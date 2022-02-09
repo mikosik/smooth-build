@@ -57,11 +57,9 @@ public class Computer {
         boolean cacheOnDisk = algorithm.isPure() && computed.hasOutput();
         if (cacheOnDisk) {
           computationCache.write(hash, computed.output());
-        }
-        newPromised.accept(computed);
-        if (cacheOnDisk) {
           promisedValues.remove(hash);
         }
+        newPromised.accept(computed);
       }
     }
   }
