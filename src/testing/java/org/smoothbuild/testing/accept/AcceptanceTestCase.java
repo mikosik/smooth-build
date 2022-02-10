@@ -29,7 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.bytecode.BytecodeModule;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.eval.SandboxHash;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
@@ -42,6 +41,7 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.BuildRunner;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.vm.SandboxHash;
 import org.smoothbuild.vm.parallel.TaskReporter;
 
 import com.google.common.collect.ImmutableList;

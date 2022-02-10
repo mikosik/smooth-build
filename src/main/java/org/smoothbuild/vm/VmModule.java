@@ -1,4 +1,4 @@
-package org.smoothbuild.eval;
+package org.smoothbuild.vm;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import org.smoothbuild.install.InstallationHashes;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class EvaluateModule extends AbstractModule {
+public class VmModule extends AbstractModule {
   @Override
   protected void configure() {}
 

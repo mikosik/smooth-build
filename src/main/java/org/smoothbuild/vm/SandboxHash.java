@@ -1,4 +1,4 @@
-package org.smoothbuild.eval;
+package org.smoothbuild.vm;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

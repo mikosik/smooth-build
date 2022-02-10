@@ -13,8 +13,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.eval.SandboxHash;
 import org.smoothbuild.util.concurrent.PromisedValue;
+import org.smoothbuild.vm.SandboxHash;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
 import org.smoothbuild.vm.job.algorithm.Input;
 import org.smoothbuild.vm.job.algorithm.Output;
