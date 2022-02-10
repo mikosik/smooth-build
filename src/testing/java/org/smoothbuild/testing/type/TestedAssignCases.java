@@ -85,8 +85,7 @@ public class TestedAssignCases<
     return result;
   }
 
-  private List<S> testSpecsCommonForNormalCaseAndParamAssignment(
-      boolean includeAny) {
+  private List<S> testSpecsCommonForNormalCaseAndParamAssignment(boolean includeAny) {
     var r = new ArrayList<S>();
     if (includeAny) {
       gen(r, any, includeAny, mAll());
