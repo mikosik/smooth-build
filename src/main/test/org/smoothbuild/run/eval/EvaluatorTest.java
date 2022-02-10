@@ -1,4 +1,4 @@
-package org.smoothbuild.eval;
+package org.smoothbuild.run.eval;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;

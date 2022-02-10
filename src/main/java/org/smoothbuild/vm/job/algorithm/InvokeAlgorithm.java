@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.job.algorithm;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static org.smoothbuild.eval.artifact.MessageStruct.containsErrors;
+import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 
 import java.lang.reflect.InvocationTargetException;

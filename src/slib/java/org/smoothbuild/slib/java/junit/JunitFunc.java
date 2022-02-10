@@ -1,9 +1,9 @@
 package org.smoothbuild.slib.java.junit;
 
 import static java.lang.ClassLoader.getPlatformClassLoader;
-import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
-import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.fs.base.PathS.path;
+import static org.smoothbuild.run.eval.FileStruct.fileContent;
+import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.slib.compress.UnzipHelper.filesFromJar;
 import static org.smoothbuild.slib.compress.UnzipHelper.filesFromLibJars;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;

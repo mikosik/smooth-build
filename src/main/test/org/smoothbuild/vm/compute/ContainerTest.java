@@ -1,8 +1,8 @@
 package org.smoothbuild.vm.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.eval.artifact.MessageStruct.severity;
-import static org.smoothbuild.eval.artifact.MessageStruct.text;
+import static org.smoothbuild.run.eval.MessageStruct.severity;
+import static org.smoothbuild.run.eval.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.TupleB;

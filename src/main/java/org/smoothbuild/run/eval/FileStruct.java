@@ -1,4 +1,4 @@
-package org.smoothbuild.eval.artifact;
+package org.smoothbuild.run.eval;
 
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.StringB;

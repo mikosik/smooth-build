@@ -1,4 +1,4 @@
-package org.smoothbuild.eval.artifact;
+package org.smoothbuild.run.eval;
 
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.INFO;

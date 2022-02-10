@@ -1,14 +1,10 @@
-package org.smoothbuild.eval.artifact;
+package org.smoothbuild.run.eval;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.eval.artifact.ArtifactPaths.artifactPath;
-import static org.smoothbuild.eval.artifact.ArtifactPaths.targetPath;
-import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
-import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.out.log.Log.error;
@@ -65,7 +61,7 @@ public class ArtifactSaver {
       return true;
     } catch (IOException e) {
       reportError(name,
-          "Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
+          "Couldn't store artifact at " + ArtifactPaths.artifactPath(name) + ". Caught exception:\n"
               + getStackTraceAsString(e));
       return false;
     } catch (DuplicatedPathsExc e) {
@@ -75,7 +71,7 @@ public class ArtifactSaver {
   }
 
   private PathS write(TopRefS topRef, ObjB obj) throws IOException, DuplicatedPathsExc {
-    PathS artifactPath = artifactPath(topRef.name());
+    PathS artifactPath = ArtifactPaths.artifactPath(topRef.name());
     if (topRef.type() instanceof ArrayT arrayT) {
       return saveArray(arrayT, artifactPath, (ArrayB) obj);
     } else if (topRef.type().name().equals(FileStruct.NAME)) {
@@ -113,7 +109,7 @@ public class ArtifactSaver {
     int i = 0;
     for (ValB val : array.elems(ValB.class)) {
       PathS sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
-      PathS targetPath = targetPath(val);
+      PathS targetPath = ArtifactPaths.targetPath(val);
       fileSystem.createLink(sourcePath, targetPath);
       i++;
     }
@@ -126,7 +122,7 @@ public class ArtifactSaver {
       PathS filePath = fileObjectPath(file);
       PathS sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
-        PathS targetPath = targetPath(fileContent(file));
+        PathS targetPath = ArtifactPaths.targetPath(FileStruct.fileContent(file));
         fileSystem.createLink(sourcePath, targetPath);
       }
     }
@@ -148,14 +144,14 @@ public class ArtifactSaver {
   }
 
   private PathS saveBaseObject(PathS artifactPath, ObjB obj) throws IOException {
-    PathS targetPath = targetPath(obj);
+    PathS targetPath = ArtifactPaths.targetPath(obj);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;
   }
 
   private static PathS fileObjectPath(TupleB file) {
-    return path(filePath(file).toJ());
+    return path(FileStruct.filePath(file).toJ());
   }
 
   private void reportSuccess(String name, PathS path) {

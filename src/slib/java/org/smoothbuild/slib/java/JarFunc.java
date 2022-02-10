@@ -2,8 +2,8 @@ package org.smoothbuild.slib.java;
 
 import static okio.Okio.buffer;
 import static okio.Okio.sink;
-import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
-import static org.smoothbuild.eval.artifact.FileStruct.filePath;
+import static org.smoothbuild.run.eval.FileStruct.fileContent;
+import static org.smoothbuild.run.eval.FileStruct.filePath;
 
 import java.io.IOException;
 import java.io.InputStream;

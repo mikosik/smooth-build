@@ -6,7 +6,7 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.eval.artifact.MessageStruct;
+import org.smoothbuild.run.eval.MessageStruct;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;

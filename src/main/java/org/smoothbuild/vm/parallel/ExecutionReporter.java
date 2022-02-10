@@ -2,10 +2,10 @@ package org.smoothbuild.vm.parallel;
 
 import static com.google.common.base.Strings.padEnd;
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.eval.artifact.MessageStruct.level;
-import static org.smoothbuild.eval.artifact.MessageStruct.text;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
+import static org.smoothbuild.run.eval.MessageStruct.level;
+import static org.smoothbuild.run.eval.MessageStruct.text;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;

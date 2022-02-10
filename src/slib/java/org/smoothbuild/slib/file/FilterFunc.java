@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.file;
 
-import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.fs.base.PathS.path;
+import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
 import java.util.function.Predicate;

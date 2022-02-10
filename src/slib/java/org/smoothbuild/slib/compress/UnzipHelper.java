@@ -1,9 +1,9 @@
 package org.smoothbuild.slib.compress;
 
 import static java.util.function.Function.identity;
-import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
-import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.plugin.UnzipBlob.unzipBlob;
+import static org.smoothbuild.run.eval.FileStruct.fileContent;
+import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.slib.java.UnjarFunc.JAR_MANIFEST_PATH;
 import static org.smoothbuild.util.collect.Maps.toMap;
 

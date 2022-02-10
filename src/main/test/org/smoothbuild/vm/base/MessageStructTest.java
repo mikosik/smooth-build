@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.eval.artifact.MessageStruct.containsErrors;
+import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.ArrayB;

@@ -1,10 +1,10 @@
 package org.smoothbuild.vm.compute;
 
-import static org.smoothbuild.eval.artifact.MessageStruct.containsErrors;
-import static org.smoothbuild.eval.artifact.MessageStruct.isValidSeverity;
-import static org.smoothbuild.eval.artifact.MessageStruct.severity;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
+import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;
+import static org.smoothbuild.run.eval.MessageStruct.severity;
 
 import java.io.IOException;
 
