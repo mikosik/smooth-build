@@ -24,7 +24,7 @@ public class TaskMatchers {
   static final TaskMatcher AT_LEAST_INFO = logLevelMatcher(INFO);
 
   static final TaskMatcher PRJ = spaceMatcher(Space.PRJ);
-  static final TaskMatcher SDK = spaceMatcher(Space.SDK);
+  static final TaskMatcher SLIB = spaceMatcher(Space.SLIB);
 
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
   static final TaskMatcher COMBINE = kindMatcher(TaskKind.COMBINE);
@@ -56,7 +56,7 @@ public class TaskMatchers {
 
           .put("project", PRJ)
           .put("prj", PRJ)
-          .put("sdk", SDK)
+          .put("slib", SLIB)
 
           .put("call", CALL)
           .put("c", CALL)

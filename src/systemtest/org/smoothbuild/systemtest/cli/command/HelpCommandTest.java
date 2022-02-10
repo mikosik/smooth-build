@@ -94,8 +94,8 @@ public class HelpCommandTest extends SystemTestCase {
                    
                                       prj, project       - evaluates expression from
                                       project module
-                                      sdk                - evaluates expression from
-                                      smooth SDK module
+                                      slib               - evaluates expression from
+                                      smooth standard library
                    
                                       c, call            - evaluates function call
                                       b, combine         - evaluates tuple creation

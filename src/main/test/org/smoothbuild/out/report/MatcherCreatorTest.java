@@ -95,7 +95,7 @@ public class MatcherCreatorTest {
 
         arguments("project", TaskMatchers.PRJ),
         arguments("prj", TaskMatchers.PRJ),
-        arguments("sdk", TaskMatchers.SDK),
+        arguments("slib", TaskMatchers.SLIB),
 
         arguments("call", TaskMatchers.CALL),
         arguments("c", TaskMatchers.CALL),

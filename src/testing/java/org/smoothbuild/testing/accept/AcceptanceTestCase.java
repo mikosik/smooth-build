@@ -7,9 +7,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.fs.space.Space.SDK;
-import static org.smoothbuild.install.InstallationPaths.SLIB_MOD_PATH;
+import static org.smoothbuild.fs.space.Space.SLIB;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
+import static org.smoothbuild.install.InstallationPaths.SLIB_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
@@ -55,7 +55,7 @@ import com.google.inject.Singleton;
 import okio.BufferedSink;
 
 public class AcceptanceTestCase extends TestingContext {
-  private MemoryFileSystem sdkFileSystem;
+  private MemoryFileSystem slibFileSystem;
   private MemoryFileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
@@ -63,15 +63,15 @@ public class AcceptanceTestCase extends TestingContext {
 
   @BeforeEach
   public void beforeEach() throws IOException {
-    this.sdkFileSystem = new MemoryFileSystem();
-    createEmptyApiModules(sdkFileSystem);
+    this.slibFileSystem = new MemoryFileSystem();
+    createEmptySlibModules(slibFileSystem);
     this.prjFileSystem = new MemoryFileSystem();
     this.memoryReporter = new MemoryReporter();
-    this.injector = createInjector(sdkFileSystem, prjFileSystem, memoryReporter);
+    this.injector = createInjector(slibFileSystem, prjFileSystem, memoryReporter);
   }
 
   public void createApiNativeJar(Class<?>... classes) throws IOException {
-    createJar(sdkFileSystem.sink(SLIB_MOD_PATH.changeExtension("jar")), classes);
+    createJar(slibFileSystem.sink(SLIB_MOD_PATH.changeExtension("jar")), classes);
   }
 
   public void createUserNativeJar(Class<?>... classes) throws IOException {
@@ -100,7 +100,7 @@ public class AcceptanceTestCase extends TestingContext {
 
   protected void resetMemory() {
     memoryReporter = new MemoryReporter();
-    injector = createInjector(sdkFileSystem, prjFileSystem, memoryReporter);
+    injector = createInjector(slibFileSystem, prjFileSystem, memoryReporter);
     artifacts = null;
   }
 
@@ -158,13 +158,13 @@ public class AcceptanceTestCase extends TestingContext {
     return prjFileSystem;
   }
 
-  private void createEmptyApiModules(MemoryFileSystem sdkFileSystem) throws IOException {
-    // SDK_MODULES has hardcoded list of standard library modules which are loaded
+  private void createEmptySlibModules(MemoryFileSystem slibFileSystem) throws IOException {
+    // SLIB_MODS has hardcoded list of standard library modules which are loaded
     // upon startup. Until modules are detected automatically we have to provide here
     // at least empty files.
     for (var filePath : SLIB_MODS) {
       PathS path = filePath.path();
-      writeFile(sdkFileSystem, path, "");
+      writeFile(slibFileSystem, path, "");
     }
   }
 
@@ -173,22 +173,22 @@ public class AcceptanceTestCase extends TestingContext {
     writeAndClose(fileSystem.sink(path), s -> s.writeUtf8(content));
   }
 
-  public static Injector createInjector(FileSystem sdkFileSystem, FileSystem prjFileSystem,
+  public static Injector createInjector(FileSystem slibFileSystem, FileSystem prjFileSystem,
       MemoryReporter memoryReporter) {
     return Guice.createInjector(PRODUCTION,
-        new TestModule(sdkFileSystem, prjFileSystem, memoryReporter),
+        new TestModule(slibFileSystem, prjFileSystem, memoryReporter),
         new BytecodeModule(),
         new ConsoleModule(new PrintWriter(nullOutputStream(), true)));
   }
 
   public static class TestModule extends AbstractModule {
-    private final FileSystem sdkFileSystem;
+    private final FileSystem slibFileSystem;
     private final FileSystem prjFileSystem;
     private final MemoryReporter memoryReporter;
 
-    public TestModule(FileSystem sdkFileSystem, FileSystem prjFileSystem,
+    public TestModule(FileSystem slibFileSystem, FileSystem prjFileSystem,
         MemoryReporter memoryReporter) {
-      this.sdkFileSystem = sdkFileSystem;
+      this.slibFileSystem = slibFileSystem;
       this.prjFileSystem = prjFileSystem;
       this.memoryReporter = memoryReporter;
     }
@@ -203,7 +203,7 @@ public class AcceptanceTestCase extends TestingContext {
     @Provides
     @Singleton
     public ImmutableMap<Space, FileSystem> provideFileSystems() {
-      return ImmutableMap.of(SDK, sdkFileSystem, PRJ, prjFileSystem);
+      return ImmutableMap.of(SLIB, slibFileSystem, PRJ, prjFileSystem);
     }
 
     private static SynchronizedFileSystem newFileSystem(Path path) {
@@ -219,9 +219,9 @@ public class AcceptanceTestCase extends TestingContext {
 
     @Provides
     @Singleton
-    @ForSpace(SDK)
-    public FileSystem provideSdkFileSystem(ImmutableMap<Space, FileSystem> fileSystems) {
-      return fileSystems.get(SDK);
+    @ForSpace(SLIB)
+    public FileSystem provideSlibFileSystem(ImmutableMap<Space, FileSystem> fileSystems) {
+      return fileSystems.get(SLIB);
     }
 
     @Provides
