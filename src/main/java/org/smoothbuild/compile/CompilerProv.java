@@ -1,4 +1,4 @@
-package org.smoothbuild.eval.compile;
+package org.smoothbuild.compile;
 
 import javax.inject.Inject;
 

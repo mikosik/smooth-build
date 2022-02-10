@@ -1,4 +1,4 @@
-package org.smoothbuild.eval.compile;
+package org.smoothbuild.compile;
 
 import static org.smoothbuild.util.collect.Lists.map;
 

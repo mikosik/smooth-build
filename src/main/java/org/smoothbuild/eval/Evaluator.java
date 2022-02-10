@@ -10,9 +10,9 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.eval.compile.Compiler;
-import org.smoothbuild.eval.compile.CompilerExc;
-import org.smoothbuild.eval.compile.CompilerProv;
+import org.smoothbuild.compile.Compiler;
+import org.smoothbuild.compile.CompilerExc;
+import org.smoothbuild.compile.CompilerProv;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.out.report.Reporter;
