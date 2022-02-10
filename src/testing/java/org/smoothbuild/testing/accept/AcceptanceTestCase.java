@@ -8,8 +8,8 @@ import static com.google.inject.Stage.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.fs.space.Space.SDK;
-import static org.smoothbuild.install.InstallationPaths.API_MOD_PATH;
-import static org.smoothbuild.install.InstallationPaths.SDK_MODS;
+import static org.smoothbuild.install.InstallationPaths.SLIB_MOD_PATH;
+import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
@@ -71,7 +71,7 @@ public class AcceptanceTestCase extends TestingContext {
   }
 
   public void createApiNativeJar(Class<?>... classes) throws IOException {
-    createJar(sdkFileSystem.sink(API_MOD_PATH.changeExtension("jar")), classes);
+    createJar(sdkFileSystem.sink(SLIB_MOD_PATH.changeExtension("jar")), classes);
   }
 
   public void createUserNativeJar(Class<?>... classes) throws IOException {
@@ -162,7 +162,7 @@ public class AcceptanceTestCase extends TestingContext {
     // SDK_MODULES has hardcoded list of standard library modules which are loaded
     // upon startup. Until modules are detected automatically we have to provide here
     // at least empty files.
-    for (var filePath : SDK_MODS) {
+    for (var filePath : SLIB_MODS) {
       PathS path = filePath.path();
       writeFile(sdkFileSystem, path, "");
     }

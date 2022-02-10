@@ -328,7 +328,7 @@ public class BuildCommandTest {
             result = not(true);
             """;
       private static final String INVOKE_TASK_HEADER = """
-          not()~                                      api.smooth:""";
+          not()~                                      slib.smooth:""";
 
       @Test
       public void shows_when_enabled() throws IOException {

@@ -13,10 +13,10 @@ import org.smoothbuild.fs.space.FilePath;
 import com.google.common.collect.ImmutableList;
 
 public class InstallationPaths {
-  public static final String LIB_DIR_NAME = "lib";
-  public static final PathS API_MOD_PATH = path("api.smooth");
-  public static final FilePath API_MOD_FILE_PATH = filePath(SDK, API_MOD_PATH);
-  public static final ImmutableList<FilePath> SDK_MODS = list(API_MOD_FILE_PATH);
+  private static final String SLIB_DIR_NAME = "lib";
+  public static final PathS SLIB_MOD_PATH = path("slib.smooth");
+  public static final FilePath SLIB_MOD_FILE_PATH = filePath(SDK, SLIB_MOD_PATH);
+  public static final ImmutableList<FilePath> SLIB_MODS = list(SLIB_MOD_FILE_PATH);
   private static final String SMOOTH_JAR = "smooth.jar";
   private final Path installationDir;
 
@@ -25,7 +25,7 @@ public class InstallationPaths {
   }
 
   public Path standardLibraryDir() {
-    return installationDir.resolve(LIB_DIR_NAME);
+    return installationDir.resolve(SLIB_DIR_NAME);
   }
 
   public Path smoothJar() {

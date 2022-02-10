@@ -27,7 +27,7 @@
     <property name="dir.build.class.systemtest" location="${dir.build.class}/systemtest"/>
     <property name="dir.build.jar" location="${dir.build}/jar"/>
     <property name="dir.build.smooth.jar" location="${dir.build.jar}/smooth.jar"/>
-    <property name="dir.build.api.jar" location="${dir.build.jar}/api.jar"/>
+    <property name="dir.build.slib.jar" location="${dir.build.jar}/slib.jar"/>
     <property name="dir.build.release" location="${dir.build}/release"/>
     <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip"/>
     <property name="dir.build.systemtest" location="${dir.build}/systemtest"/>
@@ -385,10 +385,10 @@
         </junitlauncher>
     </target>
 
-    <!-- build api.jar file -->
+    <!-- build slib.jar file -->
 
-    <target name="api.jar" depends="compile.slib.java">
-        <jar destfile="${dir.build.api.jar}">
+    <target name="slib.jar" depends="compile.slib.java">
+        <jar destfile="${dir.build.slib.jar}">
             <zipfileset dir="${dir.build.class.slib.java}"/>
             <zipfileset file="LICENSE"/>
         </jar>
@@ -417,11 +417,11 @@
 
     <!-- build smooth.zip release -->
 
-    <target name="release" depends="smooth.jar, api.jar">
+    <target name="release" depends="smooth.jar, slib.jar">
         <zip destfile="${dir.build.release.file}" level="9">
             <zipfileset prefix="${zipped.dir}" file="${dir.build.smooth.jar}"/>
-            <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.api.jar}"/>
-            <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.slib.smooth}/api.smooth"/>
+            <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.slib.jar}"/>
+            <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.slib.smooth}/slib.smooth"/>
             <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth" filemode="755"/>
         </zip>
     </target>
