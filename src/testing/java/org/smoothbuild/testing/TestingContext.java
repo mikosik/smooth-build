@@ -138,8 +138,8 @@ import org.smoothbuild.vm.compute.ComputationCache;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.java.FileLoader;
-import org.smoothbuild.vm.java.MethodLoader;
 import org.smoothbuild.vm.job.JobCreatorProv;
+import org.smoothbuild.vm.job.algorithm.MethodLoader;
 import org.smoothbuild.vm.parallel.ExecutionReporter;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 

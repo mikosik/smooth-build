@@ -24,7 +24,7 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.java.FileLoader;
-import org.smoothbuild.vm.java.MethodLoader;
+import org.smoothbuild.vm.job.algorithm.MethodLoader;
 
 public class EvaluatorTest  extends TestingContext {
   private final FileLoader fileLoader = mock(FileLoader.class);

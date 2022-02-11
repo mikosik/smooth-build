@@ -12,8 +12,7 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.vm.java.MethodLoader;
-import org.smoothbuild.vm.java.MethodLoaderExc;
+import org.smoothbuild.vm.job.algorithm.MethodLoader.MethodLoaderExc;
 
 public class InvokeAlgorithm extends Algorithm {
   private final MethodB methodB;

@@ -163,7 +163,6 @@ public class NativeTest extends AcceptanceTestCase {
                 "Class '" + className + "' does not have 'func' method."));
       }
 
-
       @Test
       public void is_overloaded() throws Exception {
         createUserNativeJar(OverloadedMethod.class);
@@ -176,9 +175,8 @@ public class NativeTest extends AcceptanceTestCase {
         evaluate("result");
         assertThat(logs())
             .containsExactly(methodLoadingError(className, "overloadedMethod",
-                "Class '" + className + "' has two 'func' methods."));
+                "Class '" + className + "' has more than one 'func' method."));
       }
-
 
       @Test
       public void has_result_type_different_than_declared_in_smooth_file() throws Exception {

@@ -6,7 +6,7 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.type.TypeBF;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.lang.base.define.Nal;
-import org.smoothbuild.vm.java.MethodLoader;
+import org.smoothbuild.vm.job.algorithm.MethodLoader;
 
 import com.google.common.collect.ImmutableMap;
 
