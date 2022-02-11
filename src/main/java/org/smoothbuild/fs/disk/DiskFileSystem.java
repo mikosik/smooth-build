@@ -3,13 +3,20 @@ package org.smoothbuild.fs.disk;
 import static java.lang.String.join;
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.util.Collections.nCopies;
+import static org.smoothbuild.fs.base.AssertPath.assertPathExists;
+import static org.smoothbuild.fs.base.AssertPath.assertPathIsDir;
+import static org.smoothbuild.fs.base.AssertPath.assertPathIsFile;
+import static org.smoothbuild.fs.base.AssertPath.assertPathIsUnused;
+import static org.smoothbuild.fs.base.PathS.path;
+import static org.smoothbuild.fs.base.PathState.DIR;
+import static org.smoothbuild.fs.base.PathState.FILE;
+import static org.smoothbuild.fs.base.PathState.NOTHING;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.smoothbuild.fs.base.AssertPath;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.PathState;
@@ -40,21 +47,21 @@ public class DiskFileSystem implements FileSystem {
   public PathState pathState(PathS path) {
     Path jdkPath = jdkPath(path);
     if (!Files.exists(jdkPath)) {
-      return PathState.NOTHING;
+      return NOTHING;
     }
     if (Files.isDirectory(jdkPath)) {
-      return PathState.DIR;
+      return DIR;
     }
-    return PathState.FILE;
+    return FILE;
   }
 
   @Override
   public Iterable<PathS> files(PathS dir) throws IOException {
-    AssertPath.assertPathIsDir(this, dir);
+    assertPathIsDir(this, dir);
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(jdkPath(dir))) {
       ImmutableList.Builder<PathS> builder = ImmutableList.builder();
       for (Path path : stream) {
-        builder.add(PathS.path(path.getFileName().toString()));
+        builder.add(path(path.getFileName().toString()));
       }
       return builder.build();
     }
@@ -62,17 +69,17 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public void move(PathS source, PathS target) throws IOException {
-    if (pathState(source) == PathState.NOTHING) {
+    if (pathState(source) == NOTHING) {
       throw new IOException("Cannot move " + source.q() + ". It doesn't exist.");
     }
-    if (pathState(source) == PathState.DIR) {
+    if (pathState(source) == DIR) {
       throw new IOException("Cannot move " + source.q() + ". It is directory.");
     }
-    if (pathState(target) == PathState.DIR) {
+    if (pathState(target) == DIR) {
       throw new IOException("Cannot move to " + target.q() + ". It is directory.");
     }
     PathS targetParent = target.parent();
-    if (pathState(targetParent) == PathState.NOTHING) {
+    if (pathState(targetParent) == NOTHING) {
       createDir(targetParent);
     }
     Files.move(jdkPath(source), jdkPath(target), ATOMIC_MOVE);
@@ -80,7 +87,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public BufferedSource source(PathS path) throws IOException {
-    AssertPath.assertPathIsFile(this, path);
+    assertPathIsFile(this, path);
     return Okio.buffer(Okio.source(jdkPath(path)));
   }
 
@@ -91,7 +98,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public Sink sinkWithoutBuffer(PathS path) throws IOException {
-    if (pathState(path) == PathState.DIR) {
+    if (pathState(path) == DIR) {
       throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }
     createDir(path.parent());
@@ -105,7 +112,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public void delete(PathS path) throws IOException {
-    if (pathState(path) == PathState.NOTHING) {
+    if (pathState(path) == NOTHING) {
       return;
     }
     RecursiveDeleter.deleteRecursively(jdkPath(path));
@@ -113,8 +120,8 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public void createLink(PathS link, PathS target) throws IOException {
-    AssertPath.assertPathExists(this, target);
-    AssertPath.assertPathIsUnused(this, link);
+    assertPathExists(this, target);
+    assertPathIsUnused(this, link);
 
     createDir(link.parent());
 
