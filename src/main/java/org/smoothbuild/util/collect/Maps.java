@@ -41,7 +41,8 @@ public class Maps {
   }
 
   /**
-   * Works like Map.computeIfAbsent() but allows modifying map from mappingFunction
+   * Works like Map.computeIfAbsent() but allows modifying map from mappingFunction and
+   * use ThrowingFunction as mappingFunction.
    */
   public static <K, V, E extends Throwable> V computeIfAbsent(Map<K, V> map, K key,
       ThrowingFunction<? super K, ? extends V, E> mappingFunction) throws E {
