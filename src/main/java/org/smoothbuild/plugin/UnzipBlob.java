@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Predicate;
 
+import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.StringB;
@@ -18,16 +19,16 @@ import net.lingala.zip4j.exception.ZipException;
 
 public class UnzipBlob {
   public static ArrayB unzipBlob(
-      NativeApi nativeApi, BlobB blob, Predicate<String> includePredicate)
+      BytecodeF bytecodeF, BlobB blob, Predicate<String> includePredicate)
       throws IOException, ZipException, DuplicateFileNameExc, IllegalZipEntryFileNameExc {
-    var arrayBuilder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
-    unzip(blob, includePredicate, (f, is) -> arrayBuilder.add(fileB(nativeApi, f, is)));
+    var arrayBuilder = bytecodeF.arrayBuilderWithElems(bytecodeF.fileT());
+    unzip(blob, includePredicate, (f, is) -> arrayBuilder.add(fileB(bytecodeF, f, is)));
     return arrayBuilder.build();
   }
 
-  private static TupleB fileB(NativeApi nativeApi, String fileName, InputStream inputStream) {
-    StringB path = nativeApi.factory().string(fileName);
-    BlobB content = nativeApi.factory().blob(sink -> sink.writeAll(source(inputStream)));
-    return nativeApi.factory().file(path, content);
+  private static TupleB fileB(BytecodeF bytecodeF, String fileName, InputStream inputStream) {
+    StringB path = bytecodeF.string(fileName);
+    BlobB content = bytecodeF.blob(sink -> sink.writeAll(source(inputStream)));
+    return bytecodeF.file(path, content);
   }
 }

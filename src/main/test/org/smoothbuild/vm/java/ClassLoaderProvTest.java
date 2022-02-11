@@ -10,7 +10,7 @@ public class ClassLoaderProvTest extends TestingContext {
   @Test
   public void name() throws Exception {
     var jar = blobBJarWithJavaByteCode(MyClass.class);
-    var classLoaderProv = new ClassLoaderProv(getPlatformClassLoader(), nativeApi());
+    var classLoaderProv = new ClassLoaderProv(getPlatformClassLoader(), bytecodeF());
     var classLoader = classLoaderProv.classLoaderForJar(jar);
     var clazz = classLoader.loadClass(MyClass.class.getName());
     assertThat(clazz)

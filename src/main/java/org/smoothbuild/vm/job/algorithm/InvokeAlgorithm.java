@@ -45,7 +45,7 @@ public class InvokeAlgorithm extends Algorithm {
   }
 
   private Output runImpl(Input input, NativeApi nativeApi) throws InvokeExc {
-    var classLoaderProv = new ClassLoaderProv(getSystemClassLoader(), nativeApi);
+    var classLoaderProv = new ClassLoaderProv(getSystemClassLoader(), nativeApi.factory());
     var method = loadMethod(classLoaderProv);
     var result = invoke(method, input, nativeApi);
     var hasErrors = containsErrors(nativeApi.messages());

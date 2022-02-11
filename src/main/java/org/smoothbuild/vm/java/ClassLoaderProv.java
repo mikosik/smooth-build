@@ -9,9 +9,9 @@ import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 
 import java.io.IOException;
 
+import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.io.DuplicateFileNameExc;
 import org.smoothbuild.util.io.IllegalZipEntryFileNameExc;
 
@@ -21,16 +21,16 @@ import net.lingala.zip4j.exception.ZipException;
 
 public class ClassLoaderProv {
   private final ClassLoader parentClassLoader;
-  private final NativeApi nativeApi;
+  private final BytecodeF bytecodeF;
 
-  public ClassLoaderProv(ClassLoader parentClassLoader, NativeApi nativeApi) {
+  public ClassLoaderProv(ClassLoader parentClassLoader, BytecodeF bytecodeF) {
     this.parentClassLoader = parentClassLoader;
-    this.nativeApi = nativeApi;
+    this.bytecodeF = bytecodeF;
   }
 
   public ClassLoader classLoaderForJar(BlobB jar) throws ClassLoaderProvExc, IOException {
     try {
-      var files = unzipBlob(nativeApi, jar, s -> true);
+      var files = unzipBlob(bytecodeF, jar, s -> true);
       var filesMap = toMap(files.elems(TupleB.class), f -> filePath(f).toJ(), identity());
       return classLoader(filesMap);
     } catch (DuplicateFileNameExc | IllegalZipEntryFileNameExc | ZipException e) {

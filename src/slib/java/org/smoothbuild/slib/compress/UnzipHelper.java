@@ -71,7 +71,7 @@ public class UnzipHelper {
       NativeApi nativeApi, BlobB blob, Predicate<String> includePredicate)
       throws IOException {
     try {
-      return unzipBlob(nativeApi, blob, includePredicate);
+      return unzipBlob(nativeApi.factory(), blob, includePredicate);
     } catch (ZipException e) {
       nativeApi.log().error(
           "Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
