@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.base.define;
 
-import java.util.Objects;
-
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.expr.NativeS;
 import org.smoothbuild.util.collect.NList;
@@ -9,44 +7,19 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public final class NatFuncS extends FuncS {
-  private final NativeS ann;
-
-  public NatFuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, NativeS ann,
+public final class NatFuncS extends AnnFuncS {
+  public NatFuncS(NativeS ann, FuncTS type, ModPath modPath, String name, NList<ItemS> params,
       Loc loc) {
-    super(type, modPath, name, params, loc);
-    this.ann = ann;
+    super(type, modPath, name, params, ann, loc);
   }
 
+  @Override
   public NativeS ann() {
-    return ann;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (this == object) {
-      return true;
-    }
-    return object instanceof NatFuncS that
-        && this.ann.equals(that.ann)
-        && this.resT().equals(that.resT())
-        && this.modPath().equals(that.modPath())
-        && this.name().equals(that.name())
-        && this.params().equals(that.params())
-        && this.loc().equals(that.loc());
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(ann, resT(), modPath(), name(), params(), loc());
+    return ((NativeS) super.ann());
   }
 
   @Override
   public String toString() {
     return "NatFunc(`" + code() + "`)";
-  }
-
-  private String code() {
-    return ann + " " + signature();
   }
 }

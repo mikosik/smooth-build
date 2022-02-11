@@ -1036,7 +1036,7 @@ public class TestingContext {
 
   public NatFuncS natFuncS(int line, FuncTS funcT, ModPath modPath, String name,
       NList<ItemS> params, NativeS ann) {
-    return new NatFuncS(funcT, modPath, name, params, ann, loc(line));
+    return new NatFuncS(ann, funcT, modPath, name, params, loc(line));
   }
 
   public DefFuncS defFuncS(TypeS type, String name, ExprS body, NList<ItemS> params) {

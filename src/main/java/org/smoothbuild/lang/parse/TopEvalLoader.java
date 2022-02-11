@@ -81,7 +81,7 @@ public class TopEvalLoader {
     var loc = funcN.loc();
     var funcT = typeSF.func(resT, map(params, DefinedS::type));
     if (funcN.ann().isPresent()) {
-      return new NatFuncS(funcT, path, name, params, loadNativeAnn(funcN.ann().get()), loc);
+      return new NatFuncS(loadNativeAnn(funcN.ann().get()), funcT, path, name, params, loc);
     } else {
       var body = createExpr(funcN.body().get());
       return new DefFuncS(funcT, path, name, params, body, loc);
