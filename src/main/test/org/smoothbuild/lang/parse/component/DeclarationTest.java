@@ -1212,7 +1212,7 @@ public class DeclarationTest extends TestingContext {
 
           private String arrayLiteral(String string) {
             return """
-              result = [ PLACEHOLDER ];
+              result = [PLACEHOLDER];
               """.replace("PLACEHOLDER", string);
           }
         }

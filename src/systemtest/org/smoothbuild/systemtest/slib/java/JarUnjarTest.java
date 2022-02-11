@@ -11,7 +11,7 @@ public class JarUnjarTest extends SystemTestCase {
   @Test
   public void jar_unjar() throws IOException {
     createUserModule("""
-            result = [ file("dir/file1.txt", 0x41), file("file2.txt", 0x42) ]
+            result = [file("dir/file1.txt", 0x41), file("file2.txt", 0x42)]
               | jar() | unjar();
             """);
     runSmoothBuild("result");

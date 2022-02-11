@@ -37,7 +37,7 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem() {
       module("""
-           result = [ 0x01 ];
+           result = [0x01];
            """)
           .loadsWithSuccess();
     }
@@ -104,7 +104,7 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem() {
       module("""
-           result = [ 123 ];
+           result = [123];
            """)
           .loadsWithSuccess();
     }
@@ -171,7 +171,7 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem() {
       module("""
-           result = [ "abc" ];
+           result = ["abc"];
            """)
           .loadsWithSuccess();
     }
@@ -238,7 +238,7 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem() {
       module("""
-           result = [ ["abc"] ];
+           result = [["abc"]];
            """)
           .loadsWithSuccess();
     }
@@ -321,7 +321,7 @@ public class ExprSUsageTest extends TestingContext {
              String field,
            }
            myValue = myStruct("abc");
-           result = [ myValue.field ];
+           result = [myValue.field];
            """)
           .loadsWithSuccess();
     }
@@ -425,7 +425,7 @@ public class ExprSUsageTest extends TestingContext {
     public void array_elem() {
       module("""
              String myIdentity(String string) = string;
-             result = [ "abc" | myIdentity() ];
+             result = ["abc" | myIdentity()];
              """)
           .loadsWithSuccess();
     }
@@ -474,7 +474,7 @@ public class ExprSUsageTest extends TestingContext {
     public void array_elem() {
       module("""
            String myFunc() = "abc";
-           result = [ myFunc() ];
+           result = [myFunc()];
            """)
           .loadsWithSuccess();
     }
@@ -546,7 +546,7 @@ public class ExprSUsageTest extends TestingContext {
     public void array_elem() {
       module("""
            String myFunc() = "abc";
-           result = [ myFunc ];
+           result = [myFunc];
            """)
           .loadsWithSuccess();
     }
@@ -602,7 +602,7 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem() {
       module("""
-          myFunc(String string) = [ string ];
+          myFunc(String string) = [string];
            """)
           .loadsWithSuccess();
     }
@@ -679,7 +679,7 @@ public class ExprSUsageTest extends TestingContext {
     public void array_elem() {
       module("""
            String myValue = "abc";
-           result = [ myValue ];
+           result = [myValue];
            """)
           .loadsWithSuccess();
     }
@@ -779,12 +779,12 @@ public class ExprSUsageTest extends TestingContext {
     public void array_elem_fails() {
       module("""
           MyStruct {}
-          result = [ MyStruct ];
+          result = [MyStruct];
           """)
           .loadsWithError(2, """
               extraneous input 'MyStruct' expecting {'[', ']', NAME, INT, BLOB, STRING}
-              result = [ MyStruct ];
-                         ^^^^^^^^""");
+              result = [MyStruct];
+                        ^^^^^^^^""");
     }
 
     @Test
@@ -952,12 +952,12 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem_fails() {
       module("""
-          result = [ A ];
+          result = [A];
           """)
           .loadsWithError(1, """
               extraneous input 'A' expecting {'[', ']', NAME, INT, BLOB, STRING}
-              result = [ A ];
-                         ^""");
+              result = [A];
+                        ^""");
     }
 
     @Test

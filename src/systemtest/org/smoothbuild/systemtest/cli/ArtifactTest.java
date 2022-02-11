@@ -104,7 +104,7 @@ public class ArtifactTest extends SystemTestCase {
   @Test
   public void store_array_of_bools_artifact() throws Exception {
     createUserModule("""
-            result = [ true, false ];
+            result = [true, false];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -128,7 +128,7 @@ public class ArtifactTest extends SystemTestCase {
   @Test
   public void store_array_of_strings_artifact() throws Exception {
     createUserModule("""
-            result = [ "abc", "def" ];
+            result = ["abc", "def"];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -164,7 +164,7 @@ public class ArtifactTest extends SystemTestCase {
   @Test
   public void store_array_of_blobs_artifact() throws Exception {
     createUserModule("""
-            result = [ 0x41, 0x42 ];
+            result = [0x41, 0x42];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -188,7 +188,7 @@ public class ArtifactTest extends SystemTestCase {
   @Test
   public void store_array_of_files_artifact() throws Exception {
     createUserModule("""
-            result = [ file("file1.txt", 0x41), file("file2.txt", 0x42) ];
+            result = [file("file1.txt", 0x41), file("file2.txt", 0x42)];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -201,7 +201,7 @@ public class ArtifactTest extends SystemTestCase {
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
     createUserModule("""
             myFile = file("file.txt", 0x41);
-            result = [ myFile, myFile ];
+            result = [myFile, myFile];
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

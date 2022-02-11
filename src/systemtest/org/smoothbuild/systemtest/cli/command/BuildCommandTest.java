@@ -297,7 +297,7 @@ public class BuildCommandTest {
     class _convert_matcher extends SystemTestCase {
       private static final String CONVERT = """
           result = [
-            [ 123 ],
+            [123],
             [],
           ];
           """;
@@ -622,7 +622,7 @@ public class BuildCommandTest {
     @Test
     public void literal_array() throws IOException {
       createUserModule("""
-          result = [ "abc" ];
+          result = ["abc"];
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();

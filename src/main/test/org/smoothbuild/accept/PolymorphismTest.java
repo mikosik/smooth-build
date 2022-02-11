@@ -12,7 +12,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
   public void single_elem_array() throws Exception {
     createUserNativeJar(Flatten.class);
     createUserModule("""
-            [E] testSingleElement(E elem) = [ elem ];
+            [E] testSingleElement(E elem) = [elem ];
             result = testSingleElement("abc");
             """);
     evaluate("result");
@@ -26,7 +26,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s")
             [E] testFlatten([[E]] array);
-            result = testFlatten(array = [ [ "aa" ], [ "bb", "cc" ] ]);
+            result = testFlatten(array = [["aa" ], ["bb", "cc" ] ]);
             """, Flatten.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())
@@ -39,7 +39,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s")
             [E] testFlatten([[E]] array);
-            result = testFlatten(array = [ [ [ "aa" ], [ "bb", "cc" ] ] ]);
+            result = testFlatten(array = [[["aa"], ["bb", "cc" ] ] ]);
             """, Flatten.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())
@@ -50,7 +50,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
   public void pair_and_identity() throws Exception {
     createUserModule("""
             A testIdentity(A v) = v;
-            [A] pair(A a1, A a2) = [ a1, a2 ];
+            [A] pair(A a1, A a2) = [a1, a2 ];
             result = pair(a1 = testIdentity(v = "aa"), a2 = testIdentity(v = "bb"));
             """);
     evaluate("result");

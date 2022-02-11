@@ -24,7 +24,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void actual_result_type_can_be_inferred_from_args_and_converted() throws Exception {
     createUserModule("""
             A myfunc(A res, A forcedType) = res;
-            result = myfunc(res = [], forcedType = [ [ "abc" ] ]);
+            result = myfunc(res = [], forcedType = [["abc"]]);
             """);
     evaluate("result");
     assertThat(artifact())
@@ -35,8 +35,8 @@ public class InferenceTest extends AcceptanceTestCase {
   public void actual_array_type_can_be_inferred_from_args_and_elems_are_converted()
       throws Exception {
     createUserModule("""
-            pair(A first, A second) = [ first, second ];
-            result = pair(first = [], second = [ [ "abc" ] ]);
+            pair(A first, A second) = [first, second];
+            result = pair(first = [], second = [["abc"]]);
             """);
     evaluate("result");
     assertThat(artifact())
@@ -64,7 +64,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [ "aaa" ], second = [ "bbb" ]);
+            result = testConcat(first = ["aaa"], second = ["bbb"]);
             """, Concat.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())
@@ -77,7 +77,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [ "aaa" ], second = []);
+            result = testConcat(first = ["aaa"], second = []);
             """, Concat.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())
@@ -90,7 +90,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [], second = [ "bbb" ]);
+            result = testConcat(first = [], second = ["bbb"]);
             """, Concat.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())
@@ -104,7 +104,7 @@ public class InferenceTest extends AcceptanceTestCase {
             @Native("%s")
             [A] testConcat([A] first, [A] second);
             wrapper([Nothing] f, [[A]] s) = testConcat(first = f, second = s);
-            result = wrapper(f = [], s = [ [ "aaa" ] ]);
+            result = wrapper(f = [], s = [["aaa"]]);
             """, Concat.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())
@@ -119,7 +119,7 @@ public class InferenceTest extends AcceptanceTestCase {
             [A] testConcat([A] first, [A] second);
             [A] testConcatW([A] f, [A] s) = testConcat(first = f, second = s);
             wrapper([Nothing] f, [[A]] s) = testConcatW(f = f, s = s);
-            result = wrapper(f = [], s = [ [ "aaa" ] ]);
+            result = wrapper(f = [], s = [["aaa"]]);
             """, Concat.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())
@@ -147,7 +147,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s")
             [A] testAppend([A] array, A elem);
-            result = testAppend(array = [ "aaa" ], elem = "bbb");
+            result = testAppend(array = ["aaa"], elem = "bbb");
             """, Append.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())

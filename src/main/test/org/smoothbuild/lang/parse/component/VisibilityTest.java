@@ -228,7 +228,7 @@ public class VisibilityTest extends TestingContext {
         @Test
         public void array_elem() {
           var code = """
-              result = [ undefined ];
+              result = [undefined];
               """;
           module(code)
               .loadsWithError(1, "`undefined` is undefined.");

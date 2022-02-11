@@ -49,7 +49,7 @@ public class InferenceTest extends TestingContext {
     @Test
     public void array_literal() {
       String code = """
-          myValue = [ "abc" ];
+          myValue = ["abc"];
           """;
       module(code)
           .loadsWithSuccess()
@@ -125,7 +125,7 @@ public class InferenceTest extends TestingContext {
     @Test
     public void array_literal() {
       String code = """
-          myFunc() = [ "abc" ];
+          myFunc() = ["abc"];
           """;
       module(code)
           .loadsWithSuccess()
@@ -191,7 +191,7 @@ public class InferenceTest extends TestingContext {
     @Test
     public void when_elems_have_the_same_type() {
       String code = """
-            result = [ "abc", "def" ];
+            result = ["abc", "def"];
             """;
       module(code)
           .loadsWithSuccess()
@@ -203,7 +203,7 @@ public class InferenceTest extends TestingContext {
       String code = """
             @Native("impl.met")
             Nothing myNothing();
-            result = [ "abc", myNothing() ];
+            result = ["abc", myNothing()];
             """;
       module(code)
           .loadsWithSuccess()
@@ -384,7 +384,7 @@ public class InferenceTest extends TestingContext {
             A firstElement([A] array);
             String myFunc1(Blob param) = "abc";
             String myFunc2(String param) = "abc";
-            myValue = firstElement([ myFunc1, myFunc2 ]);
+            myValue = firstElement([myFunc1, myFunc2]);
             """;
         module(code)
             .loadsWithSuccess()

@@ -140,7 +140,7 @@ public class EqualTest extends SystemTestCase {
     @Test
     public void string_array_is_equal_to_itself() throws Exception {
       createUserModule("""
-          result = equal([ "aaa", "bbb" ], [ "aaa", "bbb" ]);
+          result = equal(["aaa", "bbb"], ["aaa", "bbb"]);
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
