@@ -138,7 +138,7 @@ public class CompilerTest extends TestingContext {
       var funcTS = funcTS(intTS(), list(blobTS()));
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = "class.binary.name";
-      var ann = annS(loc(filePath, 1), stringS(classBinaryName));
+      var ann = nativeS(loc(filePath, 1), stringS(classBinaryName));
       var natFuncS = natFuncS(funcTS, "myFunc", nList(itemS(intTS(), "param")), ann);
 
       var resT = intTB();

@@ -21,11 +21,11 @@ import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
-import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
+import org.smoothbuild.lang.expr.NativeS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
@@ -81,18 +81,16 @@ public class TopEvalLoader {
     var loc = funcN.loc();
     var funcT = typeSF.func(resT, map(params, DefinedS::type));
     if (funcN.ann().isPresent()) {
-      return new NatFuncS(funcT,
-          path, name, params, loadAnn(funcN.ann().get()), loc
-      );
+      return new NatFuncS(funcT, path, name, params, loadNativeAnn(funcN.ann().get()), loc);
     } else {
       var body = createExpr(funcN.body().get());
       return new DefFuncS(funcT, path, name, params, body, loc);
     }
   }
 
-  private AnnS loadAnn(AnnN annN) {
+  private NativeS loadNativeAnn(AnnN annN) {
     var path = createString(annN.path());
-    return new AnnS(path, annN.isPure(), annN.loc());
+    return new NativeS(path, annN.isPure(), annN.loc());
   }
 
   private NList<ItemS> loadParams(ModPath path, FuncN funcN) {

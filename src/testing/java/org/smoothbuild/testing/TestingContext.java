@@ -116,12 +116,12 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VarTS;
-import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
+import org.smoothbuild.lang.expr.NativeS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
@@ -966,24 +966,24 @@ public class TestingContext {
 
   // other smooth language thingies
 
-  public AnnS annS() {
-    return annS(1, stringS("implementation.Class"));
+  public NativeS nativeS() {
+    return nativeS(1, stringS("implementation.Class"));
   }
 
-  public AnnS annS(int line, StringS implementedBy) {
-    return annS(line, implementedBy, true);
+  public NativeS nativeS(int line, StringS implementedBy) {
+    return nativeS(line, implementedBy, true);
   }
 
-  public AnnS annS(int line, StringS implementedBy, boolean pure) {
-    return annS(loc(line), implementedBy, pure);
+  public NativeS nativeS(int line, StringS implementedBy, boolean pure) {
+    return nativeS(loc(line), implementedBy, pure);
   }
 
-  public AnnS annS(Loc loc, StringS implementedBy) {
-    return annS(loc, implementedBy, true);
+  public NativeS nativeS(Loc loc, StringS implementedBy) {
+    return nativeS(loc, implementedBy, true);
   }
 
-  public AnnS annS(Loc loc, StringS implementedBy, boolean pure) {
-    return new AnnS(implementedBy, pure, loc);
+  public NativeS nativeS(Loc loc, StringS implementedBy, boolean pure) {
+    return new NativeS(implementedBy, pure, loc);
   }
 
   public ItemS itemS(TypeS type, String name) {
@@ -1011,31 +1011,31 @@ public class TestingContext {
   }
 
   public NatFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {
-    return natFuncS(resT, name, params, annS(1, stringS(1, "Impl.met")));
+    return natFuncS(resT, name, params, nativeS(1, stringS(1, "Impl.met")));
   }
 
-  public NatFuncS natFuncS(TypeS resT, String name, NList<ItemS> params, AnnS annS) {
-    return natFuncS(1, resT, name, params, annS);
+  public NatFuncS natFuncS(TypeS resT, String name, NList<ItemS> params, NativeS ann) {
+    return natFuncS(1, resT, name, params, ann);
   }
 
-  public NatFuncS natFuncS(int line, TypeS resT, String name, NList<ItemS> params, AnnS annS) {
-    return natFuncS(line, funcTS(resT, params.list()), modPath(), name, params, annS);
+  public NatFuncS natFuncS(int line, TypeS resT, String name, NList<ItemS> params, NativeS ann) {
+    return natFuncS(line, funcTS(resT, params.list()), modPath(), name, params, ann);
   }
 
   public NatFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params) {
-    return natFuncS(funcT, name, params, annS());
+    return natFuncS(funcT, name, params, nativeS());
   }
 
-  public NatFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
+  public NatFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params, NativeS ann) {
     return natFuncS(1, funcT, name, params, ann);
   }
 
-  public NatFuncS natFuncS(int line, FuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
+  public NatFuncS natFuncS(int line, FuncTS funcT, String name, NList<ItemS> params, NativeS ann) {
     return natFuncS(line, funcT, modPath(), name, params, ann);
   }
 
-  public NatFuncS natFuncS(int line, FuncTS funcT, ModPath modPath, String name, NList<ItemS> params,
-      AnnS ann) {
+  public NatFuncS natFuncS(int line, FuncTS funcT, ModPath modPath, String name,
+      NList<ItemS> params, NativeS ann) {
     return new NatFuncS(funcT, modPath, name, params, ann, loc(line));
   }
 

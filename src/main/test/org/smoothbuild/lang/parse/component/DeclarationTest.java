@@ -625,7 +625,7 @@ public class DeclarationTest extends TestingContext {
               .loadsWithSuccess()
               .containsEval(natFuncS(2, STRING, "myFunc", nList(
                   itemS(3, STRING, "default", stringS(3, "value")),
-                  itemS(4, STRING, "nonDefault")), annS(1, stringS(1, "Impl.met"))));
+                  itemS(4, STRING, "nonDefault")), nativeS(1, stringS(1, "Impl.met"))));
         }
 
         @Test
@@ -688,7 +688,7 @@ public class DeclarationTest extends TestingContext {
           module(funcTDeclaration("String,"))
               .loadsWithSuccess()
               .containsEval(natFuncS(2, f(f(BLOB, STRING)), "myFunc", nList(),
-                  annS(1, stringS(1, "Impl.met"))));
+                  nativeS(1, stringS(1, "Impl.met"))));
         }
 
         @Test

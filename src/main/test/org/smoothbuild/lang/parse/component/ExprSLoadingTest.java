@@ -189,7 +189,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(), annS(1, stringS(1, "Impl.met"), true)));
+              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
@@ -200,7 +200,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(), annS(1, stringS(1, "Impl.met"), false)));
+              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), false)));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(), annS(1, stringS(1, "Impl.met"), true)));
+              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
     }
   }
 

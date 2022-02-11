@@ -3,9 +3,9 @@ package org.smoothbuild.lang.expr;
 import org.smoothbuild.lang.base.define.Loc;
 
 /**
- * Annotation.
+ * Native annotation.
  */
-public record AnnS(StringS path, boolean isPure, Loc loc) {
+public record NativeS(StringS path, boolean isPure, Loc loc) {
   @Override
   public String toString() {
     return """

@@ -48,12 +48,12 @@ import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
+import org.smoothbuild.lang.expr.NativeS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
@@ -148,11 +148,11 @@ public class Compiler {
     return bytecodeF.func(funcTB, bodyB);
   }
 
-  private MethodB createMethodB(AnnS annS, FuncTB funcTB) {
+  private MethodB createMethodB(NativeS nativeS, FuncTB funcTB) {
     var methodTB = bytecodeF.methodT(funcTB.res(), funcTB.params());
-    var jarB = loadNativeJar(annS);
-    var classBinaryNameB = bytecodeF.string(annS.path().string());
-    var isPureB = bytecodeF.bool(annS.isPure());
+    var jarB = loadNativeJar(nativeS);
+    var classBinaryNameB = bytecodeF.string(nativeS.path().string());
+    var isPureB = bytecodeF.bool(nativeS.isPure());
     return bytecodeF.method(methodTB, jarB, classBinaryNameB, isPureB);
   }
 
@@ -280,12 +280,12 @@ public class Compiler {
 
   // helpers
 
-  private BlobB loadNativeJar(AnnS ann) {
-    var filePath = ann.loc().file().withExtension("jar");
+  private BlobB loadNativeJar(NativeS nativeS) {
+    var filePath = nativeS.loc().file().withExtension("jar");
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {
-      String message = ann.loc() + ": Error loading native jar: File %s doesn't exist."
+      String message = nativeS.loc() + ": Error loading native jar: File %s doesn't exist."
           .formatted(filePath.q());
       throw new CompilerExc(message);
     }

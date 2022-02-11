@@ -101,7 +101,7 @@ public class EvaluatorTest  extends TestingContext {
   class _invoke {
     @Test
     public void invoke_argless() throws Exception {
-      var funcS = natFuncS(intTS(), "f", nList(), annS(1, stringS("class binary name")));
+      var funcS = natFuncS(intTS(), "f", nList(), nativeS(1, stringS("class binary name")));
       var callS = callS(intTS(), topRefS(funcS));
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
@@ -115,7 +115,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void invoke_with_param() throws Exception {
       var funcS = natFuncS(intTS(), "f", nList(itemS(intTS(), "p")),
-          annS(1, stringS("class binary name")));
+          nativeS(1, stringS("class binary name")));
       var callS = callS(intTS(), topRefS(funcS), intS(77));
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
@@ -130,7 +130,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void invoke_with_param_conversion() throws Exception {
       var funcS = natFuncS(arrayTS(intTS()), "f", nList(itemS(arrayTS(intTS()), "p")),
-          annS(1, stringS("class binary name")));
+          nativeS(1, stringS("class binary name")));
       var callS = callS(arrayTS(intTS()), topRefS(funcS), orderS(nothingTS()));
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
