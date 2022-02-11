@@ -15,7 +15,6 @@ import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
-import org.smoothbuild.util.collect.Maps;
 
 /**
  * This class is thread-safe.

@@ -10,6 +10,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 
 import com.google.common.collect.ImmutableList;
 
@@ -152,6 +154,28 @@ public class CompilerTest extends TestingContext {
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
       var compiler = newCompiler(defs(natFuncS), fileLoader);
       assertThat(compiler.compileExpr(topRefS(natFuncS)))
+          .isEqualTo(funcB);
+    }
+
+    @Test
+    public void topRef_to_bytecode_func() throws IOException {
+      Class<?> clazz = ReturnIdFunc.class;
+      var oVarTS = oVarTS("A");
+      var funcTS = funcTS(oVarTS, list(oVarTS));
+      var filePath = filePath(PRJ, path("my/path"));
+      var classBinaryName = clazz.getCanonicalName();
+      var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
+      var byteFuncS = byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nList(itemS(oVarTS, "p")),
+          loc(filePath, 2));
+
+      var a = oVarTB("A");
+      var funcTB = funcTB(a, list(a));
+      var funcB = funcB(funcTB, paramRefB(cVarTB("A"), 0));
+
+      var fileLoader = createFileLoaderMock(
+          filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+      var compiler = newCompiler(defs(byteFuncS), fileLoader);
+      assertThat(compiler.compileExpr(topRefS(byteFuncS)))
           .isEqualTo(funcB);
     }
 

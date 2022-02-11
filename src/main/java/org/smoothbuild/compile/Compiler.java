@@ -33,12 +33,14 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.define.BoolValS;
+import org.smoothbuild.lang.base.define.ByteFuncS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.IfFuncS;
 import org.smoothbuild.lang.base.define.ItemS;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
@@ -72,6 +74,7 @@ public class Compiler {
   private final DefsS defs;
   private final TypeSbConv typeSbConv;
   private final FileLoader fileLoader;
+  private final BytecodeLoader bytecodeLoader;
   private final Deque<NList<ItemS>> callStack;
   private final Map<String, FuncB> funcCache;
   private final Map<String, ObjB> valCache;
@@ -79,12 +82,13 @@ public class Compiler {
 
   @Inject
   public Compiler(BytecodeF bytecodeF, TypingB typing, DefsS defs,
-      TypeSbConv typeSbConv, FileLoader fileLoader) {
+      TypeSbConv typeSbConv, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
     this.bytecodeF = bytecodeF;
     this.typing = typing;
     this.defs = defs;
     this.typeSbConv = typeSbConv;
     this.fileLoader = fileLoader;
+    this.bytecodeLoader = bytecodeLoader;
     this.callStack = new LinkedList<>();
     this.funcCache = new HashMap<>();
     this.valCache = new HashMap<>();
@@ -103,6 +107,7 @@ public class Compiler {
     try {
       callStack.push(funcS.params());
       var funcB = switch (funcS) {
+        case ByteFuncS b -> compileByteFunc(b);
         case DefFuncS d -> compileDefFunc(d);
         case IfFuncS i -> compileIfFunc(i);
         case MapFuncS m -> compileMapFunc(m);
@@ -113,6 +118,23 @@ public class Compiler {
     } finally {
       callStack.pop();
     }
+  }
+
+  private FuncB compileByteFunc(ByteFuncS byteFuncS) {
+    var ann = byteFuncS.ann();
+    var jar = loadNativeJar(ann.loc());
+    var bytecode = bytecodeLoader.load(byteFuncS.name(), jar, ann.path().string());
+    if (!bytecode.isPresent()) {
+      throw new CompilerExc(ann.loc() + ": " + bytecode.error());
+    }
+    var funcB = bytecode.value();
+    var funcTB = convertFuncT(byteFuncS.type());
+    if (!funcB.type().equals(funcTB)) {
+      throw new CompilerExc(ann.loc() + ": Bytecode provider returned object of wrong type "
+          + funcB.type().q() + " when function " + byteFuncS.q() + " is declared as " + funcTB.q()
+          + ".");
+    }
+    return (FuncB) funcB;
   }
 
   private FuncB compileDefFunc(DefFuncS defFuncS) {
@@ -150,7 +172,7 @@ public class Compiler {
 
   private MethodB createMethodB(NativeS nativeS, FuncTB funcTB) {
     var methodTB = bytecodeF.methodT(funcTB.res(), funcTB.params());
-    var jarB = loadNativeJar(nativeS);
+    var jarB = loadNativeJar(nativeS.loc());
     var classBinaryNameB = bytecodeF.string(nativeS.path().string());
     var isPureB = bytecodeF.bool(nativeS.isPure());
     return bytecodeF.method(methodTB, jarB, classBinaryNameB, isPureB);
@@ -280,12 +302,12 @@ public class Compiler {
 
   // helpers
 
-  private BlobB loadNativeJar(NativeS nativeS) {
-    var filePath = nativeS.loc().file().withExtension("jar");
+  private BlobB loadNativeJar(Loc loc) {
+    var filePath = loc.file().withExtension("jar");
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {
-      String message = nativeS.loc() + ": Error loading native jar: File %s doesn't exist."
+      String message = loc + ": Error loading native jar: File %s doesn't exist."
           .formatted(filePath.q());
       throw new CompilerExc(message);
     }

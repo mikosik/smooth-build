@@ -8,7 +8,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public sealed abstract class AnnFuncS extends FuncS permits NatFuncS {
+public sealed abstract class AnnFuncS extends FuncS permits ByteFuncS, NatFuncS {
   private final Object ann;
 
   public AnnFuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, Object ann,

@@ -2,6 +2,7 @@ package org.smoothbuild.testing;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.io.ByteStreams.nullOutputStream;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
@@ -73,6 +74,8 @@ import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.compile.BytecodeLoader;
+import org.smoothbuild.compile.BytecodeMethodLoader;
 import org.smoothbuild.compile.CompilerProv;
 import org.smoothbuild.compile.TypeSbConv;
 import org.smoothbuild.db.Hash;
@@ -84,6 +87,7 @@ import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.install.TempManager;
+import org.smoothbuild.lang.base.define.ByteFuncS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.IfFuncS;
@@ -117,6 +121,7 @@ import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VarTS;
 import org.smoothbuild.lang.expr.BlobS;
+import org.smoothbuild.lang.expr.BytecodeS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
@@ -128,6 +133,8 @@ import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.load.FileLoader;
+import org.smoothbuild.load.JarClassLoaderProv;
+import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.ConsoleReporter;
@@ -169,6 +176,10 @@ public class TestingContext {
   private ModS internalMod;
   private TypeSF typeSF;
   private ConsoleReporter consoleReporter;
+  private BytecodeLoader bytecodeLoader;
+  private JarClassLoaderProv jarClassLoaderProv;
+  private MethodLoader methodLoader;
+  private BytecodeMethodLoader bytecodeMethodLoader;
 
   public Vm vm() {
     return vmProv().get(ImmutableMap.of());
@@ -192,7 +203,35 @@ public class TestingContext {
   }
 
   public CompilerProv compilerProv(FileLoader fileLoader) {
-    return new CompilerProv(typeShConv(), bytecodeF(), typingB(), fileLoader);
+    return new CompilerProv(typeShConv(), bytecodeF(), typingB(), fileLoader, bytecodeLoader());
+  }
+
+  private BytecodeLoader bytecodeLoader() {
+    if (bytecodeLoader == null) {
+      bytecodeLoader = new BytecodeLoader(bytecodeMethodLoader(), bytecodeF());
+    }
+    return bytecodeLoader;
+  }
+
+  private BytecodeMethodLoader bytecodeMethodLoader() {
+    if (bytecodeMethodLoader == null) {
+      bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader());
+    }
+    return bytecodeMethodLoader;
+  }
+
+  private MethodLoader methodLoader() {
+    if (methodLoader == null) {
+      methodLoader = new MethodLoader(jarClassLoaderProv());
+    }
+    return methodLoader;
+  }
+
+  private JarClassLoaderProv jarClassLoaderProv() {
+    if (jarClassLoaderProv == null) {
+      jarClassLoaderProv = new JarClassLoaderProv(bytecodeF(), getSystemClassLoader());
+    }
+    return jarClassLoaderProv;
   }
 
   public ParallelJobExecutor parallelJobExecutor() {
@@ -966,6 +1005,10 @@ public class TestingContext {
 
   // other smooth language thingies
 
+  public BytecodeS bytecodeS(StringS path, Loc loc) {
+    return new BytecodeS(path, loc);
+  }
+
   public NativeS nativeS() {
     return nativeS(1, stringS("implementation.Class"));
   }
@@ -1000,6 +1043,11 @@ public class TestingContext {
 
   private ItemS itemS(int line, TypeS type, String name, Optional<ExprS> defaultArg) {
     return new ItemS(type, modPath(), name, defaultArg, loc(line));
+  }
+
+  public ByteFuncS byteFuncS(BytecodeS ann, FuncTS type, ModPath modPath, String name,
+      NList<ItemS> params, Loc loc) {
+    return new ByteFuncS(ann, type, modPath, name, params, loc);
   }
 
   public DefValS defValS(String name, ExprS expr) {
@@ -1096,11 +1144,15 @@ public class TestingContext {
   }
 
   public static ModPath modPath() {
-    return ModPath.of(smoothFilePath());
+    return modPath(smoothFilePath());
   }
 
   public static ModPath importedModPath() {
-    return ModPath.of(importedFilePath());
+    return modPath(importedFilePath());
+  }
+
+  public static ModPath modPath(FilePath filePath) {
+    return ModPath.of(filePath);
   }
 
   public static Loc loc() {
