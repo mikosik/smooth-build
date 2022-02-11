@@ -16,7 +16,6 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.plugin.NativeApi;
@@ -28,35 +27,32 @@ import org.smoothbuild.vm.compute.Container;
 @Singleton
 public class MethodLoader {
   static final String NATIVE_METHOD_NAME = "func";
+  private final ClassLoaderProv classLoaderProv;
   private final HashMap<MethodB, Method> methodCache;
-  private final HashMap<BlobB, ClassLoader> classLoaderCache;
 
   @Inject
-  public MethodLoader() {
+  public MethodLoader(ClassLoaderProv classLoaderProv) {
+    this.classLoaderProv = classLoaderProv;
     this.methodCache = new HashMap<>();
-    this.classLoaderCache = new HashMap<>();
   }
 
-  public synchronized Method load(String name, MethodB methodB, ClassLoaderProv classLoaderProv)
-      throws MethodLoaderExc {
+  public synchronized Method load(String name, MethodB methodB) throws MethodLoaderExc {
     String qName = q(name);
     String classBinaryName = methodB.classBinaryName().toJ();
-    Method method = loadMethod(qName, methodB, classBinaryName, classLoaderProv);
+    Method method = loadMethod(qName, methodB, classBinaryName);
     assertMethodMatchesFuncRequirements(qName, methodB, method, classBinaryName);
     return method;
   }
 
-  private Method loadMethod(
-      String qName, MethodB methodB, String classBinaryName, ClassLoaderProv classLoaderProv)
+  private Method loadMethod(String qName, MethodB methodB, String classBinaryName)
       throws MethodLoaderExc {
     return computeIfAbsent(methodCache, methodB,
-        n -> findAndVerifyMethod(qName, methodB, classBinaryName, classLoaderProv));
+        n -> findAndVerifyMethod(qName, methodB, classBinaryName));
   }
 
-  private Method findAndVerifyMethod(
-      String qName, MethodB methodB, String classBinaryName, ClassLoaderProv classLoaderProv)
+  private Method findAndVerifyMethod(String qName, MethodB methodB, String classBinaryName)
       throws MethodLoaderExc {
-    var method = findMethod(qName, methodB, classBinaryName, classLoaderProv);
+    var method = findMethod(qName, methodB, classBinaryName);
     if (!isPublic(method)) {
       throw newLoadingExc(qName, classBinaryName, "Providing method is not public.");
     } else if (!isStatic(method)) {
@@ -69,10 +65,9 @@ public class MethodLoader {
     }
   }
 
-  private Method findMethod(
-      String qName, MethodB methodB, String classBinaryName, ClassLoaderProv classLoaderProv)
+  private Method findMethod(String qName, MethodB methodB, String classBinaryName)
       throws MethodLoaderExc {
-    var clazz = findClass(qName, methodB, classBinaryName, classLoaderProv);
+    var clazz = findClass(qName, methodB, classBinaryName);
     var declaredMethods = asList(clazz.getDeclaredMethods());
     var methods = filter(declaredMethods, m -> m.getName().equals(NATIVE_METHOD_NAME));
     return switch (methods.size()) {
@@ -93,12 +88,11 @@ public class MethodLoader {
         + "'func' methods.");
   }
 
-  private Class<?> findClass(
-      String qName, MethodB methodB, String classBinaryName, ClassLoaderProv classLoaderProv)
+  private Class<?> findClass(String qName, MethodB methodB, String classBinaryName)
       throws MethodLoaderExc {
     try {
-      return findClassLoader(methodB, classLoaderProv)
-          .loadClass(classBinaryName);
+      var classLoader = classLoaderProv.classLoaderFor(methodB.jar());
+      return classLoader.loadClass(classBinaryName);
     } catch (ClassNotFoundException e) {
       throw newLoadingExc(qName, classBinaryName, "Class not found in jar.");
     } catch (FileNotFoundException | ClassLoaderProvExc e) {
@@ -106,17 +100,6 @@ public class MethodLoader {
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
-  }
-
-  private ClassLoader findClassLoader(MethodB methodB, ClassLoaderProv classLoaderProv)
-      throws ClassLoaderProvExc, IOException {
-    var jar = methodB.jar();
-    var classLoader = classLoaderCache.get(jar);
-    if (classLoader == null) {
-      classLoader = classLoaderProv.classLoaderForJar(jar);
-      classLoaderCache.put(jar, classLoader);
-    }
-    return classLoader;
   }
 
   private static boolean hasContainerParam(Method method) {

@@ -1,6 +1,5 @@
 package org.smoothbuild.vm.job.algorithm;
 
-import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 
@@ -13,7 +12,6 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.vm.java.ClassLoaderProv;
 import org.smoothbuild.vm.java.MethodLoader;
 import org.smoothbuild.vm.java.MethodLoaderExc;
 
@@ -45,8 +43,7 @@ public class InvokeAlgorithm extends Algorithm {
   }
 
   private Output runImpl(Input input, NativeApi nativeApi) throws InvokeExc {
-    var classLoaderProv = new ClassLoaderProv(getSystemClassLoader(), nativeApi.factory());
-    var method = loadMethod(classLoaderProv);
+    var method = loadMethod();
     var result = invoke(method, input, nativeApi);
     var hasErrors = containsErrors(nativeApi.messages());
     if (result == null) {
@@ -71,9 +68,9 @@ public class InvokeAlgorithm extends Algorithm {
     nativeApi.log().error(q(name) + " has faulty native implementation: " + message);
   }
 
-  private Method loadMethod(ClassLoaderProv classLoaderProv) throws InvokeExc {
+  private Method loadMethod() throws InvokeExc {
     try {
-      return methodLoader.load(name, methodB, classLoaderProv);
+      return methodLoader.load(name, methodB);
     } catch (MethodLoaderExc e) {
       throw new InvokeExc(e);
     }
