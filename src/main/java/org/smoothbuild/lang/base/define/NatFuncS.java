@@ -28,17 +28,17 @@ public final class NatFuncS extends FuncS {
       return true;
     }
     return object instanceof NatFuncS that
+        && this.ann.equals(that.ann)
         && this.resT().equals(that.resT())
         && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
-        && this.ann.equals(that.ann)
         && this.loc().equals(that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resT(), modPath(), name(), params(), ann, loc());
+    return Objects.hash(ann, resT(), modPath(), name(), params(), loc());
   }
 
   @Override
