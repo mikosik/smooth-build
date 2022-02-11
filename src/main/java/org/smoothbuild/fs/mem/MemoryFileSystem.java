@@ -29,6 +29,9 @@ import okio.Sink;
 public class MemoryFileSystem implements FileSystem {
   private final MemoryDir root = new MemoryDir(null, PathS.root());
 
+  public MemoryFileSystem() {
+  }
+
   @Override
   public Path rootDirJPath() {
     return Path.of("in-memory");

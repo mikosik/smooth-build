@@ -314,7 +314,7 @@ public class TestingContext {
 
   public FileSystem computationCacheFileSystem() {
     if (computationCacheFileSystem == null) {
-      computationCacheFileSystem = new MemoryFileSystem();
+      computationCacheFileSystem = synchronizedMemoryFileSystem();
     }
     return computationCacheFileSystem;
   }
@@ -337,7 +337,7 @@ public class TestingContext {
 
   public FileSystem hashedDbFileSystem() {
     if (hashedDbFileSystem == null) {
-      hashedDbFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
+      hashedDbFileSystem = synchronizedMemoryFileSystem();
     }
     return hashedDbFileSystem;
   }
@@ -351,7 +351,7 @@ public class TestingContext {
 
   public FileSystem fullFileSystem() {
     if (fullFileSystem == null) {
-      fullFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
+      fullFileSystem = synchronizedMemoryFileSystem();
     }
     return fullFileSystem;
   }
@@ -1149,5 +1149,9 @@ public class TestingContext {
 
   private static String userFileMessagge(int line, String message) {
     return PRJ_MOD_FILE_NAME + ":" + line + ": " + message;
+  }
+
+  public static SynchronizedFileSystem synchronizedMemoryFileSystem() {
+    return new SynchronizedFileSystem(new MemoryFileSystem());
   }
 }

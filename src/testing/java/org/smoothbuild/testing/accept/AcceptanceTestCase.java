@@ -32,7 +32,6 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
-import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.lang.expr.TopRefS;
@@ -55,17 +54,17 @@ import com.google.inject.Singleton;
 import okio.BufferedSink;
 
 public class AcceptanceTestCase extends TestingContext {
-  private MemoryFileSystem slibFileSystem;
-  private MemoryFileSystem prjFileSystem;
+  private FileSystem slibFileSystem;
+  private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
   private Optional<Map<TopRefS, ValB>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
-    this.slibFileSystem = new MemoryFileSystem();
+    this.slibFileSystem = synchronizedMemoryFileSystem();
     createEmptySlibModules(slibFileSystem);
-    this.prjFileSystem = new MemoryFileSystem();
+    this.prjFileSystem = synchronizedMemoryFileSystem();
     this.memoryReporter = new MemoryReporter();
     this.injector = createInjector(slibFileSystem, prjFileSystem, memoryReporter);
   }
@@ -105,10 +104,14 @@ public class AcceptanceTestCase extends TestingContext {
   }
 
   protected void resetDiskData() {
-    prjFileSystem.delete(ARTIFACTS_PATH);
-    prjFileSystem.delete(TEMPORARY_PATH);
-    prjFileSystem.delete(COMPUTATION_CACHE_PATH);
-    prjFileSystem.delete(HASHED_DB_PATH);
+    try {
+      prjFileSystem.delete(ARTIFACTS_PATH);
+      prjFileSystem.delete(TEMPORARY_PATH);
+      prjFileSystem.delete(COMPUTATION_CACHE_PATH);
+      prjFileSystem.delete(HASHED_DB_PATH);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   protected ValB artifact() {
@@ -158,7 +161,7 @@ public class AcceptanceTestCase extends TestingContext {
     return prjFileSystem;
   }
 
-  private void createEmptySlibModules(MemoryFileSystem slibFileSystem) throws IOException {
+  private void createEmptySlibModules(FileSystem slibFileSystem) throws IOException {
     // SLIB_MODS has hardcoded list of standard library modules which are loaded
     // upon startup. Until modules are detected automatically we have to provide here
     // at least empty files.
@@ -207,7 +210,7 @@ public class AcceptanceTestCase extends TestingContext {
     }
 
     private static SynchronizedFileSystem newFileSystem(Path path) {
-      return new SynchronizedFileSystem(new MemoryFileSystem());
+      return synchronizedMemoryFileSystem();
     }
 
     @Provides
