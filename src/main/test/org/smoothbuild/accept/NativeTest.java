@@ -32,7 +32,7 @@ import org.smoothbuild.testing.nativefunc.ReturnStringStruct;
 import org.smoothbuild.testing.nativefunc.StringIdentity;
 import org.smoothbuild.testing.nativefunc.ThrowException;
 import org.smoothbuild.testing.nativefunc.ThrowRandomException;
-import org.smoothbuild.testing.nativefunc.WithoutContainer;
+import org.smoothbuild.testing.nativefunc.WithoutNativeApi;
 import org.smoothbuild.testing.nativefunc.WrongMethodName;
 
 public class NativeTest extends AcceptanceTestCase {
@@ -278,8 +278,8 @@ public class NativeTest extends AcceptanceTestCase {
 
       @Test
       public void does_not_have_container_as_first_param() throws Exception {
-        createUserNativeJar(WithoutContainer.class, ReturnAbc.class);
-        String className = WithoutContainer.class.getCanonicalName();
+        createUserNativeJar(WithoutNativeApi.class, ReturnAbc.class);
+        String className = WithoutNativeApi.class.getCanonicalName();
         createUserModule(format("""
             @Native("%s")
             String returnAbc();
