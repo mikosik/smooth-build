@@ -73,7 +73,6 @@ public class JobCreator {
   private final TaskCreator taskCreator;
   private final Map<Class<?>, Handler<?>> handler;
 
-  @Inject
   public JobCreator(NativeMethodLoader nativeMethodLoader, TypingB typing,
       ImmutableMap<ObjB, Nal> nals) {
     this(nativeMethodLoader, typing, nals, Task::new);
