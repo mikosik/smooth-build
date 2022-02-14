@@ -15,18 +15,18 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.Result;
 import org.smoothbuild.vm.compute.Container;
-import org.smoothbuild.vm.java.MethodProv;
+import org.smoothbuild.vm.java.MethodLoader;
 
 import com.google.common.collect.ImmutableList;
 
 public class NativeMethodLoader {
   static final String NATIVE_METHOD_NAME = "func";
-  private final MethodProv methodProv;
+  private final MethodLoader methodLoader;
   private final ConcurrentHashMap<MethodB, Result<Method>> cache;
 
   @Inject
-  public NativeMethodLoader(MethodProv methodProv) {
-    this.methodProv = methodProv;
+  public NativeMethodLoader(MethodLoader methodLoader) {
+    this.methodLoader = methodLoader;
     this.cache = new ConcurrentHashMap<>();
   }
 
@@ -37,7 +37,7 @@ public class NativeMethodLoader {
   private Result<Method> loadImpl(String name, MethodB methodB) {
     String classBinaryName = methodB.classBinaryName().toJ();
     String qName = q(name);
-    return methodProv.provide(methodB.jar(), classBinaryName, NATIVE_METHOD_NAME)
+    return methodLoader.provide(methodB.jar(), classBinaryName, NATIVE_METHOD_NAME)
         .validate(m -> validateSignature(m))
         .validate(m -> validateNativeResT(m, qName, methodB.type().res()))
         .validate(m -> validateNativeParamTs(m, qName, methodB.type().params()))

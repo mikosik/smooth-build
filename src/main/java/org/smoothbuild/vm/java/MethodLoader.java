@@ -17,12 +17,12 @@ import org.smoothbuild.util.collect.Result;
  * This class is thread-safe.
  */
 @Singleton
-public class MethodProv {
+public class MethodLoader {
   private final JarClassLoaderProv jarClassLoaderProv;
   private final ConcurrentHashMap<MethodSpec, Result<Method>> cache;
 
   @Inject
-  public MethodProv(JarClassLoaderProv jarClassLoaderProv) {
+  public MethodLoader(JarClassLoaderProv jarClassLoaderProv) {
     this.jarClassLoaderProv = jarClassLoaderProv;
     this.cache = new ConcurrentHashMap<>();
   }

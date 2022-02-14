@@ -17,7 +17,7 @@ import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.nativefunc.NonPublicMethod;
 import org.smoothbuild.testing.nativefunc.ReturnAbc;
 import org.smoothbuild.util.collect.Result;
-import org.smoothbuild.vm.java.MethodProv;
+import org.smoothbuild.vm.java.MethodLoader;
 
 public class NativeMethodLoaderTest extends TestingContext {
   @Test
@@ -34,7 +34,7 @@ public class NativeMethodLoaderTest extends TestingContext {
   }
 
   private void testCaching(Method method, Result<Method> resultMethod, Result<Method> expected) {
-    var methodProv = mock(MethodProv.class);
+    var methodProv = mock(MethodLoader.class);
     BlobB jar = blobB();
     String classBinaryName = "binary.name";
     when(methodProv.provide(jar, classBinaryName, method.getName()))

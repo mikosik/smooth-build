@@ -14,7 +14,7 @@ import org.smoothbuild.testing.nativefunc.NonPublicMethod;
 import org.smoothbuild.testing.nativefunc.ReturnAbc;
 import org.smoothbuild.util.collect.Result;
 
-public class MethodProvTest extends TestingContext {
+public class MethodLoaderTest extends TestingContext {
   @Test
   public void method_is_cached() throws Exception {
     testCaching(ReturnAbc.class);
@@ -38,7 +38,7 @@ public class MethodProvTest extends TestingContext {
         .when(classLoaderProv)
         .classLoaderFor(jar);
 
-    var methodLoader = new MethodProv(classLoaderProv);
+    var methodLoader = new MethodLoader(classLoaderProv);
     Result<Method> method1 = methodLoader.provide(jar, className, "func");
     Result<Method> method2 = methodLoader.provide(jar, className, "func");
     assertThat(method1)
