@@ -28,7 +28,7 @@ import org.smoothbuild.util.collect.Result;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.job.JobCreator.TaskCreator;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
-import org.smoothbuild.vm.job.algorithm.MethodLoader;
+import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.job.job.Job;
 import org.smoothbuild.vm.job.job.Task;
@@ -38,7 +38,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class VmTest extends TestingContext {
-  private final MethodLoader methodLoader = mock(MethodLoader.class);
+  private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private TaskCreator taskCreator;
 
   @Nested
@@ -232,7 +232,7 @@ public class VmTest extends TestingContext {
     public void argless() throws Exception {
       var method = methodB(methodTB(intTB(), list()), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method);
-      when(methodLoader.load(any(), eq(method)))
+      when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(Result.of(VmTest.class.getMethod("returnInt", NativeApi.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(intB(173));
@@ -242,7 +242,7 @@ public class VmTest extends TestingContext {
     public void with_param() throws Exception {
       var method = methodB(methodTB(intTB(), list(intTB())), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method, intB(33));
-      when(methodLoader.load(any(), eq(method)))
+      when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(Result.of(
               VmTest.class.getMethod("returnIntParam", NativeApi.class, IntB.class)));
       assertThat(evaluate(invoke))
@@ -254,7 +254,7 @@ public class VmTest extends TestingContext {
       var methodT = methodTB(arrayTB(intTB()), list(arrayTB(intTB())));
       var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(arrayTB(intTB()), method, arrayB(nothingTB()));
-      when(methodLoader.load(any(), eq(method)))
+      when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(Result.of(
               VmTest.class.getMethod("returnArrayParamWithCheck", NativeApi.class, ArrayB.class)));
       assertThat(evaluate(invoke))
@@ -266,7 +266,7 @@ public class VmTest extends TestingContext {
       var methodT = methodTB(arrayTB(nothingTB()), list());
       var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(arrayTB(intTB()), method);
-      when(methodLoader.load(any(), eq(method)))
+      when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(Result.of(VmTest.class.getMethod("returnNothingArray", NativeApi.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(arrayB(intTB()));
@@ -279,7 +279,7 @@ public class VmTest extends TestingContext {
         var methodT = methodTB(arrayTB(b), list(b));
         var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
         try {
-          when(methodLoader.load(any(), eq(method)))
+          when(nativeMethodLoader.load(any(), eq(method)))
               .thenReturn(Result.of(
                   VmTest.class.getMethod("returnSingleElemArray", NativeApi.class, ValB.class)));
         } catch (NoSuchMethodException e) {
@@ -431,7 +431,7 @@ public class VmTest extends TestingContext {
   }
 
   private ObjB evaluate(ObjB obj) {
-    var vm = vmProv(methodLoader).get(ImmutableMap.of());
+    var vm = vmProv(nativeMethodLoader).get(ImmutableMap.of());
     return evaluate(vm, obj);
   }
 

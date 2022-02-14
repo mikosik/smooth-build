@@ -16,12 +16,13 @@ import org.smoothbuild.plugin.NativeApi;
 public class InvokeAlgorithm extends Algorithm {
   private final MethodB methodB;
   private final String name;
-  private final MethodLoader methodLoader;
+  private final NativeMethodLoader nativeMethodLoader;
 
-  public InvokeAlgorithm(TypeB outputT, String name, MethodB method, MethodLoader methodLoader) {
+  public InvokeAlgorithm(TypeB outputT, String name, MethodB method,
+      NativeMethodLoader methodLoader) {
     super(outputT, method.isPure().toJ());
     this.name = name;
-    this.methodLoader = methodLoader;
+    this.nativeMethodLoader = methodLoader;
     this.methodB = method;
   }
 
@@ -32,7 +33,7 @@ public class InvokeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    return methodLoader.load(name, methodB)
+    return nativeMethodLoader.load(name, methodB)
         .map(m -> invokeMethod(m, input, nativeApi))
         .orElse(e -> logErrorAndReturnNullOutput(nativeApi, e));
   }

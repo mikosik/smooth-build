@@ -139,7 +139,7 @@ import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.java.FileLoader;
 import org.smoothbuild.vm.job.JobCreatorProv;
-import org.smoothbuild.vm.job.algorithm.MethodLoader;
+import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.parallel.ExecutionReporter;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 
@@ -175,11 +175,11 @@ public class TestingContext {
   }
 
   public VmProv vmProv() {
-    return vmProv((MethodLoader) null);
+    return vmProv((NativeMethodLoader) null);
   }
 
-  public VmProv vmProv(MethodLoader methodLoader) {
-    return vmProv(new JobCreatorProv(methodLoader, typeBF(), typingB()));
+  public VmProv vmProv(NativeMethodLoader nativeMethodLoader) {
+    return vmProv(new JobCreatorProv(nativeMethodLoader, typeBF(), typingB()));
   }
 
   public VmProv vmProv(JobCreatorProv jobCreatorProv) {

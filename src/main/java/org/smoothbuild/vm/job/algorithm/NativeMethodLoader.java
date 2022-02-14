@@ -19,13 +19,13 @@ import org.smoothbuild.vm.java.MethodProv;
 
 import com.google.common.collect.ImmutableList;
 
-public class MethodLoader {
+public class NativeMethodLoader {
   static final String NATIVE_METHOD_NAME = "func";
   private final MethodProv methodProv;
   private final ConcurrentHashMap<MethodB, Result<Method>> cache;
 
   @Inject
-  public MethodLoader(MethodProv methodProv) {
+  public NativeMethodLoader(MethodProv methodProv) {
     this.methodProv = methodProv;
     this.cache = new ConcurrentHashMap<>();
   }

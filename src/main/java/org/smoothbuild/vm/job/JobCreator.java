@@ -48,7 +48,7 @@ import org.smoothbuild.vm.job.algorithm.Algorithm;
 import org.smoothbuild.vm.job.algorithm.CombineAlgorithm;
 import org.smoothbuild.vm.job.algorithm.ConvertAlgorithm;
 import org.smoothbuild.vm.job.algorithm.InvokeAlgorithm;
-import org.smoothbuild.vm.job.algorithm.MethodLoader;
+import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.job.algorithm.SelectAlgorithm;
 import org.smoothbuild.vm.job.job.CallJob;
@@ -67,20 +67,21 @@ import com.google.common.collect.ImmutableMap;
 public class JobCreator {
   private static final String PARENTHESES = "()";
   private static final String PARENTHESES_INVOKE = "()~";
-  private final MethodLoader methodLoader;
+  private final NativeMethodLoader nativeMethodLoader;
   private final TypingB typing;
   private final ImmutableMap<ObjB, Nal> nals;
   private final TaskCreator taskCreator;
   private final Map<Class<?>, Handler<?>> handler;
 
   @Inject
-  public JobCreator(MethodLoader methodLoader, TypingB typing, ImmutableMap<ObjB, Nal> nals) {
-    this(methodLoader, typing, nals, Task::new);
+  public JobCreator(NativeMethodLoader nativeMethodLoader, TypingB typing,
+      ImmutableMap<ObjB, Nal> nals) {
+    this(nativeMethodLoader, typing, nals, Task::new);
   }
 
-  public JobCreator(MethodLoader methodLoader, TypingB typing, ImmutableMap<ObjB, Nal> nals,
-      TaskCreator taskCreator) {
-    this.methodLoader = methodLoader;
+  public JobCreator(NativeMethodLoader nativeMethodLoader, TypingB typing,
+      ImmutableMap<ObjB, Nal> nals, TaskCreator taskCreator) {
+    this.nativeMethodLoader = nativeMethodLoader;
     this.typing = typing;
     this.nals = nals;
     this.taskCreator = taskCreator;
@@ -268,7 +269,7 @@ public class JobCreator {
     var argJs = eagerJobsFor(invokeData.args().items(), scope, vars);
     var newVars = inferVarsInCallLike(methodT, map(argJs, Job::type));
     var actualResT = mapClosedVarsLower(methodT.res(), newVars);
-    var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), methodLoader);
+    var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), nativeMethodLoader);
     var info = new TaskInfo(INVOKE, name + PARENTHESES_INVOKE, nal.loc());
     var actualArgTs = map(methodT.params(), t -> mapClosedVarsLower(t, newVars));
     var convertedArgJs = convertJobs(actualArgTs, nal, argJs);

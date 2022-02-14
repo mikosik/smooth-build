@@ -25,11 +25,11 @@ import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Result;
 import org.smoothbuild.vm.java.FileLoader;
-import org.smoothbuild.vm.job.algorithm.MethodLoader;
+import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
 
 public class EvaluatorTest  extends TestingContext {
   private final FileLoader fileLoader = mock(FileLoader.class);
-  private final MethodLoader methodLoader = mock(MethodLoader.class);
+  private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
 
   @Nested
   class _values {
@@ -107,7 +107,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(any(), any()))
+      when(nativeMethodLoader.load(any(), any()))
           .thenReturn(Result.of(EvaluatorTest.class.getMethod("returnInt", NativeApi.class)));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(173));
@@ -121,7 +121,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(any(), any()))
+      when(nativeMethodLoader.load(any(), any()))
           .thenReturn(Result.of(
               EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, IntB.class)));
       assertThat(evaluate(callS, nList(funcS)))
@@ -136,7 +136,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(any(), any()))
+      when(nativeMethodLoader.load(any(), any()))
           .thenReturn(Result.of(
               EvaluatorTest.class.getMethod("returnArrayParam", NativeApi.class, ArrayB.class)));
       assertThat(evaluate(callS, nList(funcS)))
@@ -203,6 +203,6 @@ public class EvaluatorTest  extends TestingContext {
   }
 
   private Evaluator newEvaluator() {
-    return new Evaluator(compilerProv(fileLoader), vmProv(methodLoader), reporter());
+    return new Evaluator(compilerProv(fileLoader), vmProv(nativeMethodLoader), reporter());
   }
 }
