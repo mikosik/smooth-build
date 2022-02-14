@@ -21,8 +21,8 @@ import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
+import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.vm.java.FileLoader;
 
 import com.google.common.collect.ImmutableList;
 

@@ -12,12 +12,12 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.nativefunc.NonPublicMethod;
 import org.smoothbuild.testing.nativefunc.ReturnAbc;
 import org.smoothbuild.util.collect.Result;
-import org.smoothbuild.vm.java.MethodLoader;
 
 public class NativeMethodLoaderTest extends TestingContext {
   @Test

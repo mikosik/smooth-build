@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.lang.base.define.DefsS;
-import org.smoothbuild.vm.java.FileLoader;
+import org.smoothbuild.load.FileLoader;
 
 public class CompilerProv {
   private final TypeSbConv typeSbConv;

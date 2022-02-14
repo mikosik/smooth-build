@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.java;
+package org.smoothbuild.load;
 
 import static org.smoothbuild.fs.base.PathState.FILE;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;

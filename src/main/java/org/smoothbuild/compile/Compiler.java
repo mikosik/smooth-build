@@ -59,8 +59,8 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.vm.java.FileLoader;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

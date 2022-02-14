@@ -12,10 +12,10 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.Result;
 import org.smoothbuild.vm.compute.Container;
-import org.smoothbuild.vm.java.MethodLoader;
 
 import com.google.common.collect.ImmutableList;
 

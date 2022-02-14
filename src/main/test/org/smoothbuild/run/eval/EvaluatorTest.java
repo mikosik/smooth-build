@@ -20,11 +20,11 @@ import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.expr.ExprS;
+import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Result;
-import org.smoothbuild.vm.java.FileLoader;
 import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
 
 public class EvaluatorTest  extends TestingContext {

@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.java;
+package org.smoothbuild.load;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.function.Function.identity;

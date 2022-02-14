@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.java;
+package org.smoothbuild.load;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.util.collect.Lists.filter;

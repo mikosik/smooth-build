@@ -14,8 +14,6 @@ import static org.smoothbuild.vm.job.job.TaskKind.SELECT;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;

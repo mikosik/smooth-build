@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.java;
+package org.smoothbuild.load;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.doReturn;
