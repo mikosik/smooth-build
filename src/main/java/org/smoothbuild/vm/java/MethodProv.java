@@ -2,17 +2,16 @@ package org.smoothbuild.vm.java;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.util.collect.Lists.filter;
-import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.util.collect.Result;
 
 /**
  * This class is thread-safe.
@@ -20,52 +19,59 @@ import org.smoothbuild.bytecode.obj.val.BlobB;
 @Singleton
 public class MethodProv {
   private final ClassLoaderProv classLoaderProv;
-  private final HashMap<MethodSpec, Method> methodCache;
+  private final ConcurrentHashMap<MethodSpec, Result<Method>> cache;
 
   @Inject
   public MethodProv(ClassLoaderProv classLoaderProv) {
     this.classLoaderProv = classLoaderProv;
-    this.methodCache = new HashMap<>();
+    this.cache = new ConcurrentHashMap<>();
   }
 
-  public synchronized Method provide(BlobB jar, String classBinaryName, String methodName)
-      throws MethodProvExc {
+  public synchronized Result<Method> provide(BlobB jar, String classBinaryName, String methodName) {
     var methodSpec = new MethodSpec(jar, classBinaryName, methodName);
-    return computeIfAbsent(methodCache, methodSpec, n -> findMethod(methodSpec));
+    return cache.computeIfAbsent(methodSpec, this::findMethod);
   }
 
-  private Method findMethod(MethodSpec methodSpec) throws MethodProvExc {
-    var clazz = findClass(methodSpec);
-    var declaredMethods = asList(clazz.getDeclaredMethods());
-    var methods = filter(declaredMethods, m -> m.getName().equals(methodSpec.methodName()));
-    return switch (methods.size()) {
-      case 0 -> throw newMissingMethodExc(methodSpec);
-      case 1 -> methods.get(0);
-      default -> throw newOverloadedMethodExc(methodSpec);
-    };
+  private Result<Method> findMethod(MethodSpec methodSpec) {
+    return findClass(methodSpec)
+        .flatMap(c -> findMethod(methodSpec, c));
   }
 
-  private Class<?> findClass(MethodSpec methodSpec) throws MethodProvExc {
+  private Result<Class<?>> findClass(MethodSpec methodSpec) {
     try {
-      var classLoader = classLoaderProv.classLoaderFor(methodSpec.jar());
-      return classLoader.loadClass(methodSpec.classBinaryName());
-    } catch (ClassNotFoundException e) {
-      throw new MethodProvExc("Class not found in jar.");
-    } catch (FileNotFoundException | ClassLoaderProvExc e) {
-      throw new MethodProvExc(e.getMessage(), e);
+      return classLoaderProv.classLoaderFor(methodSpec.jar())
+          .flatMap(classLoader -> loadClass(classLoader, methodSpec));
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
 
-  private static MethodProvExc newMissingMethodExc(MethodSpec methodSpec) {
-    return new MethodProvExc("Class '" + methodSpec.classBinaryName() + "' does not have '"
-        + methodSpec.methodName() + "' method.");
+  private Result<Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
+    try {
+      return Result.of(classLoader.loadClass(methodSpec.classBinaryName));
+    } catch (ClassNotFoundException e) {
+      return Result.error("Class not found in jar.");
+    }
   }
 
-  private static MethodProvExc newOverloadedMethodExc(MethodSpec methodSpec) {
-    return new MethodProvExc("Class '" + methodSpec.classBinaryName + "' has more than one '"
-        + methodSpec.methodName() +  "' method.");
+  private static Result<Method> findMethod(MethodSpec methodSpec, Class<?> clazz) {
+    var declaredMethods = asList(clazz.getDeclaredMethods());
+    var methods = filter(declaredMethods, m -> m.getName().equals(methodSpec.methodName()));
+    return switch (methods.size()) {
+      case 0 -> missingMethodError(methodSpec);
+      case 1 -> Result.of(methods.get(0));
+      default -> overloadedMethodError(methodSpec);
+    };
+  }
+
+  private static Result<Method> missingMethodError(MethodSpec methodSpec) {
+    return Result.error("Class '%s' does not have '%s' method."
+        .formatted(methodSpec.classBinaryName(), methodSpec.methodName()));
+  }
+
+  private static Result<Method> overloadedMethodError(MethodSpec methodSpec) {
+    return Result.error("Class '%s' has more than one '%s' method."
+        .formatted(methodSpec.classBinaryName, methodSpec.methodName()));
   }
 
   private record MethodSpec(BlobB jar, String classBinaryName, String methodName) {}

@@ -23,6 +23,7 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.collect.Result;
 import org.smoothbuild.vm.java.FileLoader;
 import org.smoothbuild.vm.job.algorithm.MethodLoader;
 
@@ -107,7 +108,7 @@ public class EvaluatorTest  extends TestingContext {
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
       when(methodLoader.load(any(), any()))
-          .thenReturn(EvaluatorTest.class.getMethod("returnInt", NativeApi.class));
+          .thenReturn(Result.of(EvaluatorTest.class.getMethod("returnInt", NativeApi.class)));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(173));
     }
@@ -121,8 +122,8 @@ public class EvaluatorTest  extends TestingContext {
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
       when(methodLoader.load(any(), any()))
-          .thenReturn(EvaluatorTest.class.getMethod(
-              "returnIntParam", NativeApi.class, IntB.class));
+          .thenReturn(Result.of(
+              EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, IntB.class)));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(77));
     }
@@ -136,8 +137,8 @@ public class EvaluatorTest  extends TestingContext {
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
       when(methodLoader.load(any(), any()))
-          .thenReturn(EvaluatorTest.class.getMethod(
-              "returnArrayParam", NativeApi.class, ArrayB.class));
+          .thenReturn(Result.of(
+              EvaluatorTest.class.getMethod("returnArrayParam", NativeApi.class, ArrayB.class)));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(arrayB(intTB()));
     }

@@ -12,7 +12,6 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.vm.job.algorithm.MethodLoader.MethodLoaderExc;
 
 public class InvokeAlgorithm extends Algorithm {
   private final MethodB methodB;
@@ -32,17 +31,13 @@ public class InvokeAlgorithm extends Algorithm {
   }
 
   @Override
-  public Output run(Input input, NativeApi nativeApi) throws Exception {
-    try {
-      return runImpl(input, nativeApi);
-    } catch (InvokeExc e) {
-      nativeApi.log().error(e.getMessage());
-      return new Output(null, nativeApi.messages());
-    }
+  public Output run(Input input, NativeApi nativeApi) {
+    return methodLoader.load(name, methodB)
+        .map(m -> invokeMethod(m, input, nativeApi))
+        .orElse(e -> logErrorAndReturnNullOutput(nativeApi, e));
   }
 
-  private Output runImpl(Input input, NativeApi nativeApi) throws InvokeExc {
-    var method = loadMethod();
+  private Output invokeMethod(Method method, Input input, NativeApi nativeApi) {
     var result = invoke(method, input, nativeApi);
     var hasErrors = containsErrors(nativeApi.messages());
     if (result == null) {
@@ -61,18 +56,6 @@ public class InvokeAlgorithm extends Algorithm {
       return new Output(null, nativeApi.messages());
     }
     return new Output(result, nativeApi.messages());
-  }
-
-  private void logFaultyImplementationError(NativeApi nativeApi, String message) {
-    nativeApi.log().error(q(name) + " has faulty native implementation: " + message);
-  }
-
-  private Method loadMethod() throws InvokeExc {
-    try {
-      return methodLoader.load(name, methodB);
-    } catch (MethodLoaderExc e) {
-      throw new InvokeExc(e);
-    }
   }
 
   private ValB invoke(Method method, Input input, NativeApi nativeApi) {
@@ -95,9 +78,12 @@ public class InvokeAlgorithm extends Algorithm {
     return nativeArgs;
   }
 
-  private static class InvokeExc extends Exception {
-    public InvokeExc(Throwable e) {
-      super(e.getMessage(), e);
-    }
+  private void logFaultyImplementationError(NativeApi nativeApi, String message) {
+    nativeApi.log().error(q(name) + " has faulty native implementation: " + message);
+  }
+
+  private static Output logErrorAndReturnNullOutput(NativeApi nativeApi, String message) {
+    nativeApi.log().error(message);
+    return new Output(null, nativeApi.messages());
   }
 }

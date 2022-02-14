@@ -6,28 +6,43 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.lang.reflect.Method;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.nativefunc.NonPublicMethod;
 import org.smoothbuild.testing.nativefunc.ReturnAbc;
+import org.smoothbuild.util.collect.Result;
 
 public class MethodProvTest extends TestingContext {
   @Test
   public void method_is_cached() throws Exception {
+    testCaching(ReturnAbc.class);
+  }
+
+  @Test
+  public void loading_method_error_is_cached() throws Exception {
+    testCaching(NonPublicMethod.class);
+  }
+
+  private void testCaching(Class<?> clazz) throws Exception {
     var className = "className";
     var jar = blobB();
 
     var classLoader = mock(ClassLoader.class);
-    doReturn(ReturnAbc.class)
+    doReturn(clazz)
         .when(classLoader)
         .loadClass(className);
     var classLoaderProv = mock(ClassLoaderProv.class);
-    doReturn(classLoader)
+    doReturn(Result.of(classLoader))
         .when(classLoaderProv)
         .classLoaderFor(jar);
 
     var methodLoader = new MethodProv(classLoaderProv);
-    assertThat(methodLoader.provide(jar, className, "func"))
-        .isSameInstanceAs(methodLoader.provide(jar, className, "func"));
+    Result<Method> method1 = methodLoader.provide(jar, className, "func");
+    Result<Method> method2 = methodLoader.provide(jar, className, "func");
+    assertThat(method1)
+        .isSameInstanceAs(method2);
     verify(classLoader, times(1))
         .loadClass(className);
   }

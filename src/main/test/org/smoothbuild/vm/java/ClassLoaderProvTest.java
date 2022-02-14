@@ -13,7 +13,7 @@ public class ClassLoaderProvTest extends TestingContext {
     var jar = blobBJarWithJavaByteCode(MyClass.class);
     var classLoaderProv = new ClassLoaderProv(bytecodeF(), getPlatformClassLoader());
     var classLoader = classLoaderProv.classLoaderFor(jar);
-    var clazz = classLoader.loadClass(MyClass.class.getName());
+    var clazz = classLoader.value().loadClass(MyClass.class.getName());
     assertThat(clazz)
         .isNotSameInstanceAs(MyClass.class);
     assertThat(clazz.getMethod("method").invoke(null))

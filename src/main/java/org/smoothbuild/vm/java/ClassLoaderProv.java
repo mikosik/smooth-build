@@ -5,6 +5,7 @@ import static java.util.function.Function.identity;
 import static org.smoothbuild.plugin.UnzipBlob.unzipBlob;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
+import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 
@@ -18,6 +19,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.util.collect.Result;
 import org.smoothbuild.util.io.DuplicateFileNameExc;
 import org.smoothbuild.util.io.IllegalZipEntryFileNameExc;
 
@@ -29,8 +31,8 @@ import net.lingala.zip4j.exception.ZipException;
 @Singleton
 public class ClassLoaderProv {
   private final BytecodeF bytecodeF;
-  private final HashMap<BlobB, ClassLoader> classLoaderCache;
   private final ClassLoader parentClassLoader;
+  private final HashMap<BlobB, Result<ClassLoader>> cache;
 
   @Inject
   public ClassLoaderProv(BytecodeF bytecodeF) {
@@ -39,27 +41,22 @@ public class ClassLoaderProv {
 
   public ClassLoaderProv(BytecodeF bytecodeF, ClassLoader parentClassLoader) {
     this.bytecodeF = bytecodeF;
-    this.classLoaderCache = new HashMap<>();
     this.parentClassLoader = parentClassLoader;
+    this.cache = new HashMap<>();
   }
 
-  public synchronized ClassLoader classLoaderFor(BlobB jar) throws ClassLoaderProvExc, IOException {
-    var classLoader = classLoaderCache.get(jar);
-    if (classLoader == null) {
-      classLoader = newClassLoader(parentClassLoader, jar);
-      classLoaderCache.put(jar, classLoader);
-    }
-    return classLoader;
+  public synchronized Result<ClassLoader> classLoaderFor(BlobB jar) throws IOException {
+    return computeIfAbsent(cache, jar, j -> newClassLoader(parentClassLoader, j));
   }
 
-  private ClassLoader newClassLoader(ClassLoader parentClassLoader, BlobB jar)
-      throws IOException, ClassLoaderProvExc {
+  private Result<ClassLoader> newClassLoader(ClassLoader parentClassLoader, BlobB jar)
+      throws IOException {
     try {
       var files = unzipBlob(bytecodeF, jar, s -> true);
       var filesMap = toMap(files.elems(TupleB.class), f -> filePath(f).toJ(), identity());
-      return classLoader(parentClassLoader, filesMap);
+      return Result.of(classLoader(parentClassLoader, filesMap));
     } catch (DuplicateFileNameExc | IllegalZipEntryFileNameExc | ZipException e) {
-      throw new ClassLoaderProvExc("Error unpacking jar with native code: " + e.getMessage());
+      return Result.error("Error unpacking jar with native code: " + e.getMessage());
     }
   }
 
