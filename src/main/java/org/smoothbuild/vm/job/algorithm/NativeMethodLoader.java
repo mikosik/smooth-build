@@ -19,6 +19,9 @@ import org.smoothbuild.vm.compute.Container;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class is thread-safe.
+ */
 public class NativeMethodLoader {
   static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
