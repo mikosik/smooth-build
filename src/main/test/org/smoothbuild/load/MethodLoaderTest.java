@@ -39,8 +39,9 @@ public class MethodLoaderTest extends TestingContext {
         .classLoaderFor(jar);
 
     var methodLoader = new MethodLoader(classLoaderProv);
-    Result<Method> method1 = methodLoader.provide(jar, className, "func");
-    Result<Method> method2 = methodLoader.provide(jar, className, "func");
+    var methodSpec = new MethodSpec(jar, className, "func");
+    Result<Method> method1 = methodLoader.provide(methodSpec);
+    Result<Method> method2 = methodLoader.provide(methodSpec);
     assertThat(method1)
         .isSameInstanceAs(method2);
     verify(classLoader, times(1))

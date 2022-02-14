@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.util.collect.Result;
 
 /**
@@ -27,8 +26,7 @@ public class MethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public synchronized Result<Method> provide(BlobB jar, String classBinaryName, String methodName) {
-    var methodSpec = new MethodSpec(jar, classBinaryName, methodName);
+  public synchronized Result<Method> provide(MethodSpec methodSpec) {
     return cache.computeIfAbsent(methodSpec, this::findMethod);
   }
 
@@ -48,7 +46,7 @@ public class MethodLoader {
 
   private Result<Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
     try {
-      return Result.of(classLoader.loadClass(methodSpec.classBinaryName));
+      return Result.of(classLoader.loadClass(methodSpec.classBinaryName()));
     } catch (ClassNotFoundException e) {
       return Result.error("Class not found in jar.");
     }
@@ -71,8 +69,6 @@ public class MethodLoader {
 
   private static Result<Method> overloadedMethodError(MethodSpec methodSpec) {
     return Result.error("Class '%s' has more than one '%s' method."
-        .formatted(methodSpec.classBinaryName, methodSpec.methodName()));
+        .formatted(methodSpec.classBinaryName(), methodSpec.methodName()));
   }
-
-  private record MethodSpec(BlobB jar, String classBinaryName, String methodName) {}
 }

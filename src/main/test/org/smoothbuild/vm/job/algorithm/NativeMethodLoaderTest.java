@@ -11,8 +11,8 @@ import static org.smoothbuild.vm.job.algorithm.NativeMethodLoader.NATIVE_METHOD_
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.load.MethodLoader;
+import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.nativefunc.NonPublicMethod;
@@ -35,9 +35,10 @@ public class NativeMethodLoaderTest extends TestingContext {
 
   private void testCaching(Method method, Result<Method> resultMethod, Result<Method> expected) {
     var methodProv = mock(MethodLoader.class);
-    BlobB jar = blobB();
-    String classBinaryName = "binary.name";
-    when(methodProv.provide(jar, classBinaryName, method.getName()))
+    var jar = blobB();
+    var classBinaryName = "binary.name";
+    var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
+    when(methodProv.provide(methodSpec))
         .thenReturn(resultMethod);
 
     var methodLoader = new NativeMethodLoader(methodProv);
@@ -50,6 +51,6 @@ public class NativeMethodLoaderTest extends TestingContext {
     assertThat(resultMethod1)
         .isSameInstanceAs(resultMethod2);
     verify(methodProv, times(1))
-        .provide(jar, classBinaryName, method.getName());
+        .provide(methodSpec);
   }
 }

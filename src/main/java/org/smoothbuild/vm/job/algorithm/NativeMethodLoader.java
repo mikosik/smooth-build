@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.load.MethodLoader;
+import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.Result;
 import org.smoothbuild.vm.compute.Container;
@@ -38,9 +39,10 @@ public class NativeMethodLoader {
   }
 
   private Result<Method> loadImpl(String name, MethodB methodB) {
-    String classBinaryName = methodB.classBinaryName().toJ();
-    String qName = q(name);
-    return methodLoader.provide(methodB.jar(), classBinaryName, NATIVE_METHOD_NAME)
+    var classBinaryName = methodB.classBinaryName().toJ();
+    var qName = q(name);
+    var methodSpec = new MethodSpec(methodB.jar(), classBinaryName, NATIVE_METHOD_NAME);
+    return methodLoader.provide(methodSpec)
         .validate(m -> validateSignature(m))
         .validate(m -> validateNativeResT(m, qName, methodB.type().res()))
         .validate(m -> validateNativeParamTs(m, qName, methodB.type().params()))
