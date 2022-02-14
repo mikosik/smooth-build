@@ -26,7 +26,7 @@ public class MethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public synchronized Result<Method> provide(MethodSpec methodSpec) {
+  public Result<Method> provide(MethodSpec methodSpec) {
     return cache.computeIfAbsent(methodSpec, this::findMethod);
   }
 
