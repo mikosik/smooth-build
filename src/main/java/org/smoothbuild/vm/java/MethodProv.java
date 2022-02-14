@@ -18,12 +18,12 @@ import org.smoothbuild.util.collect.Result;
  */
 @Singleton
 public class MethodProv {
-  private final ClassLoaderProv classLoaderProv;
+  private final JarClassLoaderProv jarClassLoaderProv;
   private final ConcurrentHashMap<MethodSpec, Result<Method>> cache;
 
   @Inject
-  public MethodProv(ClassLoaderProv classLoaderProv) {
-    this.classLoaderProv = classLoaderProv;
+  public MethodProv(JarClassLoaderProv jarClassLoaderProv) {
+    this.jarClassLoaderProv = jarClassLoaderProv;
     this.cache = new ConcurrentHashMap<>();
   }
 
@@ -39,7 +39,7 @@ public class MethodProv {
 
   private Result<Class<?>> findClass(MethodSpec methodSpec) {
     try {
-      return classLoaderProv.classLoaderFor(methodSpec.jar())
+      return jarClassLoaderProv.classLoaderFor(methodSpec.jar())
           .flatMap(classLoader -> loadClass(classLoader, methodSpec));
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);

@@ -33,7 +33,7 @@ public class MethodProvTest extends TestingContext {
     doReturn(clazz)
         .when(classLoader)
         .loadClass(className);
-    var classLoaderProv = mock(ClassLoaderProv.class);
+    var classLoaderProv = mock(JarClassLoaderProv.class);
     doReturn(Result.of(classLoader))
         .when(classLoaderProv)
         .classLoaderFor(jar);

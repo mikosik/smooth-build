@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.nativefunc.ReturnAbc;
 
-public class ClassLoaderProvTest extends TestingContext {
+public class JarClassLoaderProvTest extends TestingContext {
   @Test
   public void provided_classloader_can_load_class_and_its_method() throws Exception {
     var jar = blobBJarWithJavaByteCode(MyClass.class);
-    var classLoaderProv = new ClassLoaderProv(bytecodeF(), getPlatformClassLoader());
+    var classLoaderProv = new JarClassLoaderProv(bytecodeF(), getPlatformClassLoader());
     var classLoader = classLoaderProv.classLoaderFor(jar);
     var clazz = classLoader.value().loadClass(MyClass.class.getName());
     assertThat(clazz)
@@ -29,7 +29,7 @@ public class ClassLoaderProvTest extends TestingContext {
   @Test
   public void classloader_is_cached() throws Exception {
     var jar = blobBJarWithJavaByteCode(ReturnAbc.class);
-    var classLoaderProv = new ClassLoaderProv(bytecodeF(), getPlatformClassLoader());
+    var classLoaderProv = new JarClassLoaderProv(bytecodeF(), getPlatformClassLoader());
     var classLoader1 = classLoaderProv.classLoaderFor(jar);
     var classLoader2 = classLoaderProv.classLoaderFor(jar);
     assertThat(classLoader1)

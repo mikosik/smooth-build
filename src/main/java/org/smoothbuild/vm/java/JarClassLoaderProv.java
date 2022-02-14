@@ -29,17 +29,17 @@ import net.lingala.zip4j.exception.ZipException;
  * This class is thread-safe.
  */
 @Singleton
-public class ClassLoaderProv {
+public class JarClassLoaderProv {
   private final BytecodeF bytecodeF;
   private final ClassLoader parentClassLoader;
   private final HashMap<BlobB, Result<ClassLoader>> cache;
 
   @Inject
-  public ClassLoaderProv(BytecodeF bytecodeF) {
+  public JarClassLoaderProv(BytecodeF bytecodeF) {
     this(bytecodeF, getSystemClassLoader());
   }
 
-  public ClassLoaderProv(BytecodeF bytecodeF, ClassLoader parentClassLoader) {
+  public JarClassLoaderProv(BytecodeF bytecodeF, ClassLoader parentClassLoader) {
     this.bytecodeF = bytecodeF;
     this.parentClassLoader = parentClassLoader;
     this.cache = new HashMap<>();
