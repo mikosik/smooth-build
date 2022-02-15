@@ -54,7 +54,7 @@ public class NativeMethodLoader {
       return "Providing method is not public.";
     } else if (!isStatic(method)) {
       return "Providing method is not static.";
-    } else if (!hasContainerParam(method)) {
+    } else if (!hasNativeApiParam(method)) {
       return "Providing method first parameter is not of type "
           + NativeApi.class.getCanonicalName() + ".";
     } else {
@@ -62,7 +62,7 @@ public class NativeMethodLoader {
     }
   }
 
-  private static boolean hasContainerParam(Method method) {
+  private static boolean hasNativeApiParam(Method method) {
     Class<?>[] types = method.getParameterTypes();
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
