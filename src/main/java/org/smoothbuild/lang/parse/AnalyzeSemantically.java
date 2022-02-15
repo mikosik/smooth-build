@@ -229,7 +229,7 @@ public class AnalyzeSemantically {
           logger.log(parseError(funcN, "Native function cannot have body."));
         }
         if (funcN.ann().isEmpty() && funcN.body().isEmpty()) {
-          logger.log(parseError(funcN, "Non native function cannot have empty body."));
+          logger.log(parseError(funcN, "Function body is missing."));
         }
       }
 

@@ -403,7 +403,7 @@ public class DeclarationTest extends TestingContext {
         module("""
           String myFunc();
           """)
-            .loadsWithError(1, "Non native function cannot have empty body.");
+            .loadsWithError(1, "Function body is missing.");
       }
 
       @Test
