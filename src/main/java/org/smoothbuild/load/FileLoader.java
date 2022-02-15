@@ -1,6 +1,7 @@
 package org.smoothbuild.load;
 
 import static org.smoothbuild.fs.base.PathState.FILE;
+import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.FileNotFoundException;
@@ -14,6 +15,7 @@ import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
+import org.smoothbuild.util.collect.Maps;
 
 /**
  * This class is thread-safe.
@@ -32,16 +34,15 @@ public class FileLoader {
   }
 
   public BlobB load(FilePath filePath) throws FileNotFoundException {
-    BlobB result = fileCache.get(filePath);
-    if (result == null) {
-      BlobBBuilder blobBuilder = objDb.blobBuilder();
-      if (!fileResolver.pathState(filePath).equals(FILE)) {
-        throw new FileNotFoundException();
-      }
-      blobBuilder.write(sink -> copyAllAndClose(fileResolver.source(filePath), sink));
-      result = blobBuilder.build();
-      fileCache.put(filePath, result);
+    return computeIfAbsent(fileCache, filePath, this::loadImpl);
+  }
+
+  private BlobB loadImpl(FilePath filePath) throws FileNotFoundException {
+    BlobBBuilder blobBuilder = objDb.blobBuilder();
+    if (!fileResolver.pathState(filePath).equals(FILE)) {
+      throw new FileNotFoundException(filePath.q());
     }
-    return result;
+    blobBuilder.write(sink -> copyAllAndClose(fileResolver.source(filePath), sink));
+    return blobBuilder.build();
   }
 }
