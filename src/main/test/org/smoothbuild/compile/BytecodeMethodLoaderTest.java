@@ -17,12 +17,12 @@ import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.testing.nativefunc.NonPublicBytecodeMethod;
-import org.smoothbuild.testing.nativefunc.NonStaticBytecodeMethod;
-import org.smoothbuild.testing.nativefunc.ReturnAbcBytecode;
-import org.smoothbuild.testing.nativefunc.WithNonObjResBytecode;
-import org.smoothbuild.testing.nativefunc.WithTwoParamsBytecode;
-import org.smoothbuild.testing.nativefunc.WithoutBytecodeF;
+import org.smoothbuild.testing.func.bytecode.NonPublicMethod;
+import org.smoothbuild.testing.func.bytecode.NonStaticMethod;
+import org.smoothbuild.testing.func.bytecode.ReturnAbc;
+import org.smoothbuild.testing.func.bytecode.WithNonObjRes;
+import org.smoothbuild.testing.func.bytecode.WithTwoParams;
+import org.smoothbuild.testing.func.bytecode.WithoutBytecodeF;
 import org.smoothbuild.util.collect.Result;
 
 public class BytecodeMethodLoaderTest extends TestingContext {
@@ -30,13 +30,13 @@ public class BytecodeMethodLoaderTest extends TestingContext {
   class _caching {
     @Test
     public void method_is_cached() throws Exception {
-      var method = fetchJMethod(ReturnAbcBytecode.class);
+      var method = fetchJMethod(ReturnAbc.class);
       testCaching(method, Result.of(method), Result.of(method));
     }
 
     @Test
     public void error_when_loading_method_is_cached() throws Exception {
-      var method = fetchJMethod(NonPublicBytecodeMethod.class);
+      var method = fetchJMethod(NonPublicMethod.class);
       testCaching(method, Result.error("xx"), Result.error(
           "Error loading bytecode provider for `smoothName` specified as `binary.name`: xx"));
     }
@@ -64,12 +64,12 @@ public class BytecodeMethodLoaderTest extends TestingContext {
 
   @Test
   public void loading_non_public_method_causes_error() throws Exception {
-    assertLoadingCausesError(NonPublicBytecodeMethod.class, "Providing method is not public.");
+    assertLoadingCausesError(NonPublicMethod.class, "Providing method is not public.");
   }
 
   @Test
   public void loading_non_static_method_causes_error() throws Exception {
-    assertLoadingCausesError(NonStaticBytecodeMethod.class, "Providing method is not static.");
+    assertLoadingCausesError(NonStaticMethod.class, "Providing method is not static.");
   }
 
   @Test
@@ -81,14 +81,14 @@ public class BytecodeMethodLoaderTest extends TestingContext {
 
   @Test
   public void loading_method_with_two_params_causes_error() throws Exception {
-    var method = WithTwoParamsBytecode.class.getDeclaredMethod(BYTECODE_METHOD_NAME,
+    var method = WithTwoParams.class.getDeclaredMethod(BYTECODE_METHOD_NAME,
         BytecodeF.class, BytecodeF.class);
     assertLoadingCausesError(method, "Providing method has more than one parameter.");
   }
 
   @Test
   public void loading_method_with_non_objb_result_causes_error() throws Exception {
-    assertLoadingCausesError(WithNonObjResBytecode.class,
+    assertLoadingCausesError(WithNonObjRes.class,
         "Providing method result type is not org.smoothbuild.bytecode.obj.base.ObjB.");
   }
 

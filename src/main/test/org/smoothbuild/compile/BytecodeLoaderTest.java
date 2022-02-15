@@ -11,20 +11,20 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.testing.nativefunc.ReturnAbcBytecode;
-import org.smoothbuild.testing.nativefunc.ThrowExceptionBytecode;
+import org.smoothbuild.testing.func.bytecode.ReturnAbc;
+import org.smoothbuild.testing.func.bytecode.ThrowException;
 import org.smoothbuild.util.collect.Result;
 
 public class BytecodeLoaderTest extends TestingContext {
   @Test
   public void loading_bytecode() throws Exception {
-    assertThat(loadBytecode(ReturnAbcBytecode.class))
+    assertThat(loadBytecode(ReturnAbc.class))
         .isEqualTo(Result.of(stringB("abc")));
   }
 
   @Test
   public void loading_bytecode_exception_is_returned_as_error() throws Exception {
-    assertThat(loadBytecode(ThrowExceptionBytecode.class))
+    assertThat(loadBytecode(ThrowException.class))
         .isEqualTo(loadingError("Providing method thrown exception: java.lang"
             + ".UnsupportedOperationException: detailed message"));
   }

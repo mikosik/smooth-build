@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
-import org.smoothbuild.testing.nativefunc.ThrowException;
+import org.smoothbuild.testing.func.nativ.ThrowException;
 
 public class AndTest extends SystemTestCase {
   @Test

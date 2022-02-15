@@ -5,7 +5,7 @@ import static java.lang.ClassLoader.getPlatformClassLoader;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.testing.nativefunc.ReturnAbc;
+import org.smoothbuild.testing.func.nativ.ReturnAbc;
 
 public class JarClassLoaderProvTest extends TestingContext {
   @Test

@@ -10,8 +10,8 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.testing.nativefunc.NonPublicMethod;
-import org.smoothbuild.testing.nativefunc.ReturnAbc;
+import org.smoothbuild.testing.func.nativ.NonPublicMethod;
+import org.smoothbuild.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.util.collect.Result;
 
 public class MethodLoaderTest extends TestingContext {

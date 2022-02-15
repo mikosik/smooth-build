@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
-import org.smoothbuild.testing.nativefunc.Sleep3s;
+import org.smoothbuild.testing.func.nativ.Sleep3s;
 
 public abstract class LockFileTestCase extends SystemTestCase {
   @Test

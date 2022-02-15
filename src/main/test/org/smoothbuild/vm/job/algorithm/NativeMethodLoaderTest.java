@@ -15,8 +15,8 @@ import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.testing.nativefunc.NonPublicMethod;
-import org.smoothbuild.testing.nativefunc.ReturnAbc;
+import org.smoothbuild.testing.func.nativ.NonPublicMethod;
+import org.smoothbuild.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.util.collect.Result;
 
 public class NativeMethodLoaderTest extends TestingContext {

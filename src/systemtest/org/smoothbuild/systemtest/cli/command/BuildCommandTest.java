@@ -19,9 +19,9 @@ import org.smoothbuild.systemtest.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.systemtest.cli.command.common.LockFileTestCase;
 import org.smoothbuild.systemtest.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.systemtest.cli.command.common.ValuesArgTestCase;
-import org.smoothbuild.testing.nativefunc.ReportError;
-import org.smoothbuild.testing.nativefunc.ReportInfo;
-import org.smoothbuild.testing.nativefunc.ReportWarning;
+import org.smoothbuild.testing.func.nativ.ReportError;
+import org.smoothbuild.testing.func.nativ.ReportInfo;
+import org.smoothbuild.testing.func.nativ.ReportWarning;
 
 public class BuildCommandTest {
   @Nested

@@ -5,8 +5,8 @@ import static java.lang.String.format;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.accept.AcceptanceTestCase;
-import org.smoothbuild.testing.nativefunc.Append;
-import org.smoothbuild.testing.nativefunc.Concat;
+import org.smoothbuild.testing.func.nativ.Append;
+import org.smoothbuild.testing.func.nativ.Concat;
 
 public class InferenceTest extends AcceptanceTestCase {
   @Test

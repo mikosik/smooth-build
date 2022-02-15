@@ -5,7 +5,7 @@ import static java.lang.String.format;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.accept.AcceptanceTestCase;
-import org.smoothbuild.testing.nativefunc.Flatten;
+import org.smoothbuild.testing.func.nativ.Flatten;
 
 public class PolymorphismTest extends AcceptanceTestCase {
   @Test
