@@ -34,23 +34,23 @@ public class NativeMethodLoaderTest extends TestingContext {
   }
 
   private void testCaching(Method method, Result<Method> resultMethod, Result<Method> expected) {
-    var methodProv = mock(MethodLoader.class);
+    var methodLoader = mock(MethodLoader.class);
     var jar = blobB();
     var classBinaryName = "binary.name";
     var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
-    when(methodProv.provide(methodSpec))
+    when(methodLoader.provide(methodSpec))
         .thenReturn(resultMethod);
 
-    var methodLoader = new NativeMethodLoader(methodProv);
+    var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
     var methodB = methodB(methodTB(stringTB(), list()), jar, stringB(classBinaryName));
-    var resultMethod1 = methodLoader.load("smoothName", methodB);
-    var resultMethod2 = methodLoader.load("smoothName", methodB);
+    var resultMethod1 = nativeMethodLoader.load("smoothName", methodB);
+    var resultMethod2 = nativeMethodLoader.load("smoothName", methodB);
     assertThat(resultMethod1)
         .isEqualTo(expected);
     assertThat(resultMethod1)
         .isSameInstanceAs(resultMethod2);
-    verify(methodProv, times(1))
+    verify(methodLoader, times(1))
         .provide(methodSpec);
   }
 }
