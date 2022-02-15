@@ -10,8 +10,8 @@ import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,7 +32,7 @@ import net.lingala.zip4j.exception.ZipException;
 public class JarClassLoaderProv {
   private final BytecodeF bytecodeF;
   private final ClassLoader parentClassLoader;
-  private final HashMap<BlobB, Result<ClassLoader>> cache;
+  private final ConcurrentHashMap<BlobB, Result<ClassLoader>> cache;
 
   @Inject
   public JarClassLoaderProv(BytecodeF bytecodeF) {
@@ -42,10 +42,10 @@ public class JarClassLoaderProv {
   public JarClassLoaderProv(BytecodeF bytecodeF, ClassLoader parentClassLoader) {
     this.bytecodeF = bytecodeF;
     this.parentClassLoader = parentClassLoader;
-    this.cache = new HashMap<>();
+    this.cache = new ConcurrentHashMap<>();
   }
 
-  public synchronized Result<ClassLoader> classLoaderFor(BlobB jar) throws IOException {
+  public Result<ClassLoader> classLoaderFor(BlobB jar) throws IOException {
     return computeIfAbsent(cache, jar, j -> newClassLoader(parentClassLoader, j));
   }
 
