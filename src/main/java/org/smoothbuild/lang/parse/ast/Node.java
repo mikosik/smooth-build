@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public sealed class Node permits AnnN, ExprN, NamedN {
+public sealed class Node permits ExprN, NamedN {
   private final Loc loc;
   private Optional<TypeS> type;
 

@@ -29,6 +29,18 @@ public class DeclarationTest extends TestingContext {
   @Nested
   class _members {
     @Nested
+    class _annotation {
+      @Test
+      public void with_unknown_name_causes_error() {
+        module("""
+            @UnknownAnnotation("value")
+            Int myFunc() = 3;
+            """)
+            .loadsWithError(1, "Unknown annotation `UnknownAnnotation`.");
+      }
+    }
+
+    @Nested
     class _struct {
       @Test
       public void declaring_empty_struct_is_allowed() {
@@ -412,7 +424,7 @@ public class DeclarationTest extends TestingContext {
           @Native("Impl.met")
           String myFunc() = "abc";
           """)
-            .loadsWithError(2, "Native function cannot have body.");
+            .loadsWithError(2, "Function with @Native annotation cannot have body.");
       }
 
       @Test

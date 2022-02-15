@@ -33,7 +33,7 @@ public class CachingTest extends AcceptanceTestCase {
     public void impure_func_result_is_cached_in_single_build() throws Exception {
       createUserNativeJar(Random.class);
       createUserModule(format("""
-            @Native("%s", IMPURE)
+            @NativeImpure("%s")
             String cachedInMemoryRandom();
             resultA = cachedInMemoryRandom();
             resultB = cachedInMemoryRandom();
@@ -47,7 +47,7 @@ public class CachingTest extends AcceptanceTestCase {
     public void impure_func_result_is_not_cached_on_disk() throws Exception {
       createUserNativeJar(Random.class);
       createUserModule(format("""
-            @Native("%s", IMPURE)
+            @NativeImpure("%s")
             String cachedInMemoryRandom();
             result = cachedInMemoryRandom();
             """, Random.class.getCanonicalName()));
@@ -66,9 +66,9 @@ public class CachingTest extends AcceptanceTestCase {
   public void native_func_with_same_pure_native_share_cache_results() throws Exception {
     createUserNativeJar(Random.class);
     createUserModule(format("""
-            @Native("%s", PURE)
+            @Native("%s")
             String first();
-            @Native("%s", PURE)
+            @Native("%s")
             String second();
             random1 = first();
             random2 = second();
@@ -86,9 +86,9 @@ public class CachingTest extends AcceptanceTestCase {
   public void native_func_with_same_impure_native_share_cache_results() throws Exception {
     createUserNativeJar(Random.class);
     createUserModule(format("""
-            @Native("%s", IMPURE)
+            @NativeImpure("%s")
             String first();
-            @Native("%s", IMPURE)
+            @NativeImpure("%s")
             String second();
             random1 = first();
             random2 = second();
@@ -106,9 +106,9 @@ public class CachingTest extends AcceptanceTestCase {
       throws Exception {
     createUserNativeJar(Random.class);
     createUserModule(format("""
-            @Native("%s", IMPURE)
+            @NativeImpure("%s")
             String first();
-            @Native("%s", PURE)
+            @Native("%s")
             String second();
             random1 = first();
             random2 = second();

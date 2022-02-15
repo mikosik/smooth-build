@@ -5,7 +5,7 @@ struct       : TNAME '{' fieldList? '}' ;
 fieldList    : field ( ',' field )* ','? ;
 field        : type NAME ;
 eval         : ann? type? NAME paramList? ('=' expr)? ';' ;
-ann          : '@Native(' STRING (',' (pure='PURE' | impure='IMPURE'))? ')' ;
+ann          : '@' TNAME '(' STRING ')' ;
 paramList    : '(' ( param ( ',' param )* ','? )? ')' ;
 param        : type NAME ( '=' expr )? ;
 expr         : exprHead ( p+='|' chainCall )* ;

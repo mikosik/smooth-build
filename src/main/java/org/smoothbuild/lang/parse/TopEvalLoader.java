@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse;
 
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -90,7 +91,7 @@ public class TopEvalLoader {
 
   private NativeS loadNativeAnn(AnnN annN) {
     var path = createString(annN.path());
-    return new NativeS(path, annN.isPure(), annN.loc());
+    return new NativeS(path, annN.name().equals(NATIVE_PURE), annN.loc());
   }
 
   private NList<ItemS> loadParams(ModPath path, FuncN funcN) {

@@ -8,6 +8,6 @@ import org.smoothbuild.lang.base.define.Loc;
 public record NativeS(StringS path, boolean isPure, Loc loc) {
   @Override
   public String toString() {
-    return "@Native(\"%s\", %s)".formatted(path.string(), isPure ? "PURE" : "IMPURE");
+    return ("@Native" + (isPure ? "" : "Impure") + "(\"%s\")").formatted(path.string());
   }
 }

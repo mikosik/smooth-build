@@ -5,23 +5,15 @@ import org.smoothbuild.lang.base.define.Loc;
 /**
  * Annotation.
  */
-public final class AnnN extends Node {
+public final class AnnN extends NamedN {
   private final StringN path;
-  private final boolean isPure;
-  private final Loc loc;
 
-  public AnnN(StringN path, boolean isPure, Loc loc) {
-    super(loc);
+  public AnnN(String name, StringN path, Loc loc) {
+    super(name, loc);
     this.path = path;
-    this.isPure = isPure;
-    this.loc = loc;
   }
 
   public StringN path() {
     return path;
-  }
-
-  public boolean isPure() {
-    return isPure;
   }
 }

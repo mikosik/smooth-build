@@ -195,7 +195,7 @@ public class ExprSLoadingTest extends TestingContext {
     @Test
     public void impure() {
       module("""
-          @Native("Impl.met", IMPURE)
+          @NativeImpure("Impl.met")
           String myFunc();
           """)
           .loadsWithSuccess()
@@ -206,7 +206,7 @@ public class ExprSLoadingTest extends TestingContext {
     @Test
     public void pure() {
       module("""
-          @Native("Impl.met", PURE)
+          @Native("Impl.met")
           String myFunc();
           """)
           .loadsWithSuccess()

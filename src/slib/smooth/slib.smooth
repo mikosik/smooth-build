@@ -37,12 +37,12 @@ A elem(
   [A] array2,
 );
 
-@Native("org.smoothbuild.slib.file.ProjectFileFunc", IMPURE)
+@NativeImpure("org.smoothbuild.slib.file.ProjectFileFunc")
 File projectFile(
   String path,
 );
 
-@Native("org.smoothbuild.slib.file.ProjectFilesFunc", IMPURE)
+@NativeImpure("org.smoothbuild.slib.file.ProjectFilesFunc")
 [File] projectFiles(
   String dir,
 );

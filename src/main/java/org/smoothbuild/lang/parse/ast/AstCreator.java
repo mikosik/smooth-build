@@ -97,15 +97,12 @@ public class AstCreator {
         if (annotation == null) {
           return Optional.empty();
         } else {
+          String name = annotation.TNAME().getText();
           return Optional.of(new AnnN(
+              name,
               createStringNode(annotation, annotation.STRING()),
-              isPure(annotation),
               locOf(filePath, annotation)));
         }
-      }
-
-      private boolean isPure(AnnContext annotation) {
-        return annotation.pure != null || annotation.impure == null;
       }
 
       private List<ItemN> createParams(ParamListContext paramList) {
