@@ -70,4 +70,20 @@ public class ProjectFileTest extends SystemTestCase {
     assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
+
+  @Test
+  public void result_is_not_cached() throws Exception {
+    createFile("dir/file.txt", "abc");
+    createUserModule("""
+            result = projectFile("dir/file.txt");
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+
+    createFile("dir/file.txt", "def");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(artifactTreeContentAsStrings("result"))
+        .containsExactly("dir/file.txt", "def");
+  }
 }
