@@ -24,6 +24,7 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 
 import com.google.common.collect.ImmutableList;
@@ -96,6 +97,23 @@ public class CompilerTest extends TestingContext {
     public void topRef_to_val() {
       var defVal = defValS("myVal", stringS("abc"));
       assertConversion(defVal, topRefS(defVal), stringB("abc"));
+    }
+
+    @Test
+    public void topRef_to_bytecode_val() throws IOException {
+      Class<?> clazz = ReturnAbc.class;
+      var filePath = filePath(PRJ, path("my/path"));
+      var classBinaryName = clazz.getCanonicalName();
+      var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
+      var annValS = annValS(ann, stringTS(), modPath(filePath), "myVal", loc(filePath, 2));
+
+      var valB = stringB("abc");
+
+      var fileLoader = createFileLoaderMock(
+          filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+      var compiler = newCompiler(defs(annValS), fileLoader);
+      assertThat(compiler.compileExpr(topRefS(annValS)))
+          .isEqualTo(valB);
     }
 
     @Test

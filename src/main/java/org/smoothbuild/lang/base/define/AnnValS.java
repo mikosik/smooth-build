@@ -3,23 +3,22 @@ package org.smoothbuild.lang.base.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.expr.ExprS;
 
 /**
- * Defined value (one that has a body).
+ * Annotated value (one that has not a body).
  *
  * This class is immutable.
  */
-public final class DefValS extends ValS {
-  private final ExprS body;
+public final class AnnValS extends ValS {
+  private final AnnS ann;
 
-  public DefValS(TypeS type, ModPath modPath, String name, ExprS body, Loc loc) {
+  public AnnValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
     super(type, modPath, name, loc);
-    this.body = body;
+    this.ann = ann;
   }
 
-  public ExprS body() {
-    return body;
+  public AnnS ann() {
+    return ann;
   }
 
   @Override
@@ -27,21 +26,22 @@ public final class DefValS extends ValS {
     if (this == object) {
       return true;
     }
-    return object instanceof DefValS that
+    return object instanceof AnnValS that
+        && this.ann().equals(that.ann())
         && this.type().equals(that.type())
+        && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
-        && this.body().equals(that.body())
         && this.loc().equals(that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), name(), body(), loc());
+    return Objects.hash(ann(), type(), modPath(), name(), loc());
   }
 
   @Override
   public String toString() {
-    return "DefVal(`" + type().name() + " " + name() + " = " + body + "`)";
+    return "DefVal(`" + ann() + " " + type().name() + " " + name() + "`)";
   }
 }
 

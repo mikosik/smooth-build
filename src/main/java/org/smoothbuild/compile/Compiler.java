@@ -3,6 +3,7 @@ package org.smoothbuild.compile;
 import static org.smoothbuild.lang.base.type.api.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_PURE;
+import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
@@ -37,6 +38,7 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.define.AnnFuncS;
 import org.smoothbuild.lang.base.define.AnnS;
+import org.smoothbuild.lang.base.define.AnnValS;
 import org.smoothbuild.lang.base.define.BoolValS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
@@ -120,27 +122,14 @@ public class Compiler {
   private FuncB compileAnnFunc(AnnFuncS annFuncS) {
     var annName = annFuncS.ann().name();
     return switch (annName) {
-      case BYTECODE -> compileByteFunc(annFuncS);
+      case BYTECODE -> fetchFuncBytecode(annFuncS);
       case NATIVE_PURE, NATIVE_IMPURE -> compileNatFunc(annFuncS);
-      default -> throw new CompilerExc("Illegal native function annotation: " + annName + ".");
+      default -> throw new CompilerExc("Illegal function annotation: " + annName + ".");
     };
   }
 
-  private FuncB compileByteFunc(AnnFuncS byteFuncS) {
-    var ann = byteFuncS.ann();
-    var jar = loadNativeJar(ann.loc());
-    var bytecode = bytecodeLoader.load(byteFuncS.name(), jar, ann.path().string());
-    if (!bytecode.isPresent()) {
-      throw new CompilerExc(ann.loc() + ": " + bytecode.error());
-    }
-    var funcB = bytecode.value();
-    var funcTB = convertFuncT(byteFuncS.type());
-    if (!funcB.type().equals(funcTB)) {
-      throw new CompilerExc(ann.loc() + ": Bytecode provider returned object of wrong type "
-          + funcB.type().q() + " when function " + byteFuncS.q() + " is declared as " + funcTB.q()
-          + ".");
-    }
-    return (FuncB) funcB;
+  private FuncB fetchFuncBytecode(AnnFuncS annFuncS) {
+    return (FuncB) fetchBytecode(annFuncS.ann(), convertFuncT(annFuncS.type()), annFuncS.name());
   }
 
   private FuncB compileDefFunc(DefFuncS defFuncS) {
@@ -185,6 +174,7 @@ public class Compiler {
 
   private ObjB compileValImpl(ValS valS) {
     var exprB = switch (valS) {
+      case AnnValS annValS -> compileAnnVal(annValS);
       case DefValS defValS -> compileExpr(defValS.body());
       case BoolValS boolValS -> compileBoolVal(boolValS);
     };
@@ -199,10 +189,32 @@ public class Compiler {
     return exprB;
   }
 
+  private ObjB compileAnnVal(AnnValS annValS) {
+    var annName = annValS.ann().name();
+    return switch (annName) {
+      case BYTECODE ->  fetchBytecode(annValS.ann(), convertT(annValS.type()), annValS.name());
+      default -> throw new CompilerExc("Illegal value annotation: " + annName + ".");
+    };
+  }
+
   private BoolB compileBoolVal(BoolValS boolValS) {
     var boolB = bytecodeF.bool(boolValS.valJ());
     nals.put(boolB, boolValS);
     return boolB;
+  }
+
+  private ObjB fetchBytecode(AnnS ann, TypeB typeB, String name) {
+    var jar = loadNativeJar(ann.loc());
+    var bytecode = bytecodeLoader.load(name, jar, ann.path().string());
+    if (!bytecode.isPresent()) {
+      throw new CompilerExc(ann.loc() + ": " + bytecode.error());
+    }
+    var bytecodeB = bytecode.value();
+    if (!bytecodeB.type().equals(typeB)) {
+      throw new CompilerExc(ann.loc() + ": Bytecode provider returned object of wrong type "
+          + bytecodeB.type().q() + " when " + q(name) + " is declared as " + typeB.q() + ".");
+    }
+    return bytecodeB;
   }
 
   // handling expressions

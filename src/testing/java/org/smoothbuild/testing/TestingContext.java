@@ -92,6 +92,7 @@ import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.lang.base.define.AnnFuncS;
 import org.smoothbuild.lang.base.define.AnnS;
+import org.smoothbuild.lang.base.define.AnnValS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
@@ -1048,6 +1049,10 @@ public class TestingContext {
   public AnnFuncS byteFuncS(AnnS ann, FuncTS type, ModPath modPath, String name,
       NList<ItemS> params, Loc loc) {
     return new AnnFuncS(ann, type, modPath, name, params, loc);
+  }
+
+  public AnnValS annValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
+    return new AnnValS(ann, type, modPath, name, loc);
   }
 
   public DefValS defValS(String name, ExprS expr) {
