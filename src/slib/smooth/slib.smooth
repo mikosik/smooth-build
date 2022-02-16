@@ -109,4 +109,7 @@ Blob zip(
   [File] files,
 );
 
+@Bytecode("org.smoothbuild.slib.core.IfFunc")
+A if(Bool condition, A then, A else);
+
 A id(A a) = a;

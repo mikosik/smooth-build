@@ -94,7 +94,6 @@ import org.smoothbuild.lang.base.define.AnnFuncS;
 import org.smoothbuild.lang.base.define.AnnS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
-import org.smoothbuild.lang.base.define.IfFuncS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
@@ -1103,10 +1102,6 @@ public class TestingContext {
 
   public DefFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ExprS expr) {
     return new DefFuncS(funcTS(resT, toTypes(params)), modPath(), name, params, expr, loc(1));
-  }
-
-  public IfFuncS ifFuncS() {
-    return new IfFuncS(modPath(), typeSF());
   }
 
   public MapFuncS mapFuncS() {

@@ -112,17 +112,6 @@ public class CompilerTest extends TestingContext {
     }
 
     @Test
-    public void topRef_to_if_func() {
-      var ifFuncS = ifFuncS();
-      var oa = oVarTB("A");
-      var ca = cVarTB("A");
-      var bodyB = ifB(paramRefB(boolTB(), 0), paramRefB(ca, 1), paramRefB(ca, 2));
-      var funcTB = funcTB(oa, list(boolTB(), oa, oa));
-      var funcb = funcB(funcTB, bodyB);
-      assertConversion(ifFuncS, topRefS(ifFuncS), funcb);
-    }
-
-    @Test
     public void topRef_to_map_func() {
       var mapFuncS = mapFuncS();
       var varE = oVarTB("E");
@@ -204,11 +193,6 @@ public class CompilerTest extends TestingContext {
     @Test
     public void def_func_conversion_result() {
       assertConversionIsCached(defFuncS("myFunc", nList(), stringS("abcdefghi")));
-    }
-
-    @Test
-    public void if_func_conversion_result() {
-      assertConversionIsCached(ifFuncS());
     }
 
     @Test

@@ -610,12 +610,13 @@ public class BuildCommandTest {
     @Test
     public void func_reference() throws IOException {
       createUserModule("""
-          result = if;
+          myFunc() = 7;
+          result = myFunc;
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          if                                          internal
+          myFunc                                      build.smooth:1
           """);
     }
 

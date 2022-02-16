@@ -678,17 +678,6 @@ public class VisibilityTest extends TestingContext {
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myStruct"));
         }
       }
-
-      @Nested
-      class _internal {
-        @Test
-        public void func_fails() {
-          module("""
-                if = "def";
-                """)
-              .loadsWithError(1, alreadyDefinedInternally("if"));
-        }
-      }
     }
 
     @Nested
@@ -768,17 +757,6 @@ public class VisibilityTest extends TestingContext {
                myStruct() = "abc";
                """)
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myStruct"));
-        }
-      }
-
-      @Nested
-      class _internal {
-        @Test
-        public void func_fails() {
-          module("""
-                if() = "def";
-                """)
-              .loadsWithError(1, alreadyDefinedInternally("if"));
         }
       }
     }
@@ -869,18 +847,6 @@ public class VisibilityTest extends TestingContext {
              MyStruct {}
              String myFunc(String myStruct) = "abc";
              """)
-              .loadsWithSuccess();
-        }
-      }
-
-      @Nested
-      class _internal {
-        @Test
-        public void func_succeeds() {
-          module("""
-              verifying_that_internal_if_func_is_defined = if;
-              String myFunc(String if) = "abc";
-              """)
               .loadsWithSuccess();
         }
       }
@@ -1036,20 +1002,6 @@ public class VisibilityTest extends TestingContext {
               .loadsWithSuccess();
         }
       }
-
-      @Nested
-      class _internal {
-        @Test
-        public void func_succeeds() {
-          module("""
-              verifying_that_internal_if_func_is_defined = if;
-              MyStruct {
-                String if,
-              }
-              """)
-              .loadsWithSuccess();
-        }
-      }
     }
 
     @Nested
@@ -1105,17 +1057,6 @@ public class VisibilityTest extends TestingContext {
                MyFunc{}
                """)
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
-        }
-      }
-
-      @Nested
-      class _internal {
-        @Test
-        public void func_fails() {
-          module("""
-                If{}
-                """)
-              .loadsWithError(1, alreadyDefinedInternally("if"));
         }
       }
     }

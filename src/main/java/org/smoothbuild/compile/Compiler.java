@@ -42,7 +42,6 @@ import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.FuncS;
-import org.smoothbuild.lang.base.define.IfFuncS;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.MapFuncS;
@@ -111,7 +110,6 @@ public class Compiler {
       var funcB = switch (funcS) {
         case AnnFuncS n -> compileAnnFunc(n);
         case DefFuncS d -> compileDefFunc(d);
-        case IfFuncS i -> compileIfFunc(i);
         case MapFuncS m -> compileMapFunc(m);
       };
       nals.put(funcB, funcS);
@@ -151,14 +149,6 @@ public class Compiler {
     var funcTB = convertFuncT(defFuncS.type());
     var body = compileExpr(defFuncS.body());
     return bytecodeF.func(funcTB, body);
-  }
-
-  private FuncB compileIfFunc(IfFuncS ifFuncS) {
-    var funcTB = convertFuncT(ifFuncS.type());
-    var paramRefsB = createParamRefsB(funcTB.params());
-    var bodyB = bytecodeF.if_(paramRefsB.get(0), paramRefsB.get(1), paramRefsB.get(2));
-    nals.put(bodyB, ifFuncS);
-    return bytecodeF.func(funcTB, bodyB);
   }
 
   private FuncB compileMapFunc(MapFuncS mapFuncS) {
