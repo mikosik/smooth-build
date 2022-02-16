@@ -98,7 +98,6 @@ import org.smoothbuild.lang.base.define.InternalModLoader;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
@@ -1102,10 +1101,6 @@ public class TestingContext {
 
   public DefFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ExprS expr) {
     return new DefFuncS(funcTS(resT, toTypes(params)), modPath(), name, params, expr, loc(1));
-  }
-
-  public MapFuncS mapFuncS() {
-    return new MapFuncS(modPath(), typeSF());
   }
 
   public ItemSigS sigS(TypeS type, String name) {

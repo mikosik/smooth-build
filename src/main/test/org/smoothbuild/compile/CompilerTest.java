@@ -112,19 +112,6 @@ public class CompilerTest extends TestingContext {
     }
 
     @Test
-    public void topRef_to_map_func() {
-      var mapFuncS = mapFuncS();
-      var varE = oVarTB("E");
-      var varR = oVarTB("R");
-      var mappingFuncT = funcTB(varR, list(varE));
-      var inputArrayT = arrayTB(varE);
-      var funcTB = funcTB(arrayTB(varR), list(inputArrayT, mappingFuncT));
-      var bodyB = mapB(paramRefB(close(inputArrayT), 0), paramRefB(close(mappingFuncT), 1));
-      var funcB = funcB(funcTB, bodyB);
-      assertConversion(mapFuncS, topRefS(mapFuncS), funcB);
-    }
-
-    @Test
     public void topRef_to_native_func() {
       var funcTS = funcTS(intTS(), list(blobTS()));
       var filePath = filePath(PRJ, path("my/path"));
@@ -193,11 +180,6 @@ public class CompilerTest extends TestingContext {
     @Test
     public void def_func_conversion_result() {
       assertConversionIsCached(defFuncS("myFunc", nList(), stringS("abcdefghi")));
-    }
-
-    @Test
-    public void map_func_conversion_result() {
-      assertConversionIsCached(mapFuncS());
     }
 
     @Test

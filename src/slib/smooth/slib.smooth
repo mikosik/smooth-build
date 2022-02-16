@@ -112,4 +112,7 @@ Blob zip(
 @Bytecode("org.smoothbuild.slib.core.IfFunc")
 A if(Bool condition, A then, A else);
 
+@Bytecode("org.smoothbuild.slib.core.MapFunc")
+[R] map([S] array, R(S) mapper);
+
 A id(A a) = a;

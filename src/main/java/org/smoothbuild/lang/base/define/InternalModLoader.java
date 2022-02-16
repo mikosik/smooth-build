@@ -23,9 +23,8 @@ public class InternalModLoader {
   }
 
   private NList<TopEvalS> evaluables(ModPath modPath) {
-    var mapFunc = new MapFuncS(modPath, typeSF);
     var trueValue = new BoolValS(true, modPath, typeSF);
     var falseValue = new BoolValS(false, modPath, typeSF);
-    return nList(mapFunc, trueValue, falseValue);
+    return nList(trueValue, falseValue);
   }
 }
