@@ -17,6 +17,7 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.accept.AcceptanceTestCase;
+import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.nativ.AddElementOfWrongTypeToArray;
 import org.smoothbuild.testing.func.nativ.BrokenIdentity;
 import org.smoothbuild.testing.func.nativ.EmptyStringArray;
@@ -398,6 +399,23 @@ public class NativeTest extends AcceptanceTestCase {
               .contains("Element type must be Blob but was String.");
         }
       }
+    }
+  }
+
+  @Nested
+  class _bytecode_func {
+    @Test
+    public void can_be_called() throws Exception {
+      createUserNativeJar(ReturnIdFunc.class);
+      createUserModule(format("""
+            @Bytecode("%s")
+            A myId(A a);
+            result = myId(77);
+            """, ReturnIdFunc.class.getCanonicalName()));
+      evaluate("result");
+      assertThat(artifact())
+          .isEqualTo(intB(77));
+
     }
   }
 
