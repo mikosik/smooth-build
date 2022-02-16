@@ -45,10 +45,6 @@ public final class AnnFuncS extends FuncS {
 
   @Override
   public String toString() {
-    return "NatFunc(`" + code() + "`)";
-  }
-
-  protected String code() {
-    return ann + " " + signature();
+    return "AnnFunc(`" + (ann + " " + signature()) + "`)";
   }
 }
