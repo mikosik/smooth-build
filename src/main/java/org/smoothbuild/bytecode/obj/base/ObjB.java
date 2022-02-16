@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 /**
- * Object.
+ * Bytecode object.
  * This class is thread-safe.
  */
 public abstract class ObjB {
