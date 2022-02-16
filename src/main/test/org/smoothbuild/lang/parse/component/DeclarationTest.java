@@ -411,7 +411,7 @@ public class DeclarationTest extends TestingContext {
     @Nested
     class _func {
       @Test
-      public void non_nat_func_without_body() {
+      public void func_without_body() {
         module("""
           String myFunc();
           """)
@@ -419,7 +419,25 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void nat_func_with_body() {
+      public void func_with_unknown_ann_with_body() {
+        module("""
+          @Unknown("abc")
+          String myFunc() = "abc";
+          """)
+            .loadsWithError(1, "Unknown annotation `Unknown`.");
+      }
+
+      @Test
+      public void func_with_unknown_ann_without_body() {
+        module("""
+          @Unknown("abc")
+          String myFunc();
+          """)
+            .loadsWithError(1, "Unknown annotation `Unknown`.");
+      }
+
+      @Test
+      public void func_with_native_ann_and_with_body() {
         module("""
           @Native("Impl.met")
           String myFunc() = "abc";
@@ -428,11 +446,20 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
+      public void func_with_bytecode_ann_and_with_body() {
+        module("""
+          @Bytecode("Impl.met")
+          String myFunc() = "abc";
+          """)
+            .loadsWithError(2, "Function with @Bytecode annotation cannot have body.");
+      }
+
+      @Test
       public void nat_func_without_declared_result_type_fails() {
         module("""
-        @Native("Impl.met")
-        myFunc();
-        """)
+          @Native("Impl.met")
+          myFunc();
+          """)
             .loadsWithError(2, "`myFunc` is native so it should have declared result type.");
       }
 

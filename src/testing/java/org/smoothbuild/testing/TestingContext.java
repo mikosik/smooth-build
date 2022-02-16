@@ -1046,6 +1046,10 @@ public class TestingContext {
     return new ItemS(type, modPath(), name, defaultArg, loc(line));
   }
 
+  public AnnFuncS byteFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
+    return byteFuncS(ann, funcTS(resT, params.list()), modPath(), name, params, loc(line));
+  }
+
   public AnnFuncS byteFuncS(AnnS ann, FuncTS type, ModPath modPath, String name,
       NList<ItemS> params, Loc loc) {
     return new AnnFuncS(ann, type, modPath, name, params, loc);

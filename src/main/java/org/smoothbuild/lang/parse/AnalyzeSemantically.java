@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse;
 
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.api.AnnotationNames.ANNOTATION_NAMES;
-import static org.smoothbuild.lang.base.type.api.AnnotationNames.isAnnotationName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -15,7 +14,6 @@ import java.util.Map;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.Nal;
-import org.smoothbuild.lang.parse.ast.AnnN;
 import org.smoothbuild.lang.parse.ast.ArrayTN;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
@@ -48,8 +46,7 @@ public class AnalyzeSemantically {
     detectDuplicateFieldNames(logBuffer, ast);
     detectDuplicateParamNames(logBuffer, ast);
     detectStructNameWithSingleCapitalLetter(logBuffer, ast);
-    detectIllegalNatives(logBuffer, ast);
-    detectUnknownAnnotations(logBuffer, ast);
+    detectIllegalAnnotations(logBuffer, ast);
     return logBuffer.toImmutableLogs();
   }
 
@@ -218,27 +215,26 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  /**
-   * Detects:
-   *  - func with body and @Native annotation
-   *  - func without body nor @Native annotation
-   *  - value with @Native annotation
-   */
-  private static void detectIllegalNatives(Logger logger, Ast ast) {
+  private static void detectIllegalAnnotations(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitFunc(FuncN funcN) {
         super.visitFunc(funcN);
         if (funcN.ann().isPresent()) {
-          var annName = funcN.ann().get().name();
-          if (isAnnotationName(annName) && funcN.body().isPresent()) {
-            logger.log(
-                parseError(funcN, "Function with @" + annName + " annotation cannot have body."));
+          var ann = funcN.ann().get();
+          var annName = ann.name();
+          if (ANNOTATION_NAMES.contains(annName)) {
+            if (funcN.body().isPresent()) {
+              logger.log(
+                  parseError(funcN, "Function with @" + annName + " annotation cannot have body."));
+            }
+          } else {
+            logger.log(parseError(ann, "Unknown annotation " + ann.q() + "."));
           }
-        }
-        if (funcN.ann().isEmpty() && funcN.body().isEmpty()) {
+        } else if (funcN.body().isEmpty()) {
           logger.log(parseError(funcN, "Function body is missing."));
         }
+
       }
 
       @Override
@@ -249,17 +245,6 @@ public class AnalyzeSemantically {
         }
         if (valN.body().isEmpty()) {
           logger.log(parseError(valN, "Value cannot have empty body."));
-        }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void detectUnknownAnnotations(Logger logger, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitAnn(AnnN ann) {
-        if (!ANNOTATION_NAMES.contains(ann.name())) {
-          logger.log(parseError(ann, "Unknown annotation " + ann.q() + "."));
         }
       }
     }.visitAst(ast);

@@ -180,18 +180,21 @@ public class ExprSLoadingTest extends TestingContext {
   }
 
   @Nested
-  class _nat_func {
+  class _bytecode_func {
     @Test
-    public void default_pureness() {
+    public void bytecode_func() {
       module("""
-          @Native("Impl.met")
+          @Bytecode("Impl.met")
           String myFunc();
           """)
           .loadsWithSuccess()
           .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
+              byteFuncS(2, bytecodeS(stringS(1, "Impl.met"), loc(1)), STRING, "myFunc", nList()));
     }
+  }
 
+  @Nested
+  class _nat_func {
     @Test
     public void impure() {
       module("""
