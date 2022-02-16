@@ -29,7 +29,6 @@ public final class AnnFuncS extends FuncS {
       return true;
     }
     return object instanceof AnnFuncS that
-        && this.getClass().equals(that.getClass())
         && this.ann.equals(that.ann)
         && this.resT().equals(that.resT())
         && this.modPath().equals(that.modPath())
