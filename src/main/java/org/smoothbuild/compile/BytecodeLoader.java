@@ -23,7 +23,7 @@ public class BytecodeLoader {
   }
 
   public Result<ObjB> load(String name, BlobB jar, String classBinaryName) {
-    return methodLoader.load(name, jar, classBinaryName)
+    return methodLoader.load(jar, classBinaryName)
         .flatMap(this::invoke)
         .mapError(e -> loadingError(name, classBinaryName, e));
   }

@@ -1,6 +1,5 @@
 package org.smoothbuild.compile;
 
-import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
 
@@ -32,17 +31,14 @@ public class BytecodeMethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Result<Method> load(String name, BlobB jar, String classBinaryName) {
+  public Result<Method> load(BlobB jar, String classBinaryName) {
     var methodSpec = new MethodSpec(jar, classBinaryName, BYTECODE_METHOD_NAME);
-    return cache.computeIfAbsent(methodSpec, m -> loadImpl(name, m));
+    return cache.computeIfAbsent(methodSpec, this::loadImpl);
   }
 
-  private Result<Method> loadImpl(String name, MethodSpec methodSpec) {
-    String classBinaryName = methodSpec.classBinaryName();
-    var qName = q(name);
+  private Result<Method> loadImpl(MethodSpec methodSpec) {
     return methodLoader.provide(methodSpec)
-        .validate(m -> validateSignature(m))
-        .mapError(e -> loadingError(qName, classBinaryName, e));
+        .validate(this::validateSignature);
   }
 
   private String validateSignature(Method method) {
@@ -65,10 +61,5 @@ public class BytecodeMethodLoader {
   private static boolean hasBytecodeFactoryParam(Method method) {
     Class<?>[] types = method.getParameterTypes();
     return types.length != 0 && (types[0] == BytecodeF.class);
-  }
-
-  private static String loadingError(String qName, String classBinaryName, String message) {
-    return "Error loading bytecode provider for " + qName + " specified as `" + classBinaryName
-        + "`: " + message;
   }
 }

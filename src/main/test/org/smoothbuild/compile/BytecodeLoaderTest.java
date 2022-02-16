@@ -30,15 +30,14 @@ public class BytecodeLoaderTest extends TestingContext {
   }
 
   private Result<ObjB> loadBytecode(Class<?> clazz) throws NoSuchMethodException {
-    var name = "name";
     var jar = blobB();
     var classBinaryName = "binary.name";
     var bytecodeMethodLoader = mock(BytecodeMethodLoader.class);
-    when(bytecodeMethodLoader.load(name, jar, classBinaryName))
+    when(bytecodeMethodLoader.load(jar, classBinaryName))
         .thenReturn(fetchMethod(clazz));
 
     return new BytecodeLoader(bytecodeMethodLoader, bytecodeF())
-        .load(name, jar, classBinaryName);
+        .load("name", jar, classBinaryName);
   }
 
   private static Result<Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {

@@ -37,8 +37,7 @@ public class BytecodeMethodLoaderTest extends TestingContext {
     @Test
     public void error_when_loading_method_is_cached() throws Exception {
       var method = fetchJMethod(NonPublicMethod.class);
-      testCaching(method, Result.error("xx"), Result.error(
-          "Error loading bytecode provider for `smoothName` specified as `binary.name`: xx"));
+      testCaching(method, Result.error("error message"), Result.error("error message"));
     }
 
     private void testCaching(Method method, Result<Method> resultMethod, Result<Method> expected) {
@@ -51,8 +50,8 @@ public class BytecodeMethodLoaderTest extends TestingContext {
 
       var methodLoader = new BytecodeMethodLoader(methodProv);
 
-      var resultMethod1 = methodLoader.load("smoothName", jar, classBinaryName);
-      var resultMethod2 = methodLoader.load("smoothName", jar, classBinaryName);
+      var resultMethod1 = methodLoader.load(jar, classBinaryName);
+      var resultMethod2 = methodLoader.load(jar, classBinaryName);
       assertThat(resultMethod1)
           .isEqualTo(expected);
       assertThat(resultMethod1)
@@ -99,7 +98,7 @@ public class BytecodeMethodLoaderTest extends TestingContext {
   private void assertLoadingCausesError(Method method, String message) {
     var methodSpec = new MethodSpec(blobB(), "class.binary.name", BYTECODE_METHOD_NAME);
     assertThat(load(methodSpec, method))
-        .isEqualTo(Result.error(loadingError(message)));
+        .isEqualTo(Result.error(message));
   }
 
   private Result<Method> load(MethodSpec methodSpec, Method method) {
@@ -108,15 +107,10 @@ public class BytecodeMethodLoaderTest extends TestingContext {
         .when(methodLoader)
         .provide(methodSpec);
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
-    return bytecodeMethodLoader.load("name", methodSpec.jar(), methodSpec.classBinaryName());
+    return bytecodeMethodLoader.load(methodSpec.jar(), methodSpec.classBinaryName());
   }
 
   private static Method fetchJMethod(Class<?> clazz) throws NoSuchMethodException {
     return clazz.getDeclaredMethod(BYTECODE_METHOD_NAME, BytecodeF.class);
-  }
-
-  private static String loadingError(String message) {
-    return "Error loading bytecode provider for `name` specified as `class.binary.name`: "
-        + message;
   }
 }
