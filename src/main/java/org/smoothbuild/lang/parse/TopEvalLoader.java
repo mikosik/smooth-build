@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse;
 
-import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -9,13 +8,14 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.base.define.AnnFuncS;
+import org.smoothbuild.lang.base.define.AnnS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefinedS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ModPath;
-import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
@@ -26,7 +26,6 @@ import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
-import org.smoothbuild.lang.expr.NativeS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
@@ -82,16 +81,16 @@ public class TopEvalLoader {
     var loc = funcN.loc();
     var funcT = typeSF.func(resT, map(params, DefinedS::type));
     if (funcN.ann().isPresent()) {
-      return new NatFuncS(loadNativeAnn(funcN.ann().get()), funcT, path, name, params, loc);
+      return new AnnFuncS(loadAnn(funcN.ann().get()), funcT, path, name, params, loc);
     } else {
       var body = createExpr(funcN.body().get());
       return new DefFuncS(funcT, path, name, params, body, loc);
     }
   }
 
-  private NativeS loadNativeAnn(AnnN annN) {
+  private AnnS loadAnn(AnnN annN) {
     var path = createString(annN.path());
-    return new NativeS(path, annN.name().equals(NATIVE_PURE), annN.loc());
+    return new AnnS(annN.name(), path, annN.loc());
   }
 
   private NList<ItemS> loadParams(ModPath path, FuncN funcN) {

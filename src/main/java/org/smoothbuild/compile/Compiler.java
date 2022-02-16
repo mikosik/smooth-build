@@ -1,5 +1,8 @@
 package org.smoothbuild.compile;
 
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.BYTECODE;
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_IMPURE;
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
@@ -32,8 +35,9 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.lang.base.define.AnnFuncS;
+import org.smoothbuild.lang.base.define.AnnS;
 import org.smoothbuild.lang.base.define.BoolValS;
-import org.smoothbuild.lang.base.define.ByteFuncS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
@@ -44,7 +48,6 @@ import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
@@ -55,7 +58,6 @@ import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
-import org.smoothbuild.lang.expr.NativeS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
@@ -107,11 +109,10 @@ public class Compiler {
     try {
       callStack.push(funcS.params());
       var funcB = switch (funcS) {
-        case ByteFuncS b -> compileByteFunc(b);
+        case AnnFuncS n -> compileAnnFunc(n);
         case DefFuncS d -> compileDefFunc(d);
         case IfFuncS i -> compileIfFunc(i);
         case MapFuncS m -> compileMapFunc(m);
-        case NatFuncS n -> compileNatFunc(n);
       };
       nals.put(funcB, funcS);
       return funcB;
@@ -120,7 +121,16 @@ public class Compiler {
     }
   }
 
-  private FuncB compileByteFunc(ByteFuncS byteFuncS) {
+  private FuncB compileAnnFunc(AnnFuncS annFuncS) {
+    var annName = annFuncS.ann().name();
+    return switch (annName) {
+      case BYTECODE -> compileByteFunc(annFuncS);
+      case NATIVE_PURE, NATIVE_IMPURE -> compileNatFunc(annFuncS);
+      default -> throw new CompilerExc("Illegal native function annotation: " + annName + ".");
+    };
+  }
+
+  private FuncB compileByteFunc(AnnFuncS byteFuncS) {
     var ann = byteFuncS.ann();
     var jar = loadNativeJar(ann.loc());
     var bytecode = bytecodeLoader.load(byteFuncS.name(), jar, ann.path().string());
@@ -159,7 +169,7 @@ public class Compiler {
     return bytecodeF.func(funcTB, bodyB);
   }
 
-  private FuncB compileNatFunc(NatFuncS natFuncS) {
+  private FuncB compileNatFunc(AnnFuncS natFuncS) {
     var funcTB = convertFuncT(natFuncS.type());
     var methodB = createMethodB(natFuncS.ann(), funcTB);
     var paramRefsB = createParamRefsB(funcTB.params());
@@ -170,11 +180,11 @@ public class Compiler {
     return bytecodeF.func(funcTB, bodyB);
   }
 
-  private MethodB createMethodB(NativeS nativeS, FuncTB funcTB) {
+  private MethodB createMethodB(AnnS annS, FuncTB funcTB) {
     var methodTB = bytecodeF.methodT(funcTB.res(), funcTB.params());
-    var jarB = loadNativeJar(nativeS.loc());
-    var classBinaryNameB = bytecodeF.string(nativeS.path().string());
-    var isPureB = bytecodeF.bool(nativeS.isPure());
+    var jarB = loadNativeJar(annS.loc());
+    var classBinaryNameB = bytecodeF.string(annS.path().string());
+    var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
     return bytecodeF.method(methodTB, jarB, classBinaryNameB, isPureB);
   }
 

@@ -6,18 +6,20 @@ import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.util.collect.NList;
 
 /**
+ * Annotated function that has no defined body.
+ *
  * This class is immutable.
  */
-public sealed abstract class AnnFuncS extends FuncS permits ByteFuncS, NatFuncS {
-  private final Object ann;
+public final class AnnFuncS extends FuncS {
+  private final AnnS ann;
 
-  public AnnFuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, Object ann,
+  public AnnFuncS(AnnS ann, FuncTS type, ModPath modPath, String name, NList<ItemS> params,
       Loc loc) {
     super(type, modPath, name, params, loc);
     this.ann = ann;
   }
 
-  public Object ann() {
+  public AnnS ann() {
     return ann;
   }
 
@@ -39,6 +41,11 @@ public sealed abstract class AnnFuncS extends FuncS permits ByteFuncS, NatFuncS 
   @Override
   public int hashCode() {
     return Objects.hash(ann, resT(), modPath(), name(), params(), loc());
+  }
+
+  @Override
+  public String toString() {
+    return "NatFunc(`" + code() + "`)";
   }
 
   protected String code() {

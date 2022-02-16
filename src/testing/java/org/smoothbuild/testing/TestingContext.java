@@ -10,6 +10,9 @@ import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
 import static org.smoothbuild.lang.base.define.ItemS.toTypes;
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.BYTECODE;
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_IMPURE;
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
@@ -87,7 +90,8 @@ import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.install.TempManager;
-import org.smoothbuild.lang.base.define.ByteFuncS;
+import org.smoothbuild.lang.base.define.AnnFuncS;
+import org.smoothbuild.lang.base.define.AnnS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.IfFuncS;
@@ -99,7 +103,6 @@ import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
-import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
@@ -121,12 +124,10 @@ import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VarTS;
 import org.smoothbuild.lang.expr.BlobS;
-import org.smoothbuild.lang.expr.BytecodeS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
-import org.smoothbuild.lang.expr.NativeS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
@@ -1005,28 +1006,29 @@ public class TestingContext {
 
   // other smooth language thingies
 
-  public BytecodeS bytecodeS(StringS path, Loc loc) {
-    return new BytecodeS(path, loc);
+  public AnnS bytecodeS(StringS path, Loc loc) {
+    return new AnnS(BYTECODE, path, loc);
   }
 
-  public NativeS nativeS() {
+  public AnnS nativeS() {
     return nativeS(1, stringS("implementation.Class"));
   }
 
-  public NativeS nativeS(int line, StringS implementedBy) {
-    return nativeS(line, implementedBy, true);
+  public AnnS nativeS(int line, StringS classBinaryName) {
+    return nativeS(line, classBinaryName, true);
   }
 
-  public NativeS nativeS(int line, StringS implementedBy, boolean pure) {
-    return nativeS(loc(line), implementedBy, pure);
+  public AnnS nativeS(int line, StringS classBinaryName, boolean pure) {
+    return nativeS(loc(line), classBinaryName, pure);
   }
 
-  public NativeS nativeS(Loc loc, StringS implementedBy) {
-    return nativeS(loc, implementedBy, true);
+  public AnnS nativeS(Loc loc, StringS classBinaryName) {
+    return nativeS(loc, classBinaryName, true);
   }
 
-  public NativeS nativeS(Loc loc, StringS implementedBy, boolean pure) {
-    return new NativeS(implementedBy, pure, loc);
+  public AnnS nativeS(Loc loc, StringS classBinaryName, boolean pure) {
+    var name = pure ? NATIVE_PURE : NATIVE_IMPURE;
+    return new AnnS(name, classBinaryName, loc);
   }
 
   public ItemS itemS(TypeS type, String name) {
@@ -1045,9 +1047,9 @@ public class TestingContext {
     return new ItemS(type, modPath(), name, defaultArg, loc(line));
   }
 
-  public ByteFuncS byteFuncS(BytecodeS ann, FuncTS type, ModPath modPath, String name,
+  public AnnFuncS byteFuncS(AnnS ann, FuncTS type, ModPath modPath, String name,
       NList<ItemS> params, Loc loc) {
-    return new ByteFuncS(ann, type, modPath, name, params, loc);
+    return new AnnFuncS(ann, type, modPath, name, params, loc);
   }
 
   public DefValS defValS(String name, ExprS expr) {
@@ -1058,33 +1060,33 @@ public class TestingContext {
     return new DefValS(type, modPath(), name, expr, loc(line));
   }
 
-  public NatFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {
+  public AnnFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {
     return natFuncS(resT, name, params, nativeS(1, stringS(1, "Impl.met")));
   }
 
-  public NatFuncS natFuncS(TypeS resT, String name, NList<ItemS> params, NativeS ann) {
+  public AnnFuncS natFuncS(TypeS resT, String name, NList<ItemS> params, AnnS ann) {
     return natFuncS(1, resT, name, params, ann);
   }
 
-  public NatFuncS natFuncS(int line, TypeS resT, String name, NList<ItemS> params, NativeS ann) {
+  public AnnFuncS natFuncS(int line, TypeS resT, String name, NList<ItemS> params, AnnS ann) {
     return natFuncS(line, funcTS(resT, params.list()), modPath(), name, params, ann);
   }
 
-  public NatFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params) {
+  public AnnFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params) {
     return natFuncS(funcT, name, params, nativeS());
   }
 
-  public NatFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params, NativeS ann) {
+  public AnnFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
     return natFuncS(1, funcT, name, params, ann);
   }
 
-  public NatFuncS natFuncS(int line, FuncTS funcT, String name, NList<ItemS> params, NativeS ann) {
+  public AnnFuncS natFuncS(int line, FuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
     return natFuncS(line, funcT, modPath(), name, params, ann);
   }
 
-  public NatFuncS natFuncS(int line, FuncTS funcT, ModPath modPath, String name,
-      NList<ItemS> params, NativeS ann) {
-    return new NatFuncS(ann, funcT, modPath, name, params, loc(line));
+  public AnnFuncS natFuncS(int line, FuncTS funcT, ModPath modPath, String name,
+      NList<ItemS> params, AnnS ann) {
+    return new AnnFuncS(ann, funcT, modPath, name, params, loc(line));
   }
 
   public DefFuncS defFuncS(TypeS type, String name, ExprS body, NList<ItemS> params) {
