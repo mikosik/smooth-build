@@ -2,6 +2,9 @@ package org.smoothbuild.lang.parse;
 
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.api.AnnotationNames.ANNOTATION_NAMES;
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.BYTECODE;
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_IMPURE;
+import static org.smoothbuild.lang.base.type.api.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -234,18 +237,29 @@ public class AnalyzeSemantically {
         } else if (funcN.body().isEmpty()) {
           logger.log(parseError(funcN, "Function body is missing."));
         }
-
       }
 
       @Override
       public void visitValue(ValN valN) {
         super.visitValue(valN);
         if (valN.ann().isPresent()) {
-          logger.log(parseError(valN.ann().get(), "Value cannot have @Native annotation."));
-        }
-        if (valN.body().isEmpty()) {
+          var ann = valN.ann().get();
+          var annName = ann.name();
+          switch (annName) {
+            case BYTECODE -> {
+              if (valN.body().isPresent()) {
+                logger.log(
+                    parseError(valN, "Value with @" + annName + " annotation cannot have body."));
+              }
+            }
+            case NATIVE_PURE, NATIVE_IMPURE -> logger.log(
+                parseError(valN.ann().get(), "Value cannot have @" + annName + " annotation."));
+            default -> logger.log(parseError(ann, "Unknown annotation " + ann.q() + "."));
+          }
+        } else if (valN.body().isEmpty()) {
           logger.log(parseError(valN, "Value cannot have empty body."));
         }
+
       }
     }.visitAst(ast);
   }

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.define.AnnFuncS;
 import org.smoothbuild.lang.base.define.AnnS;
+import org.smoothbuild.lang.base.define.AnnValS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefinedS;
@@ -17,6 +18,7 @@ import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.TopEvalS;
+import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
@@ -66,12 +68,17 @@ public class TopEvalLoader {
     }
   }
 
-  private DefValS loadVal(ModPath path, EvalN valN) {
+  private ValS loadVal(ModPath path, EvalN valN) {
     var type = valN.type().get();
     var name = valN.name();
     var loc = valN.loc();
-    var body = createExpr(valN.body().get());
-    return new DefValS(type, path, name, body, loc);
+    if (valN.ann().isPresent()) {
+      var ann = loadAnn(valN.ann().get());
+      return new AnnValS(ann, type, path, name, loc);
+    } else {
+      var body = createExpr(valN.body().get());
+      return new DefValS(type, path, name, body, loc);
+    }
   }
 
   private FuncS loadFunc(ModPath path, FuncN funcN) {
@@ -81,7 +88,8 @@ public class TopEvalLoader {
     var loc = funcN.loc();
     var funcT = typeSF.func(resT, map(params, DefinedS::type));
     if (funcN.ann().isPresent()) {
-      return new AnnFuncS(loadAnn(funcN.ann().get()), funcT, path, name, params, loc);
+      var ann = loadAnn(funcN.ann().get());
+      return new AnnFuncS(ann, funcT, path, name, params, loc);
     } else {
       var body = createExpr(funcN.body().get());
       return new DefFuncS(funcT, path, name, params, body, loc);

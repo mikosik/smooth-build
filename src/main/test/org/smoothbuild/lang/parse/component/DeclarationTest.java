@@ -400,11 +400,56 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void without_body_fails() {
+      public void non_bytecode_val_without_body_fails() {
         module("""
             String result;
             """)
             .loadsWithError(1, "Value cannot have empty body.");
+      }
+
+      @Test
+      public void bytecode_val_with_body_fails() {
+        module("""
+            @Bytecode("implementation")
+            String result = "abc";
+            """)
+            .loadsWithError(2, "Value with @Bytecode annotation cannot have body.");
+      }
+
+      @Test
+      public void native_val_with_body_fails() {
+        module("""
+            @Native("implementation")
+            String result = "abc";
+            """)
+            .loadsWithError(1, "Value cannot have @Native annotation.");
+      }
+
+      @Test
+      public void native_impure_val_with_body_fails() {
+        module("""
+            @NativeImpure("implementation")
+            String result = "abc";
+            """)
+            .loadsWithError(1, "Value cannot have @NativeImpure annotation.");
+      }
+
+      @Test
+      public void native_val_without_body_fails() {
+        module("""
+            @Native("implementation")
+            String result;
+            """)
+            .loadsWithError(1, "Value cannot have @Native annotation.");
+      }
+
+      @Test
+      public void native_impure_val_without_body_fails() {
+        module("""
+            @NativeImpure("implementation")
+            String result;
+            """)
+            .loadsWithError(1, "Value cannot have @NativeImpure annotation.");
       }
     }
 

@@ -280,13 +280,25 @@ public class ExprSLoadingTest extends TestingContext {
   @Nested
   class _definition_of {
     @Test
-    public void defined_value() {
-      module("""
+    public void def_value() {
+      var code = """
           Blob myValue =
             0x07;
-          """)
+          """;
+      module(code)
           .loadsWithSuccess()
           .containsEval(defValS(1, BLOB, "myValue", blobS(2, 7)));
+    }
+
+    @Test
+    public void byte_value() {
+      var code = """
+          @Bytecode("implementation")
+          Blob myValue;
+          """;
+      module(code)
+          .loadsWithSuccess()
+          .containsEval(annValS(2, bytecodeS(1, "implementation"), BLOB, "myValue"));
     }
 
     @Test

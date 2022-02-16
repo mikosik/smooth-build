@@ -403,9 +403,9 @@ public class NativeTest extends AcceptanceTestCase {
   }
 
   @Nested
-  class _bytecode_func {
+  class _bytecode {
     @Test
-    public void can_be_called() throws Exception {
+    public void func_can_be_called() throws Exception {
       createUserNativeJar(ReturnIdFunc.class);
       createUserModule(format("""
             @Bytecode("%s")
@@ -416,6 +416,19 @@ public class NativeTest extends AcceptanceTestCase {
       assertThat(artifact())
           .isEqualTo(intB(77));
 
+    }
+
+    @Test
+    public void value_can_be_called() throws Exception {
+      Class<?> clazz = org.smoothbuild.testing.func.bytecode.ReturnAbc.class;
+      createUserNativeJar(clazz);
+      createUserModule(format("""
+            @Bytecode("%s")
+            String result;
+            """, clazz.getCanonicalName()));
+      evaluate("result");
+      assertThat(artifact())
+          .isEqualTo(stringB("abc"));
     }
   }
 

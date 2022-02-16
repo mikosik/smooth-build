@@ -1005,6 +1005,14 @@ public class TestingContext {
 
   // other smooth language thingies
 
+  public AnnS bytecodeS(int line, String path) {
+    return bytecodeS(stringS(path), loc(line));
+  }
+
+  public AnnS bytecodeS(String path, Loc loc) {
+    return bytecodeS(stringS(path), loc);
+  }
+
   public AnnS bytecodeS(StringS path, Loc loc) {
     return new AnnS(BYTECODE, path, loc);
   }
@@ -1053,6 +1061,10 @@ public class TestingContext {
   public AnnFuncS byteFuncS(AnnS ann, FuncTS type, ModPath modPath, String name,
       NList<ItemS> params, Loc loc) {
     return new AnnFuncS(ann, type, modPath, name, params, loc);
+  }
+
+  public AnnValS annValS(int line, AnnS ann, TypeS type, String name) {
+    return new AnnValS(ann, type, modPath(), name, loc(line));
   }
 
   public AnnValS annValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
