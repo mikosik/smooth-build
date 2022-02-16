@@ -24,13 +24,8 @@ public class BytecodeLoader {
 
   public Result<ObjB> load(String name, BlobB jar, String classBinaryName) {
     return methodLoader.load(name, jar, classBinaryName)
-        .validate(BytecodeLoader::validateType)
         .flatMap(this::invoke)
         .mapError(e -> loadingError(name, classBinaryName, e));
-  }
-
-  private static String validateType(Method method) {
-    return null;
   }
 
   private Result<ObjB> invoke(Method method) {
