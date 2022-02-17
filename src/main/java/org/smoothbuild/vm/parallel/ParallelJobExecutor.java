@@ -33,8 +33,7 @@ public class ParallelJobExecutor {
     this(computer, reporter, Runtime.getRuntime().availableProcessors());
   }
 
-  public ParallelJobExecutor(Computer computer, ExecutionReporter reporter,
-      int threadCount) {
+  public ParallelJobExecutor(Computer computer, ExecutionReporter reporter, int threadCount) {
     this.computer = computer;
     this.reporter = reporter;
     this.threadCount = threadCount;
