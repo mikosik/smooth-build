@@ -1,9 +1,9 @@
 package org.smoothbuild.testing.type;
 
-import org.smoothbuild.lang.base.type.Typing;
-import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.type.Typing;
+import org.smoothbuild.lang.type.api.Bounds;
+import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 

@@ -9,8 +9,8 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
 import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeBBridge;
+import org.smoothbuild.lang.type.api.Type;
+import org.smoothbuild.lang.type.api.TypeBBridge;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

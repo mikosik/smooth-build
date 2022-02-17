@@ -17,14 +17,14 @@ import javax.inject.Inject;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.install.ModFilesDetector;
-import org.smoothbuild.lang.base.define.DefsS;
-import org.smoothbuild.lang.base.define.InternalModLoader;
-import org.smoothbuild.lang.base.define.ModFiles;
-import org.smoothbuild.lang.base.define.ModPath;
-import org.smoothbuild.lang.base.define.ModS;
-import org.smoothbuild.lang.parse.ModLoader;
+import org.smoothbuild.lang.define.DefsS;
+import org.smoothbuild.lang.define.InternalModLoader;
+import org.smoothbuild.lang.define.ModFiles;
+import org.smoothbuild.lang.define.ModPath;
+import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.parse.ModLoader;
 
 import com.google.common.collect.ImmutableList;
 

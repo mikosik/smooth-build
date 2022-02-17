@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type;
 
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.lang.base.type.api.TypeF;
+import org.smoothbuild.lang.type.api.TypeF;
 
 public interface TypeBF extends TypeF<TypeB> {
 }

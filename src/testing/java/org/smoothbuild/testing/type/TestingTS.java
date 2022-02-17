@@ -1,28 +1,28 @@
 package org.smoothbuild.testing.type;
 
-import static org.smoothbuild.lang.base.define.ItemSigS.itemSigS;
+import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
-import org.smoothbuild.lang.base.define.ItemSigS;
-import org.smoothbuild.lang.base.type.Typing;
-import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.api.VarBounds;
-import org.smoothbuild.lang.base.type.impl.AnyTS;
-import org.smoothbuild.lang.base.type.impl.ArrayTS;
-import org.smoothbuild.lang.base.type.impl.BlobTS;
-import org.smoothbuild.lang.base.type.impl.BoolTS;
-import org.smoothbuild.lang.base.type.impl.ClosedVarTS;
-import org.smoothbuild.lang.base.type.impl.FuncTS;
-import org.smoothbuild.lang.base.type.impl.IntTS;
-import org.smoothbuild.lang.base.type.impl.NothingTS;
-import org.smoothbuild.lang.base.type.impl.OpenVarTS;
-import org.smoothbuild.lang.base.type.impl.StringTS;
-import org.smoothbuild.lang.base.type.impl.StructTS;
-import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.base.type.impl.TypeSF;
-import org.smoothbuild.lang.base.type.impl.VarTS;
+import org.smoothbuild.lang.define.ItemSigS;
+import org.smoothbuild.lang.type.Typing;
+import org.smoothbuild.lang.type.api.Bounds;
+import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.impl.AnyTS;
+import org.smoothbuild.lang.type.impl.ArrayTS;
+import org.smoothbuild.lang.type.impl.BlobTS;
+import org.smoothbuild.lang.type.impl.BoolTS;
+import org.smoothbuild.lang.type.impl.ClosedVarTS;
+import org.smoothbuild.lang.type.impl.FuncTS;
+import org.smoothbuild.lang.type.impl.IntTS;
+import org.smoothbuild.lang.type.impl.NothingTS;
+import org.smoothbuild.lang.type.impl.OpenVarTS;
+import org.smoothbuild.lang.type.impl.StringTS;
+import org.smoothbuild.lang.type.impl.StructTS;
+import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.impl.TypeSF;
+import org.smoothbuild.lang.type.impl.VarTS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 

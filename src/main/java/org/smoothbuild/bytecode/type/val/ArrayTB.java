@@ -2,15 +2,15 @@ package org.smoothbuild.bytecode.type.val;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.bytecode.type.base.CatKindB.ARRAY;
-import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
+import static org.smoothbuild.lang.type.api.TypeNames.arrayTypeName;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.base.type.api.ArrayT;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.type.api.ArrayT;
+import org.smoothbuild.lang.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 

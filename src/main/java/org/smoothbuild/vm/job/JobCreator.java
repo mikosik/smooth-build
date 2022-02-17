@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.job;
 
-import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
+import static org.smoothbuild.lang.type.api.VarBounds.varBounds;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
@@ -37,10 +37,10 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.CallableTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.lang.base.define.Nal;
-import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.type.api.VarBounds;
+import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.define.Nal;
+import org.smoothbuild.lang.define.NalImpl;
+import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.util.function.TriFunction;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
 import org.smoothbuild.vm.job.algorithm.CombineAlgorithm;

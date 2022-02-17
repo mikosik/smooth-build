@@ -1,8 +1,8 @@
 package org.smoothbuild.bytecode.type.val;
 
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.lang.base.type.api.FuncT;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.type.api.FuncT;
+import org.smoothbuild.lang.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 

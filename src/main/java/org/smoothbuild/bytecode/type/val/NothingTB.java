@@ -4,7 +4,7 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.NOTHING;
 
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.base.type.api.TypeNames;
+import org.smoothbuild.lang.type.api.TypeNames;
 
 /**
  * This class is immutable.

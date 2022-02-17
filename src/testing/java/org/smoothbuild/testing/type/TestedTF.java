@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.type;
 
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 

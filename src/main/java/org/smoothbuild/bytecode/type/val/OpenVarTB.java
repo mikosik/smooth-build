@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.type.val;
 import static org.smoothbuild.bytecode.type.base.CatKindB.OPEN_VARIABLE;
 
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.base.type.api.OpenVarT;
+import org.smoothbuild.lang.type.api.OpenVarT;
 
 import com.google.common.collect.ImmutableSet;
 

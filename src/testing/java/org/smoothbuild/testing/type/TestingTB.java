@@ -16,8 +16,8 @@ import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Bounds;
+import org.smoothbuild.lang.type.api.Sides.Side;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;

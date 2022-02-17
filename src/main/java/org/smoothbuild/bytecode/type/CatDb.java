@@ -28,7 +28,7 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.fromMarker;
-import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
+import static org.smoothbuild.lang.type.api.TypeNames.isVarName;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,9 +68,9 @@ import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
-import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.Sides;
-import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Bounds;
+import org.smoothbuild.lang.type.api.Sides;
+import org.smoothbuild.lang.type.api.Sides.Side;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.function.TriFunction;
 

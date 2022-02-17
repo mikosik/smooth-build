@@ -47,7 +47,7 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
-import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.type.Typing;
 import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.base.Preconditions;

@@ -8,10 +8,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.FuncTS;
-import org.smoothbuild.lang.base.type.impl.NothingTS;
-import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.type.api.Type;
+import org.smoothbuild.lang.type.impl.FuncTS;
+import org.smoothbuild.lang.type.impl.NothingTS;
+import org.smoothbuild.lang.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 

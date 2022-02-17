@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.compile.Compiler;
 import org.smoothbuild.compile.CompilerExc;
 import org.smoothbuild.compile.CompilerProv;
-import org.smoothbuild.lang.base.define.DefsS;
+import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.Vm;

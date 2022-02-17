@@ -1,13 +1,13 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.lang.base.define.Loc.commandLineLoc;
+import static org.smoothbuild.lang.define.Loc.commandLineLoc;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.DefsS;
-import org.smoothbuild.lang.base.define.ValS;
+import org.smoothbuild.lang.define.DefsS;
+import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;

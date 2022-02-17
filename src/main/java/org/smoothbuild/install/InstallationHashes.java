@@ -16,8 +16,8 @@ import javax.inject.Inject;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
-import org.smoothbuild.lang.base.define.ModFiles;
-import org.smoothbuild.lang.base.define.ModPath;
+import org.smoothbuild.lang.define.ModFiles;
+import org.smoothbuild.lang.define.ModPath;
 
 import com.google.common.collect.ImmutableList;
 

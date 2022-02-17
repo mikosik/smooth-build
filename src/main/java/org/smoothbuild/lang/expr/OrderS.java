@@ -2,8 +2,8 @@ package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.lang.base.type.impl.ArrayTS;
+import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.type.impl.ArrayTS;
 
 import com.google.common.collect.ImmutableList;
 

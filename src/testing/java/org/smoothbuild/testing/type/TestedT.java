@@ -3,7 +3,7 @@ package org.smoothbuild.testing.type;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.type.api.Type;
 
 public interface TestedT<T extends Type> {
   public T type();

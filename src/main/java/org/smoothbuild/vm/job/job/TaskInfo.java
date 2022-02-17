@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.job.job;
 
-import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.lang.base.define.Nal;
+import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.define.Nal;
 
 public record TaskInfo(TaskKind kind, String name, Loc loc) implements Nal {
   public static final int NAME_LENGTH_LIMIT = 43;

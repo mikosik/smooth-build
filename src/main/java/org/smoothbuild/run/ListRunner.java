@@ -8,9 +8,9 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.define.DefinedS;
-import org.smoothbuild.lang.base.define.DefsS;
-import org.smoothbuild.lang.base.define.ValS;
+import org.smoothbuild.lang.define.DefinedS;
+import org.smoothbuild.lang.define.DefsS;
+import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.report.Reporter;
 
