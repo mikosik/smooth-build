@@ -13,20 +13,6 @@ import org.smoothbuild.testing.TestingContext;
 
 public class ExprSLoadingTest extends TestingContext {
   @Test
-  public void array_literal_expression() {
-    module("""
-          result =
-          [
-            0x07,
-            0x08
-          ];
-          """)
-        .loadsWithSuccess()
-        .containsEval(defValS(1, a(BLOB), "result",
-            orderS(2, BLOB, blobS(3, 7), blobS(4, 8))));
-  }
-
-  @Test
   public void blob_literal_expression() {
     module("""
           result =
@@ -44,6 +30,20 @@ public class ExprSLoadingTest extends TestingContext {
           """)
         .loadsWithSuccess()
         .containsEval(defValS(1, INT, "result", intS(2, 123)));
+  }
+
+  @Test
+  public void order_expression() {
+    module("""
+          result =
+          [
+            0x07,
+            0x08
+          ];
+          """)
+        .loadsWithSuccess()
+        .containsEval(defValS(1, a(BLOB), "result",
+            orderS(2, BLOB, blobS(3, 7), blobS(4, 8))));
   }
 
   @Nested
@@ -164,6 +164,17 @@ public class ExprSLoadingTest extends TestingContext {
   }
 
   @Test
+  public void param_reference_expression() {
+    module("""
+          Blob myFunc(Blob param1)
+            = param1;
+          """)
+        .loadsWithSuccess()
+        .containsEval(defFuncS(
+            1, BLOB, "myFunc", paramRefS(2, BLOB, "param1"), nList(itemS(1, BLOB, "param1"))));
+  }
+
+  @Test
   public void select_expression() {
     var myStruct = structTS("MyStruct", nList(sigS(STRING, "field")));
     module("""
@@ -177,17 +188,6 @@ public class ExprSLoadingTest extends TestingContext {
         .loadsWithSuccess()
         .containsEval(defValS(5, STRING, "result",
             selectS(6, STRING, topRefS(5, myStruct, "struct"), "field")));
-  }
-
-  @Test
-  public void param_reference_expression() {
-    module("""
-          Blob myFunc(Blob param1)
-            = param1;
-          """)
-        .loadsWithSuccess()
-        .containsEval(defFuncS(
-            1, BLOB, "myFunc", paramRefS(2, BLOB, "param1"), nList(itemS(1, BLOB, "param1"))));
   }
 
   @Nested
