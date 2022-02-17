@@ -167,12 +167,7 @@ public class TypeInferrer {
             return exprT.map(typing::openVars);
           }
         } else {
-          if (eval.evalT().isPresent()) {
-            return createType(eval.evalT().get());
-          } else {
-            logError(eval, eval.q() + " is native so it should have declared result type.");
-            return empty();
-          }
+          return createType(eval.evalT().get());
         }
       }
 

@@ -228,8 +228,12 @@ public class AnalyzeSemantically {
           var annName = ann.name();
           if (ANNOTATION_NAMES.contains(annName)) {
             if (funcN.body().isPresent()) {
-              logger.log(
-                  parseError(funcN, "Function with @" + annName + " annotation cannot have body."));
+              logger.log(parseError(funcN,
+                  "Function " + funcN.q() + " with @" + annName + " annotation cannot have body."));
+            }
+            if (funcN.evalT().isEmpty()) {
+              logger.log(parseError(funcN, "Function " + funcN.q() + " with @" + annName
+                  + " annotation must declare result type."));
             }
           } else {
             logger.log(parseError(ann, "Unknown annotation " + ann.q() + "."));
@@ -250,6 +254,10 @@ public class AnalyzeSemantically {
               if (valN.body().isPresent()) {
                 logger.log(
                     parseError(valN, "Value with @" + annName + " annotation cannot have body."));
+              }
+              if (valN.evalT().isEmpty()) {
+                logger.log(parseError(valN, "Value " + valN.q() + " with @" + annName
+                    + " annotation must declare type."));
               }
             }
             case NATIVE_PURE, NATIVE_IMPURE -> logger.log(

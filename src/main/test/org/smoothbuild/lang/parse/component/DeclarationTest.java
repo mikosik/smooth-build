@@ -400,7 +400,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void non_bytecode_val_without_body_fails() {
+      public void without_body_fails() {
         module("""
             String result;
             """)
@@ -408,7 +408,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void bytecode_val_with_body_fails() {
+      public void with_bytecode_ann_and_body_fails() {
         module("""
             @Bytecode("implementation")
             String result = "abc";
@@ -417,7 +417,16 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void native_val_with_body_fails() {
+      public void with_bytecode_ann_and_without_res_type_fails() {
+        module("""
+            @Bytecode("implementation")
+            result;
+            """)
+            .loadsWithError(2, "Value `result` with @Bytecode annotation must declare type.");
+      }
+
+      @Test
+      public void with_native_ann_and_body_fails() {
         module("""
             @Native("implementation")
             String result = "abc";
@@ -426,16 +435,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void native_impure_val_with_body_fails() {
-        module("""
-            @NativeImpure("implementation")
-            String result = "abc";
-            """)
-            .loadsWithError(1, "Value cannot have @NativeImpure annotation.");
-      }
-
-      @Test
-      public void native_val_without_body_fails() {
+      public void with_native_ann_and_without_body_fails() {
         module("""
             @Native("implementation")
             String result;
@@ -444,19 +444,46 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void native_impure_val_without_body_fails() {
+      public void with_native_impure_ann_and_body_fails() {
+        module("""
+            @NativeImpure("implementation")
+            String result = "abc";
+            """)
+            .loadsWithError(1, "Value cannot have @NativeImpure annotation.");
+      }
+
+      @Test
+      public void with_native_impure_ann_and_without_body_fails() {
         module("""
             @NativeImpure("implementation")
             String result;
             """)
             .loadsWithError(1, "Value cannot have @NativeImpure annotation.");
+      }
+
+      @Test
+      public void with_unknown_ann_and_body_fails() {
+        module("""
+            @Unknown("implementation")
+            String result = "abc";
+            """)
+            .loadsWithError(1, "Unknown annotation `Unknown`.");
+      }
+
+      @Test
+      public void with_unknown_ann_and_without_body_fails() {
+        module("""
+            @Unknown("implementation")
+            String result;
+            """)
+            .loadsWithError(1, "Unknown annotation `Unknown`.");
       }
     }
 
     @Nested
     class _func {
       @Test
-      public void func_without_body() {
+      public void without_body_fails() {
         module("""
           String myFunc();
           """)
@@ -464,7 +491,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void func_with_unknown_ann_with_body() {
+      public void with_unknown_ann_with_body_fails() {
         module("""
           @Unknown("abc")
           String myFunc() = "abc";
@@ -473,7 +500,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void func_with_unknown_ann_without_body() {
+      public void with_unknown_ann_without_body_fails() {
         module("""
           @Unknown("abc")
           String myFunc();
@@ -482,30 +509,41 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void func_with_native_ann_and_with_body() {
+      public void with_native_ann_and_with_body_fails() {
         module("""
           @Native("Impl.met")
           String myFunc() = "abc";
           """)
-            .loadsWithError(2, "Function with @Native annotation cannot have body.");
+            .loadsWithError(2, "Function `myFunc` with @Native annotation cannot have body.");
       }
 
       @Test
-      public void func_with_bytecode_ann_and_with_body() {
-        module("""
-          @Bytecode("Impl.met")
-          String myFunc() = "abc";
-          """)
-            .loadsWithError(2, "Function with @Bytecode annotation cannot have body.");
-      }
-
-      @Test
-      public void nat_func_without_declared_result_type_fails() {
+      public void with_native_ann_without_declared_result_type_fails() {
         module("""
           @Native("Impl.met")
           myFunc();
           """)
-            .loadsWithError(2, "`myFunc` is native so it should have declared result type.");
+            .loadsWithError(2,
+                "Function `myFunc` with @Native annotation must declare result type.");
+      }
+
+      @Test
+      public void with_bytecode_ann_and_with_body_fails() {
+        module("""
+          @Bytecode("Impl.met")
+          String myFunc() = "abc";
+          """)
+            .loadsWithError(2, "Function `myFunc` with @Bytecode annotation cannot have body.");
+      }
+
+      @Test
+      public void with_bytecode_ann_and_without_declared_result_type_fails() {
+        module("""
+          @Bytecode("Impl.met")
+          myFunc();
+          """)
+            .loadsWithError(2,
+                "Function `myFunc` with @Bytecode annotation must declare result type.");
       }
 
       @Nested
