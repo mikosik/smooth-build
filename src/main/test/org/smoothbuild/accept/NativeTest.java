@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import static java.util.regex.Pattern.DOTALL;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.util.Strings.q;
 
 import java.util.regex.Pattern;
@@ -415,7 +416,22 @@ public class NativeTest extends AcceptanceTestCase {
       evaluate("result");
       assertThat(artifact())
           .isEqualTo(intB(77));
+    }
 
+    @Test
+    public void func_with_illegal_impl_causes_err() throws Exception {
+      Class<?> clazz = org.smoothbuild.testing.func.bytecode.NonPublicMethod.class;
+      createUserNativeJar(clazz);
+      createUserModule(format("""
+            @Bytecode("%s")
+            Int brokenFunc();
+            result = brokenFunc();
+            """, clazz.getCanonicalName()));
+      evaluate("result");
+      assertThat(logs())
+          .containsExactly(fatal("build.smooth:1: Error loading bytecode for `brokenFunc` using "
+              + "provider specified as `org.smoothbuild.testing.func.bytecode.NonPublicMethod`: "
+              + "Providing method is not public."));
     }
 
     @Test
@@ -429,6 +445,21 @@ public class NativeTest extends AcceptanceTestCase {
       evaluate("result");
       assertThat(artifact())
           .isEqualTo(stringB("abc"));
+    }
+
+    @Test
+    public void value_with_illegal_impl_causes_err() throws Exception {
+      Class<?> clazz = org.smoothbuild.testing.func.bytecode.NonPublicMethod.class;
+      createUserNativeJar(clazz);
+      createUserModule(format("""
+            @Bytecode("%s")
+            Int result;
+            """, clazz.getCanonicalName()));
+      evaluate("result");
+      assertThat(logs())
+          .containsExactly(fatal("build.smooth:1: Error loading bytecode for `result` using "
+              + "provider specified as `org.smoothbuild.testing.func.bytecode.NonPublicMethod`: "
+              + "Providing method is not public."));
     }
   }
 

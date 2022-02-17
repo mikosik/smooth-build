@@ -1006,7 +1006,11 @@ public class TestingContext {
   // other smooth language thingies
 
   public AnnS bytecodeS(int line, String path) {
-    return bytecodeS(stringS(path), loc(line));
+    return bytecodeS(line, stringS(path));
+  }
+
+  public AnnS bytecodeS(int line, StringS path) {
+    return bytecodeS(path, loc(line));
   }
 
   public AnnS bytecodeS(String path, Loc loc) {

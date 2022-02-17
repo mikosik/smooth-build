@@ -179,45 +179,6 @@ public class ExprSLoadingTest extends TestingContext {
             selectS(6, STRING, topRefS(5, myStruct, "struct"), "field")));
   }
 
-  @Nested
-  class _bytecode_func {
-    @Test
-    public void bytecode_func() {
-      module("""
-          @Bytecode("Impl.met")
-          String myFunc();
-          """)
-          .loadsWithSuccess()
-          .containsEval(
-              byteFuncS(2, bytecodeS(stringS(1, "Impl.met"), loc(1)), STRING, "myFunc", nList()));
-    }
-  }
-
-  @Nested
-  class _nat_func {
-    @Test
-    public void impure() {
-      module("""
-          @NativeImpure("Impl.met")
-          String myFunc();
-          """)
-          .loadsWithSuccess()
-          .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), false)));
-    }
-
-    @Test
-    public void pure() {
-      module("""
-          @Native("Impl.met")
-          String myFunc();
-          """)
-          .loadsWithSuccess()
-          .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
-    }
-  }
-
   @Test
   public void param_reference_expression() {
     module("""
@@ -291,7 +252,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void byte_value() {
+    public void bytecode_value() {
       var code = """
           @Bytecode("implementation")
           Blob myValue;
@@ -334,6 +295,67 @@ public class ExprSLoadingTest extends TestingContext {
           .loadsWithSuccess()
           .containsEval(defFuncS(1, STRING, "myFunc", stringS(4, "abc"),
               nList(itemS(2, BLOB, "param1", blobS(3, 7)))));
+    }
+
+    @Test
+    public void native_impure_func() {
+      module("""
+          @NativeImpure("Impl.met")
+          String myFunc();
+          """)
+          .loadsWithSuccess()
+          .containsEval(
+              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), false)));
+    }
+
+    @Test
+    public void native_pure_func() {
+      module("""
+          @Native("Impl.met")
+          String myFunc();
+          """)
+          .loadsWithSuccess()
+          .containsEval(
+              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
+    }
+
+    @Test
+    public void native_pure_func_with_default_argument() {
+      module("""
+          @Native("Impl.met")
+          String myFunc(
+            Blob param1 =
+              0x07);
+          """)
+          .loadsWithSuccess()
+          .containsEval(
+              natFuncS(2, STRING, "myFunc", nList(itemS(3, BLOB, "param1", blobS(4, 7))),
+                  nativeS(1, stringS(1, "Impl.met"), true)));
+    }
+
+    @Test
+    public void bytecode_func() {
+      module("""
+          @Bytecode("Impl.met")
+          String myFunc();
+          """)
+          .loadsWithSuccess()
+          .containsEval(
+              byteFuncS(2, bytecodeS(stringS(1, "Impl.met"), loc(1)), STRING, "myFunc", nList()));
+    }
+
+    @Test
+    public void bytecode_func_with_default_argument() {
+      module("""
+          @Bytecode("Impl.met")
+          String myFunc(
+            Blob param1 =
+              0x07);
+          """)
+          .loadsWithSuccess()
+          .containsEval(
+              byteFuncS(2, bytecodeS(1, stringS(1, "Impl.met")), STRING, "myFunc",
+                  nList(itemS(3, BLOB, "param1", blobS(4, 7)))));
     }
 
     @Test
