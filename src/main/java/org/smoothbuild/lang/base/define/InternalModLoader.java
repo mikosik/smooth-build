@@ -6,7 +6,6 @@ import static org.smoothbuild.util.collect.NList.nList;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.type.impl.TypeSF;
-import org.smoothbuild.util.collect.NList;
 
 public class InternalModLoader {
   private final TypeSF typeSF;
@@ -19,12 +18,6 @@ public class InternalModLoader {
   public ModS load() {
     ModPath path = new ModPath("internal-module");
     var types = nList(map(typeSF.baseTs(), t -> (DefTypeS) new DefBaseTypeS(path, t)));
-    return new ModS(path, null, types, evaluables(path));
-  }
-
-  private NList<TopEvalS> evaluables(ModPath modPath) {
-    var trueValue = new BoolValS(true, modPath, typeSF);
-    var falseValue = new BoolValS(false, modPath, typeSF);
-    return nList(trueValue, falseValue);
+    return new ModS(path, null, types, nList());
   }
 }

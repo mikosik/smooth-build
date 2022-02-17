@@ -26,7 +26,6 @@ import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.BoolB;
 import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.MethodB;
@@ -39,7 +38,6 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.define.AnnFuncS;
 import org.smoothbuild.lang.base.define.AnnS;
 import org.smoothbuild.lang.base.define.AnnValS;
-import org.smoothbuild.lang.base.define.BoolValS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
@@ -176,7 +174,6 @@ public class Compiler {
     var exprB = switch (valS) {
       case AnnValS annValS -> compileAnnVal(annValS);
       case DefValS defValS -> compileExpr(defValS.body());
-      case BoolValS boolValS -> compileBoolVal(boolValS);
     };
     var typeB = typeSbConv.convert(valS.type());
     if (!typeB.equals(exprB.type())) {
@@ -195,12 +192,6 @@ public class Compiler {
       case BYTECODE ->  fetchBytecode(annValS.ann(), convertT(annValS.type()), annValS.name());
       default -> throw new CompilerExc("Illegal value annotation: " + annName + ".");
     };
-  }
-
-  private BoolB compileBoolVal(BoolValS boolValS) {
-    var boolB = bytecodeF.bool(boolValS.valJ());
-    nals.put(boolB, boolValS);
-    return boolB;
   }
 
   private ObjB fetchBytecode(AnnS ann, TypeB typeB, String name) {

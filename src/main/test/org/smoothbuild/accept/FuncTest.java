@@ -130,7 +130,7 @@ public class FuncTest extends AcceptanceTestCase {
       @Test
       public void value_makes_it_inaccessible() throws IOException {
         createUserModule("""
-              localValue = true;
+              localValue = 7;
               String myFunc(String localValue) = localValue;
               result = myFunc("abc");
               """);
@@ -142,7 +142,7 @@ public class FuncTest extends AcceptanceTestCase {
       @Test
       public void func_makes_it_inaccessible() throws IOException {
         createUserModule("""
-              localFunc() = true;
+              localFunc() = 7;
               String myFunc(String localFunc) = localFunc;
               result = myFunc("abc");
               """);
