@@ -23,7 +23,10 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class JarFunc {
-  public static BlobB func(NativeApi nativeApi, ArrayB files, BlobB manifest) throws IOException {
+  public static BlobB func(NativeApi nativeApi, TupleB args) throws IOException {
+    ArrayB files = (ArrayB) args.get(0);
+    BlobB manifest = (BlobB) args.get(1);
+
     var duplicatesDetector = new HashSet<String>();
     BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {

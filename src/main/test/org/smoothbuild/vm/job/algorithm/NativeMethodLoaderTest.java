@@ -11,6 +11,7 @@ import static org.smoothbuild.vm.job.algorithm.NativeMethodLoader.NATIVE_METHOD_
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
@@ -22,13 +23,15 @@ import org.smoothbuild.util.collect.Result;
 public class NativeMethodLoaderTest extends TestingContext {
   @Test
   public void method_is_cached() throws Exception {
-    var method = ReturnAbc.class.getDeclaredMethod(NATIVE_METHOD_NAME, NativeApi.class);
+    var method = ReturnAbc.class.getDeclaredMethod(
+        NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
     testCaching(method, Result.of(method), Result.of(method));
   }
 
   @Test
   public void error_when_loading_method_is_cached() throws Exception {
-    var method = NonPublicMethod.class.getDeclaredMethod(NATIVE_METHOD_NAME, NativeApi.class);
+    var method = NonPublicMethod.class.getDeclaredMethod(
+        NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
     testCaching(method, Result.error("xx"), Result.error(
         "Error loading native implementation for `smoothName` specified as `binary.name`: xx"));
   }

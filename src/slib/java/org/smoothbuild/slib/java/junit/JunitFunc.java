@@ -26,8 +26,11 @@ import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 import com.google.common.collect.ImmutableMap;
 
 public class JunitFunc {
-  public static StringB func(NativeApi nativeApi, TupleB tests, ArrayB deps, StringB include)
-      throws IOException {
+  public static StringB func(NativeApi nativeApi, TupleB args) throws IOException {
+    TupleB tests = (TupleB) args.get(0);
+    ArrayB deps = (ArrayB) args.get(1);
+    StringB include = (StringB) args.get(2);
+
     try {
       var filesFromTests = filesFromJar(nativeApi, tests);
       if (filesFromTests == null) {

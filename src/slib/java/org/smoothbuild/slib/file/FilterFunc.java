@@ -15,7 +15,10 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 
 public class FilterFunc {
-  public static ArrayB func(NativeApi nativeApi, ArrayB files, StringB pattern) {
+  public static ArrayB func(NativeApi nativeApi, TupleB args) {
+    ArrayB files = (ArrayB) args.get(0);
+    StringB pattern = (StringB) args.get(1);
+
     Predicate<PathS> filter;
     try {
       filter = pathMatcher(pattern.toJ());

@@ -18,8 +18,7 @@ public class CombineAlgorithm extends Algorithm {
   }
 
   @Override
-  public Output run(Input input, NativeApi nativeApi) {
-    TupleB tuple = nativeApi.factory().tuple(((TupleTB) outputT()), input.vals());
-    return new Output(tuple, nativeApi.messages());
+  public Output run(TupleB input, NativeApi nativeApi) {
+    return new Output(input, nativeApi.messages());
   }
 }

@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathIterator;
 import org.smoothbuild.fs.base.PathS;
@@ -16,7 +17,8 @@ import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.vm.compute.Container;
 
 public class ProjectFilesFunc {
-  public static ArrayB func(Container container, StringB dir) throws IOException {
+  public static ArrayB func(Container container, TupleB args) throws IOException {
+    StringB dir = (StringB) args.get(0);
     PathS path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;

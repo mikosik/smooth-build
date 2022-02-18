@@ -12,7 +12,8 @@ import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.vm.compute.Container;
 
 public class ProjectFileFunc {
-  public static TupleB func(Container container, StringB path) throws IOException {
+  public static TupleB func(Container container, TupleB args) throws IOException {
+    StringB path = (StringB) args.get(0);
     PathS validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {
       return null;

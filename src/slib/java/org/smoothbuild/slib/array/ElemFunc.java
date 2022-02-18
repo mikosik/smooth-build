@@ -2,11 +2,14 @@ package org.smoothbuild.slib.array;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.IntB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ElemFunc {
-  public static ValB func(NativeApi nativeApi, ArrayB array, IntB index) {
+  public static ValB func(NativeApi nativeApi, TupleB args) {
+    ArrayB array = (ArrayB) args.get(0);
+    IntB index = (IntB) args.get(1);
     var elems = array.elems(ValB.class);
     int indexJ = index.toJ().intValue();
     if (indexJ < 0 || elems.size() <= indexJ) {

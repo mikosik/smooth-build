@@ -18,7 +18,8 @@ import org.smoothbuild.plugin.NativeApi;
 import okio.BufferedSource;
 
 public class ZipFunc {
-  public static BlobB func(NativeApi nativeApi, ArrayB files) throws IOException {
+  public static BlobB func(NativeApi nativeApi, TupleB args) throws IOException {
+    ArrayB files = (ArrayB) args.get(0);
     var duplicatesDetector = new HashSet<String>();
     BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {

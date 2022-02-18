@@ -6,6 +6,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.testing.TestingContext;
@@ -241,7 +242,7 @@ public class ConvertAlgorithmTest extends TestingContext {
     return output.val();
   }
 
-  private Input input(ValB valH) {
-    return Input.input(list(valH));
+  private TupleB input(ValB valH) {
+    return tupleB(valH);
   }
 }

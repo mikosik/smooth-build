@@ -23,8 +23,8 @@ public class SelectAlgorithm extends Algorithm {
   }
 
   @Override
-  public Output run(Input input, NativeApi nativeApi) {
-    var vals = input.vals();
+  public Output run(TupleB input, NativeApi nativeApi) {
+    var vals = input.items();
     checkArgument(vals.size() == 2);
     var tuple = selectable(vals);
     var index = index(vals);

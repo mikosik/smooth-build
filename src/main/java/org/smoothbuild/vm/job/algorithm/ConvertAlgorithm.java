@@ -34,10 +34,10 @@ public class ConvertAlgorithm extends Algorithm {
   }
 
   @Override
-  public Output run(Input input, NativeApi nativeApi) {
-    checkArgument(input.vals().size() == 1);
+  public Output run(TupleB input, NativeApi nativeApi) {
+    checkArgument(input.items().size() == 1);
     var targetT = outputT();
-    var val = input.vals().get(0);
+    var val = input.items().get(0);
     checkArgument(!targetT.equals(val.type()));
     var converted = convert(targetT, val, nativeApi.factory());
     return new Output(converted, nativeApi.messages());

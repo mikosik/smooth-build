@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
@@ -38,7 +39,6 @@ import org.smoothbuild.vm.compute.Computed;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
-import org.smoothbuild.vm.job.algorithm.Input;
 import org.smoothbuild.vm.job.algorithm.Output;
 import org.smoothbuild.vm.job.job.Job;
 import org.smoothbuild.vm.job.job.Task;
@@ -189,7 +189,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     RuntimeException exception = new RuntimeException();
     Computer computer = new Computer(null, null, null) {
       @Override
-      public void compute(Algorithm algorithm, Input input, Consumer<Computed> consumer) {
+      public void compute(Algorithm algorithm, TupleB input, Consumer<Computed> consumer) {
         throw exception;
       }
     };
@@ -211,8 +211,8 @@ public class ParallelJobExecutorTest extends TestingContext {
   private static Algorithm concatAlgorithm() {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
-      public Output run(Input input, NativeApi nativeApi) {
-        String joinedArgs = toCommaSeparatedString(input.vals(), v -> ((StringB) v).toJ());
+      public Output run(TupleB input, NativeApi nativeApi) {
+        String joinedArgs = toCommaSeparatedString(input.items(), v -> ((StringB) v).toJ());
         StringB result = nativeApi.factory().string("(" + joinedArgs + ")");
         return new Output(result, nativeApi.messages());
       }
@@ -225,13 +225,13 @@ public class ParallelJobExecutorTest extends TestingContext {
 
   private Task job(String name, Algorithm algorithm, Job... deps) {
     TaskInfo info = new TaskInfo(CALL, name, loc());
-    return new Task(algorithm, list(deps), info);
+    return new Task(algorithm, list(deps), info, bytecodeF());
   }
 
   private Algorithm valueAlgorithm(String value) {
     return new TestAlgorithm(Hash.of(asList(Hash.of(2), Hash.of(value)))) {
       @Override
-      public Output run(Input input, NativeApi nativeApi) {
+      public Output run(TupleB input, NativeApi nativeApi) {
         StringB result = nativeApi.factory().string(value);
         return new Output(result, nativeApi.messages());
       }
@@ -241,7 +241,7 @@ public class ParallelJobExecutorTest extends TestingContext {
   private Algorithm throwingAlgorithm(ArithmeticException exception) {
     return new TestAlgorithm(Hash.of(3)) {
       @Override
-      public Output run(Input input, NativeApi nativeApi) {
+      public Output run(TupleB input, NativeApi nativeApi) {
         throw exception;
       }
     };
@@ -254,7 +254,7 @@ public class ParallelJobExecutorTest extends TestingContext {
   private Algorithm sleepGetIncrementAlgorithm(AtomicInteger counter, boolean isPure) {
     return new TestAlgorithm(Hash.of(4), isPure) {
       @Override
-      public Output run(Input input, NativeApi nativeApi) {
+      public Output run(TupleB input, NativeApi nativeApi) {
         sleep1000ms();
         return toStr(nativeApi, counter.getAndIncrement());
       }
@@ -264,7 +264,7 @@ public class ParallelJobExecutorTest extends TestingContext {
   private Algorithm getIncrementAlgorithm(AtomicInteger counter) {
     return new TestAlgorithm(Hash.of(5)) {
       @Override
-      public Output run(Input input, NativeApi nativeApi) {
+      public Output run(TupleB input, NativeApi nativeApi) {
         return toStr(nativeApi, counter.getAndIncrement());
       }
     };
@@ -273,7 +273,7 @@ public class ParallelJobExecutorTest extends TestingContext {
   private Algorithm sleepyWriteReadAlgorithm(Hash hash, AtomicInteger write, AtomicInteger read) {
     return new TestAlgorithm(hash) {
       @Override
-      public Output run(Input input, NativeApi nativeApi) {
+      public Output run(TupleB input, NativeApi nativeApi) {
         write.incrementAndGet();
         sleep1000ms();
         return toStr(nativeApi, read.get());

@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
-import org.smoothbuild.vm.job.algorithm.Input;
 import org.smoothbuild.vm.job.algorithm.Output;
 
 /**
@@ -37,7 +37,7 @@ public class Computer {
     this.promisedValues = new ConcurrentHashMap<>();
   }
 
-  public void compute(Algorithm algorithm, Input input, Consumer<Computed> consumer)
+  public void compute(Algorithm algorithm, TupleB input, Consumer<Computed> consumer)
       throws ComputationCacheExc, IOException {
     Hash hash = computationHash(algorithm, input);
     PromisedValue<Computed> newPromised = new PromisedValue<>();
@@ -71,7 +71,7 @@ public class Computer {
         computed.resSource() == EXECUTION && isPure ? DISK : MEMORY);
   }
 
-  private Computed runAlgorithm(Algorithm algorithm, Input input) {
+  private Computed runAlgorithm(Algorithm algorithm, TupleB input) {
     Container container = containerProvider.get();
     Output output;
     try {
@@ -84,11 +84,11 @@ public class Computer {
     return new Computed(output, EXECUTION);
   }
 
-  private Hash computationHash(Algorithm algorithm, Input input) {
-    return computationHash(sandboxHash, algorithm, input);
+  private Hash computationHash(Algorithm algorithm, TupleB args) {
+    return computationHash(sandboxHash, algorithm, args);
   }
 
-  public static Hash computationHash(Hash sandboxHash, Algorithm algorithm, Input input) {
-    return Hash.of(asList(sandboxHash, algorithm.hash(), input.hash()));
+  public static Hash computationHash(Hash sandboxHash, Algorithm algorithm, TupleB args) {
+    return Hash.of(asList(sandboxHash, algorithm.hash(), args.hash()));
   }
 }

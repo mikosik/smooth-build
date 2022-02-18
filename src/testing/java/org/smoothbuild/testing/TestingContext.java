@@ -1,6 +1,5 @@
 package org.smoothbuild.testing;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.io.ByteStreams.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Arrays.stream;
@@ -28,7 +27,6 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.ObjDb;
@@ -190,7 +188,7 @@ public class TestingContext {
   }
 
   public VmProv vmProv(NativeMethodLoader nativeMethodLoader) {
-    return vmProv(new JobCreatorProv(nativeMethodLoader, typeBF(), typingB()));
+    return vmProv(new JobCreatorProv(nativeMethodLoader, typingB(), bytecodeF()));
   }
 
   public VmProv vmProv(JobCreatorProv jobCreatorProv) {

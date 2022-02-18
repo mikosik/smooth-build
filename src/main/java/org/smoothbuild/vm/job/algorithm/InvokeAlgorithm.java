@@ -5,9 +5,9 @@ import static org.smoothbuild.util.Strings.q;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import org.smoothbuild.bytecode.obj.val.MethodB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
@@ -32,14 +32,14 @@ public class InvokeAlgorithm extends Algorithm {
   }
 
   @Override
-  public Output run(Input input, NativeApi nativeApi) {
+  public Output run(TupleB input, NativeApi nativeApi) {
     return nativeMethodLoader.load(name, methodB)
         .map(m -> invokeMethod(m, input, nativeApi))
         .orElse(e -> logErrorAndReturnNullOutput(nativeApi, e));
   }
 
-  private Output invokeMethod(Method method, Input input, NativeApi nativeApi) {
-    var result = invoke(method, input, nativeApi);
+  private Output invokeMethod(Method method, TupleB args, NativeApi nativeApi) {
+    var result = invoke(method, args, nativeApi);
     var hasErrors = containsErrors(nativeApi.messages());
     if (result == null) {
       if (!hasErrors) {
@@ -59,24 +59,15 @@ public class InvokeAlgorithm extends Algorithm {
     return new Output(result, nativeApi.messages());
   }
 
-  private ValB invoke(Method method, Input input, NativeApi nativeApi) {
+  private ValB invoke(Method method, TupleB args, NativeApi nativeApi) {
     try {
-      return (ValB) method.invoke(null, createArgs(nativeApi, input.vals()));
+      return (ValB) method.invoke(null, new Object[] {nativeApi, args});
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
       throw new RuntimeException(
           q(name) + " threw java exception from its native code.", e.getCause());
     }
-  }
-
-  private static Object[] createArgs(NativeApi nativeApi, List<ValB> args) {
-    Object[] nativeArgs = new Object[1 + args.size()];
-    nativeArgs[0] = nativeApi;
-    for (int i = 0; i < args.size(); i++) {
-      nativeArgs[i + 1] = args.get(i);
-    }
-    return nativeArgs;
   }
 
   private void logFaultyImplementationError(NativeApi nativeApi, String message) {

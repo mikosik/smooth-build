@@ -5,20 +5,18 @@ import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.val.MethodB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.Result;
 import org.smoothbuild.vm.compute.Container;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -43,28 +41,32 @@ public class NativeMethodLoader {
     var qName = q(name);
     var methodSpec = new MethodSpec(methodB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader.provide(methodSpec)
-        .validate(m -> validateSignature(m))
+        .validate(m -> validateMethodSignature(m))
         .validate(m -> validateNativeResT(m, qName, methodB.type().res()))
-        .validate(m -> validateNativeParamTs(m, qName, methodB.type().params()))
         .mapError(e -> loadingError(qName, classBinaryName, e));
   }
 
-  private String validateSignature(Method method) {
+  private String validateMethodSignature(Method method) {
     if (!isPublic(method)) {
       return "Providing method is not public.";
     } else if (!isStatic(method)) {
       return "Providing method is not static.";
-    } else if (!hasNativeApiParam(method)) {
-      return "Providing method first parameter is not of type "
-          + NativeApi.class.getCanonicalName() + ".";
     } else {
-      return null;
+      return validateMethodParams(method);
     }
   }
 
-  private static boolean hasNativeApiParam(Method method) {
+  private String validateMethodParams(Method method) {
     Class<?>[] types = method.getParameterTypes();
-    return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
+    boolean valid = types.length == 2
+        && (types[0].equals(NativeApi.class) || types[0].equals(Container.class))
+        && (types[1].equals(TupleB.class));
+    if (valid) {
+      return null;
+    } else {
+      return "Providing method should have two parameters " + NativeApi.class.getCanonicalName()
+          + " and " + TupleB.class.getCanonicalName() + ".";
+    }
   }
 
   private static String validateNativeResT(Method method, String qName, TypeB resTB) {
@@ -74,27 +76,6 @@ public class NativeMethodLoader {
       return qName + " declares type " + resTB.q()
           + " so its native implementation result type must be " + resTJ.getCanonicalName()
           + " but it is " + methodResTJ.getCanonicalName() + ".";
-    }
-    return null;
-  }
-
-  private static String validateNativeParamTs(
-      Method method, String qName, ImmutableList<TypeB> paramTBs) {
-    Parameter[] nativeParams = method.getParameters();
-    if (paramTBs.size() != nativeParams.length - 1) {
-      return qName + " has " + paramTBs.size() + " parameter(s) but its native implementation has "
-          + (nativeParams.length - 1) + " parameter(s).";
-    }
-    for (int i = 0; i < paramTBs.size(); i++) {
-      var paramJ = nativeParams[i + 1];
-      var paramTB = paramTBs.get(i);
-      var paramTJ = paramJ.getType();
-      var expectedParamTJ = paramTB.typeJ();
-      if (!expectedParamTJ.equals(paramTJ)) {
-        return qName + " parameter at index " + i + " has type " + paramTB.q()
-            + " so its native implementation type must be " + expectedParamTJ.getCanonicalName()
-            + " but it is " + paramTJ.getCanonicalName() + ".";
-      }
     }
     return null;
   }

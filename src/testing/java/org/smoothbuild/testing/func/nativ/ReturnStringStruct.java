@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReturnStringStruct {
-  public static TupleB func(NativeApi nativeApi) {
+  public static TupleB func(NativeApi nativeApi, TupleB args) {
     BytecodeF factory = nativeApi.factory();
     TupleTB type = factory.tupleT(list(factory.stringT()));
     return factory.tuple(type, list(factory.string("abc")));

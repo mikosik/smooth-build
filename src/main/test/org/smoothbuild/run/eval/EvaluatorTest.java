@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.IntB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.TopEvalS;
 import org.smoothbuild.lang.expr.ExprS;
@@ -90,7 +91,8 @@ public class EvaluatorTest  extends TestingContext {
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
       when(nativeMethodLoader.load(any(), any()))
-          .thenReturn(Result.of(EvaluatorTest.class.getMethod("returnInt", NativeApi.class)));
+          .thenReturn(Result.of(
+              EvaluatorTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(173));
     }
@@ -105,7 +107,7 @@ public class EvaluatorTest  extends TestingContext {
           .thenReturn(jarB);
       when(nativeMethodLoader.load(any(), any()))
           .thenReturn(Result.of(
-              EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, IntB.class)));
+              EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(77));
     }
@@ -120,22 +122,22 @@ public class EvaluatorTest  extends TestingContext {
           .thenReturn(jarB);
       when(nativeMethodLoader.load(any(), any()))
           .thenReturn(Result.of(
-              EvaluatorTest.class.getMethod("returnArrayParam", NativeApi.class, ArrayB.class)));
+              EvaluatorTest.class.getMethod("returnArrayParam", NativeApi.class, TupleB.class)));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(arrayB(intTB()));
     }
   }
 
-  public static IntB returnInt(NativeApi nativeApi) {
+  public static IntB returnInt(NativeApi nativeApi, TupleB args) {
     return nativeApi.factory().int_(BigInteger.valueOf(173));
   }
 
-  public static IntB returnIntParam(NativeApi nativeApi, IntB param) {
-    return param;
+  public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {
+    return (IntB) args.get(0);
   }
 
-  public static ArrayB returnArrayParam(NativeApi nativeApi, ArrayB param) {
-    return param;
+  public static ArrayB returnArrayParam(NativeApi nativeApi, TupleB args) {
+    return (ArrayB) args.get(0);
   }
 
   @Nested

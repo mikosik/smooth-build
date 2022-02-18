@@ -20,8 +20,11 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class JavacFunc {
-  public static ArrayB func(NativeApi nativeApi, ArrayB srcs, ArrayB libs, ArrayB options)
-      throws IOException {
+  public static ArrayB func(NativeApi nativeApi, TupleB args) throws IOException {
+    ArrayB srcs = (ArrayB) args.get(0);
+    ArrayB libs = (ArrayB) args.get(1);
+    ArrayB options = (ArrayB) args.get(2);
+
     return new Worker(nativeApi, srcs, libs, options).execute();
   }
 

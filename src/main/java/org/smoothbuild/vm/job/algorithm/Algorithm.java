@@ -2,6 +2,7 @@ package org.smoothbuild.vm.job.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
@@ -30,5 +31,5 @@ public abstract class Algorithm {
 
   public abstract Hash hash();
 
-  public abstract Output run(Input input, NativeApi nativeApi) throws Exception;
+  public abstract Output run(TupleB input, NativeApi nativeApi) throws Exception;
 }

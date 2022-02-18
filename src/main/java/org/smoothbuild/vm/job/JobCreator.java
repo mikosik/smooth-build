@@ -14,6 +14,7 @@ import static org.smoothbuild.vm.job.job.TaskKind.SELECT;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
@@ -71,9 +72,9 @@ public class JobCreator {
   private final TaskCreator taskCreator;
   private final Map<Class<?>, Handler<?>> handler;
 
-  public JobCreator(NativeMethodLoader nativeMethodLoader, TypingB typing,
+  public JobCreator(NativeMethodLoader nativeMethodLoader, TypingB typing, BytecodeF bytecodeF,
       ImmutableMap<ObjB, Nal> nals) {
-    this(nativeMethodLoader, typing, nals, Task::new);
+    this(nativeMethodLoader, typing, nals, (a,  d, i) -> new Task(a, d, i, bytecodeF));
   }
 
   public JobCreator(NativeMethodLoader nativeMethodLoader, TypingB typing,

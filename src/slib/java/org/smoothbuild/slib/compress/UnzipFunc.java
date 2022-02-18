@@ -6,10 +6,12 @@ import java.io.IOException;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class UnzipFunc {
-  public static ArrayB func(NativeApi nativeApi, BlobB blob) throws IOException {
+  public static ArrayB func(NativeApi nativeApi, TupleB args) throws IOException {
+    BlobB blob = (BlobB) args.get(0);
     return unzipToArrayB(nativeApi, blob, x -> true);
   }
 }

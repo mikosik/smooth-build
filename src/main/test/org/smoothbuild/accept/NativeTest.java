@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.accept.AcceptanceTestCase;
@@ -34,8 +34,10 @@ import org.smoothbuild.testing.func.nativ.ReturnStringStruct;
 import org.smoothbuild.testing.func.nativ.StringIdentity;
 import org.smoothbuild.testing.func.nativ.ThrowException;
 import org.smoothbuild.testing.func.nativ.ThrowRandomException;
-import org.smoothbuild.testing.func.nativ.WithoutNativeApi;
+import org.smoothbuild.testing.func.nativ.TooFewParameters;
+import org.smoothbuild.testing.func.nativ.TooManyParameters;
 import org.smoothbuild.testing.func.nativ.WrongMethodName;
+import org.smoothbuild.testing.func.nativ.WrongParameterType;
 
 public class NativeTest extends AcceptanceTestCase {
   @Nested
@@ -199,54 +201,51 @@ public class NativeTest extends AcceptanceTestCase {
 
       @Test
       public void has_too_many_params() throws Exception {
-        createUserNativeJar(StringIdentity.class);
-        String className = StringIdentity.class.getCanonicalName();
+        createUserNativeJar(TooManyParameters.class);
+        String className = TooManyParameters.class.getCanonicalName();
         createUserModule(format("""
             @Native("%s")
-            String stringIdentity();
-            result = stringIdentity();
+            String tooManyParameters();
+            result = tooManyParameters();
             """, className));
         evaluate("result");
         assertThat(logs())
-            .containsExactly(methodLoadingError(className, "stringIdentity",
-            "`stringIdentity` has 0 parameter(s) but its native implementation "
-                + "has 1 parameter(s)."));
+            .containsExactly(methodSignatureError(className, "tooManyParameters"));
       }
 
 
       @Test
       public void has_too_few_params() throws Exception {
-        createUserNativeJar(StringIdentity.class);
-        String className = StringIdentity.class.getCanonicalName();
+        createUserNativeJar(TooFewParameters.class);
+        String className = TooFewParameters.class.getCanonicalName();
         createUserModule(format("""
             @Native("%s")
-            String stringIdentity(String a, String b);
-            result = stringIdentity(a="abc", b="abc");
+            String tooFewParameters();
+            result = tooFewParameters();
             """, className));
         evaluate("result");
         assertThat(logs())
-            .containsExactly(methodLoadingError(className, "stringIdentity",
-            "`stringIdentity` has 2 parameter(s) but its native implementation "
-                + "has 1 parameter(s)."));
+            .containsExactly(methodSignatureError(className, "tooFewParameters"));
       }
 
       @Test
-      public void has_different_param_type() throws Exception {
-        createUserNativeJar(StringIdentity.class);
-        String className = StringIdentity.class.getCanonicalName();
+      public void has_wrong_param_type() throws Exception {
+        createUserNativeJar(WrongParameterType.class);
+        String className = WrongParameterType.class.getCanonicalName();
         createUserModule(format("""
             @Native("%s")
-            String stringIdentity([String] string);
-            result = stringIdentity([]);
+            String wrongParameterType();
+            result = wrongParameterType();
             """, className));
         evaluate("result");
         assertThat(logs())
-            .containsExactly(methodLoadingError(className, "stringIdentity",
-            "`stringIdentity` parameter at index 0 has type `[String]` "
-                + "so its native implementation type must be " + ArrayB.class.getCanonicalName()
-                + " but it is " + StringB.class.getCanonicalName() + "."));
+            .containsExactly(methodSignatureError(className, "wrongParameterType"));
       }
 
+      private Log methodSignatureError(String className, String name) {
+        return methodLoadingError(className, name, "Providing method should have two parameters "
+            + NativeApi.class.getCanonicalName() + " and " + TupleB.class.getCanonicalName() + ".");
+      }
 
       @Test
       public void is_not_public() throws Exception {
@@ -278,22 +277,6 @@ public class NativeTest extends AcceptanceTestCase {
                 methodLoadingError(className, "returnAbc", "Providing method is not static."));
       }
 
-      @Test
-      public void does_not_have_container_as_first_param() throws Exception {
-        createUserNativeJar(WithoutNativeApi.class, ReturnAbc.class);
-        String className = WithoutNativeApi.class.getCanonicalName();
-        createUserModule(format("""
-            @Native("%s")
-            String returnAbc();
-            result = returnAbc();
-            """, className));
-        evaluate("result");
-        assertThat(logs())
-            .containsExactly(methodLoadingError(className, "returnAbc",
-                "Providing method first parameter is not of type "
-                    + NativeApi.class.getCanonicalName() + "."));
-      }
-
       @Nested
       class _returns {
         @Test
@@ -309,7 +292,6 @@ public class NativeTest extends AcceptanceTestCase {
           assertThat(logs())
               .containsExactly(faultyNullReturnedError("returnNull"));
         }
-
 
         @Test
         public void null_and_logs_only_warning() throws Exception {

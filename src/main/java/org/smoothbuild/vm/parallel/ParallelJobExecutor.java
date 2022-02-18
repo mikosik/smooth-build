@@ -9,12 +9,11 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
-import org.smoothbuild.vm.job.algorithm.Input;
 import org.smoothbuild.vm.job.job.Job;
 import org.smoothbuild.vm.job.job.TaskInfo;
 
@@ -70,12 +69,10 @@ public class ParallelJobExecutor {
       return map(results, promise -> Optional.ofNullable(promise.get()));
     }
 
-    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<ValB>> deps,
-        Consumer<ValB> consumer) {
+    public void enqueue(TaskInfo info, Algorithm algorithm, TupleB input, Consumer<ValB> consumer) {
       jobExecutor.enqueue(() -> {
         try {
           var resultHandler = new ResHandler(info, consumer, reporter, jobExecutor);
-          Input input = Input.fromPromises(deps);
           computer.compute(algorithm, input, resultHandler);
         } catch (Throwable e) {
           reporter.reportComputerException(info, e);

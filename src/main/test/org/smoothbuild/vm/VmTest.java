@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.IntB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
@@ -233,7 +234,7 @@ public class VmTest extends TestingContext {
       var method = methodB(methodTB(intTB(), list()), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method);
       when(nativeMethodLoader.load(any(), eq(method)))
-          .thenReturn(Result.of(VmTest.class.getMethod("returnInt", NativeApi.class)));
+          .thenReturn(Result.of(VmTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(intB(173));
     }
@@ -244,7 +245,7 @@ public class VmTest extends TestingContext {
       var invoke = invokeB(method, intB(33));
       when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(Result.of(
-              VmTest.class.getMethod("returnIntParam", NativeApi.class, IntB.class)));
+              VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(intB(33));
     }
@@ -256,7 +257,7 @@ public class VmTest extends TestingContext {
       var invoke = invokeB(arrayTB(intTB()), method, arrayB(nothingTB()));
       when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(Result.of(
-              VmTest.class.getMethod("returnArrayParamWithCheck", NativeApi.class, ArrayB.class)));
+              VmTest.class.getMethod("returnArrayParamWithCheck", NativeApi.class, TupleB.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(arrayB(intTB()));
     }
@@ -267,7 +268,8 @@ public class VmTest extends TestingContext {
       var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(arrayTB(intTB()), method);
       when(nativeMethodLoader.load(any(), eq(method)))
-          .thenReturn(Result.of(VmTest.class.getMethod("returnNothingArray", NativeApi.class)));
+          .thenReturn(Result.of(
+              VmTest.class.getMethod("returnNothingArray", NativeApi.class, TupleB.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(arrayB(intTB()));
     }
@@ -281,7 +283,7 @@ public class VmTest extends TestingContext {
         try {
           when(nativeMethodLoader.load(any(), eq(method)))
               .thenReturn(Result.of(
-                  VmTest.class.getMethod("returnSingleElemArray", NativeApi.class, ValB.class)));
+                  VmTest.class.getMethod("returnSingleElemArray", NativeApi.class, TupleB.class)));
         } catch (NoSuchMethodException e) {
           throw new RuntimeException(e);
         }
@@ -292,26 +294,28 @@ public class VmTest extends TestingContext {
     }
   }
 
-  public static IntB returnInt(NativeApi nativeApi) {
+  public static IntB returnInt(NativeApi nativeApi, TupleB args) {
     return nativeApi.factory().int_(BigInteger.valueOf(173));
   }
 
-  public static IntB returnIntParam(NativeApi nativeApi, IntB param) {
-    return param;
+  public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {
+    return (IntB) args.get(0);
   }
 
-  public static ArrayB returnArrayParamWithCheck(NativeApi nativeApi, ArrayB param) {
+  public static ArrayB returnArrayParamWithCheck(NativeApi nativeApi, TupleB args) {
+    ArrayB param = (ArrayB) args.get(0);
     checkArgument(param.type().name().equals("[Int]"));
     return param;
   }
 
-  public static ArrayB returnNothingArray(NativeApi nativeApi) {
+  public static ArrayB returnNothingArray(NativeApi nativeApi, TupleB args) {
     var f = nativeApi.factory();
     var arrayT = f.arrayT(f.nothingT());
     return f.arrayBuilder(arrayT).build();
   }
 
-  public static ArrayB returnSingleElemArray(NativeApi nativeApi, ValB elem) {
+  public static ArrayB returnSingleElemArray(NativeApi nativeApi, TupleB args) {
+    ValB elem = args.get(0);
     var f = nativeApi.factory();
     var arrayT = f.arrayT(elem.type());
     return f.arrayBuilder(arrayT)
@@ -452,7 +456,7 @@ public class VmTest extends TestingContext {
     taskCreator = spy(new TaskCreator() {
       @Override
       public Task newTask(Algorithm algorithm, ImmutableList<Job> depJs, TaskInfo info) {
-        return new Task(algorithm, depJs, info);
+        return new Task(algorithm, depJs, info, bytecodeF());
       }
     });
     var jobCreator = new JobCreator(null, typingB(), ImmutableMap.of(), taskCreator);
