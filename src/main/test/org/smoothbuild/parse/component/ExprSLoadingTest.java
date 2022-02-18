@@ -1,5 +1,6 @@
 package org.smoothbuild.parse.component;
 
+import static java.util.Optional.empty;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.INT;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
@@ -9,6 +10,7 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.testing.TestingContext;
 
 public class ExprSLoadingTest extends TestingContext {
@@ -115,8 +117,9 @@ public class ExprSLoadingTest extends TestingContext {
     @Test
     public void with_ctor_reference() {
       var struct = structTS("MyStruct", nList(sigS(STRING, "field")));
-      var combine = combineS(1, struct, paramRefS(1, stringTS(), "field"));
-      var ctor = defFuncS(1, struct, "myStruct", combine, nList(itemS(2, STRING, "field")));
+      var params = struct.fields()
+          .map(i -> new ItemS(i.type(), modPath(), i.nameSane(), empty(), loc(2)));
+      var ctor = syntCtorS(1, funcTS(struct, params.list()), modPath(), "myStruct", params);
       module("""
           MyStruct {
             String field

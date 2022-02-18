@@ -102,10 +102,10 @@ import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
+import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TopEvalS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
-import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
@@ -929,24 +929,6 @@ public class TestingContext {
     return new CallS(type, callable, list(args), loc(line));
   }
 
-  public CombineS combineS(ExprS... expr) {
-    return combineS(1, structTS("MyStruct", nList(exprsToItemSigs(expr))), expr);
-  }
-
-  private ImmutableList<ItemSigS> exprsToItemSigs(ExprS... exprs) {
-    return IntStream.range(0, exprs.length)
-        .mapToObj(i -> new ItemSigS(exprs[i].type(), "field" + i, empty()))
-        .collect(toImmutableList());
-  }
-
-  public CombineS combineS(StructTS type, ExprS... items) {
-    return combineS(1, type, items);
-  }
-
-  public CombineS combineS(int line, StructTS type, ExprS... items) {
-    return new CombineS(type, ImmutableList.copyOf(items), loc(line));
-  }
-
   public IntS intS(int value) {
     return intS(1, value);
   }
@@ -1081,6 +1063,21 @@ public class TestingContext {
 
   public DefValS defValS(int line, TypeS type, String name, ExprS expr) {
     return new DefValS(type, modPath(), name, expr, loc(line));
+  }
+
+  public SyntCtorS syntCtorS(StructTS structT) {
+    return syntCtorS(1, structT, "name");
+  }
+
+  public SyntCtorS syntCtorS(int line, StructTS structT, String name) {
+    var fields = structT.fields();
+    var params = fields.map(i -> new ItemS(i.type(), modPath(), i.nameSane(), empty(), loc(line)));
+    return syntCtorS(line, funcTS(structT, params.list()), modPath(), name, params);
+  }
+
+  public SyntCtorS syntCtorS(int line, FuncTS funcT, ModPath modPath, String name,
+      NList<ItemS> params) {
+    return new SyntCtorS(funcT, modPath, name, params, loc(line));
   }
 
   public AnnFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {

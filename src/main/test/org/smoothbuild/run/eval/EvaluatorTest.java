@@ -19,7 +19,6 @@ import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.TopEvalS;
 import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
@@ -78,23 +77,6 @@ public class EvaluatorTest  extends TestingContext {
       var callS = callS(arrayTS(intTS()), topRefS(funcS), intS(7));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(arrayB(intTB(), intB(7)));
-    }
-  }
-
-  @Nested
-  class _combine {
-    @Test
-    public void combine() {
-      StructTS type = structTS("n", nList(sigS(intTS(), "f")));
-      assertThat(evaluate(combineS(type, intS(7))))
-          .isEqualTo(tupleB(tupleTB(intTB()), intB(7)));
-    }
-
-    @Test
-    public void combine_with_item_conversion() {
-      StructTS type = structTS("n", nList(sigS(arrayTS(intTS()), "f")));
-      assertThat(evaluate(combineS(type, orderS(nothingTS()))))
-          .isEqualTo(tupleB(tupleTB(arrayTB(intTB())), arrayB(intTB())));
     }
   }
 
@@ -175,17 +157,19 @@ public class EvaluatorTest  extends TestingContext {
   class _select {
     @Test
     public void select() {
-      StructTS type = structTS("n", nList(sigS(intTS(), "f")));
-      var combineS = combineS(type, intS(7));
-      assertThat(evaluate(selectS(intTS(), combineS, "f")))
+      var structTS = structTS("MyStruct", nList(sigS(intTS(), "f")));
+      var syntCtorS = syntCtorS(structTS);
+      var callS = callS(structTS, topRefS(syntCtorS), intS(7));
+      assertThat(evaluate(selectS(intTS(), callS, "f"), nList(syntCtorS)))
           .isEqualTo(intB(7));
     }
 
     @Test
     public void select_with_conversion() {
-      StructTS type = structTS("n", nList(sigS(arrayTS(nothingTS()), "f")));
-      var combineS = combineS(type, orderS(nothingTS()));
-      assertThat(evaluate(selectS(arrayTS(intTS()), combineS, "f")))
+      var structTS = structTS("MyStruct", nList(sigS(arrayTS(nothingTS()), "f")));
+      var syntCtorS = syntCtorS(structTS);
+      var callS = callS(structTS, topRefS(syntCtorS), orderS(nothingTS()));
+      assertThat(evaluate(selectS(arrayTS(intTS()), callS, "f"), nList(syntCtorS)))
           .isEqualTo(arrayB(intTB()));
     }
   }

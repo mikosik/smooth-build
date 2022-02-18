@@ -57,12 +57,6 @@ public class CompilerTest extends TestingContext {
     }
 
     @Test
-    public void combine() {
-      var combine = combineS(stringS("abc"), intS(1));
-      assertCompilation(combine, combineB(stringB("abc"), intB(1)));
-    }
-
-    @Test
     public void int_() {
       IntS int_ = intS(1);
       assertCompilation(int_, intB(1));
@@ -82,9 +76,14 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void select() {
-      var combine = combineS(stringS("abc"));
-      var select = selectS(stringTS(), combine, "field0");
-      assertCompilation(select, selectB(combineB(stringB("abc")), intB(0)));
+      var structTS = structTS("MyStruct", nList(sigS(stringTS(), "field")));
+      var syntCtorS = syntCtorS(structTS);
+      var callS = callS(structTS, topRefS(syntCtorS), stringS("abc"));
+      var selectS = selectS(stringTS(), callS, "field");
+
+      var ctorB = funcB(list(stringTB()), combineB(paramRefB(stringTB(), 0)));
+      var callB = callB(ctorB, stringB("abc"));
+      assertCompilation(syntCtorS, selectS, selectB(callB, intB(0)));
     }
 
     @Test
@@ -127,6 +126,14 @@ public class CompilerTest extends TestingContext {
       var defFunc = defFuncS(arrayTS(stringTS()), "myFunc", nList(), orderS(nothingTS()));
       assertCompilation(defFunc, topRefS(defFunc),
           funcB(arrayTB(stringTB()), list(), orderB(nothingTB())));
+    }
+
+    @Test
+    public void topRef_to_synt_ctor() {
+      var structTS = structTS("MyStruct", nList(sigS(intTS(), "f")));
+      var syntCtorS = syntCtorS(structTS);
+      var expected = funcB(list(intTB()), combineB(paramRefB(intTB(), 0)));
+      assertCompilation(syntCtorS, topRefS(syntCtorS), expected);
     }
 
     @Test

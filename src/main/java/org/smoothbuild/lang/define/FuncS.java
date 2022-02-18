@@ -10,7 +10,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends TopEvalS permits AnnFuncS, DefFuncS {
+public sealed abstract class FuncS extends TopEvalS permits AnnFuncS, DefFuncS, SyntCtorS {
   public static final String PARENTHESES = "()";
   private final NList<ItemS> params;
 

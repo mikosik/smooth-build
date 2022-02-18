@@ -21,7 +21,6 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
-import org.smoothbuild.bytecode.obj.expr.CombineB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
@@ -46,10 +45,10 @@ import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.Nal;
 import org.smoothbuild.lang.define.NalImpl;
+import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
-import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
@@ -109,6 +108,7 @@ public class Compiler {
       var funcB = switch (funcS) {
         case AnnFuncS n -> compileAnnFunc(n);
         case DefFuncS d -> compileDefFunc(d);
+        case SyntCtorS c -> compileSyntCtor(c);
       };
       nals.put(funcB, funcS);
       return funcB;
@@ -140,9 +140,9 @@ public class Compiler {
     var funcTB = convertFuncT(natFuncS.type());
     var methodB = createMethodB(natFuncS.ann(), funcTB);
     var paramRefsB = createParamRefsB(funcTB.params());
-    var paramsTuple = bytecodeF.tupleT(map(paramRefsB, ObjB::type));
-    var args = bytecodeF.combine(paramsTuple, paramRefsB);
-    var bodyB = bytecodeF.invoke(typing.closeVars(funcTB.res()), methodB, args);
+    var paramsTB = bytecodeF.tupleT(map(paramRefsB, ObjB::type));
+    var argsB = bytecodeF.combine(paramsTB, paramRefsB);
+    var bodyB = bytecodeF.invoke(typing.closeVars(funcTB.res()), methodB, argsB);
     nals.put(bodyB, natFuncS);
     return bytecodeF.func(funcTB, bodyB);
   }
@@ -153,6 +153,15 @@ public class Compiler {
     var classBinaryNameB = bytecodeF.string(annS.path().string());
     var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
     return bytecodeF.method(methodTB, jarB, classBinaryNameB, isPureB);
+  }
+
+  private FuncB compileSyntCtor(SyntCtorS syntCtorS) {
+    var funcTB = convertFuncT(syntCtorS.type());
+    var paramRefsB = createParamRefsB(funcTB.params());
+    var paramsTB = bytecodeF.tupleT(map(paramRefsB, ObjB::type));
+    var bodyB = bytecodeF.combine(paramsTB, paramRefsB);
+    nals.put(bodyB, new NalImpl("{}", syntCtorS.loc()));
+    return bytecodeF.func(funcTB, bodyB);
   }
 
   private ImmutableList<ObjB> createParamRefsB(ImmutableList<TypeB> paramTs) {
@@ -218,7 +227,6 @@ public class Compiler {
     return switch (exprS) {
       case BlobS blobS -> compileAndCacheNal(blobS, this::compileBlob);
       case CallS callS -> compileAndCacheNal(callS, this::compileCall);
-      case CombineS combineS -> compileAndCacheNal(combineS, this::compileCombine);
       case IntS intS -> compileAndCacheNal(intS, this::compileInt);
       case OrderS orderS -> compileAndCacheNal(orderS, this::compileOrder);
       case ParamRefS paramRefS -> compileAndCacheNal(paramRefS, this::compileParamRef);
@@ -250,12 +258,6 @@ public class Compiler {
 
     nals.put(combineB, new NalImpl("{}", callS.loc()));
     return bytecodeF.call(convertT(callS.type()), callableB, combineB);
-  }
-
-  private CombineB compileCombine(CombineS combineS) {
-    var evalT = convertStructT(combineS.type());
-    var items = compileExprs(combineS.elems());
-    return bytecodeF.combine(evalT, items);
   }
 
   private IntB compileInt(IntS intS) {

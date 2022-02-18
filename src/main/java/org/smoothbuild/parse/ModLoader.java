@@ -13,19 +13,14 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefTypeS;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.ItemS;
-import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.StructS;
+import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TopEvalS;
-import org.smoothbuild.lang.expr.CombineS;
-import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.lang.type.impl.TypeSF;
 import org.smoothbuild.lang.type.impl.TypingS;
@@ -101,7 +96,7 @@ public class ModLoader {
   private NList<TopEvalS> loadTopEvals(ModPath path, Ast ast) {
     var local = ImmutableList.<TopEvalS>builder();
     for (StructN struct : ast.structs()) {
-      var ctorS = loadCtor(path, struct);
+      var ctorS = loadSyntCtor(path, struct);
       local.add(ctorS);
     }
     for (EvalN eval : ast.topEvals()) {
@@ -110,24 +105,13 @@ public class ModLoader {
     return nList(local.build());
   }
 
-  private DefFuncS loadCtor(ModPath path, StructN struct) {
+  private SyntCtorS loadSyntCtor(ModPath path, StructN struct) {
     var resultT = (StructTS) struct.type().get();
     var name = struct.ctor().name();
     var paramTs = map(struct.fields(), f -> f.type().get());
     var type = typeSF.func(resultT, paramTs);
     var params = struct.fields().map(f -> f.toItem(path));
     var loc = struct.loc();
-    var body = ctorBody(resultT, params, loc);
-    return new DefFuncS(type, path, name, params, body, loc);
-  }
-
-  private CombineS ctorBody(StructTS resT, NList<ItemS> params, Loc loc) {
-    var paramRefs = map(params, p -> paramRef(p, loc));
-    return new CombineS(resT, paramRefs, loc);
-  }
-
-  private ExprS paramRef(ItemS param, Loc loc) {
-    var type = typing.closeVars(param.type());
-    return new ParamRefS(type, param.name(), loc);
+    return new SyntCtorS(type, path, name, params, loc);
   }
 }
