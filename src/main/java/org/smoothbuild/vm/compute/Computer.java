@@ -79,6 +79,8 @@ public class Computer {
     } catch (Exception e) {
       return new Computed(e, EXECUTION);
     }
+    // This Computed instance creation is outside of try-block
+    // so eventual exception it could throw won't be caught by above catch.
     return new Computed(output, EXECUTION);
   }
 
