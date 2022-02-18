@@ -3,16 +3,12 @@ package org.smoothbuild.lang.define;
 import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.empty;
-import static org.smoothbuild.util.collect.Lists.map;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.util.collect.NameableImpl;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Item signature.
@@ -39,10 +35,6 @@ public class ItemSigS extends NameableImpl {
 
   public static ItemSigS itemSigS(TypeS type, String name) {
     return new ItemSigS(type, name, empty());
-  }
-
-  public static ImmutableList<ItemSigS> toItemSigS(List<? extends TypeS> types) {
-    return map(types, ItemSigS::itemSigS);
   }
 
   public TypeS type() {
