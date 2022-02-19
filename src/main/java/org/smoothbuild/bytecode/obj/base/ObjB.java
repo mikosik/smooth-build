@@ -95,14 +95,14 @@ public abstract class ObjB {
   }
 
   protected <T> T readSeqElemObj(String path, Hash hash, int i, int expectedSize, Class<T> clazz) {
-    var objH = readSeqElemObj(path, hash, i, expectedSize);
-    return castObj(objH, path, i, clazz);
+    var obj = readSeqElemObj(path, hash, i, expectedSize);
+    return castObj(obj, path, i, clazz);
   }
 
   protected ObjB readSeqElemObjWithType(
       String path, Hash hash, int i, int expectedSize, TypeB type) {
-    var objH = readSeqElemObj(path, hash, i, expectedSize);
-    return validateType(objH, DATA_PATH, i, type);
+    var obj = readSeqElemObj(path, hash, i, expectedSize);
+    return validateType(obj, DATA_PATH, i, type);
   }
 
   private ObjB readSeqElemObj(String path, Hash hash, int i, int expectedSize) {
