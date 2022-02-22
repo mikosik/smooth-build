@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.util.io.DuplicateFileNameExc;
 import org.smoothbuild.util.io.IllegalZipEntryFileNameExc;
 
@@ -32,7 +32,7 @@ import net.lingala.zip4j.exception.ZipException;
 public class JarClassLoaderProv {
   private final BytecodeF bytecodeF;
   private final ClassLoader parentClassLoader;
-  private final ConcurrentHashMap<BlobB, Result<ClassLoader>> cache;
+  private final ConcurrentHashMap<BlobB, Try<ClassLoader>> cache;
 
   @Inject
   public JarClassLoaderProv(BytecodeF bytecodeF) {
@@ -45,18 +45,18 @@ public class JarClassLoaderProv {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Result<ClassLoader> classLoaderFor(BlobB jar) throws IOException {
+  public Try<ClassLoader> classLoaderFor(BlobB jar) throws IOException {
     return computeIfAbsent(cache, jar, j -> newClassLoader(parentClassLoader, j));
   }
 
-  private Result<ClassLoader> newClassLoader(ClassLoader parentClassLoader, BlobB jar)
+  private Try<ClassLoader> newClassLoader(ClassLoader parentClassLoader, BlobB jar)
       throws IOException {
     try {
       var files = unzipBlob(bytecodeF, jar, s -> true);
       var filesMap = toMap(files.elems(TupleB.class), f -> filePath(f).toJ(), identity());
-      return Result.of(classLoader(parentClassLoader, filesMap));
+      return Try.result(classLoader(parentClassLoader, filesMap));
     } catch (DuplicateFileNameExc | IllegalZipEntryFileNameExc | ZipException e) {
-      return Result.error("Error unpacking jar with native code: " + e.getMessage());
+      return Try.error("Error unpacking jar with native code: " + e.getMessage());
     }
   }
 

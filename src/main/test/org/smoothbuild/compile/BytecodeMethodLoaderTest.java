@@ -23,7 +23,7 @@ import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.WithNonObjRes;
 import org.smoothbuild.testing.func.bytecode.WithTwoParams;
 import org.smoothbuild.testing.func.bytecode.WithoutBytecodeF;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 
 public class BytecodeMethodLoaderTest extends TestingContext {
   @Nested
@@ -31,22 +31,22 @@ public class BytecodeMethodLoaderTest extends TestingContext {
     @Test
     public void method_is_cached() throws Exception {
       var method = fetchJMethod(ReturnAbc.class);
-      testCaching(method, Result.of(method), Result.of(method));
+      testCaching(method, Try.result(method), Try.result(method));
     }
 
     @Test
     public void error_when_loading_method_is_cached() throws Exception {
       var method = fetchJMethod(NonPublicMethod.class);
-      testCaching(method, Result.error("error message"), Result.error("error message"));
+      testCaching(method, Try.error("error message"), Try.error("error message"));
     }
 
-    private void testCaching(Method method, Result<Method> resultMethod, Result<Method> expected) {
+    private void testCaching(Method method, Try<Method> tryMethod, Try<Method> expected) {
       var methodProv = mock(MethodLoader.class);
       BlobB jar = blobB();
       String classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
       when(methodProv.provide(methodSpec))
-          .thenReturn(resultMethod);
+          .thenReturn(tryMethod);
 
       var methodLoader = new BytecodeMethodLoader(methodProv);
 
@@ -98,12 +98,12 @@ public class BytecodeMethodLoaderTest extends TestingContext {
   private void assertLoadingCausesError(Method method, String message) {
     var methodSpec = new MethodSpec(blobB(), "class.binary.name", BYTECODE_METHOD_NAME);
     assertThat(load(methodSpec, method))
-        .isEqualTo(Result.error(message));
+        .isEqualTo(Try.error(message));
   }
 
-  private Result<Method> load(MethodSpec methodSpec, Method method) {
+  private Try<Method> load(MethodSpec methodSpec, Method method) {
     var methodLoader = mock(MethodLoader.class);
-    doReturn(Result.of(method))
+    doReturn(Try.result(method))
         .when(methodLoader)
         .provide(methodSpec);
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);

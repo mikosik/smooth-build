@@ -14,7 +14,7 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 
 /**
  * This class is thread-safe.
@@ -23,7 +23,7 @@ import org.smoothbuild.util.collect.Result;
 public class BytecodeMethodLoader {
   static final String BYTECODE_METHOD_NAME = "bytecode";
   private final MethodLoader methodLoader;
-  private final ConcurrentHashMap<MethodSpec, Result<Method>> cache;
+  private final ConcurrentHashMap<MethodSpec, Try<Method>> cache;
 
   @Inject
   public BytecodeMethodLoader(MethodLoader methodLoader) {
@@ -31,12 +31,12 @@ public class BytecodeMethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Result<Method> load(BlobB jar, String classBinaryName) {
+  public Try<Method> load(BlobB jar, String classBinaryName) {
     var methodSpec = new MethodSpec(jar, classBinaryName, BYTECODE_METHOD_NAME);
     return cache.computeIfAbsent(methodSpec, this::loadImpl);
   }
 
-  private Result<Method> loadImpl(MethodSpec methodSpec) {
+  private Try<Method> loadImpl(MethodSpec methodSpec) {
     return methodLoader.provide(methodSpec)
         .validate(this::validateSignature);
   }

@@ -13,13 +13,13 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ThrowException;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 
 public class BytecodeLoaderTest extends TestingContext {
   @Test
   public void loading_bytecode() throws Exception {
     assertThat(loadBytecode(ReturnAbc.class))
-        .isEqualTo(Result.of(stringB("abc")));
+        .isEqualTo(Try.result(stringB("abc")));
   }
 
   @Test
@@ -29,7 +29,7 @@ public class BytecodeLoaderTest extends TestingContext {
             + ".UnsupportedOperationException: detailed message"));
   }
 
-  private Result<ObjB> loadBytecode(Class<?> clazz) throws NoSuchMethodException {
+  private Try<ObjB> loadBytecode(Class<?> clazz) throws NoSuchMethodException {
     var jar = blobB();
     var classBinaryName = "binary.name";
     var bytecodeMethodLoader = mock(BytecodeMethodLoader.class);
@@ -40,12 +40,12 @@ public class BytecodeLoaderTest extends TestingContext {
         .load("name", jar, classBinaryName);
   }
 
-  private static Result<Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {
-    return Result.of(clazz.getDeclaredMethod(BYTECODE_METHOD_NAME, BytecodeF.class));
+  private static Try<Method> fetchMethod(Class<?> clazz) throws NoSuchMethodException {
+    return Try.result(clazz.getDeclaredMethod(BYTECODE_METHOD_NAME, BytecodeF.class));
   }
 
-  private Result<Object> loadingError(String message) {
-    return Result.error(
+  private Try<Object> loadingError(String message) {
+    return Try.error(
         "Error loading bytecode for `name` using provider specified as `binary.name`: " + message);
   }
 }

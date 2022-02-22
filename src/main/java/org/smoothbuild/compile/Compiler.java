@@ -205,11 +205,11 @@ public class Compiler {
 
   private ObjB fetchBytecode(AnnS ann, TypeB typeB, String name) {
     var jar = loadNativeJar(ann.loc());
-    var bytecode = bytecodeLoader.load(name, jar, ann.path().string());
-    if (!bytecode.isPresent()) {
-      throw new CompilerExc(ann.loc() + ": " + bytecode.error());
+    var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string());
+    if (!bytecodeTry.isPresent()) {
+      throw new CompilerExc(ann.loc() + ": " + bytecodeTry.error());
     }
-    var bytecodeB = bytecode.value();
+    var bytecodeB = bytecodeTry.result();
     if (!bytecodeB.type().equals(typeB)) {
       throw new CompilerExc(ann.loc() + ": Bytecode provider returned object of wrong type "
           + bytecodeB.type().q() + " when " + q(name) + " is declared as " + typeB.q() + ".");

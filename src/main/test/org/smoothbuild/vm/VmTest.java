@@ -25,7 +25,7 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.job.JobCreator.TaskCreator;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
@@ -234,7 +234,7 @@ public class VmTest extends TestingContext {
       var method = methodB(methodTB(intTB(), list()), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method);
       when(nativeMethodLoader.load(any(), eq(method)))
-          .thenReturn(Result.of(VmTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
+          .thenReturn(Try.result(VmTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(intB(173));
     }
@@ -244,7 +244,7 @@ public class VmTest extends TestingContext {
       var method = methodB(methodTB(intTB(), list(intTB())), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method, intB(33));
       when(nativeMethodLoader.load(any(), eq(method)))
-          .thenReturn(Result.of(
+          .thenReturn(Try.result(
               VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(intB(33));
@@ -256,7 +256,7 @@ public class VmTest extends TestingContext {
       var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(arrayTB(intTB()), method, arrayB(nothingTB()));
       when(nativeMethodLoader.load(any(), eq(method)))
-          .thenReturn(Result.of(
+          .thenReturn(Try.result(
               VmTest.class.getMethod("returnArrayParamWithCheck", NativeApi.class, TupleB.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(arrayB(intTB()));
@@ -268,7 +268,7 @@ public class VmTest extends TestingContext {
       var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(arrayTB(intTB()), method);
       when(nativeMethodLoader.load(any(), eq(method)))
-          .thenReturn(Result.of(
+          .thenReturn(Try.result(
               VmTest.class.getMethod("returnNothingArray", NativeApi.class, TupleB.class)));
       assertThat(evaluate(invoke))
           .isEqualTo(arrayB(intTB()));
@@ -282,7 +282,7 @@ public class VmTest extends TestingContext {
         var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
         try {
           when(nativeMethodLoader.load(any(), eq(method)))
-              .thenReturn(Result.of(
+              .thenReturn(Try.result(
                   VmTest.class.getMethod("returnSingleElemArray", NativeApi.class, TupleB.class)));
         } catch (NoSuchMethodException e) {
           throw new RuntimeException(e);

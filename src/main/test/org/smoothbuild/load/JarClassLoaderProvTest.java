@@ -12,8 +12,8 @@ public class JarClassLoaderProvTest extends TestingContext {
   public void provided_classloader_can_load_class_and_its_method() throws Exception {
     var jar = blobBJarWithJavaByteCode(MyClass.class);
     var classLoaderProv = new JarClassLoaderProv(bytecodeF(), getPlatformClassLoader());
-    var classLoader = classLoaderProv.classLoaderFor(jar);
-    var clazz = classLoader.value().loadClass(MyClass.class.getName());
+    var classLoaderTry = classLoaderProv.classLoaderFor(jar);
+    var clazz = classLoaderTry.result().loadClass(MyClass.class.getName());
     assertThat(clazz)
         .isNotSameInstanceAs(MyClass.class);
     assertThat(clazz.getMethod("method").invoke(null))

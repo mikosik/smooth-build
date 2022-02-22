@@ -6,19 +6,19 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class ResultTest {
+public class TryTest {
 
   @Nested
   class _factory_method {
     @Test
     public void of_throws_exception_when_value_is_null() {
-      assertCall(() -> Result.of(null))
+      assertCall(() -> Try.result(null))
           .throwsException(IllegalArgumentException.class);
     }
 
     @Test
     public void error_throws_exception_when_error_is_null() {
-      assertCall(() -> Result.error(null))
+      assertCall(() -> Try.error(null))
           .throwsException(IllegalArgumentException.class);
     }
   }
@@ -27,15 +27,15 @@ public class ResultTest {
   class _value {
     @Test
     public void return_value() {
-      var result = Result.of(7);
-      assertThat(result.value())
+      var result = Try.result(7);
+      assertThat(result.result())
           .isEqualTo(7);
     }
 
     @Test
     public void throws_exception_when_value_is_not_present() {
-      var result = Result.error("error");
-      assertCall(result::value)
+      var error = Try.error("error");
+      assertCall(error::result)
           .throwsException(IllegalStateException.class);
     }
   }
@@ -44,14 +44,14 @@ public class ResultTest {
   class _error {
     @Test
     public void return_error() {
-      var result = Result.error("error");
-      assertThat(result.error())
+      var error = Try.error("error");
+      assertThat(error.error())
           .isEqualTo("error");
     }
 
     @Test
     public void throws_exception_when_value_is_present() {
-      var result = Result.of(7);
+      var result = Try.result(7);
       assertCall(result::error)
           .throwsException(IllegalStateException.class);
     }
@@ -61,15 +61,15 @@ public class ResultTest {
   class _is_present {
     @Test
     public void return_true_when_value_is_present() {
-      var result = Result.of(7);
+      var result = Try.result(7);
       assertThat(result.isPresent())
           .isTrue();
     }
 
     @Test
     public void return_false_when_error_is_present() {
-      var result = Result.error("error");
-      assertThat(result.isPresent())
+      var error = Try.error("error");
+      assertThat(error.isPresent())
           .isFalse();
     }
   }
@@ -78,15 +78,15 @@ public class ResultTest {
   class _orElse {
     @Test
     public void when_value_is_present() {
-      var result = Result.of(7);
+      var result = Try.result(7);
       assertThat(result.orElse(e -> 33))
           .isEqualTo(7);
     }
 
     @Test
     public void when_value_is_not_present() {
-      var result = Result.error("some error");
-      assertThat(result.orElse(e -> e + "!"))
+      var error = Try.error("some error");
+      assertThat(error.orElse(e -> e + "!"))
           .isEqualTo("some error!");
     }
   }
@@ -95,16 +95,16 @@ public class ResultTest {
   class _map {
     @Test
     public void mapping_value() {
-      var result = Result.of(7);
+      var result = Try.result(7);
       assertThat(result.map(Object::toString))
-          .isEqualTo(Result.of("7"));
+          .isEqualTo(Try.result("7"));
     }
 
     @Test
     public void mapping_error() {
-      var result = Result.error("error");
-      assertThat(result.map(Object::toString))
-          .isSameInstanceAs(result);
+      var error = Try.error("error");
+      assertThat(error.map(Object::toString))
+          .isSameInstanceAs(error);
     }
   }
 
@@ -112,23 +112,23 @@ public class ResultTest {
   class _flatMap {
     @Test
     public void mapping_value_to_value() {
-      var result = Result.of(7);
-      assertThat(result.flatMap(v -> Result.of(v.toString())))
-          .isEqualTo(Result.of("7"));
+      var result = Try.result(7);
+      assertThat(result.flatMap(v -> Try.result(v.toString())))
+          .isEqualTo(Try.result("7"));
     }
 
     @Test
     public void mapping_value_to_error() {
-      var result = Result.of(7);
-      assertThat(result.flatMap(v -> Result.error("error")))
-          .isEqualTo(Result.error("error"));
+      var result = Try.result(7);
+      assertThat(result.flatMap(v -> Try.error("error")))
+          .isEqualTo(Try.error("error"));
     }
 
     @Test
     public void mapping_error() {
-      var result = Result.error("error");
-      assertThat(result.flatMap(v -> Result.of(v.toString())))
-          .isSameInstanceAs(result);
+      var error = Try.error("error");
+      assertThat(error.flatMap(v -> Try.result(v.toString())))
+          .isSameInstanceAs(error);
     }
   }
 
@@ -136,16 +136,16 @@ public class ResultTest {
   class _mapError {
     @Test
     public void when_value_is_present() {
-      var result = Result.of(7);
+      var result = Try.result(7);
       assertThat(result.mapError(m -> "error"))
           .isSameInstanceAs(result);
     }
 
     @Test
     public void when_value_is_not_present() {
-      var result = Result.error("original error");
-      assertThat(result.mapError(m -> "error"))
-          .isEqualTo(Result.error("error"));
+      var error = Try.error("original error");
+      assertThat(error.mapError(m -> "error"))
+          .isEqualTo(Try.error("error"));
     }
   }
 
@@ -153,16 +153,16 @@ public class ResultTest {
   class _validate {
     @Test
     public void when_value_is_present() {
-      var result = Result.of(7);
+      var result = Try.result(7);
       assertThat(result.validate(v -> v.equals(7) ? "error" : null))
-          .isEqualTo(Result.error("error"));
+          .isEqualTo(Try.error("error"));
     }
 
     @Test
     public void when_value_is_not_present() {
-      var result = Result.error("original error");
-      assertThat(result.validate(v -> "other error"))
-          .isEqualTo(Result.error("original error"));
+      var error = Try.error("original error");
+      assertThat(error.validate(v -> "other error"))
+          .isEqualTo(Try.error("original error"));
     }
   }
 }

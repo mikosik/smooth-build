@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 
 /**
  * This class is thread-safe.
@@ -18,7 +18,7 @@ import org.smoothbuild.util.collect.Result;
 @Singleton
 public class MethodLoader {
   private final JarClassLoaderProv jarClassLoaderProv;
-  private final ConcurrentHashMap<MethodSpec, Result<Method>> cache;
+  private final ConcurrentHashMap<MethodSpec, Try<Method>> cache;
 
   @Inject
   public MethodLoader(JarClassLoaderProv jarClassLoaderProv) {
@@ -26,16 +26,16 @@ public class MethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Result<Method> provide(MethodSpec methodSpec) {
+  public Try<Method> provide(MethodSpec methodSpec) {
     return cache.computeIfAbsent(methodSpec, this::findMethod);
   }
 
-  private Result<Method> findMethod(MethodSpec methodSpec) {
+  private Try<Method> findMethod(MethodSpec methodSpec) {
     return findClass(methodSpec)
         .flatMap(c -> findMethod(methodSpec, c));
   }
 
-  private Result<Class<?>> findClass(MethodSpec methodSpec) {
+  private Try<Class<?>> findClass(MethodSpec methodSpec) {
     try {
       return jarClassLoaderProv.classLoaderFor(methodSpec.jar())
           .flatMap(classLoader -> loadClass(classLoader, methodSpec));
@@ -44,31 +44,31 @@ public class MethodLoader {
     }
   }
 
-  private Result<Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
+  private Try<Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
     try {
-      return Result.of(classLoader.loadClass(methodSpec.classBinaryName()));
+      return Try.result(classLoader.loadClass(methodSpec.classBinaryName()));
     } catch (ClassNotFoundException e) {
-      return Result.error("Class not found in jar.");
+      return Try.error("Class not found in jar.");
     }
   }
 
-  private static Result<Method> findMethod(MethodSpec methodSpec, Class<?> clazz) {
+  private static Try<Method> findMethod(MethodSpec methodSpec, Class<?> clazz) {
     var declaredMethods = asList(clazz.getDeclaredMethods());
     var methods = filter(declaredMethods, m -> m.getName().equals(methodSpec.methodName()));
     return switch (methods.size()) {
       case 0 -> missingMethodError(methodSpec);
-      case 1 -> Result.of(methods.get(0));
+      case 1 -> Try.result(methods.get(0));
       default -> overloadedMethodError(methodSpec);
     };
   }
 
-  private static Result<Method> missingMethodError(MethodSpec methodSpec) {
-    return Result.error("Class '%s' does not have '%s' method."
+  private static Try<Method> missingMethodError(MethodSpec methodSpec) {
+    return Try.error("Class '%s' does not have '%s' method."
         .formatted(methodSpec.classBinaryName(), methodSpec.methodName()));
   }
 
-  private static Result<Method> overloadedMethodError(MethodSpec methodSpec) {
-    return Result.error("Class '%s' has more than one '%s' method."
+  private static Try<Method> overloadedMethodError(MethodSpec methodSpec) {
+    return Try.error("Class '%s' has more than one '%s' method."
         .formatted(methodSpec.classBinaryName(), methodSpec.methodName()));
   }
 }

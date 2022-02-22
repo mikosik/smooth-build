@@ -18,31 +18,31 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.ReturnAbc;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 
 public class NativeMethodLoaderTest extends TestingContext {
   @Test
   public void method_is_cached() throws Exception {
     var method = ReturnAbc.class.getDeclaredMethod(
         NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
-    testCaching(method, Result.of(method), Result.of(method));
+    testCaching(method, Try.result(method), Try.result(method));
   }
 
   @Test
   public void error_when_loading_method_is_cached() throws Exception {
     var method = NonPublicMethod.class.getDeclaredMethod(
         NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
-    testCaching(method, Result.error("xx"), Result.error(
+    testCaching(method, Try.error("xx"), Try.error(
         "Error loading native implementation for `smoothName` specified as `binary.name`: xx"));
   }
 
-  private void testCaching(Method method, Result<Method> resultMethod, Result<Method> expected) {
+  private void testCaching(Method method, Try<Method> tryMethod, Try<Method> expected) {
     var methodLoader = mock(MethodLoader.class);
     var jar = blobB();
     var classBinaryName = "binary.name";
     var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
     when(methodLoader.provide(methodSpec))
-        .thenReturn(resultMethod);
+        .thenReturn(tryMethod);
 
     var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 

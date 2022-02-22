@@ -15,7 +15,7 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.compute.Container;
 
 /**
@@ -24,7 +24,7 @@ import org.smoothbuild.vm.compute.Container;
 public class NativeMethodLoader {
   static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
-  private final ConcurrentHashMap<MethodB, Result<Method>> cache;
+  private final ConcurrentHashMap<MethodB, Try<Method>> cache;
 
   @Inject
   public NativeMethodLoader(MethodLoader methodLoader) {
@@ -32,11 +32,11 @@ public class NativeMethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Result<Method> load(String name, MethodB methodB) {
+  public Try<Method> load(String name, MethodB methodB) {
     return cache.computeIfAbsent(methodB, m -> loadImpl(name, m));
   }
 
-  private Result<Method> loadImpl(String name, MethodB methodB) {
+  private Try<Method> loadImpl(String name, MethodB methodB) {
     var classBinaryName = methodB.classBinaryName().toJ();
     var qName = q(name);
     var methodSpec = new MethodSpec(methodB.jar(), classBinaryName, NATIVE_METHOD_NAME);

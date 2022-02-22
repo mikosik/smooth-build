@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.ReturnAbc;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 
 public class MethodLoaderTest extends TestingContext {
   @Test
@@ -34,16 +34,16 @@ public class MethodLoaderTest extends TestingContext {
         .when(classLoader)
         .loadClass(className);
     var classLoaderProv = mock(JarClassLoaderProv.class);
-    doReturn(Result.of(classLoader))
+    doReturn(Try.result(classLoader))
         .when(classLoaderProv)
         .classLoaderFor(jar);
 
     var methodLoader = new MethodLoader(classLoaderProv);
     var methodSpec = new MethodSpec(jar, className, "func");
-    Result<Method> method1 = methodLoader.provide(methodSpec);
-    Result<Method> method2 = methodLoader.provide(methodSpec);
-    assertThat(method1)
-        .isSameInstanceAs(method2);
+    Try<Method> methodTry1 = methodLoader.provide(methodSpec);
+    Try<Method> methodTry2 = methodLoader.provide(methodSpec);
+    assertThat(methodTry1)
+        .isSameInstanceAs(methodTry2);
     verify(classLoader, times(1))
         .loadClass(className);
   }

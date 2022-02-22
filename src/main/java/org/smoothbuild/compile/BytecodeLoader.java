@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.util.collect.Result;
+import org.smoothbuild.util.collect.Try;
 
 public class BytecodeLoader {
   private final BytecodeMethodLoader methodLoader;
@@ -22,19 +22,19 @@ public class BytecodeLoader {
     this.bytecodeF = bytecodeF;
   }
 
-  public Result<ObjB> load(String name, BlobB jar, String classBinaryName) {
+  public Try<ObjB> load(String name, BlobB jar, String classBinaryName) {
     return methodLoader.load(jar, classBinaryName)
         .flatMap(this::invoke)
         .mapError(e -> loadingError(name, classBinaryName, e));
   }
 
-  private Result<ObjB> invoke(Method method) {
+  private Try<ObjB> invoke(Method method) {
     try {
-      return Result.of((ObjB) method.invoke(null, bytecodeF));
+      return Try.result((ObjB) method.invoke(null, bytecodeF));
     } catch (IllegalAccessException e) {
-      return Result.error("Cannot access provider method: " + e);
+      return Try.error("Cannot access provider method: " + e);
     } catch (InvocationTargetException e) {
-      return Result.error("Providing method thrown exception: " + e.getCause());
+      return Try.error("Providing method thrown exception: " + e.getCause());
     }
   }
 
