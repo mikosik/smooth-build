@@ -77,9 +77,9 @@ public class AcceptanceTestCase extends TestingContext {
     createJar(prjFileSystem.sink(PRJ_MOD_PATH.changeExtension("jar")), classes);
   }
 
-  private void createJar(BufferedSink fileSink, Class<?>[] classes) throws IOException {
+  private void createJar(BufferedSink fileSink, Class<?>... classes) throws IOException {
     try (var sink = fileSink) {
-      saveBytecodeInJar(sink, classes);
+      saveBytecodeInJar(sink, list(classes));
     }
   }
 

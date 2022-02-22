@@ -25,6 +25,7 @@ import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
 import static org.smoothbuild.systemtest.SystemTestUtils.GIT_REPO_ROOT;
 import static org.smoothbuild.systemtest.SystemTestUtils.SMOOTH_BINARY;
 import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.readAndClose;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
@@ -82,7 +83,7 @@ public abstract class SystemTestCase {
   }
 
   public void createNativeJar(Class<?>... classes) throws IOException {
-    saveBytecodeInJar(absolutePath("build.jar"), classes);
+    saveBytecodeInJar(absolutePath("build.jar"), list(classes));
   }
 
   public void createDir(String path) throws IOException {

@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
@@ -48,13 +49,13 @@ public class Classes {
     return binaryPath.substring(0, newLength).replace('/', '.');
   }
 
-  public static void saveBytecodeInJar(Path jarPath, Class<?>... classes) throws IOException {
+  public static void saveBytecodeInJar(Path jarPath, List<Class<?>> classes) throws IOException {
     try (var outputStream = sink(jarPath.toFile())) {
       saveBytecodeInJar(outputStream, classes);
     }
   }
 
-  public static void saveBytecodeInJar(Sink sink, Class<?>... classes)
+  public static void saveBytecodeInJar(Sink sink, List<Class<?>> classes)
       throws IOException {
     try (var jarOutputStream = new JarOutputStream(buffer(sink).outputStream())) {
       for (Class<?> clazz : classes) {

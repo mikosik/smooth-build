@@ -579,7 +579,7 @@ public class TestingContext {
   public BlobB blobBJarWithJavaByteCode(Class<?>... classes) throws IOException {
     var blobBBuilder = objDb().blobBuilder();
     try (var outputStream = blobBBuilder.sink()) {
-      saveBytecodeInJar(outputStream, classes);
+      saveBytecodeInJar(outputStream, list(classes));
     }
     return blobBBuilder.build();
   }
