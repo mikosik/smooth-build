@@ -576,10 +576,27 @@ public class TestingContext {
         .build();
   }
 
+  public BlobB blobBJarWithPluginApi(Class<?>... classes) throws IOException {
+    return blobBWith(
+        ImmutableList.<Class<?>>builder()
+            .addAll(list(classes))
+            .add(BlobB.class)
+            .add(NativeApi.class)
+            .add(ObjB.class)
+            .add(StringB.class)
+            .add(TupleB.class)
+            .add(ValB.class)
+            .build());
+  }
+
   public BlobB blobBJarWithJavaByteCode(Class<?>... classes) throws IOException {
+    return blobBWith(list(classes));
+  }
+
+  private BlobB blobBWith(List<Class<?>> list) throws IOException {
     var blobBBuilder = objDb().blobBuilder();
     try (var outputStream = blobBBuilder.sink()) {
-      saveBytecodeInJar(outputStream, list(classes));
+      saveBytecodeInJar(outputStream, list);
     }
     return blobBBuilder.build();
   }
@@ -666,6 +683,10 @@ public class TestingContext {
 
   public IntB intB(BigInteger value) {
     return objDb().int_(value);
+  }
+
+  public MethodB methodB(Class<?> clazz) throws IOException {
+    return methodB(blobBJarWithPluginApi(clazz), stringB(clazz.getCanonicalName()));
   }
 
   public MethodB methodB() {
