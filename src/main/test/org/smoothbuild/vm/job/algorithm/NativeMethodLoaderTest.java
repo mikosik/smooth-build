@@ -55,11 +55,6 @@ public class NativeMethodLoaderTest extends TestingContext {
     assertLoadingCausesError(WrongParameterType.class, wrongParametersErrorMessage());
   }
 
-  @Test
-  public void wrong_result_type_in_method_causes_error() throws IOException {
-    assertLoadingCausesError(StringIdentity.class, wrongParametersErrorMessage());
-  }
-
   private void assertLoadingCausesError(Class<?> clazz, String message) throws IOException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
     assertThat(nativeMethodLoader.load("name", methodB(clazz)))

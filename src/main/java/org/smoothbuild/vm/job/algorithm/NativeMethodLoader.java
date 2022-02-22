@@ -11,7 +11,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
@@ -41,7 +40,6 @@ public class NativeMethodLoader {
     var methodSpec = new MethodSpec(methodB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader.provide(methodSpec)
         .validate(m -> validateMethodSignature(m))
-        .validate(m -> validateNativeResT(m, name, methodB.type().res()))
         .mapError(e -> loadingError(name, classBinaryName, e));
   }
 
@@ -66,17 +64,6 @@ public class NativeMethodLoader {
       return "Providing method should have two parameters " + NativeApi.class.getCanonicalName()
           + " and " + TupleB.class.getCanonicalName() + ".";
     }
-  }
-
-  private static String validateNativeResT(Method method, String name, TypeB resTB) {
-    var methodResTJ = method.getReturnType();
-    var resTJ = resTB.typeJ();
-    if (!resTJ.equals(methodResTJ)) {
-      return q(name) + " declares type " + resTB.q()
-          + " so its native implementation result type must be " + resTJ.getCanonicalName()
-          + " but it is " + methodResTJ.getCanonicalName() + ".";
-    }
-    return null;
   }
 
   private static String loadingError(String name, String classBinaryName, String message) {
