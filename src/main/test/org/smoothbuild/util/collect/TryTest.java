@@ -165,4 +165,19 @@ public class TryTest {
           .isEqualTo(Try.error("original error"));
     }
   }
+
+  @Nested
+  class _to_string {
+    @Test
+    public void error_to_string() {
+      assertThat(Try.error("my message").toString())
+          .isEqualTo("Try.error(\"my message\")");
+    }
+
+    @Test
+    public void result_to_string() {
+      assertThat(Try.result(37).toString())
+          .isEqualTo("Try.result(37)");
+    }
+  }
 }

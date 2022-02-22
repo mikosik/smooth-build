@@ -83,4 +83,13 @@ public record Try<T>(T result, String error) {
     Try<U> error = (Try<U>) this;
     return error;
   }
+
+  @Override
+  public String toString() {
+    if (isPresent()) {
+      return "Try.result(" + result + ")";
+    } else {
+      return "Try.error(\"" + error + "\")";
+    }
+  }
 }
