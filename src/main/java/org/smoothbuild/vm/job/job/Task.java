@@ -45,8 +45,8 @@ public class Task extends AbstractJob {
   }
 
   private TupleB toInput(ImmutableList<Promise<ValB>> depResults) {
-    var argsB = map(depResults, Promise::get);
-    var tupleT = bytecodeF.tupleT(map(argsB, ValB::type));
-    return bytecodeF.tuple(tupleT, argsB);
+    var inputElems = map(depResults, Promise::get);
+    var tupleT = bytecodeF.tupleT(map(inputElems, ValB::type));
+    return bytecodeF.tuple(tupleT, inputElems);
   }
 }
