@@ -22,7 +22,7 @@ import org.smoothbuild.vm.compute.Container;
  * This class is thread-safe.
  */
 public class NativeMethodLoader {
-  static final String NATIVE_METHOD_NAME = "func";
+  public static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
   private final ConcurrentHashMap<MethodB, Try<Method>> cache;
 
@@ -38,12 +38,11 @@ public class NativeMethodLoader {
 
   private Try<Method> loadImpl(String name, MethodB methodB) {
     var classBinaryName = methodB.classBinaryName().toJ();
-    var qName = q(name);
     var methodSpec = new MethodSpec(methodB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader.provide(methodSpec)
         .validate(m -> validateMethodSignature(m))
-        .validate(m -> validateNativeResT(m, qName, methodB.type().res()))
-        .mapError(e -> loadingError(qName, classBinaryName, e));
+        .validate(m -> validateNativeResT(m, name, methodB.type().res()))
+        .mapError(e -> loadingError(name, classBinaryName, e));
   }
 
   private String validateMethodSignature(Method method) {
@@ -69,19 +68,19 @@ public class NativeMethodLoader {
     }
   }
 
-  private static String validateNativeResT(Method method, String qName, TypeB resTB) {
+  private static String validateNativeResT(Method method, String name, TypeB resTB) {
     var methodResTJ = method.getReturnType();
     var resTJ = resTB.typeJ();
     if (!resTJ.equals(methodResTJ)) {
-      return qName + " declares type " + resTB.q()
+      return q(name) + " declares type " + resTB.q()
           + " so its native implementation result type must be " + resTJ.getCanonicalName()
           + " but it is " + methodResTJ.getCanonicalName() + ".";
     }
     return null;
   }
 
-  private static String loadingError(String qName, String classBinaryName, String message) {
+  private static String loadingError(String name, String classBinaryName, String message) {
     return "Error loading native implementation for "
-        + qName + " specified as `" + classBinaryName + "`: " + message;
+        + q(name) + " specified as `" + classBinaryName + "`: " + message;
   }
 }
