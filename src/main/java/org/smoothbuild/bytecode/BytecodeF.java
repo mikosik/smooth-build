@@ -45,6 +45,7 @@ import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -141,6 +142,11 @@ public class BytecodeF {
 
   public StringB string(String string) {
     return objDb.string(string);
+  }
+
+  public TupleB tuple(ImmutableList<ValB> items) {
+    var tupleTB = catDb.tuple(Lists.map(items, ValB::type));
+    return objDb.tuple(tupleTB, items);
   }
 
   public TupleB tuple(TupleTB type, ImmutableList<ValB> items) {
