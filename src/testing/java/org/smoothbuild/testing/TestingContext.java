@@ -1,5 +1,7 @@
 package org.smoothbuild.testing;
 
+import static com.google.common.base.CaseFormat.LOWER_CAMEL;
+import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static com.google.common.io.ByteStreams.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Arrays.stream;
@@ -201,7 +203,11 @@ public class TestingContext {
   }
 
   public CompilerProv compilerProv(FileLoader fileLoader) {
-    return new CompilerProv(typeShConv(), bytecodeF(), typingB(), fileLoader, bytecodeLoader());
+    return compilerProv(fileLoader, bytecodeLoader());
+  }
+
+  public CompilerProv compilerProv(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+    return new CompilerProv(typeShConv(), bytecodeF(), typingB(), fileLoader, bytecodeLoader);
   }
 
   private BytecodeLoader bytecodeLoader() {
@@ -1038,6 +1044,10 @@ public class TestingContext {
     return new ItemS(type, modPath(), name, defaultArg, loc(line));
   }
 
+  public AnnFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
+    return byteFuncS(1, new AnnS(BYTECODE, stringS(path), loc(1)), resT, name, params);
+  }
+
   public AnnFuncS byteFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
     return byteFuncS(ann, funcTS(resT, params.list()), modPath(), name, params, loc(line));
   }
@@ -1064,7 +1074,7 @@ public class TestingContext {
   }
 
   public SyntCtorS syntCtorS(StructTS structT) {
-    return syntCtorS(1, structT, "name");
+    return syntCtorS(1, structT, UPPER_CAMEL.to(LOWER_CAMEL, structT.name()));
   }
 
   public SyntCtorS syntCtorS(int line, StructTS structT, String name) {

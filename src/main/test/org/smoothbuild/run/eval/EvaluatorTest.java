@@ -17,12 +17,14 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.TopEvalS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
@@ -30,6 +32,7 @@ import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
 public class EvaluatorTest  extends TestingContext {
   private final FileLoader fileLoader = mock(FileLoader.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
+  private final BytecodeLoader bytecodeLoader = mock(BytecodeLoader.class);
 
   @Nested
   class _values {
@@ -78,6 +81,37 @@ public class EvaluatorTest  extends TestingContext {
       var callS = callS(arrayTS(intTS()), topRefS(funcS), intS(7));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(arrayB(intTB(), intB(7)));
+    }
+  }
+
+  @Nested
+  class _func {
+    @Test
+    public void def_func() {
+      var defFuncS = defFuncS("myFunc", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
+      assertThat(evaluate(topRefS(defFuncS), nList(defFuncS)))
+          .isEqualTo(funcB(list(intTB()), paramRefB(intTB(), 0)));
+    }
+
+    @Test
+    public void ann_func() throws Exception {
+      var jar = blobB(123);
+      var className = ReturnIdFunc.class.getCanonicalName();
+      when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
+          .thenReturn(jar);
+      when(bytecodeLoader.load("myFunc", jar, className))
+          .thenReturn(Try.result(ReturnIdFunc.bytecode(bytecodeF())));
+
+      var byteFuncS = byteFuncS(className, oVarTS("A"), "myFunc", nList(itemS(oVarTS("A"), "p")));
+      assertThat(evaluate(topRefS(byteFuncS), nList(byteFuncS)))
+          .isEqualTo(ReturnIdFunc.bytecode(bytecodeF()));
+    }
+
+    @Test
+    public void synt_ctor() {
+      var syntCtorS = syntCtorS(structTS("MyStruct", nList(sigS(intTS(), "myField"))));
+      assertThat(evaluate(topRefS(syntCtorS), nList(syntCtorS)))
+          .isEqualTo(funcB(list(intTB()), combineB(paramRefB(intTB(), 0))));
     }
   }
 
@@ -189,6 +223,8 @@ public class EvaluatorTest  extends TestingContext {
   }
 
   private Evaluator newEvaluator() {
-    return new Evaluator(compilerProv(fileLoader), vmProv(nativeMethodLoader), reporter());
+    var compilerProv = compilerProv(fileLoader, bytecodeLoader);
+    var vmProv = vmProv(nativeMethodLoader);
+    return new Evaluator(compilerProv, vmProv, reporter());
   }
 }
