@@ -37,7 +37,7 @@ import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.type.TestingCatsB;
 import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.algorithm.Output;
-import org.smoothbuild.vm.compute.Computed;
+import org.smoothbuild.vm.compute.CompRes;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.job.Job;
@@ -94,12 +94,12 @@ public class ParallelJobExecutorTest extends TestingContext {
     assertThat(executeSingleJob(job))
         .isEqualTo(stringB("(0,0,0,0)"));
 
-    ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
+    ArgumentCaptor<CompRes> captor = ArgumentCaptor.forClass(CompRes.class);
     ExecutionReporter reporter = this.reporter;
     verify(reporter, times(4)).report(eq(job1.info()), captor.capture());
     List<ResSource> reportedSources = captor.getAllValues()
         .stream()
-        .map(Computed::resSource)
+        .map(CompRes::resSource)
         .collect(toList());
 
     assertThat(reportedSources)
@@ -120,11 +120,11 @@ public class ParallelJobExecutorTest extends TestingContext {
       assertThat(executeSingleJob(job))
           .isEqualTo(stringB("(0,0)"));
 
-      ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
+      ArgumentCaptor<CompRes> captor = ArgumentCaptor.forClass(CompRes.class);
       verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
       List<ResSource> reportedSources = captor.getAllValues()
           .stream()
-          .map(Computed::resSource)
+          .map(CompRes::resSource)
           .collect(toList());
 
       assertThat(reportedSources)
@@ -143,11 +143,11 @@ public class ParallelJobExecutorTest extends TestingContext {
       assertThat(executeSingleJob(job))
           .isEqualTo(stringB("(0,0)"));
 
-      ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
+      ArgumentCaptor<CompRes> captor = ArgumentCaptor.forClass(CompRes.class);
       verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
       List<ResSource> reportedSources = captor.getAllValues()
           .stream()
-          .map(Computed::resSource)
+          .map(CompRes::resSource)
           .collect(toList());
 
       assertThat(reportedSources)
@@ -189,7 +189,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     RuntimeException exception = new RuntimeException();
     Computer computer = new Computer(null, null, null) {
       @Override
-      public void compute(Algorithm algorithm, TupleB input, Consumer<Computed> consumer) {
+      public void compute(Algorithm algorithm, TupleB input, Consumer<CompRes> consumer) {
         throw exception;
       }
     };

@@ -26,7 +26,7 @@ public class Computer {
   private final ComputationCache computationCache;
   private final Hash sandboxHash;
   private final Provider<Container> containerProvider;
-  private final ConcurrentHashMap<Hash, PromisedValue<Computed>> promisedValues;
+  private final ConcurrentHashMap<Hash, PromisedValue<CompRes>> promisedValues;
 
   @Inject
   public Computer(ComputationCache computationCache, @SandboxHash Hash sandboxHash,
@@ -37,11 +37,11 @@ public class Computer {
     this.promisedValues = new ConcurrentHashMap<>();
   }
 
-  public void compute(Algorithm algorithm, TupleB input, Consumer<Computed> consumer)
+  public void compute(Algorithm algorithm, TupleB input, Consumer<CompRes> consumer)
       throws ComputationCacheExc, IOException {
     Hash hash = computationHash(algorithm, input);
-    PromisedValue<Computed> newPromised = new PromisedValue<>();
-    PromisedValue<Computed> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
+    PromisedValue<CompRes> newPromised = new PromisedValue<>();
+    PromisedValue<CompRes> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       prevPromised
           .chain(c -> asCachedComputation(c, algorithm.isPure()))
@@ -50,7 +50,7 @@ public class Computer {
       newPromised.addConsumer(consumer);
       if (computationCache.contains(hash)) {
         var output = computationCache.read(hash, algorithm.outputT());
-        newPromised.accept(new Computed(output, DISK));
+        newPromised.accept(new CompRes(output, DISK));
         promisedValues.remove(hash);
       } else {
         var computed = runComputation(algorithm, input);
@@ -64,24 +64,24 @@ public class Computer {
     }
   }
 
-  private static Computed asCachedComputation(Computed computed, boolean isPure) {
-    return new Computed(
-        computed.output(),
-        computed.exception(),
-        computed.resSource() == EXECUTION && isPure ? DISK : MEMORY);
+  private static CompRes asCachedComputation(CompRes compRes, boolean isPure) {
+    return new CompRes(
+        compRes.output(),
+        compRes.exception(),
+        compRes.resSource() == EXECUTION && isPure ? DISK : MEMORY);
   }
 
-  private Computed runComputation(Algorithm algorithm, TupleB input) {
+  private CompRes runComputation(Algorithm algorithm, TupleB input) {
     var container = containerProvider.get();
     Output output;
     try {
       output = algorithm.run(input, container);
     } catch (Exception e) {
-      return new Computed(e, EXECUTION);
+      return new CompRes(e, EXECUTION);
     }
     // This Computed instance creation is outside try-block
     // so eventual exception it could throw won't be caught by above catch.
-    return new Computed(output, EXECUTION);
+    return new CompRes(output, EXECUTION);
   }
 
   private Hash computationHash(Algorithm algorithm, TupleB args) {

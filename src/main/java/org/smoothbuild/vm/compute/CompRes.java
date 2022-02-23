@@ -5,17 +5,20 @@ import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.vm.algorithm.Output;
 
-public record Computed(Output output, Exception exception, ResSource resSource) {
+/**
+ * Computation result.
+ */
+public record CompRes(Output output, Exception exception, ResSource resSource) {
 
-  public Computed(Output output, ResSource resSource) {
+  public CompRes(Output output, ResSource resSource) {
     this(output, null, resSource);
   }
 
-  public Computed(Exception exception, ResSource resSource) {
+  public CompRes(Exception exception, ResSource resSource) {
     this(null, exception, resSource);
   }
 
-  public Computed(Output output, Exception exception, ResSource resSource) {
+  public CompRes(Output output, Exception exception, ResSource resSource) {
     this.output = output;
     this.exception = exception;
     this.resSource = requireNonNull(resSource);

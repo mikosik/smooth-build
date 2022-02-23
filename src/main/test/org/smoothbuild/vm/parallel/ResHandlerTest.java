@@ -16,7 +16,7 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.algorithm.Output;
-import org.smoothbuild.vm.compute.Computed;
+import org.smoothbuild.vm.compute.CompRes;
 import org.smoothbuild.vm.job.TaskInfo;
 
 public class ResHandlerTest extends TestingContext {
@@ -73,20 +73,20 @@ public class ResHandlerTest extends TestingContext {
     @Test
     public void object_is_not_forwarded_to_consumer() {
       ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
-      resHandler.accept(new Computed(new ArithmeticException(), DISK));
+      resHandler.accept(new CompRes(new ArithmeticException(), DISK));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
       ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
-      resHandler.accept(new Computed(new ArithmeticException(), DISK));
+      resHandler.accept(new CompRes(new ArithmeticException(), DISK));
       verify(executor, only()).terminate();
     }
   }
 
-  private Computed maybeComputed(ValB val) {
-    return new Computed(output(val), DISK);
+  private CompRes maybeComputed(ValB val) {
+    return new CompRes(output(val), DISK);
   }
 
   private Output output(ValB val) {
