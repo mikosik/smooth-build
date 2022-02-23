@@ -5,6 +5,8 @@ import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;
 import static org.smoothbuild.run.eval.MessageStruct.severity;
+import static org.smoothbuild.vm.compute.ComputationCacheExc.computationCacheException;
+import static org.smoothbuild.vm.compute.ComputationCacheExc.corruptedValueException;
 
 import java.io.IOException;
 
@@ -53,7 +55,7 @@ public class ComputationCache {
         sink.write(output.val().hash().toByteString());
       }
     } catch (IOException e) {
-      throw ComputationCacheExc.computationCacheException(e);
+      throw computationCacheException(e);
     }
   }
 
@@ -63,7 +65,7 @@ public class ComputationCache {
     return switch (pathState) {
       case FILE -> true;
       case NOTHING -> false;
-      case DIR -> throw ComputationCacheExc.corruptedValueException(taskHash, path + " is directory not a file.");
+      case DIR -> throw corruptedValueException(taskHash, path + " is directory not a file.");
     };
   }
 
@@ -72,7 +74,7 @@ public class ComputationCache {
       ObjB messagesObj = objDb.get(Hash.read(source));
       ArrayTB messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
       if (!messagesObj.cat().equals(messageArrayT)) {
-        throw ComputationCacheExc.corruptedValueException(taskHash, "Expected " + messageArrayT
+        throw corruptedValueException(taskHash, "Expected " + messageArrayT
             + " as first child of its Merkle root, but got " + messagesObj.cat());
       }
 
@@ -81,7 +83,7 @@ public class ComputationCache {
       for (TupleB m : tuples) {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {
-          throw ComputationCacheExc.corruptedValueException(taskHash,
+          throw corruptedValueException(taskHash,
               "One of messages has invalid severity = '" + severity + "'");
         }
       }
@@ -91,14 +93,14 @@ public class ComputationCache {
         Hash resultObjectHash = Hash.read(source);
         ObjB obj = objDb.get(resultObjectHash);
         if (!type.equals(obj.cat())) {
-          throw ComputationCacheExc.corruptedValueException(taskHash, "Expected value of type " + type
+          throw corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its Merkle root, but got " + obj.cat());
         } else {
           return new Output((ValB) obj, messages);
         }
       }
     } catch (IOException e) {
-      throw ComputationCacheExc.computationCacheException(e);
+      throw computationCacheException(e);
     }
   }
 
