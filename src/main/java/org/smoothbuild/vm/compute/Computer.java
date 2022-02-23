@@ -16,8 +16,8 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;
-import org.smoothbuild.vm.job.algorithm.Algorithm;
-import org.smoothbuild.vm.job.algorithm.Output;
+import org.smoothbuild.vm.algorithm.Algorithm;
+import org.smoothbuild.vm.algorithm.Output;
 
 /**
  * This class is thread-safe.

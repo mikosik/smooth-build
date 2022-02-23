@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.job.job;
+package org.smoothbuild.vm.job;
 
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.Nal;

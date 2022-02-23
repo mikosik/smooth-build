@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.job.algorithm;
+package org.smoothbuild.vm.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

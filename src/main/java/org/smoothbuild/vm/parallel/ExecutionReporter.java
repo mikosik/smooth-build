@@ -9,7 +9,7 @@ import static org.smoothbuild.run.eval.MessageStruct.text;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
-import static org.smoothbuild.vm.job.job.TaskInfo.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.vm.job.TaskInfo.NAME_LENGTH_LIMIT;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.compute.Computed;
 import org.smoothbuild.vm.compute.ResSource;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.TaskInfo;
 
 /**
  * This class is thread-safe.

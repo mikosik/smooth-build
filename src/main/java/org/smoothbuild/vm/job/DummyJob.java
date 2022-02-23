@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.job.job;
+package org.smoothbuild.vm.job;
 
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.lang.define.Loc;

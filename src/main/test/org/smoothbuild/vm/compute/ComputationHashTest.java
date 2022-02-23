@@ -12,12 +12,12 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.vm.job.algorithm.Algorithm;
-import org.smoothbuild.vm.job.algorithm.CombineAlgorithm;
-import org.smoothbuild.vm.job.algorithm.InvokeAlgorithm;
-import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
-import org.smoothbuild.vm.job.algorithm.Output;
-import org.smoothbuild.vm.job.algorithm.SelectAlgorithm;
+import org.smoothbuild.vm.algorithm.Algorithm;
+import org.smoothbuild.vm.algorithm.CombineAlgorithm;
+import org.smoothbuild.vm.algorithm.InvokeAlgorithm;
+import org.smoothbuild.vm.algorithm.OrderAlgorithm;
+import org.smoothbuild.vm.algorithm.Output;
+import org.smoothbuild.vm.algorithm.SelectAlgorithm;
 
 public class ComputationHashTest extends TestingContext {
   @Test

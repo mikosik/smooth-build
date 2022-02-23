@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.job.algorithm;
+package org.smoothbuild.vm.algorithm;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.ClassLoader.getPlatformClassLoader;
@@ -7,7 +7,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.vm.job.algorithm.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -23,7 +22,6 @@ import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.NonStaticMethod;
 import org.smoothbuild.testing.func.nativ.ReturnAbc;
-import org.smoothbuild.testing.func.nativ.StringIdentity;
 import org.smoothbuild.testing.func.nativ.TooFewParameters;
 import org.smoothbuild.testing.func.nativ.TooManyParameters;
 import org.smoothbuild.testing.func.nativ.WrongParameterType;
@@ -81,14 +79,14 @@ public class NativeMethodLoaderTest extends TestingContext {
     @Test
     public void method_is_cached() throws Exception {
       var method = ReturnAbc.class.getDeclaredMethod(
-          NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
+          NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
       testCaching(method, Try.result(method), Try.result(method));
     }
 
     @Test
     public void error_when_loading_method_is_cached() throws Exception {
       var method = NonPublicMethod.class.getDeclaredMethod(
-          NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
+          NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
       testCaching(method, Try.error("xx"), Try.error(
           "Error loading native implementation for `smoothName` specified as `binary.name`: xx"));
     }

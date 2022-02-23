@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.job.job;
+package org.smoothbuild.vm.job;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -10,7 +10,6 @@ import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
 import com.google.common.collect.ImmutableList;

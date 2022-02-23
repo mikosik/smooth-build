@@ -142,11 +142,11 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
+import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.compute.ComputationCache;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.job.JobCreatorProv;
-import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.parallel.ExecutionReporter;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 

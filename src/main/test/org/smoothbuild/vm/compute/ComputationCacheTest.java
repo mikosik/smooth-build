@@ -15,7 +15,7 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.vm.job.algorithm.Output;
+import org.smoothbuild.vm.algorithm.Output;
 
 import okio.ByteString;
 

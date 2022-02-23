@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.Computed;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.TaskInfo;
 
 public class ResHandler implements Consumer<Computed> {
   private final TaskInfo taskInfo;

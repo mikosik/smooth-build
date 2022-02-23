@@ -6,7 +6,7 @@ import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.TaskInfo;
 import org.smoothbuild.vm.parallel.TaskReporter;
 
 public class MemoryReporter implements Reporter, TaskReporter {

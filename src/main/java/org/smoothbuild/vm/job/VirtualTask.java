@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.job.job;
+package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.job.algorithm;
+package org.smoothbuild.vm.algorithm;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.TupleB;

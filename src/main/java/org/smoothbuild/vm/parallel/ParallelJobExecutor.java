@@ -12,10 +12,10 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
+import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.compute.Computer;
-import org.smoothbuild.vm.job.algorithm.Algorithm;
-import org.smoothbuild.vm.job.job.Job;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.Job;
+import org.smoothbuild.vm.job.TaskInfo;
 
 /**
  * Executes tasks in parallel.

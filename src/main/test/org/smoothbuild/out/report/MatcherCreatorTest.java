@@ -22,8 +22,8 @@ import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.vm.job.job.TaskInfo;
-import org.smoothbuild.vm.job.job.TaskKind;
+import org.smoothbuild.vm.job.TaskInfo;
+import org.smoothbuild.vm.job.TaskKind;
 
 import picocli.CommandLine.TypeConversionException;
 

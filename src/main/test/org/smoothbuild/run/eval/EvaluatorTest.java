@@ -27,7 +27,7 @@ import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Try;
-import org.smoothbuild.vm.job.algorithm.NativeMethodLoader;
+import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 
 public class EvaluatorTest  extends TestingContext {
   private final FileLoader fileLoader = mock(FileLoader.class);

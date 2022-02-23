@@ -1,6 +1,6 @@
-package org.smoothbuild.vm.job.algorithm;
+package org.smoothbuild.vm.algorithm;
 
-import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.combineAlgorithmHash;
+import static org.smoothbuild.vm.algorithm.AlgorithmHashes.combineAlgorithmHash;
 
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.type.val.TupleTB;

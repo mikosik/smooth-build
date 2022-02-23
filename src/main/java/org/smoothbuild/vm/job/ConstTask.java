@@ -1,7 +1,7 @@
-package org.smoothbuild.vm.job.job;
+package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.vm.job.job.TaskKind.CONST;
+import static org.smoothbuild.vm.job.TaskKind.CONST;
 
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.lang.define.Nal;

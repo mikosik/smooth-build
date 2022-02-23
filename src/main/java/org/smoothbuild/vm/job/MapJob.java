@@ -1,9 +1,8 @@
-package org.smoothbuild.vm.job.job;
+package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
-import static org.smoothbuild.vm.job.job.TaskKind.ORDER;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -15,7 +14,6 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
 public class MapJob extends AbstractJob {
@@ -49,7 +47,7 @@ public class MapJob extends AbstractJob {
     var mapElemJs = map(
         array.elems(ValB.class),
         o -> mapElementJob(outputElemT, o));
-    var info = new TaskInfo(ORDER, "[]", loc());
+    var info = new TaskInfo(TaskKind.ORDER, "[]", loc());
     jobCreator.orderEager(outputArrayT, mapElemJs, info)
         .schedule(worker)
         .addConsumer(result);

@@ -16,7 +16,7 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.vm.compute.ResSource.DISK;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResSource.MEMORY;
-import static org.smoothbuild.vm.job.job.TaskKind.CALL;
+import static org.smoothbuild.vm.job.TaskKind.CALL;
 import static org.smoothbuild.vm.parallel.ExecutionReporter.header;
 
 import java.util.List;
@@ -35,14 +35,14 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.type.TestingCatsB;
+import org.smoothbuild.vm.algorithm.Algorithm;
+import org.smoothbuild.vm.algorithm.Output;
 import org.smoothbuild.vm.compute.Computed;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.ResSource;
-import org.smoothbuild.vm.job.algorithm.Algorithm;
-import org.smoothbuild.vm.job.algorithm.Output;
-import org.smoothbuild.vm.job.job.Job;
-import org.smoothbuild.vm.job.job.Task;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.Job;
+import org.smoothbuild.vm.job.Task;
+import org.smoothbuild.vm.job.TaskInfo;
 
 public class ParallelJobExecutorTest extends TestingContext {
   private ParallelJobExecutor parallelJobExecutor;

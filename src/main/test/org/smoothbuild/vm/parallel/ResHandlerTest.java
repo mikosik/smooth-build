@@ -5,7 +5,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.vm.compute.ResSource.DISK;
-import static org.smoothbuild.vm.job.job.TaskKind.CALL;
+import static org.smoothbuild.vm.job.TaskKind.CALL;
 
 import java.util.function.Consumer;
 
@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
+import org.smoothbuild.vm.algorithm.Output;
 import org.smoothbuild.vm.compute.Computed;
-import org.smoothbuild.vm.job.algorithm.Output;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.TaskInfo;
 
 public class ResHandlerTest extends TestingContext {
   private ExecutionReporter reporter;

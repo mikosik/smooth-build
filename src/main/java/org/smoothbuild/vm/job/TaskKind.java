@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.job.job;
+package org.smoothbuild.vm.job;
 
 public enum TaskKind {
   CALL,
