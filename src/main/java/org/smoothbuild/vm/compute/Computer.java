@@ -44,16 +44,16 @@ public class Computer {
     PromisedValue<Computed> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       prevPromised
-          .chain((computed) -> computedFromCache(algorithm.isPure(), computed))
+          .chain(c -> asCachedComputation(c, algorithm.isPure()))
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
       if (computationCache.contains(hash)) {
-        Output output = computationCache.read(hash, algorithm.outputT());
+        var output = computationCache.read(hash, algorithm.outputT());
         newPromised.accept(new Computed(output, DISK));
         promisedValues.remove(hash);
       } else {
-        Computed computed = runAlgorithm(algorithm, input);
+        var computed = runComputation(algorithm, input);
         boolean cacheOnDisk = algorithm.isPure() && computed.hasOutput();
         if (cacheOnDisk) {
           computationCache.write(hash, computed.output());
@@ -64,22 +64,22 @@ public class Computer {
     }
   }
 
-  private static Computed computedFromCache(boolean isPure, Computed computed) {
+  private static Computed asCachedComputation(Computed computed, boolean isPure) {
     return new Computed(
         computed.output(),
         computed.exception(),
         computed.resSource() == EXECUTION && isPure ? DISK : MEMORY);
   }
 
-  private Computed runAlgorithm(Algorithm algorithm, TupleB input) {
-    Container container = containerProvider.get();
+  private Computed runComputation(Algorithm algorithm, TupleB input) {
+    var container = containerProvider.get();
     Output output;
     try {
       output = algorithm.run(input, container);
     } catch (Exception e) {
       return new Computed(e, EXECUTION);
     }
-    // This Computed instance creation is outside of try-block
+    // This Computed instance creation is outside try-block
     // so eventual exception it could throw won't be caught by above catch.
     return new Computed(output, EXECUTION);
   }
