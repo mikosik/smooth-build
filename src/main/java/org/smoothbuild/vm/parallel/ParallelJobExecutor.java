@@ -44,14 +44,13 @@ public class ParallelJobExecutor {
   }
 
   public static class Worker {
-    private final SoftTerminationExecutor jobExecutor;
+    private final SoftTerminationExecutor executor;
     private final Computer computer;
     private final ExecutionReporter reporter;
 
     @Inject
-    public Worker(Computer computer, ExecutionReporter reporter,
-        SoftTerminationExecutor jobExecutor) {
-      this.jobExecutor = jobExecutor;
+    public Worker(Computer computer, ExecutionReporter reporter, SoftTerminationExecutor executor) {
+      this.executor = executor;
       this.computer = computer;
       this.reporter = reporter;
     }
@@ -63,20 +62,20 @@ public class ParallelJobExecutor {
     public List<Optional<ValB>> executeAll(List<Job> jobs)
         throws InterruptedException {
       var results = map(jobs, job -> job.schedule(this));
-      runWhenAllAvailable(results, jobExecutor::terminate);
+      runWhenAllAvailable(results, executor::terminate);
 
-      jobExecutor.awaitTermination();
+      executor.awaitTermination();
       return map(results, promise -> Optional.ofNullable(promise.get()));
     }
 
     public void enqueue(TaskInfo info, Algorithm algorithm, TupleB input, Consumer<ValB> consumer) {
-      jobExecutor.enqueue(() -> {
+      executor.enqueue(() -> {
         try {
-          var resultHandler = new ResHandler(info, consumer, reporter, jobExecutor);
-          computer.compute(algorithm, input, resultHandler);
+          var resHandler = new ResHandler(info, consumer, reporter, executor);
+          computer.compute(algorithm, input, resHandler);
         } catch (Throwable e) {
           reporter.reportComputerException(info, e);
-          jobExecutor.terminate();
+          executor.terminate();
         }
       });
     }
