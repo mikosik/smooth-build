@@ -8,8 +8,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.api.Bounds;
-import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.util.collect.NList;
@@ -25,11 +24,8 @@ public class TypeSF implements TypeF<TypeS> {
   private static final NothingTS NOTHING = new NothingTS();
   private static final StringTS STRING = new StringTS();
 
-  private final Sides<TypeS> sides;
-
   @Inject
   public TypeSF() {
-    this.sides = new Sides<>(any(), nothing());
   }
 
   /**
@@ -62,21 +58,11 @@ public class TypeSF implements TypeF<TypeS> {
   }
 
   @Override
-  public Bounds<TypeS> oneSideBound(Side<TypeS> side, TypeS type) {
+  public Bounds<TypeS> oneSideBound(Side side, TypeS type) {
     return switch (side) {
-      case Sides.Lower l -> new Bounds<>(type, any());
-      case Sides.Upper u -> new Bounds<>(nothing(), type);
+      case LOWER-> new Bounds<>(type, any());
+      case UPPER -> new Bounds<>(nothing(), type);
     };
-  }
-
-  @Override
-  public Side<TypeS> upper() {
-    return sides.upper();
-  }
-
-  @Override
-  public Side<TypeS> lower() {
-    return sides.lower();
   }
 
   @Override

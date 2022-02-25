@@ -2,6 +2,8 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static org.smoothbuild.lang.type.api.Side.LOWER;
+import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
@@ -20,7 +22,7 @@ import org.smoothbuild.lang.type.api.ClosedVarT;
 import org.smoothbuild.lang.type.api.ComposedT;
 import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.OpenVarT;
-import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.TypeF;
@@ -65,41 +67,40 @@ public class Typing<T extends Type> {
   }
 
   public boolean isAssignable(T target, T source) {
-    return inequal(target, source, typeF.lower());
+    return inequal(target, source, LOWER);
   }
 
   public boolean isParamAssignable(T target, T source) {
-    return inequalParam(target, source, typeF.lower())
+    return inequalParam(target, source, LOWER)
         && areConsistent(inferVarBoundsLower(target, source));
   }
 
-  public boolean inequal(Type type1, Type type2, Side<T> side) {
+  public boolean inequal(Type type1, Type type2, Side side) {
     return inequalImpl(type1, type2, side, this::inequal);
   }
 
-  public boolean inequalParam(Type type1, Type type2, Side<T> side) {
+  public boolean inequalParam(Type type1, Type type2, Side side) {
     return (type1 instanceof VarT)
         || inequalImpl(type1, type2, side, this::inequalParam);
   }
 
-  private boolean inequalImpl(Type type1, Type type2, Side<T> side,
-      InequalFunc<T> inequalityFunc) {
+  private boolean inequalImpl(Type type1, Type type2, Side side, InequalFunc inequalityFunc) {
     return inequalByEdgeCases(type1, type2, side)
         || inequalByConstruction(type1, type2, side, inequalityFunc);
   }
 
-  private boolean inequalByEdgeCases(Type type1, Type type2, Side<T> side) {
-    return type2.equals(side.edge())
-        || type1.equals(side.reversed().edge());
+  private boolean inequalByEdgeCases(Type type1, Type type2, Side side) {
+    return type2.equals(typeF.edge(side))
+        || type1.equals(typeF.edge(side.other()));
   }
 
-  private boolean inequalByConstruction(Type t1, Type t2, Side<T> side,
-      InequalFunc<T> isInequal) {
+  private boolean inequalByConstruction(Type t1, Type t2, Side side, InequalFunc isInequal) {
     if (t1 instanceof ComposedT c1) {
       if (t1.getClass().equals(t2.getClass())) {
         var c2 = (ComposedT) t2;
         return allMatch(c1.covars(), c2.covars(), (a, b) -> isInequal.apply(a, b, side))
-            && allMatch(c1.contravars(), c2.contravars(), (a, b) -> isInequal.apply(a, b, side.reversed()));
+            && allMatch(c1.contravars(), c2.contravars(),
+            (a, b) -> isInequal.apply(a, b, side.other()));
       } else {
         return false;
       }
@@ -108,8 +109,8 @@ public class Typing<T extends Type> {
     }
   }
 
-  public static interface InequalFunc<T> {
-    public boolean apply(Type type1, Type type2, Side<T> side);
+  public static interface InequalFunc {
+    public boolean apply(Type type1, Type type2, Side side);
   }
 
   private boolean areConsistent(VarBounds<T> varBounds) {
@@ -118,11 +119,11 @@ public class Typing<T extends Type> {
   }
 
   public VarBounds<T> inferVarBoundsLower(List<? extends T> types1, List<? extends T> types2) {
-    return inferVarBounds(types1, types2, typeF.lower());
+    return inferVarBounds(types1, types2, LOWER);
   }
 
   public VarBounds<T> inferVarBounds(
-      List<? extends T> types1, List<? extends T> types2, Side<T> side) {
+      List<? extends T> types1, List<? extends T> types2, Side side) {
     checkArgument(types1.size() == types2.size());
     var result = new HashMap<VarT, Bounded<T>>();
     for (int i = 0; i < types1.size(); i++) {
@@ -132,23 +133,24 @@ public class Typing<T extends Type> {
   }
 
   public VarBounds<T> inferVarBoundsLower(T type1, T type2) {
-    return inferVarBounds(type1, type2, typeF().lower());
+    return inferVarBounds(type1, type2, LOWER);
   }
 
-  public VarBounds<T> inferVarBounds(T type1, T type2, Side<T> side) {
+  public VarBounds<T> inferVarBounds(T type1, T type2, Side side) {
     var result = new HashMap<VarT, Bounded<T>>();
     inferImpl(type1, type2, side, result);
     return new VarBounds<>(ImmutableMap.copyOf(result));
   }
 
-  private void inferImpl(T t1, T t2, Side<T> side, Map<VarT, Bounded<T>> result) {
+  private void inferImpl(T t1, T t2, Side side, Map<VarT, Bounded<T>> result) {
     switch (t1) {
       case VarT v -> result.merge(v, new Bounded<>(v, typeF.oneSideBound(side, t2)), this::merge);
       case ComposedT c1 -> {
-        if (t2.equals(side.edge())) {
-          var reversed = side.reversed();
-          c1.covars().forEach(t -> inferImpl((T) t, side.edge(), side, result));
-          c1.contravars().forEach(t -> inferImpl((T) t, reversed.edge(), reversed, result));
+        T sideEdge = typeF.edge(side);
+        if (t2.equals(sideEdge)) {
+          var other = side.other();
+          c1.covars().forEach(t -> inferImpl((T) t, sideEdge, side, result));
+          c1.contravars().forEach(t -> inferImpl((T) t, typeF.edge(other), other, result));
         } else if (t1.getClass().equals(t2.getClass())) {
           var c2 = (ComposedT) t2;
           var c1Covars = c1.covars();
@@ -157,7 +159,7 @@ public class Typing<T extends Type> {
           var c2Contravars = c2.contravars();
           if (c1Covars.size() == c2Covars.size() && c1Contravars.size() == c2Contravars.size()) {
             inferImplForEach(c1Covars, c2Covars, side, result);
-            inferImplForEach(c1Contravars, c2Contravars, side.reversed(), result);
+            inferImplForEach(c1Contravars, c2Contravars, side.other(), result);
           }
         }
       }
@@ -166,17 +168,17 @@ public class Typing<T extends Type> {
   }
 
   private void inferImplForEach(ImmutableList<Type> types1, ImmutableList<Type> types2,
-      Side<T> side, Map<VarT, Bounded<T>> result) {
+      Side side, Map<VarT, Bounded<T>> result) {
     for (int i = 0; i < types1.size(); i++) {
       inferImpl((T) types1.get(i), (T) types2.get(i), side, result);
     }
   }
 
   public T mapVarsLower(T type, VarBounds<T> varBounds) {
-    return mapVars(type, varBounds, typeF.lower());
+    return mapVars(type, varBounds, LOWER);
   }
 
-  public T mapVars(T type, VarBounds<T> varBounds, Side<T> side) {
+  public T mapVars(T type, VarBounds<T> varBounds, Side side) {
     if (type.isPolytype()) {
       return switch (type) {
         case VarT var -> mapVarsInVar(type, varBounds, side, var);
@@ -184,7 +186,7 @@ public class Typing<T extends Type> {
           var covars = map(
               composedT.covars(), p -> mapVars((T) p, varBounds, side));
           var contravars = map(
-              composedT.contravars(), p -> mapVars((T) p, varBounds, side.reversed()));
+              composedT.contravars(), p -> mapVars((T) p, varBounds, side.other()));
           yield rebuildComposed(type, covars, contravars);
         }
         default -> type;
@@ -193,7 +195,7 @@ public class Typing<T extends Type> {
     return type;
   }
 
-  private T mapVarsInVar(T type, VarBounds<T> varBounds, Side<T> side, VarT var) {
+  private T mapVarsInVar(T type, VarBounds<T> varBounds, Side side, VarT var) {
     Bounded<T> bounded = varBounds.map().get(var);
     if (bounded == null) {
       return type;
@@ -203,18 +205,18 @@ public class Typing<T extends Type> {
   }
 
   public T mergeUp(T type1, T type2) {
-    return merge(type1, type2, typeF.upper());
+    return merge(type1, type2, UPPER);
   }
 
   public T mergeDown(T type1, T type2) {
-    return merge(type1, type2, typeF.lower());
+    return merge(type1, type2, LOWER);
   }
 
-  public T merge(T type1, T type2, Side<T> direction) {
-    Type reversedEdge = direction.reversed().edge();
-    if (reversedEdge.equals(type2)) {
+  public T merge(T type1, T type2, Side direction) {
+    Type otherEdge = typeF.edge(direction.other());
+    if (otherEdge.equals(type2)) {
       return type1;
-    } else if (reversedEdge.equals(type1)) {
+    } else if (otherEdge.equals(type1)) {
       return type2;
     } else if (type1.equals(type2)) {
       return type1;
@@ -227,14 +229,14 @@ public class Typing<T extends Type> {
         var c2contravars = c2.contravars();
         if (c1covars.size() == c2covars.size() && c1contravars.size() == c2contravars.size()) {
           var contravars = zip(c1contravars, c2contravars,
-              (a, b) -> merge((T) a, (T) b, direction.reversed()));
+              (a, b) -> merge((T) a, (T) b, direction.other()));
           var covars = zip(c1covars, c2covars,
               (a, b) -> merge((T) a, (T) b, direction));
           return rebuildComposed(type1, covars, contravars);
         }
       }
     }
-    return direction.edge();
+    return typeF.edge(direction);
   }
 
   public Bounded<T> merge(Bounded<T> a, Bounded<T> b) {
@@ -243,8 +245,8 @@ public class Typing<T extends Type> {
 
   public Bounds<T> merge(Bounds<T> bounds1, Bounds<T> bounds2) {
     return new Bounds<>(
-        merge(bounds1.lower(), bounds2.lower(), typeF.upper()),
-        merge(bounds1.upper(), bounds2.upper(), typeF.lower()));
+        merge(bounds1.lower(), bounds2.lower(), UPPER),
+        merge(bounds1.upper(), bounds2.upper(), LOWER));
   }
 
   public T openVars(T type) {

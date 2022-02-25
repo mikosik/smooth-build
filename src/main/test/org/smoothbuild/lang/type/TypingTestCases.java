@@ -3,6 +3,8 @@ package org.smoothbuild.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.type.TestingTypeGraph.buildGraph;
+import static org.smoothbuild.lang.type.api.Side.LOWER;
+import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.lang.type.api.VarBounds.varBounds;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -15,7 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.Bounds;
-import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.lang.type.api.VarBounds;
@@ -319,7 +321,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   public void inferVarBounds(T type, T assigned, VarBounds<T> expected) {
-    assertThat(typing.inferVarBounds(type, assigned, lower()))
+    assertThat(typing.inferVarBounds(type, assigned, LOWER))
         .isEqualTo(expected);
   }
 
@@ -327,111 +329,113 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     var r = new ArrayList<Arguments>();
     for (T type : concat(testingT().elementaryTypes(), ox())) {
       if (type instanceof NothingTS || type instanceof NothingTB) {
-        r.add(arguments(oa(), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(oa(), a(nothing()), vb(oa(), lower(), a(nothing()))));
-        r.add(arguments(oa(), a(a(nothing())), vb(oa(), lower(), a(a(nothing())))));
+        r.add(arguments(oa(), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(oa(), a(nothing()), vb(oa(), LOWER, a(nothing()))));
+        r.add(arguments(oa(), a(a(nothing())), vb(oa(), LOWER, a(a(nothing())))));
 
         // arrays
-        r.add(arguments(a(oa()), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(a(oa()), a(nothing()), vb(oa(), lower(), nothing())));
-        r.add(arguments(a(oa()), a(a(nothing())), vb(oa(), lower(), a(nothing()))));
+        r.add(arguments(a(oa()), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(a(oa()), a(nothing()), vb(oa(), LOWER, nothing())));
+        r.add(arguments(a(oa()), a(a(nothing())), vb(oa(), LOWER, a(nothing()))));
 
-        r.add(arguments(a(a(oa())), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(a(a(oa())), a(nothing()), vb(oa(), lower(), nothing())));
-        r.add(arguments(a(a(oa())), a(a(nothing())), vb(oa(), lower(), nothing())));
+        r.add(arguments(a(a(oa())), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(a(a(oa())), a(nothing()), vb(oa(), LOWER, nothing())));
+        r.add(arguments(a(a(oa())), a(a(nothing())), vb(oa(), LOWER, nothing())));
 
         // tuples
         if (isTupleSupported()) {
-          r.add(arguments(tuple(oa()), nothing(), vb(oa(), lower(), nothing())));
-          r.add(arguments(tuple(oa()), tuple(nothing()), vb(oa(), lower(), nothing())));
-          r.add(arguments(tuple(oa()), tuple(tuple(nothing())), vb(oa(), lower(), tuple(nothing()))));
+          r.add(arguments(tuple(oa()), nothing(), vb(oa(), LOWER, nothing())));
+          r.add(arguments(tuple(oa()), tuple(nothing()), vb(oa(), LOWER, nothing())));
+          r.add(arguments(tuple(oa()), tuple(tuple(nothing())), vb(oa(), LOWER, tuple(nothing()))));
 
-          r.add(arguments(tuple(tuple(oa())), nothing(), vb(oa(), lower(), nothing())));
-          r.add(arguments(tuple(tuple(oa())), tuple(nothing()), vb(oa(), lower(), nothing())));
-          r.add(arguments(tuple(tuple(oa())), tuple(tuple(nothing())), vb(oa(), lower(), nothing())));
+          r.add(arguments(tuple(tuple(oa())), nothing(), vb(oa(), LOWER, nothing())));
+          r.add(arguments(tuple(tuple(oa())), tuple(nothing()), vb(oa(), LOWER, nothing())));
+          r.add(arguments(tuple(tuple(oa())), tuple(tuple(nothing())), vb(oa(), LOWER, nothing())));
         }
 
         // funcs
-        r.add(arguments(f(oa()), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(f(f(oa())), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(f(f(f(oa()))), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(f(oa()), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(f(f(oa())), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(f(f(f(oa()))), nothing(), vb(oa(), LOWER, nothing())));
 
-        r.add(arguments(f(bool(), oa()), nothing(), vb(oa(), upper(), any())));
-        r.add(arguments(f(bool(), f(oa())), nothing(), vb(oa(), upper(), any())));
-        r.add(arguments(f(bool(), f(f(oa()))), nothing(), vb(oa(), upper(), any())));
+        r.add(arguments(f(bool(), oa()), nothing(), vb(oa(), UPPER, any())));
+        r.add(arguments(f(bool(), f(oa())), nothing(), vb(oa(), UPPER, any())));
+        r.add(arguments(f(bool(), f(f(oa()))), nothing(), vb(oa(), UPPER, any())));
 
-        r.add(arguments(f(bool(), f(blob(), oa())), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(f(bool(), f(blob(), f(oa()))), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(f(bool(), f(blob(), f(f(oa())))), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(f(bool(), f(blob(), oa())), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(f(bool(), f(blob(), f(oa()))), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(f(bool(), f(blob(), f(f(oa())))), nothing(), vb(oa(), LOWER, nothing())));
 
         // arrays + funcs
-        r.add(arguments(a(f(oa())), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(a(f(string(), oa())), nothing(), vb(oa(), upper(), any())));
+        r.add(arguments(a(f(oa())), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(a(f(string(), oa())), nothing(), vb(oa(), UPPER, any())));
 
-        r.add(arguments(f(a(oa())), nothing(), vb(oa(), lower(), nothing())));
-        r.add(arguments(f(bool(), a(oa())), nothing(), vb(oa(), upper(), any())));
+        r.add(arguments(f(a(oa())), nothing(), vb(oa(), LOWER, nothing())));
+        r.add(arguments(f(bool(), a(oa())), nothing(), vb(oa(), UPPER, any())));
       } else {
-        r.add(arguments(oa(), type, vb(oa(), lower(), type)));
-        r.add(arguments(oa(), a(type), vb(oa(), lower(), a(type))));
-        r.add(arguments(oa(), a(a(type)), vb(oa(), lower(), a(a(type)))));
+        r.add(arguments(oa(), type, vb(oa(), LOWER, type)));
+        r.add(arguments(oa(), a(type), vb(oa(), LOWER, a(type))));
+        r.add(arguments(oa(), a(a(type)), vb(oa(), LOWER, a(a(type)))));
 
         // arrays
         r.add(arguments(a(oa()), type, vb()));
-        r.add(arguments(a(oa()), a(type), vb(oa(), lower(), type)));
-        r.add(arguments(a(oa()), a(a(type)), vb(oa(), lower(), a(type))));
+        r.add(arguments(a(oa()), a(type), vb(oa(), LOWER, type)));
+        r.add(arguments(a(oa()), a(a(type)), vb(oa(), LOWER, a(type))));
 
         r.add(arguments(a(a(oa())), type, vb()));
         r.add(arguments(a(a(oa())), a(type), vb()));
-        r.add(arguments(a(a(oa())), a(a(type)), vb(oa(), lower(), type)));
+        r.add(arguments(a(a(oa())), a(a(type)), vb(oa(), LOWER, type)));
 
         // tuples
         if (isTupleSupported()) {
           r.add(arguments(tuple(oa()), type, vb()));
-          r.add(arguments(tuple(oa()), tuple(type), vb(oa(), lower(), type)));
-          r.add(arguments(tuple(oa()), tuple(tuple(type)), vb(oa(), lower(), tuple(type))));
+          r.add(arguments(tuple(oa()), tuple(type), vb(oa(), LOWER, type)));
+          r.add(arguments(tuple(oa()), tuple(tuple(type)), vb(oa(), LOWER, tuple(type))));
 
           r.add(arguments(tuple(tuple(oa())), type, vb()));
           r.add(arguments(tuple(tuple(oa())), tuple(type), vb()));
-          r.add(arguments(tuple(tuple(oa())), tuple(tuple(type)), vb(oa(), lower(), type)));
+          r.add(arguments(tuple(tuple(oa())), tuple(tuple(type)), vb(oa(), LOWER, type)));
         }
 
         // funcs
         r.add(arguments(f(oa()), type, vb()));
-        r.add(arguments(f(oa()), f(type), vb(oa(), lower(), type)));
-        r.add(arguments(f(oa()), f(f(type)), vb(oa(), lower(), f(type))));
-        r.add(arguments(f(oa()), f(f(f(type))), vb(oa(), lower(), f(f(type)))));
+        r.add(arguments(f(oa()), f(type), vb(oa(), LOWER, type)));
+        r.add(arguments(f(oa()), f(f(type)), vb(oa(), LOWER, f(type))));
+        r.add(arguments(f(oa()), f(f(f(type))), vb(oa(), LOWER, f(f(type)))));
 
         r.add(arguments(f(f(oa())), type, vb()));
         r.add(arguments(f(f(oa())), f(type), vb()));
-        r.add(arguments(f(f(oa())), f(f(type)), vb(oa(), lower(), type)));
-        r.add(arguments(f(f(oa())), f(f(f(type))), vb(oa(), lower(), f(type))));
+        r.add(arguments(f(f(oa())), f(f(type)), vb(oa(), LOWER, type)));
+        r.add(arguments(f(f(oa())), f(f(f(type))), vb(oa(), LOWER, f(type))));
 
         r.add(arguments(f(f(f(oa()))), type, vb()));
         r.add(arguments(f(f(f(oa()))), f(type), vb()));
         r.add(arguments(f(f(f(oa()))), f(f(type)), vb()));
-        r.add(arguments(f(f(f(oa()))), f(f(f(type))), vb(oa(), lower(), type)));
+        r.add(arguments(f(f(f(oa()))), f(f(f(type))), vb(oa(), LOWER, type)));
 
-        r.add(arguments(f(bool(), oa()), f(bool(), type), vb(oa(), upper(), type)));
-        r.add(arguments(f(bool(), f(oa())), f(bool(), f(type)), vb(oa(), upper(), type)));
-        r.add(arguments(f(bool(), f(f(oa()))), f(bool(), f(f(type))), vb(oa(), upper(), type)));
+        r.add(arguments(f(bool(), oa()), f(bool(), type), vb(oa(), UPPER, type)));
+        r.add(arguments(f(bool(), f(oa())), f(bool(), f(type)), vb(oa(), UPPER, type)));
+        r.add(arguments(f(bool(), f(f(oa()))), f(bool(), f(f(type))), vb(oa(), UPPER, type)));
 
-        r.add(arguments(f(bool(), f(blob(), oa())), f(bool(), f(blob(), type)), vb(oa(), lower(), type)));
-        r.add(arguments(f(bool(), f(blob(), f(oa()))), f(bool(), f(blob(), f(type))), vb(oa(), lower(), type)));
-        r.add(arguments(f(bool(), f(blob(), f(f(oa())))), f(bool(), f(blob(), f(f(type)))), vb(oa(), lower(), type)));
+        r.add(arguments(f(bool(), f(blob(), oa())), f(bool(), f(blob(), type)), vb(oa(), LOWER, type)));
+        r.add(arguments(f(bool(), f(blob(), f(oa()))), f(bool(), f(blob(), f(type))), vb(oa(),
+            LOWER, type)));
+        r.add(arguments(f(bool(), f(blob(), f(f(oa())))), f(bool(), f(blob(), f(f(type)))), vb(oa(),
+            LOWER, type)));
 
         // arrays + funcs
-        r.add(arguments(a(f(oa())), a(f(type)), vb(oa(), lower(), type)));
-        r.add(arguments(a(f(bool(), oa())), a(f(bool(), type)), vb(oa(), upper(), type)));
+        r.add(arguments(a(f(oa())), a(f(type)), vb(oa(), LOWER, type)));
+        r.add(arguments(a(f(bool(), oa())), a(f(bool(), type)), vb(oa(), UPPER, type)));
 
-        r.add(arguments(f(a(oa())), f(a(type)), vb(oa(), lower(), type)));
-        r.add(arguments(f(bool(), a(oa())), f(bool(), a(type)), vb(oa(), upper(), type)));
+        r.add(arguments(f(a(oa())), f(a(type)), vb(oa(), LOWER, type)));
+        r.add(arguments(f(bool(), a(oa())), f(bool(), a(type)), vb(oa(), UPPER, type)));
       }
     }
     return r;
   }
 
   public void mapVars(T type, VarBounds<T> varBounds, Type expected) {
-    assertThat(typing.mapVars(type, varBounds, lower()))
+    assertThat(typing.mapVars(type, varBounds, LOWER))
         .isEqualTo(expected);
   }
 
@@ -440,22 +444,22 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     result.add(arguments(ox(), vb(), ox()));
     result.add(arguments(a(ox()), vb(), a(ox())));
     for (T type : testingT().allTestedTypes()) {
-      result.add(arguments(ox(), vb(ox(), lower(), type), type));
-      result.add(arguments(ox(), vb(ox(), lower(), a(type)), a(type)));
+      result.add(arguments(ox(), vb(ox(), LOWER, type), type));
+      result.add(arguments(ox(), vb(ox(), LOWER, a(type)), a(type)));
       if (isTupleSupported()) {
-        result.add(arguments(ox(), vb(ox(), lower(), tuple(type)), tuple(type)));
+        result.add(arguments(ox(), vb(ox(), LOWER, tuple(type)), tuple(type)));
       }
-      result.add(arguments(a(ox()), vb(ox(), lower(), type), a(type)));
-      result.add(arguments(a(ox()), vb(ox(), lower(), a(type)), a(a(type))));
+      result.add(arguments(a(ox()), vb(ox(), LOWER, type), a(type)));
+      result.add(arguments(a(ox()), vb(ox(), LOWER, a(type)), a(a(type))));
       if (isTupleSupported()) {
-        result.add(arguments(a(ox()), vb(ox(), lower(), tuple(type)), a(tuple(type))));
-        result.add(arguments(tuple(ox()), vb(ox(), lower(), type), tuple(type)));
-        result.add(arguments(tuple(ox()), vb(ox(), lower(), a(type)), tuple(a(type))));
+        result.add(arguments(a(ox()), vb(ox(), LOWER, tuple(type)), a(tuple(type))));
+        result.add(arguments(tuple(ox()), vb(ox(), LOWER, type), tuple(type)));
+        result.add(arguments(tuple(ox()), vb(ox(), LOWER, a(type)), tuple(a(type))));
       }
     }
     for (T newA : testingT().allTestedTypes()) {
       for (T newB : testingT().allTestedTypes()) {
-        result.add(arguments(f(oa(), ob()), vb(oa(), lower(), newA, ob(), upper(), newB), f(newA, newB)));
+        result.add(arguments(f(oa(), ob()), vb(oa(), LOWER, newA, ob(), UPPER, newB), f(newA, newB)));
       }
     }
     for (T type : testingT().elementaryTypes()) {
@@ -476,7 +480,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   public void merge_up_wide_graph(T type1, T type2, T expected) {
-    testMergeBothWays(type1, type2, expected, upper());
+    testMergeBothWays(type1, type2, expected, UPPER);
   }
 
   public Collection<Arguments> merge_up_wide_graph_cases() {
@@ -485,7 +489,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   public void merge_up_deep_graph(T type1, T type2, T expected) {
-    testMergeBothWays(type1, type2, expected, upper());
+    testMergeBothWays(type1, type2, expected, UPPER);
   }
 
   public Collection<Arguments> merge_up_deep_graph_cases() {
@@ -494,7 +498,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   public void merge_down_wide_graph(T type1, T type2, T expected) {
-    testMergeBothWays(type1, type2, expected, lower());
+    testMergeBothWays(type1, type2, expected, LOWER);
   }
 
   public Collection<Arguments> merge_down_wide_graph_cases() {
@@ -504,7 +508,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   public void merge_down_deep_graph(T type1, T type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, lower());
+    testMergeBothWays(type1, type2, expected, LOWER);
   }
 
   public Collection<Arguments> merge_down_deep_graph_cases() {
@@ -513,7 +517,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
         .buildTestCases(any());
   }
 
-  private void testMergeBothWays(T type1, T type2, Type expected, Side<T> direction) {
+  private void testMergeBothWays(T type1, T type2, Type expected, Side direction) {
     assertThat(typing.merge(type1, type2, direction))
         .isEqualTo(expected);
     assertThat(typing.merge(type2, type1, direction))
@@ -574,21 +578,13 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     return result;
   }
 
-  private Side<T> lower() {
-    return typeF().lower();
-  }
-
-  private Side<T> upper() {
-    return typeF().upper();
-  }
-
-  public Bounds<T> oneSideBound(Side<T> side, T type) {
+  public Bounds<T> oneSideBound(Side side, T type) {
     return typeF().oneSideBound(side, type);
   }
 
   public VarBounds<T> vb(
-      T var1, Side<T> side1, T bound1,
-      T var2, Side<T> side2, T bound2) {
+      T var1, Side side1, T bound1,
+      T var2, Side side2, T bound2) {
     Bounds<T> bounds1 = oneSideBound(side1, bound1);
     Bounds<T> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
@@ -601,7 +597,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     }
   }
 
-  public VarBounds<T> vb(T var, Side<T> side, T bound) {
+  public VarBounds<T> vb(T var, Side side, T bound) {
     return varBounds(new Bounded<>((VarT) var, oneSideBound(side, bound)));
   }
 

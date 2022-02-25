@@ -7,7 +7,7 @@ import static org.smoothbuild.util.collect.NList.nList;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.Typing;
 import org.smoothbuild.lang.type.api.Bounds;
-import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
@@ -53,8 +53,6 @@ public class TestingTS implements TestingT<TypeS> {
   public static final ClosedVarTS CLOSED_A = cVar("A");
   public static final ClosedVarTS CLOSED_B = cVar("B");
   public static final ClosedVarTS CLOSED_X = cVar("X");
-  public static final Side<TypeS> LOWER = FACTORY.lower();
-  public static final Side<TypeS> UPPER = FACTORY.upper();
 
   public static final ImmutableList<TypeS> ELEMENTARY_TYPES = ImmutableList.<TypeS>builder()
       .addAll(BASE_TYPES)
@@ -115,17 +113,17 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   @Override
-  public Bounds<TypeS> oneSideBound(Side<TypeS> side, TypeS type) {
+  public Bounds<TypeS> oneSideBound(Side side, TypeS type) {
     return FACTORY.oneSideBound(side, type);
   }
 
   public static VarBounds<TypeS> vb(
-      VarTS var1, Side<TypeS> side1, TypeS bound1,
-      VarTS var2, Side<TypeS> side2, TypeS bound2) {
+      VarTS var1, Side side1, TypeS bound1,
+      VarTS var2, Side side2, TypeS bound2) {
     return CONTEXT.vbS(var1, side1, bound1, var2, side2, bound2);
   }
 
-  public static VarBounds<TypeS> vb(VarTS var, Side<TypeS> side, TypeS bound) {
+  public static VarBounds<TypeS> vb(VarTS var, Side side, TypeS bound) {
     return CONTEXT.vbS(var, side, bound);
   }
 
@@ -246,15 +244,5 @@ public class TestingTS implements TestingT<TypeS> {
   @Override
   public TypeS cx() {
     return CLOSED_X;
-  }
-
-  @Override
-  public Side<TypeS> lower() {
-    return LOWER;
-  }
-
-  @Override
-  public Side<TypeS> upper() {
-    return UPPER;
   }
 }

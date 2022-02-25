@@ -69,8 +69,7 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.lang.type.api.Bounds;
-import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.function.TriFunction;
 
@@ -96,7 +95,6 @@ public class CatDb implements TypeBF {
   private final IntTB int_;
   private final NothingTB nothing;
   private final StringTB string;
-  private final Sides<TypeB> sides;
 
   public CatDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -112,7 +110,6 @@ public class CatDb implements TypeBF {
     } catch (HashedDbExc e) {
       throw new CatDbExc(e);
     }
-    this.sides = new Sides<>(this.any, this.nothing);
   }
 
   public ImmutableList<TypeB> baseTs() {
@@ -125,21 +122,11 @@ public class CatDb implements TypeBF {
   }
 
   @Override
-  public Bounds<TypeB> oneSideBound(Side<TypeB> side, TypeB type) {
+  public Bounds<TypeB> oneSideBound(Side side, TypeB type) {
     return switch (side) {
-      case Sides.Lower l -> new Bounds<>(type, any());
-      case Sides.Upper u -> new Bounds<>(nothing(), type);
+      case LOWER -> new Bounds<>(type, any());
+      case UPPER -> new Bounds<>(nothing(), type);
     };
-  }
-
-  @Override
-  public Side<TypeB> upper() {
-    return sides.upper();
-  }
-
-  @Override
-  public Side<TypeB> lower() {
-    return sides.lower();
   }
 
   // methods for getting Val-s types

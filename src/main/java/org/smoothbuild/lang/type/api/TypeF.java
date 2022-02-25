@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.type.api;
 
-import org.smoothbuild.lang.type.api.Sides.Side;
-
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -10,11 +8,7 @@ import com.google.common.collect.ImmutableList;
 public interface TypeF<T extends Type> {
   public Bounds<T> unbounded();
 
-  public Bounds<T> oneSideBound(Side<T> side, T type);
-
-  public Side<T> upper();
-
-  public Side<T> lower();
+  public Bounds<T> oneSideBound(Side side, T type);
 
   public AnyT any();
 
@@ -29,4 +23,11 @@ public interface TypeF<T extends Type> {
   public OpenVarT oVar(String name);
 
   public ClosedVarT cVar(String name);
+
+  public default T edge(Side side) {
+    return switch (side) {
+      case LOWER -> (T) nothing();
+      case UPPER -> (T) any();
+    };
+  }
 }

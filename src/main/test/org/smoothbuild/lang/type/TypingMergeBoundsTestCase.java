@@ -1,10 +1,12 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.lang.type.api.Side.LOWER;
+import static org.smoothbuild.lang.type.api.Side.UPPER;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.type.api.Bounds;
-import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.testing.type.TestingT;
 
@@ -17,14 +19,14 @@ public abstract class TypingMergeBoundsTestCase<T extends Type> {
 
   @Test
   public void var_with_one_lower_bound() {
-    var bounds = oneSideBound(lower(), testingT.string());
+    var bounds = oneSideBound(LOWER, testingT.string());
     assertThat(bounds.upper()).isEqualTo(testingT.any());
     assertThat(bounds.lower()).isEqualTo(testingT.string());
   }
 
   @Test
   public void var_with_one_upper_bound() {
-    var bounds = oneSideBound(upper(), testingT.string());
+    var bounds = oneSideBound(UPPER, testingT.string());
     assertThat(bounds.upper()).isEqualTo(testingT.string());
     assertThat(bounds.lower()).isEqualTo(testingT.nothing());
   }
@@ -32,8 +34,8 @@ public abstract class TypingMergeBoundsTestCase<T extends Type> {
   @Test
   public void var_with_two_lower_bounds() {
     var bounds = testingT.typing().merge(
-        oneSideBound(lower(), testingT.string()),
-        oneSideBound(lower(), testingT.bool()));
+        oneSideBound(LOWER, testingT.string()),
+        oneSideBound(LOWER, testingT.bool()));
     assertThat(bounds.upper()).isEqualTo(testingT.any());
     assertThat(bounds.lower()).isEqualTo(testingT.any());
   }
@@ -41,21 +43,13 @@ public abstract class TypingMergeBoundsTestCase<T extends Type> {
   @Test
   public void var_with_two_upper_bounds() {
     var bounds = testingT.typing().merge(
-        oneSideBound(upper(), testingT.string()),
-        oneSideBound(upper(), testingT.bool()));
+        oneSideBound(UPPER, testingT.string()),
+        oneSideBound(UPPER, testingT.bool()));
     assertThat(bounds.upper()).isEqualTo(testingT.nothing());
     assertThat(bounds.lower()).isEqualTo(testingT.nothing());
   }
 
-  private Side<T> lower() {
-    return testingT.lower();
-  }
-
-  private Side<T> upper() {
-    return testingT.upper();
-  }
-
-  public Bounds<T> oneSideBound(Side<T> side, T type) {
+  public Bounds<T> oneSideBound(Side side, T type) {
     return testingT.oneSideBound(side, type);
   }
 }

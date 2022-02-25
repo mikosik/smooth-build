@@ -17,7 +17,7 @@ import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.type.api.Bounds;
-import org.smoothbuild.lang.type.api.Sides.Side;
+import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -41,9 +41,6 @@ public class TestingTB implements TestingT<TypeB> {
   public static final ClosedVarTB CLOSED_A = FACTORY.cVar("A");
   public static final ClosedVarTB CLOSED_B = FACTORY.cVar("B");
   public static final ClosedVarTB CLOSED_X = FACTORY.cVar("X");
-
-  public static final Side<TypeB> LOWER = FACTORY.lower();
-  public static final Side<TypeB> UPPER = FACTORY.upper();
 
   public static final FuncTB STRING_GETTER_FUNCTION = FACTORY.func(STRING, list());
   public static final FuncTB TUPLE_GETTER_FUNCTION = FACTORY.func(TUPLE, list());
@@ -188,17 +185,7 @@ public class TestingTB implements TestingT<TypeB> {
   }
 
   @Override
-  public Side<TypeB> lower() {
-    return LOWER;
-  }
-
-  @Override
-  public Side<TypeB> upper() {
-    return UPPER;
-  }
-
-  @Override
-  public Bounds<TypeB> oneSideBound(Side<TypeB> side, TypeB type) {
+  public Bounds<TypeB> oneSideBound(Side side, TypeB type) {
     return FACTORY.oneSideBound(side, type);
   }
 }
