@@ -16,6 +16,10 @@ public interface TypeF<T extends Type> {
 
   public Side<T> lower();
 
+  public AnyT any();
+
+  public NothingT nothing();
+
   public ArrayT array(T elemType);
 
   public FuncT func(T result, ImmutableList<T> params);

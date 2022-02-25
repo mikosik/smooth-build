@@ -144,6 +144,7 @@ public class CatDb implements TypeBF {
 
   // methods for getting Val-s types
 
+  @Override
   public AnyTB any() {
     return any;
   }
@@ -174,6 +175,7 @@ public class CatDb implements TypeBF {
     return wrapHashedDbExcAsObjDbExc(() -> newMethod(res, tuple(params)));
   }
 
+  @Override
   public NothingTB nothing() {
     return nothing;
   }

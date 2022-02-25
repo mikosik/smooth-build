@@ -79,6 +79,7 @@ public class TypeSF implements TypeF<TypeS> {
     return sides.lower();
   }
 
+  @Override
   public AnyTS any() {
     return ANY;
   }
@@ -105,6 +106,7 @@ public class TypeSF implements TypeF<TypeS> {
     return INT;
   }
 
+  @Override
   public NothingTS nothing() {
     return NOTHING;
   }
