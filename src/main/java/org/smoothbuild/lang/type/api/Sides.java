@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type.api;
 
-public class Sides<T extends Type> {
+public class Sides<T> {
   private final Upper upper;
   private final Lower lower;
 
