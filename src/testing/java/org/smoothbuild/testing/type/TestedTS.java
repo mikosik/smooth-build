@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.impl.FuncTS;
-import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -77,10 +76,6 @@ public class TestedTS implements TestedT<TypeS> {
   @Override
   public boolean isArrayOfArrays() {
     return false;
-  }
-
-  public boolean isNothing() {
-    return type instanceof NothingTS;
   }
 
   @Override

@@ -61,10 +61,6 @@ public abstract class CatB {
     return kind.typeJ();
   }
 
-  public boolean isNothing() {
-    return false;
-  }
-
   @Override
   public String toString() {
     return "Category(`" + name() + "`)";
