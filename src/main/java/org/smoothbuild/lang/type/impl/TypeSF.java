@@ -53,11 +53,6 @@ public class TypeSF implements TypeF<TypeS> {
   }
 
   @Override
-  public Bounds<TypeS> unbounded() {
-    return new Bounds<>(nothing(), any());
-  }
-
-  @Override
   public Bounds<TypeS> oneSideBound(Side side, TypeS type) {
     return switch (side) {
       case LOWER-> new Bounds<>(type, any());

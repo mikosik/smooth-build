@@ -6,10 +6,6 @@ import com.google.common.collect.ImmutableList;
  * TypeFactory.
  */
 public interface TypeF<T extends Type> {
-  public Bounds<T> unbounded();
-
-  public Bounds<T> oneSideBound(Side side, T type);
-
   public AnyT any();
 
   public NothingT nothing();
@@ -28,6 +24,13 @@ public interface TypeF<T extends Type> {
     return switch (side) {
       case LOWER -> (T) nothing();
       case UPPER -> (T) any();
+    };
+  }
+
+  public default Bounds<T> oneSideBound(Side side, T type) {
+    return switch (side) {
+      case LOWER -> new Bounds<>(type, (T) any());
+      case UPPER -> new Bounds<>((T) nothing(), type);
     };
   }
 }

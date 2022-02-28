@@ -116,19 +116,6 @@ public class CatDb implements TypeBF {
     return ImmutableList.of(any, blob, bool, int_, nothing, string);
   }
 
-  @Override
-  public Bounds<TypeB> unbounded() {
-    return new Bounds<>(nothing(), any());
-  }
-
-  @Override
-  public Bounds<TypeB> oneSideBound(Side side, TypeB type) {
-    return switch (side) {
-      case LOWER -> new Bounds<>(type, any());
-      case UPPER -> new Bounds<>(nothing(), type);
-    };
-  }
-
   // methods for getting Val-s types
 
   @Override
