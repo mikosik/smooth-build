@@ -17,12 +17,12 @@ import java.util.function.Supplier;
 
 import org.smoothbuild.lang.type.api.ArrayT;
 import org.smoothbuild.lang.type.api.Bounded;
-import org.smoothbuild.lang.type.api.Bounds;
 import org.smoothbuild.lang.type.api.ClosedVarT;
 import org.smoothbuild.lang.type.api.ComposedT;
 import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.OpenVarT;
 import org.smoothbuild.lang.type.api.Side;
+import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.TypeF;
@@ -243,8 +243,8 @@ public class Typing<T extends Type> {
     return new Bounded<>(a.var(), merge(a.bounds(), b.bounds()));
   }
 
-  public Bounds<T> merge(Bounds<T> bounds1, Bounds<T> bounds2) {
-    return new Bounds<>(
+  public Sides<T> merge(Sides<T> bounds1, Sides<T> bounds2) {
+    return new Sides<>(
         merge(bounds1.lower(), bounds2.lower(), UPPER),
         merge(bounds1.upper(), bounds2.upper(), LOWER));
   }

@@ -16,8 +16,8 @@ import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.lang.type.api.Bounds;
 import org.smoothbuild.lang.type.api.Side;
+import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -185,7 +185,7 @@ public class TestingTB implements TestingT<TypeB> {
   }
 
   @Override
-  public Bounds<TypeB> oneSideBound(Side side, TypeB type) {
+  public Sides<TypeB> oneSideBound(Side side, TypeB type) {
     return FACTORY.oneSideBound(side, type);
   }
 }

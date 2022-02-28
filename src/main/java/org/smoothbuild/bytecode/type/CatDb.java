@@ -68,8 +68,6 @@ import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
-import org.smoothbuild.lang.type.api.Bounds;
-import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.function.TriFunction;
 

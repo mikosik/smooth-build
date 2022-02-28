@@ -1,8 +1,8 @@
 package org.smoothbuild.testing.type;
 
 import org.smoothbuild.lang.type.Typing;
-import org.smoothbuild.lang.type.api.Bounds;
 import org.smoothbuild.lang.type.api.Side;
+import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
@@ -33,5 +33,5 @@ public interface TestingT<T extends Type> {
   public T cb();
   public T cx();
 
-  public Bounds<T> oneSideBound(Side side, T type);
+  public Sides<T> oneSideBound(Side side, T type);
 }

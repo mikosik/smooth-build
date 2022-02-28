@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type.api;
 
-public record Bounds<T>(T lower, T upper) {
+public record Sides<T>(T lower, T upper) {
   public T get(Side side) {
     return switch (side) {
       case LOWER -> lower;

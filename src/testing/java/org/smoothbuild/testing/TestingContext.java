@@ -114,8 +114,8 @@ import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.type.api.Bounded;
-import org.smoothbuild.lang.type.api.Bounds;
 import org.smoothbuild.lang.type.api.Side;
+import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
@@ -896,8 +896,8 @@ public class TestingContext {
   public VarBounds<TypeS> vbS(
       VarTS var1, Side side1, TypeS bound1,
       VarTS var2, Side side2, TypeS bound2) {
-    Bounds<TypeS> bounds1 = oneSideBoundS(side1, bound1);
-    Bounds<TypeS> bounds2 = oneSideBoundS(side2, bound2);
+    Sides<TypeS> bounds1 = oneSideBoundS(side1, bound1);
+    Sides<TypeS> bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
       return varBounds(new Bounded<>(var1, typingS().merge(bounds1, bounds2)));
     } else {
@@ -916,7 +916,7 @@ public class TestingContext {
     return varBounds();
   }
 
-  public Bounds<TypeS> oneSideBoundS(Side side, TypeS type) {
+  public Sides<TypeS> oneSideBoundS(Side side, TypeS type) {
     return typeSF().oneSideBound(side, type);
   }
 

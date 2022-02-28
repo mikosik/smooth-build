@@ -27,10 +27,10 @@ public interface TypeF<T extends Type> {
     };
   }
 
-  public default Bounds<T> oneSideBound(Side side, T type) {
+  public default Sides<T> oneSideBound(Side side, T type) {
     return switch (side) {
-      case LOWER -> new Bounds<>(type, (T) any());
-      case UPPER -> new Bounds<>((T) nothing(), type);
+      case LOWER -> new Sides<>(type, (T) any());
+      case UPPER -> new Sides<>((T) nothing(), type);
     };
   }
 }

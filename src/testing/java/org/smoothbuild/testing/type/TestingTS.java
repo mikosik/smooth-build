@@ -6,8 +6,8 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.Typing;
-import org.smoothbuild.lang.type.api.Bounds;
 import org.smoothbuild.lang.type.api.Side;
+import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
@@ -113,7 +113,7 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   @Override
-  public Bounds<TypeS> oneSideBound(Side side, TypeS type) {
+  public Sides<TypeS> oneSideBound(Side side, TypeS type) {
     return FACTORY.oneSideBound(side, type);
   }
 

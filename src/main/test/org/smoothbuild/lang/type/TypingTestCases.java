@@ -16,8 +16,8 @@ import java.util.List;
 import org.junit.jupiter.params.provider.Arguments;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.lang.type.api.Bounded;
-import org.smoothbuild.lang.type.api.Bounds;
 import org.smoothbuild.lang.type.api.Side;
+import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.lang.type.api.VarBounds;
@@ -578,15 +578,15 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     return result;
   }
 
-  public Bounds<T> oneSideBound(Side side, T type) {
+  public Sides<T> oneSideBound(Side side, T type) {
     return typeF().oneSideBound(side, type);
   }
 
   public VarBounds<T> vb(
       T var1, Side side1, T bound1,
       T var2, Side side2, T bound2) {
-    Bounds<T> bounds1 = oneSideBound(side1, bound1);
-    Bounds<T> bounds2 = oneSideBound(side2, bound2);
+    Sides<T> bounds1 = oneSideBound(side1, bound1);
+    Sides<T> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
       return varBounds(new Bounded<>((VarT) var1, typing.merge(bounds1, bounds2)));
     } else {
