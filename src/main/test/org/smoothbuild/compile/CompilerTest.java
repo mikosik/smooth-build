@@ -47,13 +47,13 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void call_polymorphic() {
-      var oa = oVarTS("A");
-      var ca = cVarTS("A");
+      var oa = varTS("A");
+      var ca = varTS("A");
       var identity = defFuncS(oa, "myIdentity", nList(itemS(oa, "p")), paramRefS(ca, "p"));
       var call = callS(stringTS(), topRefS(identity), stringS("abc"));
-      var v = oVarTB("A");
+      var v = varTB("A");
       assertCompilation(identity, call,
-          callB(stringTB(), funcB(v, list(v), paramRefB(close(v), 0)), stringB("abc")));
+          callB(stringTB(), funcB(v, list(v), paramRefB(v, 0)), stringB("abc")));
     }
 
     @Test
@@ -161,17 +161,17 @@ public class CompilerTest extends TestingContext {
     @Test
     public void topRef_to_bytecode_func() throws IOException {
       Class<?> clazz = ReturnIdFunc.class;
-      var oVarTS = oVarTS("A");
-      var funcTS = funcTS(oVarTS, list(oVarTS));
+      var varTS = varTS("A");
+      var funcTS = funcTS(varTS, list(varTS));
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var byteFuncS = byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nList(itemS(oVarTS, "p")),
+      var byteFuncS = byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nList(itemS(varTS, "p")),
           loc(filePath, 2));
 
-      var a = oVarTB("A");
+      var a = varTB("A");
       var funcTB = funcTB(a, list(a));
-      var funcB = funcB(funcTB, paramRefB(cVarTB("A"), 0));
+      var funcB = funcB(funcTB, paramRefB(varTB("A"), 0));
 
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));

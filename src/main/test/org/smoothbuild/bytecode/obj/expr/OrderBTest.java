@@ -35,7 +35,7 @@ public class OrderBTest extends TestingContext {
 
   @Test
   public void elemT_can_be_equal_polytype_elemT_specified_in_category() {
-    var varA = cVarTB("A");
+    var varA = varTB("A");
     orderB(varA, paramRefB(varA, 0));
   }
 
@@ -45,13 +45,6 @@ public class OrderBTest extends TestingContext {
     var orderB = orderB(arrayTB(intTB()), elem);
     assertThat(orderB.elems().get(0))
         .isEqualTo(elem);
-  }
-
-  @Test
-  public void creating_order_with_resT_having_open_vars_causes_exc() {
-    var a = oVarTB("A");
-    assertCall(() -> orderB(a))
-        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
   }
 
   @Test

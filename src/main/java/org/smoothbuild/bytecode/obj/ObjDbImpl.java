@@ -97,7 +97,7 @@ public class ObjDbImpl implements ObjDb {
   }
 
   private void checkBodyTypeAssignableToFuncResT(FuncTB type, ObjB body) {
-    if (!typing.isAssignable(typing.closeVars(type.res()), body.type())) {
+    if (!typing.isAssignable(type.res(), body.type())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.res().q()
           + " but body.type() is " + body.type().q() + ".");
     }
@@ -115,7 +115,7 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items) {
-    if (tupleT.isPolytype()) {
+    if (tupleT.hasVars()) {
       throw new IllegalArgumentException(
           "Cannot create tuple object with polymorphic type " + tupleT.q() + ".");
     }
@@ -139,13 +139,11 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public CallB call(TypeB evalT, ObjB func, CombineB args) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newCall(evalT, func, args));
   }
 
   @Override
   public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newCombine(evalT, items));
   }
 
@@ -156,7 +154,6 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public InvokeB invoke(TypeB evalT, ObjB method, CombineB args) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newInvoke(evalT, method, args));
   }
 
@@ -167,26 +164,17 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public OrderB order(ArrayTB evalT, ImmutableList<ObjB> elems) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newOrder(evalT, elems));
   }
 
   @Override
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newParamRef(evalT, value));
   }
 
   @Override
   public SelectB select(TypeB evalT, ObjB selectable, IntB index) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newSelect(evalT, selectable, index));
-  }
-
-  private static void validateNoOpenVars(TypeB evalT) {
-    if (evalT.hasOpenVars()) {
-      throw new IllegalArgumentException("evalT must not have open vars");
-    }
   }
 
   // generic getter

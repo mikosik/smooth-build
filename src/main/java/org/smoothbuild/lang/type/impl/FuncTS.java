@@ -2,10 +2,12 @@ package org.smoothbuild.lang.type.impl;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.type.api.TypeNames.funcTypeName;
+import static org.smoothbuild.util.collect.Lists.concat;
+
+import java.util.Objects;
 
 import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.Type;
-import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -13,16 +15,23 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class FuncTS extends TypeS implements FuncT {
+  private final VarSetS tParams;
   private final TypeS res;
   private final ImmutableList<TypeS> params;
 
-  public FuncTS(TypeS res, ImmutableList<TypeS> params) {
-    super(
-        funcTypeName(res, params),
-        calculateOpenVars(Lists.concat(res, params)),
-        FuncT.calculateHasClosedVars(res, params));
+  public FuncTS(VarSetS tParams, TypeS res, ImmutableList<TypeS> params) {
+    super(funcTypeName(tParams, res, params), calculateFuncVars(res, params));
+    this.tParams = tParams;
     this.res = requireNonNull(res);
     this.params = requireNonNull(params);
+  }
+
+  public static VarSetS calculateFuncVars(TypeS resT, ImmutableList<TypeS> paramTs) {
+    return calculateVars(concat(resT, paramTs));
+  }
+
+  public VarSetS tParams() {
+    return tParams;
   }
 
   @Override
@@ -51,7 +60,13 @@ public final class FuncTS extends TypeS implements FuncT {
       return true;
     }
     return object instanceof FuncTS that
+        && tParams.equals(that.tParams)
         && res.equals(that.res)
         && params.equals(that.params);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(tParams, res, params);
   }
 }

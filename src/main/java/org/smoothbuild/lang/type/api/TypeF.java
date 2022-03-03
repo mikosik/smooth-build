@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type.api;
 
+import java.util.Set;
+
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -12,13 +14,13 @@ public interface TypeF<T extends Type> {
 
   public ArrayT array(T elemType);
 
-  public FuncT func(T result, ImmutableList<T> params);
+  public FuncT func(VarSet<T> typeParams, T resT, ImmutableList<T> paramTs);
 
   public TupleT tuple(ImmutableList<T> items);
 
-  public OpenVarT oVar(String name);
+  public VarT var(String name);
 
-  public ClosedVarT cVar(String name);
+  public VarSet<?> varSet(Set<T> elements);
 
   public default T edge(Side side) {
     return switch (side) {

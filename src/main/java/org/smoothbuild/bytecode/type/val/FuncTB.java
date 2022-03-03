@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.bytecode.type.base.CatKindB.FUNC;
-import static org.smoothbuild.lang.type.api.FuncT.calculateHasClosedVars;
 import static org.smoothbuild.lang.type.api.TypeNames.funcTypeName;
 import static org.smoothbuild.util.collect.Lists.concat;
 
@@ -14,17 +13,26 @@ import org.smoothbuild.db.Hash;
 import com.google.common.collect.ImmutableList;
 
 public final class FuncTB extends TypeB implements CallableTB {
+  private final VarSetB tParams;
   private final TypeB res;
   private final TupleTB params;
 
-  public FuncTB(Hash hash, TypeB res, TupleTB params) {
+  public FuncTB(Hash hash, VarSetB tParams, TypeB res, TupleTB params) {
     super(
-        hash, funcTypeName(res, params.items()),
+        hash, funcTypeName(tParams, res, params.items()),
         FUNC,
-        calculateOpenVars(concat(res, params.items())),
-        calculateHasClosedVars(res, params.items()));
+        calculateFuncVars(res, params.items()));
+    this.tParams = tParams;
     this.res = res;
     this.params = params;
+  }
+
+  public static VarSetB calculateFuncVars(TypeB resT, ImmutableList<TypeB> paramTs) {
+    return calculateVars(concat(resT, paramTs));
+  }
+
+  public VarSetB tParams() {
+    return tParams;
   }
 
   @Override

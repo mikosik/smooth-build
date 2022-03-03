@@ -12,7 +12,6 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.ARRAY;
 import static org.smoothbuild.bytecode.type.base.CatKindB.BLOB;
 import static org.smoothbuild.bytecode.type.base.CatKindB.BOOL;
 import static org.smoothbuild.bytecode.type.base.CatKindB.CALL;
-import static org.smoothbuild.bytecode.type.base.CatKindB.CLOSED_VARIABLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.COMBINE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.FUNC;
 import static org.smoothbuild.bytecode.type.base.CatKindB.IF;
@@ -21,16 +20,18 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.INVOKE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.MAP;
 import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
 import static org.smoothbuild.bytecode.type.base.CatKindB.NOTHING;
-import static org.smoothbuild.bytecode.type.base.CatKindB.OPEN_VARIABLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.ORDER;
 import static org.smoothbuild.bytecode.type.base.CatKindB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.base.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
+import static org.smoothbuild.bytecode.type.base.CatKindB.VAR;
 import static org.smoothbuild.bytecode.type.base.CatKindB.fromMarker;
 import static org.smoothbuild.lang.type.api.TypeNames.isVarName;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
@@ -40,7 +41,8 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatWrongEvalTExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatTypeParamDuplicatedVarExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatTypeParamIsNotVarExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.exc.DecodeVarIllegalNameExc;
@@ -56,20 +58,20 @@ import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
-import org.smoothbuild.bytecode.type.val.ClosedVarTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
-import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
+import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.util.collect.Lists;
-import org.smoothbuild.util.function.TriFunction;
+import org.smoothbuild.util.function.Function4;
 
 import com.google.common.collect.ImmutableList;
 
@@ -79,9 +81,11 @@ import com.google.common.collect.ImmutableList;
 public class CatDb implements TypeFB {
   public static final String DATA_PATH = "data";
   private static final int DATA_IDX = 1;
-  private static final int CALLABLE_RES_IDX = 0;
+  private static final int CALLABLE_TPARAMS_IDX = 0;
+  public static final String CALLABLE_TPARAMS_PATH = DATA_PATH + "[" + CALLABLE_TPARAMS_IDX + "]";
+  private static final int CALLABLE_RES_IDX = 1;
   public static final String CALLABLE_RES_PATH = DATA_PATH + "[" + CALLABLE_RES_IDX + "]";
-  private static final int CALLABLE_PARAMS_IDX = 1;
+  private static final int CALLABLE_PARAMS_IDX = 2;
   public static final String CALLABLE_PARAMS_PATH = DATA_PATH + "[" + CALLABLE_PARAMS_IDX + "]";
 
   private final HashedDb hashedDb;
@@ -135,16 +139,21 @@ public class CatDb implements TypeFB {
   }
 
   @Override
-  public FuncTB func(TypeB res, ImmutableList<TypeB> params) {
-    return wrapHashedDbExcAsObjDbExc(() -> newFunc(res, tuple(params)));
+  public FuncTB func(VarSet<TypeB> tParams, TypeB res, ImmutableList<TypeB> params) {
+    VarSetB castTParams = (VarSetB)(Object) tParams;
+    return func(castTParams, res, params);
+  }
+
+  public FuncTB func(VarSetB tParams, TypeB res, ImmutableList<TypeB> params) {
+    return wrapHashedDbExcAsObjDbExc(() -> newFunc(tParams, res, tuple(params)));
   }
 
   public IntTB int_() {
     return int_;
   }
 
-  public MethodTB method(TypeB res, ImmutableList<TypeB> params) {
-    return wrapHashedDbExcAsObjDbExc(() -> newMethod(res, tuple(params)));
+  public MethodTB method(VarSetB tParams, TypeB res, ImmutableList<TypeB> params) {
+    return wrapHashedDbExcAsObjDbExc(() -> newMethod(tParams, res, tuple(params)));
   }
 
   @Override
@@ -162,63 +171,48 @@ public class CatDb implements TypeFB {
   }
 
   @Override
-  public OpenVarTB oVar(String name) {
+  public VarTB var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return wrapHashedDbExcAsObjDbExc(() -> newOpenVar(name));
+    return wrapHashedDbExcAsObjDbExc(() -> newVar(name));
   }
 
   @Override
-  public ClosedVarTB cVar(String name) {
-    checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return wrapHashedDbExcAsObjDbExc(() -> newClosedVar(name));
+  public VarSetB varSet(Set<TypeB> elements) {
+    return new VarSetB((Set<VarTB>)(Object) elements);
   }
 
   // methods for getting Expr-s types
 
   public CallCB call(TypeB evalT) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newCall(evalT));
   }
 
   public CombineCB combine(TupleTB evalT) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newCombine(evalT));
   }
 
   public IfCB if_(TypeB evalT) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newIf(evalT));
   }
 
   public InvokeCB invoke(TypeB evalT) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newInvoke(evalT));
   }
 
   public MapCB map(ArrayTB evalT) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newMap(evalT));
   }
 
   public OrderCB order(ArrayTB evalT) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newOrder(evalT));
   }
 
   public ParamRefCB paramRef(TypeB evalT) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newParamRef(evalT));
   }
 
   public SelectCB select(TypeB evalT) {
-    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newSelect(evalT));
-  }
-
-  private static void validateNoOpenVars(TypeB evalT) {
-    if (evalT.hasOpenVars()) {
-      throw new IllegalArgumentException("evalT must not have open vars");
-    }
   }
 
   // methods for reading from db
@@ -238,18 +232,17 @@ public class CatDb implements TypeFB {
       }
       case ARRAY -> newArray(hash, readDataAsValT(hash, rootSeq, kind));
       case CALL -> newCall(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case CLOSED_VARIABLE -> readVar(hash, rootSeq, kind, this::newClosedVar);
       case COMBINE -> newCombine(hash, readDataAsTupleT(hash, rootSeq, kind));
       case FUNC -> readFunc(hash, rootSeq, kind);
       case IF -> newIf(hash, readDataAsEvalT(hash, rootSeq, kind));
       case INVOKE -> newInvoke(hash, readDataAsEvalT(hash, rootSeq, kind));
       case MAP -> newMap(hash, readDataAsArrayT(hash, rootSeq, kind));
       case METHOD -> readMethod(hash, rootSeq, kind);
-      case OPEN_VARIABLE -> readVar(hash, rootSeq, kind, this::newOpenVar);
       case ORDER -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
       case PARAM_REF -> newParamRef(hash, readDataAsEvalT(hash, rootSeq, kind));
       case SELECT -> newSelect(hash, readDataAsEvalT(hash, rootSeq, kind));
       case TUPLE -> readTuple(hash, rootSeq);
+      case VAR -> readVar(hash, rootSeq, kind, this::newVar);
     };
   }
 
@@ -279,11 +272,7 @@ public class CatDb implements TypeFB {
   }
 
   private TypeB readDataAsEvalT(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
-    var evalT = readDataAsClass(rootHash, rootSeq, kind, TypeB.class);
-    if (evalT.hasOpenVars()) {
-      throw new DecodeCatWrongEvalTExc(rootHash, kind, evalT);
-    }
-    return evalT;
+    return readDataAsClass(rootHash, rootSeq, kind, TypeB.class);
   }
 
   private TypeB readDataAsValT(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
@@ -291,19 +280,11 @@ public class CatDb implements TypeFB {
   }
 
   private ArrayTB readDataAsArrayT(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
-    var evalT = readDataAsClass(rootHash, rootSeq, kind, ArrayTB.class);
-    if (evalT.hasOpenVars()) {
-      throw new DecodeCatWrongEvalTExc(rootHash, kind, evalT);
-    }
-    return evalT;
+    return readDataAsClass(rootHash, rootSeq, kind, ArrayTB.class);
   }
 
   private TupleTB readDataAsTupleT(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
-    var evalT = readDataAsClass(rootHash, rootSeq, kind, TupleTB.class);
-    if (evalT.hasOpenVars()) {
-      throw new DecodeCatWrongEvalTExc(rootHash, kind, evalT);
-    }
-    return evalT;
+    return readDataAsClass(rootHash, rootSeq, kind, TupleTB.class);
   }
 
   private <T extends CatB> T readDataAsClass(Hash rootHash, List<Hash> rootSeq, CatKindB kind,
@@ -322,16 +303,34 @@ public class CatDb implements TypeFB {
   }
 
   private CatB readCallable(Hash rootHash, List<Hash> rootSeq, CatKindB kind,
-      TriFunction<Hash, TypeB, TupleTB, CatB> instantiator) {
+      Function4<Hash, VarSetB, TypeB, TupleTB, CatB> instantiator) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     Hash dataHash = rootSeq.get(DATA_IDX);
     List<Hash> data = readSeqHashes(rootHash, dataHash, kind, DATA_PATH);
-    if (data.size() != 2) {
-      throw new DecodeCatWrongSeqSizeExc(rootHash, kind, DATA_PATH, 2, data.size());
+    int expectedSize = 3;
+    if (data.size() != expectedSize) {
+      throw new DecodeCatWrongSeqSizeExc(rootHash, kind, DATA_PATH, expectedSize, data.size());
     }
+    var tParamsTuple = readNode(kind, rootHash, data.get(CALLABLE_TPARAMS_IDX), CALLABLE_TPARAMS_PATH, TupleTB.class);
     var res = readNode(kind, rootHash, data.get(CALLABLE_RES_IDX), CALLABLE_RES_PATH, TypeB.class);
     var params = readNode(kind, rootHash, data.get(CALLABLE_PARAMS_IDX), CALLABLE_PARAMS_PATH, TupleTB.class);
-    return instantiator.apply(rootHash, res, params);
+    return instantiator.apply(rootHash, toVarSetB(rootHash, tParamsTuple), res, params);
+  }
+
+  private VarSetB toVarSetB(Hash rootHash, TupleTB typeParams) {
+    var set = new HashSet<VarTB>();
+    for (TypeB typeParam : typeParams.items()) {
+      if (typeParam instanceof VarTB varTB) {
+        if (set.contains(varTB)) {
+          throw new DecodeCatTypeParamDuplicatedVarExc(rootHash, varTB);
+        } else {
+          set.add(varTB);
+        }
+      } else {
+        throw new DecodeCatTypeParamIsNotVarExc(rootHash, typeParam);
+      }
+    }
+    return new VarSetB(set);
   }
 
   private TupleTB readTuple(Hash rootHash, List<Hash> rootSeq) {
@@ -391,22 +390,22 @@ public class CatDb implements TypeFB {
     return cache(new ArrayTB(rootHash, elemT));
   }
 
-  private FuncTB newFunc(TypeB res, TupleTB params) throws HashedDbExc {
-    var rootHash = writeFuncLikeRoot(res, params, FUNC);
-    return newFunc(rootHash, res, params);
+  private FuncTB newFunc(VarSetB tParams, TypeB res, TupleTB params) throws HashedDbExc {
+    var rootHash = writeFuncLikeRoot(tParams, res, params, FUNC);
+    return newFunc(rootHash, tParams, res, params);
   }
 
-  private FuncTB newFunc(Hash rootHash, TypeB res, TupleTB params) {
-    return cache(new FuncTB(rootHash, res, params));
+  private FuncTB newFunc(Hash rootHash, VarSetB tParams, TypeB res, TupleTB params) {
+    return cache(new FuncTB(rootHash, tParams, res, params));
   }
 
-  private MethodTB newMethod(TypeB res, TupleTB params) throws HashedDbExc {
-    var rootHash = writeFuncLikeRoot(res, params, METHOD);
-    return newMethod(rootHash, res, params);
+  private MethodTB newMethod(VarSetB tParams, TypeB res, TupleTB params) throws HashedDbExc {
+    var rootHash = writeFuncLikeRoot(tParams, res, params, METHOD);
+    return newMethod(rootHash, tParams, res, params);
   }
 
-  private MethodTB newMethod(Hash rootHash, TypeB res, TupleTB params) {
-    return cache(new MethodTB(rootHash, res, params));
+  private MethodTB newMethod(Hash rootHash, VarSetB tParams, TypeB res, TupleTB params) {
+    return cache(new MethodTB(rootHash, tParams, res, params));
   }
 
   private TupleTB newTuple(ImmutableList<TypeB> itemTs) throws HashedDbExc {
@@ -418,22 +417,13 @@ public class CatDb implements TypeFB {
     return cache(new TupleTB(rootHash, itemTs));
   }
 
-  private OpenVarTB newOpenVar(String name) throws HashedDbExc {
-    var rootHash = writeVarRoot(name, OPEN_VARIABLE);
-    return newOpenVar(rootHash, name);
+  private VarTB newVar(String name) throws HashedDbExc {
+    var rootHash = writeVarRoot(name, VAR);
+    return newVar(rootHash, name);
   }
 
-  private OpenVarTB newOpenVar(Hash rootHash, String name) {
-    return cache(new OpenVarTB(rootHash, name));
-  }
-
-  private ClosedVarTB newClosedVar(String name) throws HashedDbExc {
-    var rootHash = writeVarRoot(name, CLOSED_VARIABLE);
-    return newClosedVar(rootHash, name);
-  }
-
-  private ClosedVarTB newClosedVar(Hash rootHash, String name) {
-    return cache(new ClosedVarTB(rootHash, name));
+  private VarTB newVar(Hash rootHash, String name) {
+    return cache(new VarTB(rootHash, name));
   }
 
   // methods for creating Expr types
@@ -522,8 +512,10 @@ public class CatDb implements TypeFB {
     return writeNonBaseRoot(ARRAY, elemT.hash());
   }
 
-  private Hash writeFuncLikeRoot(TypeB res, TupleTB params, CatKindB kind) throws HashedDbExc {
-    var hash = hashedDb.writeSeq(res.hash(), params.hash());
+  private Hash writeFuncLikeRoot(VarSetB tParams, TypeB res, TupleTB params, CatKindB kind)
+      throws HashedDbExc {
+    TupleTB tParamsTuple = tuple((ImmutableList<TypeB>) (Object) tParams.asList());
+    var hash = hashedDb.writeSeq(tParamsTuple.hash(), res.hash(), params.hash());
     return writeNonBaseRoot(kind, hash);
   }
 

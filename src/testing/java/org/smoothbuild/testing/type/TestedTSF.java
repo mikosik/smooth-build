@@ -1,11 +1,10 @@
 package org.smoothbuild.testing.type;
 
-import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
-import static org.smoothbuild.testing.type.TestingTS.oVar;
+import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -27,8 +26,8 @@ import com.google.common.collect.ImmutableSet;
 public class TestedTSF implements TestedTF<TypeS, TestedTS, TestedAssignSpecS> {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedTS A = new TestedTS(oVar("A"), null, null);
-  public static final TestedTS B = new TestedTS(oVar("B"), null, null);
+  public static final TestedTS A = new TestedTS(var("A"), null, null);
+  public static final TestedTS B = new TestedTS(var("B"), null, null);
   public static final TestedTS ANY = new TestedTS(
       TestingTS.ANY,
       "createAny()",
@@ -258,7 +257,7 @@ public class TestedTSF implements TestedTF<TypeS, TestedTS, TestedAssignSpecS> {
     String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
         resT.name(),
         name,
-        join(",", map(paramSigs, ItemSigS::toString)));
+        toParamDeclarationString(paramTestedTs));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
         .addAll(resT.allDeclarations())
@@ -281,6 +280,14 @@ public class TestedTSF implements TestedTF<TypeS, TestedTS, TestedAssignSpecS> {
         typeDeclarations,
         declarations
     );
+  }
+
+  private static String toParamDeclarationString(ImmutableList<TestedTS> paramTestedTs) {
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < paramTestedTs.size(); i++) {
+      builder.append(paramTestedTs.get(i).name() + " p" + i);
+    }
+    return builder.toString();
   }
 
   private static ImmutableList<ItemSigS> toSigs(List<TestedTS> paramTestedTs) {

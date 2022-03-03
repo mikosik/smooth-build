@@ -1,5 +1,6 @@
 package org.smoothbuild.compile;
 
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 import static org.smoothbuild.lang.type.api.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_PURE;
@@ -142,13 +143,13 @@ public class Compiler {
     var paramRefsB = createParamRefsB(funcTB.params());
     var paramsTB = bytecodeF.tupleT(map(paramRefsB, ObjB::type));
     var argsB = bytecodeF.combine(paramsTB, paramRefsB);
-    var bodyB = bytecodeF.invoke(typing.closeVars(funcTB.res()), methodB, argsB);
+    var bodyB = bytecodeF.invoke(funcTB.res(), methodB, argsB);
     nals.put(bodyB, natFuncS);
     return bytecodeF.func(funcTB, bodyB);
   }
 
   private MethodB createMethodB(AnnS annS, FuncTB funcTB) {
-    var methodTB = bytecodeF.methodT(funcTB.res(), funcTB.params());
+    var methodTB = bytecodeF.methodT(funcTB.tParams(), funcTB.res(), funcTB.params());
     var jarB = loadNativeJar(annS.loc());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
     var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
@@ -167,7 +168,7 @@ public class Compiler {
   private ImmutableList<ObjB> createParamRefsB(ImmutableList<TypeB> paramTs) {
     Builder<ObjB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
-      var closedT = typing.closeVars(paramTs.get(i));
+      var closedT = paramTs.get(i);
       builder.add(bytecodeF.paramRef(closedT, BigInteger.valueOf(i)));
     }
     return builder.build();
@@ -186,7 +187,7 @@ public class Compiler {
     };
     var typeB = typeSbConv.convert(valS.type());
     if (!typeB.equals(exprB.type())) {
-      var funcB = bytecodeF.func(bytecodeF.funcT(typeB, list()), exprB);
+      var funcB = bytecodeF.func(bytecodeF.funcT(varSetB(), typeB, list()), exprB);
       var callB = bytecodeF.call(typeB, funcB, bytecodeF.combine(bytecodeF.tupleT(list()), list()));
       nals.put(funcB, valS);
       nals.put(callB, valS);

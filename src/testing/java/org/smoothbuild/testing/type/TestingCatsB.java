@@ -8,10 +8,10 @@ import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.ClosedVarTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.OpenVarTB;
+import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -20,16 +20,15 @@ public class TestingCatsB {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final CatDb CAT_DB = CONTEXT.catDb();
 
-  public static final TypeB ANY = CAT_DB.any();
-  public static final TypeB BLOB = CAT_DB.blob();
-  public static final TypeB BOOL = CAT_DB.bool();
-  public static final TypeB INT = CAT_DB.int_();
-  public static final TypeB FUNC = CAT_DB.func(BLOB, list(BOOL));
-  public static final TypeB METHOD = CAT_DB.method(BLOB, list(BOOL));
-  public static final TypeB NOTHING = CAT_DB.nothing();
-  public static final TypeB STRING = CAT_DB.string();
-  public static final TypeB OPEN_VARIABLE = CAT_DB.oVar("A");
-  public static final TypeB CLOSED_VARIABLE = CAT_DB.cVar("A");
+  public static final TypeB ANY = CONTEXT.anyTB();
+  public static final TypeB BLOB = CONTEXT.blobTB();
+  public static final TypeB BOOL = CONTEXT.boolTB();
+  public static final TypeB INT = CONTEXT.intTB();
+  public static final TypeB FUNC = func(BLOB, list(BOOL));
+  public static final TypeB METHOD = method(BLOB, list(BOOL));
+  public static final TypeB NOTHING = CONTEXT.nothingTB();
+  public static final TypeB STRING = CONTEXT.stringTB();
+  public static final TypeB VAR_A = CONTEXT.varTB("A");
 
   public static final TupleTB PERSON = CONTEXT.personTB();
   public static final TupleTB FILE = CONTEXT.fileTB();
@@ -53,8 +52,7 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY_STR = array(STRING);
   public static final ArrayTB ARRAY_PERSON_TUPLE = array(PERSON);
   public static final ArrayTB ARRAY_PERSON = array(PERSON);
-  public static final ArrayTB ARRAY_OPEN_VARIABLE = array(OPEN_VARIABLE);
-  public static final ArrayTB ARRAY_CLOSED_VARIABLE = array(CLOSED_VARIABLE);
+  public static final ArrayTB ARRAY_VAR = array(VAR_A);
 
   public static final ArrayTB ARRAY2_ANY = array(ARRAY_ANY);
   public static final ArrayTB ARRAY2_BLOB = array(ARRAY_BLOB);
@@ -66,8 +64,7 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY2_STR = array(ARRAY_STR);
   public static final ArrayTB ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
   public static final ArrayTB ARRAY2_PERSON = array(ARRAY_PERSON);
-  public static final ArrayTB ARRAY2_OPEN_VARIABLE = array(ARRAY_OPEN_VARIABLE);
-  public static final ArrayTB ARRAY2_CLOSED_VARIABLE = array(ARRAY_CLOSED_VARIABLE);
+  public static final ArrayTB ARRAY2_VAR = array(ARRAY_VAR);
 
   public static final ImmutableList<CatB> BASE_CATS_TO_TEST = list(
       BLOB,
@@ -110,25 +107,23 @@ public class TestingCatsB {
         ANY,
         BLOB,
         BOOL,
-        CAT_DB.func(BLOB, list()),
-        CAT_DB.func(BLOB, list(BLOB)),
-        CAT_DB.func(BLOB, list(BLOB, BLOB)),
-        CAT_DB.func(STRING, list()),
+        func(BLOB, list()),
+        func(BLOB, list(BLOB)),
+        func(BLOB, list(BLOB, BLOB)),
+        func(STRING, list()),
         INT,
-        CAT_DB.method(BLOB, list()),
-        CAT_DB.method(BLOB, list(BLOB)),
-        CAT_DB.method(BLOB, list(BLOB, BLOB)),
-        CAT_DB.method(STRING, list()),
+        method(BLOB, list()),
+        method(BLOB, list(BLOB)),
+        method(BLOB, list(BLOB, BLOB)),
+        method(STRING, list()),
         NOTHING,
         STRING,
-        CAT_DB.tuple(list()),
-        CAT_DB.tuple(list(BLOB)),
-        CAT_DB.tuple(list(BLOB, BLOB)),
-        CAT_DB.tuple(list(STRING)),
-        CAT_DB.oVar("A"),
-        CAT_DB.oVar("B"),
-        CAT_DB.cVar("A"),
-        CAT_DB.cVar("B")
+        tuple(list()),
+        tuple(list(BLOB)),
+        tuple(list(BLOB, BLOB)),
+        tuple(list(STRING)),
+        var("A"),
+        var("B")
     );
     var arrayCs = map(baseCs, CAT_DB::array);
     var valueCs = concat(baseCs, arrayCs);
@@ -159,18 +154,18 @@ public class TestingCatsB {
   }
 
   public static FuncTB func(TypeB res, ImmutableList<TypeB> params) {
-    return CAT_DB.func(res, params);
+    return CONTEXT.funcTB(res, params);
+  }
+
+  public static MethodTB method(TypeB res, ImmutableList<TypeB> params) {
+    return CONTEXT.methodTB(res, params);
   }
 
   public static TupleTB tuple(ImmutableList<TypeB> params) {
     return CAT_DB.tuple(params);
   }
 
-  public static OpenVarTB oVar(String name) {
-    return CAT_DB.oVar(name);
-  }
-
-  public static ClosedVarTB cVar(String name) {
-    return CAT_DB.cVar(name);
+  public static VarTB var(String name) {
+    return CAT_DB.var(name);
   }
 }

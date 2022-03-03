@@ -86,6 +86,6 @@ public class FuncBTest extends TestingContext {
     var funcT = funcTB(intTB(), list(stringTB()));
     var func = funcB(funcT, intB());
     assertThat(func.toString())
-        .isEqualTo("Func(Int(String))@" + func.hash());
+        .isEqualTo("Func(<>Int(String))@" + func.hash());
   }
 }

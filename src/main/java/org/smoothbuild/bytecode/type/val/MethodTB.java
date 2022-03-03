@@ -1,30 +1,34 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
+import static org.smoothbuild.bytecode.type.val.FuncTB.calculateFuncVars;
 import static org.smoothbuild.lang.type.api.TypeNames.funcTypeName;
-import static org.smoothbuild.util.collect.Lists.concat;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.type.api.FuncT;
 
 import com.google.common.collect.ImmutableList;
 
 public final class MethodTB extends TypeB implements CallableTB {
+  private final VarSetB tParams;
   private final TypeB res;
   private final TupleTB params;
 
-  public MethodTB(Hash hash, TypeB res, TupleTB params) {
+  public MethodTB(Hash hash, VarSetB tParams, TypeB res, TupleTB params) {
     super(
-        hash, "_" + funcTypeName(res, params.items()),
+        hash, "_" + funcTypeName(tParams, res, params.items()),
         METHOD,
-        calculateOpenVars(concat(res, params.items())),
-        FuncT.calculateHasClosedVars(res, params.items()));
+        calculateFuncVars(res, params.items()));
+    this.tParams = tParams;
     this.res = res;
     this.params = params;
+  }
+
+  public VarSetB tParams() {
+    return tParams;
   }
 
   @Override

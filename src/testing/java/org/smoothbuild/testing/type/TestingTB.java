@@ -1,7 +1,10 @@
 package org.smoothbuild.testing.type;
 
+import static org.smoothbuild.bytecode.type.val.VarSetB.toVarSetB;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
+
+import java.util.stream.Stream;
 
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypingB;
@@ -9,15 +12,17 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
-import org.smoothbuild.bytecode.type.val.ClosedVarTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
-import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarSetB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
+import org.smoothbuild.lang.type.api.VarSet;
+import org.smoothbuild.lang.type.api.VarT;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -35,20 +40,18 @@ public class TestingTB implements TestingT<TypeB> {
   public static final NothingTB NOTHING = FACTORY.nothing();
   public static final StringTB STRING = FACTORY.string();
   public static final TupleTB TUPLE = FACTORY.tuple(list(STRING, INT));
-  public static final OpenVarTB OPEN_A = FACTORY.oVar("A");
-  public static final OpenVarTB OPEN_B = FACTORY.oVar("B");
-  public static final OpenVarTB OPEN_X = FACTORY.oVar("X");
-  public static final ClosedVarTB CLOSED_A = FACTORY.cVar("A");
-  public static final ClosedVarTB CLOSED_B = FACTORY.cVar("B");
-  public static final ClosedVarTB CLOSED_X = FACTORY.cVar("X");
+  public static final VarTB VAR_A = FACTORY.var("A");
+  public static final VarTB VAR_B = FACTORY.var("B");
+  public static final VarTB VAR_X = FACTORY.var("X");
+  public static final VarTB VAR_Y = FACTORY.var("Y");
 
-  public static final FuncTB STRING_GETTER_FUNCTION = FACTORY.func(STRING, list());
-  public static final FuncTB TUPLE_GETTER_FUNCTION = FACTORY.func(TUPLE, list());
-  public static final FuncTB STRING_MAP_FUNCTION = FACTORY.func(STRING, list(STRING));
-  public static final FuncTB PERSON_MAP_FUNCTION = FACTORY.func(TUPLE, list(TUPLE));
-  public static final FuncTB IDENTITY_FUNCTION = FACTORY.func(OPEN_A, list(OPEN_A));
-  public static final FuncTB ARRAY_HEAD_FUNCTION = FACTORY.func(OPEN_A, list(FACTORY.array(OPEN_A)));
-  public static final FuncTB ARRAY_LENGTH_FUNCTION = FACTORY.func(STRING, list(FACTORY.array(OPEN_A)));
+  public static final FuncTB STRING_GETTER_FUNCTION = CONTEXT.funcTB(STRING, list());
+  public static final FuncTB TUPLE_GETTER_FUNCTION = CONTEXT.funcTB(TUPLE, list());
+  public static final FuncTB STRING_MAP_FUNCTION = CONTEXT.funcTB(STRING, list(STRING));
+  public static final FuncTB PERSON_MAP_FUNCTION = CONTEXT.funcTB(TUPLE, list(TUPLE));
+  public static final FuncTB IDENTITY_FUNCTION = CONTEXT.funcTB(VAR_A, list(VAR_A));
+  public static final FuncTB ARRAY_HEAD_FUNCTION = CONTEXT.funcTB(VAR_A, list(FACTORY.array(VAR_A)));
+  public static final FuncTB ARRAY_LENGTH_FUNCTION = CONTEXT.funcTB(STRING, list(FACTORY.array(VAR_A)));
 
   public static final ImmutableList<TypeB> FUNCTION_TYPES = list(
       STRING_GETTER_FUNCTION,
@@ -66,7 +69,7 @@ public class TestingTB implements TestingT<TypeB> {
       ImmutableList.<TypeB>builder()
           .addAll(ELEMENTARY_TYPES)
           .addAll(FUNCTION_TYPES)
-          .add(OPEN_X)
+          .add(VAR_X)
           .build();
 
   @Override
@@ -76,7 +79,7 @@ public class TestingTB implements TestingT<TypeB> {
 
   @Override
   public ImmutableList<TypeB> typesForBuildWideGraph() {
-    return list(oa(), ob(), blob(), bool(), int_(), string(), tuple());
+    return list(varA(), varB(), blob(), bool(), int_(), string(), tuple());
   }
 
   @Override
@@ -95,8 +98,13 @@ public class TestingTB implements TestingT<TypeB> {
   }
 
   @Override
+  public TypeB func(VarSet<TypeB> tParams, TypeB resT, ImmutableList<TypeB> params) {
+    return CONTEXT.funcTB((VarSetB)(Object) tParams, resT, params);
+  }
+
+  @Override
   public TypeB func(TypeB resT, ImmutableList<TypeB> params) {
-    return FACTORY.func(resT, params);
+    return CONTEXT.funcTB(resT, params);
   }
 
   @Override
@@ -155,33 +163,31 @@ public class TestingTB implements TestingT<TypeB> {
   }
 
   @Override
-  public TypeB oa() {
-    return OPEN_A;
+  public TypeB varA() {
+    return VAR_A;
   }
 
   @Override
-  public TypeB ob() {
-    return OPEN_B;
+  public TypeB varB() {
+    return VAR_B;
   }
 
   @Override
-  public TypeB ox() {
-    return OPEN_X;
+  public TypeB varX() {
+    return VAR_X;
   }
 
   @Override
-  public TypeB ca() {
-    return CLOSED_A;
+  public TypeB varY() {
+    return VAR_Y;
   }
 
   @Override
-  public TypeB cb() {
-    return CLOSED_B;
-  }
-
-  @Override
-  public TypeB cx() {
-    return CLOSED_X;
+  public VarSet<TypeB> vs(VarT... elements) {
+    var varSetB = Stream.of(elements)
+        .map(e -> (VarTB) e)
+        .collect(toVarSetB());
+    return (VarSet<TypeB>)(Object) varSetB;
   }
 
   @Override

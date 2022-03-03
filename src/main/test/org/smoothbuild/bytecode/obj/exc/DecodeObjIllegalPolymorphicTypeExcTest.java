@@ -9,7 +9,7 @@ import org.smoothbuild.testing.TestingContext;
 public class DecodeObjIllegalPolymorphicTypeExcTest extends TestingContext {
   @Test
   public void array_message() {
-    var type = arrayTB(oVarTB("A"));
+    var type = arrayTB(varTB("A"));
     var hash = Hash.of(33);
     assertThat(new DecodeObjIllegalPolymorphicTypeExc(hash, type).getMessage())
         .isEqualTo("Cannot decode `[A]` object at " + hash + ". ARRAY cannot be polymorphic.");
@@ -17,7 +17,7 @@ public class DecodeObjIllegalPolymorphicTypeExcTest extends TestingContext {
 
   @Test
   public void tuple_message() {
-    var type = tupleTB(oVarTB("A"));
+    var type = tupleTB(varTB("A"));
     var hash = Hash.of(33);
     assertThat(new DecodeObjIllegalPolymorphicTypeExc(hash, type).getMessage())
         .isEqualTo("Cannot decode `{A}` object at " + hash + ". TUPLE cannot be polymorphic.");

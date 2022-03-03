@@ -1,6 +1,7 @@
 package org.smoothbuild.testing.type;
 
 import static org.smoothbuild.util.collect.Lists.allMatch;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
 import java.util.Objects;
@@ -81,6 +82,11 @@ public class TestedTB implements TestedT<TypeB> {
       super(type);
       this.resT = resT;
       this.paramTs = paramTs;
+    }
+
+    @Override
+    public String name() {
+      return resT.name() + "(" + toCommaSeparatedString(paramTs, TestedT::name) + ")";
     }
 
     @Override

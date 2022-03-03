@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.obj;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
@@ -104,22 +105,29 @@ public class ObjBStableHashTest extends TestingContext {
     public void with_no_params() {
       var defFunc = funcB(funcTB(intTB(), list()), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("998efe35e88cbf9dc973880f96f5fc5dea3f2664"));
+          .isEqualTo(Hash.decode("b48cacb72e82327f711fda2bc34740a0ea564210"));
     }
 
     @Test
     public void with_one_param() {
       var defFunc = funcB(funcTB(intTB(), list(intTB())), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("5a69dadd0f5d07869ba7676dc2d1f25500d7a1a0"));
+          .isEqualTo(Hash.decode("020bf4fe5cff540ddac770c62d30d392b00d549a"));
     }
 
     @Test
     public void with_two_params() {
-      var defFunc =
-          funcB(funcTB(intTB(), list(intTB(), stringTB())), intB(1));
+      var defFunc = funcB(funcTB(intTB(), list(intTB(), stringTB())), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("8450b8f6b33d766600b980d143f24090f5c54936"));
+          .isEqualTo(Hash.decode("3cba8f4e7a9f1f94345235b00ec331f5cb8c4e09"));
+    }
+
+    @Test
+    public void with_type_params_and_two_params() {
+      var a = varTB("A");
+      var defFunc = funcB(funcTB(varSetB(a), intTB(), list(a, a)), intB(1));
+      assertThat(defFunc.hash())
+          .isEqualTo(Hash.decode("011e1cd7358acf03e488c64bad97d7fb07b2bc15"));
     }
   }
 
@@ -150,7 +158,7 @@ public class ObjBStableHashTest extends TestingContext {
     public void method() {
       assertThat(
           methodB(methodTB(intTB(), list(boolTB())), blobB(1), stringB("cbn"), boolB(true)).hash())
-          .isEqualTo(Hash.decode("1590b8ef2a27b91e1036df55d513e2423f196d89"));
+          .isEqualTo(Hash.decode("f39b14c6935a5930dff773ee5f9b417074564398"));
     }
   }
 
@@ -191,7 +199,7 @@ public class ObjBStableHashTest extends TestingContext {
     @Test
     public void call_with_one_arg() {
       assertThat(callB(funcB(list(stringTB()), intB()), stringB("abc")).hash())
-          .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
+          .isEqualTo(Hash.decode("9ab0fe90e0a01b83b1939bb4096df2911985c248"));
     }
 
     @Test
@@ -199,7 +207,7 @@ public class ObjBStableHashTest extends TestingContext {
       var type = funcTB(intTB(), list(stringTB()));
       var defFunc = funcB(type, intB());
       assertThat(callB(defFunc, stringB("abc")).hash())
-          .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
+          .isEqualTo(Hash.decode("9ab0fe90e0a01b83b1939bb4096df2911985c248"));
     }
   }
 
@@ -234,7 +242,7 @@ public class ObjBStableHashTest extends TestingContext {
       var methodTB = methodTB(blobTB(), list(boolTB()));
       var methodB = methodB(methodTB, blobB(7), stringB("class binary name"), boolB(true));
       assertThat(invokeB(methodB, boolB(true)).hash())
-          .isEqualTo(Hash.decode("781a8c37890c14f8a0d09158881052c1dffaf81c"));
+          .isEqualTo(Hash.decode("c5bf7cb7a1358346701b0de2a4f8d39fe2eb23b6"));
     }
   }
 
@@ -243,7 +251,7 @@ public class ObjBStableHashTest extends TestingContext {
     @Test
     public void map() {
       assertThat(mapB(arrayB(intB(1)), funcB(list(intTB()), intB(1))).hash())
-          .isEqualTo(Hash.decode("c09ea55c05c98df2689ae12009448b3ee27a2378"));
+          .isEqualTo(Hash.decode("921b5d2069750bdba08565e7dbddfb98d066bde6"));
     }
   }
 

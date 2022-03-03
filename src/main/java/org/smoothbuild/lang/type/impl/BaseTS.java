@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.type.impl;
 
-import org.smoothbuild.lang.type.api.BaseT;
+import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
 
-import com.google.common.collect.ImmutableSet;
+import org.smoothbuild.lang.type.api.BaseT;
 
 /**
  * This class is immutable.
@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableSet;
 public sealed abstract class BaseTS extends TypeS implements BaseT
     permits AnyTS, BlobTS, BoolTS, IntTS, NothingTS, StringTS {
   public BaseTS(String name) {
-    super(name, ImmutableSet.of(), false);
+    super(name, varSetS());
   }
 }
 

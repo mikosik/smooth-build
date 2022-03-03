@@ -3,6 +3,8 @@ package org.smoothbuild.lang.type.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.type.api.TypeNames.isVarName;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -11,6 +13,7 @@ import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.lang.type.api.TypeF;
+import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -79,8 +82,12 @@ public class TypeFS implements TypeF<TypeS> {
   }
 
   @Override
-  public FuncTS func(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return new FuncTS(resT, ImmutableList.copyOf(paramTs));
+  public FuncTS func(VarSet<TypeS> tParams, TypeS resT, ImmutableList<TypeS> paramTs) {
+    return func((VarSetS)(Object) tParams, resT, paramTs);
+  }
+
+  public FuncTS func(VarSetS setSParams, TypeS resT, ImmutableList<TypeS> paramTs) {
+    return new FuncTS(setSParams, resT, ImmutableList.copyOf(paramTs));
   }
 
   public IntTS int_() {
@@ -106,14 +113,13 @@ public class TypeFS implements TypeF<TypeS> {
   }
 
   @Override
-  public OpenVarTS oVar(String name) {
+  public VarTS var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return new OpenVarTS(name);
+    return new VarTS(name);
   }
 
   @Override
-  public ClosedVarTS cVar(String name) {
-    checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return new ClosedVarTS(name);
+  public VarSetS varSet(Set<TypeS> elements) {
+    return new VarSetS((Set<VarTS>)(Object) elements);
   }
 }

@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.lang.type.impl.FuncTS.calculateFuncVars;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -32,7 +33,6 @@ import org.smoothbuild.lang.like.EvalLike;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.lang.type.impl.TypeFS;
-import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.parse.ast.AnnN;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.BlobN;
@@ -52,12 +52,10 @@ import com.google.common.collect.ImmutableList;
 
 public class TopEvalLoader {
   private final TypeFS typeFS;
-  private final TypingS typing;
 
   @Inject
-  public TopEvalLoader(TypeFS typeFS, TypingS typing) {
+  public TopEvalLoader(TypeFS typeFS) {
     this.typeFS = typeFS;
-    this.typing = typing;
   }
 
   public TopEvalS loadEval(ModPath path, EvalN evalN) {
@@ -86,7 +84,9 @@ public class TopEvalLoader {
     var resT = funcN.resT().get();
     var name = funcN.name();
     var loc = funcN.loc();
-    var funcT = typeFS.func(resT, map(params, DefinedS::type));
+    var paramTs = map(params, DefinedS::type);
+    var tParams = calculateFuncVars(resT, paramTs);
+    var funcT = typeFS.func(tParams, resT, paramTs);
     if (funcN.ann().isPresent()) {
       var ann = loadAnn(funcN.ann().get());
       return new AnnFuncS(ann, funcT, path, name, params, loc);
@@ -179,7 +179,7 @@ public class TopEvalLoader {
   private ExprS createRef(RefN ref) {
     EvalLike referenced = ref.referenced();
     if (referenced instanceof ItemN) {
-      return new ParamRefS(typing.closeVars(ref.type().get()), ref.name(), ref.loc());
+      return new ParamRefS(ref.type().get(), ref.name(), ref.loc());
     } else {
       return new TopRefS(ref.type().get(), ref.name(), ref.loc());
     }

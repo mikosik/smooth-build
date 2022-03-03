@@ -22,8 +22,8 @@ public class CallBTest extends TestingContext {
 
     @Test
     public void with_generic_params() {
-      var oa = oVarTB("A");
-      assertThat(callB(funcB(oa, list(oa), paramRefB(cVarTB("A"), 0)), intB()).cat())
+      var oa = varTB("A");
+      assertThat(callB(funcB(oa, list(oa), paramRefB(varTB("A"), 0)), intB()).cat())
           .isEqualTo(callCB(intTB()));
     }
   }
@@ -81,14 +81,6 @@ public class CallBTest extends TestingContext {
     assertCall(() -> callB(stringTB(), func))
         .throwsException(new IllegalArgumentException(
             "Call's result type `Int` cannot be assigned to evalT `String`."));
-  }
-
-  @Test
-  public void creating_call_with_resT_having_open_vars_causes_exc() {
-    var a = oVarTB("A");
-    var func = funcB(a, list(a), paramRefB(close(a), 0));
-    assertCall(() -> callB(a, func, intB(7)))
-        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
   }
 
   @Test

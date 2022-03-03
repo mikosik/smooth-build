@@ -2,6 +2,7 @@ package org.smoothbuild.testing.type;
 
 import static java.lang.String.join;
 import static org.smoothbuild.util.collect.Lists.allMatch;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
 import java.util.Objects;
@@ -124,6 +125,11 @@ public class TestedTS implements TestedT<TypeS> {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.resT = resT;
       this.paramTs = paramTs;
+    }
+
+    @Override
+    public String name() {
+      return resT.name() + "(" + toCommaSeparatedString(paramTs, TestedT::name) + ")";
     }
 
     @Override

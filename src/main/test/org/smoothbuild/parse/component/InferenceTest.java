@@ -176,7 +176,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(oVarTS("A"), list(oVarTS("A"))));
+          .containsEvalWithType("myFunc", funcTS(varTS("A"), list(varTS("A"))));
     }
   }
 
@@ -232,8 +232,8 @@ public class InferenceTest extends TestingContext {
       module(code)
           .loadsWithError(5, """
                   Array elems at indexes 0 and 1 doesn't have common super type.
-                  Element at index 0 type = `String()`
-                  Element at index 1 type = `Blob()`""");
+                  Element at index 0 type = `<>String()`
+                  Element at index 1 type = `<>Blob()`""");
     }
   }
 

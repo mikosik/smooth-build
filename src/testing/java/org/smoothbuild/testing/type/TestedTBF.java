@@ -63,12 +63,12 @@ public class TestedTBF implements TestedTF<TypeB, TestedTB, TestedAssignSpecB> {
 
   @Override
   public TestedTB varA() {
-    return new TestedTB(TestingTB.OPEN_A);
+    return new TestedTB(TestingTB.VAR_A);
   }
 
   @Override
   public TestedTB varB() {
-    return new TestedTB(TestingTB.OPEN_B);
+    return new TestedTB(TestingTB.VAR_B);
   }
 
   @Override

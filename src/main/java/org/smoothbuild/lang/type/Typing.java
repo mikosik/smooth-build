@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
@@ -9,6 +8,7 @@ import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
+import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,16 +17,15 @@ import java.util.function.Supplier;
 
 import org.smoothbuild.lang.type.api.ArrayT;
 import org.smoothbuild.lang.type.api.Bounded;
-import org.smoothbuild.lang.type.api.ClosedVarT;
 import org.smoothbuild.lang.type.api.ComposedT;
 import org.smoothbuild.lang.type.api.FuncT;
-import org.smoothbuild.lang.type.api.OpenVarT;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.lang.type.api.VarT;
 
 import com.google.common.collect.ImmutableList;
@@ -179,7 +178,7 @@ public class Typing<T extends Type> {
   }
 
   public T mapVars(T type, VarBounds<T> varBounds, Side side) {
-    if (type.isPolytype()) {
+    if (type.hasVars()) {
       return switch (type) {
         case VarT var -> mapVarsInVar(type, varBounds, side, var);
         case ComposedT composedT -> {
@@ -249,39 +248,6 @@ public class Typing<T extends Type> {
         merge(bounds1.upper(), bounds2.upper(), LOWER));
   }
 
-  public T openVars(T type) {
-    if (!type.hasClosedVars()) {
-      return type;
-    }
-    return switch (type) {
-      case ComposedT composedT -> rebuildComposed(type,
-          map(composedT.covars(), t -> openVars((T) t)),
-          map(composedT.contravars(), t -> openVars((T) t)));
-      case ClosedVarT closedVarT -> (T) typeF.oVar(closedVarT.name());
-      default -> throw unexpectedCaseExc(type);
-    };
-  }
-
-  public T closeVars(T type) {
-    if (!type.hasOpenVars()) {
-      return type;
-    }
-    return switch (type) {
-      case ComposedT composedT -> rebuildComposed(type,
-          map(composedT.covars(), t -> closeVars((T) t)),
-          map(composedT.contravars(), t -> closeVars((T) t)));
-      case OpenVarT openVarT -> (T) typeF.cVar(openVarT.name());
-      default -> throw unexpectedCaseExc(type);
-    };
-  }
-
-  public VarBounds<T> closeVars(VarBounds<T> varBounds) {
-    var map = varBounds.map().values().stream()
-        .map(bounded -> new Bounded<>((VarT) closeVars((T) bounded.var()), bounded.bounds()))
-        .collect(toImmutableMap(Bounded::var, b -> b));
-    return new VarBounds<>(map);
-  }
-
   public T rebuildComposed(T type, ImmutableList<T> covars, ImmutableList<T> contravars) {
     if (!(type instanceof ComposedT composedT)) {
       throw unexpectedCaseExc(type);
@@ -291,7 +257,7 @@ public class Typing<T extends Type> {
     }
     return switch (composedT) {
       case ArrayT array -> (T) typeF.array(covars.get(0));
-      case FuncT func -> (T) typeF.func(covars.get(0), contravars);
+      case FuncT func -> (T) typeF.func((VarSet<T>) typeF.varSet(set()), covars.get(0), contravars);
       case TupleT func -> (T) typeF.tuple(covars);
     };
   }

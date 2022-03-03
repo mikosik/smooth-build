@@ -4,6 +4,8 @@ import org.smoothbuild.lang.type.Typing;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
+import org.smoothbuild.lang.type.api.VarSet;
+import org.smoothbuild.lang.type.api.VarT;
 
 import com.google.common.collect.ImmutableList;
 
@@ -14,6 +16,7 @@ public interface TestingT<T extends Type> {
   public ImmutableList<T> allTestedTypes();
   public T array(T elemT);
 
+  public T func(VarSet<T> tParams, T resT, ImmutableList<T> params);
   public T func(T resT, ImmutableList<T> params);
   public T any();
   public T blob();
@@ -26,12 +29,11 @@ public interface TestingT<T extends Type> {
   public boolean isTupleSupported();
   public T tuple();
   public T tuple(ImmutableList<T> items);
-  public T oa();
-  public T ob();
-  public T ox();
-  public T ca();
-  public T cb();
-  public T cx();
+  public T varA();
+  public T varB();
+  public T varX();
+  public T varY();
+  public VarSet<T> vs(VarT... elements);
 
   public Sides<T> oneSideBound(Side side, T type);
 }

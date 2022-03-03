@@ -7,6 +7,8 @@ import static org.smoothbuild.lang.type.api.TypeNames.isVarName;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
+import static org.smoothbuild.testing.type.TestingTS.VAR_A;
+import static org.smoothbuild.testing.type.TestingTS.varSet;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
@@ -71,8 +73,8 @@ public class TypeNamesTest {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(funcTypeName(STRING, list(BLOB, BOOL)))
-          .isEqualTo("String(Blob,Bool)");
+      assertThat(funcTypeName(varSet(VAR_A), STRING, list(BLOB, BOOL)))
+          .isEqualTo("<A>String(Blob,Bool)");
     }
   }
 }

@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class VarSetTest {
@@ -50,12 +49,7 @@ public class VarSetTest {
 
   private record MyVar(String name) implements VarT {
     @Override
-    public boolean hasClosedVars() {
-      return false;
-    }
-
-    @Override
-    public ImmutableSet<? extends OpenVarT> openVars() {
+    public VarSet<?> vars() {
       return null;
     }
   }

@@ -14,10 +14,7 @@ public final class StructTS extends TypeS {
   private final NList<ItemSigS> fields;
 
   public StructTS(String name, NList<ItemSigS> fields) {
-    super(
-        name,
-        calculateOpenVars(map(fields, ItemSigS::type)),
-        anyMatch(fields, f -> f.type().hasClosedVars()));
+    super(name, calculateVars(map(fields, ItemSigS::type)));
     this.fields = fields;
   }
 

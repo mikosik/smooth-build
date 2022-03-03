@@ -7,6 +7,7 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.bytecode.type.val.FuncTB.calculateFuncVars;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
@@ -15,6 +16,7 @@ import static org.smoothbuild.lang.type.api.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.lang.type.api.VarBounds.varBounds;
+import static org.smoothbuild.lang.type.impl.FuncTS.calculateFuncVars;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
@@ -69,14 +71,14 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
 import org.smoothbuild.bytecode.type.val.CallableTB;
-import org.smoothbuild.bytecode.type.val.ClosedVarTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
-import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarSetB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.compile.BytecodeMethodLoader;
 import org.smoothbuild.compile.CompilerProv;
@@ -121,11 +123,9 @@ import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.BlobTS;
 import org.smoothbuild.lang.type.impl.BoolTS;
-import org.smoothbuild.lang.type.impl.ClosedVarTS;
 import org.smoothbuild.lang.type.impl.FuncTS;
 import org.smoothbuild.lang.type.impl.IntTS;
 import org.smoothbuild.lang.type.impl.NothingTS;
-import org.smoothbuild.lang.type.impl.OpenVarTS;
 import org.smoothbuild.lang.type.impl.StringTS;
 import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.lang.type.impl.TypeFS;
@@ -434,7 +434,12 @@ public class TestingContext {
   }
 
   public FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb().func(resT, paramTs);
+    var tParams = calculateFuncVars(resT, paramTs);
+    return funcTB(tParams, resT, paramTs);
+  }
+
+  public FuncTB funcTB(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {
+    return catDb().func(tParams, resT, paramTs);
   }
 
   public IntTB intTB() {
@@ -446,7 +451,12 @@ public class TestingContext {
   }
 
   public MethodTB methodTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb().method(resT, paramTs);
+    var typeParams = calculateFuncVars(resT, paramTs);
+    return methodTB(typeParams, resT, paramTs);
+  }
+
+  public MethodTB methodTB(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {
+    return catDb().method(tParams, resT, paramTs);
   }
 
   public NothingTB nothingTB() {
@@ -465,20 +475,8 @@ public class TestingContext {
     return catDb().tuple(ImmutableList.copyOf(itemTs));
   }
 
-  public OpenVarTB oVarTB(String name) {
-    return catDb().oVar(name);
-  }
-
-  public ClosedVarTB cVarTB(String name) {
-    return catDb().cVar(name);
-  }
-
-  public TypeB open(TypeB typeB) {
-    return typingB().openVars(typeB);
-  }
-
-  public TypeB close(TypeB typeB) {
-    return typingB().closeVars(typeB);
+  public VarTB varTB(String name) {
+    return catDb().var(name);
   }
 
   // Expr types
@@ -651,9 +649,7 @@ public class TestingContext {
   }
 
   public FuncB funcB(ImmutableList<TypeB> paramTs, ObjB body) {
-    // TODO this will only work until we introduce inner functions
-    var resT = typingB.openVars(body.type());
-    return funcB(resT, paramTs, body);
+    return funcB(body.type(), paramTs, body);
   }
 
   public FuncB funcB(TypeB resT, ImmutableList<TypeB> paramTs, ObjB body) {
@@ -853,7 +849,8 @@ public class TestingContext {
   }
 
   public FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return typeFS().func(resT, paramTs);
+    var tParams = calculateFuncVars(resT, paramTs);
+    return typeFS().func(tParams, resT, paramTs);
   }
 
   public IntTS intTS() {
@@ -877,20 +874,8 @@ public class TestingContext {
     return typeFS().struct(name, fields);
   }
 
-  public OpenVarTS oVarTS(String name) {
-    return typeFS().oVar(name);
-  }
-
-  public ClosedVarTS cVarTS(String name) {
-    return typeFS().cVar(name);
-  }
-
-  public TypeS open(TypeS typeS) {
-    return typingS().openVars(typeS);
-  }
-
-  public TypeS close(TypeS typeS) {
-    return typingS().closeVars(typeS);
+  public VarTS varTS(String name) {
+    return typeFS().var(name);
   }
 
   public VarBounds<TypeS> vbS(
@@ -1140,22 +1125,6 @@ public class TestingContext {
 
   public ItemSigS sigS(TypeS type, String name) {
     return new ItemSigS(type, name, empty());
-  }
-
-  public TypeS o(TypeS type) {
-    return typingS().openVars(type);
-  }
-
-  public TypeS c(TypeS type) {
-    return typingS().closeVars(type);
-  }
-
-  public TypeB o(TypeB type) {
-    return typingB().openVars(type);
-  }
-
-  public TypeB c(TypeB type) {
-    return typingB().closeVars(type);
   }
 
   public static ModFiles modFiles() {

@@ -151,7 +151,7 @@ public class JobCreator {
       return callEagerJob(actualEvalT, func, args, loc, scope, vars);
     } else {
       var funcT = (FuncTB) func.type();
-      var actualResT = mapClosedVarsLower(funcT.res(), vars);
+      var actualResT = mapVarsLower(funcT.res(), vars);
       return new LazyJob(actualEvalT, loc,
           () -> callEagerJob(actualEvalT, actualResT, func, args, loc, scope, vars));
     }
@@ -166,7 +166,7 @@ public class JobCreator {
   private Job callEagerJob(TypeB actualEvalT, Job func, ImmutableList<Job> args, Loc loc,
       List<Job> scope, VarBounds<TypeB> vars) {
     var funcT = (FuncTB) func.type();
-    var actualResT = mapClosedVarsLower(funcT.res(), vars);
+    var actualResT = mapVarsLower(funcT.res(), vars);
     return callEagerJob(actualEvalT, actualResT, func, args, loc, scope, vars);
   }
 
@@ -182,8 +182,7 @@ public class JobCreator {
   }
 
   private VarBounds<TypeB> inferVarsInCallLike(CallableTB callableT, ImmutableList<TypeB> argTs) {
-    var varBounds = typing.inferVarBoundsLower(callableT.params(), argTs);
-    return typing.closeVars(varBounds);
+    return typing.inferVarBoundsLower(callableT.params(), argTs);
   }
 
   // Combine
@@ -257,10 +256,10 @@ public class JobCreator {
     var methodT = invokeData.method().type();
     var argJs = eagerJobsFor(invokeData.args().items(), scope, vars);
     var newVars = inferVarsInCallLike(methodT, map(argJs, Job::type));
-    var actualResT = mapClosedVarsLower(methodT.res(), newVars);
+    var actualResT = mapVarsLower(methodT.res(), newVars);
     var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), nativeMethodLoader);
     var info = new TaskInfo(INVOKE, name + PARENTHESES_INVOKE, nal.loc());
-    var actualArgTs = map(methodT.params(), t -> mapClosedVarsLower(t, newVars));
+    var actualArgTs = map(methodT.params(), t -> mapVarsLower(t, newVars));
     var convertedArgJs = convertJobs(actualArgTs, nal, argJs);
     var task = taskCreator.newTask(algorithm, convertedArgJs, info);
     var actualEvalT = typing.mapVarsLower(invoke.type(), vars);
@@ -371,8 +370,8 @@ public class JobCreator {
     return new VirtualTask(convertedJ, new TaskInfo(CALL, name, loc));
   }
 
-  private TypeB mapClosedVarsLower(TypeB t, VarBounds<TypeB> newVars) {
-    return typing.mapVarsLower(typing.closeVars(t), newVars);
+  private TypeB mapVarsLower(TypeB type, VarBounds<TypeB> newVars) {
+    return typing.mapVarsLower(type, newVars);
   }
 
   private ImmutableList<Job> convertJobs(

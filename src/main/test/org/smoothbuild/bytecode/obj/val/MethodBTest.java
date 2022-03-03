@@ -95,6 +95,6 @@ public class MethodBTest extends TestingContext {
     var methodTH = methodTB(stringTB(), list(intTB()));
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
     assertThat(methodH.toString())
-        .isEqualTo("Method(_String(Int))@" + methodH.hash());
+        .isEqualTo("Method(_<>String(Int))@" + methodH.hash());
   }
 }

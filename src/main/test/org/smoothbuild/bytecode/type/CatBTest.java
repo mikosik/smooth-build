@@ -3,34 +3,32 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingCatsB.ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BOOL;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_CLOSED_VARIABLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_FUNCTION;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_INT;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_NOTHING;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_OPEN_VARIABLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_PERSON_TUPLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_STR;
+import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_VAR;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BOOL;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_CLOSED_VARIABLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_FUNCTION;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_INT;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_METHOD;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_NOTHING;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_OPEN_VARIABLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_PERSON_TUPLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_STR;
+import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_VAR;
 import static org.smoothbuild.testing.type.TestingCatsB.BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.CALL;
 import static org.smoothbuild.testing.type.TestingCatsB.CAT_DB;
-import static org.smoothbuild.testing.type.TestingCatsB.CLOSED_VARIABLE;
 import static org.smoothbuild.testing.type.TestingCatsB.COMBINE;
 import static org.smoothbuild.testing.type.TestingCatsB.FUNC;
 import static org.smoothbuild.testing.type.TestingCatsB.IF;
@@ -39,17 +37,16 @@ import static org.smoothbuild.testing.type.TestingCatsB.INVOKE;
 import static org.smoothbuild.testing.type.TestingCatsB.MAP;
 import static org.smoothbuild.testing.type.TestingCatsB.METHOD;
 import static org.smoothbuild.testing.type.TestingCatsB.NOTHING;
-import static org.smoothbuild.testing.type.TestingCatsB.OPEN_VARIABLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ORDER;
 import static org.smoothbuild.testing.type.TestingCatsB.PARAM_REF;
 import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
 import static org.smoothbuild.testing.type.TestingCatsB.SELECT;
 import static org.smoothbuild.testing.type.TestingCatsB.STRING;
+import static org.smoothbuild.testing.type.TestingCatsB.VAR_A;
 import static org.smoothbuild.testing.type.TestingCatsB.array;
-import static org.smoothbuild.testing.type.TestingCatsB.cVar;
 import static org.smoothbuild.testing.type.TestingCatsB.func;
-import static org.smoothbuild.testing.type.TestingCatsB.oVar;
 import static org.smoothbuild.testing.type.TestingCatsB.tuple;
+import static org.smoothbuild.testing.type.TestingCatsB.var;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
@@ -81,9 +78,11 @@ import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
-import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarSetB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.lang.type.api.ArrayT;
 import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.Type;
@@ -93,14 +92,13 @@ import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class CatBTest extends TestingContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindB.values())
-        .hasLength(20);
+        .hasLength(19);
   }
 
   @ParameterizedTest
@@ -138,11 +136,9 @@ public class CatBTest extends TestingContext {
         args(f -> f.int_(), "Int"),
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
-        args(f -> f.oVar("A"), "A"),
-        args(f -> f.cVar("A"), "A"),
+        args(f -> f.var("A"), "A"),
 
-        args(f -> f.array(f.oVar("A")), "[A]"),
-        args(f -> f.array(f.cVar("A")), "[A]"),
+        args(f -> f.array(f.var("A")), "[A]"),
         args(f -> f.array(f.any()), "[Any]"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
@@ -150,8 +146,7 @@ public class CatBTest extends TestingContext {
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
 
-        args(f -> f.array(f.array(f.oVar("A"))), "[[A]]"),
-        args(f -> f.array(f.array(f.cVar("A"))), "[[A]]"),
+        args(f -> f.array(f.array(f.var("A"))), "[[A]]"),
         args(f -> f.array(f.array(f.any())), "[[Any]]"),
         args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
@@ -159,23 +154,17 @@ public class CatBTest extends TestingContext {
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.func(f.oVar("A"), list(f.array(f.oVar("A")))), "A([A])"),
-        args(f -> f.func(f.cVar("A"), list(f.array(f.cVar("A")))), "A([A])"),
-        args(f -> f.func(f.string(), list(f.array(f.oVar("A")))), "String([A])"),
-        args(f -> f.func(f.string(), list(f.array(f.cVar("A")))), "String([A])"),
-        args(f -> f.func(f.oVar("A"), list(f.oVar("A"))), "A(A)"),
-        args(f -> f.func(f.cVar("A"), list(f.cVar("A"))), "A(A)"),
-        args(f -> f.func(f.string(), list()), "String()"),
-        args(f -> f.func(f.string(), list(f.string())), "String(String)"),
+        args(f -> f.func(varSetB(f.var("A")), f.var("A"), list(f.array(f.var("A")))), "<A>A([A])"),
+        args(f -> f.func(varSetB(f.var("A")), f.string(), list(f.array(f.var("A")))), "<A>String([A])"),
+        args(f -> f.func(varSetB(f.var("A")), f.var("A"), list(f.var("A"))), "<A>A(A)"),
+        args(f -> f.func(varSetB(), f.string(), list()), "<>String()"),
+        args(f -> f.func(varSetB(), f.string(), list(f.string())), "<>String(String)"),
 
-        args(f -> f.method(f.oVar("A"), list(f.array(f.oVar("A")))), "_A([A])"),
-        args(f -> f.method(f.cVar("A"), list(f.array(f.cVar("A")))), "_A([A])"),
-        args(f -> f.method(f.string(), list(f.array(f.oVar("A")))), "_String([A])"),
-        args(f -> f.method(f.string(), list(f.array(f.cVar("A")))), "_String([A])"),
-        args(f -> f.method(f.oVar("A"), list(f.oVar("A"))), "_A(A)"),
-        args(f -> f.method(f.cVar("A"), list(f.cVar("A"))), "_A(A)"),
-        args(f -> f.method(f.string(), list()), "_String()"),
-        args(f -> f.method(f.string(), list(f.string())), "_String(String)"),
+        args(f -> f.method(varSetB(f.var("A")), f.var("A"), list(f.array(f.var("A")))), "_<A>A([A])"),
+        args(f -> f.method(varSetB(f.var("A")), f.string(), list(f.array(f.var("A")))), "_<A>String([A])"),
+        args(f -> f.method(varSetB(f.var("A")), f.var("A"), list(f.var("A"))), "_<A>A(A)"),
+        args(f -> f.method(varSetB(), f.string(), list()), "_<>String()"),
+        args(f -> f.method(varSetB(), f.string(), list(f.string())), "_<>String(String)"),
 
         args(f -> f.tuple(list()), "{}"),
         args(f -> f.tuple(list(f.string(), f.bool())), "{String,Bool}"),
@@ -186,8 +175,6 @@ public class CatBTest extends TestingContext {
         args(f -> f.if_(f.int_()), "If:Int"),
         args(f -> f.map(f.array(f.int_())), "Map:[Int]"),
         args(f -> f.invoke(f.int_()), "Invoke:Int"),
-        args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
-        args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.order(f.array(f.string())), "Order:[String]"),
         args(f -> f.paramRef(f.int_()), "ParamRef:Int"),
         args(f -> f.select(f.int_()), "Select:Int")
@@ -197,61 +184,35 @@ public class CatBTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
   public void isPolytype(Function<CatDb, TypeB> factoryCall, boolean expected) {
-    assertThat(execute(factoryCall).isPolytype())
+    assertThat(execute(factoryCall).hasVars())
         .isEqualTo(expected);
   }
 
   public static List<Arguments> isPolytype_test_data() {
     return asList(
-        args(f -> f.oVar("A"), true),
-        args(f -> f.array(f.oVar("A")), true),
-        args(f -> f.array(f.array(f.oVar("A"))), true),
+        args(f -> f.var("A"), true),
+        args(f -> f.array(f.var("A")), true),
+        args(f -> f.array(f.array(f.var("A"))), true),
 
-        args(f -> f.func(f.oVar("A"), list()), true),
-        args(f -> f.func(f.func(f.oVar("A"), list()), list()), true),
-        args(f -> f.func(f.func(f.func(f.oVar("A"), list()), list()), list()), true),
+        args(f -> f.func(varSetB(f.var("A")), f.var("A"), list()), true),
+        args(f -> f.func(varSetB(f.var("A")), f.func(varSetB(), f.var("A"), list()), list()), true),
+        args(f -> f.func(varSetB(f.var("A")), f.func(varSetB(), f.func(varSetB(), f.var("A"), list()), list()), list()), true),
 
-        args(f -> f.func(f.bool(), list(f.oVar("A"))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.oVar("A"), list()))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.func(f.oVar("A"), list()), list()))), true),
+        args(f -> f.func(varSetB(f.var("A")), f.bool(), list(f.var("A"))), true),
+        args(f -> f.func(varSetB(f.var("A")), f.bool(), list(f.func(varSetB(), f.var("A"), list()))), true),
+        args(f -> f.func(varSetB(f.var("A")), f.bool(), list(f.func(varSetB(), f.func(varSetB(), f.var("A"), list()), list()))), true),
 
-        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.oVar("A"))))), true),
+        args(f -> f.func(varSetB(f.var("A")), f.bool(), list(f.func(varSetB(), f.blob(), list(f.var("A"))))), true),
 
-        args(f -> f.method(f.oVar("A"), list()), true),
-        args(f -> f.method(f.func(f.oVar("A"), list()), list()), true),
-        args(f -> f.method(f.func(f.func(f.oVar("A"), list()), list()), list()), true),
+        args(f -> f.method(varSetB(f.var("A")), f.var("A"), list()), true),
+        args(f -> f.method(varSetB(f.var("A")), f.func(varSetB(), f.var("A"), list()), list()), true),
+        args(f -> f.method(varSetB(f.var("A")), f.func(varSetB(), f.func(varSetB(), f.var("A"), list()), list()), list()), true),
 
-        args(f -> f.method(f.bool(), list(f.oVar("A"))), true),
-        args(f -> f.method(f.bool(), list(f.method(f.oVar("A"), list()))), true),
-        args(f -> f.method(f.bool(), list(f.method(f.func(f.oVar("A"), list()), list()))), true),
+        args(f -> f.method(varSetB(f.var("A")), f.bool(), list(f.var("A"))), true),
+        args(f -> f.method(varSetB(f.var("A")), f.bool(), list(f.method(varSetB(), f.var("A"), list()))), true),
+        args(f -> f.method(varSetB(f.var("A")), f.bool(), list(f.method(varSetB(), f.func(varSetB(), f.var("A"), list()), list()))), true),
 
-        args(f -> f.method(f.bool(), list(f.method(f.blob(), list(f.oVar("A"))))), true),
-
-
-        args(f -> f.cVar("A"), true),
-        args(f -> f.array(f.cVar("A")), true),
-        args(f -> f.array(f.array(f.cVar("A"))), true),
-
-        args(f -> f.func(f.cVar("A"), list()), true),
-        args(f -> f.func(f.func(f.cVar("A"), list()), list()), true),
-        args(f -> f.func(f.func(f.func(f.cVar("A"), list()), list()), list()), true),
-
-        args(f -> f.func(f.bool(), list(f.cVar("A"))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.cVar("A"), list()))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.func(f.cVar("A"), list()), list()))), true),
-
-        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.cVar("A"))))), true),
-
-        args(f -> f.method(f.cVar("A"), list()), true),
-        args(f -> f.method(f.func(f.cVar("A"), list()), list()), true),
-        args(f -> f.method(f.func(f.func(f.cVar("A"), list()), list()), list()), true),
-
-        args(f -> f.method(f.bool(), list(f.cVar("A"))), true),
-        args(f -> f.method(f.bool(), list(f.method(f.cVar("A"), list()))), true),
-        args(f -> f.method(f.bool(), list(f.method(f.func(f.cVar("A"), list()), list()))), true),
-
-        args(f -> f.method(f.bool(), list(f.method(f.blob(), list(f.cVar("A"))))), true),
-
+        args(f -> f.method(varSetB(f.var("A")), f.bool(), list(f.method(varSetB(), f.blob(), list(f.var("A"))))), true),
 
         args(f -> f.any(), false),
         args(f -> f.blob(), false),
@@ -261,114 +222,58 @@ public class CatBTest extends TestingContext {
         args(f -> f.string(), false),
         args(f -> f.tuple(list()), false),
         args(f -> f.tuple(list(f.int_())), false),
-        args(f -> f.tuple(list(f.oVar("A"))), true),
-        args(f -> f.tuple(list(f.cVar("A"))), true),
-        args(f -> f.tuple(list(f.tuple(list(f.oVar("A"))))), true),
-        args(f -> f.tuple(list(f.tuple(list(f.cVar("A"))))), true)
+        args(f -> f.tuple(list(f.var("A"))), true),
+        args(f -> f.tuple(list(f.tuple(list(f.var("A"))))), true)
         );
   }
 
   @ParameterizedTest
-  @MethodSource("hasOpenVars_test_data")
-  public void hasOpenVars(TypeB type, boolean expected) {
-    assertThat(type.hasOpenVars())
-        .isEqualTo(expected);
+  @MethodSource("vars_test_data")
+  public void vars(TypeB type, VarSetB varSet) {
+    assertThat(type.vars())
+        .isEqualTo(varSet);
   }
 
-  public static List<Arguments> hasOpenVars_test_data() {
+  public static List<Arguments> vars_test_data() {
     return List.of(
-        arguments(ANY, false),
-        arguments(BLOB, false),
-        arguments(BOOL, false),
-        arguments(INT, false),
-        arguments(NOTHING, false),
-        arguments(STRING, false),
+        arguments(ANY, varSetB()),
+        arguments(BLOB, varSetB()),
+        arguments(BOOL, varSetB()),
+        arguments(INT, varSetB()),
+        arguments(NOTHING, varSetB()),
+        arguments(STRING, varSetB()),
+        arguments(BLOB, varSetB()),
+        arguments(BLOB, varSetB()),
 
-        arguments(array(INT), false),
-        arguments(array(oVar("A")), true),
-        arguments(array(cVar("A")), false),
+        arguments(array(INT), varSetB()),
+        arguments(array(var("A")), varSetB(var("A"))),
 
-        arguments(tuple(list(INT)), false),
-        arguments(tuple(list(oVar("A"))), true),
-        arguments(tuple(list(cVar("A"))), false),
+        arguments(tuple(list(INT)), varSetB()),
+        arguments(tuple(list(var("A"))), varSetB(var("A"))),
 
-        arguments(func(BLOB, list(BOOL)), false),
-        arguments(func(oVar("A"), list(BOOL)), true),
-        arguments(func(cVar("A"), list(BOOL)), false),
-        arguments(func(BLOB, list(oVar("A"))), true),
-        arguments(func(BLOB, list(cVar("A"))), false)
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("hasClosedVars_test_data")
-  public void hasOpenClosed(TypeB type, boolean expected) {
-    assertThat(type.hasClosedVars())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> hasClosedVars_test_data() {
-    return List.of(
-        arguments(ANY, false),
-        arguments(BLOB, false),
-        arguments(BOOL, false),
-        arguments(INT, false),
-        arguments(NOTHING, false),
-        arguments(STRING, false),
-
-        arguments(array(INT), false),
-        arguments(array(oVar("A")), false),
-        arguments(array(cVar("A")), true),
-
-        arguments(tuple(list(INT)), false),
-        arguments(tuple(list(oVar("A"))), false),
-        arguments(tuple(list(cVar("A"))), true),
-
-        arguments(func(BLOB, list(BOOL)), false),
-        arguments(func(oVar("A"), list(BOOL)), false),
-        arguments(func(cVar("A"), list(BOOL)), true),
-        arguments(func(BLOB, list(oVar("A"))), false),
-        arguments(func(BLOB, list(cVar("A"))), true)
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("open_vars_test_data")
-  public void open_vars(TypeB type, ImmutableSet<OpenVarTB> openVars) {
-    assertThat(type.openVars())
-        .isEqualTo(openVars);
-  }
-
-  public static List<Arguments> open_vars_test_data() {
-    return List.of(
-        arguments(ANY, ImmutableSet.of()),
-        arguments(BLOB, ImmutableSet.of()),
-        arguments(BOOL, ImmutableSet.of()),
-        arguments(INT, ImmutableSet.of()),
-        arguments(NOTHING, ImmutableSet.of()),
-        arguments(STRING, ImmutableSet.of()),
-        arguments(BLOB, ImmutableSet.of()),
-        arguments(BLOB, ImmutableSet.of()),
-
-
-        arguments(array(INT), ImmutableSet.of()),
-        arguments(array(oVar("A")), ImmutableSet.of(oVar("A"))),
-        arguments(array(cVar("A")), ImmutableSet.of()),
-
-        arguments(tuple(list(INT)), ImmutableSet.of()),
-        arguments(tuple(list(oVar("A"))), ImmutableSet.of(oVar("A"))),
-        arguments(tuple(list(cVar("A"))), ImmutableSet.of()),
-
-        arguments(func(BLOB, list(BOOL)), ImmutableSet.of()),
-        arguments(func(oVar("A"), list(BOOL)), ImmutableSet.of(oVar("A"))),
-        arguments(func(cVar("A"), list(BOOL)), ImmutableSet.of()),
-        arguments(func(BLOB, list(oVar("A"))), ImmutableSet.of(oVar("A"))),
-        arguments(func(BLOB, list(cVar("A"))), ImmutableSet.of())
+        arguments(func(BLOB, list(BOOL)), varSetB()),
+        arguments(func(var("A"), list(BOOL)), varSetB(var("A"))),
+        arguments(func(BLOB, list(var("A"))), varSetB(var("A")))
     );
   }
 
   @Nested
   class _func {
+    @ParameterizedTest
+    @MethodSource("tParams_cases")
+    public void tParams(Function<CatDb, FuncTB> factoryCall,
+        Function<CatDb, List<VarTB>> expected) {
+      assertThat(execute(factoryCall).tParams())
+          .isEqualTo(execute(expected));
+    }
+
+    public static List<Arguments> tParams_cases() {
+      return asList(
+          args(f -> f.func(varSetB(f.var("A")), f.int_(), list()), f -> varSetB(f.var("A"))),
+          args(f -> f.func(varSetB(f.var("A"), f.var("B")), f.int_(), list()), f -> varSetB(f.var("A"), f.var("B")))
+      );
+    }
+
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(Function<CatDb, FuncT> factoryCall,
@@ -379,9 +284,9 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.func(f.int_(), list()), f -> f.int_()),
-          args(f -> f.func(f.blob(), list(f.bool())), f -> f.blob()),
-          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+          args(f -> f.func(varSetB(), f.int_(), list()), f -> f.int_()),
+          args(f -> f.func(varSetB(), f.blob(), list(f.bool())), f -> f.blob()),
+          args(f -> f.func(varSetB(), f.blob(), list(f.bool(), f.int_())), f -> f.blob())
       );
     }
 
@@ -395,14 +300,29 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.func(f.int_(), list()), f -> list()),
-          args(f -> f.func(f.blob(), list(f.bool())), f -> list(f.bool())),
-          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+          args(f -> f.func(varSetB(), f.int_(), list()), f -> list()),
+          args(f -> f.func(varSetB(), f.blob(), list(f.bool())), f -> list(f.bool())),
+          args(f -> f.func(varSetB(), f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
       );
     }
   }
   @Nested
   class _method {
+    @ParameterizedTest
+    @MethodSource("tParams_cases")
+    public void tParams(Function<CatDb, MethodTB> factoryCall,
+        Function<CatDb, List<VarTB>> expected) {
+      assertThat(execute(factoryCall).tParams())
+          .isEqualTo(execute(expected));
+    }
+
+    public static List<Arguments> tParams_cases() {
+      return asList(
+          args(f -> f.method(varSetB(f.var("A")), f.int_(), list()), f -> varSetB(f.var("A"))),
+          args(f -> f.method(varSetB(f.var("A"), f.var("B")), f.int_(), list()), f -> varSetB(f.var("A"), f.var("B")))
+      );
+    }
+
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(Function<CatDb, MethodTB> factoryCall,
@@ -413,9 +333,9 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.method(f.int_(), list()), f -> f.int_()),
-          args(f -> f.method(f.blob(), list(f.bool())), f -> f.blob()),
-          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+          args(f -> f.method(varSetB(), f.int_(), list()), f -> f.int_()),
+          args(f -> f.method(varSetB(), f.blob(), list(f.bool())), f -> f.blob()),
+          args(f -> f.method(varSetB(), f.blob(), list(f.bool(), f.int_())), f -> f.blob())
       );
     }
 
@@ -429,39 +349,24 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.method(f.int_(), list()), f -> list()),
-          args(f -> f.method(f.blob(), list(f.bool())), f -> list(f.bool())),
-          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+          args(f -> f.method(varSetB(), f.int_(), list()), f -> list()),
+          args(f -> f.method(varSetB(), f.blob(), list(f.bool())), f -> list(f.bool())),
+          args(f -> f.method(varSetB(), f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
       );
     }
   }
 
   @Nested
-  class _open_var {
+  class _var {
     @Test
     public void name() {
-      assertThat(oVarTB("A").name())
+      assertThat(varTB("A").name())
           .isEqualTo("A");
     }
 
     @Test
     public void illegal_name() {
-      assertCall(() -> oVarTB("a"))
-          .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
-    }
-  }
-
-  @Nested
-  class _closed_var {
-    @Test
-    public void name() {
-      assertThat(cVarTB("A").name())
-          .isEqualTo("A");
-    }
-
-    @Test
-    public void illegal_name() {
-      assertCall(() -> cVarTB("a"))
+      assertCall(() -> varTB("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
@@ -482,25 +387,23 @@ public class CatBTest extends TestingContext {
           args(f -> f.any()),
           args(f -> f.blob()),
           args(f -> f.bool()),
-          args(f -> f.func(f.string(), list())),
-          args(f -> f.method(f.string(), list())),
+          args(f -> f.func(varSetB(), f.string(), list())),
+          args(f -> f.method(varSetB(), f.string(), list())),
           args(f -> f.int_()),
           args(f -> f.nothing()),
           args(f -> f.string()),
           args(f -> f.tuple(list(f.int_()))),
-          args(f -> f.oVar("A")),
-          args(f -> f.cVar("A")),
+          args(f -> f.var("A")),
 
           args(f -> f.array(f.any())),
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
-          args(f -> f.array(f.func(f.string(), list()))),
-          args(f -> f.array(f.method(f.string(), list()))),
+          args(f -> f.array(f.func(varSetB(), f.string(), list()))),
+          args(f -> f.array(f.method(varSetB(), f.string(), list()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),
-          args(f -> f.array(f.oVar("A"))),
-          args(f -> f.array(f.cVar("A")))
+          args(f -> f.array(f.var("A")))
       );
     }
   }
@@ -535,8 +438,7 @@ public class CatBTest extends TestingContext {
       return asList(
           args(f -> f.tuple(list()), f -> list()),
           args(f -> f.tuple(list(f.string())), f -> list(f.string())),
-          args(f -> f.tuple(list(f.oVar("A"))), f -> list(f.oVar("A"))),
-          args(f -> f.tuple(list(f.cVar("A"))), f -> list(f.cVar("A"))),
+          args(f -> f.tuple(list(f.var("A"))), f -> list(f.var("A"))),
           args(f -> f.tuple(list(f.string(), f.int_())), f -> list(f.string(), f.int_()))
       );
     }
@@ -560,8 +462,7 @@ public class CatBTest extends TestingContext {
         arguments(NOTHING, ValB.class),
         arguments(PERSON, TupleB.class),
         arguments(STRING, StringB.class),
-        arguments(OPEN_VARIABLE, ValB.class),
-        arguments(CLOSED_VARIABLE, ValB.class),
+        arguments(VAR_A, ValB.class),
 
         arguments(ARRAY_ANY, ArrayB.class),
         arguments(ARRAY_BLOB, ArrayB.class),
@@ -572,8 +473,7 @@ public class CatBTest extends TestingContext {
         arguments(ARRAY_NOTHING, ArrayB.class),
         arguments(ARRAY_PERSON_TUPLE, ArrayB.class),
         arguments(ARRAY_STR, ArrayB.class),
-        arguments(ARRAY_OPEN_VARIABLE, ArrayB.class),
-        arguments(ARRAY_CLOSED_VARIABLE, ArrayB.class),
+        arguments(ARRAY_VAR, ArrayB.class),
 
         arguments(CALL, CallB.class),
         arguments(ORDER, OrderB.class),
@@ -588,57 +488,6 @@ public class CatBTest extends TestingContext {
 
   @Nested
   class _eval_type {
-    @Nested
-    class _cannot_have_open_vars {
-      @Test
-      public void call() {
-        assertCall(() -> callCB(oVar("A")))
-            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
-      }
-
-      @Test
-      public void combine() {
-        assertCall(() -> combineCB(oVar("A")))
-            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
-      }
-
-      @Test
-      public void if_() {
-        assertCall(() -> ifCB(oVar("A")))
-            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
-      }
-
-      @Test
-      public void invoke() {
-        assertCall(() -> invokeCB(oVar("A")))
-            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
-      }
-
-      @Test
-      public void map() {
-        assertCall(() -> mapCB(arrayTB(oVar("A"))))
-            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
-      }
-
-      @Test
-      public void order() {
-        assertCall(() -> orderCB(oVar("A")))
-            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
-      }
-
-      @Test
-      public void param_ref() {
-        assertCall(() -> paramRefCB(oVar("A")))
-            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
-      }
-
-      @Test
-      public void select() {
-        assertCall(() -> selectCB(oVar("A")))
-            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
-      }
-    }
-
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
@@ -706,8 +555,7 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STRING, STRING);
     tester.addEqualityGroup(PERSON, PERSON);
-    tester.addEqualityGroup(OPEN_VARIABLE, OPEN_VARIABLE);
-    tester.addEqualityGroup(CLOSED_VARIABLE, CLOSED_VARIABLE);
+    tester.addEqualityGroup(VAR_A, VAR_A);
 
     tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
@@ -717,8 +565,7 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(ARRAY_NOTHING, ARRAY_NOTHING);
     tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
     tester.addEqualityGroup(ARRAY_PERSON_TUPLE, ARRAY_PERSON_TUPLE);
-    tester.addEqualityGroup(ARRAY_OPEN_VARIABLE, ARRAY_OPEN_VARIABLE);
-    tester.addEqualityGroup(ARRAY_CLOSED_VARIABLE, ARRAY_CLOSED_VARIABLE);
+    tester.addEqualityGroup(ARRAY_VAR, ARRAY_VAR);
 
     tester.addEqualityGroup(ARRAY2_ANY, ARRAY2_ANY);
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
@@ -728,8 +575,7 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(ARRAY2_NOTHING, ARRAY2_NOTHING);
     tester.addEqualityGroup(ARRAY2_STR, ARRAY2_STR);
     tester.addEqualityGroup(ARRAY2_PERSON_TUPLE, ARRAY2_PERSON_TUPLE);
-    tester.addEqualityGroup(ARRAY2_OPEN_VARIABLE, ARRAY2_OPEN_VARIABLE);
-    tester.addEqualityGroup(ARRAY2_CLOSED_VARIABLE, ARRAY2_CLOSED_VARIABLE);
+    tester.addEqualityGroup(ARRAY2_VAR, ARRAY2_VAR);
 
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(COMBINE, COMBINE);

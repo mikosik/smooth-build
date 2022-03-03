@@ -37,14 +37,14 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
-import org.smoothbuild.bytecode.type.val.ClosedVarTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
-import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarSetB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -171,8 +171,8 @@ public class BytecodeF {
     return catDb.bool();
   }
 
-  public FuncTB funcT(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb.func(resT, paramTs);
+  public FuncTB funcT(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {
+    return catDb.func(tParams, resT, paramTs);
   }
 
   public IntTB intT() {
@@ -183,8 +183,8 @@ public class BytecodeF {
     return messageT;
   }
 
-  public MethodTB methodT(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb.method(resT, paramTs);
+  public MethodTB methodT(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {
+    return catDb.method(tParams, resT, paramTs);
   }
 
   public NothingTB nothingT() {
@@ -199,12 +199,8 @@ public class BytecodeF {
     return catDb.tuple(itemTs);
   }
 
-  public OpenVarTB oVarT(String name) {
-    return catDb.oVar(name);
-  }
-
-  public ClosedVarTB cVarT(String name) {
-    return catDb.cVar(name);
+  public VarTB varT(String name) {
+    return catDb.var(name);
   }
 
   // other values and its types

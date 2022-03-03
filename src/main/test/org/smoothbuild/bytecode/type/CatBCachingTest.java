@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
@@ -40,8 +41,7 @@ public class CatBCachingTest extends TestingContext {
         CatDb::nothing,
         CatDb::string,
         CatBCachingTest::tupleT,
-        catDb -> catDb.oVar("A"),
-        catDb -> catDb.cVar("A"),
+        catDb -> catDb.var("A"),
 
         catDb -> catDb.call(catDb.int_()),
         catDb -> catDb.combine(catDb.tuple(list())),
@@ -76,6 +76,6 @@ public class CatBCachingTest extends TestingContext {
   }
 
   private static FuncTB funcT(CatDb catDb) {
-    return catDb.func(catDb.string(), list(catDb.bool(), catDb.blob()));
+    return catDb.func(varSetB(), catDb.string(), list(catDb.bool(), catDb.blob()));
   }
 }

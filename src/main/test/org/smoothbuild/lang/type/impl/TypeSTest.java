@@ -4,21 +4,20 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingTS.ANY;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
-import static org.smoothbuild.testing.type.TestingTS.CLOSED_A;
 import static org.smoothbuild.testing.type.TestingTS.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.testing.type.TestingTS.INT;
 import static org.smoothbuild.testing.type.TestingTS.NOTHING;
-import static org.smoothbuild.testing.type.TestingTS.OPEN_A;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
+import static org.smoothbuild.testing.type.TestingTS.VAR_A;
 import static org.smoothbuild.testing.type.TestingTS.a;
-import static org.smoothbuild.testing.type.TestingTS.cVar;
 import static org.smoothbuild.testing.type.TestingTS.f;
-import static org.smoothbuild.testing.type.TestingTS.oVar;
 import static org.smoothbuild.testing.type.TestingTS.struct;
+import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -34,7 +33,6 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.api.ArrayT;
 import org.smoothbuild.util.collect.NList;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class TypeSTest {
@@ -74,8 +72,7 @@ public class TypeSTest {
         arguments(NOTHING, "Nothing"),
         arguments(STRING, "String"),
         arguments(struct("MyStruct", nList()), "MyStruct"),
-        arguments(OPEN_A, "A"),
-        arguments(CLOSED_A, "A"),
+        arguments(VAR_A, "A"),
 
         arguments(a(ANY), "[Any]"),
         arguments(a(BLOB), "[Blob]"),
@@ -84,11 +81,9 @@ public class TypeSTest {
         arguments(a(NOTHING), "[Nothing]"),
         arguments(a(STRING), "[String]"),
         arguments(a(struct("MyStruct", nList())), "[MyStruct]"),
-        arguments(a(OPEN_A), "[A]"),
-        arguments(a(CLOSED_A), "[A]"),
+        arguments(a(VAR_A), "[A]"),
 
-        arguments(a(a(OPEN_A)), "[[A]]"),
-        arguments(a(a(CLOSED_A)), "[[A]]"),
+        arguments(a(a(VAR_A)), "[[A]]"),
         arguments(a(a(ANY)), "[[Any]]"),
         arguments(a(a(BLOB)), "[[Blob]]"),
         arguments(a(a(BOOL)), "[[Bool]]"),
@@ -97,53 +92,36 @@ public class TypeSTest {
         arguments(a(a(struct("MyStruct", nList()))), "[[MyStruct]]"),
         arguments(a(a(STRING)), "[[String]]"),
 
-        arguments(f(OPEN_A, list(a(OPEN_A))), "A([A])"),
-        arguments(f(CLOSED_A, list(a(CLOSED_A))), "A([A])"),
-        arguments(f(STRING, list(a(OPEN_A))), "String([A])"),
-        arguments(f(STRING, list(a(CLOSED_A))), "String([A])"),
-        arguments(f(OPEN_A, list(OPEN_A)), "A(A)"),
-        arguments(f(CLOSED_A, list(CLOSED_A)), "A(A)"),
-        arguments(f(STRING, list()), "String()"),
-        arguments(f(STRING, list(STRING)), "String(String)")
+        arguments(f(VAR_A, list(a(VAR_A))), "<A>A([A])"),
+        arguments(f(STRING, list(a(VAR_A))), "<A>String([A])"),
+        arguments(f(VAR_A, list(VAR_A)), "<A>A(A)"),
+        arguments(f(STRING, list()), "<>String()"),
+        arguments(f(STRING, list(STRING)), "<>String(String)")
     );
   }
 
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
   public void isPolytype(TypeS type, boolean expected) {
-    assertThat(type.isPolytype())
+    assertThat(type.hasVars())
         .isEqualTo(expected);
   }
 
   public static List<Arguments> isPolytype_test_data() {
     return asList(
-        arguments(OPEN_A, true),
-        arguments(a(OPEN_A), true),
-        arguments(a(a(OPEN_A)), true),
+        arguments(VAR_A, true),
+        arguments(a(VAR_A), true),
+        arguments(a(a(VAR_A)), true),
 
-        arguments(f(OPEN_A, list()), true),
-        arguments(f(f(OPEN_A, list()), list()), true),
-        arguments(f(f(f(OPEN_A, list()), list()), list()), true),
+        arguments(f(VAR_A, list()), true),
+        arguments(f(f(VAR_A, list()), list()), true),
+        arguments(f(f(f(VAR_A, list()), list()), list()), true),
 
-        arguments(f(BOOL, list(OPEN_A)), true),
-        arguments(f(BOOL, list(f(OPEN_A, list()))), true),
-        arguments(f(BOOL, list(f(f(OPEN_A, list()), list()))), true),
+        arguments(f(BOOL, list(VAR_A)), true),
+        arguments(f(BOOL, list(f(VAR_A, list()))), true),
+        arguments(f(BOOL, list(f(f(VAR_A, list()), list()))), true),
 
-        arguments(f(BOOL, list(f(BLOB, list(OPEN_A)))), true),
-
-        arguments(CLOSED_A, true),
-        arguments(a(CLOSED_A), true),
-        arguments(a(a(CLOSED_A)), true),
-
-        arguments(f(CLOSED_A, list()), true),
-        arguments(f(f(CLOSED_A, list()), list()), true),
-        arguments(f(f(f(CLOSED_A, list()), list()), list()), true),
-
-        arguments(f(BOOL, list(CLOSED_A)), true),
-        arguments(f(BOOL, list(f(CLOSED_A, list()))), true),
-        arguments(f(BOOL, list(f(f(CLOSED_A, list()), list()))), true),
-
-        arguments(f(BOOL, list(f(BLOB, list(CLOSED_A)))), true),
+        arguments(f(BOOL, list(f(BLOB, list(VAR_A)))), true),
 
         arguments(f(BOOL, list(INT)), false),
 
@@ -158,86 +136,27 @@ public class TypeSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("hasOpenVars_test_data")
-  public void hasOpenVars(TypeS type, boolean expected) {
-    assertThat(type.hasOpenVars())
+  @MethodSource("vars_test_data")
+  public void vars(TypeS type, VarSetS expected) {
+    assertThat(type.vars())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> hasOpenVars_test_data() {
+  public static List<Arguments> vars_test_data() {
     return List.of(
-        arguments(ANY, false),
-        arguments(BLOB, false),
-        arguments(BOOL, false),
-        arguments(INT, false),
-        arguments(NOTHING, false),
-        arguments(STRING, false),
+        arguments(ANY, varSetS()),
+        arguments(BLOB, varSetS()),
+        arguments(BOOL, varSetS()),
+        arguments(INT, varSetS()),
+        arguments(NOTHING, varSetS()),
+        arguments(STRING, varSetS()),
 
-        arguments(a(INT), false),
-        arguments(a(OPEN_A), true),
-        arguments(a(CLOSED_A), false),
+        arguments(a(INT), varSetS()),
+        arguments(a(VAR_A), varSetS(VAR_A)),
 
-        arguments(f(BLOB, list(BOOL)), false),
-        arguments(f(OPEN_A, list(BOOL)), true),
-        arguments(f(CLOSED_A, list(BOOL)), false),
-        arguments(f(BLOB, list(OPEN_A)), true),
-        arguments(f(BLOB, list(CLOSED_A)), false)
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("hasClosedVars_test_data")
-  public void hasOpenClosed(TypeS type, boolean expected) {
-    assertThat(type.hasClosedVars())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> hasClosedVars_test_data() {
-    return List.of(
-        arguments(ANY, false),
-        arguments(BLOB, false),
-        arguments(BOOL, false),
-        arguments(INT, false),
-        arguments(NOTHING, false),
-        arguments(STRING, false),
-
-        arguments(a(INT), false),
-        arguments(a(OPEN_A), false),
-        arguments(a(CLOSED_A), true),
-
-        arguments(f(BLOB, list(BOOL)), false),
-        arguments(f(OPEN_A, list(BOOL)), false),
-        arguments(f(CLOSED_A, list(BOOL)), true),
-        arguments(f(BLOB, list(OPEN_A)), false),
-        arguments(f(BLOB, list(CLOSED_A)), true)
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("openVars_test_data")
-  public void openVars(TypeS type, ImmutableSet<OpenVarTS> expected) {
-    assertThat(type.openVars())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> openVars_test_data() {
-    return List.of(
-        arguments(ANY, ImmutableSet.of()),
-        arguments(BLOB, ImmutableSet.of()),
-        arguments(BOOL, ImmutableSet.of()),
-        arguments(INT, ImmutableSet.of()),
-        arguments(NOTHING, ImmutableSet.of()),
-        arguments(STRING, ImmutableSet.of()),
-
-        arguments(a(INT), ImmutableSet.of()),
-        arguments(a(OPEN_A), ImmutableSet.of(OPEN_A)),
-        arguments(a(CLOSED_A), ImmutableSet.of()),
-
-        arguments(f(BLOB, list(BOOL)), ImmutableSet.of()),
-        arguments(f(OPEN_A, list(BOOL)), ImmutableSet.of(OPEN_A)),
-        arguments(f(CLOSED_A, list(BOOL)), ImmutableSet.of()),
-        arguments(f(BLOB, list(OPEN_A)), ImmutableSet.of(OPEN_A)),
-        arguments(f(BLOB, list(CLOSED_A)), ImmutableSet.of())
+        arguments(f(BLOB, list(BOOL)), varSetS()),
+        arguments(f(VAR_A, list(BOOL)), varSetS(VAR_A)),
+        arguments(f(BLOB, list(VAR_A)), varSetS(VAR_A))
     );
   }
 
@@ -272,19 +191,10 @@ public class TypeSTest {
   }
 
   @Nested
-  class _open_var {
+  class _var {
     @Test
     public void illegal_name() {
-      assertCall(() -> oVar("a"))
-          .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
-    }
-  }
-
-  @Nested
-  class _closed_var {
-    @Test
-    public void illegal_name() {
-      assertCall(() -> cVar("a"))
+      assertCall(() -> var("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
@@ -309,8 +219,7 @@ public class TypeSTest {
           arguments(NOTHING),
           arguments(STRING),
           arguments(struct("MyStruct", nList())),
-          arguments(OPEN_A),
-          arguments(CLOSED_A),
+          arguments(VAR_A),
 
           arguments(a(ANY)),
           arguments(a(BLOB)),
@@ -319,8 +228,7 @@ public class TypeSTest {
           arguments(a(INT)),
           arguments(a(NOTHING)),
           arguments(a(STRING)),
-          arguments(a(OPEN_A)),
-          arguments(a(CLOSED_A))
+          arguments(a(VAR_A))
       );
     }
   }
@@ -387,12 +295,9 @@ public class TypeSTest {
         STRING,
         struct("MyStruct", nList()),
         struct("MyStruct", nList(itemSigS(INT, "field"))),
-        OPEN_A,
-        oVar("B"),
-        oVar("C"),
-        CLOSED_A,
-        cVar("B"),
-        cVar("C"),
+        VAR_A,
+        var("B"),
+        var("C"),
 
         f(BLOB, list()),
         f(STRING, list()),

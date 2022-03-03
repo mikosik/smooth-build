@@ -1,27 +1,32 @@
 package org.smoothbuild.testing.type;
 
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.lang.type.impl.FuncTS.calculateFuncVars;
+import static org.smoothbuild.lang.type.impl.VarSetS.toVarSetS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
+
+import java.util.stream.Stream;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.Typing;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.api.VarSet;
+import org.smoothbuild.lang.type.api.VarT;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.BlobTS;
 import org.smoothbuild.lang.type.impl.BoolTS;
-import org.smoothbuild.lang.type.impl.ClosedVarTS;
 import org.smoothbuild.lang.type.impl.FuncTS;
 import org.smoothbuild.lang.type.impl.IntTS;
 import org.smoothbuild.lang.type.impl.NothingTS;
-import org.smoothbuild.lang.type.impl.OpenVarTS;
 import org.smoothbuild.lang.type.impl.StringTS;
 import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.impl.VarSetS;
 import org.smoothbuild.lang.type.impl.VarTS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
@@ -47,12 +52,10 @@ public class TestingTS implements TestingT<TypeS> {
       nList(itemSigS(STRING, "firstName"), itemSigS(STRING, "lastName")));
   public static final StructTS FLAG = struct("Flag", nList(itemSigS(BOOL, "flab")));
   public static final StructTS DATA = struct("Data", nList(itemSigS(BLOB, "data")));
-  public static final OpenVarTS OPEN_A = oVar("A");
-  public static final OpenVarTS OPEN_B = oVar("B");
-  public static final OpenVarTS OPEN_X = oVar("X");
-  public static final ClosedVarTS CLOSED_A = cVar("A");
-  public static final ClosedVarTS CLOSED_B = cVar("B");
-  public static final ClosedVarTS CLOSED_X = cVar("X");
+  public static final VarTS VAR_A = var("A");
+  public static final VarTS VAR_B = var("B");
+  public static final VarTS VAR_X = var("X");
+  public static final VarTS VAR_Y = var("Y");
 
   public static final ImmutableList<TypeS> ELEMENTARY_TYPES = ImmutableList.<TypeS>builder()
       .addAll(BASE_TYPES)
@@ -63,9 +66,9 @@ public class TestingTS implements TestingT<TypeS> {
   public static final FuncTS PERSON_GETTER_FUNCTION = f(PERSON);
   public static final FuncTS STRING_MAP_FUNCTION = f(STRING, STRING);
   public static final FuncTS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
-  public static final FuncTS IDENTITY_FUNCTION = f(OPEN_A, OPEN_A);
-  public static final FuncTS ARRAY_HEAD_FUNCTION = f(OPEN_A, a(OPEN_A));
-  public static final FuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(OPEN_A));
+  public static final FuncTS IDENTITY_FUNCTION = f(VAR_A, VAR_A);
+  public static final FuncTS ARRAY_HEAD_FUNCTION = f(VAR_A, a(VAR_A));
+  public static final FuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(VAR_A));
 
   public static final ImmutableList<TypeS> FUNCTION_TYPES =
       list(
@@ -81,7 +84,7 @@ public class TestingTS implements TestingT<TypeS> {
       ImmutableList.<TypeS>builder()
           .addAll(ELEMENTARY_TYPES)
           .addAll(FUNCTION_TYPES)
-          .add(OPEN_X)
+          .add(VAR_X)
           .build();
 
   public static ArrayTS a(TypeS elemT) {
@@ -89,7 +92,7 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   public static FuncTS f(TypeS resT) {
-    return FACTORY.func(resT, list());
+    return f(resT, list());
   }
 
   public static FuncTS f(TypeS resT, TypeS... paramTs) {
@@ -97,15 +100,16 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   public static FuncTS f(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return FACTORY.func(resT, paramTs);
+    var typeParams = calculateFuncVars(resT, paramTs);
+    return f(typeParams, resT, paramTs);
   }
 
-  public static OpenVarTS oVar(String a) {
-    return FACTORY.oVar(a);
+  public static FuncTS f(VarSetS tParams, TypeS resT, ImmutableList<TypeS> paramTs) {
+    return FACTORY.func(tParams, resT, paramTs);
   }
 
-  public static ClosedVarTS cVar(String a) {
-    return FACTORY.cVar(a);
+  public static VarTS var(String a) {
+    return FACTORY.var(a);
   }
 
   public static StructTS struct(String name, NList<ItemSigS> fields) {
@@ -138,7 +142,7 @@ public class TestingTS implements TestingT<TypeS> {
 
   @Override
   public ImmutableList<TypeS> typesForBuildWideGraph() {
-    return list(oa(), ob(), blob(), bool(), int_(), struct(), string());
+    return list(varA(), varB(), blob(), bool(), int_(), struct(), string());
   }
 
   @Override
@@ -159,6 +163,11 @@ public class TestingTS implements TestingT<TypeS> {
   @Override
   public TypeS func(TypeS resT, ImmutableList<TypeS> params) {
     return TestingTS.f(resT, params);
+  }
+
+  @Override
+  public TypeS func(VarSet<TypeS> tParams, TypeS resT, ImmutableList<TypeS> params) {
+    return TestingTS.f((VarSetS)(Object) tParams, resT, params);
   }
 
   @Override
@@ -217,32 +226,34 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   @Override
-  public TypeS oa() {
-    return OPEN_A;
+  public TypeS varA() {
+    return VAR_A;
   }
 
   @Override
-  public TypeS ob() {
-    return OPEN_B;
+  public TypeS varB() {
+    return VAR_B;
   }
 
   @Override
-  public TypeS ox() {
-    return OPEN_X;
+  public TypeS varX() {
+    return VAR_X;
   }
 
   @Override
-  public TypeS ca() {
-    return CLOSED_A;
+  public TypeS varY() {
+    return VAR_Y;
   }
 
   @Override
-  public TypeS cb() {
-    return CLOSED_B;
+  public VarSet<TypeS> vs(VarT... elements) {
+    return varSet(elements);
   }
 
-  @Override
-  public TypeS cx() {
-    return CLOSED_X;
+  public static VarSet<TypeS> varSet(VarT... elements) {
+    var varSetS = Stream.of(elements)
+        .map(e -> (VarTS) e)
+        .collect(toVarSetS());
+    return (VarSet<TypeS>) (Object) varSetS;
   }
 }

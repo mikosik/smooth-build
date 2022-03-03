@@ -22,7 +22,7 @@ public class InvokeBTest extends TestingContext {
 
     @Test
     public void with_generic_params() {
-      assertThat(invokeB(methodB(methodTB(oVarTB("A"), list(oVarTB("A")))), boolB()).cat())
+      assertThat(invokeB(methodB(methodTB(varTB("A"), list(varTB("A")))), boolB()).cat())
           .isEqualTo(invokeCB(boolTB()));
     }
   }
@@ -79,14 +79,6 @@ public class InvokeBTest extends TestingContext {
     assertCall(() -> invokeB(stringTB(), method))
         .throwsException(new IllegalArgumentException(
             "Method's result type `Int` cannot be assigned to evalT `String`."));
-  }
-
-  @Test
-  public void creating_invoke_with_resT_having_open_vars_causes_exc() {
-    var a = oVarTB("A");
-    var method = methodB(methodTB(a, list(a)));
-    assertCall(() -> invokeB(a, method, intB()))
-        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
   }
 
   private static IllegalArgumentException argsNotMatchingParamsException(

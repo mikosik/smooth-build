@@ -328,8 +328,8 @@ public class DeclarationTest extends TestingContext {
               A myId(A param);
               Int(Int) myValue = myId;
           """;
-          module(code).loadsWithError(3, "`myValue` has body which type is `A(A)` and it is not"
-              + " convertible to its declared type `Int(Int)`.");
+          module(code).loadsWithError(3, "`myValue` has body which type is `<A>A(A)` and it is not"
+              + " convertible to its declared type `<>Int(Int)`.");
         }
 
         @Test

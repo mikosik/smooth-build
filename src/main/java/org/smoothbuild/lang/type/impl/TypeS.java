@@ -1,10 +1,12 @@
 package org.smoothbuild.lang.type.impl;
 
+import static org.smoothbuild.lang.type.impl.VarSetS.toVarSetS;
+
 import java.util.Objects;
 
 import org.smoothbuild.lang.type.api.AbstractT;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Smooth language type.
@@ -12,8 +14,23 @@ import com.google.common.collect.ImmutableSet;
  */
 public abstract sealed class TypeS extends AbstractT
     permits ArrayTS, BaseTS, FuncTS, StructTS, VarTS {
-  protected TypeS(String name, ImmutableSet<OpenVarTS> openVars, boolean hasClosedVars) {
-    super(name, openVars, hasClosedVars);
+  private final VarSetS vars;
+
+  protected TypeS(String name, VarSetS vars) {
+    super(name);
+    this.vars = vars;
+  }
+
+  public static VarSetS calculateVars(ImmutableList<TypeS> types) {
+    return types.stream()
+        .map(TypeS::vars)
+        .flatMap(VarSetS::stream)
+        .collect(toVarSetS());
+  }
+
+  @Override
+  public VarSetS vars() {
+    return vars;
   }
 
   @Override

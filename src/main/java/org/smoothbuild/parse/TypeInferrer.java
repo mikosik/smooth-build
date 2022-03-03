@@ -1,8 +1,9 @@
 package org.smoothbuild.parse;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.type.api.TypeNames.isVarName;
+import static org.smoothbuild.lang.type.impl.VarSetS.toVarSetS;
+import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
 import static org.smoothbuild.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
@@ -76,7 +77,7 @@ public class TypeInferrer {
         var fields = Optionals.pullUp(map(struct.fields(), ItemN::sig));
         struct.setType(fields.map(f -> typeFS.struct(struct.name(), nList(f))));
         struct.ctor().setType(
-            fields.map(s -> typeFS.func(struct.type().get(), map(s, ItemSigS::type))));
+            fields.map(s -> typeFS.func(varSetS(), struct.type().get(), map(s, ItemSigS::type))));
       }
 
       @Override
@@ -84,7 +85,7 @@ public class TypeInferrer {
         super.visitField(itemN);
         var typeOpt = itemN.evalT().get().type();
         typeOpt.flatMap((t) -> {
-          if (t.isPolytype()) {
+          if (t.hasVars()) {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
                 .formatted(itemN.q(), t.q());
             logError(itemN, message);
@@ -111,12 +112,13 @@ public class TypeInferrer {
           return empty();
         }
         var ps = params.get();
-        var paramOpenVars = ps.stream()
-            .flatMap(t -> t.openVars().stream())
-            .collect(toImmutableSet());
+        var paramVars = ps.stream()
+            .flatMap(t -> t.vars().stream())
+            .collect(toVarSetS());
         var r = result.get();
-        if (paramOpenVars.containsAll(r.openVars())) {
-          return Optional.of(typeFS.func(r, ps));
+        if (paramVars.containsAll(r.vars())) {
+          var tParams = r.vars().unionWith(paramVars);
+          return Optional.of(typeFS.func(tParams, r, ps));
         }
         logError(
             resN, "Function result type has type variable(s) not present in any parameter type.");
@@ -159,12 +161,11 @@ public class TypeInferrer {
           if (eval.evalT().isPresent()) {
             var type = createType(eval.evalT().get());
             type.ifPresent(target -> exprT.ifPresent(source -> {
-              var targetInAssignment = eval instanceof FuncN ? typing.closeVars(target) : target;
-              assignmentChecker.accept(targetInAssignment, source);
+              assignmentChecker.accept(target, source);
             }));
             return type;
           } else {
-            return exprT.map(typing::openVars);
+            return exprT;
           }
         } else {
           return createType(eval.evalT().get());
@@ -179,7 +180,7 @@ public class TypeInferrer {
 
       private Optional<TypeS> createType(TypeN type) {
         if (isVarName(type.name())) {
-          return Optional.of(typeFS.oVar(type.name()));
+          return Optional.of(typeFS.var(type.name()));
         }
         return switch (type) {
           case ArrayTN array -> createType(array.elemT()).map(typeFS::array);
@@ -189,7 +190,7 @@ public class TypeInferrer {
             if (resultOpt.isEmpty() || paramsOpt.isEmpty()) {
               yield empty();
             }
-            yield Optional.of(typeFS.func(resultOpt.get(), paramsOpt.get()));
+            yield Optional.of(typeFS.func(varSetS(), resultOpt.get(), paramsOpt.get()));
           }
           default -> Optional.of(findType(type.name()));
         };
@@ -339,22 +340,7 @@ public class TypeInferrer {
       @Override
       public void visitRef(RefN ref) {
         super.visitRef(ref);
-        ref.setType(referencedType(ref));
-      }
-
-      private Optional<TypeS> referencedType(RefN ref) {
-        EvalLike referenced = ref.referenced();
-        if (referenced instanceof ItemN) {
-          // Closing vars here is a hack because we lose some important information.
-          // It is worked around by opening vars it in evalTypeOf() method in this class but
-          // workaround works only because here we are referencing parameter of most
-          // inner function. Once we allow referencing outer function parameters (which
-          // have closed vars to most inner function) then opening them in evalTypeOf()
-          // won't work. We would need to pass more information from here.
-          return ref.referencedType().map(typing::closeVars);
-        } else {
-          return ref.referencedType();
-        }
+        ref.setType(ref.referencedType());
       }
 
       @Override
