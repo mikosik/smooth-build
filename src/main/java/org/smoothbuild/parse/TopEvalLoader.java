@@ -31,7 +31,7 @@ import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.like.EvalLike;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeSF;
+import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.parse.ast.AnnN;
 import org.smoothbuild.parse.ast.ArgNode;
@@ -51,12 +51,12 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class TopEvalLoader {
-  private final TypeSF typeSF;
+  private final TypeFS typeFS;
   private final TypingS typing;
 
   @Inject
-  public TopEvalLoader(TypeSF typeSF, TypingS typing) {
-    this.typeSF = typeSF;
+  public TopEvalLoader(TypeFS typeFS, TypingS typing) {
+    this.typeFS = typeFS;
     this.typing = typing;
   }
 
@@ -86,7 +86,7 @@ public class TopEvalLoader {
     var resT = funcN.resT().get();
     var name = funcN.name();
     var loc = funcN.loc();
-    var funcT = typeSF.func(resT, map(params, DefinedS::type));
+    var funcT = typeFS.func(resT, map(params, DefinedS::type));
     if (funcN.ann().isPresent()) {
       var ann = loadAnn(funcN.ann().get());
       return new AnnFuncS(ann, funcT, path, name, params, loc);
@@ -187,21 +187,21 @@ public class TopEvalLoader {
 
   public BlobS createBlob(BlobN blob) {
     return new BlobS(
-        typeSF.blob(),
+        typeFS.blob(),
         blob.byteString(),
         blob.loc());
   }
 
   public IntS createInt(IntN intN) {
     return new IntS(
-        typeSF.int_(),
+        typeFS.int_(),
         intN.bigInteger(),
         intN.loc());
   }
 
   public StringS createString(StringN string) {
     return new StringS(
-        typeSF.string(),
+        typeFS.string(),
         string.unescapedValue(),
         string.loc());
   }

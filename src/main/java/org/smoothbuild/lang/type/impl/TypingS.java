@@ -6,7 +6,7 @@ import org.smoothbuild.lang.type.Typing;
 
 public class TypingS extends Typing<TypeS> {
   @Inject
-  public TypingS(TypeSF factory) {
+  public TypingS(TypeFS factory) {
     super(factory);
   }
 }

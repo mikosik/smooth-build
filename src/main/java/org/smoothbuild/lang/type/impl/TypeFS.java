@@ -16,7 +16,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 @Singleton
-public class TypeSF implements TypeF<TypeS> {
+public class TypeFS implements TypeF<TypeS> {
   private static final AnyTS ANY = new AnyTS();
   private static final BlobTS BLOB = new BlobTS();
   private static final BoolTS BOOL = new BoolTS();
@@ -25,7 +25,7 @@ public class TypeSF implements TypeF<TypeS> {
   private static final StringTS STRING = new StringTS();
 
   @Inject
-  public TypeSF() {
+  public TypeFS() {
   }
 
   /**

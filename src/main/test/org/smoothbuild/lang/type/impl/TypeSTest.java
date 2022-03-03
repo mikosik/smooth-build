@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class TypeSTest {
-  private static final TypeSF F = new TypeSF();
+  private static final TypeFS F = new TypeFS();
 
   @Test
   public void verify_all_base_types_are_tested() {

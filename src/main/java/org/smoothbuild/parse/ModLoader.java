@@ -22,7 +22,7 @@ import org.smoothbuild.lang.define.StructS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TopEvalS;
 import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeSF;
+import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
@@ -36,15 +36,15 @@ import com.google.common.collect.ImmutableList;
 public class ModLoader {
   private final TypeInferrer typeInferrer;
   private final TopEvalLoader topEvalLoader;
-  private final TypeSF typeSF;
+  private final TypeFS typeFS;
   private final TypingS typing;
 
   @Inject
   public ModLoader(TypeInferrer typeInferrer, TopEvalLoader topEvalLoader,
-      TypeSF typeSF, TypingS typing) {
+      TypeFS typeFS, TypingS typing) {
     this.typeInferrer = typeInferrer;
     this.topEvalLoader = topEvalLoader;
-    this.typeSF = typeSF;
+    this.typeFS = typeFS;
     this.typing = typing;
   }
 
@@ -109,7 +109,7 @@ public class ModLoader {
     var resultT = (StructTS) struct.type().get();
     var name = struct.ctor().name();
     var paramTs = map(struct.fields(), f -> f.type().get());
-    var type = typeSF.func(resultT, paramTs);
+    var type = typeFS.func(resultT, paramTs);
     var params = struct.fields().map(f -> f.toItem(path));
     var loc = struct.loc();
     return new SyntCtorS(type, path, name, params, loc);

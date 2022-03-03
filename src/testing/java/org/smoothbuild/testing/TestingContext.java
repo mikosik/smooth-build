@@ -53,7 +53,7 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.TypeBF;
+import org.smoothbuild.bytecode.type.TypeFB;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.expr.CallCB;
@@ -128,8 +128,8 @@ import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.OpenVarTS;
 import org.smoothbuild.lang.type.impl.StringTS;
 import org.smoothbuild.lang.type.impl.StructTS;
+import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
-import org.smoothbuild.lang.type.impl.TypeSF;
 import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.lang.type.impl.VarTS;
 import org.smoothbuild.load.FileLoader;
@@ -174,7 +174,7 @@ public class TestingContext {
   private FileSystem fullFileSystem;
   private TempManager tempManager;
   private ModS internalMod;
-  private TypeSF typeSF;
+  private TypeFS typeFS;
   private ConsoleReporter consoleReporter;
   private BytecodeLoader bytecodeLoader;
   private JarClassLoaderProv jarClassLoaderProv;
@@ -266,7 +266,7 @@ public class TestingContext {
 
   public ModS internalMod() {
     if (internalMod == null) {
-      internalMod = new InternalModLoader(typeSF()).load();
+      internalMod = new InternalModLoader(typeFS()).load();
     }
     return internalMod;
   }
@@ -310,7 +310,7 @@ public class TestingContext {
 
   public TypingS typingS() {
     if (typingS == null) {
-      typingS = new TypingS(typeSF());
+      typingS = new TypingS(typeFS());
     }
     return typingS;
   }
@@ -322,15 +322,15 @@ public class TestingContext {
     return typingB;
   }
 
-  public TypeBF typeBF() {
+  public TypeFB typeFB() {
     return catDb();
   }
 
-  public TypeSF typeSF() {
-    if (typeSF == null) {
-      typeSF = new TypeSF();
+  public TypeFS typeFS() {
+    if (typeFS == null) {
+      typeFS = new TypeFS();
     }
-    return typeSF;
+    return typeFS;
   }
 
   public CatDb catDb() {
@@ -829,19 +829,19 @@ public class TestingContext {
   // Types Smooth
 
   public AnyTS anyTS() {
-    return typeSF().any();
+    return typeFS().any();
   }
 
   public ArrayTS arrayTS(TypeS elemT) {
-    return typeSF().array(elemT);
+    return typeFS().array(elemT);
   }
 
   public BlobTS blobTS() {
-    return typeSF().blob();
+    return typeFS().blob();
   }
 
   public BoolTS boolTS() {
-    return typeSF().bool();
+    return typeFS().bool();
   }
 
   public FuncTS funcTS(TypeS resT) {
@@ -853,36 +853,36 @@ public class TestingContext {
   }
 
   public FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return typeSF().func(resT, paramTs);
+    return typeFS().func(resT, paramTs);
   }
 
   public IntTS intTS() {
-    return typeSF().int_();
+    return typeFS().int_();
   }
 
   public NothingTS nothingTS() {
-    return typeSF().nothing();
+    return typeFS().nothing();
   }
 
   public StructTS personTS() {
-    return typeSF().struct("Person",
+    return typeFS().struct("Person",
         nList(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
   }
 
   public StringTS stringTS() {
-    return typeSF().string();
+    return typeFS().string();
   }
 
   public StructTS structTS(String name, NList<ItemSigS> fields) {
-    return typeSF().struct(name, fields);
+    return typeFS().struct(name, fields);
   }
 
   public OpenVarTS oVarTS(String name) {
-    return typeSF().oVar(name);
+    return typeFS().oVar(name);
   }
 
   public ClosedVarTS cVarTS(String name) {
-    return typeSF().cVar(name);
+    return typeFS().cVar(name);
   }
 
   public TypeS open(TypeS typeS) {
@@ -917,7 +917,7 @@ public class TestingContext {
   }
 
   public Sides<TypeS> oneSideBoundS(Side side, TypeS type) {
-    return typeSF().oneSideBound(side, type);
+    return typeFS().oneSideBound(side, type);
   }
 
   // Expressions
