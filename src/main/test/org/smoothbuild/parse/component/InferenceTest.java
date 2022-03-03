@@ -12,7 +12,7 @@ public class InferenceTest extends TestingContext {
   class _inferring_value_type_from {
     @Test
     public void string_literal() {
-      String code = """
+      var code = """
           myValue = "abc";
           """;
       module(code)
@@ -22,7 +22,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void blob_literal() {
-      String code = """
+      var code = """
           myValue = 0x07;
           """;
       module(code)
@@ -32,7 +32,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void int_literal() {
-      String code = """
+      var code = """
           myValue = 123;
           """;
       module(code)
@@ -42,7 +42,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void array_literal() {
-      String code = """
+      var code = """
           myValue = ["abc"];
           """;
       module(code)
@@ -52,7 +52,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void value_reference() {
-      String code = """
+      var code = """
           String stringValue = "abc";
           myValue = stringValue;
           """;
@@ -63,7 +63,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void func_reference() {
-      String code = """
+      var code = """
           String myFunc(Blob param) = "abc";
           myValue = myFunc;
           """;
@@ -74,7 +74,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void func_call() {
-      String code = """
+      var code = """
           String myFunc() = "abc";
           myValue = myFunc();
           """;
@@ -88,7 +88,7 @@ public class InferenceTest extends TestingContext {
   class _inferring_func_result_type_from {
     @Test
     public void string_literal() {
-      String code = """
+      var code = """
           myFunc() = "abc";
           """;
       module(code)
@@ -98,7 +98,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void blob_literal() {
-      String code = """
+      var code = """
           myFunc() = 0x07;
           """;
       module(code)
@@ -108,7 +108,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void int_literal() {
-      String code = """
+      var code = """
           myFunc() = 123;
           """;
       module(code)
@@ -118,7 +118,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void array_literal() {
-      String code = """
+      var code = """
           myFunc() = ["abc"];
           """;
       module(code)
@@ -128,7 +128,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void value_reference() {
-      String code = """
+      var code = """
           String stringValue = "abc";
           myFunc() = stringValue;
           """;
@@ -139,7 +139,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void func_reference() {
-      String code = """
+      var code = """
           String otherFunc(Blob param) = "abc";
           myFunc() = otherFunc;
           """;
@@ -150,7 +150,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void func_call() {
-      String code = """
+      var code = """
           String otherFunc() = "abc";
           myFunc() = otherFunc();
           """;
@@ -161,7 +161,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void func_param() {
-      String code = """
+      var code = """
           myFunc(String param) = param;
           """;
       module(code)
@@ -171,7 +171,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void func_generic_param() {
-      String code = """
+      var code = """
           myFunc(A param) = param;
           """;
       module(code)
@@ -184,7 +184,7 @@ public class InferenceTest extends TestingContext {
   class _inferring_array_literal_type {
     @Test
     public void when_elems_have_the_same_type() {
-      String code = """
+      var code = """
             result = ["abc", "def"];
             """;
       module(code)
@@ -194,7 +194,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void when_elems_have_convertible_types() {
-      String code = """
+      var code = """
             @Native("impl.met")
             Nothing myNothing();
             result = ["abc", myNothing()];
@@ -206,7 +206,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void when_elems_have_base_types_that_have_no_common_super_type() {
-      String code = """
+      var code = """
             result = [
               "abc",
               0x01,
@@ -221,7 +221,7 @@ public class InferenceTest extends TestingContext {
 
     @Test
     public void when_elems_have_func_types_that_have_no_common_super_type() {
-      String code = """
+      var code = """
             String firstFunc() = "abc";
             Blob secondFunc() = 0x01;
             result = [
@@ -243,7 +243,7 @@ public class InferenceTest extends TestingContext {
     class _fails_when_var_has_two_inconvertible_lower_bounds {
       @Test
       public void base_types() {
-        String code = """
+        var code = """
           String myEqual(A p1, A p2) = "true";
           result = myEqual("def", 0x01);
           """;
@@ -253,7 +253,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void arrays() {
-        String code = """
+        var code = """
           String myEqual(A p1, A p2) = "true";
           result = myEqual(["def"], [0x01]);
           """;
@@ -263,7 +263,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void structs_with_the_same_object_db_representation() {
-        String code = """
+        var code = """
           Vector {
             String x,
             String y,
@@ -287,7 +287,7 @@ public class InferenceTest extends TestingContext {
     class _identity_func_applied_to {
       @Test
       public void nothing() {
-        String code = """
+        var code = """
             @Native("impl.met")
             Nothing nothingFunc();
             A myIdentity(A a) = a;
@@ -300,7 +300,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void arg_of_base_type() {
-        String code = """
+        var code = """
             A myIdentity(A a) = a;
             myValue = myIdentity("abc");
             """;
@@ -311,7 +311,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void array() {
-        String code = """
+        var code = """
             A myIdentity(A a) = a;
             myValue = myIdentity(["abc"]);
             """;
@@ -322,7 +322,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void func() {
-        String code = """
+        var code = """
             A myIdentity(A a) = a;
             String myFunc(Blob param) = "abc";
             myValue = myIdentity(myFunc);
@@ -337,7 +337,7 @@ public class InferenceTest extends TestingContext {
     class _first_elem_func_applied_to {
       @Test
       public void nothing_array() {
-        String code = """
+        var code = """
             @Native("impl.met")
             A firstElement([A] array);
             myValue = firstElement([]);
@@ -349,7 +349,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void array() {
-        String code = """
+        var code = """
             @Native("impl.met")
             A firstElement([A] array);
             myValue = firstElement(["abc"]);
@@ -361,7 +361,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void array2() {
-        String code = """
+        var code = """
             @Native("impl.met")
             A firstElement([A] array);
             myValue = firstElement([["abc"]]);
@@ -373,7 +373,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void func_array_with_convertible_funcs() {
-        String code = """
+        var code = """
             @Native("impl.met")
             A firstElement([A] array);
             String myFunc1(Blob param) = "abc";
@@ -390,7 +390,7 @@ public class InferenceTest extends TestingContext {
     class _single_elem_array_func_applied_to {
       @Test
       public void nothing() {
-        String code = """
+        var code = """
             @Native("impl.met")
             Nothing nothingFunc();
             [A] singleElement(A a) = [a];
@@ -403,7 +403,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void arg_of_base_type() {
-        String code = """
+        var code = """
             [A] singleElement(A a) = [a];
             myValue = singleElement("abc");
             """;
@@ -414,7 +414,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void array() {
-        String code = """
+        var code = """
             [A] singleElement(A a) = [a];
             myValue = singleElement(["abc"]);
             """;
@@ -425,7 +425,7 @@ public class InferenceTest extends TestingContext {
 
       @Test
       public void func() {
-        String code = """
+        var code = """
             [A] singleElement(A a) = [a];
             String myFunc(Blob param) = "abc";
             myValue = singleElement(myFunc);
@@ -448,7 +448,7 @@ public class InferenceTest extends TestingContext {
       // Fixing it is not easy because there can be cases with longer chain of dependencies
       // between `C` and `String` and there can be cases with circular dependencies that are
       // illegal. This probably means that we need more powerful inferring algorithm.
-      String code = """
+      var code = """
             B f(A item, B(A) convert) = convert(item);
             [C] single(C elem) = [elem];
             result = f("abc", single);
