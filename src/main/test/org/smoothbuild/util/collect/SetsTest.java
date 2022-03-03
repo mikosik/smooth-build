@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Sets.filter;
 import static org.smoothbuild.util.collect.Sets.map;
 import static org.smoothbuild.util.collect.Sets.set;
+import static org.smoothbuild.util.collect.Sets.union;
 
 import java.util.HashSet;
 
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 public class SetsTest {
   @Nested
-  class create {
+  class _create {
     @Test
     public void set_with_no_elems() {
       assertThat(set())
@@ -39,7 +40,22 @@ public class SetsTest {
   }
 
   @Nested
-  class map {
+  class _union {
+    @Test
+    public void of_empty_sets_is_empty_set() {
+      assertThat(union(new HashSet<>(), new HashSet<>()))
+          .isEmpty();
+    }
+
+    @Test
+    public void of_two_sets_contains_value_from_each_one() {
+      assertThat(union(set("abc"), set("def")))
+          .containsExactly("abc", "def");
+    }
+  }
+
+  @Nested
+  class _map {
     @Test
     public void returns_empty_for_empty_arg() {
       assertThat(map(new HashSet<String>(), String::toUpperCase))
@@ -60,7 +76,7 @@ public class SetsTest {
   }
 
   @Nested
-  class filter {
+  class _filter {
     @Test
     public void returns_empty_for_empty_arg() {
       assertThat(filter(new HashSet<>(), e -> true))
