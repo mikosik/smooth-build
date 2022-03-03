@@ -1,12 +1,6 @@
 package org.smoothbuild.parse.component;
 
-import static org.smoothbuild.testing.type.TestingTS.BLOB;
-import static org.smoothbuild.testing.type.TestingTS.INT;
-import static org.smoothbuild.testing.type.TestingTS.NOTHING;
-import static org.smoothbuild.testing.type.TestingTS.OPEN_A;
-import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.a;
-import static org.smoothbuild.testing.type.TestingTS.f;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -23,7 +17,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", STRING);
+          .containsEvalWithType("myValue", stringTS());
     }
 
     @Test
@@ -33,7 +27,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", BLOB);
+          .containsEvalWithType("myValue", blobTS());
     }
 
     @Test
@@ -43,7 +37,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", INT);
+          .containsEvalWithType("myValue", intTS());
     }
 
     @Test
@@ -53,7 +47,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", a(STRING));
+          .containsEvalWithType("myValue", arrayTS(stringTS()));
     }
 
     @Test
@@ -64,7 +58,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", STRING);
+          .containsEvalWithType("myValue", stringTS());
     }
 
     @Test
@@ -75,7 +69,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", f(STRING, BLOB));
+          .containsEvalWithType("myValue", funcTS(stringTS(), list(blobTS())));
     }
 
     @Test
@@ -86,7 +80,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", STRING);
+          .containsEvalWithType("myValue", stringTS());
     }
   }
 
@@ -99,7 +93,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(STRING));
+          .containsEvalWithType("myFunc", funcTS(stringTS()));
     }
 
     @Test
@@ -109,7 +103,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(BLOB));
+          .containsEvalWithType("myFunc", funcTS(blobTS()));
     }
 
     @Test
@@ -119,7 +113,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(INT));
+          .containsEvalWithType("myFunc", funcTS(intTS()));
     }
 
     @Test
@@ -129,7 +123,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(a(STRING)));
+          .containsEvalWithType("myFunc", funcTS(arrayTS(stringTS())));
     }
 
     @Test
@@ -140,7 +134,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(STRING));
+          .containsEvalWithType("myFunc", funcTS(stringTS()));
     }
 
     @Test
@@ -151,7 +145,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(f(STRING, BLOB)));
+          .containsEvalWithType("myFunc", funcTS(funcTS(stringTS(), list(blobTS()))));
     }
 
     @Test
@@ -162,7 +156,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(STRING));
+          .containsEvalWithType("myFunc", funcTS(stringTS()));
     }
 
     @Test
@@ -172,7 +166,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(STRING, STRING));
+          .containsEvalWithType("myFunc", funcTS(stringTS(), list(stringTS())));
     }
 
     @Test
@@ -182,7 +176,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", f(OPEN_A, OPEN_A));
+          .containsEvalWithType("myFunc", funcTS(oVarTS("A"), list(oVarTS("A"))));
     }
   }
 
@@ -195,7 +189,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("result", a(STRING));
+          .containsEvalWithType("result", arrayTS(stringTS()));
     }
 
     @Test
@@ -207,7 +201,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("result", a(STRING));
+          .containsEvalWithType("result", arrayTS(stringTS()));
     }
 
     @Test
@@ -301,7 +295,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", NOTHING);
+            .containsEvalWithType("myValue", nothingTS());
       }
 
       @Test
@@ -312,7 +306,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", STRING);
+            .containsEvalWithType("myValue", stringTS());
       }
 
       @Test
@@ -323,7 +317,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", a(STRING));
+            .containsEvalWithType("myValue", arrayTS(stringTS()));
       }
 
       @Test
@@ -335,7 +329,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", f(STRING, BLOB));
+            .containsEvalWithType("myValue", funcTS(stringTS(), list(blobTS())));
       }
     }
 
@@ -350,7 +344,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", NOTHING);
+            .containsEvalWithType("myValue", nothingTS());
       }
 
       @Test
@@ -362,7 +356,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", STRING);
+            .containsEvalWithType("myValue", stringTS());
       }
 
       @Test
@@ -374,7 +368,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", a(STRING));
+            .containsEvalWithType("myValue", arrayTS(stringTS()));
       }
 
       @Test
@@ -388,7 +382,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", f(STRING, NOTHING));
+            .containsEvalWithType("myValue", funcTS(stringTS(), list(nothingTS())));
       }
     }
 
@@ -404,7 +398,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", a(NOTHING));
+            .containsEvalWithType("myValue", arrayTS(nothingTS()));
       }
 
       @Test
@@ -415,7 +409,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", a(STRING));
+            .containsEvalWithType("myValue", arrayTS(stringTS()));
       }
 
       @Test
@@ -426,7 +420,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", a(a(STRING)));
+            .containsEvalWithType("myValue", arrayTS(arrayTS(stringTS())));
       }
 
       @Test
@@ -438,7 +432,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", a(f(STRING, BLOB)));
+            .containsEvalWithType("myValue", arrayTS(funcTS(stringTS(), list(blobTS()))));
       }
     }
 
@@ -461,7 +455,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("result", a(STRING));
+          .containsEvalWithType("result", arrayTS(stringTS()));
     }
   }
 }
