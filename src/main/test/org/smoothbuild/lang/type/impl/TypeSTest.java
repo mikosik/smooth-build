@@ -5,7 +5,20 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.testing.type.TestingTS.ANY;
+import static org.smoothbuild.testing.type.TestingTS.BLOB;
+import static org.smoothbuild.testing.type.TestingTS.BOOL;
+import static org.smoothbuild.testing.type.TestingTS.CLOSED_A;
 import static org.smoothbuild.testing.type.TestingTS.INFERABLE_BASE_TYPES;
+import static org.smoothbuild.testing.type.TestingTS.INT;
+import static org.smoothbuild.testing.type.TestingTS.NOTHING;
+import static org.smoothbuild.testing.type.TestingTS.OPEN_A;
+import static org.smoothbuild.testing.type.TestingTS.STRING;
+import static org.smoothbuild.testing.type.TestingTS.a;
+import static org.smoothbuild.testing.type.TestingTS.cVar;
+import static org.smoothbuild.testing.type.TestingTS.f;
+import static org.smoothbuild.testing.type.TestingTS.oVar;
+import static org.smoothbuild.testing.type.TestingTS.struct;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -25,8 +38,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class TypeSTest {
-  private static final TypeFS F = new TypeFS();
-
   @Test
   public void verify_all_base_types_are_tested() {
     assertThat(INFERABLE_BASE_TYPES)
@@ -56,44 +67,44 @@ public class TypeSTest {
 
   public static List<Arguments> names() {
     return asList(
-        arguments(F.any(), "Any"),
-        arguments(F.blob(), "Blob"),
-        arguments(F.bool(), "Bool"),
-        arguments(F.int_(), "Int"),
-        arguments(F.nothing(), "Nothing"),
-        arguments(F.string(), "String"),
-        arguments(F.struct("MyStruct", nList()), "MyStruct"),
-        arguments(F.oVar("A"), "A"),
-        arguments(F.cVar("A"), "A"),
+        arguments(ANY, "Any"),
+        arguments(BLOB, "Blob"),
+        arguments(BOOL, "Bool"),
+        arguments(INT, "Int"),
+        arguments(NOTHING, "Nothing"),
+        arguments(STRING, "String"),
+        arguments(struct("MyStruct", nList()), "MyStruct"),
+        arguments(OPEN_A, "A"),
+        arguments(CLOSED_A, "A"),
 
-        arguments(F.array(F.any()), "[Any]"),
-        arguments(F.array(F.blob()), "[Blob]"),
-        arguments(F.array(F.bool()), "[Bool]"),
-        arguments(F.array(F.int_()), "[Int]"),
-        arguments(F.array(F.nothing()), "[Nothing]"),
-        arguments(F.array(F.string()), "[String]"),
-        arguments(F.array(F.struct("MyStruct", nList())), "[MyStruct]"),
-        arguments(F.array(F.oVar("A")), "[A]"),
-        arguments(F.array(F.cVar("A")), "[A]"),
+        arguments(a(ANY), "[Any]"),
+        arguments(a(BLOB), "[Blob]"),
+        arguments(a(BOOL), "[Bool]"),
+        arguments(a(INT), "[Int]"),
+        arguments(a(NOTHING), "[Nothing]"),
+        arguments(a(STRING), "[String]"),
+        arguments(a(struct("MyStruct", nList())), "[MyStruct]"),
+        arguments(a(OPEN_A), "[A]"),
+        arguments(a(CLOSED_A), "[A]"),
 
-        arguments(F.array(F.array(F.oVar("A"))), "[[A]]"),
-        arguments(F.array(F.array(F.cVar("A"))), "[[A]]"),
-        arguments(F.array(F.array(F.any())), "[[Any]]"),
-        arguments(F.array(F.array(F.blob())), "[[Blob]]"),
-        arguments(F.array(F.array(F.bool())), "[[Bool]]"),
-        arguments(F.array(F.array(F.int_())), "[[Int]]"),
-        arguments(F.array(F.array(F.nothing())), "[[Nothing]]"),
-        arguments(F.array(F.array(F.struct("MyStruct", nList()))), "[[MyStruct]]"),
-        arguments(F.array(F.array(F.string())), "[[String]]"),
+        arguments(a(a(OPEN_A)), "[[A]]"),
+        arguments(a(a(CLOSED_A)), "[[A]]"),
+        arguments(a(a(ANY)), "[[Any]]"),
+        arguments(a(a(BLOB)), "[[Blob]]"),
+        arguments(a(a(BOOL)), "[[Bool]]"),
+        arguments(a(a(INT)), "[[Int]]"),
+        arguments(a(a(NOTHING)), "[[Nothing]]"),
+        arguments(a(a(struct("MyStruct", nList()))), "[[MyStruct]]"),
+        arguments(a(a(STRING)), "[[String]]"),
 
-        arguments(F.func(F.oVar("A"), list(F.array(F.oVar("A")))), "A([A])"),
-        arguments(F.func(F.cVar("A"), list(F.array(F.cVar("A")))), "A([A])"),
-        arguments(F.func(F.string(), list(F.array(F.oVar("A")))), "String([A])"),
-        arguments(F.func(F.string(), list(F.array(F.cVar("A")))), "String([A])"),
-        arguments(F.func(F.oVar("A"), list(F.oVar("A"))), "A(A)"),
-        arguments(F.func(F.cVar("A"), list(F.cVar("A"))), "A(A)"),
-        arguments(F.func(F.string(), list()), "String()"),
-        arguments(F.func(F.string(), list(F.string())), "String(String)")
+        arguments(f(OPEN_A, list(a(OPEN_A))), "A([A])"),
+        arguments(f(CLOSED_A, list(a(CLOSED_A))), "A([A])"),
+        arguments(f(STRING, list(a(OPEN_A))), "String([A])"),
+        arguments(f(STRING, list(a(CLOSED_A))), "String([A])"),
+        arguments(f(OPEN_A, list(OPEN_A)), "A(A)"),
+        arguments(f(CLOSED_A, list(CLOSED_A)), "A(A)"),
+        arguments(f(STRING, list()), "String()"),
+        arguments(f(STRING, list(STRING)), "String(String)")
     );
   }
 
@@ -106,43 +117,43 @@ public class TypeSTest {
 
   public static List<Arguments> isPolytype_test_data() {
     return asList(
-        arguments(F.oVar("A"), true),
-        arguments(F.array(F.oVar("A")), true),
-        arguments(F.array(F.array(F.oVar("A"))), true),
+        arguments(OPEN_A, true),
+        arguments(a(OPEN_A), true),
+        arguments(a(a(OPEN_A)), true),
 
-        arguments(F.func(F.oVar("A"), list()), true),
-        arguments(F.func(F.func(F.oVar("A"), list()), list()), true),
-        arguments(F.func(F.func(F.func(F.oVar("A"), list()), list()), list()), true),
+        arguments(f(OPEN_A, list()), true),
+        arguments(f(f(OPEN_A, list()), list()), true),
+        arguments(f(f(f(OPEN_A, list()), list()), list()), true),
 
-        arguments(F.func(F.bool(), list(F.oVar("A"))), true),
-        arguments(F.func(F.bool(), list(F.func(F.oVar("A"), list()))), true),
-        arguments(F.func(F.bool(), list(F.func(F.func(F.oVar("A"), list()), list()))), true),
+        arguments(f(BOOL, list(OPEN_A)), true),
+        arguments(f(BOOL, list(f(OPEN_A, list()))), true),
+        arguments(f(BOOL, list(f(f(OPEN_A, list()), list()))), true),
 
-        arguments(F.func(F.bool(), list(F.func(F.blob(), list(F.oVar("A"))))), true),
+        arguments(f(BOOL, list(f(BLOB, list(OPEN_A)))), true),
 
-        arguments(F.cVar("A"), true),
-        arguments(F.array(F.cVar("A")), true),
-        arguments(F.array(F.array(F.cVar("A"))), true),
+        arguments(CLOSED_A, true),
+        arguments(a(CLOSED_A), true),
+        arguments(a(a(CLOSED_A)), true),
 
-        arguments(F.func(F.cVar("A"), list()), true),
-        arguments(F.func(F.func(F.cVar("A"), list()), list()), true),
-        arguments(F.func(F.func(F.func(F.cVar("A"), list()), list()), list()), true),
+        arguments(f(CLOSED_A, list()), true),
+        arguments(f(f(CLOSED_A, list()), list()), true),
+        arguments(f(f(f(CLOSED_A, list()), list()), list()), true),
 
-        arguments(F.func(F.bool(), list(F.cVar("A"))), true),
-        arguments(F.func(F.bool(), list(F.func(F.cVar("A"), list()))), true),
-        arguments(F.func(F.bool(), list(F.func(F.func(F.cVar("A"), list()), list()))), true),
+        arguments(f(BOOL, list(CLOSED_A)), true),
+        arguments(f(BOOL, list(f(CLOSED_A, list()))), true),
+        arguments(f(BOOL, list(f(f(CLOSED_A, list()), list()))), true),
 
-        arguments(F.func(F.bool(), list(F.func(F.blob(), list(F.cVar("A"))))), true),
+        arguments(f(BOOL, list(f(BLOB, list(CLOSED_A)))), true),
 
-        arguments(F.func(F.bool(), list(F.int_())), false),
+        arguments(f(BOOL, list(INT)), false),
 
-        arguments(F.any(), false),
-        arguments(F.blob(), false),
-        arguments(F.bool(), false),
-        arguments(F.int_(), false),
-        arguments(F.nothing(), false),
-        arguments(F.string(), false),
-        arguments(F.struct("MyStruct", nList()), false)
+        arguments(ANY, false),
+        arguments(BLOB, false),
+        arguments(BOOL, false),
+        arguments(INT, false),
+        arguments(NOTHING, false),
+        arguments(STRING, false),
+        arguments(struct("MyStruct", nList()), false)
     );
   }
 
@@ -155,22 +166,22 @@ public class TypeSTest {
 
   public static List<Arguments> hasOpenVars_test_data() {
     return List.of(
-        arguments(F.any(), false),
-        arguments(F.blob(), false),
-        arguments(F.bool(), false),
-        arguments(F.int_(), false),
-        arguments(F.nothing(), false),
-        arguments(F.string(), false),
+        arguments(ANY, false),
+        arguments(BLOB, false),
+        arguments(BOOL, false),
+        arguments(INT, false),
+        arguments(NOTHING, false),
+        arguments(STRING, false),
 
-        arguments(F.array(F.int_()), false),
-        arguments(F.array(F.oVar("A")), true),
-        arguments(F.array(F.cVar("A")), false),
+        arguments(a(INT), false),
+        arguments(a(OPEN_A), true),
+        arguments(a(CLOSED_A), false),
 
-        arguments(F.func(F.blob(), list(F.bool())), false),
-        arguments(F.func(F.oVar("A"), list(F.bool())), true),
-        arguments(F.func(F.cVar("A"), list(F.bool())), false),
-        arguments(F.func(F.blob(), list(F.oVar("A"))), true),
-        arguments(F.func(F.blob(), list(F.cVar("A"))), false)
+        arguments(f(BLOB, list(BOOL)), false),
+        arguments(f(OPEN_A, list(BOOL)), true),
+        arguments(f(CLOSED_A, list(BOOL)), false),
+        arguments(f(BLOB, list(OPEN_A)), true),
+        arguments(f(BLOB, list(CLOSED_A)), false)
     );
   }
 
@@ -183,22 +194,22 @@ public class TypeSTest {
 
   public static List<Arguments> hasClosedVars_test_data() {
     return List.of(
-        arguments(F.any(), false),
-        arguments(F.blob(), false),
-        arguments(F.bool(), false),
-        arguments(F.int_(), false),
-        arguments(F.nothing(), false),
-        arguments(F.string(), false),
+        arguments(ANY, false),
+        arguments(BLOB, false),
+        arguments(BOOL, false),
+        arguments(INT, false),
+        arguments(NOTHING, false),
+        arguments(STRING, false),
 
-        arguments(F.array(F.int_()), false),
-        arguments(F.array(F.oVar("A")), false),
-        arguments(F.array(F.cVar("A")), true),
+        arguments(a(INT), false),
+        arguments(a(OPEN_A), false),
+        arguments(a(CLOSED_A), true),
 
-        arguments(F.func(F.blob(), list(F.bool())), false),
-        arguments(F.func(F.oVar("A"), list(F.bool())), false),
-        arguments(F.func(F.cVar("A"), list(F.bool())), true),
-        arguments(F.func(F.blob(), list(F.oVar("A"))), false),
-        arguments(F.func(F.blob(), list(F.cVar("A"))), true)
+        arguments(f(BLOB, list(BOOL)), false),
+        arguments(f(OPEN_A, list(BOOL)), false),
+        arguments(f(CLOSED_A, list(BOOL)), true),
+        arguments(f(BLOB, list(OPEN_A)), false),
+        arguments(f(BLOB, list(CLOSED_A)), true)
     );
   }
 
@@ -211,22 +222,22 @@ public class TypeSTest {
 
   public static List<Arguments> openVars_test_data() {
     return List.of(
-        arguments(F.any(), ImmutableSet.of()),
-        arguments(F.blob(), ImmutableSet.of()),
-        arguments(F.bool(), ImmutableSet.of()),
-        arguments(F.int_(), ImmutableSet.of()),
-        arguments(F.nothing(), ImmutableSet.of()),
-        arguments(F.string(), ImmutableSet.of()),
+        arguments(ANY, ImmutableSet.of()),
+        arguments(BLOB, ImmutableSet.of()),
+        arguments(BOOL, ImmutableSet.of()),
+        arguments(INT, ImmutableSet.of()),
+        arguments(NOTHING, ImmutableSet.of()),
+        arguments(STRING, ImmutableSet.of()),
 
-        arguments(F.array(F.int_()), ImmutableSet.of()),
-        arguments(F.array(F.oVar("A")), ImmutableSet.of(F.oVar("A"))),
-        arguments(F.array(F.cVar("A")), ImmutableSet.of()),
+        arguments(a(INT), ImmutableSet.of()),
+        arguments(a(OPEN_A), ImmutableSet.of(OPEN_A)),
+        arguments(a(CLOSED_A), ImmutableSet.of()),
 
-        arguments(F.func(F.blob(), list(F.bool())), ImmutableSet.of()),
-        arguments(F.func(F.oVar("A"), list(F.bool())), ImmutableSet.of(F.oVar("A"))),
-        arguments(F.func(F.cVar("A"), list(F.bool())), ImmutableSet.of()),
-        arguments(F.func(F.blob(), list(F.oVar("A"))), ImmutableSet.of(F.oVar("A"))),
-        arguments(F.func(F.blob(), list(F.cVar("A"))), ImmutableSet.of())
+        arguments(f(BLOB, list(BOOL)), ImmutableSet.of()),
+        arguments(f(OPEN_A, list(BOOL)), ImmutableSet.of(OPEN_A)),
+        arguments(f(CLOSED_A, list(BOOL)), ImmutableSet.of()),
+        arguments(f(BLOB, list(OPEN_A)), ImmutableSet.of(OPEN_A)),
+        arguments(f(BLOB, list(CLOSED_A)), ImmutableSet.of())
     );
   }
 
@@ -239,9 +250,9 @@ public class TypeSTest {
 
   public static List<Arguments> func_result_cases() {
     return asList(
-        arguments(F.func(F.int_(), list()), F.int_()),
-        arguments(F.func(F.blob(), list(F.bool())), F.blob()),
-        arguments(F.func(F.blob(), list(F.bool(), F.int_())), F.blob())
+        arguments(f(INT, list()), INT),
+        arguments(f(BLOB, list(BOOL)), BLOB),
+        arguments(f(BLOB, list(BOOL, INT)), BLOB)
     );
   }
 
@@ -254,9 +265,9 @@ public class TypeSTest {
 
   public static List<Arguments> func_params_cases() {
     return asList(
-        arguments(F.func(F.int_(), list()), list()),
-        arguments(F.func(F.blob(), list(F.bool())), list(F.bool())),
-        arguments(F.func(F.blob(), list(F.bool(), F.int_())), list(F.bool(), F.int_()))
+        arguments(f(INT, list()), list()),
+        arguments(f(BLOB, list(BOOL)), list(BOOL)),
+        arguments(f(BLOB, list(BOOL, INT)), list(BOOL, INT))
     );
   }
 
@@ -264,7 +275,7 @@ public class TypeSTest {
   class _open_var {
     @Test
     public void illegal_name() {
-      assertCall(() -> F.oVar("a"))
+      assertCall(() -> oVar("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
@@ -273,7 +284,7 @@ public class TypeSTest {
   class _closed_var {
     @Test
     public void illegal_name() {
-      assertCall(() -> F.cVar("a"))
+      assertCall(() -> cVar("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
@@ -283,33 +294,33 @@ public class TypeSTest {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
     public void elemType(TypeS type) {
-      ArrayT array = F.array(type);
+      ArrayT array = a(type);
       assertThat(array.elem())
           .isEqualTo(type);
     }
 
     public static List<Arguments> elemType_test_data() {
       return asList(
-          arguments(F.any()),
-          arguments(F.blob()),
-          arguments(F.bool()),
-          arguments(F.func(F.string(), list())),
-          arguments(F.int_()),
-          arguments(F.nothing()),
-          arguments(F.string()),
-          arguments(F.struct("MyStruct", nList())),
-          arguments(F.oVar("A")),
-          arguments(F.cVar("A")),
+          arguments(ANY),
+          arguments(BLOB),
+          arguments(BOOL),
+          arguments(f(STRING, list())),
+          arguments(INT),
+          arguments(NOTHING),
+          arguments(STRING),
+          arguments(struct("MyStruct", nList())),
+          arguments(OPEN_A),
+          arguments(CLOSED_A),
 
-          arguments(F.array(F.any())),
-          arguments(F.array(F.blob())),
-          arguments(F.array(F.bool())),
-          arguments(F.array(F.func(F.string(), list()))),
-          arguments(F.array(F.int_())),
-          arguments(F.array(F.nothing())),
-          arguments(F.array(F.string())),
-          arguments(F.array(F.oVar("A"))),
-          arguments(F.array(F.cVar("A")))
+          arguments(a(ANY)),
+          arguments(a(BLOB)),
+          arguments(a(BOOL)),
+          arguments(a(f(STRING, list()))),
+          arguments(a(INT)),
+          arguments(a(NOTHING)),
+          arguments(a(STRING)),
+          arguments(a(OPEN_A)),
+          arguments(a(CLOSED_A))
       );
     }
   }
@@ -318,22 +329,22 @@ public class TypeSTest {
   class _struct {
     @Test
     public void without_fields_can_be_created() {
-      F.struct("MyStruct", nList());
+      struct("MyStruct", nList());
     }
 
     @Test
     public void first_field_type_can_be_nothing() {
-      F.struct("MyStruct", nList(itemSigS(F.nothing(), "fieldName")));
+      struct("MyStruct", nList(itemSigS(NOTHING, "fieldName")));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      F.struct("MyStruct", nList(itemSigS(F.array(F.nothing()), "fieldName")));
+      struct("MyStruct", nList(itemSigS(a(NOTHING), "fieldName")));
     }
 
     @Test
     public void struct_name() {
-      var struct = F.struct("MyStruct", nList());
+      var struct = struct("MyStruct", nList());
       assertThat(struct.name())
           .isEqualTo("MyStruct");
     }
@@ -341,7 +352,7 @@ public class TypeSTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  "})
     public void illegal_struct_name(String name) {
-      assertCall(() -> F.struct(name, nList()))
+      assertCall(() -> struct(name, nList()))
           .throwsException(IllegalArgumentException.class);
     }
 
@@ -354,12 +365,12 @@ public class TypeSTest {
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
-          arguments(F.struct("Person", nList()), nList()),
-          arguments(F.struct("Person", nList(itemSigS(F.string(), "field"))),
-              nList(itemSigS(F.string(), "field"))),
-          arguments(F.struct("Person",
-              nList(itemSigS(F.string(), "field"), itemSigS(F.int_(), "field2"))),
-              nList(itemSigS(F.string(), "field"), itemSigS(F.int_(), "field2")))
+          arguments(struct("Person", nList()), nList()),
+          arguments(struct("Person", nList(itemSigS(STRING, "field"))),
+              nList(itemSigS(STRING, "field"))),
+          arguments(struct("Person",
+              nList(itemSigS(STRING, "field"), itemSigS(INT, "field2"))),
+              nList(itemSigS(STRING, "field"), itemSigS(INT, "field2")))
       );
     }
   }
@@ -368,31 +379,31 @@ public class TypeSTest {
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
     List<TypeS> types = asList(
-        F.any(),
-        F.blob(),
-        F.bool(),
-        F.int_(),
-        F.nothing(),
-        F.string(),
-        F.struct("MyStruct", nList()),
-        F.struct("MyStruct", nList(itemSigS(F.int_(), "field"))),
-        F.oVar("A"),
-        F.oVar("B"),
-        F.oVar("C"),
-        F.cVar("A"),
-        F.cVar("B"),
-        F.cVar("C"),
+        ANY,
+        BLOB,
+        BOOL,
+        INT,
+        NOTHING,
+        STRING,
+        struct("MyStruct", nList()),
+        struct("MyStruct", nList(itemSigS(INT, "field"))),
+        OPEN_A,
+        oVar("B"),
+        oVar("C"),
+        CLOSED_A,
+        cVar("B"),
+        cVar("C"),
 
-        F.func(F.blob(), list()),
-        F.func(F.string(), list()),
-        F.func(F.blob(), list(F.string())),
-        F.func(F.blob(), list(F.blob()))
+        f(BLOB, list()),
+        f(STRING, list()),
+        f(BLOB, list(STRING)),
+        f(BLOB, list(BLOB))
     );
 
     for (TypeS type : types) {
       equalsTester.addEqualityGroup(type, type);
-      equalsTester.addEqualityGroup(F.array(type), F.array(type));
-      equalsTester.addEqualityGroup(F.array(F.array(type)), F.array(F.array(type)));
+      equalsTester.addEqualityGroup(a(type), a(type));
+      equalsTester.addEqualityGroup(a(a(type)), a(a(type)));
     }
     equalsTester.testEquals();
   }
