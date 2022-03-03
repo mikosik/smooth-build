@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type.api;
 
 import static java.lang.Character.isUpperCase;
-import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
@@ -23,11 +22,8 @@ public class TypeNames {
   }
 
   public static String funcTypeName(Type resT, List<? extends Type> paramTs) {
-    String paramsString = paramTs
-        .stream()
-        .map(Type::name)
-        .collect(joining(", "));
-    return resT.name() + "(" + paramsString + ")";
+    var params = toCommaSeparatedString(paramTs, Type::name);
+    return resT.name() + "(" + params + ")";
   }
 
   public static String tupleTypeName(Iterable<? extends Type> itemTs) {
