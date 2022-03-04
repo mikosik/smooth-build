@@ -1,14 +1,17 @@
 package org.smoothbuild.util.collect;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.ImmutableSortedSet.toImmutableSortedSet;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.ImmutableSortedSet;
 
 public class Sets {
   @SafeVarargs
@@ -36,5 +39,12 @@ public class Sets {
         .stream()
         .filter(predicate)
         .collect(toImmutableSet());
+  }
+
+  public static <E> ImmutableSortedSet<E> sort(Collection<E> set,
+      Comparator<? super E> comparator) {
+    return set
+        .stream()
+        .collect(toImmutableSortedSet(comparator));
   }
 }

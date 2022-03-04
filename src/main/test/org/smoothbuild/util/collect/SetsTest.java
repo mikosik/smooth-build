@@ -1,9 +1,11 @@
 package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Comparator.comparing;
 import static org.smoothbuild.util.collect.Sets.filter;
 import static org.smoothbuild.util.collect.Sets.map;
 import static org.smoothbuild.util.collect.Sets.set;
+import static org.smoothbuild.util.collect.Sets.sort;
 import static org.smoothbuild.util.collect.Sets.union;
 
 import java.util.HashSet;
@@ -99,6 +101,21 @@ public class SetsTest {
     public void filter_elems_matching_predicate() {
       assertThat(filter(set("first", "second", "third"), s -> s.startsWith("s")))
           .containsExactly("second");
+    }
+  }
+
+  @Nested
+  class _sort {
+    @Test
+    public void returns_empty_for_empty_arg() {
+      assertThat(sort(new HashSet<>(), comparing(Object::toString)))
+          .isEmpty();
+    }
+
+    @Test
+    public void sorts_elements() {
+      assertThat(sort(set(4, 2, 3, 1), Integer::compareTo))
+          .isEqualTo(set(1, 2, 3, 4));
     }
   }
 }
