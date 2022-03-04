@@ -435,7 +435,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   public void mapVars(T type, VarBounds<T> varBounds, Type expected) {
-    assertThat(typing.mapVars(type, varBounds, LOWER))
+    assertThat(typing.mapVarsLower(type, varBounds))
         .isEqualTo(expected);
   }
 
