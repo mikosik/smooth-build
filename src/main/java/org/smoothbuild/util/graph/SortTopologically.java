@@ -34,10 +34,10 @@ public class SortTopologically {
 
   private static <K, N, E> void assertAllEdgesPointToExistingNodes(
       ImmutableList<Node<K, N, E>> nodes) {
-    Set<K> kyes = nodes.stream().map(Node::key).collect(toSet());
+    Set<K> keys = nodes.stream().map(Node::key).collect(toSet());
     for (var node : nodes) {
       for (var edge : node.edges()) {
-        if (!kyes.contains(edge.targetKey())) {
+        if (!keys.contains(edge.targetKey())) {
           throw new IllegalArgumentException("Node '" + node.key()
               + "' has edge pointing to node '" + edge.targetKey() + "' which does not exist.");
         }
