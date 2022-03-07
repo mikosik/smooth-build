@@ -17,6 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.smoothbuild.util.collect.Sets;
+
 import com.google.common.collect.ImmutableList;
 
 public class SortTopologically {
@@ -34,7 +36,7 @@ public class SortTopologically {
 
   private static <K, N, E> void assertAllEdgesPointToExistingNodes(
       ImmutableList<Node<K, N, E>> nodes) {
-    Set<K> keys = nodes.stream().map(Node::key).collect(toSet());
+    var keys = Sets.map(nodes, Node::key);
     for (var node : nodes) {
       for (var edge : node.edges()) {
         if (!keys.contains(edge.targetKey())) {

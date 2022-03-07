@@ -2,7 +2,6 @@ package org.smoothbuild.parse.ast;
 
 import static java.lang.String.join;
 import static java.util.Collections.rotate;
-import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
@@ -20,6 +19,7 @@ import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.collect.Sets;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
 import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingRes;
@@ -82,9 +82,7 @@ public class Ast {
   }
 
   private TopologicalSortingRes<String, StructN, Loc> sortStructsByDeps() {
-    Set<String> structNames = structs.stream()
-        .map(NamedN::name)
-        .collect(toSet());
+    var structNames = Sets.map(structs, NamedN::name);
     var nodes = map(structs, struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
