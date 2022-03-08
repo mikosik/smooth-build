@@ -85,7 +85,7 @@ public record TestingTypeGraph<T extends Type>(ImmutableMultimap<T, T> edges) {
     newDimension.put(testingT.func(testingT.any(), list(testingT.nothing())), testingT.any());
 
     newDimension.putAll(graph.edges());
-    return new TestingTypeGraph(newDimension);
+    return new TestingTypeGraph<>(newDimension);
   }
 
   private Set<T> allTypes() {
