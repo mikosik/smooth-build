@@ -40,8 +40,8 @@ import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalVarNameExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatNodeExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatTypeParamDuplicatedVarExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatTypeParamIsNotVarExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatTParamDuplicatedVarExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatTParamIsNotVarExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.expr.ParamRefCB;
@@ -372,7 +372,7 @@ public class CatBCorruptedTest extends TestingContext {
             )
         );
         assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatTypeParamIsNotVarExc(typeHash, stringTB()));
+            .throwsException(new DecodeCatTParamIsNotVarExc(typeHash, stringTB()));
       }
 
       @Test
@@ -388,7 +388,7 @@ public class CatBCorruptedTest extends TestingContext {
             )
         );
         assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatTypeParamDuplicatedVarExc(typeHash, a));
+            .throwsException(new DecodeCatTParamDuplicatedVarExc(typeHash, a));
       }
 
       @Test

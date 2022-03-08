@@ -100,8 +100,8 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   public static FuncTS f(TypeS resT, ImmutableList<TypeS> paramTs) {
-    var typeParams = calculateFuncVars(resT, paramTs);
-    return f(typeParams, resT, paramTs);
+    var tParams = calculateFuncVars(resT, paramTs);
+    return f(tParams, resT, paramTs);
   }
 
   public static FuncTS f(VarSetS tParams, TypeS resT, ImmutableList<TypeS> paramTs) {

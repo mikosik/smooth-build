@@ -451,8 +451,8 @@ public class TestingContext {
   }
 
   public MethodTB methodTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    var typeParams = calculateFuncVars(resT, paramTs);
-    return methodTB(typeParams, resT, paramTs);
+    var tParams = calculateFuncVars(resT, paramTs);
+    return methodTB(tParams, resT, paramTs);
   }
 
   public MethodTB methodTB(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {

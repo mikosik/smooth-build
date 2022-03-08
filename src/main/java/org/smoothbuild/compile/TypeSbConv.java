@@ -59,11 +59,11 @@ public class TypeSbConv {
   }
 
   public FuncTB convert(FuncTS func) {
-    var typeParams = func.tParams().stream()
+    var tParams = func.tParams().stream()
         .map(this::convert)
         .collect(toVarSetB());
     var params = map(func.params(), this::convert);
     var res = convert(func.res());
-    return bytecodeF.funcT(typeParams, res, params);
+    return bytecodeF.funcT(tParams, res, params);
   }
 }

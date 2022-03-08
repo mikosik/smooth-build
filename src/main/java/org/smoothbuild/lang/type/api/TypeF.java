@@ -14,7 +14,7 @@ public interface TypeF<T extends Type> {
 
   public ArrayT array(T elemType);
 
-  public FuncT func(VarSet<T> typeParams, T resT, ImmutableList<T> paramTs);
+  public FuncT func(VarSet<T> tParams, T resT, ImmutableList<T> paramTs);
 
   public TupleT tuple(ImmutableList<T> items);
 

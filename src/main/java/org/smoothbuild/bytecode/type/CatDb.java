@@ -42,8 +42,8 @@ import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalVarNameExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatTypeParamDuplicatedVarExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatTypeParamIsNotVarExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatTParamDuplicatedVarExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatTParamIsNotVarExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.expr.CallCB;
@@ -317,17 +317,17 @@ public class CatDb implements TypeFB {
     return instantiator.apply(rootHash, toVarSetB(rootHash, tParamsTuple), res, params);
   }
 
-  private VarSetB toVarSetB(Hash rootHash, TupleTB typeParams) {
+  private VarSetB toVarSetB(Hash rootHash, TupleTB tParams) {
     var set = new HashSet<VarB>();
-    for (TypeB typeParam : typeParams.items()) {
-      if (typeParam instanceof VarB var) {
+    for (TypeB tParam : tParams.items()) {
+      if (tParam instanceof VarB var) {
         if (set.contains(var)) {
-          throw new DecodeCatTypeParamDuplicatedVarExc(rootHash, var);
+          throw new DecodeCatTParamDuplicatedVarExc(rootHash, var);
         } else {
           set.add(var);
         }
       } else {
-        throw new DecodeCatTypeParamIsNotVarExc(rootHash, typeParam);
+        throw new DecodeCatTParamIsNotVarExc(rootHash, tParam);
       }
     }
     return new VarSetB(set);
