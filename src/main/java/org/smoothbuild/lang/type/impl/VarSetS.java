@@ -11,21 +11,21 @@ import org.smoothbuild.lang.type.api.VarSet;
 
 import com.google.common.collect.ImmutableList;
 
-public final class VarSetS extends VarSet<VarTS> {
-  public VarSetS(Set<VarTS> elements) {
+public final class VarSetS extends VarSet<VarS> {
+  public VarSetS(Set<VarS> elements) {
     super(elements);
   }
 
-  public static VarSetS varSetS(VarTS... vars) {
+  public static VarSetS varSetS(VarS... vars) {
     return new VarSetS(Set.of(vars));
   }
 
-  public static Collector<VarTS, Object, VarSetS> toVarSetS() {
+  public static Collector<VarS, Object, VarSetS> toVarSetS() {
     return collectingAndThen(toSet(), VarSetS::new);
   }
 
   @Override
-  public ImmutableList<VarTS> asList() {
+  public ImmutableList<VarS> asList() {
     return super.asList();
   }
 

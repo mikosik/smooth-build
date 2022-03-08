@@ -3,5 +3,5 @@ package org.smoothbuild.lang.type.api;
 /**
  *  Type variable.
  */
-public non-sealed interface VarT extends Type {
+public non-sealed interface Var extends Type {
 }

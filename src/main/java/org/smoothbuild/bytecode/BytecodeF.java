@@ -43,8 +43,8 @@ import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -199,7 +199,7 @@ public class BytecodeF {
     return catDb.tuple(itemTs);
   }
 
-  public VarTB varT(String name) {
+  public VarB varT(String name) {
     return catDb.var(name);
   }
 

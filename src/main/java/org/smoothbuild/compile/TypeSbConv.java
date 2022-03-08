@@ -10,7 +10,7 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.BlobTS;
@@ -21,7 +21,7 @@ import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.StringTS;
 import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.lang.type.impl.TypeS;
-import org.smoothbuild.lang.type.impl.VarTS;
+import org.smoothbuild.lang.type.impl.VarS;
 
 public class TypeSbConv {
   private final BytecodeF bytecodeF;
@@ -39,14 +39,14 @@ public class TypeSbConv {
       case BoolTS bool -> bytecodeF.boolT();
       case IntTS i -> bytecodeF.intT();
       case NothingTS n -> bytecodeF.nothingT();
-      case VarTS v ->  convert(v);
+      case VarS v ->  convert(v);
       case StringTS s -> bytecodeF.stringT();
       case StructTS st -> convert(st);
       case FuncTS f -> convert(f);
     };
   }
 
-  public VarTB convert(VarTS var) {
+  public VarB convert(VarS var) {
     return bytecodeF.varT(var.name());
   }
 

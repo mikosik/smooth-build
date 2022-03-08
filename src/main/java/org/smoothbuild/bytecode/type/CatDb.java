@@ -64,8 +64,8 @@ import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
@@ -171,14 +171,14 @@ public class CatDb implements TypeFB {
   }
 
   @Override
-  public VarTB var(String name) {
+  public VarB var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return wrapHashedDbExcAsObjDbExc(() -> newVar(name));
   }
 
   @Override
   public VarSetB varSet(Set<TypeB> elements) {
-    return new VarSetB((Set<VarTB>)(Object) elements);
+    return new VarSetB((Set<VarB>)(Object) elements);
   }
 
   // methods for getting Expr-s types
@@ -318,13 +318,13 @@ public class CatDb implements TypeFB {
   }
 
   private VarSetB toVarSetB(Hash rootHash, TupleTB typeParams) {
-    var set = new HashSet<VarTB>();
+    var set = new HashSet<VarB>();
     for (TypeB typeParam : typeParams.items()) {
-      if (typeParam instanceof VarTB varTB) {
-        if (set.contains(varTB)) {
-          throw new DecodeCatTypeParamDuplicatedVarExc(rootHash, varTB);
+      if (typeParam instanceof VarB var) {
+        if (set.contains(var)) {
+          throw new DecodeCatTypeParamDuplicatedVarExc(rootHash, var);
         } else {
-          set.add(varTB);
+          set.add(var);
         }
       } else {
         throw new DecodeCatTypeParamIsNotVarExc(rootHash, typeParam);
@@ -348,7 +348,7 @@ public class CatDb implements TypeFB {
     return builder.build();
   }
 
-  private <T extends VarTB> T readVar(Hash rootHash, List<Hash> rootSeq, CatKindB kind,
+  private <T extends VarB> T readVar(Hash rootHash, List<Hash> rootSeq, CatKindB kind,
       BiFunction<Hash, String, T> creator) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var name = wrapHashedDbExcAsDecodeCatNodeExc(
@@ -417,13 +417,13 @@ public class CatDb implements TypeFB {
     return cache(new TupleTB(rootHash, itemTs));
   }
 
-  private VarTB newVar(String name) throws HashedDbExc {
+  private VarB newVar(String name) throws HashedDbExc {
     var rootHash = writeVarRoot(name, VAR);
     return newVar(rootHash, name);
   }
 
-  private VarTB newVar(Hash rootHash, String name) {
-    return cache(new VarTB(rootHash, name));
+  private VarB newVar(Hash rootHash, String name) {
+    return cache(new VarB(rootHash, name));
   }
 
   // methods for creating Expr types

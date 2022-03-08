@@ -47,7 +47,7 @@ public class VarSetTest {
     return new MyVar(name);
   }
 
-  private record MyVar(String name) implements VarT {
+  private record MyVar(String name) implements Var {
     @Override
     public VarSet<?> vars() {
       return null;

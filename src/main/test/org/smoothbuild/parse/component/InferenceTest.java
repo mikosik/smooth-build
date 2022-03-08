@@ -176,7 +176,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(varTS("A"), list(varTS("A"))));
+          .containsEvalWithType("myFunc", funcTS(varS("A"), list(varS("A"))));
     }
   }
 

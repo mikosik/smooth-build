@@ -17,12 +17,12 @@ import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
+import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarSet;
-import org.smoothbuild.lang.type.api.VarT;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -40,10 +40,10 @@ public class TestingTB implements TestingT<TypeB> {
   public static final NothingTB NOTHING = FACTORY.nothing();
   public static final StringTB STRING = FACTORY.string();
   public static final TupleTB TUPLE = FACTORY.tuple(list(STRING, INT));
-  public static final VarTB VAR_A = FACTORY.var("A");
-  public static final VarTB VAR_B = FACTORY.var("B");
-  public static final VarTB VAR_X = FACTORY.var("X");
-  public static final VarTB VAR_Y = FACTORY.var("Y");
+  public static final VarB VAR_A = FACTORY.var("A");
+  public static final VarB VAR_B = FACTORY.var("B");
+  public static final VarB VAR_X = FACTORY.var("X");
+  public static final VarB VAR_Y = FACTORY.var("Y");
 
   public static final FuncTB STRING_GETTER_FUNCTION = CONTEXT.funcTB(STRING, list());
   public static final FuncTB TUPLE_GETTER_FUNCTION = CONTEXT.funcTB(TUPLE, list());
@@ -183,9 +183,9 @@ public class TestingTB implements TestingT<TypeB> {
   }
 
   @Override
-  public VarSet<TypeB> vs(VarT... elements) {
+  public VarSet<TypeB> vs(Var... elements) {
     var varSetB = Stream.of(elements)
-        .map(e -> (VarTB) e)
+        .map(e -> (VarB) e)
         .collect(toVarSetB());
     return (VarSet<TypeB>)(Object) varSetB;
   }

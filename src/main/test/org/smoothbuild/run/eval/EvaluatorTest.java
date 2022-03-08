@@ -75,7 +75,7 @@ public class EvaluatorTest  extends TestingContext {
 
     @Test
     public void call_polymorphic() {
-      var a = varTS("A");
+      var a = varS("A");
       var funcS = defFuncS(arrayTS(a), "n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e")));
       var callS = callS(arrayTS(intTS()), topRefS(funcS), intS(7));
       assertThat(evaluate(callS, nList(funcS)))
@@ -101,7 +101,7 @@ public class EvaluatorTest  extends TestingContext {
       when(bytecodeLoader.load("myFunc", jar, className))
           .thenReturn(Try.result(ReturnIdFunc.bytecode(bytecodeF())));
 
-      var byteFuncS = byteFuncS(className, varTS("A"), "myFunc", nList(itemS(varTS("A"), "p")));
+      var byteFuncS = byteFuncS(className, varS("A"), "myFunc", nList(itemS(varS("A"), "p")));
       assertThat(evaluate(topRefS(byteFuncS), nList(byteFuncS)))
           .isEqualTo(ReturnIdFunc.bytecode(bytecodeF()));
     }

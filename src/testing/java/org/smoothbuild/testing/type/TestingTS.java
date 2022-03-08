@@ -12,9 +12,9 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.Typing;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
+import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.api.VarSet;
-import org.smoothbuild.lang.type.api.VarT;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.BlobTS;
@@ -26,8 +26,8 @@ import org.smoothbuild.lang.type.impl.StringTS;
 import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.impl.VarS;
 import org.smoothbuild.lang.type.impl.VarSetS;
-import org.smoothbuild.lang.type.impl.VarTS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 
@@ -52,10 +52,10 @@ public class TestingTS implements TestingT<TypeS> {
       nList(itemSigS(STRING, "firstName"), itemSigS(STRING, "lastName")));
   public static final StructTS FLAG = struct("Flag", nList(itemSigS(BOOL, "flab")));
   public static final StructTS DATA = struct("Data", nList(itemSigS(BLOB, "data")));
-  public static final VarTS VAR_A = var("A");
-  public static final VarTS VAR_B = var("B");
-  public static final VarTS VAR_X = var("X");
-  public static final VarTS VAR_Y = var("Y");
+  public static final VarS VAR_A = var("A");
+  public static final VarS VAR_B = var("B");
+  public static final VarS VAR_X = var("X");
+  public static final VarS VAR_Y = var("Y");
 
   public static final ImmutableList<TypeS> ELEMENTARY_TYPES = ImmutableList.<TypeS>builder()
       .addAll(BASE_TYPES)
@@ -108,7 +108,7 @@ public class TestingTS implements TestingT<TypeS> {
     return FACTORY.func(tParams, resT, paramTs);
   }
 
-  public static VarTS var(String a) {
+  public static VarS var(String a) {
     return FACTORY.var(a);
   }
 
@@ -122,12 +122,12 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   public static VarBounds<TypeS> vb(
-      VarTS var1, Side side1, TypeS bound1,
-      VarTS var2, Side side2, TypeS bound2) {
+      VarS var1, Side side1, TypeS bound1,
+      VarS var2, Side side2, TypeS bound2) {
     return CONTEXT.vbS(var1, side1, bound1, var2, side2, bound2);
   }
 
-  public static VarBounds<TypeS> vb(VarTS var, Side side, TypeS bound) {
+  public static VarBounds<TypeS> vb(VarS var, Side side, TypeS bound) {
     return CONTEXT.vbS(var, side, bound);
   }
 
@@ -246,13 +246,13 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   @Override
-  public VarSet<TypeS> vs(VarT... elements) {
+  public VarSet<TypeS> vs(Var... elements) {
     return varSet(elements);
   }
 
-  public static VarSet<TypeS> varSet(VarT... elements) {
+  public static VarSet<TypeS> varSet(Var... elements) {
     var varSetS = Stream.of(elements)
-        .map(e -> (VarTS) e)
+        .map(e -> (VarS) e)
         .collect(toVarSetS());
     return (VarSet<TypeS>) (Object) varSetS;
   }

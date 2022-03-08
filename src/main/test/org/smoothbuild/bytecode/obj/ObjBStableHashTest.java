@@ -124,7 +124,7 @@ public class ObjBStableHashTest extends TestingContext {
 
     @Test
     public void with_type_params_and_two_params() {
-      var a = varTB("A");
+      var a = varB("A");
       var defFunc = funcB(funcTB(varSetB(a), intTB(), list(a, a)), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("011e1cd7358acf03e488c64bad97d7fb07b2bc15"));

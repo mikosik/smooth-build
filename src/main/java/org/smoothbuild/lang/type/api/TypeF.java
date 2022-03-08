@@ -18,7 +18,7 @@ public interface TypeF<T extends Type> {
 
   public TupleT tuple(ImmutableList<T> items);
 
-  public VarT var(String name);
+  public Var var(String name);
 
   public VarSet<?> varSet(Set<T> elements);
 

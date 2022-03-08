@@ -113,13 +113,13 @@ public class TypeFS implements TypeF<TypeS> {
   }
 
   @Override
-  public VarTS var(String name) {
+  public VarS var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return new VarTS(name);
+    return new VarS(name);
   }
 
   @Override
   public VarSetS varSet(Set<TypeS> elements) {
-    return new VarSetS((Set<VarTS>)(Object) elements);
+    return new VarSetS((Set<VarS>)(Object) elements);
   }
 }

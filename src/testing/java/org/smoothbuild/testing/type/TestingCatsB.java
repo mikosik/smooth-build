@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -28,7 +28,7 @@ public class TestingCatsB {
   public static final TypeB METHOD = method(BLOB, list(BOOL));
   public static final TypeB NOTHING = CONTEXT.nothingTB();
   public static final TypeB STRING = CONTEXT.stringTB();
-  public static final TypeB VAR_A = CONTEXT.varTB("A");
+  public static final TypeB VAR_A = CONTEXT.varB("A");
 
   public static final TupleTB PERSON = CONTEXT.personTB();
   public static final TupleTB FILE = CONTEXT.fileTB();
@@ -165,7 +165,7 @@ public class TestingCatsB {
     return CAT_DB.tuple(params);
   }
 
-  public static VarTB var(String name) {
+  public static VarB var(String name) {
     return CAT_DB.var(name);
   }
 }

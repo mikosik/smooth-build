@@ -50,8 +50,8 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashingBufferedSink;
 import org.smoothbuild.db.exc.DecodeHashSeqExc;
@@ -203,7 +203,7 @@ public class CatBCorruptedTest extends TestingContext {
       @Override
       protected Hash hashOfNewTB(TupleTB tParamsTuple, TypeB resT,
           ImmutableList<TypeB> paramTs) {
-        var tParams = new VarSetB(map(tParamsTuple.items(), i -> (VarTB) i));
+        var tParams = new VarSetB(map(tParamsTuple.items(), i -> (VarB) i));
         return funcTB(tParams, resT, paramTs).hash();
       }
     }
@@ -217,7 +217,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Override
       protected Hash hashOfNewTB(TupleTB tParamsTuple, TypeB resT, ImmutableList<TypeB> paramTs) {
-        var tParams = new VarSetB(map(tParamsTuple.items(), i -> (VarTB) i));
+        var tParams = new VarSetB(map(tParamsTuple.items(), i -> (VarB) i));
         return methodTB(tParams, resT, paramTs).hash();
       }
     }
@@ -237,7 +237,7 @@ public class CatBCorruptedTest extends TestingContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save func type in HashedDb.
          */
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var paramsTuple = tupleTB(stringTB(), boolTB());
         var specHash = hash(
             hash(catKind().marker()),
@@ -280,7 +280,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_data_having_four_elems() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var paramTs = tupleTB(stringTB(), boolTB());
         var hash = hash(
             hash(catKind().marker()),
@@ -297,7 +297,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_data_having_two_elems() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var res = intTB();
         var hash = hash(
             hash(catKind().marker()),
@@ -378,7 +378,7 @@ public class CatBCorruptedTest extends TestingContext {
       @Test
       public void with_type_params_with_duplicated_var() throws Exception {
         var paramsTuple = tupleTB(stringTB(), boolTB());
-        var a = varTB("A");
+        var a = varB("A");
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
@@ -409,7 +409,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_result_pointing_nowhere() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var paramTs = tupleTB(stringTB(), boolTB());
         var nowhere = Hash.of(33);
         var typeHash = hash(
@@ -427,7 +427,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_result_being_expr_type() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var paramT = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
             hash(catKind().marker()),
@@ -444,7 +444,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_result_type_corrupted() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var paramTs = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
             hash(catKind().marker()),
@@ -461,7 +461,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_params_pointing_nowhere() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var nowhere = Hash.of(33);
         var typeHash = hash(
             hash(catKind().marker()),
@@ -478,7 +478,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_params_not_being_tuple() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
@@ -494,7 +494,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_params_being_expr_type() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
@@ -510,7 +510,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_params_type_corrupted() throws Exception {
-        var tParamsTuple = tupleTB(varTB("A"));
+        var tParamsTuple = tupleTB(varB("A"));
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
@@ -737,7 +737,7 @@ public class CatBCorruptedTest extends TestingContext {
           hash("A")
       );
       assertThat(hash)
-          .isEqualTo(varTB("A").hash());
+          .isEqualTo(varB("A").hash());
     }
 
     @Test

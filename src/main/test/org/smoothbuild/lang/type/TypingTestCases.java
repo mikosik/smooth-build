@@ -20,9 +20,9 @@ import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.TypeF;
+import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.api.VarSet;
-import org.smoothbuild.lang.type.api.VarT;
 import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.testing.type.TestedAssignCases;
 import org.smoothbuild.testing.type.TestedAssignSpec;
@@ -545,17 +545,17 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     Sides<T> bounds1 = oneSideBound(side1, bound1);
     Sides<T> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
-      return varBounds(new Bounded<>((VarT) var1, typing.merge(bounds1, bounds2)));
+      return varBounds(new Bounded<>((Var) var1, typing.merge(bounds1, bounds2)));
     } else {
       return new VarBounds<>(ImmutableMap.of(
-          (VarT) var1, new Bounded<>((VarT) var1, bounds1),
-          (VarT) var2, new Bounded<>((VarT) var2, bounds2)
+          (Var) var1, new Bounded<>((Var) var1, bounds1),
+          (Var) var2, new Bounded<>((Var) var2, bounds2)
       ));
     }
   }
 
   public VarBounds<T> vb(T var, Side side, T bound) {
-    return varBounds(new Bounded<>((VarT) var, oneSideBound(side, bound)));
+    return varBounds(new Bounded<>((Var) var, oneSideBound(side, bound)));
   }
 
   public VarBounds<T> vb() {
@@ -578,7 +578,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     return testingT().varY();
   }
 
-  private VarSet<T> vs(VarT... elements) {
+  private VarSet<T> vs(Var... elements) {
     return testingT().vs(elements);
   }
 

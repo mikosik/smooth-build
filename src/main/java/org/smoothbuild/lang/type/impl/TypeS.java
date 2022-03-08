@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class TypeS extends AbstractT
-    permits ArrayTS, BaseTS, FuncTS, StructTS, VarTS {
+    permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
   private final VarSetS vars;
 
   protected TypeS(String name, VarSetS vars) {

@@ -77,8 +77,8 @@ import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.compile.BytecodeMethodLoader;
 import org.smoothbuild.compile.CompilerProv;
@@ -131,7 +131,7 @@ import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.lang.type.impl.TypingS;
-import org.smoothbuild.lang.type.impl.VarTS;
+import org.smoothbuild.lang.type.impl.VarS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.load.JarClassLoaderProv;
 import org.smoothbuild.load.MethodLoader;
@@ -475,7 +475,7 @@ public class TestingContext {
     return catDb().tuple(ImmutableList.copyOf(itemTs));
   }
 
-  public VarTB varTB(String name) {
+  public VarB varB(String name) {
     return catDb().var(name);
   }
 
@@ -874,13 +874,13 @@ public class TestingContext {
     return typeFS().struct(name, fields);
   }
 
-  public VarTS varTS(String name) {
+  public VarS varS(String name) {
     return typeFS().var(name);
   }
 
   public VarBounds<TypeS> vbS(
-      VarTS var1, Side side1, TypeS bound1,
-      VarTS var2, Side side2, TypeS bound2) {
+      VarS var1, Side side1, TypeS bound1,
+      VarS var2, Side side2, TypeS bound2) {
     Sides<TypeS> bounds1 = oneSideBoundS(side1, bound1);
     Sides<TypeS> bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
@@ -893,7 +893,7 @@ public class TestingContext {
     }
   }
 
-  public VarBounds<TypeS> vbS(VarTS var, Side side, TypeS bound) {
+  public VarBounds<TypeS> vbS(VarS var, Side side, TypeS bound) {
     return varBounds(new Bounded<>(var, oneSideBoundS(side, bound)));
   }
 

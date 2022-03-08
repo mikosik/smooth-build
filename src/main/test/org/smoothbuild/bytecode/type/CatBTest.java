@@ -81,8 +81,8 @@ import org.smoothbuild.bytecode.type.expr.CombineCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.lang.type.api.ArrayT;
 import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.Type;
@@ -262,7 +262,7 @@ public class CatBTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("tParams_cases")
     public void tParams(Function<CatDb, FuncTB> factoryCall,
-        Function<CatDb, List<VarTB>> expected) {
+        Function<CatDb, List<VarB>> expected) {
       assertThat(execute(factoryCall).tParams())
           .isEqualTo(execute(expected));
     }
@@ -311,7 +311,7 @@ public class CatBTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("tParams_cases")
     public void tParams(Function<CatDb, MethodTB> factoryCall,
-        Function<CatDb, List<VarTB>> expected) {
+        Function<CatDb, List<VarB>> expected) {
       assertThat(execute(factoryCall).tParams())
           .isEqualTo(execute(expected));
     }
@@ -360,13 +360,13 @@ public class CatBTest extends TestingContext {
   class _var {
     @Test
     public void name() {
-      assertThat(varTB("A").name())
+      assertThat(varB("A").name())
           .isEqualTo("A");
     }
 
     @Test
     public void illegal_name() {
-      assertCall(() -> varTB("a"))
+      assertCall(() -> varB("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
