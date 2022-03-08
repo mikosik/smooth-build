@@ -40,12 +40,12 @@ import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalVarNameExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatTypeParamDuplicatedVarExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatTypeParamIsNotVarExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
-import org.smoothbuild.bytecode.type.exc.DecodeVarIllegalNameExc;
 import org.smoothbuild.bytecode.type.expr.CallCB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
 import org.smoothbuild.bytecode.type.expr.IfCB;
@@ -354,7 +354,7 @@ public class CatDb implements TypeFB {
     var name = wrapHashedDbExcAsDecodeCatNodeExc(
         rootHash, kind, DATA_PATH, () ->hashedDb.readString(rootSeq.get(1)));
     if (!isVarName(name)) {
-      throw new DecodeVarIllegalNameExc(rootHash, name);
+      throw new DecodeCatIllegalVarNameExc(rootHash, name);
     }
     return creator.apply(rootHash, name);
   }
