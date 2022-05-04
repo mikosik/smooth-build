@@ -2,12 +2,12 @@ package org.smoothbuild.bytecode.type;
 
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.BoundedB;
+import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
-import org.smoothbuild.bytecode.type.val.VarBoundsB;
 
 import com.google.common.collect.ImmutableMap;
 
