@@ -143,7 +143,7 @@ public class Typing<T extends Type> {
 
   private void inferImpl(T t1, T t2, Side side, Map<Var, Bounded<T>> result) {
     switch (t1) {
-      case Var v -> result.merge(v, new Bounded<>(v, typeF.oneSideBound(side, t2)), this::merge);
+      case Var v -> result.merge(v, typeF.bounded(v, typeF.oneSideBound(side, t2)), this::merge);
       case ComposedT c1 -> {
         T sideEdge = typeF.edge(side);
         if (t2.equals(sideEdge)) {
@@ -239,7 +239,7 @@ public class Typing<T extends Type> {
   }
 
   public Bounded<T> merge(Bounded<T> a, Bounded<T> b) {
-    return new Bounded<>(a.var(), merge(a.bounds(), b.bounds()));
+    return typeF.bounded(a.var(), merge(a.bounds(), b.bounds()));
   }
 
   public Sides<T> merge(Sides<T> bounds1, Sides<T> bounds2) {

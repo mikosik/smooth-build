@@ -22,6 +22,8 @@ public interface TypeF<T extends Type> {
 
   public VarSet<?> varSet(Set<T> elements);
 
+  public Bounded<T> bounded(Var var, Sides<T> sides);
+
   public default T edge(Side side) {
     return switch (side) {
       case LOWER -> (T) nothing();

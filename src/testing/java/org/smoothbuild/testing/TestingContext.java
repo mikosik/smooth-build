@@ -115,7 +115,6 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
-import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.VarBounds;
@@ -123,6 +122,7 @@ import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.BlobTS;
 import org.smoothbuild.lang.type.impl.BoolTS;
+import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.FuncTS;
 import org.smoothbuild.lang.type.impl.IntTS;
 import org.smoothbuild.lang.type.impl.NothingTS;
@@ -884,17 +884,17 @@ public class TestingContext {
     Sides<TypeS> bounds1 = oneSideBoundS(side1, bound1);
     Sides<TypeS> bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
-      return varBounds(new Bounded<>(var1, typingS().merge(bounds1, bounds2)));
+      return varBounds(new BoundedS(var1, typingS().merge(bounds1, bounds2)));
     } else {
       return new VarBounds<>(ImmutableMap.of(
-          var1, new Bounded<>(var1, bounds1),
-          var2, new Bounded<>(var2, bounds2)
+          var1, new BoundedS(var1, bounds1),
+          var2, new BoundedS(var2, bounds2)
       ));
     }
   }
 
   public VarBounds<TypeS> vbS(VarS var, Side side, TypeS bound) {
-    return varBounds(new Bounded<>(var, oneSideBoundS(side, bound)));
+    return varBounds(new BoundedS(var, oneSideBoundS(side, bound)));
   }
 
   public VarBounds<TypeS> vbS() {

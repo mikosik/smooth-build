@@ -18,8 +18,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.BoundedB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
-import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
@@ -443,17 +443,17 @@ public class TypingBTest {
     Sides<TypeB> bounds1 = oneSideBound(side1, bound1);
     Sides<TypeB> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
-      return varBounds(new Bounded<>((Var) var1, typing().merge(bounds1, bounds2)));
+      return varBounds(new BoundedB((Var) var1, typing().merge(bounds1, bounds2)));
     } else {
       return new VarBounds<>(ImmutableMap.of(
-          (Var) var1, new Bounded<>((Var) var1, bounds1),
-          (Var) var2, new Bounded<>((Var) var2, bounds2)
+          (Var) var1, new BoundedB((Var) var1, bounds1),
+          (Var) var2, new BoundedB((Var) var2, bounds2)
       ));
     }
   }
 
   private static VarBounds<TypeB> vb(TypeB var, Side side, TypeB bound) {
-    return varBounds(new Bounded<>((Var) var, oneSideBound(side, bound)));
+    return varBounds(new BoundedB((Var) var, oneSideBound(side, bound)));
   }
 
   private static VarBounds<TypeB> vb() {

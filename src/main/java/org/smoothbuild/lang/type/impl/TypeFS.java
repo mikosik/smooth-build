@@ -13,6 +13,7 @@ import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.lang.type.api.TypeF;
+import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.util.collect.NList;
 
@@ -29,6 +30,11 @@ public class TypeFS implements TypeF<TypeS> {
 
   @Inject
   public TypeFS() {
+  }
+
+  @Override
+  public BoundedS bounded(Var var, Sides<TypeS> sides) {
+    return new BoundedS(var, sides);
   }
 
   /**
