@@ -15,7 +15,7 @@ public class ArrayBBuilder {
   private final List<ValB> elems;
 
   public ArrayBBuilder(ArrayTB type, ObjDbImpl objDb) {
-    if (type.hasVars()) {
+    if (!type.vars().isEmpty()) {
       throw new IllegalArgumentException(
           "Cannot create array object with polymorphic type " + type.q() + ".");
     }

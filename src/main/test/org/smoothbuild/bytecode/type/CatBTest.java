@@ -182,52 +182,6 @@ public class CatBTest extends TestingContext {
   }
 
   @ParameterizedTest
-  @MethodSource("isPolytype_test_data")
-  public void isPolytype(Function<CatDb, TypeB> factoryCall, boolean expected) {
-    assertThat(execute(factoryCall).hasVars())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> isPolytype_test_data() {
-    return asList(
-        args(f -> f.var("A"), true),
-        args(f -> f.array(f.var("A")), true),
-        args(f -> f.array(f.array(f.var("A"))), true),
-
-        args(f -> f.func(varSetB(f.var("A")), f.var("A"), list()), true),
-        args(f -> f.func(varSetB(f.var("A")), f.func(varSetB(), f.var("A"), list()), list()), true),
-        args(f -> f.func(varSetB(f.var("A")), f.func(varSetB(), f.func(varSetB(), f.var("A"), list()), list()), list()), true),
-
-        args(f -> f.func(varSetB(f.var("A")), f.bool(), list(f.var("A"))), true),
-        args(f -> f.func(varSetB(f.var("A")), f.bool(), list(f.func(varSetB(), f.var("A"), list()))), true),
-        args(f -> f.func(varSetB(f.var("A")), f.bool(), list(f.func(varSetB(), f.func(varSetB(), f.var("A"), list()), list()))), true),
-
-        args(f -> f.func(varSetB(f.var("A")), f.bool(), list(f.func(varSetB(), f.blob(), list(f.var("A"))))), true),
-
-        args(f -> f.method(varSetB(f.var("A")), f.var("A"), list()), true),
-        args(f -> f.method(varSetB(f.var("A")), f.func(varSetB(), f.var("A"), list()), list()), true),
-        args(f -> f.method(varSetB(f.var("A")), f.func(varSetB(), f.func(varSetB(), f.var("A"), list()), list()), list()), true),
-
-        args(f -> f.method(varSetB(f.var("A")), f.bool(), list(f.var("A"))), true),
-        args(f -> f.method(varSetB(f.var("A")), f.bool(), list(f.method(varSetB(), f.var("A"), list()))), true),
-        args(f -> f.method(varSetB(f.var("A")), f.bool(), list(f.method(varSetB(), f.func(varSetB(), f.var("A"), list()), list()))), true),
-
-        args(f -> f.method(varSetB(f.var("A")), f.bool(), list(f.method(varSetB(), f.blob(), list(f.var("A"))))), true),
-
-        args(f -> f.any(), false),
-        args(f -> f.blob(), false),
-        args(f -> f.bool(), false),
-        args(f -> f.int_(), false),
-        args(f -> f.nothing(), false),
-        args(f -> f.string(), false),
-        args(f -> f.tuple(list()), false),
-        args(f -> f.tuple(list(f.int_())), false),
-        args(f -> f.tuple(list(f.var("A"))), true),
-        args(f -> f.tuple(list(f.tuple(list(f.var("A"))))), true)
-        );
-  }
-
-  @ParameterizedTest
   @MethodSource("vars_test_data")
   public void vars(TypeB type, VarSetB varSet) {
     assertThat(type.vars())

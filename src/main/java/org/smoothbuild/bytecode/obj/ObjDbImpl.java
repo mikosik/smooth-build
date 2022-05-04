@@ -115,7 +115,7 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items) {
-    if (tupleT.hasVars()) {
+    if (!tupleT.vars().isEmpty()) {
       throw new IllegalArgumentException(
           "Cannot create tuple object with polymorphic type " + tupleT.q() + ".");
     }

@@ -178,7 +178,7 @@ public class Typing<T extends Type> {
   }
 
   public T mapVars(T type, VarBounds<T> varBounds, Side side) {
-    if (type.hasVars()) {
+    if (!type.vars().isEmpty()) {
       return switch (type) {
         case Var var -> mapVarsInVar(type, varBounds, side, var);
         case ComposedT composedT -> {

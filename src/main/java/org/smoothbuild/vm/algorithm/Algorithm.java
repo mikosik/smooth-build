@@ -18,7 +18,7 @@ public abstract class Algorithm {
   protected Algorithm(TypeB outputT, boolean isPure) {
     this.outputT = outputT;
     this.isPure = isPure;
-    checkArgument(!outputT.hasVars());
+    checkArgument(outputT.vars().isEmpty());
   }
 
   public TypeB outputT() {

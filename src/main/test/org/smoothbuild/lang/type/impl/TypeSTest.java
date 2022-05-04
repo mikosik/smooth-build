@@ -101,41 +101,6 @@ public class TypeSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("isPolytype_test_data")
-  public void isPolytype(TypeS type, boolean expected) {
-    assertThat(type.hasVars())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> isPolytype_test_data() {
-    return asList(
-        arguments(VAR_A, true),
-        arguments(a(VAR_A), true),
-        arguments(a(a(VAR_A)), true),
-
-        arguments(f(VAR_A, list()), true),
-        arguments(f(f(VAR_A, list()), list()), true),
-        arguments(f(f(f(VAR_A, list()), list()), list()), true),
-
-        arguments(f(BOOL, list(VAR_A)), true),
-        arguments(f(BOOL, list(f(VAR_A, list()))), true),
-        arguments(f(BOOL, list(f(f(VAR_A, list()), list()))), true),
-
-        arguments(f(BOOL, list(f(BLOB, list(VAR_A)))), true),
-
-        arguments(f(BOOL, list(INT)), false),
-
-        arguments(ANY, false),
-        arguments(BLOB, false),
-        arguments(BOOL, false),
-        arguments(INT, false),
-        arguments(NOTHING, false),
-        arguments(STRING, false),
-        arguments(struct("MyStruct", nList()), false)
-    );
-  }
-
-  @ParameterizedTest
   @MethodSource("vars_test_data")
   public void vars(TypeS type, VarSetS expected) {
     assertThat(type.vars())

@@ -85,7 +85,7 @@ public class TypeInferrer {
         super.visitField(itemN);
         var typeOpt = itemN.evalT().get().type();
         typeOpt.flatMap((t) -> {
-          if (t.hasVars()) {
+          if (!t.vars().isEmpty()) {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
                 .formatted(itemN.q(), t.q());
             logError(itemN, message);

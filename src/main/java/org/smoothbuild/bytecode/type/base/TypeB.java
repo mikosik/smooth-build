@@ -41,7 +41,7 @@ public abstract class TypeB extends CatB implements Type {
   }
 
   protected static void validateNotPolymorphic(MerkleRoot merkleRoot) {
-    if (((TypeB) merkleRoot.cat()).hasVars()) {
+    if (!((TypeB) merkleRoot.cat()).vars().isEmpty()) {
       throw new DecodeObjIllegalPolymorphicTypeExc(merkleRoot.hash(), merkleRoot.cat());
     }
   }
