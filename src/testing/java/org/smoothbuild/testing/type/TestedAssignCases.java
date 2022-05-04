@@ -20,9 +20,9 @@ public class TestedAssignCases<
     TT extends TestedT<T>,
     S extends TestedAssignSpec<? extends TT>> {
 
-  public static final TestedAssignCases<TypeS, TestedTS, TestedAssignSpecS> INSTANCE_S =
+  public static final TestedAssignCases<TypeS, TestedTS, TestedAssignSpecS> TESTED_ASSIGN_CASES_S =
       new TestedAssignCases<>(new TestedTSF());
-  public static final TestedAssignCases<TypeB, TestedTB, TestedAssignSpecB> INSTANCE_B =
+  public static final TestedAssignCases<TypeB, TestedTB, TestedAssignSpecB> TESTED_ASSIGN_CASES_B =
       new TestedAssignCases<>(new TestedTBF());
 
   private final TestedTF<T, TT, S> testedTF;
