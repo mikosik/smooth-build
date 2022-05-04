@@ -7,11 +7,11 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.type.api.TypeBBridge;
+import org.smoothbuild.lang.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class TypeB extends CatB implements TypeBBridge {
+public abstract class TypeB extends CatB implements Type {
   private final VarSetB vars;
 
   protected TypeB(Hash hash, String name, CatKindB kind) {

@@ -5,8 +5,7 @@ import org.smoothbuild.util.collect.Named;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed interface Type extends Named
-    permits TypeBBridge, AbstractT, BaseT, ComposedT, Var {
+public interface Type extends Named {
 
   @Override
   public String name();
