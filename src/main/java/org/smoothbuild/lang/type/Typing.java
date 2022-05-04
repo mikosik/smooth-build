@@ -128,7 +128,7 @@ public class Typing<T extends Type> {
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
-    return new VarBounds<>(ImmutableMap.copyOf(result));
+    return typeF.varBounds(ImmutableMap.copyOf(result));
   }
 
   public VarBounds<T> inferVarBoundsLower(T type1, T type2) {
@@ -138,7 +138,7 @@ public class Typing<T extends Type> {
   public VarBounds<T> inferVarBounds(T type1, T type2, Side side) {
     var result = new HashMap<Var, Bounded<T>>();
     inferImpl(type1, type2, side, result);
-    return new VarBounds<>(ImmutableMap.copyOf(result));
+    return typeF.varBounds(ImmutableMap.copyOf(result));
   }
 
   private void inferImpl(T t1, T t2, Side side, Map<Var, Bounded<T>> result) {

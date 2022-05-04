@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type.api;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * TypeFactory.
@@ -23,6 +24,8 @@ public interface TypeF<T extends Type> {
   public VarSet<?> varSet(Set<T> elements);
 
   public Bounded<T> bounded(Var var, Sides<T> sides);
+
+  public VarBounds<T> varBounds(ImmutableMap<Var, Bounded<T>> map);
 
   public default T edge(Side side) {
     return switch (side) {

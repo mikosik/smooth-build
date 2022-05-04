@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.job;
 
-import static org.smoothbuild.lang.type.api.VarBounds.varBounds;
+import static org.smoothbuild.bytecode.type.val.VarBoundsB.varBoundsB;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
@@ -98,7 +98,7 @@ public class JobCreator {
   }
 
   public Job eagerJobFor(ObjB obj) {
-    return eagerJobFor(list(), varBounds(), obj);
+    return eagerJobFor(list(), varBoundsB(), obj);
   }
 
   private ImmutableList<Job> eagerJobsFor(

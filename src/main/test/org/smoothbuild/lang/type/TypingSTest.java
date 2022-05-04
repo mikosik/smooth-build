@@ -5,7 +5,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.type.TestingTypeGraph.buildGraph;
 import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
-import static org.smoothbuild.lang.type.api.VarBounds.varBounds;
+import static org.smoothbuild.lang.type.api.VarBoundsS.varBoundsS;
 import static org.smoothbuild.testing.type.TestedAssignCases.TESTED_ASSIGN_CASES_S;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -23,6 +23,7 @@ import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
@@ -390,9 +391,9 @@ public class TypingSTest {
     Sides<TypeS> bounds1 = oneSideBound(side1, bound1);
     Sides<TypeS> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
-      return varBounds(new BoundedS((Var) var1, typing().merge(bounds1, bounds2)));
+      return varBoundsS(new BoundedS((Var) var1, typing().merge(bounds1, bounds2)));
     } else {
-      return new VarBounds<>(ImmutableMap.of(
+      return new VarBoundsS(ImmutableMap.of(
           (Var) var1, new BoundedS((Var) var1, bounds1),
           (Var) var2, new BoundedS((Var) var2, bounds2)
       ));
@@ -400,11 +401,11 @@ public class TypingSTest {
   }
 
   private static VarBounds<TypeS> vb(TypeS var, Side side, TypeS bound) {
-    return varBounds(new BoundedS((Var) var, oneSideBound(side, bound)));
+    return varBoundsS(new BoundedS((Var) var, oneSideBound(side, bound)));
   }
 
   private static VarBounds<TypeS> vb() {
-    return varBounds();
+    return varBoundsS();
   }
 
   private static TypeS a() {

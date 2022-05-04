@@ -9,15 +9,19 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.lang.define.ItemSigS;
+import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.lang.type.api.Var;
+import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 @Singleton
 public class TypeFS implements TypeF<TypeS> {
@@ -35,6 +39,11 @@ public class TypeFS implements TypeF<TypeS> {
   @Override
   public BoundedS bounded(Var var, Sides<TypeS> sides) {
     return new BoundedS(var, sides);
+  }
+
+  @Override
+  public VarBounds<TypeS> varBounds(ImmutableMap<Var, Bounded<TypeS>> map) {
+    return new VarBoundsS(map);
   }
 
   /**

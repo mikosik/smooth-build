@@ -8,6 +8,7 @@ import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.bytecode.type.val.FuncTB.calculateFuncVars;
+import static org.smoothbuild.bytecode.type.val.VarBoundsB.varBoundsB;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
@@ -15,7 +16,7 @@ import static org.smoothbuild.lang.define.ItemS.toTypes;
 import static org.smoothbuild.lang.type.api.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.lang.type.api.VarBounds.varBounds;
+import static org.smoothbuild.lang.type.api.VarBoundsS.varBoundsS;
 import static org.smoothbuild.lang.type.impl.FuncTS.calculateFuncVars;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
@@ -70,6 +71,7 @@ import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
+import org.smoothbuild.bytecode.type.val.BoundedB;
 import org.smoothbuild.bytecode.type.val.CallableTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
@@ -78,6 +80,7 @@ import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.compile.BytecodeMethodLoader;
@@ -118,6 +121,7 @@ import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.BlobTS;
@@ -477,6 +481,33 @@ public class TestingContext {
 
   public VarB varB(String name) {
     return catDb().var(name);
+  }
+
+  public VarBoundsB vbS(
+      VarB var1, Side side1, TypeB bound1,
+      VarB var2, Side side2, TypeB bound2) {
+    Sides<TypeB> bounds1 = oneSideBoundB(side1, bound1);
+    Sides<TypeB> bounds2 = oneSideBoundB(side2, bound2);
+    if (var1.equals(var2)) {
+      return varBoundsB(new BoundedB(var1, typingB().merge(bounds1, bounds2)));
+    } else {
+      return new VarBoundsB(ImmutableMap.of(
+          var1, new BoundedB(var1, bounds1),
+          var2, new BoundedB(var2, bounds2)
+      ));
+    }
+  }
+
+  public VarBounds<TypeB> vbB(VarB var, Side side, TypeB bound) {
+    return varBoundsB(new BoundedB(var, oneSideBoundB(side, bound)));
+  }
+
+  public VarBounds<TypeB> vbB() {
+    return varBoundsB();
+  }
+
+  public Sides<TypeB> oneSideBoundB(Side side, TypeB type) {
+    return typeFB().oneSideBound(side, type);
   }
 
   // Expr types
@@ -884,9 +915,9 @@ public class TestingContext {
     Sides<TypeS> bounds1 = oneSideBoundS(side1, bound1);
     Sides<TypeS> bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
-      return varBounds(new BoundedS(var1, typingS().merge(bounds1, bounds2)));
+      return varBoundsS(new BoundedS(var1, typingS().merge(bounds1, bounds2)));
     } else {
-      return new VarBounds<>(ImmutableMap.of(
+      return new VarBoundsS(ImmutableMap.of(
           var1, new BoundedS(var1, bounds1),
           var2, new BoundedS(var2, bounds2)
       ));
@@ -894,11 +925,11 @@ public class TestingContext {
   }
 
   public VarBounds<TypeS> vbS(VarS var, Side side, TypeS bound) {
-    return varBounds(new BoundedS(var, oneSideBoundS(side, bound)));
+    return varBoundsS(new BoundedS(var, oneSideBoundS(side, bound)));
   }
 
   public VarBounds<TypeS> vbS() {
-    return varBounds();
+    return varBoundsS();
   }
 
   public Sides<TypeS> oneSideBoundS(Side side, TypeS type) {
