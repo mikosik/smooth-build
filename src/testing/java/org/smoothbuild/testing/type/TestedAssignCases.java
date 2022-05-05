@@ -64,11 +64,11 @@ public class TestedAssignCases<
   }
 
   private S illegalAssignment(TT target, TT source) {
-    return testedTF.illegalAssignment(target, source);
+    return testedTF.testedAssignmentSpec(target, source, false);
   }
 
   private S allowedAssignment(TT target, TT source) {
-    return testedTF.allowedAssignment(target, source);
+    return testedTF.testedAssignmentSpec(target, source, true);
   }
 
   public List<S> assignment_test_specs(boolean includeAny) {

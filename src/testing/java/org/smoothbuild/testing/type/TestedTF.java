@@ -37,13 +37,5 @@ public interface TestedTF
 
   public TT func(TT resT, ImmutableList<TT> paramTestedTs);
 
-  public default S illegalAssignment(TT target, TT source) {
-    return testedAssignmentSpec(target, source, false);
-  }
-
-  public default S allowedAssignment(TT target, TT source) {
-    return testedAssignmentSpec(target, source, true);
-  }
-
   public S testedAssignmentSpec(TT target, TT source, boolean allowed);
 }
