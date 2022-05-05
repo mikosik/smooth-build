@@ -6,14 +6,13 @@ import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
 public class IntTB extends BaseTB {
   public IntTB(Hash hash) {
-    super(hash, TypeNames.INT, INT);
+    super(hash, TypeNamesB.INT, INT);
   }
 
   @Override

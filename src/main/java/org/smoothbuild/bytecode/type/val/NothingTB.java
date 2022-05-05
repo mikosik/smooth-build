@@ -4,13 +4,12 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.NOTHING;
 
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.type.api.NothingT;
-import org.smoothbuild.lang.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
 public class NothingTB extends BaseTB implements NothingT {
   public NothingTB(Hash hash) {
-    super(hash, TypeNames.NOTHING, NOTHING);
+    super(hash, TypeNamesB.NOTHING, NOTHING);
   }
 }

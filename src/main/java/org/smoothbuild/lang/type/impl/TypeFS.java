@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.type.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.api.TypeNames.isVarName;
+import static org.smoothbuild.lang.type.impl.TypeNamesS.isVarName;
 
 import java.util.Set;
 

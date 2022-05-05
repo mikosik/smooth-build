@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.type.api.TypeNames.isVarName;
+import static org.smoothbuild.lang.type.impl.TypeNamesS.isVarName;
 
 import org.smoothbuild.lang.define.Loc;
 

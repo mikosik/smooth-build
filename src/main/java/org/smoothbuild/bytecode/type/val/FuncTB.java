@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.bytecode.type.base.CatKindB.FUNC;
-import static org.smoothbuild.lang.type.api.TypeNames.funcTypeName;
+import static org.smoothbuild.bytecode.type.val.TypeNamesB.funcTypeName;
 import static org.smoothbuild.util.collect.Lists.concat;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;

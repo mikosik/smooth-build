@@ -1,11 +1,14 @@
-package org.smoothbuild.lang.type.api;
+package org.smoothbuild.bytecode.type.val;
 
 import static java.lang.Character.isUpperCase;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
 
-public class TypeNames {
+import org.smoothbuild.lang.type.api.Type;
+import org.smoothbuild.lang.type.api.VarSet;
+
+public class TypeNamesB {
   public static final String ANY = "Any";
   public static final String BLOB = "Blob";
   public static final String BOOL = "Bool";

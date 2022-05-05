@@ -27,7 +27,7 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.VAR;
 import static org.smoothbuild.bytecode.type.base.CatKindB.fromMarker;
-import static org.smoothbuild.lang.type.api.TypeNames.isVarName;
+import static org.smoothbuild.bytecode.type.val.TypeNamesB.isVarName;
 
 import java.util.HashSet;
 import java.util.List;

@@ -6,14 +6,13 @@ import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.BoolB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
 public class BoolTB extends BaseTB {
   public BoolTB(Hash hash) {
-    super(hash, TypeNames.BOOL, BOOL);
+    super(hash, TypeNamesB.BOOL, BOOL);
   }
 
   @Override

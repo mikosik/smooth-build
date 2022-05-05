@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.val;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.bytecode.type.base.CatKindB.ARRAY;
-import static org.smoothbuild.lang.type.api.TypeNames.arrayTypeName;
+import static org.smoothbuild.bytecode.type.val.TypeNamesB.arrayTypeName;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;

@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
 import static org.smoothbuild.bytecode.type.val.FuncTB.calculateFuncVars;
-import static org.smoothbuild.lang.type.api.TypeNames.funcTypeName;
+import static org.smoothbuild.bytecode.type.val.TypeNamesB.funcTypeName;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;

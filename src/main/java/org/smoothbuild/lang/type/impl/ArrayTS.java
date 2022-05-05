@@ -3,7 +3,6 @@ package org.smoothbuild.lang.type.impl;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.lang.type.api.ArrayT;
-import org.smoothbuild.lang.type.api.TypeNames;
 
 import com.google.common.collect.ImmutableList;
 
@@ -14,7 +13,7 @@ public final class ArrayTS extends TypeS implements ArrayT, ComposedTS {
   private final TypeS elem;
 
   public ArrayTS(TypeS elem) {
-    super(TypeNames.arrayTypeName(elem), elem.vars());
+    super(TypeNamesS.arrayTypeName(elem), elem.vars());
     this.elem = requireNonNull(elem);
   }
 
