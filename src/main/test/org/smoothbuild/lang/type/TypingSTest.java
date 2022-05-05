@@ -32,6 +32,7 @@ import org.smoothbuild.testing.type.TestedAssignSpec;
 import org.smoothbuild.testing.type.TestedTS;
 import org.smoothbuild.testing.type.TestedTSF;
 import org.smoothbuild.testing.type.TestingT;
+import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -476,7 +477,7 @@ public class TypingSTest {
     return testingT().func(resT, paramTs);
   }
 
-  private static TestingT<TypeS> testingT() {
+  private static TestingTS testingT() {
     return testedF().testingT();
   }
 

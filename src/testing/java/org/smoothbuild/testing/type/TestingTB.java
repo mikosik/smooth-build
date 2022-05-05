@@ -27,7 +27,7 @@ import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestingTB implements TestingT<TypeB> {
+public class TestingTB {
   public static final TestingTB INSTANCE = new TestingTB();
 
   private static final TestingContext CONTEXT = new TestingContext();
@@ -72,117 +72,94 @@ public class TestingTB implements TestingT<TypeB> {
           .add(VAR_X)
           .build();
 
-  @Override
   public TypingB typing() {
     return CONTEXT.typingB();
   }
 
-  @Override
   public ImmutableList<TypeB> typesForBuildWideGraph() {
     return list(varA(), varB(), blob(), bool(), int_(), string(), tuple());
   }
 
-  @Override
   public ImmutableList<TypeB> elementaryTypes() {
     return ELEMENTARY_TYPES;
   }
 
-  @Override
   public ImmutableList<TypeB> allTestedTypes() {
     return ALL_TESTED_TYPES;
   }
 
-  @Override
   public TypeB array(TypeB elemT) {
     return FACTORY.array(elemT);
   }
 
-  @Override
   public TypeB func(VarSet<TypeB> tParams, TypeB resT, ImmutableList<TypeB> params) {
     return CONTEXT.funcTB((VarSetB)(Object) tParams, resT, params);
   }
 
-  @Override
   public TypeB func(TypeB resT, ImmutableList<TypeB> params) {
     return CONTEXT.funcTB(resT, params);
   }
 
-  @Override
   public TypeB any() {
     return ANY;
   }
 
-  @Override
   public TypeB blob() {
     return BLOB;
   }
 
-  @Override
   public TypeB bool() {
     return BOOL;
   }
 
-  @Override
   public TypeB int_() {
     return INT;
   }
 
-  @Override
   public TypeB nothing() {
     return NOTHING;
   }
 
-  @Override
   public TypeB string() {
     return STRING;
   }
 
-  @Override
   public boolean isStructSupported() {
     return false;
   }
 
-  @Override
   public TypeB struct() {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public boolean isTupleSupported() {
     return true;
   }
 
-  @Override
   public TypeB tuple() {
     return TUPLE;
   }
 
-  @Override
   public TypeB tuple(ImmutableList<TypeB> items) {
     return FACTORY.tuple(items);
   }
 
-  @Override
   public TypeB varA() {
     return VAR_A;
   }
 
-  @Override
   public TypeB varB() {
     return VAR_B;
   }
 
-  @Override
   public TypeB varX() {
     return VAR_X;
   }
 
-  @Override
   public TypeB varY() {
     return VAR_Y;
   }
 
-  @Override
   public VarSet<TypeB> vs(Var... elements) {
     var varSetB = Stream.of(elements)
         .map(e -> (VarB) e)
@@ -190,7 +167,6 @@ public class TestingTB implements TestingT<TypeB> {
     return (VarSet<TypeB>)(Object) varSetB;
   }
 
-  @Override
   public Sides<TypeB> oneSideBound(Side side, TypeB type) {
     return FACTORY.oneSideBound(side, type);
   }

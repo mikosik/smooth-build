@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.testing.type.TestingT;
+import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -30,7 +31,7 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
   // building graph edges
 
   public static TestingTypeGraphS buildGraph(
-      ImmutableList<TypeS> types, int levelCount, TestingT<TypeS> testingT) {
+      ImmutableList<TypeS> types, int levelCount, TestingTS testingT) {
     TestingTypeGraphS graph = baseGraph(types, testingT);
     for (int i = 0; i < levelCount; i++) {
       graph = levelUp(graph, testingT);
@@ -38,15 +39,14 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     return graph;
   }
 
-  private static TestingTypeGraphS baseGraph(ImmutableList<TypeS> types, TestingT<TypeS> testingT) {
+  private static TestingTypeGraphS baseGraph(ImmutableList<TypeS> types, TestingTS testingT) {
     Multimap<TypeS, TypeS> graph = newMultimap();
     types.forEach(t -> graph.put(testingT.nothing(), t));
     types.forEach(t -> graph.put(t, testingT.any()));
     return new TestingTypeGraphS(graph);
   }
 
-  private static TestingTypeGraphS levelUp(TestingTypeGraphS graph,
-      TestingT<TypeS> testingT) {
+  private static TestingTypeGraphS levelUp(TestingTypeGraphS graph, TestingTS testingT) {
     Multimap<TypeS, TypeS> newDimension = newMultimap();
 
     // arrays

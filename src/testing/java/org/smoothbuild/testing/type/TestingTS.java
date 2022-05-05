@@ -33,7 +33,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestingTS implements TestingT<TypeS> {
+public class TestingTS {
   public static final TestingTS INSTANCE = new TestingTS();
 
   private static final TestingContext CONTEXT = new TestingContext();
@@ -116,7 +116,6 @@ public class TestingTS implements TestingT<TypeS> {
     return FACTORY.struct(name, fields);
   }
 
-  @Override
   public Sides<TypeS> oneSideBound(Side side, TypeS type) {
     return FACTORY.oneSideBound(side, type);
   }
@@ -135,117 +134,94 @@ public class TestingTS implements TestingT<TypeS> {
     return CONTEXT.vbS();
   }
 
-  @Override
   public Typing<TypeS> typing() {
     return CONTEXT.typingS();
   }
 
-  @Override
   public ImmutableList<TypeS> typesForBuildWideGraph() {
     return list(varA(), varB(), blob(), bool(), int_(), struct(), string());
   }
 
-  @Override
   public ImmutableList<TypeS> elementaryTypes() {
     return ELEMENTARY_TYPES;
   }
 
-  @Override
   public ImmutableList<TypeS> allTestedTypes() {
     return ALL_TESTED_TYPES;
   }
 
-  @Override
   public TypeS array(TypeS elemT) {
     return a(elemT);
   }
 
-  @Override
   public TypeS func(TypeS resT, ImmutableList<TypeS> params) {
     return TestingTS.f(resT, params);
   }
 
-  @Override
   public TypeS func(VarSet<TypeS> tParams, TypeS resT, ImmutableList<TypeS> params) {
     return TestingTS.f((VarSetS)(Object) tParams, resT, params);
   }
 
-  @Override
   public TypeS any() {
     return ANY;
   }
 
-  @Override
   public TypeS blob() {
     return BLOB;
   }
 
-  @Override
   public TypeS bool() {
     return BOOL;
   }
 
-  @Override
   public TypeS int_() {
     return INT;
   }
 
-  @Override
   public TypeS nothing() {
     return NOTHING;
   }
 
-  @Override
   public TypeS string() {
     return STRING;
   }
 
-  @Override
   public boolean isStructSupported() {
     return true;
   }
 
-  @Override
   public TypeS struct() {
     return PERSON;
   }
 
-  @Override
   public boolean isTupleSupported() {
     return false;
   }
 
-  @Override
   public TypeS tuple() {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public TypeS tuple(ImmutableList<TypeS> items) {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public TypeS varA() {
     return VAR_A;
   }
 
-  @Override
   public TypeS varB() {
     return VAR_B;
   }
 
-  @Override
   public TypeS varX() {
     return VAR_X;
   }
 
-  @Override
   public TypeS varY() {
     return VAR_Y;
   }
 
-  @Override
   public VarSet<TypeS> vs(Var... elements) {
     return varSet(elements);
   }

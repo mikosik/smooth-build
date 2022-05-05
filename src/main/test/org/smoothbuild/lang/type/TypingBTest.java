@@ -33,6 +33,7 @@ import org.smoothbuild.testing.type.TestedT;
 import org.smoothbuild.testing.type.TestedTB;
 import org.smoothbuild.testing.type.TestedTBF;
 import org.smoothbuild.testing.type.TestingT;
+import org.smoothbuild.testing.type.TestingTB;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -533,7 +534,7 @@ public class TypingBTest {
     return testingT().func(resT, paramTs);
   }
 
-  private static TestingT<TypeB> testingT() {
+  private static TestingTB testingT() {
     return testedF().testingT();
   }
 
