@@ -13,7 +13,6 @@ import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
-import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.BlobTS;
@@ -158,8 +157,8 @@ public class TestingTS {
     return TestingTS.f(resT, params);
   }
 
-  public TypeS func(VarSet<TypeS> tParams, TypeS resT, ImmutableList<TypeS> params) {
-    return TestingTS.f((VarSetS)(Object) tParams, resT, params);
+  public TypeS func(VarSetS tParams, TypeS resT, ImmutableList<TypeS> params) {
+    return TestingTS.f(tParams, resT, params);
   }
 
   public TypeS any() {
@@ -222,14 +221,14 @@ public class TestingTS {
     return VAR_Y;
   }
 
-  public VarSet<TypeS> vs(Var... elements) {
+  public VarSetS vs(Var... elements) {
     return varSet(elements);
   }
 
-  public static VarSet<TypeS> varSet(Var... elements) {
+  public static VarSetS varSet(Var... elements) {
     var varSetS = Stream.of(elements)
         .map(e -> (VarS) e)
         .collect(toVarSetS());
-    return (VarSet<TypeS>) (Object) varSetS;
+    return varSetS;
   }
 }

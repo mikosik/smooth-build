@@ -22,7 +22,6 @@ import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Var;
-import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -92,7 +91,7 @@ public class TestingTB {
     return FACTORY.array(elemT);
   }
 
-  public TypeB func(VarSet<TypeB> tParams, TypeB resT, ImmutableList<TypeB> params) {
+  public TypeB func(VarSetB tParams, TypeB resT, ImmutableList<TypeB> params) {
     return CONTEXT.funcTB((VarSetB)(Object) tParams, resT, params);
   }
 
@@ -160,11 +159,11 @@ public class TestingTB {
     return VAR_Y;
   }
 
-  public VarSet<TypeB> vs(Var... elements) {
+  public VarSetB vs(Var... elements) {
     var varSetB = Stream.of(elements)
         .map(e -> (VarB) e)
         .collect(toVarSetB());
-    return (VarSet<TypeB>)(Object) varSetB;
+    return (VarSetB)(Object) varSetB;
   }
 
   public Sides<TypeB> oneSideBound(Side side, TypeB type) {

@@ -10,13 +10,12 @@ import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 
-public final class VarSetB implements VarSet<VarB> {
+public final class VarSetB {
   private final ImmutableSortedSet<VarB> elements;
 
   public VarSetB(Set<VarB> elements) {
@@ -31,27 +30,22 @@ public final class VarSetB implements VarSet<VarB> {
     return collectingAndThen(toSet(), VarSetB::new);
   }
 
-  @Override
   public boolean contains(VarB type) {
     return elements.contains(type);
   }
 
-  @Override
-  public boolean containsAll(VarSet<VarB> subset) {
-    return elements.containsAll(((VarSetB) subset).elements);
+  public boolean containsAll(VarSetB subset) {
+    return elements.containsAll(subset.elements);
   }
 
-  @Override
   public boolean isEmpty() {
     return elements.isEmpty();
   }
 
-  @Override
   public Stream<VarB> stream() {
     return elements.stream();
   }
 
-  @Override
   public ImmutableList<VarB> asList() {
     return elements.asList();
   }

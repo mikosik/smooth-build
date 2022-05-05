@@ -16,7 +16,6 @@ import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.api.VarBoundsS;
-import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -83,12 +82,8 @@ public class TypeFS {
     return BOOL;
   }
 
-  public FuncTS func(VarSet<TypeS> tParams, TypeS resT, ImmutableList<TypeS> paramTs) {
-    return func((VarSetS)(Object) tParams, resT, paramTs);
-  }
-
-  public FuncTS func(VarSetS setSParams, TypeS resT, ImmutableList<TypeS> paramTs) {
-    return new FuncTS(setSParams, resT, ImmutableList.copyOf(paramTs));
+  public FuncTS func(VarSetS tParams, TypeS resT, ImmutableList<TypeS> paramTs) {
+    return new FuncTS(tParams, resT, ImmutableList.copyOf(paramTs));
   }
 
   public IntTS int_() {

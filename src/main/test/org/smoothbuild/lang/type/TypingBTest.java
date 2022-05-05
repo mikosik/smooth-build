@@ -23,12 +23,12 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.BoundedB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
+import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
-import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.testing.type.TestedAssignSpec;
 import org.smoothbuild.testing.type.TestedT;
 import org.smoothbuild.testing.type.TestedTB;
@@ -478,7 +478,7 @@ public class TypingBTest {
     return testingT().varY();
   }
 
-  private static VarSet<TypeB> vs(Var... elements) {
+  private static VarSetB vs(Var... elements) {
     return testingT().vs(elements);
   }
 
@@ -522,7 +522,7 @@ public class TypingBTest {
     return f(resT, list(paramTs));
   }
 
-  private static TypeB f(VarSet<TypeB> tParams, TypeB resT, TypeB... paramTs) {
+  private static TypeB f(VarSetB tParams, TypeB resT, TypeB... paramTs) {
     return testingT().func(tParams, resT, list(paramTs));
   }
 

@@ -36,7 +36,6 @@ public abstract sealed class TypeS implements Type
         .collect(toVarSetS());
   }
 
-  @Override
   public VarSetS vars() {
     return vars;
   }

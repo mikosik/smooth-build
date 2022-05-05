@@ -31,7 +31,6 @@ import static org.smoothbuild.bytecode.type.val.TypeNamesB.isVarName;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
@@ -69,7 +68,6 @@ import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
-import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.function.Function4;
 
@@ -139,11 +137,6 @@ public class CatDb implements TypeFB {
   }
 
   @Override
-  public FuncTB func(VarSet<TypeB> tParams, TypeB res, ImmutableList<TypeB> params) {
-    VarSetB castTParams = (VarSetB)(Object) tParams;
-    return func(castTParams, res, params);
-  }
-
   public FuncTB func(VarSetB tParams, TypeB res, ImmutableList<TypeB> params) {
     return wrapHashedDbExcAsObjDbExc(() -> newFunc(tParams, res, tuple(params)));
   }
@@ -174,11 +167,6 @@ public class CatDb implements TypeFB {
   public VarB var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return wrapHashedDbExcAsObjDbExc(() -> newVar(name));
-  }
-
-  @Override
-  public VarSetB varSet(Set<TypeB> elements) {
-    return new VarSetB((Set<VarB>)(Object) elements);
   }
 
   // methods for getting Expr-s types

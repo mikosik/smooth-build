@@ -23,12 +23,12 @@ import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.api.VarBoundsS;
-import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.lang.type.impl.TypingS;
+import org.smoothbuild.lang.type.impl.VarSetS;
 import org.smoothbuild.testing.type.TestedAssignSpec;
 import org.smoothbuild.testing.type.TestedTS;
 import org.smoothbuild.testing.type.TestedTSF;
@@ -425,7 +425,7 @@ public class TypingSTest {
     return testingT().varY();
   }
 
-  private static VarSet<TypeS> vs(Var... elements) {
+  private static VarSetS vs(Var... elements) {
     return testingT().vs(elements);
   }
 
@@ -465,7 +465,7 @@ public class TypingSTest {
     return f(resT, list(paramTs));
   }
 
-  private static TypeS f(VarSet<TypeS> tParams, TypeS resT, TypeS... paramTs) {
+  private static TypeS f(VarSetS tParams, TypeS resT, TypeS... paramTs) {
     return testingT().func(tParams, resT, list(paramTs));
   }
 

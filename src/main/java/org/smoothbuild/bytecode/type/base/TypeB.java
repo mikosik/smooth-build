@@ -30,7 +30,6 @@ public abstract class TypeB extends CatB implements Type {
         .collect(toVarSetB());
   }
 
-  @Override
   public VarSetB vars() {
     return vars;
   }

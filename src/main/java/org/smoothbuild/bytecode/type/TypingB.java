@@ -30,7 +30,6 @@ import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
-import org.smoothbuild.lang.type.api.VarSet;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -265,7 +264,7 @@ public class TypingB {
     }
     return switch (composedT) {
       case ArrayTB array -> typeFB.array(covars.get(0));
-      case FuncTB func -> typeFB.func((VarSet<TypeB>)(Object) typeFB.varSet(set()), covars.get(0),
+      case FuncTB func -> typeFB.func(typeFB.varSet(set()), covars.get(0),
           contravars);
       case TupleTB tuple -> typeFB.tuple(covars);
     };

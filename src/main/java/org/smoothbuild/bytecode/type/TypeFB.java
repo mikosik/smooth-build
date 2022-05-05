@@ -17,7 +17,6 @@ import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
-import org.smoothbuild.lang.type.api.VarSet;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -29,7 +28,7 @@ public interface TypeFB {
 
   public ArrayTB array(TypeB elemType);
 
-  public FuncTB func(VarSet<TypeB> tParams, TypeB resT, ImmutableList<TypeB> paramTs);
+  public FuncTB func(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs);
 
   public TupleTB tuple(ImmutableList<TypeB> items);
 
@@ -43,8 +42,8 @@ public interface TypeFB {
     return new VarBoundsB(map);
   }
 
-  public default VarSetB varSet(Set<TypeB> elements) {
-    return new VarSetB((Set<VarB>)(Object) elements);
+  public default VarSetB varSet(Set<VarB> elements) {
+    return new VarSetB(elements);
   }
 
   public default TypeB edge(Side side) {
