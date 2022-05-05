@@ -13,7 +13,6 @@ import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.TupleT;
-import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.api.VarBoundsS;
@@ -24,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 @Singleton
-public class TypeFS implements TypeF<TypeS> {
+public class TypeFS {
   private static final AnyTS ANY = new AnyTS();
   private static final BlobTS BLOB = new BlobTS();
   private static final BoolTS BOOL = new BoolTS();
@@ -36,12 +35,10 @@ public class TypeFS implements TypeF<TypeS> {
   public TypeFS() {
   }
 
-  @Override
   public BoundedS bounded(Var var, Sides<TypeS> sides) {
     return new BoundedS(var, sides);
   }
 
-  @Override
   public VarBounds<TypeS> varBounds(ImmutableMap<Var, Bounded<TypeS>> map) {
     return new VarBoundsS(map);
   }
@@ -70,20 +67,10 @@ public class TypeFS implements TypeF<TypeS> {
     );
   }
 
-  @Override
-  public Sides<TypeS> oneSideBound(Side side, TypeS type) {
-    return switch (side) {
-      case LOWER-> new Sides<>(type, any());
-      case UPPER -> new Sides<>(nothing(), type);
-    };
-  }
-
-  @Override
   public AnyTS any() {
     return ANY;
   }
 
-  @Override
   public ArrayTS array(TypeS elemT) {
     return new ArrayTS(elemT);
   }
@@ -96,7 +83,6 @@ public class TypeFS implements TypeF<TypeS> {
     return BOOL;
   }
 
-  @Override
   public FuncTS func(VarSet<TypeS> tParams, TypeS resT, ImmutableList<TypeS> paramTs) {
     return func((VarSetS)(Object) tParams, resT, paramTs);
   }
@@ -109,7 +95,6 @@ public class TypeFS implements TypeF<TypeS> {
     return INT;
   }
 
-  @Override
   public NothingTS nothing() {
     return NOTHING;
   }
@@ -122,19 +107,30 @@ public class TypeFS implements TypeF<TypeS> {
     return new StructTS(name, fields);
   }
 
-  @Override
   public TupleT tuple(ImmutableList<TypeS> items) {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public VarS var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return new VarS(name);
   }
 
-  @Override
   public VarSetS varSet(Set<TypeS> elements) {
     return new VarSetS((Set<VarS>)(Object) elements);
+  }
+
+  public TypeS edge(Side side) {
+    return switch (side) {
+      case LOWER -> nothing();
+      case UPPER -> any();
+    };
+  }
+
+  public Sides<TypeS> oneSideBound(Side side, TypeS type) {
+    return switch (side) {
+      case LOWER-> new Sides<>(type, any());
+      case UPPER -> new Sides<>(nothing(), type);
+    };
   }
 }

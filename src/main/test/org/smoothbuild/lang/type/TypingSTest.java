@@ -20,13 +20,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
-import org.smoothbuild.lang.type.api.TypeF;
 import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
+import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.testing.type.TestedAssignSpec;
@@ -485,7 +485,7 @@ public class TypingSTest {
     return TESTED_ASSIGN_CASES_S.testedTF();
   }
 
-  private static TypeF<TypeS> typeF() {
+  private static TypeFS typeF() {
     return typing().typeF();
   }
 

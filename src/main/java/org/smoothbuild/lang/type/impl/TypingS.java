@@ -87,7 +87,7 @@ public class TypingS {
         || inequalByConstruction(type1, type2, side, inequalityFunc);
   }
 
-  private boolean inequalByEdgeCases(Type type1, Type type2, Side side) {
+  private boolean inequalByEdgeCases(TypeS type1, TypeS type2, Side side) {
     return type2.equals(typeFS.edge(side))
         || type1.equals(typeFS.edge(side.other()));
   }
