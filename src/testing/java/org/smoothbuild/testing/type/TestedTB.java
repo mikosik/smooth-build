@@ -25,6 +25,16 @@ public class TestedTB implements TestedT<TypeB> {
   }
 
   @Override
+  public String name() {
+    return type().name();
+  }
+
+  @Override
+  public String q() {
+    return type().q();
+  }
+
+  @Override
   public boolean isFunc(Predicate<? super TestedT<? extends Type>> resPredicate,
       List<? extends Predicate<? super TestedT<? extends Type>>> paramPredicates) {
     return false;

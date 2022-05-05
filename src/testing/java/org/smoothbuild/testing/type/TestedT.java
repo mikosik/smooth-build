@@ -8,13 +8,9 @@ import org.smoothbuild.lang.type.api.Type;
 public interface TestedT<T extends Type> {
   public T type();
 
-  public default String name() {
-    return type().name();
-  }
+  public String name();
 
-  public default String q() {
-    return type().q();
-  }
+  public String q();
 
   public boolean isFunc(
       Predicate<? super TestedT<? extends Type>> resPredicate,

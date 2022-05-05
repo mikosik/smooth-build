@@ -40,6 +40,16 @@ public class TestedTS implements TestedT<TypeS> {
     return type;
   }
 
+  @Override
+  public String name() {
+    return type().name();
+  }
+
+  @Override
+  public String q() {
+    return type().q();
+  }
+
   public String literal() {
     return literal;
   }
