@@ -9,7 +9,6 @@ import static org.smoothbuild.util.collect.NList.nList;
 import java.util.stream.Stream;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.Typing;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Var;
@@ -26,6 +25,7 @@ import org.smoothbuild.lang.type.impl.StringTS;
 import org.smoothbuild.lang.type.impl.StructTS;
 import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.lang.type.impl.VarS;
 import org.smoothbuild.lang.type.impl.VarSetS;
 import org.smoothbuild.testing.TestingContext;
@@ -134,7 +134,7 @@ public class TestingTS {
     return CONTEXT.vbS();
   }
 
-  public Typing<TypeS> typing() {
+  public TypingS typing() {
     return CONTEXT.typingS();
   }
 

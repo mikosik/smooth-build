@@ -23,7 +23,6 @@ import org.smoothbuild.bytecode.type.val.CallableTB;
 import org.smoothbuild.bytecode.type.val.ComposedTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.lang.type.Typing;
 import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.Side;
@@ -36,7 +35,7 @@ import org.smoothbuild.lang.type.api.VarSet;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class TypingB implements Typing<TypeB> {
+public class TypingB {
   private final TypeFB typeFB;
 
   @Inject
@@ -44,7 +43,6 @@ public class TypingB implements Typing<TypeB> {
     this.typeFB = typeFB;
   }
 
-  @Override
   public boolean contains(TypeB type, TypeB inner) {
     if (type.equals(inner)) {
       return true;
@@ -57,7 +55,6 @@ public class TypingB implements Typing<TypeB> {
     }
   }
 
-  @Override
   public TypeB inferCallResT(FuncT funcT, ImmutableList<TypeB> argTs,
       Supplier<RuntimeException> illegalArgsExcThrower) {
     var callableTB = (CallableTB) funcT;
@@ -74,23 +71,19 @@ public class TypingB implements Typing<TypeB> {
     return mapVarsLower(res, varBounds);
   }
 
-  @Override
   public boolean isAssignable(TypeB target, TypeB source) {
     return inequal(target, source, LOWER);
   }
 
-  @Override
   public boolean isParamAssignable(TypeB target, TypeB source) {
     return inequalParam(target, source, LOWER)
         && areConsistent(inferVarBoundsLower(target, source));
   }
 
-  @Override
   public boolean inequal(TypeB type1, TypeB type2, Side side) {
     return inequalImpl(type1, type2, side, this::inequal);
   }
 
-  @Override
   public boolean inequalParam(TypeB type1, TypeB type2, Side side) {
     return (type1 instanceof Var)
         || inequalImpl(type1, type2, side, this::inequalParam);
@@ -130,13 +123,11 @@ public class TypingB implements Typing<TypeB> {
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  @Override
   public VarBounds<TypeB> inferVarBoundsLower(List<? extends TypeB> types1,
       List<? extends TypeB> types2) {
     return inferVarBounds(types1, types2, LOWER);
   }
 
-  @Override
   public VarBounds<TypeB> inferVarBounds(
       List<? extends TypeB> types1, List<? extends TypeB> types2, Side side) {
     checkArgument(types1.size() == types2.size());
@@ -147,12 +138,10 @@ public class TypingB implements Typing<TypeB> {
     return typeFB.varBounds(ImmutableMap.copyOf(result));
   }
 
-  @Override
   public VarBounds<TypeB> inferVarBoundsLower(TypeB type1, TypeB type2) {
     return inferVarBounds(type1, type2, LOWER);
   }
 
-  @Override
   public VarBounds<TypeB> inferVarBounds(TypeB type1, TypeB type2, Side side) {
     var result = new HashMap<Var, Bounded<TypeB>>();
     inferImpl(type1, type2, side, result);
@@ -191,12 +180,10 @@ public class TypingB implements Typing<TypeB> {
     }
   }
 
-  @Override
   public TypeB mapVarsLower(TypeB type, VarBounds<TypeB> varBounds) {
     return mapVars(type, varBounds, LOWER);
   }
 
-  @Override
   public TypeB mapVars(TypeB type, VarBounds<TypeB> varBounds, Side side) {
     if (!type.vars().isEmpty()) {
       return switch (type) {
@@ -223,17 +210,14 @@ public class TypingB implements Typing<TypeB> {
     }
   }
 
-  @Override
   public TypeB mergeUp(TypeB type1, TypeB type2) {
     return merge(type1, type2, UPPER);
   }
 
-  @Override
   public TypeB mergeDown(TypeB type1, TypeB type2) {
     return merge(type1, type2, LOWER);
   }
 
-  @Override
   public TypeB merge(TypeB type1, TypeB type2, Side direction) {
     Type otherEdge = typeFB.edge(direction.other());
     if (otherEdge.equals(type2)) {
@@ -261,19 +245,16 @@ public class TypingB implements Typing<TypeB> {
     return typeFB.edge(direction);
   }
 
-  @Override
   public Bounded<TypeB> merge(Bounded<TypeB> a, Bounded<TypeB> b) {
     return typeFB.bounded(a.var(), merge(a.bounds(), b.bounds()));
   }
 
-  @Override
   public Sides<TypeB> merge(Sides<TypeB> bounds1, Sides<TypeB> bounds2) {
     return new Sides<>(
         merge(bounds1.lower(), bounds2.lower(), UPPER),
         merge(bounds1.upper(), bounds2.upper(), LOWER));
   }
 
-  @Override
   public TypeB rebuildComposed(
       TypeB type, ImmutableList<TypeB> covars, ImmutableList<TypeB> contravars) {
     if (!(type instanceof ComposedTB composedT)) {
@@ -290,7 +271,6 @@ public class TypingB implements Typing<TypeB> {
     };
   }
 
-  @Override
   public TypeFB typeF() {
     return typeFB;
   }

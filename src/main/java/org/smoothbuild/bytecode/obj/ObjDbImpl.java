@@ -47,7 +47,6 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
-import org.smoothbuild.lang.type.Typing;
 import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.base.Preconditions;
@@ -531,7 +530,7 @@ public class ObjDbImpl implements ObjDb {
     return catDb;
   }
 
-  public Typing<TypeB> typing() {
+  public TypingB typing() {
     return typing;
   }
 }

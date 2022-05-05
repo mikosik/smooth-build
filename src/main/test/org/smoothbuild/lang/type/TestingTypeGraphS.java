@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.params.provider.Arguments;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.impl.TypeS;
-import org.smoothbuild.testing.type.TestingT;
 import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableList;

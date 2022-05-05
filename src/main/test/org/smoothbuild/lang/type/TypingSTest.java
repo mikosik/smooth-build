@@ -28,10 +28,10 @@ import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.testing.type.TestedAssignSpec;
 import org.smoothbuild.testing.type.TestedTS;
 import org.smoothbuild.testing.type.TestedTSF;
-import org.smoothbuild.testing.type.TestingT;
 import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableList;
@@ -489,7 +489,7 @@ public class TypingSTest {
     return typing().typeF();
   }
 
-  private static Typing<TypeS> typing() {
+  private static TypingS typing() {
     return TESTED_ASSIGN_CASES_S.testingT().typing();
   }
 }

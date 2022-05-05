@@ -17,6 +17,7 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.BoundedB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
@@ -32,7 +33,6 @@ import org.smoothbuild.testing.type.TestedAssignSpec;
 import org.smoothbuild.testing.type.TestedT;
 import org.smoothbuild.testing.type.TestedTB;
 import org.smoothbuild.testing.type.TestedTBF;
-import org.smoothbuild.testing.type.TestingT;
 import org.smoothbuild.testing.type.TestingTB;
 
 import com.google.common.collect.ImmutableList;
@@ -546,7 +546,7 @@ public class TypingBTest {
     return typing().typeF();
   }
 
-  private static Typing<TypeB> typing() {
+  private static TypingB typing() {
     return TESTED_ASSIGN_CASES_B.testingT().typing();
   }
 }

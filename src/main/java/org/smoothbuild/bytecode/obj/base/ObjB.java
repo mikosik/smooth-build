@@ -13,11 +13,11 @@ import org.smoothbuild.bytecode.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongSeqSizeExc;
+import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
-import org.smoothbuild.lang.type.Typing;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -49,7 +49,7 @@ public abstract class ObjB {
     return objDb.hashedDb();
   }
 
-  protected Typing<TypeB> typing() {
+  protected TypingB typing() {
     return objDb.typing();
   }
 
