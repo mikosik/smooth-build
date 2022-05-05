@@ -3,7 +3,7 @@ package org.smoothbuild.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.bytecode.type.val.VarBoundsB.varBoundsB;
-import static org.smoothbuild.lang.type.TestingTypeGraph.buildGraph;
+import static org.smoothbuild.lang.type.TestingTypeGraphB.buildGraph;
 import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.testing.type.TestedAssignCasesB.TESTED_ASSIGN_CASES_B;
@@ -430,7 +430,7 @@ public class TypingBTest {
         .isEqualTo(expected);
   }
 
-  private static TestingTypeGraph<TypeB> buildWideGraph() {
+  private static TestingTypeGraphB buildWideGraph() {
     return buildGraph(testingT().typesForBuildWideGraph(), 1, testingT());
   }
 
