@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 
 public class TestedTBF implements TestedTF<TypeB, TestedTB, TestedAssignSpecB> {
   @Override
-  public TestingT<TypeB> testingT() {
+  public TestingTB testingT() {
     return TestingTB.INSTANCE;
   }
 

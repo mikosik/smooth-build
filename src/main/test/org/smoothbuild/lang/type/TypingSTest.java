@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.type.TestingTypeGraph.buildGraph;
 import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.lang.type.api.VarBoundsS.varBoundsS;
-import static org.smoothbuild.testing.type.TestedAssignCases.TESTED_ASSIGN_CASES_S;
+import static org.smoothbuild.testing.type.TestedAssignCasesS.TESTED_ASSIGN_CASES_S;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 

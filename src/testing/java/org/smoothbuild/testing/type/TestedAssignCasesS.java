@@ -8,38 +8,30 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.lang.type.api.Type;
-import org.smoothbuild.lang.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class TestedAssignCases<
-    T extends Type,
-    TT extends TestedT<T>,
-    S extends TestedAssignSpec<? extends TT>> {
+public class TestedAssignCasesS {
+  public static final TestedAssignCasesS TESTED_ASSIGN_CASES_S =
+      new TestedAssignCasesS(new TestedTSF());
 
-  public static final TestedAssignCases<TypeS, TestedTS, TestedAssignSpecS> TESTED_ASSIGN_CASES_S =
-      new TestedAssignCases<>(new TestedTSF());
-  public static final TestedAssignCases<TypeB, TestedTB, TestedAssignSpecB> TESTED_ASSIGN_CASES_B =
-      new TestedAssignCases<>(new TestedTBF());
-
-  private final TestedTF<T, TT, S> testedTF;
-  private final TestingT<T> testingT;
-  private final TT a;
-  private final TT b;
-  private final TT any;
-  private final TT blob;
-  private final TT int_;
-  private final TT nothing;
-  private final TT string;
-  private final TT struct;
-  private final TT tuple;
+  private final TestedTSF testedTF;
+  private final TestingTS testingT;
+  private final TestedTS a;
+  private final TestedTS b;
+  private final TestedTS any;
+  private final TestedTS blob;
+  private final TestedTS int_;
+  private final TestedTS nothing;
+  private final TestedTS string;
+  private final TestedTS struct;
+  private final TestedTS tuple;
   private final boolean isStructSupported;
   private final boolean isTupleSupported;
 
-  private TestedAssignCases(TestedTF<T, TT, S> testedTF) {
+  public TestedAssignCasesS(TestedTSF testedTF) {
     this.testedTF = testedTF;
     this.testingT = testedTF.testingT();
     this.a = testedTF.varA();
@@ -55,38 +47,42 @@ public class TestedAssignCases<
     this.tuple = this.isTupleSupported ? testedTF.tuple() : null;
   }
 
-  public TestedTF<T, TT, S> testedTF() {
+  @Override
+  public TestedTSF testedTF() {
     return testedTF;
   }
 
-  public TestingT<T> testingT() {
+  @Override
+  public TestingTS testingT() {
     return testingT;
   }
 
-  private S illegalAssignment(TT target, TT source) {
+  private TestedAssignSpecS illegalAssignment(TestedTS target, TestedTS source) {
     return testedTF.testedAssignmentSpec(target, source, false);
   }
 
-  private S allowedAssignment(TT target, TT source) {
+  private TestedAssignSpecS allowedAssignment(TestedTS target, TestedTS source) {
     return testedTF.testedAssignmentSpec(target, source, true);
   }
 
-  public List<S> assignment_test_specs(boolean includeAny) {
-    var result = new ArrayList<S>();
+  @Override
+  public List<TestedAssignSpecS> assignment_test_specs(boolean includeAny) {
+    var result = new ArrayList<TestedAssignSpecS>();
     result.addAll(testSpecsCommonForNormalCaseAndParamAssignment(includeAny));
     result.addAll(testSpecSpecificForNormalAssignment(includeAny));
     return result;
   }
 
-  public List<S> param_assignment_test_specs(boolean includeAny) {
-    var result = new ArrayList<S>();
+  @Override
+  public List<TestedAssignSpecS> param_assignment_test_specs(boolean includeAny) {
+    var result = new ArrayList<TestedAssignSpecS>();
     result.addAll(testSpecsCommonForNormalCaseAndParamAssignment(includeAny));
     result.addAll(testSpecsSpecificForParamAssignment(includeAny));
     return result;
   }
 
-  private List<S> testSpecsCommonForNormalCaseAndParamAssignment(boolean includeAny) {
-    var r = new ArrayList<S>();
+  private List<TestedAssignSpecS> testSpecsCommonForNormalCaseAndParamAssignment(boolean includeAny) {
+    var r = new ArrayList<TestedAssignSpecS>();
     if (includeAny) {
       gen(r, any, includeAny, mAll());
     }
@@ -201,8 +197,8 @@ public class TestedAssignCases<
     return r;
   }
 
-  private List<S> testSpecSpecificForNormalAssignment(boolean includeAny) {
-    List<S> r = new ArrayList<>();
+  private List<TestedAssignSpecS> testSpecSpecificForNormalAssignment(boolean includeAny) {
+    List<TestedAssignSpecS> r = new ArrayList<>();
     gen(r, a, includeAny, oneOf(nothing, a));
     gen(r, b, includeAny, oneOf(nothing));
 
@@ -277,8 +273,8 @@ public class TestedAssignCases<
     return r;
   }
 
-  private List<S> testSpecsSpecificForParamAssignment(boolean includeAny) {
-    List<S> r = new ArrayList<>();
+  private List<TestedAssignSpecS> testSpecsSpecificForParamAssignment(boolean includeAny) {
+    List<TestedAssignSpecS> r = new ArrayList<>();
     gen(r, a, includeAny, mAll());
     gen(r, b, includeAny, mAll());
     gen(r, a(a), includeAny, mNothing(), TestedT::isArray);
@@ -371,21 +367,21 @@ public class TestedAssignCases<
     return type -> type.equals(nothing);
   }
 
-  private Predicate<TestedT<? extends Type>> oneOf(TT... types) {
+  private Predicate<TestedT<? extends Type>> oneOf(TestedTS... types) {
     return Set.of(types)::contains;
   }
 
-  private List<S> gen(List<S> result, TT target, boolean includeAny,
+  private List<TestedAssignSpecS> gen(List<TestedAssignSpecS> result, TestedTS target, boolean includeAny,
       Predicate<TestedT<? extends Type>>... allowedPredicates) {
-    for (TT type : generateTypes(2, includeAny)) {
+    for (TestedTS type : generateTypes(2, includeAny)) {
       boolean allowed = stream(allowedPredicates).anyMatch(predicate -> predicate.test(type));
       result.add(testedTF.testedAssignmentSpec(target, type, allowed));
     }
     return result;
   }
 
-  private ImmutableList<TT> generateTypes(int depth, boolean includeAny) {
-    Builder<TT> builder = ImmutableList.builder();
+  private ImmutableList<TestedTS> generateTypes(int depth, boolean includeAny) {
+    Builder<TestedTS> builder = ImmutableList.builder();
     builder.add(blob);
     builder.add(nothing);
     if (isStructSupported) {
@@ -395,14 +391,14 @@ public class TestedAssignCases<
       builder.add(any);
     }
     if (0 < depth) {
-      List<TT> types = generateTypes(depth - 1, includeAny);
-      for (TT type : types) {
+      List<TestedTS> types = generateTypes(depth - 1, includeAny);
+      for (TestedTS type : types) {
         builder.add(a(type));
         if (isTupleSupported) {
           builder.add(tuple(type));
         }
         builder.add(f(type, list()));
-        for (TT type2 : types) {
+        for (TestedTS type2 : types) {
           builder.add(f(type, list(type2)));
         }
       }
@@ -410,23 +406,23 @@ public class TestedAssignCases<
     return builder.build();
   }
 
-  private TT a(TT type) {
+  private TestedTS a(TestedTS type) {
     return testedTF.array(type);
   }
 
-  private TT a2(TT type) {
+  private TestedTS a2(TestedTS type) {
     return testedTF.array2(type);
   }
 
-  private TT tuple(TT type) {
+  private TestedTS tuple(TestedTS type) {
     return testedTF.tuple(list(type));
   }
 
-  private TT f(TT resT, ImmutableList<TT> paramTs) {
+  private TestedTS f(TestedTS resT, ImmutableList<TestedTS> paramTs) {
     return testedTF.func(resT, paramTs);
   }
 
-  private TT f(TT resT, TT... paramTs) {
+  private TestedTS f(TestedTS resT, TestedTS... paramTs) {
     return testedTF.func(resT, list(paramTs));
   }
 }
