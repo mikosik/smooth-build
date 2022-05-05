@@ -1,5 +1,5 @@
 package org.smoothbuild.lang.type.api;
 
-public non-sealed interface ArrayT extends ComposedT {
+public interface ArrayT {
   public Type elem();
 }

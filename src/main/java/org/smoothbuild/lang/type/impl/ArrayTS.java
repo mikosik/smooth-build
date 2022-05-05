@@ -3,7 +3,6 @@ package org.smoothbuild.lang.type.impl;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.lang.type.api.ArrayT;
-import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.TypeNames;
 
 import com.google.common.collect.ImmutableList;
@@ -11,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public final class ArrayTS extends TypeS implements ArrayT {
+public final class ArrayTS extends TypeS implements ArrayT, ComposedTS {
   private final TypeS elem;
 
   public ArrayTS(TypeS elem) {
@@ -25,12 +24,12 @@ public final class ArrayTS extends TypeS implements ArrayT {
   }
 
   @Override
-  public ImmutableList<Type> covars() {
+  public ImmutableList<TypeS> covars() {
     return ImmutableList.of(elem);
   }
 
   @Override
-  public ImmutableList<Type> contravars() {
+  public ImmutableList<TypeS> contravars() {
     return ImmutableList.of();
   }
 

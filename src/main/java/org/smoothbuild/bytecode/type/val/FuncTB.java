@@ -12,7 +12,7 @@ import org.smoothbuild.db.Hash;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncTB extends TypeB implements CallableTB {
+public final class FuncTB extends TypeB implements CallableTB, ComposedTB {
   private final VarSetB tParams;
   private final TypeB res;
   private final TupleTB params;
@@ -53,5 +53,15 @@ public final class FuncTB extends TypeB implements CallableTB {
   @Override
   public FuncB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
     return (FuncB) super.newObj(merkleRoot, objDb);
+  }
+
+  @Override
+  public ImmutableList<TypeB> covars() {
+    return ImmutableList.of(res());
+  }
+
+  @Override
+  public ImmutableList<TypeB> contravars() {
+    return params();
   }
 }

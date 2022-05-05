@@ -9,14 +9,13 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.type.api.TupleT;
-import org.smoothbuild.lang.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class TupleTB extends TypeB implements TupleT {
+public final class TupleTB extends TypeB implements TupleT, ComposedTB {
   private final ImmutableList<TypeB> itemTs;
 
   public TupleTB(Hash hash, ImmutableList<TypeB> itemTs) {
@@ -40,12 +39,12 @@ public class TupleTB extends TypeB implements TupleT {
   }
 
   @Override
-  public ImmutableList<Type> covars() {
-    return (ImmutableList<Type>)(Object) items();
+  public ImmutableList<TypeB> covars() {
+    return items();
   }
 
   @Override
-  public ImmutableList<Type> contravars() {
+  public ImmutableList<TypeB> contravars() {
     return ImmutableList.of();
   }
 }

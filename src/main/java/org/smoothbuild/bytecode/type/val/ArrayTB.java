@@ -10,14 +10,13 @@ import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.type.api.ArrayT;
-import org.smoothbuild.lang.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class ArrayTB extends TypeB implements ArrayT {
+public final class ArrayTB extends TypeB implements ArrayT, ComposedTB {
   private final TypeB elem;
 
   public ArrayTB(Hash hash, TypeB elem) {
@@ -37,12 +36,12 @@ public class ArrayTB extends TypeB implements ArrayT {
   }
 
   @Override
-  public ImmutableList<Type> covars() {
+  public ImmutableList<TypeB> covars() {
     return ImmutableList.of(elem);
   }
 
   @Override
-  public ImmutableList<Type> contravars() {
+  public ImmutableList<TypeB> contravars() {
     return ImmutableList.of();
   }
 }
