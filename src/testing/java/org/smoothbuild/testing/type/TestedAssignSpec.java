@@ -5,15 +5,7 @@ public interface TestedAssignSpec<T extends TestedT<?>> {
 
   public boolean allowed();
 
-  public default T source() {
-    return assignment().source();
-  }
+  public T source();
 
-  public default T target() {
-    return assignment().target();
-  }
-
-  public default String toStringImpl() {
-    return assignment().toString() + " :" + (allowed() ? "allowed" : "illegal");
-  }
+  public T target();
 }

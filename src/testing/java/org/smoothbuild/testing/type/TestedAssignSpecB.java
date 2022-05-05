@@ -24,7 +24,17 @@ public class TestedAssignSpecB implements TestedAssignSpec<TestedTB> {
   }
 
   @Override
+  public TestedTB source() {
+    return assignment().source();
+  }
+
+  @Override
+  public TestedTB target() {
+    return assignment().target();
+  }
+
+  @Override
   public String toString() {
-    return toStringImpl();
+    return assignment().toString() + " :" + (allowed() ? "allowed" : "illegal");
   }
 }

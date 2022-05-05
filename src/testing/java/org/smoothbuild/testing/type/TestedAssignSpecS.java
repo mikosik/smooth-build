@@ -32,7 +32,17 @@ public class TestedAssignSpecS implements TestedAssignSpec<TestedTS> {
   }
 
   @Override
+  public TestedTS source() {
+    return assignment().source();
+  }
+
+  @Override
+  public TestedTS target() {
+    return assignment().target();
+  }
+
+  @Override
   public String toString() {
-    return toStringImpl();
+    return assignment().toString() + " :" + (allowed() ? "allowed" : "illegal");
   }
 }
