@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.testing.type.TestedTS.TestedArrayTS;
 import org.smoothbuild.testing.type.TestedTS.TestedFuncTS;
 
@@ -23,7 +22,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 
-public class TestedTSF implements TestedTF<TypeS, TestedTS, TestedAssignSpecS> {
+public class TestedTSF {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
   public static final TestedTS A = new TestedTS(var("A"), null, null);
@@ -145,67 +144,54 @@ public class TestedTSF implements TestedTF<TypeS, TestedTS, TestedAssignSpecS> {
       Set.of("Flag{ Bool value }")
   );
 
-  @Override
   public TestingTS testingT() {
     return TestingTS.INSTANCE;
   }
 
-  @Override
   public TestedTS any() {
     return ANY;
   }
 
-  @Override
   public TestedTS blob() {
     return BLOB;
   }
 
-  @Override
   public TestedTS bool() {
     return BOOL;
   }
 
-  @Override
   public TestedTS int_() {
     return INT;
   }
 
-  @Override
   public TestedTS nothing() {
     return NOTHING;
   }
 
-  @Override
   public TestedTS string() {
     return STRING;
   }
 
-  @Override
   public TestedTS struct() {
     return STRUCT;
   }
 
-  @Override
   public TestedTS tuple() {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public TestedTS tuple(ImmutableList<TestedTS> items) {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public TestedTS varA() {
     return A;
   }
 
-  @Override
   public TestedTS varB() {
     return B;
   }
 
-  @Override
   public TestedTS array(TestedTS type) {
     return a(type);
   }
@@ -237,12 +223,10 @@ public class TestedTSF implements TestedTF<TypeS, TestedTS, TestedAssignSpecS> {
     );
   }
 
-  @Override
   public TestedTS array2(TestedTS type) {
     return array(array(type));
   }
 
-  @Override
   public TestedTS func(TestedTS resT, ImmutableList<TestedTS> paramTs) {
     return f(resT, paramTs);
   }
@@ -298,7 +282,6 @@ public class TestedTSF implements TestedTF<TypeS, TestedTS, TestedAssignSpecS> {
     return builder.build();
   }
 
-  @Override
   public TestedAssignSpecS testedAssignmentSpec(TestedTS target,
       TestedTS source, boolean allowed) {
     return new TestedAssignSpecS(target, source, allowed);

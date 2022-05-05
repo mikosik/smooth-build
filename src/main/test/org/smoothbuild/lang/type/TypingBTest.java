@@ -31,7 +31,7 @@ import org.smoothbuild.lang.type.api.VarSet;
 import org.smoothbuild.testing.type.TestedAssignSpec;
 import org.smoothbuild.testing.type.TestedT;
 import org.smoothbuild.testing.type.TestedTB;
-import org.smoothbuild.testing.type.TestedTF;
+import org.smoothbuild.testing.type.TestedTBF;
 import org.smoothbuild.testing.type.TestingT;
 
 import com.google.common.collect.ImmutableList;
@@ -537,7 +537,7 @@ public class TypingBTest {
     return testedF().testingT();
   }
 
-  private static TestedTF<TypeB, TestedTB, ? extends TestedAssignSpec<TestedTB>> testedF() {
+  private static TestedTBF testedF() {
     return TESTED_ASSIGN_CASES_B.testedTF();
   }
 

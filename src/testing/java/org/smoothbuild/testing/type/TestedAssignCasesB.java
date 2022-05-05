@@ -47,12 +47,10 @@ public class TestedAssignCasesB {
     this.tuple = this.isTupleSupported ? testedTF.tuple() : null;
   }
 
-  @Override
   public TestedTBF testedTF() {
     return testedTF;
   }
 
-  @Override
   public TestingTB testingT() {
     return testingT;
   }
@@ -65,7 +63,6 @@ public class TestedAssignCasesB {
     return testedTF.testedAssignmentSpec(target, source, true);
   }
 
-  @Override
   public List<TestedAssignSpecB> assignment_test_specs(boolean includeAny) {
     var result = new ArrayList<TestedAssignSpecB>();
     result.addAll(testSpecsCommonForNormalCaseAndParamAssignment(includeAny));
@@ -73,7 +70,6 @@ public class TestedAssignCasesB {
     return result;
   }
 
-  @Override
   public List<TestedAssignSpecB> param_assignment_test_specs(boolean includeAny) {
     var result = new ArrayList<TestedAssignSpecB>();
     result.addAll(testSpecsCommonForNormalCaseAndParamAssignment(includeAny));

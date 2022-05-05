@@ -29,8 +29,8 @@ import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.testing.type.TestedAssignSpec;
-import org.smoothbuild.testing.type.TestedTF;
 import org.smoothbuild.testing.type.TestedTS;
+import org.smoothbuild.testing.type.TestedTSF;
 import org.smoothbuild.testing.type.TestingT;
 
 import com.google.common.collect.ImmutableList;
@@ -480,7 +480,7 @@ public class TypingSTest {
     return testedF().testingT();
   }
 
-  private static TestedTF<TypeS, TestedTS, ? extends TestedAssignSpec<TestedTS>> testedF() {
+  private static TestedTSF testedF() {
     return TESTED_ASSIGN_CASES_S.testedTF();
   }
 
