@@ -115,20 +115,6 @@ public class TestingTS {
     return FACTORY.oneSideBound(side, type);
   }
 
-  public static VarBoundsS vb(
-      VarS var1, Side side1, TypeS bound1,
-      VarS var2, Side side2, TypeS bound2) {
-    return CONTEXT.vbS(var1, side1, bound1, var2, side2, bound2);
-  }
-
-  public static VarBoundsS vb(VarS var, Side side, TypeS bound) {
-    return CONTEXT.vbS(var, side, bound);
-  }
-
-  public static VarBoundsS vb() {
-    return CONTEXT.vbS();
-  }
-
   public TypingS typing() {
     return CONTEXT.typingS();
   }
