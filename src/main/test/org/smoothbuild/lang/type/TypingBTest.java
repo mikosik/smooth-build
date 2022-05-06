@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.bytecode.type.val.VarBoundsB.varBoundsB;
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 import static org.smoothbuild.lang.type.TestingTypeGraphB.buildGraph;
 import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
@@ -475,7 +476,7 @@ public class TypingBTest {
   }
 
   private static VarSetB vs(VarB... elements) {
-    return testingT().vs(elements);
+    return varSetB(elements);
   }
 
   private static TypeB any() {

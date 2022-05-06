@@ -2,11 +2,8 @@ package org.smoothbuild.testing.type;
 
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.type.impl.FuncTS.calculateFuncVars;
-import static org.smoothbuild.lang.type.impl.VarSetS.toVarSetS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
-
-import java.util.stream.Stream;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.api.Side;
@@ -218,15 +215,5 @@ public class TestingTS {
 
   public TypeS varY() {
     return VAR_Y;
-  }
-
-  public VarSetS vs(VarS... elements) {
-    return varSet(elements);
-  }
-
-  public static VarSetS varSet(VarS... elements) {
-    var varSetS = Stream.of(elements)
-        .collect(toVarSetS());
-    return varSetS;
   }
 }

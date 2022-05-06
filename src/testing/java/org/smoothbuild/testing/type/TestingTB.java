@@ -1,10 +1,7 @@
 package org.smoothbuild.testing.type;
 
-import static org.smoothbuild.bytecode.type.val.VarSetB.toVarSetB;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
-
-import java.util.stream.Stream;
 
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypingB;
@@ -156,12 +153,6 @@ public class TestingTB {
 
   public TypeB varY() {
     return VAR_Y;
-  }
-
-  public VarSetB vs(VarB... elements) {
-    var varSetB = Stream.of(elements)
-        .collect(toVarSetB());
-    return varSetB;
   }
 
   public Sides<TypeB> oneSideBound(Side side, TypeB type) {

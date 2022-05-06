@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.collect.Multimaps.newSetMultimap;
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public record TestingTypeGraphB(ImmutableMultimap<TypeB, TypeB> edges) {
     // one param funcs
     Set<TypeB> allTypes = graph.allTypes();
 
-    var vs = testingT.vs();
+    var vs = varSetB();
     for (TypeB type : allTypes) {
       for (Entry<TypeB, TypeB> entry : graph.edges().entries()) {
         var lower = entry.getKey();
