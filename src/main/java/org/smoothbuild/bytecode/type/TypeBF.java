@@ -17,7 +17,7 @@ import org.smoothbuild.lang.type.api.Var;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public interface TypeFB {
+public interface TypeBF {
   public AnyTB any();
 
   public NothingTB nothing();

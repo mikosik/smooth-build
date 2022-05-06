@@ -17,7 +17,7 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.bytecode.type.TypeFB;
+import org.smoothbuild.bytecode.type.TypeBF;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.BoundedB;
@@ -542,7 +542,7 @@ public class TypingBTest {
     return TESTED_ASSIGN_CASES_B.testedTF();
   }
 
-  private static TypeFB typeF() {
+  private static TypeBF typeF() {
     return typing().typeF();
   }
 

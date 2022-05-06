@@ -22,8 +22,8 @@ import org.smoothbuild.lang.type.impl.IntTS;
 import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.StringTS;
 import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.impl.TypeSF;
 import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.lang.type.impl.VarS;
 import org.smoothbuild.lang.type.impl.VarSetS;
@@ -36,7 +36,7 @@ public class TestingTS {
   public static final TestingTS INSTANCE = new TestingTS();
 
   private static final TestingContext CONTEXT = new TestingContext();
-  public static final TypeFS FACTORY = CONTEXT.typeFS();
+  public static final TypeSF FACTORY = CONTEXT.typeFS();
 
   public static final ImmutableList<TypeS> BASE_TYPES = ImmutableList.copyOf(FACTORY.baseTs());
   public static final ImmutableList<TypeS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTs();

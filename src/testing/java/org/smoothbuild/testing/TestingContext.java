@@ -56,7 +56,7 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.TypeFB;
+import org.smoothbuild.bytecode.type.TypeBF;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.expr.CallCB;
@@ -131,8 +131,8 @@ import org.smoothbuild.lang.type.impl.IntTS;
 import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.StringTS;
 import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.impl.TypeSF;
 import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.lang.type.impl.VarS;
 import org.smoothbuild.load.FileLoader;
@@ -177,7 +177,7 @@ public class TestingContext {
   private FileSystem fullFileSystem;
   private TempManager tempManager;
   private ModS internalMod;
-  private TypeFS typeFS;
+  private TypeSF typeSF;
   private ConsoleReporter consoleReporter;
   private BytecodeLoader bytecodeLoader;
   private JarClassLoaderProv jarClassLoaderProv;
@@ -325,15 +325,15 @@ public class TestingContext {
     return typingB;
   }
 
-  public TypeFB typeFB() {
+  public TypeBF typeFB() {
     return catDb();
   }
 
-  public TypeFS typeFS() {
-    if (typeFS == null) {
-      typeFS = new TypeFS();
+  public TypeSF typeFS() {
+    if (typeSF == null) {
+      typeSF = new TypeSF();
     }
-    return typeFS;
+    return typeSF;
   }
 
   public CatDb catDb() {

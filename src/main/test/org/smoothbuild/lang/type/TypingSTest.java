@@ -24,8 +24,8 @@ import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
-import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.impl.TypeSF;
 import org.smoothbuild.lang.type.impl.TypingS;
 import org.smoothbuild.lang.type.impl.VarS;
 import org.smoothbuild.lang.type.impl.VarSetS;
@@ -485,7 +485,7 @@ public class TypingSTest {
     return TESTED_ASSIGN_CASES_S.testedTF();
   }
 
-  private static TypeFS typeF() {
+  private static TypeSF typeF() {
     return typing().typeF();
   }
 

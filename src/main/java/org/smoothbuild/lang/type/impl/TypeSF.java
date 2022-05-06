@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 @Singleton
-public class TypeFS {
+public class TypeSF {
   private static final AnyTS ANY = new AnyTS();
   private static final BlobTS BLOB = new BlobTS();
   private static final BoolTS BOOL = new BoolTS();
@@ -26,7 +26,7 @@ public class TypeFS {
   private static final StringTS STRING = new StringTS();
 
   @Inject
-  public TypeFS() {
+  public TypeSF() {
   }
 
   public BoundedS bounded(VarS var, Sides<TypeS> sides) {
