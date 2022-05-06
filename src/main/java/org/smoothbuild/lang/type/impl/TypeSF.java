@@ -10,11 +10,9 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.TupleT;
-import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 @Singleton
 public class TypeSF {
@@ -27,14 +25,6 @@ public class TypeSF {
 
   @Inject
   public TypeSF() {
-  }
-
-  public BoundedS bounded(VarS var, Sides<TypeS> sides) {
-    return new BoundedS(var, sides);
-  }
-
-  public VarBoundsS varBounds(ImmutableMap<VarS, BoundedS> map) {
-    return new VarBoundsS(map);
   }
 
   /**

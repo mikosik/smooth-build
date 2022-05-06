@@ -135,7 +135,7 @@ public class TypingB {
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
-    return typeBF.varBounds(ImmutableMap.copyOf(result));
+    return new VarBoundsB(ImmutableMap.copyOf(result));
   }
 
   public VarBoundsB inferVarBoundsLower(TypeB type1, TypeB type2) {
@@ -145,12 +145,12 @@ public class TypingB {
   public VarBoundsB inferVarBounds(TypeB type1, TypeB type2, Side side) {
     var result = new HashMap<VarB, BoundedB>();
     inferImpl(type1, type2, side, result);
-    return typeBF.varBounds(ImmutableMap.copyOf(result));
+    return new VarBoundsB(ImmutableMap.copyOf(result));
   }
 
   private void inferImpl(TypeB t1, TypeB t2, Side side, Map<VarB, BoundedB> result) {
     switch (t1) {
-      case VarB v -> result.merge(v, typeBF.bounded(v, typeBF.oneSideBound(side, t2)), this::merge);
+      case VarB v -> result.merge(v, new BoundedB(v, typeBF.oneSideBound(side, t2)), this::merge);
       case ComposedTB c1 -> {
         TypeB sideEdge = typeBF.edge(side);
         if (t2.equals(sideEdge)) {
@@ -246,7 +246,7 @@ public class TypingB {
   }
 
   public BoundedB merge(BoundedB a, BoundedB b) {
-    return typeBF.bounded(a.var(), merge(a.bounds(), b.bounds()));
+    return new BoundedB(a.var(), merge(a.bounds(), b.bounds()));
   }
 
   public Sides<TypeB> merge(Sides<TypeB> bounds1, Sides<TypeB> bounds2) {

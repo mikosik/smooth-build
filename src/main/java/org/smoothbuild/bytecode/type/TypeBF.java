@@ -3,19 +3,15 @@ package org.smoothbuild.bytecode.type;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.BoundedB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarB;
-import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Var;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public interface TypeBF {
   public AnyTB any();
@@ -29,14 +25,6 @@ public interface TypeBF {
   public TupleTB tuple(ImmutableList<TypeB> items);
 
   public Var var(String name);
-
-  public default BoundedB bounded(VarB var, Sides<TypeB> sides) {
-    return new BoundedB(var, sides);
-  }
-
-  public default VarBoundsB varBounds(ImmutableMap<VarB, BoundedB> map) {
-    return new VarBoundsB(map);
-  }
 
   public default TypeB edge(Side side) {
     return switch (side) {
