@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.bytecode.type;
 
 import static com.google.common.collect.Multimaps.newSetMultimap;
 import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.type.api.Side.LOWER;

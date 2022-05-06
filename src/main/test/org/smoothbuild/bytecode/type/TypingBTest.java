@@ -1,10 +1,10 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.bytecode.type.TestingTypeGraphB.buildGraph;
 import static org.smoothbuild.bytecode.type.val.VarBoundsB.varBoundsB;
 import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
-import static org.smoothbuild.lang.type.TestingTypeGraphB.buildGraph;
 import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.testing.type.TestedAssignCasesB.TESTED_ASSIGN_CASES_B;
@@ -18,8 +18,6 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.bytecode.type.TypeBF;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.val.BoundedB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
