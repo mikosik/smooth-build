@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;

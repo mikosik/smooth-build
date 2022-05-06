@@ -1,14 +1,14 @@
 package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.type.api.Side.LOWER;
-import static org.smoothbuild.lang.type.api.Side.UPPER;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.lang.type.api.Side;
-import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.testing.type.TestingTB;
+import org.smoothbuild.util.type.Side;
+import org.smoothbuild.util.type.Sides;
 
 public class TypingBMergeBoundsTest {
   private final TestingTB testingT;

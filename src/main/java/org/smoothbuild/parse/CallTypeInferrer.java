@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.api.VarBoundsS;
-import org.smoothbuild.lang.type.impl.TypeS;
-import org.smoothbuild.lang.type.impl.TypeSF;
-import org.smoothbuild.lang.type.impl.TypingS;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypingS;
+import org.smoothbuild.lang.type.VarBoundsS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;

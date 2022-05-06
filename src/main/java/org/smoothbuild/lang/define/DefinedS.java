@@ -2,7 +2,7 @@ package org.smoothbuild.lang.define;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 /**
  * This class and all its subclasses are immutable.

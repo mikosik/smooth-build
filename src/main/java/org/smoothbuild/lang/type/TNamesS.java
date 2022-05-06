@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
 import static java.lang.Character.isUpperCase;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;

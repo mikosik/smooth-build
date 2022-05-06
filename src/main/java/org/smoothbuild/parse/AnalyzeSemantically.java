@@ -1,11 +1,11 @@
 package org.smoothbuild.parse;
 
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.lang.type.api.AnnotationNames.ANNOTATION_NAMES;
-import static org.smoothbuild.lang.type.api.AnnotationNames.BYTECODE;
-import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_IMPURE;
-import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.lang.type.impl.TNamesS.isVarName;
+import static org.smoothbuild.lang.type.AnnotationNames.ANNOTATION_NAMES;
+import static org.smoothbuild.lang.type.AnnotationNames.BYTECODE;
+import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_IMPURE;
+import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_PURE;
+import static org.smoothbuild.lang.type.TNamesS.isVarName;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.map;
 

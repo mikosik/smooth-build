@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 public class ArgNodeTest {
   @Test

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.type.impl.ArrayTS;
+import org.smoothbuild.lang.type.ArrayTS;
 
 import com.google.common.collect.ImmutableList;
 

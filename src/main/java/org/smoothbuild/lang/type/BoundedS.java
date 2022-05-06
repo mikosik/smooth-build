@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
-import org.smoothbuild.lang.type.api.Sides;
+import org.smoothbuild.util.type.Sides;
 
 public record BoundedS(VarS var, Sides<TypeS> bounds) {
   @Override

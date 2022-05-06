@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.lang.type.impl.TNamesS.funcTypeName;
+import static org.smoothbuild.lang.type.TNamesS.funcTypeName;
 import static org.smoothbuild.util.collect.Lists.concat;
 
 import java.util.Objects;

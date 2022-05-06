@@ -12,7 +12,7 @@ import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.TopEvalS;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ModLoader;

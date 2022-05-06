@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.like.EvalLike;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 public final class RefN extends ExprN {
   private final String name;

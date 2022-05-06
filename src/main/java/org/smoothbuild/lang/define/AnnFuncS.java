@@ -2,7 +2,7 @@ package org.smoothbuild.lang.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.type.impl.FuncTS;
+import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.util.collect.NList;
 
 /**

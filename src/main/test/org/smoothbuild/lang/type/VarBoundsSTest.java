@@ -1,11 +1,11 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.type.api.Side.LOWER;
-import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.testing.type.TestingTS.VAR_A;
 import static org.smoothbuild.testing.type.TestingTS.VAR_B;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;

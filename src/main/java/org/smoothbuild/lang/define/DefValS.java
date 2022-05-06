@@ -3,7 +3,7 @@ package org.smoothbuild.lang.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 /**
  * Defined value (one that has a body).

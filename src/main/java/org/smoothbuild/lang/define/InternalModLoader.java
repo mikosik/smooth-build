@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.type.impl.TypeSF;
+import org.smoothbuild.lang.type.TypeSF;
 
 public class InternalModLoader {
   private final TypeSF typeSF;

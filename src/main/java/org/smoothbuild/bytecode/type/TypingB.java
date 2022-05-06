@@ -2,13 +2,13 @@ package org.smoothbuild.bytecode.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
-import static org.smoothbuild.lang.type.api.Side.LOWER;
-import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +26,8 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
-import org.smoothbuild.lang.type.api.Side;
-import org.smoothbuild.lang.type.api.Sides;
+import org.smoothbuild.util.type.Side;
+import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

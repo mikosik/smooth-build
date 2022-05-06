@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.collect.Multimaps.newSetMultimap;
-import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.params.provider.Arguments;
-import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableList;

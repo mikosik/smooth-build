@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type.api;
+package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.util.collect.Sets.set;
 

@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 public sealed class Node permits ExprN, NamedN {
   private final Loc loc;

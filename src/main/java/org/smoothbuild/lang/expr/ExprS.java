@@ -2,7 +2,7 @@ package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.Nal;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 /**
  * Expression in smooth language.

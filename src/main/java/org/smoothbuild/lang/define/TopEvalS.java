@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.define;
 
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 /**
  * Top level evaluable.

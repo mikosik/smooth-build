@@ -1,30 +1,29 @@
 package org.smoothbuild.testing.type;
 
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
-import static org.smoothbuild.lang.type.impl.FuncTS.calculateFuncVars;
+import static org.smoothbuild.lang.type.FuncTS.calculateFuncVars;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.api.Side;
-import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.VarBoundsS;
-import org.smoothbuild.lang.type.impl.AnyTS;
-import org.smoothbuild.lang.type.impl.ArrayTS;
-import org.smoothbuild.lang.type.impl.BlobTS;
-import org.smoothbuild.lang.type.impl.BoolTS;
-import org.smoothbuild.lang.type.impl.FuncTS;
-import org.smoothbuild.lang.type.impl.IntTS;
-import org.smoothbuild.lang.type.impl.NothingTS;
-import org.smoothbuild.lang.type.impl.StringTS;
-import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeS;
-import org.smoothbuild.lang.type.impl.TypeSF;
-import org.smoothbuild.lang.type.impl.TypingS;
-import org.smoothbuild.lang.type.impl.VarS;
-import org.smoothbuild.lang.type.impl.VarSetS;
+import org.smoothbuild.lang.type.AnyTS;
+import org.smoothbuild.lang.type.ArrayTS;
+import org.smoothbuild.lang.type.BlobTS;
+import org.smoothbuild.lang.type.BoolTS;
+import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.IntTS;
+import org.smoothbuild.lang.type.NothingTS;
+import org.smoothbuild.lang.type.StringTS;
+import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypingS;
+import org.smoothbuild.lang.type.VarS;
+import org.smoothbuild.lang.type.VarSetS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.type.Side;
+import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 

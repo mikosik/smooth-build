@@ -2,7 +2,7 @@ package org.smoothbuild.lang.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 /**
  * Annotated value (one that has not a body).

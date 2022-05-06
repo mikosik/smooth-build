@@ -1,14 +1,14 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.api.Side.LOWER;
-import static org.smoothbuild.lang.type.api.Side.UPPER;
-import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +17,8 @@ import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.type.api.Side;
-import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.VarBoundsS;
+import org.smoothbuild.util.type.Side;
+import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

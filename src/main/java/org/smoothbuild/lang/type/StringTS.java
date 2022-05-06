@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
 /**
  * This class is immutable.

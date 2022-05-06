@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.type.impl.FuncTS.calculateFuncVars;
+import static org.smoothbuild.lang.type.FuncTS.calculateFuncVars;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -30,9 +30,9 @@ import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.like.EvalLike;
-import org.smoothbuild.lang.type.impl.ArrayTS;
-import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeSF;
+import org.smoothbuild.lang.type.ArrayTS;
+import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.parse.ast.AnnN;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.BlobN;

@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.impl.FuncTS;
+import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;

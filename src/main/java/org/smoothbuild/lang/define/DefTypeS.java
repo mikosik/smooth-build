@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.define;
 
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 public class DefTypeS extends DefinedS {
   public DefTypeS(TypeS type, ModPath modPath, String name, Loc loc) {

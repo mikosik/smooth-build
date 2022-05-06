@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;

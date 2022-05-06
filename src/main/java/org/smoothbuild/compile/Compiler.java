@@ -1,9 +1,9 @@
 package org.smoothbuild.compile;
 
 import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
-import static org.smoothbuild.lang.type.api.AnnotationNames.BYTECODE;
-import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_IMPURE;
-import static org.smoothbuild.lang.type.api.AnnotationNames.NATIVE_PURE;
+import static org.smoothbuild.lang.type.AnnotationNames.BYTECODE;
+import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_IMPURE;
+import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -57,10 +57,10 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
-import org.smoothbuild.lang.type.impl.ArrayTS;
-import org.smoothbuild.lang.type.impl.FuncTS;
-import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.ArrayTS;
+import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.util.collect.NList;
 

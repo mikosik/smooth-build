@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 public final class ArgNode extends NamedN {
   private final ExprN expr;

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
 import static java.util.Objects.requireNonNull;
 

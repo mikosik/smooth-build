@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type.api;
+package org.smoothbuild.util.type;
 
 public enum Side {
   UPPER,

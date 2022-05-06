@@ -1,15 +1,15 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.impl.TNamesS.isVarName;
+import static org.smoothbuild.lang.type.TNamesS.isVarName;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.api.Side;
-import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.type.Side;
+import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 

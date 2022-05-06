@@ -8,7 +8,7 @@ import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.ModPath;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 public final class ItemN extends EvalN {
   private Optional<ItemSigS> sig;

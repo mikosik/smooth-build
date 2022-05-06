@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 import static org.smoothbuild.vm.job.TaskInfo.NAME_LENGTH_LIMIT;
 
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.type.impl.StringTS;
+import org.smoothbuild.lang.type.StringTS;
 
 public record StringS(StringTS type, String string, Loc loc) implements ExprS {
   @Override

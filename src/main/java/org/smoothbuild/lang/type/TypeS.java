@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.impl.VarSetS.toVarSetS;
+import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
 
 import java.util.Objects;
 

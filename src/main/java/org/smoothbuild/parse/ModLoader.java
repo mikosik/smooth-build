@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.AnalyzeSemantically.analyzeSemantically;
@@ -22,9 +22,9 @@ import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.StructS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TopEvalS;
-import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeSF;
-import org.smoothbuild.lang.type.impl.TypingS;
+import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;

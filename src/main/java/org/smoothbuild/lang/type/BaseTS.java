@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.type.impl;
+package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 /**
  * This class is immutable.

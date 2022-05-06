@@ -1,8 +1,8 @@
-package org.smoothbuild.lang.type.api;
+package org.smoothbuild.util.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.type.api.Side.LOWER;
-import static org.smoothbuild.lang.type.api.Side.UPPER;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import org.junit.jupiter.api.Test;
 

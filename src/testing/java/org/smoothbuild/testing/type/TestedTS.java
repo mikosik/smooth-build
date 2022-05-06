@@ -9,8 +9,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.smoothbuild.lang.type.impl.FuncTS;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.TypeS;
 
 import com.google.common.collect.ImmutableList;
 

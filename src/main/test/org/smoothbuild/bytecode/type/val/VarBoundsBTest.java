@@ -1,11 +1,11 @@
 package org.smoothbuild.bytecode.type.val;
 
-import static org.smoothbuild.lang.type.api.Side.LOWER;
-import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.testing.type.TestingTB.BOOL;
 import static org.smoothbuild.testing.type.TestingTB.STRING;
 import static org.smoothbuild.testing.type.TestingTB.VAR_A;
 import static org.smoothbuild.testing.type.TestingTB.VAR_B;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;

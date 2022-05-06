@@ -3,8 +3,8 @@ package org.smoothbuild.lang.define;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
-import org.smoothbuild.lang.type.impl.FuncTS;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
 
 /**

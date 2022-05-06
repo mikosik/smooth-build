@@ -13,7 +13,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 import com.google.common.testing.EqualsTester;
 

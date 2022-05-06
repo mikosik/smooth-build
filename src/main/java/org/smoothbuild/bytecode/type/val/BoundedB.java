@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
-import org.smoothbuild.lang.type.api.Sides;
+import org.smoothbuild.util.type.Sides;
 
 public record BoundedB(VarB var, Sides<TypeB> bounds) {
   @Override

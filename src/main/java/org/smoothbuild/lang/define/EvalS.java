@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.define;
 
 import org.smoothbuild.lang.like.EvalLike;
-import org.smoothbuild.lang.type.impl.TypeS;
+import org.smoothbuild.lang.type.TypeS;
 
 /**
  * Evaluable.

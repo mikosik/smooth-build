@@ -11,17 +11,17 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
-import org.smoothbuild.lang.type.impl.AnyTS;
-import org.smoothbuild.lang.type.impl.ArrayTS;
-import org.smoothbuild.lang.type.impl.BlobTS;
-import org.smoothbuild.lang.type.impl.BoolTS;
-import org.smoothbuild.lang.type.impl.FuncTS;
-import org.smoothbuild.lang.type.impl.IntTS;
-import org.smoothbuild.lang.type.impl.NothingTS;
-import org.smoothbuild.lang.type.impl.StringTS;
-import org.smoothbuild.lang.type.impl.StructTS;
-import org.smoothbuild.lang.type.impl.TypeS;
-import org.smoothbuild.lang.type.impl.VarS;
+import org.smoothbuild.lang.type.AnyTS;
+import org.smoothbuild.lang.type.ArrayTS;
+import org.smoothbuild.lang.type.BlobTS;
+import org.smoothbuild.lang.type.BoolTS;
+import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.IntTS;
+import org.smoothbuild.lang.type.NothingTS;
+import org.smoothbuild.lang.type.StringTS;
+import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.VarS;
 
 public class TypeSbConv {
   private final BytecodeF bytecodeF;

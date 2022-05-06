@@ -8,8 +8,8 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.lang.type.api.Side;
-import org.smoothbuild.lang.type.api.Sides;
+import org.smoothbuild.util.type.Side;
+import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 

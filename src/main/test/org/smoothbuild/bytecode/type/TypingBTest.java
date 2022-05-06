@@ -5,11 +5,11 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.bytecode.type.TestingTypeGraphB.buildGraph;
 import static org.smoothbuild.bytecode.type.val.VarBoundsB.varBoundsB;
 import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
-import static org.smoothbuild.lang.type.api.Side.LOWER;
-import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.testing.type.TestedAssignCasesB.TESTED_ASSIGN_CASES_B;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,11 +24,11 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.lang.type.api.Side;
-import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.testing.type.TestedAssignSpecB;
 import org.smoothbuild.testing.type.TestedTBF;
 import org.smoothbuild.testing.type.TestingTB;
+import org.smoothbuild.util.type.Side;
+import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

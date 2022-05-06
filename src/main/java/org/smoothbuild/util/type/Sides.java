@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type.api;
+package org.smoothbuild.util.type;
 
 public record Sides<T>(T lower, T upper) {
   public T get(Side side) {
