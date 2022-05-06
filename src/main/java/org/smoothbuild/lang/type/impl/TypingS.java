@@ -17,13 +17,12 @@ import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.Var;
-import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.api.VarBoundsS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -111,38 +110,39 @@ public class TypingS {
     public boolean apply(TypeS type1, TypeS type2, Side side);
   }
 
-  private boolean areConsistent(VarBounds<TypeS> varBounds) {
+  private boolean areConsistent(VarBoundsS varBounds) {
     return varBounds.map().values().stream()
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public VarBounds<TypeS> inferVarBoundsLower(List<? extends TypeS> types1, List<? extends TypeS> types2) {
+  public VarBoundsS inferVarBoundsLower(List<? extends TypeS> types1,
+      List<? extends TypeS> types2) {
     return inferVarBounds(types1, types2, LOWER);
   }
 
-  public VarBounds<TypeS> inferVarBounds(
+  public VarBoundsS inferVarBounds(
       List<? extends TypeS> types1, List<? extends TypeS> types2, Side side) {
     checkArgument(types1.size() == types2.size());
-    var result = new HashMap<Var, Bounded<TypeS>>();
+    var result = new HashMap<VarS, BoundedS>();
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
     return typeFS.varBounds(ImmutableMap.copyOf(result));
   }
 
-  public VarBounds<TypeS> inferVarBoundsLower(TypeS type1, TypeS type2) {
+  public VarBoundsS inferVarBoundsLower(TypeS type1, TypeS type2) {
     return inferVarBounds(type1, type2, LOWER);
   }
 
-  public VarBounds<TypeS> inferVarBounds(TypeS type1, TypeS type2, Side side) {
-    var result = new HashMap<Var, Bounded<TypeS>>();
+  public VarBoundsS inferVarBounds(TypeS type1, TypeS type2, Side side) {
+    var result = new HashMap<VarS, BoundedS>();
     inferImpl(type1, type2, side, result);
     return typeFS.varBounds(ImmutableMap.copyOf(result));
   }
 
-  private void inferImpl(TypeS t1, TypeS t2, Side side, Map<Var, Bounded<TypeS>> result) {
+  private void inferImpl(TypeS t1, TypeS t2, Side side, Map<VarS, BoundedS> result) {
     switch (t1) {
-      case Var v -> result.merge(v, typeFS.bounded(v, typeFS.oneSideBound(side, t2)), this::merge);
+      case VarS v -> result.merge(v, typeFS.bounded(v, typeFS.oneSideBound(side, t2)), this::merge);
       case ComposedTS c1 -> {
         TypeS sideEdge = typeFS.edge(side);
         if (t2.equals(sideEdge)) {
@@ -166,17 +166,17 @@ public class TypingS {
   }
 
   private void inferImplForEach(ImmutableList<TypeS> types1, ImmutableList<TypeS> types2,
-      Side side, Map<Var, Bounded<TypeS>> result) {
+      Side side, Map<VarS, BoundedS> result) {
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
   }
 
-  public TypeS mapVarsLower(TypeS type, VarBounds<TypeS> varBounds) {
+  public TypeS mapVarsLower(TypeS type, VarBoundsS varBounds) {
     return mapVars(type, varBounds, LOWER);
   }
 
-  public TypeS mapVars(TypeS type, VarBounds<TypeS> varBounds, Side side) {
+  public TypeS mapVars(TypeS type, VarBoundsS varBounds, Side side) {
     if (!type.vars().isEmpty()) {
       return switch (type) {
         case Var var -> mapVarsInVar(type, varBounds, side, var);
@@ -193,8 +193,8 @@ public class TypingS {
     return type;
   }
 
-  private TypeS mapVarsInVar(TypeS type, VarBounds<TypeS> varBounds, Side side, Var var) {
-    Bounded<TypeS> bounded = varBounds.map().get(var);
+  private TypeS mapVarsInVar(TypeS type, VarBoundsS varBounds, Side side, Var var) {
+    BoundedS bounded = varBounds.map().get(var);
     if (bounded == null) {
       return type;
     } else {
@@ -237,7 +237,7 @@ public class TypingS {
     return typeFS.edge(direction);
   }
 
-  public Bounded<TypeS> merge(Bounded<TypeS> a, Bounded<TypeS> b) {
+  public BoundedS merge(BoundedS a, BoundedS b) {
     return typeFS.bounded(a.var(), merge(a.bounds(), b.bounds()));
   }
 

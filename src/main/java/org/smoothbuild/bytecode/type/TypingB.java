@@ -19,17 +19,18 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.BoundedB;
 import org.smoothbuild.bytecode.type.val.CallableTB;
 import org.smoothbuild.bytecode.type.val.ComposedTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.lang.type.api.Bounded;
+import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.Var;
-import org.smoothbuild.lang.type.api.VarBounds;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -117,39 +118,39 @@ public class TypingB {
     public boolean apply(TypeB type1, TypeB type2, Side side);
   }
 
-  private boolean areConsistent(VarBounds<TypeB> varBounds) {
+  private boolean areConsistent(VarBoundsB varBounds) {
     return varBounds.map().values().stream()
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public VarBounds<TypeB> inferVarBoundsLower(List<? extends TypeB> types1,
+  public VarBoundsB inferVarBoundsLower(List<? extends TypeB> types1,
       List<? extends TypeB> types2) {
     return inferVarBounds(types1, types2, LOWER);
   }
 
-  public VarBounds<TypeB> inferVarBounds(
+  public VarBoundsB inferVarBounds(
       List<? extends TypeB> types1, List<? extends TypeB> types2, Side side) {
     checkArgument(types1.size() == types2.size());
-    var result = new HashMap<Var, Bounded<TypeB>>();
+    var result = new HashMap<VarB, BoundedB>();
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
     return typeFB.varBounds(ImmutableMap.copyOf(result));
   }
 
-  public VarBounds<TypeB> inferVarBoundsLower(TypeB type1, TypeB type2) {
+  public VarBoundsB inferVarBoundsLower(TypeB type1, TypeB type2) {
     return inferVarBounds(type1, type2, LOWER);
   }
 
-  public VarBounds<TypeB> inferVarBounds(TypeB type1, TypeB type2, Side side) {
-    var result = new HashMap<Var, Bounded<TypeB>>();
+  public VarBoundsB inferVarBounds(TypeB type1, TypeB type2, Side side) {
+    var result = new HashMap<VarB, BoundedB>();
     inferImpl(type1, type2, side, result);
     return typeFB.varBounds(ImmutableMap.copyOf(result));
   }
 
-  private void inferImpl(TypeB t1, TypeB t2, Side side, Map<Var, Bounded<TypeB>> result) {
+  private void inferImpl(TypeB t1, TypeB t2, Side side, Map<VarB, BoundedB> result) {
     switch (t1) {
-      case Var v -> result.merge(v, typeFB.bounded(v, typeFB.oneSideBound(side, t2)), this::merge);
+      case VarB v -> result.merge(v, typeFB.bounded(v, typeFB.oneSideBound(side, t2)), this::merge);
       case ComposedTB c1 -> {
         TypeB sideEdge = typeFB.edge(side);
         if (t2.equals(sideEdge)) {
@@ -173,20 +174,20 @@ public class TypingB {
   }
 
   private void inferImplForEach(ImmutableList<TypeB> types1, ImmutableList<TypeB> types2,
-      Side side, Map<Var, Bounded<TypeB>> result) {
+      Side side, Map<VarB, BoundedB> result) {
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
   }
 
-  public TypeB mapVarsLower(TypeB type, VarBounds<TypeB> varBounds) {
+  public TypeB mapVarsLower(TypeB type, VarBoundsB varBounds) {
     return mapVars(type, varBounds, LOWER);
   }
 
-  public TypeB mapVars(TypeB type, VarBounds<TypeB> varBounds, Side side) {
+  public TypeB mapVars(TypeB type, VarBoundsB varBounds, Side side) {
     if (!type.vars().isEmpty()) {
       return switch (type) {
-        case Var var -> mapVarsInVar(type, varBounds, side, var);
+        case VarB var -> mapVarsInVar(type, varBounds, side, var);
         case ComposedTB composedT -> {
           var covars = map(
               composedT.covars(), p -> mapVars(p, varBounds, side));
@@ -200,8 +201,8 @@ public class TypingB {
     return type;
   }
 
-  private TypeB mapVarsInVar(TypeB type, VarBounds<TypeB> varBounds, Side side, Var var) {
-    Bounded<TypeB> bounded = varBounds.map().get(var);
+  private TypeB mapVarsInVar(TypeB type, VarBoundsB varBounds, Side side, Var var) {
+    BoundedB bounded = varBounds.map().get(var);
     if (bounded == null) {
       return type;
     } else {
@@ -244,7 +245,7 @@ public class TypingB {
     return typeFB.edge(direction);
   }
 
-  public Bounded<TypeB> merge(Bounded<TypeB> a, Bounded<TypeB> b) {
+  public BoundedB merge(BoundedB a, BoundedB b) {
     return typeFB.bounded(a.var(), merge(a.bounds(), b.bounds()));
   }
 

@@ -12,7 +12,7 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Var;
-import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
 import org.smoothbuild.lang.type.impl.BlobTS;
@@ -119,17 +119,17 @@ public class TestingTS {
     return FACTORY.oneSideBound(side, type);
   }
 
-  public static VarBounds<TypeS> vb(
+  public static VarBoundsS vb(
       VarS var1, Side side1, TypeS bound1,
       VarS var2, Side side2, TypeS bound2) {
     return CONTEXT.vbS(var1, side1, bound1, var2, side2, bound2);
   }
 
-  public static VarBounds<TypeS> vb(VarS var, Side side, TypeS bound) {
+  public static VarBoundsS vb(VarS var, Side side, TypeS bound) {
     return CONTEXT.vbS(var, side, bound);
   }
 
-  public static VarBounds<TypeS> vb() {
+  public static VarBoundsS vb() {
     return CONTEXT.vbS();
   }
 

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.api.VarBounds;
+import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.impl.TypeFS;
 import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.lang.type.impl.TypingS;
@@ -98,7 +98,7 @@ public class CallTypeInferrer {
     return assigned.stream().allMatch(Optional::isPresent);
   }
 
-  private ImmutableList<Log> findVarProblems(CallN call, VarBounds<TypeS> varBounds) {
+  private ImmutableList<Log> findVarProblems(CallN call, VarBoundsS varBounds) {
     return varBounds.map().values().stream()
         .filter(b -> typing.contains(b.bounds().lower(), typeFS.any()))
         .map(b -> parseError(call, "Cannot infer actual type for type var "

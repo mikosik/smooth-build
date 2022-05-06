@@ -22,13 +22,13 @@ import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.BoundedB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.api.Var;
-import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.testing.type.TestedAssignSpec;
 import org.smoothbuild.testing.type.TestedT;
 import org.smoothbuild.testing.type.TestedTB;
@@ -232,7 +232,7 @@ public class TypingBTest {
 
   @ParameterizedTest
   @MethodSource("inferVarBounds_test_data")
-  public void inferVarBounds(TypeB type, TypeB assigned, VarBounds<TypeB> expected) {
+  public void inferVarBounds(TypeB type, TypeB assigned, VarBoundsB expected) {
     assertThat(typing().inferVarBounds(type, assigned, LOWER))
         .isEqualTo(expected);
   }
@@ -344,7 +344,7 @@ public class TypingBTest {
 
   @ParameterizedTest
   @MethodSource("mapVarsLower_test_data")
-  public void mapVarsLower(TypeB type, VarBounds<TypeB> varBounds, Type expected) {
+  public void mapVarsLower(TypeB type, VarBoundsB varBounds, Type expected) {
     assertThat(typing().mapVarsLower(type, varBounds))
         .isEqualTo(expected);
   }
@@ -439,26 +439,26 @@ public class TypingBTest {
     return typeF().oneSideBound(side, type);
   }
 
-  private static VarBounds<TypeB> vb(
+  private static VarBoundsB vb(
       TypeB var1, Side side1, TypeB bound1,
       TypeB var2, Side side2, TypeB bound2) {
     Sides<TypeB> bounds1 = oneSideBound(side1, bound1);
     Sides<TypeB> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
-      return varBoundsB(new BoundedB((Var) var1, typing().merge(bounds1, bounds2)));
+      return varBoundsB(new BoundedB((VarB) var1, typing().merge(bounds1, bounds2)));
     } else {
       return new VarBoundsB(ImmutableMap.of(
-          (Var) var1, new BoundedB((Var) var1, bounds1),
-          (Var) var2, new BoundedB((Var) var2, bounds2)
+          (VarB) var1, new BoundedB((VarB) var1, bounds1),
+          (VarB) var2, new BoundedB((VarB) var2, bounds2)
       ));
     }
   }
 
-  private static VarBounds<TypeB> vb(TypeB var, Side side, TypeB bound) {
-    return varBoundsB(new BoundedB((Var) var, oneSideBound(side, bound)));
+  private static VarBoundsB vb(TypeB var, Side side, TypeB bound) {
+    return varBoundsB(new BoundedB((VarB) var, oneSideBound(side, bound)));
   }
 
-  private static VarBounds<TypeB> vb() {
+  private static VarBoundsB vb() {
     return varBoundsB();
   }
 

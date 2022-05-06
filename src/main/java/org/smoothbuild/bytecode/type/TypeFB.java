@@ -12,11 +12,9 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.lang.type.api.Bounded;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.Var;
-import org.smoothbuild.lang.type.api.VarBounds;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -34,11 +32,11 @@ public interface TypeFB {
 
   public Var var(String name);
 
-  public default BoundedB bounded(Var var, Sides<TypeB> sides) {
+  public default BoundedB bounded(VarB var, Sides<TypeB> sides) {
     return new BoundedB(var, sides);
   }
 
-  public default VarBounds<TypeB> varBounds(ImmutableMap<Var, Bounded<TypeB>> map) {
+  public default VarBoundsB varBounds(ImmutableMap<VarB, BoundedB> map) {
     return new VarBoundsB(map);
   }
 

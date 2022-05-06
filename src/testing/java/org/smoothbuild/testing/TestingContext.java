@@ -120,7 +120,6 @@ import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
@@ -498,11 +497,11 @@ public class TestingContext {
     }
   }
 
-  public VarBounds<TypeB> vbB(VarB var, Side side, TypeB bound) {
+  public VarBoundsB vbB(VarB var, Side side, TypeB bound) {
     return varBoundsB(new BoundedB(var, oneSideBoundB(side, bound)));
   }
 
-  public VarBounds<TypeB> vbB() {
+  public VarBoundsB vbB() {
     return varBoundsB();
   }
 
@@ -909,7 +908,7 @@ public class TestingContext {
     return typeFS().var(name);
   }
 
-  public VarBounds<TypeS> vbS(
+  public VarBoundsS vbS(
       VarS var1, Side side1, TypeS bound1,
       VarS var2, Side side2, TypeS bound2) {
     Sides<TypeS> bounds1 = oneSideBoundS(side1, bound1);
@@ -924,11 +923,11 @@ public class TestingContext {
     }
   }
 
-  public VarBounds<TypeS> vbS(VarS var, Side side, TypeS bound) {
+  public VarBoundsS vbS(VarS var, Side side, TypeS bound) {
     return varBoundsS(new BoundedS(var, oneSideBoundS(side, bound)));
   }
 
-  public VarBounds<TypeS> vbS() {
+  public VarBoundsS vbS() {
     return varBoundsS();
   }
 

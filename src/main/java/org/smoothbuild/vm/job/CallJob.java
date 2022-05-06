@@ -6,8 +6,8 @@ import java.util.function.Consumer;
 import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.type.api.VarBounds;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
@@ -17,12 +17,12 @@ import com.google.common.collect.ImmutableList;
 public class CallJob extends AbstractJob {
   private final Job callableJ;
   private final ImmutableList<Job> argJs;
-  private final VarBounds<TypeB> vars;
+  private final VarBoundsB vars;
   private final List<Job> params;
   private final JobCreator jobCreator;
 
   public CallJob(TypeB type, Job callableJ, ImmutableList<Job> argJs, Loc loc,
-      VarBounds<TypeB> vars, List<Job> params, JobCreator jobCreator) {
+      VarBoundsB vars, List<Job> params, JobCreator jobCreator) {
     super(type, loc);
     this.callableJ = callableJ;
     this.argJs = argJs;
