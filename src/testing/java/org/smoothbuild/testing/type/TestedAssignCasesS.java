@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.smoothbuild.lang.type.api.Type;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -92,7 +90,7 @@ public class TestedAssignCasesS {
     }
 
     if (includeAny) {
-      gen(r, a(any), includeAny, TestedT::isArray, mNothing());
+      gen(r, a(any), includeAny, TestedTS::isArray, mNothing());
     }
     gen(r, a(blob), includeAny, oneOf(a(blob), a(nothing), nothing));
     gen(r, a(nothing), includeAny, oneOf(a(nothing), nothing));
@@ -103,7 +101,7 @@ public class TestedAssignCasesS {
       gen(r, a(tuple), includeAny, oneOf(a(tuple), a(nothing), nothing));
     }
     if (includeAny) {
-      gen(r, a2(any), includeAny, TestedT::isArrayOfArrays, t -> t.isArrayOf(nothing), mNothing());
+      gen(r, a2(any), includeAny, TestedTS::isArrayOfArrays, t -> t.isArrayOf(nothing), mNothing());
     }
     gen(r, a2(blob), includeAny, oneOf(a2(blob), a2(nothing), a(nothing), nothing));
     gen(r, a2(nothing), includeAny, oneOf(a2(nothing), a(nothing), nothing));
@@ -273,17 +271,17 @@ public class TestedAssignCasesS {
     List<TestedAssignSpecS> r = new ArrayList<>();
     gen(r, a, includeAny, mAll());
     gen(r, b, includeAny, mAll());
-    gen(r, a(a), includeAny, mNothing(), TestedT::isArray);
-    gen(r, a(b), includeAny, mNothing(), TestedT::isArray);
-    gen(r, a2(a), includeAny, oneOf(nothing, a(nothing)), TestedT::isArrayOfArrays);
-    gen(r, a2(b), includeAny, oneOf(nothing, a(nothing)), TestedT::isArrayOfArrays);
+    gen(r, a(a), includeAny, mNothing(), TestedTS::isArray);
+    gen(r, a(b), includeAny, mNothing(), TestedTS::isArray);
+    gen(r, a2(a), includeAny, oneOf(nothing, a(nothing)), TestedTS::isArrayOfArrays);
+    gen(r, a2(b), includeAny, oneOf(nothing, a(nothing)), TestedTS::isArrayOfArrays);
 
     if (isTupleSupported) {
-      gen(r, tuple(a), includeAny, mNothing(), TestedT::isTuple);
-      gen(r, tuple(b), includeAny, mNothing(), TestedT::isTuple);
+      gen(r, tuple(a), includeAny, mNothing(), TestedTS::isTuple);
+      gen(r, tuple(b), includeAny, mNothing(), TestedTS::isTuple);
 
-      gen(r, tuple(tuple(a)), includeAny, oneOf(nothing, tuple(nothing)), TestedT::isTupleOfTuple);
-      gen(r, tuple(tuple(b)), includeAny, oneOf(nothing, tuple(nothing)), TestedT::isTupleOfTuple);
+      gen(r, tuple(tuple(a)), includeAny, oneOf(nothing, tuple(nothing)), TestedTS::isTupleOfTuple);
+      gen(r, tuple(tuple(b)), includeAny, oneOf(nothing, tuple(nothing)), TestedTS::isTupleOfTuple);
     }
 
     r.addAll(list(
@@ -342,9 +340,9 @@ public class TestedAssignCasesS {
   /**
    * Match a func.
    */
-  private <X extends TestedT<? extends Type>> Predicate<X> mFunc(
-      Predicate<? super TestedT<? extends Type>> result,
-      Predicate<? super TestedT<? extends Type>>... params) {
+  private <X extends TestedTS> Predicate<X> mFunc(
+      Predicate<? super TestedTS> result,
+      Predicate<? super TestedTS>... params) {
     var list = list(params);
     return (X t) -> t.isFunc(result, list);
   }
@@ -352,18 +350,18 @@ public class TestedAssignCasesS {
   /**
    * Match anything.
    */
-  private Predicate<TestedT<? extends Type>> mAll() {
+  private Predicate<TestedTS> mAll() {
     return t -> true;
   }
 
   /**
    * Match nothing.
    */
-  private Predicate<TestedT<? extends Type>> mNothing() {
+  private Predicate<TestedTS> mNothing() {
     return type -> type.equals(nothing);
   }
 
-  private Predicate<TestedT<? extends Type>> oneOf(TestedTS... types) {
+  private Predicate<TestedTS> oneOf(TestedTS... types) {
     return Set.of(types)::contains;
   }
 

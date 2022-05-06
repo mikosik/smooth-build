@@ -9,13 +9,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.impl.FuncTS;
 import org.smoothbuild.lang.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestedTS implements TestedT<TypeS> {
+public class TestedTS {
   private final TypeS type;
   private final String literal;
   private final Object value;
@@ -35,17 +34,14 @@ public class TestedTS implements TestedT<TypeS> {
     this.allDeclarations = allDeclarations;
   }
 
-  @Override
   public TypeS type() {
     return type;
   }
 
-  @Override
   public String name() {
     return type().name();
   }
 
-  @Override
   public String q() {
     return type().q();
   }
@@ -74,34 +70,28 @@ public class TestedTS implements TestedT<TypeS> {
     return join("\n", typeDeclarations);
   }
 
-  @Override
-  public boolean isArrayOf(TestedT<? extends Type> elem) {
+  public boolean isArrayOf(TestedTS elem) {
     return false;
   }
 
-  @Override
   public boolean isArray() {
     return false;
   }
 
-  @Override
   public boolean isArrayOfArrays() {
     return false;
   }
 
-  @Override
   public boolean isFunc(
-      Predicate<? super TestedT<? extends Type>> resPredicate,
-      List<? extends Predicate<? super TestedT<? extends Type>>> paramPredicates) {
+      Predicate<? super TestedTS> resPredicate,
+      List<? extends Predicate<? super TestedTS>> paramPredicates) {
     return false;
   }
 
-  @Override
   public boolean isTuple() {
     return false;
   }
 
-  @Override
   public boolean isTupleOfTuple() {
     return false;
   }
@@ -139,13 +129,13 @@ public class TestedTS implements TestedT<TypeS> {
 
     @Override
     public String name() {
-      return resT.name() + "(" + toCommaSeparatedString(paramTs, TestedT::name) + ")";
+      return resT.name() + "(" + toCommaSeparatedString(paramTs, TestedTS::name) + ")";
     }
 
     @Override
     public boolean isFunc(
-        Predicate<? super TestedT<? extends Type>> resPredicate,
-        List<? extends Predicate<? super TestedT<? extends Type>>> paramPredicates) {
+        Predicate<? super TestedTS> resPredicate,
+        List<? extends Predicate<? super TestedTS>> paramPredicates) {
       return paramTs.size() == paramPredicates.size()
           && resPredicate.test(resT)
           && allMatch(paramPredicates, paramTs, Predicate::test);
@@ -162,7 +152,7 @@ public class TestedTS implements TestedT<TypeS> {
     }
 
     @Override
-    public boolean isArrayOf(TestedT<? extends Type> elemT) {
+    public boolean isArrayOf(TestedTS elemT) {
       return this.elemT.equals(elemT);
     }
 

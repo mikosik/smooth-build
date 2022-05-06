@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.type;
 
-public class TestedAssignSpecB implements TestedAssignSpec<TestedTB> {
+public class TestedAssignSpecB {
   private final TestedAssignB assignment;
   private final boolean allowed;
 
@@ -8,27 +8,23 @@ public class TestedAssignSpecB implements TestedAssignSpec<TestedTB> {
     this(new TestedAssignB(target, source), allowed);
   }
 
-  public TestedAssignSpecB(TestedAssign<TestedTB> assignment, boolean allowed) {
-    this.assignment = (TestedAssignB) assignment;
+  public TestedAssignSpecB(TestedAssignB assignment, boolean allowed) {
+    this.assignment = assignment;
     this.allowed = allowed;
   }
 
-  @Override
-  public TestedAssign<TestedTB> assignment() {
+  public TestedAssignB assignment() {
     return assignment;
   }
 
-  @Override
   public boolean allowed() {
     return allowed;
   }
 
-  @Override
   public TestedTB source() {
     return assignment().source();
   }
 
-  @Override
   public TestedTB target() {
     return assignment().target();
   }

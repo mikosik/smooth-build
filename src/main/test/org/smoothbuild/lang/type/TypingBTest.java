@@ -27,9 +27,7 @@ import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.testing.type.TestedAssignSpec;
-import org.smoothbuild.testing.type.TestedT;
-import org.smoothbuild.testing.type.TestedTB;
+import org.smoothbuild.testing.type.TestedAssignSpecB;
 import org.smoothbuild.testing.type.TestedTBF;
 import org.smoothbuild.testing.type.TestingTB;
 
@@ -204,27 +202,27 @@ public class TypingBTest {
 
   @ParameterizedTest
   @MethodSource("isAssignable_test_data")
-  public void isAssignable(TestedAssignSpec<? extends TestedT<TypeB>> spec) {
+  public void isAssignable(TestedAssignSpecB spec) {
     var target = spec.target().type();
     var source = spec.source().type();
     assertThat(typing().isAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
 
-  private static List<? extends TestedAssignSpec<TestedTB>> isAssignable_test_data() {
+  private static List<? extends TestedAssignSpecB> isAssignable_test_data() {
     return TESTED_ASSIGN_CASES_B.assignment_test_specs(true);
   }
 
   @ParameterizedTest
   @MethodSource("isParamAssignable_test_data")
-  public void isParamAssignable(TestedAssignSpec<? extends TestedT<TypeB>> spec) {
+  public void isParamAssignable(TestedAssignSpecB spec) {
     var target = spec.target().type();
     var source = spec.source().type();
     assertThat(typing().isParamAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
 
-  private static List<? extends TestedAssignSpec<TestedTB>> isParamAssignable_test_data() {
+  private static List<? extends TestedAssignSpecB> isParamAssignable_test_data() {
     return TESTED_ASSIGN_CASES_B.param_assignment_test_specs(true);
   }
 
