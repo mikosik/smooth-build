@@ -3,8 +3,6 @@ package org.smoothbuild.lang.type.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.type.impl.TypeNamesS.isVarName;
 
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -106,10 +104,6 @@ public class TypeFS {
   public VarS var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return new VarS(name);
-  }
-
-  public VarSetS varSet(Set<TypeS> elements) {
-    return new VarSetS((Set<VarS>)(Object) elements);
   }
 
   public TypeS edge(Side side) {

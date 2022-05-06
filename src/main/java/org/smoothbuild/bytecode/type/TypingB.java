@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
@@ -8,7 +9,6 @@ import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
-import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.HashMap;
 import java.util.List;
@@ -265,7 +265,7 @@ public class TypingB {
     }
     return switch (composedT) {
       case ArrayTB array -> typeFB.array(covars.get(0));
-      case FuncTB func -> typeFB.func(typeFB.varSet(set()), covars.get(0),
+      case FuncTB func -> typeFB.func(varSetB(), covars.get(0),
           contravars);
       case TupleTB tuple -> typeFB.tuple(covars);
     };

@@ -1,7 +1,5 @@
 package org.smoothbuild.bytecode.type;
 
-import java.util.Set;
-
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
@@ -38,10 +36,6 @@ public interface TypeFB {
 
   public default VarBoundsB varBounds(ImmutableMap<VarB, BoundedB> map) {
     return new VarBoundsB(map);
-  }
-
-  public default VarSetB varSet(Set<VarB> elements) {
-    return new VarSetB(elements);
   }
 
   public default TypeB edge(Side side) {

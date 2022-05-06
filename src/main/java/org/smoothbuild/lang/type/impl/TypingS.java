@@ -3,12 +3,12 @@ package org.smoothbuild.lang.type.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
+import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
-import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.HashMap;
 import java.util.List;
@@ -257,7 +257,7 @@ public class TypingS {
     }
     return switch (composedT) {
       case ArrayTS array -> typeFS.array(covars.get(0));
-      case FuncTS func -> typeFS.func(typeFS.varSet(set()), covars.get(0), contravars);
+      case FuncTS func -> typeFS.func(varSetS(), covars.get(0), contravars);
     };
   }
 
