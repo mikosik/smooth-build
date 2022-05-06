@@ -5,6 +5,6 @@ package org.smoothbuild.lang.type.impl;
  */
 public final class NothingTS extends BaseTS {
   public NothingTS() {
-    super(TypeNamesS.NOTHING);
+    super(TNamesS.NOTHING);
   }
 }

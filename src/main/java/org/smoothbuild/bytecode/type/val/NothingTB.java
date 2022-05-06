@@ -9,6 +9,6 @@ import org.smoothbuild.db.Hash;
  */
 public class NothingTB extends BaseTB {
   public NothingTB(Hash hash) {
-    super(hash, TypeNamesB.NOTHING, NOTHING);
+    super(hash, TNamesB.NOTHING, NOTHING);
   }
 }

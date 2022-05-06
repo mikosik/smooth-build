@@ -5,6 +5,6 @@ package org.smoothbuild.lang.type.impl;
  */
 public final class BlobTS extends BaseTS {
   public BlobTS() {
-    super(TypeNamesS.BLOB);
+    super(TNamesS.BLOB);
   }
 }

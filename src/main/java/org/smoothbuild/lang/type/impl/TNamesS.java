@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
 
-public class TypeNamesS {
+public class TNamesS {
   public static final String ANY = "Any";
   public static final String BLOB = "Blob";
   public static final String BOOL = "Bool";

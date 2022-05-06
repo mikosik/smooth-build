@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
-import static org.smoothbuild.bytecode.type.val.TypeNamesB.tupleTypeName;
+import static org.smoothbuild.bytecode.type.val.TNamesB.tupleTypeName;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;

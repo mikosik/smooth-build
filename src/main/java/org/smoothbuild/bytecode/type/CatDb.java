@@ -27,7 +27,7 @@ import static org.smoothbuild.bytecode.type.CatKindB.fromMarker;
 import static org.smoothbuild.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
-import static org.smoothbuild.bytecode.type.val.TypeNamesB.isVarName;
+import static org.smoothbuild.bytecode.type.val.TNamesB.isVarName;
 
 import java.util.HashSet;
 import java.util.List;

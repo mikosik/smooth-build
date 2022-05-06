@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.type.impl.TypeNamesS.isVarName;
+import static org.smoothbuild.lang.type.impl.TNamesS.isVarName;
 import static org.smoothbuild.lang.type.impl.VarSetS.toVarSetS;
 import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
 import static org.smoothbuild.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;

@@ -11,7 +11,7 @@ public final class ArrayTS extends TypeS implements ComposedTS {
   private final TypeS elem;
 
   public ArrayTS(TypeS elem) {
-    super(TypeNamesS.arrayTypeName(elem), elem.vars());
+    super(TNamesS.arrayTypeName(elem), elem.vars());
     this.elem = requireNonNull(elem);
   }
 

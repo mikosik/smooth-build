@@ -1,20 +1,20 @@
-package org.smoothbuild.lang.type.api;
+package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.type.impl.TypeNamesS.arrayTypeName;
-import static org.smoothbuild.lang.type.impl.TypeNamesS.funcTypeName;
-import static org.smoothbuild.lang.type.impl.TypeNamesS.isVarName;
-import static org.smoothbuild.lang.type.impl.VarSetS.varSetS;
-import static org.smoothbuild.testing.type.TestingTS.BLOB;
-import static org.smoothbuild.testing.type.TestingTS.BOOL;
-import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.VAR_A;
+import static org.smoothbuild.bytecode.type.val.TNamesB.arrayTypeName;
+import static org.smoothbuild.bytecode.type.val.TNamesB.funcTypeName;
+import static org.smoothbuild.bytecode.type.val.TNamesB.isVarName;
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
+import static org.smoothbuild.testing.type.TestingTB.BLOB;
+import static org.smoothbuild.testing.type.TestingTB.BOOL;
+import static org.smoothbuild.testing.type.TestingTB.STRING;
+import static org.smoothbuild.testing.type.TestingTB.VAR_A;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class TypeNamesSTest {
+public class TNamesBTest {
   @Nested
   class _var_name {
     @Test
@@ -73,8 +73,17 @@ public class TypeNamesSTest {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(funcTypeName(varSetS(VAR_A), STRING, list(BLOB, BOOL)))
+      assertThat(funcTypeName(varSetB(VAR_A), STRING, list(BLOB, BOOL)))
           .isEqualTo("<A>String(Blob,Bool)");
+    }
+  }
+
+  @Nested
+  class _tuple_type_name {
+    @Test
+    public void func_type_name() {
+      assertThat(TNamesB.tupleTypeName(list(BLOB, BOOL)))
+          .isEqualTo("{Blob,Bool}");
     }
   }
 }

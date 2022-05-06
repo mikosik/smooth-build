@@ -12,7 +12,7 @@ import org.smoothbuild.db.Hash;
  */
 public class BlobTB extends BaseTB {
   public BlobTB(Hash hash) {
-    super(hash, TypeNamesB.BLOB, BLOB);
+    super(hash, TNamesB.BLOB, BLOB);
   }
 
   @Override

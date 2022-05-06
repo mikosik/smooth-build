@@ -12,7 +12,7 @@ import org.smoothbuild.db.Hash;
  */
 public class IntTB extends BaseTB {
   public IntTB(Hash hash) {
-    super(hash, TypeNamesB.INT, INT);
+    super(hash, TNamesB.INT, INT);
   }
 
   @Override
