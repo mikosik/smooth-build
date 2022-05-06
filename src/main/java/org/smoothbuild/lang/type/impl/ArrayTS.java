@@ -2,14 +2,12 @@ package org.smoothbuild.lang.type.impl;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.lang.type.api.ArrayT;
-
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public final class ArrayTS extends TypeS implements ArrayT, ComposedTS {
+public final class ArrayTS extends TypeS implements ComposedTS {
   private final TypeS elem;
 
   public ArrayTS(TypeS elem) {
@@ -17,7 +15,6 @@ public final class ArrayTS extends TypeS implements ArrayT, ComposedTS {
     this.elem = requireNonNull(elem);
   }
 
-  @Override
   public TypeS elem() {
     return elem;
   }

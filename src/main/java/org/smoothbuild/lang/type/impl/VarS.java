@@ -2,12 +2,10 @@ package org.smoothbuild.lang.type.impl;
 
 import static org.smoothbuild.util.collect.Sets.set;
 
-import org.smoothbuild.lang.type.api.Var;
-
 /**
  * This class is immutable.
  */
-public final class VarS extends TypeS implements Var {
+public final class VarS extends TypeS {
   private final VarSetS vars;
 
   public VarS(String name) {

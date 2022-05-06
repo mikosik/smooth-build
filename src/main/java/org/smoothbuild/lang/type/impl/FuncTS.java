@@ -6,14 +6,12 @@ import static org.smoothbuild.util.collect.Lists.concat;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.type.api.FuncT;
-
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public final class FuncTS extends TypeS implements FuncT, ComposedTS {
+public final class FuncTS extends TypeS implements ComposedTS {
   private final VarSetS tParams;
   private final TypeS res;
   private final ImmutableList<TypeS> params;
@@ -33,12 +31,10 @@ public final class FuncTS extends TypeS implements FuncT, ComposedTS {
     return tParams;
   }
 
-  @Override
   public TypeS res() {
     return res;
   }
 
-  @Override
   public ImmutableList<TypeS> params() {
     return params;
   }

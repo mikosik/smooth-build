@@ -9,14 +9,13 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.type.api.ArrayT;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public final class ArrayTB extends TypeB implements ArrayT, ComposedTB {
+public final class ArrayTB extends TypeB implements ComposedTB {
   private final TypeB elem;
 
   public ArrayTB(Hash hash, TypeB elem) {
@@ -24,7 +23,6 @@ public final class ArrayTB extends TypeB implements ArrayT, ComposedTB {
     this.elem = requireNonNull(elem);
   }
 
-  @Override
   public TypeB elem() {
     return elem;
   }

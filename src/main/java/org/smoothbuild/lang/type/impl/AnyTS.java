@@ -1,11 +1,9 @@
 package org.smoothbuild.lang.type.impl;
 
-import org.smoothbuild.lang.type.api.AnyT;
-
 /**
  * This class is immutable.
  */
-public final class AnyTS extends BaseTS implements AnyT {
+public final class AnyTS extends BaseTS {
   public AnyTS() {
     super(TypeNamesS.ANY);
   }

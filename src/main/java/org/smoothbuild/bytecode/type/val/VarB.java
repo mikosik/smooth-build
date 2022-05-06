@@ -5,9 +5,8 @@ import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.type.api.Var;
 
-public class VarB extends TypeB implements Var {
+public class VarB extends TypeB {
   private final VarSetB vars;
 
   public VarB(Hash hash, String name) {

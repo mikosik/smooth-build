@@ -5,15 +5,13 @@ import static org.smoothbuild.lang.type.impl.VarSetS.toVarSetS;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.type.api.Type;
-
 import com.google.common.collect.ImmutableList;
 
 /**
  * Smooth language type.
  * This class and all its subclasses are immutable.
  */
-public abstract sealed class TypeS implements Type
+public abstract sealed class TypeS
     permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
   private final VarSetS vars;
   private final String name;
@@ -24,9 +22,12 @@ public abstract sealed class TypeS implements Type
     this.vars = vars;
   }
 
-  @Override
   public String name() {
     return name;
+  }
+
+  public String q() {
+    return "`" + name() + "`";
   }
 
   public static VarSetS calculateVars(ImmutableList<TypeS> types) {

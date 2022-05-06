@@ -8,14 +8,13 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.type.api.TupleT;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public final class TupleTB extends TypeB implements TupleT, ComposedTB {
+public final class TupleTB extends TypeB implements ComposedTB {
   private final ImmutableList<TypeB> itemTs;
 
   public TupleTB(Hash hash, ImmutableList<TypeB> itemTs) {
@@ -29,7 +28,6 @@ public final class TupleTB extends TypeB implements TupleT, ComposedTB {
     return (TupleB) super.newObj(merkleRoot, objDb);
   }
 
-  @Override
   public ImmutableList<TypeB> items() {
     return itemTs;
   }
