@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;
@@ -221,13 +220,12 @@ public class TestingTS {
     return VAR_Y;
   }
 
-  public VarSetS vs(Var... elements) {
+  public VarSetS vs(VarS... elements) {
     return varSet(elements);
   }
 
-  public static VarSetS varSet(Var... elements) {
+  public static VarSetS varSet(VarS... elements) {
     var varSetS = Stream.of(elements)
-        .map(e -> (VarS) e)
         .collect(toVarSetS());
     return varSetS;
   }

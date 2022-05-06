@@ -6,10 +6,10 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Var;
 
 import com.google.common.collect.ImmutableList;
 
@@ -24,7 +24,7 @@ public interface TypeBF {
 
   public TupleTB tuple(ImmutableList<TypeB> items);
 
-  public Var var(String name);
+  public VarB var(String name);
 
   public default TypeB edge(Side side) {
     return switch (side) {

@@ -30,7 +30,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.api.ArrayT;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.testing.EqualsTester;
@@ -169,7 +168,7 @@ public class TypeSTest {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
     public void elemType(TypeS type) {
-      ArrayT array = a(type);
+      ArrayTS array = a(type);
       assertThat(array.elem())
           .isEqualTo(type);
     }

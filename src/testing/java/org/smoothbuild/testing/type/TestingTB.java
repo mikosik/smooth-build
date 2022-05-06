@@ -21,7 +21,6 @@ import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -159,11 +158,10 @@ public class TestingTB {
     return VAR_Y;
   }
 
-  public VarSetB vs(Var... elements) {
+  public VarSetB vs(VarB... elements) {
     var varSetB = Stream.of(elements)
-        .map(e -> (VarB) e)
         .collect(toVarSetB());
-    return (VarSetB)(Object) varSetB;
+    return varSetB;
   }
 
   public Sides<TypeB> oneSideBound(Side side, TypeB type) {

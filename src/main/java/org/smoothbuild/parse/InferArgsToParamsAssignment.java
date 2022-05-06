@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.api.FuncT;
+import org.smoothbuild.lang.type.impl.FuncTS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
@@ -135,7 +135,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static String inCallToPrefix(CallN call, List<ItemSigS> params) {
-    String result = ((FuncT) call.callable().type().get()).res().name();
+    String result = ((FuncTS) call.callable().type().get()).res().name();
     String paramsString = join(", ", map(params, ItemSigS::typeAndName));
     return "In call to function with type `" + result + "(" + paramsString + ")`: ";
   }

@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.params.provider.Arguments;
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.testing.type.TestingTB;
 
 import com.google.common.collect.ImmutableList;
@@ -137,7 +136,7 @@ public record TestingTypeGraphB(ImmutableMultimap<TypeB, TypeB> edges) {
 
   private Arguments buildTestCase(int i, int j, int[][] intEdges, ArrayList<TypeB> indexToType) {
     if (i == j) {
-      Type type = indexToType.get(i);
+      TypeB type = indexToType.get(i);
       return Arguments.of(type, type, type);
     }
     // This method could be made faster by keeping separate `colors` array for `i` and `j` types.
@@ -183,7 +182,7 @@ public record TestingTypeGraphB(ImmutableMultimap<TypeB, TypeB> edges) {
     return typeToInteger;
   }
 
-  private static <T extends Type> Multimap<T, T> newMultimap() {
+  private static <T extends TypeB> Multimap<T, T> newMultimap() {
     return newSetMultimap(new HashMap<>(), HashSet::new);
   }
 

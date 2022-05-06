@@ -9,7 +9,6 @@ import javax.inject.Singleton;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.TupleT;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -85,10 +84,6 @@ public class TypeSF {
 
   public StructTS struct(String name, NList<ItemSigS> fields) {
     return new StructTS(name, fields);
-  }
-
-  public TupleT tuple(ImmutableList<TypeS> items) {
-    throw new UnsupportedOperationException();
   }
 
   public VarS var(String name) {

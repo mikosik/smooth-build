@@ -12,7 +12,7 @@ import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.TopEvalS;
-import org.smoothbuild.lang.type.api.Type;
+import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ModLoader;
@@ -56,7 +56,7 @@ public class TestingModLoader {
         .isEqualTo(expected);
   }
 
-  public void containsEvalWithType(String name, Type expectedT) {
+  public void containsEvalWithType(String name, TypeS expectedT) {
     var topEval = assertContainsEval(name);
     assertThat(topEval.type())
         .isEqualTo(expectedT);
@@ -70,13 +70,13 @@ public class TestingModLoader {
     return topEvals.get(name);
   }
 
-  public void containsType(Type expected) {
+  public void containsType(TypeS expected) {
     var name = expected.name();
     var types = modS.value().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.containsName(name))
         .isTrue();
-    Type actual = types.get(name).type();
+    TypeS actual = types.get(name).type();
     assertWithMessage(
         "Module contains type '" + name + "', but")
         .that(actual)

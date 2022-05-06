@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.params.provider.Arguments;
-import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.testing.type.TestingTS;
 
@@ -137,7 +136,7 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
 
   private Arguments buildTestCase(int i, int j, int[][] intEdges, ArrayList<TypeS> indexToType) {
     if (i == j) {
-      Type type = indexToType.get(i);
+      TypeS type = indexToType.get(i);
       return Arguments.of(type, type, type);
     }
     // This method could be made faster by keeping separate `colors` array for `i` and `j` types.
@@ -183,7 +182,7 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     return typeToInteger;
   }
 
-  private static <T extends Type> Multimap<T, T> newMultimap() {
+  private static <T extends TypeS> Multimap<T, T> newMultimap() {
     return newSetMultimap(new HashMap<>(), HashSet::new);
   }
 
