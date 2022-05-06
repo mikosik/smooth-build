@@ -26,11 +26,8 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
-import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Type;
-import org.smoothbuild.lang.type.api.Var;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -55,19 +52,17 @@ public class TypingB {
     }
   }
 
-  public TypeB inferCallResT(FuncT funcT, ImmutableList<TypeB> argTs,
+  public TypeB inferCallResT(CallableTB funcT, ImmutableList<TypeB> argTs,
       Supplier<RuntimeException> illegalArgsExcThrower) {
-    var callableTB = (CallableTB) funcT;
-    ImmutableList<TypeB> paramTs = callableTB.params();
     allMatchOtherwise(
-        paramTs,
+        funcT.params(),
         argTs,
         this::isParamAssignable,
         (expectedSize, actualSize) -> { throw illegalArgsExcThrower.get(); },
         i -> { throw illegalArgsExcThrower.get(); }
     );
-    var varBounds = inferVarBoundsLower(paramTs, argTs);
-    TypeB res = callableTB.res();
+    var varBounds = inferVarBoundsLower(funcT.params(), argTs);
+    TypeB res = funcT.res();
     return mapVarsLower(res, varBounds);
   }
 
@@ -85,7 +80,7 @@ public class TypingB {
   }
 
   public boolean inequalParam(TypeB type1, TypeB type2, Side side) {
-    return (type1 instanceof Var)
+    return (type1 instanceof VarB)
         || inequalImpl(type1, type2, side, this::inequalParam);
   }
 
@@ -94,12 +89,12 @@ public class TypingB {
         || inequalByConstruction(type1, type2, side, inequalityFunc);
   }
 
-  private boolean inequalByEdgeCases(Type type1, Type type2, Side side) {
+  private boolean inequalByEdgeCases(TypeB type1, TypeB type2, Side side) {
     return type2.equals(typeBF.edge(side))
         || type1.equals(typeBF.edge(side.other()));
   }
 
-  private boolean inequalByConstruction(Type t1, Type t2, Side side, InequalFunc isInequal) {
+  private boolean inequalByConstruction(TypeB t1, TypeB t2, Side side, InequalFunc isInequal) {
     if (t1 instanceof ComposedTB c1) {
       if (t1.getClass().equals(t2.getClass())) {
         var c2 = (ComposedTB) t2;
@@ -201,7 +196,7 @@ public class TypingB {
     return type;
   }
 
-  private TypeB mapVarsInVar(TypeB type, VarBoundsB varBounds, Side side, Var var) {
+  private TypeB mapVarsInVar(TypeB type, VarBoundsB varBounds, Side side, VarB var) {
     BoundedB bounded = varBounds.map().get(var);
     if (bounded == null) {
       return type;
@@ -219,7 +214,7 @@ public class TypingB {
   }
 
   public TypeB merge(TypeB type1, TypeB type2, Side direction) {
-    Type otherEdge = typeBF.edge(direction.other());
+    TypeB otherEdge = typeBF.edge(direction.other());
     if (otherEdge.equals(type2)) {
       return type1;
     } else if (otherEdge.equals(type1)) {

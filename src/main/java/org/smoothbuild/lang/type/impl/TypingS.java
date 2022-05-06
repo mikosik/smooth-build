@@ -17,11 +17,8 @@ import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.type.api.FuncT;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Type;
-import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBoundsS;
 
 import com.google.common.collect.ImmutableList;
@@ -47,19 +44,17 @@ public class TypingS {
     }
   }
 
-  public TypeS inferCallResT(FuncT funcT, ImmutableList<TypeS> argTs,
+  public TypeS inferCallResT(FuncTS funcT, ImmutableList<TypeS> argTs,
       Supplier<RuntimeException> illegalArgsExcThrower) {
-    var funcTS = (FuncTS) funcT;
-    ImmutableList<TypeS> paramTs = funcTS.params();
     allMatchOtherwise(
-        paramTs,
+        funcT.params(),
         argTs,
         this::isParamAssignable,
         (expectedSize, actualSize) -> { throw illegalArgsExcThrower.get(); },
         i -> { throw illegalArgsExcThrower.get(); }
     );
-    var varBounds = inferVarBoundsLower(paramTs, argTs);
-    TypeS res = funcTS.res();
+    var varBounds = inferVarBoundsLower(funcT.params(), argTs);
+    TypeS res = funcT.res();
     return mapVarsLower(res, varBounds);
   }
 
@@ -77,7 +72,7 @@ public class TypingS {
   }
 
   public boolean inequalParam(TypeS type1, TypeS type2, Side side) {
-    return (type1 instanceof Var)
+    return (type1 instanceof VarS)
         || inequalImpl(type1, type2, side, this::inequalParam);
   }
 
@@ -91,7 +86,7 @@ public class TypingS {
         || type1.equals(typeSF.edge(side.other()));
   }
 
-  private boolean inequalByConstruction(Type t1, Type t2, Side side, InequalFunc isInequal) {
+  private boolean inequalByConstruction(TypeS t1, TypeS t2, Side side, InequalFunc isInequal) {
     if (t1 instanceof ComposedTS c1) {
       if (t1.getClass().equals(t2.getClass())) {
         var c2 = (ComposedTS) t2;
@@ -179,7 +174,7 @@ public class TypingS {
   public TypeS mapVars(TypeS type, VarBoundsS varBounds, Side side) {
     if (!type.vars().isEmpty()) {
       return switch (type) {
-        case Var var -> mapVarsInVar(type, varBounds, side, var);
+        case VarS var -> mapVarsInVar(type, varBounds, side, var);
         case ComposedTS composedT -> {
           var covars = map(
               composedT.covars(), p -> mapVars(p, varBounds, side));
@@ -193,7 +188,7 @@ public class TypingS {
     return type;
   }
 
-  private TypeS mapVarsInVar(TypeS type, VarBoundsS varBounds, Side side, Var var) {
+  private TypeS mapVarsInVar(TypeS type, VarBoundsS varBounds, Side side, VarS var) {
     BoundedS bounded = varBounds.map().get(var);
     if (bounded == null) {
       return type;
@@ -211,7 +206,7 @@ public class TypingS {
   }
 
   public TypeS merge(TypeS type1, TypeS type2, Side direction) {
-    Type otherEdge = typeSF.edge(direction.other());
+    TypeS otherEdge = typeSF.edge(direction.other());
     if (otherEdge.equals(type2)) {
       return type1;
     } else if (otherEdge.equals(type1)) {
