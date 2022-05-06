@@ -1,6 +1,5 @@
 package org.smoothbuild.bytecode.type.val;
 
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.lang.type.api.Sides;
 
 public record BoundedB(VarB var, Sides<TypeB> bounds) {

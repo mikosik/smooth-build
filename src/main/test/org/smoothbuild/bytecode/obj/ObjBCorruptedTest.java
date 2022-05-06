@@ -54,7 +54,7 @@ import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.base.CatB;
+import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;

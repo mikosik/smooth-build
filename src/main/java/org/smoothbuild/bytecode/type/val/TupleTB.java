@@ -1,12 +1,11 @@
 package org.smoothbuild.bytecode.type.val;
 
-import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
+import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.val.TypeNamesB.tupleTypeName;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 
 import com.google.common.collect.ImmutableList;

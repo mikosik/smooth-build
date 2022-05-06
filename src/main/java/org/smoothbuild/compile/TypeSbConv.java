@@ -6,10 +6,10 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.ArrayTS;

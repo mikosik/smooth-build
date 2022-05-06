@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.type.exc;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.type.base.CatKindB;
+import org.smoothbuild.bytecode.type.CatKindB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 

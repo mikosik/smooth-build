@@ -5,7 +5,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypingB;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
@@ -14,6 +13,7 @@ import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;

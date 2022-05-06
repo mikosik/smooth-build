@@ -1,13 +1,12 @@
 package org.smoothbuild.bytecode.type.val;
 
-import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
+import static org.smoothbuild.bytecode.type.CatKindB.METHOD;
 import static org.smoothbuild.bytecode.type.val.FuncTB.calculateFuncVars;
 import static org.smoothbuild.bytecode.type.val.TypeNamesB.funcTypeName;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 
 import com.google.common.collect.ImmutableList;

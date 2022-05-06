@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.type.api.Side.LOWER;
 import static org.smoothbuild.lang.type.api.Side.UPPER;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.testing.type.TestingTB;

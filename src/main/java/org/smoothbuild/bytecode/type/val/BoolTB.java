@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
-import static org.smoothbuild.bytecode.type.base.CatKindB.BOOL;
+import static org.smoothbuild.bytecode.type.CatKindB.BOOL;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;

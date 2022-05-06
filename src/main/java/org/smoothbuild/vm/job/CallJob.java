@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.util.concurrent.Promise;

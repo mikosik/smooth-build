@@ -3,8 +3,8 @@ package org.smoothbuild.bytecode.obj.base;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
-import org.smoothbuild.bytecode.type.base.ExprCatB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.expr.ExprCatB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 
 /**
  * Expression.

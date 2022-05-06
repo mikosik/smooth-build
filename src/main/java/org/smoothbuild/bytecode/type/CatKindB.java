@@ -1,4 +1,4 @@
-package org.smoothbuild.bytecode.type.base;
+package org.smoothbuild.bytecode.type;
 
 import java.util.function.BiFunction;
 

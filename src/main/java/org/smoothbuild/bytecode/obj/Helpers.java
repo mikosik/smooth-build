@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.obj;
 
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.bytecode.obj.exc.ObjDbExc;
-import org.smoothbuild.bytecode.type.base.CatB;
+import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.exc.HashedDbExc;
 

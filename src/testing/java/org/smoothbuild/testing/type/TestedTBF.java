@@ -2,7 +2,7 @@ package org.smoothbuild.testing.type;
 
 import static org.smoothbuild.util.collect.Lists.map;
 
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.testing.type.TestedTB.TestedArrayTB;
 import org.smoothbuild.testing.type.TestedTB.TestedFuncTB;
 import org.smoothbuild.testing.type.TestedTB.TestedTupleTB;

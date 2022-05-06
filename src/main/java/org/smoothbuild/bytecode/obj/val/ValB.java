@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.obj.val;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 
 /**
  * Value.

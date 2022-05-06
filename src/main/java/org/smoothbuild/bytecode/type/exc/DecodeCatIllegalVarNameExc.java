@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.type.exc;
 
-import static org.smoothbuild.bytecode.type.base.CatKindB.VAR;
+import static org.smoothbuild.bytecode.type.CatKindB.VAR;
 
 import org.smoothbuild.db.Hash;
 

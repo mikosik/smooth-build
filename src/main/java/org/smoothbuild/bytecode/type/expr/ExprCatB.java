@@ -1,5 +1,8 @@
-package org.smoothbuild.bytecode.type.base;
+package org.smoothbuild.bytecode.type.expr;
 
+import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.CatKindB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 
 public abstract class ExprCatB extends CatB {

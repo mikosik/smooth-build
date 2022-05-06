@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.TopEvalS;

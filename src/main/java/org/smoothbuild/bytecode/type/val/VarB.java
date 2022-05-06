@@ -1,9 +1,8 @@
 package org.smoothbuild.bytecode.type.val;
 
-import static org.smoothbuild.bytecode.type.base.CatKindB.VAR;
+import static org.smoothbuild.bytecode.type.CatKindB.VAR;
 import static org.smoothbuild.util.collect.Sets.set;
 
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 
 public class VarB extends TypeB {

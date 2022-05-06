@@ -1,11 +1,11 @@
 package org.smoothbuild.bytecode.type;
 
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;

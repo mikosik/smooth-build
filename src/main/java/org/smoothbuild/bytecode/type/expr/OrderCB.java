@@ -1,11 +1,10 @@
 package org.smoothbuild.bytecode.type.expr;
 
-import static org.smoothbuild.bytecode.type.base.CatKindB.ORDER;
+import static org.smoothbuild.bytecode.type.CatKindB.ORDER;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
-import org.smoothbuild.bytecode.type.base.ExprCatB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.db.Hash;
 

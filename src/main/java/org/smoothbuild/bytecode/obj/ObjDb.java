@@ -21,11 +21,11 @@ import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 
 import com.google.common.collect.ImmutableList;

@@ -1,11 +1,12 @@
-package org.smoothbuild.bytecode.type.base;
+package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.bytecode.type.val.VarSetB.toVarSetB;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
-import org.smoothbuild.bytecode.type.val.VarSetB;
+import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.CatKindB;
 import org.smoothbuild.db.Hash;
 
 import com.google.common.collect.ImmutableList;

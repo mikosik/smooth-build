@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.testing.TestingContext;
 
 public class ConvertAlgorithmTest extends TestingContext {

@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 

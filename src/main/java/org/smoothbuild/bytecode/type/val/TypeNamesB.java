@@ -5,8 +5,6 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
 
-import org.smoothbuild.bytecode.type.base.TypeB;
-
 public class TypeNamesB {
   public static final String ANY = "Any";
   public static final String BLOB = "Blob";

@@ -21,7 +21,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.VarBoundsS;
-import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.TypeS;
@@ -35,7 +34,6 @@ import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.errorprone.annotations.Var;
 
 public class TypingSTest {
   @ParameterizedTest

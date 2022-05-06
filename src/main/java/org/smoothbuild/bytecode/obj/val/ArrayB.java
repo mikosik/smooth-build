@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
-import org.smoothbuild.bytecode.type.base.CatB;
+import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 

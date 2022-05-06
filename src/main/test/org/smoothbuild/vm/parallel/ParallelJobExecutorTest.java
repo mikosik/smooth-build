@@ -30,7 +30,7 @@ import org.mockito.ArgumentCaptor;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;

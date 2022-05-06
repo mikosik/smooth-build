@@ -1,4 +1,4 @@
-package org.smoothbuild.bytecode.type.base;
+package org.smoothbuild.bytecode.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

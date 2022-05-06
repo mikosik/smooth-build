@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.type.TestingCatsB;

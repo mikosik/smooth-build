@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.obj.exc;
 
-import org.smoothbuild.bytecode.type.base.CatB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 
 public class DecodeObjWrongNodeTypeExc extends DecodeObjNodeExc {

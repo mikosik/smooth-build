@@ -4,13 +4,13 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
+import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.base.CatB;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.testing.TestingContext;
 

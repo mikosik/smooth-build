@@ -1,6 +1,5 @@
 package org.smoothbuild.bytecode.type;
 
-import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatNodeExc;

@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
-import org.smoothbuild.bytecode.type.base.CatKindB;
-import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.CatKindB;
 import org.smoothbuild.db.Hash;
 
 /**
