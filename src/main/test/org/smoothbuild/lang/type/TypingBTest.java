@@ -27,8 +27,6 @@ import org.smoothbuild.bytecode.type.val.VarBoundsB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Type;
-import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.testing.type.TestedAssignSpec;
 import org.smoothbuild.testing.type.TestedT;
 import org.smoothbuild.testing.type.TestedTB;
@@ -344,7 +342,7 @@ public class TypingBTest {
 
   @ParameterizedTest
   @MethodSource("mapVarsLower_test_data")
-  public void mapVarsLower(TypeB type, VarBoundsB varBounds, Type expected) {
+  public void mapVarsLower(TypeB type, VarBoundsB varBounds, TypeB expected) {
     assertThat(typing().mapVarsLower(type, varBounds))
         .isEqualTo(expected);
   }
@@ -414,7 +412,7 @@ public class TypingBTest {
 
   @ParameterizedTest
   @MethodSource("merge_down_deep_graph_test_data")
-  public void merge_down_deep_graph(TypeB type1, TypeB type2, Type expected) {
+  public void merge_down_deep_graph(TypeB type1, TypeB type2, TypeB expected) {
     testMergeBothWays(type1, type2, expected, LOWER);
   }
 
@@ -424,7 +422,7 @@ public class TypingBTest {
         .buildTestCases(any());
   }
 
-  private void testMergeBothWays(TypeB type1, TypeB type2, Type expected, Side direction) {
+  private void testMergeBothWays(TypeB type1, TypeB type2, TypeB expected, Side direction) {
     assertThat(typing().merge(type1, type2, direction))
         .isEqualTo(expected);
     assertThat(typing().merge(type2, type1, direction))
@@ -478,7 +476,7 @@ public class TypingBTest {
     return testingT().varY();
   }
 
-  private static VarSetB vs(Var... elements) {
+  private static VarSetB vs(VarB... elements) {
     return testingT().vs(elements);
   }
 

@@ -26,8 +26,8 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.lang.expr.TopRefS;
-import org.smoothbuild.lang.type.api.ArrayT;
-import org.smoothbuild.lang.type.api.Type;
+import org.smoothbuild.lang.type.impl.ArrayTS;
+import org.smoothbuild.lang.type.impl.TypeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.util.collect.DuplicatesDetector;
@@ -72,7 +72,7 @@ public class ArtifactSaver {
 
   private PathS write(TopRefS topRef, ObjB obj) throws IOException, DuplicatedPathsExc {
     PathS artifactPath = ArtifactPaths.artifactPath(topRef.name());
-    if (topRef.type() instanceof ArrayT arrayT) {
+    if (topRef.type() instanceof ArrayTS arrayT) {
       return saveArray(arrayT, artifactPath, (ArrayB) obj);
     } else if (topRef.type().name().equals(FileStruct.NAME)) {
       return saveFile(artifactPath, (TupleB) obj);
@@ -87,17 +87,17 @@ public class ArtifactSaver {
     return artifactPath.append(fileObjectPath(file));
   }
 
-  private PathS saveArray(ArrayT arrayT, PathS artifactPath,
+  private PathS saveArray(ArrayTS arrayTS, PathS artifactPath,
       ArrayB array) throws IOException, DuplicatedPathsExc {
     fileSystem.createDir(artifactPath);
-    Type elemT = arrayT.elem();
-    if (elemT instanceof ArrayT elemArrayT) {
+    TypeS elemTS = arrayTS.elem();
+    if (elemTS instanceof ArrayTS elemArrayTS) {
       int i = 0;
       for (ArrayB elem : array.elems(ArrayB.class)) {
-        saveArray(elemArrayT, artifactPath.appendPart(Integer.toString(i)), elem);
+        saveArray(elemArrayTS, artifactPath.appendPart(Integer.toString(i)), elem);
         i++;
       }
-    } else if (elemT.name().equals(FileStruct.NAME)) {
+    } else if (elemTS.name().equals(FileStruct.NAME)) {
       saveFileArray(artifactPath, array.elems(TupleB.class));
     } else {
       saveObjectArray(artifactPath, array);

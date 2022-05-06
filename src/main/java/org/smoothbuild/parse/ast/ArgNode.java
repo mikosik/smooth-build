@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.type.api.Type;
+import org.smoothbuild.lang.type.impl.TypeS;
 
 public final class ArgNode extends NamedN {
   private final ExprN expr;
@@ -28,7 +28,7 @@ public final class ArgNode extends NamedN {
   }
 
   public String typeAndName() {
-    return type().map(Type::name).orElse("<missing type>") + ":" + nameSanitized();
+    return type().map(TypeS::name).orElse("<missing type>") + ":" + nameSanitized();
   }
 
   public ExprN expr() {

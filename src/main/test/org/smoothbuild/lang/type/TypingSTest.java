@@ -19,8 +19,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
-import org.smoothbuild.lang.type.api.Type;
-import org.smoothbuild.lang.type.api.Var;
 import org.smoothbuild.lang.type.api.VarBoundsS;
 import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
@@ -294,7 +292,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("mapVarsLower_test_data")
-  public void mapVarsLower(TypeS type, VarBoundsS varBounds, Type expected) {
+  public void mapVarsLower(TypeS type, VarBoundsS varBounds, TypeS expected) {
     assertThat(typing().mapVarsLower(type, varBounds))
         .isEqualTo(expected);
   }
@@ -361,7 +359,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("merge_down_deep_graph_test_data")
-  public void merge_down_deep_graph(TypeS type1, TypeS type2, Type expected) {
+  public void merge_down_deep_graph(TypeS type1, TypeS type2, TypeS expected) {
     testMergeBothWays(type1, type2, expected, LOWER);
   }
 
@@ -371,7 +369,7 @@ public class TypingSTest {
         .buildTestCases(any());
   }
 
-  private void testMergeBothWays(TypeS type1, TypeS type2, Type expected, Side direction) {
+  private void testMergeBothWays(TypeS type1, TypeS type2, TypeS expected, Side direction) {
     assertThat(typing().merge(type1, type2, direction))
         .isEqualTo(expected);
     assertThat(typing().merge(type2, type1, direction))
@@ -425,7 +423,7 @@ public class TypingSTest {
     return testingT().varY();
   }
 
-  private static VarSetS vs(Var... elements) {
+  private static VarSetS vs(VarS... elements) {
     return testingT().vs(elements);
   }
 

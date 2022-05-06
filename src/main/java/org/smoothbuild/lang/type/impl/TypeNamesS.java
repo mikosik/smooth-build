@@ -5,8 +5,6 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
 
-import org.smoothbuild.lang.type.api.Type;
-
 public class TypeNamesS {
   public static final String ANY = "Any";
   public static final String BLOB = "Blob";
@@ -19,12 +17,12 @@ public class TypeNamesS {
     return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 
-  public static String arrayTypeName(Type elemT) {
+  public static String arrayTypeName(TypeS elemT) {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(VarSetS tParams, Type resT, List<? extends Type> paramTs) {
-    var params = toCommaSeparatedString(paramTs, Type::name);
+  public static String funcTypeName(VarSetS tParams, TypeS resT, List<? extends TypeS> paramTs) {
+    var params = toCommaSeparatedString(paramTs, TypeS::name);
     return tParams + resT.name() + "(" + params + ")";
   }
 }

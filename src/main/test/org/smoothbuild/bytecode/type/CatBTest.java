@@ -78,14 +78,12 @@ import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
-import org.smoothbuild.lang.type.api.ArrayT;
-import org.smoothbuild.lang.type.api.FuncT;
-import org.smoothbuild.lang.type.api.Type;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.type.TestingCatsB;
 import org.smoothbuild.util.collect.Labeled;
@@ -230,8 +228,8 @@ public class CatBTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CatDb, FuncT> factoryCall,
-        Function<CatDb, List<Type>> expected) {
+    public void result(Function<CatDb, FuncTB> factoryCall,
+        Function<CatDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).res())
           .isEqualTo(execute(expected));
     }
@@ -246,8 +244,8 @@ public class CatBTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CatDb, FuncT> factoryCall,
-        Function<CatDb, List<Type>> expected) {
+    public void params(Function<CatDb, FuncTB> factoryCall,
+        Function<CatDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).params())
           .isEqualTo(execute(expected));
     }
@@ -280,7 +278,7 @@ public class CatBTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(Function<CatDb, MethodTB> factoryCall,
-        Function<CatDb, List<Type>> expected) {
+        Function<CatDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).res())
           .isEqualTo(execute(expected));
     }
@@ -296,7 +294,7 @@ public class CatBTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("params_cases")
     public void params(Function<CatDb, MethodTB> factoryCall,
-        Function<CatDb, List<Type>> expected) {
+        Function<CatDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).params())
           .isEqualTo(execute(expected));
     }
@@ -331,7 +329,7 @@ public class CatBTest extends TestingContext {
     @MethodSource("elemType_test_data")
     public void elemType(Function<CatDb, TypeB> factoryCall) {
       TypeB elem = execute(factoryCall);
-      ArrayT array = typeFB().array(elem);
+      ArrayTB array = typeFB().array(elem);
       assertThat(array.elem())
           .isEqualTo(elem);
     }
@@ -383,7 +381,7 @@ public class CatBTest extends TestingContext {
     @MethodSource("tuple_item_cases")
     public void tuple_item(
         Function<CatDb, TupleTB> factoryCall,
-        Function<CatDb, NList<Labeled<Type>>> expected) {
+        Function<CatDb, NList<Labeled<TypeB>>> expected) {
       assertThat(execute(factoryCall).items())
           .isEqualTo(execute(expected));
     }
