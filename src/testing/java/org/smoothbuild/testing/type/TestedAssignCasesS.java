@@ -368,7 +368,7 @@ public class TestedAssignCasesS {
   }
 
   private List<TestedAssignSpecS> gen(List<TestedAssignSpecS> result, TestedTS target, boolean includeAny,
-      Predicate<TestedT<? extends Type>>... allowedPredicates) {
+      Predicate<? super TestedTS>... allowedPredicates) {
     for (TestedTS type : generateTypes(2, includeAny)) {
       boolean allowed = stream(allowedPredicates).anyMatch(predicate -> predicate.test(type));
       result.add(testedTF.testedAssignmentSpec(target, type, allowed));

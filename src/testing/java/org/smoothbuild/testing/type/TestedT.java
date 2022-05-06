@@ -3,9 +3,7 @@ package org.smoothbuild.testing.type;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.smoothbuild.lang.type.api.Type;
-
-public interface TestedT<T extends Type> {
+public interface TestedT<T> {
   public T type();
 
   public String name();
@@ -13,15 +11,15 @@ public interface TestedT<T extends Type> {
   public String q();
 
   public boolean isFunc(
-      Predicate<? super TestedT<? extends Type>> resPredicate,
-      List<? extends Predicate<? super TestedT<? extends Type>>> paramPredicates);
+      Predicate<? super TestedT<T>> resPredicate,
+      List<? extends Predicate<? super TestedT<T>>> paramPredicates);
 
 
   public boolean isArray();
 
   public boolean isArrayOfArrays();
 
-  public boolean isArrayOf(TestedT<? extends Type> nothing);
+  public boolean isArrayOf(TestedT<T> nothing);
 
   public boolean isTuple();
 
