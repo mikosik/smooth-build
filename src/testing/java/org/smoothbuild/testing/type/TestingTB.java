@@ -139,19 +139,19 @@ public class TestingTB {
     return FACTORY.tuple(items);
   }
 
-  public TypeB varA() {
+  public VarB varA() {
     return VAR_A;
   }
 
-  public TypeB varB() {
+  public VarB varB() {
     return VAR_B;
   }
 
-  public TypeB varX() {
+  public VarB varX() {
     return VAR_X;
   }
 
-  public TypeB varY() {
+  public VarB varY() {
     return VAR_Y;
   }
 

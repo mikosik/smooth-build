@@ -437,41 +437,41 @@ public class TypingBTest {
   }
 
   private static VarBoundsB vb(
-      TypeB var1, Side side1, TypeB bound1,
-      TypeB var2, Side side2, TypeB bound2) {
+      VarB var1, Side side1, VarB bound1,
+      VarB var2, Side side2, VarB bound2) {
     Sides<TypeB> bounds1 = oneSideBound(side1, bound1);
     Sides<TypeB> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
-      return varBoundsB(new BoundedB((VarB) var1, typing().merge(bounds1, bounds2)));
+      return varBoundsB(new BoundedB(var1, typing().merge(bounds1, bounds2)));
     } else {
       return new VarBoundsB(ImmutableMap.of(
-          (VarB) var1, new BoundedB((VarB) var1, bounds1),
-          (VarB) var2, new BoundedB((VarB) var2, bounds2)
+          var1, new BoundedB(var1, bounds1),
+          var2, new BoundedB(var2, bounds2)
       ));
     }
   }
 
-  private static VarBoundsB vb(TypeB var, Side side, TypeB bound) {
-    return varBoundsB(new BoundedB((VarB) var, oneSideBound(side, bound)));
+  private static VarBoundsB vb(VarB var, Side side, TypeB bound) {
+    return varBoundsB(new BoundedB(var, oneSideBound(side, bound)));
   }
 
   private static VarBoundsB vb() {
     return varBoundsB();
   }
 
-  private static TypeB a() {
+  private static VarB a() {
     return testingT().varA();
   }
 
-  private static TypeB b() {
+  private static VarB b() {
     return testingT().varB();
   }
 
-  private static TypeB x() {
+  private static VarB x() {
     return testingT().varX();
   }
 
-  private static TypeB y() {
+  private static VarB y() {
     return testingT().varY();
   }
 

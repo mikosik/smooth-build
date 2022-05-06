@@ -201,19 +201,19 @@ public class TestingTS {
     throw new UnsupportedOperationException();
   }
 
-  public TypeS varA() {
+  public VarS varA() {
     return VAR_A;
   }
 
-  public TypeS varB() {
+  public VarS varB() {
     return VAR_B;
   }
 
-  public TypeS varX() {
+  public VarS varX() {
     return VAR_X;
   }
 
-  public TypeS varY() {
+  public VarS varY() {
     return VAR_Y;
   }
 }

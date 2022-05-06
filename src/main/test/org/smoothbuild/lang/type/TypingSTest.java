@@ -21,6 +21,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.type.api.Side;
 import org.smoothbuild.lang.type.api.Sides;
 import org.smoothbuild.lang.type.api.VarBoundsS;
+import org.smoothbuild.lang.type.impl.AnyTS;
 import org.smoothbuild.lang.type.impl.BoundedS;
 import org.smoothbuild.lang.type.impl.NothingTS;
 import org.smoothbuild.lang.type.impl.TypeS;
@@ -34,6 +35,7 @@ import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.annotations.Var;
 
 public class TypingSTest {
   @ParameterizedTest
@@ -385,41 +387,41 @@ public class TypingSTest {
   }
 
   private static VarBoundsS vb(
-      TypeS var1, Side side1, TypeS bound1,
-      TypeS var2, Side side2, TypeS bound2) {
+      VarS var1, Side side1, VarS bound1,
+      VarS var2, Side side2, VarS bound2) {
     Sides<TypeS> bounds1 = oneSideBound(side1, bound1);
     Sides<TypeS> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
-      return varBoundsS(new BoundedS((VarS) var1, typing().merge(bounds1, bounds2)));
+      return varBoundsS(new BoundedS(var1, typing().merge(bounds1, bounds2)));
     } else {
       return new VarBoundsS(ImmutableMap.of(
-          (VarS) var1, new BoundedS((VarS) var1, bounds1),
-          (VarS) var2, new BoundedS((VarS) var2, bounds2)
+          var1, new BoundedS(var1, bounds1),
+          var2, new BoundedS(var2, bounds2)
       ));
     }
   }
 
-  private static VarBoundsS vb(TypeS var, Side side, TypeS bound) {
-    return varBoundsS(new BoundedS((VarS) var, oneSideBound(side, bound)));
+  private static VarBoundsS vb(VarS var, Side side, TypeS bound) {
+    return varBoundsS(new BoundedS(var, oneSideBound(side, bound)));
   }
 
   private static VarBoundsS vb() {
     return varBoundsS();
   }
 
-  private static TypeS a() {
+  private static VarS a() {
     return testingT().varA();
   }
 
-  private static TypeS b() {
+  private static VarS b() {
     return testingT().varB();
   }
 
-  private static TypeS x() {
+  private static VarS x() {
     return testingT().varX();
   }
 
-  private static TypeS y() {
+  private static VarS y() {
     return testingT().varY();
   }
 
