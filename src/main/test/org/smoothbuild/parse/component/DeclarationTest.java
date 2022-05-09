@@ -120,11 +120,11 @@ public class DeclarationTest extends TestingContext {
           public void cannot_be_polytype() {
             module("""
                 MyStruct {
-                 A field
+                 A(B) field
                 }
                 """)
                 .loadsWithError(
-                    2, "Field type cannot be polymorphic. Found field `field` with type `A`.");
+                    2, "Field type cannot be polymorphic. Found field `field` with type `<>A(B)`.");
           }
 
           @Test
@@ -573,6 +573,17 @@ public class DeclarationTest extends TestingContext {
             var code = """
                 @Native("Impl.met")
                 A myFunc(B b, C c);
+                """;
+            module(code)
+                .loadsWithError(2,
+                    "Function result type has type variable(s) not present in any parameter type.");
+          }
+
+          @Test
+          public void cannot_be_polytype_func() {
+            var code = """
+                @Native("Impl.met")
+                A(A) myFunc(B b, C c);
                 """;
             module(code)
                 .loadsWithError(2,
