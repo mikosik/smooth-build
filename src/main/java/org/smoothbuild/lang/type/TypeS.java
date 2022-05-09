@@ -2,6 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import java.util.Objects;
 
@@ -13,11 +14,17 @@ import com.google.common.collect.ImmutableList;
  */
 public abstract sealed class TypeS
     permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
+  private final VarSetS tParams;
   private final VarSetS vars;
   private final String name;
 
-  protected TypeS(String name, VarSetS vars) {
+  protected TypeS(String name) {
+    this(name, varSetS(), varSetS());
+  }
+
+  protected TypeS(String name, VarSetS tParams, VarSetS vars) {
     checkArgument(!name.isBlank());
+    this.tParams = tParams;
     this.name = name;
     this.vars = vars;
   }
@@ -35,6 +42,10 @@ public abstract sealed class TypeS
         .map(TypeS::vars)
         .flatMap(VarSetS::stream)
         .collect(toVarSetS());
+  }
+
+  public VarSetS tParams() {
+    return tParams;
   }
 
   public VarSetS vars() {

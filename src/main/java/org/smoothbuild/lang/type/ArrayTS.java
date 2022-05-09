@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.type;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import com.google.common.collect.ImmutableList;
 
@@ -11,7 +12,7 @@ public final class ArrayTS extends TypeS implements ComposedTS {
   private final TypeS elem;
 
   public ArrayTS(TypeS elem) {
-    super(TNamesS.arrayTypeName(elem), elem.vars());
+    super(TNamesS.arrayTypeName(elem), varSetS(), elem.vars());
     this.elem = requireNonNull(elem);
   }
 

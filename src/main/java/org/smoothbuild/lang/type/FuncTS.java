@@ -12,23 +12,17 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class FuncTS extends TypeS implements ComposedTS {
-  private final VarSetS tParams;
   private final TypeS res;
   private final ImmutableList<TypeS> params;
 
   public FuncTS(VarSetS tParams, TypeS res, ImmutableList<TypeS> params) {
-    super(funcTypeName(tParams, res, params), calculateFuncVars(res, params));
-    this.tParams = tParams;
+    super(funcTypeName(tParams, res, params), tParams, calculateFuncVars(res, params));
     this.res = requireNonNull(res);
     this.params = requireNonNull(params);
   }
 
   public static VarSetS calculateFuncVars(TypeS resT, ImmutableList<TypeS> paramTs) {
     return calculateVars(concat(resT, paramTs));
-  }
-
-  public VarSetS tParams() {
-    return tParams;
   }
 
   public TypeS res() {
@@ -55,13 +49,13 @@ public final class FuncTS extends TypeS implements ComposedTS {
       return true;
     }
     return object instanceof FuncTS that
-        && tParams.equals(that.tParams)
+        && tParams().equals(that.tParams())
         && res.equals(that.res)
         && params.equals(that.params);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tParams, res, params);
+    return Objects.hash(tParams(), res, params);
   }
 }

@@ -2,6 +2,7 @@ package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.val.TNamesB.tupleTypeName;
+import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
@@ -17,7 +18,7 @@ public final class TupleTB extends TypeB implements ComposedTB {
   private final ImmutableList<TypeB> itemTs;
 
   public TupleTB(Hash hash, ImmutableList<TypeB> itemTs) {
-    super(hash, calculateName(itemTs), TUPLE, calculateVars(itemTs));
+    super(hash, calculateName(itemTs), TUPLE, varSetB(), calculateVars(itemTs));
     this.itemTs = ImmutableList.copyOf(itemTs);
   }
 

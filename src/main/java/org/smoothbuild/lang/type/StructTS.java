@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.util.collect.Lists.map;
-
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.util.collect.NList;
 
@@ -12,7 +10,7 @@ public final class StructTS extends TypeS {
   private final NList<ItemSigS> fields;
 
   public StructTS(String name, NList<ItemSigS> fields) {
-    super(name, calculateVars(map(fields, ItemSigS::type)));
+    super(name);
     this.fields = fields;
   }
 

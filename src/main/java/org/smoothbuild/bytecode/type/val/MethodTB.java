@@ -12,7 +12,6 @@ import org.smoothbuild.db.Hash;
 import com.google.common.collect.ImmutableList;
 
 public final class MethodTB extends TypeB implements CallableTB {
-  private final VarSetB tParams;
   private final TypeB res;
   private final TupleTB params;
 
@@ -20,14 +19,10 @@ public final class MethodTB extends TypeB implements CallableTB {
     super(
         hash, "_" + funcTypeName(tParams, res, params.items()),
         METHOD,
+        tParams,
         calculateFuncVars(res, params.items()));
-    this.tParams = tParams;
     this.res = res;
     this.params = params;
-  }
-
-  public VarSetB tParams() {
-    return tParams;
   }
 
   @Override
