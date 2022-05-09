@@ -42,7 +42,7 @@ public class SetsTest {
   }
 
   @Nested
-  class _union {
+  class _union_with_set {
     @Test
     public void of_empty_sets_is_empty_set() {
       assertThat(union(new HashSet<>(), new HashSet<>()))
@@ -52,6 +52,21 @@ public class SetsTest {
     @Test
     public void of_two_sets_contains_value_from_each_one() {
       assertThat(union(set("abc"), set("def")))
+          .containsExactly("abc", "def");
+    }
+  }
+
+  @Nested
+  class _union_with_elem {
+    @Test
+    public void of_empty_sets_is_added_elem() {
+      assertThat(union(new HashSet<>(), "abc"))
+          .containsExactly("abc");
+    }
+
+    @Test
+    public void of_set_and_value_contains_set_elements_and_added_element() {
+      assertThat(union(set("abc"), "def"))
           .containsExactly("abc", "def");
     }
   }

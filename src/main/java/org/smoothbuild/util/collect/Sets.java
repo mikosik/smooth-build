@@ -19,10 +19,17 @@ public class Sets {
     return ImmutableSet.copyOf(elems);
   }
 
-  public static <T> ImmutableSet<T> union(Set<? extends T> set1, Set<? extends T> set2) {
+  public static <T, E1 extends T, E2 extends T> ImmutableSet<T> union(Set<E1> set1, Set<E2> set2) {
     Builder<T> builder = ImmutableSet.builder();
     builder.addAll(set1);
     builder.addAll(set2);
+    return builder.build();
+  }
+
+  public static <T, E1 extends T, E2 extends T> ImmutableSet<T> union(Set<E1> set1, E2 elem) {
+    Builder<T> builder = ImmutableSet.builder();
+    builder.addAll(set1);
+    builder.add(elem);
     return builder.build();
   }
 
