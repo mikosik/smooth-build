@@ -135,7 +135,7 @@ public class CatDb implements TypeBF {
   }
 
   @Override
-  public FuncTB func(VarSetB tParams, TypeB res, ImmutableList<TypeB> params) {
+  public FuncTB func(VarSetB tParams, TypeB res, List<? extends TypeB> params) {
     return wrapHashedDbExcAsObjDbExc(() -> newFunc(tParams, res, tuple(params)));
   }
 
@@ -153,8 +153,8 @@ public class CatDb implements TypeBF {
   }
 
   @Override
-  public TupleTB tuple(ImmutableList<TypeB> itemTs) {
-    return wrapHashedDbExcAsObjDbExc(() -> newTuple(itemTs));
+  public TupleTB tuple(List<? extends TypeB> itemTs) {
+    return wrapHashedDbExcAsObjDbExc(() -> newTuple(ImmutableList.copyOf(itemTs)));
   }
 
   public StringTB string() {
@@ -500,7 +500,7 @@ public class CatDb implements TypeBF {
 
   private Hash writeFuncLikeRoot(VarSetB tParams, TypeB res, TupleTB params, CatKindB kind)
       throws HashedDbExc {
-    TupleTB tParamsTuple = tuple((ImmutableList<TypeB>) (Object) tParams.asList());
+    TupleTB tParamsTuple = tuple(tParams.asList());
     var hash = hashedDb.writeSeq(tParamsTuple.hash(), res.hash(), params.hash());
     return writeNonBaseRoot(kind, hash);
   }

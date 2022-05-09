@@ -1,5 +1,7 @@
 package org.smoothbuild.bytecode.type;
 
+import java.util.List;
+
 import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
@@ -11,8 +13,6 @@ import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.util.type.Side;
 import org.smoothbuild.util.type.Sides;
 
-import com.google.common.collect.ImmutableList;
-
 public interface TypeBF {
   public AnyTB any();
 
@@ -20,9 +20,9 @@ public interface TypeBF {
 
   public ArrayTB array(TypeB elemType);
 
-  public FuncTB func(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs);
+  public FuncTB func(VarSetB tParams, TypeB resT, List<? extends TypeB> paramTs);
 
-  public TupleTB tuple(ImmutableList<TypeB> items);
+  public TupleTB tuple(List<? extends TypeB> items);
 
   public VarB var(String name);
 

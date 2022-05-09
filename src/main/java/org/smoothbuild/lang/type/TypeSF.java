@@ -3,6 +3,8 @@ package org.smoothbuild.lang.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -66,7 +68,7 @@ public class TypeSF {
     return BOOL;
   }
 
-  public FuncTS func(VarSetS tParams, TypeS resT, ImmutableList<TypeS> paramTs) {
+  public FuncTS func(VarSetS tParams, TypeS resT, List<? extends TypeS> paramTs) {
     return new FuncTS(tParams, resT, ImmutableList.copyOf(paramTs));
   }
 
