@@ -7,7 +7,6 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.bytecode.type.val.FuncTB.calculateFuncVars;
 import static org.smoothbuild.bytecode.type.val.VarBoundsB.varBoundsB;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
@@ -16,7 +15,6 @@ import static org.smoothbuild.lang.define.ItemS.toTypes;
 import static org.smoothbuild.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.lang.type.FuncTS.calculateFuncVars;
 import static org.smoothbuild.lang.type.VarBoundsS.varBoundsS;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
@@ -81,7 +79,6 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
-import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.compile.BytecodeMethodLoader;
 import org.smoothbuild.compile.CompilerProv;
@@ -436,13 +433,8 @@ public class TestingContext {
     return funcTB(intTB(), list(blobTB(), stringTB()));
   }
 
-  public FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    var tParams = calculateFuncVars(resT, paramTs);
-    return funcTB(tParams, resT, paramTs);
-  }
-
-  public FuncTB funcTB(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb().func(tParams, resT, paramTs);
+ public FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+    return catDb().func(resT, paramTs);
   }
 
   public IntTB intTB() {
@@ -454,12 +446,7 @@ public class TestingContext {
   }
 
   public MethodTB methodTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    var tParams = calculateFuncVars(resT, paramTs);
-    return methodTB(tParams, resT, paramTs);
-  }
-
-  public MethodTB methodTB(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb().method(tParams, resT, paramTs);
+    return catDb().method(resT, paramTs);
   }
 
   public NothingTB nothingTB() {
@@ -879,8 +866,7 @@ public class TestingContext {
   }
 
   public FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    var tParams = calculateFuncVars(resT, paramTs);
-    return typeFS().func(tParams, resT, paramTs);
+    return typeFS().func(resT, paramTs);
   }
 
   public IntTS intTS() {

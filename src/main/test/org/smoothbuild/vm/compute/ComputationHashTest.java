@@ -76,7 +76,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new InvokeAlgorithm(stringTB(), "name", method, null);
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("2c3320cf4bd86778f984a9113f5ad3ef45a3c32a"));
+        .isEqualTo(Hash.decode("b52d91d785a4b35449b0f667423c82527eca83bb"));
   }
 
   @Test
@@ -85,7 +85,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new InvokeAlgorithm(stringTB(), "name", method, null);
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("4ef952ab075c82d014f0d855247ec865b4a9638d"));
+        .isEqualTo(Hash.decode("640b3acc88c7aec5ff496c5976d09eaeaeffdfa5"));
   }
 
   @Test

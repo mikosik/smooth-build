@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
 import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
-import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
@@ -77,7 +76,7 @@ public class TypeInferrer {
         var fields = Optionals.pullUp(map(struct.fields(), ItemN::sig));
         struct.setType(fields.map(f -> typeSF.struct(struct.name(), nList(f))));
         struct.ctor().setType(
-            fields.map(s -> typeSF.func(varSetS(), struct.type().get(), map(s, ItemSigS::type))));
+            fields.map(s -> typeSF.func(struct.type().get(), map(s, ItemSigS::type))));
       }
 
       @Override
@@ -117,8 +116,7 @@ public class TypeInferrer {
             .collect(toVarSetS());
         var r = result.get();
         if (paramVars.containsAll(r.vars())) {
-          var tParams = r.vars().unionWith(paramVars);
-          return Optional.of(typeSF.func(tParams, r, ps));
+          return Optional.of(typeSF.func(r, ps));
         }
         logError(
             resN, "Function result type has type variable(s) not present in any parameter type.");
@@ -190,7 +188,7 @@ public class TypeInferrer {
             if (resultOpt.isEmpty() || paramsOpt.isEmpty()) {
               yield empty();
             }
-            yield Optional.of(typeSF.func(varSetS(), resultOpt.get(), paramsOpt.get()));
+            yield Optional.of(typeSF.func(resultOpt.get(), paramsOpt.get()));
           }
           default -> Optional.of(findType(type.name()));
         };

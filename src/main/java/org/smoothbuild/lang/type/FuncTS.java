@@ -15,8 +15,8 @@ public final class FuncTS extends TypeS implements ComposedTS {
   private final TypeS res;
   private final ImmutableList<TypeS> params;
 
-  public FuncTS(VarSetS tParams, TypeS res, ImmutableList<TypeS> params) {
-    super(funcTypeName(tParams, res, params), tParams, calculateFuncVars(res, params));
+  public FuncTS(TypeS res, ImmutableList<TypeS> params) {
+    super(funcTypeName(res, params), calculateFuncVars(res, params));
     this.res = requireNonNull(res);
     this.params = requireNonNull(params);
   }
@@ -49,13 +49,12 @@ public final class FuncTS extends TypeS implements ComposedTS {
       return true;
     }
     return object instanceof FuncTS that
-        && tParams().equals(that.tParams())
         && res.equals(that.res)
         && params.equals(that.params);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tParams(), res, params);
+    return Objects.hash(res, params);
   }
 }

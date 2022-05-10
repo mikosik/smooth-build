@@ -12,16 +12,14 @@ import org.smoothbuild.db.Hash;
 import com.google.common.collect.ImmutableList;
 
 public abstract class TypeB extends CatB {
-  private final VarSetB tParams;
   private final VarSetB vars;
 
   protected TypeB(Hash hash, String name, CatKindB kind) {
-    this(hash, name, kind, varSetB(), varSetB());
+    this(hash, name, kind, varSetB());
   }
 
-  protected TypeB(Hash hash, String name, CatKindB kind, VarSetB tParams, VarSetB vars) {
+  protected TypeB(Hash hash, String name, CatKindB kind, VarSetB vars) {
     super(hash, name, kind);
-    this.tParams = tParams;
     this.vars = vars;
   }
 
@@ -30,10 +28,6 @@ public abstract class TypeB extends CatB {
         .map(TypeB::vars)
         .flatMap(VarSetB::stream)
         .collect(toVarSetB());
-  }
-
-  public VarSetB tParams() {
-    return tParams;
   }
 
   public VarSetB vars() {

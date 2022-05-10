@@ -1,7 +1,6 @@
 package org.smoothbuild.testing.type;
 
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
-import static org.smoothbuild.lang.type.FuncTS.calculateFuncVars;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -19,7 +18,6 @@ import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.lang.type.VarSetS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.type.Side;
@@ -94,12 +92,7 @@ public class TestingTS {
   }
 
   public static FuncTS f(TypeS resT, ImmutableList<TypeS> paramTs) {
-    var tParams = calculateFuncVars(resT, paramTs);
-    return f(tParams, resT, paramTs);
-  }
-
-  public static FuncTS f(VarSetS tParams, TypeS resT, ImmutableList<TypeS> paramTs) {
-    return FACTORY.func(tParams, resT, paramTs);
+    return FACTORY.func(resT, paramTs);
   }
 
   public static VarS var(String a) {
@@ -136,10 +129,6 @@ public class TestingTS {
 
   public TypeS func(TypeS resT, ImmutableList<TypeS> params) {
     return TestingTS.f(resT, params);
-  }
-
-  public TypeS func(VarSetS tParams, TypeS resT, ImmutableList<TypeS> params) {
-    return TestingTS.f(tParams, resT, params);
   }
 
   public TypeS any() {

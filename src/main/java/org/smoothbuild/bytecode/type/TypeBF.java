@@ -9,7 +9,6 @@ import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
-import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.util.type.Side;
 import org.smoothbuild.util.type.Sides;
 
@@ -20,7 +19,7 @@ public interface TypeBF {
 
   public ArrayTB array(TypeB elemType);
 
-  public FuncTB func(VarSetB tParams, TypeB resT, List<? extends TypeB> paramTs);
+  public FuncTB func(TypeB resT, List<? extends TypeB> paramTs);
 
   public TupleTB tuple(List<? extends TypeB> items);
 

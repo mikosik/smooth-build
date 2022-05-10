@@ -3,7 +3,6 @@ package org.smoothbuild.bytecode.type.val;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.bytecode.type.CatKindB.ARRAY;
 import static org.smoothbuild.bytecode.type.val.TNamesB.arrayTypeName;
-import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
@@ -19,7 +18,7 @@ public final class ArrayTB extends TypeB implements ComposedTB {
   private final TypeB elem;
 
   public ArrayTB(Hash hash, TypeB elem) {
-    super(hash, arrayTypeName(elem), ARRAY, varSetB(), elem.vars());
+    super(hash, arrayTypeName(elem), ARRAY, elem.vars());
     this.elem = requireNonNull(elem);
   }
 

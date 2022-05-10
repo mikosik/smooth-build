@@ -68,8 +68,8 @@ public class TypeSF {
     return BOOL;
   }
 
-  public FuncTS func(VarSetS tParams, TypeS resT, List<? extends TypeS> paramTs) {
-    return new FuncTS(tParams, resT, ImmutableList.copyOf(paramTs));
+  public FuncTS func(TypeS resT, List<? extends TypeS> paramTs) {
+    return new FuncTS(resT, ImmutableList.copyOf(paramTs));
   }
 
   public IntTS int_() {

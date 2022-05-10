@@ -310,7 +310,7 @@ public class TypingSTest {
     // {X}
 
     // X(Y)
-    r.add(arguments(f(x(), y()), vb(x(), LOWER, a(), y(), UPPER, b()), f(vs(), a(), b())));
+    r.add(arguments(f(x(), y()), vb(x(), LOWER, a(), y(), UPPER, b()), f(a(), b())));
 
     return r;
   }
@@ -452,11 +452,7 @@ public class TypingSTest {
   }
 
   private static TypeS f(TypeS resT, TypeS... paramTs) {
-    return f(resT, list(paramTs));
-  }
-
-  private static TypeS f(VarSetS tParams, TypeS resT, TypeS... paramTs) {
-    return testingT().func(tParams, resT, list(paramTs));
+    return testingT().func(resT, list(paramTs));
   }
 
   private static TypeS f(TypeS resT) {

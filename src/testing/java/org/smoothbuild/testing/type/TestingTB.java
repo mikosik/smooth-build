@@ -15,7 +15,6 @@ import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
-import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.type.Side;
 import org.smoothbuild.util.type.Sides;
@@ -85,10 +84,6 @@ public class TestingTB {
 
   public TypeB array(TypeB elemT) {
     return FACTORY.array(elemT);
-  }
-
-  public TypeB func(VarSetB tParams, TypeB resT, ImmutableList<TypeB> params) {
-    return CONTEXT.funcTB((VarSetB)(Object) tParams, resT, params);
   }
 
   public TypeB func(TypeB resT, ImmutableList<TypeB> params) {

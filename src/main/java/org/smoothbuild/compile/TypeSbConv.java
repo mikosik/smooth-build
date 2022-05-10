@@ -1,6 +1,5 @@
 package org.smoothbuild.compile;
 
-import static org.smoothbuild.bytecode.type.val.VarSetB.toVarSetB;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import javax.inject.Inject;
@@ -59,11 +58,8 @@ public class TypeSbConv {
   }
 
   public FuncTB convert(FuncTS func) {
-    var tParams = func.tParams().stream()
-        .map(this::convert)
-        .collect(toVarSetB());
     var params = map(func.params(), this::convert);
     var res = convert(func.res());
-    return bytecodeF.funcT(tParams, res, params);
+    return bytecodeF.funcT(res, params);
   }
 }

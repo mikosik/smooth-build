@@ -91,11 +91,11 @@ public class TypeSTest {
         arguments(a(a(struct("MyStruct", nList()))), "[[MyStruct]]"),
         arguments(a(a(STRING)), "[[String]]"),
 
-        arguments(f(VAR_A, list(a(VAR_A))), "<A>A([A])"),
-        arguments(f(STRING, list(a(VAR_A))), "<A>String([A])"),
-        arguments(f(VAR_A, list(VAR_A)), "<A>A(A)"),
-        arguments(f(STRING, list()), "<>String()"),
-        arguments(f(STRING, list(STRING)), "<>String(String)")
+        arguments(f(VAR_A, list(a(VAR_A))), "A([A])"),
+        arguments(f(STRING, list(a(VAR_A))), "String([A])"),
+        arguments(f(VAR_A, list(VAR_A)), "A(A)"),
+        arguments(f(STRING, list()), "String()"),
+        arguments(f(STRING, list(STRING)), "String(String)")
     );
   }
 

@@ -14,17 +14,15 @@ import com.google.common.collect.ImmutableList;
  */
 public abstract sealed class TypeS
     permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
-  private final VarSetS tParams;
   private final VarSetS vars;
   private final String name;
 
   protected TypeS(String name) {
-    this(name, varSetS(), varSetS());
+    this(name, varSetS());
   }
 
-  protected TypeS(String name, VarSetS tParams, VarSetS vars) {
+  protected TypeS(String name, VarSetS vars) {
     checkArgument(!name.isBlank());
-    this.tParams = tParams;
     this.name = name;
     this.vars = vars;
   }
@@ -42,10 +40,6 @@ public abstract sealed class TypeS
         .map(TypeS::vars)
         .flatMap(VarSetS::stream)
         .collect(toVarSetS());
-  }
-
-  public VarSetS tParams() {
-    return tParams;
   }
 
   public VarSetS vars() {

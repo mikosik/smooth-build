@@ -368,7 +368,7 @@ public class TypingBTest {
     r.add(arguments(tuple(x()), vb(x(), LOWER, tuple(a())), tuple(tuple(a()))));
 
     // X(Y)
-    r.add(arguments(f(x(), y()), vb(x(), LOWER, a(), y(), UPPER, b()), f(vs(), a(), b())));
+    r.add(arguments(f(x(), y()), vb(x(), LOWER, a(), y(), UPPER, b()), f(a(), b())));
 
     return r;
   }
@@ -514,11 +514,7 @@ public class TypingBTest {
   }
 
   private static TypeB f(TypeB resT, TypeB... paramTs) {
-    return f(resT, list(paramTs));
-  }
-
-  private static TypeB f(VarSetB tParams, TypeB resT, TypeB... paramTs) {
-    return testingT().func(tParams, resT, list(paramTs));
+    return testingT().func(resT, list(paramTs));
   }
 
   private static TypeB f(TypeB resT) {

@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.AnalyzeSemantically.analyzeSemantically;
@@ -110,7 +109,7 @@ public class ModLoader {
     var resultT = (StructTS) struct.type().get();
     var name = struct.ctor().name();
     var paramTs = map(struct.fields(), f -> f.type().get());
-    var type = typeSF.func(varSetS(), resultT, paramTs);
+    var type = typeSF.func(resultT, paramTs);
     var params = struct.fields().map(f -> f.toItem(path));
     var loc = struct.loc();
     return new SyntCtorS(type, path, name, params, loc);

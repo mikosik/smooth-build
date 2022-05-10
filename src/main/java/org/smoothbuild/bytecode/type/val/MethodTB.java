@@ -15,11 +15,10 @@ public final class MethodTB extends TypeB implements CallableTB {
   private final TypeB res;
   private final TupleTB params;
 
-  public MethodTB(Hash hash, VarSetB tParams, TypeB res, TupleTB params) {
+  public MethodTB(Hash hash, TypeB res, TupleTB params) {
     super(
-        hash, "_" + funcTypeName(tParams, res, params.items()),
+        hash, "_" + funcTypeName(res, params.items()),
         METHOD,
-        tParams,
         calculateFuncVars(res, params.items()));
     this.res = res;
     this.params = params;

@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
@@ -251,7 +250,7 @@ public class TypingS {
     }
     return switch (composedT) {
       case ArrayTS array -> typeSF.array(covars.get(0));
-      case FuncTS func -> typeSF.func(varSetS(), covars.get(0), contravars);
+      case FuncTS func -> typeSF.func(covars.get(0), contravars);
     };
   }
 

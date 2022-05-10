@@ -21,9 +21,9 @@ public class TNamesB {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(VarSetB tParams, TypeB resT, List<? extends TypeB> paramTs) {
+  public static String funcTypeName(TypeB resT, List<? extends TypeB> paramTs) {
     var params = toCommaSeparatedString(paramTs, TypeB::name);
-    return tParams + resT.name() + "(" + params + ")";
+    return resT.name() + "(" + params + ")";
   }
 
   public static String tupleTypeName(Iterable<? extends TypeB> itemTs) {

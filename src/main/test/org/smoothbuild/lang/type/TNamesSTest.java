@@ -4,11 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.type.TNamesS.arrayTypeName;
 import static org.smoothbuild.lang.type.TNamesS.funcTypeName;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
-import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.VAR_A;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
@@ -73,8 +71,8 @@ public class TNamesSTest {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(funcTypeName(varSetS(VAR_A), STRING, list(BLOB, BOOL)))
-          .isEqualTo("<A>String(Blob,Bool)");
+      assertThat(funcTypeName(STRING, list(BLOB, BOOL)))
+          .isEqualTo("String(Blob,Bool)");
     }
   }
 }

@@ -577,7 +577,7 @@ public class ExprSUsageTest extends TestingContext {
             """;
       module(code)
           .loadsWithError(
-              2, "Type `<>String()` is not a struct so it doesn't have `myField` field.");
+              2, "Type `String()` is not a struct so it doesn't have `myField` field.");
     }
   }
 

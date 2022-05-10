@@ -21,8 +21,8 @@ public class TNamesS {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(VarSetS tParams, TypeS resT, List<? extends TypeS> paramTs) {
+  public static String funcTypeName(TypeS resT, List<? extends TypeS> paramTs) {
     var params = toCommaSeparatedString(paramTs, TypeS::name);
-    return tParams + resT.name() + "(" + params + ")";
+    return resT.name() + "(" + params + ")";
   }
 }

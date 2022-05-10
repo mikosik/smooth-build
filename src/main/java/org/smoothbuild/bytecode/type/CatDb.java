@@ -67,7 +67,7 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.util.collect.Lists;
-import org.smoothbuild.util.function.Function4;
+import org.smoothbuild.util.function.TriFunction;
 
 import com.google.common.collect.ImmutableList;
 
@@ -77,11 +77,9 @@ import com.google.common.collect.ImmutableList;
 public class CatDb implements TypeBF {
   public static final String DATA_PATH = "data";
   private static final int DATA_IDX = 1;
-  private static final int CALLABLE_TPARAMS_IDX = 0;
-  public static final String CALLABLE_TPARAMS_PATH = DATA_PATH + "[" + CALLABLE_TPARAMS_IDX + "]";
-  private static final int CALLABLE_RES_IDX = 1;
+  private static final int CALLABLE_RES_IDX = 0;
   public static final String CALLABLE_RES_PATH = DATA_PATH + "[" + CALLABLE_RES_IDX + "]";
-  private static final int CALLABLE_PARAMS_IDX = 2;
+  private static final int CALLABLE_PARAMS_IDX = 1;
   public static final String CALLABLE_PARAMS_PATH = DATA_PATH + "[" + CALLABLE_PARAMS_IDX + "]";
 
   private final HashedDb hashedDb;
@@ -135,16 +133,16 @@ public class CatDb implements TypeBF {
   }
 
   @Override
-  public FuncTB func(VarSetB tParams, TypeB res, List<? extends TypeB> params) {
-    return wrapHashedDbExcAsObjDbExc(() -> newFunc(tParams, res, tuple(params)));
+  public FuncTB func(TypeB res, List<? extends TypeB> params) {
+    return wrapHashedDbExcAsObjDbExc(() -> newFunc(res, tuple(params)));
   }
 
   public IntTB int_() {
     return int_;
   }
 
-  public MethodTB method(VarSetB tParams, TypeB res, ImmutableList<TypeB> params) {
-    return wrapHashedDbExcAsObjDbExc(() -> newMethod(tParams, res, tuple(params)));
+  public MethodTB method(TypeB res, ImmutableList<TypeB> params) {
+    return wrapHashedDbExcAsObjDbExc(() -> newMethod(res, tuple(params)));
   }
 
   @Override
@@ -289,18 +287,17 @@ public class CatDb implements TypeBF {
   }
 
   private CatB readCallable(Hash rootHash, List<Hash> rootSeq, CatKindB kind,
-      Function4<Hash, VarSetB, TypeB, TupleTB, CatB> instantiator) {
+      TriFunction<Hash, TypeB, TupleTB, CatB> instantiator) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     Hash dataHash = rootSeq.get(DATA_IDX);
     List<Hash> data = readSeqHashes(rootHash, dataHash, kind, DATA_PATH);
-    int expectedSize = 3;
+    int expectedSize = 2;
     if (data.size() != expectedSize) {
       throw new DecodeCatWrongSeqSizeExc(rootHash, kind, DATA_PATH, expectedSize, data.size());
     }
-    var tParamsTuple = readNode(kind, rootHash, data.get(CALLABLE_TPARAMS_IDX), CALLABLE_TPARAMS_PATH, TupleTB.class);
     var res = readNode(kind, rootHash, data.get(CALLABLE_RES_IDX), CALLABLE_RES_PATH, TypeB.class);
     var params = readNode(kind, rootHash, data.get(CALLABLE_PARAMS_IDX), CALLABLE_PARAMS_PATH, TupleTB.class);
-    return instantiator.apply(rootHash, toVarSetB(rootHash, tParamsTuple), res, params);
+    return instantiator.apply(rootHash, res, params);
   }
 
   private VarSetB toVarSetB(Hash rootHash, TupleTB tParams) {
@@ -376,22 +373,22 @@ public class CatDb implements TypeBF {
     return cache(new ArrayTB(rootHash, elemT));
   }
 
-  private FuncTB newFunc(VarSetB tParams, TypeB res, TupleTB params) throws HashedDbExc {
-    var rootHash = writeFuncLikeRoot(tParams, res, params, FUNC);
-    return newFunc(rootHash, tParams, res, params);
+  private FuncTB newFunc(TypeB res, TupleTB params) throws HashedDbExc {
+    var rootHash = writeFuncLikeRoot(res, params, FUNC);
+    return newFunc(rootHash, res, params);
   }
 
-  private FuncTB newFunc(Hash rootHash, VarSetB tParams, TypeB res, TupleTB params) {
-    return cache(new FuncTB(rootHash, tParams, res, params));
+  private FuncTB newFunc(Hash rootHash, TypeB res, TupleTB params) {
+    return cache(new FuncTB(rootHash, res, params));
   }
 
-  private MethodTB newMethod(VarSetB tParams, TypeB res, TupleTB params) throws HashedDbExc {
-    var rootHash = writeFuncLikeRoot(tParams, res, params, METHOD);
-    return newMethod(rootHash, tParams, res, params);
+  private MethodTB newMethod(TypeB res, TupleTB params) throws HashedDbExc {
+    var rootHash = writeFuncLikeRoot(res, params, METHOD);
+    return newMethod(rootHash, res, params);
   }
 
-  private MethodTB newMethod(Hash rootHash, VarSetB tParams, TypeB res, TupleTB params) {
-    return cache(new MethodTB(rootHash, tParams, res, params));
+  private MethodTB newMethod(Hash rootHash, TypeB res, TupleTB params) {
+    return cache(new MethodTB(rootHash, res, params));
   }
 
   private TupleTB newTuple(ImmutableList<TypeB> itemTs) throws HashedDbExc {
@@ -498,10 +495,8 @@ public class CatDb implements TypeBF {
     return writeNonBaseRoot(ARRAY, elemT.hash());
   }
 
-  private Hash writeFuncLikeRoot(VarSetB tParams, TypeB res, TupleTB params, CatKindB kind)
-      throws HashedDbExc {
-    TupleTB tParamsTuple = tuple(tParams.asList());
-    var hash = hashedDb.writeSeq(tParamsTuple.hash(), res.hash(), params.hash());
+  private Hash writeFuncLikeRoot(TypeB res, TupleTB params, CatKindB kind) throws HashedDbExc {
+    var hash = hashedDb.writeSeq(res.hash(), params.hash());
     return writeNonBaseRoot(kind, hash);
   }
 

@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.collect.Multimaps.newSetMultimap;
-import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
@@ -70,18 +69,17 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     // one param funcs
     Set<TypeS> allTypes = graph.allTypes();
 
-    var vs = varSetS();
     for (TypeS type : allTypes) {
       for (Entry<TypeS, TypeS> entry : graph.edges().entries()) {
         var lower = entry.getKey();
         var upper = entry.getValue();
-        newDimension.put(testingT.func(vs, lower, list(type)), testingT.func(vs, upper, list(type)));
-        newDimension.put(testingT.func(vs, type, list(upper)), testingT.func(vs, type, list(lower)));
+        newDimension.put(testingT.func(lower, list(type)), testingT.func(upper, list(type)));
+        newDimension.put(testingT.func(type, list(upper)), testingT.func(type, list(lower)));
 
       }
     }
-    newDimension.put(testingT.nothing(), testingT.func(vs, testingT.nothing(), list(testingT.any())));
-    newDimension.put(testingT.func(vs, testingT.any(), list(testingT.nothing())), testingT.any());
+    newDimension.put(testingT.nothing(), testingT.func(testingT.nothing(), list(testingT.any())));
+    newDimension.put(testingT.func(testingT.any(), list(testingT.nothing())), testingT.any());
 
     newDimension.putAll(graph.edges());
     return new TestingTypeGraphS(newDimension);

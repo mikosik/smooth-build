@@ -44,7 +44,6 @@ import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
-import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -171,8 +170,8 @@ public class BytecodeF {
     return catDb.bool();
   }
 
-  public FuncTB funcT(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb.func(tParams, resT, paramTs);
+  public FuncTB funcT(TypeB resT, ImmutableList<TypeB> paramTs) {
+    return catDb.func(resT, paramTs);
   }
 
   public IntTB intT() {
@@ -183,8 +182,8 @@ public class BytecodeF {
     return messageT;
   }
 
-  public MethodTB methodT(VarSetB tParams, TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb.method(tParams, resT, paramTs);
+  public MethodTB methodT(TypeB resT, ImmutableList<TypeB> paramTs) {
+    return catDb.method(resT, paramTs);
   }
 
   public NothingTB nothingT() {

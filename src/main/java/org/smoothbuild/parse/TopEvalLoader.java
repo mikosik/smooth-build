@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.type.FuncTS.calculateFuncVars;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -85,8 +84,7 @@ public class TopEvalLoader {
     var name = funcN.name();
     var loc = funcN.loc();
     var paramTs = map(params, DefinedS::type);
-    var tParams = calculateFuncVars(resT, paramTs);
-    var funcT = typeSF.func(tParams, resT, paramTs);
+    var funcT = typeSF.func(resT, paramTs);
     if (funcN.ann().isPresent()) {
       var ann = loadAnn(funcN.ann().get());
       return new AnnFuncS(ann, funcT, path, name, params, loc);

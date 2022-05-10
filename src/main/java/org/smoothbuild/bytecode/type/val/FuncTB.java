@@ -15,11 +15,10 @@ public final class FuncTB extends TypeB implements CallableTB, ComposedTB {
   private final TypeB res;
   private final TupleTB params;
 
-  public FuncTB(Hash hash, VarSetB tParams, TypeB res, TupleTB params) {
+  public FuncTB(Hash hash, TypeB res, TupleTB params) {
     super(
-        hash, funcTypeName(tParams, res, params.items()),
+        hash, funcTypeName(res, params.items()),
         FUNC,
-        tParams,
         calculateFuncVars(res, params.items()));
     this.res = res;
     this.params = params;

@@ -80,7 +80,6 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.type.TestingCatsB;
@@ -150,17 +149,17 @@ public class CatBTest extends TestingContext {
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.func(varSetB(f.var("A")), f.var("A"), list(f.array(f.var("A")))), "<A>A([A])"),
-        args(f -> f.func(varSetB(f.var("A")), f.string(), list(f.array(f.var("A")))), "<A>String([A])"),
-        args(f -> f.func(varSetB(f.var("A")), f.var("A"), list(f.var("A"))), "<A>A(A)"),
-        args(f -> f.func(varSetB(), f.string(), list()), "<>String()"),
-        args(f -> f.func(varSetB(), f.string(), list(f.string())), "<>String(String)"),
+        args(f -> f.func(f.var("A"), list(f.array(f.var("A")))), "A([A])"),
+        args(f -> f.func(f.string(), list(f.array(f.var("A")))), "String([A])"),
+        args(f -> f.func(f.var("A"), list(f.var("A"))), "A(A)"),
+        args(f -> f.func(f.string(), list()), "String()"),
+        args(f -> f.func(f.string(), list(f.string())), "String(String)"),
 
-        args(f -> f.method(varSetB(f.var("A")), f.var("A"), list(f.array(f.var("A")))), "_<A>A([A])"),
-        args(f -> f.method(varSetB(f.var("A")), f.string(), list(f.array(f.var("A")))), "_<A>String([A])"),
-        args(f -> f.method(varSetB(f.var("A")), f.var("A"), list(f.var("A"))), "_<A>A(A)"),
-        args(f -> f.method(varSetB(), f.string(), list()), "_<>String()"),
-        args(f -> f.method(varSetB(), f.string(), list(f.string())), "_<>String(String)"),
+        args(f -> f.method(f.var("A"), list(f.array(f.var("A")))), "_A([A])"),
+        args(f -> f.method(f.string(), list(f.array(f.var("A")))), "_String([A])"),
+        args(f -> f.method(f.var("A"), list(f.var("A"))), "_A(A)"),
+        args(f -> f.method(f.string(), list()), "_String()"),
+        args(f -> f.method(f.string(), list(f.string())), "_String(String)"),
 
         args(f -> f.tuple(list()), "{}"),
         args(f -> f.tuple(list(f.string(), f.bool())), "{String,Bool}"),
@@ -210,21 +209,6 @@ public class CatBTest extends TestingContext {
   @Nested
   class _func {
     @ParameterizedTest
-    @MethodSource("tParams_cases")
-    public void tParams(Function<CatDb, FuncTB> factoryCall,
-        Function<CatDb, List<VarB>> expected) {
-      assertThat(execute(factoryCall).tParams())
-          .isEqualTo(execute(expected));
-    }
-
-    public static List<Arguments> tParams_cases() {
-      return asList(
-          args(f -> f.func(varSetB(f.var("A")), f.int_(), list()), f -> varSetB(f.var("A"))),
-          args(f -> f.func(varSetB(f.var("A"), f.var("B")), f.int_(), list()), f -> varSetB(f.var("A"), f.var("B")))
-      );
-    }
-
-    @ParameterizedTest
     @MethodSource("result_cases")
     public void result(Function<CatDb, FuncTB> factoryCall,
         Function<CatDb, List<TypeB>> expected) {
@@ -234,9 +218,9 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.func(varSetB(), f.int_(), list()), f -> f.int_()),
-          args(f -> f.func(varSetB(), f.blob(), list(f.bool())), f -> f.blob()),
-          args(f -> f.func(varSetB(), f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+          args(f -> f.func(f.int_(), list()), f -> f.int_()),
+          args(f -> f.func(f.blob(), list(f.bool())), f -> f.blob()),
+          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
       );
     }
 
@@ -250,29 +234,14 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.func(varSetB(), f.int_(), list()), f -> list()),
-          args(f -> f.func(varSetB(), f.blob(), list(f.bool())), f -> list(f.bool())),
-          args(f -> f.func(varSetB(), f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+          args(f -> f.func(f.int_(), list()), f -> list()),
+          args(f -> f.func(f.blob(), list(f.bool())), f -> list(f.bool())),
+          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
       );
     }
   }
   @Nested
   class _method {
-    @ParameterizedTest
-    @MethodSource("tParams_cases")
-    public void tParams(Function<CatDb, MethodTB> factoryCall,
-        Function<CatDb, List<VarB>> expected) {
-      assertThat(execute(factoryCall).tParams())
-          .isEqualTo(execute(expected));
-    }
-
-    public static List<Arguments> tParams_cases() {
-      return asList(
-          args(f -> f.method(varSetB(f.var("A")), f.int_(), list()), f -> varSetB(f.var("A"))),
-          args(f -> f.method(varSetB(f.var("A"), f.var("B")), f.int_(), list()), f -> varSetB(f.var("A"), f.var("B")))
-      );
-    }
-
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(Function<CatDb, MethodTB> factoryCall,
@@ -283,9 +252,9 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.method(varSetB(), f.int_(), list()), f -> f.int_()),
-          args(f -> f.method(varSetB(), f.blob(), list(f.bool())), f -> f.blob()),
-          args(f -> f.method(varSetB(), f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+          args(f -> f.method(f.int_(), list()), f -> f.int_()),
+          args(f -> f.method(f.blob(), list(f.bool())), f -> f.blob()),
+          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
       );
     }
 
@@ -299,9 +268,9 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.method(varSetB(), f.int_(), list()), f -> list()),
-          args(f -> f.method(varSetB(), f.blob(), list(f.bool())), f -> list(f.bool())),
-          args(f -> f.method(varSetB(), f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+          args(f -> f.method(f.int_(), list()), f -> list()),
+          args(f -> f.method(f.blob(), list(f.bool())), f -> list(f.bool())),
+          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
       );
     }
   }
@@ -337,8 +306,8 @@ public class CatBTest extends TestingContext {
           args(f -> f.any()),
           args(f -> f.blob()),
           args(f -> f.bool()),
-          args(f -> f.func(varSetB(), f.string(), list())),
-          args(f -> f.method(varSetB(), f.string(), list())),
+          args(f -> f.func(f.string(), list())),
+          args(f -> f.method(f.string(), list())),
           args(f -> f.int_()),
           args(f -> f.nothing()),
           args(f -> f.string()),
@@ -348,8 +317,8 @@ public class CatBTest extends TestingContext {
           args(f -> f.array(f.any())),
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
-          args(f -> f.array(f.func(varSetB(), f.string(), list()))),
-          args(f -> f.array(f.method(varSetB(), f.string(), list()))),
+          args(f -> f.array(f.func(f.string(), list()))),
+          args(f -> f.array(f.method(f.string(), list()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),

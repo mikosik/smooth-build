@@ -1,6 +1,5 @@
 package org.smoothbuild.compile;
 
-import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
 import static org.smoothbuild.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_PURE;
@@ -140,7 +139,7 @@ public class Compiler {
 
   private FuncB compileNatFunc(AnnFuncS natFuncS) {
     var funcTB = convertFuncT(natFuncS.type());
-    var methodTB = bytecodeF.methodT(funcTB.tParams(), funcTB.res(), funcTB.params());
+    var methodTB = bytecodeF.methodT(funcTB.res(), funcTB.params());
     var methodB = createMethodB(natFuncS.ann(), methodTB);
     var paramRefsB = createParamRefsB(funcTB.params());
     var paramsTB = bytecodeF.tupleT(map(paramRefsB, ObjB::type));
@@ -188,7 +187,7 @@ public class Compiler {
     };
     var typeB = typeSbConv.convert(valS.type());
     if (!typeB.equals(exprB.type())) {
-      var funcB = bytecodeF.func(bytecodeF.funcT(varSetB(), typeB, list()), exprB);
+      var funcB = bytecodeF.func(bytecodeF.funcT(typeB, list()), exprB);
       var callB = bytecodeF.call(typeB, funcB, bytecodeF.combine(bytecodeF.tupleT(list()), list()));
       nals.put(funcB, valS);
       nals.put(callB, valS);

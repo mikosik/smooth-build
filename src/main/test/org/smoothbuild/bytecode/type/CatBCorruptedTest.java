@@ -3,7 +3,6 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.bytecode.type.CatDb.CALLABLE_PARAMS_PATH;
 import static org.smoothbuild.bytecode.type.CatDb.CALLABLE_RES_PATH;
-import static org.smoothbuild.bytecode.type.CatDb.CALLABLE_TPARAMS_PATH;
 import static org.smoothbuild.bytecode.type.CatDb.DATA_PATH;
 import static org.smoothbuild.bytecode.type.CatKindB.ANY;
 import static org.smoothbuild.bytecode.type.CatKindB.ARRAY;
@@ -24,7 +23,6 @@ import static org.smoothbuild.bytecode.type.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.CatKindB.VAR;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Sets.map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,8 +35,6 @@ import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalVarNameExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatNodeExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatTParamDuplicatedVarExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatTParamIsNotVarExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.expr.ParamRefCB;
@@ -48,8 +44,6 @@ import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarB;
-import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashingBufferedSink;
 import org.smoothbuild.db.exc.DecodeHashSeqExc;
@@ -199,10 +193,8 @@ public class CatBCorruptedTest extends TestingContext {
       }
 
       @Override
-      protected Hash hashOfNewTB(TupleTB tParamsTuple, TypeB resT,
-          ImmutableList<TypeB> paramTs) {
-        var tParams = new VarSetB(map(tParamsTuple.items(), i -> (VarB) i));
-        return funcTB(tParams, resT, paramTs).hash();
+      protected Hash hashOfNewTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+        return funcTB(resT, paramTs).hash();
       }
     }
 
@@ -214,9 +206,8 @@ public class CatBCorruptedTest extends TestingContext {
       }
 
       @Override
-      protected Hash hashOfNewTB(TupleTB tParamsTuple, TypeB resT, ImmutableList<TypeB> paramTs) {
-        var tParams = new VarSetB(map(tParamsTuple.items(), i -> (VarB) i));
-        return methodTB(tParams, resT, paramTs).hash();
+      protected Hash hashOfNewTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+        return methodTB(resT, paramTs).hash();
       }
     }
 
@@ -225,7 +216,7 @@ public class CatBCorruptedTest extends TestingContext {
         throw new UnsupportedOperationException("implement in subclasses");
       }
 
-      protected Hash hashOfNewTB(TupleTB tParamsTuple, TypeB resT, ImmutableList<TypeB> paramTs) {
+      protected Hash hashOfNewTB(TypeB resT, ImmutableList<TypeB> paramTs) {
         throw new UnsupportedOperationException("implement in subclasses");
       }
 
@@ -235,18 +226,16 @@ public class CatBCorruptedTest extends TestingContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save func type in HashedDb.
          */
-        var tParamsTuple = tupleTB(varB("A"));
         var paramsTuple = tupleTB(stringTB(), boolTB());
         var specHash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 hash(intTB()),
                 hash(paramsTuple)
             )
         );
         assertThat(specHash)
-            .isEqualTo(hashOfNewTB(tParamsTuple, intTB(), paramsTuple.items()));
+            .isEqualTo(hashOfNewTB(intTB(), paramsTuple.items()));
       }
 
       @Test
@@ -277,41 +266,37 @@ public class CatBCorruptedTest extends TestingContext {
       }
 
       @Test
-      public void with_data_having_four_elems() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
+      public void with_data_having_three_elems() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var hash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 hash(intTB()),
                 hash(paramTs),
                 hash(paramTs)
             )
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeExc(hash, catKind(), DATA_PATH, 3, 4));
+            .throwsException(new DecodeCatWrongSeqSizeExc(hash, catKind(), DATA_PATH, 2, 3));
       }
 
       @Test
-      public void with_data_having_two_elems() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
+      public void with_data_having_one_elems() throws Exception {
         var res = intTB();
         var hash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 hash(res)
             )
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeExc(hash, catKind(), DATA_PATH, 3, 2));
+            .throwsException(new DecodeCatWrongSeqSizeExc(hash, catKind(), DATA_PATH, 2, 1));
       }
 
       @ParameterizedTest
       @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-      public void with_data_seq_size_different_than_multiple_of_hash_size(
-          int byteCount) throws Exception {
+      public void with_data_seq_size_different_than_multiple_of_hash_size(int byteCount)
+          throws Exception {
         var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
         var typeHash = hash(
             hash(catKind().marker()),
@@ -324,96 +309,12 @@ public class CatBCorruptedTest extends TestingContext {
       }
 
       @Test
-      public void with_type_params_pointing_nowhere() throws Exception {
-        var nowhere = Hash.of(33);
-        var paramTs = tupleTB(stringTB(), boolTB());
-        var res = intTB();
-        var typeHash = hash(
-            hash(catKind().marker()),
-            hash(
-                nowhere,
-                hash(res),
-                hash(paramTs)
-            )
-        );
-        assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), CALLABLE_TPARAMS_PATH))
-            .withCause(new DecodeCatExc(nowhere));
-      }
-
-
-      @Test
-      public void with_type_params_not_being_tuple() throws Exception {
-        var paramsTuple = tupleTB(stringTB(), boolTB());
-        var typeHash = hash(
-            hash(catKind().marker()),
-            hash(
-                hash(stringTB()),
-                hash(intTB()),
-                hash(paramsTuple)
-            )
-        );
-        assertThatGet(typeHash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, catKind(), DATA_PATH, 0, TupleTB.class, StringTB.class));
-      }
-
-      @Test
-      public void with_type_params_not_being_var() throws Exception {
-        var paramsTuple = tupleTB(stringTB(), boolTB());
-        var typeHash = hash(
-            hash(catKind().marker()),
-            hash(
-                hash(tupleTB(stringTB())),
-                hash(intTB()),
-                hash(paramsTuple)
-            )
-        );
-        assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatTParamIsNotVarExc(typeHash, stringTB()));
-      }
-
-      @Test
-      public void with_type_params_with_duplicated_var() throws Exception {
-        var paramsTuple = tupleTB(stringTB(), boolTB());
-        var a = varB("A");
-        var typeHash = hash(
-            hash(catKind().marker()),
-            hash(
-                hash(tupleTB(a, a)),
-                hash(intTB()),
-                hash(paramsTuple)
-            )
-        );
-        assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatTParamDuplicatedVarExc(typeHash, a));
-      }
-
-      @Test
-      public void with_type_params_type_corrupted() throws Exception {
-        var paramsTuple = tupleTB(stringTB(), boolTB());
-        var typeHash = hash(
-            hash(catKind().marker()),
-            hash(
-                corruptedArrayTHash(),
-                hash(intTB()),
-                hash(paramsTuple)
-            )
-        );
-        assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), CALLABLE_TPARAMS_PATH))
-            .withCause(corruptedArrayTypeExc());
-      }
-
-      @Test
       public void with_result_pointing_nowhere() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
         var paramTs = tupleTB(stringTB(), boolTB());
         var nowhere = Hash.of(33);
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 nowhere,
                 hash(paramTs)
             )
@@ -425,12 +326,10 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_result_being_expr_type() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
         var paramT = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 hash(paramRefCB()),
                 hash(paramT)
             )
@@ -442,12 +341,10 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_result_type_corrupted() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
         var paramTs = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 corruptedArrayTHash(),
                 hash(paramTs)
             )
@@ -459,12 +356,10 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_params_pointing_nowhere() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
         var nowhere = Hash.of(33);
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 hash(intTB()),
                 nowhere
             )
@@ -476,27 +371,23 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_params_not_being_tuple() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 hash(intTB()),
                 hash(stringTB())
             )
         );
         assertThatGet(typeHash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, catKind(), DATA_PATH, 2, TupleTB.class, StringTB.class));
+                typeHash, catKind(), DATA_PATH, 1, TupleTB.class, StringTB.class));
       }
 
       @Test
       public void with_params_being_expr_type() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 hash(intTB()),
                 hash(paramRefCB())
             )
@@ -508,11 +399,9 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_params_type_corrupted() throws Exception {
-        var tParamsTuple = tupleTB(varB("A"));
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
-                hash(tParamsTuple),
                 hash(intTB()),
                 corruptedArrayTHash()
             )
