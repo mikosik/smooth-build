@@ -33,6 +33,7 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.lang.define.AnnFuncS;
@@ -139,7 +140,8 @@ public class Compiler {
 
   private FuncB compileNatFunc(AnnFuncS natFuncS) {
     var funcTB = convertFuncT(natFuncS.type());
-    var methodB = createMethodB(natFuncS.ann(), funcTB);
+    var methodTB = bytecodeF.methodT(funcTB.tParams(), funcTB.res(), funcTB.params());
+    var methodB = createMethodB(natFuncS.ann(), methodTB);
     var paramRefsB = createParamRefsB(funcTB.params());
     var paramsTB = bytecodeF.tupleT(map(paramRefsB, ObjB::type));
     var argsB = bytecodeF.combine(paramsTB, paramRefsB);
@@ -148,8 +150,7 @@ public class Compiler {
     return bytecodeF.func(funcTB, bodyB);
   }
 
-  private MethodB createMethodB(AnnS annS, FuncTB funcTB) {
-    var methodTB = bytecodeF.methodT(funcTB.tParams(), funcTB.res(), funcTB.params());
+  private MethodB createMethodB(AnnS annS, MethodTB methodTB) {
     var jarB = loadNativeJar(annS.loc());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
     var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
