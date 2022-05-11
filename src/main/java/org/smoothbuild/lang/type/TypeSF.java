@@ -86,7 +86,6 @@ public class TypeSF {
   }
 
   public VarS var(String name) {
-    checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return new VarS(name);
   }
 

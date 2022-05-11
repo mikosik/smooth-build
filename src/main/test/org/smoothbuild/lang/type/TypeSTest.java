@@ -155,15 +155,6 @@ public class TypeSTest {
   }
 
   @Nested
-  class _var {
-    @Test
-    public void illegal_name() {
-      assertCall(() -> var("a"))
-          .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
-    }
-  }
-
-  @Nested
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
