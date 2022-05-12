@@ -1,8 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.TNamesS.isVarName;
-
 import java.util.List;
 
 import javax.inject.Inject;
