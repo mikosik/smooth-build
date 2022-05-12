@@ -4,6 +4,8 @@ import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
+import java.util.List;
+
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
@@ -48,6 +50,7 @@ public class TestingTS {
   public static final StructTS DATA = struct("Data", nList(itemSigS(BLOB, "data")));
   public static final VarS VAR_A = var("A");
   public static final VarS VAR_B = var("B");
+  public static final VarS VAR_C = var("C");
   public static final VarS VAR_X = var("X");
   public static final VarS VAR_Y = var("Y");
 
@@ -109,6 +112,14 @@ public class TestingTS {
     return FACTORY.oneSideBound(side, type);
   }
 
+  public Sides<TypeS> bounds() {
+    return bounds(nothing(), any());
+  }
+
+  public Sides<TypeS> bounds(TypeS lower, TypeS upper) {
+    return new Sides<>(lower, upper);
+  }
+
   public TypingS typing() {
     return CONTEXT.typingS();
   }
@@ -133,8 +144,36 @@ public class TestingTS {
     return a(elemT);
   }
 
+  public TypeS join(List<TypeS> elems) {
+    return switch (elems.size()) {
+      case 0 -> throw new IllegalArgumentException();
+      case 1 -> elems.get(0);
+      default -> {
+        TypeS result = nothing();
+        for (TypeS elem : elems) {
+          result = JoinTS.join(result, elem);
+        }
+        yield  result;
+      }
+    };
+  }
+
   public TypeS join(TypeS a, TypeS b) {
     return JoinTS.join(a, b);
+  }
+
+  public TypeS meet(List<TypeS> elems) {
+    return switch (elems.size()) {
+      case 0 -> throw new IllegalArgumentException();
+      case 1 -> elems.get(0);
+      default -> {
+        TypeS result = any();
+        for (TypeS elem : elems) {
+          result = MeetTS.meet(result, elem);
+        }
+        yield  result;
+      }
+    };
   }
 
   public TypeS meet(TypeS a, TypeS b) {
@@ -189,6 +228,14 @@ public class TestingTS {
     throw new UnsupportedOperationException();
   }
 
+  public VarS var0() {
+    return var("_0");
+  }
+
+  public VarS var1() {
+    return var("_1");
+  }
+
   public VarS varA() {
     return VAR_A;
   }
@@ -197,11 +244,19 @@ public class TestingTS {
     return VAR_B;
   }
 
+  public VarS varC() {
+    return VAR_C;
+  }
+
   public VarS varX() {
     return VAR_X;
   }
 
   public VarS varY() {
     return VAR_Y;
+  }
+
+  public TypeSF factory() {
+    return FACTORY;
   }
 }
