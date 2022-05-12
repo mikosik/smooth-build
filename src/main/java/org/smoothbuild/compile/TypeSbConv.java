@@ -16,6 +16,8 @@ import org.smoothbuild.lang.type.BlobTS;
 import org.smoothbuild.lang.type.BoolTS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.IntTS;
+import org.smoothbuild.lang.type.JoinTS;
+import org.smoothbuild.lang.type.MeetTS;
 import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
@@ -42,6 +44,8 @@ public class TypeSbConv {
       case StringTS s -> bytecodeF.stringT();
       case StructTS st -> convert(st);
       case FuncTS f -> convert(f);
+      case MeetTS meet -> throw new UnsupportedOperationException();
+      case JoinTS join -> throw new UnsupportedOperationException();
     };
   }
 

@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class TypeS
-    permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
+    permits ArrayTS, BaseTS, FuncTS, JoinTS, MeetTS, StructTS, VarS {
   private final VarSetS vars;
   private final String name;
 
@@ -25,6 +25,10 @@ public abstract sealed class TypeS
     checkArgument(!name.isBlank());
     this.name = name;
     this.vars = vars;
+  }
+
+  public static boolean isConstrTriviallyAllowed(TypeS a, TypeS b) {
+    return (a instanceof NothingTS) || (b instanceof AnyTS);
   }
 
   public String name() {
