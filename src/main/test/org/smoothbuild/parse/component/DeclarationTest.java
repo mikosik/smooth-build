@@ -5,11 +5,8 @@ import static org.smoothbuild.testing.TestingModLoader.err;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_MONOTYPES;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_SINGLE_VARIABLE_POLYTYPES;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_VALID_POLYTYPES;
-import static org.smoothbuild.testing.type.TestingTS.BLOB;
-import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.a;
-import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.stream.Stream;
@@ -247,7 +244,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
               .loadsWithSuccess()
-              .containsType(structTS("MyStruct", nList(sigS(STRING, "field"))));
+              .containsType(structTS("MyStruct", nList(sigS(stringTS(), "field"))));
         }
 
         @Test
@@ -756,9 +753,9 @@ public class DeclarationTest extends TestingContext {
               String nonDefault);
             """)
               .loadsWithSuccess()
-              .containsEval(natFuncS(2, STRING, "myFunc", nList(
-                  itemS(3, STRING, "default", stringS(3, "value")),
-                  itemS(4, STRING, "nonDefault")), nativeS(1, stringS(1, "Impl.met"))));
+              .containsEval(natFuncS(2, stringTS(), "myFunc", nList(
+                  itemS(3, stringTS(), "default", stringS(3, "value")),
+                  itemS(4, stringTS(), "nonDefault")), nativeS(1, stringS(1, "Impl.met"))));
         }
 
         @Test
@@ -785,8 +782,8 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(funcDeclaration("String param1,"))
               .loadsWithSuccess()
-              .containsEval(defFuncS(1, STRING, "myFunc", stringS(1, "abc"),
-                  nList(itemS(1, STRING, "param1"))));
+              .containsEval(defFuncS(1, stringTS(), "myFunc", stringS(1, "abc"),
+                  nList(itemS(1, stringTS(), "param1"))));
         }
 
         @Test
@@ -820,8 +817,8 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(funcTDeclaration("String,"))
               .loadsWithSuccess()
-              .containsEval(natFuncS(2, f(f(BLOB, STRING)), "myFunc", nList(),
-                  nativeS(1, stringS(1, "Impl.met"))));
+              .containsEval(natFuncS(2, funcTS(funcTS(blobTS(), list(stringTS()))), "myFunc",
+                  nList(), nativeS(1, stringS(1, "Impl.met"))));
         }
 
         @Test
@@ -1046,9 +1043,9 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(funcCall("0x07,"))
               .loadsWithSuccess()
-              .containsEval(defValS(2, BLOB, "result",
-                  callS(2, BLOB,
-                      topRefS(2, f(BLOB, BLOB), "myFunc"),
+              .containsEval(defValS(2, blobTS(), "result",
+                  callS(2, blobTS(),
+                      topRefS(2, funcTS(blobTS(), list(blobTS())), "myFunc"),
                       blobS(2, 7))));
         }
 
@@ -1321,8 +1318,8 @@ public class DeclarationTest extends TestingContext {
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
                 .loadsWithSuccess()
-                .containsEval(defValS(1, a(BLOB), "result",
-                    orderS(1, BLOB, blobS(1, 7))));
+                .containsEval(defValS(1, arrayTS(blobTS()), "result",
+                    orderS(1, blobTS(), blobS(1, 7))));
           }
 
           @Test

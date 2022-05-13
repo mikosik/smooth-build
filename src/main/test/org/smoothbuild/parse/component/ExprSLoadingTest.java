@@ -1,11 +1,7 @@
 package org.smoothbuild.parse.component;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.testing.type.TestingTS.BLOB;
-import static org.smoothbuild.testing.type.TestingTS.INT;
-import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.a;
-import static org.smoothbuild.testing.type.TestingTS.f;
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import org.junit.jupiter.api.Nested;
@@ -21,7 +17,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(1, BLOB, "result", blobS(2, 7)));
+        .containsEval(defValS(1, blobTS(), "result", blobS(2, 7)));
   }
 
   @Test
@@ -31,7 +27,7 @@ public class ExprSLoadingTest extends TestingContext {
             123;
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(1, INT, "result", intS(2, 123)));
+        .containsEval(defValS(1, intTS(), "result", intS(2, 123)));
   }
 
   @Test
@@ -44,8 +40,8 @@ public class ExprSLoadingTest extends TestingContext {
           ];
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(1, a(BLOB), "result",
-            orderS(2, BLOB, blobS(3, 7), blobS(4, 8))));
+        .containsEval(defValS(1, arrayTS(blobTS()), "result",
+            orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
   }
 
   @Nested
@@ -57,8 +53,8 @@ public class ExprSLoadingTest extends TestingContext {
           result = myFunc();
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, STRING, "result",
-              callS(2, STRING, topRefS(2, f(STRING), "myFunc"))));
+          .containsEval(defValS(2, stringTS(), "result",
+              callS(2, stringTS(), topRefS(2, funcTS(stringTS()), "myFunc"))));
     }
 
     @Test
@@ -69,8 +65,8 @@ public class ExprSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, STRING, "result",
-              callS(2, STRING, topRefS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
+          .containsEval(defValS(2, stringTS(), "result", callS(2, stringTS(),
+              topRefS(2, funcTS(stringTS(), list(blobTS())), "myFunc"), blobS(3, 7))));
     }
 
     @Test
@@ -81,8 +77,8 @@ public class ExprSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, STRING, "result",
-              callS(2, STRING, topRefS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
+          .containsEval(defValS(2, stringTS(), "result", callS(2, stringTS(), topRefS(2,
+              funcTS(stringTS(), list(blobTS())), "myFunc"), blobS(3, 7))));
     }
 
     @Test
@@ -95,8 +91,8 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              defValS(4, STRING, "result",
-                  callS(4, STRING, topRefS(4, f(STRING), "myValue"))));
+              defValS(4, stringTS(), "result",
+                  callS(4, stringTS(), topRefS(4, funcTS(stringTS()), "myValue"))));
     }
 
     @Test
@@ -110,13 +106,14 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              defValS(4, STRING, "result",
-                  callS(4, STRING, topRefS(4, f(STRING, BLOB), "myValue"), blobS(5, 7))));
+              defValS(4, stringTS(), "result",
+                  callS(4, stringTS(), topRefS(4, funcTS(stringTS(), list(blobTS())), "myValue"),
+                      blobS(5, 7))));
     }
 
     @Test
     public void with_ctor_reference() {
-      var struct = structTS("MyStruct", nList(sigS(STRING, "field")));
+      var struct = structTS("MyStruct", nList(sigS(stringTS(), "field")));
       var params = struct.fields()
           .map(i -> new ItemS(i.type(), modPath(), i.nameSane(), empty(), loc(2)));
       var ctor = syntCtorS(1, funcTS(struct, params.list()), modPath(), "myStruct", params);
@@ -131,7 +128,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_ctor_reference_and_arg() {
-      var struct = structTS("MyStruct", nList(sigS(STRING, "field")));
+      var struct = structTS("MyStruct", nList(sigS(stringTS(), "field")));
       module("""
           MyStruct {
             String field
@@ -140,8 +137,8 @@ public class ExprSLoadingTest extends TestingContext {
             "aaa");
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(4, struct, "result",
-              callS(4, struct, topRefS(4, f(struct, STRING), "myStruct"), stringS(5, "aaa"))));
+          .containsEval(defValS(4, struct, "result", callS(4, struct, topRefS(4,
+              funcTS(struct, list(stringTS())), "myStruct"), stringS(5, "aaa"))));
     }
 
     @Test
@@ -150,8 +147,8 @@ public class ExprSLoadingTest extends TestingContext {
           result(String() f) = f();
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, STRING, "result",
-              callS(1, STRING, paramRefS(f(STRING), "f")), nList(itemS(1, f(STRING), "f"))));
+          .containsEval(defFuncS(1, stringTS(), "result",
+              callS(1, stringTS(), paramRefS(funcTS(stringTS()), "f")), nList(itemS(1, funcTS(stringTS()), "f"))));
     }
 
     @Test
@@ -160,9 +157,9 @@ public class ExprSLoadingTest extends TestingContext {
           result(String(Blob) f) = f(0x09);
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, STRING, "result",
-              callS(1, STRING, paramRefS(f(STRING, BLOB), "f"), blobS(1, 9)),
-              nList(itemS(1, f(STRING, BLOB), "f"))));
+          .containsEval(defFuncS(1, stringTS(), "result",
+              callS(1, stringTS(), paramRefS(funcTS(stringTS(), list(blobTS())), "f"), blobS(1, 9)),
+              nList(itemS(1, funcTS(stringTS(), list(blobTS())), "f"))));
     }
   }
 
@@ -174,12 +171,12 @@ public class ExprSLoadingTest extends TestingContext {
           """)
         .loadsWithSuccess()
         .containsEval(defFuncS(
-            1, BLOB, "myFunc", paramRefS(2, BLOB, "param1"), nList(itemS(1, BLOB, "param1"))));
+            1, blobTS(), "myFunc", paramRefS(2, blobTS(), "param1"), nList(itemS(1, blobTS(), "param1"))));
   }
 
   @Test
   public void select_expression() {
-    var myStruct = structTS("MyStruct", nList(sigS(STRING, "field")));
+    var myStruct = structTS("MyStruct", nList(sigS(stringTS(), "field")));
     module("""
           MyStruct {
             String field,
@@ -189,8 +186,8 @@ public class ExprSLoadingTest extends TestingContext {
             .field;
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(5, STRING, "result",
-            selectS(6, STRING, topRefS(5, myStruct, "struct"), "field")));
+        .containsEval(defValS(5, stringTS(), "result",
+            selectS(6, stringTS(), topRefS(5, myStruct, "struct"), "field")));
   }
 
   @Nested
@@ -204,7 +201,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              defValS(2, STRING, "result", topRefS(3, STRING, "myValue")));
+              defValS(2, stringTS(), "result", topRefS(3, stringTS(), "myValue")));
     }
 
     @Test
@@ -215,7 +212,7 @@ public class ExprSLoadingTest extends TestingContext {
             myFunc;
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, f(STRING), "result", topRefS(3, f(STRING), "myFunc")));
+          .containsEval(defValS(2, funcTS(stringTS()), "result", topRefS(3, funcTS(stringTS()), "myFunc")));
     }
 
     @Test
@@ -227,7 +224,7 @@ public class ExprSLoadingTest extends TestingContext {
             myStruct;
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, f(structT), "result", topRefS(3, f(structT), "myStruct")));
+          .containsEval(defValS(2, funcTS(structT), "result", topRefS(3, funcTS(structT), "myStruct")));
     }
   }
 
@@ -238,7 +235,7 @@ public class ExprSLoadingTest extends TestingContext {
             "abc";
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(1, STRING, "result", stringS(2, "abc")));
+        .containsEval(defValS(1, stringTS(), "result", stringS(2, "abc")));
   }
 
   @Nested
@@ -251,7 +248,7 @@ public class ExprSLoadingTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEval(defValS(1, BLOB, "myValue", blobS(2, 7)));
+          .containsEval(defValS(1, blobTS(), "myValue", blobS(2, 7)));
     }
 
     @Test
@@ -262,7 +259,7 @@ public class ExprSLoadingTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEval(annValS(2, bytecodeS(1, "implementation"), BLOB, "myValue"));
+          .containsEval(annValS(2, bytecodeS(1, "implementation"), blobTS(), "myValue"));
     }
 
     @Test
@@ -272,7 +269,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, BLOB, "myFunc", blobS(2, 7), nList()));
+          .containsEval(defFuncS(1, blobTS(), "myFunc", blobS(2, 7), nList()));
     }
 
     @Test
@@ -283,8 +280,8 @@ public class ExprSLoadingTest extends TestingContext {
             = "abc";
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, STRING, "myFunc", stringS(3, "abc"),
-              nList(itemS(2, BLOB, "param1"))));
+          .containsEval(defFuncS(1, stringTS(), "myFunc", stringS(3, "abc"),
+              nList(itemS(2, blobTS(), "param1"))));
     }
 
     @Test
@@ -296,8 +293,8 @@ public class ExprSLoadingTest extends TestingContext {
               = "abc";
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, STRING, "myFunc", stringS(4, "abc"),
-              nList(itemS(2, BLOB, "param1", blobS(3, 7)))));
+          .containsEval(defFuncS(1, stringTS(), "myFunc", stringS(4, "abc"),
+              nList(itemS(2, blobTS(), "param1", blobS(3, 7)))));
     }
 
     @Test
@@ -308,7 +305,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), false)));
+              natFuncS(2, stringTS(), "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), false)));
     }
 
     @Test
@@ -319,7 +316,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
+              natFuncS(2, stringTS(), "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
@@ -332,7 +329,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              natFuncS(2, STRING, "myFunc", nList(itemS(3, BLOB, "param1", blobS(4, 7))),
+              natFuncS(2, stringTS(), "myFunc", nList(itemS(3, blobTS(), "param1", blobS(4, 7))),
                   nativeS(1, stringS(1, "Impl.met"), true)));
     }
 
@@ -344,7 +341,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              byteFuncS(2, bytecodeS(stringS(1, "Impl.met"), loc(1)), STRING, "myFunc", nList()));
+              byteFuncS(2, bytecodeS(stringS(1, "Impl.met"), loc(1)), stringTS(), "myFunc", nList()));
     }
 
     @Test
@@ -357,8 +354,8 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsEval(
-              byteFuncS(2, bytecodeS(1, stringS(1, "Impl.met")), STRING, "myFunc",
-                  nList(itemS(3, BLOB, "param1", blobS(4, 7)))));
+              byteFuncS(2, bytecodeS(1, stringS(1, "Impl.met")), stringTS(), "myFunc",
+                  nList(itemS(3, blobTS(), "param1", blobS(4, 7)))));
     }
 
     @Test
@@ -369,7 +366,7 @@ public class ExprSLoadingTest extends TestingContext {
           }
           """)
           .loadsWithSuccess()
-          .containsType(structTS("MyStruct", nList(sigS(STRING, "field"))));
+          .containsType(structTS("MyStruct", nList(sigS(stringTS(), "field"))));
     }
   }
 }
