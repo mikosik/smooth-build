@@ -109,7 +109,6 @@
         <pathelement location="${dir.lib}/ivy/junit-platform-commons-1.7.2.jar"/>
         <pathelement location="${dir.lib}/ivy/junit-platform-engine-1.7.2.jar"/>
         <pathelement location="${dir.lib}/ivy/junit-platform-launcher-1.7.2.jar"/>
-        <pathelement location="${dir.lib}/ivy/junit-vintage-engine-5.7.2.jar"/>
         <pathelement location="${dir.lib}/ivy/junit-4.13.2.jar"/>
         <pathelement location="${dir.lib}/ivy/junit-jupiter-api-5.7.2.jar"/>
         <pathelement location="${dir.lib}/ivy/junit-jupiter-params-5.7.2.jar"/>
