@@ -115,6 +115,10 @@ public class TestingTS {
     return list(varA(), varB(), blob(), bool(), int_(), struct(), string());
   }
 
+  public ImmutableList<TypeS> baseTypes() {
+    return BASE_TYPES;
+  }
+
   public ImmutableList<TypeS> elementaryTypes() {
     return ELEMENTARY_TYPES;
   }
