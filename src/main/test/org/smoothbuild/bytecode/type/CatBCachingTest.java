@@ -10,27 +10,26 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 
 public class CatBCachingTest extends TestingContext {
   @ParameterizedTest
-  @MethodSource("type_creators")
-  public void created_type_is_cached(Function<CatDb, CatB> typeCreator) {
-    assertThat(typeCreator.apply(catDb()))
-        .isSameInstanceAs(typeCreator.apply(catDb()));
+  @MethodSource("factories")
+  public void created_type_is_cached(Function<CatDb, CatB> factory) {
+    assertThat(factory.apply(catDb()))
+        .isSameInstanceAs(factory.apply(catDb()));
   }
 
   @ParameterizedTest
-  @MethodSource("type_creators")
-  public void read_type_is_cached(Function<CatDb, CatB> typeCreator) {
-    Hash hash = typeCreator.apply(catDb()).hash();
-    CatDb catDb = catDbOther();
+  @MethodSource("factories")
+  public void read_type_is_cached(Function<CatDb, CatB> factory) {
+    var hash = factory.apply(catDb()).hash();
+    var catDb = catDbOther();
     assertThat(catDb.get(hash))
         .isSameInstanceAs(catDb.get(hash));
   }
 
-  private static List<Function<CatDb, CatB>> type_creators() {
+  private static List<Function<CatDb, CatB>> factories() {
     return list(
         CatDb::blob,
         CatDb::bool,
