@@ -2,7 +2,6 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.smoothbuild.lang.type.JoinTS.join;
 
 import java.util.List;
 

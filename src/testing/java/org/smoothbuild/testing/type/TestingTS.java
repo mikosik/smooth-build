@@ -11,6 +11,8 @@ import org.smoothbuild.lang.type.BlobTS;
 import org.smoothbuild.lang.type.BoolTS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.IntTS;
+import org.smoothbuild.lang.type.JoinTS;
+import org.smoothbuild.lang.type.MeetTS;
 import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
@@ -129,6 +131,14 @@ public class TestingTS {
 
   public TypeS array(TypeS elemT) {
     return a(elemT);
+  }
+
+  public TypeS join(TypeS a, TypeS b) {
+    return JoinTS.join(a, b);
+  }
+
+  public TypeS meet(TypeS a, TypeS b) {
+    return MeetTS.meet(a, b);
   }
 
   public TypeS func(TypeS resT, ImmutableList<TypeS> params) {
