@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableSet.Builder;
 /**
  * Least upper bound (aka Join) of a set of slices.
  */
-public final class JoinTS extends TypeS {
+public final class JoinTS extends MergingTS {
   private final ImmutableSet<TypeS> elems;
 
   private JoinTS(ImmutableSet<TypeS> elems) {

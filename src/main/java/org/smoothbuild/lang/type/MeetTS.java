@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableSet.Builder;
 /**
  * Greatest lower bound (aka Meet) of a set of slices.
  */
-public final class MeetTS extends TypeS {
+public final class MeetTS extends MergingTS {
   private final ImmutableSet<TypeS> elems;
 
   private MeetTS(ImmutableSet<TypeS> elems) {
