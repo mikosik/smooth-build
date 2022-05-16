@@ -12,7 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/systemtest" isTestSource="true" />
     </content>
-    <orderEntry type="jdk" jdkName="17" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="18" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.junit.jupiter:junit-jupiter-engine" level="project" />
     <orderEntry type="library" name="org.junit.jupiter:junit-jupiter-params" level="project" />
