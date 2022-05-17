@@ -1,7 +1,6 @@
 <ivy-module version="2.0">
     <info organisation="org.smooth-build" module="smooth-build"/>
     <dependencies>
-        <dependency org="org.junit.vintage" name="junit-vintage-engine" rev="5.7.2"/>
         <dependency org="org.junit.jupiter" name="junit-jupiter-engine" rev="5.7.2"/>
         <dependency org="org.junit.jupiter" name="junit-jupiter-params" rev="5.7.2"/>
         <dependency org="org.junit.platform" name="junit-platform-launcher" rev="1.7.2"/>
