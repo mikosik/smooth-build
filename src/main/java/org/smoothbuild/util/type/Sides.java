@@ -7,4 +7,11 @@ public record Sides<T>(T lower, T upper) {
       case UPPER -> upper;
     };
   }
+
+  public Sides<T> with(Side side, T newBound) {
+    return switch (side) {
+      case LOWER -> new Sides<>(newBound, upper);
+      case UPPER -> new Sides<>(lower, newBound);
+    };
+  }
 }
