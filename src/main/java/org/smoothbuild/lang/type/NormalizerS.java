@@ -28,13 +28,13 @@ public class NormalizerS {
 
   public TypeS normalizeImpl(TypeS type, Side side, Builder<ConstrS> constrBuilder) {
     return switch (type) {
-      case VarS var -> var;
       case ArrayTS array -> normalizeArray(array, side, constrBuilder);
       case BaseTS base -> base;
       case FuncTS func -> normalizeFunc(func, side, constrBuilder);
-      case StructTS struct -> struct;
-      case MeetTS meet -> throw new UnsupportedOperationException();
       case JoinTS join -> throw new UnsupportedOperationException();
+      case MeetTS meet -> throw new UnsupportedOperationException();
+      case StructTS struct -> struct;
+      case VarS var -> var;
     };
   }
 
