@@ -3,6 +3,8 @@ package org.smoothbuild.lang.type;
 import static org.smoothbuild.util.collect.Sets.set;
 
 /**
+ * Type variable.
+ *
  * This class is immutable.
  */
 public final class VarS extends TypeS {
