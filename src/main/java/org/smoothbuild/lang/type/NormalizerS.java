@@ -11,12 +11,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
 public class NormalizerS {
-  private final TypeSF typeSF;
-  private final TempVarFS tempVarF;
+  private final TypeSF typeF;
+  private int currentId;
 
-  public NormalizerS(TypeSF typeSF) {
-    this.typeSF = typeSF;
-    this.tempVarF = new TempVarFS(typeSF);
+  public NormalizerS(TypeSF typeF) {
+    this.typeF = typeF;
   }
 
   public ImmutableSet<ConstrS> normalize(ConstrS constr) {
@@ -41,19 +40,23 @@ public class NormalizerS {
 
   private ArrayTS normalizeArray(ArrayTS array, Side side, Builder<ConstrS> constrBuilder) {
     var elem = normalizeToLeaf(array.elem(), side, constrBuilder);
-    return typeSF.array(elem);
+    return typeF.array(elem);
   }
 
   private TypeS normalizeFunc(FuncTS func, Side side, Builder<ConstrS> constrBuilder) {
     var res = normalizeToLeaf(func.res(), side, constrBuilder);
     var params = map(func.params(), p -> normalizeToLeaf(p, side.other(), constrBuilder));
-    return typeSF.func(res, params);
+    return typeF.func(res, params);
   }
 
   private VarS normalizeToLeaf(TypeS type, Side side, Builder<ConstrS> constrBuilder) {
     var rootT = normalizeImpl(type, side, constrBuilder);
-    var var = tempVarF.newTempVar();
+    var var = newTempVar();
     constrBuilder.add(constrS(var, rootT, side));
     return var;
+  }
+
+  public VarS newTempVar() {
+    return typeF.var("_" + currentId++);
   }
 }
