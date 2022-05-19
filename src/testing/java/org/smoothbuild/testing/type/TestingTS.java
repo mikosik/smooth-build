@@ -24,8 +24,8 @@ import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 
@@ -108,16 +108,16 @@ public class TestingTS {
     return FACTORY.struct(name, fields);
   }
 
-  public Sides<TypeS> oneSideBound(Side side, TypeS type) {
+  public Bounds<TypeS> oneSideBound(Side side, TypeS type) {
     return FACTORY.oneSideBound(side, type);
   }
 
-  public Sides<TypeS> bounds() {
+  public Bounds<TypeS> bounds() {
     return bounds(nothing(), any());
   }
 
-  public Sides<TypeS> bounds(TypeS lower, TypeS upper) {
-    return new Sides<>(lower, upper);
+  public Bounds<TypeS> bounds(TypeS lower, TypeS upper) {
+    return new Bounds<>(lower, upper);
   }
 
   public TypingS typing() {

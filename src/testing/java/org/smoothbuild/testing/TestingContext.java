@@ -138,8 +138,8 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
@@ -472,8 +472,8 @@ public class TestingContext {
   public VarBoundsB vbS(
       VarB var1, Side side1, TypeB bound1,
       VarB var2, Side side2, TypeB bound2) {
-    Sides<TypeB> bounds1 = oneSideBoundB(side1, bound1);
-    Sides<TypeB> bounds2 = oneSideBoundB(side2, bound2);
+    var bounds1 = oneSideBoundB(side1, bound1);
+    var bounds2 = oneSideBoundB(side2, bound2);
     if (var1.equals(var2)) {
       return varBoundsB(new BoundedB(var1, typingB().merge(bounds1, bounds2)));
     } else {
@@ -492,7 +492,7 @@ public class TestingContext {
     return varBoundsB();
   }
 
-  public Sides<TypeB> oneSideBoundB(Side side, TypeB type) {
+  public Bounds<TypeB> oneSideBoundB(Side side, TypeB type) {
     return typeFB().oneSideBound(side, type);
   }
 
@@ -897,8 +897,8 @@ public class TestingContext {
   public VarBoundsS vbS(
       VarS var1, Side side1, TypeS bound1,
       VarS var2, Side side2, TypeS bound2) {
-    Sides<TypeS> bounds1 = oneSideBoundS(side1, bound1);
-    Sides<TypeS> bounds2 = oneSideBoundS(side2, bound2);
+    var bounds1 = oneSideBoundS(side1, bound1);
+    var bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
       return varBoundsS(new BoundedS(var1, typingS().merge(bounds1, bounds2)));
     } else {
@@ -917,7 +917,7 @@ public class TestingContext {
     return varBoundsS();
   }
 
-  public Sides<TypeS> oneSideBoundS(Side side, TypeS type) {
+  public Bounds<TypeS> oneSideBoundS(Side side, TypeS type) {
     return typeFS().oneSideBound(side, type);
   }
 

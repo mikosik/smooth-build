@@ -9,14 +9,14 @@ import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.solver.ConstrGraphS.Builder;
-import org.smoothbuild.util.type.Sides;
+import org.smoothbuild.util.type.Bounds;
 
 public class VarNodes {
   private final HashMap<VarS, VarNode> nodes;
-  private final Sides<TypeS> initialBounds;
+  private final Bounds<TypeS> initialBounds;
 
   public VarNodes(TypeSF typeF) {
-    this.initialBounds = new Sides<>(typeF.nothing(), typeF.any());
+    this.initialBounds = new Bounds<>(typeF.nothing(), typeF.any());
     this.nodes = new HashMap<>();
   }
 

@@ -21,8 +21,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.testing.type.TestedAssignSpecS;
 import org.smoothbuild.testing.type.TestedTSF;
 import org.smoothbuild.testing.type.TestingTS;
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -372,15 +372,15 @@ public class TypingSTest {
     return buildGraph(testingT().typesForBuildWideGraph(), 1, testingT());
   }
 
-  private static Sides<TypeS> oneSideBound(Side side, TypeS type) {
+  private static Bounds<TypeS> oneSideBound(Side side, TypeS type) {
     return typeF().oneSideBound(side, type);
   }
 
   private static VarBoundsS vb(
       VarS var1, Side side1, VarS bound1,
       VarS var2, Side side2, VarS bound2) {
-    Sides<TypeS> bounds1 = oneSideBound(side1, bound1);
-    Sides<TypeS> bounds2 = oneSideBound(side2, bound2);
+    var bounds1 = oneSideBound(side1, bound1);
+    var bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
       return varBoundsS(new BoundedS(var1, typing().merge(bounds1, bounds2)));
     } else {

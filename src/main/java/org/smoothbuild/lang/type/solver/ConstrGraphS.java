@@ -5,13 +5,13 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.util.type.Sides;
+import org.smoothbuild.util.type.Bounds;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSetMultimap;
 
 public record ConstrGraphS(
-  ImmutableMap<VarS, Sides<TypeS>> varBounds,
+  ImmutableMap<VarS, Bounds<TypeS>> varBounds,
   ImmutableSetMultimap<VarS, VarS> constrs) {
 
   public static Builder builder() {
@@ -33,7 +33,7 @@ public record ConstrGraphS(
   }
 
   public static class Builder {
-    private final ImmutableMap.Builder<VarS, Sides<TypeS>> varBounds;
+    private final ImmutableMap.Builder<VarS, Bounds<TypeS>> varBounds;
     private final ImmutableSetMultimap.Builder<VarS, VarS> constrs;
 
     public Builder() {
@@ -41,13 +41,13 @@ public record ConstrGraphS(
       this.constrs = ImmutableSetMultimap.builder();
     }
 
-    public Builder addVar(VarS var, Iterable<? extends VarS> uppers, Sides<TypeS> bounds) {
+    public Builder addVar(VarS var, Iterable<? extends VarS> uppers, Bounds<TypeS> bounds) {
       constrs.putAll(var, uppers);
       addBounds(var, bounds);
       return this;
     }
 
-    public Builder addBounds(VarS var, Sides<TypeS> bounds) {
+    public Builder addBounds(VarS var, Bounds<TypeS> bounds) {
       varBounds.put(var, bounds);
       return this;
     }

@@ -25,8 +25,8 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.bytecode.type.val.VarBoundsB;
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -243,8 +243,8 @@ public class TypingB {
     return new BoundedB(a.var(), merge(a.bounds(), b.bounds()));
   }
 
-  public Sides<TypeB> merge(Sides<TypeB> bounds1, Sides<TypeB> bounds2) {
-    return new Sides<>(
+  public Bounds<TypeB> merge(Bounds<TypeB> bounds1, Bounds<TypeB> bounds2) {
+    return new Bounds<>(
         merge(bounds1.lower(), bounds2.lower(), UPPER),
         merge(bounds1.upper(), bounds2.upper(), LOWER));
   }

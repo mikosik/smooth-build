@@ -6,32 +6,32 @@ import static org.smoothbuild.util.type.Side.UPPER;
 
 import org.junit.jupiter.api.Test;
 
-public class SidesTest {
+public class BoundsTest {
   @Test
   public void get_lower() {
-    var sides = new Sides<>(1, 2);
-    assertThat(sides.get(LOWER))
+    var bounds = new Bounds<>(1, 2);
+    assertThat(bounds.get(LOWER))
         .isEqualTo(1);
   }
 
   @Test
   public void get_upper() {
-    var sides = new Sides<>(1, 2);
-    assertThat(sides.get(UPPER))
+    var bounds = new Bounds<>(1, 2);
+    assertThat(bounds.get(UPPER))
         .isEqualTo(2);
   }
 
   @Test
   public void with_lower() {
-    var sides = new Sides<>(1, 2);
-    assertThat(sides.with(LOWER, 3))
-        .isEqualTo(new Sides<>(3, 2));
+    var bounds = new Bounds<>(1, 2);
+    assertThat(bounds.with(LOWER, 3))
+        .isEqualTo(new Bounds<>(3, 2));
   }
 
   @Test
   public void with_upper() {
-    var sides = new Sides<>(1, 2);
-    assertThat(sides.with(UPPER, 3))
-        .isEqualTo(new Sides<>(1, 3));
+    var bounds = new Bounds<>(1, 2);
+    assertThat(bounds.with(UPPER, 3))
+        .isEqualTo(new Bounds<>(1, 3));
   }
 }

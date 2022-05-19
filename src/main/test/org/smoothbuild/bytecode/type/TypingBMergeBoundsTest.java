@@ -7,8 +7,8 @@ import static org.smoothbuild.util.type.Side.UPPER;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.testing.type.TestingTB;
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 
 public class TypingBMergeBoundsTest {
   private final TestingTB testingT;
@@ -49,7 +49,7 @@ public class TypingBMergeBoundsTest {
     assertThat(bounds.lower()).isEqualTo(testingT.nothing());
   }
 
-  public Sides<TypeB> oneSideBound(Side side, TypeB type) {
+  public Bounds<TypeB> oneSideBound(Side side, TypeB type) {
     return testingT.oneSideBound(side, type);
   }
 }

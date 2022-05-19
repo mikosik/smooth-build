@@ -16,8 +16,8 @@ import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -234,8 +234,8 @@ public class TypingS {
     return new BoundedS(a.var(), merge(a.bounds(), b.bounds()));
   }
 
-  public Sides<TypeS> merge(Sides<TypeS> bounds1, Sides<TypeS> bounds2) {
-    return new Sides<>(
+  public Bounds<TypeS> merge(Bounds<TypeS> bounds1, Bounds<TypeS> bounds2) {
+    return new Bounds<>(
         merge(bounds1.lower(), bounds2.lower(), UPPER),
         merge(bounds1.upper(), bounds2.upper(), LOWER));
   }

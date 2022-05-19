@@ -7,18 +7,18 @@ import java.util.Set;
 
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 
 public class VarNode {
   private final VarS var;
-  private Sides<TypeS> bounds;
-  private final Sides<Set<VarNode>> edges;
+  private Bounds<TypeS> bounds;
+  private final Bounds<Set<VarNode>> edges;
 
-  public VarNode(VarS var, Sides<TypeS> bounds) {
+  public VarNode(VarS var, Bounds<TypeS> bounds) {
     this.var = var;
     this.bounds = bounds;
-    this.edges = new Sides<>(new HashSet<>(), new HashSet<>());
+    this.edges = new Bounds<>(new HashSet<>(), new HashSet<>());
   }
 
   public VarS var() {
@@ -26,18 +26,14 @@ public class VarNode {
   }
 
   public Set<VarNode> edges(Side side) {
-    return edges().get(side);
-  }
-
-  public Sides<Set<VarNode>> edges() {
-    return edges;
+    return edges.get(side);
   }
 
   public TypeS bound(Side side) {
     return bounds.get(side);
   }
 
-  public Sides<TypeS> bounds() {
+  public Bounds<TypeS> bounds() {
     return bounds;
   }
 

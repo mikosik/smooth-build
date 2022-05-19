@@ -27,8 +27,8 @@ import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.testing.type.TestedAssignSpecB;
 import org.smoothbuild.testing.type.TestedTBF;
 import org.smoothbuild.testing.type.TestingTB;
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -430,15 +430,15 @@ public class TypingBTest {
     return buildGraph(testingT().typesForBuildWideGraph(), 1, testingT());
   }
 
-  private static Sides<TypeB> oneSideBound(Side side, TypeB type) {
+  private static Bounds<TypeB> oneSideBound(Side side, TypeB type) {
     return typeF().oneSideBound(side, type);
   }
 
   private static VarBoundsB vb(
       VarB var1, Side side1, VarB bound1,
       VarB var2, Side side2, VarB bound2) {
-    Sides<TypeB> bounds1 = oneSideBound(side1, bound1);
-    Sides<TypeB> bounds2 = oneSideBound(side2, bound2);
+    var bounds1 = oneSideBound(side1, bound1);
+    var bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
       return varBoundsB(new BoundedB(var1, typing().merge(bounds1, bounds2)));
     } else {

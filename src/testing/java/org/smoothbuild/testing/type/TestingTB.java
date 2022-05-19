@@ -16,8 +16,8 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.bytecode.type.val.VarB;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
-import org.smoothbuild.util.type.Sides;
 
 import com.google.common.collect.ImmutableList;
 
@@ -150,7 +150,7 @@ public class TestingTB {
     return VAR_Y;
   }
 
-  public Sides<TypeB> oneSideBound(Side side, TypeB type) {
+  public Bounds<TypeB> oneSideBound(Side side, TypeB type) {
     return FACTORY.oneSideBound(side, type);
   }
 }
