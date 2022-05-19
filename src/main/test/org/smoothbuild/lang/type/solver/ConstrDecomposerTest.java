@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.type.solver;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.lang.type.ConstrS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableSet;

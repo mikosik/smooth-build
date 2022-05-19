@@ -7,10 +7,7 @@ import static org.smoothbuild.util.type.Side.UPPER;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.smoothbuild.lang.type.ConstrDecomposeExc;
-import org.smoothbuild.lang.type.ConstrDecomposer;
 import org.smoothbuild.lang.type.ConstrS;
-import org.smoothbuild.lang.type.NormalizerS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.VarS;

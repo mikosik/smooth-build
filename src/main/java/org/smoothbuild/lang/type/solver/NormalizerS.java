@@ -1,10 +1,20 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.type.solver;
 
 import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.type.Side.LOWER;
 import static org.smoothbuild.util.type.Side.UPPER;
 
+import org.smoothbuild.lang.type.ArrayTS;
+import org.smoothbuild.lang.type.BaseTS;
+import org.smoothbuild.lang.type.ConstrS;
+import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.JoinTS;
+import org.smoothbuild.lang.type.MeetTS;
+import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableSet;
