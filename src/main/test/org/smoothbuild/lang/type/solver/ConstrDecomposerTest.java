@@ -68,7 +68,7 @@ public class ConstrDecomposerTest extends TestingTS {
 
     @TestInstance(PER_CLASS)
     @Nested
-    class _nothing_vs extends TestingTS {
+    class _nothing_vs_sth extends TestingTS {
       @ParameterizedTest
       @MethodSource("baseTypes")
       public void noting_vs_base_type() throws Exception {
@@ -89,7 +89,7 @@ public class ConstrDecomposerTest extends TestingTS {
       }
 
       @Test
-      public void noting_func() throws Exception {
+      public void nothing_vs_func() throws Exception {
         assertThat(elementarize(constrS(nothing(), func(blob(), list()))))
             .isEmpty();
       }
