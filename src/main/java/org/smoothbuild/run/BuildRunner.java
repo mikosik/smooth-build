@@ -10,7 +10,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.lang.define.ValRefS;
+import org.smoothbuild.lang.define.MonoRefS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.Evaluator;
@@ -47,7 +47,7 @@ public class BuildRunner {
     return exitCode;
   }
 
-  public Optional<Map<ValRefS, CnstB>> evaluate(List<String> names) {
+  public Optional<Map<MonoRefS, CnstB>> evaluate(List<String> names) {
     if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
       return Optional.empty();
     }

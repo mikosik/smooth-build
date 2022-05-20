@@ -147,10 +147,10 @@ public class SolverSTest extends TestingTS {
     public void propagation_of_element_upper_bound_through_var(List<ConstrS> constrs)
         throws Exception {
       assertSolvedGraph(constrs, ConstrGraphS.builder()
-          .addVar(varA(), list(var0(), var1()), bounds(nothing(), int_()))
-          .addVar(varB(), list(), bounds(array(var0()), array(var1())))
-          .addVar(var0(), list(var1()), bounds(nothing(), int_()))
-          .addVar(var1(), list(), bounds(nothing(), int_()))
+          .addVar(varA(), list(v0(), v1()), bounds(nothing(), int_()))
+          .addVar(varB(), list(), bounds(array(v0()), array(v1())))
+          .addVar(v0(), list(v1()), bounds(nothing(), int_()))
+          .addVar(v1(), list(), bounds(nothing(), int_()))
           .build());
     }
 

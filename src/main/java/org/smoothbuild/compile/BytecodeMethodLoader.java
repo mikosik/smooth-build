@@ -49,8 +49,8 @@ public class BytecodeMethodLoader {
     } else if (!hasBytecodeFactoryParam(method)) {
       return "Providing method parameter is not of type "
           + BytecodeF.class.getCanonicalName() + ".";
-    } else if (method.getParameterTypes().length != 1) {
-      return "Providing method has more than one parameter.";
+    } else if (method.getParameterTypes().length != 2) {
+      return "Providing method parameter count is different than 2.";
     } else if (!method.getReturnType().equals(ObjB.class)) {
       return "Providing method result type is not " + ObjB.class.getName() + ".";
     } else {

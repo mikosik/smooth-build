@@ -1,28 +1,44 @@
 package org.smoothbuild.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.IntStream.range;
-import static org.smoothbuild.lang.type.TypeS.hackyCast;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
-import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
+import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.lang.type.ConstrS.constrS;
+import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
+import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.parse.ConstructArgList.constructArgList;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.Optionals.pullUp;
+import static org.smoothbuild.util.type.Side.LOWER;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemSigS;
+import org.smoothbuild.lang.like.Obj;
 import org.smoothbuild.lang.like.Param;
+import org.smoothbuild.lang.like.Refable;
+import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.TypingS;
-import org.smoothbuild.lang.type.VarBoundsS;
+import org.smoothbuild.lang.type.VarS;
+import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
+import org.smoothbuild.lang.type.solver.DenormalizerS;
+import org.smoothbuild.lang.type.solver.SolverS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
-import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.CallN;
+import org.smoothbuild.parse.ast.FuncN;
+import org.smoothbuild.parse.ast.ObjN;
+import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -36,34 +52,121 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Maybe<MonoTS> inferCallT(CallN call, MonoTS resT, NList<Param> params) {
-    var logBuffer = new LogBuffer();
+  public Optional<MonoTS> inferCallT(CallN call, LogBuffer logBuffer) {
+    ObjN callee = call.callee();
+
+    if (callee.typeO().isEmpty()) {
+      return empty();
+    }
+
+    if (!(callee.typeO().get() instanceof FuncTS calleeT)) {
+      logBuffer.log(parseError(call, description(callee)
+          + " cannot be called as it is not a function but " + callee.typeO().get().q() + "."));
+      return empty();
+    }
+
+    var funcParams = funcParams(callee, calleeT);
+    if (funcParams.isEmpty()) {
+      return empty();
+    }
+
+    var params = funcParams.get();
+    Maybe<ImmutableList<ArgN>> args = constructArgList(call, params);
+    if (args.containsProblem()) {
+      logBuffer.logAll(args.logs());
+      return empty();
+    } else if (someArgHasNotInferredType(args.value())) {
+      return empty();
+    } else {
+      call.setAssignedArgs(args.value());
+      return inferCallT(call, params, calleeT, logBuffer);
+    }
+  }
+
+  public static Optional<NList<Param>> funcParams(ObjN callee, FuncTS calleeT) {
+    if (callee instanceof RefN refN) {
+      Refable referenced = refN.referenced();
+      if (referenced instanceof FuncS funcS) {
+        return Optional.of(funcS.params().map(p -> new Param(p.sig(), p.body())));
+      } else if (referenced instanceof FuncN funcN) {
+        var params = map(
+            funcN.params().list(), p -> p.sig().map(sig -> new Param(sig, p.body())));
+        return pullUp(params).map(NList::nList);
+      }
+    }
+    return Optional.of(nList(map(calleeT.params(), p -> new Param(itemSigS(p), empty()))));
+  }
+
+  private static boolean someArgHasNotInferredType(ImmutableList<ArgN> args) {
+    return args.stream()
+        .anyMatch(a -> a.typeO().isEmpty());
+  }
+
+  private static String description(ObjN node) {
+    if (node instanceof RefN refN) {
+      return "`" + refN.name() + "`";
+    }
+    return "expression";
+  }
+
+  public Optional<MonoTS> inferCallT(CallN call, NList<Param> params, FuncTS calleeT,
+      LogBuffer logBuffer) {
     var args = call.assignedArgs();
-    findIllegalTypeAssignmentErrors(args, params.map(Param::sig), logBuffer);
-    if (logBuffer.containsProblem()) {
-      return maybeLogs(logBuffer);
+    var prefixedArgTs = prefixFreeVarsWithIndex(map(args, a -> a.obj().typeO().get()));
+    var prefixedCalleeT = (FuncTS) calleeT.mapFreeVars(v -> v.prefixed("callee"));
+    var prefixedParamTs = prefixedCalleeT.params();
+    var solver = new SolverS(typeFS);
+    for (int i = 0; i < args.size(); i++) {
+      try {
+        solver.addConstr(constrS(prefixedArgTs.get(i), prefixedParamTs.get(i)));
+      } catch (ConstrDecomposeExc e) {
+        NList<ItemSigS> paramSigs = params.map(Param::sig);
+        logBuffer.log(illegalAssignmentError(paramSigs, paramSigs.get(i), args.get(i)));
+        return empty();
+      }
     }
-    var assignedTs = map(args, arg -> hackyCast(arg.typeO().get()));
-    var boundedVars = typing.inferVarBoundsLower(map(params, Param::type), assignedTs);
-    var varProblems = findVarProblems(call, boundedVars);
-    if (!varProblems.isEmpty()) {
-      logBuffer.logAll(varProblems);
-      return maybeLogs(logBuffer);
+
+    var constrGraph = solver.graph();
+    var denormalizer = new DenormalizerS(typeFS, constrGraph);
+    for (var prefixedParamT : prefixedParamTs) {
+      var typeS = denormalizeAndResolveMerges(denormalizer, prefixedParamT);
+      if (typeS.includes(typeFS.any())) {
+        logBuffer.log(paramInferringError(call.loc(), prefixedParamT));
+        return empty();
+      }
     }
-    MonoTS mapped = typing.mapVarsLower(resT, boundedVars);
-    return maybeValueAndLogs(mapped, logBuffer);
+    for (int i = 0; i < args.size(); i++) {
+      storeActualTypeIfNeeded(args.get(i).obj(), prefixedArgTs.get(i), denormalizer);
+    }
+    var prefixedResT = prefixedCalleeT.res();
+    var actualResT = denormalizeAndResolveMerges(denormalizer, prefixedResT);
+    if (actualResT.includes(typeFS.any())) {
+      logBuffer.log(resInferringError(call, calleeT.res()));
+      return empty();
+    }
+
+    storeActualTypeIfNeeded(call.callee(), typeFS.func(prefixedResT, prefixedArgTs), denormalizer);
+    return Optional.of(actualResT);
   }
 
-  private void findIllegalTypeAssignmentErrors(
-      ImmutableList<ArgN> args, List<ItemSigS> params, Logger logger) {
-    range(0, args.size())
-        .filter(i -> !isAssignable(params.get(i), args.get(i)))
-        .mapToObj(i -> illegalAssignmentError(params, params.get(i), args.get(i)))
-        .forEach(logger::log);
+  private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, DenormalizerS denormalizer) {
+    if (obj instanceof RefN refN && refN.referenced().typeO().get() instanceof PolyTS) {
+      refN.setInferredMonoType(denormalizeAndResolveMerges(denormalizer, monoTS));
+    }
   }
 
-  private boolean isAssignable(ItemSigS param, ArgN arg) {
-    return typing.isParamAssignable(param.type(), hackyCast(arg.typeO().get()));
+  private MonoTS denormalizeAndResolveMerges(DenormalizerS denormalizer, MonoTS typeS) {
+    var denormalizedT = denormalizer.denormalizeVars(typeS, LOWER);
+    return typing.resolveMerges(denormalizedT);
+  }
+
+  private static Log paramInferringError(Loc loc, MonoTS paramT) {
+    return error(loc + ": Cannot infer actual type for "
+        + paramT.mapVars(VarS::unprefixed).q() + ".");
+  }
+
+  private static Log resInferringError(CallN call, MonoTS resT) {
+    return error(call.loc() + ": Cannot infer call actual result type " + resT.q() + ".");
   }
 
   private static Log illegalAssignmentError(List<ItemSigS> params, ItemSigS param, ArgN arg) {
@@ -77,13 +180,5 @@ public class CallTypeInferrer {
         .map(ItemSigS::typeAndName)
         .collect(joining(", "));
     return "In call to function with parameters (" + paramsString + "): ";
-  }
-
-  private ImmutableList<Log> findVarProblems(CallN call, VarBoundsS varBounds) {
-    return varBounds.map().values().stream()
-        .filter(b -> typing.contains(b.bounds().lower(), typeFS.any()))
-        .map(b -> parseError(call, "Cannot infer actual type for type var "
-            + b.var().q() + "."))
-        .collect(toImmutableList());
   }
 }

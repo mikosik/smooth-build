@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public final class ArrayTS extends MonoTS implements ComposedTS {
+public final class ArrayTS extends ComposedTS {
   private final MonoTS elem;
 
   public ArrayTS(MonoTS elem) {

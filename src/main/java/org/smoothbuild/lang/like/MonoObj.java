@@ -9,5 +9,5 @@ import org.smoothbuild.lang.type.MonoTS;
  */
 public interface MonoObj extends Obj {
   @Override
-  public Optional<MonoTS> typeO();
+  public Optional<? extends MonoTS> typeO();
 }

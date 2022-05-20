@@ -17,6 +17,7 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.obj.cnst.IntB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.MonoObjS;
@@ -28,6 +29,8 @@ import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
+
+import com.google.common.collect.ImmutableMap;
 
 public class EvaluatorTest  extends TestingContext {
   private final FileLoader fileLoader = mock(FileLoader.class);
@@ -43,7 +46,7 @@ public class EvaluatorTest  extends TestingContext {
     }
 
     @Test
-    public void bool() {
+    public void int_() {
       assertThat(evaluate(intS(8)))
           .isEqualTo(intB(8));
     }
@@ -60,7 +63,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void call() {
       var defFuncS = defFuncS("n", nList(), intS(7));
-      var callS = callS(intTS(), topRefS(defFuncS));
+      var callS = callS(intTS(), refS(defFuncS));
       assertThat(evaluate(callS, nList(defFuncS)))
           .isEqualTo(intB(7));
     }
@@ -68,7 +71,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void call_with_result_conversion() {
       var defFuncS = defFuncS(arrayTS(nothingTS()), "n", nList(), orderS(nothingTS()));
-      var callS = callS(arrayTS(intTS()), topRefS(defFuncS));
+      var callS = callS(arrayTS(intTS()), refS(defFuncS));
       assertThat(evaluate(callS, nList(defFuncS)))
           .isEqualTo(arrayB(intTB()));
     }
@@ -76,8 +79,10 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void call_polymorphic() {
       var a = varS("A");
-      var funcS = defFuncS(arrayTS(a), "n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e")));
-      var callS = callS(arrayTS(intTS()), topRefS(funcS), intS(7));
+      var funcS = poly(defFuncS(
+          arrayTS(a), "n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e"))));
+      var actualTS = funcTS(arrayTS(intTS()), list(intTS()));
+      var callS = callS(arrayTS(intTS()), monoizeS(actualTS, refS(funcS)), intS(7));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(arrayB(intTB(), intB(7)));
     }
@@ -88,7 +93,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void def_func() {
       var defFuncS = defFuncS("myFunc", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-      assertThat(evaluate(topRefS(defFuncS), nList(defFuncS)))
+      assertThat(evaluate(refS(defFuncS), nList(defFuncS)))
           .isEqualTo(funcB(list(intTB()), paramRefB(intTB(), 0)));
     }
 
@@ -98,18 +103,21 @@ public class EvaluatorTest  extends TestingContext {
       var className = ReturnIdFunc.class.getCanonicalName();
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jar);
-      when(bytecodeLoader.load("myFunc", jar, className))
-          .thenReturn(Try.result(ReturnIdFunc.bytecode(bytecodeF())));
+      var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
+      var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
+      when(bytecodeLoader.load("myFunc", jar, className, varMap))
+          .thenReturn(Try.result(funcB));
 
-      var byteFuncS = byteFuncS(className, varS("A"), "myFunc", nList(itemS(varS("A"), "p")));
-      assertThat(evaluate(topRefS(byteFuncS), nList(byteFuncS)))
-          .isEqualTo(ReturnIdFunc.bytecode(bytecodeF()));
+      var byteFuncS = poly(byteFuncS(className, varS("A"), "myFunc", nList(itemS(varS("A"), "p"))));
+      var actualFuncTS = funcTS(intTS(), list(intTS()));
+      assertThat(evaluate(monoizeS(actualFuncTS, refS(byteFuncS)), nList(byteFuncS)))
+          .isEqualTo(funcB);
     }
 
     @Test
     public void synt_ctor() {
       var syntCtorS = syntCtorS(structTS("MyStruct", nList(sigS(intTS(), "myField"))));
-      assertThat(evaluate(topRefS(syntCtorS), nList(syntCtorS)))
+      assertThat(evaluate(refS(syntCtorS), nList(syntCtorS)))
           .isEqualTo(funcB(list(intTB()), combineB(paramRefB(intTB(), 0))));
     }
   }
@@ -119,7 +127,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void invoke_argless() throws Exception {
       var funcS = natFuncS(intTS(), "f", nList(), nativeS(1, stringS("class binary name")));
-      var callS = callS(intTS(), topRefS(funcS));
+      var callS = callS(intTS(), refS(funcS));
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
@@ -134,7 +142,7 @@ public class EvaluatorTest  extends TestingContext {
     public void invoke_with_param() throws Exception {
       var funcS = natFuncS(intTS(), "f", nList(itemS(intTS(), "p")),
           nativeS(1, stringS("class binary name")));
-      var callS = callS(intTS(), topRefS(funcS), intS(77));
+      var callS = callS(intTS(), refS(funcS), intS(77));
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
@@ -149,7 +157,7 @@ public class EvaluatorTest  extends TestingContext {
     public void invoke_with_param_conversion() throws Exception {
       var funcS = natFuncS(arrayTS(intTS()), "f", nList(itemS(arrayTS(intTS()), "p")),
           nativeS(1, stringS("class binary name")));
-      var callS = callS(arrayTS(intTS()), topRefS(funcS), orderS(nothingTS()));
+      var callS = callS(arrayTS(intTS()), refS(funcS), orderS(nothingTS()));
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
@@ -174,6 +182,20 @@ public class EvaluatorTest  extends TestingContext {
   }
 
   @Nested
+  class _monoize {
+    @Test
+    public void monoize() {
+      var a = varS("A");
+      var funcS = poly(defFuncS("n", nList(itemS(a, "e")), paramRefS(a, "e")));
+      var actualTS = funcTS(intTS(), list(intTS()));
+      var monoizeS = monoizeS(actualTS, refS(funcS));
+
+      assertThat(evaluate(monoizeS, nList(funcS)))
+          .isEqualTo(funcB(list(intTB()), paramRefB(intTB(), 0)));
+    }
+  }
+
+  @Nested
   class _order {
     @Test
     public void order() {
@@ -194,7 +216,7 @@ public class EvaluatorTest  extends TestingContext {
     public void select() {
       var structTS = structTS("MyStruct", nList(sigS(intTS(), "f")));
       var syntCtorS = syntCtorS(structTS);
-      var callS = callS(structTS, topRefS(syntCtorS), intS(7));
+      var callS = callS(structTS, refS(syntCtorS), intS(7));
       assertThat(evaluate(selectS(intTS(), callS, "f"), nList(syntCtorS)))
           .isEqualTo(intB(7));
     }
@@ -203,7 +225,7 @@ public class EvaluatorTest  extends TestingContext {
     public void select_with_conversion() {
       var structTS = structTS("MyStruct", nList(sigS(arrayTS(nothingTS()), "f")));
       var syntCtorS = syntCtorS(structTS);
-      var callS = callS(structTS, topRefS(syntCtorS), orderS(nothingTS()));
+      var callS = callS(structTS, refS(syntCtorS), orderS(nothingTS()));
       assertThat(evaluate(selectS(arrayTS(intTS()), callS, "f"), nList(syntCtorS)))
           .isEqualTo(arrayB(intTB()));
     }

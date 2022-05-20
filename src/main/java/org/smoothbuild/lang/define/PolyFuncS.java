@@ -4,15 +4,14 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.NalImpl;
 import org.smoothbuild.lang.type.PolyFuncTS;
 
-public final class PolyFuncS extends NalImpl implements PolyTopRefableS {
+public final class PolyFuncS extends FuncS implements PolyTopRefableS {
   private final PolyFuncTS type;
   private final MonoFuncS func;
 
   public PolyFuncS(PolyFuncTS type, MonoFuncS func) {
-    super(func.name(), func.loc());
+    super(func.modPath(), func.name(), func.params(), func.loc());
     this.type = requireNonNull(type);
     this.func = requireNonNull(func);
   }

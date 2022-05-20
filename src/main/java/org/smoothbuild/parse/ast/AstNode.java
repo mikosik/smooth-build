@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.type.TypeS;
 
 public sealed interface AstNode
-    permits GenericAstNode, MonoAstNode, PolyAstNode, MonoObjN, NamedN, ObjN, RefableN {
+    permits GenericAstNode, MonoAstNode, GenericNamedN, NamedN, ObjN, RefableN {
   public Loc loc();
 
   public Optional<? extends TypeS> typeO();

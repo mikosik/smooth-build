@@ -54,7 +54,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(defValS(2, stringTS(), "result",
-              callS(2, stringTS(), topRefS(2, funcTS(stringTS()), "myFunc"))));
+              callS(2, stringTS(), refS(2, funcTS(stringTS()), "myFunc"))));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(defValS(2, stringTS(), "result", callS(2, stringTS(),
-              topRefS(2, funcTS(stringTS(), list(blobTS())), "myFunc"), blobS(3, 7))));
+              refS(2, funcTS(stringTS(), list(blobTS())), "myFunc"), blobS(3, 7))));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class ObjSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsWithSuccess()
-          .containsTopRefable(defValS(2, stringTS(), "result", callS(2, stringTS(), topRefS(2,
-              funcTS(stringTS(), list(blobTS())), "myFunc"), blobS(3, 7))));
+          .containsTopRefable(defValS(2, stringTS(), "result", callS(2, stringTS(),
+              refS(2, funcTS(stringTS(), list(blobTS())), "myFunc"), blobS(3, 7))));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ObjSLoadingTest extends TestingContext {
           .loadsWithSuccess()
           .containsTopRefable(
               defValS(4, stringTS(), "result",
-                  callS(4, stringTS(), topRefS(4, funcTS(stringTS()), "myValue"))));
+                  callS(4, stringTS(), refS(4, funcTS(stringTS()), "myValue"))));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class ObjSLoadingTest extends TestingContext {
           .loadsWithSuccess()
           .containsTopRefable(
               defValS(4, stringTS(), "result",
-                  callS(4, stringTS(), topRefS(4, funcTS(stringTS(), list(blobTS())), "myValue"),
+                  callS(4, stringTS(), refS(4, funcTS(stringTS(), list(blobTS())), "myValue"),
                       blobS(5, 7))));
     }
 
@@ -137,7 +137,7 @@ public class ObjSLoadingTest extends TestingContext {
             "aaa");
           """)
           .loadsWithSuccess()
-          .containsTopRefable(defValS(4, struct, "result", callS(4, struct, topRefS(4,
+          .containsTopRefable(defValS(4, struct, "result", callS(4, struct, refS(4,
               funcTS(struct, list(stringTS())), "myStruct"), stringS(5, "aaa"))));
     }
 
@@ -187,7 +187,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
         .loadsWithSuccess()
         .containsTopRefable(defValS(5, stringTS(), "result",
-            selectS(6, stringTS(), topRefS(5, myStruct, "struct"), "field")));
+            selectS(6, stringTS(), refS(5, myStruct, "struct"), "field")));
   }
 
   @Nested
@@ -201,7 +201,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(
-              defValS(2, stringTS(), "result", topRefS(3, stringTS(), "myValue")));
+              defValS(2, stringTS(), "result", refS(3, stringTS(), "myValue")));
     }
 
     @Test
@@ -212,7 +212,8 @@ public class ObjSLoadingTest extends TestingContext {
             myFunc;
           """)
           .loadsWithSuccess()
-          .containsTopRefable(defValS(2, funcTS(stringTS()), "result", topRefS(3, funcTS(stringTS()), "myFunc")));
+          .containsTopRefable(defValS(2, funcTS(stringTS()), "result",
+              refS(3, funcTS(stringTS()), "myFunc")));
     }
 
     @Test
@@ -224,7 +225,8 @@ public class ObjSLoadingTest extends TestingContext {
             myStruct;
           """)
           .loadsWithSuccess()
-          .containsTopRefable(defValS(2, funcTS(structT), "result", topRefS(3, funcTS(structT), "myStruct")));
+          .containsTopRefable(defValS(2, funcTS(structT), "result",
+              refS(3, funcTS(structT), "myStruct")));
     }
   }
 

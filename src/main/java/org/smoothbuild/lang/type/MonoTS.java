@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableCollection;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class MonoTS implements TypeS
-    permits ArrayTS, BaseTS, MonoFuncTS, MergeTS, StructTS, VarS {
+    permits BaseTS, ComposedTS, MergeTS, StructTS, VarS {
   private final VarSetS vars;
   private final String name;
 
@@ -30,6 +30,11 @@ public abstract sealed class MonoTS implements TypeS
   }
 
   @Override
+  public MonoTS mapFreeVars(Function<VarS, VarS> varMapper) {
+    return this;
+  }
+
+  @Override
   public String name() {
     return name;
   }
@@ -41,8 +46,7 @@ public abstract sealed class MonoTS implements TypeS
 
   public static VarSetS calculateVars(ImmutableCollection<MonoTS> types) {
     return types.stream()
-        .map(MonoTS::vars)
-        .flatMap(VarSetS::stream)
+        .flatMap(t -> t.vars().stream())
         .collect(toVarSetS());
   }
 

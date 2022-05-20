@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.ValRefS;
+import org.smoothbuild.lang.define.MonoRefS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
@@ -15,16 +15,16 @@ import org.smoothbuild.out.report.Reporter;
 import com.google.common.collect.ImmutableList;
 
 public class FindTopObjS {
-  public static Optional<List<ValRefS>> findTopObjS(
+  public static Optional<List<MonoRefS>> findTopObjS(
       Reporter reporter, DefsS defs, List<String> names) {
     var topRefables = defs.topRefables();
-    var topRefs = new HashSet<ValRefS>();
+    var topRefs = new HashSet<MonoRefS>();
     var logs = new LogBuffer();
     for (String name : names) {
       var topRefable = topRefables.get(name);
       if (topRefable != null) {
         if (topRefable instanceof ValS value) {
-          topRefs.add(new ValRefS(value.type(), value.name(), commandLineLoc()));
+          topRefs.add(new MonoRefS(value.type(), value.name(), commandLineLoc()));
         } else {
           logs.error(
               "`" + name + "` cannot be calculated as it is not a value but a function.");

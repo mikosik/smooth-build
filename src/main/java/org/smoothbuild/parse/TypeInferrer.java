@@ -1,15 +1,19 @@
 package org.smoothbuild.parse;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
+import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
 import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
-import static org.smoothbuild.parse.ConstructArgList.constructArgList;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.NList.nList;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
+import static org.smoothbuild.util.type.Side.LOWER;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,20 +23,21 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.define.PolyFuncS;
-import org.smoothbuild.lang.like.Param;
-import org.smoothbuild.lang.like.Refable;
-import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.like.Obj;
+import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
-import org.smoothbuild.lang.type.PolyFuncTS;
 import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypingS;
+import org.smoothbuild.lang.type.VarS;
+import org.smoothbuild.lang.type.VarSetS;
+import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
+import org.smoothbuild.lang.type.solver.DenormalizerS;
+import org.smoothbuild.lang.type.solver.SolverS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
-import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.ArrayTN;
 import org.smoothbuild.parse.ast.Ast;
@@ -42,6 +47,7 @@ import org.smoothbuild.parse.ast.CallN;
 import org.smoothbuild.parse.ast.FuncN;
 import org.smoothbuild.parse.ast.FuncTN;
 import org.smoothbuild.parse.ast.ItemN;
+import org.smoothbuild.parse.ast.NamedN;
 import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
@@ -51,7 +57,6 @@ import org.smoothbuild.parse.ast.StructN;
 import org.smoothbuild.parse.ast.TopRefableN;
 import org.smoothbuild.parse.ast.TypeN;
 import org.smoothbuild.parse.ast.ValN;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -77,7 +82,7 @@ public class TypeInferrer {
         var fields = pullUp(map(struct.fields(), ItemN::sig));
         struct.setTypeO(fields.map(f -> typeFS.struct(struct.name(), nList(f))));
         struct.ctor().setTypeO(
-            fields.map(s -> typeFS.polyFunc(struct.typeO().get(), map(s, ItemSigS::type))));
+            fields.map(s -> typeFS.func(struct.typeO().get(), map(s, ItemSigS::type))));
       }
 
       @Override
@@ -100,13 +105,14 @@ public class TypeInferrer {
 
       @Override
       public void visitFunc(FuncN funcN) {
+        funcN.resTN().ifPresent(this::visitType);
         visitParams(funcN.params());
         funcN.body().ifPresent(this::visitObj);
         var resN = funcN.resTN().orElse(null);
-        funcN.setTypeO(funcTOpt(resN, evalTOfTopEval(funcN), funcN.paramTSs()));
+        funcN.setTypeO(funcTOpt(resN, evalTOfTopEval(funcN), funcN.paramTs()));
       }
 
-      private Optional<PolyTS> funcTOpt(TypeN resN, Optional<MonoTS> result,
+      private Optional<FuncTS> funcTOpt(TypeN resN, Optional<MonoTS> result,
           Optional<ImmutableList<MonoTS>> params) {
         if (result.isEmpty() || params.isEmpty()) {
           return empty();
@@ -117,7 +123,7 @@ public class TypeInferrer {
             .collect(toVarSetS());
         var r = result.get();
         if (paramVars.containsAll(r.vars())) {
-          return Optional.of(typeFS.polyFunc(r, ps));
+          return Optional.of(paramVars.isEmpty() ? typeFS.func(r, ps) :  typeFS.polyFunc(r, ps));
         }
         logError(
             resN, "Function result type has type variable(s) not present in any parameter type.");
@@ -126,6 +132,7 @@ public class TypeInferrer {
 
       @Override
       public void visitValue(ValN valN) {
+        valN.typeN().ifPresent(this::visitType);
         valN.body().ifPresent(this::visitObj);
         valN.setTypeO(evalTOfTopEval(valN));
       }
@@ -137,39 +144,126 @@ public class TypeInferrer {
       }
 
       private Optional<MonoTS> typeOfParam(ItemN param) {
-        return evalTypeOf(param, (target, source) -> {
-          if (!typing.isParamAssignable(target, source)) {
-            logError(param, "Parameter " + param.q() + " is of type " + target.q()
-                + " so it cannot have default argument of type " + source.q() + ".");
-          }
-        });
+        return evalTypeOf(
+            param,
+            (bodyT, targetT) -> logError(param, "Parameter " + param.q() + " is of type "
+                + targetT.q() + " so it cannot have default argument of type " + bodyT.q() + "."));
       }
 
       private Optional<MonoTS> evalTOfTopEval(TopRefableN refableN) {
-        return evalTypeOf(refableN, (target, source) -> {
-          if (!typing.isAssignable(target, source)) {
-            logError(refableN, "`" + refableN.name() + "` has body which type is " + source.q()
-                + " and it is not convertible to its declared type " + target.q() + ".");
-          }
-        });
+        return evalTypeOf(
+            refableN,
+            (bodyT, targetT) -> bodyConversionError(refableN, bodyT, targetT));
+      }
+
+      private void bodyConversionError(NamedN refableN, TypeS sourceT, MonoTS targetT) {
+        logError(refableN, refableN.q() + " has body which type is " + sourceT.q()
+            + " and it is not convertible to its declared type " + targetT.q() + ".");
+      }
+
+      private Optional<MonoTS> inferMonoizedBodyT(TypeS bodyT, MonoTS targetT) {
+        var mappedBodyT = bodyT.mapFreeVars(v -> v.prefixed("body"));
+        var solver = new SolverS(typeFS);
+        try {
+          solver.addConstr(constrS(mappedBodyT, targetT));
+        } catch (ConstrDecomposeExc e) {
+          return empty();
+        }
+        var constrGraph = solver.graph();
+        var denormalizer = new DenormalizerS(typeFS, constrGraph);
+        var typeS = denormalizeAndResolveMerges(denormalizer, mappedBodyT);
+        if (typeS.includes(typeFS.any())) {
+          return empty();
+        }
+        return Optional.of(typeS);
+      }
+
+      private MonoTS denormalizeAndResolveMerges(DenormalizerS denormalizer, MonoTS typeS) {
+        var denormalizedT = denormalizer.denormalizeVars(typeS, LOWER);
+        return typing.resolveMerges(denormalizedT);
       }
 
       private Optional<MonoTS> evalTypeOf(
-          RefableN refable, BiConsumer<MonoTS, MonoTS> assignmentChecker) {
+          RefableN refable, BiConsumer<TypeS, MonoTS> bodyAssignmentErrorReporter) {
+        if (evalTHasProblems(refable)) {
+          return empty();
+        }
+
         if (refable.body().isPresent()) {
-          var exprT = refable.body().get().typeO();
-          if (refable.evalTN().isPresent()) {
-            var type = createType(refable.evalTN().get());
-            type.ifPresent(target -> exprT.ifPresent(source -> {
-              assignmentChecker.accept(target, TypeS.hackyCast(source));
+          var body = refable.body().get();
+          var bodyT = body.typeO();
+          if (refable.evalT().isPresent()) {
+            var evalTS = createType(refable.evalT().get());
+            evalTS.ifPresent(targetT -> bodyT.ifPresent(sourceT -> {
+              var inferredT = inferMonoizedBodyT(sourceT, targetT);
+              if (inferredT.isEmpty()) {
+                bodyAssignmentErrorReporter.accept(sourceT, targetT);
+              } else if (body instanceof RefN refN && bodyT.get() instanceof PolyTS) {
+                refN.setInferredMonoType(inferredT.get());
+              }
             }));
-            return type;
+            return evalTS;
           } else {
-            return exprT.map(TypeS::hackyCast);
+            return bodyT.flatMap((TypeS t) -> switch (t) {
+              case MonoTS monoTS -> Optional.of(monoTS);
+              case PolyTS polyTS -> {
+                logError(refable, ("Cannot infer type parameters to convert function reference "
+                    + "%s to monomorphic function. You need to specify type of " + refable.q()
+                    + " explicitly.").formatted(((RefN) body).referenced().q()));
+                yield empty();
+              }
+              case default -> throw unexpectedCaseExc(t);
+            });
           }
         } else {
-          return createType(refable.evalTN().get());
+          return createType(refable.evalT().get());
         }
+      }
+
+      private boolean evalTHasProblems(RefableN refable) {
+        if (refable.evalT().isEmpty()) {
+          return false;
+        }
+        TypeN typeN = refable.evalT().get();
+        Optional<MonoTS> typeS = typeN.typeO();
+        if (typeS.isEmpty()) {
+          return true;
+        }
+        VarSetS evalTVars = typeS.get().vars();
+        return switch (refable) {
+          case ItemN itemN -> false;
+          case FuncN funcN -> !evalTypeVarsArePresentInParameters(funcN, typeN, evalTVars);
+          case ValN valN -> evalTypeHasVars(typeN, evalTVars);
+        };
+      }
+
+      private boolean evalTypeVarsArePresentInParameters(FuncN funcN,
+          TypeN typeN, VarSetS evalTVars) {
+        if (funcN.paramTs().isEmpty()) {
+          return false;
+        }
+        VarSetS paramVars = funcN.paramTs().get()
+            .stream()
+            .flatMap(p -> p.vars().stream())
+            .collect(toVarSetS());
+        var unknownVars = filter(evalTVars.asList(), var -> !paramVars.contains(var));
+        if (!unknownVars.isEmpty()) {
+          logUnknownVars(typeN, unknownVars);
+          return false;
+        }
+        return true;
+      }
+
+      private boolean evalTypeHasVars(TypeN typeN, VarSetS evalTVars) {
+        if (evalTVars.isEmpty()) {
+          return false;
+        }
+        logUnknownVars(typeN, evalTVars.asList());
+        return false;
+      }
+
+      private void logUnknownVars(TypeN typeN, ImmutableList<VarS> unknownVars) {
+        logError(typeN, "Unknown type variable(s): " + toCommaSeparatedString(unknownVars));
       }
 
       @Override
@@ -248,92 +342,60 @@ public class TypeInferrer {
         if (expressions.isEmpty()) {
           return Optional.of(typeFS.array(typeFS.nothing()));
         }
-        Optional<? extends TypeS> firstType = expressions.get(0).typeO();
-        if (firstType.isEmpty()) {
+
+        var map = map(expressions, AstNode::typeO);
+        var elemTsOpt = pullUp(map);
+        if (elemTsOpt.isEmpty()) {
           return empty();
         }
+        var elemTs = elemTsOpt.get();
+        if (!elemTs.isEmpty() && elemTs.stream().allMatch(t -> t instanceof PolyTS)) {
+          ObjN firstElem = expressions.get(0);
+          String funcName = ((RefN) firstElem).referenced().q();
+          logError(firstElem, "Cannot infer type parameters to convert function reference "
+              +  funcName + " to monomorphic function.");
+          return empty();
+        }
+        var prefixedElemTs = prefixFreeVarsWithIndex(elemTs);
+        var solver = new SolverS(typeFS);
 
-        MonoTS type = TypeS.hackyCast(firstType.get());
-        for (int i = 1; i < expressions.size(); i++) {
-          ObjN elem = expressions.get(i);
-          Optional<? extends TypeS> elemT = elem.typeO();
-          if (elemT.isEmpty()) {
-            return empty();
-          }
-          type = typing.mergeUp(type, TypeS.hackyCast(elemT.get()));
-          if (typing.contains(type, typeFS.any())) {
-            logError(elem,
-                "Array elems at indexes 0 and " + i + " doesn't have common super type."
-                + "\nElement at index 0 type = " + expressions.get(0).typeO().get().q()
-                + "\nElement at index " + i + " type = " + elemT.get().q());
+        var a = typeFS.var("array.A");
+        for (MonoTS prefixedElemT : prefixedElemTs) {
+          try {
+            solver.addConstr(constrS(prefixedElemT, a));
+          } catch (ConstrDecomposeExc e) {
+            arrayElemError(array);
             return empty();
           }
         }
-        return Optional.of(typeFS.array(type));
+
+        var constrGraph = solver.graph();
+        var denormalizer = new DenormalizerS(typeFS, constrGraph);
+        var inferredElemT = denormalizeAndResolveMerges(denormalizer, a);
+        for (int i = 0; i < prefixedElemTs.size(); i++) {
+          storeActualTypeIfNeeded(expressions.get(i), inferredElemT, denormalizer);
+        }
+        if (inferredElemT.includes(typeFS.any())) {
+          arrayElemError(array);
+          return empty();
+        }
+        return Optional.of(typeFS.array(inferredElemT));
+      }
+
+      private void arrayElemError(OrderN array) {
+        logError(array, "Array elements don't have common super type.");
+      }
+
+      private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, DenormalizerS denormalizer) {
+        if (obj instanceof RefN refN && refN.referenced().typeO().get() instanceof PolyTS) {
+          refN.setInferredMonoType(denormalizeAndResolveMerges(denormalizer, monoTS));
+        }
       }
 
       @Override
       public void visitCall(CallN call) {
         super.visitCall(call);
-        ObjN callee = call.callee();
-        Optional<? extends TypeS> calledT = callee.typeO();
-        if (calledT.isEmpty()) {
-          call.setTypeO(empty());
-        } else if (!(calledT.get() instanceof MonoFuncTS || calledT.get() instanceof PolyFuncTS)) {
-          logError(call, description(callee) + " cannot be called as it is not a function but "
-              + calledT.get().q() + ".");
-          call.setTypeO(empty());
-        } else {
-          var funcParams = funcParams(callee);
-          if (funcParams.isEmpty()) {
-            call.setTypeO(empty());
-          } else {
-            var params = funcParams.get();
-            Maybe<ImmutableList<ArgN>> args = constructArgList(call, params);
-            if (args.containsProblem()) {
-              logBuffer.logAll(args.logs());
-              call.setTypeO(empty());
-            } else if (someArgHasNotInferredType(args.value())) {
-              call.setTypeO(empty());
-            } else {
-              call.setAssignedArgs(args.value());
-              Maybe<MonoTS> type = callTypeInferrer.inferCallT(call, castToFuncTS(calledT.get()).res(), params);
-              logBuffer.logAll(type.logs());
-              call.setTypeO(type.valueOptional());
-            }
-          }
-        }
-      }
-
-      public static Optional<NList<Param>> funcParams(ObjN callee) {
-        if (callee instanceof RefN refN) {
-          Refable referenced = refN.referenced();
-          if (referenced instanceof PolyFuncS polyFuncS) {
-            var funcS = polyFuncS.func();
-            return Optional.of(funcS.params().map(p -> new Param(p.sig(), p.body())));
-          } else if (referenced instanceof FuncN funcN) {
-            var params = map(
-                funcN.params().list(), p -> p.sig().map(sig -> new Param(sig, p.body())));
-            return pullUp(params).map(NList::nList);
-          }
-        }
-        return callee.typeO().map(t -> funcTParams(t));
-      }
-
-      private static NList<Param> funcTParams(TypeS funcType) {
-        return nList(map(castToFuncTS(funcType).params(), p -> new Param(itemSigS(p), empty())));
-      }
-
-      private static boolean someArgHasNotInferredType(ImmutableList<ArgN> args) {
-        return args.stream()
-            .anyMatch(a -> a.typeO().isEmpty());
-      }
-
-      private static String description(ObjN node) {
-        if (node instanceof RefN refN) {
-          return "`" + refN.name() + "`";
-        }
-        return "expression";
+        call.setTypeO(callTypeInferrer.inferCallT(call, logBuffer));
       }
 
       @Override
@@ -353,10 +415,5 @@ public class TypeInferrer {
       }
     }.visitAst(ast);
     return logBuffer.toList();
-  }
-
-  private static MonoFuncTS castToFuncTS(TypeS funcType) {
-    // TODO handle polymorphic correctly
-    return (MonoFuncTS) TypeS.hackyCast(funcType);
   }
 }

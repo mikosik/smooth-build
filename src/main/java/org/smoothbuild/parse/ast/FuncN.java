@@ -7,16 +7,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
-import org.smoothbuild.lang.type.PolyFuncTS;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncN extends PolyRefableN implements PolyTopRefableN {
+public final class FuncN extends GenericRefableN implements TopRefableN {
   private final Optional<TypeN> resTN;
   private final NList<ItemN> params;
+  private Optional<FuncTS> type;
 
   public FuncN(Optional<TypeN> resTN, String name, List<ItemN> params, Optional<ObjN> body,
       Optional<AnnN> ann, Loc loc) {
@@ -39,15 +40,24 @@ public final class FuncN extends PolyRefableN implements PolyTopRefableN {
   }
 
   @Override
-  public Optional<TypeN> evalTN() {
+  public Optional<TypeN> evalT() {
     return resTN;
   }
 
-  public Optional<ImmutableList<MonoTS>> paramTSs() {
+  public Optional<ImmutableList<MonoTS>> paramTs() {
     return Optionals.pullUp(map(params(), ItemN::typeO));
   }
 
-  public Optional<MonoTS> resTS() {
-    return typeO().map(f -> ((PolyFuncTS) f).type().res());
+  @Override
+  public Optional<FuncTS> typeO() {
+    return type;
+  }
+
+  public void setTypeO(FuncTS type) {
+    setTypeO(Optional.of(type));
+  }
+
+  public void setTypeO(Optional<FuncTS> type) {
+    this.type = type;
   }
 }

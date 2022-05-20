@@ -17,7 +17,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.type.ConstrS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableSet;
@@ -191,22 +190,6 @@ public class NormalizerSTest extends TestingTS {
       assertThat(normalize(constrS(varA(), varB())))
           .isEqualTo(set(constrS(varA(), varB())));
     }
-  }
-
-  private VarS v0() {
-    return var("_0");
-  }
-
-  private VarS v1() {
-    return var("_1");
-  }
-
-  private VarS v2() {
-    return var("_2");
-  }
-
-  private VarS v3() {
-    return var("_3");
   }
 
   private ImmutableSet<ConstrS> normalize(ConstrS constr) {

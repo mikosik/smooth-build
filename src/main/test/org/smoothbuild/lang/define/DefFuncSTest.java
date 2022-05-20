@@ -11,6 +11,6 @@ public class DefFuncSTest extends TestingContext {
   public void to_string() {
     var func = defFuncS(stringTS(), "myFunc", intS(17), nList(itemS(intTS(), "myParam")));
     assertThat(func.toString())
-        .isEqualTo("<>String myFunc(Int myParam) = ?");
+        .isEqualTo("String myFunc(Int myParam) = ?");
   }
 }

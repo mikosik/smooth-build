@@ -121,7 +121,7 @@ public class DeduceVarMap {
         throw new IllegalArgumentException(
             ("Deduced bounds (%s) for variable %s are not legal. They generate additional "
                 + "constraints %s.")
-                .formatted(constr, entry.getKey(), constr));
+                .formatted(constr, entry.getKey(), constrs));
       }
     } catch (ConstrDecomposeExc e) {
       throw new IllegalArgumentException(

@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Polymorphic type.
@@ -15,14 +16,18 @@ public sealed abstract class PolyTS implements TypeS
   private final MonoTS type;
 
   public PolyTS(VarSetS freeVars, MonoTS type) {
-    checkArgument(type.vars().containsAll(freeVars),
-        "Free variable(s) " + freeVars + " are not present in type " + type.q() + ".");
-    this.name = calculateName(type, freeVars);
+    assertFreeVarsArePresentInType(freeVars, type);
+    this.name = calculateName(freeVars, type);
     this.freeVars = requireNonNull(freeVars);
     this.type = requireNonNull(type);
   }
 
-  private static String calculateName(MonoTS type, VarSetS freeVars) {
+  private static void assertFreeVarsArePresentInType(VarSetS freeVars, MonoTS type) {
+    checkArgument(type.vars().containsAll(freeVars),
+        "Free variable(s) " + freeVars + " are not present in type " + type.q() + ".");
+  }
+
+  private static String calculateName(VarSetS freeVars, MonoTS type) {
     return freeVars.toString() + type.name();
   }
 
@@ -35,8 +40,13 @@ public sealed abstract class PolyTS implements TypeS
     return freeVars;
   }
 
-  public MonoTS type() {
+  public MonoTS mono() {
     return type;
+  }
+
+  @Override
+  public MonoTS mapFreeVars(Function<VarS, VarS> varMapper) {
+    return type.mapVars(v -> freeVars.contains(v) ? varMapper.apply(v) : v);
   }
 
   @Override

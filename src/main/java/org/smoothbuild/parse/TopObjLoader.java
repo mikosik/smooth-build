@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.lang.define.PolyFuncS.polyFuncS;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -15,20 +16,23 @@ import org.smoothbuild.lang.define.DefValS;
 import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ModPath;
+import org.smoothbuild.lang.define.MonoFuncS;
 import org.smoothbuild.lang.define.MonoObjS;
+import org.smoothbuild.lang.define.MonoRefS;
+import org.smoothbuild.lang.define.MonoizeS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
-import org.smoothbuild.lang.define.PolyFuncS;
+import org.smoothbuild.lang.define.PolyRefS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.TopRefableS;
-import org.smoothbuild.lang.define.ValRefS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.like.MonoTopRefable;
 import org.smoothbuild.lang.like.Obj;
-import org.smoothbuild.lang.like.PolyTopRefable;
 import org.smoothbuild.lang.like.Refable;
+import org.smoothbuild.lang.like.TopRefable;
 import org.smoothbuild.lang.type.ArrayTS;
+import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.parse.ast.AnnN;
@@ -76,20 +80,24 @@ public class TopObjLoader {
     }
   }
 
-  private PolyFuncS loadFunc(ModPath path, FuncN funcN) {
+  private TopRefableS loadFunc(ModPath path, FuncN funcN) {
     var params = loadParams(funcN);
-    var resT = funcN.resTS().get();
+    var resT = funcN.typeO().get().res();
     var name = funcN.name();
     var loc = funcN.loc();
     var paramTs = map(params, ItemS::type);
     var funcT = typeFS.func(resT, paramTs);
     if (funcN.ann().isPresent()) {
       var ann = loadAnn(funcN.ann().get());
-      return PolyFuncS.polyFuncS(new AnnFuncS(ann, funcT, path, name, params, loc));
+      return polimorphizeIfNeeded(new AnnFuncS(ann, funcT, path, name, params, loc));
     } else {
       var body = createObj(funcN.body().get());
-      return PolyFuncS.polyFuncS(new DefFuncS(funcT, path, name, params, body, loc));
+      return polimorphizeIfNeeded(new DefFuncS(funcT, path, name, params, body, loc));
     }
+  }
+
+  private TopRefableS polimorphizeIfNeeded(MonoFuncS funcS) {
+    return funcS.type().vars().isEmpty() ? funcS : polyFuncS(funcS);
   }
 
   private AnnS loadAnn(AnnN annN) {
@@ -153,8 +161,14 @@ public class TopObjLoader {
     Refable referenced = ref.referenced();
     return switch (referenced) {
       case ItemN itemN -> new ParamRefS(itemN.typeO().get(), ref.name(), ref.loc());
-      case MonoTopRefable mono -> new ValRefS(mono.typeO().get(), ref.name(), ref.loc());
-      case PolyTopRefable poly -> new ValRefS(poly.typeO().get().type(), ref.name(), ref.loc());
+      case TopRefable topRefable -> switch (topRefable.typeO().get()) {
+        case MonoTS monoTS -> new MonoRefS(monoTS, ref.name(), ref.loc());
+        case PolyTS polyTS -> {
+          var funcRefS = new PolyRefS(polyTS, ref.name(), ref.loc());
+          yield new MonoizeS(ref.inferredMonoT(), funcRefS, ref.loc());
+        }
+        default -> throw unexpectedCaseExc(topRefable.typeO().get());
+      };
       default -> throw unexpectedCaseExc(referenced);
     };
   }

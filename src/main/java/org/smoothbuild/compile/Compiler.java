@@ -3,11 +3,13 @@ package org.smoothbuild.compile;
 import static org.smoothbuild.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_PURE;
+import static org.smoothbuild.lang.type.solver.DeduceVarMap.deduceVarMap;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
+import static org.smoothbuild.util.collect.Maps.map;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -51,13 +53,14 @@ import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.MonoFuncS;
 import org.smoothbuild.lang.define.MonoObjS;
+import org.smoothbuild.lang.define.MonoRefS;
+import org.smoothbuild.lang.define.MonoizeS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
 import org.smoothbuild.lang.define.PolyFuncS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.SyntCtorS;
-import org.smoothbuild.lang.define.ValRefS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.MonoFuncTS;
@@ -78,7 +81,7 @@ public class Compiler {
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
   private final Deque<NList<ItemS>> callStack;
-  private final Map<String, FuncB> funcCache;
+  private final Map<CacheKey, FuncB> funcCache;
   private final Map<String, ObjB> valCache;
   private final Map<ObjB, Nal> nals;
 
@@ -101,15 +104,16 @@ public class Compiler {
     return ImmutableMap.copyOf(nals);
   }
 
-  private FuncB compileFunc(MonoFuncS funcS) {
-    return computeIfAbsent(funcCache, funcS.name(), name -> compileFuncImpl(funcS));
+  private FuncB compileMonoFunc(MonoFuncS monoFuncS, Map<String, TypeB> varMap) {
+    var key = new CacheKey(monoFuncS.name(), varMap);
+    return computeIfAbsent(funcCache, key, name -> compileMonoFuncImpl(monoFuncS, varMap));
   }
 
-  private FuncB compileFuncImpl(MonoFuncS funcS) {
+  private FuncB compileMonoFuncImpl(MonoFuncS funcS, Map<String, TypeB> varMap) {
     try {
       callStack.push(funcS.params());
       var funcB = switch (funcS) {
-        case AnnFuncS n -> compileAnnFunc(n);
+        case AnnFuncS n -> compileAnnFunc(n, varMap);
         case DefFuncS d -> compileDefFunc(d);
         case SyntCtorS c -> compileSyntCtor(c);
       };
@@ -120,17 +124,20 @@ public class Compiler {
     }
   }
 
-  private FuncB compileAnnFunc(AnnFuncS annFuncS) {
+  private FuncB compileAnnFunc(AnnFuncS annFuncS, Map<String, TypeB> varMap) {
     var annName = annFuncS.ann().name();
     return switch (annName) {
-      case BYTECODE -> fetchFuncBytecode(annFuncS);
+      case BYTECODE -> fetchFuncBytecode(annFuncS, varMap);
       case NATIVE_PURE, NATIVE_IMPURE -> compileNatFunc(annFuncS);
       default -> throw new CompilerExc("Illegal function annotation: " + annName + ".");
     };
   }
 
-  private FuncB fetchFuncBytecode(AnnFuncS annFuncS) {
-    return (FuncB) fetchBytecode(annFuncS.ann(), convertFuncT(annFuncS.type()), annFuncS.name());
+  private FuncB fetchFuncBytecode(AnnFuncS annFuncS, Map<String, TypeB> varMap) {
+    var ann = annFuncS.ann();
+    var funcTB = convertFuncT(annFuncS.type());
+    var name = annFuncS.name();
+    return (FuncB) fetchBytecode(ann, funcTB, name, varMap);
   }
 
   private FuncB compileDefFunc(DefFuncS defFuncS) {
@@ -201,14 +208,22 @@ public class Compiler {
   private ObjB compileAnnVal(AnnValS annValS) {
     var annName = annValS.ann().name();
     return switch (annName) {
-      case BYTECODE ->  fetchBytecode(annValS.ann(), convertT(annValS.type()), annValS.name());
+      case BYTECODE ->  fetchValBytecode(annValS);
       default -> throw new CompilerExc("Illegal value annotation: " + annName + ".");
     };
   }
 
-  private ObjB fetchBytecode(AnnS ann, TypeB typeB, String name) {
+  private ObjB fetchValBytecode(AnnValS annValS) {
+    var ann = annValS.ann();
+    var typeB = convertT(annValS.type());
+    var name = annValS.name();
+    var varMap = ImmutableMap.<String, TypeB>of();
+    return fetchBytecode(ann, typeB, name, varMap);
+  }
+
+  private ObjB fetchBytecode(AnnS ann, TypeB typeB, String name, Map<String, TypeB> varMap) {
     var jar = loadNativeJar(ann.loc());
-    var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string());
+    var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string(), varMap);
     if (!bytecodeTry.isPresent()) {
       throw new CompilerExc(ann.loc() + ": " + bytecodeTry.error());
     }
@@ -231,14 +246,14 @@ public class Compiler {
       case BlobS blobS -> compileAndCacheNal(blobS, this::compileBlob);
       case CallS callS -> compileAndCacheNal(callS, this::compileCall);
       case IntS intS -> compileAndCacheNal(intS, this::compileInt);
+      case MonoizeS monoizeS -> compileMonoize(monoizeS);
+      case MonoFuncS monoFuncS -> compileMonoFunc(monoFuncS, ImmutableMap.of());
+      case MonoRefS monoRefS -> compileMonoRef(monoRefS);
       case OrderS orderS -> compileAndCacheNal(orderS, this::compileOrder);
       case ParamRefS paramRefS -> compileAndCacheNal(paramRefS, this::compileParamRef);
-      case ValRefS valRefS -> compileTopRef(valRefS);
       case SelectS selectS -> compileAndCacheNal(selectS, this::compileSelect);
       case StringS stringS -> compileAndCacheNal(stringS, this::compileString);
-      case AnnValS annValS -> throw unexpectedCaseExc(objS); // TODO remove?
-      case DefValS defValS -> throw unexpectedCaseExc(objS); // TODO remove?
-      case MonoFuncS funcS -> throw unexpectedCaseExc(objS); // TODO remove?
+      case ValS v -> compileVal(v);
     };
   }
 
@@ -270,6 +285,21 @@ public class Compiler {
     return bytecodeF.int_(intS.bigInteger());
   }
 
+  private FuncB compileMonoize(MonoizeS monoizeS) {
+    var varMap = deduceVarMap(monoizeS.funcRef().type().mono(), monoizeS.type());
+    var varMapB = map(varMap, MonoTS::name, this::convertT);
+    typeSbConv.addLastVarMap(varMapB);
+    try {
+      var topRefableS = defs.topRefables().get(monoizeS.funcRef().name());
+      return switch (topRefableS) {
+        case PolyFuncS polyFuncS -> compileMonoFunc(polyFuncS.func(), varMapB);
+        default -> throw unexpectedCaseExc(topRefableS);
+      };
+    } finally {
+      typeSbConv.removeLastVarMap();
+    }
+  }
+
   private OrderB compileOrder(OrderS orderS) {
     var arrayTB = convertArrayT(orderS.type());
     var elemsB = compileObjs(orderS.elems());
@@ -281,10 +311,11 @@ public class Compiler {
     return bytecodeF.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
   }
 
-  private ObjB compileTopRef(ValRefS valRefS) {
-    return switch (defs.topRefables().get(valRefS.name())) {
-      case PolyFuncS f -> compileFunc(f.func()); // TODO workaround hack
-      case ValS v -> compileVal(v);
+  private ObjB compileMonoRef(MonoRefS monoRefS) {
+    return switch (defs.topRefables().get(monoRefS.name())) {
+      case MonoFuncS monoFuncS -> compileObj(monoFuncS);
+      case ValS valS -> compileObj(valS);
+      case PolyFuncS f -> throw unexpectedCaseExc(f);
     };
   }
 
@@ -328,5 +359,8 @@ public class Compiler {
 
   private FuncTB convertFuncT(MonoFuncTS monoFuncTS) {
     return typeSbConv.convert(monoFuncTS);
+  }
+
+  private static record CacheKey(String funcName, Map<String, TypeB> varMap) {
   }
 }

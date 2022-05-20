@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.compile.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import org.smoothbuild.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.testing.func.bytecode.NonStaticMethod;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.WithNonObjRes;
-import org.smoothbuild.testing.func.bytecode.WithTwoParams;
+import org.smoothbuild.testing.func.bytecode.WithThreeParams;
 import org.smoothbuild.testing.func.bytecode.WithoutBytecodeF;
 import org.smoothbuild.util.collect.Try;
 
@@ -79,10 +80,10 @@ public class BytecodeMethodLoaderTest extends TestingContext {
   }
 
   @Test
-  public void loading_method_with_two_params_causes_error() throws Exception {
-    var method = WithTwoParams.class.getDeclaredMethod(BYTECODE_METHOD_NAME,
-        BytecodeF.class, BytecodeF.class);
-    assertLoadingCausesError(method, "Providing method has more than one parameter.");
+  public void loading_method_with_three_params_causes_error() throws Exception {
+    var method = WithThreeParams.class.getDeclaredMethod(BYTECODE_METHOD_NAME,
+        BytecodeF.class, Map.class, Map.class);
+    assertLoadingCausesError(method, "Providing method parameter count is different than 2.");
   }
 
   @Test
@@ -111,6 +112,6 @@ public class BytecodeMethodLoaderTest extends TestingContext {
   }
 
   private static Method fetchJMethod(Class<?> clazz) throws NoSuchMethodException {
-    return clazz.getDeclaredMethod(BYTECODE_METHOD_NAME, BytecodeF.class);
+    return clazz.getDeclaredMethod(BYTECODE_METHOD_NAME, BytecodeF.class, Map.class);
   }
 }

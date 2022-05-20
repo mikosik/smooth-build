@@ -4,12 +4,12 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
 
-public sealed abstract class PolyRefableN extends PolyNamedN implements RefableN
+public sealed abstract class GenericRefableN extends GenericNamedN implements RefableN
     permits FuncN {
   private final Optional<ObjN> body;
   private final Optional<AnnN> ann;
 
-  public PolyRefableN(String name, Optional<ObjN> body, Optional<AnnN> ann, Loc loc) {
+  public GenericRefableN(String name, Optional<ObjN> body, Optional<AnnN> ann, Loc loc) {
     super(name, loc);
     this.body = body;
     this.ann = ann;
@@ -27,7 +27,7 @@ public sealed abstract class PolyRefableN extends PolyNamedN implements RefableN
 
   @Override
   public final boolean equals(Object object) {
-    return object instanceof PolyRefableN that
+    return object instanceof GenericRefableN that
         && this.name().equals(that.name());
   }
 

@@ -13,7 +13,7 @@ public sealed interface MonoObjS extends ObjS, MonoObj permits MonoTopRefableS, 
   public MonoTS type();
 
   @Override
-  public default Optional<MonoTS> typeO() {
+  public default Optional<? extends MonoTS> typeO() {
     return Optional.of(type());
   }
 }

@@ -1,5 +1,5 @@
 package org.smoothbuild.lang.define;
 
 public sealed interface MonoExprS extends MonoObjS
-    permits CallS, OrderS, ParamRefS, SelectS, ValRefS {
+    permits CallS, MonoizeS, MonoRefS, OrderS, ParamRefS, SelectS {
 }

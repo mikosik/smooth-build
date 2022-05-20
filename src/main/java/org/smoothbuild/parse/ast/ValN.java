@@ -18,7 +18,7 @@ public final class ValN extends MonoRefableN implements MonoTopRefableN {
   }
 
   @Override
-  public Optional<TypeN> evalTN() {
+  public Optional<TypeN> evalT() {
     return typeN();
   }
 }

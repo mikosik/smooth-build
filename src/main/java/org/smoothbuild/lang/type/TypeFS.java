@@ -9,7 +9,6 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
@@ -99,13 +98,6 @@ public class TypeFS {
     return switch (side) {
       case LOWER -> nothing();
       case UPPER -> any();
-    };
-  }
-
-  public Bounds<MonoTS> oneSideBound(Side side, MonoTS type) {
-    return switch (side) {
-      case LOWER-> new Bounds<>(type, any());
-      case UPPER -> new Bounds<>(nothing(), type);
     };
   }
 }

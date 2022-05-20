@@ -68,6 +68,6 @@ public class NormalizerS {
   }
 
   public VarS newTempVar() {
-    return typeF.var("_" + currentId++);
+    return typeF.var(Integer.toString(currentId++)).prefixed("_");
   }
 }

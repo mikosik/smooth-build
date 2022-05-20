@@ -304,29 +304,29 @@ public class DeclarationTest extends TestingContext {
               A myValue = myId("abc");
           """;
           module(code)
-              .loadsWithError(3, "`myValue` has body which type is `String` and it is "
-                  + "not convertible to its declared type `A`.");
+              .loadsWithError(3, "Unknown type variable(s): A");
         }
 
         @Test
-        public void can_be_polytype_assigned_from_func() {
+        public void cannot_be_polytype_assigned_from_func() {
           var code = """
               @Native("Impl.met")
               A myId(A param);
               A(A) myValue = myId;
           """;
-          module(code).loadsWithSuccess();
+          module(code)
+              .loadsWithError(3, "Unknown type variable(s): A");
         }
 
         @Test
-        public void cannot_be_monotype_assigned_from_polytype_func() {
+        public void can_be_monotype_function_assigned_from_polytype_func() {
           var code = """
               @Native("Impl.met")
               A myId(A param);
               Int(Int) myValue = myId;
           """;
-          module(code).loadsWithError(3, "`myValue` has body which type is `A(A)` and it is not"
-              + " convertible to its declared type `Int(Int)`.");
+          module(code)
+              .loadsWithSuccess();
         }
 
         @Test
@@ -566,29 +566,17 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void cannot_be_single_var_polytype_when_no_param_type_has_such_var() {
+          public void cannot_contain_var_not_present_in_any_param_type() {
             var code = """
                 @Native("Impl.met")
                 A myFunc(B b, C c);
                 """;
             module(code)
-                .loadsWithError(2,
-                    "Function result type has type variable(s) not present in any parameter type.");
+                .loadsWithError(2, "Unknown type variable(s): A");
           }
 
           @Test
-          public void cannot_be_polytype_func() {
-            var code = """
-                @Native("Impl.met")
-                A(A) myFunc(B b, C c);
-                """;
-            module(code)
-                .loadsWithError(2,
-                    "Function result type has type variable(s) not present in any parameter type.");
-          }
-
-          @Test
-          public void can_be_single_var_polytype_when_param_type_has_such_var() {
+          public void can_contain_var_that_is_present_in_some_param_type() {
             var code = """
                 @Native("Impl.met")
                 A myFunc(A a);
@@ -598,7 +586,17 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void can_be_supertype_of_func_expression() {
+          public void cannot_be_polytype_func() {
+            var code = """
+                @Native("Impl.met")
+                A(A) myFunc(B b, C c);
+                """;
+            module(code)
+                .loadsWithError(2, "Unknown type variable(s): A");
+          }
+
+          @Test
+          public void can_be_supertype_of_func_body() {
             module("""
                 @Native("impl")
                 Nothing nothingFunc();
@@ -759,19 +757,19 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void polytype_param_can_have_default_arg() {
+        public void param_with_vars_can_have_default_arg() {
           module("""
-        A myFunc(A value = "abc") = value;
-        """)
+              A myFunc(A value = "abc") = value;
+              """)
               .loadsWithSuccess();
         }
 
         @Test
-        public void default_arg_gets_converted_to_polytype_param() {
+        public void default_arg_gets_converted_to_param_type() {
           module("""
-        [A] myFunc(A param1, [A] param2 = []) = param2;
-        [String] result = myFunc("abc");
-        """)
+              [String] myFunc(String param1, [String] param2 = []) = param2;
+              [String] result = myFunc("abc");
+              """)
               .loadsWithSuccess();
         }
       }
@@ -1045,7 +1043,7 @@ public class DeclarationTest extends TestingContext {
               .loadsWithSuccess()
               .containsTopRefable(defValS(2, blobTS(), "result",
                   callS(2, blobTS(),
-                      topRefS(2, funcTS(blobTS(), list(blobTS())), "myFunc"),
+                      refS(2, funcTS(blobTS(), list(blobTS())), "myFunc"),
                       blobS(2, 7))));
         }
 

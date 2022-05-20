@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public final class MonoFuncTS extends MonoTS implements ComposedTS {
+public final class MonoFuncTS extends ComposedTS implements FuncTS {
   private final MonoTS res;
   private final ImmutableList<MonoTS> params;
 
@@ -43,10 +43,12 @@ public final class MonoFuncTS extends MonoTS implements ComposedTS {
     }
   }
 
+  @Override
   public MonoTS res() {
     return res;
   }
 
+  @Override
   public ImmutableList<MonoTS> params() {
     return params;
   }

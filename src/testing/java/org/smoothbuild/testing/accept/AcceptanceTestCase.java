@@ -34,7 +34,7 @@ import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.fs.space.Space;
-import org.smoothbuild.lang.define.ValRefS;
+import org.smoothbuild.lang.define.MonoRefS;
 import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
@@ -58,7 +58,7 @@ public class AcceptanceTestCase extends TestingContext {
   private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
-  private Optional<Map<ValRefS, CnstB>> artifacts;
+  private Optional<Map<MonoRefS, CnstB>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
@@ -134,7 +134,7 @@ public class AcceptanceTestCase extends TestingContext {
     return newArrayList(artifactsMap.values()).get(index);
   }
 
-  private Map<ValRefS, CnstB> artifactsMap() {
+  private Map<MonoRefS, CnstB> artifactsMap() {
     if (artifacts == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }

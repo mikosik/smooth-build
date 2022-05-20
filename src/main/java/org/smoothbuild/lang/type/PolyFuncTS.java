@@ -1,9 +1,11 @@
 package org.smoothbuild.lang.type;
 
+import com.google.common.collect.ImmutableList;
+
 /**
- * Polymorphic type.
+ * Polymorphic function type.
  */
-public final class PolyFuncTS extends PolyTS {
+public final class PolyFuncTS extends PolyTS implements FuncTS {
   public PolyFuncTS(VarSetS freeVars, MonoFuncTS monoFuncTS) {
     super(freeVars, monoFuncTS);
   }
@@ -13,14 +15,17 @@ public final class PolyFuncTS extends PolyTS {
   }
 
   @Override
-  public MonoFuncTS type() {
-    return (MonoFuncTS) super.type();
+  public MonoFuncTS mono() {
+    return (MonoFuncTS) super.mono();
   }
 
   @Override
-  public String q() {
-    VarSetS vars = freeVars();
-    String shortName = (vars.isEmpty() ? "" : vars.toString()) + type().name();
-    return "`" + shortName + "`";
+  public MonoTS res() {
+    return mono().res();
+  }
+
+  @Override
+  public ImmutableList<MonoTS> params() {
+    return mono().params();
   }
 }

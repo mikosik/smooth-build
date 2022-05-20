@@ -24,7 +24,6 @@ import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.type.Bounds;
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -106,10 +105,6 @@ public class TestingTS {
 
   public static StructTS struct(String name, NList<ItemSigS> fields) {
     return FACTORY.struct(name, fields);
-  }
-
-  public Bounds<MonoTS> oneSideBound(Side side, MonoTS type) {
-    return FACTORY.oneSideBound(side, type);
   }
 
   public Bounds<MonoTS> bounds() {
@@ -208,12 +203,20 @@ public class TestingTS {
     throw new UnsupportedOperationException();
   }
 
-  public VarS var0() {
-    return var("_0");
+  public static VarS v0() {
+    return var("0").prefixed("_");
   }
 
-  public VarS var1() {
-    return var("_1");
+  public static VarS v1() {
+    return var("1").prefixed("_");
+  }
+
+  public static VarS v2() {
+    return var("2").prefixed("_");
+  }
+
+  public static VarS v3() {
+    return var("3").prefixed("_");
   }
 
   public VarS varA() {

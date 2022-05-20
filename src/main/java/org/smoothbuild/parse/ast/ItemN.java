@@ -23,7 +23,7 @@ public final class ItemN extends MonoRefableN {
   }
 
   @Override
-  public Optional<TypeN> evalTN() {
+  public Optional<TypeN> evalT() {
     return Optional.of(typeN);
   }
 

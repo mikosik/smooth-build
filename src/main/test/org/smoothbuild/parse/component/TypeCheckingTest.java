@@ -132,10 +132,7 @@ public class TypeCheckingTest extends TestingContext {
           result = [1, "abc"];
           """;
       module(sourceCode)
-          .loadsWithError(1, """
-              Array elems at indexes 0 and 1 doesn't have common super type.
-              Element at index 0 type = `Int`
-              Element at index 1 type = `String`""");
+          .loadsWithError(1, "Array elements don't have common super type.");
     }
 
     @Test

@@ -1,7 +1,12 @@
 package org.smoothbuild.compile;
 
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -10,7 +15,6 @@ import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
@@ -27,10 +31,24 @@ import org.smoothbuild.lang.type.VarS;
 
 public class TypeSbConv {
   private final BytecodeF bytecodeF;
+  private final Deque<Map<String, TypeB>> varMaps;
 
   @Inject
   public TypeSbConv(BytecodeF bytecodeF) {
     this.bytecodeF = bytecodeF;
+    this.varMaps = new ArrayDeque<>();
+  }
+
+  public void addLastVarMap(Map<String, TypeB> varMap) {
+    varMaps.addLast(varMap);
+  }
+
+  public void removeLastVarMap() {
+    varMaps.removeLast();
+  }
+
+  public Map<String, TypeB> getLastVarMap() {
+    return varMaps.getLast();
   }
 
   public TypeB convert(MonoTS type) {
@@ -51,8 +69,9 @@ public class TypeSbConv {
     };
   }
 
-  public VarB convert(VarS var) {
-    return bytecodeF.varT(var.name());
+  public TypeB convert(VarS var) {
+    var result = varMaps.getLast().get(var.name());
+    return requireNonNull(result);
   }
 
   public TupleTB convert(StructTS struct) {

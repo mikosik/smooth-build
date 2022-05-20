@@ -8,8 +8,10 @@ import static org.smoothbuild.util.type.Side.UPPER;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.util.type.Bounds;
+import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 
 public record ConstrGraphS(
@@ -18,6 +20,13 @@ public record ConstrGraphS(
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  public ImmutableSet<VarS> neighbours(VarS var, Side side) {
+    return switch (side) {
+      case LOWER -> constrs.inverse().get(var);
+      case UPPER -> constrs.get(var);
+    };
   }
 
   @Override
