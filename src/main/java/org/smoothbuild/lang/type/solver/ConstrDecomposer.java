@@ -11,6 +11,7 @@ import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
 import org.smoothbuild.lang.type.MergingTS;
 import org.smoothbuild.lang.type.NothingTS;
+import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 
@@ -47,6 +48,8 @@ public class ConstrDecomposer {
       }
     } else if (lower instanceof BaseTS base) {
       elementarizeBase(base, upper);
+    } else if (lower instanceof StructTS struct) {
+      elementarizeStruct(struct, upper);
     } else if (lower instanceof ArrayTS array) {
       elementarizeArray(array, upper, builder);
     } else if (lower instanceof FuncTS func) {
@@ -71,6 +74,12 @@ public class ConstrDecomposer {
   private void elementarizeBase(BaseTS base, TypeS upper) throws ConstrDecomposeExc {
     if (!(base.getClass().equals(upper.getClass()))) {
       throw new ConstrDecomposeExc(constrS(base, upper));
+    }
+  }
+
+  private void elementarizeStruct(StructTS struct, TypeS upper) throws ConstrDecomposeExc {
+    if (!struct.equals(upper)) {
+      throw new ConstrDecomposeExc(constrS(struct, upper));
     }
   }
 

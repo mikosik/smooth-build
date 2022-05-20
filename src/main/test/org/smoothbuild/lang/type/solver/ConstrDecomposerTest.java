@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,9 +27,9 @@ public class ConstrDecomposerTest extends TestingTS {
     @Nested
     class _type_vs_itself extends TestingTS {
       @ParameterizedTest
-      @MethodSource("baseTypes")
-      public void base_type_vs_itself(TypeS baseT) throws Exception {
-        assertThat(elementarize(constrS(baseT, baseT)))
+      @MethodSource("elementaryTypes")
+      public void elementary_type_vs_itself(TypeS type) throws Exception {
+        assertThat(elementarize(constrS(type, type)))
             .isEmpty();
       }
 
@@ -70,9 +71,9 @@ public class ConstrDecomposerTest extends TestingTS {
     @Nested
     class _nothing_vs_sth extends TestingTS {
       @ParameterizedTest
-      @MethodSource("baseTypes")
-      public void noting_vs_base_type() throws Exception {
-        assertThat(elementarize(constrS(nothing(), blob())))
+      @MethodSource("elementaryTypes")
+      public void noting_vs_elementary_type(TypeS type) throws Exception {
+        assertThat(elementarize(constrS(nothing(), type)))
             .isEmpty();
       }
 
@@ -104,9 +105,10 @@ public class ConstrDecomposerTest extends TestingTS {
     @TestInstance(PER_CLASS)
     @Nested
     class _sth_vs_any extends TestingTS {
-      @Test
-      public void base_type_vs_any() throws Exception {
-        assertThat(elementarize(constrS(blob(), any())))
+      @ParameterizedTest
+      @MethodSource("elementaryTypes")
+      public void elementary_type_vs_any(TypeS type) throws Exception {
+        assertThat(elementarize(constrS(type, any())))
             .isEmpty();
       }
 
@@ -135,6 +137,13 @@ public class ConstrDecomposerTest extends TestingTS {
     @Test
     public void two_constructed_types() {
       assertDecomposeFails(constrS(bool(), string()));
+    }
+
+    @Test
+    public void two_different_structs() {
+      assertDecomposeFails(constrS(
+          struct("MyStruct1", nList()),
+          struct("MyStruct2", nList())));
     }
 
     @Test
