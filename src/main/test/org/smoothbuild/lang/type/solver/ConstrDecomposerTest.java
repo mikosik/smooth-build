@@ -77,6 +77,12 @@ public class ConstrDecomposerTest extends TestingTS {
       }
 
       @Test
+      public void noting_vs_var() throws Exception {
+        assertThat(elementarize(constrS(nothing(), varA())))
+            .isEmpty();
+      }
+
+      @Test
       public void noting_vs_array() throws Exception {
         assertThat(elementarize(constrS(nothing(), array(blob()))))
             .isEmpty();
@@ -101,6 +107,12 @@ public class ConstrDecomposerTest extends TestingTS {
       @Test
       public void base_type_vs_any() throws Exception {
         assertThat(elementarize(constrS(blob(), any())))
+            .isEmpty();
+      }
+
+      @Test
+      public void var_vs_any() throws Exception {
+        assertThat(elementarize(constrS(varA(), any())))
             .isEmpty();
       }
 

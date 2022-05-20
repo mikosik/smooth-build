@@ -37,14 +37,14 @@ public class ConstrDecomposer {
       for (TypeS elem : meet.elems()) {
         decompose(lower, elem, builder);
       }
-    } else if (isElementary(lower, upper)) {
-      if (!lower.equals(upper)) {
-        builder.add(constrS(lower, upper));
-      }
     } else if (lower instanceof NothingTS) {
       // such constraint is always true
     } else if (upper instanceof AnyTS) {
       // such constraint is always true
+    } else if (isElementary(lower, upper)) {
+      if (!lower.equals(upper)) {
+        builder.add(constrS(lower, upper));
+      }
     } else if (lower instanceof BaseTS base) {
       elementarizeBase(base, upper);
     } else if (lower instanceof ArrayTS array) {
