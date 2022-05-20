@@ -34,7 +34,8 @@ public class TypeSbConv {
 
   public TypeB convert(TypeS type) {
     return switch (type) {
-      case AnyTS any -> throw new RuntimeException("S-Any cannot be converted to H-type.");
+      case AnyTS any -> throw new RuntimeException(
+          AnyTS.class.getName() + " cannot be converted to " + TypeB.class.getName() + ".");
       case ArrayTS a -> convert(a);
       case BlobTS blob -> bytecodeF.blobT();
       case BoolTS bool -> bytecodeF.boolT();
