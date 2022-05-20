@@ -19,16 +19,16 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
 /**
- * Converts constraint into (possible empty) set of elementary constraints.
+ * Decomposes constraint into (possible empty) set of elementary constraints.
  */
-public class ConstrDecomposer {
-  public ImmutableSet<ConstrS> decompose(ConstrS constr) throws ConstrDecomposeExc {
+public class Decompose {
+  public static ImmutableSet<ConstrS> decompose(ConstrS constr) throws ConstrDecomposeExc {
     Builder<ConstrS> builder = ImmutableSet.builder();
     decompose(constr.lower(), constr.upper(), builder);
     return builder.build();
   }
 
-  private void decompose(TypeS lower, TypeS upper, Builder<ConstrS> builder)
+  private static void decompose(TypeS lower, TypeS upper, Builder<ConstrS> builder)
       throws ConstrDecomposeExc {
     if (lower instanceof JoinTS join) {
       for (TypeS elem : join.elems()) {
@@ -71,19 +71,19 @@ public class ConstrDecomposer {
     };
   }
 
-  private void elementarizeBase(BaseTS base, TypeS upper) throws ConstrDecomposeExc {
+  private static void elementarizeBase(BaseTS base, TypeS upper) throws ConstrDecomposeExc {
     if (!(base.getClass().equals(upper.getClass()))) {
       throw new ConstrDecomposeExc(constrS(base, upper));
     }
   }
 
-  private void elementarizeStruct(StructTS struct, TypeS upper) throws ConstrDecomposeExc {
+  private static void elementarizeStruct(StructTS struct, TypeS upper) throws ConstrDecomposeExc {
     if (!struct.equals(upper)) {
       throw new ConstrDecomposeExc(constrS(struct, upper));
     }
   }
 
-  private void elementarizeArray(ArrayTS array, TypeS upper, Builder<ConstrS> builder)
+  private static void elementarizeArray(ArrayTS array, TypeS upper, Builder<ConstrS> builder)
       throws ConstrDecomposeExc {
     if (upper instanceof ArrayTS other) {
       decompose(array.elem(), other.elem(), builder);
@@ -92,7 +92,7 @@ public class ConstrDecomposer {
     }
   }
 
-  private void elementarizeFunc(FuncTS func, TypeS upper, Builder<ConstrS> builder)
+  private static void elementarizeFunc(FuncTS func, TypeS upper, Builder<ConstrS> builder)
       throws ConstrDecomposeExc {
     if (upper instanceof FuncTS other) {
       var params = func.params();

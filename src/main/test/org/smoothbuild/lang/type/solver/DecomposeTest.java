@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type.solver;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
+import static org.smoothbuild.lang.type.solver.Decompose.decompose;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -16,10 +17,8 @@ import org.smoothbuild.lang.type.ConstrS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.testing.type.TestingTS;
 
-import com.google.common.collect.ImmutableSet;
-
 @TestInstance(PER_CLASS)
-public class ConstrDecomposerTest extends TestingTS {
+public class DecomposeTest extends TestingTS {
   @TestInstance(PER_CLASS)
   @Nested
   class _decomposable_to_empty_set extends TestingTS {
@@ -29,40 +28,40 @@ public class ConstrDecomposerTest extends TestingTS {
       @ParameterizedTest
       @MethodSource("elementaryTypes")
       public void elementary_type_vs_itself(TypeS type) throws Exception {
-        assertThat(elementarize(constrS(type, type)))
+        assertThat(decompose(constrS(type, type)))
             .isEmpty();
       }
 
       @Test
       public void var_vs_itself() throws Exception {
         var varA = var("A");
-        assertThat(elementarize(constrS(varA, varA)))
+        assertThat(decompose(constrS(varA, varA)))
             .isEmpty();
       }
 
       @Test
       public void nothing_vs_itself() throws Exception {
-        assertThat(elementarize(constrS(nothing(), nothing())))
+        assertThat(decompose(constrS(nothing(), nothing())))
             .isEmpty();
       }
 
       @Test
       public void any_vs_itself() throws Exception {
-        assertThat(elementarize(constrS(any(), any())))
+        assertThat(decompose(constrS(any(), any())))
             .isEmpty();
       }
 
       @Test
       public void array_vs_array_of_same_base_type() throws Exception {
         var array = array(blob());
-        assertThat(elementarize(constrS(array, array)))
+        assertThat(decompose(constrS(array, array)))
             .isEmpty();
       }
 
       @Test
       public void func_vs_func_with_same_paramTs_and_resT() throws Exception {
         var func = func(blob(), list(bool(), string()));
-        assertThat(elementarize(constrS(func, func)))
+        assertThat(decompose(constrS(func, func)))
             .isEmpty();
       }
     }
@@ -73,31 +72,31 @@ public class ConstrDecomposerTest extends TestingTS {
       @ParameterizedTest
       @MethodSource("elementaryTypes")
       public void noting_vs_elementary_type(TypeS type) throws Exception {
-        assertThat(elementarize(constrS(nothing(), type)))
+        assertThat(decompose(constrS(nothing(), type)))
             .isEmpty();
       }
 
       @Test
       public void noting_vs_var() throws Exception {
-        assertThat(elementarize(constrS(nothing(), varA())))
+        assertThat(decompose(constrS(nothing(), varA())))
             .isEmpty();
       }
 
       @Test
       public void noting_vs_array() throws Exception {
-        assertThat(elementarize(constrS(nothing(), array(blob()))))
+        assertThat(decompose(constrS(nothing(), array(blob()))))
             .isEmpty();
       }
 
       @Test
       public void noting_vs_any() throws Exception {
-        assertThat(elementarize(constrS(nothing(), any())))
+        assertThat(decompose(constrS(nothing(), any())))
             .isEmpty();
       }
 
       @Test
       public void nothing_vs_func() throws Exception {
-        assertThat(elementarize(constrS(nothing(), func(blob(), list()))))
+        assertThat(decompose(constrS(nothing(), func(blob(), list()))))
             .isEmpty();
       }
     }
@@ -108,25 +107,25 @@ public class ConstrDecomposerTest extends TestingTS {
       @ParameterizedTest
       @MethodSource("elementaryTypes")
       public void elementary_type_vs_any(TypeS type) throws Exception {
-        assertThat(elementarize(constrS(type, any())))
+        assertThat(decompose(constrS(type, any())))
             .isEmpty();
       }
 
       @Test
       public void var_vs_any() throws Exception {
-        assertThat(elementarize(constrS(varA(), any())))
+        assertThat(decompose(constrS(varA(), any())))
             .isEmpty();
       }
 
       @Test
       public void array_vs_any() throws Exception {
-        assertThat(elementarize(constrS(array(blob()), any())))
+        assertThat(decompose(constrS(array(blob()), any())))
             .isEmpty();
       }
 
       @Test
       public void func_vs_any() throws Exception {
-        assertThat(elementarize(constrS(func(blob(), list()), any())))
+        assertThat(decompose(constrS(func(blob(), list()), any())))
             .isEmpty();
       }
     }
@@ -156,7 +155,7 @@ public class ConstrDecomposerTest extends TestingTS {
   class _array {
     @Test
     public void vs_array() throws Exception {
-      assertThat(elementarize(constrS(array(blob()), array(varA()))))
+      assertThat(decompose(constrS(array(blob()), array(varA()))))
           .containsExactly(constrS(blob(), varA()));
     }
 
@@ -170,7 +169,7 @@ public class ConstrDecomposerTest extends TestingTS {
   class _func {
     @Test
     public void vs_func() throws Exception {
-      assertThat(elementarize(constrS(func(blob(), list(int_())), func(varA(), list(varB())))))
+      assertThat(decompose(constrS(func(blob(), list(int_())), func(varA(), list(varB())))))
           .containsExactly(
               constrS(blob(), varA()),
               constrS(varB(), int_()));
@@ -186,7 +185,7 @@ public class ConstrDecomposerTest extends TestingTS {
   class _join {
     @Test
     public void vs_var() throws Exception {
-      assertThat(elementarize(constrS(join(blob(), int_()), varA())))
+      assertThat(decompose(constrS(join(blob(), int_()), varA())))
           .containsExactly(
               constrS(blob(), varA()),
               constrS(int_(), varA()));
@@ -209,7 +208,7 @@ public class ConstrDecomposerTest extends TestingTS {
   class _meet {
     @Test
     public void vs_var() throws Exception {
-      assertThat(elementarize(constrS(varA(), meet(blob(), int_()))))
+      assertThat(decompose(constrS(varA(), meet(blob(), int_()))))
           .containsExactly(constrS(varA(), blob()), constrS(varA(), int_()));
     }
 
@@ -231,15 +230,7 @@ public class ConstrDecomposerTest extends TestingTS {
   }
 
   private void assertDecomposeFailsWithReason(ConstrS constr, ConstrS reason) {
-    assertCall(() -> elementarize(constr))
+    assertCall(() -> decompose(constr))
         .throwsException(new ConstrDecomposeExc(reason));
-  }
-
-  private ImmutableSet<ConstrS> elementarize(ConstrS constr) throws Exception {
-    return elementarizer().decompose(constr);
-  }
-
-  private ConstrDecomposer elementarizer() {
-    return new ConstrDecomposer();
   }
 }

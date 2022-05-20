@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.type.solver;
 
 import static org.smoothbuild.lang.type.ConstrS.constrS;
+import static org.smoothbuild.lang.type.solver.Decompose.decompose;
 import static org.smoothbuild.util.type.Side.LOWER;
 import static org.smoothbuild.util.type.Side.UPPER;
 
@@ -15,18 +16,16 @@ import org.smoothbuild.util.type.Side;
 
 public class SolverS {
   private final NormalizerS normalizer;
-  private final ConstrDecomposer constrDecomposer;
   private final VarNodes varNodes;
 
   public SolverS(TypeSF typeF) {
     this.normalizer = new NormalizerS(typeF);
-    this.constrDecomposer = new ConstrDecomposer();
     this.varNodes = new VarNodes(typeF);
   }
 
   public void addConstr(ConstrS constr) throws ConstrDecomposeExc {
     Queue<ConstrS> queue = new LinkedList<>();
-    var elementaryConstrs = constrDecomposer.decompose(constr);
+    var elementaryConstrs = decompose(constr);
     for (var elementaryConstr : elementaryConstrs) {
       queue.addAll(normalizer.normalize(elementaryConstr));
     }
@@ -118,7 +117,7 @@ public class SolverS {
 
   private void addDecomposedToQueue(Queue<ConstrS> queue, TypeS lower, TypeS upper)
       throws ConstrDecomposeExc {
-    queue.addAll(constrDecomposer.decompose(constrS(lower, upper)));
+    queue.addAll(decompose(constrS(lower, upper)));
   }
 
   public ConstrGraphS graph() {
