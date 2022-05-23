@@ -96,7 +96,9 @@ public class AstVisitor {
   }
 
   public void visitArg(ArgN arg) {
-    visitExpr(arg.expr());
+    if (arg.expr() instanceof ExprN exprN) {
+      visitExpr(exprN);
+    }
   }
 
   public void visitSelect(SelectN select) {

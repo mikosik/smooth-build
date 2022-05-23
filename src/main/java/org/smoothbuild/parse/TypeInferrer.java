@@ -343,7 +343,7 @@ public class TypeInferrer {
       @Override
       public void visitArg(ArgN arg) {
         super.visitArg(arg);
-        arg.setType(arg.expr().type());
+        arg.setType(arg.expr().typeO());
       }
 
       @Override

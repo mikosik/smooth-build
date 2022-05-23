@@ -29,6 +29,7 @@ import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.like.Eval;
+import org.smoothbuild.lang.like.Expr;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
@@ -45,6 +46,7 @@ import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.parse.ast.SelectN;
 import org.smoothbuild.parse.ast.StringN;
+import org.smoothbuild.util.Throwables;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -147,7 +149,12 @@ public class TopEvalLoader {
   private ExprS createArgExpr(CallN call, List<Optional<ArgN>> args, int i) {
     Optional<ArgN> arg = args.get(i);
     if (arg.isPresent()) {
-      return createExpr(arg.get().expr());
+      Expr expr = arg.get().expr();
+      return switch (expr) {
+        case ExprN exprN -> createExpr(exprN);
+        case ExprS exprS -> exprS;
+        default -> throw unexpectedCaseExc(expr);
+      };
     } else {
       return createDefaultArgExpr(call, i);
     }
