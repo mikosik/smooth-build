@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.smoothbuild.lang.define.ItemSigS;
+import org.smoothbuild.lang.like.Param;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableList;
 
 public class InferArgsToParamsAssignment {
   public static Maybe<List<Optional<ArgN>>> inferArgsToParamsAssignment(
-      CallN call, NList<ItemSigS> params) {
+      CallN call, NList<Param> params) {
     var logBuffer = new LogBuffer();
     var positionalArgs = leadingPositionalArgs(call);
     logBuffer.logAll(findPositionalArgAfterNamedArgError(call, params));
@@ -55,7 +55,7 @@ public class InferArgsToParamsAssignment {
         .collect(toImmutableList());
   }
 
-  private static List<Optional<ArgN>> assignedArgs(CallN call, NList<ItemSigS> params) {
+  private static List<Optional<ArgN>> assignedArgs(CallN call, NList<Param> params) {
     List<ArgN> args = call.args();
     List<Optional<ArgN>> assignedList =
         new ArrayList<>(nCopies(params.size(), Optional.empty()));
@@ -70,7 +70,7 @@ public class InferArgsToParamsAssignment {
     return assignedList;
   }
 
-  private static List<Log> findPositionalArgAfterNamedArgError(CallN call, List<ItemSigS> params) {
+  private static List<Log> findPositionalArgAfterNamedArgError(CallN call, NList<Param> params) {
     return call.args()
         .stream()
         .dropWhile(not(ArgN::declaresName))
@@ -81,7 +81,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findTooManyPositionalArgsError(
-      CallN call, List<ArgN> positionalArgs, List<ItemSigS> params) {
+      CallN call, List<ArgN> positionalArgs, NList<Param> params) {
     if (params.size() < positionalArgs.size()) {
       return list(parseError(
           call, inCallToPrefix(call, params) + "Too many positional arguments."));
@@ -89,7 +89,7 @@ public class InferArgsToParamsAssignment {
     return list();
   }
 
-  private static List<Log> findUnknownParamNameErrors(CallN call, NList<ItemSigS> params) {
+  private static List<Log> findUnknownParamNameErrors(CallN call, NList<Param> params) {
     return call.args()
         .stream()
         .filter(ArgN::declaresName)
@@ -100,7 +100,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findDuplicateAssignmentErrors(
-      CallN call, List<ArgN> positionalArgs, NList<ItemSigS> params) {
+      CallN call, List<ArgN> positionalArgs, NList<Param> params) {
     Set<String> names = positionalArgNames(positionalArgs, params);
     return call.args()
         .stream()
@@ -111,7 +111,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static Set<String> positionalArgNames(
-      List<ArgN> positionalArgs, NList<ItemSigS> params) {
+      List<ArgN> positionalArgs, NList<Param> params) {
     return params.stream()
         .limit(positionalArgs.size())
         .flatMap(p -> p.nameO().stream())
@@ -119,24 +119,24 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findUnassignedParamsWithoutDefaultArgsErrors(CallN call,
-      List<Optional<ArgN>> assignedList, NList<ItemSigS> params) {
+      List<Optional<ArgN>> assignedList, NList<Param> params) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())
-        .filter(i -> params.get(i).defaultValT().isEmpty())
+        .filter(i -> params.get(i).body().isEmpty())
         .mapToObj(i -> paramsMustBeSpecifiedError(call, i, params.get(i), params))
         .collect(toList());
   }
 
-  private static Log paramsMustBeSpecifiedError(CallN call, int i, ItemSigS param,
-      List<ItemSigS> params) {
+  private static Log paramsMustBeSpecifiedError(
+      CallN call, int i, Param param, NList<Param> params) {
     String paramName = param.nameO().map(n -> "`" + n + "`").orElse("#" + (i + 1));
     return parseError(call,
         inCallToPrefix(call, params) + "Parameter " + paramName + " must be specified.");
   }
 
-  private static String inCallToPrefix(CallN call, List<ItemSigS> params) {
+  private static String inCallToPrefix(CallN call, NList<Param> params) {
     String result = ((FuncTS) call.callable().type().get()).res().name();
-    String paramsString = join(", ", map(params, ItemSigS::typeAndName));
+    String paramsString = join(", ", map(params, Param::typeAndName));
     return "In call to function with type `" + result + "(" + paramsString + ")`: ";
   }
 }

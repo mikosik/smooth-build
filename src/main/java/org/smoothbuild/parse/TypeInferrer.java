@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.util.Optional.empty;
+import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
 import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
 import static org.smoothbuild.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
@@ -8,6 +9,7 @@ import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +20,9 @@ import javax.inject.Inject;
 import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.FuncS;
-import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.like.Eval;
+import org.smoothbuild.lang.like.Param;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeS;
@@ -50,7 +52,6 @@ import org.smoothbuild.parse.ast.StructN;
 import org.smoothbuild.parse.ast.TypeN;
 import org.smoothbuild.parse.ast.ValN;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
@@ -73,7 +74,7 @@ public class TypeInferrer {
       @Override
       public void visitStruct(StructN struct) {
         super.visitStruct(struct);
-        var fields = Optionals.pullUp(map(struct.fields(), ItemN::sig));
+        var fields = pullUp(map(struct.fields(), ItemN::sig));
         struct.setType(fields.map(f -> typeSF.struct(struct.name(), nList(f))));
         struct.ctor().setType(
             fields.map(s -> typeSF.func(struct.type().get(), map(s, ItemSigS::type))));
@@ -88,7 +89,7 @@ public class TypeInferrer {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
                 .formatted(itemN.q(), t.q());
             logError(itemN, message);
-            return Optional.empty();
+            return empty();
           } else {
             return Optional.of(t);
           }
@@ -184,7 +185,7 @@ public class TypeInferrer {
           case ArrayTN array -> createType(array.elemT()).map(typeSF::array);
           case FuncTN func -> {
             var resultOpt = createType(func.resT());
-            var paramsOpt = Optionals.pullUp(map(func.paramTs(), this::createType));
+            var paramsOpt = pullUp(map(func.paramTs(), this::createType));
             if (resultOpt.isEmpty() || paramsOpt.isEmpty()) {
               yield empty();
             }
@@ -295,7 +296,7 @@ public class TypeInferrer {
               call.setType(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<TypeS> type = callTypeInferrer.inferCallT(call, funcT.res(), params);
+              Maybe<TypeS> type = callTypeInferrer.inferCallT(call, funcT.res(), params.map(Param::sig));
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
             }
@@ -303,22 +304,22 @@ public class TypeInferrer {
         }
       }
 
-      public static Optional<NList<ItemSigS>> funcParams(ExprN called) {
+      public static Optional<NList<Param>> funcParams(ExprN called) {
         if (called instanceof RefN refN) {
           Eval referenced = refN.referenced();
-          if (referenced instanceof FuncS func) {
-            return Optional.of(func.params().map(ItemS::sig));
+          if (referenced instanceof FuncS funcS) {
+            return Optional.of(funcS.params().map(p -> new Param(p.sig(), p.body())));
           } else if (referenced instanceof FuncN funcN) {
-            var itemSignatures = Optionals.pullUp(map(funcN.params(), ItemN::sig));
-            return itemSignatures.map(NList::nList);
-          } else {
-            var params = ((FuncTS) refN.referencedType().get()).params();
-            return Optional.of(nList(map(params, ItemSigS::itemSigS)));
+            var params = map(
+                funcN.params().list(), p -> p.sig().map(sig -> new Param(sig, p.body())));
+            return pullUp(params).map(NList::nList);
           }
-        } else {
-          return called.type().map(
-              t -> nList(map(((FuncTS) t).params(), ItemSigS::itemSigS)));
         }
+        return called.type().map(t -> funcTParams(t));
+      }
+
+      private static NList<Param> funcTParams(TypeS funcTS) {
+        return nList(map(((FuncTS) funcTS).params(), p -> new Param(itemSigS(p), empty())));
       }
 
       private static boolean someArgHasNotInferredType(List<Optional<ArgN>> assignedArgs) {
