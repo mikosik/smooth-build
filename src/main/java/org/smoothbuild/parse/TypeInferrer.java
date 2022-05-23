@@ -20,7 +20,7 @@ import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.like.EvalLike;
+import org.smoothbuild.lang.like.Eval;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeS;
@@ -305,7 +305,7 @@ public class TypeInferrer {
 
       public static Optional<NList<ItemSigS>> funcParams(ExprN called) {
         if (called instanceof RefN refN) {
-          EvalLike referenced = refN.referenced();
+          Eval referenced = refN.referenced();
           if (referenced instanceof FuncS func) {
             return Optional.of(func.params().map(ItemS::sig));
           } else if (referenced instanceof FuncN funcN) {

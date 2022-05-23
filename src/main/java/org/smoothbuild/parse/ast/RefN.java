@@ -6,12 +6,12 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.like.EvalLike;
+import org.smoothbuild.lang.like.Eval;
 import org.smoothbuild.lang.type.TypeS;
 
 public final class RefN extends ExprN {
   private final String name;
-  private EvalLike referenced;
+  private Eval referenced;
 
   public RefN(String name, Loc loc) {
     super(loc);
@@ -22,11 +22,11 @@ public final class RefN extends ExprN {
     return name;
   }
 
-  public void setReferenced(EvalLike referenced) {
+  public void setReferenced(Eval referenced) {
     this.referenced = referenced;
   }
 
-  public EvalLike referenced() {
+  public Eval referenced() {
     return referenced;
   }
 

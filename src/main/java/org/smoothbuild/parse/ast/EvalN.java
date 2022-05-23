@@ -3,9 +3,9 @@ package org.smoothbuild.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.like.EvalLike;
+import org.smoothbuild.lang.like.Eval;
 
-public sealed abstract class EvalN extends NamedN implements EvalLike
+public sealed abstract class EvalN extends NamedN implements Eval
     permits FuncN, ItemN, ValN {
   private final Optional<TypeN> evalT;
   private final Optional<ExprN> body;

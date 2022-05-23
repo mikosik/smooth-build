@@ -28,7 +28,7 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
-import org.smoothbuild.lang.like.EvalLike;
+import org.smoothbuild.lang.like.Eval;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
@@ -158,7 +158,7 @@ public class TopEvalLoader {
     // This means that this call is made on reference to actual func and that func
     // has default arg for given param, otherwise checkers that ran so far would
     // report an error.
-    EvalLike referenced = ((RefN) call.callable()).referenced();
+    Eval referenced = ((RefN) call.callable()).referenced();
     return switch (referenced) {
       case FuncS func -> func.params().get(i).defaultVal().get();
       case FuncN node -> createExpr(node.params().get(i).body().get());
@@ -175,7 +175,7 @@ public class TopEvalLoader {
   }
 
   private ExprS createRef(RefN ref) {
-    EvalLike referenced = ref.referenced();
+    Eval referenced = ref.referenced();
     if (referenced instanceof ItemN) {
       return new ParamRefS(ref.type().get(), ref.name(), ref.loc());
     } else {
