@@ -176,6 +176,14 @@ public class DecomposeTest extends TestingTS {
     }
 
     @Test
+    public void id_vs_concrete() throws Exception {
+      assertThat(decompose(constrS(func(varA(), list(varA())), func(int_(), list(int_())))))
+          .containsExactly(
+              constrS(int_(), varA()),
+              constrS(varA(), int_()));
+    }
+
+    @Test
     public void vs_base_type() {
       assertDecomposeFails(constrS(func(blob(), list()), bool()));
     }

@@ -161,6 +161,18 @@ public class SolverSTest extends TestingTS {
     }
   }
 
+  @Nested
+  @TestInstance(PER_CLASS)
+  class _func {
+    @Test
+    public void id() throws Exception {
+      var constr = constrS(func(varA(), list(varA())), func(int_(), list(int_())));
+      assertSolvedGraph(list(constr), ConstrGraphS.builder()
+          .addVar(varA(), list(), bounds(int_(), int_()))
+          .build());
+    }
+  }
+
   @ParameterizedTest
   @MethodSource
   public void legal_var_loop(List<ConstrS> constrs) throws Exception {
