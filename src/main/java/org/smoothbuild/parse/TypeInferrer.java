@@ -309,8 +309,7 @@ public class TypeInferrer {
           if (referenced instanceof FuncS func) {
             return Optional.of(func.params().map(ItemS::sig));
           } else if (referenced instanceof FuncN funcN) {
-            var itemSignatures = Optionals.pullUp(
-                map(funcN.params(), ItemN::sig));
+            var itemSignatures = Optionals.pullUp(map(funcN.params(), ItemN::sig));
             return itemSignatures.map(NList::nList);
           } else {
             var params = ((FuncTS) refN.referencedType().get()).params();
