@@ -238,6 +238,48 @@ public class TypeSTest {
     }
   }
 
+  @Nested
+  class _var {
+    @Test
+    public void with_prefix() {
+      assertThat(var("A").withPrefix("abc"))
+          .isEqualTo(var("abc.A"));
+    }
+
+    @Test
+    public void with_prefix_fails_when_prefix_contains_dot() {
+      var var = var("A");
+      assertCall(() -> var.withPrefix("abc."))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void strip_prefix() {
+      assertThat(var("abc.A").stripPrefix())
+          .isEqualTo(var("A"));
+    }
+
+    @Test
+    public void strip_prefix_of_double_prefixed_variable() {
+      assertThat(var("abc.def.A").stripPrefix())
+          .isEqualTo(var("def.A"));
+    }
+
+    @Test
+    public void strip_fails_when_var_has_no_prefix() {
+      var var = var("A");
+      assertCall(() -> var.stripPrefix())
+          .throwsException(IllegalStateException.class);
+    }
+
+    @Test
+    public void stripping_twice_double_prefix() {
+      var var = var("abc.def.A");
+      assertThat(var.stripPrefix().stripPrefix())
+          .isEqualTo(var("A"));
+    }
+  }
+
   @Test
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
