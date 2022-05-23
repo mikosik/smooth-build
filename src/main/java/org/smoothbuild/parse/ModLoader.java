@@ -23,7 +23,6 @@ import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TopEvalS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
-import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
@@ -37,15 +36,12 @@ public class ModLoader {
   private final TypeInferrer typeInferrer;
   private final TopEvalLoader topEvalLoader;
   private final TypeSF typeSF;
-  private final TypingS typing;
 
   @Inject
-  public ModLoader(TypeInferrer typeInferrer, TopEvalLoader topEvalLoader,
-      TypeSF typeSF, TypingS typing) {
+  public ModLoader(TypeInferrer typeInferrer, TopEvalLoader topEvalLoader, TypeSF typeSF) {
     this.typeInferrer = typeInferrer;
     this.topEvalLoader = topEvalLoader;
     this.typeSF = typeSF;
-    this.typing = typing;
   }
 
   public Maybe<ModS> loadModule(

@@ -123,7 +123,7 @@ public class TestingModLoader {
     var factory = testingContext.typeFS();
     var typeInferrer = new TypeInferrer(factory, typing);
     var topEvalLoader = new TopEvalLoader(factory);
-    var modLoader = new ModLoader(typeInferrer, topEvalLoader, factory, typing);
+    var modLoader = new ModLoader(typeInferrer, topEvalLoader, factory);
     DefsS importedSane = imported != null ? imported
         : DefsS.empty().withModule(testingContext.internalMod());
     ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();
