@@ -153,10 +153,10 @@ public class AstCreator {
         return createChainParts(result, chain.chainPart());
       }
 
-      private ArgNode pipedArg(ExprN result, Token pipeCharacter) {
+      private ArgN pipedArg(ExprN result, Token pipeCharacter) {
         // Loc of nameless piped arg is set to the loc of pipe character '|'.
         Loc loc = LocHelpers.locOf(filePath, pipeCharacter);
-        return new ArgNode(null, result, loc);
+        return new ArgN(null, result, loc);
       }
 
       private ExprN createLiteral(LiteralContext expr) {
@@ -182,7 +182,7 @@ public class AstCreator {
         return new StringN(unquoted, loc);
       }
 
-      private ExprN createChainCallExpr(ArgNode pipedArg, ChainCallContext chainCall) {
+      private ExprN createChainCallExpr(ArgN pipedArg, ChainCallContext chainCall) {
         ExprN result = newRefNode(chainCall.NAME());
         for (SelectContext fieldRead : chainCall.select()) {
           result = createSelect(result, fieldRead);
@@ -219,20 +219,20 @@ public class AstCreator {
         return result;
       }
 
-      private List<ArgNode> createArgList(ArgListContext argList) {
-        List<ArgNode> result = new ArrayList<>();
+      private List<ArgN> createArgList(ArgListContext argList) {
+        List<ArgN> result = new ArrayList<>();
         for (ArgContext arg : argList.arg()) {
           ExprContext expr = arg.expr();
           TerminalNode nameNode = arg.NAME();
           String name = nameNode == null ? null : nameNode.getText();
           ExprN exprN = createExpr(expr);
-          result.add(new ArgNode(name, exprN, LocHelpers.locOf(filePath, arg)));
+          result.add(new ArgN(name, exprN, LocHelpers.locOf(filePath, arg)));
         }
         return result;
       }
 
       private ExprN createCall(
-          ExprN callable, List<ArgNode> args, ArgListContext argListContext) {
+          ExprN callable, List<ArgN> args, ArgListContext argListContext) {
         Loc loc = LocHelpers.locOf(filePath, argListContext);
         return new CallN(callable, args, loc);
       }

@@ -91,11 +91,11 @@ public class AstVisitor {
     visitArgs(call.args());
   }
 
-  public void visitArgs(List<ArgNode> args) {
+  public void visitArgs(List<ArgN> args) {
     args.forEach(this::visitArg);
   }
 
-  public void visitArg(ArgNode arg) {
+  public void visitArg(ArgN arg) {
     visitExpr(arg.expr());
   }
 

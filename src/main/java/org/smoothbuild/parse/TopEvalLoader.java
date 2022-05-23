@@ -33,7 +33,7 @@ import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.parse.ast.AnnN;
-import org.smoothbuild.parse.ast.ArgNode;
+import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
 import org.smoothbuild.parse.ast.EvalN;
@@ -137,15 +137,15 @@ public class TopEvalLoader {
 
   private ImmutableList<ExprS> createArgExprs(CallN call) {
     var builder = ImmutableList.<ExprS>builder();
-    List<Optional<ArgNode>> args = call.assignedArgs();
+    List<Optional<ArgN>> args = call.assignedArgs();
     for (int i = 0; i < args.size(); i++) {
       builder.add(createArgExpr(call, args, i));
     }
     return builder.build();
   }
 
-  private ExprS createArgExpr(CallN call, List<Optional<ArgNode>> args, int i) {
-    Optional<ArgNode> arg = args.get(i);
+  private ExprS createArgExpr(CallN call, List<Optional<ArgN>> args, int i) {
+    Optional<ArgN> arg = args.get(i);
     if (arg.isPresent()) {
       return createExpr(arg.get().expr());
     } else {

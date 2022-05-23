@@ -9,10 +9,10 @@ import com.google.common.collect.ImmutableList;
 
 public final class CallN extends ExprN {
   private final ExprN callable;
-  private final List<ArgNode> args;
-  private List<Optional<ArgNode>> assignedArgs;
+  private final List<ArgN> args;
+  private List<Optional<ArgN>> assignedArgs;
 
-  public CallN(ExprN callable, List<ArgNode> args, Loc loc) {
+  public CallN(ExprN callable, List<ArgN> args, Loc loc) {
     super(loc);
     this.callable = callable;
     this.args = ImmutableList.copyOf(args);
@@ -22,11 +22,11 @@ public final class CallN extends ExprN {
     return callable;
   }
 
-  public List<ArgNode> args() {
+  public List<ArgN> args() {
     return args;
   }
 
-  public void setAssignedArgs(List<Optional<ArgNode>> assignedArgs) {
+  public void setAssignedArgs(List<Optional<ArgN>> assignedArgs) {
     this.assignedArgs = assignedArgs;
   }
 
@@ -35,7 +35,7 @@ public final class CallN extends ExprN {
    * arg has been assigned. Optional.empty() value means that given parameter has no
    * arg assigned explicitly and parameter's default arg should be used.
    */
-  public List<Optional<ArgNode>> assignedArgs() {
+  public List<Optional<ArgN>> assignedArgs() {
     return assignedArgs;
   }
 }

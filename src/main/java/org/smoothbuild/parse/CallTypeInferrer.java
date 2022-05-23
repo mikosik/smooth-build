@@ -20,7 +20,7 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.parse.ast.ArgNode;
+import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.CallN;
 import org.smoothbuild.util.collect.NList;
 
@@ -37,7 +37,7 @@ public class CallTypeInferrer {
 
   public Maybe<TypeS> inferCallT(CallN call, TypeS resT, NList<ItemSigS> params) {
     var logBuffer = new LogBuffer();
-    List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
+    List<Optional<ArgN>> assignedArgs = call.assignedArgs();
     findIllegalTypeAssignmentErrors(call, assignedArgs, params, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
@@ -59,7 +59,7 @@ public class CallTypeInferrer {
   }
 
   private void findIllegalTypeAssignmentErrors(CallN call,
-      List<Optional<ArgNode>> assignedList, List<ItemSigS> params, Logger logger) {
+      List<Optional<ArgN>> assignedList, List<ItemSigS> params, Logger logger) {
     range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isPresent())
         .filter(i -> !isAssignable(params.get(i), assignedList.get(i).get()))
@@ -67,11 +67,11 @@ public class CallTypeInferrer {
         .forEach(logger::log);
   }
 
-  private boolean isAssignable(ItemSigS param, ArgNode arg) {
+  private boolean isAssignable(ItemSigS param, ArgN arg) {
     return typing.isParamAssignable(param.type(), arg.type().get());
   }
 
-  private static Log illegalAssignmentError(CallN call, ItemSigS param, ArgNode arg) {
+  private static Log illegalAssignmentError(CallN call, ItemSigS param, ArgN arg) {
     return parseError(arg.loc(), inCallToPrefix(call)
         + "Cannot assign argument of type " + arg.type().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");
@@ -81,10 +81,10 @@ public class CallTypeInferrer {
     return "In call to function with type " + call.callable().type().get().q() + ": ";
   }
 
-  private List<Optional<TypeS>> assignedTs(List<ItemSigS> params, List<Optional<ArgNode>> args) {
+  private List<Optional<TypeS>> assignedTs(List<ItemSigS> params, List<Optional<ArgN>> args) {
     List<Optional<TypeS>> assigned = new ArrayList<>();
     for (int i = 0; i < params.size(); i++) {
-      Optional<ArgNode> arg = args.get(i);
+      Optional<ArgN> arg = args.get(i);
       if (arg.isPresent()) {
         assigned.add(arg.get().type());
       } else {

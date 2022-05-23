@@ -5,10 +5,10 @@ import static com.google.common.base.Preconditions.checkState;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.type.TypeS;
 
-public final class ArgNode extends NamedN {
+public final class ArgN extends NamedN {
   private final ExprN expr;
 
-  public ArgNode(String name, ExprN expr, Loc loc) {
+  public ArgN(String name, ExprN expr, Loc loc) {
     super(name, loc);
     this.expr = expr;
   }

@@ -23,14 +23,14 @@ import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.parse.ast.ArgNode;
+import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.CallN;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 public class InferArgsToParamsAssignment {
-  public static Maybe<List<Optional<ArgNode>>> inferArgsToParamsAssignment(
+  public static Maybe<List<Optional<ArgN>>> inferArgsToParamsAssignment(
       CallN call, NList<ItemSigS> params) {
     var logBuffer = new LogBuffer();
     var positionalArgs = leadingPositionalArgs(call);
@@ -48,19 +48,19 @@ public class InferArgsToParamsAssignment {
     return maybeValueAndLogs(result, logBuffer);
   }
 
-  private static ImmutableList<ArgNode> leadingPositionalArgs(CallN call) {
+  private static ImmutableList<ArgN> leadingPositionalArgs(CallN call) {
     return call.args()
         .stream()
-        .takeWhile(not(ArgNode::declaresName))
+        .takeWhile(not(ArgN::declaresName))
         .collect(toImmutableList());
   }
 
-  private static List<Optional<ArgNode>> assignedArgs(CallN call, NList<ItemSigS> params) {
-    List<ArgNode> args = call.args();
-    List<Optional<ArgNode>> assignedList =
+  private static List<Optional<ArgN>> assignedArgs(CallN call, NList<ItemSigS> params) {
+    List<ArgN> args = call.args();
+    List<Optional<ArgN>> assignedList =
         new ArrayList<>(nCopies(params.size(), Optional.empty()));
     for (int i = 0; i < args.size(); i++) {
-      ArgNode arg = args.get(i);
+      ArgN arg = args.get(i);
       if (arg.declaresName()) {
         assignedList.set(params.indexMap().get(arg.name()), Optional.of(arg));
       } else {
@@ -73,15 +73,15 @@ public class InferArgsToParamsAssignment {
   private static List<Log> findPositionalArgAfterNamedArgError(CallN call, List<ItemSigS> params) {
     return call.args()
         .stream()
-        .dropWhile(not(ArgNode::declaresName))
-        .dropWhile(ArgNode::declaresName)
+        .dropWhile(not(ArgN::declaresName))
+        .dropWhile(ArgN::declaresName)
         .map(a -> parseError(a, inCallToPrefix(call, params)
             + "Positional arguments must be placed before named arguments."))
         .collect(toList());
   }
 
   private static List<Log> findTooManyPositionalArgsError(
-      CallN call, List<ArgNode> positionalArgs, List<ItemSigS> params) {
+      CallN call, List<ArgN> positionalArgs, List<ItemSigS> params) {
     if (params.size() < positionalArgs.size()) {
       return list(parseError(
           call, inCallToPrefix(call, params) + "Too many positional arguments."));
@@ -92,7 +92,7 @@ public class InferArgsToParamsAssignment {
   private static List<Log> findUnknownParamNameErrors(CallN call, NList<ItemSigS> params) {
     return call.args()
         .stream()
-        .filter(ArgNode::declaresName)
+        .filter(ArgN::declaresName)
         .filter(a -> !params.containsName(a.name()))
         .map(a -> parseError(a,
             inCallToPrefix(call, params) + "Unknown parameter " + a.q() + "."))
@@ -100,18 +100,18 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findDuplicateAssignmentErrors(
-      CallN call, List<ArgNode> positionalArgs, NList<ItemSigS> params) {
+      CallN call, List<ArgN> positionalArgs, NList<ItemSigS> params) {
     Set<String> names = positionalArgNames(positionalArgs, params);
     return call.args()
         .stream()
-        .filter(ArgNode::declaresName)
+        .filter(ArgN::declaresName)
         .filter(a -> !names.add(a.name()))
         .map(a -> parseError(a, inCallToPrefix(call, params) + a.q() + " is already assigned."))
         .collect(toList());
   }
 
   private static Set<String> positionalArgNames(
-      List<ArgNode> positionalArgs, NList<ItemSigS> params) {
+      List<ArgN> positionalArgs, NList<ItemSigS> params) {
     return params.stream()
         .limit(positionalArgs.size())
         .flatMap(p -> p.nameO().stream())
@@ -119,7 +119,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findUnassignedParamsWithoutDefaultArgsErrors(CallN call,
-      List<Optional<ArgNode>> assignedList, NList<ItemSigS> params) {
+      List<Optional<ArgN>> assignedList, NList<ItemSigS> params) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())
         .filter(i -> params.get(i).defaultValT().isEmpty())

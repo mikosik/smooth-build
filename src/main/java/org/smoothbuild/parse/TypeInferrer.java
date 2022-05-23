@@ -29,7 +29,7 @@ import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.parse.ast.ArgNode;
+import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.ArrayTN;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
@@ -287,7 +287,7 @@ public class TypeInferrer {
             call.setType(empty());
           } else {
             var params = funcParams.get();
-            Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, params);
+            Maybe<List<Optional<ArgN>>> args = inferArgsToParamsAssignment(call, params);
             if (args.containsProblem()) {
               logBuffer.logAll(args.logs());
               call.setType(empty());
@@ -322,7 +322,7 @@ public class TypeInferrer {
         }
       }
 
-      private static boolean someArgHasNotInferredType(List<Optional<ArgNode>> assignedArgs) {
+      private static boolean someArgHasNotInferredType(List<Optional<ArgN>> assignedArgs) {
         return assignedArgs.stream()
             .flatMap(Optional::stream)
             .anyMatch(a -> a.type().isEmpty());
@@ -342,7 +342,7 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitArg(ArgNode arg) {
+      public void visitArg(ArgN arg) {
         super.visitArg(arg);
         arg.setType(arg.expr().type());
       }
