@@ -1,9 +1,9 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.lang.String.join;
 import static java.util.Collections.nCopies;
 import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;
@@ -11,14 +11,12 @@ import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.lang.like.Param;
-import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
@@ -81,7 +79,7 @@ public class ConstructArgList {
         .stream()
         .dropWhile(not(ArgN::declaresName))
         .dropWhile(ArgN::declaresName)
-        .map(a -> parseError(a, inCallToPrefix(call, params)
+        .map(a -> parseError(a, messagePrefix(params)
             + "Positional arguments must be placed before named arguments."))
         .collect(toList());
   }
@@ -89,8 +87,7 @@ public class ConstructArgList {
   private static List<Log> findTooManyPositionalArgsError(
       CallN call, List<ArgN> positionalArgs, NList<Param> params) {
     if (params.size() < positionalArgs.size()) {
-      return list(parseError(
-          call, inCallToPrefix(call, params) + "Too many positional arguments."));
+      return list(parseError(call, messagePrefix(params) + "Too many positional arguments."));
     }
     return list();
   }
@@ -100,8 +97,7 @@ public class ConstructArgList {
         .stream()
         .filter(ArgN::declaresName)
         .filter(a -> !params.containsName(a.name()))
-        .map(a -> parseError(a,
-            inCallToPrefix(call, params) + "Unknown parameter " + a.q() + "."))
+        .map(a -> parseError(a, messagePrefix(params) + "Unknown parameter " + a.q() + "."))
         .collect(toList());
   }
 
@@ -112,7 +108,7 @@ public class ConstructArgList {
         .stream()
         .filter(ArgN::declaresName)
         .filter(a -> !names.add(a.name()))
-        .map(a -> parseError(a, inCallToPrefix(call, params) + a.q() + " is already assigned."))
+        .map(a -> parseError(a, messagePrefix(params) + a.q() + " is already assigned."))
         .collect(toList());
   }
 
@@ -135,13 +131,13 @@ public class ConstructArgList {
   private static Log paramsMustBeSpecifiedError(
       CallN call, int i, Param param, NList<Param> params) {
     String paramName = param.nameO().map(n -> "`" + n + "`").orElse("#" + (i + 1));
-    return parseError(call,
-        inCallToPrefix(call, params) + "Parameter " + paramName + " must be specified.");
+    return parseError(call, messagePrefix(params) + "Parameter " + paramName + " must be specified.");
   }
 
-  private static String inCallToPrefix(CallN call, NList<Param> params) {
-    String result = ((FuncTS) call.callable().type().get()).res().name();
-    String paramsString = join(", ", map(params, Param::typeAndName));
-    return "In call to function with type `" + result + "(" + paramsString + ")`: ";
+  private static String messagePrefix(NList<Param> params) {
+    var paramsString = params.stream()
+        .map(Param::typeAndName)
+        .collect(joining(", "));
+    return "In call to function with parameters `" + "(" + paramsString + ")`: ";
   }
 }

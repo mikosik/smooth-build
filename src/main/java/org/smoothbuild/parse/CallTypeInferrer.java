@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
@@ -36,7 +37,7 @@ public class CallTypeInferrer {
   public Maybe<TypeS> inferCallT(CallN call, TypeS resT, NList<ItemSigS> params) {
     var logBuffer = new LogBuffer();
     var args = call.assignedArgs();
-    findIllegalTypeAssignmentErrors(call, args, params, logBuffer);
+    findIllegalTypeAssignmentErrors(args, params, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
@@ -52,10 +53,10 @@ public class CallTypeInferrer {
   }
 
   private void findIllegalTypeAssignmentErrors(
-      CallN call, ImmutableList<ArgN> args, List<ItemSigS> params, Logger logger) {
+      ImmutableList<ArgN> args, List<ItemSigS> params, Logger logger) {
     range(0, args.size())
         .filter(i -> !isAssignable(params.get(i), args.get(i)))
-        .mapToObj(i -> illegalAssignmentError(call, params.get(i), args.get(i)))
+        .mapToObj(i -> illegalAssignmentError(params, params.get(i), args.get(i)))
         .forEach(logger::log);
   }
 
@@ -63,14 +64,17 @@ public class CallTypeInferrer {
     return typing.isParamAssignable(param.type(), arg.type().get());
   }
 
-  private static Log illegalAssignmentError(CallN call, ItemSigS param, ArgN arg) {
-    return parseError(arg.loc(), inCallToPrefix(call)
+  private static Log illegalAssignmentError(List<ItemSigS> params, ItemSigS param, ArgN arg) {
+    return parseError(arg.loc(), messagePrefix(params)
         + "Cannot assign argument of type " + arg.type().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");
   }
 
-  private static String inCallToPrefix(CallN call) {
-    return "In call to function with type " + call.callable().type().get().q() + ": ";
+  private static String messagePrefix(List<ItemSigS> params) {
+    var paramsString = params.stream()
+        .map(ItemSigS::typeAndName)
+        .collect(joining(", "));
+    return "In call to function with parameters (" + paramsString + "): ";
   }
 
   private ImmutableList<Log> findVarProblems(CallN call, VarBoundsS varBounds) {

@@ -862,7 +862,7 @@ public class DeclarationTest extends TestingContext {
               result = myIdentity("abc", "def");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with type `String(String param)`:"
+              .loadsWithError(2, "In call to function with parameters `(String param)`:"
                   + " Too many positional arguments.");
         }
 
@@ -873,7 +873,7 @@ public class DeclarationTest extends TestingContext {
               result = returnFirst("abc");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with type `String(String param1,"
+              .loadsWithError(2, "In call to function with parameters `(String param1,"
                   + " String param2)`: Parameter `param2` must be specified.");
         }
 
@@ -885,7 +885,7 @@ public class DeclarationTest extends TestingContext {
               result = funcValue("abc");
               """;
           module(code)
-              .loadsWithError(3, "In call to function with type `String(String, String)`:"
+              .loadsWithError(3, "In call to function with parameters `(String, String)`:"
                   + " Parameter #2 must be specified.");
         }
 
@@ -896,7 +896,7 @@ public class DeclarationTest extends TestingContext {
               result = myIdentity(wrongName="abc");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with type `String(String param)`: "
+              .loadsWithError(2, "In call to function with parameters `(String param)`: "
                   + "Unknown parameter `wrongName`.");
         }
 
@@ -928,7 +928,7 @@ public class DeclarationTest extends TestingContext {
               """;
           module(code)
               .loadsWithError(2,
-                  "In call to function with type `String(String param1, String param2)`: "
+                  "In call to function with parameters `(String param1, String param2)`: "
                       + "Positional arguments must be placed before named arguments.");
         }
 
@@ -939,7 +939,7 @@ public class DeclarationTest extends TestingContext {
               result = myIdentity(param="abc", param="abc");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with type `String(String param)`:"
+              .loadsWithError(2, "In call to function with parameters `(String param)`:"
                   + " `param` is already assigned.");
         }
 
@@ -950,7 +950,7 @@ public class DeclarationTest extends TestingContext {
               result = myIdentity("abc", param="abc");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with type `String(String param)`: "
+              .loadsWithError(2, "In call to function with parameters `(String param)`: "
                   + "`param` is already assigned.");
         }
 
@@ -983,7 +983,7 @@ public class DeclarationTest extends TestingContext {
             """;
           module(code)
               .loadsWithError(3,
-                  "In call to function with type `String(String)`: Unknown parameter `param`.");
+                  "In call to function with parameters `(String)`: Unknown parameter `param`.");
         }
 
         @Test
@@ -994,7 +994,7 @@ public class DeclarationTest extends TestingContext {
             result = valueReferencingFunc();
             """;
           module(code)
-              .loadsWithError(3, "In call to function with type `String(String)`: "
+              .loadsWithError(3, "In call to function with parameters `(String)`: "
                   + "Parameter #1 must be specified.");
         }
       }
@@ -1032,7 +1032,7 @@ public class DeclarationTest extends TestingContext {
               result = myStruct();
               """;
           module(code)
-              .loadsWithError(4, "In call to function with type `MyStruct(String field)`:" +
+              .loadsWithError(4, "In call to function with parameters `(String field)`:" +
                   " Parameter `field` must be specified.");
         }
       }
@@ -1368,8 +1368,8 @@ public class DeclarationTest extends TestingContext {
             ];
             """)
               .loadsWith(
-                  err(3, "In call to function with type `String()`: Unknown parameter `unknown1`."),
-                  err(4, "In call to function with type `String()`: Unknown parameter `unknown2`.")
+                  err(3, "In call to function with parameters `()`: Unknown parameter `unknown1`."),
+                  err(4, "In call to function with parameters `()`: Unknown parameter `unknown2`.")
               );
         }
       }
@@ -1413,9 +1413,9 @@ public class DeclarationTest extends TestingContext {
             result = "abc" | myIdentity(myFunc(unknown=""));
             """)
                 .loadsWith(
-                    err(3, "In call to function with type `String(String a, String b)`:"
+                    err(3, "In call to function with parameters `(String a, String b)`:"
                         + " Unknown parameter `unknown`."),
-                    err(3, "In call to function with type `String(String s)`:"
+                    err(3, "In call to function with parameters `(String s)`:"
                         + " Too many positional arguments.")
         );
       }

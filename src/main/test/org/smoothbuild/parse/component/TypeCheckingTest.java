@@ -1,7 +1,5 @@
 package org.smoothbuild.parse.component;
 
-import static org.smoothbuild.util.collect.Lists.list;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
@@ -60,10 +58,9 @@ public class TypeCheckingTest extends TestingContext {
           result = myFunc([1, 2, 3]);
           """;
       var blobArray = arrayTS(blobTS());
-      var funcTS = funcTS(stringTS(), list(blobArray));
       module(sourceCode)
-          .loadsWithError(2, "In call to function with type " + funcTS.q()
-              + ": Cannot assign argument of type " + arrayTS(intTS()).q()
+          .loadsWithError(2, "In call to function with parameters ([Blob] blobArray):"
+              + " Cannot assign argument of type " + arrayTS(intTS()).q()
               + " to parameter `blobArray` of type " + blobArray.q() + ".");
     }
 
@@ -87,11 +84,11 @@ public class TypeCheckingTest extends TestingContext {
           result = myFunc(blobArray = [1, 2, 3]);
           """;
       var blobArray = arrayTS(blobTS());
-      var funcTS = funcTS(stringTS(), list(blobArray));
       module(sourceCode)
-          .loadsWithError(2, "In call to function with type " + funcTS.q()
-              + ": Cannot assign argument of type " + arrayTS(intTS()).q()
-              + " to parameter `blobArray` of type " + blobArray.q() + ".");
+          .loadsWithError(2,
+              "In call to function with parameters ([Blob] blobArray):"
+                  + " Cannot assign argument of type " + arrayTS(intTS()).q()
+                  + " to parameter `blobArray` of type " + blobArray.q() + ".");
     }
 
     @Test
