@@ -10,7 +10,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -277,7 +276,7 @@ public class TestedTSF {
   private static ImmutableList<ItemSigS> toSigs(List<TestedTS> paramTestedTs) {
     Builder<ItemSigS> builder = ImmutableList.builder();
     for (int i = 0; i < paramTestedTs.size(); i++) {
-      builder.add(new ItemSigS(paramTestedTs.get(i).type(), "p" + i, Optional.empty()));
+      builder.add(new ItemSigS(paramTestedTs.get(i).type(), "p" + i));
     }
     return builder.build();
   }

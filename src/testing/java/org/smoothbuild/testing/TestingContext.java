@@ -1140,7 +1140,7 @@ public class TestingContext {
   }
 
   public ItemSigS sigS(TypeS type, String name) {
-    return new ItemSigS(type, name, empty());
+    return new ItemSigS(type, name);
   }
 
   public static ModFiles modFiles() {

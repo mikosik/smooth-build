@@ -20,7 +20,7 @@ public final class ItemN extends EvalN {
   @Override
   public void setType(Optional<TypeS> type) {
     super.setType(type);
-    sig = type().map(t -> new ItemSigS(t, Optional.of(name()), body().flatMap(Node::type)));
+    sig = type().map(t -> new ItemSigS(t, Optional.of(name())));
   }
 
   public Optional<ItemSigS> sig() {

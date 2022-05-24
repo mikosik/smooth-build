@@ -23,7 +23,7 @@ public class ItemS extends EvalS {
   public ItemS(TypeS type, ModPath modPath, String name, Optional<ExprS> body, Loc loc) {
     super(type, modPath, name, loc);
     this.body = body;
-    this.sig = new ItemSigS(type(), name(), body.map(ExprS::type));
+    this.sig = new ItemSigS(type(), name());
   }
 
   public ItemSigS sig() {
