@@ -17,16 +17,16 @@ import org.smoothbuild.util.collect.NameableImpl;
  */
 public class ItemSigS extends NameableImpl {
   private final TypeS type;
-  private final Optional<TypeS> defaultValT;
+  private final Optional<TypeS> body;
 
-  public ItemSigS(TypeS type, String name, Optional<TypeS> defaultValT) {
-    this(type, Optional.of(name), defaultValT);
+  public ItemSigS(TypeS type, String name, Optional<TypeS> body) {
+    this(type, Optional.of(name), body);
   }
 
-  public ItemSigS(TypeS type, Optional<String> name, Optional<TypeS> defaultValT) {
+  public ItemSigS(TypeS type, Optional<String> name, Optional<TypeS> body) {
     super(name);
     this.type = requireNonNull(type);
-    this.defaultValT = requireNonNull(defaultValT);
+    this.body = requireNonNull(body);
   }
 
   public static ItemSigS itemSigS(TypeS type) {
@@ -41,8 +41,8 @@ public class ItemSigS extends NameableImpl {
     return type;
   }
 
-  public Optional<TypeS> defaultValT() {
-    return defaultValT;
+  public Optional<TypeS> body() {
+    return body;
   }
 
   public String typeAndName() {
@@ -68,11 +68,11 @@ public class ItemSigS extends NameableImpl {
     return object instanceof ItemSigS that
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.nameO(), that.nameO())
-        && Objects.equals(this.defaultValT, that.defaultValT);
+        && Objects.equals(this.body, that.body);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), nameO(), defaultValT);
+    return Objects.hash(type(), nameO(), body);
   }
 }

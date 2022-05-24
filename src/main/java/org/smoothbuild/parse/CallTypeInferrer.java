@@ -88,7 +88,7 @@ public class CallTypeInferrer {
       if (arg.isPresent()) {
         assigned.add(arg.get().type());
       } else {
-        assigned.add(params.get(i).defaultValT());
+        assigned.add(params.get(i).body());
       }
     }
     return assigned;
