@@ -34,6 +34,7 @@ import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.ArrayTN;
 import org.smoothbuild.parse.ast.Ast;
+import org.smoothbuild.parse.ast.AstNode;
 import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
@@ -43,7 +44,6 @@ import org.smoothbuild.parse.ast.FuncN;
 import org.smoothbuild.parse.ast.FuncTN;
 import org.smoothbuild.parse.ast.IntN;
 import org.smoothbuild.parse.ast.ItemN;
-import org.smoothbuild.parse.ast.Node;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.parse.ast.SelectN;
@@ -364,8 +364,8 @@ public class TypeInferrer {
         intN.setType(typeSF.int_());
       }
 
-      private void logError(Node node, String message) {
-        logBuffer.log(parseError(node, message));
+      private void logError(AstNode astNode, String message) {
+        logBuffer.log(parseError(astNode, message));
       }
     }.visitAst(ast);
     return logBuffer.toList();

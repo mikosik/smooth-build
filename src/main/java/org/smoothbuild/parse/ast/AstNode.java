@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.type.TypeS;
 
-public sealed class Node permits ExprN, NamedN {
+public sealed class AstNode permits ExprN, NamedN {
   private final Loc loc;
   private Optional<TypeS> type;
 
-  public Node(Loc loc) {
+  public AstNode(Loc loc) {
     this.loc = loc;
   }
 

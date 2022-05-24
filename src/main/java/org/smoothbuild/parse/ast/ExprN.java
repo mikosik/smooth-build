@@ -6,7 +6,7 @@ import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.like.Expr;
 import org.smoothbuild.lang.type.TypeS;
 
-public sealed abstract class ExprN extends Node implements Expr
+public sealed abstract class ExprN extends AstNode implements Expr
     permits OrderN, BlobN, CallN, IntN, RefN, SelectN, StringN {
   public ExprN(Loc loc) {
     super(loc);

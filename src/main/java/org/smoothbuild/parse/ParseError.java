@@ -4,11 +4,11 @@ import static org.smoothbuild.out.log.Log.error;
 
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.parse.ast.Node;
+import org.smoothbuild.parse.ast.AstNode;
 
 public class ParseError {
-  public static Log parseError(Node node, String message) {
-    return parseError(node.loc(), message);
+  public static Log parseError(AstNode astNode, String message) {
+    return parseError(astNode.loc(), message);
   }
 
   public static Log parseError(Loc loc, String message) {
