@@ -4,7 +4,7 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
 import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
-import static org.smoothbuild.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
+import static org.smoothbuild.parse.ConstructArgList.constructArgList;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -288,7 +288,7 @@ public class TypeInferrer {
             call.setType(empty());
           } else {
             var params = funcParams.get();
-            Maybe<List<Optional<ArgN>>> args = inferArgsToParamsAssignment(call, params);
+            Maybe<ImmutableList<ArgN>> args = constructArgList(call, params);
             if (args.containsProblem()) {
               logBuffer.logAll(args.logs());
               call.setType(empty());
@@ -322,9 +322,8 @@ public class TypeInferrer {
         return nList(map(((FuncTS) funcTS).params(), p -> new Param(itemSigS(p), empty())));
       }
 
-      private static boolean someArgHasNotInferredType(List<Optional<ArgN>> assignedArgs) {
-        return assignedArgs.stream()
-            .flatMap(Optional::stream)
+      private static boolean someArgHasNotInferredType(ImmutableList<ArgN> args) {
+        return args.stream()
             .anyMatch(a -> a.type().isEmpty());
       }
 

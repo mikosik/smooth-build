@@ -7,9 +7,7 @@ import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.map;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.TypeS;
@@ -37,33 +35,27 @@ public class CallTypeInferrer {
 
   public Maybe<TypeS> inferCallT(CallN call, TypeS resT, NList<ItemSigS> params) {
     var logBuffer = new LogBuffer();
-    List<Optional<ArgN>> assignedArgs = call.assignedArgs();
-    findIllegalTypeAssignmentErrors(call, assignedArgs, params, logBuffer);
+    var args = call.assignedArgs();
+    findIllegalTypeAssignmentErrors(call, args, params, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
-    List<Optional<TypeS>> assignedTs = assignedTs(params, assignedArgs);
-    if (allAssignedTypesAreInferred(assignedTs)) {
-      var boundedVars = typing.inferVarBoundsLower(
-          map(params, ItemSigS::type),
-          map(assignedTs, Optional::get));
-      var varProblems = findVarProblems(call, boundedVars);
-      if (!varProblems.isEmpty()) {
-        logBuffer.logAll(varProblems);
-        return maybeLogs(logBuffer);
-      }
-      TypeS mapped = typing.mapVarsLower(resT, boundedVars);
-      return maybeValueAndLogs(mapped, logBuffer);
+    var assignedTs = map(args, arg -> arg.type().get());
+    var boundedVars = typing.inferVarBoundsLower(map(params, ItemSigS::type), assignedTs);
+    var varProblems = findVarProblems(call, boundedVars);
+    if (!varProblems.isEmpty()) {
+      logBuffer.logAll(varProblems);
+      return maybeLogs(logBuffer);
     }
-    return maybeLogs(logBuffer);
+    TypeS mapped = typing.mapVarsLower(resT, boundedVars);
+    return maybeValueAndLogs(mapped, logBuffer);
   }
 
-  private void findIllegalTypeAssignmentErrors(CallN call,
-      List<Optional<ArgN>> assignedList, List<ItemSigS> params, Logger logger) {
-    range(0, assignedList.size())
-        .filter(i -> assignedList.get(i).isPresent())
-        .filter(i -> !isAssignable(params.get(i), assignedList.get(i).get()))
-        .mapToObj(i -> illegalAssignmentError(call, params.get(i), assignedList.get(i).get()))
+  private void findIllegalTypeAssignmentErrors(
+      CallN call, ImmutableList<ArgN> args, List<ItemSigS> params, Logger logger) {
+    range(0, args.size())
+        .filter(i -> !isAssignable(params.get(i), args.get(i)))
+        .mapToObj(i -> illegalAssignmentError(call, params.get(i), args.get(i)))
         .forEach(logger::log);
   }
 
@@ -79,23 +71,6 @@ public class CallTypeInferrer {
 
   private static String inCallToPrefix(CallN call) {
     return "In call to function with type " + call.callable().type().get().q() + ": ";
-  }
-
-  private List<Optional<TypeS>> assignedTs(List<ItemSigS> params, List<Optional<ArgN>> args) {
-    List<Optional<TypeS>> assigned = new ArrayList<>();
-    for (int i = 0; i < params.size(); i++) {
-      Optional<ArgN> arg = args.get(i);
-      if (arg.isPresent()) {
-        assigned.add(arg.get().type());
-      } else {
-        assigned.add(params.get(i).body());
-      }
-    }
-    return assigned;
-  }
-
-  private static boolean allAssignedTypesAreInferred(List<Optional<TypeS>> assigned) {
-    return assigned.stream().allMatch(Optional::isPresent);
   }
 
   private ImmutableList<Log> findVarProblems(CallN call, VarBoundsS varBounds) {

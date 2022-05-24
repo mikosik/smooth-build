@@ -1,10 +1,12 @@
 package org.smoothbuild.parse.ast;
 
 import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.like.Expr;
 
 public final class DefaultArgN extends ArgN {
-  public DefaultArgN(ExprN expr, Loc loc) {
+  public DefaultArgN(Expr expr, Loc loc) {
     super(null, expr, loc);
+    setType(expr.typeO());
   }
 
   @Override

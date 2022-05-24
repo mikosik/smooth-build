@@ -15,7 +15,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.smoothbuild.lang.like.Param;
@@ -25,13 +24,13 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.CallN;
+import org.smoothbuild.parse.ast.DefaultArgN;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class InferArgsToParamsAssignment {
-  public static Maybe<List<Optional<ArgN>>> inferArgsToParamsAssignment(
-      CallN call, NList<Param> params) {
+public class ConstructArgList {
+  public static Maybe<ImmutableList<ArgN>> constructArgList(CallN call, NList<Param> params) {
     var logBuffer = new LogBuffer();
     var positionalArgs = leadingPositionalArgs(call);
     logBuffer.logAll(findPositionalArgAfterNamedArgError(call, params));
@@ -44,7 +43,7 @@ public class InferArgsToParamsAssignment {
 
     var assignedArgs = assignedArgs(call, params);
     logBuffer.logAll(findUnassignedParamsWithoutDefaultArgsErrors(call, assignedArgs, params));
-    var result = logBuffer.containsProblem() ? null : assignedArgs;
+    var result = logBuffer.containsProblem() ? null : ImmutableList.copyOf(assignedArgs);
     return maybeValueAndLogs(result, logBuffer);
   }
 
@@ -55,19 +54,26 @@ public class InferArgsToParamsAssignment {
         .collect(toImmutableList());
   }
 
-  private static List<Optional<ArgN>> assignedArgs(CallN call, NList<Param> params) {
-    List<ArgN> args = call.args();
-    List<Optional<ArgN>> assignedList =
-        new ArrayList<>(nCopies(params.size(), Optional.empty()));
+  private static List<ArgN> assignedArgs(CallN call, NList<Param> params) {
+    var args = call.args();
+    var result = new ArrayList<ArgN>(nCopies(params.size(), null));
     for (int i = 0; i < args.size(); i++) {
-      ArgN arg = args.get(i);
+      var arg = args.get(i);
       if (arg.declaresName()) {
-        assignedList.set(params.indexMap().get(arg.name()), Optional.of(arg));
+        result.set(params.indexMap().get(arg.name()), arg);
       } else {
-        assignedList.set(i, Optional.of(arg));
+        result.set(i, arg);
       }
     }
-    return assignedList;
+    for (int i = 0; i < result.size(); i++) {
+      if (result.get(i) == null) {
+        var body = params.get(i).body();
+        if (body.isPresent()) {
+          result.set(i, new DefaultArgN(body.get(), call.loc()));
+        }
+      }
+    }
+    return result;
   }
 
   private static List<Log> findPositionalArgAfterNamedArgError(CallN call, NList<Param> params) {
@@ -119,10 +125,9 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findUnassignedParamsWithoutDefaultArgsErrors(CallN call,
-      List<Optional<ArgN>> assignedList, NList<Param> params) {
+      List<ArgN> assignedList, NList<Param> params) {
     return range(0, assignedList.size())
-        .filter(i -> assignedList.get(i).isEmpty())
-        .filter(i -> params.get(i).body().isEmpty())
+        .filter(i -> assignedList.get(i) == null)
         .mapToObj(i -> paramsMustBeSpecifiedError(call, i, params.get(i), params))
         .collect(toList());
   }

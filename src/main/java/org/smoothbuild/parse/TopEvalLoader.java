@@ -3,9 +3,6 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
-import java.util.List;
-import java.util.Optional;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.define.AnnFuncS;
@@ -34,7 +31,6 @@ import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.parse.ast.AnnN;
-import org.smoothbuild.parse.ast.ArgN;
 import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
 import org.smoothbuild.parse.ast.EvalN;
@@ -131,44 +127,16 @@ public class TopEvalLoader {
 
   private ExprS createCall(CallN call) {
     var callable = createExpr(call.callable());
-    var argExpressions = createArgExprs(call);
+    var argExpressions = map(call.assignedArgs(), a -> createArgExpr(a.expr()));
     var resT = call.type().get();
     return new CallS(resT, callable, argExpressions, call.loc());
   }
 
-  private ImmutableList<ExprS> createArgExprs(CallN call) {
-    var builder = ImmutableList.<ExprS>builder();
-    List<Optional<ArgN>> args = call.assignedArgs();
-    for (int i = 0; i < args.size(); i++) {
-      builder.add(createArgExpr(call, args, i));
-    }
-    return builder.build();
-  }
-
-  private ExprS createArgExpr(CallN call, List<Optional<ArgN>> args, int i) {
-    Optional<ArgN> arg = args.get(i);
-    if (arg.isPresent()) {
-      Expr expr = arg.get().expr();
-      return switch (expr) {
-        case ExprN exprN -> createExpr(exprN);
-        case ExprS exprS -> exprS;
-        default -> throw unexpectedCaseExc(expr);
-      };
-    } else {
-      return createDefaultArgExpr(call, i);
-    }
-  }
-
-  private ExprS createDefaultArgExpr(CallN call, int i) {
-    // Arg is not present so we have to use func default arg.
-    // This means that this call is made on reference to actual func and that func
-    // has default arg for given param, otherwise checkers that ran so far would
-    // report an error.
-    Eval referenced = ((RefN) call.callable()).referenced();
-    return switch (referenced) {
-      case FuncS func -> func.params().get(i).body().get();
-      case FuncN node -> createExpr(node.params().get(i).body().get());
-      default -> throw unexpectedCaseExc(referenced);
+  private ExprS createArgExpr(Expr expr) {
+    return switch (expr) {
+      case ExprN exprN -> createExpr(exprN);
+      case ExprS exprS -> exprS;
+      default -> throw unexpectedCaseExc(expr);
     };
   }
 
