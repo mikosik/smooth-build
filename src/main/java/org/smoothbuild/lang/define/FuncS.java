@@ -39,7 +39,7 @@ public sealed abstract class FuncS extends TopEvalS permits AnnFuncS, DefFuncS, 
 
   public boolean canBeCalledArgless() {
     return params.stream()
-        .allMatch(p -> p.defaultVal().isPresent());
+        .allMatch(p -> p.body().isPresent());
   }
 
   protected String signature() {

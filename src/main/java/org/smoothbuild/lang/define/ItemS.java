@@ -17,25 +17,25 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class ItemS extends EvalS {
-  private final Optional<ExprS> defaultVal;
+  private final Optional<ExprS> body;
   private final ItemSigS sig;
 
-  public ItemS(TypeS type, ModPath modPath, String name, Optional<ExprS> defaultVal, Loc loc) {
+  public ItemS(TypeS type, ModPath modPath, String name, Optional<ExprS> body, Loc loc) {
     super(type, modPath, name, loc);
-    this.defaultVal = defaultVal;
-    this.sig = new ItemSigS(type(), name(), defaultVal.map(ExprS::type));
+    this.body = body;
+    this.sig = new ItemSigS(type(), name(), body.map(ExprS::type));
   }
 
   public ItemSigS sig() {
     return sig;
   }
 
-  public Optional<ExprS> defaultVal() {
-    return defaultVal;
+  public Optional<ExprS> body() {
+    return body;
   }
 
   private String defaultValToString() {
-    return defaultVal.map(v -> " = " + v).orElse("");
+    return body.map(v -> " = " + v).orElse("");
   }
 
   public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
@@ -56,12 +56,12 @@ public class ItemS extends EvalS {
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.modPath(), that.modPath())
         && Objects.equals(this.name(), that.name())
-        && Objects.equals(this.defaultVal, that.defaultVal)
+        && Objects.equals(this.body, that.body)
         && Objects.equals(this.loc(), that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), modPath(), name(), defaultVal, loc());
+    return Objects.hash(type(), modPath(), name(), body, loc());
   }
 }

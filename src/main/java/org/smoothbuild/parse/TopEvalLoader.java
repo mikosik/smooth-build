@@ -46,7 +46,6 @@ import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.parse.ast.SelectN;
 import org.smoothbuild.parse.ast.StringN;
-import org.smoothbuild.util.Throwables;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -108,8 +107,8 @@ public class TopEvalLoader {
   private ItemS createParam(ItemN param, ModPath path) {
     var type = param.evalT().get().type().get();
     var name = param.name();
-    var defaultArg = param.body().map(this::createExpr);
-    return new ItemS(type, path, name, defaultArg, param.loc());
+    var body = param.body().map(this::createExpr);
+    return new ItemS(type, path, name, body, param.loc());
   }
 
   private ExprS createExpr(ExprN expr) {
@@ -167,7 +166,7 @@ public class TopEvalLoader {
     // report an error.
     Eval referenced = ((RefN) call.callable()).referenced();
     return switch (referenced) {
-      case FuncS func -> func.params().get(i).defaultVal().get();
+      case FuncS func -> func.params().get(i).body().get();
       case FuncN node -> createExpr(node.params().get(i).body().get());
       default -> throw unexpectedCaseExc(referenced);
     };

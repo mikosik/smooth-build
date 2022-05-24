@@ -1042,12 +1042,12 @@ public class TestingContext {
     return itemS(line, type, name, empty());
   }
 
-  public ItemS itemS(int line, TypeS type, String name, ExprS defaultArg) {
-    return itemS(line, type, name, Optional.of(defaultArg));
+  public ItemS itemS(int line, TypeS type, String name, ExprS body) {
+    return itemS(line, type, name, Optional.of(body));
   }
 
-  private ItemS itemS(int line, TypeS type, String name, Optional<ExprS> defaultArg) {
-    return new ItemS(type, modPath(), name, defaultArg, loc(line));
+  private ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
+    return new ItemS(type, modPath(), name, body, loc(line));
   }
 
   public AnnFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {

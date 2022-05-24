@@ -45,8 +45,8 @@ public class FuncSTest extends TestingContext {
     return param(name, Optional.empty());
   }
 
-  private ItemS param(String name, Optional<ExprS> defaultArg) {
-    return new ItemS(STRING, modPath(), name, defaultArg, loc());
+  private ItemS param(String name, Optional<ExprS> body) {
+    return new ItemS(STRING, modPath(), name, body, loc());
   }
 
   private FuncS myFunc(TypeS resT, ImmutableList<ItemS> params) {
