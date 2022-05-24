@@ -296,7 +296,7 @@ public class TypeInferrer {
               call.setType(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<TypeS> type = callTypeInferrer.inferCallT(call, funcT.res(), params.map(Param::sig));
+              Maybe<TypeS> type = callTypeInferrer.inferCallT(call, funcT.res(), params);
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
             }

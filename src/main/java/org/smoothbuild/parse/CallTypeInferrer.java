@@ -11,6 +11,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import java.util.List;
 
 import org.smoothbuild.lang.define.ItemSigS;
+import org.smoothbuild.lang.like.Param;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.TypingS;
@@ -34,15 +35,15 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Maybe<TypeS> inferCallT(CallN call, TypeS resT, NList<ItemSigS> params) {
+  public Maybe<TypeS> inferCallT(CallN call, TypeS resT, NList<Param> params) {
     var logBuffer = new LogBuffer();
     var args = call.assignedArgs();
-    findIllegalTypeAssignmentErrors(args, params, logBuffer);
+    findIllegalTypeAssignmentErrors(args, params.map(Param::sig), logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
     var assignedTs = map(args, arg -> arg.type().get());
-    var boundedVars = typing.inferVarBoundsLower(map(params, ItemSigS::type), assignedTs);
+    var boundedVars = typing.inferVarBoundsLower(map(params, Param::type), assignedTs);
     var varProblems = findVarProblems(call, boundedVars);
     if (!varProblems.isEmpty()) {
       logBuffer.logAll(varProblems);
