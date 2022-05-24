@@ -1085,7 +1085,7 @@ public class TestingContext {
 
   public SyntCtorS syntCtorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
-    var params = fields.map(i -> new ItemS(i.type(), modPath(), i.nameSane(), empty(), loc(line)));
+    var params = fields.map(f -> new ItemS(f.type(), modPath(), f.nameSane(), empty(), loc(line)));
     return syntCtorS(line, funcTS(structT, params.list()), modPath(), name, params);
   }
 
