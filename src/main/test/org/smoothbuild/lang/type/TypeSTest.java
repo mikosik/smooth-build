@@ -124,36 +124,6 @@ public class TypeSTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("func_result_cases")
-  public void func_result(FuncTS type, TypeS expected) {
-    assertThat(type.res())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> func_result_cases() {
-    return asList(
-        arguments(f(INT, list()), INT),
-        arguments(f(BLOB, list(BOOL)), BLOB),
-        arguments(f(BLOB, list(BOOL, INT)), BLOB)
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("func_params_cases")
-  public void func_params(FuncTS type, Object expected) {
-    assertThat(type.params())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> func_params_cases() {
-    return asList(
-        arguments(f(INT, list()), list()),
-        arguments(f(BLOB, list(BOOL)), list(BOOL)),
-        arguments(f(BLOB, list(BOOL, INT)), list(BOOL, INT))
-    );
-  }
-
   @Nested
   class _array {
     @ParameterizedTest
@@ -184,6 +154,39 @@ public class TypeSTest {
           arguments(a(NOTHING)),
           arguments(a(STRING)),
           arguments(a(VAR_A))
+      );
+    }
+  }
+
+  @Nested
+  class _func {
+    @ParameterizedTest
+    @MethodSource("func_result_cases")
+    public void func_result(FuncTS type, TypeS expected) {
+      assertThat(type.res())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> func_result_cases() {
+      return asList(
+          arguments(f(INT, list()), INT),
+          arguments(f(BLOB, list(BOOL)), BLOB),
+          arguments(f(BLOB, list(BOOL, INT)), BLOB)
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("func_params_cases")
+    public void func_params(FuncTS type, Object expected) {
+      assertThat(type.params())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> func_params_cases() {
+      return asList(
+          arguments(f(INT, list()), list()),
+          arguments(f(BLOB, list(BOOL)), list(BOOL)),
+          arguments(f(BLOB, list(BOOL, INT)), list(BOOL, INT))
       );
     }
   }
