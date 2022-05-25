@@ -22,7 +22,8 @@ public final class VarS extends TypeS {
     return vars;
   }
 
-  public VarS withPrefix(String prefix) {
+  @Override
+  public VarS withPrefixedVars(String prefix) {
     checkArgument(!prefix.contains(PREFIX_SEPARATOR));
     return new VarS(prefix + PREFIX_SEPARATOR + name());
   }

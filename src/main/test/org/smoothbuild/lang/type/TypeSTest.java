@@ -138,6 +138,52 @@ public class TypeSTest {
     );
   }
 
+  @ParameterizedTest
+  @MethodSource("with_prefixed_vars")
+  public void with_prefixed_vars(TypeS type, String prefix, TypeS expected) {
+    assertThat(type.withPrefixedVars(prefix))
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> with_prefixed_vars() {
+    return List.of(
+        arguments(ANY, "prefix", ANY),
+        arguments(BLOB, "prefix", BLOB),
+        arguments(BOOL, "prefix", BOOL),
+        arguments(INT, "prefix", INT),
+        arguments(NOTHING, "prefix", NOTHING),
+        arguments(STRING, "prefix", STRING),
+
+        arguments(var("A"), "prefix", var("prefix.A")),
+        arguments(var("pre.A"), "prefix", var("prefix.pre.A")),
+
+        arguments(join(BLOB, INT), "prefix", join(BLOB, INT)),
+        arguments(join(var("A"), var("B")), "prefix", join(var("prefix.A"), var("prefix.B"))),
+        arguments(join(var("p.A"), var("p.B")), "prefix", join(var("prefix.p.A"), var("prefix.p.B"))),
+
+        arguments(meet(BLOB, INT), "prefix", meet(BLOB, INT)),
+        arguments(meet(var("A"), var("B")), "prefix", meet(var("prefix.A"), var("prefix.B"))),
+        arguments(meet(var("p.A"), var("p.B")), "prefix", meet(var("prefix.p.A"), var("prefix.p.B"))),
+
+        arguments(a(INT), "prefix", a(INT)),
+        arguments(a(var("A")), "prefix", a(var("prefix.A"))),
+        arguments(a(var("p.A")), "prefix", a(var("prefix.p.A"))),
+
+        arguments(f(BLOB, list(BOOL)), "prefix", f(BLOB, list(BOOL))),
+        arguments(f(var("A"), list(BOOL)), "prefix", f(var("prefix.A"), list(BOOL))),
+        arguments(f(BLOB, list(var("A"))), "prefix", f(BLOB, list(var("prefix.A")))),
+        arguments(f(var("p.A"), list(BOOL)), "prefix", f(var("prefix.p.A"), list(BOOL))),
+        arguments(f(BLOB, list(var("p.A"))), "prefix", f(BLOB, list(var("prefix.p.A"))))
+    );
+  }
+
+  @Test
+  public void with_prefixed_vars_fails_when_prefix_contains_dot() {
+    var var = var("A");
+    assertCall(() -> var.withPrefixedVars("abc."))
+        .throwsException(IllegalArgumentException.class);
+  }
+
   @Nested
   class _array {
     @ParameterizedTest
@@ -329,19 +375,6 @@ public class TypeSTest {
 
   @Nested
   class _var {
-    @Test
-    public void with_prefix() {
-      assertThat(var("A").withPrefix("abc"))
-          .isEqualTo(var("abc.A"));
-    }
-
-    @Test
-    public void with_prefix_fails_when_prefix_contains_dot() {
-      var var = var("A");
-      assertCall(() -> var.withPrefix("abc."))
-          .throwsException(IllegalArgumentException.class);
-    }
-
     @Test
     public void strip_prefix() {
       assertThat(var("abc.A").stripPrefix())

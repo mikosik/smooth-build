@@ -15,6 +15,15 @@ public final class ArrayTS extends TypeS implements ComposedTS {
     this.elem = requireNonNull(elem);
   }
 
+  @Override
+  public ArrayTS withPrefixedVars(String prefix) {
+    if (vars().isEmpty()) {
+      return this;
+    } else {
+      return new ArrayTS(elem.withPrefixedVars(prefix));
+    }
+  }
+
   public TypeS elem() {
     return elem;
   }

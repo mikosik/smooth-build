@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.type;
 
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.util.collect.Sets.map;
 
 import java.util.Objects;
 import java.util.Set;
@@ -53,6 +54,15 @@ public final class MeetTS extends MergingTS {
       result.addAll(meet.elems);
     } else {
       result.add(type);
+    }
+  }
+
+  @Override
+  public TypeS withPrefixedVars(String prefix) {
+    if (vars().isEmpty()) {
+      return this;
+    } else {
+      return new MeetTS(map(elems, e -> e.withPrefixedVars(prefix)));
     }
   }
 

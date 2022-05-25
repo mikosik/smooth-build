@@ -50,6 +50,10 @@ public abstract sealed class TypeS
     return vars;
   }
 
+  public TypeS withPrefixedVars(String prefix) {
+    return this;
+  }
+
   @Override
   public boolean equals(Object object) {
     if (this == object) {

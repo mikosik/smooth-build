@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.type.TNamesS.funcTypeName;
 import static org.smoothbuild.util.collect.Lists.concat;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Objects;
 
@@ -23,6 +24,15 @@ public final class FuncTS extends TypeS implements ComposedTS {
 
   public static VarSetS calculateFuncVars(TypeS resT, ImmutableList<TypeS> paramTs) {
     return calculateVars(concat(resT, paramTs));
+  }
+
+  @Override
+  public TypeS withPrefixedVars(String prefix) {
+    if (vars().isEmpty()) {
+      return this;
+    } else {
+      return new FuncTS(res.withPrefixedVars(prefix), map(params, t -> t.withPrefixedVars(prefix)));
+    }
   }
 
   public TypeS res() {
