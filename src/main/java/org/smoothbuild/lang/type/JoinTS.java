@@ -4,8 +4,7 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import java.util.Objects;
-
-import org.smoothbuild.util.collect.Lists;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -18,8 +17,14 @@ public final class JoinTS extends MergingTS {
 
   private JoinTS(ImmutableSet<TypeS> elems) {
     // TODO empty varSet - should we calculate it here or lazily? is it even needed for join/meet
-    super("Join", varSetS());
+    super(calculateName(elems), varSetS());
     this.elems = elems;
+  }
+
+  private static String calculateName(Set<TypeS> elems) {
+    return elems.stream()
+        .map(TypeS::name)
+        .collect(joining(" ⊔ "));
   }
 
   public ImmutableSet<TypeS> elems() {
@@ -65,12 +70,5 @@ public final class JoinTS extends MergingTS {
   @Override
   public int hashCode() {
     return Objects.hash(elems.hashCode());
-  }
-
-  @Override
-  public String toString() {
-    return elems.stream()
-        .map(Object::toString)
-        .collect(joining(" ⊔ "));
   }
 }

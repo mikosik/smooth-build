@@ -75,6 +75,11 @@ public class TypeSTest {
         arguments(struct("MyStruct", nList()), "MyStruct"),
         arguments(VAR_A, "A"),
 
+        arguments(join(BLOB, INT), "Blob ⊔ Int"),
+        arguments(join(INT, BLOB), "Int ⊔ Blob"),
+        arguments(meet(BLOB, INT), "Blob ⊓ Int"),
+        arguments(meet(INT, BLOB), "Int ⊓ Blob"),
+
         arguments(a(ANY), "[Any]"),
         arguments(a(BLOB), "[Blob]"),
         arguments(a(BOOL), "[Bool]"),

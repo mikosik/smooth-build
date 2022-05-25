@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -15,8 +16,14 @@ public final class MeetTS extends MergingTS {
   private final ImmutableSet<TypeS> elems;
 
   private MeetTS(ImmutableSet<TypeS> elems) {
-    super("Meet", varSetS());
+    super(calculateName(elems), varSetS());
     this.elems = elems;
+  }
+
+  private static String calculateName(Set<TypeS> elems) {
+    return elems.stream()
+        .map(TypeS::name)
+        .collect(joining(" ⊓ "));
   }
 
   public ImmutableSet<TypeS> elems() {
@@ -62,12 +69,5 @@ public final class MeetTS extends MergingTS {
   @Override
   public int hashCode() {
     return Objects.hash(elems.hashCode());
-  }
-
-  @Override
-  public String toString() {
-    return elems.stream()
-        .map(Object::toString)
-        .collect(joining(" ⊓ "));
   }
 }
