@@ -144,12 +144,12 @@ public class TestingTS {
     return a(elemT);
   }
 
-  public TypeS join(List<TypeS> elems) {
+  public static TypeS join(List<TypeS> elems) {
     return switch (elems.size()) {
       case 0 -> throw new IllegalArgumentException();
       case 1 -> elems.get(0);
       default -> {
-        TypeS result = nothing();
+        TypeS result = NOTHING;
         for (TypeS elem : elems) {
           result = JoinTS.join(result, elem);
         }
@@ -158,16 +158,16 @@ public class TestingTS {
     };
   }
 
-  public TypeS join(TypeS a, TypeS b) {
+  public static TypeS join(TypeS a, TypeS b) {
     return JoinTS.join(a, b);
   }
 
-  public TypeS meet(List<TypeS> elems) {
+  public static TypeS meet(List<TypeS> elems) {
     return switch (elems.size()) {
       case 0 -> throw new IllegalArgumentException();
       case 1 -> elems.get(0);
       default -> {
-        TypeS result = any();
+        TypeS result = ANY;
         for (TypeS elem : elems) {
           result = MeetTS.meet(result, elem);
         }
@@ -176,7 +176,7 @@ public class TestingTS {
     };
   }
 
-  public TypeS meet(TypeS a, TypeS b) {
+  public static TypeS meet(TypeS a, TypeS b) {
     return MeetTS.meet(a, b);
   }
 
