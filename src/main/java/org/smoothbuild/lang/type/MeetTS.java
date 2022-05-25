@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import java.util.Objects;
 import java.util.Set;
@@ -16,7 +15,7 @@ public final class MeetTS extends MergingTS {
   private final ImmutableSet<TypeS> elems;
 
   private MeetTS(ImmutableSet<TypeS> elems) {
-    super(calculateName(elems), varSetS());
+    super(calculateName(elems), calculateVars(elems));
     this.elems = elems;
   }
 

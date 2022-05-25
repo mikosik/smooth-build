@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import java.util.Objects;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableCollection;
 
 /**
  * Smooth language type.
@@ -39,7 +39,7 @@ public abstract sealed class TypeS
     return "`" + name() + "`";
   }
 
-  public static VarSetS calculateVars(ImmutableList<TypeS> types) {
+  public static VarSetS calculateVars(ImmutableCollection<TypeS> types) {
     return types.stream()
         .map(TypeS::vars)
         .flatMap(VarSetS::stream)

@@ -14,6 +14,7 @@ import static org.smoothbuild.testing.type.TestingTS.INT;
 import static org.smoothbuild.testing.type.TestingTS.NOTHING;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.testing.type.TestingTS.VAR_A;
+import static org.smoothbuild.testing.type.TestingTS.VAR_B;
 import static org.smoothbuild.testing.type.TestingTS.a;
 import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.testing.type.TestingTS.join;
@@ -121,6 +122,12 @@ public class TypeSTest {
         arguments(INT, varSetS()),
         arguments(NOTHING, varSetS()),
         arguments(STRING, varSetS()),
+
+        arguments(join(INT, BLOB), varSetS()),
+        arguments(join(VAR_A, VAR_B), varSetS(VAR_A, VAR_B)),
+
+        arguments(meet(INT, BLOB), varSetS()),
+        arguments(meet(VAR_A, VAR_B), varSetS(VAR_A, VAR_B)),
 
         arguments(a(INT), varSetS()),
         arguments(a(VAR_A), varSetS(VAR_A)),

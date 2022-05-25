@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import java.util.Objects;
 import java.util.Set;
@@ -16,8 +15,7 @@ public final class JoinTS extends MergingTS {
   private final ImmutableSet<TypeS> elems;
 
   private JoinTS(ImmutableSet<TypeS> elems) {
-    // TODO empty varSet - should we calculate it here or lazily? is it even needed for join/meet
-    super(calculateName(elems), varSetS());
+    super(calculateName(elems), calculateVars(elems));
     this.elems = elems;
   }
 
