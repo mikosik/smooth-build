@@ -194,6 +194,78 @@ public class TypeSTest {
   }
 
   @Nested
+  class _join {
+    @ParameterizedTest
+    @MethodSource("join_of_test_cases")
+    public void join_of(TypeS a, TypeS b, TypeS expected) {
+      assertThat(join(a, b))
+          .isEqualTo(expected);
+      assertThat(join(b, a))
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> join_of_test_cases() {
+      return List.of(
+          arguments(NOTHING, ANY, ANY),
+          arguments(NOTHING, STRING, STRING),
+          arguments(NOTHING, a(STRING), a(STRING)),
+          arguments(NOTHING, join(STRING, BOOL), join(STRING, BOOL)),
+          arguments(NOTHING, NOTHING, NOTHING),
+
+          arguments(STRING, ANY, ANY),
+          arguments(STRING, a(STRING), join(STRING, a(STRING))),
+          arguments(STRING, BOOL, join(STRING, BOOL)),
+          arguments(STRING, STRING, STRING),
+
+          arguments(a(STRING), ANY, ANY),
+          arguments(a(STRING), a(STRING), a(STRING)),
+
+          arguments(join(STRING, BOOL), ANY, ANY),
+          arguments(join(STRING, BOOL), BOOL, join(STRING, BOOL)),
+          arguments(join(STRING, BOOL), STRING, join(STRING, BOOL)),
+
+          arguments(ANY, ANY, ANY)
+      );
+    }
+  }
+
+  @Nested
+  class _meet {
+    @ParameterizedTest
+    @MethodSource("meet_of_test_cases")
+    public void meet_of(TypeS a, TypeS b, TypeS expected) {
+      assertThat(meet(a, b))
+          .isEqualTo(expected);
+      assertThat(meet(b, a))
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> meet_of_test_cases() {
+      return List.of(
+          arguments(NOTHING, ANY, NOTHING),
+          arguments(NOTHING, STRING, NOTHING),
+          arguments(NOTHING, a(STRING), NOTHING),
+          arguments(NOTHING, meet(STRING, BOOL), NOTHING),
+          arguments(NOTHING, NOTHING, NOTHING),
+
+          arguments(STRING, ANY, STRING),
+          arguments(STRING, a(STRING), meet(STRING, a(STRING))),
+          arguments(STRING, BOOL, meet(STRING, BOOL)),
+          arguments(STRING, STRING, STRING),
+
+          arguments(a(STRING), ANY, a(STRING)),
+          arguments(a(STRING), a(STRING), a(STRING)),
+
+          arguments(meet(STRING, BOOL), ANY, meet(STRING, BOOL)),
+          arguments(meet(STRING, BOOL), BOOL, meet(STRING, BOOL)),
+          arguments(meet(STRING, BOOL), STRING, meet(STRING, BOOL)),
+
+          arguments(ANY, ANY, ANY)
+      );
+    }
+  }
+
+  @Nested
   class _struct {
     @Test
     public void without_fields_can_be_created() {
