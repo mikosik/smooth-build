@@ -54,6 +54,11 @@ public abstract sealed class TypeS
     return this;
   }
 
+//  public abstract TypeS removeVarPrefixes(String prefix);
+  public TypeS removeVarPrefixes() {
+    return this;
+  }
+
   @Override
   public boolean equals(Object object) {
     if (this == object) {

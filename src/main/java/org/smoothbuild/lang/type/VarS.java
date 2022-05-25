@@ -28,7 +28,8 @@ public final class VarS extends TypeS {
     return new VarS(prefix + PREFIX_SEPARATOR + name());
   }
 
-  public VarS stripPrefix() {
+  @Override
+  public VarS removeVarPrefixes() {
     String name = name();
     int index = name.indexOf(PREFIX_SEPARATOR);
     if (0 <= index) {

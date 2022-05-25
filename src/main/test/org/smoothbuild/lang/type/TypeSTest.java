@@ -140,9 +140,9 @@ public class TypeSTest {
 
   @ParameterizedTest
   @MethodSource("with_prefixed_vars")
-  public void with_prefixed_vars(TypeS type, String prefix, TypeS expected) {
+  public void with_prefixed_vars(TypeS type, String prefix, TypeS typeWithPrefixedVars) {
     assertThat(type.withPrefixedVars(prefix))
-        .isEqualTo(expected);
+        .isEqualTo(typeWithPrefixedVars);
   }
 
   public static List<Arguments> with_prefixed_vars() {
@@ -182,6 +182,20 @@ public class TypeSTest {
     var var = var("A");
     assertCall(() -> var.withPrefixedVars("abc."))
         .throwsException(IllegalArgumentException.class);
+  }
+
+  @ParameterizedTest
+  @MethodSource("with_prefixed_vars")
+  public void remove_var_prefixes(TypeS type, String prefix, TypeS typeWithPrefixedVars) {
+    assertThat(typeWithPrefixedVars.removeVarPrefixes())
+        .isEqualTo(type);
+  }
+
+  @Test
+  public void remove_var_prefixes_fails_when_var_has_no_prefix() {
+    var var = var("A");
+    assertCall(() -> var.removeVarPrefixes())
+        .throwsException(IllegalStateException.class);
   }
 
   @Nested
@@ -370,35 +384,6 @@ public class TypeSTest {
               nList(itemSigS(STRING, "field"), itemSigS(INT, "field2"))),
               nList(itemSigS(STRING, "field"), itemSigS(INT, "field2")))
       );
-    }
-  }
-
-  @Nested
-  class _var {
-    @Test
-    public void strip_prefix() {
-      assertThat(var("abc.A").stripPrefix())
-          .isEqualTo(var("A"));
-    }
-
-    @Test
-    public void strip_prefix_of_double_prefixed_variable() {
-      assertThat(var("abc.def.A").stripPrefix())
-          .isEqualTo(var("def.A"));
-    }
-
-    @Test
-    public void strip_fails_when_var_has_no_prefix() {
-      var var = var("A");
-      assertCall(() -> var.stripPrefix())
-          .throwsException(IllegalStateException.class);
-    }
-
-    @Test
-    public void stripping_twice_double_prefix() {
-      var var = var("abc.def.A");
-      assertThat(var.stripPrefix().stripPrefix())
-          .isEqualTo(var("A"));
     }
   }
 

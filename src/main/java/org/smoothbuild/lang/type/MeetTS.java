@@ -67,6 +67,15 @@ public final class MeetTS extends MergingTS {
   }
 
   @Override
+  public TypeS removeVarPrefixes() {
+    if (vars().isEmpty()) {
+      return this;
+    } else {
+      return new MeetTS(map(elems, TypeS::removeVarPrefixes));
+    }
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;

@@ -35,6 +35,15 @@ public final class FuncTS extends TypeS implements ComposedTS {
     }
   }
 
+  @Override
+  public TypeS removeVarPrefixes() {
+    if (vars().isEmpty()) {
+      return this;
+    } else {
+      return new FuncTS(res.removeVarPrefixes(), map(params, TypeS::removeVarPrefixes));
+    }
+  }
+
   public TypeS res() {
     return res;
   }

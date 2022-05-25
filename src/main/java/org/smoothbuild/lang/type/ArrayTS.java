@@ -24,6 +24,15 @@ public final class ArrayTS extends TypeS implements ComposedTS {
     }
   }
 
+  @Override
+  public TypeS removeVarPrefixes() {
+    if (vars().isEmpty()) {
+      return this;
+    } else {
+      return new ArrayTS(elem.removeVarPrefixes());
+    }
+  }
+
   public TypeS elem() {
     return elem;
   }
