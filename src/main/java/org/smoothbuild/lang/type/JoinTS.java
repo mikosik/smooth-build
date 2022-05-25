@@ -3,6 +3,10 @@ package org.smoothbuild.lang.type;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
+import java.util.Objects;
+
+import org.smoothbuild.util.collect.Lists;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
@@ -47,6 +51,20 @@ public final class JoinTS extends MergingTS {
     } else {
       result.add(type);
     }
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    return object instanceof JoinTS that
+        && this.elems.equals(that.elems);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(elems.hashCode());
   }
 
   @Override

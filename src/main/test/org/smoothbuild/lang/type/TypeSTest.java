@@ -16,6 +16,8 @@ import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.testing.type.TestingTS.VAR_A;
 import static org.smoothbuild.testing.type.TestingTS.a;
 import static org.smoothbuild.testing.type.TestingTS.f;
+import static org.smoothbuild.testing.type.TestingTS.join;
+import static org.smoothbuild.testing.type.TestingTS.meet;
 import static org.smoothbuild.testing.type.TestingTS.struct;
 import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -310,6 +312,11 @@ public class TypeSTest {
       equalsTester.addEqualityGroup(a(type), a(type));
       equalsTester.addEqualityGroup(a(a(type)), a(a(type)));
     }
+    equalsTester.addEqualityGroup(join(BLOB, INT), join(INT, BLOB));
+    equalsTester.addEqualityGroup(join(BLOB, STRING), join(STRING, BLOB));
+    equalsTester.addEqualityGroup(meet(BLOB, INT), meet(INT, BLOB));
+    equalsTester.addEqualityGroup(meet(BLOB, STRING), meet(STRING, BLOB));
+
     equalsTester.testEquals();
   }
 }
