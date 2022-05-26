@@ -109,7 +109,7 @@ public class TopEvalLoader {
 
   private ExprS createExpr(ExprN expr) {
     return switch (expr) {
-      case OrderN orderN -> createArrayLiteral(orderN);
+      case OrderN orderN -> createArray(orderN);
       case BlobN blobN -> createBlob(blobN);
       case CallN callN -> createCall(callN);
       case IntN intN -> createInt(intN);
@@ -119,10 +119,10 @@ public class TopEvalLoader {
     };
   }
 
-  private ExprS createArrayLiteral(OrderN array) {
-    var type = (ArrayTS) array.type().get();
-    ImmutableList<ExprS> elems = map(array.elems(), this::createExpr);
-    return new OrderS(type, elems, array.loc());
+  private ExprS createArray(OrderN order) {
+    var type = (ArrayTS) order.type().get();
+    ImmutableList<ExprS> elems = map(order.elems(), this::createExpr);
+    return new OrderS(type, elems, order.loc());
   }
 
   private ExprS createCall(CallN call) {
