@@ -32,7 +32,7 @@ public class CallBTest extends TestingContext {
   public void creating_call_with_func_type_not_being_func_causes_exception() {
     assertCall(() -> callB(blobTB(), intB()))
         .throwsException(new IllegalArgumentException(
-            "`func` component doesn't evaluate to FuncH."));
+            "`func` component doesn't evaluate to FuncB."));
   }
 
   @Test

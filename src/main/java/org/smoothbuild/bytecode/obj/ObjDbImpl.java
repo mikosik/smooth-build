@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
 import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.cannotReadRootException;
 import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.wrongSizeOfRootSeqException;
+import static org.smoothbuild.bytecode.type.cnst.TNamesB.BOOL;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.math.BigInteger;
@@ -276,7 +277,7 @@ public class ObjDbImpl implements ObjDb {
     if (callable.type() instanceof FuncTB funcT) {
       return funcT;
     } else {
-      throw new IllegalArgumentException("`func` component doesn't evaluate to FuncH.");
+      throw new IllegalArgumentException("`func` component doesn't evaluate to FuncB.");
     }
   }
 
@@ -289,7 +290,7 @@ public class ObjDbImpl implements ObjDb {
     if (args.type() instanceof TupleTB tupleT) {
       return tupleT;
     } else {
-      throw new IllegalArgumentException("`args` component doesn't evaluate to TupleH.");
+      throw new IllegalArgumentException("`args` component doesn't evaluate to TupleB.");
     }
   }
 
@@ -339,7 +340,7 @@ public class ObjDbImpl implements ObjDb {
 
   private IfB newIf(ObjB condition, ObjB then, ObjB else_) throws HashedDbExc {
     Preconditions.checkArgument(condition.type().equals(catDb.bool()),
-        "`condition` component must evaluate to BoolH but is " + condition.type().q() + ".");
+        "`condition` component must evaluate to " + BOOL + " but is " + condition.type().q() + ".");
     var evalT = typing.mergeUp(then.type(), else_.type());
     var type = catDb.if_(evalT);
     var data = writeIfData(condition, then, else_);
@@ -363,7 +364,7 @@ public class ObjDbImpl implements ObjDb {
     if (method.type() instanceof MethodTB methodTB) {
       return methodTB;
     } else {
-      throw new IllegalArgumentException("`method` component doesn't evaluate to MethodH.");
+      throw new IllegalArgumentException("`method` component doesn't evaluate to MethodB.");
     }
   }
 

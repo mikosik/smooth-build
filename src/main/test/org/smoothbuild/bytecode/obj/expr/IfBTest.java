@@ -65,7 +65,7 @@ public class IfBTest extends TestingContext {
   public void creating_if_with_condition_not_being_bool_causes_exception() {
     assertCall(() -> ifB(blobB(0), intB(1), intB(2)))
         .throwsException(new IllegalArgumentException(
-            "`condition` component must evaluate to BoolH but is `Blob`."));
+            "`condition` component must evaluate to Bool but is `Blob`."));
   }
 
   @Test

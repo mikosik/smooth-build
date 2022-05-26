@@ -31,7 +31,7 @@ public class InvokeBTest extends TestingContext {
   public void creating_invoke_with_expr_not_being_method_causes_exception() {
     assertCall(() -> invokeB(blobTB(), intB()))
         .throwsException(new IllegalArgumentException(
-            "`method` component doesn't evaluate to MethodH."));
+            "`method` component doesn't evaluate to MethodB."));
   }
 
   @Test
