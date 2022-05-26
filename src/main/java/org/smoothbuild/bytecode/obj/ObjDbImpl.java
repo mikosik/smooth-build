@@ -397,21 +397,6 @@ public class ObjDbImpl implements ObjDb {
     return type.newObj(root, this);
   }
 
-  private IllegalArgumentException illegalElemT(TypeB funcT, TypeB elemT) {
-    return new IllegalArgumentException(
-        "Function %s cannot accept as argument %s.".formatted(funcT.q(), elemT.q()));
-  }
-
-  private TypeB elemT(ObjB pickable) {
-    var evalT = pickable.type();
-    if (evalT instanceof ArrayTB arrayT) {
-      return arrayT.elem();
-    } else {
-      throw new IllegalArgumentException(
-          "pickable.type() should be instance of ArrayTB but is " + evalT.q() + ".");
-    }
-  }
-
   private SelectB newSelect(TypeB evalT, ObjB selectable, IntB index) throws HashedDbExc {
     var inferredEvalT = selectEvalT(selectable, index);
     if (!typing.isAssignable(evalT, inferredEvalT)) {
