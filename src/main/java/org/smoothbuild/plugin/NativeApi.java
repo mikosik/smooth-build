@@ -1,7 +1,7 @@
 package org.smoothbuild.plugin;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.type.TypingB;
 
 /**

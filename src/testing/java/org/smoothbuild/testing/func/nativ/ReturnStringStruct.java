@@ -3,7 +3,7 @@ package org.smoothbuild.testing.func.nativ;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReturnStringStruct {

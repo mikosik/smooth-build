@@ -4,8 +4,8 @@ import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
-import org.smoothbuild.bytecode.type.val.CallableTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.CallableTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
 
 public class CallLikeB extends ExprB {
   protected static final int DATA_SEQ_SIZE = 2;

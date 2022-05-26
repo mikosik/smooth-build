@@ -16,15 +16,15 @@ import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.BoundedB;
-import org.smoothbuild.bytecode.type.val.CallableTB;
-import org.smoothbuild.bytecode.type.val.ComposedTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarB;
-import org.smoothbuild.bytecode.type.val.VarBoundsB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.BoundedB;
+import org.smoothbuild.bytecode.type.cnst.CallableTB;
+import org.smoothbuild.bytecode.type.cnst.ComposedTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.cnst.VarB;
+import org.smoothbuild.bytecode.type.cnst.VarBoundsB;
 import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
 

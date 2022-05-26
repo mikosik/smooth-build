@@ -1,16 +1,16 @@
 package org.smoothbuild.slib.array;
 
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ElemFunc {
-  public static ValB func(NativeApi nativeApi, TupleB args) {
+  public static CnstB func(NativeApi nativeApi, TupleB args) {
     ArrayB array = (ArrayB) args.get(0);
     IntB index = (IntB) args.get(1);
-    var elems = array.elems(ValB.class);
+    var elems = array.elems(CnstB.class);
     int indexJ = index.toJ().intValue();
     if (indexJ < 0 || elems.size() <= indexJ) {
       nativeApi.log()

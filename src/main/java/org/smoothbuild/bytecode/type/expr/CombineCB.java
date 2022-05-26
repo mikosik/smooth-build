@@ -5,7 +5,7 @@ import static org.smoothbuild.bytecode.type.CatKindB.COMBINE;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.db.Hash;
 
 /**

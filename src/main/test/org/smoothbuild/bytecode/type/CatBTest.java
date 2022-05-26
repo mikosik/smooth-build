@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.bytecode.type.val.VarSetB.varSetB;
+import static org.smoothbuild.bytecode.type.cnst.VarSetB.varSetB;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingCatsB.ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_ANY;
@@ -57,6 +57,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BoolB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
 import org.smoothbuild.bytecode.obj.expr.IfB;
@@ -65,22 +74,13 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.BoolB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.MethodTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.cnst.VarSetB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarSetB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.type.TestingCatsB;
 import org.smoothbuild.util.collect.Labeled;
@@ -372,16 +372,16 @@ public class CatBTest extends TestingContext {
 
   public static List<Arguments> typeJ_test_data() {
     return list(
-        arguments(ANY, ValB.class),
+        arguments(ANY, CnstB.class),
         arguments(BLOB, BlobB.class),
         arguments(BOOL, BoolB.class),
         arguments(FUNC, FuncB.class),
         arguments(INT, IntB.class),
         arguments(METHOD, MethodB.class),
-        arguments(NOTHING, ValB.class),
+        arguments(NOTHING, CnstB.class),
         arguments(PERSON, TupleB.class),
         arguments(STRING, StringB.class),
-        arguments(VAR_A, ValB.class),
+        arguments(VAR_A, CnstB.class),
 
         arguments(ARRAY_ANY, ArrayB.class),
         arguments(ARRAY_BLOB, ArrayB.class),

@@ -8,8 +8,8 @@ import java.util.function.Function;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.testing.TestingContext;
 
 public class CatBCachingTest extends TestingContext {

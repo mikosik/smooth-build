@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.load.JarClassLoaderProv;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;

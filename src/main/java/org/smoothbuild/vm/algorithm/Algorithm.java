@@ -2,8 +2,8 @@ package org.smoothbuild.vm.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 

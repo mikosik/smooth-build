@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.job;
 
-import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
@@ -9,7 +9,7 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 public abstract class AbstractJob implements Job {
   private final TypeB type;
   private final Loc loc;
-  private volatile Promise<ValB> promise;
+  private volatile Promise<CnstB> promise;
 
   public AbstractJob(TypeB type, Loc loc) {
     this.type = type;
@@ -27,9 +27,9 @@ public abstract class AbstractJob implements Job {
   }
 
   @Override
-  public Promise<ValB> schedule(Worker worker) {
+  public Promise<CnstB> schedule(Worker worker) {
     // Double-checked locking.
-    Promise<ValB> result = promise;
+    Promise<CnstB> result = promise;
     if (result != null) {
       return result;
     }
@@ -42,5 +42,5 @@ public abstract class AbstractJob implements Job {
     }
   }
 
-  protected abstract Promise<ValB> scheduleImpl(Worker worker);
+  protected abstract Promise<CnstB> scheduleImpl(Worker worker);
 }

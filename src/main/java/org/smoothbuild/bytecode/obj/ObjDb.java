@@ -3,6 +3,16 @@ package org.smoothbuild.bytecode.obj;
 import java.math.BigInteger;
 
 import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BlobBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.BoolB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
 import org.smoothbuild.bytecode.obj.expr.IfB;
@@ -11,21 +21,11 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
-import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
-import org.smoothbuild.bytecode.obj.val.BoolB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.MethodTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.db.Hash;
 
 import com.google.common.collect.ImmutableList;
@@ -45,7 +45,7 @@ public interface ObjDb {
 
   public StringB string(String value);
 
-  public TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items);
+  public TupleB tuple(TupleTB tupleT, ImmutableList<CnstB> items);
 
   public CallB call(TypeB evalT, ObjB func, CombineB args);
 

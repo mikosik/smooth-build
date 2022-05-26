@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.params.provider.Arguments;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.testing.type.TestingTB;
 
 import com.google.common.collect.ImmutableList;

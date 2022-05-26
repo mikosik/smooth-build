@@ -6,15 +6,15 @@ import static org.smoothbuild.util.collect.Lists.allMatch;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.type.TypingB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -43,14 +43,14 @@ public class ConvertAlgorithm extends Algorithm {
     return new Output(converted, nativeApi.messages());
   }
 
-  private ValB convert(TypeB targetT, ValB val, BytecodeF factory) {
-    if (targetT.equals(val.type())) {
-      return val;
+  private CnstB convert(TypeB targetT, CnstB cnst, BytecodeF factory) {
+    if (targetT.equals(cnst.type())) {
+      return cnst;
     } else {
       return switch (targetT) {
-        case ArrayTB a -> convertArray(a, (ArrayB) val, factory);
-        case FuncTB f -> convertFunc(f, (FuncB) val, factory);
-        case TupleTB t -> convertTuple(t, (TupleB) val, factory);
+        case ArrayTB a -> convertArray(a, (ArrayB) cnst, factory);
+        case FuncTB f -> convertFunc(f, (FuncB) cnst, factory);
+        case TupleTB t -> convertTuple(t, (TupleB) cnst, factory);
         default -> throw unexpectedCaseExc(targetT);
       };
     }
@@ -59,7 +59,7 @@ public class ConvertAlgorithm extends Algorithm {
   private ArrayB convertArray(ArrayTB targetT, ArrayB array, BytecodeF factory) {
     var builder = factory.arrayBuilder(targetT);
     TypeB elemTargetT = targetT.elem();
-    array.elems(ValB.class)
+    array.elems(CnstB.class)
         .forEach(e -> builder.add(convert(elemTargetT, e, factory)));
     return builder.build();
   }
@@ -73,8 +73,8 @@ public class ConvertAlgorithm extends Algorithm {
 
   private ObjB convertBodyIfNeeded(FuncTB targetT, FuncB func, BytecodeF factory) {
     var body = func.body();
-    if (body instanceof ValB valB && !targetT.res().equals(body.type())) {
-      return convert(targetT.res(), valB, factory);
+    if (body instanceof CnstB cnstB && !targetT.res().equals(body.type())) {
+      return convert(targetT.res(), cnstB, factory);
     }
     return body;
   }
@@ -87,7 +87,7 @@ public class ConvertAlgorithm extends Algorithm {
     var targetTs = targetT.items();
     var items = tuple.items();
     checkArgument(targetTs.size() == items.size());
-    var builder = ImmutableList.<ValB>builder();
+    var builder = ImmutableList.<CnstB>builder();
     for (int i = 0; i < targetTs.size(); i++) {
       builder.add(convert(targetTs.get(i), items.get(i), factory));
     }

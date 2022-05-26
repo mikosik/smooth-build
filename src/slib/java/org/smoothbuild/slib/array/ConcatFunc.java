@@ -1,9 +1,9 @@
 package org.smoothbuild.slib.array;
 
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConcatFunc {
@@ -14,8 +14,8 @@ public class ConcatFunc {
     var elemT = ((ArrayTB) nativeApi.typing().mergeUp(array1.cat(), array2.cat())).elem();
     return factory
         .arrayBuilderWithElems(elemT)
-        .addAll(array1.elems(ValB.class))
-        .addAll(array2.elems(ValB.class))
+        .addAll(array1.elems(CnstB.class))
+        .addAll(array2.elems(CnstB.class))
         .build();
   }
 }

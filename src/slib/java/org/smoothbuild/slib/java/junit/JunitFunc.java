@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;

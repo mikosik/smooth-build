@@ -2,13 +2,13 @@ package org.smoothbuild.bytecode.type;
 
 import java.util.List;
 
-import org.smoothbuild.bytecode.type.val.AnyTB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.NothingTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.cnst.AnyTB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.NothingTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
 

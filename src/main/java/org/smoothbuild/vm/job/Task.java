@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.algorithm.Algorithm;
@@ -36,15 +36,15 @@ public class Task extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> scheduleImpl(Worker worker) {
-    PromisedValue<ValB> result = new PromisedValue<>();
+  public Promise<CnstB> scheduleImpl(Worker worker) {
+    PromisedValue<CnstB> result = new PromisedValue<>();
     var depResults = map(depJs, d -> d.schedule(worker));
     runWhenAllAvailable(
         depResults, () -> worker.enqueue(info, algorithm, toInput(depResults), result));
     return result;
   }
 
-  private TupleB toInput(ImmutableList<Promise<ValB>> depResults) {
+  private TupleB toInput(ImmutableList<Promise<CnstB>> depResults) {
     return bytecodeF.tuple(map(depResults, Promise::get));
   }
 }

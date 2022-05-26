@@ -9,11 +9,11 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.exc.DecodeMapIllegalMappingFuncExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.CallableTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.bytecode.type.expr.MapCB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.CallableTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
 
 /**
  * Map expression.

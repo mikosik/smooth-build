@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.algorithm.Output;
@@ -22,8 +22,8 @@ import org.smoothbuild.vm.job.TaskInfo;
 public class ResHandlerTest extends TestingContext {
   private ExecutionReporter reporter;
   private SoftTerminationExecutor executor;
-  private Consumer<ValB> consumer;
-  private ValB val;
+  private Consumer<CnstB> consumer;
+  private CnstB cnst;
 
   @BeforeEach
   @SuppressWarnings("unchecked")
@@ -31,7 +31,7 @@ public class ResHandlerTest extends TestingContext {
     reporter = mock(ExecutionReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
-    val = stringB();
+    cnst = stringB();
   }
 
   @Nested
@@ -39,14 +39,14 @@ public class ResHandlerTest extends TestingContext {
     @Test
     public void object_is_forwarded_to_consumer() {
       ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
-      resHandler.accept(maybeComputed(val));
-      verify(consumer, only()).accept(val);
+      resHandler.accept(maybeComputed(cnst));
+      verify(consumer, only()).accept(cnst);
     }
 
     @Test
     public void executor_is_not_stopped() {
       ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
-      resHandler.accept(maybeComputed(val));
+      resHandler.accept(maybeComputed(cnst));
       verifyNoInteractions(executor);
     }
   }
@@ -85,12 +85,12 @@ public class ResHandlerTest extends TestingContext {
     }
   }
 
-  private CompRes maybeComputed(ValB val) {
-    return new CompRes(output(val), DISK);
+  private CompRes maybeComputed(CnstB cnst) {
+    return new CompRes(output(cnst), DISK);
   }
 
-  private Output output(ValB val) {
-    return new Output(val, arrayB(stringTB()));
+  private Output output(CnstB cnst) {
+    return new Output(cnst, arrayB(stringTB()));
   }
 
   private TaskInfo taskInfo() {

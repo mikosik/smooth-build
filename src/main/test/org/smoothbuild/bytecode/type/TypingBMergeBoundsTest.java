@@ -5,7 +5,7 @@ import static org.smoothbuild.util.type.Side.LOWER;
 import static org.smoothbuild.util.type.Side.UPPER;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.testing.type.TestingTB;
 import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;

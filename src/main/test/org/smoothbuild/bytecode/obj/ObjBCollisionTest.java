@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 

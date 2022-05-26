@@ -15,7 +15,7 @@ import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.TypingB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 

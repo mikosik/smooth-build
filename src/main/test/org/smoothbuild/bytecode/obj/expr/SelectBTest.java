@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.testing.TestingContext;
 
 public class SelectBTest extends TestingContext {

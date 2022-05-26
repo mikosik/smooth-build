@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.type.exc;
 
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.db.Hash;
 
 public class DecodeCatTParamIsNotVarExc extends DecodeCatExc {

@@ -14,9 +14,9 @@ import java.util.zip.ZipException;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class JavacFunc {

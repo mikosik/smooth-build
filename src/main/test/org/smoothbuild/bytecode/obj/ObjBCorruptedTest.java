@@ -26,6 +26,15 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BoolB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.obj.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeMapIllegalMappingFuncExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjCatExc;
@@ -45,21 +54,12 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.BoolB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.IntTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.IntTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashingBufferedSink;
 import org.smoothbuild.db.exc.DecodeBooleanExc;
@@ -207,7 +207,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(type),
               notHashOfSeq
           );
-      assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(ValB.class))
+      assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(CnstB.class))
           .throwsException(new DecodeObjNodeExc(objHash, type, DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -279,7 +279,7 @@ public class ObjBCorruptedTest extends TestingContext {
               ));
       assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(StringB.class))
           .throwsException(new DecodeObjWrongNodeClassExc(
-              objHash, type, DATA_PATH, 1, ValB.class, ParamRefB.class));
+              objHash, type, DATA_PATH, 1, CnstB.class, ParamRefB.class));
     }
   }
 
@@ -1676,7 +1676,7 @@ public class ObjBCorruptedTest extends TestingContext {
        */
       var tupleT = tupleTB(stringTB());
       var tuple = tupleB(tupleT, stringB("abc"));
-      var selectable = (ValB) tuple;
+      var selectable = (CnstB) tuple;
       var index = intB(0);
       Hash objHash =
           hash(
@@ -2033,7 +2033,7 @@ public class ObjBCorruptedTest extends TestingContext {
       TupleB tuple = (TupleB) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeObjWrongNodeClassExc(
-              objHash, personTB(), DATA_PATH + "[1]", ValB.class, ParamRefB.class));
+              objHash, personTB(), DATA_PATH + "[1]", CnstB.class, ParamRefB.class));
     }
   }
 

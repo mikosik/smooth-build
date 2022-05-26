@@ -7,8 +7,8 @@ import static okio.Okio.sink;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
-import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.testing.TestingContext;
 

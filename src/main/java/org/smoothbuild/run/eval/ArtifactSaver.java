@@ -19,9 +19,9 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
@@ -42,7 +42,7 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<TopRefS, ValB> artifacts) {
+  public int saveArtifacts(Map<TopRefS, CnstB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
     var sortedPairs = sort(artifacts, comparing(e -> e.getKey().name()));
     for (var pair : sortedPairs.entrySet()) {
@@ -107,9 +107,9 @@ public class ArtifactSaver {
 
   private void saveObjectArray(PathS artifactPath, ArrayB array) throws IOException {
     int i = 0;
-    for (ValB val : array.elems(ValB.class)) {
+    for (CnstB cnst : array.elems(CnstB.class)) {
       PathS sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
-      PathS targetPath = ArtifactPaths.targetPath(val);
+      PathS targetPath = ArtifactPaths.targetPath(cnst);
       fileSystem.createLink(sourcePath, targetPath);
       i++;
     }

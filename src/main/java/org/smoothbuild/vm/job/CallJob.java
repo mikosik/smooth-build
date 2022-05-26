@@ -3,10 +3,10 @@ package org.smoothbuild.vm.job;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarBoundsB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.cnst.VarBoundsB;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -32,16 +32,16 @@ public class CallJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> scheduleImpl(Worker worker) {
-    var result = new PromisedValue<ValB>();
+  public Promise<CnstB> scheduleImpl(Worker worker) {
+    var result = new PromisedValue<CnstB>();
     funcJob()
         .schedule(worker)
         .addConsumer(valueH -> onFuncJobCompleted(valueH, worker, result));
     return result;
   }
 
-  private void onFuncJobCompleted(ValB val, Worker worker, Consumer<ValB> res) {
-    var funcH = (FuncB) val;
+  private void onFuncJobCompleted(CnstB cnst, Worker worker, Consumer<CnstB> res) {
+    var funcH = (FuncB) cnst;
     jobCreator.callFuncEagerJob(type(), funcH, argJs, loc(), params, vars)
         .schedule(worker)
         .addConsumer(res);

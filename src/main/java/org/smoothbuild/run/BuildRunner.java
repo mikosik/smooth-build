@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
@@ -47,7 +47,7 @@ public class BuildRunner {
     return exitCode;
   }
 
-  public Optional<Map<TopRefS, ValB>> evaluate(List<String> names) {
+  public Optional<Map<TopRefS, CnstB>> evaluate(List<String> names) {
     if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
       return Optional.empty();
     }
@@ -68,7 +68,7 @@ public class BuildRunner {
     if (evaluationsOpt.isEmpty()) {
       return Optional.empty();
     }
-    ImmutableList<ValB> listB = evaluationsOpt.get();
+    ImmutableList<CnstB> listB = evaluationsOpt.get();
     return Optional.of(Maps.zip(evaluables, listB));
   }
 }

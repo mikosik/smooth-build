@@ -6,8 +6,8 @@ import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.expr.CallCB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
 
 /**
  * This class is thread-safe.

@@ -12,6 +12,17 @@ import java.util.Objects;
 
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BlobBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.BoolB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.bytecode.obj.expr.CallB;
@@ -22,27 +33,16 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
-import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
-import org.smoothbuild.bytecode.obj.val.BoolB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypingB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.CallableTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.MethodTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.CallableTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
@@ -66,7 +66,7 @@ public class ObjDbImpl implements ObjDb {
     this.typing = typing;
   }
 
-  // methods for creating ValueH subclasses
+  // methods for creating CnstB subclasses
 
   @Override
   public ArrayBBuilder arrayBuilder(ArrayTB type) {
@@ -113,7 +113,7 @@ public class ObjDbImpl implements ObjDb {
   }
 
   @Override
-  public TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items) {
+  public TupleB tuple(TupleTB tupleT, ImmutableList<CnstB> items) {
     if (!tupleT.vars().isEmpty()) {
       throw new IllegalArgumentException(
           "Cannot create tuple object with polymorphic type " + tupleT.q() + ".");
@@ -134,7 +134,7 @@ public class ObjDbImpl implements ObjDb {
     return wrapHashedDbExcAsObjDbExc(() -> newTuple(tupleT, items));
   }
 
-  // methods for creating ExprH subclasses
+  // methods for creating ExprB subclasses
 
   @Override
   public CallB call(TypeB evalT, ObjB func, CombineB args) {
@@ -207,9 +207,9 @@ public class ObjDbImpl implements ObjDb {
     }
   }
 
-  // methods for creating Val Obj-s
+  // methods for creating Cnst-s
 
-  public ArrayB newArray(ArrayTB type, List<ValB> elems) throws HashedDbExc {
+  public ArrayB newArray(ArrayTB type, List<CnstB> elems) throws HashedDbExc {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -251,8 +251,8 @@ public class ObjDbImpl implements ObjDb {
     return catDb.string().newObj(root, this);
   }
 
-  private TupleB newTuple(TupleTB type, ImmutableList<ValB> vals) throws HashedDbExc {
-    var data = writeTupleData(vals);
+  private TupleB newTuple(TupleTB type, ImmutableList<CnstB> cnsts) throws HashedDbExc {
+    var data = writeTupleData(cnsts);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -482,9 +482,9 @@ public class ObjDbImpl implements ObjDb {
     return hashedDb.writeSeq(selectable.hash(), index.hash());
   }
 
-  // methods for writing data of Val-s
+  // methods for writing data of Cnst-s
 
-  private Hash writeArrayData(List<ValB> elems) throws HashedDbExc {
+  private Hash writeArrayData(List<CnstB> elems) throws HashedDbExc {
     return writeSeq(elems);
   }
 
@@ -509,7 +509,7 @@ public class ObjDbImpl implements ObjDb {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeTupleData(ImmutableList<ValB> items) throws HashedDbExc {
+  private Hash writeTupleData(ImmutableList<CnstB> items) throws HashedDbExc {
     return writeSeq(items);
   }
 

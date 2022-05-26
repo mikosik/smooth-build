@@ -5,11 +5,11 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;

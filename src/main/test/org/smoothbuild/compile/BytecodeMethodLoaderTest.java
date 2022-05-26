@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.testing.TestingContext;

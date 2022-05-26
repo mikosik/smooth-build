@@ -2,9 +2,9 @@ package org.smoothbuild.vm.job;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.bytecode.obj.val.BoolB;
-import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.obj.cnst.BoolB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -23,14 +23,14 @@ public class IfJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> scheduleImpl(Worker worker) {
-    var res = new PromisedValue<ValB>();
+  public Promise<CnstB> scheduleImpl(Worker worker) {
+    var res = new PromisedValue<CnstB>();
     conditionJ.schedule(worker)
         .addConsumer(obj -> onConditionCalculated(obj, worker, res));
     return res;
   }
 
-  private void onConditionCalculated(ValB condition, Worker worker, Consumer<ValB> res) {
+  private void onConditionCalculated(CnstB condition, Worker worker, Consumer<CnstB> res) {
     var conditionJ = ((BoolB) condition).toJ();
     var job = conditionJ ? thenJ : elseJ;
     job.schedule(worker)

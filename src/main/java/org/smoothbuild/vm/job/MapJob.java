@@ -7,10 +7,10 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -32,20 +32,20 @@ public class MapJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> scheduleImpl(Worker worker) {
-    PromisedValue<ValB> result = new PromisedValue<>();
-    Promise<ValB> array = arrayJ.schedule(worker);
-    Promise<ValB> func = funcJ.schedule(worker);
+  public Promise<CnstB> scheduleImpl(Worker worker) {
+    PromisedValue<CnstB> result = new PromisedValue<>();
+    Promise<CnstB> array = arrayJ.schedule(worker);
+    Promise<CnstB> func = funcJ.schedule(worker);
     runWhenAllAvailable(list(array, func),
         () -> onDepsCompleted((ArrayB) array.get(), worker, result));
     return result;
   }
 
-  private void onDepsCompleted(ArrayB array, Worker worker, Consumer<ValB> result) {
+  private void onDepsCompleted(ArrayB array, Worker worker, Consumer<CnstB> result) {
     var outputArrayT = (ArrayTB) type();
     var outputElemT = outputArrayT.elem();
     var mapElemJs = map(
-        array.elems(ValB.class),
+        array.elems(CnstB.class),
         o -> mapElementJob(outputElemT, o));
     var info = new TaskInfo(TaskKind.ORDER, "[]", loc());
     jobCreator.orderEager(outputArrayT, mapElemJs, info)
@@ -53,12 +53,12 @@ public class MapJob extends AbstractJob {
         .addConsumer(result);
   }
 
-  private Job mapElementJob(TypeB elemT, ValB elem) {
+  private Job mapElementJob(TypeB elemT, CnstB elem) {
     var elemJ = elemJob(elem);
     return jobCreator.callEagerJob(elemT, funcJ, list(elemJ), funcJ.loc(), params);
   }
 
-  private Job elemJob(ValB elem) {
+  private Job elemJob(CnstB elem) {
     return new DummyJob(elem, arrayJ.loc());
   }
 }

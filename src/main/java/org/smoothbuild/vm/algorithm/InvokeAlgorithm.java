@@ -6,10 +6,10 @@ import static org.smoothbuild.util.Strings.q;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -59,9 +59,9 @@ public class InvokeAlgorithm extends Algorithm {
     return new Output(result, nativeApi.messages());
   }
 
-  private ValB invoke(Method method, TupleB args, NativeApi nativeApi) {
+  private CnstB invoke(Method method, TupleB args, NativeApi nativeApi) {
     try {
-      return (ValB) method.invoke(null, new Object[] {nativeApi, args});
+      return (CnstB) method.invoke(null, new Object[] {nativeApi, args});
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {

@@ -2,7 +2,7 @@ package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.fs.base.PathS.path;
 
-import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
 import org.smoothbuild.fs.base.IllegalPathExc;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;

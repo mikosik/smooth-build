@@ -3,27 +3,27 @@ package org.smoothbuild.vm.job;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.job.TaskKind.CONST;
 
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.lang.define.Nal;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
 public class ConstTask extends AbstractJob {
-  private final ValB val;
+  private final CnstB cnst;
   private final TaskInfo taskInfo;
 
-  public ConstTask(ValB val, Nal nal) {
-    super(val.type(), nal.loc());
-    this.val = val;
+  public ConstTask(CnstB cnst, Nal nal) {
+    super(cnst.type(), nal.loc());
+    this.cnst = cnst;
     this.taskInfo = new TaskInfo(CONST, nal);
   }
 
   @Override
-  public Promise<ValB> scheduleImpl(Worker worker) {
-    PromisedValue<ValB> result = new PromisedValue<>();
+  public Promise<CnstB> scheduleImpl(Worker worker) {
+    PromisedValue<CnstB> result = new PromisedValue<>();
     worker.reporter().print(taskInfo, list());
-    result.accept(val);
+    result.accept(cnst);
     return result;
   }
 }

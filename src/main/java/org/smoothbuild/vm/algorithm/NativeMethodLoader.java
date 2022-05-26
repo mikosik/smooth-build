@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;

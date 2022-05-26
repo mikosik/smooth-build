@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.type.expr.IfCB;
 import org.smoothbuild.testing.TestingContext;
 

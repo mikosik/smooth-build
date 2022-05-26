@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.compile.Compiler;
 import org.smoothbuild.compile.CompilerExc;
 import org.smoothbuild.compile.CompilerProv;
@@ -33,7 +33,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<ValB>> evaluate(DefsS defs, List<? extends ExprS> values) {
+  public Optional<ImmutableList<CnstB>> evaluate(DefsS defs, List<? extends ExprS> values) {
     reporter.startNewPhase("Compiling");
     var compiler = compilerProv.get(defs);
     var exprs = compile(values, compiler);
@@ -46,7 +46,7 @@ public class Evaluator {
     return evaluate(vm, exprs.get());
   }
 
-  private Optional<ImmutableList<ValB>> evaluate(Vm vm, ImmutableList<ObjB> exprs) {
+  private Optional<ImmutableList<CnstB>> evaluate(Vm vm, ImmutableList<ObjB> exprs) {
     try {
       return vm.evaluate(exprs);
     } catch (InterruptedException e) {

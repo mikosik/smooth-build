@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.obj.exc;
 
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.bytecode.type.expr.SelectCB;
-import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 
 public class DecodeSelectWrongEvalTypeExc extends DecodeObjExc {

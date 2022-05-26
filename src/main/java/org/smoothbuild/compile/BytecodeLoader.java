@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.util.collect.Try;
 
 public class BytecodeLoader {

@@ -13,6 +13,16 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BlobBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.BoolB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.obj.exc.ObjDbExc;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
@@ -22,28 +32,18 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
-import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
-import org.smoothbuild.bytecode.obj.val.BoolB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.BlobTB;
-import org.smoothbuild.bytecode.type.val.BoolTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.IntTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
-import org.smoothbuild.bytecode.type.val.NothingTB;
-import org.smoothbuild.bytecode.type.val.StringTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.BlobTB;
+import org.smoothbuild.bytecode.type.cnst.BoolTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.IntTB;
+import org.smoothbuild.bytecode.type.cnst.MethodTB;
+import org.smoothbuild.bytecode.type.cnst.NothingTB;
+import org.smoothbuild.bytecode.type.cnst.StringTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -143,12 +143,12 @@ public class BytecodeF {
     return objDb.string(string);
   }
 
-  public TupleB tuple(ImmutableList<ValB> items) {
-    var tupleTB = catDb.tuple(Lists.map(items, ValB::type));
+  public TupleB tuple(ImmutableList<CnstB> items) {
+    var tupleTB = catDb.tuple(Lists.map(items, CnstB::type));
     return objDb.tuple(tupleTB, items);
   }
 
-  public TupleB tuple(TupleTB type, ImmutableList<ValB> items) {
+  public TupleB tuple(TupleTB type, ImmutableList<CnstB> items) {
     return objDb.tuple(type, items);
   }
 
@@ -221,8 +221,8 @@ public class BytecodeF {
   }
 
   private TupleB message(String severity, String text) {
-    ValB textObject = objDb.string(text);
-    ValB severityObject = objDb.string(severity);
+    CnstB textObject = objDb.string(text);
+    CnstB severityObject = objDb.string(severity);
     return objDb.tuple(messageT(), list(textObject, severityObject));
   }
 

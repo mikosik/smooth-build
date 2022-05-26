@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
-import org.smoothbuild.bytecode.obj.val.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
 import org.smoothbuild.bytecode.type.expr.InvokeCB;
 
 /**

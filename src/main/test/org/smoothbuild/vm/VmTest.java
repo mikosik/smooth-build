@@ -19,10 +19,10 @@ import java.util.function.Function;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.Try;
@@ -313,7 +313,7 @@ public class VmTest extends TestingContext {
   }
 
   public static ArrayB returnSingleElemArray(NativeApi nativeApi, TupleB args) {
-    ValB elem = args.get(0);
+    CnstB elem = args.get(0);
     var f = nativeApi.factory();
     var arrayT = f.arrayT(elem.type());
     return f.arrayBuilder(arrayT)
@@ -436,7 +436,7 @@ public class VmTest extends TestingContext {
     return evaluate(vm, obj);
   }
 
-  private ValB evaluate(Vm vm, ObjB obj) {
+  private CnstB evaluate(Vm vm, ObjB obj) {
     try {
       var results = vm.evaluate(list(obj)).get();
       assertThat(results.size())

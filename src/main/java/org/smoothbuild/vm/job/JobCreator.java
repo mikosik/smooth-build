@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.job;
 
-import static org.smoothbuild.bytecode.type.val.VarBoundsB.varBoundsB;
+import static org.smoothbuild.bytecode.type.cnst.VarBoundsB.varBoundsB;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
@@ -16,6 +16,14 @@ import java.util.Map;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BoolB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
 import org.smoothbuild.bytecode.obj.expr.IfB;
@@ -24,21 +32,13 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.BoolB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.TypingB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.CallableTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.bytecode.type.val.VarBoundsB;
+import org.smoothbuild.bytecode.type.cnst.ArrayTB;
+import org.smoothbuild.bytecode.type.cnst.CallableTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.cnst.VarBoundsB;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.Nal;
 import org.smoothbuild.lang.define.NalImpl;
@@ -348,15 +348,15 @@ public class JobCreator {
 
   // Value
 
-  private Job constLazy(ValB val, List<Job> scope, VarBoundsB vars) {
-    var nal = nalFor(val);
+  private Job constLazy(CnstB cnst, List<Job> scope, VarBoundsB vars) {
+    var nal = nalFor(cnst);
     var loc = nal.loc();
-    return new LazyJob(val.cat(), loc, () -> new ConstTask(val, nal));
+    return new LazyJob(cnst.cat(), loc, () -> new ConstTask(cnst, nal));
   }
 
-  private Job constEager(ValB val, List<Job> scope, VarBoundsB vars) {
-    var nal = nalFor(val);
-    return new ConstTask(val, nal);
+  private Job constEager(CnstB cnst, List<Job> scope, VarBoundsB vars) {
+    var nal = nalFor(cnst);
+    return new ConstTask(cnst, nal);
   }
 
   // helper methods

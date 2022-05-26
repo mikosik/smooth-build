@@ -6,9 +6,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.testing.TestingContext;
 
 public class ConvertAlgorithmTest extends TestingContext {
@@ -44,8 +44,8 @@ public class ConvertAlgorithmTest extends TestingContext {
       assertConvertThrowsIllegalArgumentExc(tupleTB(intTB()), tupleB(intB(3)));
     }
 
-    private void assertConvertThrowsIllegalArgumentExc(TypeB typeB, ValB val) {
-      assertConvertThrowsExc(typeB, val, IllegalArgumentException.class);
+    private void assertConvertThrowsIllegalArgumentExc(TypeB typeB, CnstB cnst) {
+      assertConvertThrowsExc(typeB, cnst, IllegalArgumentException.class);
     }
   }
 
@@ -213,36 +213,36 @@ public class ConvertAlgorithmTest extends TestingContext {
     }
   }
 
-  private void assertConvertThrowsRuntimeExc(TypeB typeB, ValB val) {
-    assertConvertThrowsExc(typeB, val, RuntimeException.class);
+  private void assertConvertThrowsRuntimeExc(TypeB typeB, CnstB cnst) {
+    assertConvertThrowsExc(typeB, cnst, RuntimeException.class);
   }
 
-  private void assertConvertThrowsIllegalArgExc(TypeB typeB, ValB val) {
-    assertConvertThrowsExc(typeB, val, IllegalArgumentException.class);
+  private void assertConvertThrowsIllegalArgExc(TypeB typeB, CnstB cnst) {
+    assertConvertThrowsExc(typeB, cnst, IllegalArgumentException.class);
   }
 
-  private void assertConvertThrowsClassCastExc(TypeB typeB, ValB val) {
-    assertConvertThrowsExc(typeB, val, ClassCastException.class);
+  private void assertConvertThrowsClassCastExc(TypeB typeB, CnstB cnst) {
+    assertConvertThrowsExc(typeB, cnst, ClassCastException.class);
   }
 
-  private void assertConvertThrowsExc(TypeB typeB, ValB val, Class<? extends Throwable> expected) {
+  private void assertConvertThrowsExc(TypeB typeB, CnstB cnst, Class<? extends Throwable> expected) {
     var convertAlgorithm = new ConvertAlgorithm(typeB, typingB());
-    assertCall(() -> convertAlgorithm.run(input(val), newNativeApi()))
+    assertCall(() -> convertAlgorithm.run(input(cnst), newNativeApi()))
         .throwsException(expected);
   }
 
-  private void assertConversion(TypeB targetT, ValB val, ValB expected) {
-    assertThat(convert(targetT, val))
+  private void assertConversion(TypeB targetT, CnstB cnst, CnstB expected) {
+    assertThat(convert(targetT, cnst))
         .isEqualTo(expected);
   }
 
-  private ValB convert(TypeB targetT, ValB inputVal) {
+  private CnstB convert(TypeB targetT, CnstB input) {
     var output = new ConvertAlgorithm(targetT, typingB())
-        .run(input(inputVal), newNativeApi());
-    return output.val();
+        .run(input(input), newNativeApi());
+    return output.cnst();
   }
 
-  private TupleB input(ValB valH) {
-    return tupleB(valH);
+  private TupleB input(CnstB cnstH) {
+    return tupleB(cnstH);
   }
 }

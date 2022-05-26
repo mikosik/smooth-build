@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.obj.exc;
 
 import org.smoothbuild.bytecode.type.CatB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.db.Hash;
 
 public class DecodeMapIllegalMappingFuncExc extends DecodeObjExc {

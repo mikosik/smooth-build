@@ -5,6 +5,15 @@ import java.util.function.BiFunction;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.BoolB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.FuncB;
+import org.smoothbuild.bytecode.obj.cnst.IntB;
+import org.smoothbuild.bytecode.obj.cnst.MethodB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
 import org.smoothbuild.bytecode.obj.expr.IfB;
@@ -13,15 +22,6 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.BoolB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
-import org.smoothbuild.bytecode.obj.val.IntB;
-import org.smoothbuild.bytecode.obj.val.MethodB;
-import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -33,7 +33,7 @@ public enum CatKindB {
   METHOD(         (byte) 3,  MethodB.class,     MethodB::new),
   INT(            (byte) 4,  IntB.class,        IntB::new),
   IF(             (byte) 5,  IfB.class,         IfB::new),
-  NOTHING(        (byte) 6,  ValB.class,        CatKindB::throwException),
+  NOTHING(        (byte) 6,  CnstB.class,        CatKindB::throwException),
   TUPLE(          (byte) 7,  TupleB.class,      TupleB::new),
   STRING(         (byte) 8,  StringB.class,     StringB::new),
   CALL(           (byte) 9,  CallB.class,       CallB::new),
@@ -44,8 +44,8 @@ public enum CatKindB {
   PARAM_REF(      (byte) 14, ParamRefB.class,   ParamRefB::new),
   COMBINE(        (byte) 15, CombineB.class,    CombineB::new),
   // TODO unused 16
-  VAR(            (byte) 17, ValB.class,        CatKindB::throwException),
-  ANY(            (byte) 18, ValB.class,        CatKindB::throwException),
+  VAR(            (byte) 17, CnstB.class,        CatKindB::throwException),
+  ANY(            (byte) 18, CnstB.class,        CatKindB::throwException),
   INVOKE(         (byte) 19, InvokeB.class,     InvokeB::new),
   MAP(            (byte) 20, MapB.class,        MapB::new),
   ;

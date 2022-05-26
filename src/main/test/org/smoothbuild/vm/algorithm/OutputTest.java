@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.cnst.ArrayB;
+import org.smoothbuild.bytecode.obj.cnst.StringB;
 import org.smoothbuild.testing.TestingContext;
 
 public class OutputTest extends TestingContext {
@@ -17,7 +17,7 @@ public class OutputTest extends TestingContext {
 
   @Test
   public void value_returns_value() {
-    assertThat(new Output(aString(), messages()).val())
+    assertThat(new Output(aString(), messages()).cnst())
         .isEqualTo(aString());
   }
 
@@ -38,7 +38,7 @@ public class OutputTest extends TestingContext {
   @Test
   public void value_throws_exception_when_no_value_is_present() {
     Output output = new Output(null, messages());
-    assertCall(output::val)
+    assertCall(output::cnst)
         .throwsException(IllegalStateException.class);
   }
 

@@ -1,11 +1,11 @@
 package org.smoothbuild.testing.func.nativ;
 
-import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class BrokenIdentity {
-  public static ValB func(NativeApi nativeApi, TupleB args) {
+  public static CnstB func(NativeApi nativeApi, TupleB args) {
     return nativeApi.factory().string("abc");
   }
 }
