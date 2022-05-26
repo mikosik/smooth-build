@@ -81,14 +81,14 @@ public class AstCreator {
         visitChildren(evaluable);
         Optional<TypeN> type = createTypeSane(evaluable.type());
         String name = nameNode.getText();
-        Optional<ExprN> expr = createExprSane(evaluable.expr());
+        Optional<ObjN> obj = createObjSane(evaluable.expr());
         Optional<AnnN> annotation = createNativeSane(evaluable.ann());
         Loc loc = LocHelpers.locOf(filePath, nameNode);
         if (evaluable.paramList() == null) {
-          evals.add(new ValN(type, name, expr, annotation, loc));
+          evals.add(new ValN(type, name, obj, annotation, loc));
         } else {
           List<ItemN> params = createParams(evaluable.paramList());
-          evals.add(new FuncN(type, name, params, expr, annotation, loc));
+          evals.add(new FuncN(type, name, params, obj, annotation, loc));
         }
         return null;
       }
@@ -118,29 +118,29 @@ public class AstCreator {
       private ItemN createParam(ParamContext param) {
         var type = createT(param.type());
         var name = param.NAME().getText();
-        var defaultArg = Optional.ofNullable(param.expr()).map(this::createExpr);
+        var defaultArg = Optional.ofNullable(param.expr()).map(this::createObj);
         var loc = LocHelpers.locOf(filePath, param);
         return new ItemN(type, name, defaultArg, loc);
       }
 
-      private Optional<ExprN> createExprSane(ExprContext expr) {
-        return expr == null ? Optional.empty() : Optional.of(createExpr(expr));
+      private Optional<ObjN> createObjSane(ExprContext expr) {
+        return expr == null ? Optional.empty() : Optional.of(createObj(expr));
       }
 
-      private ExprN createExpr(ExprContext expr) {
-        ExprN result = createExprHead(expr.exprHead());
+      private ObjN createObj(ExprContext expr) {
+        ObjN result = createChainHead(expr.exprHead());
         List<ChainCallContext> chainCallsInPipe = expr.chainCall();
         for (int i = 0; i < chainCallsInPipe.size(); i++) {
           var pipedArg = pipedArg(result, expr.p.get(i));
           ChainCallContext chain = chainCallsInPipe.get(i);
-          result = createChainCallExpr(pipedArg, chain);
+          result = createChainCallObj(pipedArg, chain);
         }
         return result;
       }
 
-      private ExprN createExprHead(ExprHeadContext expr) {
+      private ObjN createChainHead(ExprHeadContext expr) {
         if (expr.chain() != null) {
-          return createChainExpr(expr.chain());
+          return createChainObj(expr.chain());
         }
         if (expr.literal() != null) {
           return createLiteral(expr.literal());
@@ -148,20 +148,20 @@ public class AstCreator {
         throw newRuntimeException(ExprHeadContext.class);
       }
 
-      private ExprN createChainExpr(ChainContext chain) {
-        ExprN result = newRefNode(chain.NAME());
+      private ObjN createChainObj(ChainContext chain) {
+        ObjN result = newRefNode(chain.NAME());
         return createChainParts(result, chain.chainPart());
       }
 
-      private ArgN pipedArg(ExprN result, Token pipeCharacter) {
+      private ArgN pipedArg(ObjN result, Token pipeCharacter) {
         // Loc of nameless piped arg is set to the loc of pipe character '|'.
         Loc loc = LocHelpers.locOf(filePath, pipeCharacter);
         return new ExplicitArgN(null, result, loc);
       }
 
-      private ExprN createLiteral(LiteralContext expr) {
+      private ObjN createLiteral(LiteralContext expr) {
         if (expr.array() != null) {
-          List<ExprN> elems = map(expr.array().expr(), this::createExpr);
+          List<ObjN> elems = map(expr.array().expr(), this::createObj);
           return new OrderN(elems, LocHelpers.locOf(filePath, expr));
         }
         if (expr.BLOB() != null) {
@@ -182,8 +182,8 @@ public class AstCreator {
         return new StringN(unquoted, loc);
       }
 
-      private ExprN createChainCallExpr(ArgN pipedArg, ChainCallContext chainCall) {
-        ExprN result = newRefNode(chainCall.NAME());
+      private ObjN createChainCallObj(ArgN pipedArg, ChainCallContext chainCall) {
+        ObjN result = newRefNode(chainCall.NAME());
         for (SelectContext fieldRead : chainCall.select()) {
           result = createSelect(result, fieldRead);
         }
@@ -198,14 +198,14 @@ public class AstCreator {
         return new RefN(name.getText(), LocHelpers.locOf(filePath, name));
       }
 
-      private SelectN createSelect(ExprN selectable, SelectContext fieldRead) {
+      private SelectN createSelect(ObjN selectable, SelectContext fieldRead) {
         String name = fieldRead.NAME().getText();
         Loc loc = LocHelpers.locOf(filePath, fieldRead);
         return new SelectN(selectable, name, loc);
       }
 
-      private ExprN createChainParts(ExprN expr, List<ChainPartContext> chainParts) {
-        ExprN result = expr;
+      private ObjN createChainParts(ObjN obj, List<ChainPartContext> chainParts) {
+        ObjN result = obj;
         for (ChainPartContext chainPart : chainParts) {
           if (chainPart.argList() != null) {
             var args = createArgList(chainPart.argList());
@@ -225,14 +225,14 @@ public class AstCreator {
           ExprContext expr = arg.expr();
           TerminalNode nameNode = arg.NAME();
           String name = nameNode == null ? null : nameNode.getText();
-          ExprN exprN = createExpr(expr);
-          result.add(new ExplicitArgN(name, exprN, LocHelpers.locOf(filePath, arg)));
+          ObjN objN = createObj(expr);
+          result.add(new ExplicitArgN(name, objN, LocHelpers.locOf(filePath, arg)));
         }
         return result;
       }
 
-      private ExprN createCall(
-          ExprN callable, List<ArgN> args, ArgListContext argListContext) {
+      private ObjN createCall(
+          ObjN callable, List<ArgN> args, ArgListContext argListContext) {
         Loc loc = LocHelpers.locOf(filePath, argListContext);
         return new CallN(callable, args, loc);
       }

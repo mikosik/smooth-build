@@ -3,8 +3,8 @@ package org.smoothbuild.parse.ast;
 import org.smoothbuild.lang.define.Loc;
 
 public final class ExplicitArgN extends ArgN {
-  public ExplicitArgN(String name, ExprN expr, Loc loc) {
-    super(name, expr, loc);
+  public ExplicitArgN(String name, ObjN obj, Loc loc) {
+    super(name, obj, loc);
   }
 
   @Override

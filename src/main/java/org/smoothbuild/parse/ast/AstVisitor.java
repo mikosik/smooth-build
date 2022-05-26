@@ -42,14 +42,14 @@ public class AstVisitor {
   public void visitValue(ValN valN) {
     valN.ann().ifPresent(this::visitAnn);
     valN.evalT().ifPresent(this::visitType);
-    valN.body().ifPresent(this::visitExpr);
+    valN.body().ifPresent(this::visitObj);
   }
 
   public void visitFunc(FuncN funcN) {
     funcN.ann().ifPresent(this::visitAnn);
     funcN.evalT().ifPresent(this::visitType);
     visitParams(funcN.params());
-    funcN.body().ifPresent(this::visitExpr);
+    funcN.body().ifPresent(this::visitObj);
   }
 
   public void visitAnn(AnnN annotation) {
@@ -62,13 +62,13 @@ public class AstVisitor {
 
   public void visitParam(int index, ItemN param) {
     param.evalT().ifPresent(this::visitType);
-    param.body().ifPresent(this::visitExpr);
+    param.body().ifPresent(this::visitObj);
   }
 
   public void visitType(TypeN type) {}
 
-  public void visitExpr(ExprN expr) {
-    switch (expr) {
+  public void visitObj(ObjN obj) {
+    switch (obj) {
       case OrderN orderN -> visitOrder(orderN);
       case BlobN blobN -> visitBlob(blobN);
       case CallN callN -> visitCall(callN);
@@ -80,14 +80,14 @@ public class AstVisitor {
   }
 
   public void visitOrder(OrderN order) {
-    order.elems().forEach(this::visitExpr);
+    order.elems().forEach(this::visitObj);
   }
 
   public void visitBlob(BlobN blob) {
   }
 
   public void visitCall(CallN call) {
-    visitExpr(call.callable());
+    visitObj(call.callable());
     visitArgs(call.args());
   }
 
@@ -96,13 +96,13 @@ public class AstVisitor {
   }
 
   public void visitArg(ArgN arg) {
-    if (arg.expr() instanceof ExprN exprN) {
-      visitExpr(exprN);
+    if (arg.obj() instanceof ObjN objN) {
+      visitObj(objN);
     }
   }
 
   public void visitSelect(SelectN select) {
-    visitExpr(select.selectable());
+    visitObj(select.selectable());
   }
 
   public void visitInt(IntN int_) {

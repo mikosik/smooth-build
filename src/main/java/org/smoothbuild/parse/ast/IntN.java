@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 import org.smoothbuild.lang.define.Loc;
 
-public final class IntN extends ExprN {
+public final class IntN extends CnstN {
   private final String literal;
   private BigInteger bigInteger;
 

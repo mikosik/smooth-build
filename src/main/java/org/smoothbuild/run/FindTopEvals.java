@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.lang.obj.TopRefS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 

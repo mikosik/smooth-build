@@ -1,19 +1,10 @@
 package org.smoothbuild.parse.ast;
 
-import java.util.Optional;
-
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.like.Expr;
-import org.smoothbuild.lang.type.TypeS;
 
-public sealed abstract class ExprN extends AstNode implements Expr
-    permits OrderN, BlobN, CallN, IntN, RefN, SelectN, StringN {
+public abstract sealed class ExprN extends ObjN
+    permits CallN, OrderN, RefN, SelectN {
   public ExprN(Loc loc) {
     super(loc);
-  }
-
-  @Override
-  public Optional<TypeS> typeO() {
-    return type();
   }
 }

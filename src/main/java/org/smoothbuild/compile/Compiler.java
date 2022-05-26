@@ -48,15 +48,15 @@ import org.smoothbuild.lang.define.Nal;
 import org.smoothbuild.lang.define.NalImpl;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.expr.BlobS;
-import org.smoothbuild.lang.expr.CallS;
-import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.lang.expr.IntS;
-import org.smoothbuild.lang.expr.OrderS;
-import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.SelectS;
-import org.smoothbuild.lang.expr.StringS;
-import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.lang.obj.BlobS;
+import org.smoothbuild.lang.obj.CallS;
+import org.smoothbuild.lang.obj.IntS;
+import org.smoothbuild.lang.obj.ObjS;
+import org.smoothbuild.lang.obj.OrderS;
+import org.smoothbuild.lang.obj.ParamRefS;
+import org.smoothbuild.lang.obj.SelectS;
+import org.smoothbuild.lang.obj.StringS;
+import org.smoothbuild.lang.obj.TopRefS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.StructTS;
@@ -133,7 +133,7 @@ public class Compiler {
 
   private FuncB compileDefFunc(DefFuncS defFuncS) {
     var funcTB = convertFuncT(defFuncS.type());
-    var body = compileExpr(defFuncS.body());
+    var body = compileObj(defFuncS.body());
     return bytecodeF.func(funcTB, body);
   }
 
@@ -181,19 +181,19 @@ public class Compiler {
   }
 
   private ObjB compileValImpl(ValS valS) {
-    var exprB = switch (valS) {
+    var objB = switch (valS) {
       case AnnValS annValS -> compileAnnVal(annValS);
-      case DefValS defValS -> compileExpr(defValS.body());
+      case DefValS defValS -> compileObj(defValS.body());
     };
     var typeB = typeSbConv.convert(valS.type());
-    if (!typeB.equals(exprB.type())) {
-      var funcB = bytecodeF.func(bytecodeF.funcT(typeB, list()), exprB);
+    if (!typeB.equals(objB.type())) {
+      var funcB = bytecodeF.func(bytecodeF.funcT(typeB, list()), objB);
       var callB = bytecodeF.call(typeB, funcB, bytecodeF.combine(bytecodeF.tupleT(list()), list()));
       nals.put(funcB, valS);
       nals.put(callB, valS);
       return callB;
     }
-    return exprB;
+    return objB;
   }
 
   private ObjB compileAnnVal(AnnValS annValS) {
@@ -218,14 +218,14 @@ public class Compiler {
     return bytecodeB;
   }
 
-  // handling expressions
+  // handling objects
 
-  private ImmutableList<ObjB> compileExprs(ImmutableList<ExprS> exprs) {
-    return map(exprs, this::compileExpr);
+  private ImmutableList<ObjB> compileObjs(ImmutableList<ObjS> objs) {
+    return map(objs, this::compileObj);
   }
 
-  public ObjB compileExpr(ExprS exprS) {
-    return switch (exprS) {
+  public ObjB compileObj(ObjS objS) {
+    return switch (objS) {
       case BlobS blobS -> compileAndCacheNal(blobS, this::compileBlob);
       case CallS callS -> compileAndCacheNal(callS, this::compileCall);
       case IntS intS -> compileAndCacheNal(intS, this::compileInt);
@@ -237,9 +237,9 @@ public class Compiler {
     };
   }
 
-  private <T extends ExprS> ObjB compileAndCacheNal(T exprS, Function<T, ObjB> mapping) {
-    var objB = mapping.apply(exprS);
-    nals.put(objB, exprS);
+  private <T extends ObjS> ObjB compileAndCacheNal(T objS, Function<T, ObjB> mapping) {
+    var objB = mapping.apply(objS);
+    nals.put(objB, objS);
     return objB;
   }
 
@@ -248,8 +248,8 @@ public class Compiler {
   }
 
   private CallB compileCall(CallS callS) {
-    var callableB = compileExpr(callS.callable());
-    var argsB = compileExprs(callS.args());
+    var callableB = compileObj(callS.callable());
+    var argsB = compileObjs(callS.args());
 
     var argTupleT = bytecodeF.tupleT(map(argsB, ObjB::type));
     var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
@@ -267,7 +267,7 @@ public class Compiler {
 
   private OrderB compileOrder(OrderS orderS) {
     var arrayTB = convertArrayT(orderS.type());
-    var elemsB = compileExprs(orderS.elems());
+    var elemsB = compileObjs(orderS.elems());
     return bytecodeF.order(arrayTB, elemsB);
   }
 
@@ -284,7 +284,7 @@ public class Compiler {
   }
 
   private SelectB compileSelect(SelectS selectS) {
-    var selectableB = compileExpr(selectS.selectable());
+    var selectableB = compileObj(selectS.selectable());
     var structTS = (StructTS) selectS.selectable().type();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));

@@ -25,7 +25,7 @@ import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
-import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.lang.obj.TopRefS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;

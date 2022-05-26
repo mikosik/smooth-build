@@ -39,11 +39,11 @@ import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
 import org.smoothbuild.parse.ast.EvalN;
-import org.smoothbuild.parse.ast.ExprN;
 import org.smoothbuild.parse.ast.FuncN;
 import org.smoothbuild.parse.ast.FuncTN;
 import org.smoothbuild.parse.ast.IntN;
 import org.smoothbuild.parse.ast.ItemN;
+import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.parse.ast.SelectN;
@@ -101,7 +101,7 @@ public class TypeInferrer {
       @Override
       public void visitFunc(FuncN funcN) {
         visitParams(funcN.params());
-        funcN.body().ifPresent(this::visitExpr);
+        funcN.body().ifPresent(this::visitObj);
         var resN = funcN.evalT().orElse(null);
         funcN.setType(funcTOpt(resN, evalTOfTopEval(funcN), funcN.paramTsOpt()));
       }
@@ -126,7 +126,7 @@ public class TypeInferrer {
 
       @Override
       public void visitValue(ValN valN) {
-        valN.body().ifPresent(this::visitExpr);
+        valN.body().ifPresent(this::visitObj);
         valN.setType(evalTOfTopEval(valN));
       }
 
@@ -243,7 +243,7 @@ public class TypeInferrer {
       }
 
       private Optional<TypeS> findArrayT(OrderN array) {
-        List<ExprN> expressions = array.elems();
+        List<ObjN> expressions = array.elems();
         if (expressions.isEmpty()) {
           return Optional.of(typeSF.array(typeSF.nothing()));
         }
@@ -254,7 +254,7 @@ public class TypeInferrer {
 
         TypeS type = firstType.get();
         for (int i = 1; i < expressions.size(); i++) {
-          ExprN elem = expressions.get(i);
+          ObjN elem = expressions.get(i);
           Optional<TypeS> elemT = elem.type();
           if (elemT.isEmpty()) {
             return empty();
@@ -274,7 +274,7 @@ public class TypeInferrer {
       @Override
       public void visitCall(CallN call) {
         super.visitCall(call);
-        ExprN called = call.callable();
+        ObjN called = call.callable();
         Optional<TypeS> calledT = called.type();
         if (calledT.isEmpty()) {
           call.setType(empty());
@@ -304,7 +304,7 @@ public class TypeInferrer {
         }
       }
 
-      public static Optional<NList<Param>> funcParams(ExprN called) {
+      public static Optional<NList<Param>> funcParams(ObjN called) {
         if (called instanceof RefN refN) {
           Eval referenced = refN.referenced();
           if (referenced instanceof FuncS funcS) {
@@ -327,7 +327,7 @@ public class TypeInferrer {
             .anyMatch(a -> a.type().isEmpty());
       }
 
-      private static String description(ExprN node) {
+      private static String description(ObjN node) {
         if (node instanceof RefN refN) {
           return "`" + refN.name() + "`";
         }
@@ -343,7 +343,7 @@ public class TypeInferrer {
       @Override
       public void visitArg(ArgN arg) {
         super.visitArg(arg);
-        arg.setType(arg.expr().typeO());
+        arg.setType(arg.obj().typeO());
       }
 
       @Override

@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.type.TypeS;
 
-public interface Expr {
+/**
+ * Literal or expression.
+ */
+public interface Obj {
   public Optional<TypeS> typeO();
 }

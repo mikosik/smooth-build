@@ -1,17 +1,16 @@
-package org.smoothbuild.lang.expr;
+package org.smoothbuild.lang.obj;
 
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.Nal;
-import org.smoothbuild.lang.like.Expr;
+import org.smoothbuild.lang.like.Obj;
 import org.smoothbuild.lang.type.TypeS;
 
 /**
- * Expression in smooth language.
+ * Literal or expression in smooth language.
  */
-public sealed interface ExprS extends Nal, Expr
-    permits BlobS, CallS, IntS, OrderS, ParamRefS, SelectS, StringS, TopRefS {
+public sealed interface ObjS extends Nal, Obj permits CnstS, ExprS {
   public TypeS type();
 
   @Override

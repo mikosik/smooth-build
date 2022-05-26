@@ -2,7 +2,7 @@ package org.smoothbuild.lang.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.expr.ExprS;
+import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.TypeS;
 
 /**
@@ -11,14 +11,14 @@ import org.smoothbuild.lang.type.TypeS;
  * This class is immutable.
  */
 public final class DefValS extends ValS {
-  private final ExprS body;
+  private final ObjS body;
 
-  public DefValS(TypeS type, ModPath modPath, String name, ExprS body, Loc loc) {
+  public DefValS(TypeS type, ModPath modPath, String name, ObjS body, Loc loc) {
     super(type, modPath, name, loc);
     this.body = body;
   }
 
-  public ExprS body() {
+  public ObjS body() {
     return body;
   }
 

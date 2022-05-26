@@ -2,7 +2,7 @@ package org.smoothbuild.lang.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.expr.ExprS;
+import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.util.collect.NList;
 
@@ -12,15 +12,15 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class DefFuncS extends FuncS {
-  private final ExprS body;
+  private final ObjS body;
 
   public DefFuncS(FuncTS type, ModPath modPath, String name,
-      NList<ItemS> params, ExprS body, Loc loc) {
+      NList<ItemS> params, ObjS body, Loc loc) {
     super(type, modPath, name, params, loc);
     this.body = body;
   }
 
-  public ExprS body() {
+  public ObjS body() {
     return body;
   }
 

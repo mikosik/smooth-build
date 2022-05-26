@@ -16,17 +16,17 @@ import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.TopEvalS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.expr.BlobS;
-import org.smoothbuild.lang.expr.CallS;
-import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.lang.expr.IntS;
-import org.smoothbuild.lang.expr.OrderS;
-import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.SelectS;
-import org.smoothbuild.lang.expr.StringS;
-import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.like.Eval;
-import org.smoothbuild.lang.like.Expr;
+import org.smoothbuild.lang.like.Obj;
+import org.smoothbuild.lang.obj.BlobS;
+import org.smoothbuild.lang.obj.CallS;
+import org.smoothbuild.lang.obj.IntS;
+import org.smoothbuild.lang.obj.ObjS;
+import org.smoothbuild.lang.obj.OrderS;
+import org.smoothbuild.lang.obj.ParamRefS;
+import org.smoothbuild.lang.obj.SelectS;
+import org.smoothbuild.lang.obj.StringS;
+import org.smoothbuild.lang.obj.TopRefS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
@@ -34,10 +34,10 @@ import org.smoothbuild.parse.ast.AnnN;
 import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
 import org.smoothbuild.parse.ast.EvalN;
-import org.smoothbuild.parse.ast.ExprN;
 import org.smoothbuild.parse.ast.FuncN;
 import org.smoothbuild.parse.ast.IntN;
 import org.smoothbuild.parse.ast.ItemN;
+import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.parse.ast.SelectN;
@@ -70,7 +70,7 @@ public class TopEvalLoader {
       var ann = loadAnn(valN.ann().get());
       return new AnnValS(ann, type, path, name, loc);
     } else {
-      var body = createExpr(valN.body().get());
+      var body = createObj(valN.body().get());
       return new DefValS(type, path, name, body, loc);
     }
   }
@@ -86,7 +86,7 @@ public class TopEvalLoader {
       var ann = loadAnn(funcN.ann().get());
       return new AnnFuncS(ann, funcT, path, name, params, loc);
     } else {
-      var body = createExpr(funcN.body().get());
+      var body = createObj(funcN.body().get());
       return new DefFuncS(funcT, path, name, params, body, loc);
     }
   }
@@ -103,12 +103,12 @@ public class TopEvalLoader {
   private ItemS createParam(ItemN param, ModPath path) {
     var type = param.evalT().get().type().get();
     var name = param.name();
-    var body = param.body().map(this::createExpr);
+    var body = param.body().map(this::createObj);
     return new ItemS(type, path, name, body, param.loc());
   }
 
-  private ExprS createExpr(ExprN expr) {
-    return switch (expr) {
+  private ObjS createObj(ObjN obj) {
+    return switch (obj) {
       case OrderN orderN -> createArray(orderN);
       case BlobN blobN -> createBlob(blobN);
       case CallN callN -> createCall(callN);
@@ -119,36 +119,36 @@ public class TopEvalLoader {
     };
   }
 
-  private ExprS createArray(OrderN order) {
+  private ObjS createArray(OrderN order) {
     var type = (ArrayTS) order.type().get();
-    ImmutableList<ExprS> elems = map(order.elems(), this::createExpr);
+    ImmutableList<ObjS> elems = map(order.elems(), this::createObj);
     return new OrderS(type, elems, order.loc());
   }
 
-  private ExprS createCall(CallN call) {
-    var callable = createExpr(call.callable());
-    var argExpressions = map(call.assignedArgs(), a -> createArgExpr(a.expr()));
+  private ObjS createCall(CallN call) {
+    var callable = createObj(call.callable());
+    var argObjs = map(call.assignedArgs(), a -> createArgObj(a.obj()));
     var resT = call.type().get();
-    return new CallS(resT, callable, argExpressions, call.loc());
+    return new CallS(resT, callable, argObjs, call.loc());
   }
 
-  private ExprS createArgExpr(Expr expr) {
-    return switch (expr) {
-      case ExprN exprN -> createExpr(exprN);
-      case ExprS exprS -> exprS;
-      default -> throw unexpectedCaseExc(expr);
+  private ObjS createArgObj(Obj obj) {
+    return switch (obj) {
+      case ObjN objN -> createObj(objN);
+      case ObjS objS -> objS;
+      default -> throw unexpectedCaseExc(obj);
     };
   }
 
-  private ExprS createSelect(SelectN selectN) {
+  private ObjS createSelect(SelectN selectN) {
     var structT = (StructTS) selectN.selectable().type().get();
     var index = structT.fields().indexMap().get(selectN.field());
     var fieldT = structT.fields().get(index).type();
-    var selectable = createExpr(selectN.selectable());
+    var selectable = createObj(selectN.selectable());
     return new SelectS(fieldT, selectable, selectN.field(), selectN.loc());
   }
 
-  private ExprS createRef(RefN ref) {
+  private ObjS createRef(RefN ref) {
     Eval referenced = ref.referenced();
     if (referenced instanceof ItemN) {
       return new ParamRefS(ref.type().get(), ref.name(), ref.loc());

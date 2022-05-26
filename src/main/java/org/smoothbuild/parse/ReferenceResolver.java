@@ -42,7 +42,7 @@ public class ReferenceResolver extends AstVisitor {
     visitParams(funcN.params());
     funcN.body().ifPresent(expr -> {
       var referenceResolver = new ReferenceResolver(new Scope<>(scope, funcN.params()), logger);
-      referenceResolver.visitExpr(expr);
+      referenceResolver.visitObj(expr);
     });
   }
 

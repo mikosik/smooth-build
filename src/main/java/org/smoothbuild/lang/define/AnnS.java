@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.define;
 
-import org.smoothbuild.lang.expr.StringS;
+import org.smoothbuild.lang.obj.StringS;
 
 /**
  * Annotation.

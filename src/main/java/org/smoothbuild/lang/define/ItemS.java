@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.lang.expr.ExprS;
+import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -17,10 +17,10 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class ItemS extends EvalS {
-  private final Optional<ExprS> body;
+  private final Optional<ObjS> body;
   private final ItemSigS sig;
 
-  public ItemS(TypeS type, ModPath modPath, String name, Optional<ExprS> body, Loc loc) {
+  public ItemS(TypeS type, ModPath modPath, String name, Optional<ObjS> body, Loc loc) {
     super(type, modPath, name, loc);
     this.body = body;
     this.sig = new ItemSigS(type(), name());
@@ -30,7 +30,7 @@ public class ItemS extends EvalS {
     return sig;
   }
 
-  public Optional<ExprS> body() {
+  public Optional<ObjS> body() {
     return body;
   }
 

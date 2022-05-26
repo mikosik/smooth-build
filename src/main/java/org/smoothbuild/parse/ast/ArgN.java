@@ -3,15 +3,15 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.like.Expr;
+import org.smoothbuild.lang.like.Obj;
 import org.smoothbuild.lang.type.TypeS;
 
 public sealed abstract class ArgN extends NamedN permits DefaultArgN, ExplicitArgN {
-  private final Expr expr;
+  private final Obj obj;
 
-  public ArgN(String name, Expr expr, Loc loc) {
+  public ArgN(String name, Obj obj, Loc loc) {
     super(name, loc);
-    this.expr = expr;
+    this.obj = obj;
   }
 
   public boolean declaresName() {
@@ -30,7 +30,7 @@ public sealed abstract class ArgN extends NamedN permits DefaultArgN, ExplicitAr
     return type().map(TypeS::name).orElse("<missing type>") + ":" + nameSanitized();
   }
 
-  public Expr expr() {
-    return expr;
+  public Obj obj() {
+    return obj;
   }
 }

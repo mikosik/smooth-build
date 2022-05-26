@@ -106,15 +106,15 @@ import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TopEvalS;
-import org.smoothbuild.lang.expr.BlobS;
-import org.smoothbuild.lang.expr.CallS;
-import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.lang.expr.IntS;
-import org.smoothbuild.lang.expr.OrderS;
-import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.SelectS;
-import org.smoothbuild.lang.expr.StringS;
-import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.lang.obj.BlobS;
+import org.smoothbuild.lang.obj.CallS;
+import org.smoothbuild.lang.obj.IntS;
+import org.smoothbuild.lang.obj.ObjS;
+import org.smoothbuild.lang.obj.OrderS;
+import org.smoothbuild.lang.obj.ParamRefS;
+import org.smoothbuild.lang.obj.SelectS;
+import org.smoothbuild.lang.obj.StringS;
+import org.smoothbuild.lang.obj.TopRefS;
 import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
@@ -931,11 +931,11 @@ public class TestingContext {
     return new BlobS(blobTS(), intToByteString(data), loc(line));
   }
 
-  public CallS callS(TypeS type, ExprS callable, ExprS... args) {
+  public CallS callS(TypeS type, ObjS callable, ObjS... args) {
     return callS(1, type, callable, args);
   }
 
-  public CallS callS(int line, TypeS type, ExprS callable, ExprS... args) {
+  public CallS callS(int line, TypeS type, ObjS callable, ObjS... args) {
     return new CallS(type, callable, list(args), loc(line));
   }
 
@@ -947,12 +947,12 @@ public class TestingContext {
     return new IntS(intTS(), BigInteger.valueOf(value), loc(line));
   }
 
-  public OrderS orderS(TypeS elemT, ExprS... exprs) {
-    return orderS(1, elemT, exprs);
+  public OrderS orderS(TypeS elemT, ObjS... objs) {
+    return orderS(1, elemT, objs);
   }
 
-  public OrderS orderS(int line, TypeS elemT, ExprS... exprs) {
-    return new OrderS(arrayTS(elemT), ImmutableList.copyOf(exprs), loc(line));
+  public OrderS orderS(int line, TypeS elemT, ObjS... objs) {
+    return new OrderS(arrayTS(elemT), ImmutableList.copyOf(objs), loc(line));
   }
 
   public ParamRefS paramRefS(TypeS type) {
@@ -975,11 +975,11 @@ public class TestingContext {
     return new TopRefS(type, name, loc(line));
   }
 
-  public SelectS selectS(TypeS type, ExprS selectable, String field) {
+  public SelectS selectS(TypeS type, ObjS selectable, String field) {
     return selectS(1, type, selectable, field);
   }
 
-  public SelectS selectS(int line, TypeS type, ExprS selectable, String field) {
+  public SelectS selectS(int line, TypeS type, ObjS selectable, String field) {
     return new SelectS(type, selectable, field, loc(line));
   }
 
@@ -1042,11 +1042,11 @@ public class TestingContext {
     return itemS(line, type, name, empty());
   }
 
-  public ItemS itemS(int line, TypeS type, String name, ExprS body) {
+  public ItemS itemS(int line, TypeS type, String name, ObjS body) {
     return itemS(line, type, name, Optional.of(body));
   }
 
-  private ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
+  private ItemS itemS(int line, TypeS type, String name, Optional<ObjS> body) {
     return new ItemS(type, modPath(), name, body, loc(line));
   }
 
@@ -1071,11 +1071,11 @@ public class TestingContext {
     return new AnnValS(ann, type, modPath, name, loc);
   }
 
-  public DefValS defValS(String name, ExprS expr) {
+  public DefValS defValS(String name, ObjS expr) {
     return defValS(1, expr.type(), name, expr);
   }
 
-  public DefValS defValS(int line, TypeS type, String name, ExprS expr) {
+  public DefValS defValS(int line, TypeS type, String name, ObjS expr) {
     return new DefValS(type, modPath(), name, expr, loc(line));
   }
 
@@ -1123,19 +1123,19 @@ public class TestingContext {
     return new AnnFuncS(ann, funcT, modPath, name, params, loc(line));
   }
 
-  public DefFuncS defFuncS(TypeS type, String name, ExprS body, NList<ItemS> params) {
+  public DefFuncS defFuncS(TypeS type, String name, ObjS body, NList<ItemS> params) {
     return defFuncS(1, type, name, body, params);
   }
 
-  public DefFuncS defFuncS(int line, TypeS type, String name, ExprS body, NList<ItemS> params) {
+  public DefFuncS defFuncS(int line, TypeS type, String name, ObjS body, NList<ItemS> params) {
     return new DefFuncS(funcTS(type, params), modPath(), name, params, body, loc(line));
   }
 
-  public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS expr) {
+  public DefFuncS defFuncS(String name, NList<ItemS> params, ObjS expr) {
     return defFuncS(expr.type(), name, params, expr);
   }
 
-  public DefFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ExprS expr) {
+  public DefFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ObjS expr) {
     return new DefFuncS(funcTS(resT, toTypes(params)), modPath(), name, params, expr, loc(1));
   }
 

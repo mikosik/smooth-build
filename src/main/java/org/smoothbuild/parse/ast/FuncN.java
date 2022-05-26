@@ -17,12 +17,12 @@ import com.google.common.collect.ImmutableList;
 public final class FuncN extends EvalN {
   private final NList<ItemN> params;
 
-  public FuncN(Optional<TypeN> resT, String name, List<ItemN> params, Optional<ExprN> body,
+  public FuncN(Optional<TypeN> resT, String name, List<ItemN> params, Optional<ObjN> body,
       Optional<AnnN> ann, Loc loc) {
     this(resT, name, nListWithNonUniqueNames(ImmutableList.copyOf(params)), body, ann, loc);
   }
 
-  public FuncN(Optional<TypeN> resT, String name, NList<ItemN> params, Optional<ExprN> body,
+  public FuncN(Optional<TypeN> resT, String name, NList<ItemN> params, Optional<ObjN> body,
       Optional<AnnN> ann, Loc loc) {
     super(resT, name, body, ann, loc);
     this.params = params;

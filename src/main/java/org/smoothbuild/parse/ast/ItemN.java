@@ -13,7 +13,7 @@ import org.smoothbuild.lang.type.TypeS;
 public final class ItemN extends EvalN {
   private Optional<ItemSigS> sig;
 
-  public ItemN(TypeN typeN, String name, Optional<ExprN> body, Loc loc) {
+  public ItemN(TypeN typeN, String name, Optional<ObjN> body, Loc loc) {
     super(Optional.of(typeN), name, body, Optional.empty(), loc);
   }
 

@@ -8,10 +8,10 @@ import org.smoothbuild.lang.like.Eval;
 public sealed abstract class EvalN extends NamedN implements Eval
     permits FuncN, ItemN, ValN {
   private final Optional<TypeN> evalT;
-  private final Optional<ExprN> body;
+  private final Optional<ObjN> body;
   private final Optional<AnnN> ann;
 
-  public EvalN(Optional<TypeN> evalT, String name, Optional<ExprN> body, Optional<AnnN> ann,
+  public EvalN(Optional<TypeN> evalT, String name, Optional<ObjN> body, Optional<AnnN> ann,
       Loc loc) {
     super(name, loc);
     this.evalT = evalT;
@@ -23,7 +23,7 @@ public sealed abstract class EvalN extends NamedN implements Eval
     return evalT;
   }
 
-  public Optional<ExprN> body() {
+  public Optional<ObjN> body() {
     return body;
   }
 

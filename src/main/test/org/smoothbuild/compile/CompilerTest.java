@@ -20,8 +20,8 @@ import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.TopEvalS;
-import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.lang.expr.IntS;
+import org.smoothbuild.lang.obj.IntS;
+import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
@@ -111,7 +111,7 @@ public class CompilerTest extends TestingContext {
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
       var compiler = newCompiler(defs(annValS), fileLoader);
-      assertThat(compiler.compileExpr(topRefS(annValS)))
+      assertThat(compiler.compileObj(topRefS(annValS)))
           .isEqualTo(valB);
     }
 
@@ -154,7 +154,7 @@ public class CompilerTest extends TestingContext {
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
       var compiler = newCompiler(defs(natFuncS), fileLoader);
-      assertThat(compiler.compileExpr(topRefS(natFuncS)))
+      assertThat(compiler.compileObj(topRefS(natFuncS)))
           .isEqualTo(funcB);
     }
 
@@ -176,21 +176,21 @@ public class CompilerTest extends TestingContext {
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
       var compiler = newCompiler(defs(byteFuncS), fileLoader);
-      assertThat(compiler.compileExpr(topRefS(byteFuncS)))
+      assertThat(compiler.compileObj(topRefS(byteFuncS)))
           .isEqualTo(funcB);
     }
 
-    private void assertCompilation(ExprS exprS, ObjB expected) {
-      assertCompilation(defs(), exprS, expected);
+    private void assertCompilation(ObjS objS, ObjB expected) {
+      assertCompilation(defs(), objS, expected);
     }
 
-    private void assertCompilation(TopEvalS topEval, ExprS exprS, ObjB expected) {
-      assertCompilation(defs(topEval), exprS, expected);
+    private void assertCompilation(TopEvalS topEval, ObjS objS, ObjB expected) {
+      assertCompilation(defs(topEval), objS, expected);
     }
 
-    private void assertCompilation(DefsS defs, ExprS exprS, ObjB expected) {
+    private void assertCompilation(DefsS defs, ObjS objS, ObjB expected) {
       var compiler = newCompiler(defs);
-      assertThat(compiler.compileExpr(exprS))
+      assertThat(compiler.compileObj(objS))
           .isEqualTo(expected);
     }
   }
@@ -214,8 +214,8 @@ public class CompilerTest extends TestingContext {
 
     private void assertCompilationIsCached(TopEvalS topEval) {
       var compiler = newCompiler(topEval);
-      assertThat(compiler.compileExpr(topRefS(topEval)))
-          .isSameInstanceAs(compiler.compileExpr(topRefS(topEval)));
+      assertThat(compiler.compileObj(topRefS(topEval)))
+          .isSameInstanceAs(compiler.compileObj(topRefS(topEval)));
     }
   }
 

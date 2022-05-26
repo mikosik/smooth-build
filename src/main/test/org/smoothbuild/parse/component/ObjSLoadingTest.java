@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.testing.TestingContext;
 
-public class ExprSLoadingTest extends TestingContext {
+public class ObjSLoadingTest extends TestingContext {
   @Test
   public void blob_literal_expression() {
     module("""

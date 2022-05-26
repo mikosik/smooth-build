@@ -4,7 +4,7 @@ import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.util.Strings;
 import org.smoothbuild.util.UnescapingFailedExc;
 
-public final class StringN extends ExprN {
+public final class StringN extends CnstN {
   private final String value;
   private String unescaped;
 
