@@ -4,7 +4,7 @@ import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.Nal;
 
 public sealed class NamedN extends AstNode implements Nal
-    permits AnnN, ArgN, EvalN, StructN, TypeN {
+    permits AnnN, ArgN, RefableN, StructN, TypeN {
   private final String name;
 
   public NamedN(String name, Loc loc) {

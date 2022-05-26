@@ -1,10 +1,10 @@
 grammar Smooth;
 
-mod          : ( struct | eval )* EOF ;
+mod          : ( struct | top )* EOF ;
 struct       : TNAME '{' fieldList? '}' ;
 fieldList    : field ( ',' field )* ','? ;
 field        : type NAME ;
-eval         : ann? type? NAME paramList? ('=' expr)? ';' ;
+top          : ann? type? NAME paramList? ('=' expr)? ';' ;
 ann          : '@' TNAME '(' STRING ')' ;
 paramList    : '(' ( param ( ',' param )* ','? )? ')' ;
 param        : type NAME ( '=' expr )? ;

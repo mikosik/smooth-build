@@ -17,7 +17,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", stringTS());
+          .containsTopRefableWithType("myValue", stringTS());
     }
 
     @Test
@@ -27,7 +27,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", blobTS());
+          .containsTopRefableWithType("myValue", blobTS());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", intTS());
+          .containsTopRefableWithType("myValue", intTS());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", arrayTS(stringTS()));
+          .containsTopRefableWithType("myValue", arrayTS(stringTS()));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", stringTS());
+          .containsTopRefableWithType("myValue", stringTS());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", funcTS(stringTS(), list(blobTS())));
+          .containsTopRefableWithType("myValue", funcTS(stringTS(), list(blobTS())));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myValue", stringTS());
+          .containsTopRefableWithType("myValue", stringTS());
     }
   }
 
@@ -93,7 +93,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(stringTS()));
+          .containsTopRefableWithType("myFunc", funcTS(stringTS()));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(blobTS()));
+          .containsTopRefableWithType("myFunc", funcTS(blobTS()));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(intTS()));
+          .containsTopRefableWithType("myFunc", funcTS(intTS()));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(arrayTS(stringTS())));
+          .containsTopRefableWithType("myFunc", funcTS(arrayTS(stringTS())));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(stringTS()));
+          .containsTopRefableWithType("myFunc", funcTS(stringTS()));
     }
 
     @Test
@@ -145,7 +145,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(funcTS(stringTS(), list(blobTS()))));
+          .containsTopRefableWithType("myFunc", funcTS(funcTS(stringTS(), list(blobTS()))));
     }
 
     @Test
@@ -156,7 +156,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(stringTS()));
+          .containsTopRefableWithType("myFunc", funcTS(stringTS()));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(stringTS(), list(stringTS())));
+          .containsTopRefableWithType("myFunc", funcTS(stringTS(), list(stringTS())));
     }
 
     @Test
@@ -176,7 +176,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("myFunc", funcTS(varS("A"), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", funcTS(varS("A"), list(varS("A"))));
     }
   }
 
@@ -189,7 +189,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("result", arrayTS(stringTS()));
+          .containsTopRefableWithType("result", arrayTS(stringTS()));
     }
 
     @Test
@@ -201,7 +201,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("result", arrayTS(stringTS()));
+          .containsTopRefableWithType("result", arrayTS(stringTS()));
     }
 
     @Test
@@ -295,7 +295,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", nothingTS());
+            .containsTopRefableWithType("myValue", nothingTS());
       }
 
       @Test
@@ -306,7 +306,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", stringTS());
+            .containsTopRefableWithType("myValue", stringTS());
       }
 
       @Test
@@ -317,7 +317,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", arrayTS(stringTS()));
+            .containsTopRefableWithType("myValue", arrayTS(stringTS()));
       }
 
       @Test
@@ -329,7 +329,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", funcTS(stringTS(), list(blobTS())));
+            .containsTopRefableWithType("myValue", funcTS(stringTS(), list(blobTS())));
       }
     }
 
@@ -344,7 +344,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", nothingTS());
+            .containsTopRefableWithType("myValue", nothingTS());
       }
 
       @Test
@@ -356,7 +356,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", stringTS());
+            .containsTopRefableWithType("myValue", stringTS());
       }
 
       @Test
@@ -368,7 +368,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", arrayTS(stringTS()));
+            .containsTopRefableWithType("myValue", arrayTS(stringTS()));
       }
 
       @Test
@@ -382,7 +382,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", funcTS(stringTS(), list(nothingTS())));
+            .containsTopRefableWithType("myValue", funcTS(stringTS(), list(nothingTS())));
       }
     }
 
@@ -398,7 +398,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", arrayTS(nothingTS()));
+            .containsTopRefableWithType("myValue", arrayTS(nothingTS()));
       }
 
       @Test
@@ -409,7 +409,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", arrayTS(stringTS()));
+            .containsTopRefableWithType("myValue", arrayTS(stringTS()));
       }
 
       @Test
@@ -420,7 +420,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", arrayTS(arrayTS(stringTS())));
+            .containsTopRefableWithType("myValue", arrayTS(arrayTS(stringTS())));
       }
 
       @Test
@@ -432,7 +432,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvalWithType("myValue", arrayTS(funcTS(stringTS(), list(blobTS()))));
+            .containsTopRefableWithType("myValue", arrayTS(funcTS(stringTS(), list(blobTS()))));
       }
     }
 
@@ -455,7 +455,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsWithSuccess()
-          .containsEvalWithType("result", arrayTS(stringTS()));
+          .containsTopRefableWithType("result", arrayTS(stringTS()));
     }
   }
 }

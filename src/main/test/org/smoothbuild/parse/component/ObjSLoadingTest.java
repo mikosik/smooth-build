@@ -17,7 +17,7 @@ public class ObjSLoadingTest extends TestingContext {
             0x07;
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(1, blobTS(), "result", blobS(2, 7)));
+        .containsTopRefable(defValS(1, blobTS(), "result", blobS(2, 7)));
   }
 
   @Test
@@ -27,7 +27,7 @@ public class ObjSLoadingTest extends TestingContext {
             123;
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(1, intTS(), "result", intS(2, 123)));
+        .containsTopRefable(defValS(1, intTS(), "result", intS(2, 123)));
   }
 
   @Test
@@ -40,7 +40,7 @@ public class ObjSLoadingTest extends TestingContext {
           ];
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(1, arrayTS(blobTS()), "result",
+        .containsTopRefable(defValS(1, arrayTS(blobTS()), "result",
             orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
   }
 
@@ -53,7 +53,7 @@ public class ObjSLoadingTest extends TestingContext {
           result = myFunc();
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, stringTS(), "result",
+          .containsTopRefable(defValS(2, stringTS(), "result",
               callS(2, stringTS(), topRefS(2, funcTS(stringTS()), "myFunc"))));
     }
 
@@ -65,7 +65,7 @@ public class ObjSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, stringTS(), "result", callS(2, stringTS(),
+          .containsTopRefable(defValS(2, stringTS(), "result", callS(2, stringTS(),
               topRefS(2, funcTS(stringTS(), list(blobTS())), "myFunc"), blobS(3, 7))));
     }
 
@@ -77,7 +77,7 @@ public class ObjSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, stringTS(), "result", callS(2, stringTS(), topRefS(2,
+          .containsTopRefable(defValS(2, stringTS(), "result", callS(2, stringTS(), topRefS(2,
               funcTS(stringTS(), list(blobTS())), "myFunc"), blobS(3, 7))));
     }
 
@@ -90,7 +90,7 @@ public class ObjSLoadingTest extends TestingContext {
           result = myValue();
           """)
           .loadsWithSuccess()
-          .containsEval(
+          .containsTopRefable(
               defValS(4, stringTS(), "result",
                   callS(4, stringTS(), topRefS(4, funcTS(stringTS()), "myValue"))));
     }
@@ -105,7 +105,7 @@ public class ObjSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsWithSuccess()
-          .containsEval(
+          .containsTopRefable(
               defValS(4, stringTS(), "result",
                   callS(4, stringTS(), topRefS(4, funcTS(stringTS(), list(blobTS())), "myValue"),
                       blobS(5, 7))));
@@ -123,7 +123,7 @@ public class ObjSLoadingTest extends TestingContext {
           }
           """)
           .loadsWithSuccess()
-          .containsEval(ctor);
+          .containsTopRefable(ctor);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class ObjSLoadingTest extends TestingContext {
             "aaa");
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(4, struct, "result", callS(4, struct, topRefS(4,
+          .containsTopRefable(defValS(4, struct, "result", callS(4, struct, topRefS(4,
               funcTS(struct, list(stringTS())), "myStruct"), stringS(5, "aaa"))));
     }
 
@@ -147,7 +147,7 @@ public class ObjSLoadingTest extends TestingContext {
           result(String() f) = f();
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, stringTS(), "result",
+          .containsTopRefable(defFuncS(1, stringTS(), "result",
               callS(1, stringTS(), paramRefS(funcTS(stringTS()), "f")), nList(itemS(1, funcTS(stringTS()), "f"))));
     }
 
@@ -157,7 +157,7 @@ public class ObjSLoadingTest extends TestingContext {
           result(String(Blob) f) = f(0x09);
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, stringTS(), "result",
+          .containsTopRefable(defFuncS(1, stringTS(), "result",
               callS(1, stringTS(), paramRefS(funcTS(stringTS(), list(blobTS())), "f"), blobS(1, 9)),
               nList(itemS(1, funcTS(stringTS(), list(blobTS())), "f"))));
     }
@@ -170,7 +170,7 @@ public class ObjSLoadingTest extends TestingContext {
             = param1;
           """)
         .loadsWithSuccess()
-        .containsEval(defFuncS(
+        .containsTopRefable(defFuncS(
             1, blobTS(), "myFunc", paramRefS(2, blobTS(), "param1"), nList(itemS(1, blobTS(), "param1"))));
   }
 
@@ -186,7 +186,7 @@ public class ObjSLoadingTest extends TestingContext {
             .field;
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(5, stringTS(), "result",
+        .containsTopRefable(defValS(5, stringTS(), "result",
             selectS(6, stringTS(), topRefS(5, myStruct, "struct"), "field")));
   }
 
@@ -200,7 +200,7 @@ public class ObjSLoadingTest extends TestingContext {
             myValue;
           """)
           .loadsWithSuccess()
-          .containsEval(
+          .containsTopRefable(
               defValS(2, stringTS(), "result", topRefS(3, stringTS(), "myValue")));
     }
 
@@ -212,7 +212,7 @@ public class ObjSLoadingTest extends TestingContext {
             myFunc;
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, funcTS(stringTS()), "result", topRefS(3, funcTS(stringTS()), "myFunc")));
+          .containsTopRefable(defValS(2, funcTS(stringTS()), "result", topRefS(3, funcTS(stringTS()), "myFunc")));
     }
 
     @Test
@@ -224,7 +224,7 @@ public class ObjSLoadingTest extends TestingContext {
             myStruct;
           """)
           .loadsWithSuccess()
-          .containsEval(defValS(2, funcTS(structT), "result", topRefS(3, funcTS(structT), "myStruct")));
+          .containsTopRefable(defValS(2, funcTS(structT), "result", topRefS(3, funcTS(structT), "myStruct")));
     }
   }
 
@@ -235,7 +235,7 @@ public class ObjSLoadingTest extends TestingContext {
             "abc";
           """)
         .loadsWithSuccess()
-        .containsEval(defValS(1, stringTS(), "result", stringS(2, "abc")));
+        .containsTopRefable(defValS(1, stringTS(), "result", stringS(2, "abc")));
   }
 
   @Nested
@@ -248,7 +248,7 @@ public class ObjSLoadingTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEval(defValS(1, blobTS(), "myValue", blobS(2, 7)));
+          .containsTopRefable(defValS(1, blobTS(), "myValue", blobS(2, 7)));
     }
 
     @Test
@@ -259,7 +259,7 @@ public class ObjSLoadingTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsEval(annValS(2, bytecodeS(1, "implementation"), blobTS(), "myValue"));
+          .containsTopRefable(annValS(2, bytecodeS(1, "implementation"), blobTS(), "myValue"));
     }
 
     @Test
@@ -269,7 +269,7 @@ public class ObjSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, blobTS(), "myFunc", blobS(2, 7), nList()));
+          .containsTopRefable(defFuncS(1, blobTS(), "myFunc", blobS(2, 7), nList()));
     }
 
     @Test
@@ -280,7 +280,7 @@ public class ObjSLoadingTest extends TestingContext {
             = "abc";
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, stringTS(), "myFunc", stringS(3, "abc"),
+          .containsTopRefable(defFuncS(1, stringTS(), "myFunc", stringS(3, "abc"),
               nList(itemS(2, blobTS(), "param1"))));
     }
 
@@ -293,7 +293,7 @@ public class ObjSLoadingTest extends TestingContext {
               = "abc";
           """)
           .loadsWithSuccess()
-          .containsEval(defFuncS(1, stringTS(), "myFunc", stringS(4, "abc"),
+          .containsTopRefable(defFuncS(1, stringTS(), "myFunc", stringS(4, "abc"),
               nList(itemS(2, blobTS(), "param1", blobS(3, 7)))));
     }
 
@@ -304,7 +304,7 @@ public class ObjSLoadingTest extends TestingContext {
           String myFunc();
           """)
           .loadsWithSuccess()
-          .containsEval(
+          .containsTopRefable(
               natFuncS(2, stringTS(), "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), false)));
     }
 
@@ -315,7 +315,7 @@ public class ObjSLoadingTest extends TestingContext {
           String myFunc();
           """)
           .loadsWithSuccess()
-          .containsEval(
+          .containsTopRefable(
               natFuncS(2, stringTS(), "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
     }
 
@@ -328,7 +328,7 @@ public class ObjSLoadingTest extends TestingContext {
               0x07);
           """)
           .loadsWithSuccess()
-          .containsEval(
+          .containsTopRefable(
               natFuncS(2, stringTS(), "myFunc", nList(itemS(3, blobTS(), "param1", blobS(4, 7))),
                   nativeS(1, stringS(1, "Impl.met"), true)));
     }
@@ -340,7 +340,7 @@ public class ObjSLoadingTest extends TestingContext {
           String myFunc();
           """)
           .loadsWithSuccess()
-          .containsEval(
+          .containsTopRefable(
               byteFuncS(2, bytecodeS(stringS(1, "Impl.met"), loc(1)), stringTS(), "myFunc", nList()));
     }
 
@@ -353,7 +353,7 @@ public class ObjSLoadingTest extends TestingContext {
               0x07);
           """)
           .loadsWithSuccess()
-          .containsEval(
+          .containsTopRefable(
               byteFuncS(2, bytecodeS(1, stringS(1, "Impl.met")), stringTS(), "myFunc",
                   nList(itemS(3, blobTS(), "param1", blobS(4, 7)))));
     }

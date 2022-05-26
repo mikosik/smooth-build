@@ -19,7 +19,7 @@ import org.smoothbuild.bytecode.obj.cnst.IntB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.TopEvalS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;
@@ -213,8 +213,8 @@ public class EvaluatorTest  extends TestingContext {
     return evaluate(objS, nList());
   }
 
-  private ObjB evaluate(ObjS objS, NList<TopEvalS> topEvals) {
-    var defsS = new DefsS(nList(), topEvals);
+  private ObjB evaluate(ObjS objS, NList<TopRefableS> topRefables) {
+    var defsS = new DefsS(nList(), topRefables);
     var resultMap = newEvaluator().evaluate(defsS, list(objS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);

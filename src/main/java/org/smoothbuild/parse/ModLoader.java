@@ -20,13 +20,13 @@ import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.StructS;
 import org.smoothbuild.lang.define.SyntCtorS;
-import org.smoothbuild.lang.define.TopEvalS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.EvalN;
+import org.smoothbuild.parse.ast.RefableN;
 import org.smoothbuild.parse.ast.StructN;
 import org.smoothbuild.util.collect.NList;
 
@@ -34,13 +34,13 @@ import com.google.common.collect.ImmutableList;
 
 public class ModLoader {
   private final TypeInferrer typeInferrer;
-  private final TopEvalLoader topEvalLoader;
+  private final TopRefableLoader topRefableLoader;
   private final TypeSF typeSF;
 
   @Inject
-  public ModLoader(TypeInferrer typeInferrer, TopEvalLoader topEvalLoader, TypeSF typeSF) {
+  public ModLoader(TypeInferrer typeInferrer, TopRefableLoader topRefableLoader, TypeSF typeSF) {
     this.typeInferrer = typeInferrer;
-    this.topEvalLoader = topEvalLoader;
+    this.topRefableLoader = topRefableLoader;
     this.typeSF = typeSF;
   }
 
@@ -78,7 +78,7 @@ public class ModLoader {
     }
 
     var types = sortedAst.structs().map(s -> (DefTypeS) loadStruct(path, s));
-    var evals = loadTopEvals(path, sortedAst);
+    var evals = loadTopRefables(path, sortedAst);
     var moduleS = new ModS(path, modFiles, types, evals);
     return maybeValueAndLogs(moduleS, logBuffer);
   }
@@ -89,14 +89,14 @@ public class ModLoader {
     return new StructS(type, path, loc);
   }
 
-  private NList<TopEvalS> loadTopEvals(ModPath path, Ast ast) {
-    var local = ImmutableList.<TopEvalS>builder();
+  private NList<TopRefableS> loadTopRefables(ModPath path, Ast ast) {
+    var local = ImmutableList.<TopRefableS>builder();
     for (StructN struct : ast.structs()) {
       var ctorS = loadSyntCtor(path, struct);
       local.add(ctorS);
     }
-    for (EvalN eval : ast.topEvals()) {
-      local.add(topEvalLoader.loadEval(path, eval));
+    for (RefableN refable : ast.topRefables()) {
+      local.add(topRefableLoader.loadRefable(path, refable));
     }
     return nList(local.build());
   }

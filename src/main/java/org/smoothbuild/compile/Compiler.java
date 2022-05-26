@@ -277,7 +277,7 @@ public class Compiler {
   }
 
   private ObjB compileTopRef(TopRefS topRefS) {
-    return switch (defs.topEvals().get(topRefS.name())) {
+    return switch (defs.topRefables().get(topRefS.name())) {
       case FuncS f -> compileFunc(f);
       case ValS v -> compileVal(v);
     };

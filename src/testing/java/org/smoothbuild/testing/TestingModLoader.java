@@ -11,12 +11,12 @@ import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
-import org.smoothbuild.lang.define.TopEvalS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ModLoader;
-import org.smoothbuild.parse.TopEvalLoader;
+import org.smoothbuild.parse.TopRefableLoader;
 import org.smoothbuild.parse.TypeInferrer;
 
 public class TestingModLoader {
@@ -49,25 +49,25 @@ public class TestingModLoader {
     return this;
   }
 
-  public void containsEval(TopEvalS expected) {
+  public void containsTopRefable(TopRefableS expected) {
     String name = expected.name();
-    TopEvalS actual = assertContainsEval(name);
+    TopRefableS actual = assertContainsTopRefable(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
-  public void containsEvalWithType(String name, TypeS expectedT) {
-    var topEval = assertContainsEval(name);
-    assertThat(topEval.type())
+  public void containsTopRefableWithType(String name, TypeS expectedT) {
+    var topRefable = assertContainsTopRefable(name);
+    assertThat(topRefable.type())
         .isEqualTo(expectedT);
   }
 
-  private TopEvalS assertContainsEval(String name) {
-    var topEvals = modS.value().topEvals();
+  private TopRefableS assertContainsTopRefable(String name) {
+    var topRefables = modS.value().topRefables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(topEvals.containsName(name))
+        .that(topRefables.containsName(name))
         .isTrue();
-    return topEvals.get(name);
+    return topRefables.get(name);
   }
 
   public void containsType(TypeS expected) {
@@ -122,8 +122,8 @@ public class TestingModLoader {
     var typing = testingContext.typingS();
     var factory = testingContext.typeFS();
     var typeInferrer = new TypeInferrer(factory, typing);
-    var topEvalLoader = new TopEvalLoader(factory);
-    var modLoader = new ModLoader(typeInferrer, topEvalLoader, factory);
+    var topRefableLoader = new TopRefableLoader(factory);
+    var modLoader = new ModLoader(typeInferrer, topRefableLoader, factory);
     DefsS importedSane = imported != null ? imported
         : DefsS.empty().withModule(testingContext.internalMod());
     ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();

@@ -14,10 +14,10 @@ import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ModPath;
-import org.smoothbuild.lang.define.TopEvalS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.like.Eval;
 import org.smoothbuild.lang.like.Obj;
+import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.obj.BlobS;
 import org.smoothbuild.lang.obj.CallS;
 import org.smoothbuild.lang.obj.IntS;
@@ -33,36 +33,36 @@ import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.parse.ast.AnnN;
 import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
-import org.smoothbuild.parse.ast.EvalN;
 import org.smoothbuild.parse.ast.FuncN;
 import org.smoothbuild.parse.ast.IntN;
 import org.smoothbuild.parse.ast.ItemN;
 import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
+import org.smoothbuild.parse.ast.RefableN;
 import org.smoothbuild.parse.ast.SelectN;
 import org.smoothbuild.parse.ast.StringN;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class TopEvalLoader {
+public class TopRefableLoader {
   private final TypeSF typeSF;
 
   @Inject
-  public TopEvalLoader(TypeSF typeSF) {
+  public TopRefableLoader(TypeSF typeSF) {
     this.typeSF = typeSF;
   }
 
-  public TopEvalS loadEval(ModPath path, EvalN evalN) {
-    if (evalN instanceof FuncN funcN) {
+  public TopRefableS loadRefable(ModPath path, RefableN refableN) {
+    if (refableN instanceof FuncN funcN) {
       return loadFunc(path, funcN);
     } else {
-      return loadVal(path, evalN);
+      return loadVal(path, refableN);
     }
   }
 
-  private ValS loadVal(ModPath path, EvalN valN) {
+  private ValS loadVal(ModPath path, RefableN valN) {
     var type = valN.type().get();
     var name = valN.name();
     var loc = valN.loc();
@@ -149,7 +149,7 @@ public class TopEvalLoader {
   }
 
   private ObjS createRef(RefN ref) {
-    Eval referenced = ref.referenced();
+    Refable referenced = ref.referenced();
     if (referenced instanceof ItemN) {
       return new ParamRefS(ref.type().get(), ref.name(), ref.loc());
     } else {

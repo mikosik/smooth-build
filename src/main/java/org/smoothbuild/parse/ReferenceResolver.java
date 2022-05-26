@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.like.Eval;
+import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
@@ -16,7 +16,7 @@ import org.smoothbuild.parse.ast.StructN;
 import org.smoothbuild.util.Scope;
 
 public class ReferenceResolver extends AstVisitor {
-  private final Scope<? extends Eval> scope;
+  private final Scope<? extends Refable> scope;
   private final Logger logger;
 
   public static void resolveReferences(Logger logger, DefsS imported, Ast ast) {
@@ -25,14 +25,14 @@ public class ReferenceResolver extends AstVisitor {
         .visitAst(ast);
   }
 
-  private static Scope<Eval> scope(DefsS imported, Ast ast) {
-    var importedScope = new Scope<Eval>(imported.topEvals());
+  private static Scope<Refable> scope(DefsS imported, Ast ast) {
+    var importedScope = new Scope<Refable>(imported.topRefables());
     var ctors = map(ast.structs(), StructN::ctor);
-    var evals = ast.topEvals();
+    var evals = ast.topRefables();
     return new Scope<>(importedScope, nList(concat(evals, ctors)));
   }
 
-  public ReferenceResolver(Scope<? extends Eval> scope, Logger logger) {
+  public ReferenceResolver(Scope<? extends Refable> scope, Logger logger) {
     this.scope = scope;
     this.logger = logger;
   }

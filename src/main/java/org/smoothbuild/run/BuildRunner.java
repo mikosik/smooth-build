@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.run.FindTopEvals.findTopEvaluables;
+import static org.smoothbuild.run.FindTopRefable.findTopRefables;
 
 import java.util.List;
 import java.util.Map;
@@ -58,17 +58,17 @@ public class BuildRunner {
     }
 
     var defs = defsOpt.get();
-    var evaluablesOpt = findTopEvaluables(reporter, defs, names);
-    if (evaluablesOpt.isEmpty()) {
+    var refablesOpt = findTopRefables(reporter, defs, names);
+    if (refablesOpt.isEmpty()) {
       return Optional.empty();
     }
 
-    var evaluables = evaluablesOpt.get();
-    var evaluationsOpt = evaluator.evaluate(defs, evaluables);
+    var refables = refablesOpt.get();
+    var evaluationsOpt = evaluator.evaluate(defs, refables);
     if (evaluationsOpt.isEmpty()) {
       return Optional.empty();
     }
     ImmutableList<CnstB> listB = evaluationsOpt.get();
-    return Optional.of(Maps.zip(evaluables, listB));
+    return Optional.of(Maps.zip(refables, listB));
   }
 }

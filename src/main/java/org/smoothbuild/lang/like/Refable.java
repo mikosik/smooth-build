@@ -3,7 +3,7 @@ package org.smoothbuild.lang.like;
 import org.smoothbuild.util.collect.Named;
 
 /**
- * Evaluable.
+ * Referencable.
  */
-public interface Eval extends Named {
+public interface Refable extends Named {
 }

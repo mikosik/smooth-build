@@ -14,7 +14,7 @@ import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncN extends EvalN {
+public final class FuncN extends RefableN {
   private final NList<ItemN> params;
 
   public FuncN(Optional<TypeN> resT, String name, List<ItemN> params, Optional<ObjN> body,

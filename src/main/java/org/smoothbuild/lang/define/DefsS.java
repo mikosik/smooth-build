@@ -7,7 +7,7 @@ import org.smoothbuild.util.collect.NList;
 
 public record DefsS(
     NList<DefTypeS> types,
-    NList<TopEvalS> topEvals) {
+    NList<TopRefableS> topRefables) {
 
   public static DefsS empty() {
     return new DefsS(nList(), nList());
@@ -16,7 +16,7 @@ public record DefsS(
   public DefsS withModule(ModS mod) {
     return new DefsS(
         nList(concat(types, mod.types())),
-        nList(concat(topEvals, mod.topEvals()))
+        nList(concat(topRefables, mod.topRefables()))
     );
   }
 }

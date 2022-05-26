@@ -14,16 +14,16 @@ import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
-public class FindTopEvals {
-  public static Optional<List<TopRefS>> findTopEvaluables(
+public class FindTopRefable {
+  public static Optional<List<TopRefS>> findTopRefables(
       Reporter reporter, DefsS defs, List<String> names) {
-    var topEvals = defs.topEvals();
+    var topRefables = defs.topRefables();
     var topRefs = new HashSet<TopRefS>();
     var logs = new LogBuffer();
     for (String name : names) {
-      var topEval = topEvals.get(name);
-      if (topEval != null) {
-        if (topEval instanceof ValS value) {
+      var topRefable = topRefables.get(name);
+      if (topRefable != null) {
+        if (topRefable instanceof ValS value) {
           topRefs.add(new TopRefS(value.type(), value.name(), commandLineLoc()));
         } else {
           logs.error(

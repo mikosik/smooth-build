@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitEvaluable(ast.topEvals());
+    visitRefable(ast.topRefables());
   }
 
   public void visitStructs(List<StructN> structs) {
@@ -27,11 +27,11 @@ public class AstVisitor {
     field.evalT().ifPresent(this::visitType);
   }
 
-  public void visitEvaluable(List<EvalN> evals) {
-    evals.forEach(this::visitEvaluable);
+  public void visitRefable(List<RefableN> refables) {
+    refables.forEach(this::visitRefable);
   }
 
-  public void visitEvaluable(EvalN eval) {
+  public void visitRefable(RefableN eval) {
     switch (eval) {
       case FuncN func -> visitFunc(func);
       case ValN value -> visitValue(value);

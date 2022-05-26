@@ -3,15 +3,18 @@ package org.smoothbuild.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.like.Eval;
+import org.smoothbuild.lang.like.Refable;
 
-public sealed abstract class EvalN extends NamedN implements Eval
+/**
+ * Referencable.
+ */
+public sealed abstract class RefableN extends NamedN implements Refable
     permits FuncN, ItemN, ValN {
   private final Optional<TypeN> evalT;
   private final Optional<ObjN> body;
   private final Optional<AnnN> ann;
 
-  public EvalN(Optional<TypeN> evalT, String name, Optional<ObjN> body, Optional<AnnN> ann,
+  public RefableN(Optional<TypeN> evalT, String name, Optional<ObjN> body, Optional<AnnN> ann,
       Loc loc) {
     super(name, loc);
     this.evalT = evalT;
@@ -33,7 +36,7 @@ public sealed abstract class EvalN extends NamedN implements Eval
 
   @Override
   public final boolean equals(Object object) {
-    return object instanceof EvalN that
+    return object instanceof RefableN that
         && this.name().equals(that.name());
   }
 

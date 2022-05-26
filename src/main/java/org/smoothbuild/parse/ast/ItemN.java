@@ -10,7 +10,7 @@ import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.type.TypeS;
 
-public final class ItemN extends EvalN {
+public final class ItemN extends RefableN {
   private Optional<ItemSigS> sig;
 
   public ItemN(TypeN typeN, String name, Optional<ObjN> body, Loc loc) {

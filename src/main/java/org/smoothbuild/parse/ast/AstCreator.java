@@ -22,7 +22,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.ArrayTContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainCallContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
-import org.smoothbuild.antlr.lang.SmoothParser.EvalContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
@@ -34,6 +33,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
+import org.smoothbuild.antlr.lang.SmoothParser.TopContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
@@ -46,7 +46,7 @@ import com.google.common.collect.ImmutableList;
 public class AstCreator {
   public static Ast fromParseTree(FilePath filePath, ModContext module) {
     List<StructN> structs = new ArrayList<>();
-    List<EvalN> evals = new ArrayList<>();
+    List<RefableN> refables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
@@ -76,19 +76,19 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitEval(EvalContext evaluable) {
-        TerminalNode nameNode = evaluable.NAME();
-        visitChildren(evaluable);
-        Optional<TypeN> type = createTypeSane(evaluable.type());
+      public Void visitTop(TopContext top) {
+        TerminalNode nameNode = top.NAME();
+        visitChildren(top);
+        Optional<TypeN> type = createTypeSane(top.type());
         String name = nameNode.getText();
-        Optional<ObjN> obj = createObjSane(evaluable.expr());
-        Optional<AnnN> annotation = createNativeSane(evaluable.ann());
+        Optional<ObjN> obj = createObjSane(top.expr());
+        Optional<AnnN> annotation = createNativeSane(top.ann());
         Loc loc = LocHelpers.locOf(filePath, nameNode);
-        if (evaluable.paramList() == null) {
-          evals.add(new ValN(type, name, obj, annotation, loc));
+        if (top.paramList() == null) {
+          refables.add(new ValN(type, name, obj, annotation, loc));
         } else {
-          List<ItemN> params = createParams(evaluable.paramList());
-          evals.add(new FuncN(type, name, params, obj, annotation, loc));
+          List<ItemN> params = createParams(top.paramList());
+          refables.add(new FuncN(type, name, params, obj, annotation, loc));
         }
         return null;
       }
@@ -278,7 +278,7 @@ public class AstCreator {
             + " without children.");
       }
     }.visit(module);
-    return new Ast(structs, evals);
+    return new Ast(structs, refables);
   }
 
   private static String unquote(String quotedString) {

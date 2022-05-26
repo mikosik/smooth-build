@@ -28,15 +28,15 @@ import com.google.common.collect.ImmutableList;
 
 public class Ast {
   private final NList<StructN> structs;
-  private final ImmutableList<EvalN> topEvals;
+  private final ImmutableList<RefableN> topRefables;
 
-  public Ast(List<StructN> structs, List<EvalN> topEvals) {
+  public Ast(List<StructN> structs, List<RefableN> topRefables) {
     this.structs = nListWithNonUniqueNames(ImmutableList.copyOf(structs));
-    this.topEvals = ImmutableList.copyOf(topEvals);
+    this.topRefables = ImmutableList.copyOf(topRefables);
   }
 
-  public ImmutableList<EvalN> topEvals() {
-    return topEvals;
+  public ImmutableList<RefableN> topRefables() {
+    return topRefables;
   }
 
   public NList<StructN> structs() {
@@ -49,25 +49,25 @@ public class Ast {
       Log error = createCycleError("Type hierarchy", sortedTs.cycle());
       return maybeLogs(logs(error));
     }
-    var sortedEvals = sortEvalsByDeps();
-    if (sortedEvals.sorted() == null) {
-      Log error = createCycleError("Dependency graph", sortedEvals.cycle());
+    var sortedRefables = sortRefablesByDeps();
+    if (sortedRefables.sorted() == null) {
+      Log error = createCycleError("Dependency graph", sortedRefables.cycle());
       return maybeLogs(logs(error));
     }
-    Ast ast = new Ast(sortedTs.valuesReversed(), sortedEvals.valuesReversed());
+    Ast ast = new Ast(sortedTs.valuesReversed(), sortedRefables.valuesReversed());
     return maybeValue(ast);
   }
 
-  private TopologicalSortingRes<String, EvalN, Loc> sortEvalsByDeps() {
+  private TopologicalSortingRes<String, RefableN, Loc> sortRefablesByDeps() {
     HashSet<String> names = new HashSet<>();
-    topEvals.forEach(v -> names.add(v.name()));
+    topRefables.forEach(v -> names.add(v.name()));
 
-    HashSet<GraphNode<String, EvalN, Loc>> nodes = new HashSet<>();
-    nodes.addAll(map(topEvals, value -> evalToGraphNode(value, names)));
+    HashSet<GraphNode<String, RefableN, Loc>> nodes = new HashSet<>();
+    nodes.addAll(map(topRefables, value -> refable(value, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, EvalN, Loc> evalToGraphNode(EvalN evaluable, Set<String> names) {
+  private static GraphNode<String, RefableN, Loc> refable(RefableN refable, Set<String> names) {
     Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {
       @Override
@@ -77,8 +77,8 @@ public class Ast {
           deps.add(new GraphEdge<>(ref.loc(), ref.name()));
         }
       }
-    }.visitEvaluable(evaluable);
-    return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(deps));
+    }.visitRefable(refable);
+    return new GraphNode<>(refable.name(), refable, ImmutableList.copyOf(deps));
   }
 
   private TopologicalSortingRes<String, StructN, Loc> sortStructsByDeps() {

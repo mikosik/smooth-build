@@ -753,7 +753,7 @@ public class DeclarationTest extends TestingContext {
               String nonDefault);
             """)
               .loadsWithSuccess()
-              .containsEval(natFuncS(2, stringTS(), "myFunc", nList(
+              .containsTopRefable(natFuncS(2, stringTS(), "myFunc", nList(
                   itemS(3, stringTS(), "default", stringS(3, "value")),
                   itemS(4, stringTS(), "nonDefault")), nativeS(1, stringS(1, "Impl.met"))));
         }
@@ -782,7 +782,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(funcDeclaration("String param1,"))
               .loadsWithSuccess()
-              .containsEval(defFuncS(1, stringTS(), "myFunc", stringS(1, "abc"),
+              .containsTopRefable(defFuncS(1, stringTS(), "myFunc", stringS(1, "abc"),
                   nList(itemS(1, stringTS(), "param1"))));
         }
 
@@ -817,7 +817,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(funcTDeclaration("String,"))
               .loadsWithSuccess()
-              .containsEval(natFuncS(2, funcTS(funcTS(blobTS(), list(stringTS()))), "myFunc",
+              .containsTopRefable(natFuncS(2, funcTS(funcTS(blobTS(), list(stringTS()))), "myFunc",
                   nList(), nativeS(1, stringS(1, "Impl.met"))));
         }
 
@@ -1043,7 +1043,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(funcCall("0x07,"))
               .loadsWithSuccess()
-              .containsEval(defValS(2, blobTS(), "result",
+              .containsTopRefable(defValS(2, blobTS(), "result",
                   callS(2, blobTS(),
                       topRefS(2, funcTS(blobTS(), list(blobTS())), "myFunc"),
                       blobS(2, 7))));
@@ -1318,7 +1318,7 @@ public class DeclarationTest extends TestingContext {
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
                 .loadsWithSuccess()
-                .containsEval(defValS(1, arrayTS(blobTS()), "result",
+                .containsTopRefable(defValS(1, arrayTS(blobTS()), "result",
                     orderS(1, blobTS(), blobS(1, 7))));
           }
 

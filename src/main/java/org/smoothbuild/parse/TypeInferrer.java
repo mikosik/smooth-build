@@ -21,8 +21,8 @@ import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.like.Eval;
 import org.smoothbuild.lang.like.Param;
+import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeS;
@@ -38,7 +38,6 @@ import org.smoothbuild.parse.ast.AstNode;
 import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
-import org.smoothbuild.parse.ast.EvalN;
 import org.smoothbuild.parse.ast.FuncN;
 import org.smoothbuild.parse.ast.FuncTN;
 import org.smoothbuild.parse.ast.IntN;
@@ -46,6 +45,7 @@ import org.smoothbuild.parse.ast.ItemN;
 import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
+import org.smoothbuild.parse.ast.RefableN;
 import org.smoothbuild.parse.ast.SelectN;
 import org.smoothbuild.parse.ast.StringN;
 import org.smoothbuild.parse.ast.StructN;
@@ -145,16 +145,16 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evalTOfTopEval(EvalN evalN) {
-        return evalTypeOf(evalN, (target, source) -> {
+      private Optional<TypeS> evalTOfTopEval(RefableN refableN) {
+        return evalTypeOf(refableN, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
-            logError(evalN, "`" + evalN.name() + "` has body which type is " + source.q()
+            logError(refableN, "`" + refableN.name() + "` has body which type is " + source.q()
                 + " and it is not convertible to its declared type " + target.q() + ".");
           }
         });
       }
 
-      private Optional<TypeS> evalTypeOf(EvalN eval, BiConsumer<TypeS, TypeS> assignmentChecker) {
+      private Optional<TypeS> evalTypeOf(RefableN eval, BiConsumer<TypeS, TypeS> assignmentChecker) {
         if (eval.body().isPresent()) {
           var exprT = eval.body().get().type();
           if (eval.evalT().isPresent()) {
@@ -306,7 +306,7 @@ public class TypeInferrer {
 
       public static Optional<NList<Param>> funcParams(ObjN called) {
         if (called instanceof RefN refN) {
-          Eval referenced = refN.referenced();
+          Refable referenced = refN.referenced();
           if (referenced instanceof FuncS funcS) {
             return Optional.of(funcS.params().map(p -> new Param(p.sig(), p.body())));
           } else if (referenced instanceof FuncN funcN) {

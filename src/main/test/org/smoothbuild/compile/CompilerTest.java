@@ -19,7 +19,7 @@ import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.TopEvalS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.obj.IntS;
 import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.load.FileLoader;
@@ -184,8 +184,8 @@ public class CompilerTest extends TestingContext {
       assertCompilation(defs(), objS, expected);
     }
 
-    private void assertCompilation(TopEvalS topEval, ObjS objS, ObjB expected) {
-      assertCompilation(defs(topEval), objS, expected);
+    private void assertCompilation(TopRefableS topRefable, ObjS objS, ObjB expected) {
+      assertCompilation(defs(topRefable), objS, expected);
     }
 
     private void assertCompilation(DefsS defs, ObjS objS, ObjB expected) {
@@ -212,15 +212,15 @@ public class CompilerTest extends TestingContext {
       assertCompilationIsCached(natFuncS(funcTS(stringTS()), "myFunc", nList()));
     }
 
-    private void assertCompilationIsCached(TopEvalS topEval) {
-      var compiler = newCompiler(topEval);
-      assertThat(compiler.compileObj(topRefS(topEval)))
-          .isSameInstanceAs(compiler.compileObj(topRefS(topEval)));
+    private void assertCompilationIsCached(TopRefableS topRefable) {
+      var compiler = newCompiler(topRefable);
+      assertThat(compiler.compileObj(topRefS(topRefable)))
+          .isSameInstanceAs(compiler.compileObj(topRefS(topRefable)));
     }
   }
 
-  private Compiler newCompiler(TopEvalS topEval) {
-    return newCompiler(defs(topEval));
+  private Compiler newCompiler(TopRefableS topRefable) {
+    return newCompiler(defs(topRefable));
   }
 
   private Compiler newCompiler(DefsS defs) {
@@ -251,7 +251,7 @@ public class CompilerTest extends TestingContext {
     return new DefsS(nList(), nList());
   }
 
-  private DefsS defs(TopEvalS topEval) {
-    return new DefsS(nList(), nList(topEval));
+  private DefsS defs(TopRefableS topRefable) {
+    return new DefsS(nList(), nList(topRefable));
   }
 }

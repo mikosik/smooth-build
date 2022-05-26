@@ -105,7 +105,7 @@ import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.SyntCtorS;
-import org.smoothbuild.lang.define.TopEvalS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.obj.BlobS;
 import org.smoothbuild.lang.obj.CallS;
 import org.smoothbuild.lang.obj.IntS;
@@ -967,7 +967,7 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public TopRefS topRefS(TopEvalS topEval) {
+  public TopRefS topRefS(TopRefableS topEval) {
     return topRefS(1, topEval.type(), topEval.name());
   }
 
