@@ -11,12 +11,12 @@ import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
-import org.smoothbuild.lang.define.TopRefableS;
+import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ModLoader;
-import org.smoothbuild.parse.TopRefableLoader;
+import org.smoothbuild.parse.TopObjLoader;
 import org.smoothbuild.parse.TypeInferrer;
 
 public class TestingModLoader {
@@ -49,9 +49,9 @@ public class TestingModLoader {
     return this;
   }
 
-  public void containsTopRefable(TopRefableS expected) {
+  public void containsTopRefable(RefableObjS expected) {
     String name = expected.name();
-    TopRefableS actual = assertContainsTopRefable(name);
+    RefableObjS actual = assertContainsTopRefable(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
@@ -62,7 +62,7 @@ public class TestingModLoader {
         .isEqualTo(expectedT);
   }
 
-  private TopRefableS assertContainsTopRefable(String name) {
+  private RefableObjS assertContainsTopRefable(String name) {
     var topRefables = modS.value().topRefables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(topRefables.containsName(name))
@@ -122,7 +122,7 @@ public class TestingModLoader {
     var typing = testingContext.typingS();
     var factory = testingContext.typeFS();
     var typeInferrer = new TypeInferrer(factory, typing);
-    var topRefableLoader = new TopRefableLoader(factory);
+    var topRefableLoader = new TopObjLoader(factory);
     var modLoader = new ModLoader(typeInferrer, topRefableLoader, factory);
     DefsS importedSane = imported != null ? imported
         : DefsS.empty().withModule(testingContext.internalMod());

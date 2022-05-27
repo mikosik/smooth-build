@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.type.TypeS;
 
 public final class ItemN extends RefableN {
@@ -27,8 +26,8 @@ public final class ItemN extends RefableN {
     return sig;
   }
 
-  public ItemS toItem(ModPath path) {
+  public ItemS toItem() {
     checkState(body().isEmpty());
-    return new ItemS(type().get(), path, name(), Optional.empty(), loc());
+    return new ItemS(type().get(), name(), Optional.empty(), loc());
   }
 }

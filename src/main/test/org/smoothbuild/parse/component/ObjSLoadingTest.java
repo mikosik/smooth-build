@@ -115,7 +115,7 @@ public class ObjSLoadingTest extends TestingContext {
     public void with_ctor_reference() {
       var struct = structTS("MyStruct", nList(sigS(stringTS(), "field")));
       var params = struct.fields()
-          .map(i -> new ItemS(i.type(), modPath(), i.nameSane(), empty(), loc(2)));
+          .map(i -> new ItemS(i.type(), i.nameSane(), empty(), loc(2)));
       var ctor = syntCtorS(1, funcTS(struct, params.list()), modPath(), "myStruct", params);
       module("""
           MyStruct {

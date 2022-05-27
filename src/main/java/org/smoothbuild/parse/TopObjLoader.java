@@ -13,19 +13,19 @@ import org.smoothbuild.lang.define.DefValS;
 import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ModPath;
-import org.smoothbuild.lang.define.TopRefableS;
+import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.like.Obj;
 import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.obj.BlobS;
 import org.smoothbuild.lang.obj.CallS;
 import org.smoothbuild.lang.obj.IntS;
+import org.smoothbuild.lang.obj.ObjRefS;
 import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.obj.OrderS;
 import org.smoothbuild.lang.obj.ParamRefS;
 import org.smoothbuild.lang.obj.SelectS;
 import org.smoothbuild.lang.obj.StringS;
-import org.smoothbuild.lang.obj.TopRefS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
@@ -45,15 +45,15 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class TopRefableLoader {
+public class TopObjLoader {
   private final TypeSF typeSF;
 
   @Inject
-  public TopRefableLoader(TypeSF typeSF) {
+  public TopObjLoader(TypeSF typeSF) {
     this.typeSF = typeSF;
   }
 
-  public TopRefableS loadRefable(ModPath path, RefableN refableN) {
+  public RefableObjS loadTopObj(ModPath path, RefableN refableN) {
     if (refableN instanceof FuncN funcN) {
       return loadFunc(path, funcN);
     } else {
@@ -75,7 +75,7 @@ public class TopRefableLoader {
   }
 
   private FuncS loadFunc(ModPath path, FuncN funcN) {
-    var params = loadParams(path, funcN);
+    var params = loadParams(funcN);
     var resT = funcN.resT().get();
     var name = funcN.name();
     var loc = funcN.loc();
@@ -95,15 +95,15 @@ public class TopRefableLoader {
     return new AnnS(annN.name(), path, annN.loc());
   }
 
-  private NList<ItemS> loadParams(ModPath path, FuncN funcN) {
-    return funcN.params().map(param -> createParam(param, path));
+  private NList<ItemS> loadParams(FuncN funcN) {
+    return funcN.params().map(this::createParam);
   }
 
-  private ItemS createParam(ItemN param, ModPath path) {
+  private ItemS createParam(ItemN param) {
     var type = param.evalT().get().type().get();
     var name = param.name();
     var body = param.body().map(this::createObj);
-    return new ItemS(type, path, name, body, param.loc());
+    return new ItemS(type, name, body, param.loc());
   }
 
   private ObjS createObj(ObjN obj) {
@@ -152,7 +152,7 @@ public class TopRefableLoader {
     if (referenced instanceof ItemN) {
       return new ParamRefS(ref.type().get(), ref.name(), ref.loc());
     } else {
-      return new TopRefS(ref.type().get(), ref.name(), ref.loc());
+      return new ObjRefS(ref.type().get(), ref.name(), ref.loc());
     }
   }
 

@@ -25,7 +25,7 @@ import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
-import org.smoothbuild.lang.obj.TopRefS;
+import org.smoothbuild.lang.obj.ObjRefS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;
@@ -42,7 +42,7 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<TopRefS, CnstB> artifacts) {
+  public int saveArtifacts(Map<ObjRefS, CnstB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
     var sortedPairs = sort(artifacts, comparing(e -> e.getKey().name()));
     for (var pair : sortedPairs.entrySet()) {
@@ -53,7 +53,7 @@ public class ArtifactSaver {
     return EXIT_CODE_SUCCESS;
   }
 
-  private boolean save(TopRefS topRef, ObjB obj) {
+  private boolean save(ObjRefS topRef, ObjB obj) {
     String name = topRef.name();
     try {
       PathS path = write(topRef, obj);
@@ -70,7 +70,7 @@ public class ArtifactSaver {
     }
   }
 
-  private PathS write(TopRefS topRef, ObjB obj) throws IOException, DuplicatedPathsExc {
+  private PathS write(ObjRefS topRef, ObjB obj) throws IOException, DuplicatedPathsExc {
     PathS artifactPath = ArtifactPaths.artifactPath(topRef.name());
     if (topRef.type() instanceof ArrayTS arrayT) {
       return saveArray(arrayT, artifactPath, (ArrayB) obj);

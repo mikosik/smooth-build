@@ -5,9 +5,9 @@ import org.smoothbuild.lang.type.TypeS;
 /**
  * Top level evaluable.
  */
-public sealed abstract class TopRefableS extends RefableS implements Nal
+public sealed abstract class RefableObjS extends PatanalS implements RefableS
     permits FuncS, ValS {
-  public TopRefableS(TypeS type, ModPath modPath, String name, Loc loc) {
+  public RefableObjS(TypeS type, ModPath modPath, String name, Loc loc) {
     super(type, modPath, name, loc);
   }
 }

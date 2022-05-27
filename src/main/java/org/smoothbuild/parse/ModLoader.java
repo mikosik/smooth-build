@@ -17,16 +17,16 @@ import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
+import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.StructDefS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TDefS;
-import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.RefableN;
+import org.smoothbuild.parse.ast.ItemN;
 import org.smoothbuild.parse.ast.StructN;
 import org.smoothbuild.util.collect.NList;
 
@@ -34,13 +34,13 @@ import com.google.common.collect.ImmutableList;
 
 public class ModLoader {
   private final TypeInferrer typeInferrer;
-  private final TopRefableLoader topRefableLoader;
+  private final TopObjLoader topObjLoader;
   private final TypeSF typeSF;
 
   @Inject
-  public ModLoader(TypeInferrer typeInferrer, TopRefableLoader topRefableLoader, TypeSF typeSF) {
+  public ModLoader(TypeInferrer typeInferrer, TopObjLoader topObjLoader, TypeSF typeSF) {
     this.typeInferrer = typeInferrer;
-    this.topRefableLoader = topRefableLoader;
+    this.topObjLoader = topObjLoader;
     this.typeSF = typeSF;
   }
 
@@ -89,14 +89,14 @@ public class ModLoader {
     return new StructDefS(type, path, loc);
   }
 
-  private NList<TopRefableS> loadTopRefables(ModPath path, Ast ast) {
-    var local = ImmutableList.<TopRefableS>builder();
-    for (StructN struct : ast.structs()) {
-      var ctorS = loadSyntCtor(path, struct);
+  private NList<RefableObjS> loadTopRefables(ModPath path, Ast ast) {
+    var local = ImmutableList.<RefableObjS>builder();
+    for (var structN : ast.structs()) {
+      var ctorS = loadSyntCtor(path, structN);
       local.add(ctorS);
     }
-    for (RefableN refable : ast.topRefables()) {
-      local.add(topRefableLoader.loadRefable(path, refable));
+    for (var refableN : ast.topObjs()) {
+      local.add(topObjLoader.loadTopObj(path, refableN));
     }
     return nList(local.build());
   }
@@ -106,7 +106,7 @@ public class ModLoader {
     var name = struct.ctor().name();
     var paramTs = map(struct.fields(), f -> f.type().get());
     var type = typeSF.func(resultT, paramTs);
-    var params = struct.fields().map(f -> f.toItem(path));
+    var params = struct.fields().map(ItemN::toItem);
     var loc = struct.loc();
     return new SyntCtorS(type, path, name, params, loc);
   }

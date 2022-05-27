@@ -8,23 +8,23 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.obj.TopRefS;
+import org.smoothbuild.lang.obj.ObjRefS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
-public class FindTopRefable {
-  public static Optional<List<TopRefS>> findTopRefables(
+public class FindTopObjS {
+  public static Optional<List<ObjRefS>> findTopObjS(
       Reporter reporter, DefsS defs, List<String> names) {
     var topRefables = defs.topRefables();
-    var topRefs = new HashSet<TopRefS>();
+    var topRefs = new HashSet<ObjRefS>();
     var logs = new LogBuffer();
     for (String name : names) {
       var topRefable = topRefables.get(name);
       if (topRefable != null) {
         if (topRefable instanceof ValS value) {
-          topRefs.add(new TopRefS(value.type(), value.name(), commandLineLoc()));
+          topRefs.add(new ObjRefS(value.type(), value.name(), commandLineLoc()));
         } else {
           logs.error(
               "`" + name + "` cannot be calculated as it is not a value but a function.");

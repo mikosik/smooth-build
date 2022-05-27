@@ -28,7 +28,7 @@ public class ReferenceResolver extends AstVisitor {
   private static Scope<Refable> scope(DefsS imported, Ast ast) {
     var importedScope = new Scope<Refable>(imported.topRefables());
     var ctors = map(ast.structs(), StructN::ctor);
-    var evals = ast.topRefables();
+    var evals = ast.topObjs();
     return new Scope<>(importedScope, nList(concat(evals, ctors)));
   }
 

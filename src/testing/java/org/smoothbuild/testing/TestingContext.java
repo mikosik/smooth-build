@@ -104,17 +104,17 @@ import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
+import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.SyntCtorS;
-import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.obj.BlobS;
 import org.smoothbuild.lang.obj.CallS;
 import org.smoothbuild.lang.obj.IntS;
+import org.smoothbuild.lang.obj.ObjRefS;
 import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.obj.OrderS;
 import org.smoothbuild.lang.obj.ParamRefS;
 import org.smoothbuild.lang.obj.SelectS;
 import org.smoothbuild.lang.obj.StringS;
-import org.smoothbuild.lang.obj.TopRefS;
 import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
@@ -967,12 +967,12 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public TopRefS topRefS(TopRefableS topEval) {
+  public ObjRefS topRefS(RefableObjS topEval) {
     return topRefS(1, topEval.type(), topEval.name());
   }
 
-  public TopRefS topRefS(int line, TypeS type, String name) {
-    return new TopRefS(type, name, loc(line));
+  public ObjRefS topRefS(int line, TypeS type, String name) {
+    return new ObjRefS(type, name, loc(line));
   }
 
   public SelectS selectS(TypeS type, ObjS selectable, String field) {
@@ -1047,7 +1047,7 @@ public class TestingContext {
   }
 
   private ItemS itemS(int line, TypeS type, String name, Optional<ObjS> body) {
-    return new ItemS(type, modPath(), name, body, loc(line));
+    return new ItemS(type, name, body, loc(line));
   }
 
   public AnnFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
@@ -1085,7 +1085,7 @@ public class TestingContext {
 
   public SyntCtorS syntCtorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
-    var params = fields.map(f -> new ItemS(f.type(), modPath(), f.nameSane(), empty(), loc(line)));
+    var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(line)));
     return syntCtorS(line, funcTS(structT, params.list()), modPath(), name, params);
   }
 

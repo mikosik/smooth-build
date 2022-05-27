@@ -51,12 +51,12 @@ import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.obj.BlobS;
 import org.smoothbuild.lang.obj.CallS;
 import org.smoothbuild.lang.obj.IntS;
+import org.smoothbuild.lang.obj.ObjRefS;
 import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.obj.OrderS;
 import org.smoothbuild.lang.obj.ParamRefS;
 import org.smoothbuild.lang.obj.SelectS;
 import org.smoothbuild.lang.obj.StringS;
-import org.smoothbuild.lang.obj.TopRefS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.StructTS;
@@ -231,7 +231,7 @@ public class Compiler {
       case IntS intS -> compileAndCacheNal(intS, this::compileInt);
       case OrderS orderS -> compileAndCacheNal(orderS, this::compileOrder);
       case ParamRefS paramRefS -> compileAndCacheNal(paramRefS, this::compileParamRef);
-      case TopRefS topRefS -> compileTopRef(topRefS);
+      case ObjRefS objRefS -> compileTopRef(objRefS);
       case SelectS selectS -> compileAndCacheNal(selectS, this::compileSelect);
       case StringS stringS -> compileAndCacheNal(stringS, this::compileString);
     };
@@ -276,8 +276,8 @@ public class Compiler {
     return bytecodeF.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
   }
 
-  private ObjB compileTopRef(TopRefS topRefS) {
-    return switch (defs.topRefables().get(topRefS.name())) {
+  private ObjB compileTopRef(ObjRefS objRefS) {
+    return switch (defs.topRefables().get(objRefS.name())) {
       case FuncS f -> compileFunc(f);
       case ValS v -> compileVal(v);
     };

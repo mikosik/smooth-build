@@ -16,12 +16,12 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public class ItemS extends RefableS {
+public class ItemS extends TanalS implements RefableS {
   private final Optional<ObjS> body;
   private final ItemSigS sig;
 
-  public ItemS(TypeS type, ModPath modPath, String name, Optional<ObjS> body, Loc loc) {
-    super(type, modPath, name, loc);
+  public ItemS(TypeS type, String name, Optional<ObjS> body, Loc loc) {
+    super(type, name, loc);
     this.body = body;
     this.sig = new ItemSigS(type(), name());
   }
@@ -54,7 +54,6 @@ public class ItemS extends RefableS {
     }
     return (o instanceof ItemS that)
         && Objects.equals(this.type(), that.type())
-        && Objects.equals(this.modPath(), that.modPath())
         && Objects.equals(this.name(), that.name())
         && Objects.equals(this.body, that.body)
         && Objects.equals(this.loc(), that.loc());
@@ -62,6 +61,6 @@ public class ItemS extends RefableS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), modPath(), name(), body, loc());
+    return Objects.hash(type(), name(), body, loc());
   }
 }

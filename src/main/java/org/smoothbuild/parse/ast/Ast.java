@@ -35,7 +35,7 @@ public class Ast {
     this.topRefables = ImmutableList.copyOf(topRefables);
   }
 
-  public ImmutableList<RefableN> topRefables() {
+  public ImmutableList<RefableN> topObjs() {
     return topRefables;
   }
 

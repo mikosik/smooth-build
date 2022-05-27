@@ -3,5 +3,5 @@ package org.smoothbuild.lang.obj;
 import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.type.TypeS;
 
-public record TopRefS(TypeS type, String name, Loc loc) implements ExprS {
+public record ObjRefS(TypeS type, String name, Loc loc) implements ExprS {
 }

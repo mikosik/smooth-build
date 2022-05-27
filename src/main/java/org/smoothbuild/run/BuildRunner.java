@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.run.FindTopRefable.findTopRefables;
+import static org.smoothbuild.run.FindTopObjS.findTopObjS;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.lang.obj.TopRefS;
+import org.smoothbuild.lang.obj.ObjRefS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.Evaluator;
@@ -47,7 +47,7 @@ public class BuildRunner {
     return exitCode;
   }
 
-  public Optional<Map<TopRefS, CnstB>> evaluate(List<String> names) {
+  public Optional<Map<ObjRefS, CnstB>> evaluate(List<String> names) {
     if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
       return Optional.empty();
     }
@@ -58,7 +58,7 @@ public class BuildRunner {
     }
 
     var defs = defsOpt.get();
-    var refablesOpt = findTopRefables(reporter, defs, names);
+    var refablesOpt = findTopObjS(reporter, defs, names);
     if (refablesOpt.isEmpty()) {
       return Optional.empty();
     }
