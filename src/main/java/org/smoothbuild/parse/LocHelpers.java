@@ -1,12 +1,12 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.define.Loc.loc;
+import static org.smoothbuild.lang.base.Loc.loc;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 
 public class LocHelpers {
   public static Loc locOf(FilePath filePath, ParserRuleContext parserRuleContext) {

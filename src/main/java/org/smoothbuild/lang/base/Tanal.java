@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.define;
+package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.type.TypeS;
 

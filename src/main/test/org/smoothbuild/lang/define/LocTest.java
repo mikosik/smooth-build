@@ -3,16 +3,17 @@ package org.smoothbuild.lang.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.lang.define.Loc.commandLineLoc;
-import static org.smoothbuild.lang.define.Loc.internal;
-import static org.smoothbuild.lang.define.Loc.loc;
-import static org.smoothbuild.lang.define.Loc.unknown;
+import static org.smoothbuild.lang.base.Loc.commandLineLoc;
+import static org.smoothbuild.lang.base.Loc.internal;
+import static org.smoothbuild.lang.base.Loc.loc;
+import static org.smoothbuild.lang.base.Loc.unknown;
 import static org.smoothbuild.testing.TestingContext.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.lang.base.Loc;
 
 import com.google.common.testing.EqualsTester;
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.lang.String.join;
-import static org.smoothbuild.lang.define.Loc.loc;
+import static org.smoothbuild.lang.base.Loc.loc;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.LocHelpers.locOf;
 import static org.smoothbuild.parse.ParseError.parseError;
@@ -24,7 +24,7 @@ import org.smoothbuild.antlr.lang.SmoothLexer;
 import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;

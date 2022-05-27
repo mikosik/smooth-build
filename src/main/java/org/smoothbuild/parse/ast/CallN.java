@@ -2,7 +2,7 @@ package org.smoothbuild.parse.ast;
 
 import java.util.List;
 
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 
 import com.google.common.collect.ImmutableList;
 

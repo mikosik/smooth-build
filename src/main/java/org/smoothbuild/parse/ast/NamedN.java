@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.ast;
 
-import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.define.Nal;
+import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.base.Nal;
 
 public sealed class NamedN extends AstNode implements Nal
     permits AnnN, ArgN, RefableN, StructN, TypeN {

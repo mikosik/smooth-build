@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 
 public class LocHelpersTest {
   @Test

@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.define;
 
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.type.StructTS;
 
 public class StructDefS extends TDefS {

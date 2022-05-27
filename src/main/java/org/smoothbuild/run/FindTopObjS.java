@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.lang.define.Loc.commandLineLoc;
+import static org.smoothbuild.lang.base.Loc.commandLineLoc;
 
 import java.util.HashSet;
 import java.util.List;

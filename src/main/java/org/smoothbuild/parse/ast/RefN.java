@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.type.TypeS;

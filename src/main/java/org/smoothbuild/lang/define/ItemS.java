@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.base.TanalImpl;
 import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.TypeS;
 

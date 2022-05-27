@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.define;
 
+import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.base.Patanal;
 import org.smoothbuild.lang.type.TypeS;
 
 /**

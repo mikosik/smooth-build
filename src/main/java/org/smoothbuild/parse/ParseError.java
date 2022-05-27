@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.out.log.Log.error;
 
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.parse.ast.AstNode;
 

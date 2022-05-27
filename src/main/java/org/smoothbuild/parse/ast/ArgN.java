@@ -2,7 +2,7 @@ package org.smoothbuild.parse.ast;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.like.Obj;
 import org.smoothbuild.lang.type.TypeS;
 

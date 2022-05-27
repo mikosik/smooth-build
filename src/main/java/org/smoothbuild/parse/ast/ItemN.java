@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.define.Loc;
 import org.smoothbuild.lang.type.TypeS;
 
 public final class ItemN extends RefableN {

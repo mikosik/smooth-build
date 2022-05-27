@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.collect.NList;

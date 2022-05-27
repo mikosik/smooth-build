@@ -2,7 +2,7 @@ package org.smoothbuild.lang.obj;
 
 import static org.smoothbuild.vm.job.TaskInfo.NAME_LENGTH_LIMIT;
 
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.type.BlobTS;
 
 import okio.ByteString;

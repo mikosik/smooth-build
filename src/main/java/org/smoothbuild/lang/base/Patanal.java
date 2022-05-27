@@ -1,7 +1,8 @@
-package org.smoothbuild.lang.define;
+package org.smoothbuild.lang.base;
 
 import static java.util.Objects.requireNonNull;
 
+import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.type.TypeS;
 
 /**

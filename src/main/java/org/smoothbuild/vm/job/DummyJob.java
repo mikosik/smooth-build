@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.job;
 
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;

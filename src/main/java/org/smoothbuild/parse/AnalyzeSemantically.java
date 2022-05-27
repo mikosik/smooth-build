@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.base.Nal;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.Loc;
-import org.smoothbuild.lang.define.Nal;
 import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;

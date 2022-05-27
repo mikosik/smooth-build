@@ -4,7 +4,7 @@ import static java.lang.Character.isDigit;
 
 import java.math.BigInteger;
 
-import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.base.Loc;
 
 public final class IntN extends CnstN {
   private final String literal;
