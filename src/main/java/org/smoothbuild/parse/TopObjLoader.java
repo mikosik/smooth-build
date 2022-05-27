@@ -17,6 +17,7 @@ import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.like.Obj;
 import org.smoothbuild.lang.like.Refable;
+import org.smoothbuild.lang.like.RefableObj;
 import org.smoothbuild.lang.obj.BlobS;
 import org.smoothbuild.lang.obj.CallS;
 import org.smoothbuild.lang.obj.IntS;
@@ -41,6 +42,7 @@ import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.parse.ast.RefableN;
 import org.smoothbuild.parse.ast.SelectN;
 import org.smoothbuild.parse.ast.StringN;
+import org.smoothbuild.parse.ast.ValN;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -54,14 +56,14 @@ public class TopObjLoader {
   }
 
   public RefableObjS loadTopObj(ModPath path, RefableN refableN) {
-    if (refableN instanceof FuncN funcN) {
-      return loadFunc(path, funcN);
-    } else {
-      return loadVal(path, refableN);
-    }
+    return switch (refableN) {
+      case FuncN funcN -> loadFunc(path, funcN);
+      case ValN valN -> loadVal(path, valN);
+      default -> throw unexpectedCaseExc(refableN);
+    };
   }
 
-  private ValS loadVal(ModPath path, RefableN valN) {
+  private ValS loadVal(ModPath path, ValN valN) {
     var type = valN.type().get();
     var name = valN.name();
     var loc = valN.loc();
@@ -149,11 +151,11 @@ public class TopObjLoader {
 
   private ObjS createRef(RefN ref) {
     Refable referenced = ref.referenced();
-    if (referenced instanceof ItemN) {
-      return new ParamRefS(ref.type().get(), ref.name(), ref.loc());
-    } else {
-      return new ObjRefS(ref.type().get(), ref.name(), ref.loc());
-    }
+    return switch (referenced) {
+      case ItemN itemN -> new ParamRefS(ref.type().get(), ref.name(), ref.loc());
+      case RefableObj refableObj -> new ObjRefS(ref.type().get(), ref.name(), ref.loc());
+      default -> throw unexpectedCaseExc(referenced);
+    };
   }
 
   public BlobS createBlob(BlobN blob) {
