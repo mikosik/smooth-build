@@ -77,13 +77,13 @@ public class ModLoader {
       return maybeLogs(logBuffer);
     }
 
-    var types = sortedAst.structs().map(s -> (DefTypeS) loadStruct(path, s));
+    var types = sortedAst.structs().map(s -> loadStruct(path, s));
     var evals = loadTopRefables(path, sortedAst);
     var moduleS = new ModS(path, modFiles, types, evals);
     return maybeValueAndLogs(moduleS, logBuffer);
   }
 
-  private StructS loadStruct(ModPath path, StructN struct) {
+  private DefTypeS loadStruct(ModPath path, StructN struct) {
     var type = (StructTS) struct.type().get();
     var loc = struct.loc();
     return new StructS(type, path, loc);
