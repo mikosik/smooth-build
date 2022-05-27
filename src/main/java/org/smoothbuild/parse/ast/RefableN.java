@@ -9,7 +9,7 @@ import org.smoothbuild.lang.like.Refable;
  * Referencable.
  */
 public sealed abstract class RefableN extends NamedN implements Refable
-    permits FuncN, ItemN, ValN {
+    permits ItemN, RefableObjN {
   private final Optional<TypeN> evalT;
   private final Optional<ObjN> body;
   private final Optional<AnnN> ann;

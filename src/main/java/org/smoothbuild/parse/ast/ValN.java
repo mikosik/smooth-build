@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
 
-public final class ValN extends RefableN {
+public final class ValN extends RefableObjN {
   public ValN(Optional<TypeN> type, String name, Optional<ObjN> body,
       Optional<AnnN> annotation, Loc loc) {
     super(type, name, body, annotation, loc);
