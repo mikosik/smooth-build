@@ -5,6 +5,7 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.type.BaseTS;
 import org.smoothbuild.lang.type.TypeSF;
 
 public class InternalModLoader {
@@ -16,8 +17,12 @@ public class InternalModLoader {
   }
 
   public ModS load() {
-    ModPath path = new ModPath("internal-module");
-    var types = nList(map(typeSF.baseTs(), t -> (DefTypeS) new DefBaseTypeS(path, t)));
-    return new ModS(path, null, types, nList());
+    var modPath = new ModPath("internal-module");
+    var types = nList(map(typeSF.baseTs(), t -> baseTDef(modPath, t)));
+    return new ModS(modPath, null, types, nList());
+  }
+
+  private TDefS baseTDef(ModPath modPath, BaseTS baseTS) {
+    return new BaseTDefS(modPath, baseTS);
   }
 }

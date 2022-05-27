@@ -195,7 +195,7 @@ public class TypeInferrer {
       }
 
       private TypeS findType(String name) {
-        var typeDef = imported.types().get(name);
+        var typeDef = imported.tDefs().get(name);
         if (typeDef != null) {
           return typeDef.type();
         } else {

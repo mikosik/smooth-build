@@ -13,13 +13,13 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.lang.define.DefTypeS;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
-import org.smoothbuild.lang.define.StructS;
+import org.smoothbuild.lang.define.StructDefS;
 import org.smoothbuild.lang.define.SyntCtorS;
+import org.smoothbuild.lang.define.TDefS;
 import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
@@ -77,16 +77,16 @@ public class ModLoader {
       return maybeLogs(logBuffer);
     }
 
-    var types = sortedAst.structs().map(s -> loadStruct(path, s));
+    var types = sortedAst.structs().map(s -> loadStructDef(path, s));
     var evals = loadTopRefables(path, sortedAst);
     var moduleS = new ModS(path, modFiles, types, evals);
     return maybeValueAndLogs(moduleS, logBuffer);
   }
 
-  private DefTypeS loadStruct(ModPath path, StructN struct) {
+  private TDefS loadStructDef(ModPath path, StructN struct) {
     var type = (StructTS) struct.type().get();
     var loc = struct.loc();
-    return new StructS(type, path, loc);
+    return new StructDefS(type, path, loc);
   }
 
   private NList<TopRefableS> loadTopRefables(ModPath path, Ast ast) {
