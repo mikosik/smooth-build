@@ -7,7 +7,7 @@ import org.smoothbuild.lang.type.TypeS;
 /**
  * PATANAL = Path and TypeS and Name and Location.
  */
-public class Patanal extends Tanal {
+public class Patanal extends TanalImpl {
   private final ModPath modPath;
 
   public Patanal(TypeS type, ModPath modPath, String name, Loc loc) {

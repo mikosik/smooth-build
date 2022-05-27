@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public class ItemS extends Tanal implements RefableS {
+public class ItemS extends TanalImpl implements RefableS {
   private final Optional<ObjS> body;
   private final ItemSigS sig;
 

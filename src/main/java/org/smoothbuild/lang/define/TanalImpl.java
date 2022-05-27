@@ -7,14 +7,15 @@ import org.smoothbuild.lang.type.TypeS;
 /**
  * TANAL = TypeS and name and location.
  */
-public abstract class Tanal extends NalImpl {
+public abstract class TanalImpl extends NalImpl implements Tanal {
   private final TypeS type;
 
-  public Tanal(TypeS type, String name, Loc loc) {
+  public TanalImpl(TypeS type, String name, Loc loc) {
     super(name, loc);
     this.type = requireNonNull(type);
   }
 
+  @Override
   public TypeS type() {
     return type;
   }
