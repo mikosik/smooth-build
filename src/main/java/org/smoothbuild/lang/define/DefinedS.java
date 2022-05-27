@@ -24,8 +24,4 @@ public class DefinedS extends NalImpl {
   public ModPath modPath() {
     return modPath;
   }
-
-  public String extendedName() {
-    return name();
-  }
 }

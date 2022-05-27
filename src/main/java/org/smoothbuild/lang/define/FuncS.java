@@ -11,7 +11,6 @@ import org.smoothbuild.util.collect.NList;
  * This class and all its subclasses are immutable.
  */
 public sealed abstract class FuncS extends TopRefableS permits AnnFuncS, DefFuncS, SyntCtorS {
-  public static final String PARENTHESES = "()";
   private final NList<ItemS> params;
 
   public FuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
@@ -22,11 +21,6 @@ public sealed abstract class FuncS extends TopRefableS permits AnnFuncS, DefFunc
   @Override
   public FuncTS type() {
     return (FuncTS) super.type();
-  }
-
-  @Override
-  public String extendedName() {
-    return name() + PARENTHESES;
   }
 
   public TypeS resT() {
