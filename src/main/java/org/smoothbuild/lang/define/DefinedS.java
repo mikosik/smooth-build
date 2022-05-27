@@ -7,18 +7,12 @@ import org.smoothbuild.lang.type.TypeS;
 /**
  * This class and all its subclasses are immutable.
  */
-public class DefinedS extends NalImpl {
-  private final TypeS type;
+public class DefinedS extends TanalS {
   private final ModPath modPath;
 
   public DefinedS(TypeS type, ModPath modPath, String name, Loc loc) {
-    super(name, loc);
-    this.type = requireNonNull(type);
+    super(type, name, loc);
     this.modPath = requireNonNull(modPath);
-  }
-
-  public TypeS type() {
-    return type;
   }
 
   public ModPath modPath() {

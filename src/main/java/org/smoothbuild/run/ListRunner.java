@@ -8,8 +8,8 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.DefsS;
+import org.smoothbuild.lang.define.Nal;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.report.Reporter;
@@ -35,7 +35,7 @@ public class ListRunner {
           .stream()
           .filter(f -> f.loc().file().space().equals(PRJ))
           .filter(ValS.class::isInstance)
-          .map(DefinedS::name)
+          .map(Nal::name)
           .sorted()
           .forEach(console::println);
       return EXIT_CODE_SUCCESS;

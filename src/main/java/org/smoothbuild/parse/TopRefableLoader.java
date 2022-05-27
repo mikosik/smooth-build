@@ -10,7 +10,6 @@ import org.smoothbuild.lang.define.AnnS;
 import org.smoothbuild.lang.define.AnnValS;
 import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefValS;
-import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ModPath;
@@ -80,7 +79,7 @@ public class TopRefableLoader {
     var resT = funcN.resT().get();
     var name = funcN.name();
     var loc = funcN.loc();
-    var paramTs = map(params, DefinedS::type);
+    var paramTs = map(params, ItemS::type);
     var funcT = typeSF.func(resT, paramTs);
     if (funcN.ann().isPresent()) {
       var ann = loadAnn(funcN.ann().get());
