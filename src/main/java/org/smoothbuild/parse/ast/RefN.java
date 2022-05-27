@@ -4,8 +4,8 @@ import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.Loc;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.type.TypeS;
 
@@ -33,7 +33,7 @@ public final class RefN extends ExprN {
   public Optional<TypeS> referencedType() {
     return switch (referenced) {
       case AstNode n -> n.type();
-      case DefinedS d -> Optional.of(d.type());
+      case TopRefableS d -> Optional.of(d.type());
       default -> throw unexpectedCaseExc(referenced);
     };
   }

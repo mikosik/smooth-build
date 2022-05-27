@@ -17,7 +17,6 @@ import java.util.function.BiConsumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.define.DefinedS;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemSigS;
@@ -196,9 +195,9 @@ public class TypeInferrer {
       }
 
       private TypeS findType(String name) {
-        DefinedS type = imported.types().get(name);
-        if (type != null) {
-          return type.type();
+        var typeDef = imported.types().get(name);
+        if (typeDef != null) {
+          return typeDef.type();
         } else {
           return findLocalType(name);
         }
