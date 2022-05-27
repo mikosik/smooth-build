@@ -47,7 +47,11 @@ public sealed abstract class FuncS extends TopRefableS permits AnnFuncS, DefFunc
   }
 
   protected String paramsToString() {
-    return toCommaSeparatedString(params, DefinedS::typeAndName);
+    return toCommaSeparatedString(params, FuncS::paramToString);
+  }
+
+  private static String paramToString(ItemS itemS) {
+    return itemS.type().name() + " " + itemS.name();
   }
 
   @Override
