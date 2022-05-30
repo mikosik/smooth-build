@@ -6,13 +6,13 @@
     <property name="dir.src" location="src"/>
     <property name="dir.src.main.java" location="${dir.src}/main/java"/>
     <property name="dir.src.main.test" location="${dir.src}/main/test"/>
+    <property name="dir.src.main.script" location="${dir.src}/main/script"/>
     <property name="dir.src.slib.java" location="${dir.src}/slib/java"/>
     <property name="dir.src.slib.smooth" location="${dir.src}/slib/smooth"/>
     <property name="dir.src.slib.test" location="${dir.src}/slib/test"/>
     <property name="dir.src.testing.java" location="${dir.src}/testing/java"/>
     <property name="dir.src.testing.test" location="${dir.src}/testing/test"/>
     <property name="dir.src.systemtest" location="${dir.src}/systemtest"/>
-    <property name="dir.src.script" location="${dir.src}/script"/>
     <property name="dir.build" location="build"/>
     <property name="dir.build.java" location="${dir.build}/java"/>
     <property name="dir.build.java.smooth-parser" location="${dir.build.java}/org/smoothbuild/antlr/lang"/>
@@ -421,7 +421,7 @@
             <zipfileset prefix="${zipped.dir}" file="${dir.build.smooth.jar}"/>
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.slib.jar}"/>
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.slib.smooth}/slib.smooth"/>
-            <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth" filemode="755"/>
+            <zipfileset prefix="${zipped.dir}" file="${dir.src.main.script}/smooth" filemode="755"/>
         </zip>
     </target>
 
