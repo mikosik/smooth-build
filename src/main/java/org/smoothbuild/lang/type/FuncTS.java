@@ -27,6 +27,13 @@ public final class FuncTS extends TypeS implements ComposedTS {
   }
 
   @Override
+  public boolean includes(TypeS type) {
+    return this.equals(type)
+        || res.includes(type)
+        || params.stream().anyMatch(p -> p.includes(type));
+  }
+
+  @Override
   public TypeS withPrefixedVars(String prefix) {
     if (vars().isEmpty()) {
       return this;

@@ -16,6 +16,11 @@ public final class ArrayTS extends TypeS implements ComposedTS {
   }
 
   @Override
+  public boolean includes(TypeS type) {
+    return this.equals(type) || elem.includes(type);
+  }
+
+  @Override
   public ArrayTS withPrefixedVars(String prefix) {
     if (vars().isEmpty()) {
       return this;

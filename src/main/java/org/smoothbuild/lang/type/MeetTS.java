@@ -63,6 +63,11 @@ public final class MeetTS extends MergeTS {
   }
 
   @Override
+  public boolean includes(TypeS type) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public TypeS withPrefixedVars(String prefix) {
     if (vars().isEmpty()) {
       return this;

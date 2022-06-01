@@ -49,6 +49,10 @@ public abstract sealed class TypeS implements TKind
     return vars;
   }
 
+  public boolean includes(TypeS type) {
+    return this.equals(type);
+  }
+
   public TypeS withPrefixedVars(String prefix) {
     return this;
   }
