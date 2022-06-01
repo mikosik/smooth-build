@@ -4,6 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.lang.type.JoinTS.joinReduced;
+import static org.smoothbuild.lang.type.MeetTS.meetReduced;
+import static org.smoothbuild.lang.type.MergingTS.mergeReduced;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingTS.ANY;
@@ -23,6 +26,9 @@ import static org.smoothbuild.testing.type.TestingTS.struct;
 import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.Sets.set;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.List;
 
@@ -267,12 +273,24 @@ public class TypeSTest {
 
   @Nested
   class _join {
+    @Test
+    public void join_method_forbids_empty_set() {
+      assertCall(() -> JoinTS.join(set()))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void joinReduced_method_forbids_empty_set() {
+      assertCall(() -> joinReduced(set()))
+          .throwsException(IllegalArgumentException.class);
+    }
+
     @ParameterizedTest
     @MethodSource("join_of_test_cases")
     public void join_of(TypeS a, TypeS b, TypeS expected) {
-      assertThat(join(a, b))
+      assertThat(joinReduced(set(a, b)))
           .isEqualTo(expected);
-      assertThat(join(b, a))
+      assertThat(joinReduced(set(b, a)))
           .isEqualTo(expected);
     }
 
@@ -303,12 +321,24 @@ public class TypeSTest {
 
   @Nested
   class _meet {
+    @Test
+    public void meet_method_forbids_empty_set() {
+      assertCall(() -> MeetTS.meet(set()))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void meetReduced_method_forbids_empty_set() {
+      assertCall(() -> MeetTS.meet(set()))
+          .throwsException(IllegalArgumentException.class);
+    }
+
     @ParameterizedTest
     @MethodSource("meet_of_test_cases")
     public void meet_of(TypeS a, TypeS b, TypeS expected) {
-      assertThat(meet(a, b))
+      assertThat(meetReduced(set(a, b)))
           .isEqualTo(expected);
-      assertThat(meet(b, a))
+      assertThat(meetReduced(set(b, a)))
           .isEqualTo(expected);
     }
 
@@ -334,6 +364,21 @@ public class TypeSTest {
 
           arguments(ANY, ANY, ANY)
       );
+    }
+  }
+
+  @Nested
+  class _merge {
+    @Test
+    public void merge_reduced_up() {
+      assertThat(mergeReduced(STRING, BOOL, UPPER))
+          .isEqualTo(join(STRING, BOOL));
+    }
+
+    @Test
+    public void merge_reduced_down() {
+      assertThat(mergeReduced(STRING, BOOL, LOWER))
+          .isEqualTo(meet(STRING, BOOL));
     }
   }
 

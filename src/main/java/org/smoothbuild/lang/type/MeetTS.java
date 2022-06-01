@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.type;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.util.collect.Sets.map;
 
@@ -26,35 +27,38 @@ public final class MeetTS extends MergingTS {
         .collect(joining(" ⊓ "));
   }
 
+  public static TypeS meet(ImmutableSet<TypeS> elems) {
+    return new MeetTS(elems);
+  }
+
+  public static TypeS meetReduced(Set<? extends TypeS> elems) {
+    checkArgument(!elems.isEmpty(), "Elems must have at least one element.");
+    Builder<TypeS> builder = ImmutableSet.builder();
+    AnyTS any = null;
+    for (TypeS elem : elems) {
+      switch (elem) {
+        case NothingTS nothing:
+          return nothing;
+        case AnyTS any_:
+          any = any_;
+          break;
+        case MeetTS meet:
+          builder.addAll(meet.elems);
+          break;
+        default:
+          builder.add(elem);
+      }
+    }
+    var reducedElems = builder.build();
+    return switch (reducedElems.size()) {
+      case 0 -> any;
+      case 1 -> reducedElems.iterator().next();
+      default -> new MeetTS(reducedElems);
+    };
+  }
+
   public ImmutableSet<TypeS> elems() {
     return elems;
-  }
-
-  public static TypeS meet(TypeS a, TypeS b) {
-    if (isConstrTriviallyAllowed(a, b)) {
-      return a;
-    }
-    if (isConstrTriviallyAllowed(b, a)) {
-      return b;
-    }
-
-    Builder<TypeS> builder = ImmutableSet.builder();
-    addElem(a, builder);
-    addElem(b, builder);
-    ImmutableSet<TypeS> elems = builder.build();
-    if (elems.size() == 1) {
-      return elems.iterator().next();
-    } else {
-      return new MeetTS(elems);
-    }
-  }
-
-  private static void addElem(TypeS type, Builder<TypeS> result) {
-    if (type instanceof MeetTS meet) {
-      result.addAll(meet.elems);
-    } else {
-      result.add(type);
-    }
   }
 
   @Override

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type.solver;
 
-import static org.smoothbuild.lang.type.MergingTS.merge;
+import static org.smoothbuild.lang.type.MergingTS.mergeReduced;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +39,7 @@ public class VarNode {
 
   public boolean mergeBound(Side side, TypeS merging) {
     TypeS old = bounds.get(side);
-    TypeS merged = merge(old, merging, side.other());
+    TypeS merged = mergeReduced(old, merging, side.other());
     if (!old.equals(merged)) {
       bounds = bounds.with(side, merged);
       return true;

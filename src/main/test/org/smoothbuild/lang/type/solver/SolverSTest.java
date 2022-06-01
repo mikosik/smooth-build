@@ -37,6 +37,7 @@ import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.testing.type.TestingTS;
+import org.smoothbuild.util.collect.Sets;
 
 @TestInstance(PER_CLASS)
 public class SolverSTest extends TestingTS {
@@ -256,8 +257,8 @@ public class SolverSTest extends TestingTS {
       case FuncTS func -> func(
           mapVars(func.res(), mapper), map(func.params(), p -> mapVars(p, mapper)));
       case IntTS int_ -> int_;
-      case JoinTS join -> join(map(join.elems(), e -> mapVars(e, mapper)));
-      case MeetTS meet -> meet(map(meet.elems(), e -> mapVars(e, mapper)));
+      case JoinTS join -> join(Sets.map(join.elems(), e -> mapVars(e, mapper)));
+      case MeetTS meet -> meet(Sets.map(meet.elems(), e -> mapVars(e, mapper)));
       case NothingTS nothing -> nothing;
       case StringTS string -> string;
       case StructTS struct -> struct;

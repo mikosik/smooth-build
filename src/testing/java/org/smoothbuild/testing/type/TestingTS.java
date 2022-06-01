@@ -3,8 +3,7 @@ package org.smoothbuild.testing.type;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
-
-import java.util.List;
+import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.AnyTS;
@@ -28,6 +27,7 @@ import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class TestingTS {
   public static final TestingTS INSTANCE = new TestingTS();
@@ -144,40 +144,20 @@ public class TestingTS {
     return a(elemT);
   }
 
-  public static TypeS join(List<TypeS> elems) {
-    return switch (elems.size()) {
-      case 0 -> throw new IllegalArgumentException();
-      case 1 -> elems.get(0);
-      default -> {
-        TypeS result = NOTHING;
-        for (TypeS elem : elems) {
-          result = JoinTS.join(result, elem);
-        }
-        yield  result;
-      }
-    };
+  public static TypeS join(ImmutableSet<TypeS> elems) {
+    return JoinTS.join(elems);
   }
 
-  public static TypeS join(TypeS a, TypeS b) {
-    return JoinTS.join(a, b);
+  public static TypeS join(TypeS... types) {
+    return JoinTS.join(set(types));
   }
 
-  public static TypeS meet(List<TypeS> elems) {
-    return switch (elems.size()) {
-      case 0 -> throw new IllegalArgumentException();
-      case 1 -> elems.get(0);
-      default -> {
-        TypeS result = ANY;
-        for (TypeS elem : elems) {
-          result = MeetTS.meet(result, elem);
-        }
-        yield  result;
-      }
-    };
+  public static TypeS meet(ImmutableSet<TypeS> elems) {
+    return MeetTS.meet(elems);
   }
 
-  public static TypeS meet(TypeS a, TypeS b) {
-    return MeetTS.meet(a, b);
+  public static TypeS meet(TypeS... types) {
+    return MeetTS.meet(set(types));
   }
 
   public TypeS func(TypeS resT, ImmutableList<TypeS> params) {
