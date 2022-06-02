@@ -3,9 +3,12 @@ package org.smoothbuild.lang.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.util.collect.Sets.map;
+import static org.smoothbuild.util.type.Side.LOWER;
 
 import java.util.Objects;
 import java.util.Set;
+
+import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -52,6 +55,11 @@ public final class MeetTS extends MergingTS {
       case 1 -> reducedElems.iterator().next();
       default -> new MeetTS(reducedElems);
     };
+  }
+
+  @Override
+  public Side direction() {
+    return LOWER;
   }
 
   @Override

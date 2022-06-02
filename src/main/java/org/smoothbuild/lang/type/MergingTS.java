@@ -21,6 +21,8 @@ public abstract sealed class MergingTS extends TypeS permits JoinTS, MeetTS {
     return elems;
   }
 
+  public abstract Side direction();
+
   public static TypeS merge(ImmutableSet<TypeS> elems, Side direction) {
     return switch (direction) {
       case UPPER -> join(elems);
