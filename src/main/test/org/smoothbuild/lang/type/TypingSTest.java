@@ -6,6 +6,16 @@ import static org.smoothbuild.lang.type.TestingTypeGraphS.buildGraph;
 import static org.smoothbuild.lang.type.VarBoundsS.varBoundsS;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.testing.type.TestedAssignCasesS.TESTED_ASSIGN_CASES_S;
+import static org.smoothbuild.testing.type.TestingTS.ANY;
+import static org.smoothbuild.testing.type.TestingTS.BLOB;
+import static org.smoothbuild.testing.type.TestingTS.BOOL;
+import static org.smoothbuild.testing.type.TestingTS.INT;
+import static org.smoothbuild.testing.type.TestingTS.NOTHING;
+import static org.smoothbuild.testing.type.TestingTS.STRING;
+import static org.smoothbuild.testing.type.TestingTS.VAR_A;
+import static org.smoothbuild.testing.type.TestingTS.VAR_B;
+import static org.smoothbuild.testing.type.TestingTS.join;
+import static org.smoothbuild.testing.type.TestingTS.meet;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.type.Side.LOWER;
@@ -265,7 +275,8 @@ public class TypingSTest {
         r.add(arguments(f(bool(), f(a())), f(bool(), f(type)), vb(a(), UPPER, type)));
         r.add(arguments(f(bool(), f(f(a()))), f(bool(), f(f(type))), vb(a(), UPPER, type)));
 
-        r.add(arguments(f(bool(), f(blob(), a())), f(bool(), f(blob(), type)), vb(a(), LOWER, type)));
+        r.add(
+            arguments(f(bool(), f(blob(), a())), f(bool(), f(blob(), type)), vb(a(), LOWER, type)));
         r.add(arguments(f(bool(), f(blob(), f(a()))), f(bool(), f(blob(), f(type))), vb(a(),
             LOWER, type)));
         r.add(arguments(f(bool(), f(blob(), f(f(a())))), f(bool(), f(blob(), f(f(type)))), vb(a(),
@@ -370,6 +381,53 @@ public class TypingSTest {
 
   private static TestingTypeGraphS buildWideGraph() {
     return buildGraph(testingT().typesForBuildWideGraph(), 1, testingT());
+  }
+
+  @ParameterizedTest
+  @MethodSource("resolve_merges")
+  public void resolve_merges(TypeS type, TypeS reduced) {
+    assertThat(typing().resolveMerges(type))
+        .isEqualTo(reduced);
+  }
+
+  public static List<Arguments> resolve_merges() {
+    return list(
+        arguments(STRING, STRING),
+        arguments(VAR_A, VAR_A),
+        arguments(f(INT, BLOB), f(INT, BLOB)),
+        arguments(ar(INT), ar(INT)),
+        arguments(ar(ar(INT)), ar(ar(INT))),
+
+        arguments(join(BLOB, INT), ANY),
+        arguments(join(VAR_A, VAR_B), ANY),
+
+        arguments(join(ar(BLOB), ar(NOTHING)), ar(BLOB)),
+        arguments(join(ar(ar(BLOB)), ar(NOTHING)), ar(ar(BLOB))),
+        arguments(join(ar(BLOB), ar(ar(NOTHING))), ar(ANY)),
+        arguments(join(ar(ar(BLOB)), ar(ar(NOTHING))), ar(ar(BLOB))),
+
+        arguments(join(ar(BLOB), ar(ANY)), ar(ANY)),
+        arguments(join(ar(ar(BLOB)), ar(ANY)), ar(ANY)),
+        arguments(join(ar(BLOB), ar(ar(ANY))), ar(ANY)),
+        arguments(join(ar(ar(BLOB)), ar(ar(ANY))), ar(ar(ANY))),
+
+        arguments(meet(BLOB, INT), NOTHING),
+        arguments(meet(VAR_A, VAR_B), NOTHING),
+
+        arguments(meet(ar(BLOB), ar(NOTHING)), ar(NOTHING)),
+        arguments(meet(ar(ar(BLOB)), ar(NOTHING)), ar(NOTHING)),
+        arguments(meet(ar(BLOB), ar(ar(NOTHING))), ar(NOTHING)),
+        arguments(meet(ar(ar(BLOB)), ar(ar(NOTHING))), ar(ar(NOTHING))),
+
+        arguments(meet(ar(BLOB), ar(ANY)), ar(BLOB)),
+        arguments(meet(ar(ar(BLOB)), ar(ANY)), ar(ar(BLOB))),
+        arguments(meet(ar(BLOB), ar(ar(ANY))), ar(NOTHING)),
+        arguments(meet(ar(ar(BLOB)), ar(ar(ANY))), ar(ar(BLOB))),
+
+        arguments(join(f(INT, BLOB), f(INT, STRING)), f(INT, NOTHING)),
+        arguments(join(f(INT, BLOB), f(BOOL, BLOB)), f(ANY, BLOB)),
+        arguments(join(f(INT, BLOB), f(BLOB, INT)), f(ANY, NOTHING))
+    );
   }
 
   private static Bounds<TypeS> oneSideBound(Side side, TypeS type) {

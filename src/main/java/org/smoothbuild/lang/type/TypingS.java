@@ -9,7 +9,10 @@ import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.util.type.Side.LOWER;
 import static org.smoothbuild.util.type.Side.UPPER;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -21,6 +24,8 @@ import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.MultimapBuilder.SetMultimapBuilder;
+import com.google.common.collect.SetMultimap;
 
 public class TypingS {
   private final TypeSF typeSF;
@@ -238,6 +243,81 @@ public class TypingS {
     return new Bounds<>(
         merge(bounds1.lower(), bounds2.lower(), UPPER),
         merge(bounds1.upper(), bounds2.upper(), LOWER));
+  }
+
+  public TypeS resolveMerges(TypeS type) {
+    return switch (type) {
+      case ComposedTS composedT -> {
+        var covars = map(composedT.covars(), this::resolveMerges);
+        var contravars = map(composedT.contravars(), this::resolveMerges);
+        yield rebuildComposed(type, covars, contravars);
+      }
+      case MergingTS mergingT -> resolveMerges(mergingT);
+      default -> type;
+    };
+  }
+
+  private TypeS resolveMerges(MergingTS mergingT) {
+    return resolveMergeElems(mergingT.elems(), mergingT.direction());
+  }
+
+  private TypeS resolveMergeElems(Collection<TypeS> elems, Side direction) {
+    var arrayTs = new ArrayList<ArrayTS>(elems.size());
+    SetMultimap<Integer, FuncTS> funcTs = SetMultimapBuilder.hashKeys().hashSetValues().build();
+    var others = new HashSet<TypeS>();
+    TypeS zero = null;
+    for (TypeS elem : elems) {
+      switch (elem) {
+        case EdgeTS edge:
+          if (edge.side().equals(direction)) {
+            return edge;
+          } else {
+            zero = edge;
+          }
+          break;
+        case FuncTS funcT:
+          funcTs.put(funcT.params().size(), funcT);
+          break;
+        case ArrayTS arrayT:
+          arrayTs.add(arrayT);
+          break;
+        case MergingTS mergeT:
+          throw unexpectedCaseExc(mergeT);
+        default:
+          others.add(elem);
+      }
+    }
+
+    if (1 < others.size()) {
+      return typeSF.edge(direction);
+    }
+    var funcEntries = funcTs.asMap().entrySet();
+    if (1 < others.size() + (arrayTs.isEmpty() ? 0 : 1) + funcEntries.size()) {
+      return typeSF.edge(direction);
+    }
+    if (!arrayTs.isEmpty()) {
+      var reducedElems = resolveMergeElems(map(arrayTs, ArrayTS::elem), direction);
+      return typeF().array(reducedElems);
+    }
+
+    if (!funcEntries.isEmpty()) {
+      var entry = funcEntries.iterator().next();
+      var reducedElems = resolveMergeElems(map(entry.getValue(), FuncTS::res), direction);
+      int paramCount = entry.getKey();
+      var reducedParams = new ArrayList<TypeS>();
+      for (int i = 0; i < paramCount; i++) {
+        int n = i;
+        var nthParams = map(entry.getValue(), f -> f.params().get(n));
+        reducedParams.add(resolveMergeElems(nthParams, direction.other()));
+      }
+      return typeF().func(reducedElems, reducedParams);
+    }
+
+    if (!others.isEmpty()) {
+      return others.iterator().next();
+    }
+
+    return zero;
   }
 
   public TypeS rebuildComposed(
