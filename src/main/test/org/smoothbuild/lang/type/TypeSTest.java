@@ -6,6 +6,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.type.JoinTS.joinReduced;
 import static org.smoothbuild.lang.type.MeetTS.meetReduced;
+import static org.smoothbuild.lang.type.MergingTS.merge;
 import static org.smoothbuild.lang.type.MergingTS.mergeReduced;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -286,6 +287,39 @@ public class TypeSTest {
     }
 
     @ParameterizedTest
+    @MethodSource("join_without_reduce")
+    public void join_without_reduce(TypeS a, TypeS b, TypeS expected) {
+      assertThat(join(set(a, b)))
+          .isEqualTo(expected);
+      assertThat(join(set(b, a)))
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> join_without_reduce() {
+      return List.of(
+          arguments(NOTHING, ANY, join(NOTHING, ANY)),
+          arguments(NOTHING, STRING, join(NOTHING, STRING)),
+          arguments(NOTHING, a(STRING), join(NOTHING, a(STRING))),
+          arguments(NOTHING, join(STRING, BOOL), join(NOTHING, join(STRING, BOOL))),
+          arguments(NOTHING, NOTHING, join(NOTHING)),
+
+          arguments(STRING, ANY, join(STRING, ANY)),
+          arguments(STRING, a(STRING), join(STRING, a(STRING))),
+          arguments(STRING, BOOL, join(STRING, BOOL)),
+          arguments(STRING, STRING, join(STRING)),
+
+          arguments(a(STRING), ANY, join(a(STRING), ANY)),
+          arguments(a(STRING), a(STRING), join(a(STRING))),
+
+          arguments(join(STRING, BOOL), ANY, join(join(STRING, BOOL), ANY)),
+          arguments(join(STRING, BOOL), BOOL, join(join(STRING, BOOL), BOOL)),
+          arguments(join(STRING, BOOL), STRING, join(join(STRING, BOOL), STRING)),
+
+          arguments(ANY, ANY, join(ANY))
+      );
+    }
+
+    @ParameterizedTest
     @MethodSource("join_reduced")
     public void join_reduced(TypeS a, TypeS b, TypeS expected) {
       assertThat(joinReduced(set(a, b)))
@@ -334,6 +368,38 @@ public class TypeSTest {
     }
 
     @ParameterizedTest
+    @MethodSource("meet_without_reduce")
+    public void meet_without_reduce(TypeS a, TypeS b, TypeS expected) {
+      assertThat(meet(set(a, b)))
+          .isEqualTo(expected);
+      assertThat(meet(set(b, a)))
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> meet_without_reduce() {
+      return List.of(
+          arguments(NOTHING, ANY, meet(NOTHING, ANY)),
+          arguments(NOTHING, STRING, meet(NOTHING, STRING)),
+          arguments(NOTHING, a(STRING), meet(NOTHING, a(STRING))),
+          arguments(NOTHING, meet(STRING, BOOL), meet(NOTHING, meet(STRING, BOOL))),
+          arguments(NOTHING, NOTHING, meet(NOTHING)),
+
+          arguments(STRING, ANY, meet(STRING, ANY)),
+          arguments(STRING, a(STRING), meet(STRING, a(STRING))),
+          arguments(STRING, BOOL, meet(STRING, BOOL)),
+          arguments(STRING, STRING, meet(STRING)),
+
+          arguments(a(STRING), ANY, meet(a(STRING), ANY)),
+          arguments(a(STRING), a(STRING), meet(a(STRING))),
+
+          arguments(meet(STRING, BOOL), ANY, meet(meet(STRING, BOOL), ANY)),
+          arguments(meet(STRING, BOOL), BOOL, meet(meet(STRING, BOOL), BOOL)),
+          arguments(meet(STRING, BOOL), STRING, meet(meet(STRING, BOOL), STRING)),
+
+          arguments(ANY, ANY, meet(ANY))
+      );
+    }
+    @ParameterizedTest
     @MethodSource("meet_reduced")
     public void meet_reduced(TypeS a, TypeS b, TypeS expected) {
       assertThat(meetReduced(set(a, b)))
@@ -369,6 +435,32 @@ public class TypeSTest {
 
   @Nested
   class _merge {
+    @ParameterizedTest
+    @MethodSource("join_upper_without_reduce")
+    public void merge_upper_without_reduce(TypeS a, TypeS b, TypeS expected) {
+      assertThat(merge(set(a, b), UPPER))
+          .isEqualTo(expected);
+      assertThat(merge(set(b, a), UPPER))
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> join_upper_without_reduce() {
+      return _join.join_without_reduce();
+    }
+
+    @ParameterizedTest
+    @MethodSource("join_lower_without_reduce")
+    public void merge_lower_without_reduce(TypeS a, TypeS b, TypeS expected) {
+      assertThat(merge(set(a, b), LOWER))
+          .isEqualTo(expected);
+      assertThat(merge(set(b, a), LOWER))
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> join_lower_without_reduce() {
+      return _meet.meet_without_reduce();
+    }
+
     @ParameterizedTest
     @MethodSource("mergeReduced_upper")
     public void mergeReduced_upper(TypeS a, TypeS b, TypeS expected) {

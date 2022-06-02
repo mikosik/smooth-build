@@ -1,6 +1,8 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.JoinTS.join;
 import static org.smoothbuild.lang.type.JoinTS.joinReduced;
+import static org.smoothbuild.lang.type.MeetTS.meet;
 import static org.smoothbuild.lang.type.MeetTS.meetReduced;
 
 import org.smoothbuild.util.type.Side;
@@ -17,6 +19,13 @@ public abstract sealed class MergingTS extends TypeS permits JoinTS, MeetTS {
 
   public ImmutableSet<TypeS> elems() {
     return elems;
+  }
+
+  public static TypeS merge(ImmutableSet<TypeS> elems, Side direction) {
+    return switch (direction) {
+      case UPPER -> join(elems);
+      case LOWER -> meet(elems);
+    };
   }
 
   public static TypeS mergeReduced(ImmutableSet<TypeS> elems, Side direction) {
