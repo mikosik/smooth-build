@@ -6,9 +6,18 @@ import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.util.type.Side;
 
+import com.google.common.collect.ImmutableSet;
+
 public abstract sealed class MergingTS extends TypeS permits JoinTS, MeetTS {
-  protected MergingTS(String name, VarSetS vars) {
+  private final ImmutableSet<TypeS> elems;
+
+  protected MergingTS(String name, VarSetS vars, ImmutableSet<TypeS> elems) {
     super(name, vars);
+    this.elems = elems;
+  }
+
+  public ImmutableSet<TypeS> elems() {
+    return elems;
   }
 
   public static TypeS mergeReduced(TypeS a, TypeS b, Side direction) {

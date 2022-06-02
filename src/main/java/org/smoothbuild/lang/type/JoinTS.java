@@ -14,11 +14,8 @@ import com.google.common.collect.ImmutableSet.Builder;
  * Least upper bound (aka Join) of a set of slices.
  */
 public final class JoinTS extends MergingTS {
-  private final ImmutableSet<TypeS> elems;
-
   private JoinTS(ImmutableSet<TypeS> elems) {
-    super(calculateName(elems), calculateVars(elems));
-    this.elems = elems;
+    super(calculateName(elems), calculateVars(elems), elems);
   }
 
   private static String calculateName(Set<TypeS> elems) {
@@ -43,7 +40,7 @@ public final class JoinTS extends MergingTS {
           nothing = not;
           break;
         case JoinTS join:
-          builder.addAll(join.elems);
+          builder.addAll(join.elems());
           break;
         default:
           builder.add(elem);
@@ -57,16 +54,12 @@ public final class JoinTS extends MergingTS {
     };
   }
 
-  public ImmutableSet<TypeS> elems() {
-    return elems;
-  }
-
   @Override
   public TypeS withPrefixedVars(String prefix) {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new JoinTS(map(elems, e -> e.withPrefixedVars(prefix)));
+      return new JoinTS(map(elems(), e -> e.withPrefixedVars(prefix)));
     }
   }
 
@@ -75,7 +68,7 @@ public final class JoinTS extends MergingTS {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new JoinTS(map(elems, TypeS::removeVarPrefixes));
+      return new JoinTS(map(elems(), TypeS::removeVarPrefixes));
     }
   }
 
@@ -85,11 +78,11 @@ public final class JoinTS extends MergingTS {
       return true;
     }
     return object instanceof JoinTS that
-        && this.elems.equals(that.elems);
+        && this.elems().equals(that.elems());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(elems.hashCode());
+    return Objects.hash(elems().hashCode());
   }
 }

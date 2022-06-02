@@ -14,11 +14,8 @@ import com.google.common.collect.ImmutableSet.Builder;
  * Greatest lower bound (aka Meet) of a set of slices.
  */
 public final class MeetTS extends MergingTS {
-  private final ImmutableSet<TypeS> elems;
-
   private MeetTS(ImmutableSet<TypeS> elems) {
-    super(calculateName(elems), calculateVars(elems));
-    this.elems = elems;
+    super(calculateName(elems), calculateVars(elems), elems);
   }
 
   private static String calculateName(Set<TypeS> elems) {
@@ -43,7 +40,7 @@ public final class MeetTS extends MergingTS {
           any = any_;
           break;
         case MeetTS meet:
-          builder.addAll(meet.elems);
+          builder.addAll(meet.elems());
           break;
         default:
           builder.add(elem);
@@ -57,16 +54,12 @@ public final class MeetTS extends MergingTS {
     };
   }
 
-  public ImmutableSet<TypeS> elems() {
-    return elems;
-  }
-
   @Override
   public TypeS withPrefixedVars(String prefix) {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new MeetTS(map(elems, e -> e.withPrefixedVars(prefix)));
+      return new MeetTS(map(elems(), e -> e.withPrefixedVars(prefix)));
     }
   }
 
@@ -75,7 +68,7 @@ public final class MeetTS extends MergingTS {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new MeetTS(map(elems, TypeS::removeVarPrefixes));
+      return new MeetTS(map(elems(), TypeS::removeVarPrefixes));
     }
   }
 
@@ -85,11 +78,11 @@ public final class MeetTS extends MergingTS {
       return true;
     }
     return object instanceof MeetTS that
-        && this.elems.equals(that.elems);
+        && this.elems().equals(that.elems());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(elems.hashCode());
+    return Objects.hash(elems().hashCode());
   }
 }
