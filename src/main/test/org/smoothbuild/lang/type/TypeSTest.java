@@ -369,16 +369,30 @@ public class TypeSTest {
 
   @Nested
   class _merge {
-    @Test
-    public void merge_reduced_up() {
-      assertThat(mergeReduced(set(STRING, BOOL), UPPER))
-          .isEqualTo(join(STRING, BOOL));
+    @ParameterizedTest
+    @MethodSource("mergeReduced_upper")
+    public void mergeReduced_upper(TypeS a, TypeS b, TypeS expected) {
+      assertThat(mergeReduced(set(a, b), UPPER))
+          .isEqualTo(expected);
+      assertThat(mergeReduced(set(b, a), UPPER))
+          .isEqualTo(expected);
     }
 
-    @Test
-    public void merge_reduced_down() {
-      assertThat(mergeReduced(set(STRING, BOOL), LOWER))
-          .isEqualTo(meet(STRING, BOOL));
+    public static List<Arguments> mergeReduced_upper() {
+      return _join.join_of_test_cases();
+    }
+
+    @ParameterizedTest
+    @MethodSource("mergeReduced_lower")
+    public void mergeReduced_lower(TypeS a, TypeS b, TypeS expected) {
+      assertThat(mergeReduced(set(a, b), LOWER))
+          .isEqualTo(expected);
+      assertThat(mergeReduced(set(b, a), LOWER))
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> mergeReduced_lower() {
+      return _meet.meet_of_test_cases();
     }
   }
 
