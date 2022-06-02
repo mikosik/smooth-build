@@ -371,13 +371,13 @@ public class TypeSTest {
   class _merge {
     @Test
     public void merge_reduced_up() {
-      assertThat(mergeReduced(STRING, BOOL, UPPER))
+      assertThat(mergeReduced(set(STRING, BOOL), UPPER))
           .isEqualTo(join(STRING, BOOL));
     }
 
     @Test
     public void merge_reduced_down() {
-      assertThat(mergeReduced(STRING, BOOL, LOWER))
+      assertThat(mergeReduced(set(STRING, BOOL), LOWER))
           .isEqualTo(meet(STRING, BOOL));
     }
   }
