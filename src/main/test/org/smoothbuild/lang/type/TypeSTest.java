@@ -286,15 +286,15 @@ public class TypeSTest {
     }
 
     @ParameterizedTest
-    @MethodSource("join_of_test_cases")
-    public void join_of(TypeS a, TypeS b, TypeS expected) {
+    @MethodSource("join_reduced")
+    public void join_reduced(TypeS a, TypeS b, TypeS expected) {
       assertThat(joinReduced(set(a, b)))
           .isEqualTo(expected);
       assertThat(joinReduced(set(b, a)))
           .isEqualTo(expected);
     }
 
-    public static List<Arguments> join_of_test_cases() {
+    public static List<Arguments> join_reduced() {
       return List.of(
           arguments(NOTHING, ANY, ANY),
           arguments(NOTHING, STRING, STRING),
@@ -334,15 +334,15 @@ public class TypeSTest {
     }
 
     @ParameterizedTest
-    @MethodSource("meet_of_test_cases")
-    public void meet_of(TypeS a, TypeS b, TypeS expected) {
+    @MethodSource("meet_reduced")
+    public void meet_reduced(TypeS a, TypeS b, TypeS expected) {
       assertThat(meetReduced(set(a, b)))
           .isEqualTo(expected);
       assertThat(meetReduced(set(b, a)))
           .isEqualTo(expected);
     }
 
-    public static List<Arguments> meet_of_test_cases() {
+    public static List<Arguments> meet_reduced() {
       return List.of(
           arguments(NOTHING, ANY, NOTHING),
           arguments(NOTHING, STRING, NOTHING),
@@ -379,7 +379,7 @@ public class TypeSTest {
     }
 
     public static List<Arguments> mergeReduced_upper() {
-      return _join.join_of_test_cases();
+      return _join.join_reduced();
     }
 
     @ParameterizedTest
@@ -392,7 +392,7 @@ public class TypeSTest {
     }
 
     public static List<Arguments> mergeReduced_lower() {
-      return _meet.meet_of_test_cases();
+      return _meet.meet_reduced();
     }
   }
 
