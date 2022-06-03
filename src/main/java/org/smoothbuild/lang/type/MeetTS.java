@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableSet.Builder;
 /**
  * Greatest lower bound (aka Meet) of a set of slices.
  */
-public final class MeetTS extends MergingTS {
+public final class MeetTS extends MergeTS {
   private MeetTS(ImmutableSet<TypeS> elems) {
     super(calculateName(elems), calculateVars(elems), elems);
   }

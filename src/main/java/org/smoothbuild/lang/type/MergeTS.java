@@ -9,10 +9,10 @@ import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableSet;
 
-public abstract sealed class MergingTS extends TypeS permits JoinTS, MeetTS {
+public abstract sealed class MergeTS extends TypeS permits JoinTS, MeetTS {
   private final ImmutableSet<TypeS> elems;
 
-  protected MergingTS(String name, VarSetS vars, ImmutableSet<TypeS> elems) {
+  protected MergeTS(String name, VarSetS vars, ImmutableSet<TypeS> elems) {
     super(name, vars);
     this.elems = elems;
   }

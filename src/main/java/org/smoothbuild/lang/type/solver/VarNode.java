@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type.solver;
 
-import static org.smoothbuild.lang.type.MergingTS.mergeReduced;
+import static org.smoothbuild.lang.type.MergeTS.mergeReduced;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.HashSet;

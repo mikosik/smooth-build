@@ -9,7 +9,7 @@ import org.smoothbuild.lang.type.ConstrS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
-import org.smoothbuild.lang.type.MergingTS;
+import org.smoothbuild.lang.type.MergeTS;
 import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeS;
@@ -66,7 +66,7 @@ public class Decompose {
   private static int weight(TypeS lower) {
     return switch (lower) {
       case VarS var -> 2;
-      case MergingTS merging -> 0;
+      case MergeTS merge -> 0;
       default -> 1;
     };
   }

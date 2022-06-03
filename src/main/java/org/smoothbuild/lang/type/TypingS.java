@@ -252,13 +252,13 @@ public class TypingS {
         var contravars = map(composedT.contravars(), this::resolveMerges);
         yield rebuildComposed(type, covars, contravars);
       }
-      case MergingTS mergingT -> resolveMerges(mergingT);
+      case MergeTS mergeT -> resolveMerges(mergeT);
       default -> type;
     };
   }
 
-  private TypeS resolveMerges(MergingTS mergingT) {
-    return resolveMergeElems(mergingT.elems(), mergingT.direction());
+  private TypeS resolveMerges(MergeTS mergeT) {
+    return resolveMergeElems(mergeT.elems(), mergeT.direction());
   }
 
   private TypeS resolveMergeElems(Collection<TypeS> elems, Side direction) {
@@ -281,7 +281,7 @@ public class TypingS {
         case ArrayTS arrayT:
           arrayTs.add(arrayT);
           break;
-        case MergingTS mergeT:
+        case MergeTS mergeT:
           throw unexpectedCaseExc(mergeT);
         default:
           others.add(elem);
