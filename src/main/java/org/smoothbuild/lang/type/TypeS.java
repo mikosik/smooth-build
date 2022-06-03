@@ -76,6 +76,6 @@ public abstract sealed class TypeS
 
   @Override
   public String toString() {
-    return "Type(`" + name() + "`)";
+    return name();
   }
 }

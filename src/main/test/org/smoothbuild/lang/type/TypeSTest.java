@@ -69,7 +69,7 @@ public class TypeSTest {
   @MethodSource("names")
   public void to_string(TypeS type, String name) {
     assertThat(type.toString())
-        .isEqualTo("Type(`" + name + "`)");
+        .isEqualTo(name);
   }
 
   public static List<Arguments> names() {
