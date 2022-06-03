@@ -34,11 +34,6 @@ public abstract class TypeB extends CatB {
     return vars;
   }
 
-  @Override
-  public String toString() {
-    return "TypeB(`" + name() + "`)";
-  }
-
   protected static void validateNotPolymorphic(MerkleRoot merkleRoot) {
     if (!((TypeB) merkleRoot.cat()).vars().isEmpty()) {
       throw new DecodeObjIllegalPolymorphicTypeExc(merkleRoot.hash(), merkleRoot.cat());

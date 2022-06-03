@@ -114,13 +114,8 @@ public class CatBTest extends TestingContext {
   @MethodSource("names")
   public void to_string(Function<CatDb, CatB> factoryCall, String name) {
     var catH = execute(factoryCall);
-    if (catH instanceof TypeB) {
-      assertThat(catH.toString())
-          .isEqualTo("TypeB(`" + name + "`)");
-    } else {
-      assertThat(catH.toString())
-          .isEqualTo("Category(`" + name + "`)");
-    }
+    assertThat(catH.toString())
+        .isEqualTo(name);
   }
 
   public static List<Arguments> names() {

@@ -63,6 +63,6 @@ public abstract class CatB {
 
   @Override
   public String toString() {
-    return "Category(`" + name() + "`)";
+    return name();
   }
 }
