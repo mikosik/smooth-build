@@ -40,6 +40,6 @@ public final class RefN extends ExprN {
 
   @Override
   public String toString() {
-    return RefN.class.getName() + "(" + name + ")";
+    return "RefN(`" + name + "`)";
   }
 }
