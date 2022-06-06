@@ -27,10 +27,6 @@ public abstract sealed class TypeS
     this.vars = vars;
   }
 
-  public static boolean isConstrTriviallyAllowed(TypeS a, TypeS b) {
-    return (a instanceof NothingTS) || (b instanceof AnyTS);
-  }
-
   public String name() {
     return name;
   }
