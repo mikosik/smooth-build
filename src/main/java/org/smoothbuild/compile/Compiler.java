@@ -248,7 +248,7 @@ public class Compiler {
   }
 
   private CallB compileCall(CallS callS) {
-    var callableB = compileObj(callS.callable());
+    var callableB = compileObj(callS.callee());
     var argsB = compileObjs(callS.args());
 
     var argTupleT = bytecodeF.tupleT(map(argsB, ObjB::type));

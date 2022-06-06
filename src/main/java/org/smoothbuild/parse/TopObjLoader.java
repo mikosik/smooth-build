@@ -127,10 +127,10 @@ public class TopObjLoader {
   }
 
   private ObjS createCall(CallN call) {
-    var callable = createObj(call.callable());
+    var callee = createObj(call.callee());
     var argObjs = map(call.assignedArgs(), a -> createArgObj(a.obj()));
     var resT = call.type().get();
-    return new CallS(resT, callable, argObjs, call.loc());
+    return new CallS(resT, callee, argObjs, call.loc());
   }
 
   private ObjS createArgObj(Obj obj) {

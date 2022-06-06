@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public record CallS(TypeS type, ObjS callable, ImmutableList<ObjS> args, Loc loc) implements ExprS {
+public record CallS(TypeS type, ObjS callee, ImmutableList<ObjS> args, Loc loc) implements ExprS {
   @Override
   public String name() {
     return "()";

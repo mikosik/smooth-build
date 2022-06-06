@@ -7,18 +7,18 @@ import org.smoothbuild.lang.base.Loc;
 import com.google.common.collect.ImmutableList;
 
 public final class CallN extends ExprN {
-  private final ObjN callable;
+  private final ObjN callee;
   private final List<ArgN> args;
   private ImmutableList<ArgN> assignedArgs;
 
-  public CallN(ObjN callable, List<ArgN> args, Loc loc) {
+  public CallN(ObjN callee, List<ArgN> args, Loc loc) {
     super(loc);
-    this.callable = callable;
+    this.callee = callee;
     this.args = ImmutableList.copyOf(args);
   }
 
-  public ObjN callable() {
-    return callable;
+  public ObjN callee() {
+    return callee;
   }
 
   public List<ArgN> args() {

@@ -273,16 +273,16 @@ public class TypeInferrer {
       @Override
       public void visitCall(CallN call) {
         super.visitCall(call);
-        ObjN called = call.callable();
-        Optional<TypeS> calledT = called.type();
+        ObjN callee = call.callee();
+        Optional<TypeS> calledT = callee.type();
         if (calledT.isEmpty()) {
           call.setType(empty());
         } else if (!(calledT.get() instanceof FuncTS funcT)) {
-          logError(call, description(called) + " cannot be called as it is not a function but "
+          logError(call, description(callee) + " cannot be called as it is not a function but "
               + calledT.get().q() + ".");
           call.setType(empty());
         } else {
-          var funcParams = funcParams(called);
+          var funcParams = funcParams(callee);
           if (funcParams.isEmpty()) {
             call.setType(empty());
           } else {
@@ -303,8 +303,8 @@ public class TypeInferrer {
         }
       }
 
-      public static Optional<NList<Param>> funcParams(ObjN called) {
-        if (called instanceof RefN refN) {
+      public static Optional<NList<Param>> funcParams(ObjN callee) {
+        if (callee instanceof RefN refN) {
           Refable referenced = refN.referenced();
           if (referenced instanceof FuncS funcS) {
             return Optional.of(funcS.params().map(p -> new Param(p.sig(), p.body())));
@@ -314,7 +314,7 @@ public class TypeInferrer {
             return pullUp(params).map(NList::nList);
           }
         }
-        return called.type().map(t -> funcTParams(t));
+        return callee.type().map(t -> funcTParams(t));
       }
 
       private static NList<Param> funcTParams(TypeS funcTS) {

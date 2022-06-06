@@ -87,7 +87,7 @@ public class AstVisitor {
   }
 
   public void visitCall(CallN call) {
-    visitObj(call.callable());
+    visitObj(call.callee());
     visitArgs(call.args());
   }
 
