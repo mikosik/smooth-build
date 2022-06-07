@@ -50,7 +50,6 @@ public abstract sealed class TypeS
     return this;
   }
 
-//  public abstract TypeS removeVarPrefixes(String prefix);
   public TypeS removeVarPrefixes() {
     return this;
   }
