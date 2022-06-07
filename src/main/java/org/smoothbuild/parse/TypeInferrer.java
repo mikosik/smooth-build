@@ -153,11 +153,12 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evalTypeOf(RefableN eval, BiConsumer<TypeS, TypeS> assignmentChecker) {
-        if (eval.body().isPresent()) {
-          var exprT = eval.body().get().typeS();
-          if (eval.evalTN().isPresent()) {
-            var type = createType(eval.evalTN().get());
+      private Optional<TypeS> evalTypeOf(
+          RefableN refable, BiConsumer<TypeS, TypeS> assignmentChecker) {
+        if (refable.body().isPresent()) {
+          var exprT = refable.body().get().typeS();
+          if (refable.evalTN().isPresent()) {
+            var type = createType(refable.evalTN().get());
             type.ifPresent(target -> exprT.ifPresent(source -> {
               assignmentChecker.accept(target, source);
             }));
@@ -166,7 +167,7 @@ public class TypeInferrer {
             return exprT;
           }
         } else {
-          return createType(eval.evalTN().get());
+          return createType(refable.evalTN().get());
         }
       }
 
