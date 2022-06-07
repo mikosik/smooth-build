@@ -1,5 +1,6 @@
 package org.smoothbuild.compile;
 
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import javax.inject.Inject;
@@ -45,8 +46,8 @@ public class TypeSbConv {
       case StringTS s -> bytecodeF.stringT();
       case StructTS st -> convert(st);
       case FuncTS f -> convert(f);
-      case MeetTS meet -> throw new UnsupportedOperationException();
-      case JoinTS join -> throw new UnsupportedOperationException();
+      case MeetTS meet -> throw unexpectedCaseExc(meet);
+      case JoinTS join -> throw unexpectedCaseExc(join);
     };
   }
 

@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.type.solver;
 
 import static org.smoothbuild.lang.type.ConstrS.constrS;
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.type.Side.LOWER;
 import static org.smoothbuild.util.type.Side.UPPER;
@@ -41,8 +42,8 @@ public class NormalizerS {
       case ArrayTS array -> normalizeArray(array, side, constrBuilder);
       case BaseTS base -> base;
       case FuncTS func -> normalizeFunc(func, side, constrBuilder);
-      case JoinTS join -> throw new UnsupportedOperationException();
-      case MeetTS meet -> throw new UnsupportedOperationException();
+      case JoinTS join -> throw unexpectedCaseExc(join);
+      case MeetTS meet -> throw unexpectedCaseExc(meet);
       case StructTS struct -> struct;
       case VarS var -> var;
     };
