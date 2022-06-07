@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.base.Panal;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
@@ -11,17 +12,20 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends RefableObjS permits AnnFuncS, DefFuncS, SyntCtorS {
+public sealed abstract class FuncS extends Panal implements RefableObjS
+    permits AnnFuncS, DefFuncS, SyntCtorS {
+  private final FuncTS type;
   private final NList<ItemS> params;
 
   public FuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
-    super(type, modPath, name, loc);
+    super(modPath, name, loc);
+    this.type = type;
     this.params = requireNonNull(params);
   }
 
   @Override
   public FuncTS type() {
-    return (FuncTS) super.type();
+    return type;
   }
 
   public TypeS resT() {

@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.base.TanalImpl;
+import org.smoothbuild.lang.base.Tanal;
 import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.TypeS;
 
@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public class ItemS extends TanalImpl implements RefableS {
+public class ItemS extends Tanal implements RefableS {
   private final Optional<ObjS> body;
   private final ItemSigS sig;
 

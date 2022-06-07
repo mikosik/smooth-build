@@ -98,6 +98,7 @@ import org.smoothbuild.lang.define.AnnS;
 import org.smoothbuild.lang.define.AnnValS;
 import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefValS;
+import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.InternalModLoader;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
@@ -106,6 +107,7 @@ import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.SyntCtorS;
+import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.obj.BlobS;
 import org.smoothbuild.lang.obj.CallS;
 import org.smoothbuild.lang.obj.IntS;
@@ -967,8 +969,19 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public ObjRefS topRefS(RefableObjS topEval) {
-    return topRefS(1, topEval.type(), topEval.name());
+  public ObjRefS topRefS(RefableObjS refableObjS) {
+    return switch (refableObjS) {
+      case ValS val -> topRefS(val);
+      case FuncS func -> topRefS(func);
+    };
+  }
+
+  public ObjRefS topRefS(ValS val) {
+    return topRefS(1, val.type(), val.name());
+  }
+
+  public ObjRefS topRefS(FuncS func) {
+    return topRefS(1, func.type(), func.name());
   }
 
   public ObjRefS topRefS(int line, TypeS type, String name) {

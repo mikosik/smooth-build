@@ -3,16 +3,15 @@ package org.smoothbuild.lang.base;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.lang.define.ModPath;
-import org.smoothbuild.lang.type.TypeS;
 
 /**
- * PATANAL = Path and TypeS and Name and Location.
+ * PANAL = Path and Name and Location.
  */
-public class Patanal extends TanalImpl {
+public class Panal extends NalImpl {
   private final ModPath modPath;
 
-  public Patanal(TypeS type, ModPath modPath, String name, Loc loc) {
-    super(type, name, loc);
+  public Panal(ModPath modPath, String name, Loc loc) {
+    super(name, loc);
     this.modPath = requireNonNull(modPath);
   }
 
