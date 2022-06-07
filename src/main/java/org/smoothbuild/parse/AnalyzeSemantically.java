@@ -98,33 +98,12 @@ public class AnalyzeSemantically {
   private static void detectUndefinedTypes(Logger logger, DefsS imported, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitFunc(FuncN funcN) {
-        super.visitFunc(funcN);
-        funcN.evalT().ifPresent(this::assertTypeIsDefined);
-      }
-
-      @Override
-      public void visitValue(ValN valN) {
-        super.visitValue(valN);
-        valN.evalT().ifPresent(this::assertTypeIsDefined);
-      }
-
-      @Override
-      public void visitParam(int index, ItemN param) {
-        param.evalT().ifPresent(this::assertTypeIsDefined);
-      }
-
-      @Override
-      public void visitField(ItemN field) {
-        field.evalT().ifPresent(this::assertTypeIsDefined);
-      }
-
-      private void assertTypeIsDefined(TypeN type) {
+      public void visitType(TypeN type) {
         if (type instanceof ArrayTN array) {
-          assertTypeIsDefined(array.elemT());
+          visitType(array.elemT());
         } else if (type instanceof FuncTN func) {
-          assertTypeIsDefined(func.resT());
-          func.paramTs().forEach(this::assertTypeIsDefined);
+          visitType(func.resT());
+          func.paramTs().forEach(this::visitType);
         } else if (!isDefinedType(type)) {
           logger.log(parseError(type.loc(), type.q() + " type is undefined."));
         }
