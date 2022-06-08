@@ -14,12 +14,12 @@ import com.google.common.collect.ImmutableList;
 
 @Singleton
 public class TypeSF {
-  private static final AnyTS ANY = new AnyTS();
-  private static final BlobTS BLOB = new BlobTS();
-  private static final BoolTS BOOL = new BoolTS();
-  private static final IntTS INT = new IntTS();
-  private static final NothingTS NOTHING = new NothingTS();
-  private static final StringTS STRING = new StringTS();
+  public static final AnyTS ANY = new AnyTS();
+  public static final BlobTS BLOB = new BlobTS();
+  public static final BoolTS BOOL = new BoolTS();
+  public static final IntTS INT = new IntTS();
+  public static final NothingTS NOTHING = new NothingTS();
+  public static final StringTS STRING = new StringTS();
 
   @Inject
   public TypeSF() {

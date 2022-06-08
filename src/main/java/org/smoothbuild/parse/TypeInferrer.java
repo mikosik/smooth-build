@@ -35,11 +35,9 @@ import org.smoothbuild.parse.ast.ArrayTN;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstNode;
 import org.smoothbuild.parse.ast.AstVisitor;
-import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
 import org.smoothbuild.parse.ast.FuncN;
 import org.smoothbuild.parse.ast.FuncTN;
-import org.smoothbuild.parse.ast.IntN;
 import org.smoothbuild.parse.ast.ItemN;
 import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
@@ -47,7 +45,6 @@ import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.parse.ast.RefableN;
 import org.smoothbuild.parse.ast.RefableObjN;
 import org.smoothbuild.parse.ast.SelectN;
-import org.smoothbuild.parse.ast.StringN;
 import org.smoothbuild.parse.ast.StructN;
 import org.smoothbuild.parse.ast.TypeN;
 import org.smoothbuild.parse.ast.ValN;
@@ -345,24 +342,6 @@ public class TypeInferrer {
       public void visitArg(ArgN arg) {
         super.visitArg(arg);
         arg.setTypeS(arg.obj().typeS());
-      }
-
-      @Override
-      public void visitString(StringN string) {
-        super.visitString(string);
-        string.setTypeS(typeSF.string());
-      }
-
-      @Override
-      public void visitBlob(BlobN blob) {
-        super.visitBlob(blob);
-        blob.setTypeS(typeSF.blob());
-      }
-
-      @Override
-      public void visitInt(IntN intN) {
-        super.visitInt(intN);
-        intN.setTypeS(typeSF.int_());
       }
 
       private void logError(AstNode astNode, String message) {

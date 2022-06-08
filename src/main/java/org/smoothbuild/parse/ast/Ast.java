@@ -83,7 +83,7 @@ public class Ast {
   }
 
   private TopologicalSortingRes<String, StructN, Loc> sortStructsByDeps() {
-    var structNames = Sets.map(structs, NamedN::name);
+    var structNames = Sets.map(structs, MonoNamedN::name);
     var nodes = map(structs, struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }

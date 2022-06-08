@@ -3,29 +3,11 @@ package org.smoothbuild.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.TKind;
 
-public sealed class AstNode permits ObjN, NamedN {
-  private final Loc loc;
-  private Optional<TypeS> type;
+public sealed interface AstNode
+    permits MonoAstNode, ObjN {
+  public Loc loc();
 
-  public AstNode(Loc loc) {
-    this.loc = loc;
-  }
-
-  public Loc loc() {
-    return loc;
-  }
-
-  public Optional<TypeS> typeS() {
-    return type;
-  }
-
-  public void setTypeS(TypeS type) {
-    setTypeS(Optional.of(type));
-  }
-
-  public void setTypeS(Optional<TypeS> type) {
-    this.type = type;
-  }
+  public Optional<? extends TKind> typeS();
 }

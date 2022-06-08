@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.like.Obj;
 import org.smoothbuild.lang.type.TypeS;
 
-public sealed abstract class ArgN extends NamedN permits DefaultArgN, ExplicitArgN {
+public sealed abstract class ArgN extends MonoNamedN permits DefaultArgN, ExplicitArgN {
   private final Obj obj;
 
   public ArgN(String name, Obj obj, Loc loc) {

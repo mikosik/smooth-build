@@ -29,7 +29,7 @@ import org.smoothbuild.parse.ast.FuncN;
 import org.smoothbuild.parse.ast.FuncTN;
 import org.smoothbuild.parse.ast.IntN;
 import org.smoothbuild.parse.ast.ItemN;
-import org.smoothbuild.parse.ast.NamedN;
+import org.smoothbuild.parse.ast.MonoNamedN;
 import org.smoothbuild.parse.ast.StringN;
 import org.smoothbuild.parse.ast.StructN;
 import org.smoothbuild.parse.ast.TypeN;
@@ -173,9 +173,9 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void findDuplicateNames(Logger logger, List<? extends NamedN> nodes) {
+  private static void findDuplicateNames(Logger logger, List<? extends MonoNamedN> nodes) {
     Map<String, Loc> alreadyDefined = new HashMap<>();
-    for (NamedN named : nodes) {
+    for (MonoNamedN named : nodes) {
       String name = named.name();
       if (alreadyDefined.containsKey(name)) {
         logger.log(alreadyDefinedError(named, alreadyDefined.get(name)));

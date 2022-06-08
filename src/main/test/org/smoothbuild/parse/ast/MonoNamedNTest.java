@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 
-public class NamedNTest {
+public class MonoNamedNTest {
   @Test
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
@@ -18,7 +18,7 @@ public class NamedNTest {
     tester.testEquals();
   }
 
-  private static NamedN namedNode(int line, String name) {
-    return new NamedN(name, loc(line));
+  private static MonoNamedN namedNode(int line, String name) {
+    return new MonoNamedN(name, loc(line));
   }
 }

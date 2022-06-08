@@ -33,7 +33,7 @@ public final class RefN extends ExprN {
 
   public Optional<TypeS> referencedType() {
     return switch (referenced) {
-      case AstNode n -> n.typeS();
+      case MonoAstNode n -> n.typeS();
       case FuncS f -> Optional.of(f.type());
       case ValS v -> Optional.of(v.type());
       default -> throw unexpectedCaseExc(referenced);

@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class StructN extends NamedN {
+public final class StructN extends MonoNamedN {
   private final NList<ItemN> fields;
   private final FuncN ctor;
 

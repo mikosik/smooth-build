@@ -1,6 +1,7 @@
 package org.smoothbuild.parse.ast;
 
 import static java.lang.Character.isDigit;
+import static org.smoothbuild.lang.type.TypeSF.INT;
 
 import java.math.BigInteger;
 
@@ -11,7 +12,7 @@ public final class IntN extends CnstN {
   private BigInteger bigInteger;
 
   public IntN(String literal, Loc loc) {
-    super(loc);
+    super(INT, loc);
     this.literal = literal;
   }
 
