@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitRefable(ast.topObjs());
+    visitRefable(ast.topRefables());
   }
 
   public void visitStructs(List<StructN> structs) {

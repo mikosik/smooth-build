@@ -95,7 +95,7 @@ public class ModLoader {
       var ctorS = loadSyntCtor(path, structN);
       local.add(ctorS);
     }
-    for (var refableN : ast.topObjs()) {
+    for (var refableN : ast.topRefables()) {
       local.add(topObjLoader.loadTopObj(path, refableN));
     }
     return nList(local.build());
