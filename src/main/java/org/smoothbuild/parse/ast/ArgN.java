@@ -27,7 +27,7 @@ public sealed abstract class ArgN extends NamedN permits DefaultArgN, ExplicitAr
   public abstract String nameSanitized();
 
   public String typeAndName() {
-    return type().map(TypeS::name).orElse("<missing type>") + ":" + nameSanitized();
+    return typeS().map(TypeS::name).orElse("<missing type>") + ":" + nameSanitized();
   }
 
   public Obj obj() {

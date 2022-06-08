@@ -64,7 +64,7 @@ public class TopObjLoader {
   }
 
   private ValS loadVal(ModPath path, ValN valN) {
-    var type = valN.type().get();
+    var type = valN.typeS().get();
     var name = valN.name();
     var loc = valN.loc();
     if (valN.ann().isPresent()) {
@@ -78,7 +78,7 @@ public class TopObjLoader {
 
   private FuncS loadFunc(ModPath path, FuncN funcN) {
     var params = loadParams(funcN);
-    var resT = funcN.resT().get();
+    var resT = funcN.resTS().get();
     var name = funcN.name();
     var loc = funcN.loc();
     var paramTs = map(params, ItemS::type);
@@ -102,7 +102,7 @@ public class TopObjLoader {
   }
 
   private ItemS createParam(ItemN param) {
-    var type = param.evalT().get().type().get();
+    var type = param.typeN().typeS().get();
     var name = param.name();
     var body = param.body().map(this::createObj);
     return new ItemS(type, name, body, param.loc());
@@ -121,7 +121,7 @@ public class TopObjLoader {
   }
 
   private ObjS createArray(OrderN order) {
-    var type = (ArrayTS) order.type().get();
+    var type = (ArrayTS) order.typeS().get();
     ImmutableList<ObjS> elems = map(order.elems(), this::createObj);
     return new OrderS(type, elems, order.loc());
   }
@@ -129,7 +129,7 @@ public class TopObjLoader {
   private ObjS createCall(CallN call) {
     var callee = createObj(call.callee());
     var argObjs = map(call.assignedArgs(), a -> createArgObj(a.obj()));
-    var resT = call.type().get();
+    var resT = call.typeS().get();
     return new CallS(resT, callee, argObjs, call.loc());
   }
 
@@ -142,7 +142,7 @@ public class TopObjLoader {
   }
 
   private ObjS createSelect(SelectN selectN) {
-    var structT = (StructTS) selectN.selectable().type().get();
+    var structT = (StructTS) selectN.selectable().typeS().get();
     var index = structT.fields().indexMap().get(selectN.field());
     var fieldT = structT.fields().get(index).type();
     var selectable = createObj(selectN.selectable());
@@ -152,8 +152,8 @@ public class TopObjLoader {
   private ObjS createRef(RefN ref) {
     Refable referenced = ref.referenced();
     return switch (referenced) {
-      case ItemN itemN -> new ParamRefS(ref.type().get(), ref.name(), ref.loc());
-      case RefableObj refableObj -> new ObjRefS(ref.type().get(), ref.name(), ref.loc());
+      case ItemN itemN -> new ParamRefS(ref.typeS().get(), ref.name(), ref.loc());
+      case RefableObj refableObj -> new ObjRefS(ref.typeS().get(), ref.name(), ref.loc());
       default -> throw unexpectedCaseExc(referenced);
     };
   }

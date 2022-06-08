@@ -94,7 +94,7 @@ public class Ast {
       @Override
       public void visitField(ItemN field) {
         super.visitField(field);
-        field.evalT().ifPresent(this::addToDeps);
+        addToDeps(field.typeN());
       }
 
       private void addToDeps(TypeN type) {

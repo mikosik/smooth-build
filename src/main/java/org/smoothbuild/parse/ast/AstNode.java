@@ -17,15 +17,15 @@ public sealed class AstNode permits ObjN, NamedN {
     return loc;
   }
 
-  public Optional<TypeS> type() {
+  public Optional<TypeS> typeS() {
     return type;
   }
 
-  public void setType(TypeS type) {
-    setType(Optional.of(type));
+  public void setTypeS(TypeS type) {
+    setTypeS(Optional.of(type));
   }
 
-  public void setType(Optional<TypeS> type) {
+  public void setTypeS(Optional<TypeS> type) {
     this.type = type;
   }
 }

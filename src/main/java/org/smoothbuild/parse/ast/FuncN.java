@@ -15,28 +15,39 @@ import org.smoothbuild.util.collect.Optionals;
 import com.google.common.collect.ImmutableList;
 
 public final class FuncN extends RefableObjN {
+  private final Optional<TypeN> resTN;
   private final NList<ItemN> params;
 
-  public FuncN(Optional<TypeN> resT, String name, List<ItemN> params, Optional<ObjN> body,
+  public FuncN(Optional<TypeN> resTN, String name, List<ItemN> params, Optional<ObjN> body,
       Optional<AnnN> ann, Loc loc) {
-    this(resT, name, nListWithNonUniqueNames(ImmutableList.copyOf(params)), body, ann, loc);
+    this(resTN, name, nListWithNonUniqueNames(ImmutableList.copyOf(params)), body, ann, loc);
   }
 
-  public FuncN(Optional<TypeN> resT, String name, NList<ItemN> params, Optional<ObjN> body,
+  public FuncN(Optional<TypeN> resTN, String name, NList<ItemN> params, Optional<ObjN> body,
       Optional<AnnN> ann, Loc loc) {
-    super(resT, name, body, ann, loc);
+    super(name, body, ann, loc);
+    this.resTN = resTN;
     this.params = params;
+  }
+
+  public Optional<TypeN> resTN() {
+    return resTN;
   }
 
   public NList<ItemN> params() {
     return params;
   }
 
-  public Optional<ImmutableList<TypeS>> paramTsOpt() {
-    return Optionals.pullUp(map(params(), ItemN::type));
+  @Override
+  public Optional<TypeN> evalTN() {
+    return resTN;
   }
 
-  public Optional<TypeS> resT() {
-    return type().map(f -> ((FuncTS) f).res());
+  public Optional<ImmutableList<TypeS>> paramTSs() {
+    return Optionals.pullUp(map(params(), ItemN::typeS));
+  }
+
+  public Optional<TypeS> resTS() {
+    return typeS().map(f -> ((FuncTS) f).res());
   }
 }

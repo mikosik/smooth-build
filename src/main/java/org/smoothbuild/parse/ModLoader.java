@@ -84,7 +84,7 @@ public class ModLoader {
   }
 
   private TDefS loadStructDef(ModPath path, StructN struct) {
-    var type = (StructTS) struct.type().get();
+    var type = (StructTS) struct.typeS().get();
     var loc = struct.loc();
     return new StructDefS(type, path, loc);
   }
@@ -102,11 +102,11 @@ public class ModLoader {
   }
 
   private SyntCtorS loadSyntCtor(ModPath path, StructN struct) {
-    var resultT = (StructTS) struct.type().get();
+    var resultT = (StructTS) struct.typeS().get();
     var name = struct.ctor().name();
-    var paramTs = map(struct.fields(), f -> f.type().get());
+    var paramTs = map(struct.fields(), f -> f.typeS().get());
     var type = typeSF.func(resultT, paramTs);
-    var params = struct.fields().map(ItemN::toItem);
+    var params = struct.fields().map(ItemN::toItemS);
     var loc = struct.loc();
     return new SyntCtorS(type, path, name, params, loc);
   }

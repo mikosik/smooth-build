@@ -210,7 +210,7 @@ public class AnalyzeSemantically {
               logger.log(parseError(funcN,
                   "Function " + funcN.q() + " with @" + annName + " annotation cannot have body."));
             }
-            if (funcN.evalT().isEmpty()) {
+            if (funcN.resTN().isEmpty()) {
               logger.log(parseError(funcN, "Function " + funcN.q() + " with @" + annName
                   + " annotation must declare result type."));
             }
@@ -234,7 +234,7 @@ public class AnalyzeSemantically {
                 logger.log(
                     parseError(valN, "Value with @" + annName + " annotation cannot have body."));
               }
-              if (valN.evalT().isEmpty()) {
+              if (valN.typeN().isEmpty()) {
                 logger.log(parseError(valN, "Value " + valN.q() + " with @" + annName
                     + " annotation must declare type."));
               }

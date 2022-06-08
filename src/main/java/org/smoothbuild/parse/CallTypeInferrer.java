@@ -42,7 +42,7 @@ public class CallTypeInferrer {
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
-    var assignedTs = map(args, arg -> arg.type().get());
+    var assignedTs = map(args, arg -> arg.typeS().get());
     var boundedVars = typing.inferVarBoundsLower(map(params, Param::type), assignedTs);
     var varProblems = findVarProblems(call, boundedVars);
     if (!varProblems.isEmpty()) {
@@ -62,12 +62,12 @@ public class CallTypeInferrer {
   }
 
   private boolean isAssignable(ItemSigS param, ArgN arg) {
-    return typing.isParamAssignable(param.type(), arg.type().get());
+    return typing.isParamAssignable(param.type(), arg.typeS().get());
   }
 
   private static Log illegalAssignmentError(List<ItemSigS> params, ItemSigS param, ArgN arg) {
     return parseError(arg.loc(), messagePrefix(params)
-        + "Cannot assign argument of type " + arg.type().get().q() + " to parameter "
+        + "Cannot assign argument of type " + arg.typeS().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");
   }
 

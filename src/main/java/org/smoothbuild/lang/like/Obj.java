@@ -8,5 +8,5 @@ import org.smoothbuild.lang.type.TypeS;
  * Literal or expression.
  */
 public interface Obj {
-  public Optional<TypeS> typeO();
+  public Optional<TypeS> typeS();
 }

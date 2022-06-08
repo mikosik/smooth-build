@@ -14,7 +14,7 @@ public sealed interface ObjS extends Nal, Obj permits CnstS, ExprS {
   public TypeS type();
 
   @Override
-  public default Optional<TypeS> typeO() {
+  public default Optional<TypeS> typeS() {
     return Optional.of(type());
   }
 

@@ -7,8 +7,7 @@ import org.smoothbuild.lang.like.RefableObj;
 
 public abstract sealed class RefableObjN extends RefableN implements RefableObj
     permits FuncN, ValN {
-  public RefableObjN(Optional<TypeN> evalT, String name, Optional<ObjN> body,
-      Optional<AnnN> ann, Loc loc) {
-    super(evalT, name, body, ann, loc);
+  public RefableObjN(String name, Optional<ObjN> body, Optional<AnnN> ann, Loc loc) {
+    super(name, body, ann, loc);
   }
 }
