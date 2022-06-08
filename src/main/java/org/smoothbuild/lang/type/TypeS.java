@@ -9,10 +9,11 @@ import java.util.Objects;
 import com.google.common.collect.ImmutableCollection;
 
 /**
- * Smooth language type.
+ * Monomorphic type.
+ *
  * This class and all its subclasses are immutable.
  */
-public abstract sealed class TypeS
+public abstract sealed class TypeS implements TKind
     permits ArrayTS, BaseTS, FuncTS, MergeTS, StructTS, VarS {
   private final VarSetS vars;
   private final String name;
@@ -27,10 +28,12 @@ public abstract sealed class TypeS
     this.vars = vars;
   }
 
+  @Override
   public String name() {
     return name;
   }
 
+  @Override
   public String q() {
     return "`" + name() + "`";
   }

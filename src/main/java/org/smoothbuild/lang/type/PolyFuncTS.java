@@ -6,7 +6,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Polymorphic type.
  */
-public final class PolyFuncTS {
+public final class PolyFuncTS implements TKind {
   private final String name;
   private final VarSetS freeVars;
   private final TypeS type;
@@ -19,6 +19,7 @@ public final class PolyFuncTS {
         "Free variable(s) " + freeVars + " are not present in type " + type.q() + ".");
   }
 
+  @Override
   public String name() {
     return name;
   }
