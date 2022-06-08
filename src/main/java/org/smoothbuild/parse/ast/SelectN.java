@@ -2,7 +2,7 @@ package org.smoothbuild.parse.ast;
 
 import org.smoothbuild.lang.base.Loc;
 
-public final class SelectN extends ExprN {
+public final class SelectN extends MonoExprN {
   private final ObjN selectable;
   private final String field;
 

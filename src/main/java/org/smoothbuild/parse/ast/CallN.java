@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.Loc;
 
 import com.google.common.collect.ImmutableList;
 
-public final class CallN extends ExprN {
+public final class CallN extends MonoExprN {
   private final ObjN callee;
   private final List<ArgN> args;
   private ImmutableList<ArgN> assignedArgs;

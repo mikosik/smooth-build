@@ -10,7 +10,7 @@ import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.type.TypeS;
 
-public final class RefN extends ExprN {
+public final class RefN extends MonoExprN {
   private final String name;
   private Refable referenced;
 

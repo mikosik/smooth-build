@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.WithLoc;
 import org.smoothbuild.lang.type.TypeS;
 
 public sealed class MonoAstNode extends WithLoc implements AstNode
-    permits ExprN, MonoNamedN {
+    permits MonoExprN, MonoNamedN {
   private Optional<TypeS> type;
 
   public MonoAstNode(Loc loc) {

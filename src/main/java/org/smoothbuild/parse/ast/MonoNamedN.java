@@ -1,9 +1,8 @@
 package org.smoothbuild.parse.ast;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.base.Nal;
 
-public sealed class MonoNamedN extends MonoAstNode implements Nal
+public sealed class MonoNamedN extends MonoAstNode implements NamedN
     permits AnnN, ArgN, RefableN, StructN, TypeN {
   private final String name;
 
