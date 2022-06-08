@@ -28,14 +28,14 @@ import com.google.common.collect.ImmutableList;
 
 public class Ast {
   private final NList<StructN> structs;
-  private final ImmutableList<RefableN> topRefables;
+  private final ImmutableList<RefableObjN> topRefables;
 
-  public Ast(List<StructN> structs, List<RefableN> topRefables) {
+  public Ast(List<StructN> structs, List<RefableObjN> topRefables) {
     this.structs = nListWithNonUniqueNames(ImmutableList.copyOf(structs));
     this.topRefables = ImmutableList.copyOf(topRefables);
   }
 
-  public ImmutableList<RefableN> topRefables() {
+  public ImmutableList<RefableObjN> topRefables() {
     return topRefables;
   }
 
@@ -58,16 +58,17 @@ public class Ast {
     return maybeValue(ast);
   }
 
-  private TopologicalSortingRes<String, RefableN, Loc> sortRefablesByDeps() {
+  private TopologicalSortingRes<String, RefableObjN, Loc> sortRefablesByDeps() {
     HashSet<String> names = new HashSet<>();
     topRefables.forEach(v -> names.add(v.name()));
 
-    HashSet<GraphNode<String, RefableN, Loc>> nodes = new HashSet<>();
+    HashSet<GraphNode<String, RefableObjN, Loc>> nodes = new HashSet<>();
     nodes.addAll(map(topRefables, value -> refable(value, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, RefableN, Loc> refable(RefableN refable, Set<String> names) {
+  private static GraphNode<String, RefableObjN, Loc> refable(RefableObjN refable,
+      Set<String> names) {
     Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {
       @Override

@@ -46,7 +46,7 @@ import com.google.common.collect.ImmutableList;
 public class AstCreator {
   public static Ast fromParseTree(FilePath filePath, ModContext module) {
     List<StructN> structs = new ArrayList<>();
-    List<RefableN> refables = new ArrayList<>();
+    List<RefableObjN> refables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {

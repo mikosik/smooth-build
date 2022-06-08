@@ -1,7 +1,5 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
-
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -27,15 +25,14 @@ public class AstVisitor {
     visitType(field.typeN());
   }
 
-  public void visitRefable(List<RefableN> refables) {
-    refables.forEach(this::visitRefable);
+  public void visitRefable(List<RefableObjN> refableObjs) {
+    refableObjs.forEach(this::visitRefable);
   }
 
-  public void visitRefable(RefableN eval) {
+  public void visitRefable(RefableObjN eval) {
     switch (eval) {
       case FuncN func -> visitFunc(func);
       case ValN value -> visitValue(value);
-      case ItemN item -> throw unexpectedCaseExc(item);
     }
   }
 

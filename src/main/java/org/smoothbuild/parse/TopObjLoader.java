@@ -39,7 +39,7 @@ import org.smoothbuild.parse.ast.ItemN;
 import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
-import org.smoothbuild.parse.ast.RefableN;
+import org.smoothbuild.parse.ast.RefableObjN;
 import org.smoothbuild.parse.ast.SelectN;
 import org.smoothbuild.parse.ast.StringN;
 import org.smoothbuild.parse.ast.ValN;
@@ -55,11 +55,10 @@ public class TopObjLoader {
     this.typeSF = typeSF;
   }
 
-  public RefableObjS loadTopObj(ModPath path, RefableN refableN) {
+  public RefableObjS loadTopObj(ModPath path, RefableObjN refableN) {
     return switch (refableN) {
       case FuncN funcN -> loadFunc(path, funcN);
       case ValN valN -> loadVal(path, valN);
-      default -> throw unexpectedCaseExc(refableN);
     };
   }
 
