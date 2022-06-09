@@ -3,7 +3,6 @@ package org.smoothbuild.lang.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.TypeS;
 
 /**
@@ -12,14 +11,14 @@ import org.smoothbuild.lang.type.TypeS;
  * This class is immutable.
  */
 public final class DefValS extends ValS {
-  private final ObjS body;
+  private final MonoObjS body;
 
-  public DefValS(TypeS type, ModPath modPath, String name, ObjS body, Loc loc) {
+  public DefValS(TypeS type, ModPath modPath, String name, MonoObjS body, Loc loc) {
     super(type, modPath, name, loc);
     this.body = body;
   }
 
-  public ObjS body() {
+  public MonoObjS body() {
     return body;
   }
 

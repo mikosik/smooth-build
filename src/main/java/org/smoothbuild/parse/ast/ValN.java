@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
 
-public final class ValN extends RefableObjN {
+public final class ValN extends MonoRefableN implements MonoRefableObjN {
   private final Optional<TypeN> typeN;
 
   public ValN(Optional<TypeN> typeN, String name, Optional<ObjN> body,

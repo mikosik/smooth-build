@@ -48,7 +48,7 @@ public class ExplicitArgNTest {
   @Test
   public void type_and_name_of_named_arg() {
     var arg = new ExplicitArgN("name", obj(STRING), internal());
-    arg.setTypeS(STRING);
+    arg.setTypeO(STRING);
     assertThat(arg.typeAndName())
         .isEqualTo("String:" + "name");
   }
@@ -56,14 +56,14 @@ public class ExplicitArgNTest {
   @Test
   public void nameless_arg_to_string() {
     var arg = new ExplicitArgN(null, obj(STRING), internal());
-    arg.setTypeS(STRING);
+    arg.setTypeO(STRING);
     assertThat(arg.typeAndName())
         .isEqualTo("String:<nameless>");
   }
 
   private static ObjN obj(TypeS type) {
     var ref = new RefN("name", loc());
-    ref.setTypeS(type);
+    ref.setTypeO(type);
     return ref;
   }
 }

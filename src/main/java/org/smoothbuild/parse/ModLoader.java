@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.lang.define.PolyFuncS.polyFuncS;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.AnalyzeSemantically.analyzeSemantically;
@@ -17,6 +18,7 @@ import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
+import org.smoothbuild.lang.define.PolyFuncS;
 import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.StructDefS;
 import org.smoothbuild.lang.define.SyntCtorS;
@@ -84,7 +86,7 @@ public class ModLoader {
   }
 
   private TDefS loadStructDef(ModPath path, StructN struct) {
-    var type = (StructTS) struct.typeS().get();
+    var type = (StructTS) struct.typeO().get();
     var loc = struct.loc();
     return new StructDefS(type, path, loc);
   }
@@ -101,13 +103,13 @@ public class ModLoader {
     return nList(local.build());
   }
 
-  private SyntCtorS loadSyntCtor(ModPath path, StructN struct) {
-    var resultT = (StructTS) struct.typeS().get();
+  private PolyFuncS loadSyntCtor(ModPath path, StructN struct) {
+    var resultT = (StructTS) struct.typeO().get();
     var name = struct.ctor().name();
-    var paramTs = map(struct.fields(), f -> f.typeS().get());
+    var paramTs = map(struct.fields(), f -> f.typeO().get());
     var type = typeSF.func(resultT, paramTs);
     var params = struct.fields().map(ItemN::toItemS);
     var loc = struct.loc();
-    return new SyntCtorS(type, path, name, params, loc);
+    return polyFuncS(new SyntCtorS(type, path, name, params, loc));
   }
 }

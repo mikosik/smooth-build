@@ -1,38 +1,26 @@
 package org.smoothbuild.lang.type;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static java.util.Objects.requireNonNull;
-
 /**
  * Polymorphic type.
  */
-public final class PolyFuncTS implements TKind {
-  private final String name;
-  private final VarSetS freeVars;
-  private final TypeS type;
+public final class PolyFuncTS extends PolyTS {
+  public PolyFuncTS(VarSetS freeVars, FuncTS funcTS) {
+    super(freeVars, funcTS);
+  }
 
-  public PolyFuncTS(VarSetS freeVars, TypeS type) {
-    this.name = calculateName(type, freeVars);
-    this.freeVars = requireNonNull(freeVars);
-    this.type = requireNonNull(type);
-    checkArgument(type.vars().containsAll(freeVars),
-        "Free variable(s) " + freeVars + " are not present in type " + type.q() + ".");
+  public static PolyFuncTS polyFuncTS(FuncTS funcTS) {
+    return new PolyFuncTS(funcTS.vars(), funcTS);
   }
 
   @Override
-  public String name() {
-    return name;
+  public FuncTS type() {
+    return (FuncTS) super.type();
   }
 
-  public VarSetS freeVars() {
-    return freeVars;
-  }
-
-  public TypeS type() {
-    return type;
-  }
-
-  private static String calculateName(TypeS type, VarSetS freeVars) {
-    return freeVars.toString() + type.toString();
+  @Override
+  public String q() {
+    VarSetS vars = freeVars();
+    String shortName = (vars.isEmpty() ? "" : vars.toString()) + type().name();
+    return "`" + shortName + "`";
   }
 }

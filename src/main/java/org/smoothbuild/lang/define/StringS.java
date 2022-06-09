@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.obj;
+package org.smoothbuild.lang.define;
 
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 import static org.smoothbuild.vm.job.TaskInfo.NAME_LENGTH_LIMIT;

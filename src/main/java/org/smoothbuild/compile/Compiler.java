@@ -4,6 +4,7 @@ import static org.smoothbuild.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
@@ -41,22 +42,23 @@ import org.smoothbuild.lang.base.NalImpl;
 import org.smoothbuild.lang.define.AnnFuncS;
 import org.smoothbuild.lang.define.AnnS;
 import org.smoothbuild.lang.define.AnnValS;
+import org.smoothbuild.lang.define.BlobS;
+import org.smoothbuild.lang.define.CallS;
 import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefValS;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.FuncS;
+import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.ItemS;
+import org.smoothbuild.lang.define.MonoObjS;
+import org.smoothbuild.lang.define.ObjRefS;
+import org.smoothbuild.lang.define.OrderS;
+import org.smoothbuild.lang.define.ParamRefS;
+import org.smoothbuild.lang.define.PolyFuncS;
+import org.smoothbuild.lang.define.SelectS;
+import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.obj.BlobS;
-import org.smoothbuild.lang.obj.CallS;
-import org.smoothbuild.lang.obj.IntS;
-import org.smoothbuild.lang.obj.ObjRefS;
-import org.smoothbuild.lang.obj.ObjS;
-import org.smoothbuild.lang.obj.OrderS;
-import org.smoothbuild.lang.obj.ParamRefS;
-import org.smoothbuild.lang.obj.SelectS;
-import org.smoothbuild.lang.obj.StringS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.StructTS;
@@ -220,11 +222,11 @@ public class Compiler {
 
   // handling objects
 
-  private ImmutableList<ObjB> compileObjs(ImmutableList<ObjS> objs) {
+  private ImmutableList<ObjB> compileObjs(ImmutableList<MonoObjS> objs) {
     return map(objs, this::compileObj);
   }
 
-  public ObjB compileObj(ObjS objS) {
+  public ObjB compileObj(MonoObjS objS) {
     return switch (objS) {
       case BlobS blobS -> compileAndCacheNal(blobS, this::compileBlob);
       case CallS callS -> compileAndCacheNal(callS, this::compileCall);
@@ -234,10 +236,12 @@ public class Compiler {
       case ObjRefS objRefS -> compileTopRef(objRefS);
       case SelectS selectS -> compileAndCacheNal(selectS, this::compileSelect);
       case StringS stringS -> compileAndCacheNal(stringS, this::compileString);
+      case AnnValS annValS -> throw unexpectedCaseExc(objS); // TODO remove?
+      case DefValS defValS -> throw unexpectedCaseExc(objS); // TODO remove?
     };
   }
 
-  private <T extends ObjS> ObjB compileAndCacheNal(T objS, Function<T, ObjB> mapping) {
+  private <T extends MonoObjS> ObjB compileAndCacheNal(T objS, Function<T, ObjB> mapping) {
     var objB = mapping.apply(objS);
     nals.put(objB, objS);
     return objB;
@@ -278,7 +282,7 @@ public class Compiler {
 
   private ObjB compileTopRef(ObjRefS objRefS) {
     return switch (defs.topRefables().get(objRefS.name())) {
-      case FuncS f -> compileFunc(f);
+      case PolyFuncS f -> compileFunc(f.func()); // TODO workaround hack
       case ValS v -> compileVal(v);
     };
   }

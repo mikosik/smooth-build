@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.IntStream.range;
+import static org.smoothbuild.lang.type.TKind.hackyCast;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.ParseError.parseError;
@@ -42,7 +43,7 @@ public class CallTypeInferrer {
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
-    var assignedTs = map(args, arg -> arg.typeS().get());
+    var assignedTs = map(args, arg -> hackyCast(arg.typeO().get()));
     var boundedVars = typing.inferVarBoundsLower(map(params, Param::type), assignedTs);
     var varProblems = findVarProblems(call, boundedVars);
     if (!varProblems.isEmpty()) {
@@ -62,12 +63,12 @@ public class CallTypeInferrer {
   }
 
   private boolean isAssignable(ItemSigS param, ArgN arg) {
-    return typing.isParamAssignable(param.type(), arg.typeS().get());
+    return typing.isParamAssignable(param.type(), hackyCast(arg.typeO().get()));
   }
 
   private static Log illegalAssignmentError(List<ItemSigS> params, ItemSigS param, ArgN arg) {
     return parseError(arg.loc(), messagePrefix(params)
-        + "Cannot assign argument of type " + arg.typeS().get().q() + " to parameter "
+        + "Cannot assign argument of type " + arg.typeO().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");
   }
 

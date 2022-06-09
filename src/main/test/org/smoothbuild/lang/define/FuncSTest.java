@@ -9,7 +9,6 @@ import static org.smoothbuild.util.collect.NList.nList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.testing.TestingContext;
 
@@ -45,7 +44,7 @@ public class FuncSTest extends TestingContext {
     return param(name, Optional.empty());
   }
 
-  private ItemS param(String name, Optional<ObjS> body) {
+  private ItemS param(String name, Optional<MonoObjS> body) {
     return new ItemS(STRING, name, body, loc());
   }
 

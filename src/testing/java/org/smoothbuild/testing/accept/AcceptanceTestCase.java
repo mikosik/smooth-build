@@ -34,7 +34,7 @@ import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.fs.space.Space;
-import org.smoothbuild.lang.obj.ObjRefS;
+import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;

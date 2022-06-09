@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.obj;
+package org.smoothbuild.lang.define;
 
 import java.math.BigInteger;
 

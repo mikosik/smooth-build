@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends Panal implements RefableObjS
+public sealed abstract class FuncS extends Panal
     permits AnnFuncS, DefFuncS, SyntCtorS {
   private final FuncTS type;
   private final NList<ItemS> params;
@@ -23,7 +23,6 @@ public sealed abstract class FuncS extends Panal implements RefableObjS
     this.params = requireNonNull(params);
   }
 
-  @Override
   public FuncTS type() {
     return type;
   }

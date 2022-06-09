@@ -9,7 +9,7 @@ import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.TypeS;
 
-public final class ItemN extends RefableN {
+public final class ItemN extends MonoRefableN {
   private final TypeN typeN;
   private Optional<ItemSigS> sig;
 
@@ -28,9 +28,9 @@ public final class ItemN extends RefableN {
   }
 
   @Override
-  public void setTypeS(Optional<TypeS> type) {
-    super.setTypeS(type);
-    sig = typeS().map(t -> new ItemSigS(t, Optional.of(name())));
+  public void setTypeO(Optional<TypeS> type) {
+    super.setTypeO(type);
+    sig = typeO().map(t -> new ItemSigS(t, Optional.of(name())));
   }
 
   public Optional<ItemSigS> sig() {
@@ -39,6 +39,6 @@ public final class ItemN extends RefableN {
 
   public ItemS toItemS() {
     checkState(body().isEmpty());
-    return new ItemS(typeS().get(), name(), Optional.empty(), loc());
+    return new ItemS(typeO().get(), name(), Optional.empty(), loc());
   }
 }

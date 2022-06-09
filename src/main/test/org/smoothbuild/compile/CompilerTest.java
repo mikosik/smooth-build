@@ -19,9 +19,9 @@ import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.define.DefsS;
+import org.smoothbuild.lang.define.IntS;
+import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.lang.define.RefableObjS;
-import org.smoothbuild.lang.obj.IntS;
-import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
@@ -180,15 +180,15 @@ public class CompilerTest extends TestingContext {
           .isEqualTo(funcB);
     }
 
-    private void assertCompilation(ObjS objS, ObjB expected) {
+    private void assertCompilation(MonoObjS objS, ObjB expected) {
       assertCompilation(defs(), objS, expected);
     }
 
-    private void assertCompilation(RefableObjS topRefable, ObjS objS, ObjB expected) {
+    private void assertCompilation(RefableObjS topRefable, MonoObjS objS, ObjB expected) {
       assertCompilation(defs(topRefable), objS, expected);
     }
 
-    private void assertCompilation(DefsS defs, ObjS objS, ObjB expected) {
+    private void assertCompilation(DefsS defs, MonoObjS objS, ObjB expected) {
       var compiler = newCompiler(defs);
       assertThat(compiler.compileObj(objS))
           .isEqualTo(expected);

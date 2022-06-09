@@ -18,12 +18,15 @@ import java.util.function.BiConsumer;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemSigS;
+import org.smoothbuild.lang.define.PolyFuncS;
 import org.smoothbuild.lang.like.Param;
 import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.PolyFuncTS;
+import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TKind;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.TypingS;
@@ -72,15 +75,15 @@ public class TypeInferrer {
       public void visitStruct(StructN struct) {
         super.visitStruct(struct);
         var fields = pullUp(map(struct.fields(), ItemN::sig));
-        struct.setTypeS(fields.map(f -> typeSF.struct(struct.name(), nList(f))));
-        struct.ctor().setTypeS(
-            fields.map(s -> typeSF.func(struct.typeS().get(), map(s, ItemSigS::type))));
+        struct.setTypeO(fields.map(f -> typeSF.struct(struct.name(), nList(f))));
+        struct.ctor().setTypeO(
+            fields.map(s -> typeSF.polyFunc(struct.typeO().get(), map(s, ItemSigS::type))));
       }
 
       @Override
       public void visitField(ItemN itemN) {
         super.visitField(itemN);
-        var typeOpt = itemN.typeN().typeS();
+        var typeOpt = itemN.typeN().typeO();
         typeOpt.flatMap((t) -> {
           if (!t.vars().isEmpty()) {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
@@ -92,7 +95,7 @@ public class TypeInferrer {
           }
         });
 
-        itemN.setTypeS(typeOpt);
+        itemN.setTypeO(typeOpt);
       }
 
       @Override
@@ -100,10 +103,10 @@ public class TypeInferrer {
         visitParams(funcN.params());
         funcN.body().ifPresent(this::visitObj);
         var resN = funcN.resTN().orElse(null);
-        funcN.setTypeS(funcTOpt(resN, evalTOfTopEval(funcN), funcN.paramTSs()));
+        funcN.setTypeO(funcTOpt(resN, evalTOfTopEval(funcN), funcN.paramTSs()));
       }
 
-      private Optional<TypeS> funcTOpt(TypeN resN, Optional<TypeS> result,
+      private Optional<PolyTS> funcTOpt(TypeN resN, Optional<TypeS> result,
           Optional<ImmutableList<TypeS>> params) {
         if (result.isEmpty() || params.isEmpty()) {
           return empty();
@@ -114,7 +117,7 @@ public class TypeInferrer {
             .collect(toVarSetS());
         var r = result.get();
         if (paramVars.containsAll(r.vars())) {
-          return Optional.of(typeSF.func(r, ps));
+          return Optional.of(typeSF.polyFunc(r, ps));
         }
         logError(
             resN, "Function result type has type variable(s) not present in any parameter type.");
@@ -124,13 +127,13 @@ public class TypeInferrer {
       @Override
       public void visitValue(ValN valN) {
         valN.body().ifPresent(this::visitObj);
-        valN.setTypeS(evalTOfTopEval(valN));
+        valN.setTypeO(evalTOfTopEval(valN));
       }
 
       @Override
       public void visitParam(int index, ItemN param) {
         super.visitParam(index, param);
-        param.setTypeS(typeOfParam(param));
+        param.setTypeO(typeOfParam(param));
       }
 
       private Optional<TypeS> typeOfParam(ItemN param) {
@@ -154,15 +157,15 @@ public class TypeInferrer {
       private Optional<TypeS> evalTypeOf(
           RefableN refable, BiConsumer<TypeS, TypeS> assignmentChecker) {
         if (refable.body().isPresent()) {
-          var exprT = refable.body().get().typeS();
+          var exprT = refable.body().get().typeO();
           if (refable.evalTN().isPresent()) {
             var type = createType(refable.evalTN().get());
             type.ifPresent(target -> exprT.ifPresent(source -> {
-              assignmentChecker.accept(target, source);
+              assignmentChecker.accept(target, TKind.hackyCast(source));
             }));
             return type;
           } else {
-            return exprT;
+            return exprT.map(TKind::hackyCast);
           }
         } else {
           return createType(refable.evalTN().get());
@@ -172,7 +175,7 @@ public class TypeInferrer {
       @Override
       public void visitType(TypeN type) {
         super.visitType(type);
-        type.setTypeS(createType(type));
+        type.setTypeO(createType(type));
       }
 
       private Optional<TypeS> createType(TypeN type) {
@@ -208,7 +211,7 @@ public class TypeInferrer {
           throw new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structs());
         } else {
-          return localStruct.typeS().orElseThrow(() -> new RuntimeException(
+          return localStruct.typeO().orElseThrow(() -> new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structs()));
         }
       }
@@ -216,28 +219,28 @@ public class TypeInferrer {
       @Override
       public void visitSelect(SelectN select) {
         super.visitSelect(select);
-        select.selectable().typeS().ifPresentOrElse(
+        select.selectable().typeO().ifPresentOrElse(
             t -> {
               if (!(t instanceof StructTS st)) {
-                select.setTypeS(empty());
+                select.setTypeO(empty());
                 logError(select, "Type " + t.q() + " is not a struct so it doesn't have "
                     + q(select.field()) + " field.");
               } else if (!st.fields().containsName(select.field())) {
-                select.setTypeS(empty());
+                select.setTypeO(empty());
                 logError(select,
                     "Struct " + t.q() + " doesn't have field `" + select.field() + "`.");
               } else {
-                select.setTypeS(((StructTS) t).fields().get(select.field()).type());
+                select.setTypeO(((StructTS) t).fields().get(select.field()).type());
               }
             },
-            () -> select.setTypeS(empty())
+            () -> select.setTypeO(empty())
         );
       }
 
       @Override
       public void visitOrder(OrderN order) {
         super.visitOrder(order);
-        order.setTypeS(findArrayT(order));
+        order.setTypeO(findArrayT(order));
       }
 
       private Optional<TypeS> findArrayT(OrderN array) {
@@ -245,23 +248,23 @@ public class TypeInferrer {
         if (expressions.isEmpty()) {
           return Optional.of(typeSF.array(typeSF.nothing()));
         }
-        Optional<TypeS> firstType = expressions.get(0).typeS();
+        Optional<? extends TKind> firstType = expressions.get(0).typeO();
         if (firstType.isEmpty()) {
           return empty();
         }
 
-        TypeS type = firstType.get();
+        TypeS type = TKind.hackyCast(firstType.get());
         for (int i = 1; i < expressions.size(); i++) {
           ObjN elem = expressions.get(i);
-          Optional<TypeS> elemT = elem.typeS();
+          Optional<? extends TKind> elemT = elem.typeO();
           if (elemT.isEmpty()) {
             return empty();
           }
-          type = typing.mergeUp(type, elemT.get());
+          type = typing.mergeUp(type, TKind.hackyCast(elemT.get()));
           if (typing.contains(type, typeSF.any())) {
             logError(elem,
                 "Array elems at indexes 0 and " + i + " doesn't have common super type."
-                + "\nElement at index 0 type = " + expressions.get(0).typeS().get().q()
+                + "\nElement at index 0 type = " + expressions.get(0).typeO().get().q()
                 + "\nElement at index " + i + " type = " + elemT.get().q());
             return empty();
           }
@@ -273,30 +276,30 @@ public class TypeInferrer {
       public void visitCall(CallN call) {
         super.visitCall(call);
         ObjN callee = call.callee();
-        Optional<TypeS> calledT = callee.typeS();
+        Optional<? extends TKind> calledT = callee.typeO();
         if (calledT.isEmpty()) {
-          call.setTypeS(empty());
-        } else if (!(calledT.get() instanceof FuncTS funcT)) {
+          call.setTypeO(empty());
+        } else if (!(calledT.get() instanceof FuncTS || calledT.get() instanceof PolyFuncTS)) {
           logError(call, description(callee) + " cannot be called as it is not a function but "
               + calledT.get().q() + ".");
-          call.setTypeS(empty());
+          call.setTypeO(empty());
         } else {
           var funcParams = funcParams(callee);
           if (funcParams.isEmpty()) {
-            call.setTypeS(empty());
+            call.setTypeO(empty());
           } else {
             var params = funcParams.get();
             Maybe<ImmutableList<ArgN>> args = constructArgList(call, params);
             if (args.containsProblem()) {
               logBuffer.logAll(args.logs());
-              call.setTypeS(empty());
+              call.setTypeO(empty());
             } else if (someArgHasNotInferredType(args.value())) {
-              call.setTypeS(empty());
+              call.setTypeO(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<TypeS> type = callTypeInferrer.inferCallT(call, funcT.res(), params);
+              Maybe<TypeS> type = callTypeInferrer.inferCallT(call, castToFuncTS(calledT.get()).res(), params);
               logBuffer.logAll(type.logs());
-              call.setTypeS(type.valueOptional());
+              call.setTypeO(type.valueOptional());
             }
           }
         }
@@ -305,7 +308,8 @@ public class TypeInferrer {
       public static Optional<NList<Param>> funcParams(ObjN callee) {
         if (callee instanceof RefN refN) {
           Refable referenced = refN.referenced();
-          if (referenced instanceof FuncS funcS) {
+          if (referenced instanceof PolyFuncS polyFuncS) {
+            var funcS = polyFuncS.func();
             return Optional.of(funcS.params().map(p -> new Param(p.sig(), p.body())));
           } else if (referenced instanceof FuncN funcN) {
             var params = map(
@@ -313,16 +317,16 @@ public class TypeInferrer {
             return pullUp(params).map(NList::nList);
           }
         }
-        return callee.typeS().map(t -> funcTParams(t));
+        return callee.typeO().map(t -> funcTParams(t));
       }
 
-      private static NList<Param> funcTParams(TypeS funcTS) {
-        return nList(map(((FuncTS) funcTS).params(), p -> new Param(itemSigS(p), empty())));
+      private static NList<Param> funcTParams(TKind funcType) {
+        return nList(map(castToFuncTS(funcType).params(), p -> new Param(itemSigS(p), empty())));
       }
 
       private static boolean someArgHasNotInferredType(ImmutableList<ArgN> args) {
         return args.stream()
-            .anyMatch(a -> a.typeS().isEmpty());
+            .anyMatch(a -> a.typeO().isEmpty());
       }
 
       private static String description(ObjN node) {
@@ -335,13 +339,13 @@ public class TypeInferrer {
       @Override
       public void visitRef(RefN ref) {
         super.visitRef(ref);
-        ref.setTypeS(ref.referencedType());
+        ref.setTypeO(ref.referencedType());
       }
 
       @Override
       public void visitArg(ArgN arg) {
         super.visitArg(arg);
-        arg.setTypeS(arg.obj().typeS());
+        arg.setTypeO(arg.obj().typeO());
       }
 
       private void logError(AstNode astNode, String message) {
@@ -349,5 +353,10 @@ public class TypeInferrer {
       }
     }.visitAst(ast);
     return logBuffer.toList();
+  }
+
+  private static FuncTS castToFuncTS(TKind funcType) {
+    // TODO handle polymorphic correctly
+    return (FuncTS) TKind.hackyCast(funcType);
   }
 }

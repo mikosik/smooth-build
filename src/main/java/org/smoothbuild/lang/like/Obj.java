@@ -2,11 +2,11 @@ package org.smoothbuild.lang.like;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.TKind;
 
 /**
  * Literal or expression.
  */
 public interface Obj {
-  public Optional<TypeS> typeS();
+  public Optional<? extends TKind> typeO();
 }

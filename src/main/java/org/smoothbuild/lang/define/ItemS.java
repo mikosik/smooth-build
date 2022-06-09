@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.base.Tanal;
-import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -19,10 +18,10 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class ItemS extends Tanal implements RefableS {
-  private final Optional<ObjS> body;
+  private final Optional<MonoObjS> body;
   private final ItemSigS sig;
 
-  public ItemS(TypeS type, String name, Optional<ObjS> body, Loc loc) {
+  public ItemS(TypeS type, String name, Optional<MonoObjS> body, Loc loc) {
     super(type, name, loc);
     this.body = body;
     this.sig = new ItemSigS(type(), name());
@@ -32,7 +31,7 @@ public class ItemS extends Tanal implements RefableS {
     return sig;
   }
 
-  public Optional<ObjS> body() {
+  public Optional<MonoObjS> body() {
     return body;
   }
 

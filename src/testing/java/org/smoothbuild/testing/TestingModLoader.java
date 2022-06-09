@@ -12,6 +12,7 @@ import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.RefableObjS;
+import org.smoothbuild.lang.type.TKind;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
@@ -52,12 +53,13 @@ public class TestingModLoader {
   public void containsTopRefable(RefableObjS expected) {
     String name = expected.name();
     RefableObjS actual = assertContainsTopRefable(name);
+    boolean equals = actual.equals(expected);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
-  public void containsTopRefableWithType(String name, TypeS expectedT) {
-    var topRefable = assertContainsTopRefable(name);
+  public void containsTopRefableWithType(String name, TKind expectedT) {
+    RefableObjS topRefable = assertContainsTopRefable(name);
     assertThat(topRefable.type())
         .isEqualTo(expectedT);
   }

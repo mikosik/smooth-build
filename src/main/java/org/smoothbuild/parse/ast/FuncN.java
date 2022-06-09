@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.PolyFuncTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncN extends RefableObjN {
+public final class FuncN extends PolyRefableN implements PolyRefableObjN {
   private final Optional<TypeN> resTN;
   private final NList<ItemN> params;
 
@@ -44,10 +44,10 @@ public final class FuncN extends RefableObjN {
   }
 
   public Optional<ImmutableList<TypeS>> paramTSs() {
-    return Optionals.pullUp(map(params(), ItemN::typeS));
+    return Optionals.pullUp(map(params(), ItemN::typeO));
   }
 
   public Optional<TypeS> resTS() {
-    return typeS().map(f -> ((FuncTS) f).res());
+    return typeO().map(f -> ((PolyFuncTS) f).type().res());
   }
 }

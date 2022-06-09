@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast;
 import org.smoothbuild.lang.base.Loc;
 
 public sealed class MonoNamedN extends MonoAstNode implements NamedN
-    permits AnnN, ArgN, RefableN, StructN, TypeN {
+    permits AnnN, MonoRefableN, StructN, TypeN {
   private final String name;
 
   public MonoNamedN(String name, Loc loc) {

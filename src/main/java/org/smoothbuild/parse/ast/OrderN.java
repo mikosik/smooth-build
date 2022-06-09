@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.Loc;
 
 import com.google.common.collect.ImmutableList;
 
-public final class OrderN extends MonoExprN {
+public final class OrderN extends MonoAstNode implements MonoExprN {
   private final List<ObjN> elems;
 
   public OrderN(List<ObjN> elems, Loc loc) {

@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.PolyFuncTS.polyFuncTS;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,6 +65,10 @@ public class TypeSF {
 
   public BoolTS bool() {
     return BOOL;
+  }
+
+  public PolyFuncTS polyFunc(TypeS resT, List<? extends TypeS> paramTs) {
+    return polyFuncTS(func(resT, paramTs));
   }
 
   public FuncTS func(TypeS resT, List<? extends TypeS> paramTs) {

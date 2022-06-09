@@ -45,6 +45,6 @@ public final class AnnFuncS extends FuncS {
 
   @Override
   public String toString() {
-    return "AnnFunc(`" + (ann + " " + signature()) + "`)";
+    return ann + " " + signature();
   }
 }

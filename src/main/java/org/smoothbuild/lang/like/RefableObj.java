@@ -1,4 +1,4 @@
 package org.smoothbuild.lang.like;
 
-public interface RefableObj extends Refable {
+public interface RefableObj extends Refable, Obj {
 }

@@ -231,7 +231,7 @@ public class AstCreator {
         return result;
       }
 
-      private ObjN createCall(
+      private MonoObjN createCall(
           ObjN callable, List<ArgN> args, ArgListContext argListContext) {
         Loc loc = LocHelpers.locOf(filePath, argListContext);
         return new CallN(callable, args, loc);

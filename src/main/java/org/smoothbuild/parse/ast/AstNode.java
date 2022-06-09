@@ -6,8 +6,8 @@ import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.type.TKind;
 
 public sealed interface AstNode
-    permits MonoAstNode, NamedN, ObjN {
+    permits GenericAstNode, MonoAstNode, PolyAstNode, MonoObjN, NamedN, ObjN, RefableN {
   public Loc loc();
 
-  public Optional<? extends TKind> typeS();
+  public Optional<? extends TKind> typeO();
 }

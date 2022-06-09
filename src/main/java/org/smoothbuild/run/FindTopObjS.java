@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.DefsS;
+import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.obj.ObjRefS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 

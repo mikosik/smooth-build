@@ -6,7 +6,7 @@ import org.smoothbuild.lang.like.Obj;
 public final class DefaultArgN extends ArgN {
   public DefaultArgN(Obj obj, Loc loc) {
     super(null, obj, loc);
-    setTypeS(obj.typeS());
+    setTypeO(obj.typeO());
   }
 
   @Override

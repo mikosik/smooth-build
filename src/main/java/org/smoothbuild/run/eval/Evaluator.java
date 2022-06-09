@@ -14,7 +14,7 @@ import org.smoothbuild.compile.Compiler;
 import org.smoothbuild.compile.CompilerExc;
 import org.smoothbuild.compile.CompilerProv;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.obj.ObjS;
+import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
@@ -33,7 +33,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<CnstB>> evaluate(DefsS defs, List<? extends ObjS> values) {
+  public Optional<ImmutableList<CnstB>> evaluate(DefsS defs, List<? extends MonoObjS> values) {
     reporter.startNewPhase("Compiling");
     var compiler = compilerProv.get(defs);
     var exprs = compile(values, compiler);
@@ -55,7 +55,7 @@ public class Evaluator {
     }
   }
 
-  private Optional<ImmutableList<ObjB>> compile(List<? extends ObjS> values, Compiler compiler) {
+  private Optional<ImmutableList<ObjB>> compile(List<? extends MonoObjS> values, Compiler compiler) {
     try {
       return Optional.of(map(values, compiler::compileObj));
     } catch (CompilerExc e) {

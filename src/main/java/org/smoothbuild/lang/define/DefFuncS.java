@@ -3,7 +3,6 @@ package org.smoothbuild.lang.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.obj.ObjS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.util.collect.NList;
 
@@ -13,15 +12,15 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class DefFuncS extends FuncS {
-  private final ObjS body;
+  private final MonoObjS body;
 
   public DefFuncS(FuncTS type, ModPath modPath, String name,
-      NList<ItemS> params, ObjS body, Loc loc) {
+      NList<ItemS> params, MonoObjS body, Loc loc) {
     super(type, modPath, name, params, loc);
     this.body = body;
   }
 
-  public ObjS body() {
+  public MonoObjS body() {
     return body;
   }
 
@@ -46,10 +45,6 @@ public final class DefFuncS extends FuncS {
 
   @Override
   public String toString() {
-    return "DefFunc(`" + code() + "`)";
-  }
-
-  private String code() {
     return signature() + " = ?";
   }
 }
