@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class MonoFuncS extends Panal
+public sealed abstract class MonoFuncS extends Panal implements CnstS
     permits AnnFuncS, DefFuncS, SyntCtorS {
   private final MonoFuncTS type;
   private final NList<ItemS> params;
@@ -23,6 +23,7 @@ public sealed abstract class MonoFuncS extends Panal
     this.params = requireNonNull(params);
   }
 
+  @Override
   public MonoFuncTS type() {
     return type;
   }

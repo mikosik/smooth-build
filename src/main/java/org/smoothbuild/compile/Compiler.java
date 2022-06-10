@@ -238,6 +238,7 @@ public class Compiler {
       case StringS stringS -> compileAndCacheNal(stringS, this::compileString);
       case AnnValS annValS -> throw unexpectedCaseExc(objS); // TODO remove?
       case DefValS defValS -> throw unexpectedCaseExc(objS); // TODO remove?
+      case MonoFuncS funcS -> throw unexpectedCaseExc(objS); // TODO remove?
     };
   }
 
