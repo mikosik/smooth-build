@@ -47,9 +47,9 @@ import org.smoothbuild.lang.define.CallS;
 import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefValS;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.ItemS;
+import org.smoothbuild.lang.define.MonoFuncS;
 import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.define.OrderS;
@@ -60,9 +60,9 @@ import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.type.ArrayTS;
-import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.util.collect.NList;
 
@@ -101,11 +101,11 @@ public class Compiler {
     return ImmutableMap.copyOf(nals);
   }
 
-  private FuncB compileFunc(FuncS funcS) {
+  private FuncB compileFunc(MonoFuncS funcS) {
     return computeIfAbsent(funcCache, funcS.name(), name -> compileFuncImpl(funcS));
   }
 
-  private FuncB compileFuncImpl(FuncS funcS) {
+  private FuncB compileFuncImpl(MonoFuncS funcS) {
     try {
       callStack.push(funcS.params());
       var funcB = switch (funcS) {
@@ -313,8 +313,8 @@ public class Compiler {
     }
   }
 
-  private TypeB convertT(TypeS typeS) {
-    return typeSbConv.convert(typeS);
+  private TypeB convertT(MonoTS monoTS) {
+    return typeSbConv.convert(monoTS);
   }
 
   private ArrayTB convertArrayT(ArrayTS typeS) {
@@ -325,7 +325,7 @@ public class Compiler {
     return typeSbConv.convert(typeS);
   }
 
-  private FuncTB convertFuncT(FuncTS funcTS) {
-    return typeSbConv.convert(funcTS);
+  private FuncTB convertFuncT(MonoFuncTS monoFuncTS) {
+    return typeSbConv.convert(monoFuncTS);
   }
 }

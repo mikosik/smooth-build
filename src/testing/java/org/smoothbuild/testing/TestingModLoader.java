@@ -12,7 +12,7 @@ import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.RefableObjS;
-import org.smoothbuild.lang.type.TKind;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
@@ -58,7 +58,7 @@ public class TestingModLoader {
         .isEqualTo(expected);
   }
 
-  public void containsTopRefableWithType(String name, TKind expectedT) {
+  public void containsTopRefableWithType(String name, TypeS expectedT) {
     RefableObjS topRefable = assertContainsTopRefable(name);
     assertThat(topRefable.type())
         .isEqualTo(expectedT);
@@ -72,13 +72,13 @@ public class TestingModLoader {
     return topRefables.get(name);
   }
 
-  public void containsType(TypeS expected) {
+  public void containsType(MonoTS expected) {
     var name = expected.name();
     var types = modS.value().tDefs();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.containsName(name))
         .isTrue();
-    TypeS actual = types.get(name).type();
+    MonoTS actual = types.get(name).type();
     assertWithMessage(
         "Module contains type '" + name + "', but")
         .that(actual)

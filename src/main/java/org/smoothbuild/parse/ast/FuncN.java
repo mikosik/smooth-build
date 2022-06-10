@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyFuncTS;
-import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 
@@ -43,11 +43,11 @@ public final class FuncN extends PolyRefableN implements PolyRefableObjN {
     return resTN;
   }
 
-  public Optional<ImmutableList<TypeS>> paramTSs() {
+  public Optional<ImmutableList<MonoTS>> paramTSs() {
     return Optionals.pullUp(map(params(), ItemN::typeO));
   }
 
-  public Optional<TypeS> resTS() {
+  public Optional<MonoTS> resTS() {
     return typeO().map(f -> ((PolyFuncTS) f).type().res());
   }
 }

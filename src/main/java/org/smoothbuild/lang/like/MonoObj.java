@@ -2,12 +2,12 @@ package org.smoothbuild.lang.like;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
 /**
  * Monomorphic object.
  */
 public interface MonoObj extends Obj {
   @Override
-  public Optional<TypeS> typeO();
+  public Optional<MonoTS> typeO();
 }

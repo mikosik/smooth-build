@@ -13,51 +13,51 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public final class FuncTS extends TypeS implements ComposedTS {
-  private final TypeS res;
-  private final ImmutableList<TypeS> params;
+public final class MonoFuncTS extends MonoTS implements ComposedTS {
+  private final MonoTS res;
+  private final ImmutableList<MonoTS> params;
 
-  public FuncTS(TypeS res, ImmutableList<TypeS> params) {
+  public MonoFuncTS(MonoTS res, ImmutableList<MonoTS> params) {
     super(funcTypeName(res, params), calculateFuncVars(res, params));
     this.res = requireNonNull(res);
     this.params = requireNonNull(params);
   }
 
-  public static VarSetS calculateFuncVars(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public static VarSetS calculateFuncVars(MonoTS resT, ImmutableList<MonoTS> paramTs) {
     return calculateVars(concat(resT, paramTs));
   }
 
   @Override
-  public boolean includes(TypeS type) {
+  public boolean includes(MonoTS type) {
     return this.equals(type)
         || res.includes(type)
         || params.stream().anyMatch(p -> p.includes(type));
   }
 
   @Override
-  public TypeS mapVars(Function<VarS, VarS> varMapper) {
+  public MonoTS mapVars(Function<VarS, VarS> varMapper) {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new FuncTS(res.mapVars(varMapper), map(params, t -> t.mapVars(varMapper)));
+      return new MonoFuncTS(res.mapVars(varMapper), map(params, t -> t.mapVars(varMapper)));
     }
   }
 
-  public TypeS res() {
+  public MonoTS res() {
     return res;
   }
 
-  public ImmutableList<TypeS> params() {
+  public ImmutableList<MonoTS> params() {
     return params;
   }
 
   @Override
-  public ImmutableList<TypeS> covars() {
+  public ImmutableList<MonoTS> covars() {
     return ImmutableList.of(res);
   }
 
   @Override
-  public ImmutableList<TypeS> contravars() {
+  public ImmutableList<MonoTS> contravars() {
     return params();
   }
 
@@ -66,7 +66,7 @@ public final class FuncTS extends TypeS implements ComposedTS {
     if (this == object) {
       return true;
     }
-    return object instanceof FuncTS that
+    return object instanceof MonoFuncTS that
         && res.equals(that.res)
         && params.equals(that.params);
   }

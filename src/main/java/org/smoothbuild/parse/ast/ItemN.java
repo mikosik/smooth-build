@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
 public final class ItemN extends MonoRefableN {
   private final TypeN typeN;
@@ -28,7 +28,7 @@ public final class ItemN extends MonoRefableN {
   }
 
   @Override
-  public void setTypeO(Optional<TypeS> type) {
+  public void setTypeO(Optional<MonoTS> type) {
     super.setTypeO(type);
     sig = typeO().map(t -> new ItemSigS(t, Optional.of(name())));
   }

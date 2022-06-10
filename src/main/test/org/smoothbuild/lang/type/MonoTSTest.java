@@ -45,7 +45,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.testing.EqualsTester;
 
-public class TypeSTest {
+public class MonoTSTest {
   @Test
   public void verify_all_base_types_are_tested() {
     assertThat(INFERABLE_BASE_TYPES)
@@ -54,21 +54,21 @@ public class TypeSTest {
 
   @ParameterizedTest
   @MethodSource("names")
-  public void name(TypeS type, String name) {
+  public void name(MonoTS type, String name) {
     assertThat(type.name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(TypeS type, String name) {
+  public void quoted_name(MonoTS type, String name) {
     assertThat(type.q())
         .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(TypeS type, String name) {
+  public void to_string(MonoTS type, String name) {
     assertThat(type.toString())
         .isEqualTo(name);
   }
@@ -117,7 +117,7 @@ public class TypeSTest {
 
   @ParameterizedTest
   @MethodSource("vars_test_data")
-  public void vars(TypeS type, VarSetS expected) {
+  public void vars(MonoTS type, VarSetS expected) {
     assertThat(type.vars())
         .isEqualTo(expected);
   }
@@ -148,7 +148,7 @@ public class TypeSTest {
 
   @ParameterizedTest
   @MethodSource("map_vars")
-  public void map_vars(TypeS type, Function<VarS, VarS> varMapper, TypeS expected) {
+  public void map_vars(MonoTS type, Function<VarS, VarS> varMapper, MonoTS expected) {
     assertThat(type.mapVars(varMapper))
         .isEqualTo(expected);
   }
@@ -190,7 +190,7 @@ public class TypeSTest {
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
-    public void elemType(TypeS type) {
+    public void elemType(MonoTS type) {
       ArrayTS array = a(type);
       assertThat(array.elem())
           .isEqualTo(type);
@@ -224,7 +224,7 @@ public class TypeSTest {
   class _func {
     @ParameterizedTest
     @MethodSource("func_result_cases")
-    public void func_result(FuncTS type, TypeS expected) {
+    public void func_result(MonoFuncTS type, MonoTS expected) {
       assertThat(type.res())
           .isEqualTo(expected);
     }
@@ -239,7 +239,7 @@ public class TypeSTest {
 
     @ParameterizedTest
     @MethodSource("func_params_cases")
-    public void func_params(FuncTS type, Object expected) {
+    public void func_params(MonoFuncTS type, Object expected) {
       assertThat(type.params())
           .isEqualTo(expected);
     }
@@ -269,7 +269,7 @@ public class TypeSTest {
 
     @ParameterizedTest
     @MethodSource("join_without_reduce")
-    public void join_without_reduce(TypeS a, TypeS b, TypeS expected) {
+    public void join_without_reduce(MonoTS a, MonoTS b, MonoTS expected) {
       assertThat(join(set(a, b)))
           .isEqualTo(expected);
       assertThat(join(set(b, a)))
@@ -302,7 +302,7 @@ public class TypeSTest {
 
     @ParameterizedTest
     @MethodSource("join_reduced")
-    public void join_reduced(TypeS a, TypeS b, TypeS expected) {
+    public void join_reduced(MonoTS a, MonoTS b, MonoTS expected) {
       assertThat(joinReduced(set(a, b)))
           .isEqualTo(expected);
       assertThat(joinReduced(set(b, a)))
@@ -350,7 +350,7 @@ public class TypeSTest {
 
     @ParameterizedTest
     @MethodSource("meet_without_reduce")
-    public void meet_without_reduce(TypeS a, TypeS b, TypeS expected) {
+    public void meet_without_reduce(MonoTS a, MonoTS b, MonoTS expected) {
       assertThat(meet(set(a, b)))
           .isEqualTo(expected);
       assertThat(meet(set(b, a)))
@@ -382,7 +382,7 @@ public class TypeSTest {
     }
     @ParameterizedTest
     @MethodSource("meet_reduced")
-    public void meet_reduced(TypeS a, TypeS b, TypeS expected) {
+    public void meet_reduced(MonoTS a, MonoTS b, MonoTS expected) {
       assertThat(meetReduced(set(a, b)))
           .isEqualTo(expected);
       assertThat(meetReduced(set(b, a)))
@@ -418,7 +418,7 @@ public class TypeSTest {
   class _merge {
     @ParameterizedTest
     @MethodSource("join_upper_without_reduce")
-    public void merge_upper_without_reduce(TypeS a, TypeS b, TypeS expected) {
+    public void merge_upper_without_reduce(MonoTS a, MonoTS b, MonoTS expected) {
       assertThat(merge(set(a, b), UPPER))
           .isEqualTo(expected);
       assertThat(merge(set(b, a), UPPER))
@@ -431,7 +431,7 @@ public class TypeSTest {
 
     @ParameterizedTest
     @MethodSource("join_lower_without_reduce")
-    public void merge_lower_without_reduce(TypeS a, TypeS b, TypeS expected) {
+    public void merge_lower_without_reduce(MonoTS a, MonoTS b, MonoTS expected) {
       assertThat(merge(set(a, b), LOWER))
           .isEqualTo(expected);
       assertThat(merge(set(b, a), LOWER))
@@ -444,7 +444,7 @@ public class TypeSTest {
 
     @ParameterizedTest
     @MethodSource("mergeReduced_upper")
-    public void mergeReduced_upper(TypeS a, TypeS b, TypeS expected) {
+    public void mergeReduced_upper(MonoTS a, MonoTS b, MonoTS expected) {
       assertThat(mergeReduced(set(a, b), UPPER))
           .isEqualTo(expected);
       assertThat(mergeReduced(set(b, a), UPPER))
@@ -457,7 +457,7 @@ public class TypeSTest {
 
     @ParameterizedTest
     @MethodSource("mergeReduced_lower")
-    public void mergeReduced_lower(TypeS a, TypeS b, TypeS expected) {
+    public void mergeReduced_lower(MonoTS a, MonoTS b, MonoTS expected) {
       assertThat(mergeReduced(set(a, b), LOWER))
           .isEqualTo(expected);
       assertThat(mergeReduced(set(b, a), LOWER))
@@ -522,7 +522,7 @@ public class TypeSTest {
   @Test
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
-    List<TypeS> types = asList(
+    List<MonoTS> types = asList(
         ANY,
         BLOB,
         BOOL,
@@ -541,7 +541,7 @@ public class TypeSTest {
         f(BLOB, list(BLOB))
     );
 
-    for (TypeS type : types) {
+    for (MonoTS type : types) {
       equalsTester.addEqualityGroup(type, type);
       equalsTester.addEqualityGroup(a(type), a(type));
       equalsTester.addEqualityGroup(a(a(type)), a(a(type)));

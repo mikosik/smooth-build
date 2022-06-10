@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableMap;
 public class TypingSTest {
   @ParameterizedTest
   @MethodSource("contains_test_data")
-  public void testContains(TypeS type, TypeS contained, boolean expected) {
+  public void testContains(MonoTS type, MonoTS contained, boolean expected) {
     assertThat(typing().contains(type, contained))
         .isEqualTo(expected);
   }
@@ -200,14 +200,14 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("inferVarBounds_test_data")
-  public void inferVarBounds(TypeS type, TypeS assigned, VarBoundsS expected) {
+  public void inferVarBounds(MonoTS type, MonoTS assigned, VarBoundsS expected) {
     assertThat(typing().inferVarBounds(type, assigned, LOWER))
         .isEqualTo(expected);
   }
 
   private static List<Arguments> inferVarBounds_test_data() {
     var r = new ArrayList<Arguments>();
-    for (TypeS type : concat(testingT().elementaryTypes(), x())) {
+    for (MonoTS type : concat(testingT().elementaryTypes(), x())) {
       if (type instanceof NothingTS) {
         r.add(arguments(a(), nothing(), vb(a(), LOWER, nothing())));
         r.add(arguments(a(), ar(nothing()), vb(a(), LOWER, ar(nothing()))));
@@ -295,7 +295,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("mapVarsLower_test_data")
-  public void mapVarsLower(TypeS type, VarBoundsS varBounds, TypeS expected) {
+  public void mapVarsLower(MonoTS type, VarBoundsS varBounds, MonoTS expected) {
     assertThat(typing().mapVarsLower(type, varBounds))
         .isEqualTo(expected);
   }
@@ -328,7 +328,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("merge_up_wide_graph_test_data")
-  public void merge_up_wide_graph(TypeS type1, TypeS type2, TypeS expected) {
+  public void merge_up_wide_graph(MonoTS type1, MonoTS type2, MonoTS expected) {
     testMergeBothWays(type1, type2, expected, UPPER);
   }
 
@@ -339,7 +339,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("merge_up_deep_graph_test_data")
-  public void merge_up_deep_graph(TypeS type1, TypeS type2, TypeS expected) {
+  public void merge_up_deep_graph(MonoTS type1, MonoTS type2, MonoTS expected) {
     testMergeBothWays(type1, type2, expected, UPPER);
   }
 
@@ -350,7 +350,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("merge_down_wide_graph_test_data")
-  public void merge_down_wide_graph(TypeS type1, TypeS type2, TypeS expected) {
+  public void merge_down_wide_graph(MonoTS type1, MonoTS type2, MonoTS expected) {
     testMergeBothWays(type1, type2, expected, LOWER);
   }
 
@@ -362,7 +362,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("merge_down_deep_graph_test_data")
-  public void merge_down_deep_graph(TypeS type1, TypeS type2, TypeS expected) {
+  public void merge_down_deep_graph(MonoTS type1, MonoTS type2, MonoTS expected) {
     testMergeBothWays(type1, type2, expected, LOWER);
   }
 
@@ -372,7 +372,7 @@ public class TypingSTest {
         .buildTestCases(any());
   }
 
-  private void testMergeBothWays(TypeS type1, TypeS type2, TypeS expected, Side direction) {
+  private void testMergeBothWays(MonoTS type1, MonoTS type2, MonoTS expected, Side direction) {
     assertThat(typing().merge(type1, type2, direction))
         .isEqualTo(expected);
     assertThat(typing().merge(type2, type1, direction))
@@ -385,7 +385,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("resolve_merges")
-  public void resolve_merges(TypeS type, TypeS reduced) {
+  public void resolve_merges(MonoTS type, MonoTS reduced) {
     assertThat(typing().resolveMerges(type))
         .isEqualTo(reduced);
   }
@@ -430,7 +430,7 @@ public class TypingSTest {
     );
   }
 
-  private static Bounds<TypeS> oneSideBound(Side side, TypeS type) {
+  private static Bounds<MonoTS> oneSideBound(Side side, MonoTS type) {
     return typeF().oneSideBound(side, type);
   }
 
@@ -449,7 +449,7 @@ public class TypingSTest {
     }
   }
 
-  private static VarBoundsS vb(VarS var, Side side, TypeS bound) {
+  private static VarBoundsS vb(VarS var, Side side, MonoTS bound) {
     return varBoundsS(new BoundedS(var, oneSideBound(side, bound)));
   }
 
@@ -477,47 +477,47 @@ public class TypingSTest {
     return varSetS(elements);
   }
 
-  private static TypeS any() {
+  private static MonoTS any() {
     return testingT().any();
   }
 
-  private static TypeS blob() {
+  private static MonoTS blob() {
     return testingT().blob();
   }
 
-  private static TypeS bool() {
+  private static MonoTS bool() {
     return testingT().bool();
   }
 
-  private static TypeS int_() {
+  private static MonoTS int_() {
     return testingT().int_();
   }
 
-  private static TypeS nothing() {
+  private static MonoTS nothing() {
     return testingT().nothing();
   }
 
-  private static TypeS string() {
+  private static MonoTS string() {
     return testingT().string();
   }
 
-  private static TypeS struct() {
+  private static MonoTS struct() {
     return testingT().struct();
   }
 
-  private static TypeS ar(TypeS elemT) {
+  private static MonoTS ar(MonoTS elemT) {
     return testingT().array(elemT);
   }
 
-  private static TypeS f(TypeS resT, TypeS... paramTs) {
+  private static MonoTS f(MonoTS resT, MonoTS... paramTs) {
     return testingT().func(resT, list(paramTs));
   }
 
-  private static TypeS f(TypeS resT) {
+  private static MonoTS f(MonoTS resT) {
     return f(resT, list());
   }
 
-  private static TypeS f(TypeS resT, ImmutableList<TypeS> paramTs) {
+  private static MonoTS f(MonoTS resT, ImmutableList<MonoTS> paramTs) {
     return testingT().func(resT, paramTs);
   }
 

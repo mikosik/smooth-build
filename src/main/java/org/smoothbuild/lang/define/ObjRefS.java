@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.define;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
-public record ObjRefS(TypeS type, String name, Loc loc) implements MonoExprS {
+public record ObjRefS(MonoTS type, String name, Loc loc) implements MonoExprS {
 }

@@ -8,13 +8,13 @@ import java.util.Objects;
 /**
  * Polymorphic type.
  */
-public sealed abstract class PolyTS implements TKind
+public sealed abstract class PolyTS implements TypeS
     permits PolyFuncTS {
   private final String name;
   private final VarSetS freeVars;
-  private final TypeS type;
+  private final MonoTS type;
 
-  public PolyTS(VarSetS freeVars, TypeS type) {
+  public PolyTS(VarSetS freeVars, MonoTS type) {
     checkArgument(type.vars().containsAll(freeVars),
         "Free variable(s) " + freeVars + " are not present in type " + type.q() + ".");
     this.name = calculateName(type, freeVars);
@@ -22,7 +22,7 @@ public sealed abstract class PolyTS implements TKind
     this.type = requireNonNull(type);
   }
 
-  private static String calculateName(TypeS type, VarSetS freeVars) {
+  private static String calculateName(MonoTS type, VarSetS freeVars) {
     return freeVars.toString() + type.name();
   }
 
@@ -35,7 +35,7 @@ public sealed abstract class PolyTS implements TKind
     return freeVars;
   }
 
-  public TypeS type() {
+  public MonoTS type() {
     return type;
   }
 

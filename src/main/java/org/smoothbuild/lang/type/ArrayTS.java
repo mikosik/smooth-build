@@ -9,21 +9,21 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public final class ArrayTS extends TypeS implements ComposedTS {
-  private final TypeS elem;
+public final class ArrayTS extends MonoTS implements ComposedTS {
+  private final MonoTS elem;
 
-  public ArrayTS(TypeS elem) {
+  public ArrayTS(MonoTS elem) {
     super(TNamesS.arrayTypeName(elem), elem.vars());
     this.elem = requireNonNull(elem);
   }
 
   @Override
-  public boolean includes(TypeS type) {
+  public boolean includes(MonoTS type) {
     return this.equals(type) || elem.includes(type);
   }
 
   @Override
-  public TypeS mapVars(Function<VarS, VarS> varMapper) {
+  public MonoTS mapVars(Function<VarS, VarS> varMapper) {
     if (vars().isEmpty()) {
       return this;
     } else {
@@ -31,17 +31,17 @@ public final class ArrayTS extends TypeS implements ComposedTS {
     }
   }
 
-  public TypeS elem() {
+  public MonoTS elem() {
     return elem;
   }
 
   @Override
-  public ImmutableList<TypeS> covars() {
+  public ImmutableList<MonoTS> covars() {
     return ImmutableList.of(elem);
   }
 
   @Override
-  public ImmutableList<TypeS> contravars() {
+  public ImmutableList<MonoTS> contravars() {
     return ImmutableList.of();
   }
 

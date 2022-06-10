@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import org.smoothbuild.lang.type.ConstrS;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.util.type.Side;
@@ -92,13 +92,13 @@ public class SolverS {
     upperNode.edges(LOWER).add(lowerNode);
   }
 
-  private void handleVarLowerThanNonVar(Queue<ConstrS> queue, VarNode lower, TypeS upper)
+  private void handleVarLowerThanNonVar(Queue<ConstrS> queue, VarNode lower, MonoTS upper)
       throws ConstrDecomposeExc {
     updateBoundTransitively(upper, lower, UPPER);
     addDecomposedToQueue(queue, lower.bound(LOWER), upper);
   }
 
-  private void handleNonVarLowerThanVar(Queue<ConstrS> queue, TypeS lower, VarNode upper)
+  private void handleNonVarLowerThanVar(Queue<ConstrS> queue, MonoTS lower, VarNode upper)
       throws ConstrDecomposeExc {
     updateBoundTransitively(lower, upper, LOWER);
     addDecomposedToQueue(queue, lower, upper.bound(UPPER));
@@ -108,14 +108,14 @@ public class SolverS {
     updateBoundTransitively(source.bound(boundSide), target, boundSide);
   }
 
-  private void updateBoundTransitively(TypeS bound, VarNode target, Side boundSide) {
+  private void updateBoundTransitively(MonoTS bound, VarNode target, Side boundSide) {
     if (target.mergeBound(boundSide, bound)) {
       target.edges(boundSide.other())
           .forEach(n -> updateBoundTransitively(bound, n, boundSide));
     }
   }
 
-  private void addDecomposedToQueue(Queue<ConstrS> queue, TypeS lower, TypeS upper)
+  private void addDecomposedToQueue(Queue<ConstrS> queue, MonoTS lower, MonoTS upper)
       throws ConstrDecomposeExc {
     queue.addAll(decompose(constrS(lower, upper)));
   }

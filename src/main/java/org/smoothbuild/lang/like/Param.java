@@ -3,7 +3,7 @@ package org.smoothbuild.lang.like;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.util.collect.NameableImpl;
 
 public class Param extends NameableImpl {
@@ -16,7 +16,7 @@ public class Param extends NameableImpl {
     this.body = body;
   }
 
-  public TypeS type() {
+  public MonoTS type() {
     return itemSigS.type();
   }
 

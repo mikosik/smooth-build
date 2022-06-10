@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.base.Tanal;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
 import com.google.common.collect.ImmutableList;
 
@@ -21,7 +21,7 @@ public class ItemS extends Tanal implements RefableS {
   private final Optional<MonoObjS> body;
   private final ItemSigS sig;
 
-  public ItemS(TypeS type, String name, Optional<MonoObjS> body, Loc loc) {
+  public ItemS(MonoTS type, String name, Optional<MonoObjS> body, Loc loc) {
     super(type, name, loc);
     this.body = body;
     this.sig = new ItemSigS(type(), name());
@@ -39,7 +39,7 @@ public class ItemS extends Tanal implements RefableS {
     return body.map(v -> " = " + v).orElse("");
   }
 
-  public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
+  public static ImmutableList<MonoTS> toTypes(List<? extends ItemS> items) {
     return map(items, ItemS::type);
   }
 

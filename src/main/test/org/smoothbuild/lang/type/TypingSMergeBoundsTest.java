@@ -48,7 +48,7 @@ public class TypingSMergeBoundsTest {
     assertThat(bounds.lower()).isEqualTo(testingT.nothing());
   }
 
-  public Bounds<TypeS> oneSideBound(Side side, TypeS type) {
+  public Bounds<MonoTS> oneSideBound(Side side, MonoTS type) {
     return testingT.oneSideBound(side, type);
   }
 }

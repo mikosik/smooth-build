@@ -3,7 +3,7 @@ package org.smoothbuild.lang.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.util.collect.NList;
 
 /**
@@ -11,10 +11,10 @@ import org.smoothbuild.util.collect.NList;
  *
  * This class is immutable.
  */
-public final class AnnFuncS extends FuncS {
+public final class AnnFuncS extends MonoFuncS {
   private final AnnS ann;
 
-  public AnnFuncS(AnnS ann, FuncTS type, ModPath modPath, String name, NList<ItemS> params,
+  public AnnFuncS(AnnS ann, MonoFuncTS type, ModPath modPath, String name, NList<ItemS> params,
       Loc loc) {
     super(type, modPath, name, params, loc);
     this.ann = ann;

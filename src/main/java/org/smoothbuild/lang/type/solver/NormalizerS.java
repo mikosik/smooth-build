@@ -9,11 +9,11 @@ import static org.smoothbuild.util.type.Side.UPPER;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BaseTS;
 import org.smoothbuild.lang.type.ConstrS;
-import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.util.type.Side;
@@ -37,11 +37,11 @@ public class NormalizerS {
     return builder.build();
   }
 
-  public TypeS normalizeImpl(TypeS type, Side side, Builder<ConstrS> constrBuilder) {
+  public MonoTS normalizeImpl(MonoTS type, Side side, Builder<ConstrS> constrBuilder) {
     return switch (type) {
       case ArrayTS array -> normalizeArray(array, side, constrBuilder);
       case BaseTS base -> base;
-      case FuncTS func -> normalizeFunc(func, side, constrBuilder);
+      case MonoFuncTS func -> normalizeFunc(func, side, constrBuilder);
       case JoinTS join -> throw unexpectedCaseExc(join);
       case MeetTS meet -> throw unexpectedCaseExc(meet);
       case StructTS struct -> struct;
@@ -54,13 +54,13 @@ public class NormalizerS {
     return typeF.array(elem);
   }
 
-  private TypeS normalizeFunc(FuncTS func, Side side, Builder<ConstrS> constrBuilder) {
+  private MonoTS normalizeFunc(MonoFuncTS func, Side side, Builder<ConstrS> constrBuilder) {
     var res = normalizeToLeaf(func.res(), side, constrBuilder);
     var params = map(func.params(), p -> normalizeToLeaf(p, side.other(), constrBuilder));
     return typeF.func(res, params);
   }
 
-  private VarS normalizeToLeaf(TypeS type, Side side, Builder<ConstrS> constrBuilder) {
+  private VarS normalizeToLeaf(MonoTS type, Side side, Builder<ConstrS> constrBuilder) {
     var rootT = normalizeImpl(type, side, constrBuilder);
     var var = newTempVar();
     constrBuilder.add(constrS(var, rootT, side));

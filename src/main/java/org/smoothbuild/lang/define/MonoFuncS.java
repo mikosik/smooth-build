@@ -5,29 +5,29 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.base.Panal;
-import org.smoothbuild.lang.type.FuncTS;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.util.collect.NList;
 
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends Panal
+public sealed abstract class MonoFuncS extends Panal
     permits AnnFuncS, DefFuncS, SyntCtorS {
-  private final FuncTS type;
+  private final MonoFuncTS type;
   private final NList<ItemS> params;
 
-  public FuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
+  public MonoFuncS(MonoFuncTS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
     super(modPath, name, loc);
     this.type = type;
     this.params = requireNonNull(params);
   }
 
-  public FuncTS type() {
+  public MonoFuncTS type() {
     return type;
   }
 
-  public TypeS resT() {
+  public MonoTS resT() {
     return type().res();
   }
 
@@ -45,7 +45,7 @@ public sealed abstract class FuncS extends Panal
   }
 
   protected String paramsToString() {
-    return toCommaSeparatedString(params, FuncS::paramToString);
+    return toCommaSeparatedString(params, MonoFuncS::paramToString);
   }
 
   private static String paramToString(ItemS itemS) {

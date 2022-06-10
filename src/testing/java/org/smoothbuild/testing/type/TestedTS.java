@@ -9,23 +9,23 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.smoothbuild.lang.type.FuncTS;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 
 import com.google.common.collect.ImmutableList;
 
 public class TestedTS {
-  private final TypeS type;
+  private final MonoTS type;
   private final String literal;
   private final Object value;
   private final Set<String> typeDeclarations;
   private final Set<String> allDeclarations;
 
-  public TestedTS(TypeS type, String literal, Object value) {
+  public TestedTS(MonoTS type, String literal, Object value) {
     this(type, literal, value, Set.of(), Set.of());
   }
 
-  public TestedTS(TypeS type, String literal, Object value, Set<String> typeDeclarations,
+  public TestedTS(MonoTS type, String literal, Object value, Set<String> typeDeclarations,
       Set<String> allDeclarations) {
     this.type = type;
     this.literal = literal;
@@ -34,7 +34,7 @@ public class TestedTS {
     this.allDeclarations = allDeclarations;
   }
 
-  public TypeS type() {
+  public MonoTS type() {
     return type;
   }
 
@@ -120,7 +120,7 @@ public class TestedTS {
     public final TestedTS resT;
     public final ImmutableList<TestedTS> paramTs;
 
-    public TestedFuncTS(TestedTS resT, ImmutableList<TestedTS> paramTs, FuncTS type,
+    public TestedFuncTS(TestedTS resT, ImmutableList<TestedTS> paramTs, MonoFuncTS type,
         String literal, Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.resT = resT;
@@ -145,7 +145,7 @@ public class TestedTS {
   public static class TestedArrayTS extends TestedTS {
     public final TestedTS elemT;
 
-    public TestedArrayTS(TestedTS elemT, TypeS type, String literal, Object value,
+    public TestedArrayTS(TestedTS elemT, MonoTS type, String literal, Object value,
         Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.elemT = elemT;

@@ -15,14 +15,14 @@ import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
 import org.smoothbuild.lang.type.BoolTS;
-import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.IntTS;
 import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 
 public class TypeSbConv {
@@ -33,7 +33,7 @@ public class TypeSbConv {
     this.bytecodeF = bytecodeF;
   }
 
-  public TypeB convert(TypeS type) {
+  public TypeB convert(MonoTS type) {
     return switch (type) {
       case AnyTS any -> throw new RuntimeException(
           AnyTS.class.getName() + " cannot be converted to " + TypeB.class.getName() + ".");
@@ -45,7 +45,7 @@ public class TypeSbConv {
       case VarS v ->  convert(v);
       case StringTS s -> bytecodeF.stringT();
       case StructTS st -> convert(st);
-      case FuncTS f -> convert(f);
+      case MonoFuncTS f -> convert(f);
       case MeetTS meet -> throw unexpectedCaseExc(meet);
       case JoinTS join -> throw unexpectedCaseExc(join);
     };
@@ -63,7 +63,7 @@ public class TypeSbConv {
     return bytecodeF.arrayT(convert(array.elem()));
   }
 
-  public FuncTB convert(FuncTS func) {
+  public FuncTB convert(MonoFuncTS func) {
     var params = map(func.params(), this::convert);
     var res = convert(func.res());
     return bytecodeF.funcT(res, params);

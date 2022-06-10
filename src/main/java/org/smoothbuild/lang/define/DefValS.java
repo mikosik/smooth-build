@@ -3,7 +3,7 @@ package org.smoothbuild.lang.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
 /**
  * Defined value (one that has a body).
@@ -13,7 +13,7 @@ import org.smoothbuild.lang.type.TypeS;
 public final class DefValS extends ValS {
   private final MonoObjS body;
 
-  public DefValS(TypeS type, ModPath modPath, String name, MonoObjS body, Loc loc) {
+  public DefValS(MonoTS type, ModPath modPath, String name, MonoObjS body, Loc loc) {
     super(type, modPath, name, loc);
     this.body = body;
   }

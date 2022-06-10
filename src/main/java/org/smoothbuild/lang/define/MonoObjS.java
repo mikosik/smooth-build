@@ -3,17 +3,17 @@ package org.smoothbuild.lang.define;
 import java.util.Optional;
 
 import org.smoothbuild.lang.like.MonoObj;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
 /**
  * Monomorphic object.
  */
 public sealed interface MonoObjS extends ObjS, MonoObj permits MonoRefableObjS, CnstS, MonoExprS {
   @Override
-  public TypeS type();
+  public MonoTS type();
 
   @Override
-  public default Optional<TypeS> typeO() {
+  public default Optional<MonoTS> typeO() {
     return Optional.of(type());
   }
 }

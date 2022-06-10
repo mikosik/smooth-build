@@ -6,17 +6,17 @@ import static org.smoothbuild.util.collect.Sets.set;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
 
 public class VarNode {
   private final VarS var;
-  private Bounds<TypeS> bounds;
+  private Bounds<MonoTS> bounds;
   private final Bounds<Set<VarNode>> edges;
 
-  public VarNode(VarS var, Bounds<TypeS> bounds) {
+  public VarNode(VarS var, Bounds<MonoTS> bounds) {
     this.var = var;
     this.bounds = bounds;
     this.edges = new Bounds<>(new HashSet<>(), new HashSet<>());
@@ -30,17 +30,17 @@ public class VarNode {
     return edges.get(side);
   }
 
-  public TypeS bound(Side side) {
+  public MonoTS bound(Side side) {
     return bounds.get(side);
   }
 
-  public Bounds<TypeS> bounds() {
+  public Bounds<MonoTS> bounds() {
     return bounds;
   }
 
-  public boolean mergeBound(Side side, TypeS merging) {
-    TypeS old = bounds.get(side);
-    TypeS merged = mergeReduced(set(old, merging), side.other());
+  public boolean mergeBound(Side side, MonoTS merging) {
+    MonoTS old = bounds.get(side);
+    MonoTS merged = mergeReduced(set(old, merging), side.other());
     if (!old.equals(merged)) {
       bounds = bounds.with(side, merged);
       return true;

@@ -9,29 +9,29 @@ import static org.smoothbuild.util.collect.NList.nList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class FuncSTest extends TestingContext {
+public class MonoFuncSTest extends TestingContext {
   @Test
   public void func_without_params_can_be_called_without_args() {
-    FuncS func = myFunc(STRING, list());
+    MonoFuncS func = myFunc(STRING, list());
     assertThat(func.canBeCalledArgless())
         .isTrue();
   }
 
   @Test
   public void func_with_all_params_with_default_args_can_be_called_without_args() {
-    FuncS func = myFunc(STRING, list(paramWithDefault("a"), paramWithDefault("b")));
+    MonoFuncS func = myFunc(STRING, list(paramWithDefault("a"), paramWithDefault("b")));
     assertThat(func.canBeCalledArgless())
         .isTrue();
   }
 
   @Test
   public void func_with_one_param_without_default_args_cannot_be_called_without_args() {
-    FuncS func = myFunc(STRING, list(paramWithDefault("a"), paramWithoutDefault("b")));
+    MonoFuncS func = myFunc(STRING, list(paramWithDefault("a"), paramWithoutDefault("b")));
     assertThat(func.canBeCalledArgless())
         .isFalse();
   }
@@ -48,7 +48,7 @@ public class FuncSTest extends TestingContext {
     return new ItemS(STRING, name, body, loc());
   }
 
-  private FuncS myFunc(TypeS resT, ImmutableList<ItemS> params) {
+  private MonoFuncS myFunc(MonoTS resT, ImmutableList<ItemS> params) {
     return new DefFuncS(funcTS(resT, toTypes(params)),
         modPath(), "name", nList(params), stringS(), loc(1)
     );

@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
 public class ExplicitArgNTest {
   @Test
@@ -61,7 +61,7 @@ public class ExplicitArgNTest {
         .isEqualTo("String:<nameless>");
   }
 
-  private static ObjN obj(TypeS type) {
+  private static ObjN obj(MonoTS type) {
     var ref = new RefN("name", loc());
     ref.setTypeO(type);
     return ref;

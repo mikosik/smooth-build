@@ -4,17 +4,17 @@ package org.smoothbuild.lang.type;
  * Polymorphic type.
  */
 public final class PolyFuncTS extends PolyTS {
-  public PolyFuncTS(VarSetS freeVars, FuncTS funcTS) {
-    super(freeVars, funcTS);
+  public PolyFuncTS(VarSetS freeVars, MonoFuncTS monoFuncTS) {
+    super(freeVars, monoFuncTS);
   }
 
-  public static PolyFuncTS polyFuncTS(FuncTS funcTS) {
-    return new PolyFuncTS(funcTS.vars(), funcTS);
+  public static PolyFuncTS polyFuncTS(MonoFuncTS monoFuncTS) {
+    return new PolyFuncTS(monoFuncTS.vars(), monoFuncTS);
   }
 
   @Override
-  public FuncTS type() {
-    return (FuncTS) super.type();
+  public MonoFuncTS type() {
+    return (MonoFuncTS) super.type();
   }
 
   @Override

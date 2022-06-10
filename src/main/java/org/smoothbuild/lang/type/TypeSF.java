@@ -31,8 +31,8 @@ public class TypeSF {
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
    */
-  public ImmutableList<TypeS> inferableBaseTs() {
-    return ImmutableList.<TypeS>builder()
+  public ImmutableList<MonoTS> inferableBaseTs() {
+    return ImmutableList.<MonoTS>builder()
         .addAll(baseTs())
         .add(any())
         .build();
@@ -55,7 +55,7 @@ public class TypeSF {
     return ANY;
   }
 
-  public ArrayTS array(TypeS elemT) {
+  public ArrayTS array(MonoTS elemT) {
     return new ArrayTS(elemT);
   }
 
@@ -67,12 +67,12 @@ public class TypeSF {
     return BOOL;
   }
 
-  public PolyFuncTS polyFunc(TypeS resT, List<? extends TypeS> paramTs) {
+  public PolyFuncTS polyFunc(MonoTS resT, List<? extends MonoTS> paramTs) {
     return polyFuncTS(func(resT, paramTs));
   }
 
-  public FuncTS func(TypeS resT, List<? extends TypeS> paramTs) {
-    return new FuncTS(resT, ImmutableList.copyOf(paramTs));
+  public MonoFuncTS func(MonoTS resT, List<? extends MonoTS> paramTs) {
+    return new MonoFuncTS(resT, ImmutableList.copyOf(paramTs));
   }
 
   public IntTS int_() {
@@ -95,14 +95,14 @@ public class TypeSF {
     return new VarS(name);
   }
 
-  public TypeS edge(Side side) {
+  public MonoTS edge(Side side) {
     return switch (side) {
       case LOWER -> nothing();
       case UPPER -> any();
     };
   }
 
-  public Bounds<TypeS> oneSideBound(Side side, TypeS type) {
+  public Bounds<MonoTS> oneSideBound(Side side, MonoTS type) {
     return switch (side) {
       case LOWER-> new Bounds<>(type, any());
       case UPPER -> new Bounds<>(nothing(), type);

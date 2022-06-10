@@ -17,12 +17,12 @@ public class TNamesS {
     return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 
-  public static String arrayTypeName(TypeS elemT) {
+  public static String arrayTypeName(MonoTS elemT) {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(TypeS resT, List<? extends TypeS> paramTs) {
-    var params = toCommaSeparatedString(paramTs, TypeS::name);
+  public static String funcTypeName(MonoTS resT, List<? extends MonoTS> paramTs) {
+    var params = toCommaSeparatedString(paramTs, MonoTS::name);
     return resT.name() + "(" + params + ")";
   }
 }

@@ -22,11 +22,11 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.define.PolyFuncS;
 import org.smoothbuild.lang.like.Param;
 import org.smoothbuild.lang.like.Refable;
-import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyFuncTS;
 import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TKind;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.TypingS;
@@ -106,8 +106,8 @@ public class TypeInferrer {
         funcN.setTypeO(funcTOpt(resN, evalTOfTopEval(funcN), funcN.paramTSs()));
       }
 
-      private Optional<PolyTS> funcTOpt(TypeN resN, Optional<TypeS> result,
-          Optional<ImmutableList<TypeS>> params) {
+      private Optional<PolyTS> funcTOpt(TypeN resN, Optional<MonoTS> result,
+          Optional<ImmutableList<MonoTS>> params) {
         if (result.isEmpty() || params.isEmpty()) {
           return empty();
         }
@@ -136,7 +136,7 @@ public class TypeInferrer {
         param.setTypeO(typeOfParam(param));
       }
 
-      private Optional<TypeS> typeOfParam(ItemN param) {
+      private Optional<MonoTS> typeOfParam(ItemN param) {
         return evalTypeOf(param, (target, source) -> {
           if (!typing.isParamAssignable(target, source)) {
             logError(param, "Parameter " + param.q() + " is of type " + target.q()
@@ -145,7 +145,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evalTOfTopEval(RefableObjN refableN) {
+      private Optional<MonoTS> evalTOfTopEval(RefableObjN refableN) {
         return evalTypeOf(refableN, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
             logError(refableN, "`" + refableN.name() + "` has body which type is " + source.q()
@@ -154,18 +154,18 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evalTypeOf(
-          RefableN refable, BiConsumer<TypeS, TypeS> assignmentChecker) {
+      private Optional<MonoTS> evalTypeOf(
+          RefableN refable, BiConsumer<MonoTS, MonoTS> assignmentChecker) {
         if (refable.body().isPresent()) {
           var exprT = refable.body().get().typeO();
           if (refable.evalTN().isPresent()) {
             var type = createType(refable.evalTN().get());
             type.ifPresent(target -> exprT.ifPresent(source -> {
-              assignmentChecker.accept(target, TKind.hackyCast(source));
+              assignmentChecker.accept(target, TypeS.hackyCast(source));
             }));
             return type;
           } else {
-            return exprT.map(TKind::hackyCast);
+            return exprT.map(TypeS::hackyCast);
           }
         } else {
           return createType(refable.evalTN().get());
@@ -178,7 +178,7 @@ public class TypeInferrer {
         type.setTypeO(createType(type));
       }
 
-      private Optional<TypeS> createType(TypeN type) {
+      private Optional<MonoTS> createType(TypeN type) {
         if (isVarName(type.name())) {
           return Optional.of(typeSF.var(type.name()));
         }
@@ -196,7 +196,7 @@ public class TypeInferrer {
         };
       }
 
-      private TypeS findType(String name) {
+      private MonoTS findType(String name) {
         var typeDef = imported.tDefs().get(name);
         if (typeDef != null) {
           return typeDef.type();
@@ -205,7 +205,7 @@ public class TypeInferrer {
         }
       }
 
-      private TypeS findLocalType(String name) {
+      private MonoTS findLocalType(String name) {
         StructN localStruct = ast.structs().get(name);
         if (localStruct == null) {
           throw new RuntimeException(
@@ -243,24 +243,24 @@ public class TypeInferrer {
         order.setTypeO(findArrayT(order));
       }
 
-      private Optional<TypeS> findArrayT(OrderN array) {
+      private Optional<MonoTS> findArrayT(OrderN array) {
         List<ObjN> expressions = array.elems();
         if (expressions.isEmpty()) {
           return Optional.of(typeSF.array(typeSF.nothing()));
         }
-        Optional<? extends TKind> firstType = expressions.get(0).typeO();
+        Optional<? extends TypeS> firstType = expressions.get(0).typeO();
         if (firstType.isEmpty()) {
           return empty();
         }
 
-        TypeS type = TKind.hackyCast(firstType.get());
+        MonoTS type = TypeS.hackyCast(firstType.get());
         for (int i = 1; i < expressions.size(); i++) {
           ObjN elem = expressions.get(i);
-          Optional<? extends TKind> elemT = elem.typeO();
+          Optional<? extends TypeS> elemT = elem.typeO();
           if (elemT.isEmpty()) {
             return empty();
           }
-          type = typing.mergeUp(type, TKind.hackyCast(elemT.get()));
+          type = typing.mergeUp(type, TypeS.hackyCast(elemT.get()));
           if (typing.contains(type, typeSF.any())) {
             logError(elem,
                 "Array elems at indexes 0 and " + i + " doesn't have common super type."
@@ -276,10 +276,10 @@ public class TypeInferrer {
       public void visitCall(CallN call) {
         super.visitCall(call);
         ObjN callee = call.callee();
-        Optional<? extends TKind> calledT = callee.typeO();
+        Optional<? extends TypeS> calledT = callee.typeO();
         if (calledT.isEmpty()) {
           call.setTypeO(empty());
-        } else if (!(calledT.get() instanceof FuncTS || calledT.get() instanceof PolyFuncTS)) {
+        } else if (!(calledT.get() instanceof MonoFuncTS || calledT.get() instanceof PolyFuncTS)) {
           logError(call, description(callee) + " cannot be called as it is not a function but "
               + calledT.get().q() + ".");
           call.setTypeO(empty());
@@ -297,7 +297,7 @@ public class TypeInferrer {
               call.setTypeO(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<TypeS> type = callTypeInferrer.inferCallT(call, castToFuncTS(calledT.get()).res(), params);
+              Maybe<MonoTS> type = callTypeInferrer.inferCallT(call, castToFuncTS(calledT.get()).res(), params);
               logBuffer.logAll(type.logs());
               call.setTypeO(type.valueOptional());
             }
@@ -320,7 +320,7 @@ public class TypeInferrer {
         return callee.typeO().map(t -> funcTParams(t));
       }
 
-      private static NList<Param> funcTParams(TKind funcType) {
+      private static NList<Param> funcTParams(TypeS funcType) {
         return nList(map(castToFuncTS(funcType).params(), p -> new Param(itemSigS(p), empty())));
       }
 
@@ -355,8 +355,8 @@ public class TypeInferrer {
     return logBuffer.toList();
   }
 
-  private static FuncTS castToFuncTS(TKind funcType) {
+  private static MonoFuncTS castToFuncTS(TypeS funcType) {
     // TODO handle polymorphic correctly
-    return (FuncTS) TKind.hackyCast(funcType);
+    return (MonoFuncTS) TypeS.hackyCast(funcType);
   }
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.IntStream.range;
-import static org.smoothbuild.lang.type.TKind.hackyCast;
+import static org.smoothbuild.lang.type.TypeS.hackyCast;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.ParseError.parseError;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.like.Param;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarBoundsS;
@@ -36,7 +36,7 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Maybe<TypeS> inferCallT(CallN call, TypeS resT, NList<Param> params) {
+  public Maybe<MonoTS> inferCallT(CallN call, MonoTS resT, NList<Param> params) {
     var logBuffer = new LogBuffer();
     var args = call.assignedArgs();
     findIllegalTypeAssignmentErrors(args, params.map(Param::sig), logBuffer);
@@ -50,7 +50,7 @@ public class CallTypeInferrer {
       logBuffer.logAll(varProblems);
       return maybeLogs(logBuffer);
     }
-    TypeS mapped = typing.mapVarsLower(resT, boundedVars);
+    MonoTS mapped = typing.mapVarsLower(resT, boundedVars);
     return maybeValueAndLogs(mapped, logBuffer);
   }
 

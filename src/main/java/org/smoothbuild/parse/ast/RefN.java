@@ -8,7 +8,7 @@ import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.define.PolyFuncS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.like.Refable;
-import org.smoothbuild.lang.type.TKind;
+import org.smoothbuild.lang.type.TypeS;
 
 public final class RefN extends GenericAstNode implements ExprN {
   private final String name;
@@ -31,7 +31,7 @@ public final class RefN extends GenericAstNode implements ExprN {
     return referenced;
   }
 
-  public Optional<? extends TKind> referencedType() {
+  public Optional<? extends TypeS> referencedType() {
     return switch (referenced) {
       case AstNode n -> n.typeO();
       case PolyFuncS f -> f.typeO();

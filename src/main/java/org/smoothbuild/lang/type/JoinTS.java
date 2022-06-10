@@ -18,25 +18,25 @@ import com.google.common.collect.ImmutableSet.Builder;
  * Least upper bound (aka Join) of a set of slices.
  */
 public final class JoinTS extends MergeTS {
-  private JoinTS(ImmutableSet<TypeS> elems) {
+  private JoinTS(ImmutableSet<MonoTS> elems) {
     super(calculateName(elems), calculateVars(elems), elems);
   }
 
-  private static String calculateName(Set<TypeS> elems) {
+  private static String calculateName(Set<MonoTS> elems) {
     return elems.stream()
-        .map(TypeS::name)
+        .map(MonoTS::name)
         .collect(joining(" ⊔ "));
   }
 
-  public static TypeS join(ImmutableSet<TypeS> elems) {
+  public static MonoTS join(ImmutableSet<MonoTS> elems) {
     return new JoinTS(elems);
   }
 
-  public static TypeS joinReduced(Set<? extends TypeS> elems) {
+  public static MonoTS joinReduced(Set<? extends MonoTS> elems) {
     checkArgument(!elems.isEmpty(), "Elems must have at least one element.");
-    Builder<TypeS> builder = ImmutableSet.builder();
+    Builder<MonoTS> builder = ImmutableSet.builder();
     NothingTS nothing = null;
-    for (TypeS elem : elems) {
+    for (MonoTS elem : elems) {
       switch (elem) {
         case AnyTS any:
           return any;
@@ -64,12 +64,12 @@ public final class JoinTS extends MergeTS {
   }
 
   @Override
-  public boolean includes(TypeS type) {
+  public boolean includes(MonoTS type) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public TypeS mapVars(Function<VarS, VarS> varMapper) {
+  public MonoTS mapVars(Function<VarS, VarS> varMapper) {
     if (vars().isEmpty()) {
       return this;
     } else {

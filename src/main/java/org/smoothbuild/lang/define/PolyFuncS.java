@@ -9,15 +9,15 @@ import org.smoothbuild.lang.type.PolyFuncTS;
 
 public final class PolyFuncS extends NalImpl implements PolyRefableObjS {
   private final PolyFuncTS type;
-  private final FuncS func;
+  private final MonoFuncS func;
 
-  public PolyFuncS(PolyFuncTS type, FuncS func) {
+  public PolyFuncS(PolyFuncTS type, MonoFuncS func) {
     super(func.name(), func.loc());
     this.type = requireNonNull(type);
     this.func = requireNonNull(func);
   }
 
-  public static PolyFuncS polyFuncS(FuncS funcS) {
+  public static PolyFuncS polyFuncS(MonoFuncS funcS) {
     var type = funcS.type();
     return new PolyFuncS(new PolyFuncTS(type.vars(), type), funcS);
   }
@@ -27,7 +27,7 @@ public final class PolyFuncS extends NalImpl implements PolyRefableObjS {
     return type;
   }
 
-  public FuncS func() {
+  public MonoFuncS func() {
     return func;
   }
 

@@ -7,7 +7,7 @@ import static java.util.Optional.empty;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.util.collect.NameableImpl;
 
 /**
@@ -16,26 +16,26 @@ import org.smoothbuild.util.collect.NameableImpl;
  * This class is immutable.
  */
 public class ItemSigS extends NameableImpl {
-  private final TypeS type;
+  private final MonoTS type;
 
-  public ItemSigS(TypeS type, String name) {
+  public ItemSigS(MonoTS type, String name) {
     this(type, Optional.of(name));
   }
 
-  public ItemSigS(TypeS type, Optional<String> name) {
+  public ItemSigS(MonoTS type, Optional<String> name) {
     super(name);
     this.type = requireNonNull(type);
   }
 
-  public static ItemSigS itemSigS(TypeS type) {
+  public static ItemSigS itemSigS(MonoTS type) {
     return new ItemSigS(type, empty());
   }
 
-  public static ItemSigS itemSigS(TypeS type, String name) {
+  public static ItemSigS itemSigS(MonoTS type, String name) {
     return new ItemSigS(type, name);
   }
 
-  public TypeS type() {
+  public MonoTS type() {
     return type;
   }
 

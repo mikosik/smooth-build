@@ -10,14 +10,14 @@ import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
 import org.smoothbuild.lang.type.BoolTS;
-import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.IntTS;
 import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
@@ -35,8 +35,8 @@ public class TestingTS {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final TypeSF FACTORY = CONTEXT.typeFS();
 
-  public static final ImmutableList<TypeS> BASE_TYPES = ImmutableList.copyOf(FACTORY.baseTs());
-  public static final ImmutableList<TypeS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTs();
+  public static final ImmutableList<MonoTS> BASE_TYPES = ImmutableList.copyOf(FACTORY.baseTs());
+  public static final ImmutableList<MonoTS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTs();
 
   public static final AnyTS ANY = FACTORY.any();
   public static final BlobTS BLOB = FACTORY.blob();
@@ -54,20 +54,20 @@ public class TestingTS {
   public static final VarS VAR_X = var("X");
   public static final VarS VAR_Y = var("Y");
 
-  public static final ImmutableList<TypeS> ELEMENTARY_TYPES = ImmutableList.<TypeS>builder()
+  public static final ImmutableList<MonoTS> ELEMENTARY_TYPES = ImmutableList.<MonoTS>builder()
       .addAll(BASE_TYPES)
       .add(PERSON)
       .build();
 
-  public static final FuncTS STRING_GETTER_FUNCTION = f(STRING);
-  public static final FuncTS PERSON_GETTER_FUNCTION = f(PERSON);
-  public static final FuncTS STRING_MAP_FUNCTION = f(STRING, STRING);
-  public static final FuncTS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
-  public static final FuncTS IDENTITY_FUNCTION = f(VAR_A, VAR_A);
-  public static final FuncTS ARRAY_HEAD_FUNCTION = f(VAR_A, a(VAR_A));
-  public static final FuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(VAR_A));
+  public static final MonoFuncTS STRING_GETTER_FUNCTION = f(STRING);
+  public static final MonoFuncTS PERSON_GETTER_FUNCTION = f(PERSON);
+  public static final MonoFuncTS STRING_MAP_FUNCTION = f(STRING, STRING);
+  public static final MonoFuncTS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
+  public static final MonoFuncTS IDENTITY_FUNCTION = f(VAR_A, VAR_A);
+  public static final MonoFuncTS ARRAY_HEAD_FUNCTION = f(VAR_A, a(VAR_A));
+  public static final MonoFuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(VAR_A));
 
-  public static final ImmutableList<TypeS> FUNCTION_TYPES =
+  public static final ImmutableList<MonoTS> FUNCTION_TYPES =
       list(
           STRING_GETTER_FUNCTION,
           PERSON_GETTER_FUNCTION,
@@ -77,26 +77,26 @@ public class TestingTS {
           ARRAY_HEAD_FUNCTION,
           ARRAY_LENGTH_FUNCTION);
 
-  public static final ImmutableList<TypeS> ALL_TESTED_TYPES =
-      ImmutableList.<TypeS>builder()
+  public static final ImmutableList<MonoTS> ALL_TESTED_TYPES =
+      ImmutableList.<MonoTS>builder()
           .addAll(ELEMENTARY_TYPES)
           .addAll(FUNCTION_TYPES)
           .add(VAR_X)
           .build();
 
-  public static ArrayTS a(TypeS elemT) {
+  public static ArrayTS a(MonoTS elemT) {
     return FACTORY.array(elemT);
   }
 
-  public static FuncTS f(TypeS resT) {
+  public static MonoFuncTS f(MonoTS resT) {
     return f(resT, list());
   }
 
-  public static FuncTS f(TypeS resT, TypeS... paramTs) {
+  public static MonoFuncTS f(MonoTS resT, MonoTS... paramTs) {
     return f(resT, list(paramTs));
   }
 
-  public static FuncTS f(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public static MonoFuncTS f(MonoTS resT, ImmutableList<MonoTS> paramTs) {
     return FACTORY.func(resT, paramTs);
   }
 
@@ -108,15 +108,15 @@ public class TestingTS {
     return FACTORY.struct(name, fields);
   }
 
-  public Bounds<TypeS> oneSideBound(Side side, TypeS type) {
+  public Bounds<MonoTS> oneSideBound(Side side, MonoTS type) {
     return FACTORY.oneSideBound(side, type);
   }
 
-  public Bounds<TypeS> bounds() {
+  public Bounds<MonoTS> bounds() {
     return bounds(nothing(), any());
   }
 
-  public Bounds<TypeS> bounds(TypeS lower, TypeS upper) {
+  public Bounds<MonoTS> bounds(MonoTS lower, MonoTS upper) {
     return new Bounds<>(lower, upper);
   }
 
@@ -124,67 +124,67 @@ public class TestingTS {
     return CONTEXT.typingS();
   }
 
-  public ImmutableList<TypeS> typesForBuildWideGraph() {
+  public ImmutableList<MonoTS> typesForBuildWideGraph() {
     return list(varA(), varB(), blob(), bool(), int_(), struct(), string());
   }
 
-  public ImmutableList<TypeS> baseTypes() {
+  public ImmutableList<MonoTS> baseTypes() {
     return BASE_TYPES;
   }
 
-  public ImmutableList<TypeS> elementaryTypes() {
+  public ImmutableList<MonoTS> elementaryTypes() {
     return ELEMENTARY_TYPES;
   }
 
-  public ImmutableList<TypeS> allTestedTypes() {
+  public ImmutableList<MonoTS> allTestedTypes() {
     return ALL_TESTED_TYPES;
   }
 
-  public TypeS array(TypeS elemT) {
+  public MonoTS array(MonoTS elemT) {
     return a(elemT);
   }
 
-  public static TypeS join(ImmutableSet<TypeS> elems) {
+  public static MonoTS join(ImmutableSet<MonoTS> elems) {
     return JoinTS.join(elems);
   }
 
-  public static TypeS join(TypeS... types) {
+  public static MonoTS join(MonoTS... types) {
     return JoinTS.join(set(types));
   }
 
-  public static TypeS meet(ImmutableSet<TypeS> elems) {
+  public static MonoTS meet(ImmutableSet<MonoTS> elems) {
     return MeetTS.meet(elems);
   }
 
-  public static TypeS meet(TypeS... types) {
+  public static MonoTS meet(MonoTS... types) {
     return MeetTS.meet(set(types));
   }
 
-  public TypeS func(TypeS resT, ImmutableList<TypeS> params) {
+  public MonoTS func(MonoTS resT, ImmutableList<MonoTS> params) {
     return TestingTS.f(resT, params);
   }
 
-  public TypeS any() {
+  public MonoTS any() {
     return ANY;
   }
 
-  public TypeS blob() {
+  public MonoTS blob() {
     return BLOB;
   }
 
-  public TypeS bool() {
+  public MonoTS bool() {
     return BOOL;
   }
 
-  public TypeS int_() {
+  public MonoTS int_() {
     return INT;
   }
 
-  public TypeS nothing() {
+  public MonoTS nothing() {
     return NOTHING;
   }
 
-  public TypeS string() {
+  public MonoTS string() {
     return STRING;
   }
 
@@ -192,7 +192,7 @@ public class TestingTS {
     return true;
   }
 
-  public TypeS struct() {
+  public MonoTS struct() {
     return PERSON;
   }
 
@@ -200,11 +200,11 @@ public class TestingTS {
     return false;
   }
 
-  public TypeS tuple() {
+  public MonoTS tuple() {
     throw new UnsupportedOperationException();
   }
 
-  public TypeS tuple(ImmutableList<TypeS> items) {
+  public MonoTS tuple(ImmutableList<MonoTS> items) {
     throw new UnsupportedOperationException();
   }
 

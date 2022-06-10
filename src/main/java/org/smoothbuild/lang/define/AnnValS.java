@@ -3,7 +3,7 @@ package org.smoothbuild.lang.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
 /**
  * Annotated value (one that has not a body).
@@ -13,7 +13,7 @@ import org.smoothbuild.lang.type.TypeS;
 public final class AnnValS extends ValS {
   private final AnnS ann;
 
-  public AnnValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
+  public AnnValS(AnnS ann, MonoTS type, ModPath modPath, String name, Loc loc) {
     super(type, modPath, name, loc);
     this.ann = ann;
   }

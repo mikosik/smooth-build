@@ -14,7 +14,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.type.ConstrS;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.testing.type.TestingTS;
 
 @TestInstance(PER_CLASS)
@@ -27,7 +27,7 @@ public class DecomposeTest extends TestingTS {
     class _type_vs_itself extends TestingTS {
       @ParameterizedTest
       @MethodSource("elementaryTypes")
-      public void elementary_type_vs_itself(TypeS type) throws Exception {
+      public void elementary_type_vs_itself(MonoTS type) throws Exception {
         assertThat(decompose(constrS(type, type)))
             .isEmpty();
       }
@@ -71,7 +71,7 @@ public class DecomposeTest extends TestingTS {
     class _nothing_vs_sth extends TestingTS {
       @ParameterizedTest
       @MethodSource("elementaryTypes")
-      public void noting_vs_elementary_type(TypeS type) throws Exception {
+      public void noting_vs_elementary_type(MonoTS type) throws Exception {
         assertThat(decompose(constrS(nothing(), type)))
             .isEmpty();
       }
@@ -106,7 +106,7 @@ public class DecomposeTest extends TestingTS {
     class _sth_vs_any extends TestingTS {
       @ParameterizedTest
       @MethodSource("elementaryTypes")
-      public void elementary_type_vs_any(TypeS type) throws Exception {
+      public void elementary_type_vs_any(MonoTS type) throws Exception {
         assertThat(decompose(constrS(type, any())))
             .isEmpty();
       }

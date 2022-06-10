@@ -20,15 +20,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
-public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
-  public TestingTypeGraphS(Multimap<TypeS, TypeS> edges) {
+public record TestingTypeGraphS(ImmutableMultimap<MonoTS, MonoTS> edges) {
+  public TestingTypeGraphS(Multimap<MonoTS, MonoTS> edges) {
     this(ImmutableMultimap.copyOf(edges));
   }
 
   // building graph edges
 
   public static TestingTypeGraphS buildGraph(
-      ImmutableList<TypeS> types, int levelCount, TestingTS testingT) {
+      ImmutableList<MonoTS> types, int levelCount, TestingTS testingT) {
     TestingTypeGraphS graph = baseGraph(types, testingT);
     for (int i = 0; i < levelCount; i++) {
       graph = levelUp(graph, testingT);
@@ -36,18 +36,18 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     return graph;
   }
 
-  private static TestingTypeGraphS baseGraph(ImmutableList<TypeS> types, TestingTS testingT) {
-    Multimap<TypeS, TypeS> graph = newMultimap();
+  private static TestingTypeGraphS baseGraph(ImmutableList<MonoTS> types, TestingTS testingT) {
+    Multimap<MonoTS, MonoTS> graph = newMultimap();
     types.forEach(t -> graph.put(testingT.nothing(), t));
     types.forEach(t -> graph.put(t, testingT.any()));
     return new TestingTypeGraphS(graph);
   }
 
   private static TestingTypeGraphS levelUp(TestingTypeGraphS graph, TestingTS testingT) {
-    Multimap<TypeS, TypeS> newDimension = newMultimap();
+    Multimap<MonoTS, MonoTS> newDimension = newMultimap();
 
     // arrays
-    for (Entry<TypeS, TypeS> entry : graph.edges().entries()) {
+    for (Entry<MonoTS, MonoTS> entry : graph.edges().entries()) {
       var lower = entry.getKey();
       var upper = entry.getValue();
       newDimension.put(testingT.array(lower), testingT.array(upper));
@@ -57,7 +57,7 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
 
     // tuples
     if (testingT.isTupleSupported()) {
-      for (Entry<TypeS, TypeS> entry : graph.edges().entries()) {
+      for (Entry<MonoTS, MonoTS> entry : graph.edges().entries()) {
         var lower = entry.getKey();
         var upper = entry.getValue();
         newDimension.put(testingT.tuple(list(lower)), testingT.tuple(list(upper)));
@@ -67,10 +67,10 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     }
 
     // one param funcs
-    Set<TypeS> allTypes = graph.allTypes();
+    Set<MonoTS> allTypes = graph.allTypes();
 
-    for (TypeS type : allTypes) {
-      for (Entry<TypeS, TypeS> entry : graph.edges().entries()) {
+    for (MonoTS type : allTypes) {
+      for (Entry<MonoTS, MonoTS> entry : graph.edges().entries()) {
         var lower = entry.getKey();
         var upper = entry.getValue();
         newDimension.put(testingT.func(lower, list(type)), testingT.func(upper, list(type)));
@@ -85,9 +85,9 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     return new TestingTypeGraphS(newDimension);
   }
 
-  private Set<TypeS> allTypes() {
-    HashSet<TypeS> types = new HashSet<>();
-    for (Entry<TypeS, TypeS> entry : edges.entries()) {
+  private Set<MonoTS> allTypes() {
+    HashSet<MonoTS> types = new HashSet<>();
+    for (Entry<MonoTS, MonoTS> entry : edges.entries()) {
       types.add(entry.getKey());
       types.add(entry.getValue());
     }
@@ -96,8 +96,8 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
 
   // building test cases
 
-  public Collection<Arguments> buildTestCases(TypeS rootNode) {
-    ArrayList<TypeS> sorted = typesSortedTopologically(rootNode);
+  public Collection<Arguments> buildTestCases(MonoTS rootNode) {
+    ArrayList<MonoTS> sorted = typesSortedTopologically(rootNode);
     int typesCount = sorted.size();
     int[][]intEdges = buildIntEdges(sorted);
     List<Arguments> result = new ArrayList<>(typesCount * typesCount);
@@ -109,20 +109,20 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     return result;
   }
 
-  private ArrayList<TypeS> typesSortedTopologically(TypeS rootNode) {
-    var incomingEdgesCount = new HashMap<TypeS, AtomicInteger>();
-    for (Entry<TypeS, TypeS> entry : edges.entries()) {
+  private ArrayList<MonoTS> typesSortedTopologically(MonoTS rootNode) {
+    var incomingEdgesCount = new HashMap<MonoTS, AtomicInteger>();
+    for (Entry<MonoTS, MonoTS> entry : edges.entries()) {
       incomingEdgesCount.computeIfAbsent(entry.getValue(), e -> new AtomicInteger()).
           incrementAndGet();
     }
 
-    var queue = new LinkedList<TypeS>();
-    var sorted = new ArrayList<TypeS>(incomingEdgesCount.size() + 1);
+    var queue = new LinkedList<MonoTS>();
+    var sorted = new ArrayList<MonoTS>(incomingEdgesCount.size() + 1);
     queue.addLast(rootNode);
     while (!queue.isEmpty()) {
-      TypeS current = queue.removeFirst();
+      MonoTS current = queue.removeFirst();
       sorted.add(current);
-      for (TypeS edgeEnd : edges.get(current)) {
+      for (MonoTS edgeEnd : edges.get(current)) {
         AtomicInteger count = incomingEdgesCount.get(edgeEnd);
         if (count.decrementAndGet() == 0) {
           queue.addLast(edgeEnd);
@@ -132,9 +132,9 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     return sorted;
   }
 
-  private Arguments buildTestCase(int i, int j, int[][] intEdges, ArrayList<TypeS> indexToType) {
+  private Arguments buildTestCase(int i, int j, int[][] intEdges, ArrayList<MonoTS> indexToType) {
     if (i == j) {
-      TypeS type = indexToType.get(i);
+      MonoTS type = indexToType.get(i);
       return Arguments.of(type, type, type);
     }
     // This method could be made faster by keeping separate `colors` array for `i` and `j` types.
@@ -161,7 +161,7 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     }
   }
 
-  private int[][] buildIntEdges(ArrayList<TypeS> sortedTs) {
+  private int[][] buildIntEdges(ArrayList<MonoTS> sortedTs) {
     var typeToIndex = typeToIndex(sortedTs);
 
     int[][] intEdges = new int[sortedTs.size()][];
@@ -172,15 +172,15 @@ public record TestingTypeGraphS(ImmutableMultimap<TypeS, TypeS> edges) {
     return intEdges;
   }
 
-  private static HashMap<TypeS, Integer> typeToIndex(ArrayList<TypeS> sortedTs) {
-    HashMap<TypeS, Integer> typeToInteger = new HashMap<>();
+  private static HashMap<MonoTS, Integer> typeToIndex(ArrayList<MonoTS> sortedTs) {
+    HashMap<MonoTS, Integer> typeToInteger = new HashMap<>();
     for (int i = 0; i < sortedTs.size(); i++) {
       typeToInteger.put(sortedTs.get(i), i);
     }
     return typeToInteger;
   }
 
-  private static <T extends TypeS> Multimap<T, T> newMultimap() {
+  private static <T extends MonoTS> Multimap<T, T> newMultimap() {
     return newSetMultimap(new HashMap<>(), HashSet::new);
   }
 

@@ -27,7 +27,7 @@ import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.type.ArrayTS;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.util.collect.DuplicatesDetector;
@@ -90,7 +90,7 @@ public class ArtifactSaver {
   private PathS saveArray(ArrayTS arrayTS, PathS artifactPath,
       ArrayB array) throws IOException, DuplicatedPathsExc {
     fileSystem.createDir(artifactPath);
-    TypeS elemTS = arrayTS.elem();
+    MonoTS elemTS = arrayTS.elem();
     if (elemTS instanceof ArrayTS elemArrayTS) {
       int i = 0;
       for (ArrayB elem : array.elems(ArrayB.class)) {

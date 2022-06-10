@@ -101,7 +101,6 @@ import org.smoothbuild.lang.define.BlobS;
 import org.smoothbuild.lang.define.CallS;
 import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefValS;
-import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.InternalModLoader;
 import org.smoothbuild.lang.define.ItemS;
@@ -109,6 +108,7 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
+import org.smoothbuild.lang.define.MonoFuncS;
 import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.define.OrderS;
@@ -124,13 +124,13 @@ import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
 import org.smoothbuild.lang.type.BoolTS;
 import org.smoothbuild.lang.type.BoundedS;
-import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.IntTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.PolyFuncTS;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarBoundsS;
@@ -850,7 +850,7 @@ public class TestingContext {
     return typeFS().any();
   }
 
-  public ArrayTS arrayTS(TypeS elemT) {
+  public ArrayTS arrayTS(MonoTS elemT) {
     return typeFS().array(elemT);
   }
 
@@ -862,15 +862,15 @@ public class TestingContext {
     return typeFS().bool();
   }
 
-  public FuncTS funcTS(TypeS resT) {
-    return funcTS(resT, ImmutableList.<TypeS>of());
+  public MonoFuncTS funcTS(MonoTS resT) {
+    return funcTS(resT, ImmutableList.<MonoTS>of());
   }
 
-  public FuncTS funcTS(TypeS resT, List<? extends ItemS> params) {
+  public MonoFuncTS funcTS(MonoTS resT, List<? extends ItemS> params) {
     return funcTS(resT, toTypes(params));
   }
 
-  public FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public MonoFuncTS funcTS(MonoTS resT, ImmutableList<MonoTS> paramTs) {
     return typeFS().func(resT, paramTs);
   }
 
@@ -882,11 +882,11 @@ public class TestingContext {
     return typeFS().nothing();
   }
 
-  public PolyFuncTS polyFuncTS(TypeS resT) {
+  public PolyFuncTS polyFuncTS(MonoTS resT) {
     return PolyFuncTS.polyFuncTS(funcTS(resT));
   }
 
-  public PolyFuncTS polyFuncTS(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public PolyFuncTS polyFuncTS(MonoTS resT, ImmutableList<MonoTS> paramTs) {
     return PolyFuncTS.polyFuncTS(funcTS(resT, paramTs));
   }
 
@@ -908,8 +908,8 @@ public class TestingContext {
   }
 
   public VarBoundsS vbS(
-      VarS var1, Side side1, TypeS bound1,
-      VarS var2, Side side2, TypeS bound2) {
+      VarS var1, Side side1, MonoTS bound1,
+      VarS var2, Side side2, MonoTS bound2) {
     var bounds1 = oneSideBoundS(side1, bound1);
     var bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
@@ -922,7 +922,7 @@ public class TestingContext {
     }
   }
 
-  public VarBoundsS vbS(VarS var, Side side, TypeS bound) {
+  public VarBoundsS vbS(VarS var, Side side, MonoTS bound) {
     return varBoundsS(new BoundedS(var, oneSideBoundS(side, bound)));
   }
 
@@ -930,7 +930,7 @@ public class TestingContext {
     return varBoundsS();
   }
 
-  public Bounds<TypeS> oneSideBoundS(Side side, TypeS type) {
+  public Bounds<MonoTS> oneSideBoundS(Side side, MonoTS type) {
     return typeFS().oneSideBound(side, type);
   }
 
@@ -944,11 +944,11 @@ public class TestingContext {
     return new BlobS(blobTS(), intToByteString(data), loc(line));
   }
 
-  public CallS callS(TypeS type, MonoObjS callable, MonoObjS... args) {
+  public CallS callS(MonoTS type, MonoObjS callable, MonoObjS... args) {
     return callS(1, type, callable, args);
   }
 
-  public CallS callS(int line, TypeS type, MonoObjS callable, MonoObjS... args) {
+  public CallS callS(int line, MonoTS type, MonoObjS callable, MonoObjS... args) {
     return new CallS(type, callable, list(args), loc(line));
   }
 
@@ -960,23 +960,23 @@ public class TestingContext {
     return new IntS(intTS(), BigInteger.valueOf(value), loc(line));
   }
 
-  public OrderS orderS(TypeS elemT, MonoObjS... objs) {
+  public OrderS orderS(MonoTS elemT, MonoObjS... objs) {
     return orderS(1, elemT, objs);
   }
 
-  public OrderS orderS(int line, TypeS elemT, MonoObjS... objs) {
+  public OrderS orderS(int line, MonoTS elemT, MonoObjS... objs) {
     return new OrderS(arrayTS(elemT), ImmutableList.copyOf(objs), loc(line));
   }
 
-  public ParamRefS paramRefS(TypeS type) {
+  public ParamRefS paramRefS(MonoTS type) {
     return paramRefS(type, "refName");
   }
 
-  public ParamRefS paramRefS(TypeS type, String name) {
+  public ParamRefS paramRefS(MonoTS type, String name) {
     return paramRefS(1, type, name);
   }
 
-  public ParamRefS paramRefS(int line, TypeS type, String name) {
+  public ParamRefS paramRefS(int line, MonoTS type, String name) {
     return new ParamRefS(type, name, loc(line));
   }
 
@@ -991,19 +991,19 @@ public class TestingContext {
     return topRefS(1, val.type(), val.name());
   }
 
-  public ObjRefS topRefS(FuncS func) {
+  public ObjRefS topRefS(MonoFuncS func) {
     return topRefS(1, func.type(), func.name());
   }
 
-  public ObjRefS topRefS(int line, TypeS type, String name) {
+  public ObjRefS topRefS(int line, MonoTS type, String name) {
     return new ObjRefS(type, name, loc(line));
   }
 
-  public SelectS selectS(TypeS type, MonoObjS selectable, String field) {
+  public SelectS selectS(MonoTS type, MonoObjS selectable, String field) {
     return selectS(1, type, selectable, field);
   }
 
-  public SelectS selectS(int line, TypeS type, MonoObjS selectable, String field) {
+  public SelectS selectS(int line, MonoTS type, MonoObjS selectable, String field) {
     return new SelectS(type, selectable, field, loc(line));
   }
 
@@ -1058,40 +1058,40 @@ public class TestingContext {
     return new AnnS(name, classBinaryName, loc);
   }
 
-  public ItemS itemS(TypeS type, String name) {
+  public ItemS itemS(MonoTS type, String name) {
     return itemS(1, type, name);
   }
 
-  public ItemS itemS(int line, TypeS type, String name) {
+  public ItemS itemS(int line, MonoTS type, String name) {
     return itemS(line, type, name, empty());
   }
 
-  public ItemS itemS(int line, TypeS type, String name, MonoObjS body) {
+  public ItemS itemS(int line, MonoTS type, String name, MonoObjS body) {
     return itemS(line, type, name, Optional.of(body));
   }
 
-  private ItemS itemS(int line, TypeS type, String name, Optional<MonoObjS> body) {
+  private ItemS itemS(int line, MonoTS type, String name, Optional<MonoObjS> body) {
     return new ItemS(type, name, body, loc(line));
   }
 
-  public PolyFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
+  public PolyFuncS byteFuncS(String path, MonoTS resT, String name, NList<ItemS> params) {
     return byteFuncS(1, new AnnS(BYTECODE, stringS(path), loc(1)), resT, name, params);
   }
 
-  public PolyFuncS byteFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
+  public PolyFuncS byteFuncS(int line, AnnS ann, MonoTS resT, String name, NList<ItemS> params) {
     return byteFuncS(ann, funcTS(resT, params.list()), modPath(), name, params, loc(line));
   }
 
-  public PolyFuncS byteFuncS(AnnS ann, FuncTS type, ModPath modPath, String name,
+  public PolyFuncS byteFuncS(AnnS ann, MonoFuncTS type, ModPath modPath, String name,
       NList<ItemS> params, Loc loc) {
     return polyFuncS(new AnnFuncS(ann, type, modPath, name, params, loc));
   }
 
-  public AnnValS annValS(int line, AnnS ann, TypeS type, String name) {
+  public AnnValS annValS(int line, AnnS ann, MonoTS type, String name) {
     return new AnnValS(ann, type, modPath(), name, loc(line));
   }
 
-  public AnnValS annValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
+  public AnnValS annValS(AnnS ann, MonoTS type, ModPath modPath, String name, Loc loc) {
     return new AnnValS(ann, type, modPath, name, loc);
   }
 
@@ -1099,7 +1099,7 @@ public class TestingContext {
     return defValS(1, expr.type(), name, expr);
   }
 
-  public DefValS defValS(int line, TypeS type, String name, MonoObjS expr) {
+  public DefValS defValS(int line, MonoTS type, String name, MonoObjS expr) {
     return new DefValS(type, modPath(), name, expr, loc(line));
   }
 
@@ -1113,45 +1113,45 @@ public class TestingContext {
     return syntCtorS(line, funcTS(structT, params.list()), modPath(), name, params);
   }
 
-  public PolyFuncS syntCtorS(int line, FuncTS funcT, ModPath modPath, String name,
+  public PolyFuncS syntCtorS(int line, MonoFuncTS funcT, ModPath modPath, String name,
       NList<ItemS> params) {
     return polyFuncS(new SyntCtorS(funcT, modPath, name, params, loc(line)));
   }
 
-  public PolyFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {
+  public PolyFuncS natFuncS(MonoTS resT, String name, NList<ItemS> params) {
     return natFuncS(resT, name, params, nativeS(1, stringS(1, "Impl.met")));
   }
 
-  public PolyFuncS natFuncS(TypeS resT, String name, NList<ItemS> params, AnnS ann) {
+  public PolyFuncS natFuncS(MonoTS resT, String name, NList<ItemS> params, AnnS ann) {
     return natFuncS(1, resT, name, params, ann);
   }
 
-  public PolyFuncS natFuncS(int line, TypeS resT, String name, NList<ItemS> params, AnnS ann) {
+  public PolyFuncS natFuncS(int line, MonoTS resT, String name, NList<ItemS> params, AnnS ann) {
     return natFuncS(line, funcTS(resT, params.list()), modPath(), name, params, ann);
   }
 
-  public PolyFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params) {
+  public PolyFuncS natFuncS(MonoFuncTS funcT, String name, NList<ItemS> params) {
     return natFuncS(funcT, name, params, nativeS());
   }
 
-  public PolyFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
+  public PolyFuncS natFuncS(MonoFuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
     return natFuncS(1, funcT, name, params, ann);
   }
 
-  public PolyFuncS natFuncS(int line, FuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
+  public PolyFuncS natFuncS(int line, MonoFuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
     return natFuncS(line, funcT, modPath(), name, params, ann);
   }
 
-  public PolyFuncS natFuncS(int line, FuncTS funcT, ModPath modPath, String name,
+  public PolyFuncS natFuncS(int line, MonoFuncTS funcT, ModPath modPath, String name,
       NList<ItemS> params, AnnS ann) {
     return polyFuncS(new AnnFuncS(ann, funcT, modPath, name, params, loc(line)));
   }
 
-  public PolyFuncS defFuncS(TypeS type, String name, MonoObjS body, NList<ItemS> params) {
+  public PolyFuncS defFuncS(MonoTS type, String name, MonoObjS body, NList<ItemS> params) {
     return defFuncS(1, type, name, body, params);
   }
 
-  public PolyFuncS defFuncS(int line, TypeS type, String name, MonoObjS body, NList<ItemS> params) {
+  public PolyFuncS defFuncS(int line, MonoTS type, String name, MonoObjS body, NList<ItemS> params) {
     return polyFuncS(new DefFuncS(funcTS(type, params), modPath(), name, params, body, loc(line)));
   }
 
@@ -1159,11 +1159,11 @@ public class TestingContext {
     return defFuncS(expr.type(), name, params, expr);
   }
 
-  public PolyFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, MonoObjS expr) {
+  public PolyFuncS defFuncS(MonoTS resT, String name, NList<ItemS> params, MonoObjS expr) {
     return polyFuncS(new DefFuncS(funcTS(resT, toTypes(params)), modPath(), name, params, expr, loc(1)));
   }
 
-  public ItemSigS sigS(TypeS type, String name) {
+  public ItemSigS sigS(MonoTS type, String name) {
     return new ItemSigS(type, name);
   }
 

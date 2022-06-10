@@ -27,14 +27,14 @@ import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
 import org.smoothbuild.lang.type.BoolTS;
 import org.smoothbuild.lang.type.ConstrS;
-import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.IntTS;
 import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.testing.type.TestingTS;
 import org.smoothbuild.util.collect.Sets;
@@ -213,7 +213,7 @@ public class SolverSTest extends TestingTS {
     var tempVars = actual.varBounds().keySet()
         .stream()
         .filter(v -> v.name().startsWith("_"))
-        .sorted(comparing(TypeS::name))
+        .sorted(comparing(MonoTS::name))
         .collect(toImmutableList());
     for (var permutation : permutations(tempVars)) {
       var remapped = mapVars(actual, varMapper(tempVars, permutation));
@@ -248,13 +248,13 @@ public class SolverSTest extends TestingTS {
     return var -> map.computeIfAbsent(var, v -> v);
   }
 
-  private TypeS mapVars(TypeS type, Function<VarS, VarS> mapper) {
+  private MonoTS mapVars(MonoTS type, Function<VarS, VarS> mapper) {
     return switch (type) {
       case AnyTS any -> any;
       case ArrayTS array -> array(mapVars(array.elem(), mapper));
       case BlobTS blob -> blob;
       case BoolTS bool -> bool;
-      case FuncTS func -> func(
+      case MonoFuncTS func -> func(
           mapVars(func.res(), mapper), map(func.params(), p -> mapVars(p, mapper)));
       case IntTS int_ -> int_;
       case JoinTS join -> join(Sets.map(join.elems(), e -> mapVars(e, mapper)));

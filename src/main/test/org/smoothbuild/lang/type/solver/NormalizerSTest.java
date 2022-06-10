@@ -15,8 +15,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.type.ConstrS;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.testing.type.TestingTS;
 
@@ -69,12 +69,12 @@ public class NormalizerSTest extends TestingTS {
   class _base_type {
     @ParameterizedTest
     @MethodSource("lower_test_cases")
-    public void lower(TypeS type) {
+    public void lower(MonoTS type) {
       assertThat(normalize(constrS(type, varA())))
           .isEqualTo(set(constrS(type, varA())));
     }
 
-    public List<TypeS> lower_test_cases() {
+    public List<MonoTS> lower_test_cases() {
       return baseTypes();
     }
 
@@ -85,7 +85,7 @@ public class NormalizerSTest extends TestingTS {
           .isEqualTo(set(constrS(varA(), blob())));
     }
 
-    public List<TypeS> upper_test_cases() {
+    public List<MonoTS> upper_test_cases() {
       return baseTypes();
     }
   }

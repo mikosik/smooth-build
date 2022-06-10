@@ -35,7 +35,7 @@ public class TypingS {
     this.typeSF = typeSF;
   }
 
-  public boolean contains(TypeS type, TypeS inner) {
+  public boolean contains(MonoTS type, MonoTS inner) {
     if (type.equals(inner)) {
       return true;
     }
@@ -47,7 +47,7 @@ public class TypingS {
     }
   }
 
-  public TypeS inferCallResT(FuncTS funcT, ImmutableList<TypeS> argTs,
+  public MonoTS inferCallResT(MonoFuncTS funcT, ImmutableList<MonoTS> argTs,
       Supplier<RuntimeException> illegalArgsExcThrower) {
     allMatchOtherwise(
         funcT.params(),
@@ -57,39 +57,39 @@ public class TypingS {
         i -> { throw illegalArgsExcThrower.get(); }
     );
     var varBounds = inferVarBoundsLower(funcT.params(), argTs);
-    TypeS res = funcT.res();
+    MonoTS res = funcT.res();
     return mapVarsLower(res, varBounds);
   }
 
-  public boolean isAssignable(TypeS target, TypeS source) {
+  public boolean isAssignable(MonoTS target, MonoTS source) {
     return inequal(target, source, LOWER);
   }
 
-  public boolean isParamAssignable(TypeS target, TypeS source) {
+  public boolean isParamAssignable(MonoTS target, MonoTS source) {
     return inequalParam(target, source, LOWER)
         && areConsistent(inferVarBoundsLower(target, source));
   }
 
-  public boolean inequal(TypeS type1, TypeS type2, Side side) {
+  public boolean inequal(MonoTS type1, MonoTS type2, Side side) {
     return inequalImpl(type1, type2, side, this::inequal);
   }
 
-  public boolean inequalParam(TypeS type1, TypeS type2, Side side) {
+  public boolean inequalParam(MonoTS type1, MonoTS type2, Side side) {
     return (type1 instanceof VarS)
         || inequalImpl(type1, type2, side, this::inequalParam);
   }
 
-  private boolean inequalImpl(TypeS type1, TypeS type2, Side side, InequalFunc inequalityFunc) {
+  private boolean inequalImpl(MonoTS type1, MonoTS type2, Side side, InequalFunc inequalityFunc) {
     return inequalByEdgeCases(type1, type2, side)
         || inequalByConstruction(type1, type2, side, inequalityFunc);
   }
 
-  private boolean inequalByEdgeCases(TypeS type1, TypeS type2, Side side) {
+  private boolean inequalByEdgeCases(MonoTS type1, MonoTS type2, Side side) {
     return type2.equals(typeSF.edge(side))
         || type1.equals(typeSF.edge(side.other()));
   }
 
-  private boolean inequalByConstruction(TypeS t1, TypeS t2, Side side, InequalFunc isInequal) {
+  private boolean inequalByConstruction(MonoTS t1, MonoTS t2, Side side, InequalFunc isInequal) {
     if (t1 instanceof ComposedTS c1) {
       if (t1.getClass().equals(t2.getClass())) {
         var c2 = (ComposedTS) t2;
@@ -105,7 +105,7 @@ public class TypingS {
   }
 
   public static interface InequalFunc {
-    public boolean apply(TypeS type1, TypeS type2, Side side);
+    public boolean apply(MonoTS type1, MonoTS type2, Side side);
   }
 
   private boolean areConsistent(VarBoundsS varBounds) {
@@ -113,13 +113,13 @@ public class TypingS {
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public VarBoundsS inferVarBoundsLower(List<? extends TypeS> types1,
-      List<? extends TypeS> types2) {
+  public VarBoundsS inferVarBoundsLower(List<? extends MonoTS> types1,
+      List<? extends MonoTS> types2) {
     return inferVarBounds(types1, types2, LOWER);
   }
 
   public VarBoundsS inferVarBounds(
-      List<? extends TypeS> types1, List<? extends TypeS> types2, Side side) {
+      List<? extends MonoTS> types1, List<? extends MonoTS> types2, Side side) {
     checkArgument(types1.size() == types2.size());
     var result = new HashMap<VarS, BoundedS>();
     for (int i = 0; i < types1.size(); i++) {
@@ -128,21 +128,21 @@ public class TypingS {
     return new VarBoundsS(ImmutableMap.copyOf(result));
   }
 
-  public VarBoundsS inferVarBoundsLower(TypeS type1, TypeS type2) {
+  public VarBoundsS inferVarBoundsLower(MonoTS type1, MonoTS type2) {
     return inferVarBounds(type1, type2, LOWER);
   }
 
-  public VarBoundsS inferVarBounds(TypeS type1, TypeS type2, Side side) {
+  public VarBoundsS inferVarBounds(MonoTS type1, MonoTS type2, Side side) {
     var result = new HashMap<VarS, BoundedS>();
     inferImpl(type1, type2, side, result);
     return new VarBoundsS(ImmutableMap.copyOf(result));
   }
 
-  private void inferImpl(TypeS t1, TypeS t2, Side side, Map<VarS, BoundedS> result) {
+  private void inferImpl(MonoTS t1, MonoTS t2, Side side, Map<VarS, BoundedS> result) {
     switch (t1) {
       case VarS v -> result.merge(v, new BoundedS(v, typeSF.oneSideBound(side, t2)), this::merge);
       case ComposedTS c1 -> {
-        TypeS sideEdge = typeSF.edge(side);
+        MonoTS sideEdge = typeSF.edge(side);
         if (t2.equals(sideEdge)) {
           var other = side.other();
           c1.covars().forEach(t -> inferImpl(t, sideEdge, side, result));
@@ -163,18 +163,18 @@ public class TypingS {
     }
   }
 
-  private void inferImplForEach(ImmutableList<TypeS> types1, ImmutableList<TypeS> types2,
+  private void inferImplForEach(ImmutableList<MonoTS> types1, ImmutableList<MonoTS> types2,
       Side side, Map<VarS, BoundedS> result) {
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
   }
 
-  public TypeS mapVarsLower(TypeS type, VarBoundsS varBounds) {
+  public MonoTS mapVarsLower(MonoTS type, VarBoundsS varBounds) {
     return mapVars(type, varBounds, LOWER);
   }
 
-  public TypeS mapVars(TypeS type, VarBoundsS varBounds, Side side) {
+  public MonoTS mapVars(MonoTS type, VarBoundsS varBounds, Side side) {
     if (!type.vars().isEmpty()) {
       return switch (type) {
         case VarS var -> mapVarsInVar(type, varBounds, side, var);
@@ -191,7 +191,7 @@ public class TypingS {
     return type;
   }
 
-  private TypeS mapVarsInVar(TypeS type, VarBoundsS varBounds, Side side, VarS var) {
+  private MonoTS mapVarsInVar(MonoTS type, VarBoundsS varBounds, Side side, VarS var) {
     BoundedS bounded = varBounds.map().get(var);
     if (bounded == null) {
       return type;
@@ -200,16 +200,16 @@ public class TypingS {
     }
   }
 
-  public TypeS mergeUp(TypeS type1, TypeS type2) {
+  public MonoTS mergeUp(MonoTS type1, MonoTS type2) {
     return merge(type1, type2, UPPER);
   }
 
-  public TypeS mergeDown(TypeS type1, TypeS type2) {
+  public MonoTS mergeDown(MonoTS type1, MonoTS type2) {
     return merge(type1, type2, LOWER);
   }
 
-  public TypeS merge(TypeS type1, TypeS type2, Side direction) {
-    TypeS otherEdge = typeSF.edge(direction.other());
+  public MonoTS merge(MonoTS type1, MonoTS type2, Side direction) {
+    MonoTS otherEdge = typeSF.edge(direction.other());
     if (otherEdge.equals(type2)) {
       return type1;
     } else if (otherEdge.equals(type1)) {
@@ -239,13 +239,13 @@ public class TypingS {
     return new BoundedS(a.var(), merge(a.bounds(), b.bounds()));
   }
 
-  public Bounds<TypeS> merge(Bounds<TypeS> bounds1, Bounds<TypeS> bounds2) {
+  public Bounds<MonoTS> merge(Bounds<MonoTS> bounds1, Bounds<MonoTS> bounds2) {
     return new Bounds<>(
         merge(bounds1.lower(), bounds2.lower(), UPPER),
         merge(bounds1.upper(), bounds2.upper(), LOWER));
   }
 
-  public TypeS resolveMerges(TypeS type) {
+  public MonoTS resolveMerges(MonoTS type) {
     return switch (type) {
       case ComposedTS composedT -> {
         var covars = map(composedT.covars(), this::resolveMerges);
@@ -257,16 +257,16 @@ public class TypingS {
     };
   }
 
-  private TypeS resolveMerges(MergeTS mergeT) {
+  private MonoTS resolveMerges(MergeTS mergeT) {
     return resolveMergeElems(mergeT.elems(), mergeT.direction());
   }
 
-  private TypeS resolveMergeElems(Collection<TypeS> elems, Side direction) {
+  private MonoTS resolveMergeElems(Collection<MonoTS> elems, Side direction) {
     var arrayTs = new ArrayList<ArrayTS>(elems.size());
-    SetMultimap<Integer, FuncTS> funcTs = SetMultimapBuilder.hashKeys().hashSetValues().build();
-    var others = new HashSet<TypeS>();
-    TypeS zero = null;
-    for (TypeS elem : elems) {
+    SetMultimap<Integer, MonoFuncTS> funcTs = SetMultimapBuilder.hashKeys().hashSetValues().build();
+    var others = new HashSet<MonoTS>();
+    MonoTS zero = null;
+    for (MonoTS elem : elems) {
       switch (elem) {
         case EdgeTS edge:
           if (edge.side().equals(direction)) {
@@ -275,7 +275,7 @@ public class TypingS {
             zero = edge;
           }
           break;
-        case FuncTS funcT:
+        case MonoFuncTS funcT:
           funcTs.put(funcT.params().size(), funcT);
           break;
         case ArrayTS arrayT:
@@ -302,9 +302,9 @@ public class TypingS {
 
     if (!funcEntries.isEmpty()) {
       var entry = funcEntries.iterator().next();
-      var reducedElems = resolveMergeElems(map(entry.getValue(), FuncTS::res), direction);
+      var reducedElems = resolveMergeElems(map(entry.getValue(), MonoFuncTS::res), direction);
       int paramCount = entry.getKey();
-      var reducedParams = new ArrayList<TypeS>();
+      var reducedParams = new ArrayList<MonoTS>();
       for (int i = 0; i < paramCount; i++) {
         int n = i;
         var nthParams = map(entry.getValue(), f -> f.params().get(n));
@@ -320,8 +320,8 @@ public class TypingS {
     return zero;
   }
 
-  public TypeS rebuildComposed(
-      TypeS type, ImmutableList<TypeS> covars, ImmutableList<TypeS> contravars) {
+  public MonoTS rebuildComposed(
+      MonoTS type, ImmutableList<MonoTS> covars, ImmutableList<MonoTS> contravars) {
     if (!(type instanceof ComposedTS composedT)) {
       throw unexpectedCaseExc(type);
     }
@@ -330,7 +330,7 @@ public class TypingS {
     }
     return switch (composedT) {
       case ArrayTS array -> typeSF.array(covars.get(0));
-      case FuncTS func -> typeSF.func(covars.get(0), contravars);
+      case MonoFuncTS func -> typeSF.func(covars.get(0), contravars);
     };
   }
 
