@@ -7,6 +7,7 @@ import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.smoothbuild.util.type.Side;
 
@@ -68,20 +69,11 @@ public final class JoinTS extends MergeTS {
   }
 
   @Override
-  public TypeS withPrefixedVars(String prefix) {
+  public TypeS mapVars(Function<VarS, VarS> varMapper) {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new JoinTS(map(elems(), e -> e.withPrefixedVars(prefix)));
-    }
-  }
-
-  @Override
-  public TypeS removeVarPrefixes() {
-    if (vars().isEmpty()) {
-      return this;
-    } else {
-      return new JoinTS(map(elems(), TypeS::removeVarPrefixes));
+      return new JoinTS(map(elems(), e -> e.mapVars(varMapper)));
     }
   }
 

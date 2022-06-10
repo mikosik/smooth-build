@@ -3,6 +3,8 @@ package org.smoothbuild.lang.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.util.collect.Sets.set;
 
+import java.util.function.Function;
+
 /**
  * Type variable.
  *
@@ -23,13 +25,16 @@ public final class VarS extends TypeS {
   }
 
   @Override
-  public VarS withPrefixedVars(String prefix) {
+  public TypeS mapVars(Function<VarS, VarS> varMapper) {
+    return varMapper.apply(this);
+  }
+
+  public VarS prefixed(String prefix) {
     checkArgument(!prefix.contains(PREFIX_SEPARATOR));
     return new VarS(prefix + PREFIX_SEPARATOR + name());
   }
 
-  @Override
-  public VarS removeVarPrefixes() {
+  public VarS unprefixed() {
     String name = name();
     int index = name.indexOf(PREFIX_SEPARATOR);
     if (0 <= index) {

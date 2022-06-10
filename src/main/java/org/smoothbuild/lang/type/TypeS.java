@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 import com.google.common.collect.ImmutableCollection;
 
@@ -53,11 +54,7 @@ public abstract sealed class TypeS implements TKind
     return this.equals(type);
   }
 
-  public TypeS withPrefixedVars(String prefix) {
-    return this;
-  }
-
-  public TypeS removeVarPrefixes() {
+  public TypeS mapVars(Function<VarS, VarS> varMapper) {
     return this;
   }
 

@@ -2,6 +2,8 @@ package org.smoothbuild.lang.type;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.function.Function;
+
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -21,20 +23,11 @@ public final class ArrayTS extends TypeS implements ComposedTS {
   }
 
   @Override
-  public ArrayTS withPrefixedVars(String prefix) {
+  public TypeS mapVars(Function<VarS, VarS> varMapper) {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new ArrayTS(elem.withPrefixedVars(prefix));
-    }
-  }
-
-  @Override
-  public TypeS removeVarPrefixes() {
-    if (vars().isEmpty()) {
-      return this;
-    } else {
-      return new ArrayTS(elem.removeVarPrefixes());
+      return new ArrayTS(elem.mapVars(varMapper));
     }
   }
 

@@ -6,6 +6,7 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
@@ -34,20 +35,11 @@ public final class FuncTS extends TypeS implements ComposedTS {
   }
 
   @Override
-  public TypeS withPrefixedVars(String prefix) {
+  public TypeS mapVars(Function<VarS, VarS> varMapper) {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new FuncTS(res.withPrefixedVars(prefix), map(params, t -> t.withPrefixedVars(prefix)));
-    }
-  }
-
-  @Override
-  public TypeS removeVarPrefixes() {
-    if (vars().isEmpty()) {
-      return this;
-    } else {
-      return new FuncTS(res.removeVarPrefixes(), map(params, TypeS::removeVarPrefixes));
+      return new FuncTS(res.mapVars(varMapper), map(params, t -> t.mapVars(varMapper)));
     }
   }
 

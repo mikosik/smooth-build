@@ -32,6 +32,7 @@ import static org.smoothbuild.util.type.Side.LOWER;
 import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -146,63 +147,43 @@ public class TypeSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("with_prefixed_vars")
-  public void with_prefixed_vars(TypeS type, String prefix, TypeS typeWithPrefixedVars) {
-    assertThat(type.withPrefixedVars(prefix))
-        .isEqualTo(typeWithPrefixedVars);
+  @MethodSource("map_vars")
+  public void map_vars(TypeS type, Function<VarS, VarS> varMapper, TypeS expected) {
+    assertThat(type.mapVars(varMapper))
+        .isEqualTo(expected);
   }
 
-  public static List<Arguments> with_prefixed_vars() {
+  public static List<Arguments> map_vars() {
+    Function<VarS, VarS> addPrefix = (VarS v) -> v.prefixed("prefix");
     return List.of(
-        arguments(ANY, "prefix", ANY),
-        arguments(BLOB, "prefix", BLOB),
-        arguments(BOOL, "prefix", BOOL),
-        arguments(INT, "prefix", INT),
-        arguments(NOTHING, "prefix", NOTHING),
-        arguments(STRING, "prefix", STRING),
+        arguments(ANY, addPrefix, ANY),
+        arguments(BLOB, addPrefix, BLOB),
+        arguments(BOOL, addPrefix, BOOL),
+        arguments(INT, addPrefix, INT),
+        arguments(NOTHING, addPrefix, NOTHING),
+        arguments(STRING, addPrefix, STRING),
 
-        arguments(var("A"), "prefix", var("prefix.A")),
-        arguments(var("pre.A"), "prefix", var("prefix.pre.A")),
+        arguments(var("A"), addPrefix, var("prefix.A")),
+        arguments(var("pre.A"), addPrefix, var("prefix.pre.A")),
 
-        arguments(join(BLOB, INT), "prefix", join(BLOB, INT)),
-        arguments(join(var("A"), var("B")), "prefix", join(var("prefix.A"), var("prefix.B"))),
-        arguments(join(var("p.A"), var("p.B")), "prefix", join(var("prefix.p.A"), var("prefix.p.B"))),
+        arguments(join(BLOB, INT), addPrefix, join(BLOB, INT)),
+        arguments(join(var("A"), var("B")), addPrefix, join(var("prefix.A"), var("prefix.B"))),
+        arguments(join(var("p.A"), var("p.B")), addPrefix, join(var("prefix.p.A"), var("prefix.p.B"))),
 
-        arguments(meet(BLOB, INT), "prefix", meet(BLOB, INT)),
-        arguments(meet(var("A"), var("B")), "prefix", meet(var("prefix.A"), var("prefix.B"))),
-        arguments(meet(var("p.A"), var("p.B")), "prefix", meet(var("prefix.p.A"), var("prefix.p.B"))),
+        arguments(meet(BLOB, INT), addPrefix, meet(BLOB, INT)),
+        arguments(meet(var("A"), var("B")), addPrefix, meet(var("prefix.A"), var("prefix.B"))),
+        arguments(meet(var("p.A"), var("p.B")), addPrefix, meet(var("prefix.p.A"), var("prefix.p.B"))),
 
-        arguments(a(INT), "prefix", a(INT)),
-        arguments(a(var("A")), "prefix", a(var("prefix.A"))),
-        arguments(a(var("p.A")), "prefix", a(var("prefix.p.A"))),
+        arguments(a(INT), addPrefix, a(INT)),
+        arguments(a(var("A")), addPrefix, a(var("prefix.A"))),
+        arguments(a(var("p.A")), addPrefix, a(var("prefix.p.A"))),
 
-        arguments(f(BLOB, list(BOOL)), "prefix", f(BLOB, list(BOOL))),
-        arguments(f(var("A"), list(BOOL)), "prefix", f(var("prefix.A"), list(BOOL))),
-        arguments(f(BLOB, list(var("A"))), "prefix", f(BLOB, list(var("prefix.A")))),
-        arguments(f(var("p.A"), list(BOOL)), "prefix", f(var("prefix.p.A"), list(BOOL))),
-        arguments(f(BLOB, list(var("p.A"))), "prefix", f(BLOB, list(var("prefix.p.A"))))
+        arguments(f(BLOB, list(BOOL)), addPrefix, f(BLOB, list(BOOL))),
+        arguments(f(var("A"), list(BOOL)), addPrefix, f(var("prefix.A"), list(BOOL))),
+        arguments(f(BLOB, list(var("A"))), addPrefix, f(BLOB, list(var("prefix.A")))),
+        arguments(f(var("p.A"), list(BOOL)), addPrefix, f(var("prefix.p.A"), list(BOOL))),
+        arguments(f(BLOB, list(var("p.A"))), addPrefix, f(BLOB, list(var("prefix.p.A"))))
     );
-  }
-
-  @Test
-  public void with_prefixed_vars_fails_when_prefix_contains_dot() {
-    var var = var("A");
-    assertCall(() -> var.withPrefixedVars("abc."))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @ParameterizedTest
-  @MethodSource("with_prefixed_vars")
-  public void remove_var_prefixes(TypeS type, String prefix, TypeS typeWithPrefixedVars) {
-    assertThat(typeWithPrefixedVars.removeVarPrefixes())
-        .isEqualTo(type);
-  }
-
-  @Test
-  public void remove_var_prefixes_fails_when_var_has_no_prefix() {
-    var var = var("A");
-    assertCall(() -> var.removeVarPrefixes())
-        .throwsException(IllegalStateException.class);
   }
 
   @Nested
@@ -571,5 +552,34 @@ public class TypeSTest {
     equalsTester.addEqualityGroup(meet(BLOB, STRING), meet(STRING, BLOB));
 
     equalsTester.testEquals();
+  }
+
+  @Nested
+  class _vars {
+    @Test
+    public void prefixed() {
+      var var = var("A");
+      assertThat(var.prefixed("abc"))
+          .isEqualTo(var("abc.A"));
+    }
+
+    @Test
+    public void prefixed_fails_when_prefix_contains_dot() {
+      assertCall(() -> var("A").prefixed("abc."))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void unprefixed() {
+      assertThat(var("pref.A").unprefixed())
+          .isEqualTo(var("A"));
+    }
+
+    @Test
+    public void remove_var_prefixes_fails_when_var_has_no_prefix() {
+      var var = var("A");
+      assertCall(() -> var.unprefixed())
+          .throwsException(IllegalStateException.class);
+    }
   }
 }
