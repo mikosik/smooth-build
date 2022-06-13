@@ -19,10 +19,10 @@ import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.PolyFuncS;
-import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.StructDefS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TDefS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.out.log.LogBuffer;
@@ -91,8 +91,8 @@ public class ModLoader {
     return new StructDefS(type, path, loc);
   }
 
-  private NList<RefableObjS> loadTopRefables(ModPath path, Ast ast) {
-    var local = ImmutableList.<RefableObjS>builder();
+  private NList<TopRefableS> loadTopRefables(ModPath path, Ast ast) {
+    var local = ImmutableList.<TopRefableS>builder();
     for (var structN : ast.structs()) {
       var ctorS = loadSyntCtor(path, structN);
       local.add(ctorS);

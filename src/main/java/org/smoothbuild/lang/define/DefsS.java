@@ -7,7 +7,7 @@ import org.smoothbuild.util.collect.NList;
 
 public record DefsS(
     NList<TDefS> tDefs,
-    NList<RefableObjS> topRefables) {
+    NList<TopRefableS> topRefables) {
 
   public static DefsS empty() {
     return new DefsS(nList(), nList());

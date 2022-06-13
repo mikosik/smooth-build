@@ -7,8 +7,8 @@ import org.smoothbuild.lang.like.Refable;
 /**
  * Referencable.
  */
-public sealed interface RefableN extends Refable, AstNode, NamedN
-    permits MonoRefableN, PolyRefableN, RefableObjN {
+public sealed interface RefableN extends AstNode, Refable, NamedN
+    permits MonoRefableN, PolyRefableN, TopRefableN {
 
   public Optional<AnnN> ann();
 

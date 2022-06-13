@@ -9,7 +9,7 @@ import org.smoothbuild.lang.type.PolyTS;
  * Polymorphic object.
  */
 public sealed interface PolyObjS extends ObjS, PolyObj
-  permits PolyRefableObjS {
+  permits PolyTopRefableS {
 
   @Override
   public PolyTS type();

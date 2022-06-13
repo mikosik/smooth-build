@@ -25,11 +25,11 @@ public class AstVisitor {
     visitType(field.typeN());
   }
 
-  public void visitRefable(List<RefableObjN> refableObjs) {
+  public void visitRefable(List<TopRefableN> refableObjs) {
     refableObjs.forEach(this::visitRefable);
   }
 
-  public void visitRefable(RefableObjN eval) {
+  public void visitRefable(TopRefableN eval) {
     switch (eval) {
       case FuncN func -> visitFunc(func);
       case ValN value -> visitValue(value);

@@ -114,10 +114,10 @@ import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
 import org.smoothbuild.lang.define.PolyFuncS;
-import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.SyntCtorS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
@@ -980,8 +980,8 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public ObjRefS topRefS(RefableObjS refableObjS) {
-    return switch (refableObjS) {
+  public ObjRefS topRefS(TopRefableS topRefableS) {
+    return switch (topRefableS) {
       case ValS val -> topRefS(val);
       case PolyFuncS func -> topRefS(func.func());
     };

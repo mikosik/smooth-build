@@ -6,5 +6,5 @@ public record ModS(
     ModPath path,
     ModFiles files,
     NList<TDefS> tDefs,
-    NList<RefableObjS> topRefables) {
+    NList<TopRefableS> topRefables) {
 }

@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.smoothbuild.lang.base.NalImpl;
 import org.smoothbuild.lang.type.PolyFuncTS;
 
-public final class PolyFuncS extends NalImpl implements PolyRefableObjS {
+public final class PolyFuncS extends NalImpl implements PolyTopRefableS {
   private final PolyFuncTS type;
   private final MonoFuncS func;
 

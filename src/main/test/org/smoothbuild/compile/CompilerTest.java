@@ -21,7 +21,7 @@ import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.MonoObjS;
-import org.smoothbuild.lang.define.RefableObjS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
@@ -184,7 +184,7 @@ public class CompilerTest extends TestingContext {
       assertCompilation(defs(), objS, expected);
     }
 
-    private void assertCompilation(RefableObjS topRefable, MonoObjS objS, ObjB expected) {
+    private void assertCompilation(TopRefableS topRefable, MonoObjS objS, ObjB expected) {
       assertCompilation(defs(topRefable), objS, expected);
     }
 
@@ -212,14 +212,14 @@ public class CompilerTest extends TestingContext {
       assertCompilationIsCached(natFuncS(funcTS(stringTS()), "myFunc", nList()));
     }
 
-    private void assertCompilationIsCached(RefableObjS topRefable) {
+    private void assertCompilationIsCached(TopRefableS topRefable) {
       var compiler = newCompiler(topRefable);
       assertThat(compiler.compileObj(topRefS(topRefable)))
           .isSameInstanceAs(compiler.compileObj(topRefS(topRefable)));
     }
   }
 
-  private Compiler newCompiler(RefableObjS topRefable) {
+  private Compiler newCompiler(TopRefableS topRefable) {
     return newCompiler(defs(topRefable));
   }
 
@@ -251,7 +251,7 @@ public class CompilerTest extends TestingContext {
     return new DefsS(nList(), nList());
   }
 
-  private DefsS defs(RefableObjS topRefable) {
+  private DefsS defs(TopRefableS topRefable) {
     return new DefsS(nList(), nList(topRefable));
   }
 }

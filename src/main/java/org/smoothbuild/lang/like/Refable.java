@@ -5,5 +5,5 @@ import org.smoothbuild.util.collect.Named;
 /**
  * Referencable.
  */
-public interface Refable extends Named {
+public interface Refable extends Obj, Named {
 }

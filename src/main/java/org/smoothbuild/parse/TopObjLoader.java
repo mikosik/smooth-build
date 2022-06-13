@@ -20,13 +20,13 @@ import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
 import org.smoothbuild.lang.define.PolyFuncS;
-import org.smoothbuild.lang.define.RefableObjS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.like.MonoRefableObj;
+import org.smoothbuild.lang.like.MonoTopRefable;
 import org.smoothbuild.lang.like.Obj;
-import org.smoothbuild.lang.like.PolyRefableObj;
+import org.smoothbuild.lang.like.PolyTopRefable;
 import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.StructTS;
@@ -40,9 +40,9 @@ import org.smoothbuild.parse.ast.ItemN;
 import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
-import org.smoothbuild.parse.ast.RefableObjN;
 import org.smoothbuild.parse.ast.SelectN;
 import org.smoothbuild.parse.ast.StringN;
+import org.smoothbuild.parse.ast.TopRefableN;
 import org.smoothbuild.parse.ast.ValN;
 import org.smoothbuild.util.collect.NList;
 
@@ -56,7 +56,7 @@ public class TopObjLoader {
     this.typeSF = typeSF;
   }
 
-  public RefableObjS loadTopObj(ModPath path, RefableObjN refableN) {
+  public TopRefableS loadTopObj(ModPath path, TopRefableN refableN) {
     return switch (refableN) {
       case FuncN funcN -> loadFunc(path, funcN);
       case ValN valN -> loadVal(path, valN);
@@ -153,8 +153,8 @@ public class TopObjLoader {
     Refable referenced = ref.referenced();
     return switch (referenced) {
       case ItemN itemN -> new ParamRefS(itemN.typeO().get(), ref.name(), ref.loc());
-      case MonoRefableObj mono -> new ObjRefS(mono.typeO().get(), ref.name(), ref.loc());
-      case PolyRefableObj poly -> new ObjRefS(poly.typeO().get().type(), ref.name(), ref.loc());
+      case MonoTopRefable mono -> new ObjRefS(mono.typeO().get(), ref.name(), ref.loc());
+      case PolyTopRefable poly -> new ObjRefS(poly.typeO().get().type(), ref.name(), ref.loc());
       default -> throw unexpectedCaseExc(referenced);
     };
   }

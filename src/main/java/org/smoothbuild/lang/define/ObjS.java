@@ -7,6 +7,6 @@ import org.smoothbuild.lang.type.TypeS;
 /**
  * Literal or expression in smooth language.
  */
-public sealed interface ObjS extends Nal, Obj permits MonoObjS, PolyObjS, RefableObjS {
+public sealed interface ObjS extends Nal, Obj permits MonoObjS, PolyObjS, RefableS {
   public TypeS type();
 }

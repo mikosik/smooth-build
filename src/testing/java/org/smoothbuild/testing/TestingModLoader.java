@@ -11,7 +11,7 @@ import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
-import org.smoothbuild.lang.define.RefableObjS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;
@@ -50,21 +50,21 @@ public class TestingModLoader {
     return this;
   }
 
-  public void containsTopRefable(RefableObjS expected) {
+  public void containsTopRefable(TopRefableS expected) {
     String name = expected.name();
-    RefableObjS actual = assertContainsTopRefable(name);
+    TopRefableS actual = assertContainsTopRefable(name);
     boolean equals = actual.equals(expected);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
   public void containsTopRefableWithType(String name, TypeS expectedT) {
-    RefableObjS topRefable = assertContainsTopRefable(name);
+    TopRefableS topRefable = assertContainsTopRefable(name);
     assertThat(topRefable.type())
         .isEqualTo(expectedT);
   }
 
-  private RefableObjS assertContainsTopRefable(String name) {
+  private TopRefableS assertContainsTopRefable(String name) {
     var topRefables = modS.value().topRefables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(topRefables.containsName(name))

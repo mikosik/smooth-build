@@ -8,7 +8,7 @@ import org.smoothbuild.lang.type.MonoTS;
 /**
  * Monomorphic object.
  */
-public sealed interface MonoObjS extends ObjS, MonoObj permits MonoRefableObjS, CnstS, MonoExprS {
+public sealed interface MonoObjS extends ObjS, MonoObj permits MonoTopRefableS, CnstS, MonoExprS {
   @Override
   public MonoTS type();
 

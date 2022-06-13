@@ -20,7 +20,7 @@ import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.MonoObjS;
-import org.smoothbuild.lang.define.RefableObjS;
+import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
@@ -213,7 +213,7 @@ public class EvaluatorTest  extends TestingContext {
     return evaluate(objS, nList());
   }
 
-  private ObjB evaluate(MonoObjS objS, NList<RefableObjS> topRefables) {
+  private ObjB evaluate(MonoObjS objS, NList<TopRefableS> topRefables) {
     var defsS = new DefsS(nList(), topRefables);
     var resultMap = newEvaluator().evaluate(defsS, list(objS)).get();
     assertThat(resultMap.size())

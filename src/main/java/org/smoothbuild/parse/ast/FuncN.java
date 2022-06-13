@@ -14,7 +14,7 @@ import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncN extends PolyRefableN implements PolyRefableObjN {
+public final class FuncN extends PolyRefableN implements PolyTopRefableN {
   private final Optional<TypeN> resTN;
   private final NList<ItemN> params;
 

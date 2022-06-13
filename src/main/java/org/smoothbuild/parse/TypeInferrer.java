@@ -46,9 +46,9 @@ import org.smoothbuild.parse.ast.ObjN;
 import org.smoothbuild.parse.ast.OrderN;
 import org.smoothbuild.parse.ast.RefN;
 import org.smoothbuild.parse.ast.RefableN;
-import org.smoothbuild.parse.ast.RefableObjN;
 import org.smoothbuild.parse.ast.SelectN;
 import org.smoothbuild.parse.ast.StructN;
+import org.smoothbuild.parse.ast.TopRefableN;
 import org.smoothbuild.parse.ast.TypeN;
 import org.smoothbuild.parse.ast.ValN;
 import org.smoothbuild.util.collect.NList;
@@ -145,7 +145,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<MonoTS> evalTOfTopEval(RefableObjN refableN) {
+      private Optional<MonoTS> evalTOfTopEval(TopRefableN refableN) {
         return evalTypeOf(refableN, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
             logError(refableN, "`" + refableN.name() + "` has body which type is " + source.q()
