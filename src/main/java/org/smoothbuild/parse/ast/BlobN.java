@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.type.TypeSF.BLOB;
+import static org.smoothbuild.lang.type.TypeFS.BLOB;
 
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.util.DecodeHexExc;

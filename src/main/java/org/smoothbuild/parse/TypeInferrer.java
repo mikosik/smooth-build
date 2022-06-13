@@ -27,8 +27,8 @@ import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyFuncTS;
 import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.TypeS;
-import org.smoothbuild.lang.type.TypeSF;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -56,15 +56,15 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class TypeInferrer {
-  private final TypeSF typeSF;
+  private final TypeFS typeFS;
   private final TypingS typing;
   private final CallTypeInferrer callTypeInferrer;
 
   @Inject
-  public TypeInferrer(TypeSF typeSF, TypingS typing) {
-    this.typeSF = typeSF;
+  public TypeInferrer(TypeFS typeFS, TypingS typing) {
+    this.typeFS = typeFS;
     this.typing = typing;
-    this.callTypeInferrer = new CallTypeInferrer(typeSF, typing);
+    this.callTypeInferrer = new CallTypeInferrer(typeFS, typing);
   }
 
   public List<Log> inferTypes(Ast ast, DefsS imported) {
@@ -75,9 +75,9 @@ public class TypeInferrer {
       public void visitStruct(StructN struct) {
         super.visitStruct(struct);
         var fields = pullUp(map(struct.fields(), ItemN::sig));
-        struct.setTypeO(fields.map(f -> typeSF.struct(struct.name(), nList(f))));
+        struct.setTypeO(fields.map(f -> typeFS.struct(struct.name(), nList(f))));
         struct.ctor().setTypeO(
-            fields.map(s -> typeSF.polyFunc(struct.typeO().get(), map(s, ItemSigS::type))));
+            fields.map(s -> typeFS.polyFunc(struct.typeO().get(), map(s, ItemSigS::type))));
       }
 
       @Override
@@ -117,7 +117,7 @@ public class TypeInferrer {
             .collect(toVarSetS());
         var r = result.get();
         if (paramVars.containsAll(r.vars())) {
-          return Optional.of(typeSF.polyFunc(r, ps));
+          return Optional.of(typeFS.polyFunc(r, ps));
         }
         logError(
             resN, "Function result type has type variable(s) not present in any parameter type.");
@@ -180,17 +180,17 @@ public class TypeInferrer {
 
       private Optional<MonoTS> createType(TypeN type) {
         if (isVarName(type.name())) {
-          return Optional.of(typeSF.var(type.name()));
+          return Optional.of(typeFS.var(type.name()));
         }
         return switch (type) {
-          case ArrayTN array -> createType(array.elemT()).map(typeSF::array);
+          case ArrayTN array -> createType(array.elemT()).map(typeFS::array);
           case FuncTN func -> {
             var resultOpt = createType(func.resT());
             var paramsOpt = pullUp(map(func.paramTs(), this::createType));
             if (resultOpt.isEmpty() || paramsOpt.isEmpty()) {
               yield empty();
             }
-            yield Optional.of(typeSF.func(resultOpt.get(), paramsOpt.get()));
+            yield Optional.of(typeFS.func(resultOpt.get(), paramsOpt.get()));
           }
           default -> Optional.of(findType(type.name()));
         };
@@ -246,7 +246,7 @@ public class TypeInferrer {
       private Optional<MonoTS> findArrayT(OrderN array) {
         List<ObjN> expressions = array.elems();
         if (expressions.isEmpty()) {
-          return Optional.of(typeSF.array(typeSF.nothing()));
+          return Optional.of(typeFS.array(typeFS.nothing()));
         }
         Optional<? extends TypeS> firstType = expressions.get(0).typeO();
         if (firstType.isEmpty()) {
@@ -261,7 +261,7 @@ public class TypeInferrer {
             return empty();
           }
           type = typing.mergeUp(type, TypeS.hackyCast(elemT.get()));
-          if (typing.contains(type, typeSF.any())) {
+          if (typing.contains(type, typeFS.any())) {
             logError(elem,
                 "Array elems at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).typeO().get().q()
@@ -269,7 +269,7 @@ public class TypeInferrer {
             return empty();
           }
         }
-        return Optional.of(typeSF.array(type));
+        return Optional.of(typeFS.array(type));
       }
 
       @Override

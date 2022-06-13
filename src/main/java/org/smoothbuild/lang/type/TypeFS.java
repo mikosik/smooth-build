@@ -15,7 +15,7 @@ import org.smoothbuild.util.type.Side;
 import com.google.common.collect.ImmutableList;
 
 @Singleton
-public class TypeSF {
+public class TypeFS {
   public static final AnyTS ANY = new AnyTS();
   public static final BlobTS BLOB = new BlobTS();
   public static final BoolTS BOOL = new BoolTS();
@@ -24,7 +24,7 @@ public class TypeSF {
   public static final StringTS STRING = new StringTS();
 
   @Inject
-  public TypeSF() {
+  public TypeFS() {
   }
 
   /**

@@ -24,7 +24,7 @@ import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TDefS;
 import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
@@ -37,13 +37,13 @@ import com.google.common.collect.ImmutableList;
 public class ModLoader {
   private final TypeInferrer typeInferrer;
   private final TopObjLoader topObjLoader;
-  private final TypeSF typeSF;
+  private final TypeFS typeFS;
 
   @Inject
-  public ModLoader(TypeInferrer typeInferrer, TopObjLoader topObjLoader, TypeSF typeSF) {
+  public ModLoader(TypeInferrer typeInferrer, TopObjLoader topObjLoader, TypeFS typeFS) {
     this.typeInferrer = typeInferrer;
     this.topObjLoader = topObjLoader;
-    this.typeSF = typeSF;
+    this.typeFS = typeFS;
   }
 
   public Maybe<ModS> loadModule(
@@ -107,7 +107,7 @@ public class ModLoader {
     var resultT = (StructTS) struct.typeO().get();
     var name = struct.ctor().name();
     var paramTs = map(struct.fields(), f -> f.typeO().get());
-    var type = typeSF.func(resultT, paramTs);
+    var type = typeFS.func(resultT, paramTs);
     var params = struct.fields().map(ItemN::toItemS);
     var loc = struct.loc();
     return polyFuncS(new SyntCtorS(type, path, name, params, loc));

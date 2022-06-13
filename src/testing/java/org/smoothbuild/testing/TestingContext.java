@@ -131,7 +131,7 @@ import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.PolyFuncTS;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarBoundsS;
 import org.smoothbuild.lang.type.VarS;
@@ -179,7 +179,7 @@ public class TestingContext {
   private FileSystem fullFileSystem;
   private TempManager tempManager;
   private ModS internalMod;
-  private TypeSF typeSF;
+  private TypeFS typeFS;
   private ConsoleReporter consoleReporter;
   private BytecodeLoader bytecodeLoader;
   private JarClassLoaderProv jarClassLoaderProv;
@@ -331,11 +331,11 @@ public class TestingContext {
     return catDb();
   }
 
-  public TypeSF typeFS() {
-    if (typeSF == null) {
-      typeSF = new TypeSF();
+  public TypeFS typeFS() {
+    if (typeFS == null) {
+      typeFS = new TypeFS();
     }
-    return typeSF;
+    return typeFS;
   }
 
   public CatDb catDb() {

@@ -10,7 +10,7 @@ import java.util.Queue;
 
 import org.smoothbuild.lang.type.ConstrS;
 import org.smoothbuild.lang.type.MonoTS;
-import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.util.type.Side;
 
@@ -18,7 +18,7 @@ public class SolverS {
   private final NormalizerS normalizer;
   private final VarNodes varNodes;
 
-  public SolverS(TypeSF typeF) {
+  public SolverS(TypeFS typeF) {
     this.normalizer = new NormalizerS(typeF);
     this.varNodes = new VarNodes(typeF);
   }

@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.type.TypeSF.STRING;
+import static org.smoothbuild.lang.type.TypeFS.STRING;
 
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.util.Strings;

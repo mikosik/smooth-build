@@ -30,7 +30,7 @@ import org.smoothbuild.lang.like.PolyTopRefable;
 import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.parse.ast.AnnN;
 import org.smoothbuild.parse.ast.BlobN;
 import org.smoothbuild.parse.ast.CallN;
@@ -49,11 +49,11 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class TopObjLoader {
-  private final TypeSF typeSF;
+  private final TypeFS typeFS;
 
   @Inject
-  public TopObjLoader(TypeSF typeSF) {
-    this.typeSF = typeSF;
+  public TopObjLoader(TypeFS typeFS) {
+    this.typeFS = typeFS;
   }
 
   public TopRefableS loadTopObj(ModPath path, TopRefableN refableN) {
@@ -82,7 +82,7 @@ public class TopObjLoader {
     var name = funcN.name();
     var loc = funcN.loc();
     var paramTs = map(params, ItemS::type);
-    var funcT = typeSF.func(resT, paramTs);
+    var funcT = typeFS.func(resT, paramTs);
     if (funcN.ann().isPresent()) {
       var ann = loadAnn(funcN.ann().get());
       return PolyFuncS.polyFuncS(new AnnFuncS(ann, funcT, path, name, params, loc));
@@ -161,21 +161,21 @@ public class TopObjLoader {
 
   public BlobS createBlob(BlobN blob) {
     return new BlobS(
-        typeSF.blob(),
+        typeFS.blob(),
         blob.byteString(),
         blob.loc());
   }
 
   public IntS createInt(IntN intN) {
     return new IntS(
-        typeSF.int_(),
+        typeFS.int_(),
         intN.bigInteger(),
         intN.loc());
   }
 
   public StringS createString(StringN string) {
     return new StringS(
-        typeSF.string(),
+        typeFS.string(),
         string.unescapedValue(),
         string.loc());
   }

@@ -14,7 +14,7 @@ import org.smoothbuild.lang.type.MeetTS;
 import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.util.type.Side;
 
@@ -22,10 +22,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
 public class NormalizerS {
-  private final TypeSF typeF;
+  private final TypeFS typeF;
   private int currentId;
 
-  public NormalizerS(TypeSF typeF) {
+  public NormalizerS(TypeFS typeF) {
     this.typeF = typeF;
   }
 

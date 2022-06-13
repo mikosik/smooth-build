@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.ast;
 
 import static java.lang.Character.isDigit;
-import static org.smoothbuild.lang.type.TypeSF.INT;
+import static org.smoothbuild.lang.type.TypeFS.INT;
 
 import java.math.BigInteger;
 

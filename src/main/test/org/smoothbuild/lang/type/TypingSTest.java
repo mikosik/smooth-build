@@ -529,7 +529,7 @@ public class TypingSTest {
     return TESTED_ASSIGN_CASES_S.testedTF();
   }
 
-  private static TypeSF typeF() {
+  private static TypeFS typeF() {
     return typing().typeF();
   }
 

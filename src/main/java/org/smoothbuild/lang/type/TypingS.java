@@ -28,11 +28,11 @@ import com.google.common.collect.MultimapBuilder.SetMultimapBuilder;
 import com.google.common.collect.SetMultimap;
 
 public class TypingS {
-  private final TypeSF typeSF;
+  private final TypeFS typeFS;
 
   @Inject
-  public TypingS(TypeSF typeSF) {
-    this.typeSF = typeSF;
+  public TypingS(TypeFS typeFS) {
+    this.typeFS = typeFS;
   }
 
   public boolean contains(MonoTS type, MonoTS inner) {
@@ -85,8 +85,8 @@ public class TypingS {
   }
 
   private boolean inequalByEdgeCases(MonoTS type1, MonoTS type2, Side side) {
-    return type2.equals(typeSF.edge(side))
-        || type1.equals(typeSF.edge(side.other()));
+    return type2.equals(typeFS.edge(side))
+        || type1.equals(typeFS.edge(side.other()));
   }
 
   private boolean inequalByConstruction(MonoTS t1, MonoTS t2, Side side, InequalFunc isInequal) {
@@ -140,13 +140,13 @@ public class TypingS {
 
   private void inferImpl(MonoTS t1, MonoTS t2, Side side, Map<VarS, BoundedS> result) {
     switch (t1) {
-      case VarS v -> result.merge(v, new BoundedS(v, typeSF.oneSideBound(side, t2)), this::merge);
+      case VarS v -> result.merge(v, new BoundedS(v, typeFS.oneSideBound(side, t2)), this::merge);
       case ComposedTS c1 -> {
-        MonoTS sideEdge = typeSF.edge(side);
+        MonoTS sideEdge = typeFS.edge(side);
         if (t2.equals(sideEdge)) {
           var other = side.other();
           c1.covars().forEach(t -> inferImpl(t, sideEdge, side, result));
-          c1.contravars().forEach(t -> inferImpl(t, typeSF.edge(other), other, result));
+          c1.contravars().forEach(t -> inferImpl(t, typeFS.edge(other), other, result));
         } else if (t1.getClass().equals(t2.getClass())) {
           var c2 = (ComposedTS) t2;
           var c1Covars = c1.covars();
@@ -209,7 +209,7 @@ public class TypingS {
   }
 
   public MonoTS merge(MonoTS type1, MonoTS type2, Side direction) {
-    MonoTS otherEdge = typeSF.edge(direction.other());
+    MonoTS otherEdge = typeFS.edge(direction.other());
     if (otherEdge.equals(type2)) {
       return type1;
     } else if (otherEdge.equals(type1)) {
@@ -232,7 +232,7 @@ public class TypingS {
         }
       }
     }
-    return typeSF.edge(direction);
+    return typeFS.edge(direction);
   }
 
   public BoundedS merge(BoundedS a, BoundedS b) {
@@ -289,11 +289,11 @@ public class TypingS {
     }
 
     if (1 < others.size()) {
-      return typeSF.edge(direction);
+      return typeFS.edge(direction);
     }
     var funcEntries = funcTs.asMap().entrySet();
     if (1 < others.size() + (arrayTs.isEmpty() ? 0 : 1) + funcEntries.size()) {
-      return typeSF.edge(direction);
+      return typeFS.edge(direction);
     }
     if (!arrayTs.isEmpty()) {
       var reducedElems = resolveMergeElems(map(arrayTs, ArrayTS::elem), direction);
@@ -329,12 +329,12 @@ public class TypingS {
       return type;
     }
     return switch (composedT) {
-      case ArrayTS array -> typeSF.array(covars.get(0));
-      case MonoFuncTS func -> typeSF.func(covars.get(0), contravars);
+      case ArrayTS array -> typeFS.array(covars.get(0));
+      case MonoFuncTS func -> typeFS.func(covars.get(0), contravars);
     };
   }
 
-  public TypeSF typeF() {
-    return typeSF;
+  public TypeFS typeF() {
+    return typeFS;
   }
 }

@@ -6,7 +6,7 @@ import static org.smoothbuild.util.type.Side.UPPER;
 import java.util.HashMap;
 
 import org.smoothbuild.lang.type.MonoTS;
-import org.smoothbuild.lang.type.TypeSF;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.solver.ConstrGraphS.Builder;
 import org.smoothbuild.util.type.Bounds;
@@ -15,7 +15,7 @@ public class VarNodes {
   private final HashMap<VarS, VarNode> nodes;
   private final Bounds<MonoTS> initialBounds;
 
-  public VarNodes(TypeSF typeF) {
+  public VarNodes(TypeFS typeF) {
     this.initialBounds = new Bounds<>(typeF.nothing(), typeF.any());
     this.nodes = new HashMap<>();
   }
