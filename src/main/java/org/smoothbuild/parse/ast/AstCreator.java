@@ -156,7 +156,7 @@ public class AstCreator {
       private ArgN pipedArg(ObjN result, Token pipeCharacter) {
         // Loc of nameless piped arg is set to the loc of pipe character '|'.
         Loc loc = LocHelpers.locOf(filePath, pipeCharacter);
-        return new ExplicitArgN(null, result, loc);
+        return new ExplicitArgN(Optional.empty(), result, loc);
       }
 
       private ObjN createLiteral(LiteralContext expr) {
@@ -224,7 +224,7 @@ public class AstCreator {
         for (ArgContext arg : argList.arg()) {
           ExprContext expr = arg.expr();
           TerminalNode nameNode = arg.NAME();
-          String name = nameNode == null ? null : nameNode.getText();
+          var name = nameNode == null ? Optional.<String>empty() : Optional.of(nameNode.getText());
           ObjN objN = createObj(expr);
           result.add(new ExplicitArgN(name, objN, LocHelpers.locOf(filePath, arg)));
         }

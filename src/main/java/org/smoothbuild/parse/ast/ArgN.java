@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import static com.google.common.base.Preconditions.checkState;
+import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.like.Obj;
@@ -8,22 +8,21 @@ import org.smoothbuild.util.collect.Named;
 
 public sealed abstract class ArgN extends GenericAstNode implements NamedN
 permits DefaultArgN, ExplicitArgN {
-  private final String name;
+  private final Optional<String> name;
   private final Obj obj;
 
-  public ArgN(String name, Obj obj, Loc loc) {
+  public ArgN(Optional<String> name, Obj obj, Loc loc) {
     super(loc);
     this.name = name;
     this.obj = obj;
   }
 
   public boolean declaresName() {
-    return name != null;
+    return nameO().isPresent();
   }
 
   @Override
-  public String name() {
-    checkState(declaresName());
+  public Optional<String> nameO() {
     return name;
   }
 
