@@ -55,7 +55,7 @@ import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.TypeBF;
+import org.smoothbuild.bytecode.type.TypeFB;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
@@ -327,7 +327,7 @@ public class TestingContext {
     return typingB;
   }
 
-  public TypeBF typeFB() {
+  public TypeFB typeFB() {
     return catDb();
   }
 

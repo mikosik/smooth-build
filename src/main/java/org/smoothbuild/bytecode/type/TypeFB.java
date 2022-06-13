@@ -12,7 +12,7 @@ import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
 
-public interface TypeBF {
+public interface TypeFB {
   public AnyTB any();
 
   public NothingTB nothing();

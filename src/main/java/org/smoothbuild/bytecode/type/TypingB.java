@@ -32,11 +32,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class TypingB {
-  private final TypeBF typeBF;
+  private final TypeFB typeFB;
 
   @Inject
-  public TypingB(TypeBF typeBF) {
-    this.typeBF = typeBF;
+  public TypingB(TypeFB typeFB) {
+    this.typeFB = typeFB;
   }
 
   public boolean contains(TypeB type, TypeB inner) {
@@ -89,8 +89,8 @@ public class TypingB {
   }
 
   private boolean inequalByEdgeCases(TypeB type1, TypeB type2, Side side) {
-    return type2.equals(typeBF.edge(side))
-        || type1.equals(typeBF.edge(side.other()));
+    return type2.equals(typeFB.edge(side))
+        || type1.equals(typeFB.edge(side.other()));
   }
 
   private boolean inequalByConstruction(TypeB t1, TypeB t2, Side side, InequalFunc isInequal) {
@@ -144,13 +144,13 @@ public class TypingB {
 
   private void inferImpl(TypeB t1, TypeB t2, Side side, Map<VarB, BoundedB> result) {
     switch (t1) {
-      case VarB v -> result.merge(v, new BoundedB(v, typeBF.oneSideBound(side, t2)), this::merge);
+      case VarB v -> result.merge(v, new BoundedB(v, typeFB.oneSideBound(side, t2)), this::merge);
       case ComposedTB c1 -> {
-        TypeB sideEdge = typeBF.edge(side);
+        TypeB sideEdge = typeFB.edge(side);
         if (t2.equals(sideEdge)) {
           var other = side.other();
           c1.covars().forEach(t -> inferImpl(t, sideEdge, side, result));
-          c1.contravars().forEach(t -> inferImpl(t, typeBF.edge(other), other, result));
+          c1.contravars().forEach(t -> inferImpl(t, typeFB.edge(other), other, result));
         } else if (t1.getClass().equals(t2.getClass())) {
           var c2 = (ComposedTB) t2;
           var c1Covars = c1.covars();
@@ -213,7 +213,7 @@ public class TypingB {
   }
 
   public TypeB merge(TypeB type1, TypeB type2, Side direction) {
-    TypeB otherEdge = typeBF.edge(direction.other());
+    TypeB otherEdge = typeFB.edge(direction.other());
     if (otherEdge.equals(type2)) {
       return type1;
     } else if (otherEdge.equals(type1)) {
@@ -236,7 +236,7 @@ public class TypingB {
         }
       }
     }
-    return typeBF.edge(direction);
+    return typeFB.edge(direction);
   }
 
   public BoundedB merge(BoundedB a, BoundedB b) {
@@ -258,13 +258,13 @@ public class TypingB {
       return type;
     }
     return switch (composedT) {
-      case ArrayTB array -> typeBF.array(covars.get(0));
-      case FuncTB func -> typeBF.func(covars.get(0), contravars);
-      case TupleTB tuple -> typeBF.tuple(covars);
+      case ArrayTB array -> typeFB.array(covars.get(0));
+      case FuncTB func -> typeFB.func(covars.get(0), contravars);
+      case TupleTB tuple -> typeFB.tuple(covars);
     };
   }
 
-  public TypeBF typeF() {
-    return typeBF;
+  public TypeFB typeF() {
+    return typeFB;
   }
 }
