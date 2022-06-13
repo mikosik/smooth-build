@@ -281,17 +281,9 @@ public class ObjDbImpl implements ObjDb {
     }
   }
 
-  private TypeB inferCallResT(CallableTB callableTB, ObjB args) {
-    var argsT = castTypeToTupleTB(args);
+  private TypeB inferCallResT(CallableTB callableTB, CombineB args) {
+    var argsT = args.type();
     return typing.inferCallResT(callableTB, argsT.items(), () -> illegalArgs(callableTB, argsT));
-  }
-
-  private TupleTB castTypeToTupleTB(ObjB args) {
-    if (args.type() instanceof TupleTB tupleT) {
-      return tupleT;
-    } else {
-      throw new IllegalArgumentException("`args` component doesn't evaluate to TupleB.");
-    }
   }
 
   private IllegalArgumentException illegalArgs(CallableTB callableTB, TypeB argsT) {
