@@ -110,7 +110,6 @@ import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.MonoFuncS;
 import org.smoothbuild.lang.define.MonoObjS;
-import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
 import org.smoothbuild.lang.define.PolyFuncS;
@@ -118,6 +117,7 @@ import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.TopRefableS;
+import org.smoothbuild.lang.define.ValRefS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
@@ -980,23 +980,23 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public ObjRefS topRefS(TopRefableS topRefableS) {
+  public ValRefS topRefS(TopRefableS topRefableS) {
     return switch (topRefableS) {
       case ValS val -> topRefS(val);
       case PolyFuncS func -> topRefS(func.func());
     };
   }
 
-  public ObjRefS topRefS(ValS val) {
+  public ValRefS topRefS(ValS val) {
     return topRefS(1, val.type(), val.name());
   }
 
-  public ObjRefS topRefS(MonoFuncS func) {
+  public ValRefS topRefS(MonoFuncS func) {
     return topRefS(1, func.type(), func.name());
   }
 
-  public ObjRefS topRefS(int line, MonoTS type, String name) {
-    return new ObjRefS(type, name, loc(line));
+  public ValRefS topRefS(int line, MonoTS type, String name) {
+    return new ValRefS(type, name, loc(line));
   }
 
   public SelectS selectS(MonoTS type, MonoObjS selectable, String field) {

@@ -51,13 +51,13 @@ import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.MonoFuncS;
 import org.smoothbuild.lang.define.MonoObjS;
-import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
 import org.smoothbuild.lang.define.PolyFuncS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.SyntCtorS;
+import org.smoothbuild.lang.define.ValRefS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.MonoFuncTS;
@@ -233,7 +233,7 @@ public class Compiler {
       case IntS intS -> compileAndCacheNal(intS, this::compileInt);
       case OrderS orderS -> compileAndCacheNal(orderS, this::compileOrder);
       case ParamRefS paramRefS -> compileAndCacheNal(paramRefS, this::compileParamRef);
-      case ObjRefS objRefS -> compileTopRef(objRefS);
+      case ValRefS valRefS -> compileTopRef(valRefS);
       case SelectS selectS -> compileAndCacheNal(selectS, this::compileSelect);
       case StringS stringS -> compileAndCacheNal(stringS, this::compileString);
       case AnnValS annValS -> throw unexpectedCaseExc(objS); // TODO remove?
@@ -281,8 +281,8 @@ public class Compiler {
     return bytecodeF.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
   }
 
-  private ObjB compileTopRef(ObjRefS objRefS) {
-    return switch (defs.topRefables().get(objRefS.name())) {
+  private ObjB compileTopRef(ValRefS valRefS) {
+    return switch (defs.topRefables().get(valRefS.name())) {
       case PolyFuncS f -> compileFunc(f.func()); // TODO workaround hack
       case ValS v -> compileVal(v);
     };

@@ -16,13 +16,13 @@ import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.MonoObjS;
-import org.smoothbuild.lang.define.ObjRefS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
 import org.smoothbuild.lang.define.PolyFuncS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.TopRefableS;
+import org.smoothbuild.lang.define.ValRefS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.like.MonoTopRefable;
 import org.smoothbuild.lang.like.Obj;
@@ -153,8 +153,8 @@ public class TopObjLoader {
     Refable referenced = ref.referenced();
     return switch (referenced) {
       case ItemN itemN -> new ParamRefS(itemN.typeO().get(), ref.name(), ref.loc());
-      case MonoTopRefable mono -> new ObjRefS(mono.typeO().get(), ref.name(), ref.loc());
-      case PolyTopRefable poly -> new ObjRefS(poly.typeO().get().type(), ref.name(), ref.loc());
+      case MonoTopRefable mono -> new ValRefS(mono.typeO().get(), ref.name(), ref.loc());
+      case PolyTopRefable poly -> new ValRefS(poly.typeO().get().type(), ref.name(), ref.loc());
       default -> throw unexpectedCaseExc(referenced);
     };
   }
