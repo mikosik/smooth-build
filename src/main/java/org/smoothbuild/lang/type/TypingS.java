@@ -258,10 +258,10 @@ public class TypingS {
   }
 
   private MonoTS resolveMerges(MergeTS mergeT) {
-    return resolveMergeElems(mergeT.elems(), mergeT.direction());
+    return resolveMerge(mergeT.elems(), mergeT.direction());
   }
 
-  private MonoTS resolveMergeElems(Collection<MonoTS> elems, Side direction) {
+  public MonoTS resolveMerge(Collection<MonoTS> elems, Side direction) {
     var arrayTs = new ArrayList<ArrayTS>(elems.size());
     SetMultimap<Integer, MonoFuncTS> funcTs = SetMultimapBuilder.hashKeys().hashSetValues().build();
     var others = new HashSet<MonoTS>();
@@ -296,19 +296,19 @@ public class TypingS {
       return typeFS.edge(direction);
     }
     if (!arrayTs.isEmpty()) {
-      var reducedElems = resolveMergeElems(map(arrayTs, ArrayTS::elem), direction);
+      var reducedElems = resolveMerge(map(arrayTs, ArrayTS::elem), direction);
       return typeF().array(reducedElems);
     }
 
     if (!funcEntries.isEmpty()) {
       var entry = funcEntries.iterator().next();
-      var reducedElems = resolveMergeElems(map(entry.getValue(), MonoFuncTS::res), direction);
+      var reducedElems = resolveMerge(map(entry.getValue(), MonoFuncTS::res), direction);
       int paramCount = entry.getKey();
       var reducedParams = new ArrayList<MonoTS>();
       for (int i = 0; i < paramCount; i++) {
         int n = i;
         var nthParams = map(entry.getValue(), f -> f.params().get(n));
-        reducedParams.add(resolveMergeElems(nthParams, direction.other()));
+        reducedParams.add(resolveMerge(nthParams, direction.other()));
       }
       return typeF().func(reducedElems, reducedParams);
     }

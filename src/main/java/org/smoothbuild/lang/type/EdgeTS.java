@@ -1,5 +1,8 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.TypeFS.ANY;
+import static org.smoothbuild.lang.type.TypeFS.NOTHING;
+
 import org.smoothbuild.util.type.Side;
 
 /**
@@ -16,6 +19,13 @@ public sealed abstract class EdgeTS extends BaseTS
 
   public Side side() {
     return side;
+  }
+
+  public static EdgeTS edgeTS(Side side) {
+    return switch (side) {
+      case LOWER -> NOTHING;
+      case UPPER -> ANY;
+    };
   }
 }
 
