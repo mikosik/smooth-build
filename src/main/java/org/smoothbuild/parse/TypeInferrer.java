@@ -339,7 +339,7 @@ public class TypeInferrer {
       @Override
       public void visitRef(RefN ref) {
         super.visitRef(ref);
-        ref.setTypeO(ref.referencedType());
+        ref.setTypeO(ref.referenced().typeO());
       }
 
       @Override

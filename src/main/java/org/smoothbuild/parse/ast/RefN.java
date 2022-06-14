@@ -1,14 +1,7 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
-
-import java.util.Optional;
-
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.define.PolyFuncS;
-import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.like.Refable;
-import org.smoothbuild.lang.type.TypeS;
 
 public final class RefN extends GenericAstNode implements ExprN {
   private final String name;
@@ -29,15 +22,6 @@ public final class RefN extends GenericAstNode implements ExprN {
 
   public Refable referenced() {
     return referenced;
-  }
-
-  public Optional<? extends TypeS> referencedType() {
-    return switch (referenced) {
-      case AstNode n -> n.typeO();
-      case PolyFuncS f -> f.typeO();
-      case ValS v -> v.typeO();
-      default -> throw unexpectedCaseExc(referenced);
-    };
   }
 
   @Override
