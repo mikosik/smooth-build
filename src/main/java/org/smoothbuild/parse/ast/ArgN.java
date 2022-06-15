@@ -26,6 +26,11 @@ permits DefaultArgN, ExplicitArgN {
     return name;
   }
 
+  @Override
+  public String name() {
+    return name.get();
+  }
+
   public abstract String nameSanitized();
 
   public String typeAndName() {
