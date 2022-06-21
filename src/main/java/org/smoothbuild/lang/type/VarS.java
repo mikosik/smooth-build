@@ -11,7 +11,7 @@ import java.util.function.Function;
  * This class is immutable.
  */
 public final class VarS extends MonoTS {
-  private static final String PREFIX_SEPARATOR = ".";
+  private static final char PREFIX_SEPARATOR = '.';
   private final VarSetS vars;
 
   public VarS(String name) {
@@ -30,7 +30,7 @@ public final class VarS extends MonoTS {
   }
 
   public VarS prefixed(String prefix) {
-    checkArgument(!prefix.contains(PREFIX_SEPARATOR));
+    checkArgument(!containsPrefixSeparator(prefix));
     return new VarS(prefix + PREFIX_SEPARATOR + name());
   }
 
@@ -42,5 +42,13 @@ public final class VarS extends MonoTS {
     } else {
       throw new IllegalStateException("Var `" + name + "` doesn't have prefix.");
     }
+  }
+
+  public boolean hasPrefix() {
+    return containsPrefixSeparator(name());
+  }
+
+  private boolean containsPrefixSeparator(String string) {
+    return string.indexOf(PREFIX_SEPARATOR) != -1;
   }
 }
