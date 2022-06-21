@@ -621,5 +621,17 @@ public class MonoTSTest {
       assertCall(() -> var.unprefixed())
           .throwsException(IllegalStateException.class);
     }
+
+    @Test
+    public void has_prefix_returns_false_for_not_prefixed_var() {
+      assertThat(var("A").hasPrefix())
+          .isFalse();
+    }
+
+    @Test
+    public void has_prefix_returns_true_for_prefixed_var() {
+      assertThat(var("pref.A").hasPrefix())
+          .isTrue();
+    }
   }
 }
