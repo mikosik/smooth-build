@@ -186,6 +186,46 @@ public class MonoTSTest {
     );
   }
 
+  @ParameterizedTest
+  @MethodSource("includes")
+  public void includes(MonoTS type, MonoTS included, boolean expected) {
+    assertThat(type.includes(included))
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> includes() {
+    return List.of(
+        arguments(ANY, ANY, true),
+        arguments(BLOB, BLOB, true),
+        arguments(BOOL, BOOL, true),
+        arguments(INT, INT, true),
+        arguments(NOTHING, NOTHING, true),
+        arguments(STRING, STRING, true),
+
+        arguments(ANY, INT, false),
+        arguments(BLOB, INT, false),
+        arguments(BOOL, INT, false),
+        arguments(INT, STRING, false),
+        arguments(NOTHING, INT, false),
+        arguments(STRING, INT, false),
+
+        arguments(a(INT), INT, true),
+        arguments(a(a(INT)), INT, true),
+        arguments(a(INT), BLOB, false),
+        arguments(a(a(INT)), BLOB, false),
+
+        arguments(f(INT), INT, true),
+        arguments(f(INT), BLOB, false),
+
+        arguments(f(INT, BLOB), INT, true),
+        arguments(f(INT, BLOB), BLOB, true),
+        arguments(f(INT, BLOB), STRING, false),
+
+        arguments(f(f(INT)), INT, true),
+        arguments(f(INT, f(BLOB)), BLOB, true)
+    );
+  }
+
   @Nested
   class _array {
     @ParameterizedTest

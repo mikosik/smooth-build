@@ -50,12 +50,12 @@ public abstract sealed class MonoTS implements TypeS
     return vars;
   }
 
-  public boolean includes(MonoTS type) {
-    return this.equals(type);
-  }
-
   public MonoTS mapVars(Function<VarS, VarS> varMapper) {
     return this;
+  }
+
+  public boolean includes(MonoTS type) {
+    return this.equals(type);
   }
 
   @Override
