@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.FuncB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarBoundsB;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -17,16 +16,14 @@ import com.google.common.collect.ImmutableList;
 public class CallJob extends AbstractJob {
   private final Job callableJ;
   private final ImmutableList<Job> argJs;
-  private final VarBoundsB vars;
   private final List<Job> params;
   private final JobCreator jobCreator;
 
   public CallJob(TypeB type, Job callableJ, ImmutableList<Job> argJs, Loc loc,
-      VarBoundsB vars, List<Job> params, JobCreator jobCreator) {
+      List<Job> params, JobCreator jobCreator) {
     super(type, loc);
     this.callableJ = callableJ;
     this.argJs = argJs;
-    this.vars = vars;
     this.params = params;
     this.jobCreator = jobCreator;
   }
@@ -42,7 +39,7 @@ public class CallJob extends AbstractJob {
 
   private void onFuncJobCompleted(CnstB cnst, Worker worker, Consumer<CnstB> res) {
     var funcH = (FuncB) cnst;
-    jobCreator.callFuncEagerJob(type(), funcH, argJs, loc(), params, vars)
+    jobCreator.callFuncEagerJob(type(), funcH, argJs, loc(), params)
         .schedule(worker)
         .addConsumer(res);
   }

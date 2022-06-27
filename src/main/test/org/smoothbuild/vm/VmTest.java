@@ -14,7 +14,6 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.math.BigInteger;
-import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -137,26 +136,6 @@ public class VmTest extends TestingContext {
       assertThat(evaluate(call))
           .isEqualTo(arrayB(intTB()));
     }
-
-    @Test
-    public void with_polymorphic_func() {
-      var a = varB("A");
-      var func = funcB(list(a), orderB(a, paramRefB(a, 0)));
-      var call = callB(func, intB(7));
-      assertThat(evaluate(call))
-          .isEqualTo(arrayB(intTB(), intB(7)));
-    }
-
-    @Test
-    public void with_polymorphic_evalT() {
-      var evaluated = evaluatePolymorphicExpr(p -> {
-        var b = varB("B");
-        var funcB = funcB(list(b), orderB(b, paramRefB(b, 0)));
-        return callB(funcB, p);
-      }, intB(7));
-      assertThat(evaluated)
-          .isEqualTo(arrayB(intB(7)));
-    }
   }
 
   @Nested
@@ -173,12 +152,6 @@ public class VmTest extends TestingContext {
       var combine = combineB(tupleTB(arrayTB(intTB())), arrayB(nothingTB()));
       assertThat(evaluate(combine))
           .isEqualTo(tupleB(arrayB(intTB())));
-    }
-
-    @Test
-    public void with_polymorphic_evalT() {
-      assertThat(evaluatePolymorphicExpr(p -> combineB(p), intB(7)))
-          .isEqualTo(tupleB(intB(7)));
     }
   }
 
@@ -210,18 +183,6 @@ public class VmTest extends TestingContext {
       var if_ = ifB(boolB(false), arrayB(intB(7)), arrayB(nothingTB()));
       assertThat(evaluate(if_))
           .isEqualTo(arrayB(intTB()));
-    }
-
-    @Test
-    public void polymorphic_then() {
-      assertThat(evaluatePolymorphicExpr(p -> ifB(boolB(true), p, p), intB(7)))
-          .isEqualTo(intB(7));
-    }
-
-    @Test
-    public void polymorphic_else() {
-      assertThat(evaluatePolymorphicExpr(p -> ifB(boolB(false), p, p), intB(7)))
-          .isEqualTo(intB(7));
     }
   }
 
@@ -271,25 +232,6 @@ public class VmTest extends TestingContext {
       assertThat(evaluate(invoke))
           .isEqualTo(arrayB(intTB()));
     }
-
-    @Test
-    public void with_polymorphic_evalT() {
-      var evaluated = evaluatePolymorphicExpr(p -> {
-        var b = varB("B");
-        var methodT = methodTB(arrayTB(b), list(b));
-        var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
-        try {
-          when(nativeMethodLoader.load(any(), eq(method)))
-              .thenReturn(Try.result(
-                  VmTest.class.getMethod("returnSingleElemArray", NativeApi.class, TupleB.class)));
-        } catch (NoSuchMethodException e) {
-          throw new RuntimeException(e);
-        }
-        return invokeB(method, p);
-      }, intB(7));
-      assertThat(evaluated)
-          .isEqualTo(arrayB(intB(7)));
-    }
   }
 
   public static IntB returnInt(NativeApi nativeApi, TupleB args) {
@@ -333,34 +275,12 @@ public class VmTest extends TestingContext {
     }
 
     @Test
-    public void with_polymorphic_func() {
-      var evaluated = evaluatePolymorphicExpr(p -> {
-        var t = p.type();
-        var mappingFunc = funcB(tupleTB(t), list(t), combineB(paramRefB(t, 0)));
-        return mapB(orderB(t, paramRefB(t, 0)), mappingFunc);
-      }, intB(7));
-      assertThat(evaluated)
-          .isEqualTo(arrayB(tupleB(intB(7))));
-    }
-
-    @Test
     public void with_input_array_conversion() {
       var resT = tupleTB(intTB());
       var func = funcB(resT, list(intTB()), combineB(paramRefB(intTB(), 0)));
       var map = mapB(arrayB(nothingTB()), func);
       assertThat(evaluate(map))
           .isEqualTo(arrayB(tupleTB(intTB())));
-    }
-
-    @Test
-    public void with_polymorphic_evalT() {
-      var evaluated = evaluatePolymorphicExpr(p -> {
-        var t = p.type();
-        var func = funcB(tupleTB(t), list(t), combineB(paramRefB(t, 0)));
-        return mapB(orderB(p), func);
-      }, intB(7));
-      assertThat(evaluated)
-          .isEqualTo(arrayB(tupleB(intB(7))));
     }
   }
 
@@ -378,12 +298,6 @@ public class VmTest extends TestingContext {
       var order = orderB(arrayTB(intTB()), arrayB(nothingTB()));
       assertThat(evaluate(order))
           .isEqualTo(arrayB(arrayTB(intTB()), arrayB(intTB())));
-    }
-
-    @Test
-    public void with_polymorphic_evalT() {
-      assertThat(evaluatePolymorphicExpr(p -> orderB(p), intB(7)))
-          .isEqualTo(arrayB(intB(7)));
     }
   }
 
@@ -414,21 +328,6 @@ public class VmTest extends TestingContext {
       assertThat(evaluate(select))
           .isEqualTo(arrayB(intTB()));
     }
-
-    @Test
-    public void with_polymorphic_evalT() {
-      assertThat(evaluatePolymorphicExpr(p -> selectB(combineB(p), intB(0)), intB(7)))
-          .isEqualTo(intB(7));
-    }
-  }
-
-  private ObjB evaluatePolymorphicExpr(Function<ObjB, ObjB> exprCreator, ObjB val) {
-    var a = varB("A");
-    var paramRef = paramRefB(a, 0);
-    var expr = exprCreator.apply(paramRef);
-    var func = funcB(list(a), expr);
-    var call = callB(func, val);
-    return evaluate(call);
   }
 
   private ObjB evaluate(ObjB obj) {
