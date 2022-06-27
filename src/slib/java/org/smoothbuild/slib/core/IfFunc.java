@@ -16,6 +16,7 @@ public class IfFunc {
     var a = varMap.get("A");
     var type = f.funcT(a, list(f.boolT(), a, a));
     var body = f.if_(
+        a,
         f.paramRef(f.boolT(), ZERO),
         f.paramRef(a, ONE),
         f.paramRef(a, TWO));

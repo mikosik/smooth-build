@@ -9,7 +9,6 @@ import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypeFB;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
@@ -24,8 +23,8 @@ public class BytecodeModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ObjDb provideObjDb(HashedDb hashedDb, CatDb catDb, TypingB typing) {
-    return new ObjDbImpl(hashedDb, catDb, typing);
+  public ObjDb provideObjDb(HashedDb hashedDb, CatDb catDb) {
+    return new ObjDbImpl(hashedDb, catDb);
   }
 
   @Provides

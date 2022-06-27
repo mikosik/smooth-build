@@ -3,6 +3,7 @@ package org.smoothbuild.bytecode.obj.base;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsDecodeObjNodeException;
 import static org.smoothbuild.bytecode.obj.Helpers.wrapObjDbExcAsDecodeObjNodeException;
+import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
@@ -14,7 +15,6 @@ import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.CatB;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
@@ -47,10 +47,6 @@ public abstract class ObjB {
 
   protected HashedDb hashedDb() {
     return objDb.hashedDb();
-  }
-
-  protected TypingB typing() {
-    return objDb.typing();
   }
 
   public Hash hash() {
@@ -197,7 +193,7 @@ public abstract class ObjB {
 
   protected ObjB validateType(ObjB obj, String path, int index, TypeB expectedT) {
     var objT = obj.type();
-    if (!typing().isAssignable(expectedT, objT)) {
+    if (!isAssignable(expectedT, objT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), path, index, expectedT, objT);
     }
     return obj;

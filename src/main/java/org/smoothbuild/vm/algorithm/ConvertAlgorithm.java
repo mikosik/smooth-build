@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 
@@ -10,6 +11,7 @@ import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.FuncB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.type.IsAssignable;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
@@ -21,11 +23,9 @@ import org.smoothbuild.plugin.NativeApi;
 import com.google.common.collect.ImmutableList;
 
 public class ConvertAlgorithm extends Algorithm {
-  private final TypingB typing;
 
   public ConvertAlgorithm(TypeB outputT, TypingB typing) {
     super(outputT);
-    this.typing = typing;
   }
 
   @Override
@@ -67,7 +67,7 @@ public class ConvertAlgorithm extends Algorithm {
   private FuncB convertFunc(FuncTB targetT, FuncB func, BytecodeF factory) {
     var sourceT = func.type();
     checkArgument(isAssignable(targetT.res(), sourceT.res()));
-    checkArgument(allMatch(sourceT.params(), targetT.params(), this::isAssignable));
+    checkArgument(allMatch(sourceT.params(), targetT.params(), IsAssignable::isAssignable));
     return factory.func(targetT, convertBodyIfNeeded(targetT, func, factory));
   }
 
@@ -77,10 +77,6 @@ public class ConvertAlgorithm extends Algorithm {
       return convert(targetT.res(), cnstB, factory);
     }
     return body;
-  }
-
-  private boolean isAssignable(TypeB targetT, TypeB sourceT) {
-    return typing.isAssignable(targetT, sourceT);
   }
 
   private TupleB convertTuple(TupleTB targetT, TupleB tuple, BytecodeF factory) {

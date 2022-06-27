@@ -62,20 +62,6 @@ public class TestedAssignCasesB {
   }
 
   public List<TestedAssignSpecB> assignment_test_specs(boolean includeAny) {
-    var result = new ArrayList<TestedAssignSpecB>();
-    result.addAll(testSpecsCommonForNormalCaseAndParamAssignment(includeAny));
-    result.addAll(testSpecSpecificForNormalAssignment(includeAny));
-    return result;
-  }
-
-  public List<TestedAssignSpecB> param_assignment_test_specs(boolean includeAny) {
-    var result = new ArrayList<TestedAssignSpecB>();
-    result.addAll(testSpecsCommonForNormalCaseAndParamAssignment(includeAny));
-    result.addAll(testSpecsSpecificForParamAssignment(includeAny));
-    return result;
-  }
-
-  private List<TestedAssignSpecB> testSpecsCommonForNormalCaseAndParamAssignment(boolean includeAny) {
     var r = new ArrayList<TestedAssignSpecB>();
     if (includeAny) {
       gen(r, any, includeAny, mAll());
@@ -188,11 +174,6 @@ public class TestedAssignCasesB {
     r.add(illegalAssignment(f(blob, f(blob, f(blob, string))), f(blob, f(blob, f(blob, nothing)))));
     r.add(allowedAssignment(f(blob, f(blob, f(blob, nothing))), f(blob, f(blob, f(blob, string)))));
 
-    return r;
-  }
-
-  private List<TestedAssignSpecB> testSpecSpecificForNormalAssignment(boolean includeAny) {
-    List<TestedAssignSpecB> r = new ArrayList<>();
     gen(r, a, includeAny, oneOf(nothing, a));
     gen(r, b, includeAny, oneOf(nothing));
 
@@ -264,76 +245,7 @@ public class TestedAssignCasesB {
         illegalAssignment(f(string, a), f(string, nothing)),
         illegalAssignment(f(string, a), f(string, string))
     ));
-    return r;
-  }
 
-  private List<TestedAssignSpecB> testSpecsSpecificForParamAssignment(boolean includeAny) {
-    List<TestedAssignSpecB> r = new ArrayList<>();
-    gen(r, a, includeAny, mAll());
-    gen(r, b, includeAny, mAll());
-    gen(r, a(a), includeAny, mNothing(), TestedTB::isArray);
-    gen(r, a(b), includeAny, mNothing(), TestedTB::isArray);
-    gen(r, a2(a), includeAny, oneOf(nothing, a(nothing)), TestedTB::isArrayOfArrays);
-    gen(r, a2(b), includeAny, oneOf(nothing, a(nothing)), TestedTB::isArrayOfArrays);
-
-    if (isTupleSupported) {
-      gen(r, tuple(a), includeAny, mNothing(), TestedTB::isTuple);
-      gen(r, tuple(b), includeAny, mNothing(), TestedTB::isTuple);
-
-      gen(r, tuple(tuple(a)), includeAny, oneOf(nothing, tuple(nothing)), TestedTB::isTupleOfTuple);
-      gen(r, tuple(tuple(b)), includeAny, oneOf(nothing, tuple(nothing)), TestedTB::isTupleOfTuple);
-    }
-
-    r.addAll(list(
-        allowedAssignment(f(a, a), f(a, a)),
-        illegalAssignment(f(a, a, a), f(a, b, a)),
-        illegalAssignment(f(a, a, a), f(b, a, b)),
-        allowedAssignment(f(a, a), f(b, b)),
-        illegalAssignment(f(a, a, a), f(a, a, nothing)),
-        illegalAssignment(f(a, a, a), f(a, a, blob)),
-        allowedAssignment(f(a, a, a), f(nothing, a, a)),
-        allowedAssignment(f(a, a), f(nothing, nothing)),
-        allowedAssignment(f(a, a), f(nothing, blob)),
-        illegalAssignment(f(a, a), f(blob, a)),
-        illegalAssignment(f(a, a), f(blob, nothing)),
-        allowedAssignment(f(a, a), f(blob, blob)),
-        allowedAssignment(f(a, a, nothing), f(a, a, a)),
-        allowedAssignment(f(a, a, nothing), f(a, a, nothing)),
-        allowedAssignment(f(a, a, nothing), f(a, a, blob)),
-        allowedAssignment(f(a, a, nothing), f(nothing, a, a)),
-        allowedAssignment(f(a, a, nothing), f(nothing, a, nothing)),
-        allowedAssignment(f(a, a, nothing), f(nothing, a, blob)),
-
-        illegalAssignment(f(a, a, blob), f(a, a, a)),
-        illegalAssignment(f(a, a, blob), f(a, a, nothing)),
-        allowedAssignment(f(a, a, blob), f(a, a, blob)),
-        illegalAssignment(f(a, a, blob), f(nothing, a, a)),
-        illegalAssignment(f(a, a, blob), f(nothing, a, nothing)),
-        allowedAssignment(f(a, a, blob), f(nothing, a, blob)),
-        illegalAssignment(f(a, a, blob), f(blob, a, a)),
-        illegalAssignment(f(a, a, blob), f(blob, a, nothing)),
-        illegalAssignment(f(a, a, blob), f(blob, a, blob)),
-
-        illegalAssignment(f(nothing, a), f(a, a)),
-        illegalAssignment(f(nothing, a), f(a, nothing)),
-        illegalAssignment(f(nothing, a), f(a, blob)),
-        allowedAssignment(f(nothing, a), f(nothing, a)),
-        allowedAssignment(f(nothing, a), f(nothing, nothing)),
-        allowedAssignment(f(nothing, a), f(nothing, blob)),
-        illegalAssignment(f(nothing, a), f(blob, a)),
-        illegalAssignment(f(nothing, a), f(blob, nothing)),
-        illegalAssignment(f(nothing, a), f(blob, blob)),
-
-        illegalAssignment(f(blob, a), f(a, a)),
-        illegalAssignment(f(blob, a), f(a, nothing)),
-        illegalAssignment(f(blob, a), f(a, blob)),
-        allowedAssignment(f(blob, a), f(nothing, a)),
-        allowedAssignment(f(blob, a), f(nothing, nothing)),
-        allowedAssignment(f(blob, a), f(nothing, blob)),
-        allowedAssignment(f(blob, a), f(blob, a)),
-        allowedAssignment(f(blob, a), f(blob, nothing)),
-        allowedAssignment(f(blob, a), f(blob, blob))
-    ));
     return r;
   }
 

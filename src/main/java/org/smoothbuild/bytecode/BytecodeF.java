@@ -107,8 +107,8 @@ public class BytecodeF {
     return objDb.tuple(fileT(), list(path, content));
   }
 
-  public IfB if_(ObjB condition, ObjB then, ObjB else_) {
-    return objDb.if_(condition, then, else_);
+  public IfB if_(TypeB evalT, ObjB condition, ObjB then, ObjB else_) {
+    return objDb.if_(evalT, condition, then, else_);
   }
 
   public FuncB func(FuncTB type, ObjB body) {

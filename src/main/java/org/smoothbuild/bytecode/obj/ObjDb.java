@@ -51,7 +51,7 @@ public interface ObjDb {
 
   public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items);
 
-  public IfB if_(ObjB condition, ObjB then, ObjB else_);
+  public IfB if_(TypeB evalT, ObjB condition, ObjB then, ObjB else_);
 
   public InvokeB invoke(TypeB evalT, ObjB method, CombineB args);
 

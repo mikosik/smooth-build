@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
@@ -36,7 +37,7 @@ public class OrderB extends ExprB {
     var expectedElemT = cat().evalT().elem();
     for (int i = 0; i < elems.size(); i++) {
       var actualT = elems.get(i).type();
-      if (!typing().isAssignable(expectedElemT, actualT)) {
+      if (!isAssignable(expectedElemT, actualT)) {
         throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "elems", i, expectedElemT, actualT);
       }
     }

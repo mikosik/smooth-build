@@ -221,7 +221,7 @@ public class ObjBStableHashTest extends TestingContext {
   class _if {
     @Test
     public void if_() {
-      assertThat(ifB(boolB(true), intB(1), intB(2)).hash())
+      assertThat(ifB(intTB(), boolB(true), intB(1), intB(2)).hash())
           .isEqualTo(Hash.decode("d2fadb5c97a33675d3854149734c8a0bca9779d1"));
     }
   }

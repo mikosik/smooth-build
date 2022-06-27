@@ -270,12 +270,8 @@ public class Compiler {
   private CallB compileCall(CallS callS) {
     var callableB = compileObj(callS.callee());
     var argsB = compileObjs(callS.args());
-
-    var argTupleT = bytecodeF.tupleT(map(argsB, ObjB::type));
     var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
-    var vars = typing.inferVarBoundsLower(paramTupleT, argTupleT);
-    var actualParamTupleT = (TupleTB) typing.mapVarsLower(paramTupleT, vars);
-    var combineB = bytecodeF.combine(actualParamTupleT, argsB);
+    var combineB = bytecodeF.combine(paramTupleT, argsB);
 
     nals.put(combineB, new NalImpl("{}", callS.loc()));
     return bytecodeF.call(convertT(callS.type()), callableB, combineB);

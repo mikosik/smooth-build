@@ -159,28 +159,28 @@ public class VmTest extends TestingContext {
   class _if {
     @Test
     public void true_condition() {
-      var if_ = ifB(boolB(true), intB(1), intB(2));
+      var if_ = ifB(intTB(), boolB(true), intB(1), intB(2));
       assertThat(evaluate(if_))
           .isEqualTo(intB(1));
     }
 
     @Test
     public void false_condition() {
-      var if_ = ifB(boolB(false), intB(1), intB(2));
+      var if_ = ifB(intTB(), boolB(false), intB(1), intB(2));
       assertThat(evaluate(if_))
           .isEqualTo(intB(2));
     }
 
     @Test
     public void then_conversion() {
-      var if_ = ifB(boolB(true), arrayB(nothingTB()), arrayB(intB(7)));
+      var if_ = ifB(arrayTB(intTB()), boolB(true), arrayB(nothingTB()), arrayB(intB(7)));
       assertThat(evaluate(if_))
           .isEqualTo(arrayB(intTB()));
     }
 
     @Test
     public void else_conversion() {
-      var if_ = ifB(boolB(false), arrayB(intB(7)), arrayB(nothingTB()));
+      var if_ = ifB(arrayTB(intTB()), boolB(false), arrayB(intB(7)), arrayB(nothingTB()));
       assertThat(evaluate(if_))
           .isEqualTo(arrayB(intTB()));
     }

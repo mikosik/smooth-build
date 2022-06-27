@@ -7,7 +7,6 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.bytecode.type.cnst.VarBoundsB.varBoundsB;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
@@ -59,8 +58,6 @@ import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.BlobTB;
 import org.smoothbuild.bytecode.type.cnst.BoolTB;
-import org.smoothbuild.bytecode.type.cnst.BoundedB;
-import org.smoothbuild.bytecode.type.cnst.CallableTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.IntTB;
 import org.smoothbuild.bytecode.type.cnst.MethodTB;
@@ -69,7 +66,6 @@ import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.bytecode.type.cnst.VarB;
-import org.smoothbuild.bytecode.type.cnst.VarBoundsB;
 import org.smoothbuild.bytecode.type.expr.CallCB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
 import org.smoothbuild.bytecode.type.expr.IfCB;
@@ -140,8 +136,6 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.type.Bounds;
-import org.smoothbuild.util.type.Side;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
@@ -344,7 +338,7 @@ public class TestingContext {
 
   public ObjDb objDb() {
     if (objDb == null) {
-      objDb = new ObjDbImpl(hashedDb(), catDb(), typingB());
+      objDb = new ObjDbImpl(hashedDb(), catDb());
     }
     return objDb;
   }
@@ -365,7 +359,7 @@ public class TestingContext {
   }
 
   public ObjDb objDbOther() {
-    return new ObjDbImpl(hashedDb(), catDbOther(), typingB());
+    return new ObjDbImpl(hashedDb(), catDbOther());
   }
 
   public CatDb catDbOther() {
@@ -469,33 +463,6 @@ public class TestingContext {
 
   public VarB varB(String name) {
     return catDb().var(name);
-  }
-
-  public VarBoundsB vbS(
-      VarB var1, Side side1, TypeB bound1,
-      VarB var2, Side side2, TypeB bound2) {
-    var bounds1 = oneSideBoundB(side1, bound1);
-    var bounds2 = oneSideBoundB(side2, bound2);
-    if (var1.equals(var2)) {
-      return varBoundsB(new BoundedB(var1, typingB().merge(bounds1, bounds2)));
-    } else {
-      return new VarBoundsB(ImmutableMap.of(
-          var1, new BoundedB(var1, bounds1),
-          var2, new BoundedB(var2, bounds2)
-      ));
-    }
-  }
-
-  public VarBoundsB vbB(VarB var, Side side, TypeB bound) {
-    return varBoundsB(new BoundedB(var, oneSideBoundB(side, bound)));
-  }
-
-  public VarBoundsB vbB() {
-    return varBoundsB();
-  }
-
-  public Bounds<TypeB> oneSideBoundB(Side side, TypeB type) {
-    return typeFB().oneSideBound(side, type);
   }
 
   // Expr types
@@ -759,10 +726,9 @@ public class TestingContext {
 
   // Expr-s
 
-  public CallB callB(ObjB func, ObjB... args) {
+  public CallB callB(FuncB func, ObjB... args) {
     var combineB = combineB(args);
-    var evalT = inferResT(func, combineB);
-    return callBImpl(evalT, func, combineB);
+    return callBImpl(func.type().res(), func, combineB);
   }
 
   public CallB callB(TypeB evalT, ObjB func, ObjB... args) {
@@ -771,18 +737,6 @@ public class TestingContext {
 
   public CallB callBImpl(TypeB evalT, ObjB func, CombineB args) {
     return objDb().call(evalT, func, args);
-  }
-
-  private TypeB inferResT(ObjB func, CombineB args) {
-    var callableT = (CallableTB) func.type();
-    var argsT = args.type();
-    return typingB().inferCallResT(callableT, argsT.items(), () -> illegalArgs(callableT, argsT));
-  }
-
-  private IllegalArgumentException illegalArgs(CallableTB callableTB, TypeB argsT) {
-    return new IllegalArgumentException(
-        "Arguments evaluation type %s should be equal to callable type parameters %s."
-            .formatted(argsT.q(), callableTB.paramsTuple().q()));
   }
 
   public CombineB combineB(ObjB... items) {
@@ -794,13 +748,13 @@ public class TestingContext {
     return objDb().combine(evalT, ImmutableList.copyOf(items));
   }
 
-  public IfB ifB(ObjB condition, ObjB then, ObjB else_) {
-    return objDb().if_(condition, then, else_);
+  public IfB ifB(TypeB evalT, ObjB condition, ObjB then, ObjB else_) {
+    return objDb().if_(evalT, condition, then, else_);
   }
 
-  public InvokeB invokeB(ObjB method, ObjB... args) {
+  public InvokeB invokeB(MethodB method, ObjB... args) {
     var combineB = combineB(args);
-    return invokeBImpl(inferResT(method, combineB), method, combineB);
+    return invokeBImpl(method.type().res(), method, combineB);
   }
 
   public InvokeB invokeB(TypeB evalT, ObjB method, ObjB... args) {

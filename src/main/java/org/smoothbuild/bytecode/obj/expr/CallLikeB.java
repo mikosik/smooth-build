@@ -1,5 +1,8 @@
 package org.smoothbuild.bytecode.obj.expr;
 
+import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
+import static org.smoothbuild.bytecode.type.IsAssignable.validateArgs;
+
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
@@ -16,12 +19,12 @@ public class CallLikeB extends ExprB {
     super(merkleRoot, objDb);
   }
 
-  protected void validate(CallableTB callableT, CombineB argsCombine) {
-    var argsT = argsCombine.type();
-    var actualResT = typing().inferCallResT(
-        callableT, argsT.items(), () -> illegalArgsExc(callableT, argsT));
-    if (!typing().isAssignable(type(), actualResT)) {
-      throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "callable.result", type(), actualResT);
+  protected void validate(CallableTB callableTB, CombineB argsCombine) {
+    var resT = callableTB.res();
+    validateArgs(callableTB, argsCombine.type().items(),
+        () -> illegalArgsExc(callableTB, argsCombine.type()));
+    if (!isAssignable(type(), resT)) {
+      throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "callable.result", type(), resT);
     }
   }
 

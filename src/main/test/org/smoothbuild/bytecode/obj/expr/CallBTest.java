@@ -12,22 +12,6 @@ import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 public class CallBTest extends TestingContext {
-  @Nested
-  class _infer_type_of_call {
-    @Test
-    public void without_generic_params() {
-      assertThat(callB(funcB(list(stringTB()), intB()), stringB()).cat())
-          .isEqualTo(callCB(intTB()));
-    }
-
-    @Test
-    public void with_generic_params() {
-      var oa = varB("A");
-      assertThat(callB(funcB(oa, list(oa), paramRefB(varB("A"), 0)), intB()).cat())
-          .isEqualTo(callCB(intTB()));
-    }
-  }
-
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
     assertCall(() -> callB(blobTB(), intB()))
@@ -63,8 +47,8 @@ public class CallBTest extends TestingContext {
 
   private static IllegalArgumentException argsNotMatchingParamsException(
       String args, String params) {
-    return new IllegalArgumentException("Arguments evaluation type `" + args + "` should be"
-        + " equal to callable type parameters `" + params + "`.");
+    return new IllegalArgumentException("Argument evaluation types `" + args + "` should be"
+        + " equal to callable parameter types `" + params + "`.");
   }
 
   @Test
