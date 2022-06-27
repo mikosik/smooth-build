@@ -2,6 +2,8 @@ package org.smoothbuild.lang.type.solver;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.util.type.Side.UPPER;
 
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.VarS;
@@ -27,9 +29,11 @@ public record ConstrGraphS(
 
   private String varDescription(VarS var) {
     var bounds = varBounds.get(var);
-    String boundsString = bounds.lower().name() + ", " + bounds.upper().name();
-    String constrsString = toCommaSeparatedString(constrs.get(var), MonoTS::name);
-    return "%s (%s) < %s".formatted(var.name(), boundsString, constrsString);
+    var boundsString = bounds.lower().name() + ", " + bounds.upper().name();
+    var lowerNeighbours = toCommaSeparatedString(neighbours(var, LOWER), MonoTS::name);
+    var upperNeighbours = toCommaSeparatedString(neighbours(var, UPPER), MonoTS::name);
+    return "%s < %s (%s) < %s".formatted(
+        lowerNeighbours, var.name(), boundsString, upperNeighbours);
   }
 
   public static class Builder {
