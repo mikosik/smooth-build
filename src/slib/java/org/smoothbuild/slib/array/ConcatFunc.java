@@ -3,7 +3,6 @@ package org.smoothbuild.slib.array;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConcatFunc {
@@ -11,7 +10,7 @@ public class ConcatFunc {
     ArrayB array1 = (ArrayB) args.get(0);
     ArrayB array2 = (ArrayB) args.get(1);
     var factory = nativeApi.factory();
-    var elemT = ((ArrayTB) nativeApi.typing().mergeUp(array1.cat(), array2.cat())).elem();
+    var elemT = array1.cat().elem();
     return factory
         .arrayBuilderWithElems(elemT)
         .addAll(array1.elems(CnstB.class))
