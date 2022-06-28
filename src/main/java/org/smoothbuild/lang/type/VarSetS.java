@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.Sets.union;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -20,6 +21,12 @@ public final class VarSetS {
 
   public static VarSetS varSetS(VarS... vars) {
     return new VarSetS(Set.of(vars));
+  }
+
+  public static VarSetS varSetS(Collection<MonoTS> types) {
+    return types.stream()
+        .flatMap(t -> t.vars().stream())
+        .collect(toVarSetS());
   }
 
   public VarSetS(Set<VarS> elements) {

@@ -1,13 +1,10 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 
 import java.util.Objects;
 import java.util.function.Function;
-
-import com.google.common.collect.ImmutableCollection;
 
 /**
  * Monomorphic type.
@@ -42,12 +39,6 @@ public abstract sealed class MonoTS implements TypeS
   @Override
   public String q() {
     return "`" + name() + "`";
-  }
-
-  public static VarSetS calculateVars(ImmutableCollection<MonoTS> types) {
-    return types.stream()
-        .flatMap(t -> t.vars().stream())
-        .collect(toVarSetS());
   }
 
   public VarSetS vars() {

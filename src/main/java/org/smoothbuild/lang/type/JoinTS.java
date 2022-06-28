@@ -2,6 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Sets.map;
 import static org.smoothbuild.util.type.Side.UPPER;
 
@@ -19,7 +20,7 @@ import com.google.common.collect.ImmutableSet.Builder;
  */
 public final class JoinTS extends MergeTS {
   private JoinTS(ImmutableSet<MonoTS> elems) {
-    super(calculateName(elems), calculateVars(elems), elems);
+    super(calculateName(elems), varSetS(elems), elems);
   }
 
   private static String calculateName(Set<MonoTS> elems) {

@@ -2,6 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.type.TNamesS.funcTypeName;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -24,7 +25,7 @@ public final class MonoFuncTS extends ComposedTS implements FuncTS {
   }
 
   public static VarSetS calculateFuncVars(MonoTS resT, ImmutableList<MonoTS> paramTs) {
-    return calculateVars(concat(resT, paramTs));
+    return varSetS(concat(resT, paramTs));
   }
 
   @Override

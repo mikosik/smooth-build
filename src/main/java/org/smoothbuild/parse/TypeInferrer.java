@@ -4,7 +4,7 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
 import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
-import static org.smoothbuild.lang.type.VarSetS.toVarSetS;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
@@ -118,9 +118,7 @@ public class TypeInferrer {
           return empty();
         }
         var ps = params.get();
-        var paramVars = ps.stream()
-            .flatMap(t -> t.vars().stream())
-            .collect(toVarSetS());
+        var paramVars = varSetS(params.get());
         var r = result.get();
         if (paramVars.containsAll(r.vars())) {
           return Optional.of(paramVars.isEmpty() ? typeFS.func(r, ps) :  typeFS.polyFunc(r, ps));
@@ -242,10 +240,7 @@ public class TypeInferrer {
         if (funcN.paramTs().isEmpty()) {
           return false;
         }
-        VarSetS paramVars = funcN.paramTs().get()
-            .stream()
-            .flatMap(p -> p.vars().stream())
-            .collect(toVarSetS());
+        var paramVars = varSetS(funcN.paramTs().get());
         var unknownVars = filter(evalTVars.asList(), var -> !paramVars.contains(var));
         if (!unknownVars.isEmpty()) {
           logUnknownVars(typeN, unknownVars);
