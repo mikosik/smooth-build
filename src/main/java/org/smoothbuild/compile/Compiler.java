@@ -35,7 +35,6 @@ import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.MethodTB;
-import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.base.Nal;
@@ -99,6 +98,66 @@ public class Compiler {
 
   public ImmutableMap<ObjB, Nal> nals() {
     return ImmutableMap.copyOf(nals);
+  }
+
+
+  private ImmutableList<ObjB> compileObjs(ImmutableList<MonoObjS> objs) {
+    return map(objs, this::compileObj);
+  }
+
+  public ObjB compileObj(MonoObjS objS) {
+    return switch (objS) {
+      case BlobS blobS -> compileAndCacheNal(blobS, this::compileBlob);
+      case CallS callS -> compileAndCacheNal(callS, this::compileCall);
+      case IntS intS -> compileAndCacheNal(intS, this::compileInt);
+      case MonoizeS monoizeS -> compileMonoize(monoizeS);
+      case MonoFuncS monoFuncS -> compileMonoFunc(monoFuncS, ImmutableMap.of());
+      case MonoRefS monoRefS -> compileMonoRef(monoRefS);
+      case OrderS orderS -> compileAndCacheNal(orderS, this::compileOrder);
+      case ParamRefS paramRefS -> compileAndCacheNal(paramRefS, this::compileParamRef);
+      case SelectS selectS -> compileAndCacheNal(selectS, this::compileSelect);
+      case StringS stringS -> compileAndCacheNal(stringS, this::compileString);
+      case ValS v -> compileVal(v);
+    };
+  }
+
+  private <T extends MonoObjS> ObjB compileAndCacheNal(T objS, Function<T, ObjB> mapping) {
+    var objB = mapping.apply(objS);
+    nals.put(objB, objS);
+    return objB;
+  }
+
+  private BlobB compileBlob(BlobS blobS) {
+    return bytecodeF.blob(sink -> sink.write(blobS.byteString()));
+  }
+
+  private CallB compileCall(CallS callS) {
+    var callableB = compileObj(callS.callee());
+    var argsB = compileObjs(callS.args());
+    var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
+    var combineB = bytecodeF.combine(paramTupleT, argsB);
+
+    nals.put(combineB, new NalImpl("{}", callS.loc()));
+    return bytecodeF.call(convertT(callS.type()), callableB, combineB);
+  }
+
+  private IntB compileInt(IntS intS) {
+    return bytecodeF.int_(intS.bigInteger());
+  }
+
+  private FuncB compileMonoize(MonoizeS monoizeS) {
+    var varMap = deduceVarMap(monoizeS.funcRef().type().mono(), monoizeS.type());
+    var varMapB = map(varMap, MonoTS::name, this::convertT);
+    typeSbConv.addLastVarMap(varMapB);
+    try {
+      var topRefableS = defs.topRefables().get(monoizeS.funcRef().name());
+      return switch (topRefableS) {
+        case PolyFuncS polyFuncS -> compileMonoFunc(polyFuncS.func(), varMapB);
+        default -> throw unexpectedCaseExc(topRefableS);
+      };
+    } finally {
+      typeSbConv.removeLastVarMap();
+    }
   }
 
   private FuncB compileMonoFunc(MonoFuncS monoFuncS, Map<String, TypeB> varMap) {
@@ -180,7 +239,37 @@ public class Compiler {
     return builder.build();
   }
 
-  // handling value
+  private ObjB compileMonoRef(MonoRefS monoRefS) {
+    return switch (defs.topRefables().get(monoRefS.name())) {
+      case MonoFuncS monoFuncS -> compileObj(monoFuncS);
+      case ValS valS -> compileObj(valS);
+      case PolyFuncS f -> throw unexpectedCaseExc(f);
+    };
+  }
+
+  private OrderB compileOrder(OrderS orderS) {
+    var arrayTB = convertArrayT(orderS.type());
+    var elemsB = compileObjs(orderS.elems());
+    return bytecodeF.order(arrayTB, elemsB);
+  }
+
+  private ParamRefB compileParamRef(ParamRefS paramRefS) {
+    var index = callStack.peek().indexMap().get(paramRefS.paramName());
+    return bytecodeF.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
+  }
+
+  private SelectB compileSelect(SelectS selectS) {
+    var selectableB = compileObj(selectS.selectable());
+    var structTS = (StructTS) selectS.selectable().type();
+    var indexJ = structTS.fields().indexMap().get(selectS.field());
+    var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
+    nals.put(indexB, selectS);
+    return bytecodeF.select(convertT(selectS.type()), selectableB, indexB);
+  }
+
+  private StringB compileString(StringS stringS) {
+    return bytecodeF.string(stringS.string());
+  }
 
   private ObjB compileVal(ValS valS) {
     return computeIfAbsent(valCache, valS.name(), name -> compileValImpl(valS));
@@ -218,6 +307,8 @@ public class Compiler {
     return fetchBytecode(ann, typeB, name, varMap);
   }
 
+  // helpers
+
   private ObjB fetchBytecode(AnnS ann, TypeB typeB, String name, Map<String, TypeB> varMap) {
     var jar = loadNativeJar(ann.loc());
     var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string(), varMap);
@@ -231,101 +322,6 @@ public class Compiler {
     }
     return bytecodeB;
   }
-
-  // handling objects
-
-  private ImmutableList<ObjB> compileObjs(ImmutableList<MonoObjS> objs) {
-    return map(objs, this::compileObj);
-  }
-
-  public ObjB compileObj(MonoObjS objS) {
-    return switch (objS) {
-      case BlobS blobS -> compileAndCacheNal(blobS, this::compileBlob);
-      case CallS callS -> compileAndCacheNal(callS, this::compileCall);
-      case IntS intS -> compileAndCacheNal(intS, this::compileInt);
-      case MonoizeS monoizeS -> compileMonoize(monoizeS);
-      case MonoFuncS monoFuncS -> compileMonoFunc(monoFuncS, ImmutableMap.of());
-      case MonoRefS monoRefS -> compileMonoRef(monoRefS);
-      case OrderS orderS -> compileAndCacheNal(orderS, this::compileOrder);
-      case ParamRefS paramRefS -> compileAndCacheNal(paramRefS, this::compileParamRef);
-      case SelectS selectS -> compileAndCacheNal(selectS, this::compileSelect);
-      case StringS stringS -> compileAndCacheNal(stringS, this::compileString);
-      case ValS v -> compileVal(v);
-    };
-  }
-
-  private <T extends MonoObjS> ObjB compileAndCacheNal(T objS, Function<T, ObjB> mapping) {
-    var objB = mapping.apply(objS);
-    nals.put(objB, objS);
-    return objB;
-  }
-
-  private BlobB compileBlob(BlobS blobS) {
-    return bytecodeF.blob(sink -> sink.write(blobS.byteString()));
-  }
-
-  private CallB compileCall(CallS callS) {
-    var callableB = compileObj(callS.callee());
-    var argsB = compileObjs(callS.args());
-    var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
-    var combineB = bytecodeF.combine(paramTupleT, argsB);
-
-    nals.put(combineB, new NalImpl("{}", callS.loc()));
-    return bytecodeF.call(convertT(callS.type()), callableB, combineB);
-  }
-
-  private IntB compileInt(IntS intS) {
-    return bytecodeF.int_(intS.bigInteger());
-  }
-
-  private FuncB compileMonoize(MonoizeS monoizeS) {
-    var varMap = deduceVarMap(monoizeS.funcRef().type().mono(), monoizeS.type());
-    var varMapB = map(varMap, MonoTS::name, this::convertT);
-    typeSbConv.addLastVarMap(varMapB);
-    try {
-      var topRefableS = defs.topRefables().get(monoizeS.funcRef().name());
-      return switch (topRefableS) {
-        case PolyFuncS polyFuncS -> compileMonoFunc(polyFuncS.func(), varMapB);
-        default -> throw unexpectedCaseExc(topRefableS);
-      };
-    } finally {
-      typeSbConv.removeLastVarMap();
-    }
-  }
-
-  private OrderB compileOrder(OrderS orderS) {
-    var arrayTB = convertArrayT(orderS.type());
-    var elemsB = compileObjs(orderS.elems());
-    return bytecodeF.order(arrayTB, elemsB);
-  }
-
-  private ParamRefB compileParamRef(ParamRefS paramRefS) {
-    var index = callStack.peek().indexMap().get(paramRefS.paramName());
-    return bytecodeF.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
-  }
-
-  private ObjB compileMonoRef(MonoRefS monoRefS) {
-    return switch (defs.topRefables().get(monoRefS.name())) {
-      case MonoFuncS monoFuncS -> compileObj(monoFuncS);
-      case ValS valS -> compileObj(valS);
-      case PolyFuncS f -> throw unexpectedCaseExc(f);
-    };
-  }
-
-  private SelectB compileSelect(SelectS selectS) {
-    var selectableB = compileObj(selectS.selectable());
-    var structTS = (StructTS) selectS.selectable().type();
-    var indexJ = structTS.fields().indexMap().get(selectS.field());
-    var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
-    nals.put(indexB, selectS);
-    return bytecodeF.select(convertT(selectS.type()), selectableB, indexB);
-  }
-
-  private StringB compileString(StringS stringS) {
-    return bytecodeF.string(stringS.string());
-  }
-
-  // helpers
 
   private BlobB loadNativeJar(Loc loc) {
     var filePath = loc.file().withExtension("jar");
@@ -343,10 +339,6 @@ public class Compiler {
   }
 
   private ArrayTB convertArrayT(ArrayTS typeS) {
-    return typeSbConv.convert(typeS);
-  }
-
-  private TupleTB convertStructT(StructTS typeS) {
     return typeSbConv.convert(typeS);
   }
 
