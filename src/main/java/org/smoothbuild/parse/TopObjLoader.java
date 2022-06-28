@@ -75,7 +75,7 @@ public class TopObjLoader {
       var ann = loadAnn(valP.ann().get());
       return new AnnValS(ann, type, path, name, loc);
     } else {
-      var body = createObj(valP.body().get());
+      var body = loadObj(valP.body().get());
       return new DefValS(type, path, name, body, loc);
     }
   }
@@ -91,7 +91,7 @@ public class TopObjLoader {
       var ann = loadAnn(funcP.ann().get());
       return polimorphizeIfNeeded(new AnnFuncS(ann, funcT, path, name, params, loc));
     } else {
-      var body = createObj(funcP.body().get());
+      var body = loadObj(funcP.body().get());
       return polimorphizeIfNeeded(new DefFuncS(funcT, path, name, params, body, loc));
     }
   }
@@ -101,7 +101,7 @@ public class TopObjLoader {
   }
 
   private AnnS loadAnn(AnnP annP) {
-    var path = createString(annP.path());
+    var path = loadString(annP.path());
     return new AnnS(annP.name(), path, annP.loc());
   }
 
@@ -112,52 +112,52 @@ public class TopObjLoader {
   private ItemS createParam(ItemP param) {
     var type = param.typeN().typeO().get();
     var name = param.name();
-    var body = param.body().map(this::createObj);
+    var body = param.body().map(this::loadObj);
     return new ItemS(type, name, body, param.loc());
   }
 
-  private MonoObjS createObj(ObjP obj) {
+  private MonoObjS loadObj(ObjP obj) {
     return switch (obj) {
-      case OrderP orderP -> createArray(orderP);
-      case BlobP blobP -> createBlob(blobP);
-      case CallP callP -> createCall(callP);
-      case IntP intP -> createInt(intP);
-      case RefP refP -> createRef(refP);
-      case SelectP selectP -> createSelect(selectP);
-      case StringP stringP -> createString(stringP);
+      case OrderP orderP -> loadOrder(orderP);
+      case BlobP blobP -> loadBlob(blobP);
+      case CallP callP -> loadCall(callP);
+      case IntP intP -> loadInt(intP);
+      case RefP refP -> loadRef(refP);
+      case SelectP selectP -> loadSelect(selectP);
+      case StringP stringP -> loadString(stringP);
     };
   }
 
-  private MonoObjS createArray(OrderP order) {
+  private MonoObjS loadOrder(OrderP order) {
     var type = (ArrayTS) order.typeO().get();
-    ImmutableList<MonoObjS> elems = map(order.elems(), this::createObj);
+    ImmutableList<MonoObjS> elems = map(order.elems(), this::loadObj);
     return new OrderS(type, elems, order.loc());
   }
 
-  private MonoObjS createCall(CallP call) {
-    var callee = createObj(call.callee());
-    var argObjs = map(call.assignedArgs(), a -> createArgObj(a.obj()));
+  private MonoObjS loadCall(CallP call) {
+    var callee = loadObj(call.callee());
+    var argObjs = map(call.assignedArgs(), a -> loadArg(a.obj()));
     var resT = call.typeO().get();
     return new CallS(resT, callee, argObjs, call.loc());
   }
 
-  private MonoObjS createArgObj(Obj obj) {
+  private MonoObjS loadArg(Obj obj) {
     return switch (obj) {
-      case ObjP objP -> createObj(objP);
+      case ObjP objP -> loadObj(objP);
       case MonoObjS objS -> objS;
       default -> throw unexpectedCaseExc(obj);
     };
   }
 
-  private MonoObjS createSelect(SelectP selectP) {
+  private MonoObjS loadSelect(SelectP selectP) {
     var structT = (StructTS) selectP.selectable().typeO().get();
     var index = structT.fields().indexMap().get(selectP.field());
     var fieldT = structT.fields().get(index).type();
-    var selectable = createObj(selectP.selectable());
+    var selectable = loadObj(selectP.selectable());
     return new SelectS(fieldT, selectable, selectP.field(), selectP.loc());
   }
 
-  private MonoObjS createRef(RefP ref) {
+  private MonoObjS loadRef(RefP ref) {
     Refable referenced = ref.referenced();
     return switch (referenced) {
       case ItemP itemP -> new ParamRefS(itemP.typeO().get(), ref.name(), ref.loc());
@@ -173,21 +173,21 @@ public class TopObjLoader {
     };
   }
 
-  public BlobS createBlob(BlobP blob) {
+  public BlobS loadBlob(BlobP blob) {
     return new BlobS(
         typeFS.blob(),
         blob.byteString(),
         blob.loc());
   }
 
-  public IntS createInt(IntP intP) {
+  public IntS loadInt(IntP intP) {
     return new IntS(
         typeFS.int_(),
         intP.bigInteger(),
         intP.loc());
   }
 
-  public StringS createString(StringP string) {
+  public StringS loadString(StringP string) {
     return new StringS(
         typeFS.string(),
         string.unescapedValue(),
