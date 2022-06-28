@@ -10,10 +10,6 @@ import org.smoothbuild.testing.type.TestedTB.TestedTupleTB;
 import com.google.common.collect.ImmutableList;
 
 public class TestedTBF {
-  public TestingTB testingT() {
-    return TestingTB.INSTANCE;
-  }
-
   public TestedTB blob() {
     return new TestedTB(TestingTB.BLOB);
   }

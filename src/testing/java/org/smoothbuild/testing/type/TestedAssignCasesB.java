@@ -16,7 +16,6 @@ public class TestedAssignCasesB {
       new TestedAssignCasesB(new TestedTBF());
 
   private final TestedTBF testedTF;
-  private final TestingTB testingT;
   private final TestedTB blob;
   private final TestedTB int_;
   private final TestedTB nothing;
@@ -25,20 +24,11 @@ public class TestedAssignCasesB {
 
   public TestedAssignCasesB(TestedTBF testedTF) {
     this.testedTF = testedTF;
-    this.testingT = testedTF.testingT();
     this.blob = testedTF.blob();
     this.int_ = testedTF.int_();
     this.nothing = testedTF.nothing();
     this.string = testedTF.string();
     this.tuple = testedTF.tuple();
-  }
-
-  public TestedTBF testedTF() {
-    return testedTF;
-  }
-
-  public TestingTB testingT() {
-    return testingT;
   }
 
   private TestedAssignSpecB illegalAssignment(TestedTB target, TestedTB source) {
