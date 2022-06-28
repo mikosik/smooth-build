@@ -1,18 +1,18 @@
 package org.smoothbuild.parse.ast;
 
 import static java.lang.Character.isDigit;
-import static org.smoothbuild.lang.type.TypeFS.INT;
 
 import java.math.BigInteger;
 
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.type.TypeFS;
 
 public final class IntP extends CnstP {
   private final String literal;
   private BigInteger bigInteger;
 
   public IntP(String literal, Loc loc) {
-    super(INT, loc);
+    super(TypeFS.int_(), loc);
     this.literal = literal;
   }
 

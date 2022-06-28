@@ -1,8 +1,7 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.type.TypeFS.BLOB;
-
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.util.DecodeHexExc;
 import org.smoothbuild.util.Hex;
 
@@ -13,7 +12,7 @@ public final class BlobP extends CnstP {
   private ByteString byteString;
 
   public BlobP(String literal, Loc loc) {
-    super(BLOB, loc);
+    super(TypeFS.blob(), loc);
     this.literal = literal;
   }
 

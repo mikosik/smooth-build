@@ -2,6 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.lang.type.ResolveMerges.resolveMerges;
 import static org.smoothbuild.testing.type.TestedAssignCasesS.TESTED_ASSIGN_CASES_S;
 import static org.smoothbuild.testing.type.TestingTS.A;
 import static org.smoothbuild.testing.type.TestingTS.ANY;
@@ -25,11 +26,11 @@ import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableList;
 
-public class TypingSTest {
+public class ResolveMergesTest {
   @ParameterizedTest
   @MethodSource("resolve_merges")
   public void resolve_merges(MonoTS type, MonoTS reduced) {
-    assertThat(typing().resolveMerges(type))
+    assertThat(resolveMerges(type))
         .isEqualTo(reduced);
   }
 
@@ -123,13 +124,5 @@ public class TypingSTest {
 
   private static TestedTSF testedF() {
     return TESTED_ASSIGN_CASES_S.testedTF();
-  }
-
-  private static TypeFS typeF() {
-    return typing().typeF();
-  }
-
-  private static TypingS typing() {
-    return TESTED_ASSIGN_CASES_S.testingT().typing();
   }
 }

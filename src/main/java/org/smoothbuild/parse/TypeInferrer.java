@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
+import static org.smoothbuild.lang.type.ResolveMerges.resolveMerges;
 import static org.smoothbuild.lang.type.Side.LOWER;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
 import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
@@ -19,8 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.like.Obj;
@@ -30,7 +29,6 @@ import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.TypeS;
-import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.VarSetS;
 import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
@@ -61,18 +59,8 @@ import org.smoothbuild.parse.ast.ValP;
 import com.google.common.collect.ImmutableList;
 
 public class TypeInferrer {
-  private final TypeFS typeFS;
-  private final TypingS typing;
-  private final CallTypeInferrer callTypeInferrer;
-
-  @Inject
-  public TypeInferrer(TypeFS typeFS, TypingS typing) {
-    this.typeFS = typeFS;
-    this.typing = typing;
-    this.callTypeInferrer = new CallTypeInferrer(typeFS, typing);
-  }
-
-  public List<Log> inferTypes(Ast ast, DefsS imported) {
+  public static List<Log> inferTypes(Ast ast, DefsS imported) {
+    var callTypeInferrer = new CallTypeInferrer();
     var logBuffer = new LogBuffer();
 
     new AstVisitor() {
@@ -80,9 +68,9 @@ public class TypeInferrer {
       public void visitStruct(StructP struct) {
         super.visitStruct(struct);
         var fields = pullUp(map(struct.fields(), ItemP::sig));
-        struct.setTypeO(fields.map(f -> typeFS.struct(struct.name(), nList(f))));
+        struct.setTypeO(fields.map(f -> TypeFS.struct(struct.name(), nList(f))));
         struct.ctor().setTypeO(
-            fields.map(s -> typeFS.func(struct.typeO().get(), map(s, ItemSigS::type))));
+            fields.map(s -> TypeFS.func(struct.typeO().get(), map(s, ItemSigS::type))));
       }
 
       @Override
@@ -121,7 +109,7 @@ public class TypeInferrer {
         var paramVars = varSetS(params.get());
         var r = result.get();
         if (paramVars.containsAll(r.vars())) {
-          return Optional.of(paramVars.isEmpty() ? typeFS.func(r, ps) :  typeFS.polyFunc(r, ps));
+          return Optional.of(paramVars.isEmpty() ? TypeFS.func(r, ps) :  TypeFS.polyFunc(r, ps));
         }
         logError(
             resN, "Function result type has type variable(s) not present in any parameter type.");
@@ -161,16 +149,16 @@ public class TypeInferrer {
 
       private Optional<MonoTS> inferMonoizedBodyT(TypeS bodyT, MonoTS targetT) {
         var mappedBodyT = bodyT.mapFreeVars(v -> v.prefixed("body"));
-        var solver = new SolverS(typeFS);
+        var solver = new SolverS();
         try {
           solver.addConstr(constrS(mappedBodyT, targetT));
         } catch (ConstrDecomposeExc e) {
           return empty();
         }
         var constrGraph = solver.graph();
-        var denormalizer = new Denormalizer(typeFS, constrGraph);
+        var denormalizer = new Denormalizer(constrGraph);
         var typeS = denormalizeAndResolveMerges(denormalizer, mappedBodyT);
-        if (typeS.includes(typeFS.any())) {
+        if (typeS.includes(TypeFS.any())) {
           return empty();
         }
         return Optional.of(typeS);
@@ -178,7 +166,7 @@ public class TypeInferrer {
 
       private MonoTS denormalizeAndResolveMerges(Denormalizer denormalizer, MonoTS typeS) {
         var denormalizedT = denormalizer.denormalizeVars(typeS, LOWER);
-        return typing.resolveMerges(denormalizedT);
+        return resolveMerges(denormalizedT);
       }
 
       private Optional<MonoTS> evalTypeOf(
@@ -269,17 +257,17 @@ public class TypeInferrer {
 
       private Optional<MonoTS> createType(TypeP type) {
         if (isVarName(type.name())) {
-          return Optional.of(typeFS.var(type.name()));
+          return Optional.of(TypeFS.var(type.name()));
         }
         return switch (type) {
-          case ArrayTP array -> createType(array.elemT()).map(typeFS::array);
+          case ArrayTP array -> createType(array.elemT()).map(TypeFS::array);
           case FuncTP func -> {
             var resultOpt = createType(func.resT());
             var paramsOpt = pullUp(map(func.paramTs(), this::createType));
             if (resultOpt.isEmpty() || paramsOpt.isEmpty()) {
               yield empty();
             }
-            yield Optional.of(typeFS.func(resultOpt.get(), paramsOpt.get()));
+            yield Optional.of(TypeFS.func(resultOpt.get(), paramsOpt.get()));
           }
           default -> Optional.of(findType(type.name()));
         };
@@ -335,7 +323,7 @@ public class TypeInferrer {
       private Optional<MonoTS> findArrayT(OrderP array) {
         List<ObjP> expressions = array.elems();
         if (expressions.isEmpty()) {
-          return Optional.of(typeFS.array(typeFS.nothing()));
+          return Optional.of(TypeFS.array(TypeFS.nothing()));
         }
 
         var map = map(expressions, Parsed::typeO);
@@ -352,9 +340,9 @@ public class TypeInferrer {
           return empty();
         }
         var prefixedElemTs = prefixFreeVarsWithIndex(elemTs);
-        var solver = new SolverS(typeFS);
+        var solver = new SolverS();
 
-        var a = typeFS.var("array.A");
+        var a = TypeFS.var("array.A");
         for (MonoTS prefixedElemT : prefixedElemTs) {
           try {
             solver.addConstr(constrS(prefixedElemT, a));
@@ -365,16 +353,16 @@ public class TypeInferrer {
         }
 
         var constrGraph = solver.graph();
-        var denormalizer = new Denormalizer(typeFS, constrGraph);
+        var denormalizer = new Denormalizer(constrGraph);
         var inferredElemT = denormalizeAndResolveMerges(denormalizer, a);
         for (int i = 0; i < prefixedElemTs.size(); i++) {
           storeActualTypeIfNeeded(expressions.get(i), inferredElemT, denormalizer);
         }
-        if (inferredElemT.includes(typeFS.any())) {
+        if (inferredElemT.includes(TypeFS.any())) {
           arrayElemError(array);
           return empty();
         }
-        return Optional.of(typeFS.array(inferredElemT));
+        return Optional.of(TypeFS.array(inferredElemT));
       }
 
       private void arrayElemError(OrderP array) {

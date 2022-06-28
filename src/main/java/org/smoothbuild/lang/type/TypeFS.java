@@ -14,12 +14,12 @@ import com.google.common.collect.ImmutableList;
 
 @Singleton
 public class TypeFS {
-  public static final AnyTS ANY = new AnyTS();
-  public static final BlobTS BLOB = new BlobTS();
-  public static final BoolTS BOOL = new BoolTS();
-  public static final IntTS INT = new IntTS();
-  public static final NothingTS NOTHING = new NothingTS();
-  public static final StringTS STRING = new StringTS();
+  private static final AnyTS ANY = new AnyTS();
+  private static final BlobTS BLOB = new BlobTS();
+  private static final BoolTS BOOL = new BoolTS();
+  private static final IntTS INT = new IntTS();
+  private static final NothingTS NOTHING = new NothingTS();
+  private static final StringTS STRING = new StringTS();
 
   @Inject
   public TypeFS() {
@@ -29,7 +29,7 @@ public class TypeFS {
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
    */
-  public ImmutableList<MonoTS> inferableBaseTs() {
+  public static ImmutableList<MonoTS> inferableBaseTs() {
     return ImmutableList.<MonoTS>builder()
         .addAll(baseTs())
         .add(any())
@@ -39,7 +39,7 @@ public class TypeFS {
   /**
    * Base types that are legal in smooth language.
    */
-  public ImmutableList<BaseTS> baseTs() {
+  public static ImmutableList<BaseTS> baseTs() {
     return ImmutableList.of(
         blob(),
         bool(),
@@ -49,54 +49,47 @@ public class TypeFS {
     );
   }
 
-  public AnyTS any() {
+  public static AnyTS any() {
     return ANY;
   }
 
-  public ArrayTS array(MonoTS elemT) {
+  public static ArrayTS array(MonoTS elemT) {
     return new ArrayTS(elemT);
   }
 
-  public BlobTS blob() {
+  public static BlobTS blob() {
     return BLOB;
   }
 
-  public BoolTS bool() {
+  public static BoolTS bool() {
     return BOOL;
   }
 
-  public PolyFuncTS polyFunc(MonoTS resT, List<? extends MonoTS> paramTs) {
+  public static PolyFuncTS polyFunc(MonoTS resT, List<? extends MonoTS> paramTs) {
     return polyFuncTS(func(resT, paramTs));
   }
 
-  public MonoFuncTS func(MonoTS resT, List<? extends MonoTS> paramTs) {
+  public static MonoFuncTS func(MonoTS resT, List<? extends MonoTS> paramTs) {
     return new MonoFuncTS(resT, ImmutableList.copyOf(paramTs));
   }
 
-  public IntTS int_() {
+  public static IntTS int_() {
     return INT;
   }
 
-  public NothingTS nothing() {
+  public static NothingTS nothing() {
     return NOTHING;
   }
 
-  public StringTS string() {
+  public static StringTS string() {
     return STRING;
   }
 
-  public StructTS struct(String name, NList<ItemSigS> fields) {
+  public static StructTS struct(String name, NList<ItemSigS> fields) {
     return new StructTS(name, fields);
   }
 
-  public VarS var(String name) {
+  public static VarS var(String name) {
     return new VarS(name);
-  }
-
-  public MonoTS edge(Side side) {
-    return switch (side) {
-      case LOWER -> nothing();
-      case UPPER -> any();
-    };
   }
 }

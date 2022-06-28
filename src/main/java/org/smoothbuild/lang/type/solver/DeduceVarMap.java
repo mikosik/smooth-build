@@ -20,16 +20,15 @@ import org.smoothbuild.lang.type.ConstrS;
 import org.smoothbuild.lang.type.MergeTS;
 import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.ResolveMerges;
 import org.smoothbuild.lang.type.Side;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeFS;
-import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 
 import com.google.common.collect.ImmutableMap;
 
 public class DeduceVarMap {
-  private static final TypingS TYPING = new TypingS(new TypeFS());
+  private static final ResolveMerges TYPING = new ResolveMerges();
 
   /**
    * For given assignment `source -> target` deduce what types should be assigned to vars

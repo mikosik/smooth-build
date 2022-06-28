@@ -93,7 +93,6 @@ import org.smoothbuild.lang.define.CallS;
 import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefValS;
 import org.smoothbuild.lang.define.IntS;
-import org.smoothbuild.lang.define.InternalModLoader;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.define.ModFiles;
@@ -120,10 +119,10 @@ import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.PolyFuncTS;
+import org.smoothbuild.lang.type.ResolveMerges;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
-import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.load.JarClassLoaderProv;
@@ -159,14 +158,13 @@ public class TestingContext {
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
   private ObjDb objDb;
-  private TypingS typingS;
+  private ResolveMerges resolveMerges;
   private CatDb catDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
   private TempManager tempManager;
   private ModS internalMod;
-  private TypeFS typeFS;
   private ConsoleReporter consoleReporter;
   private BytecodeLoader bytecodeLoader;
   private JarClassLoaderProv jarClassLoaderProv;
@@ -256,13 +254,6 @@ public class TestingContext {
     return new Console(new PrintWriter(outputStream, true));
   }
 
-  public ModS internalMod() {
-    if (internalMod == null) {
-      internalMod = new InternalModLoader(typeFS()).load();
-    }
-    return internalMod;
-  }
-
   public Computer computer() {
     if (computer == null) {
       computer = new Computer(computationCache(), Hash.of(123), Providers.of(newContainer()));
@@ -300,22 +291,8 @@ public class TestingContext {
     return bytecodeF;
   }
 
-  public TypingS typingS() {
-    if (typingS == null) {
-      typingS = new TypingS(typeFS());
-    }
-    return typingS;
-  }
-
   public TypeFB typeFB() {
     return catDb();
-  }
-
-  public TypeFS typeFS() {
-    if (typeFS == null) {
-      typeFS = new TypeFS();
-    }
-    return typeFS;
   }
 
   public CatDb catDb() {
@@ -783,19 +760,19 @@ public class TestingContext {
   // Types Smooth
 
   public AnyTS anyTS() {
-    return typeFS().any();
+    return TypeFS.any();
   }
 
   public ArrayTS arrayTS(MonoTS elemT) {
-    return typeFS().array(elemT);
+    return TypeFS.array(elemT);
   }
 
   public BlobTS blobTS() {
-    return typeFS().blob();
+    return TypeFS.blob();
   }
 
   public BoolTS boolTS() {
-    return typeFS().bool();
+    return TypeFS.bool();
   }
 
   public MonoFuncTS funcTS(MonoTS resT) {
@@ -807,15 +784,15 @@ public class TestingContext {
   }
 
   public MonoFuncTS funcTS(MonoTS resT, ImmutableList<MonoTS> paramTs) {
-    return typeFS().func(resT, paramTs);
+    return TypeFS.func(resT, paramTs);
   }
 
   public IntTS intTS() {
-    return typeFS().int_();
+    return TypeFS.int_();
   }
 
   public NothingTS nothingTS() {
-    return typeFS().nothing();
+    return TypeFS.nothing();
   }
 
   public PolyFuncTS polyFuncTS(MonoTS resT) {
@@ -827,20 +804,20 @@ public class TestingContext {
   }
 
   public StructTS personTS() {
-    return typeFS().struct("Person",
+    return TypeFS.struct("Person",
         nList(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
   }
 
   public StringTS stringTS() {
-    return typeFS().string();
+    return TypeFS.string();
   }
 
   public StructTS structTS(String name, NList<ItemSigS> fields) {
-    return typeFS().struct(name, fields);
+    return TypeFS.struct(name, fields);
   }
 
   public VarS varS(String name) {
-    return typeFS().var(name);
+    return TypeFS.var(name);
   }
 
   // Expressions

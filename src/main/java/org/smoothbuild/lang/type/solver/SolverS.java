@@ -11,16 +11,15 @@ import java.util.Queue;
 import org.smoothbuild.lang.type.ConstrS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.Side;
-import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
 
 public class SolverS {
   private final Normalizer normalizer;
   private final VarNodes varNodes;
 
-  public SolverS(TypeFS typeF) {
-    this.normalizer = new Normalizer(typeF);
-    this.varNodes = new VarNodes(typeF);
+  public SolverS() {
+    this.normalizer = new Normalizer();
+    this.varNodes = new VarNodes();
   }
 
   public void addConstr(ConstrS constr) throws ConstrDecomposeExc {

@@ -15,8 +15,8 @@ public class VarNodes {
   private final HashMap<VarS, VarNode> nodes;
   private final Bounds<MonoTS> initialBounds;
 
-  public VarNodes(TypeFS typeF) {
-    this.initialBounds = new Bounds<>(typeF.nothing(), typeF.any());
+  public VarNodes() {
+    this.initialBounds = new Bounds<>(TypeFS.nothing(), TypeFS.any());
     this.nodes = new HashMap<>();
   }
 

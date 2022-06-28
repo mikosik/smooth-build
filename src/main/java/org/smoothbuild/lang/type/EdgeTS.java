@@ -1,8 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.type.TypeFS.ANY;
-import static org.smoothbuild.lang.type.TypeFS.NOTHING;
-
 /**
  * This class is immutable.
  */
@@ -21,8 +18,8 @@ public sealed abstract class EdgeTS extends BaseTS
 
   public static EdgeTS edgeTS(Side side) {
     return switch (side) {
-      case LOWER -> NOTHING;
-      case UPPER -> ANY;
+      case LOWER -> TypeFS.nothing();
+      case UPPER -> TypeFS.any();
     };
   }
 }

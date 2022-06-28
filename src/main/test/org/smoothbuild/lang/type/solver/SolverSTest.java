@@ -192,7 +192,7 @@ public class SolverSTest extends TestingTS {
   }
 
   private void assertSolvedGraph(List<ConstrS> constrs, ConstrGraph expected) throws Exception {
-    var solver = new SolverS(factory());
+    var solver = new SolverS();
     for (var constr : constrs) {
       solver.addConstr(constr);
     }

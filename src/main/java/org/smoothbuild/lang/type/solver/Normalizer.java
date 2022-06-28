@@ -22,11 +22,9 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
 public class Normalizer {
-  private final TypeFS typeF;
   private int currentId;
 
-  public Normalizer(TypeFS typeF) {
-    this.typeF = typeF;
+  public Normalizer() {
   }
 
   public ImmutableSet<ConstrS> normalize(ConstrS constr) {
@@ -51,13 +49,13 @@ public class Normalizer {
 
   private ArrayTS normalizeArray(ArrayTS array, Side side, Builder<ConstrS> constrBuilder) {
     var elem = normalizeToLeaf(array.elem(), side, constrBuilder);
-    return typeF.array(elem);
+    return TypeFS.array(elem);
   }
 
   private MonoTS normalizeFunc(MonoFuncTS func, Side side, Builder<ConstrS> constrBuilder) {
     var res = normalizeToLeaf(func.res(), side, constrBuilder);
     var params = map(func.params(), p -> normalizeToLeaf(p, side.other(), constrBuilder));
-    return typeF.func(res, params);
+    return TypeFS.func(res, params);
   }
 
   private VarS normalizeToLeaf(MonoTS type, Side side, Builder<ConstrS> constrBuilder) {
@@ -68,6 +66,6 @@ public class Normalizer {
   }
 
   public VarS newTempVar() {
-    return typeF.var(Integer.toString(currentId++)).prefixed("_");
+    return TypeFS.var(Integer.toString(currentId++)).prefixed("_");
   }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
+import static org.smoothbuild.lang.type.ResolveMerges.resolveMerges;
 import static org.smoothbuild.lang.type.Side.LOWER;
 import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
 import static org.smoothbuild.out.log.Log.error;
@@ -26,7 +27,6 @@ import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.TypeFS;
-import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
 import org.smoothbuild.lang.type.solver.Denormalizer;
@@ -44,14 +44,6 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class CallTypeInferrer {
-  private final TypeFS typeFS;
-  private final TypingS typing;
-
-  public CallTypeInferrer(TypeFS typeFS, TypingS typing) {
-    this.typeFS = typeFS;
-    this.typing = typing;
-  }
-
   public Optional<MonoTS> inferCallT(CallP call, LogBuffer logBuffer) {
     ObjP callee = call.callee();
 
@@ -115,7 +107,7 @@ public class CallTypeInferrer {
     var prefixedArgTs = prefixFreeVarsWithIndex(map(args, a -> a.obj().typeO().get()));
     var prefixedCalleeT = (FuncTS) calleeT.mapFreeVars(v -> v.prefixed("callee"));
     var prefixedParamTs = prefixedCalleeT.params();
-    var solver = new SolverS(typeFS);
+    var solver = new SolverS();
     for (int i = 0; i < args.size(); i++) {
       try {
         solver.addConstr(constrS(prefixedArgTs.get(i), prefixedParamTs.get(i)));
@@ -127,10 +119,10 @@ public class CallTypeInferrer {
     }
 
     var constrGraph = solver.graph();
-    var denormalizer = new Denormalizer(typeFS, constrGraph);
+    var denormalizer = new Denormalizer(constrGraph);
     for (var prefixedParamT : prefixedParamTs) {
       var typeS = denormalizeAndResolveMerges(denormalizer, prefixedParamT);
-      if (typeS.includes(typeFS.any())) {
+      if (typeS.includes(TypeFS.any())) {
         logBuffer.log(paramInferringError(call.loc(), prefixedParamT));
         return empty();
       }
@@ -140,12 +132,12 @@ public class CallTypeInferrer {
     }
     var prefixedResT = prefixedCalleeT.res();
     var actualResT = denormalizeAndResolveMerges(denormalizer, prefixedResT);
-    if (actualResT.includes(typeFS.any())) {
+    if (actualResT.includes(TypeFS.any())) {
       logBuffer.log(resInferringError(call, calleeT.res()));
       return empty();
     }
 
-    storeActualTypeIfNeeded(call.callee(), typeFS.func(prefixedResT, prefixedArgTs), denormalizer);
+    storeActualTypeIfNeeded(call.callee(), TypeFS.func(prefixedResT, prefixedArgTs), denormalizer);
     return Optional.of(actualResT);
   }
 
@@ -157,7 +149,7 @@ public class CallTypeInferrer {
 
   private MonoTS denormalizeAndResolveMerges(Denormalizer denormalizer, MonoTS typeS) {
     var denormalizedT = denormalizer.denormalizeVars(typeS, LOWER);
-    return typing.resolveMerges(denormalizedT);
+    return resolveMerges(denormalizedT);
   }
 
   private static Log paramInferringError(Loc loc, MonoTS paramT) {

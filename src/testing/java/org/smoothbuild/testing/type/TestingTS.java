@@ -20,7 +20,6 @@ import org.smoothbuild.lang.type.NothingTS;
 import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
-import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
@@ -32,17 +31,16 @@ public class TestingTS {
   public static final TestingTS INSTANCE = new TestingTS();
 
   private static final TestingContext CONTEXT = new TestingContext();
-  public static final TypeFS FACTORY = CONTEXT.typeFS();
 
-  public static final ImmutableList<MonoTS> BASE_TYPES = ImmutableList.copyOf(FACTORY.baseTs());
-  public static final ImmutableList<MonoTS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTs();
+  public static final ImmutableList<MonoTS> BASE_TYPES = ImmutableList.copyOf(TypeFS.baseTs());
+  public static final ImmutableList<MonoTS> INFERABLE_BASE_TYPES = TypeFS.inferableBaseTs();
 
-  public static final AnyTS ANY = FACTORY.any();
-  public static final BlobTS BLOB = FACTORY.blob();
-  public static final BoolTS BOOL = FACTORY.bool();
-  public static final IntTS INT = FACTORY.int_();
-  public static final NothingTS NOTHING = FACTORY.nothing();
-  public static final StringTS STRING = FACTORY.string();
+  public static final AnyTS ANY = TypeFS.any();
+  public static final BlobTS BLOB = TypeFS.blob();
+  public static final BoolTS BOOL = TypeFS.bool();
+  public static final IntTS INT = TypeFS.int_();
+  public static final NothingTS NOTHING = TypeFS.nothing();
+  public static final StringTS STRING = TypeFS.string();
   public static final StructTS PERSON = struct("Person",
       nList(itemSigS(STRING, "firstName"), itemSigS(STRING, "lastName")));
   public static final StructTS FLAG = struct("Flag", nList(itemSigS(BOOL, "flab")));
@@ -84,7 +82,7 @@ public class TestingTS {
           .build();
 
   public static ArrayTS a(MonoTS elemT) {
-    return FACTORY.array(elemT);
+    return TypeFS.array(elemT);
   }
 
   public static MonoFuncTS f(MonoTS resT) {
@@ -96,15 +94,15 @@ public class TestingTS {
   }
 
   public static MonoFuncTS f(MonoTS resT, ImmutableList<MonoTS> paramTs) {
-    return FACTORY.func(resT, paramTs);
+    return TypeFS.func(resT, paramTs);
   }
 
   public static VarS var(String a) {
-    return FACTORY.var(a);
+    return TypeFS.var(a);
   }
 
   public static StructTS struct(String name, NList<ItemSigS> fields) {
-    return FACTORY.struct(name, fields);
+    return TypeFS.struct(name, fields);
   }
 
   public Bounds<MonoTS> bounds() {
@@ -113,10 +111,6 @@ public class TestingTS {
 
   public Bounds<MonoTS> bounds(MonoTS lower, MonoTS upper) {
     return new Bounds<>(lower, upper);
-  }
-
-  public TypingS typing() {
-    return CONTEXT.typingS();
   }
 
   public ImmutableList<MonoTS> typesForBuildWideGraph() {
@@ -229,9 +223,5 @@ public class TestingTS {
 
   public VarS varC() {
     return C;
-  }
-
-  public TypeFS factory() {
-    return FACTORY;
   }
 }

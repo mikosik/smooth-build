@@ -197,6 +197,6 @@ public class NormalizerTest extends TestingTS {
   }
 
   private Normalizer normalizer() {
-    return new Normalizer(FACTORY);
+    return new Normalizer();
   }
 }

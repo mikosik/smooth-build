@@ -2,7 +2,9 @@ package org.smoothbuild.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static org.smoothbuild.lang.define.LoadInternalMod.loadInternalMod;
 import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.parse.LoadMod.loadModule;
 import static org.smoothbuild.testing.TestingContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestingContext.importedModFiles;
 import static org.smoothbuild.testing.TestingContext.modFiles;
@@ -16,9 +18,6 @@ import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.parse.ModLoader;
-import org.smoothbuild.parse.TopObjLoader;
-import org.smoothbuild.parse.TypeInferrer;
 
 public class TestingModLoader {
   private final TestingContext testingContext;
@@ -87,7 +86,7 @@ public class TestingModLoader {
 
   public DefsS getModAsDefinitions() {
     return DefsS.empty()
-        .withModule(testingContext.internalMod())
+        .withModule(loadInternalMod())
         .withModule(modS.value());
   }
 
@@ -121,15 +120,9 @@ public class TestingModLoader {
   }
 
   private Maybe<ModS> load() {
-    var typing = testingContext.typingS();
-    var factory = testingContext.typeFS();
-    var typeInferrer = new TypeInferrer(factory, typing);
-    var topRefableLoader = new TopObjLoader(factory);
-    var modLoader = new ModLoader(typeInferrer, topRefableLoader, factory);
-    DefsS importedSane = imported != null ? imported
-        : DefsS.empty().withModule(testingContext.internalMod());
+    DefsS importedSane = imported != null ? imported : DefsS.empty().withModule(loadInternalMod());
     ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();
-    return modLoader.loadModule(
+    return loadModule(
         ModPath.of(modFilesSane.smoothFile()), modFilesSane, sourceCode, importedSane);
   }
 

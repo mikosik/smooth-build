@@ -1,8 +1,7 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.type.TypeFS.STRING;
-
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.util.Strings;
 import org.smoothbuild.util.UnescapingFailedExc;
 
@@ -11,7 +10,7 @@ public final class StringP extends CnstP {
   private String unescaped;
 
   public StringP(String value, Loc loc) {
-    super(STRING, loc);
+    super(TypeFS.string(), loc);
     this.value = value;
   }
 

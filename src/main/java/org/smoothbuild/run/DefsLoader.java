@@ -2,9 +2,11 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
+import static org.smoothbuild.lang.define.LoadInternalMod.loadInternalMod;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValue;
+import static org.smoothbuild.parse.LoadMod.loadModule;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -17,13 +19,11 @@ import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.install.ModFilesDetector;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.InternalModLoader;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.parse.ModLoader;
 
 import com.google.common.collect.ImmutableList;
 
@@ -36,24 +36,20 @@ public class DefsLoader {
 
   private final FileResolver fileResolver;
   private final ModFilesDetector modFilesDetector;
-  private final ModLoader modLoader;
-  private final InternalModLoader internalModLoader;
   private final Reporter reporter;
 
   @Inject
   public DefsLoader(FileResolver fileResolver, ModFilesDetector modFilesDetector,
-      ModLoader modLoader, InternalModLoader internalModLoader, Reporter reporter) {
+      Reporter reporter) {
     this.fileResolver = fileResolver;
     this.modFilesDetector = modFilesDetector;
-    this.modLoader = modLoader;
-    this.internalModLoader = internalModLoader;
     this.reporter = reporter;
   }
 
   public Optional<DefsS> loadDefs() {
     reporter.startNewPhase("Parsing");
 
-    var internalMod = internalModLoader.load();
+    var internalMod = loadInternalMod();
     var allDefs = DefsS.empty().withModule(internalMod);
     var files = modFilesDetector.detect(MODULES);
     for (Entry<ModPath, ModFiles> entry : files.entrySet()) {
@@ -74,7 +70,7 @@ public class DefsLoader {
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());
     } else {
-      return modLoader.loadModule(path, modFiles, sourceCode.value(), imported);
+      return loadModule(path, modFiles, sourceCode.value(), imported);
     }
   }
 
