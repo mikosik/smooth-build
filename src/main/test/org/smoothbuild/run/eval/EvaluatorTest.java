@@ -94,7 +94,7 @@ public class EvaluatorTest  extends TestingContext {
     public void def_func() {
       var defFuncS = defFuncS("myFunc", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
       assertThat(evaluate(refS(defFuncS), nList(defFuncS)))
-          .isEqualTo(funcB(list(intTB()), paramRefB(intTB(), 0)));
+          .isEqualTo(idFuncB());
     }
 
     @Test
@@ -191,7 +191,7 @@ public class EvaluatorTest  extends TestingContext {
       var monoizeS = monoizeS(actualTS, refS(funcS));
 
       assertThat(evaluate(monoizeS, nList(funcS)))
-          .isEqualTo(funcB(list(intTB()), paramRefB(intTB(), 0)));
+          .isEqualTo(idFuncB());
     }
   }
 

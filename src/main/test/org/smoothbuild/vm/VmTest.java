@@ -305,8 +305,7 @@ public class VmTest extends TestingContext {
   class _param_ref {
     @Test
     public void referencing_param_inside_func() {
-      var func = funcB(list(intTB()), paramRefB(intTB(), 0));
-      assertThat(evaluate(callB(func, intB(7))))
+      assertThat(evaluate(callB(idFuncB(), intB(7))))
           .isEqualTo(intB(7));
     }
   }

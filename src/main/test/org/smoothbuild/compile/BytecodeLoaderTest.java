@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.compile.BytecodeMethodLoader.BYTECODE_METHOD_NAME;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -32,7 +31,7 @@ public class BytecodeLoaderTest extends TestingContext {
   @Test
   public void loading_monomorphised_bytecode() throws Exception {
     assertThat(loadBytecode(ReturnIdFunc.class, ImmutableMap.of("A", intTB())))
-        .isEqualTo(Try.result(funcB(list(intTB()), paramRefB(intTB(), 0))));
+        .isEqualTo(Try.result(idFuncB()));
   }
 
   @Test

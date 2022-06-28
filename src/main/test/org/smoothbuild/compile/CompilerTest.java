@@ -103,21 +103,19 @@ public class CompilerTest extends TestingContext {
           byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nList(itemS(varTS, "p")),
               loc(filePath, 2)));
 
-      var funcB = funcB(list(intTB()), paramRefB(intTB(), 0));
-
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
       var compiler = newCompiler(defs(byteFuncS), fileLoader);
       var monoizeS = monoizeS(funcTS(intTS(), list(intTS())), refS(byteFuncS));
       assertThat(compiler.compileObj(monoizeS))
-          .isEqualTo(funcB);
+          .isEqualTo(idFuncB());
     }
 
     @Test
     public void paramRef() {
       var func = defFuncS("f", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
       assertCompilation(func, refS(func),
-          funcB(list(intTB()), paramRefB(intTB(), 0)));
+          idFuncB());
     }
 
     @Test

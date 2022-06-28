@@ -628,6 +628,10 @@ public class TestingContext {
     return objDb().func(type, body);
   }
 
+  public FuncB idFuncB() {
+    return funcB(list(intTB()), paramRefB(intTB(), 0));
+  }
+
   public IntB intB() {
     return intB(17);
   }
