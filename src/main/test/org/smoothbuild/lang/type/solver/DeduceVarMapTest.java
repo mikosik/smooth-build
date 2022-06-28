@@ -4,15 +4,15 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.type.solver.DeduceVarMap.deduceVarMap;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.testing.type.TestingTS.A;
 import static org.smoothbuild.testing.type.TestingTS.ANY;
+import static org.smoothbuild.testing.type.TestingTS.B;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
+import static org.smoothbuild.testing.type.TestingTS.C;
 import static org.smoothbuild.testing.type.TestingTS.INT;
 import static org.smoothbuild.testing.type.TestingTS.NOTHING;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.VAR_A;
-import static org.smoothbuild.testing.type.TestingTS.VAR_B;
-import static org.smoothbuild.testing.type.TestingTS.VAR_C;
 import static org.smoothbuild.testing.type.TestingTS.a;
 import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.testing.type.TestingTS.struct;
@@ -56,23 +56,23 @@ public class DeduceVarMapTest {
         arguments(f(INT), f(ANY), empty()),
         arguments(f(INT, ANY), f(INT, BLOB), empty()),
 
-        arguments(f(INT, VAR_A, VAR_A), f(INT, NOTHING, BLOB), map(VAR_A, BLOB)),
+        arguments(f(INT, A, A), f(INT, NOTHING, BLOB), map(A, BLOB)),
 
-        arguments(VAR_A, INT, map(VAR_A, INT)),
-        arguments(a(VAR_A), a(INT), map(VAR_A, INT)),
-        arguments(a(a(VAR_A)), a(a(INT)), map(VAR_A, INT)),
+        arguments(A, INT, map(A, INT)),
+        arguments(a(A), a(INT), map(A, INT)),
+        arguments(a(a(A)), a(a(INT)), map(A, INT)),
         arguments(struct("MyStruct", nList()), struct("MyStruct", nList()), empty()),
-        arguments(f(VAR_A), f(INT), map(VAR_A, INT)),
-        arguments(f(VAR_A, VAR_A), f(INT, INT), map(VAR_A, INT)),
-        arguments(f(INT, VAR_A), f(INT, BLOB), map(VAR_A, BLOB)),
+        arguments(f(A), f(INT), map(A, INT)),
+        arguments(f(A, A), f(INT, INT), map(A, INT)),
+        arguments(f(INT, A), f(INT, BLOB), map(A, BLOB)),
         arguments(
-            f(VAR_A, VAR_B),
+            f(A, B),
             f(INT, BLOB),
-            ImmutableMap.of(VAR_A, INT, VAR_B, BLOB)),
+            ImmutableMap.of(A, INT, B, BLOB)),
         arguments(
-            f(VAR_A, VAR_B, VAR_C),
+            f(A, B, C),
             f(INT, BLOB, BOOL),
-            ImmutableMap.of(VAR_A, INT, VAR_B, BLOB, VAR_C, BOOL))
+            ImmutableMap.of(A, INT, B, BLOB, C, BOOL))
     );
   }
 
@@ -95,14 +95,14 @@ public class DeduceVarMapTest {
 
         // deduce var bounds doesn't fulfill lower-bound < upper bound
         arguments(
-            f(VAR_A, VAR_A),
+            f(A, A),
             f(INT, BOOL))
     );
   }
 
   @Test
   public void REMOVE() {
-    assertCall(() -> deduceVarMap(f(VAR_A, VAR_A), f(INT, BOOL)))
+    assertCall(() -> deduceVarMap(f(A, A), f(INT, BOOL)))
         .throwsException(IllegalArgumentException.class);
   }
 

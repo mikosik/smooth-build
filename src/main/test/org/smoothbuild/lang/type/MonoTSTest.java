@@ -10,15 +10,16 @@ import static org.smoothbuild.lang.type.MergeTS.merge;
 import static org.smoothbuild.lang.type.MergeTS.mergeReduced;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.testing.type.TestingTS.A;
 import static org.smoothbuild.testing.type.TestingTS.ANY;
+import static org.smoothbuild.testing.type.TestingTS.B;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
+import static org.smoothbuild.testing.type.TestingTS.C;
 import static org.smoothbuild.testing.type.TestingTS.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.testing.type.TestingTS.INT;
 import static org.smoothbuild.testing.type.TestingTS.NOTHING;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.VAR_A;
-import static org.smoothbuild.testing.type.TestingTS.VAR_B;
 import static org.smoothbuild.testing.type.TestingTS.a;
 import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.testing.type.TestingTS.join;
@@ -82,7 +83,7 @@ public class MonoTSTest {
         arguments(NOTHING, "Nothing"),
         arguments(STRING, "String"),
         arguments(struct("MyStruct", nList()), "MyStruct"),
-        arguments(VAR_A, "A"),
+        arguments(A, "A"),
 
         arguments(join(BLOB, INT), "Blob ⊔ Int"),
         arguments(join(INT, BLOB), "Int ⊔ Blob"),
@@ -96,9 +97,9 @@ public class MonoTSTest {
         arguments(a(NOTHING), "[Nothing]"),
         arguments(a(STRING), "[String]"),
         arguments(a(struct("MyStruct", nList())), "[MyStruct]"),
-        arguments(a(VAR_A), "[A]"),
+        arguments(a(A), "[A]"),
 
-        arguments(a(a(VAR_A)), "[[A]]"),
+        arguments(a(a(A)), "[[A]]"),
         arguments(a(a(ANY)), "[[Any]]"),
         arguments(a(a(BLOB)), "[[Blob]]"),
         arguments(a(a(BOOL)), "[[Bool]]"),
@@ -107,9 +108,9 @@ public class MonoTSTest {
         arguments(a(a(struct("MyStruct", nList()))), "[[MyStruct]]"),
         arguments(a(a(STRING)), "[[String]]"),
 
-        arguments(f(VAR_A, list(a(VAR_A))), "A([A])"),
-        arguments(f(STRING, list(a(VAR_A))), "String([A])"),
-        arguments(f(VAR_A, list(VAR_A)), "A(A)"),
+        arguments(f(A, list(a(A))), "A([A])"),
+        arguments(f(STRING, list(a(A))), "String([A])"),
+        arguments(f(A, list(A)), "A(A)"),
         arguments(f(STRING, list()), "String()"),
         arguments(f(STRING, list(STRING)), "String(String)")
     );
@@ -132,17 +133,17 @@ public class MonoTSTest {
         arguments(STRING, varSetS()),
 
         arguments(join(INT, BLOB), varSetS()),
-        arguments(join(VAR_A, VAR_B), varSetS(VAR_A, VAR_B)),
+        arguments(join(A, B), varSetS(A, B)),
 
         arguments(meet(INT, BLOB), varSetS()),
-        arguments(meet(VAR_A, VAR_B), varSetS(VAR_A, VAR_B)),
+        arguments(meet(A, B), varSetS(A, B)),
 
         arguments(a(INT), varSetS()),
-        arguments(a(VAR_A), varSetS(VAR_A)),
+        arguments(a(A), varSetS(A)),
 
         arguments(f(BLOB, list(BOOL)), varSetS()),
-        arguments(f(VAR_A, list(BOOL)), varSetS(VAR_A)),
-        arguments(f(BLOB, list(VAR_A)), varSetS(VAR_A))
+        arguments(f(A, list(BOOL)), varSetS(A)),
+        arguments(f(BLOB, list(A)), varSetS(A))
     );
   }
 
@@ -246,7 +247,7 @@ public class MonoTSTest {
           arguments(NOTHING),
           arguments(STRING),
           arguments(struct("MyStruct", nList())),
-          arguments(VAR_A),
+          arguments(A),
 
           arguments(a(ANY)),
           arguments(a(BLOB)),
@@ -255,7 +256,7 @@ public class MonoTSTest {
           arguments(a(INT)),
           arguments(a(NOTHING)),
           arguments(a(STRING)),
-          arguments(a(VAR_A))
+          arguments(a(A))
       );
     }
   }
@@ -571,9 +572,9 @@ public class MonoTSTest {
         STRING,
         struct("MyStruct", nList()),
         struct("MyStruct", nList(itemSigS(INT, "field"))),
-        VAR_A,
-        var("B"),
-        var("C"),
+        A,
+        B,
+        C,
 
         f(BLOB, list()),
         f(STRING, list()),

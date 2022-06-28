@@ -47,11 +47,11 @@ public class TestingTS {
       nList(itemSigS(STRING, "firstName"), itemSigS(STRING, "lastName")));
   public static final StructTS FLAG = struct("Flag", nList(itemSigS(BOOL, "flab")));
   public static final StructTS DATA = struct("Data", nList(itemSigS(BLOB, "data")));
-  public static final VarS VAR_A = var("A");
-  public static final VarS VAR_B = var("B");
-  public static final VarS VAR_C = var("C");
-  public static final VarS VAR_X = var("X");
-  public static final VarS VAR_Y = var("Y");
+  public static final VarS A = var("A");
+  public static final VarS B = var("B");
+  public static final VarS C = var("C");
+  public static final VarS X = var("X");
+  public static final VarS Y = var("Y");
 
   public static final ImmutableList<MonoTS> ELEMENTARY_TYPES = ImmutableList.<MonoTS>builder()
       .addAll(BASE_TYPES)
@@ -62,9 +62,9 @@ public class TestingTS {
   public static final MonoFuncTS PERSON_GETTER_FUNCTION = f(PERSON);
   public static final MonoFuncTS STRING_MAP_FUNCTION = f(STRING, STRING);
   public static final MonoFuncTS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
-  public static final MonoFuncTS IDENTITY_FUNCTION = f(VAR_A, VAR_A);
-  public static final MonoFuncTS ARRAY_HEAD_FUNCTION = f(VAR_A, a(VAR_A));
-  public static final MonoFuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(VAR_A));
+  public static final MonoFuncTS IDENTITY_FUNCTION = f(A, A);
+  public static final MonoFuncTS ARRAY_HEAD_FUNCTION = f(A, a(A));
+  public static final MonoFuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(A));
 
   public static final ImmutableList<MonoTS> FUNCTION_TYPES =
       list(
@@ -80,7 +80,7 @@ public class TestingTS {
       ImmutableList.<MonoTS>builder()
           .addAll(ELEMENTARY_TYPES)
           .addAll(FUNCTION_TYPES)
-          .add(VAR_X)
+          .add(X)
           .build();
 
   public static ArrayTS a(MonoTS elemT) {
@@ -220,23 +220,15 @@ public class TestingTS {
   }
 
   public VarS varA() {
-    return VAR_A;
+    return A;
   }
 
   public VarS varB() {
-    return VAR_B;
+    return B;
   }
 
   public VarS varC() {
-    return VAR_C;
-  }
-
-  public VarS varX() {
-    return VAR_X;
-  }
-
-  public VarS varY() {
-    return VAR_Y;
+    return C;
   }
 
   public TypeFS factory() {

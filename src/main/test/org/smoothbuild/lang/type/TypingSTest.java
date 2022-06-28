@@ -4,14 +4,14 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.type.TestingTypeGraphS.buildGraph;
 import static org.smoothbuild.testing.type.TestedAssignCasesS.TESTED_ASSIGN_CASES_S;
+import static org.smoothbuild.testing.type.TestingTS.A;
 import static org.smoothbuild.testing.type.TestingTS.ANY;
+import static org.smoothbuild.testing.type.TestingTS.B;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
 import static org.smoothbuild.testing.type.TestingTS.INT;
 import static org.smoothbuild.testing.type.TestingTS.NOTHING;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.VAR_A;
-import static org.smoothbuild.testing.type.TestingTS.VAR_B;
 import static org.smoothbuild.testing.type.TestingTS.join;
 import static org.smoothbuild.testing.type.TestingTS.meet;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -98,13 +98,13 @@ public class TypingSTest {
   public static List<Arguments> resolve_merges() {
     return list(
         arguments(STRING, STRING),
-        arguments(VAR_A, VAR_A),
+        arguments(A, A),
         arguments(f(INT, BLOB), f(INT, BLOB)),
         arguments(ar(INT), ar(INT)),
         arguments(ar(ar(INT)), ar(ar(INT))),
 
         arguments(join(BLOB, INT), ANY),
-        arguments(join(VAR_A, VAR_B), ANY),
+        arguments(join(A, B), ANY),
 
         arguments(join(ar(BLOB), ar(NOTHING)), ar(BLOB)),
         arguments(join(ar(ar(BLOB)), ar(NOTHING)), ar(ar(BLOB))),
@@ -117,7 +117,7 @@ public class TypingSTest {
         arguments(join(ar(ar(BLOB)), ar(ar(ANY))), ar(ar(ANY))),
 
         arguments(meet(BLOB, INT), NOTHING),
-        arguments(meet(VAR_A, VAR_B), NOTHING),
+        arguments(meet(A, B), NOTHING),
 
         arguments(meet(ar(BLOB), ar(NOTHING)), ar(NOTHING)),
         arguments(meet(ar(ar(BLOB)), ar(NOTHING)), ar(NOTHING)),
