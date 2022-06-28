@@ -12,7 +12,7 @@ import org.smoothbuild.bytecode.type.expr.CallCB;
 /**
  * This class is thread-safe.
  */
-public class CallB extends CallLikeB {
+public class CallB extends CallableB {
   public CallB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
     super(merkleRoot, objDb);
     checkArgument(merkleRoot.cat() instanceof CallCB);

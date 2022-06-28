@@ -10,12 +10,12 @@ import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.cnst.CallableTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 
-public class CallLikeB extends ExprB {
+public class CallableB extends ExprB {
   protected static final int DATA_SEQ_SIZE = 2;
   protected static final int CALLABLE_IDX = 0;
   protected static final int ARGS_IDX = 1;
 
-  public CallLikeB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+  public CallableB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
     super(merkleRoot, objDb);
   }
 
