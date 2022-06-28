@@ -15,11 +15,11 @@ import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
 
 public class SolverS {
-  private final NormalizerS normalizer;
+  private final Normalizer normalizer;
   private final VarNodes varNodes;
 
   public SolverS(TypeFS typeF) {
-    this.normalizer = new NormalizerS(typeF);
+    this.normalizer = new Normalizer(typeF);
     this.varNodes = new VarNodes(typeF);
   }
 
@@ -120,7 +120,7 @@ public class SolverS {
     queue.addAll(decompose(constrS(lower, upper)));
   }
 
-  public ConstrGraphS graph() {
+  public ConstrGraph graph() {
     return varNodes.graph();
   }
 }

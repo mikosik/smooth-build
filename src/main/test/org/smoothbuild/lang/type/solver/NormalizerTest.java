@@ -21,7 +21,7 @@ import org.smoothbuild.testing.type.TestingTS;
 
 import com.google.common.collect.ImmutableSet;
 
-public class NormalizerSTest extends TestingTS {
+public class NormalizerTest extends TestingTS {
   @Nested
   class _array_type {
     @Test
@@ -196,7 +196,7 @@ public class NormalizerSTest extends TestingTS {
     return normalizer().normalize(constr);
   }
 
-  private NormalizerS normalizer() {
-    return new NormalizerS(FACTORY);
+  private Normalizer normalizer() {
+    return new Normalizer(FACTORY);
   }
 }

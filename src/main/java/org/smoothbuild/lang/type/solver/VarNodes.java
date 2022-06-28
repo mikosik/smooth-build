@@ -9,7 +9,7 @@ import org.smoothbuild.lang.type.Bounds;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.lang.type.solver.ConstrGraphS.Builder;
+import org.smoothbuild.lang.type.solver.ConstrGraph.Builder;
 
 public class VarNodes {
   private final HashMap<VarS, VarNode> nodes;
@@ -24,8 +24,8 @@ public class VarNodes {
     return nodes.computeIfAbsent(var, v -> new VarNode(v, initialBounds));
   }
 
-  public ConstrGraphS graph() {
-    Builder builder = ConstrGraphS.builder();
+  public ConstrGraph graph() {
+    Builder builder = ConstrGraph.builder();
     for (var varNode : nodes.values()) {
       var uppers = map(varNode.edges(UPPER), VarNode::var);
       builder.addVar(varNode.var(), uppers, varNode.bounds());

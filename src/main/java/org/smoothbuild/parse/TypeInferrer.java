@@ -34,7 +34,7 @@ import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.VarSetS;
 import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
-import org.smoothbuild.lang.type.solver.DenormalizerS;
+import org.smoothbuild.lang.type.solver.Denormalizer;
 import org.smoothbuild.lang.type.solver.SolverS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -168,7 +168,7 @@ public class TypeInferrer {
           return empty();
         }
         var constrGraph = solver.graph();
-        var denormalizer = new DenormalizerS(typeFS, constrGraph);
+        var denormalizer = new Denormalizer(typeFS, constrGraph);
         var typeS = denormalizeAndResolveMerges(denormalizer, mappedBodyT);
         if (typeS.includes(typeFS.any())) {
           return empty();
@@ -176,7 +176,7 @@ public class TypeInferrer {
         return Optional.of(typeS);
       }
 
-      private MonoTS denormalizeAndResolveMerges(DenormalizerS denormalizer, MonoTS typeS) {
+      private MonoTS denormalizeAndResolveMerges(Denormalizer denormalizer, MonoTS typeS) {
         var denormalizedT = denormalizer.denormalizeVars(typeS, LOWER);
         return typing.resolveMerges(denormalizedT);
       }
@@ -365,7 +365,7 @@ public class TypeInferrer {
         }
 
         var constrGraph = solver.graph();
-        var denormalizer = new DenormalizerS(typeFS, constrGraph);
+        var denormalizer = new Denormalizer(typeFS, constrGraph);
         var inferredElemT = denormalizeAndResolveMerges(denormalizer, a);
         for (int i = 0; i < prefixedElemTs.size(); i++) {
           storeActualTypeIfNeeded(expressions.get(i), inferredElemT, denormalizer);
@@ -381,7 +381,7 @@ public class TypeInferrer {
         logError(array, "Array elements don't have common super type.");
       }
 
-      private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, DenormalizerS denormalizer) {
+      private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, Denormalizer denormalizer) {
         if (obj instanceof RefP refP && refP.referenced().typeO().get() instanceof PolyTS) {
           refP.setInferredMonoType(denormalizeAndResolveMerges(denormalizer, monoTS));
         }

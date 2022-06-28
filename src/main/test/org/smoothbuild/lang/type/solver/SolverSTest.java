@@ -43,13 +43,13 @@ import org.smoothbuild.util.collect.Sets;
 public class SolverSTest extends TestingTS {
   @Test
   public void without_constraints() throws Exception {
-    assertSolvedGraph(list(), ConstrGraphS.builder().build());
+    assertSolvedGraph(list(), ConstrGraph.builder().build());
   }
 
   @ParameterizedTest
   @MethodSource
   public void var_lower_bound_is_propagated_to_upper_var(List<ConstrS> constrs) throws Exception {
-    assertSolvedGraph(constrs, ConstrGraphS.builder()
+    assertSolvedGraph(constrs, ConstrGraph.builder()
         .addVar(varA(), list(varB()), bounds(bool(), any()))
         .addVar(varB(), list(), bounds(bool(), any()))
         .build());
@@ -66,7 +66,7 @@ public class SolverSTest extends TestingTS {
   @MethodSource
   public void var_lower_bound_is_propagated_to_upper_vars_transitively(List<ConstrS> constrs)
       throws Exception {
-    assertSolvedGraph(constrs, ConstrGraphS.builder()
+    assertSolvedGraph(constrs, ConstrGraph.builder()
         .addVar(varA(), list(varB(), varC()), bounds(bool(), any()))
         .addVar(varB(), list(varC()), bounds(bool(), any()))
         .addVar(varC(), list(), bounds(bool(), any()))
@@ -84,7 +84,7 @@ public class SolverSTest extends TestingTS {
   @ParameterizedTest
   @MethodSource
   public void var_upper_bound_is_propagated_to_lower_var(List<ConstrS> constrs) throws Exception {
-    assertSolvedGraph(constrs, ConstrGraphS.builder()
+    assertSolvedGraph(constrs, ConstrGraph.builder()
         .addVar(varA(), list(varB()), bounds(nothing(), bool()))
         .addVar(varB(), list(), bounds(nothing(), bool()))
         .build());
@@ -101,7 +101,7 @@ public class SolverSTest extends TestingTS {
   @MethodSource
   public void var_upper_bound_is_propagated_to_lower_vars_transitively(List<ConstrS> constrs)
       throws Exception {
-    assertSolvedGraph(constrs, ConstrGraphS.builder()
+    assertSolvedGraph(constrs, ConstrGraph.builder()
         .addVar(varA(), list(varB(), varC()), bounds(nothing(), bool()))
         .addVar(varB(), list(varC()), bounds(nothing(), bool()))
         .addVar(varC(), list(), bounds(nothing(), bool()))
@@ -118,7 +118,7 @@ public class SolverSTest extends TestingTS {
 
   @Test
   public void var_vs_var() throws Exception {
-    assertSolvedGraph(list(constrS(varA(), varB())), ConstrGraphS.builder()
+    assertSolvedGraph(list(constrS(varA(), varB())), ConstrGraph.builder()
             .addVar(varA(), list(varB()), bounds())
             .addVar(varB(), list(), bounds())
             .build()
@@ -131,7 +131,7 @@ public class SolverSTest extends TestingTS {
     @ParameterizedTest
     @MethodSource
     public void propagation_of_element_upper_bound(List<ConstrS> constrs) throws Exception {
-      assertSolvedGraph(constrs, ConstrGraphS.builder()
+      assertSolvedGraph(constrs, ConstrGraph.builder()
           .addVar(varA(), list(), bounds(nothing(), bool()))
           .build());
     }
@@ -146,7 +146,7 @@ public class SolverSTest extends TestingTS {
     @MethodSource
     public void propagation_of_element_upper_bound_through_var(List<ConstrS> constrs)
         throws Exception {
-      assertSolvedGraph(constrs, ConstrGraphS.builder()
+      assertSolvedGraph(constrs, ConstrGraph.builder()
           .addVar(varA(), list(v0(), v1()), bounds(nothing(), int_()))
           .addVar(varB(), list(), bounds(array(v0()), array(v1())))
           .addVar(v0(), list(v1()), bounds(nothing(), int_()))
@@ -168,7 +168,7 @@ public class SolverSTest extends TestingTS {
     @Test
     public void id() throws Exception {
       var constr = constrS(func(varA(), list(varA())), func(int_(), list(int_())));
-      assertSolvedGraph(list(constr), ConstrGraphS.builder()
+      assertSolvedGraph(list(constr), ConstrGraph.builder()
           .addVar(varA(), list(), bounds(int_(), int_()))
           .build());
     }
@@ -177,7 +177,7 @@ public class SolverSTest extends TestingTS {
   @ParameterizedTest
   @MethodSource
   public void legal_var_loop(List<ConstrS> constrs) throws Exception {
-    assertSolvedGraph(constrs, ConstrGraphS.builder()
+    assertSolvedGraph(constrs, ConstrGraph.builder()
         .addVar(varA(), list(varB(), varC()), bounds())
         .addVar(varB(), list(varC(), varA()), bounds())
         .addVar(varC(), list(varA(), varB()), bounds())
@@ -191,7 +191,7 @@ public class SolverSTest extends TestingTS {
         constrS(varC(), varA())));
   }
 
-  private void assertSolvedGraph(List<ConstrS> constrs, ConstrGraphS expected) throws Exception {
+  private void assertSolvedGraph(List<ConstrS> constrs, ConstrGraph expected) throws Exception {
     var solver = new SolverS(factory());
     for (var constr : constrs) {
       solver.addConstr(constr);
@@ -209,7 +209,7 @@ public class SolverSTest extends TestingTS {
    * Remap temporary vars in `actual` so they match `expected` and return it.
    * Otherwise, return `actual` unchanged.
    */
-  private ConstrGraphS findGraphWithRemappedTempVars(ConstrGraphS actual, ConstrGraphS expected) {
+  private ConstrGraph findGraphWithRemappedTempVars(ConstrGraph actual, ConstrGraph expected) {
     var tempVars = actual.varBounds().keySet()
         .stream()
         .filter(v -> v.name().startsWith("_"))
@@ -224,8 +224,8 @@ public class SolverSTest extends TestingTS {
     return actual;
   }
 
-  private ConstrGraphS mapVars(ConstrGraphS graph, Function<VarS, VarS> mapper) {
-    var builder = ConstrGraphS.builder();
+  private ConstrGraph mapVars(ConstrGraph graph, Function<VarS, VarS> mapper) {
+    var builder = ConstrGraph.builder();
     for (var entry : graph.varBounds().entrySet()) {
       var newVar = mapVars(entry.getKey(), mapper);
       var oldBounds = entry.getValue();

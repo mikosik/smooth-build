@@ -29,7 +29,7 @@ import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
-import org.smoothbuild.lang.type.solver.DenormalizerS;
+import org.smoothbuild.lang.type.solver.Denormalizer;
 import org.smoothbuild.lang.type.solver.SolverS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -127,7 +127,7 @@ public class CallTypeInferrer {
     }
 
     var constrGraph = solver.graph();
-    var denormalizer = new DenormalizerS(typeFS, constrGraph);
+    var denormalizer = new Denormalizer(typeFS, constrGraph);
     for (var prefixedParamT : prefixedParamTs) {
       var typeS = denormalizeAndResolveMerges(denormalizer, prefixedParamT);
       if (typeS.includes(typeFS.any())) {
@@ -149,13 +149,13 @@ public class CallTypeInferrer {
     return Optional.of(actualResT);
   }
 
-  private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, DenormalizerS denormalizer) {
+  private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, Denormalizer denormalizer) {
     if (obj instanceof RefP refP && refP.referenced().typeO().get() instanceof PolyTS) {
       refP.setInferredMonoType(denormalizeAndResolveMerges(denormalizer, monoTS));
     }
   }
 
-  private MonoTS denormalizeAndResolveMerges(DenormalizerS denormalizer, MonoTS typeS) {
+  private MonoTS denormalizeAndResolveMerges(Denormalizer denormalizer, MonoTS typeS) {
     var denormalizedT = denormalizer.denormalizeVars(typeS, LOWER);
     return typing.resolveMerges(denormalizedT);
   }

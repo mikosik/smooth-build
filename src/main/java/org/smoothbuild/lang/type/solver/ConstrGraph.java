@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 
-public record ConstrGraphS(
+public record ConstrGraph(
   ImmutableMap<VarS, Bounds<MonoTS>> varBounds,
   ImmutableSetMultimap<VarS, VarS> constrs) {
 
@@ -70,8 +70,8 @@ public record ConstrGraphS(
       return this;
     }
 
-    public ConstrGraphS build() {
-      return new ConstrGraphS(varBounds.build(), constrs.build());
+    public ConstrGraph build() {
+      return new ConstrGraph(varBounds.build(), constrs.build());
     }
   }
 }

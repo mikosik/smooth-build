@@ -21,11 +21,11 @@ import org.smoothbuild.lang.type.VarS;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
-public class NormalizerS {
+public class Normalizer {
   private final TypeFS typeF;
   private int currentId;
 
-  public NormalizerS(TypeFS typeF) {
+  public Normalizer(TypeFS typeF) {
     this.typeF = typeF;
   }
 

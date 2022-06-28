@@ -23,13 +23,13 @@ import org.smoothbuild.util.collect.Sets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public class DenormalizerS {
+public class Denormalizer {
   private final TypeFS typeFS;
-  private final ConstrGraphS graph;
+  private final ConstrGraph graph;
   private final TypingS typing;
 
   @Inject
-  public DenormalizerS(TypeFS typeFS, ConstrGraphS graph) {
+  public Denormalizer(TypeFS typeFS, ConstrGraph graph) {
     this.typeFS = typeFS;
     this.graph = graph;
     this.typing = new TypingS(typeFS);
