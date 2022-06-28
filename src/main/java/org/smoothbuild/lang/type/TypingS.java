@@ -24,41 +24,6 @@ public class TypingS {
     this.typeFS = typeFS;
   }
 
-  public MonoTS mergeUp(MonoTS type1, MonoTS type2) {
-    return merge(type1, type2, UPPER);
-  }
-
-  public MonoTS mergeDown(MonoTS type1, MonoTS type2) {
-    return merge(type1, type2, LOWER);
-  }
-
-  public MonoTS merge(MonoTS type1, MonoTS type2, Side direction) {
-    MonoTS otherEdge = typeFS.edge(direction.other());
-    if (otherEdge.equals(type2)) {
-      return type1;
-    } else if (otherEdge.equals(type1)) {
-      return type2;
-    } else if (type1.equals(type2)) {
-      return type1;
-    } else if (type1 instanceof ComposedTS c1) {
-      if (type1.getClass().equals(type2.getClass())) {
-        var c2 = (ComposedTS) type2;
-        var c1covars = c1.covars();
-        var c2covars = c2.covars();
-        var c1contravars = c1.contravars();
-        var c2contravars = c2.contravars();
-        if (c1covars.size() == c2covars.size() && c1contravars.size() == c2contravars.size()) {
-          var contravars = zip(c1contravars, c2contravars,
-              (a, b) -> merge(a, b, direction.other()));
-          var covars = zip(c1covars, c2covars,
-              (a, b) -> merge(a, b, direction));
-          return rebuildComposed(c1, covars, contravars);
-        }
-      }
-    }
-    return typeFS.edge(direction);
-  }
-
   public MonoTS resolveMerges(MonoTS type) {
     return switch (type) {
       case ComposedTS composedT -> {
