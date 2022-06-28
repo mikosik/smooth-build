@@ -10,9 +10,9 @@ import org.smoothbuild.lang.like.Refable;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
-import org.smoothbuild.parse.ast.FuncN;
-import org.smoothbuild.parse.ast.RefN;
-import org.smoothbuild.parse.ast.StructN;
+import org.smoothbuild.parse.ast.FuncP;
+import org.smoothbuild.parse.ast.RefP;
+import org.smoothbuild.parse.ast.StructP;
 import org.smoothbuild.util.Scope;
 
 public class ReferenceResolver extends AstVisitor {
@@ -27,7 +27,7 @@ public class ReferenceResolver extends AstVisitor {
 
   private static Scope<Refable> scope(DefsS imported, Ast ast) {
     var importedScope = new Scope<Refable>(imported.topRefables());
-    var ctors = map(ast.structs(), StructN::ctor);
+    var ctors = map(ast.structs(), StructP::ctor);
     var refables = ast.topRefables();
     return new Scope<>(importedScope, nList(concat(refables, ctors)));
   }
@@ -38,16 +38,16 @@ public class ReferenceResolver extends AstVisitor {
   }
 
   @Override
-  public void visitFunc(FuncN funcN) {
-    visitParams(funcN.params());
-    funcN.body().ifPresent(expr -> {
-      var referenceResolver = new ReferenceResolver(new Scope<>(scope, funcN.params()), logger);
+  public void visitFunc(FuncP funcP) {
+    visitParams(funcP.params());
+    funcP.body().ifPresent(expr -> {
+      var referenceResolver = new ReferenceResolver(new Scope<>(scope, funcP.params()), logger);
       referenceResolver.visitObj(expr);
     });
   }
 
   @Override
-  public void visitRef(RefN ref) {
+  public void visitRef(RefP ref) {
     super.visitRef(ref);
     String name = ref.name();
     if (scope.contains(name)) {

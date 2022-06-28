@@ -20,15 +20,15 @@ import org.smoothbuild.lang.like.Param;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.parse.ast.ArgN;
-import org.smoothbuild.parse.ast.CallN;
-import org.smoothbuild.parse.ast.DefaultArgN;
+import org.smoothbuild.parse.ast.ArgP;
+import org.smoothbuild.parse.ast.CallP;
+import org.smoothbuild.parse.ast.DefaultArgP;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 public class ConstructArgList {
-  public static Maybe<ImmutableList<ArgN>> constructArgList(CallN call, NList<Param> params) {
+  public static Maybe<ImmutableList<ArgP>> constructArgList(CallP call, NList<Param> params) {
     var logBuffer = new LogBuffer();
     var positionalArgs = leadingPositionalArgs(call);
     logBuffer.logAll(findPositionalArgAfterNamedArgError(call, params));
@@ -45,16 +45,16 @@ public class ConstructArgList {
     return maybeValueAndLogs(result, logBuffer);
   }
 
-  private static ImmutableList<ArgN> leadingPositionalArgs(CallN call) {
+  private static ImmutableList<ArgP> leadingPositionalArgs(CallP call) {
     return call.args()
         .stream()
-        .takeWhile(not(ArgN::declaresName))
+        .takeWhile(not(ArgP::declaresName))
         .collect(toImmutableList());
   }
 
-  private static List<ArgN> assignedArgs(CallN call, NList<Param> params) {
+  private static List<ArgP> assignedArgs(CallP call, NList<Param> params) {
     var args = call.args();
-    var result = new ArrayList<ArgN>(nCopies(params.size(), null));
+    var result = new ArrayList<ArgP>(nCopies(params.size(), null));
     for (int i = 0; i < args.size(); i++) {
       var arg = args.get(i);
       if (arg.declaresName()) {
@@ -67,61 +67,61 @@ public class ConstructArgList {
       if (result.get(i) == null) {
         var body = params.get(i).body();
         if (body.isPresent()) {
-          result.set(i, new DefaultArgN(body.get(), call.loc()));
+          result.set(i, new DefaultArgP(body.get(), call.loc()));
         }
       }
     }
     return result;
   }
 
-  private static List<Log> findPositionalArgAfterNamedArgError(CallN call, NList<Param> params) {
+  private static List<Log> findPositionalArgAfterNamedArgError(CallP call, NList<Param> params) {
     return call.args()
         .stream()
-        .dropWhile(not(ArgN::declaresName))
-        .dropWhile(ArgN::declaresName)
+        .dropWhile(not(ArgP::declaresName))
+        .dropWhile(ArgP::declaresName)
         .map(a -> parseError(a, messagePrefix(params)
             + "Positional arguments must be placed before named arguments."))
         .collect(toList());
   }
 
   private static List<Log> findTooManyPositionalArgsError(
-      CallN call, List<ArgN> positionalArgs, NList<Param> params) {
+      CallP call, List<ArgP> positionalArgs, NList<Param> params) {
     if (params.size() < positionalArgs.size()) {
       return list(parseError(call, messagePrefix(params) + "Too many positional arguments."));
     }
     return list();
   }
 
-  private static List<Log> findUnknownParamNameErrors(CallN call, NList<Param> params) {
+  private static List<Log> findUnknownParamNameErrors(CallP call, NList<Param> params) {
     return call.args()
         .stream()
-        .filter(ArgN::declaresName)
+        .filter(ArgP::declaresName)
         .filter(a -> !params.containsName(a.name()))
         .map(a -> parseError(a, messagePrefix(params) + "Unknown parameter " + a.q() + "."))
         .collect(toList());
   }
 
   private static List<Log> findDuplicateAssignmentErrors(
-      CallN call, List<ArgN> positionalArgs, NList<Param> params) {
+      CallP call, List<ArgP> positionalArgs, NList<Param> params) {
     Set<String> names = positionalArgNames(positionalArgs, params);
     return call.args()
         .stream()
-        .filter(ArgN::declaresName)
+        .filter(ArgP::declaresName)
         .filter(a -> !names.add(a.name()))
         .map(a -> parseError(a, messagePrefix(params) + a.q() + " is already assigned."))
         .collect(toList());
   }
 
   private static Set<String> positionalArgNames(
-      List<ArgN> positionalArgs, NList<Param> params) {
+      List<ArgP> positionalArgs, NList<Param> params) {
     return params.stream()
         .limit(positionalArgs.size())
         .flatMap(p -> p.nameO().stream())
         .collect(toSet());
   }
 
-  private static List<Log> findUnassignedParamsWithoutDefaultArgsErrors(CallN call,
-      List<ArgN> assignedList, NList<Param> params) {
+  private static List<Log> findUnassignedParamsWithoutDefaultArgsErrors(CallP call,
+      List<ArgP> assignedList, NList<Param> params) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i) == null)
         .mapToObj(i -> paramsMustBeSpecifiedError(call, i, params.get(i), params))
@@ -129,7 +129,7 @@ public class ConstructArgList {
   }
 
   private static Log paramsMustBeSpecifiedError(
-      CallN call, int i, Param param, NList<Param> params) {
+      CallP call, int i, Param param, NList<Param> params) {
     String paramName = param.nameO().map(n -> "`" + n + "`").orElse("#" + (i + 1));
     return parseError(call, messagePrefix(params) + "Parameter " + paramName + " must be specified.");
   }

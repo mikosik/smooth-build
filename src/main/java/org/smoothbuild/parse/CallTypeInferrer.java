@@ -34,11 +34,11 @@ import org.smoothbuild.lang.type.solver.SolverS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.parse.ast.ArgN;
-import org.smoothbuild.parse.ast.CallN;
-import org.smoothbuild.parse.ast.FuncN;
-import org.smoothbuild.parse.ast.ObjN;
-import org.smoothbuild.parse.ast.RefN;
+import org.smoothbuild.parse.ast.ArgP;
+import org.smoothbuild.parse.ast.CallP;
+import org.smoothbuild.parse.ast.FuncP;
+import org.smoothbuild.parse.ast.ObjP;
+import org.smoothbuild.parse.ast.RefP;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -52,8 +52,8 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Optional<MonoTS> inferCallT(CallN call, LogBuffer logBuffer) {
-    ObjN callee = call.callee();
+  public Optional<MonoTS> inferCallT(CallP call, LogBuffer logBuffer) {
+    ObjP callee = call.callee();
 
     if (callee.typeO().isEmpty()) {
       return empty();
@@ -71,7 +71,7 @@ public class CallTypeInferrer {
     }
 
     var params = funcParams.get();
-    Maybe<ImmutableList<ArgN>> args = constructArgList(call, params);
+    Maybe<ImmutableList<ArgP>> args = constructArgList(call, params);
     if (args.containsProblem()) {
       logBuffer.logAll(args.logs());
       return empty();
@@ -83,33 +83,33 @@ public class CallTypeInferrer {
     }
   }
 
-  public static Optional<NList<Param>> funcParams(ObjN callee, FuncTS calleeT) {
-    if (callee instanceof RefN refN) {
-      Refable referenced = refN.referenced();
+  public static Optional<NList<Param>> funcParams(ObjP callee, FuncTS calleeT) {
+    if (callee instanceof RefP refP) {
+      Refable referenced = refP.referenced();
       if (referenced instanceof FuncS funcS) {
         return Optional.of(funcS.params().map(p -> new Param(p.sig(), p.body())));
-      } else if (referenced instanceof FuncN funcN) {
+      } else if (referenced instanceof FuncP funcP) {
         var params = map(
-            funcN.params().list(), p -> p.sig().map(sig -> new Param(sig, p.body())));
+            funcP.params().list(), p -> p.sig().map(sig -> new Param(sig, p.body())));
         return pullUp(params).map(NList::nList);
       }
     }
     return Optional.of(nList(map(calleeT.params(), p -> new Param(itemSigS(p), empty()))));
   }
 
-  private static boolean someArgHasNotInferredType(ImmutableList<ArgN> args) {
+  private static boolean someArgHasNotInferredType(ImmutableList<ArgP> args) {
     return args.stream()
         .anyMatch(a -> a.typeO().isEmpty());
   }
 
-  private static String description(ObjN node) {
-    if (node instanceof RefN refN) {
-      return "`" + refN.name() + "`";
+  private static String description(ObjP node) {
+    if (node instanceof RefP refP) {
+      return "`" + refP.name() + "`";
     }
     return "expression";
   }
 
-  public Optional<MonoTS> inferCallT(CallN call, NList<Param> params, FuncTS calleeT,
+  public Optional<MonoTS> inferCallT(CallP call, NList<Param> params, FuncTS calleeT,
       LogBuffer logBuffer) {
     var args = call.assignedArgs();
     var prefixedArgTs = prefixFreeVarsWithIndex(map(args, a -> a.obj().typeO().get()));
@@ -150,8 +150,8 @@ public class CallTypeInferrer {
   }
 
   private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, DenormalizerS denormalizer) {
-    if (obj instanceof RefN refN && refN.referenced().typeO().get() instanceof PolyTS) {
-      refN.setInferredMonoType(denormalizeAndResolveMerges(denormalizer, monoTS));
+    if (obj instanceof RefP refP && refP.referenced().typeO().get() instanceof PolyTS) {
+      refP.setInferredMonoType(denormalizeAndResolveMerges(denormalizer, monoTS));
     }
   }
 
@@ -165,11 +165,11 @@ public class CallTypeInferrer {
         + paramT.mapVars(VarS::unprefixed).q() + ".");
   }
 
-  private static Log resInferringError(CallN call, MonoTS resT) {
+  private static Log resInferringError(CallP call, MonoTS resT) {
     return error(call.loc() + ": Cannot infer call actual result type " + resT.q() + ".");
   }
 
-  private static Log illegalAssignmentError(List<ItemSigS> params, ItemSigS param, ArgN arg) {
+  private static Log illegalAssignmentError(List<ItemSigS> params, ItemSigS param, ArgP arg) {
     return parseError(arg.loc(), messagePrefix(params)
         + "Cannot assign argument of type " + arg.typeO().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");

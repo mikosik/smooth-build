@@ -21,19 +21,19 @@ import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.parse.ast.ArrayTN;
+import org.smoothbuild.parse.ast.ArrayTP;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
-import org.smoothbuild.parse.ast.BlobN;
-import org.smoothbuild.parse.ast.FuncN;
-import org.smoothbuild.parse.ast.FuncTN;
-import org.smoothbuild.parse.ast.IntN;
-import org.smoothbuild.parse.ast.ItemN;
-import org.smoothbuild.parse.ast.MonoNamedN;
-import org.smoothbuild.parse.ast.StringN;
-import org.smoothbuild.parse.ast.StructN;
-import org.smoothbuild.parse.ast.TypeN;
-import org.smoothbuild.parse.ast.ValN;
+import org.smoothbuild.parse.ast.BlobP;
+import org.smoothbuild.parse.ast.FuncP;
+import org.smoothbuild.parse.ast.FuncTP;
+import org.smoothbuild.parse.ast.IntP;
+import org.smoothbuild.parse.ast.ItemP;
+import org.smoothbuild.parse.ast.MonoNamedP;
+import org.smoothbuild.parse.ast.StringP;
+import org.smoothbuild.parse.ast.StructP;
+import org.smoothbuild.parse.ast.TypeP;
+import org.smoothbuild.parse.ast.ValP;
 import org.smoothbuild.util.DecodeHexExc;
 import org.smoothbuild.util.UnescapingFailedExc;
 import org.smoothbuild.util.collect.NList;
@@ -56,7 +56,7 @@ public class AnalyzeSemantically {
   private static void decodeBlobLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitBlob(BlobN blob) {
+      public void visitBlob(BlobP blob) {
         super.visitBlob(blob);
         try {
           blob.decodeByteString();
@@ -70,12 +70,12 @@ public class AnalyzeSemantically {
   private static void decodeIntLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitInt(IntN intN) {
-        super.visitInt(intN);
+      public void visitInt(IntP intP) {
+        super.visitInt(intP);
         try {
-          intN.decodeBigInteger();
+          intP.decodeBigInteger();
         } catch (NumberFormatException e) {
-          logger.log(parseError(intN, "Illegal Int literal: `" + intN.literal() + "`."));
+          logger.log(parseError(intP, "Illegal Int literal: `" + intP.literal() + "`."));
         }
       }
     }.visitAst(ast);
@@ -84,7 +84,7 @@ public class AnalyzeSemantically {
   private static void decodeStringLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitString(StringN string) {
+      public void visitString(StringP string) {
         super.visitString(string);
         try {
           string.calculateUnescaped();
@@ -98,10 +98,10 @@ public class AnalyzeSemantically {
   private static void detectUndefinedTypes(Logger logger, DefsS imported, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitType(TypeN type) {
-        if (type instanceof ArrayTN array) {
+      public void visitType(TypeP type) {
+        if (type instanceof ArrayTP array) {
           visitType(array.elemT());
-        } else if (type instanceof FuncTN func) {
+        } else if (type instanceof FuncTP func) {
           visitType(func.resT());
           func.paramTs().forEach(this::visitType);
         } else if (!isDefinedType(type)) {
@@ -109,7 +109,7 @@ public class AnalyzeSemantically {
         }
       }
 
-      private boolean isDefinedType(TypeN type) {
+      private boolean isDefinedType(TypeP type) {
         return isVarName(type.name())
             || ast.structs().containsName(type.name())
             || imported.tDefs().containsName(type.name());
@@ -120,7 +120,7 @@ public class AnalyzeSemantically {
   private static void detectDuplicateGlobalNames(Logger logger, DefsS imported, Ast ast) {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
-    nals.addAll(map(ast.structs(), StructN::ctor));
+    nals.addAll(map(ast.structs(), StructP::ctor));
     nals.addAll(ast.topRefables());
     nals.sort(comparing(n -> n.loc().line()));
 
@@ -156,7 +156,7 @@ public class AnalyzeSemantically {
   private static void detectDuplicateFieldNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitFields(List<ItemN> fields) {
+      public void visitFields(List<ItemP> fields) {
         super.visitFields(fields);
         findDuplicateNames(logger, fields);
       }
@@ -166,16 +166,16 @@ public class AnalyzeSemantically {
   private static void detectDuplicateParamNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitParams(List<ItemN> params) {
+      public void visitParams(List<ItemP> params) {
         super.visitParams(params);
         findDuplicateNames(logger, params);
       }
     }.visitAst(ast);
   }
 
-  private static void findDuplicateNames(Logger logger, List<? extends MonoNamedN> nodes) {
+  private static void findDuplicateNames(Logger logger, List<? extends MonoNamedP> nodes) {
     Map<String, Loc> alreadyDefined = new HashMap<>();
-    for (MonoNamedN named : nodes) {
+    for (MonoNamedP named : nodes) {
       String name = named.name();
       if (alreadyDefined.containsKey(name)) {
         logger.log(alreadyDefinedError(named, alreadyDefined.get(name)));
@@ -187,7 +187,7 @@ public class AnalyzeSemantically {
   private static void detectStructNameWithSingleCapitalLetter(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitStruct(StructN struct) {
+      public void visitStruct(StructP struct) {
         String name = struct.name();
         if (isVarName(name)) {
           logger.log(parseError(struct.loc(),
@@ -200,51 +200,51 @@ public class AnalyzeSemantically {
   private static void detectIllegalAnnotations(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitFunc(FuncN funcN) {
-        super.visitFunc(funcN);
-        if (funcN.ann().isPresent()) {
-          var ann = funcN.ann().get();
+      public void visitFunc(FuncP funcP) {
+        super.visitFunc(funcP);
+        if (funcP.ann().isPresent()) {
+          var ann = funcP.ann().get();
           var annName = ann.name();
           if (ANNOTATION_NAMES.contains(annName)) {
-            if (funcN.body().isPresent()) {
-              logger.log(parseError(funcN,
-                  "Function " + funcN.q() + " with @" + annName + " annotation cannot have body."));
+            if (funcP.body().isPresent()) {
+              logger.log(parseError(funcP,
+                  "Function " + funcP.q() + " with @" + annName + " annotation cannot have body."));
             }
-            if (funcN.resTN().isEmpty()) {
-              logger.log(parseError(funcN, "Function " + funcN.q() + " with @" + annName
+            if (funcP.resTN().isEmpty()) {
+              logger.log(parseError(funcP, "Function " + funcP.q() + " with @" + annName
                   + " annotation must declare result type."));
             }
           } else {
             logger.log(parseError(ann, "Unknown annotation " + ann.q() + "."));
           }
-        } else if (funcN.body().isEmpty()) {
-          logger.log(parseError(funcN, "Function body is missing."));
+        } else if (funcP.body().isEmpty()) {
+          logger.log(parseError(funcP, "Function body is missing."));
         }
       }
 
       @Override
-      public void visitValue(ValN valN) {
-        super.visitValue(valN);
-        if (valN.ann().isPresent()) {
-          var ann = valN.ann().get();
+      public void visitValue(ValP valP) {
+        super.visitValue(valP);
+        if (valP.ann().isPresent()) {
+          var ann = valP.ann().get();
           var annName = ann.name();
           switch (annName) {
             case BYTECODE -> {
-              if (valN.body().isPresent()) {
+              if (valP.body().isPresent()) {
                 logger.log(
-                    parseError(valN, "Value with @" + annName + " annotation cannot have body."));
+                    parseError(valP, "Value with @" + annName + " annotation cannot have body."));
               }
-              if (valN.typeN().isEmpty()) {
-                logger.log(parseError(valN, "Value " + valN.q() + " with @" + annName
+              if (valP.typeN().isEmpty()) {
+                logger.log(parseError(valP, "Value " + valP.q() + " with @" + annName
                     + " annotation must declare type."));
               }
             }
             case NATIVE_PURE, NATIVE_IMPURE -> logger.log(
-                parseError(valN.ann().get(), "Value cannot have @" + annName + " annotation."));
+                parseError(valP.ann().get(), "Value cannot have @" + annName + " annotation."));
             default -> logger.log(parseError(ann, "Unknown annotation " + ann.q() + "."));
           }
-        } else if (valN.body().isEmpty()) {
-          logger.log(parseError(valN, "Value cannot have empty body."));
+        } else if (valP.body().isEmpty()) {
+          logger.log(parseError(valP, "Value cannot have empty body."));
         }
 
       }

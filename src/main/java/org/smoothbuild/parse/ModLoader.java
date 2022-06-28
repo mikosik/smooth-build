@@ -27,8 +27,8 @@ import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.ItemN;
-import org.smoothbuild.parse.ast.StructN;
+import org.smoothbuild.parse.ast.ItemP;
+import org.smoothbuild.parse.ast.StructP;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -84,7 +84,7 @@ public class ModLoader {
     return maybeValueAndLogs(moduleS, logBuffer);
   }
 
-  private TDefS loadStructDef(ModPath path, StructN struct) {
+  private TDefS loadStructDef(ModPath path, StructP struct) {
     var type = (StructTS) struct.typeO().get();
     var loc = struct.loc();
     return new StructDefS(type, path, loc);
@@ -102,12 +102,12 @@ public class ModLoader {
     return nList(local.build());
   }
 
-  private MonoFuncS loadSyntCtor(ModPath path, StructN struct) {
+  private MonoFuncS loadSyntCtor(ModPath path, StructP struct) {
     var resultT = (StructTS) struct.typeO().get();
     var name = struct.ctor().name();
     var paramTs = map(struct.fields(), f -> f.typeO().get());
     var type = typeFS.func(resultT, paramTs);
-    var params = struct.fields().map(ItemN::toItemS);
+    var params = struct.fields().map(ItemP::toItemS);
     var loc = struct.loc();
     return new SyntCtorS(type, path, name, params, loc);
   }

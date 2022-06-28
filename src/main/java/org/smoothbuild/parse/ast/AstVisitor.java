@@ -9,105 +9,105 @@ public class AstVisitor {
     visitRefable(ast.topRefables());
   }
 
-  public void visitStructs(List<StructN> structs) {
+  public void visitStructs(List<StructP> structs) {
     structs.forEach(this::visitStruct);
   }
 
-  public void visitStruct(StructN struct) {
+  public void visitStruct(StructP struct) {
     visitFields(struct.fields());
   }
 
-  public void visitFields(List<ItemN> fields) {
+  public void visitFields(List<ItemP> fields) {
     fields.forEach(this::visitField);
   }
 
-  public void visitField(ItemN field) {
+  public void visitField(ItemP field) {
     visitType(field.typeN());
   }
 
-  public void visitRefable(List<TopRefableN> refableObjs) {
+  public void visitRefable(List<TopRefableP> refableObjs) {
     refableObjs.forEach(this::visitRefable);
   }
 
-  public void visitRefable(TopRefableN eval) {
+  public void visitRefable(TopRefableP eval) {
     switch (eval) {
-      case FuncN func -> visitFunc(func);
-      case ValN value -> visitValue(value);
+      case FuncP func -> visitFunc(func);
+      case ValP value -> visitValue(value);
     }
   }
 
-  public void visitValue(ValN valN) {
-    valN.ann().ifPresent(this::visitAnn);
-    valN.typeN().ifPresent(this::visitType);
-    valN.body().ifPresent(this::visitObj);
+  public void visitValue(ValP valP) {
+    valP.ann().ifPresent(this::visitAnn);
+    valP.typeN().ifPresent(this::visitType);
+    valP.body().ifPresent(this::visitObj);
   }
 
-  public void visitFunc(FuncN funcN) {
-    funcN.ann().ifPresent(this::visitAnn);
-    funcN.resTN().ifPresent(this::visitType);
-    visitParams(funcN.params());
-    funcN.body().ifPresent(this::visitObj);
+  public void visitFunc(FuncP funcP) {
+    funcP.ann().ifPresent(this::visitAnn);
+    funcP.resTN().ifPresent(this::visitType);
+    visitParams(funcP.params());
+    funcP.body().ifPresent(this::visitObj);
   }
 
-  public void visitAnn(AnnN annotation) {
+  public void visitAnn(AnnP annotation) {
     visitString(annotation.path());
   }
 
-  public void visitParams(List<ItemN> params) {
+  public void visitParams(List<ItemP> params) {
     visitIndexedElements(params, this::visitParam);
   }
 
-  public void visitParam(int index, ItemN param) {
+  public void visitParam(int index, ItemP param) {
     visitType(param.typeN());
     param.body().ifPresent(this::visitObj);
   }
 
-  public void visitType(TypeN type) {}
+  public void visitType(TypeP type) {}
 
-  public void visitObj(ObjN obj) {
+  public void visitObj(ObjP obj) {
     switch (obj) {
-      case OrderN orderN -> visitOrder(orderN);
-      case BlobN blobN -> visitBlob(blobN);
-      case CallN callN -> visitCall(callN);
-      case IntN intN -> visitInt(intN);
-      case RefN refN -> visitRef(refN);
-      case SelectN selectN -> visitSelect(selectN);
-      case StringN stringN -> visitString(stringN);
+      case OrderP orderP -> visitOrder(orderP);
+      case BlobP blobP -> visitBlob(blobP);
+      case CallP callP -> visitCall(callP);
+      case IntP intP -> visitInt(intP);
+      case RefP refP -> visitRef(refP);
+      case SelectP selectP -> visitSelect(selectP);
+      case StringP stringP -> visitString(stringP);
     }
   }
 
-  public void visitOrder(OrderN order) {
+  public void visitOrder(OrderP order) {
     order.elems().forEach(this::visitObj);
   }
 
-  public void visitBlob(BlobN blob) {
+  public void visitBlob(BlobP blob) {
   }
 
-  public void visitCall(CallN call) {
+  public void visitCall(CallP call) {
     visitObj(call.callee());
     visitArgs(call.args());
   }
 
-  public void visitArgs(List<ArgN> args) {
+  public void visitArgs(List<ArgP> args) {
     args.forEach(this::visitArg);
   }
 
-  public void visitArg(ArgN arg) {
-    if (arg.obj() instanceof ObjN objN) {
-      visitObj(objN);
+  public void visitArg(ArgP arg) {
+    if (arg.obj() instanceof ObjP objP) {
+      visitObj(objP);
     }
   }
 
-  public void visitSelect(SelectN select) {
+  public void visitSelect(SelectP select) {
     visitObj(select.selectable());
   }
 
-  public void visitInt(IntN int_) {
+  public void visitInt(IntP int_) {
   }
 
-  public void visitRef(RefN ref) {}
+  public void visitRef(RefP ref) {}
 
-  public void visitString(StringN string) {
+  public void visitString(StringP string) {
   }
 
   public <E> void visitIndexedElements(List<E> elems, BiConsumer<Integer, ? super E> consumer) {

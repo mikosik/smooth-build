@@ -26,19 +26,19 @@ import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingRes;
 import com.google.common.collect.ImmutableList;
 
 public class Ast {
-  private final NList<StructN> structs;
-  private final ImmutableList<TopRefableN> topRefables;
+  private final NList<StructP> structs;
+  private final ImmutableList<TopRefableP> topRefables;
 
-  public Ast(List<StructN> structs, List<TopRefableN> topRefables) {
+  public Ast(List<StructP> structs, List<TopRefableP> topRefables) {
     this.structs = nListWithNonUniqueNames(ImmutableList.copyOf(structs));
     this.topRefables = ImmutableList.copyOf(topRefables);
   }
 
-  public ImmutableList<TopRefableN> topRefables() {
+  public ImmutableList<TopRefableP> topRefables() {
     return topRefables;
   }
 
-  public NList<StructN> structs() {
+  public NList<StructP> structs() {
     return structs;
   }
 
@@ -57,21 +57,21 @@ public class Ast {
     return maybeValue(ast);
   }
 
-  private TopologicalSortingRes<String, TopRefableN, Loc> sortRefablesByDeps() {
+  private TopologicalSortingRes<String, TopRefableP, Loc> sortRefablesByDeps() {
     HashSet<String> names = new HashSet<>();
     topRefables.forEach(v -> names.add(v.name()));
 
-    HashSet<GraphNode<String, TopRefableN, Loc>> nodes = new HashSet<>();
+    HashSet<GraphNode<String, TopRefableP, Loc>> nodes = new HashSet<>();
     nodes.addAll(map(topRefables, value -> refable(value, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, TopRefableN, Loc> refable(TopRefableN refable,
+  private static GraphNode<String, TopRefableP, Loc> refable(TopRefableP refable,
       Set<String> names) {
     Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {
       @Override
-      public void visitRef(RefN ref) {
+      public void visitRef(RefP ref) {
         super.visitRef(ref);
         if (names.contains(ref.name())) {
           deps.add(new GraphEdge<>(ref.loc(), ref.name()));
@@ -81,26 +81,26 @@ public class Ast {
     return new GraphNode<>(refable.name(), refable, ImmutableList.copyOf(deps));
   }
 
-  private TopologicalSortingRes<String, StructN, Loc> sortStructsByDeps() {
-    var structNames = Sets.map(structs, MonoNamedN::name);
+  private TopologicalSortingRes<String, StructP, Loc> sortStructsByDeps() {
+    var structNames = Sets.map(structs, MonoNamedP::name);
     var nodes = map(structs, struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, StructN, Loc> structToGraphNode(
-      StructN struct, Set<String> funcNames) {
+  private static GraphNode<String, StructP, Loc> structToGraphNode(
+      StructP struct, Set<String> funcNames) {
     Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {
       @Override
-      public void visitField(ItemN field) {
+      public void visitField(ItemP field) {
         super.visitField(field);
         addToDeps(field.typeN());
       }
 
-      private void addToDeps(TypeN type) {
+      private void addToDeps(TypeP type) {
         switch (type) {
-          case ArrayTN arrayT -> addToDeps(arrayT.elemT());
-          case FuncTN funcT -> {
+          case ArrayTP arrayT -> addToDeps(arrayT.elemT());
+          case FuncTP funcT -> {
             addToDeps(funcT.resT());
             funcT.paramTs().forEach(this::addToDeps);
           }

@@ -35,19 +35,19 @@ import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
-import org.smoothbuild.parse.ast.AnnN;
-import org.smoothbuild.parse.ast.BlobN;
-import org.smoothbuild.parse.ast.CallN;
-import org.smoothbuild.parse.ast.FuncN;
-import org.smoothbuild.parse.ast.IntN;
-import org.smoothbuild.parse.ast.ItemN;
-import org.smoothbuild.parse.ast.ObjN;
-import org.smoothbuild.parse.ast.OrderN;
-import org.smoothbuild.parse.ast.RefN;
-import org.smoothbuild.parse.ast.SelectN;
-import org.smoothbuild.parse.ast.StringN;
-import org.smoothbuild.parse.ast.TopRefableN;
-import org.smoothbuild.parse.ast.ValN;
+import org.smoothbuild.parse.ast.AnnP;
+import org.smoothbuild.parse.ast.BlobP;
+import org.smoothbuild.parse.ast.CallP;
+import org.smoothbuild.parse.ast.FuncP;
+import org.smoothbuild.parse.ast.IntP;
+import org.smoothbuild.parse.ast.ItemP;
+import org.smoothbuild.parse.ast.ObjP;
+import org.smoothbuild.parse.ast.OrderP;
+import org.smoothbuild.parse.ast.RefP;
+import org.smoothbuild.parse.ast.SelectP;
+import org.smoothbuild.parse.ast.StringP;
+import org.smoothbuild.parse.ast.TopRefableP;
+import org.smoothbuild.parse.ast.ValP;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -60,38 +60,38 @@ public class TopObjLoader {
     this.typeFS = typeFS;
   }
 
-  public TopRefableS loadTopObj(ModPath path, TopRefableN refableN) {
+  public TopRefableS loadTopObj(ModPath path, TopRefableP refableN) {
     return switch (refableN) {
-      case FuncN funcN -> loadFunc(path, funcN);
-      case ValN valN -> loadVal(path, valN);
+      case FuncP funcP -> loadFunc(path, funcP);
+      case ValP valP -> loadVal(path, valP);
     };
   }
 
-  private ValS loadVal(ModPath path, ValN valN) {
-    var type = valN.typeO().get();
-    var name = valN.name();
-    var loc = valN.loc();
-    if (valN.ann().isPresent()) {
-      var ann = loadAnn(valN.ann().get());
+  private ValS loadVal(ModPath path, ValP valP) {
+    var type = valP.typeO().get();
+    var name = valP.name();
+    var loc = valP.loc();
+    if (valP.ann().isPresent()) {
+      var ann = loadAnn(valP.ann().get());
       return new AnnValS(ann, type, path, name, loc);
     } else {
-      var body = createObj(valN.body().get());
+      var body = createObj(valP.body().get());
       return new DefValS(type, path, name, body, loc);
     }
   }
 
-  private TopRefableS loadFunc(ModPath path, FuncN funcN) {
-    var params = loadParams(funcN);
-    var resT = funcN.typeO().get().res();
-    var name = funcN.name();
-    var loc = funcN.loc();
+  private TopRefableS loadFunc(ModPath path, FuncP funcP) {
+    var params = loadParams(funcP);
+    var resT = funcP.typeO().get().res();
+    var name = funcP.name();
+    var loc = funcP.loc();
     var paramTs = map(params, ItemS::type);
     var funcT = typeFS.func(resT, paramTs);
-    if (funcN.ann().isPresent()) {
-      var ann = loadAnn(funcN.ann().get());
+    if (funcP.ann().isPresent()) {
+      var ann = loadAnn(funcP.ann().get());
       return polimorphizeIfNeeded(new AnnFuncS(ann, funcT, path, name, params, loc));
     } else {
-      var body = createObj(funcN.body().get());
+      var body = createObj(funcP.body().get());
       return polimorphizeIfNeeded(new DefFuncS(funcT, path, name, params, body, loc));
     }
   }
@@ -100,41 +100,41 @@ public class TopObjLoader {
     return funcS.type().vars().isEmpty() ? funcS : polyFuncS(funcS);
   }
 
-  private AnnS loadAnn(AnnN annN) {
-    var path = createString(annN.path());
-    return new AnnS(annN.name(), path, annN.loc());
+  private AnnS loadAnn(AnnP annP) {
+    var path = createString(annP.path());
+    return new AnnS(annP.name(), path, annP.loc());
   }
 
-  private NList<ItemS> loadParams(FuncN funcN) {
-    return funcN.params().map(this::createParam);
+  private NList<ItemS> loadParams(FuncP funcP) {
+    return funcP.params().map(this::createParam);
   }
 
-  private ItemS createParam(ItemN param) {
+  private ItemS createParam(ItemP param) {
     var type = param.typeN().typeO().get();
     var name = param.name();
     var body = param.body().map(this::createObj);
     return new ItemS(type, name, body, param.loc());
   }
 
-  private MonoObjS createObj(ObjN obj) {
+  private MonoObjS createObj(ObjP obj) {
     return switch (obj) {
-      case OrderN orderN -> createArray(orderN);
-      case BlobN blobN -> createBlob(blobN);
-      case CallN callN -> createCall(callN);
-      case IntN intN -> createInt(intN);
-      case RefN refN -> createRef(refN);
-      case SelectN selectN -> createSelect(selectN);
-      case StringN stringN -> createString(stringN);
+      case OrderP orderP -> createArray(orderP);
+      case BlobP blobP -> createBlob(blobP);
+      case CallP callP -> createCall(callP);
+      case IntP intP -> createInt(intP);
+      case RefP refP -> createRef(refP);
+      case SelectP selectP -> createSelect(selectP);
+      case StringP stringP -> createString(stringP);
     };
   }
 
-  private MonoObjS createArray(OrderN order) {
+  private MonoObjS createArray(OrderP order) {
     var type = (ArrayTS) order.typeO().get();
     ImmutableList<MonoObjS> elems = map(order.elems(), this::createObj);
     return new OrderS(type, elems, order.loc());
   }
 
-  private MonoObjS createCall(CallN call) {
+  private MonoObjS createCall(CallP call) {
     var callee = createObj(call.callee());
     var argObjs = map(call.assignedArgs(), a -> createArgObj(a.obj()));
     var resT = call.typeO().get();
@@ -143,24 +143,24 @@ public class TopObjLoader {
 
   private MonoObjS createArgObj(Obj obj) {
     return switch (obj) {
-      case ObjN objN -> createObj(objN);
+      case ObjP objP -> createObj(objP);
       case MonoObjS objS -> objS;
       default -> throw unexpectedCaseExc(obj);
     };
   }
 
-  private MonoObjS createSelect(SelectN selectN) {
-    var structT = (StructTS) selectN.selectable().typeO().get();
-    var index = structT.fields().indexMap().get(selectN.field());
+  private MonoObjS createSelect(SelectP selectP) {
+    var structT = (StructTS) selectP.selectable().typeO().get();
+    var index = structT.fields().indexMap().get(selectP.field());
     var fieldT = structT.fields().get(index).type();
-    var selectable = createObj(selectN.selectable());
-    return new SelectS(fieldT, selectable, selectN.field(), selectN.loc());
+    var selectable = createObj(selectP.selectable());
+    return new SelectS(fieldT, selectable, selectP.field(), selectP.loc());
   }
 
-  private MonoObjS createRef(RefN ref) {
+  private MonoObjS createRef(RefP ref) {
     Refable referenced = ref.referenced();
     return switch (referenced) {
-      case ItemN itemN -> new ParamRefS(itemN.typeO().get(), ref.name(), ref.loc());
+      case ItemP itemP -> new ParamRefS(itemP.typeO().get(), ref.name(), ref.loc());
       case TopRefable topRefable -> switch (topRefable.typeO().get()) {
         case MonoTS monoTS -> new MonoRefS(monoTS, ref.name(), ref.loc());
         case PolyTS polyTS -> {
@@ -173,21 +173,21 @@ public class TopObjLoader {
     };
   }
 
-  public BlobS createBlob(BlobN blob) {
+  public BlobS createBlob(BlobP blob) {
     return new BlobS(
         typeFS.blob(),
         blob.byteString(),
         blob.loc());
   }
 
-  public IntS createInt(IntN intN) {
+  public IntS createInt(IntP intP) {
     return new IntS(
         typeFS.int_(),
-        intN.bigInteger(),
-        intN.loc());
+        intP.bigInteger(),
+        intP.loc());
   }
 
-  public StringS createString(StringN string) {
+  public StringS createString(StringP string) {
     return new StringS(
         typeFS.string(),
         string.unescapedValue(),
