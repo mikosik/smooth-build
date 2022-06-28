@@ -2,7 +2,6 @@ package org.smoothbuild.parse.ast;
 
 import static java.lang.String.join;
 import static java.util.Collections.rotate;
-import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValue;
@@ -47,12 +46,12 @@ public class Ast {
     var sortedTs = sortStructsByDeps();
     if (sortedTs.sorted() == null) {
       Log error = createCycleError("Type hierarchy", sortedTs.cycle());
-      return maybeLogs(logs(error));
+      return maybeLogs(error);
     }
     var sortedRefables = sortRefablesByDeps();
     if (sortedRefables.sorted() == null) {
       Log error = createCycleError("Dependency graph", sortedRefables.cycle());
-      return maybeLogs(logs(error));
+      return maybeLogs(error);
     }
     Ast ast = new Ast(sortedTs.valuesReversed(), sortedRefables.valuesReversed());
     return maybeValue(ast);

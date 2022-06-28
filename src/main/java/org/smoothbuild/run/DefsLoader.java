@@ -2,7 +2,6 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
-import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValue;
@@ -83,9 +82,9 @@ public class DefsLoader {
     try {
       return maybeValue(fileResolver.readFileContentAndCacheHash(filePath));
     } catch (NoSuchFileException e) {
-      return maybeLogs(logs(error("'" + filePath + "' doesn't exist.")));
+      return maybeLogs(error("'" + filePath + "' doesn't exist."));
     } catch (IOException e) {
-      return maybeLogs(logs(error("Cannot read build script file '" + filePath + "'.")));
+      return maybeLogs(error("Cannot read build script file '" + filePath + "'."));
     }
   }
 }
