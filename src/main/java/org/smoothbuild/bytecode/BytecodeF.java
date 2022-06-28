@@ -43,7 +43,6 @@ import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -196,10 +195,6 @@ public class BytecodeF {
 
   public TupleTB tupleT(ImmutableList<TypeB> itemTs) {
     return catDb.tuple(itemTs);
-  }
-
-  public VarB varT(String name) {
-    return catDb.var(name);
   }
 
   // other values and its types

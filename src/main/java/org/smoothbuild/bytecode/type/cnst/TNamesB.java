@@ -1,6 +1,5 @@
 package org.smoothbuild.bytecode.type.cnst;
 
-import static java.lang.Character.isUpperCase;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
@@ -12,10 +11,6 @@ public class TNamesB {
   public static final String INT = "Int";
   public static final String NOTHING = "Nothing";
   public static final String STRING = "String";
-
-  public static boolean isVarName(String name) {
-    return 1 == name.length() && isUpperCase(name.charAt(0));
-  }
 
   public static String arrayTypeName(TypeB elemT) {
     return "[" + elemT.name() + "]";

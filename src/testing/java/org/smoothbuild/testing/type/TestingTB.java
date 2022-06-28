@@ -32,27 +32,18 @@ public class TestingTB {
   public static final NothingTB NOTHING = FACTORY.nothing();
   public static final StringTB STRING = FACTORY.string();
   public static final TupleTB TUPLE = FACTORY.tuple(list(STRING, INT));
-  public static final VarB VAR_A = FACTORY.var("A");
-  public static final VarB VAR_B = FACTORY.var("B");
-  public static final VarB VAR_X = FACTORY.var("X");
-  public static final VarB VAR_Y = FACTORY.var("Y");
 
   public static final FuncTB STRING_GETTER_FUNCTION = CONTEXT.funcTB(STRING, list());
   public static final FuncTB TUPLE_GETTER_FUNCTION = CONTEXT.funcTB(TUPLE, list());
   public static final FuncTB STRING_MAP_FUNCTION = CONTEXT.funcTB(STRING, list(STRING));
   public static final FuncTB PERSON_MAP_FUNCTION = CONTEXT.funcTB(TUPLE, list(TUPLE));
-  public static final FuncTB IDENTITY_FUNCTION = CONTEXT.funcTB(VAR_A, list(VAR_A));
-  public static final FuncTB ARRAY_HEAD_FUNCTION = CONTEXT.funcTB(VAR_A, list(FACTORY.array(VAR_A)));
-  public static final FuncTB ARRAY_LENGTH_FUNCTION = CONTEXT.funcTB(STRING, list(FACTORY.array(VAR_A)));
 
   public static final ImmutableList<TypeB> FUNCTION_TYPES = list(
       STRING_GETTER_FUNCTION,
       TUPLE_GETTER_FUNCTION,
       STRING_MAP_FUNCTION,
-      PERSON_MAP_FUNCTION,
-      IDENTITY_FUNCTION,
-      ARRAY_HEAD_FUNCTION,
-      ARRAY_LENGTH_FUNCTION);
+      PERSON_MAP_FUNCTION
+  );
 
   private static final ImmutableList<TypeB> BASE_TYPES = CONTEXT.catDb().baseTs();
   private static final ImmutableList<TypeB> ELEMENTARY_TYPES = concat(BASE_TYPES, TUPLE);
@@ -87,6 +78,18 @@ public class TestingTB {
 
   public TypeB string() {
     return STRING;
+  }
+
+  public boolean isStructSupported() {
+    return false;
+  }
+
+  public TypeB struct() {
+    throw new UnsupportedOperationException();
+  }
+
+  public boolean isTupleSupported() {
+    return true;
   }
 
   public TypeB tuple() {

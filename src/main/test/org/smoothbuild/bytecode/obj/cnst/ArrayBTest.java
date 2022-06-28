@@ -21,13 +21,6 @@ import okio.ByteString;
 
 public class ArrayBTest extends TestingContext {
   @Test
-  public void polymorphic_array_is_forbidden() {
-    assertCall(() -> objDb().arrayBuilder(arrayTB(varB("A"))).build())
-        .throwsException(new IllegalArgumentException(
-            "Cannot create array object with polymorphic type `[A]`."));
-  }
-
-  @Test
   public void empty_nothing_array_can_be_iterated_as_tuple() {
     ArrayB array = objDb().arrayBuilder(arrayTB(nothingTB()))
         .build();

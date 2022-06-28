@@ -18,7 +18,7 @@ public final class ArrayTB extends TypeB implements ComposedTB {
   private final TypeB elem;
 
   public ArrayTB(Hash hash, TypeB elem) {
-    super(hash, arrayTypeName(elem), ARRAY, elem.vars());
+    super(hash, arrayTypeName(elem), ARRAY);
     this.elem = requireNonNull(elem);
   }
 
@@ -28,7 +28,6 @@ public final class ArrayTB extends TypeB implements ComposedTB {
 
   @Override
   public ArrayB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
-    validateNotPolymorphic(merkleRoot);
     return (ArrayB) super.newObj(merkleRoot, objDb);
   }
 

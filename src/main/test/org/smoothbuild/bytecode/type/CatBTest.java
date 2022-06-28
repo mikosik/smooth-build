@@ -3,8 +3,6 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.bytecode.type.cnst.VarSetB.varSetB;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingCatsB.ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BLOB;
@@ -14,7 +12,6 @@ import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_INT;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_NOTHING;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_PERSON_TUPLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_STR;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_VAR;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BOOL;
@@ -24,7 +21,6 @@ import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_METHOD;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_NOTHING;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_PERSON_TUPLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_STR;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_VAR;
 import static org.smoothbuild.testing.type.TestingCatsB.BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.CALL;
@@ -42,11 +38,6 @@ import static org.smoothbuild.testing.type.TestingCatsB.PARAM_REF;
 import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
 import static org.smoothbuild.testing.type.TestingCatsB.SELECT;
 import static org.smoothbuild.testing.type.TestingCatsB.STRING;
-import static org.smoothbuild.testing.type.TestingCatsB.VAR_A;
-import static org.smoothbuild.testing.type.TestingCatsB.array;
-import static org.smoothbuild.testing.type.TestingCatsB.func;
-import static org.smoothbuild.testing.type.TestingCatsB.tuple;
-import static org.smoothbuild.testing.type.TestingCatsB.var;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
@@ -79,7 +70,6 @@ import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.MethodTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarSetB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.type.TestingCatsB;
@@ -93,7 +83,7 @@ public class CatBTest extends TestingContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindB.values())
-        .hasLength(19);
+        .hasLength(18);
   }
 
   @ParameterizedTest
@@ -126,9 +116,7 @@ public class CatBTest extends TestingContext {
         args(f -> f.int_(), "Int"),
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
-        args(f -> f.var("A"), "A"),
 
-        args(f -> f.array(f.var("A")), "[A]"),
         args(f -> f.array(f.any()), "[Any]"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
@@ -136,7 +124,6 @@ public class CatBTest extends TestingContext {
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
 
-        args(f -> f.array(f.array(f.var("A"))), "[[A]]"),
         args(f -> f.array(f.array(f.any())), "[[Any]]"),
         args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
@@ -144,15 +131,9 @@ public class CatBTest extends TestingContext {
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.func(f.var("A"), list(f.array(f.var("A")))), "A([A])"),
-        args(f -> f.func(f.string(), list(f.array(f.var("A")))), "String([A])"),
-        args(f -> f.func(f.var("A"), list(f.var("A"))), "A(A)"),
         args(f -> f.func(f.string(), list()), "String()"),
         args(f -> f.func(f.string(), list(f.string())), "String(String)"),
 
-        args(f -> f.method(f.var("A"), list(f.array(f.var("A")))), "_A([A])"),
-        args(f -> f.method(f.string(), list(f.array(f.var("A")))), "_String([A])"),
-        args(f -> f.method(f.var("A"), list(f.var("A"))), "_A(A)"),
         args(f -> f.method(f.string(), list()), "_String()"),
         args(f -> f.method(f.string(), list(f.string())), "_String(String)"),
 
@@ -168,36 +149,6 @@ public class CatBTest extends TestingContext {
         args(f -> f.order(f.array(f.string())), "Order:[String]"),
         args(f -> f.paramRef(f.int_()), "ParamRef:Int"),
         args(f -> f.select(f.int_()), "Select:Int")
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("vars_test_data")
-  public void vars(TypeB type, VarSetB varSet) {
-    assertThat(type.vars())
-        .isEqualTo(varSet);
-  }
-
-  public static List<Arguments> vars_test_data() {
-    return List.of(
-        arguments(ANY, varSetB()),
-        arguments(BLOB, varSetB()),
-        arguments(BOOL, varSetB()),
-        arguments(INT, varSetB()),
-        arguments(NOTHING, varSetB()),
-        arguments(STRING, varSetB()),
-        arguments(BLOB, varSetB()),
-        arguments(BLOB, varSetB()),
-
-        arguments(array(INT), varSetB()),
-        arguments(array(var("A")), varSetB(var("A"))),
-
-        arguments(tuple(list(INT)), varSetB()),
-        arguments(tuple(list(var("A"))), varSetB(var("A"))),
-
-        arguments(func(BLOB, list(BOOL)), varSetB()),
-        arguments(func(var("A"), list(BOOL)), varSetB(var("A"))),
-        arguments(func(BLOB, list(var("A"))), varSetB(var("A")))
     );
   }
 
@@ -271,21 +222,6 @@ public class CatBTest extends TestingContext {
   }
 
   @Nested
-  class _var {
-    @Test
-    public void name() {
-      assertThat(varB("A").name())
-          .isEqualTo("A");
-    }
-
-    @Test
-    public void illegal_name() {
-      assertCall(() -> varB("a"))
-          .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
-    }
-  }
-
-  @Nested
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
@@ -307,7 +243,6 @@ public class CatBTest extends TestingContext {
           args(f -> f.nothing()),
           args(f -> f.string()),
           args(f -> f.tuple(list(f.int_()))),
-          args(f -> f.var("A")),
 
           args(f -> f.array(f.any())),
           args(f -> f.array(f.blob())),
@@ -316,8 +251,7 @@ public class CatBTest extends TestingContext {
           args(f -> f.array(f.method(f.string(), list()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
-          args(f -> f.array(f.string())),
-          args(f -> f.array(f.var("A")))
+          args(f -> f.array(f.string()))
       );
     }
   }
@@ -352,7 +286,6 @@ public class CatBTest extends TestingContext {
       return asList(
           args(f -> f.tuple(list()), f -> list()),
           args(f -> f.tuple(list(f.string())), f -> list(f.string())),
-          args(f -> f.tuple(list(f.var("A"))), f -> list(f.var("A"))),
           args(f -> f.tuple(list(f.string(), f.int_())), f -> list(f.string(), f.int_()))
       );
     }
@@ -376,7 +309,6 @@ public class CatBTest extends TestingContext {
         arguments(NOTHING, CnstB.class),
         arguments(PERSON, TupleB.class),
         arguments(STRING, StringB.class),
-        arguments(VAR_A, CnstB.class),
 
         arguments(ARRAY_ANY, ArrayB.class),
         arguments(ARRAY_BLOB, ArrayB.class),
@@ -387,7 +319,6 @@ public class CatBTest extends TestingContext {
         arguments(ARRAY_NOTHING, ArrayB.class),
         arguments(ARRAY_PERSON_TUPLE, ArrayB.class),
         arguments(ARRAY_STR, ArrayB.class),
-        arguments(ARRAY_VAR, ArrayB.class),
 
         arguments(CALL, CallB.class),
         arguments(ORDER, OrderB.class),
@@ -469,7 +400,6 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STRING, STRING);
     tester.addEqualityGroup(PERSON, PERSON);
-    tester.addEqualityGroup(VAR_A, VAR_A);
 
     tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
@@ -479,7 +409,6 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(ARRAY_NOTHING, ARRAY_NOTHING);
     tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
     tester.addEqualityGroup(ARRAY_PERSON_TUPLE, ARRAY_PERSON_TUPLE);
-    tester.addEqualityGroup(ARRAY_VAR, ARRAY_VAR);
 
     tester.addEqualityGroup(ARRAY2_ANY, ARRAY2_ANY);
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
@@ -489,7 +418,6 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(ARRAY2_NOTHING, ARRAY2_NOTHING);
     tester.addEqualityGroup(ARRAY2_STR, ARRAY2_STR);
     tester.addEqualityGroup(ARRAY2_PERSON_TUPLE, ARRAY2_PERSON_TUPLE);
-    tester.addEqualityGroup(ARRAY2_VAR, ARRAY2_VAR);
 
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(COMBINE, COMBINE);

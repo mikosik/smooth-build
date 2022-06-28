@@ -38,7 +38,6 @@ import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.obj.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeMapIllegalMappingFuncExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjCatExc;
-import org.smoothbuild.bytecode.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
@@ -163,17 +162,6 @@ public class ObjBCorruptedTest extends TestingContext {
       assertThat(strings)
           .containsExactly("aaa", "bbb")
           .inOrder();
-    }
-
-    @Test
-    public void with_polymorphic_type() throws Exception {
-      ArrayTB type = arrayTB(varB("A"));
-      Hash objHash =
-          hash(
-              hash(type),
-              hash());
-      assertCall(() -> objDb().get(objHash))
-          .throwsException(new DecodeObjIllegalPolymorphicTypeExc(objHash, type));
     }
 
     @Test
@@ -1897,19 +1885,6 @@ public class ObjBCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_polymorphic_type() throws Exception {
-      var type = tupleTB(varB("A"));
-      var objHash = hash(
-          hash(type),
-          hash(
-              hash(stringB("John"))
-          )
-      );
-      assertCall(() -> objDb().get(objHash))
-          .throwsException(new DecodeObjIllegalPolymorphicTypeExc(objHash, type));
-    }
-
-    @Test
     public void root_without_data_hash() throws Exception {
       obj_root_without_data_hash(personTB());
     }
@@ -2078,19 +2053,6 @@ public class ObjBCorruptedTest extends TestingContext {
     assertCall(() -> readClosure.accept(objHash))
         .throwsException(new DecodeObjNodeExc(objHash, type, DATA_PATH))
         .withCause(new NoSuchDataExc(dataHash));
-  }
-
-  @Nested
-  class _var {
-    @Test
-    public void learning_test() throws Exception {
-      Hash objHash =
-          hash(
-              hash(varB("A")),
-              hash("aaa"));
-      assertCall(() -> objDb().get(objHash))
-          .throwsException(UnsupportedOperationException.class);
-    }
   }
 
   // helper methods

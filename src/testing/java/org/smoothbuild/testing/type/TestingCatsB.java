@@ -11,7 +11,6 @@ import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.MethodTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -28,7 +27,6 @@ public class TestingCatsB {
   public static final TypeB METHOD = method(BLOB, list(BOOL));
   public static final TypeB NOTHING = CONTEXT.nothingTB();
   public static final TypeB STRING = CONTEXT.stringTB();
-  public static final TypeB VAR_A = CONTEXT.varB("A");
 
   public static final TupleTB PERSON = CONTEXT.personTB();
   public static final TupleTB FILE = CONTEXT.fileTB();
@@ -52,7 +50,6 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY_STR = array(STRING);
   public static final ArrayTB ARRAY_PERSON_TUPLE = array(PERSON);
   public static final ArrayTB ARRAY_PERSON = array(PERSON);
-  public static final ArrayTB ARRAY_VAR = array(VAR_A);
 
   public static final ArrayTB ARRAY2_ANY = array(ARRAY_ANY);
   public static final ArrayTB ARRAY2_BLOB = array(ARRAY_BLOB);
@@ -64,7 +61,6 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY2_STR = array(ARRAY_STR);
   public static final ArrayTB ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
   public static final ArrayTB ARRAY2_PERSON = array(ARRAY_PERSON);
-  public static final ArrayTB ARRAY2_VAR = array(ARRAY_VAR);
 
   public static final ImmutableList<CatB> BASE_CATS_TO_TEST = list(
       BLOB,
@@ -121,9 +117,7 @@ public class TestingCatsB {
         tuple(list()),
         tuple(list(BLOB)),
         tuple(list(BLOB, BLOB)),
-        tuple(list(STRING)),
-        var("A"),
-        var("B")
+        tuple(list(STRING))
     );
     var arrayCs = map(baseCs, CAT_DB::array);
     var valueCs = concat(baseCs, arrayCs);
@@ -163,9 +157,5 @@ public class TestingCatsB {
 
   public static TupleTB tuple(ImmutableList<TypeB> params) {
     return CAT_DB.tuple(params);
-  }
-
-  public static VarB var(String name) {
-    return CAT_DB.var(name);
   }
 }

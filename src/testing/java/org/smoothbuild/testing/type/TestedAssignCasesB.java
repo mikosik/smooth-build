@@ -17,8 +17,6 @@ public class TestedAssignCasesB {
 
   private final TestedTBF testedTF;
   private final TestingTB testingT;
-  private final TestedTB a;
-  private final TestedTB b;
   private final TestedTB any;
   private final TestedTB blob;
   private final TestedTB int_;
@@ -32,8 +30,6 @@ public class TestedAssignCasesB {
   public TestedAssignCasesB(TestedTBF testedTF) {
     this.testedTF = testedTF;
     this.testingT = testedTF.testingT();
-    this.a = testedTF.varA();
-    this.b = testedTF.varB();
     this.any = testedTF.any();
     this.blob = testedTF.blob();
     this.int_ = testedTF.int_();
@@ -173,78 +169,6 @@ public class TestedAssignCasesB {
     r.add(allowedAssignment(f(blob, f(blob, f(blob, string))), f(blob, f(blob, f(blob, string)))));
     r.add(illegalAssignment(f(blob, f(blob, f(blob, string))), f(blob, f(blob, f(blob, nothing)))));
     r.add(allowedAssignment(f(blob, f(blob, f(blob, nothing))), f(blob, f(blob, f(blob, string)))));
-
-    gen(r, a, includeAny, oneOf(nothing, a));
-    gen(r, b, includeAny, oneOf(nothing));
-
-    gen(r, a(a), includeAny, oneOf(nothing, a(nothing), a(a)));
-    gen(r, a(b), includeAny, oneOf(nothing, a(nothing)));
-    gen(r, a2(a), includeAny, oneOf(nothing, a(nothing), a2(nothing), a2(a)));
-    gen(r, a2(b), includeAny, oneOf(nothing, a(nothing), a2(nothing)));
-
-    if (isTupleSupported) {
-      gen(r, tuple(a), includeAny, oneOf(nothing, tuple(nothing), tuple(a)));
-    }
-
-    gen(r, f(a), includeAny, oneOf(nothing), mFunc(oneOf(a, nothing)));
-
-    r.addAll(list(
-        // funcs
-        illegalAssignment(f(a(a)), a(a)),
-        illegalAssignment(f(a2(a)), a2(a)),
-
-        allowedAssignment(f(a, a), f(a, a)),
-        illegalAssignment(f(a, a, a), f(a, b, b)),
-        illegalAssignment(f(a, a, a), f(b, a, b)),
-        illegalAssignment(f(a, a), f(b, b)),
-        illegalAssignment(f(a, a), f(a, nothing)),
-        illegalAssignment(f(a, a), f(a, string)),
-        allowedAssignment(f(a, a), f(nothing, a)),
-        illegalAssignment(f(a, a), f(nothing, nothing)),
-        illegalAssignment(f(a, a), f(nothing, string)),
-        illegalAssignment(f(a, a), f(string, a)),
-        illegalAssignment(f(a, a), f(string, nothing)),
-        illegalAssignment(f(a, a), f(string, string)),
-        allowedAssignment(f(a, nothing), f(a, a)),
-        allowedAssignment(f(a, nothing), f(a, nothing)),
-        allowedAssignment(f(a, nothing), f(a, string)),
-        allowedAssignment(f(a, nothing), f(nothing, a)),
-        allowedAssignment(f(a, nothing), f(nothing, nothing)),
-        allowedAssignment(f(a, nothing), f(nothing, string)),
-        illegalAssignment(f(a, nothing), f(string, a)),
-        illegalAssignment(f(a, nothing), f(string, nothing)),
-        illegalAssignment(f(a, nothing), f(string, string)),
-
-        illegalAssignment(f(a, string), f(a, a)),
-        illegalAssignment(f(a, string), f(a, nothing)),
-        allowedAssignment(f(a, string), f(a, string)),
-        illegalAssignment(f(a, string), f(nothing, a)),
-        illegalAssignment(f(a, string), f(nothing, nothing)),
-        allowedAssignment(f(a, string), f(nothing, string)),
-        illegalAssignment(f(a, string), f(string, a)),
-        illegalAssignment(f(a, string), f(string, nothing)),
-        illegalAssignment(f(a, string), f(string, string)),
-
-        illegalAssignment(f(nothing, a), f(a, a)),
-        illegalAssignment(f(nothing, a), f(a, nothing)),
-        illegalAssignment(f(nothing, a), f(a, string)),
-        allowedAssignment(f(nothing, a), f(nothing, a)),
-        illegalAssignment(f(nothing, a), f(nothing, nothing)),
-        illegalAssignment(f(nothing, a), f(nothing, string)),
-        illegalAssignment(f(nothing, a), f(string, a)),
-        illegalAssignment(f(nothing, a), f(string, nothing)),
-        illegalAssignment(f(nothing, a), f(string, string)),
-
-        illegalAssignment(f(string, a), f(a, a)),
-        illegalAssignment(f(string, a), f(a, nothing)),
-        illegalAssignment(f(string, a), f(a, string)),
-        allowedAssignment(f(string, a), f(nothing, a)),
-        illegalAssignment(f(string, a), f(nothing, nothing)),
-        illegalAssignment(f(string, a), f(nothing, string)),
-        allowedAssignment(f(string, a), f(string, a)),
-        illegalAssignment(f(string, a), f(string, nothing)),
-        illegalAssignment(f(string, a), f(string, string))
-    ));
 
     return r;
   }

@@ -8,7 +8,6 @@ import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
 
@@ -22,8 +21,6 @@ public interface TypeFB {
   public FuncTB func(TypeB resT, List<? extends TypeB> paramTs);
 
   public TupleTB tuple(List<? extends TypeB> items);
-
-  public VarB var(String name);
 
   public default TypeB edge(Side side) {
     return switch (side) {

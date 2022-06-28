@@ -51,14 +51,6 @@ public class TestedTBF {
     return new TestedTupleTB(typeH, items);
   }
 
-  public TestedTB varA() {
-    return new TestedTB(TestingTB.VAR_A);
-  }
-
-  public TestedTB varB() {
-    return new TestedTB(TestingTB.VAR_B);
-  }
-
   public TestedTB array(TestedTB elem) {
     return new TestedArrayTB(elem, TestingTB.INSTANCE.array(elem.type()));
   }

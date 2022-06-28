@@ -42,7 +42,6 @@ public class CatKindBTest {
         Arguments.of(12, CatKindB.SELECT),
         Arguments.of(14, CatKindB.PARAM_REF),
         Arguments.of(15, CatKindB.COMBINE),
-        Arguments.of(17, CatKindB.VAR),
         Arguments.of(18, CatKindB.ANY),
         Arguments.of(19, CatKindB.INVOKE),
         Arguments.of(20, CatKindB.MAP)

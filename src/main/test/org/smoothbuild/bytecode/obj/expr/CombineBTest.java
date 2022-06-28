@@ -34,12 +34,6 @@ public class CombineBTest extends TestingContext {
   }
 
   @Test
-  public void item_matching_polytype_specified_in_category() {
-    var varA = varB("A");
-    combineB(tupleTB(varA), paramRefB(varA, 0));
-  }
-
-  @Test
   public void items_returns_items() {
     assertThat(combineB(intB(1), stringB("abc")).items())
         .isEqualTo(list(intB(1), stringB("abc")));

@@ -3,7 +3,6 @@ package org.smoothbuild.bytecode.type.cnst;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.bytecode.type.cnst.TNamesB.arrayTypeName;
 import static org.smoothbuild.bytecode.type.cnst.TNamesB.funcTypeName;
-import static org.smoothbuild.bytecode.type.cnst.TNamesB.isVarName;
 import static org.smoothbuild.testing.type.TestingTB.BLOB;
 import static org.smoothbuild.testing.type.TestingTB.BOOL;
 import static org.smoothbuild.testing.type.TestingTB.STRING;
@@ -13,51 +12,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class TNamesBTest {
-  @Nested
-  class _var_name {
-    @Test
-    public void empty_string_is_not_type_var_name() {
-      assertThat(isVarName(""))
-          .isFalse();
-    }
-
-    @Test
-    public void lowercase_a_character_is_not_type_var_name() {
-      assertThat(isVarName("a"))
-          .isFalse();
-    }
-
-    @Test
-    public void lowercase_b_character_is_not_type_var_name() {
-      assertThat(isVarName("b"))
-          .isFalse();
-    }
-
-    @Test
-    public void uppercase_a_character_is_type_var_name() {
-      assertThat(isVarName("A"))
-          .isTrue();
-    }
-
-    @Test
-    public void uppercase_b_character_is_type_var_name() {
-      assertThat(isVarName("B"))
-          .isTrue();
-    }
-
-    @Test
-    public void longer_string_starting_with_lowercase_is_not_type_var_name() {
-      assertThat(isVarName("alphabet"))
-          .isFalse();
-    }
-
-    @Test
-    public void longer_string_starting_with_uppercase_is_not_type_var_name() {
-      assertThat(isVarName("Alphabet"))
-          .isFalse();
-    }
-  }
-
   @Nested
   class _array_type_name {
     @Test

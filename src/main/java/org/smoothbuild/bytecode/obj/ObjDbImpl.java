@@ -114,10 +114,6 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public TupleB tuple(TupleTB tupleT, ImmutableList<CnstB> items) {
-    if (!tupleT.vars().isEmpty()) {
-      throw new IllegalArgumentException(
-          "Cannot create tuple object with polymorphic type " + tupleT.q() + ".");
-    }
     var itemTs = tupleT.items();
     allMatchOtherwise(itemTs, items, (s, i) -> Objects.equals(s, i.cat()),
         (i, j) -> {

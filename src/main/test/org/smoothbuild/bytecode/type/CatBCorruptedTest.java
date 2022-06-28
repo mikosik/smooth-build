@@ -21,7 +21,6 @@ import static org.smoothbuild.bytecode.type.CatKindB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
-import static org.smoothbuild.bytecode.type.CatKindB.VAR;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
@@ -38,7 +37,6 @@ import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalVarNameExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatNodeExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
@@ -47,7 +45,6 @@ import org.smoothbuild.bytecode.type.expr.ParamRefCB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashingBufferedSink;
 import org.smoothbuild.db.exc.DecodeHashSeqExc;
-import org.smoothbuild.db.exc.DecodeStringExc;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
 import org.smoothbuild.testing.TestingContext;
@@ -609,66 +606,6 @@ public class CatBCorruptedTest extends TestingContext {
 
   protected Hash hash(Hash... hashes) throws HashedDbExc {
     return hashedDb().writeSeq(hashes);
-  }
-
-  @Nested
-  class _var {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save OpenVar type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(VAR.marker()),
-          hash("A")
-      );
-      assertThat(hash)
-          .isEqualTo(varB("A").hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(VAR);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(VAR);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      Hash dataHash = Hash.of(33);
-      Hash typeHash = hash(
-          hash(VAR.marker()),
-          dataHash
-      );
-      assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, VAR, DATA_PATH))
-          .withCause(new NoSuchDataExc(dataHash));
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      Hash hash =
-          hash(
-              hash(VAR.marker()),
-              corruptedArrayTHash());
-      assertThatGet(hash)
-          .throwsException(new DecodeCatNodeExc(hash, VAR, DATA_PATH))
-          .withCause(DecodeStringExc.class);
-    }
-
-    @Test
-    public void with_illegal_name() throws Exception {
-      Hash hash = hash(
-          hash(VAR.marker()),
-          hash("a")
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatIllegalVarNameExc(hash, "a"));
-    }
   }
 
   @Nested

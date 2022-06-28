@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.type.cnst;
 
 import static org.smoothbuild.bytecode.type.CatKindB.METHOD;
-import static org.smoothbuild.bytecode.type.cnst.FuncTB.calculateFuncVars;
 import static org.smoothbuild.bytecode.type.cnst.TNamesB.funcTypeName;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
@@ -16,10 +15,7 @@ public final class MethodTB extends TypeB implements CallableTB {
   private final TupleTB params;
 
   public MethodTB(Hash hash, TypeB res, TupleTB params) {
-    super(
-        hash, "_" + funcTypeName(res, params.items()),
-        METHOD,
-        calculateFuncVars(res, params.items()));
+    super(hash, "_" + funcTypeName(res, params.items()), METHOD);
     this.res = res;
     this.params = params;
   }

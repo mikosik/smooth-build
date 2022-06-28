@@ -38,7 +38,6 @@ public class CatBCachingTest extends TestingContext {
         CatDb::nothing,
         CatDb::string,
         CatBCachingTest::tupleT,
-        catDb -> catDb.var("A"),
 
         catDb -> catDb.call(catDb.int_()),
         catDb -> catDb.combine(catDb.tuple(list())),

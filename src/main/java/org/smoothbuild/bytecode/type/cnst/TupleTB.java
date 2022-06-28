@@ -17,13 +17,12 @@ public final class TupleTB extends TypeB implements ComposedTB {
   private final ImmutableList<TypeB> itemTs;
 
   public TupleTB(Hash hash, ImmutableList<TypeB> itemTs) {
-    super(hash, calculateName(itemTs), TUPLE, calculateVars(itemTs));
+    super(hash, calculateName(itemTs), TUPLE);
     this.itemTs = ImmutableList.copyOf(itemTs);
   }
 
   @Override
   public TupleB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
-    validateNotPolymorphic(merkleRoot);
     return (TupleB) super.newObj(merkleRoot, objDb);
   }
 

@@ -44,7 +44,7 @@ public enum CatKindB {
   PARAM_REF(      (byte) 14, ParamRefB.class,   ParamRefB::new),
   COMBINE(        (byte) 15, CombineB.class,    CombineB::new),
   // TODO unused 16
-  VAR(            (byte) 17, CnstB.class,        CatKindB::throwException),
+  // TODO unused 17
   ANY(            (byte) 18, CnstB.class,        CatKindB::throwException),
   INVOKE(         (byte) 19, InvokeB.class,     InvokeB::new),
   MAP(            (byte) 20, MapB.class,        MapB::new),
@@ -72,7 +72,6 @@ public enum CatKindB {
           .put((byte) 12, SELECT)
           .put((byte) 14, PARAM_REF)
           .put((byte) 15, COMBINE)
-          .put((byte) 17, VAR)
           .put((byte) 18, ANY)
           .put((byte) 19, INVOKE)
           .put((byte) 20, MAP)

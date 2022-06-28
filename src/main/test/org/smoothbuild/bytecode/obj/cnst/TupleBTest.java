@@ -14,13 +14,6 @@ import org.smoothbuild.util.collect.Lists;
 
 public class TupleBTest extends TestingContext {
   @Test
-  public void polymorphic_tuple_is_forbidden() {
-    assertCall(() -> objDb().tuple(tupleTB(varB("A")), list()))
-        .throwsException(new IllegalArgumentException(
-            "Cannot create tuple object with polymorphic type `{A}`."));
-  }
-
-  @Test
   public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
     assertCall(() -> objDb().tuple(personTB(), list(stringB("John"))))
         .throwsException(IllegalArgumentException.class);

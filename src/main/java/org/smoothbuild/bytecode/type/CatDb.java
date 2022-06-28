@@ -1,6 +1,5 @@
 package org.smoothbuild.bytecode.type;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
@@ -22,17 +21,13 @@ import static org.smoothbuild.bytecode.type.CatKindB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
-import static org.smoothbuild.bytecode.type.CatKindB.VAR;
 import static org.smoothbuild.bytecode.type.CatKindB.fromMarker;
 import static org.smoothbuild.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
-import static org.smoothbuild.bytecode.type.cnst.TNamesB.isVarName;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
 
 import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
@@ -45,14 +40,9 @@ import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarB;
-import org.smoothbuild.bytecode.type.cnst.VarSetB;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalVarNameExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatTParamDuplicatedVarExc;
-import org.smoothbuild.bytecode.type.exc.DecodeCatTParamIsNotVarExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.expr.CallCB;
@@ -159,12 +149,6 @@ public class CatDb implements TypeFB {
     return string;
   }
 
-  @Override
-  public VarB var(String name) {
-    checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return wrapHashedDbExcAsObjDbExc(() -> newVar(name));
-  }
-
   // methods for getting Expr-s types
 
   public CallCB call(TypeB evalT) {
@@ -226,7 +210,6 @@ public class CatDb implements TypeFB {
       case PARAM_REF -> newParamRef(hash, readDataAsEvalT(hash, rootSeq, kind));
       case SELECT -> newSelect(hash, readDataAsEvalT(hash, rootSeq, kind));
       case TUPLE -> readTuple(hash, rootSeq);
-      case VAR -> readVar(hash, rootSeq, kind, this::newVar);
     };
   }
 
@@ -300,22 +283,6 @@ public class CatDb implements TypeFB {
     return instantiator.apply(rootHash, res, params);
   }
 
-  private VarSetB toVarSetB(Hash rootHash, TupleTB tParams) {
-    var set = new HashSet<VarB>();
-    for (TypeB tParam : tParams.items()) {
-      if (tParam instanceof VarB var) {
-        if (set.contains(var)) {
-          throw new DecodeCatTParamDuplicatedVarExc(rootHash, var);
-        } else {
-          set.add(var);
-        }
-      } else {
-        throw new DecodeCatTParamIsNotVarExc(rootHash, tParam);
-      }
-    }
-    return new VarSetB(set);
-  }
-
   private TupleTB readTuple(Hash rootHash, List<Hash> rootSeq) {
     assertCatRootSeqSize(rootHash, TUPLE, rootSeq, 2);
     var items = readTupleItems(rootHash, rootSeq.get(DATA_IDX));
@@ -329,17 +296,6 @@ public class CatDb implements TypeFB {
       builder.add(readNode(TUPLE, rootHash, itemTypeHashes.get(i), DATA_PATH, i));
     }
     return builder.build();
-  }
-
-  private <T extends VarB> T readVar(Hash rootHash, List<Hash> rootSeq, CatKindB kind,
-      BiFunction<Hash, String, T> creator) {
-    assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
-    var name = wrapHashedDbExcAsDecodeCatNodeExc(
-        rootHash, kind, DATA_PATH, () ->hashedDb.readString(rootSeq.get(1)));
-    if (!isVarName(name)) {
-      throw new DecodeCatIllegalVarNameExc(rootHash, name);
-    }
-    return creator.apply(rootHash, name);
   }
 
   private <T> T readNode(CatKindB kind, Hash outerHash, Hash hash, String path, Class<T> clazz) {
@@ -398,15 +354,6 @@ public class CatDb implements TypeFB {
 
   private TupleTB newTuple(Hash rootHash, ImmutableList<TypeB> itemTs) {
     return cache(new TupleTB(rootHash, itemTs));
-  }
-
-  private VarB newVar(String name) throws HashedDbExc {
-    var rootHash = writeVarRoot(name, VAR);
-    return newVar(rootHash, name);
-  }
-
-  private VarB newVar(Hash rootHash, String name) {
-    return cache(new VarB(rootHash, name));
   }
 
   // methods for creating Expr types

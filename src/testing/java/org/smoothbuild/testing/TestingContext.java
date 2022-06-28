@@ -64,7 +64,6 @@ import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.bytecode.type.expr.CallCB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
 import org.smoothbuild.bytecode.type.expr.IfCB;
@@ -450,10 +449,6 @@ public class TestingContext {
 
   public TupleTB tupleTB(TypeB... itemTs) {
     return catDb().tuple(ImmutableList.copyOf(itemTs));
-  }
-
-  public VarB varB(String name) {
-    return catDb().var(name);
   }
 
   // Expr types

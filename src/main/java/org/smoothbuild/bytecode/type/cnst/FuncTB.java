@@ -2,7 +2,6 @@ package org.smoothbuild.bytecode.type.cnst;
 
 import static org.smoothbuild.bytecode.type.CatKindB.FUNC;
 import static org.smoothbuild.bytecode.type.cnst.TNamesB.funcTypeName;
-import static org.smoothbuild.util.collect.Lists.concat;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
@@ -16,16 +15,9 @@ public final class FuncTB extends TypeB implements CallableTB, ComposedTB {
   private final TupleTB params;
 
   public FuncTB(Hash hash, TypeB res, TupleTB params) {
-    super(
-        hash, funcTypeName(res, params.items()),
-        FUNC,
-        calculateFuncVars(res, params.items()));
+    super(hash, funcTypeName(res, params.items()), FUNC);
     this.res = res;
     this.params = params;
-  }
-
-  public static VarSetB calculateFuncVars(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return calculateVars(concat(resT, paramTs));
   }
 
   @Override
