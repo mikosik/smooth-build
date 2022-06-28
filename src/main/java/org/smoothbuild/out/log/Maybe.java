@@ -16,8 +16,16 @@ public class Maybe<V> {
     return new Maybe<>(value, new ImmutableLogs(list()));
   }
 
+  public static <T> Maybe<T> maybeLogs(Log... logs) {
+    return maybeLogs(ImmutableLogs.logs(logs));
+  }
+
   public static <T> Maybe<T> maybeLogs(Logs logs) {
     return new Maybe<>(null, logs);
+  }
+
+  public static <T> Maybe<T> maybeValueAndLogs(T value, Log... logs) {
+    return maybeValueAndLogs(value, ImmutableLogs.logs(logs));
   }
 
   public static <T> Maybe<T> maybeValueAndLogs(T value, Logs logs) {

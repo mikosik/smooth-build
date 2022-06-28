@@ -30,8 +30,7 @@ public class MaybeTest {
 
     @Test
     public void null_value_is_passed_and_logs_have_no_problem() {
-      ImmutableLogs logs = logs(info("message"));
-      assertCall(() -> maybeValueAndLogs(null, logs))
+      assertCall(() -> maybeValueAndLogs(null, info("message")))
           .throwsException(IllegalArgumentException.class);
     }
   }
@@ -47,9 +46,7 @@ public class MaybeTest {
 
     @Test
     public void throws_exception_when_no_value_is_stored() {
-      LogBuffer logs = new LogBuffer();
-      logs.error("message");
-      var maybe = maybeLogs(logs);
+      var maybe = maybeLogs(error("message"));
       assertCall(maybe::value)
           .throwsException(IllegalStateException.class);
     }
@@ -66,8 +63,7 @@ public class MaybeTest {
 
     @Test
     public void returns_empty_when_no_value_is_stored() {
-      ImmutableLogs logs = logs(error("message"));
-      var maybe = maybeLogs(logs);
+      var maybe = maybeLogs(error("message"));
       assertThat(maybe.valueOptional())
           .isEqualTo(Optional.empty());
     }
@@ -84,32 +80,28 @@ public class MaybeTest {
 
     @Test
     public void returns_false_when_only_info_log_is_present() {
-      ImmutableLogs logs = logs(info("message"));
-      var maybe = maybeValueAndLogs("abc", logs);
+      var maybe = maybeValueAndLogs("abc", info("message"));
       assertThat(maybe.containsProblem())
           .isFalse();
     }
 
     @Test
     public void returns_false_when_only_warning_log_is_present() {
-      ImmutableLogs logs = logs(Log.warning("message"));
-      var maybe = maybeValueAndLogs("abc", logs);
+      var maybe = maybeValueAndLogs("abc", warning("message"));
       assertThat(maybe.containsProblem())
           .isFalse();
     }
 
     @Test
     public void returns_true_when_error_log_is_present() {
-      ImmutableLogs logs = logs(error("message"));
-      var maybe = maybeValueAndLogs(null, logs);
+      var maybe = maybeValueAndLogs(null, error("message"));
       assertThat(maybe.containsProblem())
           .isTrue();
     }
 
     @Test
     public void returns_true_when_fatal_log_is_present() {
-      ImmutableLogs logs = logs(fatal("message"));
-      var maybe = maybeValueAndLogs(null, logs);
+      var maybe = maybeValueAndLogs(null, fatal("message"));
       assertThat(maybe.containsProblem())
           .isTrue();
     }
@@ -125,26 +117,30 @@ public class MaybeTest {
             maybeValue("def"),
             maybeValue("def"))
         .addEqualityGroup(
-            maybeLogs(logs(fatal("abc"))),
+            maybeLogs(fatal("abc")),
+            maybeLogs(fatal("abc")),
             maybeLogs(logs(fatal("abc"))))
         .addEqualityGroup(
-            maybeLogs(logs(error("abc"))),
+            maybeLogs(error("abc")),
+            maybeLogs(error("abc")),
             maybeLogs(logs(error("abc"))))
         .addEqualityGroup(
-            maybeLogs(logs(error("def"))),
+            maybeLogs(error("def")),
+            maybeLogs(error("def")),
             maybeLogs(logs(error("def"))))
         .addEqualityGroup(
-            maybeValueAndLogs("abc", logs(warning("abc"))),
+            maybeValueAndLogs("abc", warning("abc")),
+            maybeValueAndLogs("abc", warning("abc")),
             maybeValueAndLogs("abc", logs(warning("abc"))))
         .addEqualityGroup(
-            maybeValueAndLogs("abc", logs(info("abc"))),
+            maybeValueAndLogs("abc", info("abc")),
+            maybeValueAndLogs("abc", info("abc")),
             maybeValueAndLogs("abc", logs(info("abc"))));
   }
 
   @Test
   public void to_string() {
-    var logs = logs(info("message"));
-    Maybe<String> maybe = maybeValueAndLogs("abc", logs);
+    Maybe<String> maybe = maybeValueAndLogs("abc", info("message"));
     assertThat(maybe.toString())
         .isEqualTo("Maybe{abc, [Log{INFO, 'message'}]}");
   }
