@@ -30,7 +30,7 @@ import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
 import org.smoothbuild.lang.type.solver.Denormalizer;
-import org.smoothbuild.lang.type.solver.SolverS;
+import org.smoothbuild.lang.type.solver.Solver;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
@@ -107,7 +107,7 @@ public class CallTypeInferrer {
     var prefixedArgTs = prefixFreeVarsWithIndex(map(args, a -> a.obj().typeO().get()));
     var prefixedCalleeT = (FuncTS) calleeT.mapFreeVars(v -> v.prefixed("callee"));
     var prefixedParamTs = prefixedCalleeT.params();
-    var solver = new SolverS();
+    var solver = new Solver();
     for (int i = 0; i < args.size(); i++) {
       try {
         solver.addConstr(constrS(prefixedArgTs.get(i), prefixedParamTs.get(i)));

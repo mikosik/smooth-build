@@ -13,11 +13,11 @@ import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.Side;
 import org.smoothbuild.lang.type.VarS;
 
-public class SolverS {
+public class Solver {
   private final Normalizer normalizer;
   private final VarNodes varNodes;
 
-  public SolverS() {
+  public Solver() {
     this.normalizer = new Normalizer();
     this.varNodes = new VarNodes();
   }
