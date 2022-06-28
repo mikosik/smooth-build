@@ -243,7 +243,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varA())));
     }
 
     @Test
@@ -253,7 +253,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(blobTS(), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", polyFuncTS(blobTS(), list(varA())));
     }
 
     @Test
@@ -263,7 +263,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varA())));
     }
 
     @Test
@@ -273,7 +273,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(arrayTS(stringTS()), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", polyFuncTS(arrayTS(stringTS()), list(varA())));
     }
 
     @Test
@@ -284,7 +284,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varA())));
     }
 
     @Test
@@ -294,7 +294,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varS("A"), intTS())));
+          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varA(), intTS())));
     }
 
     @Test
@@ -305,7 +305,7 @@ public class InferenceTest extends TestingContext {
       module(code)
           .loadsWithSuccess()
           .containsTopRefableWithType("myFunc",
-              polyFuncTS(intTS(), list(varS("A"), funcTS(intTS()))));
+              polyFuncTS(intTS(), list(varA(), funcTS(intTS()))));
     }
 
     @Test
@@ -317,7 +317,7 @@ public class InferenceTest extends TestingContext {
       module(code)
           .loadsWithSuccess()
           .containsTopRefableWithType("myFunc",
-              polyFuncTS(funcTS(stringTS(), list(blobTS())), list(varS("A"))));
+              polyFuncTS(funcTS(stringTS(), list(blobTS())), list(varA())));
     }
 
     @Test
@@ -339,7 +339,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varA())));
     }
 
     @Test
@@ -350,7 +350,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varA())));
     }
 
     @Test
@@ -361,7 +361,7 @@ public class InferenceTest extends TestingContext {
       module(code)
           .loadsWithSuccess()
           .containsTopRefableWithType("myFunc",
-              polyFuncTS(stringTS(), list(varS("A"), stringTS())));
+              polyFuncTS(stringTS(), list(varA(), stringTS())));
     }
 
     @Test
@@ -371,7 +371,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(varS("A"), list(varS("A"))));
+          .containsTopRefableWithType("myFunc", polyFuncTS(varA(), list(varA())));
     }
 
     @Test
@@ -382,7 +382,7 @@ public class InferenceTest extends TestingContext {
       module(code)
           .loadsWithSuccess()
           .containsTopRefableWithType("myFunc",
-              polyFuncTS(funcTS(varS("A"), list(varS("A"))), list(funcTS(varS("A"), list(varS("A"))))));
+              polyFuncTS(funcTS(varA(), list(varA())), list(funcTS(varA(), list(varA())))));
     }
   }
 

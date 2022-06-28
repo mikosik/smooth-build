@@ -12,9 +12,9 @@ import com.google.common.testing.EqualsTester;
 public class VarSetSTest extends TestingContext {
   @Test
   public void as_list() {
-    var varSet = varSetS(varS("B"), varS("C"), varS("A"));
+    var varSet = varSetS(varB(), varC(), varA());
     assertThat(varSet.asList())
-        .isEqualTo(list(varS("A"), varS("B"), varS("C")));
+        .isEqualTo(list(varA(), varB(), varC()));
   }
 
   @Test
@@ -24,21 +24,21 @@ public class VarSetSTest extends TestingContext {
             varSetS(),
             varSetS())
         .addEqualityGroup(
-            varSetS(varS("A")),
-            varSetS(varS("A")))
+            varSetS(varA()),
+            varSetS(varA()))
         .addEqualityGroup(
-            varSetS(varS("A"), varS("B")),
-            varSetS(varS("A"), varS("B")))
+            varSetS(varA(), varB()),
+            varSetS(varA(), varB()))
         .addEqualityGroup(
-            varSetS(varS("C"), varS("A"), varS("B")),
-            varSetS(varS("A"), varS("B"), varS("C")),
-            varSetS(varS("C"), varS("A"), varS("B")))
+            varSetS(varC(), varA(), varB()),
+            varSetS(varA(), varB(), varC()),
+            varSetS(varC(), varA(), varB()))
         .testEquals();
   }
 
   @Test
   public void to_string() {
-    var varSet = varSetS(varS("C"), varS("A"), varS("B"));
+    var varSet = varSetS(varC(), varA(), varB());
     assertThat(varSet.toString())
         .isEqualTo("<A, B, C>");
   }

@@ -69,7 +69,7 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void monoize_nat_func() {
-      var a = varS("A");
+      var a = varA();
       var funcTS = funcTS(a, list(a));
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = "class.binary.name";
@@ -94,7 +94,7 @@ public class CompilerTest extends TestingContext {
     @Test
     public void monoize_bytecode_func() throws IOException {
       Class<?> clazz = ReturnIdFunc.class;
-      var varTS = varS("A");
+      var varTS = varA();
       var funcTS = funcTS(varTS, list(varTS));
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();

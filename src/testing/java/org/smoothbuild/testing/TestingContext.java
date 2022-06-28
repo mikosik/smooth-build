@@ -816,6 +816,18 @@ public class TestingContext {
     return TypeFS.struct(name, fields);
   }
 
+  public VarS varA() {
+    return varS("A");
+  }
+
+  public VarS varB() {
+    return varS("B");
+  }
+
+  public VarS varC() {
+    return varS("C");
+  }
+
   public VarS varS(String name) {
     return TypeFS.var(name);
   }
@@ -1059,7 +1071,7 @@ public class TestingContext {
   }
 
   public PolyFuncS idFuncS() {
-    var a = varS("A");
+    var a = varA();
     return poly(defFuncS(a, "myIdentity", nList(itemS(a, "p")), paramRefS(a, "p")));
   }
 

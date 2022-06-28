@@ -78,7 +78,7 @@ public class EvaluatorTest  extends TestingContext {
 
     @Test
     public void call_polymorphic() {
-      var a = varS("A");
+      var a = varA();
       var funcS = poly(defFuncS(
           arrayTS(a), "n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e"))));
       var actualTS = funcTS(arrayTS(intTS()), list(intTS()));
@@ -108,7 +108,7 @@ public class EvaluatorTest  extends TestingContext {
       when(bytecodeLoader.load("myFunc", jar, className, varMap))
           .thenReturn(Try.result(funcB));
 
-      var byteFuncS = poly(byteFuncS(className, varS("A"), "myFunc", nList(itemS(varS("A"), "p"))));
+      var byteFuncS = poly(byteFuncS(className, varA(), "myFunc", nList(itemS(varA(), "p"))));
       var actualFuncTS = funcTS(intTS(), list(intTS()));
       assertThat(evaluate(monoizeS(actualFuncTS, refS(byteFuncS)), nList(byteFuncS)))
           .isEqualTo(funcB);
@@ -185,7 +185,7 @@ public class EvaluatorTest  extends TestingContext {
   class _monoize {
     @Test
     public void monoize() {
-      var a = varS("A");
+      var a = varA();
       var funcS = poly(defFuncS("n", nList(itemS(a, "e")), paramRefS(a, "e")));
       var actualTS = funcTS(intTS(), list(intTS()));
       var monoizeS = monoizeS(actualTS, refS(funcS));
