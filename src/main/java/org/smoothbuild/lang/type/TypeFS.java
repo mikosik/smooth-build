@@ -9,7 +9,6 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
 

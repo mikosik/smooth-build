@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.util.type.Side.LOWER;
+import static org.smoothbuild.lang.type.Side.LOWER;
 
 /**
  * This class is immutable.

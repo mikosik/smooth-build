@@ -1,18 +1,16 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.Side.LOWER;
+import static org.smoothbuild.lang.type.Side.UPPER;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
-import static org.smoothbuild.util.type.Side.LOWER;
-import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
 import javax.inject.Inject;
-
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MultimapBuilder.SetMultimapBuilder;

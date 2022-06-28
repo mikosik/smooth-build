@@ -2,15 +2,13 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.type.Side.UPPER;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Sets.map;
-import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;

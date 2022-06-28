@@ -5,8 +5,6 @@ import static org.smoothbuild.lang.type.JoinTS.joinReduced;
 import static org.smoothbuild.lang.type.MeetTS.meet;
 import static org.smoothbuild.lang.type.MeetTS.meetReduced;
 
-import org.smoothbuild.util.type.Side;
-
 import com.google.common.collect.ImmutableSet;
 
 public abstract sealed class MergeTS extends MonoTS permits JoinTS, MeetTS {

@@ -3,8 +3,6 @@ package org.smoothbuild.lang.type;
 import static org.smoothbuild.lang.type.TypeFS.ANY;
 import static org.smoothbuild.lang.type.TypeFS.NOTHING;
 
-import org.smoothbuild.util.type.Side;
-
 /**
  * This class is immutable.
  */

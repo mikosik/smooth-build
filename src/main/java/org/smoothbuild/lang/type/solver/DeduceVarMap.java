@@ -3,9 +3,9 @@ package org.smoothbuild.lang.type.solver;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.lang.type.EdgeTS.edgeTS;
+import static org.smoothbuild.lang.type.Side.LOWER;
+import static org.smoothbuild.lang.type.Side.UPPER;
 import static org.smoothbuild.lang.type.solver.Decompose.decompose;
-import static org.smoothbuild.util.type.Side.LOWER;
-import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,16 +15,16 @@ import java.util.Set;
 
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BaseTS;
+import org.smoothbuild.lang.type.Bounds;
 import org.smoothbuild.lang.type.ConstrS;
 import org.smoothbuild.lang.type.MergeTS;
 import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.Side;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.util.type.Bounds;
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableMap;
 

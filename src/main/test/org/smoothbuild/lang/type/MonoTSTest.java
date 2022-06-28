@@ -8,6 +8,8 @@ import static org.smoothbuild.lang.type.JoinTS.joinReduced;
 import static org.smoothbuild.lang.type.MeetTS.meetReduced;
 import static org.smoothbuild.lang.type.MergeTS.merge;
 import static org.smoothbuild.lang.type.MergeTS.mergeReduced;
+import static org.smoothbuild.lang.type.Side.LOWER;
+import static org.smoothbuild.lang.type.Side.UPPER;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingTS.A;
@@ -29,8 +31,6 @@ import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 import static org.smoothbuild.util.collect.Sets.set;
-import static org.smoothbuild.util.type.Side.LOWER;
-import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.List;
 import java.util.function.Function;

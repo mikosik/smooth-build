@@ -6,10 +6,10 @@ import static org.smoothbuild.util.collect.Sets.set;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.smoothbuild.lang.type.Bounds;
 import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.Side;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.util.type.Bounds;
-import org.smoothbuild.util.type.Side;
 
 public class VarNode {
   private final VarS var;

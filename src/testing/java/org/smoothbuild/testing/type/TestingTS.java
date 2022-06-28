@@ -10,6 +10,7 @@ import org.smoothbuild.lang.type.AnyTS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
 import org.smoothbuild.lang.type.BoolTS;
+import org.smoothbuild.lang.type.Bounds;
 import org.smoothbuild.lang.type.IntTS;
 import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
@@ -23,7 +24,6 @@ import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.type.Bounds;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

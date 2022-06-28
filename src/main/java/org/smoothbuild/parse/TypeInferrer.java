@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
+import static org.smoothbuild.lang.type.Side.LOWER;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
 import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
@@ -13,7 +14,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.NList.nList;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
-import static org.smoothbuild.util.type.Side.LOWER;
 
 import java.util.List;
 import java.util.Optional;

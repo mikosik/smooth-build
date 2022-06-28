@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import org.smoothbuild.util.type.Side;
-
 /**
  * Type constraint.
  */

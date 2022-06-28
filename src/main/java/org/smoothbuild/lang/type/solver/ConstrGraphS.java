@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.type.solver;
 
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.type.Side.LOWER;
+import static org.smoothbuild.lang.type.Side.UPPER;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
-import static org.smoothbuild.util.type.Side.LOWER;
-import static org.smoothbuild.util.type.Side.UPPER;
 
+import org.smoothbuild.lang.type.Bounds;
 import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.Side;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.util.type.Bounds;
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

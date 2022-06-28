@@ -1,15 +1,15 @@
 package org.smoothbuild.lang.type.solver;
 
+import static org.smoothbuild.lang.type.Side.UPPER;
 import static org.smoothbuild.util.collect.Sets.map;
-import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.HashMap;
 
+import org.smoothbuild.lang.type.Bounds;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.solver.ConstrGraphS.Builder;
-import org.smoothbuild.util.type.Bounds;
 
 public class VarNodes {
   private final HashMap<VarS, VarNode> nodes;

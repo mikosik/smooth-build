@@ -8,17 +8,17 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.type.ArrayTS;
+import org.smoothbuild.lang.type.Bounds;
 import org.smoothbuild.lang.type.ComposedTS;
 import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
 import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.Side;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.TypingS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.util.collect.Sets;
-import org.smoothbuild.util.type.Bounds;
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

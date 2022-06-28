@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.type.solver;
 
 import static org.smoothbuild.lang.type.ConstrS.constrS;
+import static org.smoothbuild.lang.type.Side.LOWER;
+import static org.smoothbuild.lang.type.Side.UPPER;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.type.Side.LOWER;
-import static org.smoothbuild.util.type.Side.UPPER;
 
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BaseTS;
@@ -13,10 +13,10 @@ import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
 import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.Side;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;

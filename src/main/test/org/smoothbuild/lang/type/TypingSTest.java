@@ -2,6 +2,8 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.lang.type.Side.LOWER;
+import static org.smoothbuild.lang.type.Side.UPPER;
 import static org.smoothbuild.lang.type.TestingTypeGraphS.buildGraph;
 import static org.smoothbuild.testing.type.TestedAssignCasesS.TESTED_ASSIGN_CASES_S;
 import static org.smoothbuild.testing.type.TestingTS.A;
@@ -15,8 +17,6 @@ import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.testing.type.TestingTS.join;
 import static org.smoothbuild.testing.type.TestingTS.meet;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.type.Side.LOWER;
-import static org.smoothbuild.util.type.Side.UPPER;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +26,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.testing.type.TestedTSF;
 import org.smoothbuild.testing.type.TestingTS;
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
 
