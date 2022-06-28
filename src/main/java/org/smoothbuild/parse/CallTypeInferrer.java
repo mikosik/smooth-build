@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static java.util.Optional.empty;
-import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
@@ -9,6 +8,7 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.parse.ConstructArgList.constructArgList;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.NList.nList;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
 import static org.smoothbuild.util.type.Side.LOWER;
@@ -176,9 +176,7 @@ public class CallTypeInferrer {
   }
 
   private static String messagePrefix(List<ItemSigS> params) {
-    var paramsString = params.stream()
-        .map(ItemSigS::typeAndName)
-        .collect(joining(", "));
+    var paramsString = toCommaSeparatedString(params, ItemSigS::typeAndName);
     return "In call to function with parameters (" + paramsString + "): ";
   }
 }

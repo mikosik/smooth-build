@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Collections.nCopies;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;
@@ -11,6 +10,7 @@ import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,9 +135,7 @@ public class ConstructArgList {
   }
 
   private static String messagePrefix(NList<Param> params) {
-    var paramsString = params.stream()
-        .map(Param::typeAndName)
-        .collect(joining(", "));
+    var paramsString = toCommaSeparatedString(params, Param::typeAndName);
     return "In call to function with parameters `" + "(" + paramsString + ")`: ";
   }
 }
