@@ -22,10 +22,7 @@ public class TestedAssignCasesB {
   private final TestedTB int_;
   private final TestedTB nothing;
   private final TestedTB string;
-  private final TestedTB struct;
   private final TestedTB tuple;
-  private final boolean isStructSupported;
-  private final boolean isTupleSupported;
 
   public TestedAssignCasesB(TestedTBF testedTF) {
     this.testedTF = testedTF;
@@ -35,10 +32,7 @@ public class TestedAssignCasesB {
     this.int_ = testedTF.int_();
     this.nothing = testedTF.nothing();
     this.string = testedTF.string();
-    this.isStructSupported = testingT.isStructSupported();
-    this.isTupleSupported = testingT.isTupleSupported();
-    this.struct = this.isStructSupported ? testedTF.struct() : null;
-    this.tuple = this.isTupleSupported ? testedTF.tuple() : null;
+    this.tuple = testedTF.tuple();
   }
 
   public TestedTBF testedTF() {
@@ -64,35 +58,20 @@ public class TestedAssignCasesB {
     }
     gen(r, blob, includeAny, oneOf(blob, nothing));
     gen(r, nothing, includeAny, oneOf(nothing));
-    if (isStructSupported) {
-      gen(r, struct, includeAny, oneOf(struct, nothing));
-    }
-    if (isTupleSupported) {
-      gen(r, tuple, includeAny, oneOf(tuple, nothing));
-    }
+    gen(r, tuple, includeAny, oneOf(tuple, nothing));
 
     if (includeAny) {
       gen(r, a(any), includeAny, TestedTB::isArray, mNothing());
     }
     gen(r, a(blob), includeAny, oneOf(a(blob), a(nothing), nothing));
     gen(r, a(nothing), includeAny, oneOf(a(nothing), nothing));
-    if (isStructSupported) {
-      gen(r, a(struct), includeAny, oneOf(a(struct), a(nothing), nothing));
-    }
-    if (isTupleSupported) {
-      gen(r, a(tuple), includeAny, oneOf(a(tuple), a(nothing), nothing));
-    }
+    gen(r, a(tuple), includeAny, oneOf(a(tuple), a(nothing), nothing));
     if (includeAny) {
       gen(r, a2(any), includeAny, TestedTB::isArrayOfArrays, t -> t.isArrayOf(nothing), mNothing());
     }
     gen(r, a2(blob), includeAny, oneOf(a2(blob), a2(nothing), a(nothing), nothing));
     gen(r, a2(nothing), includeAny, oneOf(a2(nothing), a(nothing), nothing));
-    if (isStructSupported) {
-      gen(r, a2(struct), includeAny, oneOf(a2(struct), a2(nothing), a(nothing), nothing));
-    }
-    if (isTupleSupported) {
-      gen(r, a2(tuple), includeAny, oneOf(a2(tuple), a2(nothing), a(nothing), nothing));
-    }
+    gen(r, a2(tuple), includeAny, oneOf(a2(tuple), a2(nothing), a(nothing), nothing));
 
     if (includeAny) {
       gen(r, f(any), includeAny, mNothing(), mFunc(mAll()));
@@ -119,20 +98,10 @@ public class TestedAssignCasesB {
     // funcs
     r.add(illegalAssignment(f(a(blob)), a(blob)));
     r.add(illegalAssignment(f(a(nothing)), a(nothing)));
-    if (isStructSupported) {
-      r.add(illegalAssignment(f(a(struct)), a(struct)));
-    }
-    if (isTupleSupported) {
-      r.add(illegalAssignment(f(a(tuple)), a(tuple)));
-    }
+    r.add(illegalAssignment(f(a(tuple)), a(tuple)));
     r.add(illegalAssignment(f(a2(blob)), a2(blob)));
     r.add(illegalAssignment(f(a2(nothing)), a2(nothing)));
-    if (isStructSupported) {
-      r.add(illegalAssignment(f(a2(struct)), a2(struct)));
-    }
-    if (isTupleSupported) {
-      r.add(illegalAssignment(f(a2(tuple)), a2(tuple)));
-    }
+    r.add(illegalAssignment(f(a2(tuple)), a2(tuple)));
 
     // funcs (as func result type)
     r.add(allowedAssignment(f(f(blob)), f(f(blob))));
@@ -214,9 +183,6 @@ public class TestedAssignCasesB {
     Builder<TestedTB> builder = ImmutableList.builder();
     builder.add(blob);
     builder.add(nothing);
-    if (isStructSupported) {
-      builder.add(struct);
-    }
     if (includeAny) {
       builder.add(any);
     }
@@ -224,9 +190,7 @@ public class TestedAssignCasesB {
       List<TestedTB> types = generateTypes(depth - 1, includeAny);
       for (TestedTB type : types) {
         builder.add(a(type));
-        if (isTupleSupported) {
-          builder.add(tuple(type));
-        }
+        builder.add(tuple(type));
         builder.add(f(type, list()));
         for (TestedTB type2 : types) {
           builder.add(f(type, list(type2)));

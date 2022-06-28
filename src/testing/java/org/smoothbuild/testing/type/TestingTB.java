@@ -80,18 +80,6 @@ public class TestingTB {
     return STRING;
   }
 
-  public boolean isStructSupported() {
-    return false;
-  }
-
-  public TypeB struct() {
-    throw new UnsupportedOperationException();
-  }
-
-  public boolean isTupleSupported() {
-    return true;
-  }
-
   public TypeB tuple() {
     return TUPLE;
   }
