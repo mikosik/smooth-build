@@ -14,8 +14,6 @@ import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.type.Bounds;
-import org.smoothbuild.util.type.Side;
 
 import com.google.common.collect.ImmutableList;
 
@@ -86,9 +84,5 @@ public class TestingTB {
 
   public TypeB tuple(ImmutableList<TypeB> items) {
     return FACTORY.tuple(items);
-  }
-
-  public Bounds<TypeB> oneSideBound(Side side, TypeB type) {
-    return FACTORY.oneSideBound(side, type);
   }
 }
