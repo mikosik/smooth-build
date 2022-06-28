@@ -355,7 +355,7 @@ public class VmTest extends TestingContext {
         return new Task(algorithm, depJs, info, bytecodeF());
       }
     });
-    var jobCreator = new JobCreator(null, typingB(), ImmutableMap.of(), taskCreator);
+    var jobCreator = new JobCreator(null, ImmutableMap.of(), taskCreator);
     return new Vm(jobCreator, parallelJobExecutor());
   }
 }

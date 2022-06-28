@@ -32,7 +32,6 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
@@ -55,20 +54,18 @@ public class JobCreator {
   private static final String PARENTHESES = "()";
   private static final String PARENTHESES_INVOKE = "()~";
   private final NativeMethodLoader nativeMethodLoader;
-  private final TypingB typing;
   private final ImmutableMap<ObjB, Nal> nals;
   private final TaskCreator taskCreator;
   private final Map<Class<?>, Handler<?>> handler;
 
-  public JobCreator(NativeMethodLoader nativeMethodLoader, TypingB typing, BytecodeF bytecodeF,
+  public JobCreator(NativeMethodLoader nativeMethodLoader, BytecodeF bytecodeF,
       ImmutableMap<ObjB, Nal> nals) {
-    this(nativeMethodLoader, typing, nals, (a,  d, i) -> new Task(a, d, i, bytecodeF));
+    this(nativeMethodLoader, nals, (a,  d, i) -> new Task(a, d, i, bytecodeF));
   }
 
-  public JobCreator(NativeMethodLoader nativeMethodLoader, TypingB typing,
+  public JobCreator(NativeMethodLoader nativeMethodLoader,
       ImmutableMap<ObjB, Nal> nals, TaskCreator taskCreator) {
     this.nativeMethodLoader = nativeMethodLoader;
-    this.typing = typing;
     this.nals = nals;
     this.taskCreator = taskCreator;
     this.handler = createHandlers();
@@ -349,7 +346,7 @@ public class JobCreator {
     if (job.type().equals(type)) {
       return job;
     } else {
-      var algorithm = new ConvertAlgorithm(type, typing);
+      var algorithm = new ConvertAlgorithm(type);
       var info = new TaskInfo(CONVERT, type.name() + " <- " + job.type().name(), loc);
       return taskCreator.newTask(algorithm, list(job), info);
     }

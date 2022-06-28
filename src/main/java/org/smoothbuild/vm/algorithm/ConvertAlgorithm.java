@@ -12,7 +12,6 @@ import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.FuncB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.type.IsAssignable;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
@@ -24,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 
 public class ConvertAlgorithm extends Algorithm {
 
-  public ConvertAlgorithm(TypeB outputT, TypingB typing) {
+  public ConvertAlgorithm(TypeB outputT) {
     super(outputT);
   }
 

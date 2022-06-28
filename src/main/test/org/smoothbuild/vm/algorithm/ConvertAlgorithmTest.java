@@ -226,7 +226,7 @@ public class ConvertAlgorithmTest extends TestingContext {
   }
 
   private void assertConvertThrowsExc(TypeB typeB, CnstB cnst, Class<? extends Throwable> expected) {
-    var convertAlgorithm = new ConvertAlgorithm(typeB, typingB());
+    var convertAlgorithm = new ConvertAlgorithm(typeB);
     assertCall(() -> convertAlgorithm.run(input(cnst), newNativeApi()))
         .throwsException(expected);
   }
@@ -237,7 +237,7 @@ public class ConvertAlgorithmTest extends TestingContext {
   }
 
   private CnstB convert(TypeB targetT, CnstB input) {
-    var output = new ConvertAlgorithm(targetT, typingB())
+    var output = new ConvertAlgorithm(targetT)
         .run(input(input), newNativeApi());
     return output.cnst();
   }

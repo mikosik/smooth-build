@@ -53,7 +53,6 @@ import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypeFB;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.BlobTB;
@@ -163,7 +162,6 @@ public class TestingContext {
   private FileSystem computationCacheFileSystem;
   private ObjDb objDb;
   private TypingS typingS;
-  private TypingB typingB;
   private CatDb catDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -186,7 +184,7 @@ public class TestingContext {
   }
 
   public VmProv vmProv(NativeMethodLoader nativeMethodLoader) {
-    return vmProv(new JobCreatorProv(nativeMethodLoader, typingB(), bytecodeF()));
+    return vmProv(new JobCreatorProv(nativeMethodLoader, bytecodeF()));
   }
 
   public VmProv vmProv(JobCreatorProv jobCreatorProv) {
@@ -203,7 +201,7 @@ public class TestingContext {
   }
 
   public CompilerProv compilerProv(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new CompilerProv(typeShConv(), bytecodeF(), typingB(), fileLoader, bytecodeLoader);
+    return new CompilerProv(typeShConv(), bytecodeF(), fileLoader, bytecodeLoader);
   }
 
   private BytecodeLoader bytecodeLoader() {
@@ -290,7 +288,7 @@ public class TestingContext {
   }
 
   private Container newContainer() {
-    return new Container(fullFileSystem(), bytecodeF(), typingB());
+    return new Container(fullFileSystem(), bytecodeF());
   }
 
   public TypeSbConv typeShConv() {
@@ -309,13 +307,6 @@ public class TestingContext {
       typingS = new TypingS(typeFS());
     }
     return typingS;
-  }
-
-  public TypingB typingB() {
-    if (typingB == null) {
-      typingB = new TypingB(catDb());
-    }
-    return typingB;
   }
 
   public TypeFB typeFB() {

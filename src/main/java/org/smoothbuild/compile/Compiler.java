@@ -32,7 +32,6 @@ import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.MethodTB;
@@ -75,7 +74,6 @@ import com.google.common.collect.ImmutableMap;
 
 public class Compiler {
   private final BytecodeF bytecodeF;
-  private final TypingB typing;
   private final DefsS defs;
   private final TypeSbConv typeSbConv;
   private final FileLoader fileLoader;
@@ -86,10 +84,9 @@ public class Compiler {
   private final Map<ObjB, Nal> nals;
 
   @Inject
-  public Compiler(BytecodeF bytecodeF, TypingB typing, DefsS defs,
-      TypeSbConv typeSbConv, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+  public Compiler(BytecodeF bytecodeF, DefsS defs, TypeSbConv typeSbConv, FileLoader fileLoader,
+      BytecodeLoader bytecodeLoader) {
     this.bytecodeF = bytecodeF;
-    this.typing = typing;
     this.defs = defs;
     this.typeSbConv = typeSbConv;
     this.fileLoader = fileLoader;

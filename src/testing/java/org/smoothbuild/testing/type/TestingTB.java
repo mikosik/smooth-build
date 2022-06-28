@@ -4,7 +4,6 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.BlobTB;
 import org.smoothbuild.bytecode.type.cnst.BoolTB;
@@ -14,7 +13,6 @@ import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.cnst.VarB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.type.Bounds;
 import org.smoothbuild.util.type.Side;
@@ -59,29 +57,6 @@ public class TestingTB {
   private static final ImmutableList<TypeB> BASE_TYPES = CONTEXT.catDb().baseTs();
   private static final ImmutableList<TypeB> ELEMENTARY_TYPES = concat(BASE_TYPES, TUPLE);
 
-  public static final ImmutableList<TypeB> ALL_TESTED_TYPES =
-      ImmutableList.<TypeB>builder()
-          .addAll(ELEMENTARY_TYPES)
-          .addAll(FUNCTION_TYPES)
-          .add(VAR_X)
-          .build();
-
-  public TypingB typing() {
-    return CONTEXT.typingB();
-  }
-
-  public ImmutableList<TypeB> typesForBuildWideGraph() {
-    return list(varA(), varB(), blob(), bool(), int_(), string(), tuple());
-  }
-
-  public ImmutableList<TypeB> elementaryTypes() {
-    return ELEMENTARY_TYPES;
-  }
-
-  public ImmutableList<TypeB> allTestedTypes() {
-    return ALL_TESTED_TYPES;
-  }
-
   public TypeB array(TypeB elemT) {
     return FACTORY.array(elemT);
   }
@@ -114,40 +89,12 @@ public class TestingTB {
     return STRING;
   }
 
-  public boolean isStructSupported() {
-    return false;
-  }
-
-  public TypeB struct() {
-    throw new UnsupportedOperationException();
-  }
-
-  public boolean isTupleSupported() {
-    return true;
-  }
-
   public TypeB tuple() {
     return TUPLE;
   }
 
   public TypeB tuple(ImmutableList<TypeB> items) {
     return FACTORY.tuple(items);
-  }
-
-  public VarB varA() {
-    return VAR_A;
-  }
-
-  public VarB varB() {
-    return VAR_B;
-  }
-
-  public VarB varX() {
-    return VAR_X;
-  }
-
-  public VarB varY() {
-    return VAR_Y;
   }
 
   public Bounds<TypeB> oneSideBound(Side side, TypeB type) {

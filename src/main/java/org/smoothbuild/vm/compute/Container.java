@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.plugin.MessageLogger;
@@ -22,25 +21,18 @@ import org.smoothbuild.plugin.NativeApi;
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
   private final BytecodeF bytecodeF;
-  private final TypingB typing;
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(@ForSpace(PRJ) FileSystem fileSystem, BytecodeF bytecodeF, TypingB typing) {
+  public Container(@ForSpace(PRJ) FileSystem fileSystem, BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;
     this.bytecodeF = bytecodeF;
     this.messageLogger = new MessageLoggerImpl(bytecodeF);
-    this.typing = typing;
   }
 
   @Override
   public BytecodeF factory() {
     return bytecodeF;
-  }
-
-  @Override
-  public TypingB typing() {
-    return typing;
   }
 
   public FileSystem fileSystem() {
