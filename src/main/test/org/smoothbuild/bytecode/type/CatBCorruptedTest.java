@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.bytecode.type.CatDb.CALLABLE_PARAMS_PATH;
 import static org.smoothbuild.bytecode.type.CatDb.CALLABLE_RES_PATH;
 import static org.smoothbuild.bytecode.type.CatDb.DATA_PATH;
-import static org.smoothbuild.bytecode.type.CatKindB.ANY;
 import static org.smoothbuild.bytecode.type.CatKindB.ARRAY;
 import static org.smoothbuild.bytecode.type.CatKindB.BLOB;
 import static org.smoothbuild.bytecode.type.CatKindB.BOOL;
@@ -90,11 +89,6 @@ public class CatBCorruptedTest extends TestingContext {
       );
       assertThat(hash)
           .isEqualTo(stringTB().hash());
-    }
-
-    @Test
-    public void any_with_additional_child() throws Exception {
-      test_base_type_with_additional_child(ANY);
     }
 
     @Test

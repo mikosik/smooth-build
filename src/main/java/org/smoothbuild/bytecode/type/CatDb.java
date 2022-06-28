@@ -3,7 +3,6 @@ package org.smoothbuild.bytecode.type;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
-import static org.smoothbuild.bytecode.type.CatKindB.ANY;
 import static org.smoothbuild.bytecode.type.CatKindB.ARRAY;
 import static org.smoothbuild.bytecode.type.CatKindB.BLOB;
 import static org.smoothbuild.bytecode.type.CatKindB.BOOL;
@@ -29,7 +28,6 @@ import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNo
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.BlobTB;
 import org.smoothbuild.bytecode.type.cnst.BoolTB;
@@ -75,7 +73,6 @@ public class CatDb implements TypeFB {
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, CatB> cache;
 
-  private final AnyTB any;
   private final BlobTB blob;
   private final BoolTB bool;
   private final IntTB int_;
@@ -87,7 +84,6 @@ public class CatDb implements TypeFB {
     this.cache = new ConcurrentHashMap<>();
 
     try {
-      this.any = cache(new AnyTB(writeBaseRoot(ANY)));
       this.blob = cache(new BlobTB(writeBaseRoot(BLOB)));
       this.bool = cache(new BoolTB(writeBaseRoot(BOOL)));
       this.int_ = cache(new IntTB(writeBaseRoot(INT)));
@@ -99,15 +95,10 @@ public class CatDb implements TypeFB {
   }
 
   public ImmutableList<TypeB> baseTs() {
-    return ImmutableList.of(any, blob, bool, int_, nothing, string);
+    return ImmutableList.of(blob, bool, int_, nothing, string);
   }
 
   // methods for getting Val-s types
-
-  @Override
-  public AnyTB any() {
-    return any;
-  }
 
   @Override
   public ArrayTB array(TypeB elemT) {
@@ -193,7 +184,7 @@ public class CatDb implements TypeFB {
     List<Hash> rootSeq = readCatRootSeq(hash);
     CatKindB kind = decodeCatMarker(hash, rootSeq.get(0));
     return switch (kind) {
-      case ANY, BLOB, BOOL, INT, NOTHING, STRING -> {
+      case BLOB, BOOL, INT, NOTHING, STRING -> {
         assertCatRootSeqSize(hash, kind, rootSeq, 1);
         throw new RuntimeException(
             "Internal error: Category with kind " + kind + " should be found in cache.");

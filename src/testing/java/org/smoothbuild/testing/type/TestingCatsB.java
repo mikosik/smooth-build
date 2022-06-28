@@ -19,7 +19,6 @@ public class TestingCatsB {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final CatDb CAT_DB = CONTEXT.catDb();
 
-  public static final TypeB ANY = CONTEXT.anyTB();
   public static final TypeB BLOB = CONTEXT.blobTB();
   public static final TypeB BOOL = CONTEXT.boolTB();
   public static final TypeB INT = CONTEXT.intTB();
@@ -40,7 +39,6 @@ public class TestingCatsB {
   public static final CatB PARAM_REF = CONTEXT.paramRefCB(INT);
   public static final CatB SELECT = CONTEXT.selectCB(INT);
 
-  public static final ArrayTB ARRAY_ANY = array(ANY);
   public static final ArrayTB ARRAY_BLOB = array(BLOB);
   public static final ArrayTB ARRAY_BOOL = array(BOOL);
   public static final ArrayTB ARRAY_FUNCTION = array(FUNC);
@@ -51,7 +49,6 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY_PERSON_TUPLE = array(PERSON);
   public static final ArrayTB ARRAY_PERSON = array(PERSON);
 
-  public static final ArrayTB ARRAY2_ANY = array(ARRAY_ANY);
   public static final ArrayTB ARRAY2_BLOB = array(ARRAY_BLOB);
   public static final ArrayTB ARRAY2_BOOL = array(ARRAY_BOOL);
   public static final ArrayTB ARRAY2_FUNCTION = array(ARRAY_FUNCTION);
@@ -100,7 +97,6 @@ public class TestingCatsB {
 
   private static ImmutableList<CatB> createAllCats() {
     var baseCs = list(
-        ANY,
         BLOB,
         BOOL,
         func(BLOB, list()),

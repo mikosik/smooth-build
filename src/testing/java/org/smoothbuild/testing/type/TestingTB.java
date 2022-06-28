@@ -4,7 +4,6 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.BlobTB;
 import org.smoothbuild.bytecode.type.cnst.BoolTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
@@ -23,7 +22,6 @@ public class TestingTB {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final CatDb FACTORY = CONTEXT.catDb();
 
-  public static final AnyTB ANY = FACTORY.any();
   public static final BlobTB BLOB = FACTORY.blob();
   public static final BoolTB BOOL = FACTORY.bool();
   public static final IntTB INT = FACTORY.int_();
@@ -52,10 +50,6 @@ public class TestingTB {
 
   public TypeB func(TypeB resT, ImmutableList<TypeB> params) {
     return CONTEXT.funcTB(resT, params);
-  }
-
-  public TypeB any() {
-    return ANY;
   }
 
   public TypeB blob() {

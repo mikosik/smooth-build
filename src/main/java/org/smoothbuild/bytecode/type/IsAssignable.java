@@ -5,7 +5,6 @@ import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.function.Supplier;
 
-import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.CallableTB;
 import org.smoothbuild.bytecode.type.cnst.ComposedTB;
 import org.smoothbuild.bytecode.type.cnst.NothingTB;
@@ -15,9 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 public class IsAssignable {
   public static boolean isAssignable(TypeB target, TypeB source) {
-    return source instanceof NothingTB
-        || target instanceof AnyTB
-        || isAssignableNonTrivial(target, source);
+    return source instanceof NothingTB || isAssignableNonTrivial(target, source);
   }
 
   private static boolean isAssignableNonTrivial(TypeB target, TypeB source) {

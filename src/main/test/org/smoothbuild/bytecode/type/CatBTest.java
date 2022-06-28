@@ -3,8 +3,6 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.testing.type.TestingCatsB.ANY;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_FUNCTION;
@@ -12,7 +10,6 @@ import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_INT;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_NOTHING;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_PERSON_TUPLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_STR;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_ANY;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_FUNCTION;
@@ -83,7 +80,7 @@ public class CatBTest extends TestingContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindB.values())
-        .hasLength(18);
+        .hasLength(17);
   }
 
   @ParameterizedTest
@@ -110,21 +107,18 @@ public class CatBTest extends TestingContext {
 
   public static List<Arguments> names() {
     return asList(
-        args(f -> f.any(), "Any"),
         args(f -> f.blob(), "Blob"),
         args(f -> f.bool(), "Bool"),
         args(f -> f.int_(), "Int"),
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
 
-        args(f -> f.array(f.any()), "[Any]"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
         args(f -> f.array(f.int_()), "[Int]"),
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
 
-        args(f -> f.array(f.array(f.any())), "[[Any]]"),
         args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
@@ -234,7 +228,6 @@ public class CatBTest extends TestingContext {
 
     public static List<Arguments> elemType_test_data() {
       return asList(
-          args(f -> f.any()),
           args(f -> f.blob()),
           args(f -> f.bool()),
           args(f -> f.func(f.string(), list())),
@@ -244,7 +237,6 @@ public class CatBTest extends TestingContext {
           args(f -> f.string()),
           args(f -> f.tuple(list(f.int_()))),
 
-          args(f -> f.array(f.any())),
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
           args(f -> f.array(f.func(f.string(), list()))),
@@ -300,7 +292,6 @@ public class CatBTest extends TestingContext {
 
   public static List<Arguments> typeJ_test_data() {
     return list(
-        arguments(ANY, CnstB.class),
         arguments(BLOB, BlobB.class),
         arguments(BOOL, BoolB.class),
         arguments(FUNC, FuncB.class),
@@ -310,7 +301,6 @@ public class CatBTest extends TestingContext {
         arguments(PERSON, TupleB.class),
         arguments(STRING, StringB.class),
 
-        arguments(ARRAY_ANY, ArrayB.class),
         arguments(ARRAY_BLOB, ArrayB.class),
         arguments(ARRAY_BOOL, ArrayB.class),
         arguments(ARRAY_FUNCTION, ArrayB.class),
@@ -392,7 +382,6 @@ public class CatBTest extends TestingContext {
   @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(ANY, ANY);
     tester.addEqualityGroup(BLOB, BLOB);
     tester.addEqualityGroup(BOOL, BOOL);
     tester.addEqualityGroup(FUNC, FUNC);
@@ -401,7 +390,6 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(STRING, STRING);
     tester.addEqualityGroup(PERSON, PERSON);
 
-    tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
     tester.addEqualityGroup(ARRAY_FUNCTION, ARRAY_FUNCTION);
@@ -410,7 +398,6 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
     tester.addEqualityGroup(ARRAY_PERSON_TUPLE, ARRAY_PERSON_TUPLE);
 
-    tester.addEqualityGroup(ARRAY2_ANY, ARRAY2_ANY);
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
     tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
     tester.addEqualityGroup(ARRAY2_FUNCTION, ARRAY2_FUNCTION);

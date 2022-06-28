@@ -9,7 +9,6 @@ import org.smoothbuild.testing.TestingContext;
 public class CatBStableHashTest extends TestingContext {
   @Test
   public void hashes_of_types_are_stable() {
-    assertHash(anyTB(), "b35d79d5718f7bba2cda55c29e2408c13ffc8cd5");
     assertHash(blobTB(), "0a2b2a825165ae9742c63b0c6ddafc22f0bd3b1e");
     assertHash(boolTB(), "47f9cc533a5f0c6f650ff0528c0d54d6d2d9d9ab");
     assertHash(funcTB(), "270b743243db48d70aaa745ebd27900338efe7ba");
@@ -19,7 +18,6 @@ public class CatBStableHashTest extends TestingContext {
     assertHash(stringTB(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
     assertHash(tupleTB(blobTB()), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
 
-    assertHash(arrayTB(anyTB()), "2dfdcb5ccf6df3057cb84565af5b67f64c685e9c");
     assertHash(arrayTB(blobTB()), "7fbebe7b9e6730b6b49fbd19811677bbd1d8880b");
     assertHash(arrayTB(boolTB()), "b2d929df4b382081405170f09fbe0febb32f547d");
     assertHash(arrayTB(funcTB()), "0bc454089c7d5eb8209d53b8ac2022f3aa67a54a");

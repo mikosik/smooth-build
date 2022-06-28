@@ -53,7 +53,6 @@ import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypeFB;
-import org.smoothbuild.bytecode.type.cnst.AnyTB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.BlobTB;
 import org.smoothbuild.bytecode.type.cnst.BoolTB;
@@ -389,10 +388,6 @@ public class TestingContext {
 
   public TupleTB animalTB() {
     return catDb().tuple(list(stringTB(), intTB()));
-  }
-
-  public AnyTB anyTB() {
-    return catDb().any();
   }
 
   public ArrayTB arrayTB() {

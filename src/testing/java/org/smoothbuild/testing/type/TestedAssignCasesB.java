@@ -17,7 +17,6 @@ public class TestedAssignCasesB {
 
   private final TestedTBF testedTF;
   private final TestingTB testingT;
-  private final TestedTB any;
   private final TestedTB blob;
   private final TestedTB int_;
   private final TestedTB nothing;
@@ -27,7 +26,6 @@ public class TestedAssignCasesB {
   public TestedAssignCasesB(TestedTBF testedTF) {
     this.testedTF = testedTF;
     this.testingT = testedTF.testingT();
-    this.any = testedTF.any();
     this.blob = testedTF.blob();
     this.int_ = testedTF.int_();
     this.nothing = testedTF.nothing();
@@ -51,47 +49,26 @@ public class TestedAssignCasesB {
     return testedTF.testedAssignmentSpec(target, source, true);
   }
 
-  public List<TestedAssignSpecB> assignment_test_specs(boolean includeAny) {
+  public List<TestedAssignSpecB> assignment_test_specs() {
     var r = new ArrayList<TestedAssignSpecB>();
-    if (includeAny) {
-      gen(r, any, includeAny, mAll());
-    }
-    gen(r, blob, includeAny, oneOf(blob, nothing));
-    gen(r, nothing, includeAny, oneOf(nothing));
-    gen(r, tuple, includeAny, oneOf(tuple, nothing));
+    gen(r, blob, oneOf(blob, nothing));
+    gen(r, nothing, oneOf(nothing));
+    gen(r, tuple, oneOf(tuple, nothing));
 
-    if (includeAny) {
-      gen(r, a(any), includeAny, TestedTB::isArray, mNothing());
-    }
-    gen(r, a(blob), includeAny, oneOf(a(blob), a(nothing), nothing));
-    gen(r, a(nothing), includeAny, oneOf(a(nothing), nothing));
-    gen(r, a(tuple), includeAny, oneOf(a(tuple), a(nothing), nothing));
-    if (includeAny) {
-      gen(r, a2(any), includeAny, TestedTB::isArrayOfArrays, t -> t.isArrayOf(nothing), mNothing());
-    }
-    gen(r, a2(blob), includeAny, oneOf(a2(blob), a2(nothing), a(nothing), nothing));
-    gen(r, a2(nothing), includeAny, oneOf(a2(nothing), a(nothing), nothing));
-    gen(r, a2(tuple), includeAny, oneOf(a2(tuple), a2(nothing), a(nothing), nothing));
+    gen(r, a(blob), oneOf(a(blob), a(nothing), nothing));
+    gen(r, a(nothing), oneOf(a(nothing), nothing));
+    gen(r, a(tuple), oneOf(a(tuple), a(nothing), nothing));
+    gen(r, a2(blob), oneOf(a2(blob), a2(nothing), a(nothing), nothing));
+    gen(r, a2(nothing), oneOf(a2(nothing), a(nothing), nothing));
+    gen(r, a2(tuple), oneOf(a2(tuple), a2(nothing), a(nothing), nothing));
 
-    if (includeAny) {
-      gen(r, f(any), includeAny, mNothing(), mFunc(mAll()));
-    }
-    gen(r, f(blob), includeAny, mNothing(), mFunc(oneOf(blob, nothing)));
-    gen(r, f(nothing), includeAny, mNothing(), mFunc(oneOf(nothing)));
+    gen(r, f(blob), mNothing(), mFunc(oneOf(blob, nothing)));
+    gen(r, f(nothing), mNothing(), mFunc(oneOf(nothing)));
 
-    if (includeAny) {
-      gen(r, f(any, any), includeAny, mNothing(), mFunc(mAll(), oneOf(any)));
-      gen(r, f(any, blob), includeAny, mNothing(), mFunc(mAll(), oneOf(any, blob)));
-      gen(r, f(any, nothing), includeAny, mNothing(), mFunc(mAll(), mAll()));
-      gen(r, f(blob, any), includeAny, mNothing(), mFunc(oneOf(blob, nothing), oneOf(any)));
-    }
-    gen(r, f(blob, blob), includeAny, mNothing(), mFunc(oneOf(blob, nothing), oneOf(any, blob)));
-    gen(r, f(blob, nothing), includeAny, mNothing(), mFunc(oneOf(blob, nothing), mAll()));
-    if (includeAny) {
-      gen(r, f(nothing, any), includeAny, mNothing(), mFunc(oneOf(nothing), oneOf(any)));
-    }
-    gen(r, f(nothing, blob), includeAny, mNothing(), mFunc(oneOf(nothing), oneOf(any, blob)));
-    gen(r, f(nothing, nothing), includeAny, mNothing(), mFunc(oneOf(nothing), mAll()));
+    gen(r, f(blob, blob), mNothing(), mFunc(oneOf(blob, nothing), oneOf(blob)));
+    gen(r, f(blob, nothing), mNothing(), mFunc(oneOf(blob, nothing), mAll()));
+    gen(r, f(nothing, blob), mNothing(), mFunc(oneOf(nothing), oneOf(blob)));
+    gen(r, f(nothing, nothing), mNothing(), mFunc(oneOf(nothing), mAll()));
 
     r.add(illegalAssignment(f(blob, string), f(blob, string, int_)));
 
@@ -170,24 +147,21 @@ public class TestedAssignCasesB {
     return Set.of(types)::contains;
   }
 
-  private List<TestedAssignSpecB> gen(List<TestedAssignSpecB> result, TestedTB target, boolean includeAny,
+  private List<TestedAssignSpecB> gen(List<TestedAssignSpecB> result, TestedTB target,
       Predicate<? super TestedTB>... allowedPredicates) {
-    for (TestedTB type : generateTypes(2, includeAny)) {
+    for (TestedTB type : generateTypes(2)) {
       boolean allowed = stream(allowedPredicates).anyMatch(predicate -> predicate.test(type));
       result.add(testedTF.testedAssignmentSpec(target, type, allowed));
     }
     return result;
   }
 
-  private ImmutableList<TestedTB> generateTypes(int depth, boolean includeAny) {
+  private ImmutableList<TestedTB> generateTypes(int depth) {
     Builder<TestedTB> builder = ImmutableList.builder();
     builder.add(blob);
     builder.add(nothing);
-    if (includeAny) {
-      builder.add(any);
-    }
     if (0 < depth) {
-      List<TestedTB> types = generateTypes(depth - 1, includeAny);
+      List<TestedTB> types = generateTypes(depth - 1);
       for (TestedTB type : types) {
         builder.add(a(type));
         builder.add(tuple(type));

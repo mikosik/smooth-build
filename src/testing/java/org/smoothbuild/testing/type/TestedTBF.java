@@ -14,10 +14,6 @@ public class TestedTBF {
     return TestingTB.INSTANCE;
   }
 
-  public TestedTB any() {
-    return new TestedTB(TestingTB.ANY);
-  }
-
   public TestedTB blob() {
     return new TestedTB(TestingTB.BLOB);
   }

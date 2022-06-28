@@ -121,19 +121,6 @@ public class ObjBCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _any {
-    @Test
-    public void learning_test() throws Exception {
-      Hash objHash =
-          hash(
-              hash(anyTB()),
-              hash("aaa"));
-      assertCall(() -> objDb().get(objHash))
-          .throwsException(UnsupportedOperationException.class);
-    }
-  }
-
-  @Nested
   class _array {
     @Test
     public void learning_test() throws Exception {

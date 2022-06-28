@@ -21,6 +21,6 @@ public class IsAssignableTest {
   }
 
   private static List<? extends TestedAssignSpecB> isAssignable_test_data() {
-    return TESTED_ASSIGN_CASES_B.assignment_test_specs(true);
+    return TESTED_ASSIGN_CASES_B.assignment_test_specs();
   }
 }
