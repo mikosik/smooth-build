@@ -226,7 +226,7 @@ public class NativeTest extends AcceptanceTestCase {
         evaluate("result");
         assertThat(logs())
             .containsExactly(
-                faultyTypeOfReturnedObject("returnStringStruct", "{String,String}", "{String}"));
+                faultyTypeOfReturnedObject("returnStringStruct", "{String, String}", "{String}"));
       }
 
       @Test

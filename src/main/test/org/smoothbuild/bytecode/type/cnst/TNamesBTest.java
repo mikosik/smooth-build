@@ -26,7 +26,7 @@ public class TNamesBTest {
     @Test
     public void func_type_name() {
       assertThat(funcTypeName(STRING, list(BLOB, BOOL)))
-          .isEqualTo("String(Blob,Bool)");
+          .isEqualTo("String(Blob, Bool)");
     }
   }
 
@@ -35,7 +35,7 @@ public class TNamesBTest {
     @Test
     public void func_type_name() {
       assertThat(TNamesB.tupleTypeName(list(BLOB, BOOL)))
-          .isEqualTo("{Blob,Bool}");
+          .isEqualTo("{Blob, Bool}");
     }
   }
 }

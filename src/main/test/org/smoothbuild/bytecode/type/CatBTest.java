@@ -132,11 +132,11 @@ public class CatBTest extends TestingContext {
         args(f -> f.method(f.string(), list(f.string())), "_String(String)"),
 
         args(f -> f.tuple(list()), "{}"),
-        args(f -> f.tuple(list(f.string(), f.bool())), "{String,Bool}"),
+        args(f -> f.tuple(list(f.string(), f.bool())), "{String, Bool}"),
         args(f -> f.tuple(list(f.tuple(list(f.int_())))), "{{Int}}"),
 
         args(f -> f.call(f.int_()), "Call:Int"),
-        args(f -> f.combine(f.tuple(list(f.string(), f.int_()))), "Combine:{String,Int}"),
+        args(f -> f.combine(f.tuple(list(f.string(), f.int_()))), "Combine:{String, Int}"),
         args(f -> f.if_(f.int_()), "If:Int"),
         args(f -> f.map(f.array(f.int_())), "Map:[Int]"),
         args(f -> f.invoke(f.int_()), "Invoke:Int"),

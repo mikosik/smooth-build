@@ -196,7 +196,7 @@ public class ArrayBTest extends TestingContext {
         .build();
     assertThat(array.toString())
         .isEqualTo("""
-            ["abc","def"]@""" + array.hash());
+            ["abc", "def"]@""" + array.hash());
   }
 
   @Nested

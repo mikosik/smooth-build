@@ -124,7 +124,7 @@ public class Lists {
 
   public static <T> String toCommaSeparatedString(
       Iterable<T> list, Function<? super T, String> func) {
-    return stream(list).map(func).collect(joining(","));
+    return stream(list).map(func).collect(joining(", "));
   }
 
   public static <E> ImmutableList<E> sort(List<E> list, Comparator<? super E> comparator) {

@@ -133,7 +133,7 @@ public class TupleBTest extends TestingContext {
     TupleB person = johnDoePerson();
     assertThat(person.toString())
         .isEqualTo("""
-            {"John","Doe"}@""" + person.hash());
+            {"John", "Doe"}@""" + person.hash());
   }
 
   private TupleB johnDoePerson() {

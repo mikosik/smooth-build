@@ -190,7 +190,7 @@ public class NListTest {
     public void to_string() {
       var nlist = nList(n0, n1, n2);
       assertThat(nlist.toString())
-          .isEqualTo("NList(zero,one,two)");
+          .isEqualTo("NList(zero, one, two)");
     }
   }
 
@@ -200,7 +200,7 @@ public class NListTest {
     public void values_to_string() {
       var nlist = nList(n0, n1, n2);
       assertThat(nlist.valuesToString())
-          .isEqualTo("zero,one,two");
+          .isEqualTo("zero, one, two");
     }
   }
 
