@@ -13,8 +13,8 @@
    `Array`, `Func`. Note that struct type is not a composed type. 
  - __default argument__ - Value assigned to function parameter upon its declaration.
    Function can be called without specifying such parameter in which case default argument is used.
- - __monotype__ - Type that does not have type variables.
- - __polytype__ - Type that has type variables.
+ - __monotype (monomorphic type)__ - Type that does not have free type variables.
+ - __polytype (polymorphic type)__ - Type that has free type variables.
  - __pure / impure__ - Pure function is a native function which always returns same result for
    given arguments.
    Pure functions are always cached to disk.
