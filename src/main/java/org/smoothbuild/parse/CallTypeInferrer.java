@@ -51,7 +51,7 @@ public class CallTypeInferrer {
     }
 
     if (!(callee.typeO().get() instanceof FuncTS calleeT)) {
-      logBuffer.log(parseError(call, description(callee)
+      logBuffer.log(parseError(call, saneName(callee)
           + " cannot be called as it is not a function but " + callee.typeO().get().q() + "."));
       return empty();
     }
@@ -93,7 +93,7 @@ public class CallTypeInferrer {
         .anyMatch(a -> a.typeO().isEmpty());
   }
 
-  private static String description(ObjP node) {
+  private static String saneName(ObjP node) {
     if (node instanceof RefP refP) {
       return "`" + refP.name() + "`";
     }
