@@ -566,13 +566,13 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void cannot_contain_var_not_present_in_any_param_type() {
+          public void can_contain_var_not_present_in_any_param_type() {
             var code = """
                 @Native("Impl.met")
                 A myFunc(B b, C c);
                 """;
             module(code)
-                .loadsWithError(2, "Unknown type variable(s): A");
+                .loadsWithSuccess();
           }
 
           @Test
@@ -583,16 +583,6 @@ public class DeclarationTest extends TestingContext {
                 """;
             module(code)
                 .loadsWithSuccess();
-          }
-
-          @Test
-          public void cannot_be_polytype_func() {
-            var code = """
-                @Native("Impl.met")
-                A(A) myFunc(B b, C c);
-                """;
-            module(code)
-                .loadsWithError(2, "Unknown type variable(s): A");
           }
 
           @Test

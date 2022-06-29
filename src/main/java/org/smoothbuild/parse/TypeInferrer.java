@@ -9,7 +9,6 @@ import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -206,23 +205,9 @@ public class TypeInferrer {
         VarSetS evalTVars = typeS.get().vars();
         return switch (refable) {
           case ItemP itemP -> false;
-          case FuncP funcP -> !evalTypeVarsArePresentInParameters(funcP, typeP, evalTVars);
+          case FuncP funcP -> !funcP.paramTs().isPresent();
           case ValP valP -> evalTypeHasVars(typeP, evalTVars);
         };
-      }
-
-      private boolean evalTypeVarsArePresentInParameters(FuncP funcP,
-          TypeP typeP, VarSetS evalTVars) {
-        if (funcP.paramTs().isEmpty()) {
-          return false;
-        }
-        var paramVars = varSetS(funcP.paramTs().get());
-        var unknownVars = filter(evalTVars.asList(), var -> !paramVars.contains(var));
-        if (!unknownVars.isEmpty()) {
-          logUnknownVars(typeP, unknownVars);
-          return false;
-        }
-        return true;
       }
 
       private boolean evalTypeHasVars(TypeP typeP, VarSetS evalTVars) {
