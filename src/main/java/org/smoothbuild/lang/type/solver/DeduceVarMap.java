@@ -20,7 +20,6 @@ import org.smoothbuild.lang.type.ConstrS;
 import org.smoothbuild.lang.type.MergeTS;
 import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
-import org.smoothbuild.lang.type.ResolveMerges;
 import org.smoothbuild.lang.type.Side;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.VarS;

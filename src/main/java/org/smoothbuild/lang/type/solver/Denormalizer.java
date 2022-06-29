@@ -3,7 +3,8 @@ package org.smoothbuild.lang.type.solver;
 import static org.smoothbuild.lang.type.EdgeTS.edgeTS;
 import static org.smoothbuild.lang.type.JoinTS.join;
 import static org.smoothbuild.lang.type.MeetTS.meet;
-import static org.smoothbuild.lang.type.ResolveMerges.resolveMerge;
+import static org.smoothbuild.lang.type.solver.ResolveMerges.resolveMerge;
+import static org.smoothbuild.lang.type.solver.ResolveMerges.resolveMerges;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import javax.inject.Inject;
@@ -32,6 +33,10 @@ public class Denormalizer {
   }
 
   public MonoTS denormalizeVars(MonoTS type, Side side) {
+    return resolveMerges(denormalizeVarsImpl(type, side));
+  }
+
+  public MonoTS denormalizeVarsImpl(MonoTS type, Side side) {
     if (type.vars().isEmpty()) {
       return type;
     }
@@ -39,9 +44,9 @@ public class Denormalizer {
       case VarS var -> denormalizeVar(var, side);
       case ComposedTS composedT -> {
         var covars = map(
-            composedT.covars(), p -> denormalizeVars(p, side));
+            composedT.covars(), p -> denormalizeVarsImpl(p, side));
         var contravars = map(
-            composedT.contravars(), p -> denormalizeVars(p, side.other()));
+            composedT.contravars(), p -> denormalizeVarsImpl(p, side.other()));
         yield rebuildComposed(composedT, covars, contravars);
       }
       case JoinTS joinT -> {
@@ -54,7 +59,7 @@ public class Denormalizer {
   }
 
   private ImmutableSet<MonoTS> denormalizeElems(ImmutableSet<MonoTS> elems, Side side) {
-    return Sets.map(elems, e -> denormalizeVars(e, side));
+    return Sets.map(elems, e -> denormalizeVarsImpl(e, side));
   }
 
   private MonoTS denormalizeVar(VarS var, Side side) {
@@ -70,12 +75,12 @@ public class Denormalizer {
           // present in the graph at all. Its bounds are <nothing, any>.
           yield edgeTS(side);
         }
-        yield denormalizeVars(bounds.get(side), side);
+        yield denormalizeVarsImpl(bounds.get(side), side);
       }
       case 1 -> denormalizeVar(neighbours.iterator().next(), side);
       // TODO resolveMerge() doesn't take into account neighbours
       // but there's probably corner case where it should (see paper notes)
-      default -> resolveMerge(map(neighbours, t -> denormalizeVars(t, side)), side.other());
+      default -> resolveMerge(map(neighbours, t -> denormalizeVarsImpl(t, side)), side.other());
     };
   }
 

@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
-import static org.smoothbuild.lang.type.ResolveMerges.resolveMerges;
 import static org.smoothbuild.lang.type.Side.LOWER;
 import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
 import static org.smoothbuild.out.log.Log.error;
@@ -121,7 +120,7 @@ public class CallTypeInferrer {
     var constrGraph = solver.graph();
     var denormalizer = new Denormalizer(constrGraph);
     for (var prefixedParamT : prefixedParamTs) {
-      var typeS = denormalizeAndResolveMerges(denormalizer, prefixedParamT);
+      var typeS = denormalize(denormalizer, prefixedParamT);
       if (typeS.includes(TypeFS.any())) {
         logBuffer.log(paramInferringError(call.loc(), prefixedParamT));
         return empty();
@@ -131,7 +130,7 @@ public class CallTypeInferrer {
       storeActualTypeIfNeeded(args.get(i).obj(), prefixedArgTs.get(i), denormalizer);
     }
     var prefixedResT = prefixedCalleeT.res();
-    var actualResT = denormalizeAndResolveMerges(denormalizer, prefixedResT);
+    var actualResT = denormalize(denormalizer, prefixedResT);
     if (actualResT.includes(TypeFS.any())) {
       logBuffer.log(resInferringError(call, calleeT.res()));
       return empty();
@@ -143,13 +142,12 @@ public class CallTypeInferrer {
 
   private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, Denormalizer denormalizer) {
     if (obj instanceof RefP refP && refP.referenced().typeO().get() instanceof PolyTS) {
-      refP.setInferredMonoType(denormalizeAndResolveMerges(denormalizer, monoTS));
+      refP.setInferredMonoType(denormalize(denormalizer, monoTS));
     }
   }
 
-  private MonoTS denormalizeAndResolveMerges(Denormalizer denormalizer, MonoTS typeS) {
-    var denormalizedT = denormalizer.denormalizeVars(typeS, LOWER);
-    return resolveMerges(denormalizedT);
+  private MonoTS denormalize(Denormalizer denormalizer, MonoTS typeS) {
+    return denormalizer.denormalizeVars(typeS, LOWER);
   }
 
   private static Log paramInferringError(Loc loc, MonoTS paramT) {

@@ -1,8 +1,8 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.type.solver;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.type.ResolveMerges.resolveMerges;
+import static org.smoothbuild.lang.type.solver.ResolveMerges.resolveMerges;
 import static org.smoothbuild.testing.type.TestedAssignCasesS.TESTED_ASSIGN_CASES_S;
 import static org.smoothbuild.testing.type.TestingTS.A;
 import static org.smoothbuild.testing.type.TestingTS.ANY;
@@ -21,6 +21,7 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.testing.type.TestedTSF;
 import org.smoothbuild.testing.type.TestingTS;
 

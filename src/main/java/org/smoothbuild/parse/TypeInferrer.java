@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
-import static org.smoothbuild.lang.type.ResolveMerges.resolveMerges;
 import static org.smoothbuild.lang.type.Side.LOWER;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
 import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
@@ -157,16 +156,15 @@ public class TypeInferrer {
         }
         var constrGraph = solver.graph();
         var denormalizer = new Denormalizer(constrGraph);
-        var typeS = denormalizeAndResolveMerges(denormalizer, mappedBodyT);
+        var typeS = denormalize(denormalizer, mappedBodyT);
         if (typeS.includes(TypeFS.any())) {
           return empty();
         }
         return Optional.of(typeS);
       }
 
-      private MonoTS denormalizeAndResolveMerges(Denormalizer denormalizer, MonoTS typeS) {
-        var denormalizedT = denormalizer.denormalizeVars(typeS, LOWER);
-        return resolveMerges(denormalizedT);
+      private MonoTS denormalize(Denormalizer denormalizer, MonoTS typeS) {
+        return denormalizer.denormalizeVars(typeS, LOWER);
       }
 
       private Optional<MonoTS> evalTypeOf(
@@ -354,7 +352,7 @@ public class TypeInferrer {
 
         var constrGraph = solver.graph();
         var denormalizer = new Denormalizer(constrGraph);
-        var inferredElemT = denormalizeAndResolveMerges(denormalizer, a);
+        var inferredElemT = denormalize(denormalizer, a);
         for (int i = 0; i < prefixedElemTs.size(); i++) {
           storeActualTypeIfNeeded(expressions.get(i), inferredElemT, denormalizer);
         }
@@ -371,7 +369,7 @@ public class TypeInferrer {
 
       private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, Denormalizer denormalizer) {
         if (obj instanceof RefP refP && refP.referenced().typeO().get() instanceof PolyTS) {
-          refP.setInferredMonoType(denormalizeAndResolveMerges(denormalizer, monoTS));
+          refP.setInferredMonoType(denormalize(denormalizer, monoTS));
         }
       }
 

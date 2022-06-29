@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.type.solver;
 
 import static org.smoothbuild.lang.type.EdgeTS.edgeTS;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
@@ -7,6 +7,15 @@ import static org.smoothbuild.util.collect.Lists.map;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+
+import org.smoothbuild.lang.type.ArrayTS;
+import org.smoothbuild.lang.type.ComposedTS;
+import org.smoothbuild.lang.type.EdgeTS;
+import org.smoothbuild.lang.type.MergeTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
+import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.Side;
+import org.smoothbuild.lang.type.TypeFS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MultimapBuilder.SetMultimapBuilder;
