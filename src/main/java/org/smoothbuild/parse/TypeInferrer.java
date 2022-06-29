@@ -95,18 +95,14 @@ public class TypeInferrer {
         funcP.resTP().ifPresent(this::visitType);
         visitParams(funcP.params());
         funcP.body().ifPresent(this::visitObj);
-        funcP.setTypeO(funcTOpt(evalTOfTopEval(funcP), funcP.paramTs()));
+        var resT = evalTOfTopEval(funcP);
+        var paramTs = funcP.paramTs();
+        var funcT = resT.flatMap(r -> paramTs.map(ps -> newFuncTS(r, ps)));
+        funcP.setTypeO(funcT);
       }
 
-      private Optional<FuncTS> funcTOpt(Optional<MonoTS> result,
-          Optional<ImmutableList<MonoTS>> params) {
-        if (result.isEmpty() || params.isEmpty()) {
-          return empty();
-        }
-        var ps = params.get();
-        var paramVars = varSetS(params.get());
-        var r = result.get();
-        return Optional.of(paramVars.isEmpty() ? TypeFS.func(r, ps) :  TypeFS.polyFunc(r, ps));
+      private static FuncTS newFuncTS(MonoTS res, ImmutableList<MonoTS> params) {
+        return varSetS(params).isEmpty() ? TypeFS.func(res, params) : TypeFS.polyFunc(res, params);
       }
 
       @Override
