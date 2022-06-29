@@ -95,11 +95,10 @@ public class TypeInferrer {
         funcP.resTP().ifPresent(this::visitType);
         visitParams(funcP.params());
         funcP.body().ifPresent(this::visitObj);
-        var resP = funcP.resTP().orElse(null);
-        funcP.setTypeO(funcTOpt(resP, evalTOfTopEval(funcP), funcP.paramTs()));
+        funcP.setTypeO(funcTOpt(evalTOfTopEval(funcP), funcP.paramTs()));
       }
 
-      private Optional<FuncTS> funcTOpt(TypeP resP, Optional<MonoTS> result,
+      private Optional<FuncTS> funcTOpt(Optional<MonoTS> result,
           Optional<ImmutableList<MonoTS>> params) {
         if (result.isEmpty() || params.isEmpty()) {
           return empty();
@@ -107,12 +106,7 @@ public class TypeInferrer {
         var ps = params.get();
         var paramVars = varSetS(params.get());
         var r = result.get();
-        if (paramVars.containsAll(r.vars())) {
-          return Optional.of(paramVars.isEmpty() ? TypeFS.func(r, ps) :  TypeFS.polyFunc(r, ps));
-        }
-        logError(
-            resP, "Function result type has type variable(s) not present in any parameter type.");
-        return empty();
+        return Optional.of(paramVars.isEmpty() ? TypeFS.func(r, ps) :  TypeFS.polyFunc(r, ps));
       }
 
       @Override
