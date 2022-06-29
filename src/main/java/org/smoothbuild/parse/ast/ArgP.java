@@ -7,7 +7,7 @@ import org.smoothbuild.lang.like.Obj;
 import org.smoothbuild.util.collect.Named;
 
 public sealed abstract class ArgP extends GenericP implements NamedP
-permits DefaultArgP, ExplicitArgP {
+    permits DefaultArgP, ExplicitArgP {
   private final Optional<String> name;
   private final Obj obj;
 
