@@ -205,7 +205,7 @@ public class ObjSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void to_func() {
+    public void to_mono_func() {
       module("""
           String myFunc() = "abc";
           String() result =
@@ -214,6 +214,22 @@ public class ObjSLoadingTest extends TestingContext {
           .loadsWithSuccess()
           .containsTopRefable(defValS(2, funcTS(stringTS()), "result",
               refS(3, funcTS(stringTS()), "myFunc")));
+    }
+
+    @Test
+    public void to_poly_func() {
+      module("""
+          A myId(A a) = a;
+          Int(Int) result =
+            myId;
+          """)
+          .loadsWithSuccess()
+          .containsTopRefable(defValS(
+              2, funcTS(intTS(), list(intTS())),
+              "result",
+              monoizeS(
+                  funcTS(intTS(), list(intTS())),
+                  refS(3, polyFuncTS(varA(), list(varA())), "myId"))));
     }
 
     @Test
