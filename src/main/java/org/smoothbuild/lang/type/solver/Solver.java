@@ -24,11 +24,21 @@ public class Solver {
 
   public void addConstr(ConstrS constr) throws ConstrDecomposeExc {
     Queue<ConstrS> queue = new LinkedList<>();
+
+    // We need to create VarNode for each Var explicitly because during decompose some tautological
+    // constraints (like `Nothing < A`) are eliminated and constraint graph wouldn't
+    // know that given variable exists at all (in our example `A` won't be known to exist).
+    createVarNodesForVars(constr.lower());
+    createVarNodesForVars(constr.upper());
     var elementaryConstrs = decompose(constr);
     for (var elementaryConstr : elementaryConstrs) {
       queue.addAll(normalizer.normalize(elementaryConstr));
     }
     drainQueue(queue);
+  }
+
+  private void createVarNodesForVars(MonoTS type) {
+    type.vars().stream().forEach(varNodes::get);
   }
 
   private void drainQueue(Queue<ConstrS> queue) throws ConstrDecomposeExc {

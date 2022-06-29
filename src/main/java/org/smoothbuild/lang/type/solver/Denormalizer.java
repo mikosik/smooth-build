@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.type.solver;
 
-import static org.smoothbuild.lang.type.EdgeTS.edgeTS;
 import static org.smoothbuild.lang.type.JoinTS.join;
 import static org.smoothbuild.lang.type.MeetTS.meet;
 import static org.smoothbuild.lang.type.solver.ResolveMerges.resolveMerge;
@@ -10,7 +9,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.type.ArrayTS;
-import org.smoothbuild.lang.type.Bounds;
 import org.smoothbuild.lang.type.ComposedTS;
 import org.smoothbuild.lang.type.JoinTS;
 import org.smoothbuild.lang.type.MeetTS;
@@ -68,15 +66,7 @@ public class Denormalizer {
     }
     var neighbours = graph.neighbours(var, side);
     return switch (neighbours.size()) {
-      case 0 -> {
-        Bounds<MonoTS> bounds = graph.varBounds().get(var);
-        if (bounds == null) {
-          // If `var` has not been constrained during constraint solving then it is not
-          // present in the graph at all. Its bounds are <nothing, any>.
-          yield edgeTS(side);
-        }
-        yield denormalizeVarsImpl(bounds.get(side), side);
-      }
+      case 0 -> denormalizeVarsImpl(graph.varBounds().get(var).get(side), side);
       case 1 -> denormalizeVar(neighbours.iterator().next(), side);
       // TODO resolveMerge() doesn't take into account neighbours
       // but there's probably corner case where it should (see paper notes)
