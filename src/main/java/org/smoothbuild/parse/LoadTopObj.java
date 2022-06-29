@@ -49,8 +49,8 @@ import org.smoothbuild.parse.ast.ValP;
 import org.smoothbuild.util.collect.NList;
 
 public class LoadTopObj {
-  public static TopRefableS loadTopObj(ModPath path, TopRefableP refableN) {
-    return switch (refableN) {
+  public static TopRefableS loadTopObj(ModPath path, TopRefableP refableP) {
+    return switch (refableP) {
       case FuncP funcP -> loadFunc(path, funcP);
       case ValP valP -> loadVal(path, valP);
     };
