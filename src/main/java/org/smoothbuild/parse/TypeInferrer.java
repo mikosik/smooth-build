@@ -31,8 +31,8 @@ import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.VarSetS;
 import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
+import org.smoothbuild.lang.type.solver.ConstrSolver;
 import org.smoothbuild.lang.type.solver.Denormalizer;
-import org.smoothbuild.lang.type.solver.Solver;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.parse.ast.ArgP;
@@ -138,7 +138,7 @@ public class TypeInferrer {
 
       private Optional<MonoTS> inferMonoizedBodyT(TypeS bodyT, MonoTS targetT) {
         var mappedBodyT = bodyT.mapFreeVars(v -> v.prefixed("body"));
-        var solver = new Solver();
+        var solver = new ConstrSolver();
         try {
           solver.addConstr(constrS(mappedBodyT, targetT));
         } catch (ConstrDecomposeExc e) {
@@ -328,7 +328,7 @@ public class TypeInferrer {
           return empty();
         }
         var prefixedElemTs = prefixFreeVarsWithIndex(elemTs);
-        var solver = new Solver();
+        var solver = new ConstrSolver();
 
         var a = TypeFS.var("array.A");
         for (MonoTS prefixedElemT : prefixedElemTs) {

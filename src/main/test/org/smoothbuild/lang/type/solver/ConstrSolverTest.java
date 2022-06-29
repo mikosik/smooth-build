@@ -40,7 +40,7 @@ import org.smoothbuild.testing.type.TestingTS;
 import org.smoothbuild.util.collect.Sets;
 
 @TestInstance(PER_CLASS)
-public class SolverTest extends TestingTS {
+public class ConstrSolverTest extends TestingTS {
   @Test
   public void without_constraints() throws Exception {
     assertSolvedGraph(list(), ConstrGraph.builder().build());
@@ -192,7 +192,7 @@ public class SolverTest extends TestingTS {
   }
 
   private void assertSolvedGraph(List<ConstrS> constrs, ConstrGraph expected) throws Exception {
-    var solver = new Solver();
+    var solver = new ConstrSolver();
     for (var constr : constrs) {
       solver.addConstr(constr);
     }
