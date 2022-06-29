@@ -68,7 +68,7 @@ public class LoadMod {
       return maybeLogs(logBuffer);
     }
 
-    var types = sortedAst.structs().map(s -> LoadMod.loadStructDef(path, s));
+    var types = sortedAst.structs().map(s -> loadStructDef(path, s));
     var evals = loadTopRefables(path, sortedAst);
     var moduleS = new ModS(path, modFiles, types, evals);
     return maybeValueAndLogs(moduleS, logBuffer);
