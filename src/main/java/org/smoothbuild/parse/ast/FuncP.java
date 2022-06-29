@@ -15,24 +15,24 @@ import org.smoothbuild.util.collect.Optionals;
 import com.google.common.collect.ImmutableList;
 
 public final class FuncP extends GenericRefableP implements TopRefableP {
-  private final Optional<TypeP> resTN;
+  private final Optional<TypeP> resTP;
   private final NList<ItemP> params;
   private Optional<FuncTS> type;
 
-  public FuncP(Optional<TypeP> resTN, String name, List<ItemP> params, Optional<ObjP> body,
+  public FuncP(Optional<TypeP> resTP, String name, List<ItemP> params, Optional<ObjP> body,
       Optional<AnnP> ann, Loc loc) {
-    this(resTN, name, nListWithNonUniqueNames(ImmutableList.copyOf(params)), body, ann, loc);
+    this(resTP, name, nListWithNonUniqueNames(ImmutableList.copyOf(params)), body, ann, loc);
   }
 
-  public FuncP(Optional<TypeP> resTN, String name, NList<ItemP> params, Optional<ObjP> body,
+  public FuncP(Optional<TypeP> resTP, String name, NList<ItemP> params, Optional<ObjP> body,
       Optional<AnnP> ann, Loc loc) {
     super(name, body, ann, loc);
-    this.resTN = resTN;
+    this.resTP = resTP;
     this.params = params;
   }
 
-  public Optional<TypeP> resTN() {
-    return resTN;
+  public Optional<TypeP> resTP() {
+    return resTP;
   }
 
   public NList<ItemP> params() {
@@ -41,7 +41,7 @@ public final class FuncP extends GenericRefableP implements TopRefableP {
 
   @Override
   public Optional<TypeP> evalT() {
-    return resTN;
+    return resTP;
   }
 
   public Optional<ImmutableList<MonoTS>> paramTs() {

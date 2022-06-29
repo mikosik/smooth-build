@@ -82,12 +82,12 @@ public class LoadMod {
 
   private static NList<TopRefableS> loadTopRefables(ModPath path, Ast ast) {
     var local = ImmutableList.<TopRefableS>builder();
-    for (var structN : ast.structs()) {
-      var ctorS = loadSyntCtor(path, structN);
+    for (var structP : ast.structs()) {
+      var ctorS = loadSyntCtor(path, structP);
       local.add(ctorS);
     }
-    for (var refableN : ast.topRefables()) {
-      local.add(loadTopObj(path, refableN));
+    for (var refableP : ast.topRefables()) {
+      local.add(loadTopObj(path, refableP));
     }
     return nList(local.build());
   }

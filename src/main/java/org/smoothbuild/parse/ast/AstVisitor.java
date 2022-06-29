@@ -22,7 +22,7 @@ public class AstVisitor {
   }
 
   public void visitField(ItemP field) {
-    visitType(field.typeN());
+    visitType(field.typeP());
   }
 
   public void visitRefable(List<TopRefableP> refableObjs) {
@@ -38,13 +38,13 @@ public class AstVisitor {
 
   public void visitValue(ValP valP) {
     valP.ann().ifPresent(this::visitAnn);
-    valP.typeN().ifPresent(this::visitType);
+    valP.typeP().ifPresent(this::visitType);
     valP.body().ifPresent(this::visitObj);
   }
 
   public void visitFunc(FuncP funcP) {
     funcP.ann().ifPresent(this::visitAnn);
-    funcP.resTN().ifPresent(this::visitType);
+    funcP.resTP().ifPresent(this::visitType);
     visitParams(funcP.params());
     funcP.body().ifPresent(this::visitObj);
   }
@@ -58,7 +58,7 @@ public class AstVisitor {
   }
 
   public void visitParam(int index, ItemP param) {
-    visitType(param.typeN());
+    visitType(param.typeP());
     param.body().ifPresent(this::visitObj);
   }
 

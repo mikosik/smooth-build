@@ -28,7 +28,7 @@ public final class RefP extends GenericP implements ExprP {
 
   @Override
   public String toString() {
-    return "RefN(`" + name + "`)";
+    return "RefP(`" + name + "`)";
   }
 
   public void setInferredMonoType(MonoTS inferredMonoT) {

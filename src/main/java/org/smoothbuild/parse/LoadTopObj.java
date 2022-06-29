@@ -99,7 +99,7 @@ public class LoadTopObj {
   }
 
   private static ItemS createParam(ItemP param) {
-    var type = param.typeN().typeO().get();
+    var type = param.typeP().typeO().get();
     var name = param.name();
     var body = param.body().map(LoadTopObj::loadObj);
     return new ItemS(type, name, body, param.loc());

@@ -37,8 +37,8 @@ public class ArrayTPTest {
 
     @Test
     public void non_polytype_array_node_with_depth_2() {
-      var typeN = new ArrayTP(new ArrayTP(new TypeP("MyType", internal()), internal()), internal());
-      assertThat(typeN.isPolytype())
+      var typeP = new ArrayTP(new ArrayTP(new TypeP("MyType", internal()), internal()), internal());
+      assertThat(typeP.isPolytype())
           .isFalse();
     }
   }

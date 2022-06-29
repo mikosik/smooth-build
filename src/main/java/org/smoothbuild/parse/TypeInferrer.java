@@ -75,7 +75,7 @@ public class TypeInferrer {
       @Override
       public void visitField(ItemP itemP) {
         super.visitField(itemP);
-        var typeOpt = itemP.typeN().typeO();
+        var typeOpt = itemP.typeP().typeO();
         typeOpt.flatMap((t) -> {
           if (!t.vars().isEmpty()) {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
@@ -92,14 +92,14 @@ public class TypeInferrer {
 
       @Override
       public void visitFunc(FuncP funcP) {
-        funcP.resTN().ifPresent(this::visitType);
+        funcP.resTP().ifPresent(this::visitType);
         visitParams(funcP.params());
         funcP.body().ifPresent(this::visitObj);
-        var resN = funcP.resTN().orElse(null);
-        funcP.setTypeO(funcTOpt(resN, evalTOfTopEval(funcP), funcP.paramTs()));
+        var resP = funcP.resTP().orElse(null);
+        funcP.setTypeO(funcTOpt(resP, evalTOfTopEval(funcP), funcP.paramTs()));
       }
 
-      private Optional<FuncTS> funcTOpt(TypeP resN, Optional<MonoTS> result,
+      private Optional<FuncTS> funcTOpt(TypeP resP, Optional<MonoTS> result,
           Optional<ImmutableList<MonoTS>> params) {
         if (result.isEmpty() || params.isEmpty()) {
           return empty();
@@ -111,13 +111,13 @@ public class TypeInferrer {
           return Optional.of(paramVars.isEmpty() ? TypeFS.func(r, ps) :  TypeFS.polyFunc(r, ps));
         }
         logError(
-            resN, "Function result type has type variable(s) not present in any parameter type.");
+            resP, "Function result type has type variable(s) not present in any parameter type.");
         return empty();
       }
 
       @Override
       public void visitValue(ValP valP) {
-        valP.typeN().ifPresent(this::visitType);
+        valP.typeP().ifPresent(this::visitType);
         valP.body().ifPresent(this::visitObj);
         valP.setTypeO(evalTOfTopEval(valP));
       }
@@ -135,14 +135,14 @@ public class TypeInferrer {
                 + targetT.q() + " so it cannot have default argument of type " + bodyT.q() + "."));
       }
 
-      private Optional<MonoTS> evalTOfTopEval(TopRefableP refableN) {
+      private Optional<MonoTS> evalTOfTopEval(TopRefableP refableP) {
         return evalTypeOf(
-            refableN,
-            (bodyT, targetT) -> bodyConversionError(refableN, bodyT, targetT));
+            refableP,
+            (bodyT, targetT) -> bodyConversionError(refableP, bodyT, targetT));
       }
 
-      private void bodyConversionError(NamedP refableN, TypeS sourceT, MonoTS targetT) {
-        logError(refableN, refableN.q() + " has body which type is " + sourceT.q()
+      private void bodyConversionError(NamedP refableP, TypeS sourceT, MonoTS targetT) {
+        logError(refableP, refableP.q() + " has body which type is " + sourceT.q()
             + " and it is not convertible to its declared type " + targetT.q() + ".");
       }
 

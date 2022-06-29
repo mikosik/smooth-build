@@ -18,7 +18,7 @@ public final class ItemP extends MonoRefableP {
     this.typeP = typeP;
   }
 
-  public TypeP typeN() {
+  public TypeP typeP() {
     return typeP;
   }
 
