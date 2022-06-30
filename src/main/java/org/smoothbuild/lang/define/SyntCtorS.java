@@ -12,7 +12,6 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class SyntCtorS extends MonoFuncS {
-
   public SyntCtorS(MonoFuncTS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
     super(type, modPath, name, params, loc);
   }

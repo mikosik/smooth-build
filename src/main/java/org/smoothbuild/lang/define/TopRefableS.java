@@ -1,10 +1,8 @@
 package org.smoothbuild.lang.define;
 
-import org.smoothbuild.lang.like.TopRefable;
-
 /**
  * Top level refable.
  */
-public sealed interface TopRefableS extends TopRefable, RefableS
+public sealed interface TopRefableS extends RefableS
     permits FuncS, MonoTopRefableS, PolyTopRefableS {
 }

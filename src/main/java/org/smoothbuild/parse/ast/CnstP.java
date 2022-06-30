@@ -13,7 +13,7 @@ public sealed abstract class CnstP extends Tal implements MonoObjP
   }
 
   @Override
-  public Optional<MonoTS> typeO() {
+  public Optional<MonoTS> typeS() {
     return Optional.of(type());
   }
 }

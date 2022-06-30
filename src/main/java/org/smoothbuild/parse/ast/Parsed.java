@@ -9,5 +9,5 @@ public sealed interface Parsed
     permits GenericP, MonoP, GenericNamedP, NamedP, ObjP, RefableP {
   public Loc loc();
 
-  public Optional<? extends TypeS> typeO();
+  public Optional<? extends TypeS> typeS();
 }

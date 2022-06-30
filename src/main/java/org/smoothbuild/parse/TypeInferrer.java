@@ -20,7 +20,7 @@ import java.util.function.BiConsumer;
 
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.like.Obj;
+import org.smoothbuild.lang.like.common.ObjC;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyTS;
@@ -66,15 +66,15 @@ public class TypeInferrer {
       public void visitStruct(StructP struct) {
         super.visitStruct(struct);
         var fields = pullUp(map(struct.fields(), ItemP::sig));
-        struct.setTypeO(fields.map(f -> TypeFS.struct(struct.name(), nList(f))));
-        struct.ctor().setTypeO(
-            fields.map(s -> TypeFS.func(struct.typeO().get(), map(s, ItemSigS::type))));
+        struct.setTypeS(fields.map(f -> TypeFS.struct(struct.name(), nList(f))));
+        struct.ctor().setTypeS(
+            fields.map(s -> TypeFS.func(struct.typeS().get(), map(s, ItemSigS::type))));
       }
 
       @Override
       public void visitField(ItemP itemP) {
         super.visitField(itemP);
-        var typeOpt = itemP.typeP().typeO();
+        var typeOpt = itemP.typeP().typeS();
         typeOpt.flatMap((t) -> {
           if (!t.vars().isEmpty()) {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
@@ -86,7 +86,7 @@ public class TypeInferrer {
           }
         });
 
-        itemP.setTypeO(typeOpt);
+        itemP.setTypeS(typeOpt);
       }
 
       @Override
@@ -97,7 +97,7 @@ public class TypeInferrer {
         var resT = evalTOfTopEval(funcP);
         var paramTs = funcP.paramTs();
         var funcT = resT.flatMap(r -> paramTs.map(ps -> newFuncTS(r, ps)));
-        funcP.setTypeO(funcT);
+        funcP.setTypeS(funcT);
       }
 
       private static FuncTS newFuncTS(MonoTS res, ImmutableList<MonoTS> params) {
@@ -108,13 +108,13 @@ public class TypeInferrer {
       public void visitValue(ValP valP) {
         valP.typeP().ifPresent(this::visitType);
         valP.body().ifPresent(this::visitObj);
-        valP.setTypeO(evalTOfTopEval(valP));
+        valP.setTypeS(evalTOfTopEval(valP));
       }
 
       @Override
       public void visitParam(int index, ItemP param) {
         super.visitParam(index, param);
-        param.setTypeO(typeOfParam(param));
+        param.setTypeS(typeOfParam(param));
       }
 
       private Optional<MonoTS> typeOfParam(ItemP param) {
@@ -164,7 +164,7 @@ public class TypeInferrer {
 
         if (refable.body().isPresent()) {
           var body = refable.body().get();
-          var bodyT = body.typeO();
+          var bodyT = body.typeS();
           if (refable.evalT().isPresent()) {
             var evalTS = createType(refable.evalT().get());
             evalTS.ifPresent(targetT -> bodyT.ifPresent(sourceT -> {
@@ -198,7 +198,7 @@ public class TypeInferrer {
           return false;
         }
         TypeP typeP = refable.evalT().get();
-        Optional<MonoTS> typeS = typeP.typeO();
+        Optional<MonoTS> typeS = typeP.typeS();
         if (typeS.isEmpty()) {
           return true;
         }
@@ -225,7 +225,7 @@ public class TypeInferrer {
       @Override
       public void visitType(TypeP type) {
         super.visitType(type);
-        type.setTypeO(createType(type));
+        type.setTypeS(createType(type));
       }
 
       private Optional<MonoTS> createType(TypeP type) {
@@ -261,7 +261,7 @@ public class TypeInferrer {
           throw new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structs());
         } else {
-          return localStruct.typeO().orElseThrow(() -> new RuntimeException(
+          return localStruct.typeS().orElseThrow(() -> new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structs()));
         }
       }
@@ -269,28 +269,28 @@ public class TypeInferrer {
       @Override
       public void visitSelect(SelectP select) {
         super.visitSelect(select);
-        select.selectable().typeO().ifPresentOrElse(
+        select.selectable().typeS().ifPresentOrElse(
             t -> {
               if (!(t instanceof StructTS st)) {
-                select.setTypeO(empty());
+                select.setTypeS(empty());
                 logError(select, "Type " + t.q() + " is not a struct so it doesn't have "
                     + q(select.field()) + " field.");
               } else if (!st.fields().containsName(select.field())) {
-                select.setTypeO(empty());
+                select.setTypeS(empty());
                 logError(select,
                     "Struct " + t.q() + " doesn't have field `" + select.field() + "`.");
               } else {
-                select.setTypeO(((StructTS) t).fields().get(select.field()).type());
+                select.setTypeS(((StructTS) t).fields().get(select.field()).type());
               }
             },
-            () -> select.setTypeO(empty())
+            () -> select.setTypeS(empty())
         );
       }
 
       @Override
       public void visitOrder(OrderP order) {
         super.visitOrder(order);
-        order.setTypeO(findArrayT(order));
+        order.setTypeS(findArrayT(order));
       }
 
       private Optional<MonoTS> findArrayT(OrderP array) {
@@ -299,7 +299,7 @@ public class TypeInferrer {
           return Optional.of(TypeFS.array(TypeFS.nothing()));
         }
 
-        var map = map(expressions, Parsed::typeO);
+        var map = map(expressions, Parsed::typeS);
         var elemTsOpt = pullUp(map);
         if (elemTsOpt.isEmpty()) {
           return empty();
@@ -342,8 +342,8 @@ public class TypeInferrer {
         logError(array, "Array elements don't have common super type.");
       }
 
-      private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, Denormalizer denormalizer) {
-        if (obj instanceof RefP refP && refP.referenced().typeO().get() instanceof PolyTS) {
+      private void storeActualTypeIfNeeded(ObjC objC, MonoTS monoTS, Denormalizer denormalizer) {
+        if (objC instanceof RefP refP && refP.referenced().typeS().get() instanceof PolyTS) {
           refP.setInferredMonoType(denormalize(denormalizer, monoTS));
         }
       }
@@ -351,19 +351,19 @@ public class TypeInferrer {
       @Override
       public void visitCall(CallP call) {
         super.visitCall(call);
-        call.setTypeO(callTypeInferrer.inferCallT(call, logBuffer));
+        call.setTypeS(callTypeInferrer.inferCallT(call, logBuffer));
       }
 
       @Override
       public void visitRef(RefP ref) {
         super.visitRef(ref);
-        ref.setTypeO(ref.referenced().typeO());
+        ref.setTypeS(ref.referenced().typeS());
       }
 
       @Override
       public void visitArg(ArgP arg) {
         super.visitArg(arg);
-        arg.setTypeO(arg.obj().typeO());
+        arg.setTypeS(arg.obj().typeS());
       }
 
       private void logError(Parsed parsed, String message) {

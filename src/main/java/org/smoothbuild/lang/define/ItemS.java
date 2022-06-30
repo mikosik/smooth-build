@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.base.Tanal;
 import org.smoothbuild.lang.type.MonoTS;
-import org.smoothbuild.lang.type.TypeS;
 
 import com.google.common.collect.ImmutableList;
 
@@ -42,11 +41,6 @@ public final class ItemS extends Tanal implements RefableS {
 
   public static ImmutableList<MonoTS> toTypes(List<? extends ItemS> items) {
     return map(items, ItemS::type);
-  }
-
-  @Override
-  public Optional<? extends TypeS> typeO() {
-    return Optional.of(sig.type());
   }
 
   @Override

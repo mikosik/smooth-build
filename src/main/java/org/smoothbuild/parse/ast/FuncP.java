@@ -2,11 +2,14 @@ package org.smoothbuild.parse.ast;
 
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nListWithNonUniqueNames;
+import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.like.common.FuncC;
+import org.smoothbuild.lang.like.common.ParamC;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.util.collect.NList;
@@ -14,7 +17,7 @@ import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncP extends GenericRefableP implements TopRefableP {
+public final class FuncP extends GenericRefableP implements TopRefableP, FuncC {
   private final Optional<TypeP> resTP;
   private final NList<ItemP> params;
   private Optional<FuncTS> type;
@@ -40,24 +43,30 @@ public final class FuncP extends GenericRefableP implements TopRefableP {
   }
 
   @Override
+  public Optional<NList<ParamC>> paramsC() {
+    var params = map(params().list(), p -> p.sig().map(sig -> new ParamC(sig, p.body())));
+    return pullUp(params).map(NList::nList);
+  }
+
+  @Override
   public Optional<TypeP> evalT() {
     return resTP;
   }
 
   public Optional<ImmutableList<MonoTS>> paramTs() {
-    return Optionals.pullUp(map(params(), ItemP::typeO));
+    return Optionals.pullUp(map(params(), ItemP::typeS));
   }
 
   @Override
-  public Optional<FuncTS> typeO() {
+  public Optional<FuncTS> typeS() {
     return type;
   }
 
-  public void setTypeO(FuncTS type) {
-    setTypeO(Optional.of(type));
+  public void setTypeS(FuncTS type) {
+    setTypeS(Optional.of(type));
   }
 
-  public void setTypeO(Optional<FuncTS> type) {
+  public void setTypeS(Optional<FuncTS> type) {
     this.type = type;
   }
 }

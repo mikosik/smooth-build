@@ -76,7 +76,7 @@ public class LoadMod {
   }
 
   private static TDefS loadStructDef(ModPath path, StructP struct) {
-    var type = (StructTS) struct.typeO().get();
+    var type = (StructTS) struct.typeS().get();
     var loc = struct.loc();
     return new StructDefS(type, path, loc);
   }
@@ -94,9 +94,9 @@ public class LoadMod {
   }
 
   private static MonoFuncS loadSyntCtor(ModPath path, StructP struct) {
-    var resultT = (StructTS) struct.typeO().get();
+    var resultT = (StructTS) struct.typeS().get();
     var name = struct.ctor().name();
-    var paramTs = map(struct.fields(), f -> f.typeO().get());
+    var paramTs = map(struct.fields(), f -> f.typeS().get());
     var type = TypeFS.func(resultT, paramTs);
     var params = struct.fields().map(ItemP::toItemS);
     var loc = struct.loc();

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.like;
+package org.smoothbuild.lang.like.common;
 
 import java.util.Optional;
 
@@ -6,11 +6,11 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.util.collect.NameableImpl;
 
-public class Param extends NameableImpl {
+public class ParamC extends NameableImpl {
   private final ItemSigS itemSigS;
-  private final Optional<? extends Obj> body;
+  private final Optional<? extends ObjC> body;
 
-  public Param(ItemSigS itemSigS, Optional<? extends Obj> body) {
+  public ParamC(ItemSigS itemSigS, Optional<? extends ObjC> body) {
     super(itemSigS.nameO());
     this.itemSigS = itemSigS;
     this.body = body;
@@ -24,7 +24,7 @@ public class Param extends NameableImpl {
     return itemSigS.typeAndName();
   }
 
-  public Optional<? extends Obj> body() {
+  public Optional<? extends ObjC> body() {
     return body;
   }
 

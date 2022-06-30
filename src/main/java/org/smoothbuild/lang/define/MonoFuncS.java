@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.define;
 
-import java.util.Optional;
-
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
@@ -22,11 +20,6 @@ public sealed abstract class MonoFuncS extends FuncS implements MonoTopRefableS,
   @Override
   public MonoFuncTS type() {
     return type;
-  }
-
-  @Override
-  public Optional<MonoFuncTS> typeO() {
-    return Optional.of(type());
   }
 
   public MonoTS resT() {

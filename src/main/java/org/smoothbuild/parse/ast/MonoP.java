@@ -15,15 +15,15 @@ public sealed abstract class MonoP extends WithLoc implements Parsed
   }
 
   @Override
-  public Optional<MonoTS> typeO() {
+  public Optional<MonoTS> typeS() {
     return type;
   }
 
-  public void setTypeO(MonoTS type) {
-    setTypeO(Optional.of(type));
+  public void setTypeS(MonoTS type) {
+    setTypeS(Optional.of(type));
   }
 
-  public void setTypeO(Optional<MonoTS> type) {
+  public void setTypeS(Optional<MonoTS> type) {
     this.type = type;
   }
 }

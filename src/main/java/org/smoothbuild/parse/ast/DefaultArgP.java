@@ -3,12 +3,12 @@ package org.smoothbuild.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.like.Obj;
+import org.smoothbuild.lang.like.common.ObjC;
 
 public final class DefaultArgP extends ArgP {
-  public DefaultArgP(Obj obj, Loc loc) {
-    super(Optional.empty(), obj, loc);
-    setTypeO(obj.typeO());
+  public DefaultArgP(ObjC objC, Loc loc) {
+    super(Optional.empty(), objC, loc);
+    setTypeS(objC.typeS());
   }
 
   @Override

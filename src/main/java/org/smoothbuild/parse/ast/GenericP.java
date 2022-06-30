@@ -15,15 +15,15 @@ public sealed abstract class GenericP extends WithLoc implements Parsed
   }
 
   @Override
-  public Optional<? extends TypeS> typeO() {
+  public Optional<? extends TypeS> typeS() {
     return type;
   }
 
-  public void setTypeO(TypeS type) {
-    setTypeO(Optional.of(type));
+  public void setTypeS(TypeS type) {
+    setTypeS(Optional.of(type));
   }
 
-  public void setTypeO(Optional<? extends TypeS> type) {
+  public void setTypeS(Optional<? extends TypeS> type) {
     this.type = type;
   }
 }

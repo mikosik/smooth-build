@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.define;
 
-import org.smoothbuild.lang.like.MonoTopRefable;
-
-public sealed interface MonoTopRefableS extends TopRefableS, MonoObjS, MonoTopRefable
+public sealed interface MonoTopRefableS extends TopRefableS, MonoObjS
     permits MonoFuncS, ValS {
 }

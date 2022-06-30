@@ -28,9 +28,9 @@ public final class ItemP extends MonoRefableP {
   }
 
   @Override
-  public void setTypeO(Optional<MonoTS> type) {
-    super.setTypeO(type);
-    sig = typeO().map(t -> new ItemSigS(t, Optional.of(name())));
+  public void setTypeS(Optional<MonoTS> type) {
+    super.setTypeS(type);
+    sig = typeS().map(t -> new ItemSigS(t, Optional.of(name())));
   }
 
   public Optional<ItemSigS> sig() {
@@ -39,6 +39,6 @@ public final class ItemP extends MonoRefableP {
 
   public ItemS toItemS() {
     checkState(body().isEmpty());
-    return new ItemS(typeO().get(), name(), Optional.empty(), loc());
+    return new ItemS(typeS().get(), name(), Optional.empty(), loc());
   }
 }

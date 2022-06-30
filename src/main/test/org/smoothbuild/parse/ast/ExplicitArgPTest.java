@@ -51,7 +51,7 @@ public class ExplicitArgPTest {
   @Test
   public void type_and_name_of_named_arg() {
     var arg = new ExplicitArgP(Optional.of("name"), obj(STRING), internal());
-    arg.setTypeO(STRING);
+    arg.setTypeS(STRING);
     assertThat(arg.typeAndName())
         .isEqualTo("String:" + "name");
   }
@@ -59,14 +59,14 @@ public class ExplicitArgPTest {
   @Test
   public void nameless_arg_to_string() {
     var arg = new ExplicitArgP(Optional.empty(), obj(STRING), internal());
-    arg.setTypeO(STRING);
+    arg.setTypeS(STRING);
     assertThat(arg.typeAndName())
         .isEqualTo("String:<nameless>");
   }
 
   private static ObjP obj(MonoTS type) {
     var ref = new RefP("name", loc());
-    ref.setTypeO(type);
+    ref.setTypeS(type);
     return ref;
   }
 }

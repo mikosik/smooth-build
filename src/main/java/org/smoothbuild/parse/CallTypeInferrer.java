@@ -11,17 +11,15 @@ import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.NList.nList;
-import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.like.Obj;
-import org.smoothbuild.lang.like.Param;
-import org.smoothbuild.lang.like.Refable;
+import org.smoothbuild.lang.like.common.FuncC;
+import org.smoothbuild.lang.like.common.ObjC;
+import org.smoothbuild.lang.like.common.ParamC;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyTS;
@@ -35,7 +33,6 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.ArgP;
 import org.smoothbuild.parse.ast.CallP;
-import org.smoothbuild.parse.ast.FuncP;
 import org.smoothbuild.parse.ast.ObjP;
 import org.smoothbuild.parse.ast.RefP;
 import org.smoothbuild.util.collect.NList;
@@ -46,13 +43,13 @@ public class CallTypeInferrer {
   public Optional<MonoTS> inferCallT(CallP call, LogBuffer logBuffer) {
     ObjP callee = call.callee();
 
-    if (callee.typeO().isEmpty()) {
+    if (callee.typeS().isEmpty()) {
       return empty();
     }
 
-    if (!(callee.typeO().get() instanceof FuncTS calleeT)) {
+    if (!(callee.typeS().get() instanceof FuncTS calleeT)) {
       logBuffer.log(parseError(call, saneName(callee)
-          + " cannot be called as it is not a function but " + callee.typeO().get().q() + "."));
+          + " cannot be called as it is not a function but " + callee.typeS().get().q() + "."));
       return empty();
     }
 
@@ -74,23 +71,18 @@ public class CallTypeInferrer {
     }
   }
 
-  public static Optional<NList<Param>> funcParams(ObjP callee, FuncTS calleeT) {
+  public static Optional<NList<ParamC>> funcParams(ObjP callee, FuncTS calleeT) {
     if (callee instanceof RefP refP) {
-      Refable referenced = refP.referenced();
-      if (referenced instanceof FuncS funcS) {
-        return Optional.of(funcS.params().map(p -> new Param(p.sig(), p.body())));
-      } else if (referenced instanceof FuncP funcP) {
-        var params = map(
-            funcP.params().list(), p -> p.sig().map(sig -> new Param(sig, p.body())));
-        return pullUp(params).map(NList::nList);
+      if (refP.referenced() instanceof FuncC funcC) {
+        return funcC.paramsC();
       }
     }
-    return Optional.of(nList(map(calleeT.params(), p -> new Param(itemSigS(p), empty()))));
+    return Optional.of(nList(map(calleeT.params(), p -> new ParamC(itemSigS(p), empty()))));
   }
 
   private static boolean someArgHasNotInferredType(ImmutableList<ArgP> args) {
     return args.stream()
-        .anyMatch(a -> a.typeO().isEmpty());
+        .anyMatch(a -> a.typeS().isEmpty());
   }
 
   private static String saneName(ObjP node) {
@@ -100,10 +92,10 @@ public class CallTypeInferrer {
     return "expression";
   }
 
-  public Optional<MonoTS> inferCallT(CallP call, NList<Param> params, FuncTS calleeT,
+  public Optional<MonoTS> inferCallT(CallP call, NList<ParamC> paramCs, FuncTS calleeT,
       LogBuffer logBuffer) {
     var args = call.assignedArgs();
-    var prefixedArgTs = prefixFreeVarsWithIndex(map(args, a -> a.obj().typeO().get()));
+    var prefixedArgTs = prefixFreeVarsWithIndex(map(args, a -> a.obj().typeS().get()));
     var prefixedCalleeT = (FuncTS) calleeT.mapFreeVars(v -> v.prefixed("callee"));
     var prefixedParamTs = prefixedCalleeT.params();
     var solver = new ConstrSolver();
@@ -111,7 +103,7 @@ public class CallTypeInferrer {
       try {
         solver.addConstr(constrS(prefixedArgTs.get(i), prefixedParamTs.get(i)));
       } catch (ConstrDecomposeExc e) {
-        NList<ItemSigS> paramSigs = params.map(Param::sig);
+        NList<ItemSigS> paramSigs = paramCs.map(ParamC::sig);
         logBuffer.log(illegalAssignmentError(paramSigs, paramSigs.get(i), args.get(i)));
         return empty();
       }
@@ -140,8 +132,8 @@ public class CallTypeInferrer {
     return Optional.of(actualResT);
   }
 
-  private void storeActualTypeIfNeeded(Obj obj, MonoTS monoTS, Denormalizer denormalizer) {
-    if (obj instanceof RefP refP && refP.referenced().typeO().get() instanceof PolyTS) {
+  private void storeActualTypeIfNeeded(ObjC objC, MonoTS monoTS, Denormalizer denormalizer) {
+    if (objC instanceof RefP refP && refP.referenced().typeS().get() instanceof PolyTS) {
       refP.setInferredMonoType(denormalize(denormalizer, monoTS));
     }
   }
@@ -161,7 +153,7 @@ public class CallTypeInferrer {
 
   private static Log illegalAssignmentError(List<ItemSigS> params, ItemSigS param, ArgP arg) {
     return parseError(arg.loc(), messagePrefix(params)
-        + "Cannot assign argument of type " + arg.typeO().get().q() + " to parameter "
+        + "Cannot assign argument of type " + arg.typeS().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");
   }
 

@@ -25,9 +25,10 @@ import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.define.ValS;
-import org.smoothbuild.lang.like.Obj;
-import org.smoothbuild.lang.like.Refable;
-import org.smoothbuild.lang.like.TopRefable;
+import org.smoothbuild.lang.like.common.ObjC;
+import org.smoothbuild.lang.like.common.RefableC;
+import org.smoothbuild.lang.like.common.TopRefableC;
+import org.smoothbuild.lang.like.wrap.MonoObjW;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyTS;
@@ -57,7 +58,7 @@ public class LoadTopObj {
   }
 
   private static ValS loadVal(ModPath path, ValP valP) {
-    var type = valP.typeO().get();
+    var type = valP.typeS().get();
     var name = valP.name();
     var loc = valP.loc();
     if (valP.ann().isPresent()) {
@@ -71,7 +72,7 @@ public class LoadTopObj {
 
   private static TopRefableS loadFunc(ModPath path, FuncP funcP) {
     var params = loadParams(funcP);
-    var resT = funcP.typeO().get().res();
+    var resT = funcP.typeS().get().res();
     var name = funcP.name();
     var loc = funcP.loc();
     var paramTs = map(params, ItemS::type);
@@ -99,7 +100,7 @@ public class LoadTopObj {
   }
 
   private static ItemS createParam(ItemP param) {
-    var type = param.typeP().typeO().get();
+    var type = param.typeP().typeS().get();
     var name = param.name();
     var body = param.body().map(LoadTopObj::loadObj);
     return new ItemS(type, name, body, param.loc());
@@ -118,7 +119,7 @@ public class LoadTopObj {
   }
 
   private static MonoObjS loadOrder(OrderP order) {
-    var type = (ArrayTS) order.typeO().get();
+    var type = (ArrayTS) order.typeS().get();
     var elems = map(order.elems(), LoadTopObj::loadObj);
     return new OrderS(type, elems, order.loc());
   }
@@ -126,20 +127,20 @@ public class LoadTopObj {
   private static MonoObjS loadCall(CallP call) {
     var callee = loadObj(call.callee());
     var argObjs = map(call.assignedArgs(), a -> loadArg(a.obj()));
-    var resT = call.typeO().get();
+    var resT = call.typeS().get();
     return new CallS(resT, callee, argObjs, call.loc());
   }
 
-  private static MonoObjS loadArg(Obj obj) {
-    return switch (obj) {
+  private static MonoObjS loadArg(ObjC objC) {
+    return switch (objC) {
       case ObjP objP -> loadObj(objP);
-      case MonoObjS objS -> objS;
-      default -> throw unexpectedCaseExc(obj);
+      case MonoObjW monoObjW -> monoObjW.monoObjS();
+      default -> throw unexpectedCaseExc(objC);
     };
   }
 
   private static MonoObjS loadSelect(SelectP selectP) {
-    var structT = (StructTS) selectP.selectable().typeO().get();
+    var structT = (StructTS) selectP.selectable().typeS().get();
     var index = structT.fields().indexMap().get(selectP.field());
     var fieldT = structT.fields().get(index).type();
     var selectable = loadObj(selectP.selectable());
@@ -147,16 +148,16 @@ public class LoadTopObj {
   }
 
   private static MonoObjS loadRef(RefP ref) {
-    Refable referenced = ref.referenced();
+    RefableC referenced = ref.referenced();
     return switch (referenced) {
-      case ItemP itemP -> new ParamRefS(itemP.typeO().get(), ref.name(), ref.loc());
-      case TopRefable topRefable -> switch (topRefable.typeO().get()) {
+      case ItemP itemP -> new ParamRefS(itemP.typeS().get(), ref.name(), ref.loc());
+      case TopRefableC topRefableC -> switch (topRefableC.typeS().get()) {
         case MonoTS monoTS -> new MonoRefS(monoTS, ref.name(), ref.loc());
         case PolyTS polyTS -> {
           var funcRefS = new PolyRefS(polyTS, ref.name(), ref.loc());
           yield new MonoizeS(ref.inferredMonoT(), funcRefS, ref.loc());
         }
-        default -> throw unexpectedCaseExc(topRefable.typeO().get());
+        default -> throw unexpectedCaseExc(topRefableC.typeS().get());
       };
       default -> throw unexpectedCaseExc(referenced);
     };

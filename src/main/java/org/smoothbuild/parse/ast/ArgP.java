@@ -3,18 +3,18 @@ package org.smoothbuild.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.like.Obj;
+import org.smoothbuild.lang.like.common.ObjC;
 import org.smoothbuild.util.collect.Named;
 
 public sealed abstract class ArgP extends GenericP implements NamedP
     permits DefaultArgP, ExplicitArgP {
   private final Optional<String> name;
-  private final Obj obj;
+  private final ObjC objC;
 
-  public ArgP(Optional<String> name, Obj obj, Loc loc) {
+  public ArgP(Optional<String> name, ObjC objC, Loc loc) {
     super(loc);
     this.name = name;
-    this.obj = obj;
+    this.objC = objC;
   }
 
   public boolean declaresName() {
@@ -34,10 +34,10 @@ public sealed abstract class ArgP extends GenericP implements NamedP
   public abstract String nameSanitized();
 
   public String typeAndName() {
-    return typeO().map(Named::name).orElse("<missing type>") + ":" + nameSanitized();
+    return typeS().map(Named::name).orElse("<missing type>") + ":" + nameSanitized();
   }
 
-  public Obj obj() {
-    return obj;
+  public ObjC obj() {
+    return objC;
   }
 }
