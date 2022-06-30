@@ -27,6 +27,11 @@ public class Maps {
         .collect(toImmutableMap(keyFunction, valueFunction));
   }
 
+  public static <K, V, K2> ImmutableMap<K2, V> mapKeys(Map<K, V> map,
+      Function<? super K, K2> keysFunction) {
+    return mapEntries(map, keysFunction, v -> v);
+  }
+
   public static <K, V, V2> ImmutableMap<K, V2> mapValues(Map<K, V> map,
       Function<? super V, V2> valueFunction) {
     return mapEntries(map, k -> k, valueFunction);
