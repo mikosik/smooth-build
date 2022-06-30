@@ -181,8 +181,8 @@ public class TypeInferrer {
               case MonoTS monoTS -> Optional.of(monoTS);
               case PolyTS polyTS -> {
                 logError(refable, ("Cannot infer type parameters to convert function reference "
-                    + "%s to monomorphic function. You need to specify type of " + refable.q()
-                    + " explicitly.").formatted(((RefP) body).referenced().q()));
+                    + "%s to monomorphic function. You need to specify type of %s explicitly.")
+                    .formatted(((RefP) body).referenced().q(), refable.q()));
                 yield empty();
               }
               case default -> throw unexpectedCaseExc(t);
