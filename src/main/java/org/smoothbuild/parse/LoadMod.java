@@ -8,6 +8,7 @@ import static org.smoothbuild.parse.ParseModule.parseModule;
 import static org.smoothbuild.parse.ReferenceResolver.resolveReferences;
 import static org.smoothbuild.parse.TypeInferrer.inferTypes;
 import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
+import static org.smoothbuild.parse.ast.AstSorter.sortParsedByDeps;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -51,7 +52,7 @@ public class LoadMod {
       return maybeLogs(logBuffer);
     }
 
-    Maybe<Ast> maybeSortedAst = ast.sortedByDeps();
+    Maybe<Ast> maybeSortedAst = sortParsedByDeps(ast);
     logBuffer.logAll(maybeSortedAst.logs());
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
