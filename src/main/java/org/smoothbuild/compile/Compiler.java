@@ -9,7 +9,7 @@ import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.util.collect.Maps.map;
+import static org.smoothbuild.util.collect.Maps.mapEntries;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -147,7 +147,7 @@ public class Compiler {
 
   private FuncB compileMonoize(MonoizeS monoizeS) {
     var varMap = deduceVarMap(monoizeS.funcRef().type().mono(), monoizeS.type());
-    var varMapB = map(varMap, MonoTS::name, this::convertT);
+    var varMapB = mapEntries(varMap, MonoTS::name, this::convertT);
     typeSbConv.addLastVarMap(varMapB);
     try {
       var topRefableS = defs.topRefables().get(monoizeS.funcRef().name());

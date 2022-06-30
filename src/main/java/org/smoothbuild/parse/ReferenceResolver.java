@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.map;
+import static org.smoothbuild.util.collect.Maps.mapEntries;
 
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.FuncS;
@@ -33,7 +33,7 @@ public class ReferenceResolver extends AstVisitor {
   }
 
   private static NameBindings<RefableC> scope(DefsS imported, Ast ast) {
-    var binding = map(imported.topRefables().map(), k -> k, ReferenceResolver::wrap);
+    var binding = mapEntries(imported.topRefables().map(), k -> k, ReferenceResolver::wrap);
     var importedBindings = new NameBindings<RefableC>(binding);
     var ctors = map(ast.structs(), StructP::ctor);
     var refables = ast.topRefables();

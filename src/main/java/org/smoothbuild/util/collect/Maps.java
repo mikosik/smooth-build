@@ -29,10 +29,10 @@ public class Maps {
 
   public static <K, V, V2> ImmutableMap<K, V2> mapValues(Map<K, V> map,
       Function<? super V, V2> valueFunction) {
-    return map(map, k -> k, valueFunction);
+    return mapEntries(map, k -> k, valueFunction);
   }
 
-  public static <K, V, K2, V2> ImmutableMap<K2, V2> map(Map<K, V> map,
+  public static <K, V, K2, V2> ImmutableMap<K2, V2> mapEntries(Map<K, V> map,
       Function<? super K, K2> keyFunction, Function<? super V, V2> valueFunction) {
     return map.entrySet().stream()
         .collect(toImmutableMap(
