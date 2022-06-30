@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.like.Refable;
@@ -14,6 +13,7 @@ import org.smoothbuild.parse.ast.FuncP;
 import org.smoothbuild.parse.ast.RefP;
 import org.smoothbuild.parse.ast.StructP;
 import org.smoothbuild.util.NameBindings;
+import org.smoothbuild.util.collect.Nameables;
 
 public class ReferenceResolver extends AstVisitor {
   private final NameBindings<? extends Refable> nameBindings;
@@ -26,10 +26,10 @@ public class ReferenceResolver extends AstVisitor {
   }
 
   private static NameBindings<Refable> scope(DefsS imported, Ast ast) {
-    var importedScope = new NameBindings<Refable>(imported.topRefables());
+    var importedScope = new NameBindings<Refable>(imported.topRefables().map());
     var ctors = map(ast.structs(), StructP::ctor);
     var refables = ast.topRefables();
-    return new NameBindings<>(importedScope, nList(concat(refables, ctors)));
+    return new NameBindings<>(importedScope, Nameables.toMap(concat(refables, ctors)));
   }
 
   public ReferenceResolver(NameBindings<? extends Refable> nameBindings, Logger logger) {
@@ -42,7 +42,7 @@ public class ReferenceResolver extends AstVisitor {
     visitParams(funcP.params());
     funcP.body().ifPresent(expr -> {
       var referenceResolver = new ReferenceResolver(
-          new NameBindings<>(nameBindings, funcP.params()), logger);
+          new NameBindings<>(nameBindings, funcP.params().map()), logger);
       referenceResolver.visitObj(expr);
     });
   }

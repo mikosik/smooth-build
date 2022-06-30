@@ -214,7 +214,7 @@ public class NList<T extends Nameable> extends AbstractList<T> {
     return list.get();
   }
 
-  private ImmutableMap<String, T> map() {
+  public ImmutableMap<String, T> map() {
     return map.get();
   }
 
