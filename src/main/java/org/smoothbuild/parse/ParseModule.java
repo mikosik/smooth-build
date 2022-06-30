@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static java.lang.String.join;
 import static org.smoothbuild.lang.base.Loc.loc;
 import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
-import static org.smoothbuild.parse.LocHelpers.locOf;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Antlr.errorLine;
 import static org.smoothbuild.util.Antlr.markingLine;
@@ -104,5 +103,9 @@ public class ParseModule {
       Token token = recognizer.getTokenStream().get(startIndex);
       logger.log(parseError(locOf(filePath, token), message));
     }
+  }
+
+  private static Loc locOf(FilePath filePath, Token token) {
+    return loc(filePath, token.getLine());
   }
 }

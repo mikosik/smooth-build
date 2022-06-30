@@ -1,6 +1,7 @@
 package org.smoothbuild.parse.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.lang.base.Loc.loc;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -39,7 +40,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.parse.LocHelpers;
 
 import com.google.common.collect.ImmutableList;
 
@@ -51,7 +51,7 @@ public class AstCreator {
       @Override
       public Void visitStruct(StructContext struct) {
         String name = struct.TNAME().getText();
-        Loc loc = LocHelpers.locOf(filePath, struct.TNAME().getSymbol());
+        Loc loc = locOf(filePath, struct.TNAME().getSymbol());
         List<ItemP> fields = createFields(struct.fieldList());
         structs.add(new StructP(name, fields, loc));
         return null;
@@ -71,7 +71,7 @@ public class AstCreator {
         TypeP type = createT(field.type());
         TerminalNode nameNode = field.NAME();
         String name = nameNode.getText();
-        Loc loc = LocHelpers.locOf(filePath, nameNode);
+        Loc loc = locOf(filePath, nameNode);
         return new ItemP(type, name, Optional.empty(), loc);
       }
 
@@ -83,7 +83,7 @@ public class AstCreator {
         String name = nameNode.getText();
         Optional<ObjP> obj = createObjSane(top.expr());
         Optional<AnnP> annotation = createNativeSane(top.ann());
-        Loc loc = LocHelpers.locOf(filePath, nameNode);
+        Loc loc = locOf(filePath, nameNode);
         if (top.paramList() == null) {
           refables.add(new ValP(type, name, obj, annotation, loc));
         } else {
@@ -101,7 +101,7 @@ public class AstCreator {
           return Optional.of(new AnnP(
               name,
               createStringNode(annotation, annotation.STRING()),
-              LocHelpers.locOf(filePath, annotation)));
+              locOf(filePath, annotation)));
         }
       }
 
@@ -119,7 +119,7 @@ public class AstCreator {
         var type = createT(param.type());
         var name = param.NAME().getText();
         var defaultArg = Optional.ofNullable(param.expr()).map(this::createObj);
-        var loc = LocHelpers.locOf(filePath, param);
+        var loc = locOf(filePath, param);
         return new ItemP(type, name, defaultArg, loc);
       }
 
@@ -155,20 +155,20 @@ public class AstCreator {
 
       private ArgP pipedArg(ObjP result, Token pipeCharacter) {
         // Loc of nameless piped arg is set to the loc of pipe character '|'.
-        Loc loc = LocHelpers.locOf(filePath, pipeCharacter);
+        Loc loc = locOf(filePath, pipeCharacter);
         return new ExplicitArgP(Optional.empty(), result, loc);
       }
 
       private ObjP createLiteral(LiteralContext expr) {
         if (expr.array() != null) {
           List<ObjP> elems = map(expr.array().expr(), this::createObj);
-          return new OrderP(elems, LocHelpers.locOf(filePath, expr));
+          return new OrderP(elems, locOf(filePath, expr));
         }
         if (expr.BLOB() != null) {
-          return new BlobP(expr.BLOB().getText().substring(2), LocHelpers.locOf(filePath, expr));
+          return new BlobP(expr.BLOB().getText().substring(2), locOf(filePath, expr));
         }
         if (expr.INT() != null) {
-          return new IntP(expr.INT().getText(), LocHelpers.locOf(filePath, expr));
+          return new IntP(expr.INT().getText(), locOf(filePath, expr));
         }
         if (expr.STRING() != null) {
           return createStringNode(expr, expr.STRING());
@@ -178,7 +178,7 @@ public class AstCreator {
 
       private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
         String unquoted = unquote(quotedString.getText());
-        Loc loc = LocHelpers.locOf(filePath, expr);
+        Loc loc = locOf(filePath, expr);
         return new StringP(unquoted, loc);
       }
 
@@ -195,12 +195,12 @@ public class AstCreator {
       }
 
       private RefP newRefNode(TerminalNode name) {
-        return new RefP(name.getText(), LocHelpers.locOf(filePath, name));
+        return new RefP(name.getText(), locOf(filePath, name));
       }
 
       private SelectP createSelect(ObjP selectable, SelectContext fieldRead) {
         String name = fieldRead.NAME().getText();
-        Loc loc = LocHelpers.locOf(filePath, fieldRead);
+        Loc loc = locOf(filePath, fieldRead);
         return new SelectP(selectable, name, loc);
       }
 
@@ -226,14 +226,14 @@ public class AstCreator {
           TerminalNode nameNode = arg.NAME();
           var name = nameNode == null ? Optional.<String>empty() : Optional.of(nameNode.getText());
           ObjP objP = createObj(expr);
-          result.add(new ExplicitArgP(name, objP, LocHelpers.locOf(filePath, arg)));
+          result.add(new ExplicitArgP(name, objP, locOf(filePath, arg)));
         }
         return result;
       }
 
       private MonoObjP createCall(
           ObjP callable, List<ArgP> args, ArgListContext argListContext) {
-        Loc loc = LocHelpers.locOf(filePath, argListContext);
+        Loc loc = locOf(filePath, argListContext);
         return new CallP(callable, args, loc);
       }
 
@@ -251,18 +251,18 @@ public class AstCreator {
       }
 
       private TypeP createT(TypeNameContext type) {
-        return new TypeP(type.getText(), LocHelpers.locOf(filePath, type.TNAME()));
+        return new TypeP(type.getText(), locOf(filePath, type.TNAME()));
       }
 
       private TypeP createArrayT(ArrayTContext arrayT) {
         TypeP elemType = createT(arrayT.type());
-        return new ArrayTP(elemType, LocHelpers.locOf(filePath, arrayT));
+        return new ArrayTP(elemType, locOf(filePath, arrayT));
       }
 
       private TypeP createFuncT(FuncTContext funcT) {
         TypeP resultType = createT(funcT.type());
         return new FuncTP(resultType, createTs(funcT.typeList()),
-            LocHelpers.locOf(filePath, funcT));
+            locOf(filePath, funcT));
       }
 
       private ImmutableList<TypeP> createTs(TypeListContext typeList) {
@@ -283,5 +283,17 @@ public class AstCreator {
 
   private static String unquote(String quotedString) {
     return quotedString.substring(1, quotedString.length() - 1);
+  }
+
+  private static Loc locOf(FilePath filePath, ParserRuleContext parserRuleContext) {
+    return locOf(filePath, parserRuleContext.getStart());
+  }
+
+  private static Loc locOf(FilePath filePath, TerminalNode node) {
+    return locOf(filePath, node.getSymbol());
+  }
+
+  private static Loc locOf(FilePath filePath, Token token) {
+    return loc(filePath, token.getLine());
   }
 }
