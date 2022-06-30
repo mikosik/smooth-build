@@ -40,10 +40,26 @@ public class NList<T extends Nameable> extends AbstractList<T> {
   }
 
   public static <E extends Nameable> NList<E> nList(ImmutableList<E> list) {
+    checkContainsNoDuplicatedNames(list);
     return new NList<>(
         () -> list,
         () -> calculateMap(list),
         () -> calculateIndexMap(list));
+  }
+
+  private static <E extends Nameable> void checkContainsNoDuplicatedNames(ImmutableList<E> list) {
+    HashSet<String> names = new HashSet<>();
+    for (E elem : list) {
+      if (elem.nameO().isPresent()) {
+        String name = elem.nameO().get();
+        if (names.contains(name)) {
+          throw new IllegalArgumentException(
+              "List contains two elements with same name = \"" + name + "\".");
+        } else {
+          names.add(name);
+        }
+      }
+    }
   }
 
   public static <E extends Nameable> NList<E> nList(ImmutableMap<String, E> map) {

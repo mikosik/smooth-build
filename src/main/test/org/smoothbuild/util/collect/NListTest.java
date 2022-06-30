@@ -49,11 +49,21 @@ public class NListTest {
           .inOrder();
     }
 
-    @Test
-    public void from_list_with_non_unique_names() {
-      assertThat(nListWithNonUniqueNames(list(n0, n1, n2, n0)))
-          .containsExactly(n0, n1, n2, n0)
-          .inOrder();
+    @Nested
+    class _from_list_with_non_unique_names {
+      @Test
+      public void using_non_unique_names_factory_method() {
+        assertThat(nListWithNonUniqueNames(list(n0, n1, n2, labeled(n0.nameSane(), ""))))
+            .containsExactly(n0, n1, n2, labeled(n0.nameSane(), ""))
+            .inOrder();
+      }
+
+      @Test
+      public void using_normal_factory_method_fails() {
+        assertCall(() -> nList(list(n0, n1, n2, labeled(n0.nameSane(), ""))))
+            .throwsException(new IllegalArgumentException(
+                "List contains two elements with same name = \"zero\"."));
+      }
     }
   }
 
@@ -233,7 +243,7 @@ public class NListTest {
 
     @Test
     public void non_unique_names() {
-      var nlist = nList(n0, n1, n2, labeled(n0.nameSane(), ""));
+      var nlist = nListWithNonUniqueNames(list(n0, n1, n2, labeled(n0.nameSane(), "")));
       assertThat(nlist.indexMap())
           .isEqualTo(Map.of(n0.nameSane(), 0, n1.nameSane(), 1, n2.nameSane(), 2));
     }
