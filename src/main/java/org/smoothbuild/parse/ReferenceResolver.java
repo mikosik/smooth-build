@@ -13,10 +13,10 @@ import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.FuncP;
 import org.smoothbuild.parse.ast.RefP;
 import org.smoothbuild.parse.ast.StructP;
-import org.smoothbuild.util.Scope;
+import org.smoothbuild.util.NameBindings;
 
 public class ReferenceResolver extends AstVisitor {
-  private final Scope<? extends Refable> scope;
+  private final NameBindings<? extends Refable> nameBindings;
   private final Logger logger;
 
   public static void resolveReferences(Logger logger, DefsS imported, Ast ast) {
@@ -25,15 +25,15 @@ public class ReferenceResolver extends AstVisitor {
         .visitAst(ast);
   }
 
-  private static Scope<Refable> scope(DefsS imported, Ast ast) {
-    var importedScope = new Scope<Refable>(imported.topRefables());
+  private static NameBindings<Refable> scope(DefsS imported, Ast ast) {
+    var importedScope = new NameBindings<Refable>(imported.topRefables());
     var ctors = map(ast.structs(), StructP::ctor);
     var refables = ast.topRefables();
-    return new Scope<>(importedScope, nList(concat(refables, ctors)));
+    return new NameBindings<>(importedScope, nList(concat(refables, ctors)));
   }
 
-  public ReferenceResolver(Scope<? extends Refable> scope, Logger logger) {
-    this.scope = scope;
+  public ReferenceResolver(NameBindings<? extends Refable> nameBindings, Logger logger) {
+    this.nameBindings = nameBindings;
     this.logger = logger;
   }
 
@@ -41,7 +41,8 @@ public class ReferenceResolver extends AstVisitor {
   public void visitFunc(FuncP funcP) {
     visitParams(funcP.params());
     funcP.body().ifPresent(expr -> {
-      var referenceResolver = new ReferenceResolver(new Scope<>(scope, funcP.params()), logger);
+      var referenceResolver = new ReferenceResolver(
+          new NameBindings<>(nameBindings, funcP.params()), logger);
       referenceResolver.visitObj(expr);
     });
   }
@@ -50,8 +51,8 @@ public class ReferenceResolver extends AstVisitor {
   public void visitRef(RefP ref) {
     super.visitRef(ref);
     String name = ref.name();
-    if (scope.contains(name)) {
-      ref.setReferenced(scope.get(name));
+    if (nameBindings.contains(name)) {
+      ref.setReferenced(nameBindings.get(name));
     } else {
       logger.log(parseError(ref.loc(), "`" + name + "` is undefined."));
     }
