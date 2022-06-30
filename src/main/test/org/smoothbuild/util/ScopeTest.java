@@ -58,43 +58,6 @@ public class ScopeTest {
         .isEqualTo(elem("name", 7));
   }
 
-  @Nested
-  class _index_of {
-    @Test
-    public void throws_exception_when_name_is_missing() {
-      innerScope = new Scope<>(nList(elem("name", 3)));
-      assertCall(() -> innerScope.indexOf("other name"))
-          .throwsException(NoSuchElementException.class);
-    }
-
-    @Test
-    public void returns_index() {
-      innerScope = new Scope<>(nList(elem("a", 3), elem("b", 7)));
-      assertThat(innerScope.indexOf("a"))
-          .isEqualTo(0);
-      assertThat(innerScope.indexOf("b"))
-          .isEqualTo(1);
-    }
-
-    @Test
-    public void returns_index_from_outer_scope_increased_by_inner_scope_elem_size() {
-      outerScope = new Scope<>(nList(elem("c", 3), elem("d", 3)));
-      innerScope = new Scope<>(outerScope, nList(elem("a", 7), elem("b", 7)));
-      assertThat(innerScope.indexOf("c"))
-          .isEqualTo(2);
-      assertThat(innerScope.indexOf("d"))
-          .isEqualTo(3);
-    }
-
-    @Test
-    public void name_in_inner_scope_shadows_name_from_outer_scope() {
-      outerScope = new Scope<>(nList(elem("c", 3), elem("d", 3)));
-      innerScope = new Scope<>(outerScope, nList(elem("a", 7), elem("c", 7)));
-      assertThat(innerScope.indexOf("c"))
-          .isEqualTo(1);
-    }
-  }
-
   @Test
   public void to_string() {
     outerScope = new Scope<>(nList(elem("value-a", 7), elem("value-b", 8)));

@@ -34,16 +34,6 @@ public class Scope<E extends Nameable> {
     throw new NoSuchElementException(name);
   }
 
-  public int indexOf(String name) {
-    if (bindings.containsName(name)) {
-      return bindings.indexMap().get(name);
-    }
-    if (outerScope != null) {
-      return bindings.size() + outerScope.indexOf(name);
-    }
-    throw new NoSuchElementException(name);
-  }
-
   @Override
   public String toString() {
     String outer = outerScope == null ? "" : outerScope + "\n";
