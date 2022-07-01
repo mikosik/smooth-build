@@ -3,8 +3,6 @@ package org.smoothbuild.parse.component;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.testing.TestingModLoader.err;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_MONOTYPES;
-import static org.smoothbuild.testing.type.TestedTSF.TESTED_SINGLE_VARIABLE_POLYTYPES;
-import static org.smoothbuild.testing.type.TestedTSF.TESTED_VALID_POLYTYPES;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -1449,22 +1447,6 @@ public class DeclarationTest extends TestingContext {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
       return TESTED_MONOTYPES.stream()
-          .map(Arguments::of);
-    }
-  }
-
-  private static class TestedValidPolytypes implements ArgumentsProvider {
-    @Override
-    public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return TESTED_VALID_POLYTYPES.stream()
-          .map(Arguments::of);
-    }
-  }
-
-  private static class TestedSingleVarPolytypes implements ArgumentsProvider {
-    @Override
-    public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return TESTED_SINGLE_VARIABLE_POLYTYPES.stream()
           .map(Arguments::of);
     }
   }
