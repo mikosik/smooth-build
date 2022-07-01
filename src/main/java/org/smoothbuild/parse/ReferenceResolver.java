@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.parse.ParseError.parseError;
+import static org.smoothbuild.util.Bindings.bindings;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.mapValues;
@@ -18,12 +19,12 @@ import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.FuncP;
 import org.smoothbuild.parse.ast.RefP;
 import org.smoothbuild.parse.ast.StructP;
-import org.smoothbuild.util.NameBindings;
+import org.smoothbuild.util.Bindings;
 import org.smoothbuild.util.Throwables;
 import org.smoothbuild.util.collect.Nameables;
 
 public class ReferenceResolver extends AstVisitor {
-  private final NameBindings<? extends RefableC> nameBindings;
+  private final Bindings<RefableC> bindings;
   private final Logger logger;
 
   public static void resolveReferences(Logger logger, DefsS imported, Ast ast) {
@@ -32,12 +33,13 @@ public class ReferenceResolver extends AstVisitor {
         .visitAst(ast);
   }
 
-  private static NameBindings<RefableC> scope(DefsS imported, Ast ast) {
-    var binding = mapValues(imported.topRefables().map(), ReferenceResolver::wrap);
-    var importedBindings = new NameBindings<RefableC>(binding);
+  private static Bindings<RefableC> scope(DefsS imported, Ast ast) {
+    Bindings<RefableC> bindings = bindings(mapValues(imported.topRefables().map(),
+        ReferenceResolver::wrap));
     var ctors = map(ast.structs(), StructP::ctor);
     var refables = ast.topRefables();
-    return new NameBindings<>(importedBindings, Nameables.toMap(concat(refables, ctors)));
+    var inner = Nameables.<RefableC>toMap(concat(refables, ctors));
+    return bindings.newInnerScope(inner);
   }
 
   private static TopRefableW wrap(TopRefableS topRefableS) {
@@ -48,8 +50,8 @@ public class ReferenceResolver extends AstVisitor {
     };
   }
 
-  public ReferenceResolver(NameBindings<? extends RefableC> nameBindings, Logger logger) {
-    this.nameBindings = nameBindings;
+  public ReferenceResolver(Bindings<RefableC> bindings, Logger logger) {
+    this.bindings = bindings;
     this.logger = logger;
   }
 
@@ -57,8 +59,8 @@ public class ReferenceResolver extends AstVisitor {
   public void visitFunc(FuncP funcP) {
     visitParams(funcP.params());
     funcP.body().ifPresent(expr -> {
-      var referenceResolver = new ReferenceResolver(
-          new NameBindings<>(nameBindings, funcP.params().map()), logger);
+      var funcBindings = bindings.newInnerScope(funcP.params().map());
+      var referenceResolver = new ReferenceResolver(funcBindings, logger);
       referenceResolver.visitObj(expr);
     });
   }
@@ -67,8 +69,8 @@ public class ReferenceResolver extends AstVisitor {
   public void visitRef(RefP ref) {
     super.visitRef(ref);
     String name = ref.name();
-    if (nameBindings.contains(name)) {
-      ref.setReferenced(nameBindings.get(name));
+    if (bindings.contains(name)) {
+      ref.setReferenced(bindings.get(name));
     } else {
       logger.log(parseError(ref.loc(), "`" + name + "` is undefined."));
     }

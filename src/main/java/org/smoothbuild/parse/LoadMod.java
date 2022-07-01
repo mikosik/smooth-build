@@ -9,10 +9,9 @@ import static org.smoothbuild.parse.ReferenceResolver.resolveReferences;
 import static org.smoothbuild.parse.TypeInferrer.inferTypes;
 import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.parse.ast.AstSorter.sortParsedByDeps;
+import static org.smoothbuild.util.Bindings.bindings;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
-
-import java.util.HashMap;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.fs.space.FilePath;
@@ -32,10 +31,7 @@ import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.ItemP;
 import org.smoothbuild.parse.ast.StructP;
-import org.smoothbuild.util.NameBindings;
 import org.smoothbuild.util.collect.NList;
-
-import com.google.common.collect.ImmutableMap;
 
 public class LoadMod {
   public static Maybe<ModS> loadModule(
@@ -85,20 +81,19 @@ public class LoadMod {
   }
 
   private static NList<TopRefableS> loadTopRefables(ModPath path, Ast ast, DefsS imported) {
-    var importedBindings = new NameBindings<>(imported.topRefables().map());
-    var localBindings = new HashMap<String, TopRefableS>();
-    var bindings = new NameBindings<>(importedBindings, localBindings);
+    var bindings = bindings(imported.topRefables().map())
+        .newInnerScope();
 
     for (var structP : ast.structs()) {
       var ctorS = loadSyntCtor(path, structP);
-      localBindings.put(ctorS.name(), ctorS);
+      bindings.add(ctorS);
     }
 
     for (var refableP : ast.topRefables()) {
       var loaded = loadTopObj(path, refableP, bindings);
-      localBindings.put(loaded.name(), loaded);
+      bindings.add(loaded);
     }
-    return nList(ImmutableMap.copyOf(localBindings));
+    return nList(bindings.innerScopeBindings());
   }
 
   private static MonoFuncS loadSyntCtor(ModPath path, StructP struct) {

@@ -7,18 +7,27 @@ import java.util.NoSuchElementException;
 
 import org.smoothbuild.util.collect.Nameable;
 
-public class NameBindings<E extends Nameable> {
-  private final NameBindings<? extends E> outerScopeBindings;
+import com.google.common.collect.ImmutableMap;
+
+public class Bindings<E extends Nameable> {
+  private final Bindings<? extends E> outerScopeBindings;
   private final Map<String, ? extends E> bindings;
 
-  public NameBindings(Map<String, ? extends E> bindings) {
-    this(null, bindings);
+  public static <E extends Nameable> Bindings<E> bindings(ImmutableMap<String, E> map) {
+    return new Bindings<>(null, map);
   }
 
-  public NameBindings(NameBindings<? extends E> outerScopeBindings,
-      Map<String, ? extends E> bindings) {
+  public MutableBindings<E> newInnerScope() {
+    return new MutableBindings<>(this);
+  }
+
+  public Bindings<E> newInnerScope(ImmutableMap<String, ? extends E> map) {
+    return new Bindings<>(this, map);
+  }
+
+  protected Bindings(Bindings<? extends E> outerScopeBindings, Map<String, ? extends E> map) {
     this.outerScopeBindings = outerScopeBindings;
-    this.bindings = bindings;
+    this.bindings = map;
   }
 
   public boolean contains(String name) {
@@ -30,13 +39,18 @@ public class NameBindings<E extends Nameable> {
   }
 
   public E get(String name) {
-    if (bindings.containsKey(name)) {
-      return bindings.get(name);
+    E element = bindings.get(name);
+    if (element != null) {
+      return element;
     }
     if (outerScopeBindings != null) {
       return outerScopeBindings.get(name);
     }
     throw new NoSuchElementException(name);
+  }
+
+  public ImmutableMap<String, E> innerScopeBindings() {
+    return ImmutableMap.copyOf(bindings);
   }
 
   @Override

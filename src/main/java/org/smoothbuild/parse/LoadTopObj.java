@@ -50,14 +50,14 @@ import org.smoothbuild.parse.ast.SelectP;
 import org.smoothbuild.parse.ast.StringP;
 import org.smoothbuild.parse.ast.TopRefableP;
 import org.smoothbuild.parse.ast.ValP;
-import org.smoothbuild.util.NameBindings;
+import org.smoothbuild.util.Bindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 public class LoadTopObj {
   public static TopRefableS loadTopObj(ModPath path, TopRefableP refableP,
-      NameBindings<TopRefableS> allBindings) {
+      Bindings<TopRefableS> bindings) {
     return new Supplier<>(){
       @Override
       public TopRefableS get() {
@@ -151,7 +151,7 @@ public class LoadTopObj {
       }
 
       private MonoObjS defaultArgumentFor(String funcName, int parameterIndex) {
-        var funcS = (FuncS) allBindings.get(funcName);
+        var funcS = (FuncS) bindings.get(funcName);
         return funcS.params().get(parameterIndex).body().get();
       }
 
