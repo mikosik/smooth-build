@@ -2,7 +2,6 @@ package org.smoothbuild.out.log;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
@@ -13,7 +12,7 @@ public class Maybe<V> {
   private final ImmutableLogs logs;
 
   public static <T> Maybe<T> maybeValue(T value) {
-    return new Maybe<>(value, new ImmutableLogs(list()));
+    return new Maybe<>(value, ImmutableLogs.logs());
   }
 
   public static <T> Maybe<T> maybeLogs(Log... logs) {

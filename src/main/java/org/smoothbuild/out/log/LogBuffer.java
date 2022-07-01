@@ -63,7 +63,7 @@ public class LogBuffer implements Logger, Logs {
 
   @Override
   public ImmutableLogs toImmutableLogs() {
-    return new ImmutableLogs(logs);
+    return ImmutableLogs.logs(logs);
   }
 
   @Override

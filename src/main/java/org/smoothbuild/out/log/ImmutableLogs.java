@@ -2,6 +2,7 @@ package org.smoothbuild.out.log;
 
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -14,7 +15,11 @@ public class ImmutableLogs implements Logs {
     return new ImmutableLogs(ImmutableList.copyOf(logs));
   }
 
-  public ImmutableLogs(List<Log> logs) {
+  public static ImmutableLogs logs(Collection<? extends Log> logs) {
+    return new ImmutableLogs(ImmutableList.copyOf(logs));
+  }
+
+  private ImmutableLogs(List<Log> logs) {
     this.logs = ImmutableList.copyOf(logs);
     this.containsProblem = this.logs.stream().anyMatch(l -> l.level().isAProblem());
   }
