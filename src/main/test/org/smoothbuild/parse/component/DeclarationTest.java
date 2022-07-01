@@ -123,6 +123,21 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
+          public void cannot_be_polytype_regression_test() {
+            // Verify that illegal field type does not cause error during processing of code that
+            // references field's struct.
+            module("""
+                MyStruct {
+                 A(B) field
+                }
+                @Native("impl")
+                MyStruct myFunction();
+                """)
+                .loadsWithError(
+                    2, "Field type cannot be polymorphic. Found field `field` with type `A(B)`.");
+          }
+
+          @Test
           public void cannot_be_polytype_array() {
             module("""
                 MyStruct {

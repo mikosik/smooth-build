@@ -75,7 +75,8 @@ public class TypeInferrer {
       public void visitField(ItemP itemP) {
         super.visitField(itemP);
         var typeOpt = itemP.typeP().typeS();
-        typeOpt.flatMap((t) -> {
+
+        itemP.setTypeS(typeOpt.flatMap((t) -> {
           if (!t.vars().isEmpty()) {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
                 .formatted(itemP.q(), t.q());
@@ -84,9 +85,7 @@ public class TypeInferrer {
           } else {
             return Optional.of(t);
           }
-        });
-
-        itemP.setTypeS(typeOpt);
+        }));
       }
 
       @Override
@@ -242,27 +241,25 @@ public class TypeInferrer {
             }
             yield Optional.of(TypeFS.func(resultOpt.get(), paramsOpt.get()));
           }
-          default -> Optional.of(findType(type.name()));
+          default -> findType(type.name());
         };
       }
 
-      private MonoTS findType(String name) {
+      private Optional<MonoTS> findType(String name) {
         var typeDef = imported.tDefs().get(name);
         if (typeDef != null) {
-          return typeDef.type();
+          return Optional.of(typeDef.type());
         } else {
           return findLocalType(name);
         }
       }
 
-      private MonoTS findLocalType(String name) {
+      private Optional<MonoTS> findLocalType(String name) {
         StructP localStruct = ast.structs().get(name);
         if (localStruct == null) {
-          throw new RuntimeException(
-              "Cannot find type `" + name + "`. Available types = " + ast.structs());
+          return empty();
         } else {
-          return localStruct.typeS().orElseThrow(() -> new RuntimeException(
-              "Cannot find type `" + name + "`. Available types = " + ast.structs()));
+          return localStruct.typeS();
         }
       }
 
