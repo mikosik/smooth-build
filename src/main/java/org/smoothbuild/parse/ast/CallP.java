@@ -1,6 +1,7 @@
 package org.smoothbuild.parse.ast;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
 
@@ -9,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 public final class CallP extends MonoP implements MonoExprP {
   private final ObjP callee;
   private final List<ArgP> args;
-  private ImmutableList<ArgP> assignedArgs;
+  private ImmutableList<Optional<ArgP>> explicitArgs;
 
   public CallP(ObjP callee, List<ArgP> args, Loc loc) {
     super(loc);
@@ -25,14 +26,18 @@ public final class CallP extends MonoP implements MonoExprP {
     return args;
   }
 
-  public void setAssignedArgs(ImmutableList<ArgP> assignedArgs) {
-    this.assignedArgs = assignedArgs;
+  public void setExplicitArgs(ImmutableList<Optional<ArgP>> explicitArgs) {
+    this.explicitArgs = explicitArgs;
   }
 
   /**
-   * @return List of args containing both explicit and default arguments.
+   * @return List of explicit args where position of arg in the list matches parameter to which
+   * that arg is assigned. Named arguments are assigned to parameters at proper positions.
+   * Optional.empty() signals that for that parameter its default argument should be used,
+   * and it was already verified that this parameter has default argument.
+   * Size of list is equal to callee parameter list size.
    */
-  public ImmutableList<ArgP> assignedArgs() {
-    return assignedArgs;
+  public ImmutableList<Optional<ArgP>> explicitArgs() {
+    return explicitArgs;
   }
 }

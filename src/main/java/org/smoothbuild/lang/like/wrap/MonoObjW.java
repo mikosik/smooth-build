@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.lang.like.common.ObjC;
-import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.MonoTS;
 
 public class MonoObjW implements ObjC {
   private final MonoObjS monoObjS;
@@ -14,11 +14,7 @@ public class MonoObjW implements ObjC {
   }
 
   @Override
-  public Optional<? extends TypeS> typeS() {
+  public Optional<MonoTS> typeS() {
     return Optional.of(monoObjS.type());
-  }
-
-  public MonoObjS monoObjS() {
-    return monoObjS;
   }
 }

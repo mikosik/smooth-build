@@ -93,9 +93,7 @@ public class AstVisitor {
   }
 
   public void visitArg(ArgP arg) {
-    if (arg.obj() instanceof ObjP objP) {
-      visitObj(objP);
-    }
+    visitObj(arg.obj());
   }
 
   public void visitSelect(SelectP select) {

@@ -12,6 +12,8 @@ import static org.smoothbuild.parse.ast.AstSorter.sortParsedByDeps;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
+import java.util.HashMap;
+
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.define.DefsS;
@@ -30,9 +32,10 @@ import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.ItemP;
 import org.smoothbuild.parse.ast.StructP;
+import org.smoothbuild.util.NameBindings;
 import org.smoothbuild.util.collect.NList;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class LoadMod {
   public static Maybe<ModS> loadModule(
@@ -70,8 +73,8 @@ public class LoadMod {
     }
 
     var types = sortedAst.structs().map(s -> loadStructDef(path, s));
-    var evals = loadTopRefables(path, sortedAst);
-    var moduleS = new ModS(path, modFiles, types, evals);
+    var topRefables = loadTopRefables(path, sortedAst, imported);
+    var moduleS = new ModS(path, modFiles, types, topRefables);
     return maybeValueAndLogs(moduleS, logBuffer);
   }
 
@@ -81,16 +84,21 @@ public class LoadMod {
     return new StructDefS(type, path, loc);
   }
 
-  private static NList<TopRefableS> loadTopRefables(ModPath path, Ast ast) {
-    var local = ImmutableList.<TopRefableS>builder();
+  private static NList<TopRefableS> loadTopRefables(ModPath path, Ast ast, DefsS imported) {
+    var importedBindings = new NameBindings<>(imported.topRefables().map());
+    var localBindings = new HashMap<String, TopRefableS>();
+    var bindings = new NameBindings<>(importedBindings, localBindings);
+
     for (var structP : ast.structs()) {
       var ctorS = loadSyntCtor(path, structP);
-      local.add(ctorS);
+      localBindings.put(ctorS.name(), ctorS);
     }
+
     for (var refableP : ast.topRefables()) {
-      local.add(loadTopObj(path, refableP));
+      var loaded = loadTopObj(path, refableP, bindings);
+      localBindings.put(loaded.name(), loaded);
     }
-    return nList(local.build());
+    return nList(ImmutableMap.copyOf(localBindings));
   }
 
   private static MonoFuncS loadSyntCtor(ModPath path, StructP struct) {

@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.mapEntries;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import org.smoothbuild.lang.define.DefsS;

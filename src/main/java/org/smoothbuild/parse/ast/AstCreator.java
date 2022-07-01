@@ -156,7 +156,7 @@ public class AstCreator {
       private ArgP pipedArg(ObjP result, Token pipeCharacter) {
         // Loc of nameless piped arg is set to the loc of pipe character '|'.
         Loc loc = locOf(filePath, pipeCharacter);
-        return new ExplicitArgP(Optional.empty(), result, loc);
+        return new ArgP(Optional.empty(), result, loc);
       }
 
       private ObjP createLiteral(LiteralContext expr) {
@@ -225,14 +225,13 @@ public class AstCreator {
           ExprContext expr = arg.expr();
           TerminalNode nameNode = arg.NAME();
           var name = nameNode == null ? Optional.<String>empty() : Optional.of(nameNode.getText());
-          ObjP objP = createObj(expr);
-          result.add(new ExplicitArgP(name, objP, locOf(filePath, arg)));
+          var objP = createObj(expr);
+          result.add(new ArgP(name, objP, locOf(filePath, arg)));
         }
         return result;
       }
 
-      private MonoObjP createCall(
-          ObjP callable, List<ArgP> args, ArgListContext argListContext) {
+      private MonoObjP createCall(ObjP callable, List<ArgP> args, ArgListContext argListContext) {
         Loc loc = locOf(filePath, argListContext);
         return new CallP(callable, args, loc);
       }
