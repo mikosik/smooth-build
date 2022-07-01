@@ -50,7 +50,7 @@ import org.smoothbuild.parse.ast.SelectP;
 import org.smoothbuild.parse.ast.StringP;
 import org.smoothbuild.parse.ast.TopRefableP;
 import org.smoothbuild.parse.ast.ValP;
-import org.smoothbuild.util.Bindings;
+import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;

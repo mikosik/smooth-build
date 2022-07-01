@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.parse.ParseError.parseError;
-import static org.smoothbuild.util.Bindings.bindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.mapValues;
@@ -19,8 +19,9 @@ import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.FuncP;
 import org.smoothbuild.parse.ast.RefP;
 import org.smoothbuild.parse.ast.StructP;
-import org.smoothbuild.util.Bindings;
 import org.smoothbuild.util.Throwables;
+import org.smoothbuild.util.bindings.Bindings;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.Nameables;
 
 public class ReferenceResolver extends AstVisitor {
@@ -34,12 +35,12 @@ public class ReferenceResolver extends AstVisitor {
   }
 
   private static Bindings<RefableC> scope(DefsS imported, Ast ast) {
-    Bindings<RefableC> bindings = bindings(mapValues(imported.topRefables().map(),
-        ReferenceResolver::wrap));
+    ImmutableBindings<RefableC> bindings = immutableBindings(
+        mapValues(imported.topRefables().asMap(), ReferenceResolver::wrap));
     var ctors = map(ast.structs(), StructP::ctor);
     var refables = ast.topRefables();
-    var inner = Nameables.<RefableC>toMap(concat(refables, ctors));
-    return bindings.newInnerScope(inner);
+    return bindings.newMutableScope()
+        .addAll(Nameables.<RefableC>toMap(concat(refables, ctors)));
   }
 
   private static TopRefableW wrap(TopRefableS topRefableS) {
@@ -59,8 +60,9 @@ public class ReferenceResolver extends AstVisitor {
   public void visitFunc(FuncP funcP) {
     visitParams(funcP.params());
     funcP.body().ifPresent(expr -> {
-      var funcBindings = bindings.newInnerScope(funcP.params().map());
-      var referenceResolver = new ReferenceResolver(funcBindings, logger);
+      var withParamBindings = bindings.newMutableScope()
+          .addAll(funcP.params().map());
+      var referenceResolver = new ReferenceResolver(withParamBindings, logger);
       referenceResolver.visitObj(expr);
     });
   }
@@ -68,11 +70,11 @@ public class ReferenceResolver extends AstVisitor {
   @Override
   public void visitRef(RefP ref) {
     super.visitRef(ref);
-    String name = ref.name();
-    if (bindings.contains(name)) {
-      ref.setReferenced(bindings.get(name));
+    var refableC = bindings.getOpt(ref.name());
+    if (refableC.isPresent()) {
+      ref.setReferenced(refableC.get());
     } else {
-      logger.log(parseError(ref.loc(), "`" + name + "` is undefined."));
+      logger.log(parseError(ref.loc(), "`" + ref.name() + "` is undefined."));
     }
   }
 }

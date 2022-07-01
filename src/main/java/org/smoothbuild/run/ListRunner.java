@@ -32,6 +32,8 @@ public class ListRunner {
       reporter.startNewPhase("Values that can be evaluated:");
       defsS.get()
           .topRefables()
+          .asMap()
+          .values()
           .stream()
           .filter(f -> f.loc().file().space().equals(PRJ))
           .filter(ValS.class::isInstance)

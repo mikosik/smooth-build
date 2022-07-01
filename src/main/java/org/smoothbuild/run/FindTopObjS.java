@@ -21,9 +21,9 @@ public class FindTopObjS {
     var topRefs = new HashSet<MonoRefS>();
     var logs = new LogBuffer();
     for (String name : names) {
-      var topRefable = topRefables.get(name);
-      if (topRefable != null) {
-        if (topRefable instanceof ValS value) {
+      var topRefable = topRefables.getOpt(name);
+      if (topRefable.isPresent()) {
+        if (topRefable.get() instanceof ValS value) {
           topRefs.add(new MonoRefS(value.type(), value.name(), commandLineLoc()));
         } else {
           logs.error(

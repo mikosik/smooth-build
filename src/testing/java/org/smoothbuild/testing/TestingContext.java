@@ -18,6 +18,7 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.report.TaskMatchers.ALL;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 import static org.smoothbuild.util.io.Okios.intToByteString;
@@ -131,7 +132,9 @@ import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.collect.Nameable;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
@@ -1157,5 +1160,9 @@ public class TestingContext {
 
   public static SynchronizedFileSystem synchronizedMemoryFileSystem() {
     return new SynchronizedFileSystem(new MemoryFileSystem());
+  }
+
+  public static <E extends Nameable> ImmutableBindings<E> oneBinding(E elem) {
+    return immutableBindings(ImmutableMap.of(elem.nameO().get(), elem));
   }
 }

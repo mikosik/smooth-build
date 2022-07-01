@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -29,6 +30,7 @@ import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class CompilerTest extends TestingContext {
   @Nested
@@ -294,10 +296,11 @@ public class CompilerTest extends TestingContext {
   }
 
   private DefsS defs() {
-    return new DefsS(nList(), nList());
+    return DefsS.empty();
   }
 
   private DefsS defs(TopRefableS topRefable) {
-    return new DefsS(nList(), nList(topRefable));
+    return new DefsS(
+        immutableBindings(), immutableBindings(ImmutableMap.of(topRefable.name(), topRefable)));
   }
 }

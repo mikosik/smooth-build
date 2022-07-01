@@ -9,9 +9,8 @@ import static org.smoothbuild.parse.ReferenceResolver.resolveReferences;
 import static org.smoothbuild.parse.TypeInferrer.inferTypes;
 import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.parse.ast.AstSorter.sortParsedByDeps;
-import static org.smoothbuild.util.Bindings.bindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.fs.space.FilePath;
@@ -31,7 +30,7 @@ import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.ItemP;
 import org.smoothbuild.parse.ast.StructP;
-import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 
 public class LoadMod {
   public static Maybe<ModS> loadModule(
@@ -68,7 +67,7 @@ public class LoadMod {
       return maybeLogs(logBuffer);
     }
 
-    var types = sortedAst.structs().map(s -> loadStructDef(path, s));
+    var types = immutableBindings(sortedAst.structs().map(s -> loadStructDef(path, s)).map());
     var topRefables = loadTopRefables(path, sortedAst, imported);
     var moduleS = new ModS(path, modFiles, types, topRefables);
     return maybeValueAndLogs(moduleS, logBuffer);
@@ -80,9 +79,10 @@ public class LoadMod {
     return new StructDefS(type, path, loc);
   }
 
-  private static NList<TopRefableS> loadTopRefables(ModPath path, Ast ast, DefsS imported) {
-    var bindings = bindings(imported.topRefables().map())
-        .newInnerScope();
+  private static ImmutableBindings<TopRefableS> loadTopRefables(
+      ModPath path, Ast ast, DefsS imported) {
+    var bindings = imported.topRefables()
+        .newMutableScope();
 
     for (var structP : ast.structs()) {
       var ctorS = loadSyntCtor(path, structP);
@@ -93,7 +93,7 @@ public class LoadMod {
       var loaded = loadTopObj(path, refableP, bindings);
       bindings.add(loaded);
     }
-    return nList(bindings.innerScopeBindings());
+    return bindings.innerScope();
   }
 
   private static MonoFuncS loadSyntCtor(ModPath path, StructP struct) {

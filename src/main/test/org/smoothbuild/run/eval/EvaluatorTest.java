@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -26,7 +27,7 @@ import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
-import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 
@@ -64,7 +65,7 @@ public class EvaluatorTest  extends TestingContext {
     public void call() {
       var defFuncS = defFuncS("n", nList(), intS(7));
       var callS = callS(intTS(), refS(defFuncS));
-      assertThat(evaluate(callS, nList(defFuncS)))
+      assertThat(evaluate(callS, oneBinding(defFuncS)))
           .isEqualTo(intB(7));
     }
 
@@ -72,7 +73,7 @@ public class EvaluatorTest  extends TestingContext {
     public void call_with_result_conversion() {
       var defFuncS = defFuncS(arrayTS(nothingTS()), "n", nList(), orderS(nothingTS()));
       var callS = callS(arrayTS(intTS()), refS(defFuncS));
-      assertThat(evaluate(callS, nList(defFuncS)))
+      assertThat(evaluate(callS, oneBinding(defFuncS)))
           .isEqualTo(arrayB(intTB()));
     }
 
@@ -83,7 +84,7 @@ public class EvaluatorTest  extends TestingContext {
           arrayTS(a), "n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e"))));
       var actualTS = funcTS(arrayTS(intTS()), list(intTS()));
       var callS = callS(arrayTS(intTS()), monoizeS(actualTS, refS(funcS)), intS(7));
-      assertThat(evaluate(callS, nList(funcS)))
+      assertThat(evaluate(callS, oneBinding(funcS)))
           .isEqualTo(arrayB(intTB(), intB(7)));
     }
   }
@@ -93,7 +94,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void def_func() {
       var defFuncS = defFuncS("myFunc", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-      assertThat(evaluate(refS(defFuncS), nList(defFuncS)))
+      assertThat(evaluate(refS(defFuncS), oneBinding(defFuncS)))
           .isEqualTo(idFuncB());
     }
 
@@ -110,14 +111,14 @@ public class EvaluatorTest  extends TestingContext {
 
       var byteFuncS = poly(byteFuncS(className, varA(), "myFunc", nList(itemS(varA(), "p"))));
       var actualFuncTS = funcTS(intTS(), list(intTS()));
-      assertThat(evaluate(monoizeS(actualFuncTS, refS(byteFuncS)), nList(byteFuncS)))
+      assertThat(evaluate(monoizeS(actualFuncTS, refS(byteFuncS)), oneBinding(byteFuncS)))
           .isEqualTo(funcB);
     }
 
     @Test
     public void synt_ctor() {
       var syntCtorS = syntCtorS(structTS("MyStruct", nList(sigS(intTS(), "myField"))));
-      assertThat(evaluate(refS(syntCtorS), nList(syntCtorS)))
+      assertThat(evaluate(refS(syntCtorS), oneBinding(syntCtorS)))
           .isEqualTo(funcB(list(intTB()), combineB(paramRefB(intTB(), 0))));
     }
   }
@@ -134,7 +135,7 @@ public class EvaluatorTest  extends TestingContext {
       when(nativeMethodLoader.load(any(), any()))
           .thenReturn(Try.result(
               EvaluatorTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(callS, nList(funcS)))
+      assertThat(evaluate(callS, oneBinding(funcS)))
           .isEqualTo(intB(173));
     }
 
@@ -149,7 +150,7 @@ public class EvaluatorTest  extends TestingContext {
       when(nativeMethodLoader.load(any(), any()))
           .thenReturn(Try.result(
               EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(callS, nList(funcS)))
+      assertThat(evaluate(callS, oneBinding(funcS)))
           .isEqualTo(intB(77));
     }
 
@@ -164,7 +165,7 @@ public class EvaluatorTest  extends TestingContext {
       when(nativeMethodLoader.load(any(), any()))
           .thenReturn(Try.result(
               EvaluatorTest.class.getMethod("returnArrayParam", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(callS, nList(funcS)))
+      assertThat(evaluate(callS, oneBinding(funcS)))
           .isEqualTo(arrayB(intTB()));
     }
   }
@@ -190,7 +191,7 @@ public class EvaluatorTest  extends TestingContext {
       var actualTS = funcTS(intTS(), list(intTS()));
       var monoizeS = monoizeS(actualTS, refS(funcS));
 
-      assertThat(evaluate(monoizeS, nList(funcS)))
+      assertThat(evaluate(monoizeS, oneBinding(funcS)))
           .isEqualTo(idFuncB());
     }
   }
@@ -217,7 +218,7 @@ public class EvaluatorTest  extends TestingContext {
       var structTS = structTS("MyStruct", nList(sigS(intTS(), "f")));
       var syntCtorS = syntCtorS(structTS);
       var callS = callS(structTS, refS(syntCtorS), intS(7));
-      assertThat(evaluate(selectS(intTS(), callS, "f"), nList(syntCtorS)))
+      assertThat(evaluate(selectS(intTS(), callS, "f"), oneBinding(syntCtorS)))
           .isEqualTo(intB(7));
     }
 
@@ -226,17 +227,17 @@ public class EvaluatorTest  extends TestingContext {
       var structTS = structTS("MyStruct", nList(sigS(arrayTS(nothingTS()), "f")));
       var syntCtorS = syntCtorS(structTS);
       var callS = callS(structTS, refS(syntCtorS), orderS(nothingTS()));
-      assertThat(evaluate(selectS(arrayTS(intTS()), callS, "f"), nList(syntCtorS)))
+      assertThat(evaluate(selectS(arrayTS(intTS()), callS, "f"), oneBinding(syntCtorS)))
           .isEqualTo(arrayB(intTB()));
     }
   }
 
   private ObjB evaluate(MonoObjS objS) {
-    return evaluate(objS, nList());
+    return evaluate(objS, immutableBindings());
   }
 
-  private ObjB evaluate(MonoObjS objS, NList<TopRefableS> topRefables) {
-    var defsS = new DefsS(nList(), topRefables);
+  private ObjB evaluate(MonoObjS objS, ImmutableBindings<TopRefableS> topRefables) {
+    var defsS = new DefsS(immutableBindings(), topRefables);
     var resultMap = newEvaluator().evaluate(defsS, list(objS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);

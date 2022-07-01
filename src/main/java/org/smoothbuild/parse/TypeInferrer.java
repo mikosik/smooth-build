@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import org.smoothbuild.lang.base.Tapanal;
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.like.common.ObjC;
@@ -246,12 +247,9 @@ public class TypeInferrer {
       }
 
       private Optional<MonoTS> findType(String name) {
-        var typeDef = imported.tDefs().get(name);
-        if (typeDef != null) {
-          return Optional.of(typeDef.type());
-        } else {
-          return findLocalType(name);
-        }
+        return imported.tDefs().getOpt(name)
+            .map(Tapanal::type)
+            .or(() -> findLocalType(name));
       }
 
       private Optional<MonoTS> findLocalType(String name) {

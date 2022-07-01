@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.define;
 
-import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 
 public record ModS(
     ModPath path,
     ModFiles files,
-    NList<TDefS> tDefs,
-    NList<TopRefableS> topRefables) {
+    ImmutableBindings<TDefS> tDefs,
+    ImmutableBindings<TopRefableS> topRefables) {
 }

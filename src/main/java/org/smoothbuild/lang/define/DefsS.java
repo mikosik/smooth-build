@@ -1,22 +1,34 @@
 package org.smoothbuild.lang.define;
 
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
-import org.smoothbuild.util.collect.NList;
+import java.util.HashMap;
+
+import org.smoothbuild.util.bindings.ImmutableBindings;
+import org.smoothbuild.util.collect.Nameable;
+
+import com.google.common.collect.ImmutableMap;
 
 public record DefsS(
-    NList<TDefS> tDefs,
-    NList<TopRefableS> topRefables) {
+    ImmutableBindings<TDefS> tDefs,
+    ImmutableBindings<TopRefableS> topRefables) {
 
   public static DefsS empty() {
-    return new DefsS(nList(), nList());
+    return new DefsS(immutableBindings(), immutableBindings());
   }
 
   public DefsS withModule(ModS mod) {
     return new DefsS(
-        nList(concat(tDefs, mod.tDefs())),
-        nList(concat(topRefables, mod.topRefables()))
+        merge(tDefs, mod.tDefs()),
+        merge(topRefables, mod.topRefables())
     );
+  }
+
+  public <E extends Nameable> ImmutableBindings<E> merge(
+      ImmutableBindings<E> outer, ImmutableBindings<? extends E> inner) {
+    var map = new HashMap<String, E>();
+    map.putAll(outer.asMap());
+    map.putAll(inner.asMap());
+    return immutableBindings(ImmutableMap.copyOf(map));
   }
 }
