@@ -74,12 +74,11 @@ public class CallTypeInferrer {
   }
 
   public static Optional<NList<ParamC>> funcParams(ObjP callee, FuncTS calleeT) {
-    if (callee instanceof RefP refP) {
-      if (refP.referenced() instanceof FuncC funcC) {
-        return funcC.paramsC();
-      }
+    if (callee instanceof RefP refP && refP.referenced() instanceof FuncC funcC) {
+      return funcC.paramsC();
+    } else {
+      return Optional.of(nList(map(calleeT.params(), p -> new ParamC(itemSigS(p), empty()))));
     }
-    return Optional.of(nList(map(calleeT.params(), p -> new ParamC(itemSigS(p), empty()))));
   }
 
   private static boolean someArgHasNotInferredType(ImmutableList<Optional<ArgP>> args) {
