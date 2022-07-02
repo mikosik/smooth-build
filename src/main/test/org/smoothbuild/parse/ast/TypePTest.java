@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.testing.TestingContext.loc;
+import static org.smoothbuild.testing.TestContext.loc;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

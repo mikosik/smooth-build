@@ -17,7 +17,7 @@ import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.testing.func.bytecode.NonStaticMethod;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
@@ -26,7 +26,7 @@ import org.smoothbuild.testing.func.bytecode.WithThreeParams;
 import org.smoothbuild.testing.func.bytecode.WithoutBytecodeF;
 import org.smoothbuild.util.collect.Try;
 
-public class BytecodeMethodLoaderTest extends TestingContext {
+public class BytecodeMethodLoaderTest extends TestContext {
   @Nested
   class _caching {
     @Test

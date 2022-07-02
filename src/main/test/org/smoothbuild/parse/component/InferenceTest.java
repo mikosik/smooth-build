@@ -5,9 +5,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class InferenceTest extends TestingContext {
+public class InferenceTest extends TestContext {
   @Nested
   class _infer_value_type_from {
     @Test

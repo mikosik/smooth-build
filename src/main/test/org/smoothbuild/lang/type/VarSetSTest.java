@@ -5,11 +5,11 @@ import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import com.google.common.testing.EqualsTester;
 
-public class VarSetSTest extends TestingContext {
+public class VarSetSTest extends TestContext {
   @Test
   public void as_list() {
     var varSet = varSetS(varB(), varC(), varA());

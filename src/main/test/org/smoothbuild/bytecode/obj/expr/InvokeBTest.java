@@ -9,9 +9,9 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class InvokeBTest extends TestingContext {
+public class InvokeBTest extends TestContext {
   @Test
   public void creating_invoke_with_expr_not_being_method_causes_exception() {
     assertCall(() -> invokeB(blobTB(), intB()))

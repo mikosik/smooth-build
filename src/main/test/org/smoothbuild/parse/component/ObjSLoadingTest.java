@@ -7,9 +7,9 @@ import static org.smoothbuild.util.collect.NList.nlist;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.define.ItemS;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class ObjSLoadingTest extends TestingContext {
+public class ObjSLoadingTest extends TestContext {
   @Test
   public void blob_literal_expression() {
     module("""

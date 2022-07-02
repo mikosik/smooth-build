@@ -6,11 +6,11 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import okio.ByteString;
 
-public class ObjBStableHashTest extends TestingContext {
+public class ObjBStableHashTest extends TestContext {
   @Nested
   class _array {
     @Test

@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class DecodeSelectIndexOutOfBoundsExcTest extends TestingContext {
+public class DecodeSelectIndexOutOfBoundsExcTest extends TestContext {
   @Test
   public void message() {
     var exception = new DecodeSelectIndexOutOfBoundsExc(

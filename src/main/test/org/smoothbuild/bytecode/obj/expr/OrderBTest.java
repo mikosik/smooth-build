@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Lists;
 
-public class OrderBTest extends TestingContext {
+public class OrderBTest extends TestContext {
   @Test
   public void cat_returns_category() {
     var orderH = orderB(intTB());

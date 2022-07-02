@@ -6,10 +6,10 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
 
-public class CatBCollisionsTest extends TestingContext {
+public class CatBCollisionsTest extends TestContext {
   @Test
   public void collisions() {
     HashMap<Hash, CatB> map = new HashMap<>();

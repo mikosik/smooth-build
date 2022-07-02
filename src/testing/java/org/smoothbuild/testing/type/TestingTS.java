@@ -21,7 +21,7 @@ import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableSet;
 public class TestingTS {
   public static final TestingTS INSTANCE = new TestingTS();
 
-  private static final TestingContext CONTEXT = new TestingContext();
+  private static final TestContext CONTEXT = new TestContext();
 
   public static final ImmutableList<MonoTS> BASE_TYPES = ImmutableList.copyOf(TypeFS.baseTs());
   public static final ImmutableList<MonoTS> INFERABLE_BASE_TYPES = TypeFS.inferableBaseTs();

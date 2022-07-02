@@ -18,7 +18,7 @@ import org.smoothbuild.load.JarClassLoaderProv;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.NonStaticMethod;
 import org.smoothbuild.testing.func.nativ.ReturnAbc;
@@ -27,7 +27,7 @@ import org.smoothbuild.testing.func.nativ.TooManyParameters;
 import org.smoothbuild.testing.func.nativ.WrongParameterType;
 import org.smoothbuild.util.collect.Try;
 
-public class NativeMethodLoaderTest extends TestingContext {
+public class NativeMethodLoaderTest extends TestContext {
   @Test
   public void non_public_method_causes_error() throws IOException {
     assertLoadingCausesError(NonPublicMethod.class, "Providing method is not public.");

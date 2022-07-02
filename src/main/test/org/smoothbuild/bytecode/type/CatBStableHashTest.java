@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class CatBStableHashTest extends TestingContext {
+public class CatBStableHashTest extends TestContext {
   @Test
   public void hashes_of_types_are_stable() {
     assertHash(blobTB(), "0a2b2a825165ae9742c63b0c6ddafc22f0bd3b1e");

@@ -25,10 +25,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.job.TaskInfo;
 
-public class ConsoleReporterTest extends TestingContext {
+public class ConsoleReporterTest extends TestContext {
   private static final String HEADER = "TASK NAME";
   private static final Log FATAL_LOG = Log.fatal("fatal message");
   private static final Log ERROR_LOG = Log.error("error message");

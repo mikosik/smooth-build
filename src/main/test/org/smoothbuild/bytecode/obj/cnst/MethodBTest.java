@@ -8,9 +8,9 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class MethodBTest extends TestingContext {
+public class MethodBTest extends TestContext {
   @Test
   public void type_is_read_correctly() {
     var jar = blobB();

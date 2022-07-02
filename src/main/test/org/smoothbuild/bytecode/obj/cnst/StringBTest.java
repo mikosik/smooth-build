@@ -8,9 +8,9 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class StringBTest extends TestingContext {
+public class StringBTest extends TestContext {
   private final String string = "my string";
   private final String otherString = "my string 2";
 

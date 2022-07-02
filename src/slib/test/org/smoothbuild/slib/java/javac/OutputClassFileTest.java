@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.ArrayBBuilder;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import okio.BufferedSink;
 import okio.ByteString;
 
-public class OutputClassFileTest extends TestingContext {
+public class OutputClassFileTest extends TestContext {
   private final PathS path = PathS.path("my/path");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 

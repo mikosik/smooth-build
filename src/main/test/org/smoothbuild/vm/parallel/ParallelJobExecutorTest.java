@@ -33,7 +33,7 @@ import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
 import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.algorithm.Output;
@@ -44,7 +44,7 @@ import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.Task;
 import org.smoothbuild.vm.job.TaskInfo;
 
-public class ParallelJobExecutorTest extends TestingContext {
+public class ParallelJobExecutorTest extends TestContext {
   private ParallelJobExecutor parallelJobExecutor;
   private ExecutionReporter reporter;
 

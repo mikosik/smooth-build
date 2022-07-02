@@ -14,12 +14,12 @@ import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
 
 import okio.ByteString;
 
-public class ArrayBTest extends TestingContext {
+public class ArrayBTest extends TestContext {
   @Test
   public void empty_nothing_array_can_be_iterated_as_tuple() {
     ArrayB array = objDb().arrayBuilder(arrayTB(nothingTB()))

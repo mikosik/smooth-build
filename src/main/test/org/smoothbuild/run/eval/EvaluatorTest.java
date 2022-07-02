@@ -25,7 +25,7 @@ import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.Try;
@@ -33,7 +33,7 @@ import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableMap;
 
-public class EvaluatorTest  extends TestingContext {
+public class EvaluatorTest  extends TestContext {
   private final FileLoader fileLoader = mock(FileLoader.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private final BytecodeLoader bytecodeLoader = mock(BytecodeLoader.class);

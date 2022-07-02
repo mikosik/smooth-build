@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import okio.ByteString;
 
-public class BlobBTest extends TestingContext {
+public class BlobBTest extends TestContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test

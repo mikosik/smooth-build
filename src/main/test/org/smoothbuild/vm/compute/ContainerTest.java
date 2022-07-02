@@ -6,9 +6,9 @@ import static org.smoothbuild.run.eval.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class ContainerTest extends TestingContext {
+public class ContainerTest extends TestContext {
   @Test
   public void file_system() {
     assertThat(container().fileSystem())

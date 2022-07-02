@@ -10,9 +10,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class CatBCachingTest extends TestingContext {
+public class CatBCachingTest extends TestContext {
   @ParameterizedTest
   @MethodSource("factories")
   public void created_type_is_cached(Function<CatDb, CatB> factory) {

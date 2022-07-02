@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.algorithm.CombineAlgorithm;
 import org.smoothbuild.vm.algorithm.InvokeAlgorithm;
@@ -19,7 +19,7 @@ import org.smoothbuild.vm.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.algorithm.Output;
 import org.smoothbuild.vm.algorithm.SelectAlgorithm;
 
-public class ComputationHashTest extends TestingContext {
+public class ComputationHashTest extends TestContext {
   @Test
   public void hashes_of_computations_with_same_algorithm_runtime_and_input_are_equal() {
     var algorithm = algorithm(Hash.of(1));

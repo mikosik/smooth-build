@@ -12,9 +12,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class PathArgValidatorTest extends TestingContext {
+public class PathArgValidatorTest extends TestContext {
   @ParameterizedTest
   @MethodSource("listOfCorrectProjectPaths")
   public void valid_project_paths_are_accepted(String path) {

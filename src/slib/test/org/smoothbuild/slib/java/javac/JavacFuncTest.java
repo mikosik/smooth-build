@@ -7,9 +7,9 @@ import static org.smoothbuild.testing.common.JarTester.jarByteString;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class JavacFuncTest extends TestingContext {
+public class JavacFuncTest extends TestContext {
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
     TupleB file1 = fileB(path("my/package/MyKlass.class"));

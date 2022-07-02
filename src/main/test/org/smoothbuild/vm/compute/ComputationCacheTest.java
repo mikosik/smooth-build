@@ -14,12 +14,12 @@ import org.smoothbuild.bytecode.obj.cnst.IntB;
 import org.smoothbuild.bytecode.obj.cnst.StringB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.algorithm.Output;
 
 import okio.ByteString;
 
-public class ComputationCacheTest extends TestingContext {
+public class ComputationCacheTest extends TestContext {
   private final Hash hash = Hash.of("abc");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 

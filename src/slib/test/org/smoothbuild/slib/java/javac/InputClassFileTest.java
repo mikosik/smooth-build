@@ -12,12 +12,12 @@ import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import okio.BufferedSource;
 import okio.ByteString;
 
-public class InputClassFileTest extends TestingContext {
+public class InputClassFileTest extends TestContext {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private final PathS path = path("a/b/MyClass.class");
 

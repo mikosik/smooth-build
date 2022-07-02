@@ -6,9 +6,9 @@ import static org.smoothbuild.testing.common.JarTester.jar;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class UnzipBlobTest extends TestingContext {
+public class UnzipBlobTest extends TestContext {
   @Test
   public void unzip_blob() throws Exception {
     TupleB file1 = fileB("file1.txt", "abc");

@@ -39,7 +39,7 @@ import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.BuildRunner;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.SandboxHash;
 import org.smoothbuild.vm.parallel.TaskReporter;
 
@@ -53,7 +53,7 @@ import com.google.inject.Singleton;
 
 import okio.BufferedSink;
 
-public class AcceptanceTestCase extends TestingContext {
+public class AcceptanceTestCase extends TestContext {
   private FileSystem slibFileSystem;
   private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;

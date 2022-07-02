@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import okio.ByteString;
 
-public class ObjBCollisionTest extends TestingContext {
+public class ObjBCollisionTest extends TestContext {
   @Test
   public void collisions() {
     HashMap<Hash, ObjB> map = new HashMap<>();

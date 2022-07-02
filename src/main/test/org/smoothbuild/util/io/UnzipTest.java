@@ -14,11 +14,11 @@ import java.util.zip.ZipEntry;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import okio.Buffer;
 
-public class UnzipTest extends TestingContext {
+public class UnzipTest extends TestContext {
   @Test
   public void files_are_unzipped() throws Exception {
     var files = Map.of("file1", "content1", "file2", "content2");

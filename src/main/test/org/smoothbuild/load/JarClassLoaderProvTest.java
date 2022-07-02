@@ -4,10 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.ClassLoader.getPlatformClassLoader;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.ReturnAbc;
 
-public class JarClassLoaderProvTest extends TestingContext {
+public class JarClassLoaderProvTest extends TestContext {
   @Test
   public void provided_classloader_can_load_class_and_its_method() throws Exception {
     var jar = blobBJarWithJavaByteCode(MyClass.class);

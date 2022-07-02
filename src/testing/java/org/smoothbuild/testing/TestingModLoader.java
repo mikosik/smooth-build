@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.lang.define.LoadInternalMod.loadInternalMod;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.parse.LoadMod.loadModule;
-import static org.smoothbuild.testing.TestingContext.BUILD_FILE_PATH;
-import static org.smoothbuild.testing.TestingContext.importedModFiles;
-import static org.smoothbuild.testing.TestingContext.modFiles;
+import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
+import static org.smoothbuild.testing.TestContext.importedModFiles;
+import static org.smoothbuild.testing.TestContext.modFiles;
 
 import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
@@ -20,14 +20,14 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 
 public class TestingModLoader {
-  private final TestingContext testingContext;
+  private final TestContext testContext;
   private final String sourceCode;
   private ModFiles modFiles;
   private DefsS imported;
   private Maybe<ModS> modS;
 
-  TestingModLoader(TestingContext testingContext, String sourceCode) {
-    this.testingContext = testingContext;
+  TestingModLoader(TestContext testContext, String sourceCode) {
+    this.testContext = testContext;
     this.sourceCode = sourceCode;
   }
 

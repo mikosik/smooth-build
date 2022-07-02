@@ -13,13 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.algorithm.Output;
 import org.smoothbuild.vm.compute.CompRes;
 import org.smoothbuild.vm.job.TaskInfo;
 
-public class ResHandlerTest extends TestingContext {
+public class ResHandlerTest extends TestContext {
   private ExecutionReporter reporter;
   private SoftTerminationExecutor executor;
   private Consumer<CnstB> consumer;

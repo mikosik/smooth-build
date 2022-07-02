@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class ConvertAlgorithmTest extends TestingContext {
+public class ConvertAlgorithmTest extends TestContext {
   @Nested
   class _unnecessary_conversions {
     @Test

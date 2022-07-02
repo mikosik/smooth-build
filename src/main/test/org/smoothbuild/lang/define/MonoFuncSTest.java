@@ -10,11 +10,11 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.type.MonoTS;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class MonoFuncSTest extends TestingContext {
+public class MonoFuncSTest extends TestContext {
   @Test
   public void func_without_params_can_be_called_without_args() {
     MonoFuncS func = myFunc(STRING, list());

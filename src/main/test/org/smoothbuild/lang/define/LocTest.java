@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.Loc.commandLineLoc;
 import static org.smoothbuild.lang.base.Loc.internal;
 import static org.smoothbuild.lang.base.Loc.loc;
 import static org.smoothbuild.lang.base.Loc.unknown;
-import static org.smoothbuild.testing.TestingContext.filePath;
+import static org.smoothbuild.testing.TestContext.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;

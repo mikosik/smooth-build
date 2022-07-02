@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ThrowException;
@@ -21,7 +21,7 @@ import org.smoothbuild.util.collect.Try;
 
 import com.google.common.collect.ImmutableMap;
 
-public class BytecodeLoaderTest extends TestingContext {
+public class BytecodeLoaderTest extends TestContext {
   @Test
   public void loading_bytecode() throws Exception {
     assertThat(loadBytecode(ReturnAbc.class, new HashMap<>()))

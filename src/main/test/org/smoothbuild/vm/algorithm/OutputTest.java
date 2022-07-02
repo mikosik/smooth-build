@@ -6,9 +6,9 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class OutputTest extends TestingContext {
+public class OutputTest extends TestContext {
   @Test
   public void null_messages_are_forbidden() {
     assertCall(() -> new Output(aString(), null))

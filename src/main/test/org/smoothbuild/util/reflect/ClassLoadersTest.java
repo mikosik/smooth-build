@@ -9,9 +9,9 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class ClassLoadersTest extends TestingContext {
+public class ClassLoadersTest extends TestContext {
   @Test
   public void load_class() throws Exception {
     Class<MyClass> clazz = MyClass.class;

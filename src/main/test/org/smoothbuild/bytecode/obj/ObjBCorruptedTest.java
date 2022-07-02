@@ -67,11 +67,11 @@ import org.smoothbuild.db.exc.DecodeHashSeqExc;
 import org.smoothbuild.db.exc.DecodeStringExc;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import okio.ByteString;
 
-public class ObjBCorruptedTest extends TestingContext {
+public class ObjBCorruptedTest extends TestContext {
   @Nested
   class _obj {
     @Test

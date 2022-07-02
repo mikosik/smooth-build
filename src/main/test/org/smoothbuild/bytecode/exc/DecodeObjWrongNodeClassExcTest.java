@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class DecodeObjWrongNodeClassExcTest extends TestingContext {
+public class DecodeObjWrongNodeClassExcTest extends TestContext {
   @Test
   public void message_without_index() {
     var exception = new DecodeObjWrongNodeClassExc(

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.testing.TestingContext.loc;
+import static org.smoothbuild.testing.TestContext.loc;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 

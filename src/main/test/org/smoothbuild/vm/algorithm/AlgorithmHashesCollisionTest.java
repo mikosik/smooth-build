@@ -10,9 +10,9 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class AlgorithmHashesCollisionTest extends TestingContext {
+public class AlgorithmHashesCollisionTest extends TestContext {
 
   @Test
   public void each_algorithm_has_different_hash() {

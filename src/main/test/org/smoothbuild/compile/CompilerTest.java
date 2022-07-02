@@ -24,7 +24,7 @@ import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.lang.define.MonoTopRefableS;
 import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.load.FileLoader;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
@@ -32,7 +32,7 @@ import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class CompilerTest extends TestingContext {
+public class CompilerTest extends TestContext {
   @Nested
   class _compiling {
     @Test

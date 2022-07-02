@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class DecodeObjRootExcTest extends TestingContext {
+public class DecodeObjRootExcTest extends TestContext {
   @Test
   public void cannot_read_root_exception() {
     var exception = DecodeObjRootExc.cannotReadRootException(Hash.of(123), new RuntimeException());

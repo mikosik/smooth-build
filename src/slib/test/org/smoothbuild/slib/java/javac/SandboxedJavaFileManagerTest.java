@@ -10,9 +10,9 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class SandboxedJavaFileManagerTest extends TestingContext {
+public class SandboxedJavaFileManagerTest extends TestContext {
   @Test
   public void getJavaFile_output_is_not_forwarded_to_standard_manager_for_class_output()
       throws Exception {

@@ -9,9 +9,9 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class ParamRefBTest extends TestingContext {
+public class ParamRefBTest extends TestContext {
   @Test
   public void type_of_ref_expr_is_ref_type() {
     assertThat(paramRefB(intTB(), 123).cat())

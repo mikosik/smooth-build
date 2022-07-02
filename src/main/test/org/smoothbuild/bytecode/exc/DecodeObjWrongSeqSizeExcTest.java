@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class DecodeObjWrongSeqSizeExcTest extends TestingContext {
+public class DecodeObjWrongSeqSizeExcTest extends TestContext {
   @Test
   public void message() {
     var exception = new DecodeObjWrongSeqSizeExc(Hash.of(123), intTB(), "node-path", 7, 2);

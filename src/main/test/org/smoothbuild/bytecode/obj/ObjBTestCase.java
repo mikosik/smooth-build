@@ -7,11 +7,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import com.google.common.testing.EqualsTester;
 
-public abstract class ObjBTestCase<T extends ObjB> extends TestingContext {
+public abstract class ObjBTestCase<T extends ObjB> extends TestContext {
   protected abstract List<T> equalValues();
 
   protected abstract List<T> nonEqualValues();

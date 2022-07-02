@@ -17,10 +17,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestedTS;
 
-public class DeclarationTest extends TestingContext {
+public class DeclarationTest extends TestContext {
   @Nested
   class _members {
     @Nested

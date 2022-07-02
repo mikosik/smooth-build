@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestedTB.TestedArrayTB;
 import org.smoothbuild.testing.type.TestedTB.TestedFuncTB;
 import org.smoothbuild.testing.type.TestedTB.TestedTupleTB;
@@ -19,7 +19,7 @@ import org.smoothbuild.testing.type.TestedTB.TestedTupleTB;
 import com.google.common.collect.ImmutableList;
 
 public class TestedTBF {
-  public static final CatDb CAT_DB = new TestingContext().catDb();
+  public static final CatDb CAT_DB = new TestContext().catDb();
 
   public static final BlobTB BLOB = CAT_DB.blob();
   public static final BoolTB BOOL = CAT_DB.bool();

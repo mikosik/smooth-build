@@ -2,7 +2,7 @@ package org.smoothbuild.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Loc.internal;
-import static org.smoothbuild.testing.TestingContext.loc;
+import static org.smoothbuild.testing.TestContext.loc;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 

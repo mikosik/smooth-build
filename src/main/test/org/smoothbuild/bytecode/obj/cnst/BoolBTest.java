@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class BoolBTest extends TestingContext {
+public class BoolBTest extends TestContext {
   @Test
   public void type_of_bool_is_bool_type() {
     assertThat(boolB(true).cat())

@@ -23,7 +23,7 @@ import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.IntB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
@@ -37,7 +37,7 @@ import org.smoothbuild.vm.job.TaskInfo;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class VmTest extends TestingContext {
+public class VmTest extends TestContext {
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
   private TaskCreator taskCreator;
 

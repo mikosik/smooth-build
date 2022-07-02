@@ -11,12 +11,12 @@ import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.MethodTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import com.google.common.collect.ImmutableList;
 
 public class TestingCatsB {
-  private static final TestingContext CONTEXT = new TestingContext();
+  private static final TestContext CONTEXT = new TestContext();
   public static final CatDb CAT_DB = CONTEXT.catDb();
 
   public static final TypeB BLOB = CONTEXT.blobTB();

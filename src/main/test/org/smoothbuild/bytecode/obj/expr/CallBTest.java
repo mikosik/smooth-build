@@ -9,9 +9,9 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class CallBTest extends TestingContext {
+public class CallBTest extends TestContext {
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
     assertCall(() -> callB(blobTB(), intB()))

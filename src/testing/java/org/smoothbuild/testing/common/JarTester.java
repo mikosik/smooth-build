@@ -10,7 +10,7 @@ import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
 import okio.Buffer;
 import okio.BufferedSource;
@@ -18,7 +18,7 @@ import okio.ByteString;
 
 public class JarTester {
   public static BlobB jar(TupleB... files) throws IOException {
-    return new TestingContext().blobB(jarByteString(files));
+    return new TestContext().blobB(jarByteString(files));
   }
 
   public static ByteString jarByteString(TupleB... files) throws IOException {

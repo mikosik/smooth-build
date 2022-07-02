@@ -68,7 +68,7 @@ import org.smoothbuild.bytecode.type.cnst.MethodTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
 import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NList;
@@ -76,7 +76,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
-public class CatBTest extends TestingContext {
+public class CatBTest extends TestContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindB.values())

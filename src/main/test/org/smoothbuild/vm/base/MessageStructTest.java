@@ -5,9 +5,9 @@ import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class MessageStructTest extends TestingContext {
+public class MessageStructTest extends TestContext {
   private ArrayB messages;
 
   @Test

@@ -2,9 +2,9 @@ package org.smoothbuild.parse.component;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class TypeCheckingTest extends TestingContext {
+public class TypeCheckingTest extends TestContext {
   @Nested
   class _type_checking_value_type_and_its_body_type {
     @Test

@@ -12,9 +12,9 @@ import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.bytecode.type.expr.IfCB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class IfBTest extends TestingContext {
+public class IfBTest extends TestContext {
   @Test
   public void then_clauses_can_be_subtype_of_evalT() {
     var evalT = arrayTB(stringTB());

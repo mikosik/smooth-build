@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class VisibilityTest extends TestingContext {
+public class VisibilityTest extends TestContext {
   @Nested
   class _visibility {
     @Nested

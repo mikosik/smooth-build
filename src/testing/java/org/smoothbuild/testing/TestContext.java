@@ -98,7 +98,6 @@ import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
-import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.lang.define.MonoFuncS;
 import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.lang.define.MonoRefS;
@@ -124,7 +123,6 @@ import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.lang.type.solver.ResolveMerges;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.load.JarClassLoaderProv;
 import org.smoothbuild.load.MethodLoader;
@@ -151,7 +149,7 @@ import com.google.inject.util.Providers;
 
 import okio.ByteString;
 
-public class TestingContext {
+public class TestContext {
   public static final String BUILD_FILE_PATH = "myBuild.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
 

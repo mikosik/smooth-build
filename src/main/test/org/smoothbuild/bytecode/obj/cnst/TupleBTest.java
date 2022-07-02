@@ -9,10 +9,10 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Lists;
 
-public class TupleBTest extends TestingContext {
+public class TupleBTest extends TestContext {
   @Test
   public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
     assertCall(() -> objDb().tuple(personTB(), list(stringB("John"))))

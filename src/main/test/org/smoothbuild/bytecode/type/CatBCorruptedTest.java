@@ -46,14 +46,14 @@ import org.smoothbuild.db.HashingBufferedSink;
 import org.smoothbuild.db.exc.DecodeHashSeqExc;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
 import com.google.common.collect.ImmutableList;
 
 import okio.ByteString;
 
-public class CatBCorruptedTest extends TestingContext {
+public class CatBCorruptedTest extends TestContext {
   @Nested
   class _illegal_type_marker {
     @Test

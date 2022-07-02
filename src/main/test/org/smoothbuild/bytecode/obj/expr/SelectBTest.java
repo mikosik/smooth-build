@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class SelectBTest extends TestingContext {
+public class SelectBTest extends TestContext {
   @Test
   public void selected_fieldT_can_be_subtype_of_evalT() {
     var select = selectB(arrayTB(intTB()), tupleB(arrayB(nothingTB())), intB(0));

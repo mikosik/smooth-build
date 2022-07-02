@@ -9,9 +9,9 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestContext;
 
-public class FuncBTest extends TestingContext {
+public class FuncBTest extends TestContext {
   @Test
   public void creating_func_with_body_evaluation_type_not_equal_result_type_causes_exception() {
     var funcT = funcTB(intTB(), list(stringTB()));
