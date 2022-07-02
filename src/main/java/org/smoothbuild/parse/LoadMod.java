@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
-import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.parse.LoadTopObj.loadTopObj;
 import static org.smoothbuild.parse.ParseModule.parseModule;
@@ -70,7 +70,7 @@ public class LoadMod {
     var types = immutableBindings(sortedAst.structs().map(s -> loadStructDef(path, s)).map());
     var topRefables = loadTopRefables(path, sortedAst, imported);
     var moduleS = new ModS(path, modFiles, types, topRefables);
-    return maybeValueAndLogs(moduleS, logBuffer);
+    return maybe(moduleS, logBuffer);
   }
 
   private static TDefS loadStructDef(ModPath path, StructP struct) {

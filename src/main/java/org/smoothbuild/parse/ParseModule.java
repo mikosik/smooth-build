@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.lang.String.join;
 import static org.smoothbuild.lang.base.Loc.loc;
-import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
+import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Antlr.errorLine;
 import static org.smoothbuild.util.Antlr.markingLine;
@@ -41,7 +41,7 @@ public class ParseModule {
     parser.addErrorListener(errorListener);
     var mod = parser.mod();
     var result = logBuffer.containsProblem() ? null : mod;
-    return maybeValueAndLogs(result, logBuffer);
+    return maybe(result, logBuffer);
   }
 
   public static class ErrorListener implements ANTLRErrorListener {

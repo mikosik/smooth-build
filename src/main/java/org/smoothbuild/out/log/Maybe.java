@@ -11,8 +11,12 @@ public class Maybe<V> {
   private final V value;
   private final ImmutableLogs logs;
 
-  public static <T> Maybe<T> maybeValue(T value) {
-    return new Maybe<>(value, ImmutableLogs.logs());
+  public static <T> Maybe<T> maybe(T value, Log... logs) {
+    return maybe(value, ImmutableLogs.logs(logs));
+  }
+
+  public static <T> Maybe<T> maybe(T value, Logs logs) {
+    return new Maybe<>(value, logs);
   }
 
   public static <T> Maybe<T> maybeLogs(Log... logs) {
@@ -21,14 +25,6 @@ public class Maybe<V> {
 
   public static <T> Maybe<T> maybeLogs(Logs logs) {
     return new Maybe<>(null, logs);
-  }
-
-  public static <T> Maybe<T> maybeValueAndLogs(T value, Log... logs) {
-    return maybeValueAndLogs(value, ImmutableLogs.logs(logs));
-  }
-
-  public static <T> Maybe<T> maybeValueAndLogs(T value, Logs logs) {
-    return new Maybe<>(value, logs);
   }
 
   private Maybe(V value, Logs logs) {

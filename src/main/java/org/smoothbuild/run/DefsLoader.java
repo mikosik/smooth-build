@@ -4,8 +4,8 @@ import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 import static org.smoothbuild.lang.define.LoadInternalMod.loadInternalMod;
 import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
-import static org.smoothbuild.out.log.Maybe.maybeValue;
 import static org.smoothbuild.parse.LoadMod.loadModule;
 
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class DefsLoader {
 
   private Maybe<String> readFileContent(FilePath filePath) {
     try {
-      return maybeValue(fileResolver.readFileContentAndCacheHash(filePath));
+      return maybe(fileResolver.readFileContentAndCacheHash(filePath));
     } catch (NoSuchFileException e) {
       return maybeLogs(error("'" + filePath + "' doesn't exist."));
     } catch (IOException e) {

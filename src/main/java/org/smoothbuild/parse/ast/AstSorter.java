@@ -3,8 +3,8 @@ package org.smoothbuild.parse.ast;
 import static java.lang.String.join;
 import static java.util.Collections.rotate;
 import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
-import static org.smoothbuild.out.log.Maybe.maybeValue;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
@@ -37,7 +37,7 @@ public class AstSorter {
       return maybeLogs(error);
     }
     Ast sorted = new Ast(sortedTs.valuesReversed(), sortedRefables.valuesReversed());
-    return maybeValue(sorted);
+    return maybe(sorted);
   }
 
   private static TopologicalSortingRes<String, TopRefableP, Loc> sortRefablesByDeps(

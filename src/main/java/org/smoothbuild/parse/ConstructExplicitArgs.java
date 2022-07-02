@@ -6,8 +6,8 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;
+import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
-import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -44,7 +44,7 @@ public class ConstructExplicitArgs {
     var explicit = explicitArgs(call, paramCs);
     logBuffer.logAll(findUnassignedParamsWithoutDefaultArgsErrors(call, explicit, paramCs));
     var result = logBuffer.containsProblem() ? null : explicit;
-    return maybeValueAndLogs(result, logBuffer);
+    return maybe(result, logBuffer);
   }
 
   private static ImmutableList<ArgP> leadingPositionalArgs(CallP call) {
