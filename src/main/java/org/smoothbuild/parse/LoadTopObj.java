@@ -157,10 +157,10 @@ public class LoadTopObj {
 
       private MonoObjS loadSelect(SelectP selectP) {
         var structT = (StructTS) selectP.selectable().typeS().get();
-        var index = structT.fields().indexMap().get(selectP.field());
-        var fieldT = structT.fields().get(index).type();
+        var fieldName = selectP.field();
+        var fieldT = structT.fields().get(fieldName).type();
         var selectable = loadObj(selectP.selectable());
-        return new SelectS(fieldT, selectable, selectP.field(), selectP.loc());
+        return new SelectS(fieldT, selectable, fieldName, selectP.loc());
       }
 
       private MonoObjS loadRef(RefP ref) {
