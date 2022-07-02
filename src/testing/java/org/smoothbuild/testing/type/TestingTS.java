@@ -2,7 +2,7 @@ package org.smoothbuild.testing.type;
 
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.lang.define.ItemSigS;
@@ -42,9 +42,9 @@ public class TestingTS {
   public static final NothingTS NOTHING = TypeFS.nothing();
   public static final StringTS STRING = TypeFS.string();
   public static final StructTS PERSON = struct("Person",
-      nList(itemSigS(STRING, "firstName"), itemSigS(STRING, "lastName")));
-  public static final StructTS FLAG = struct("Flag", nList(itemSigS(BOOL, "flab")));
-  public static final StructTS DATA = struct("Data", nList(itemSigS(BLOB, "data")));
+      nlist(itemSigS(STRING, "firstName"), itemSigS(STRING, "lastName")));
+  public static final StructTS FLAG = struct("Flag", nlist(itemSigS(BOOL, "flab")));
+  public static final StructTS DATA = struct("Data", nlist(itemSigS(BLOB, "data")));
   public static final VarS A = var("A");
   public static final VarS B = var("B");
   public static final VarS C = var("C");

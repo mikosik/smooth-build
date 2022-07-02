@@ -2,7 +2,7 @@ package org.smoothbuild.parse.ast;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
-import static org.smoothbuild.util.collect.NList.nListWithNonUniqueNames;
+import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +17,7 @@ public final class StructP extends MonoNamedP {
   private final FuncP ctor;
 
   public StructP(String name, List<ItemP> fields, Loc loc) {
-    this(name, nListWithNonUniqueNames(ImmutableList.copyOf(fields)), loc);
+    this(name, nlistWithNonUniqueNames(ImmutableList.copyOf(fields)), loc);
   }
 
   private StructP(String name, NList<ItemP> fields, Loc loc) {

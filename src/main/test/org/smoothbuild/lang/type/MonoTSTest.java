@@ -29,7 +29,7 @@ import static org.smoothbuild.testing.type.TestingTS.meet;
 import static org.smoothbuild.testing.type.TestingTS.struct;
 import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.List;
@@ -82,7 +82,7 @@ public class MonoTSTest {
         arguments(INT, "Int"),
         arguments(NOTHING, "Nothing"),
         arguments(STRING, "String"),
-        arguments(struct("MyStruct", nList()), "MyStruct"),
+        arguments(struct("MyStruct", nlist()), "MyStruct"),
         arguments(A, "A"),
 
         arguments(join(BLOB, INT), "Blob ⊔ Int"),
@@ -96,7 +96,7 @@ public class MonoTSTest {
         arguments(a(INT), "[Int]"),
         arguments(a(NOTHING), "[Nothing]"),
         arguments(a(STRING), "[String]"),
-        arguments(a(struct("MyStruct", nList())), "[MyStruct]"),
+        arguments(a(struct("MyStruct", nlist())), "[MyStruct]"),
         arguments(a(A), "[A]"),
 
         arguments(a(a(A)), "[[A]]"),
@@ -105,7 +105,7 @@ public class MonoTSTest {
         arguments(a(a(BOOL)), "[[Bool]]"),
         arguments(a(a(INT)), "[[Int]]"),
         arguments(a(a(NOTHING)), "[[Nothing]]"),
-        arguments(a(a(struct("MyStruct", nList()))), "[[MyStruct]]"),
+        arguments(a(a(struct("MyStruct", nlist()))), "[[MyStruct]]"),
         arguments(a(a(STRING)), "[[String]]"),
 
         arguments(f(A, list(a(A))), "A([A])"),
@@ -246,7 +246,7 @@ public class MonoTSTest {
           arguments(INT),
           arguments(NOTHING),
           arguments(STRING),
-          arguments(struct("MyStruct", nList())),
+          arguments(struct("MyStruct", nlist())),
           arguments(A),
 
           arguments(a(ANY)),
@@ -514,22 +514,22 @@ public class MonoTSTest {
   class _struct {
     @Test
     public void without_fields_can_be_created() {
-      struct("MyStruct", nList());
+      struct("MyStruct", nlist());
     }
 
     @Test
     public void first_field_type_can_be_nothing() {
-      struct("MyStruct", nList(itemSigS(NOTHING, "fieldName")));
+      struct("MyStruct", nlist(itemSigS(NOTHING, "fieldName")));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      struct("MyStruct", nList(itemSigS(a(NOTHING), "fieldName")));
+      struct("MyStruct", nlist(itemSigS(a(NOTHING), "fieldName")));
     }
 
     @Test
     public void struct_name() {
-      var struct = struct("MyStruct", nList());
+      var struct = struct("MyStruct", nlist());
       assertThat(struct.name())
           .isEqualTo("MyStruct");
     }
@@ -537,7 +537,7 @@ public class MonoTSTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  "})
     public void illegal_struct_name(String name) {
-      assertCall(() -> struct(name, nList()))
+      assertCall(() -> struct(name, nlist()))
           .throwsException(IllegalArgumentException.class);
     }
 
@@ -550,12 +550,12 @@ public class MonoTSTest {
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
-          arguments(struct("Person", nList()), nList()),
-          arguments(struct("Person", nList(itemSigS(STRING, "field"))),
-              nList(itemSigS(STRING, "field"))),
+          arguments(struct("Person", nlist()), nlist()),
+          arguments(struct("Person", nlist(itemSigS(STRING, "field"))),
+              nlist(itemSigS(STRING, "field"))),
           arguments(struct("Person",
-              nList(itemSigS(STRING, "field"), itemSigS(INT, "field2"))),
-              nList(itemSigS(STRING, "field"), itemSigS(INT, "field2")))
+              nlist(itemSigS(STRING, "field"), itemSigS(INT, "field2"))),
+              nlist(itemSigS(STRING, "field"), itemSigS(INT, "field2")))
       );
     }
   }
@@ -570,8 +570,8 @@ public class MonoTSTest {
         INT,
         NOTHING,
         STRING,
-        struct("MyStruct", nList()),
-        struct("MyStruct", nList(itemSigS(INT, "field"))),
+        struct("MyStruct", nlist()),
+        struct("MyStruct", nlist(itemSigS(INT, "field"))),
         A,
         B,
         C,

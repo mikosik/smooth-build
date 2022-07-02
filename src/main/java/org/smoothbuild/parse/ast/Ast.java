@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.util.collect.NList.nListWithNonUniqueNames;
+import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class Ast {
   private final ImmutableList<TopRefableP> topRefables;
 
   public Ast(List<StructP> structs, List<TopRefableP> topRefables) {
-    this.structs = nListWithNonUniqueNames(ImmutableList.copyOf(structs));
+    this.structs = nlistWithNonUniqueNames(ImmutableList.copyOf(structs));
     this.topRefables = ImmutableList.copyOf(topRefables);
   }
 

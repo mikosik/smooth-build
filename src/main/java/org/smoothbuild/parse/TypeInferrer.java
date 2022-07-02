@@ -11,7 +11,7 @@ import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.List;
@@ -67,7 +67,7 @@ public class TypeInferrer {
       public void visitStruct(StructP struct) {
         super.visitStruct(struct);
         var fields = pullUp(map(struct.fields(), ItemP::sig));
-        struct.setTypeS(fields.map(f -> TypeFS.struct(struct.name(), nList(f))));
+        struct.setTypeS(fields.map(f -> TypeFS.struct(struct.name(), nlist(f))));
         struct.ctor().setTypeS(
             fields.map(s -> TypeFS.func(struct.typeS().get(), map(s, ItemSigS::type))));
       }

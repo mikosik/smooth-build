@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.define.ItemS.toTypes;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.Optional;
 
@@ -50,7 +50,7 @@ public class MonoFuncSTest extends TestingContext {
 
   private MonoFuncS myFunc(MonoTS resT, ImmutableList<ItemS> params) {
     return new DefFuncS(funcTS(resT, toTypes(params)),
-        modPath(), "name", nList(params), stringS(), loc(1)
+        modPath(), "name", nlist(params), stringS(), loc(1)
     );
   }
 }

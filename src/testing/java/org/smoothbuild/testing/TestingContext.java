@@ -20,7 +20,7 @@ import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
@@ -808,7 +808,7 @@ public class TestingContext {
 
   public StructTS personTS() {
     return TypeFS.struct("Person",
-        nList(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
+        nlist(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
   }
 
   public StringTS stringTS() {
@@ -1075,7 +1075,7 @@ public class TestingContext {
 
   public PolyFuncS idFuncS() {
     var a = varA();
-    return poly(defFuncS(a, "myIdentity", nList(itemS(a, "p")), paramRefS(a, "p")));
+    return poly(defFuncS(a, "myIdentity", nlist(itemS(a, "p")), paramRefS(a, "p")));
   }
 
   public PolyFuncS poly(MonoFuncS monoFuncS) {

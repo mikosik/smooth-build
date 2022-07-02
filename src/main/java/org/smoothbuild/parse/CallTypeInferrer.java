@@ -11,7 +11,7 @@ import static org.smoothbuild.parse.ConstructExplicitArgs.constructExplicitArgs;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +77,7 @@ public class CallTypeInferrer {
     if (callee instanceof RefP refP && refP.referenced() instanceof FuncC funcC) {
       return funcC.paramsC();
     } else {
-      return Optional.of(nList(map(calleeT.params(), p -> new ParamC(itemSigS(p), empty()))));
+      return Optional.of(nlist(map(calleeT.params(), p -> new ParamC(itemSigS(p), empty()))));
     }
   }
 

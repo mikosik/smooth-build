@@ -5,7 +5,7 @@ import static org.smoothbuild.testing.TestingModLoader.err;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_MONOTYPES;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.stream.Stream;
 
@@ -257,7 +257,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
               .loadsWithSuccess()
-              .containsType(structTS("MyStruct", nList(sigS(stringTS(), "field"))));
+              .containsType(structTS("MyStruct", nlist(sigS(stringTS(), "field"))));
         }
 
         @Test
@@ -754,7 +754,7 @@ public class DeclarationTest extends TestingContext {
               String nonDefault);
             """)
               .loadsWithSuccess()
-              .containsTopRefable(natFuncS(2, stringTS(), "myFunc", nList(
+              .containsTopRefable(natFuncS(2, stringTS(), "myFunc", nlist(
                   itemS(3, stringTS(), "default", stringS(3, "value")),
                   itemS(4, stringTS(), "nonDefault")), nativeS(1, stringS(1, "Impl.met"))));
         }
@@ -784,7 +784,7 @@ public class DeclarationTest extends TestingContext {
           module(funcDeclaration("String param1,"))
               .loadsWithSuccess()
               .containsTopRefable(defFuncS(1, stringTS(), "myFunc", stringS(1, "abc"),
-                  nList(itemS(1, stringTS(), "param1"))));
+                  nlist(itemS(1, stringTS(), "param1"))));
         }
 
         @Test
@@ -819,7 +819,7 @@ public class DeclarationTest extends TestingContext {
           module(funcTDeclaration("String,"))
               .loadsWithSuccess()
               .containsTopRefable(natFuncS(2, funcTS(funcTS(blobTS(), list(stringTS()))), "myFunc",
-                  nList(), nativeS(1, stringS(1, "Impl.met"))));
+                  nlist(), nativeS(1, stringS(1, "Impl.met"))));
         }
 
         @Test

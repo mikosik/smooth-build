@@ -2,7 +2,7 @@ package org.smoothbuild.parse.component;
 
 import static java.util.Optional.empty;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -113,7 +113,7 @@ public class ObjSLoadingTest extends TestingContext {
 
     @Test
     public void with_ctor_reference() {
-      var struct = structTS("MyStruct", nList(sigS(stringTS(), "field")));
+      var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
       var params = struct.fields()
           .map(i -> new ItemS(i.type(), i.nameSane(), empty(), loc(2)));
       var ctor = syntCtorS(1, funcTS(struct, params.list()), modPath(), "myStruct", params);
@@ -128,7 +128,7 @@ public class ObjSLoadingTest extends TestingContext {
 
     @Test
     public void with_ctor_reference_and_arg() {
-      var struct = structTS("MyStruct", nList(sigS(stringTS(), "field")));
+      var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
       module("""
           MyStruct {
             String field
@@ -148,7 +148,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(defFuncS(1, stringTS(), "result",
-              callS(1, stringTS(), paramRefS(funcTS(stringTS()), "f")), nList(itemS(1, funcTS(stringTS()), "f"))));
+              callS(1, stringTS(), paramRefS(funcTS(stringTS()), "f")), nlist(itemS(1, funcTS(stringTS()), "f"))));
     }
 
     @Test
@@ -159,7 +159,7 @@ public class ObjSLoadingTest extends TestingContext {
           .loadsWithSuccess()
           .containsTopRefable(defFuncS(1, stringTS(), "result",
               callS(1, stringTS(), paramRefS(funcTS(stringTS(), list(blobTS())), "f"), blobS(1, 9)),
-              nList(itemS(1, funcTS(stringTS(), list(blobTS())), "f"))));
+              nlist(itemS(1, funcTS(stringTS(), list(blobTS())), "f"))));
     }
   }
 
@@ -171,12 +171,12 @@ public class ObjSLoadingTest extends TestingContext {
           """)
         .loadsWithSuccess()
         .containsTopRefable(defFuncS(
-            1, blobTS(), "myFunc", paramRefS(2, blobTS(), "param1"), nList(itemS(1, blobTS(), "param1"))));
+            1, blobTS(), "myFunc", paramRefS(2, blobTS(), "param1"), nlist(itemS(1, blobTS(), "param1"))));
   }
 
   @Test
   public void select_expression() {
-    var myStruct = structTS("MyStruct", nList(sigS(stringTS(), "field")));
+    var myStruct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
     module("""
           MyStruct {
             String field,
@@ -234,7 +234,7 @@ public class ObjSLoadingTest extends TestingContext {
 
     @Test
     public void to_ctor() {
-      var structT = structTS("MyStruct", nList());
+      var structT = structTS("MyStruct", nlist());
       module("""
           MyStruct {}
           MyStruct() result =
@@ -287,7 +287,7 @@ public class ObjSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsWithSuccess()
-          .containsTopRefable(defFuncS(1, blobTS(), "myFunc", blobS(2, 7), nList()));
+          .containsTopRefable(defFuncS(1, blobTS(), "myFunc", blobS(2, 7), nlist()));
     }
 
     @Test
@@ -299,7 +299,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(defFuncS(1, stringTS(), "myFunc", stringS(3, "abc"),
-              nList(itemS(2, blobTS(), "param1"))));
+              nlist(itemS(2, blobTS(), "param1"))));
     }
 
     @Test
@@ -312,7 +312,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(defFuncS(1, stringTS(), "myFunc", stringS(4, "abc"),
-              nList(itemS(2, blobTS(), "param1", blobS(3, 7)))));
+              nlist(itemS(2, blobTS(), "param1", blobS(3, 7)))));
     }
 
     @Test
@@ -323,7 +323,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(
-              natFuncS(2, stringTS(), "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), false)));
+              natFuncS(2, stringTS(), "myFunc", nlist(), nativeS(1, stringS(1, "Impl.met"), false)));
     }
 
     @Test
@@ -334,7 +334,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(
-              natFuncS(2, stringTS(), "myFunc", nList(), nativeS(1, stringS(1, "Impl.met"), true)));
+              natFuncS(2, stringTS(), "myFunc", nlist(), nativeS(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
@@ -347,7 +347,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(
-              natFuncS(2, stringTS(), "myFunc", nList(itemS(3, blobTS(), "param1", blobS(4, 7))),
+              natFuncS(2, stringTS(), "myFunc", nlist(itemS(3, blobTS(), "param1", blobS(4, 7))),
                   nativeS(1, stringS(1, "Impl.met"), true)));
     }
 
@@ -359,7 +359,7 @@ public class ObjSLoadingTest extends TestingContext {
           """)
           .loadsWithSuccess()
           .containsTopRefable(
-              byteFuncS(2, bytecodeS(stringS(1, "Impl.met"), loc(1)), stringTS(), "myFunc", nList()));
+              byteFuncS(2, bytecodeS(stringS(1, "Impl.met"), loc(1)), stringTS(), "myFunc", nlist()));
     }
 
     @Test
@@ -373,7 +373,7 @@ public class ObjSLoadingTest extends TestingContext {
           .loadsWithSuccess()
           .containsTopRefable(
               byteFuncS(2, bytecodeS(1, stringS(1, "Impl.met")), stringTS(), "myFunc",
-                  nList(itemS(3, blobTS(), "param1", blobS(4, 7)))));
+                  nlist(itemS(3, blobTS(), "param1", blobS(4, 7)))));
     }
 
     @Test
@@ -384,7 +384,7 @@ public class ObjSLoadingTest extends TestingContext {
           }
           """)
           .loadsWithSuccess()
-          .containsType(structTS("MyStruct", nList(sigS(stringTS(), "field"))));
+          .containsType(structTS("MyStruct", nlist(sigS(stringTS(), "field"))));
     }
   }
 }

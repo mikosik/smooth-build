@@ -16,7 +16,7 @@ import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.testing.type.TestingTS.a;
 import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.testing.type.TestingTS.struct;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class DeduceVarMapTest {
         arguments(A, INT, map(A, INT)),
         arguments(a(A), a(INT), map(A, INT)),
         arguments(a(a(A)), a(a(INT)), map(A, INT)),
-        arguments(struct("MyStruct", nList()), struct("MyStruct", nList()), empty()),
+        arguments(struct("MyStruct", nlist()), struct("MyStruct", nlist()), empty()),
         arguments(f(A), f(INT), map(A, INT)),
         arguments(f(A, A), f(INT, INT), map(A, INT)),
         arguments(f(INT, A), f(INT, BLOB), map(A, BLOB)),
@@ -90,8 +90,8 @@ public class DeduceVarMapTest {
         ),
 
         arguments(
-            struct("MyStruct", nList()),
-            struct("MyStruct2", nList())),
+            struct("MyStruct", nlist()),
+            struct("MyStruct2", nlist())),
 
         // deduce var bounds doesn't fulfill lower-bound < upper bound
         arguments(

@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.List;
@@ -170,14 +170,14 @@ public class NormalizerTest extends TestingTS {
   class _struct_type {
     @Test
     public void lower() {
-      StructTS struct = struct("MyType", nList());
+      StructTS struct = struct("MyType", nlist());
       assertThat(normalize(constrS(struct, varA())))
           .isEqualTo(set(constrS(struct, varA())));
     }
 
     @Test
     public void upper() {
-      StructTS struct = struct("MyType", nList());
+      StructTS struct = struct("MyType", nlist());
       assertThat(normalize(constrS(varA(), struct)))
           .isEqualTo(set(constrS(varA(), struct)));
     }

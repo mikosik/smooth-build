@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.lang.type.solver.Decompose.decompose;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -141,8 +141,8 @@ public class DecomposeTest extends TestingTS {
     @Test
     public void two_different_structs() {
       assertDecomposeFails(constrS(
-          struct("MyStruct1", nList()),
-          struct("MyStruct2", nList())));
+          struct("MyStruct1", nlist()),
+          struct("MyStruct2", nlist())));
     }
 
     @Test

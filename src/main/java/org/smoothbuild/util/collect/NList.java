@@ -24,22 +24,22 @@ import com.google.common.collect.ImmutableMap.Builder;
  * This class is thread-safe.
  */
 public class NList<T extends Nameable> extends AbstractList<T> {
-  private static final NList<?> EMPTY = nList(ImmutableList.of());
+  private static final NList<?> EMPTY = nlist(ImmutableList.of());
 
   private final Supplier<ImmutableList<T>> list;
   private final Supplier<ImmutableMap<String, T>> map;
   private final Supplier<ImmutableMap<String, Integer>> indexMap;
 
-  public static <T extends Nameable> NList<T> nList() {
+  public static <T extends Nameable> NList<T> nlist() {
     // cast is safe as EMPTY is empty
     return (NList<T>) EMPTY;
   }
 
-  public static <E extends Nameable> NList<E> nList(E... elems) {
-    return nList(Lists.list(elems));
+  public static <E extends Nameable> NList<E> nlist(E... elems) {
+    return nlist(Lists.list(elems));
   }
 
-  public static <E extends Nameable> NList<E> nList(ImmutableList<E> list) {
+  public static <E extends Nameable> NList<E> nlist(ImmutableList<E> list) {
     checkContainsNoDuplicatedNames(list);
     return new NList<>(
         () -> list,
@@ -62,14 +62,14 @@ public class NList<T extends Nameable> extends AbstractList<T> {
     }
   }
 
-  public static <E extends Nameable> NList<E> nList(ImmutableMap<String, E> map) {
+  public static <E extends Nameable> NList<E> nlist(ImmutableMap<String, E> map) {
     return new NList<>(
         () -> map.values().asList(),
         () -> map,
         () -> calculateIndexMap(map.values()));
   }
 
-  public static <E extends Nameable> NList<E> nListWithNonUniqueNames(ImmutableList<E> list) {
+  public static <E extends Nameable> NList<E> nlistWithNonUniqueNames(ImmutableList<E> list) {
     return new NList<>(
         () -> list,
         () -> calculateMap(list),
@@ -119,7 +119,7 @@ public class NList<T extends Nameable> extends AbstractList<T> {
   }
 
   public <R  extends Nameable> NList<R> map(Function<T, R> mapping) {
-    return nList(Lists.map(list(), mapping));
+    return nlist(Lists.map(list(), mapping));
   }
 
   public T get(String name) {

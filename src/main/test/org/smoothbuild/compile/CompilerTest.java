@@ -8,7 +8,7 @@ import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void call() {
-      var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
+      var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
       var call = callS(stringTS(), refS(defFunc));
       assertCompilation(defFunc, call, callB(funcB(stringB("abc"))));
     }
@@ -76,7 +76,7 @@ public class CompilerTest extends TestingContext {
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = "class.binary.name";
       var ann = nativeS(loc(filePath, 1), stringS(classBinaryName));
-      var natFuncS = poly(natFuncS(funcTS, "myIdentity", nList(itemS(a, "param")), ann));
+      var natFuncS = poly(natFuncS(funcTS, "myIdentity", nlist(itemS(a, "param")), ann));
 
       var resT = intTB();
       ImmutableList<TypeB> paramTs = list(intTB());
@@ -102,7 +102,7 @@ public class CompilerTest extends TestingContext {
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
       var byteFuncS = poly(
-          byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nList(itemS(varTS, "p")),
+          byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nlist(itemS(varTS, "p")),
               loc(filePath, 2)));
 
       var fileLoader = createFileLoaderMock(
@@ -115,14 +115,14 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void paramRef() {
-      var func = defFuncS("f", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
+      var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
       assertCompilation(func, refS(func),
           idFuncB());
     }
 
     @Test
     public void select() {
-      var structTS = structTS("MyStruct", nList(sigS(stringTS(), "field")));
+      var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
       var syntCtorS = syntCtorS(structTS);
       var callS = callS(structTS, refS(syntCtorS), stringS("abc"));
       var selectS = selectS(stringTS(), callS, "field");
@@ -163,20 +163,20 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void topRef_to_def_func() {
-      var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
+      var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
       assertCompilation(defFunc, refS(defFunc), funcB(stringB("abc")));
     }
 
     @Test
     public void topRef_to_def_func_with_bodyT_being_subtype_of_resT() {
-      var defFunc = defFuncS(arrayTS(stringTS()), "myFunc", nList(), orderS(nothingTS()));
+      var defFunc = defFuncS(arrayTS(stringTS()), "myFunc", nlist(), orderS(nothingTS()));
       assertCompilation(defFunc, refS(defFunc),
           funcB(arrayTB(stringTB()), list(), orderB(nothingTB())));
     }
 
     @Test
     public void topRef_to_synt_ctor() {
-      var structTS = structTS("MyStruct", nList(sigS(intTS(), "f")));
+      var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
       var syntCtorS = syntCtorS(structTS);
       var expected = funcB(list(intTB()), combineB(paramRefB(intTB(), 0)));
       assertCompilation(syntCtorS, refS(syntCtorS), expected);
@@ -188,7 +188,7 @@ public class CompilerTest extends TestingContext {
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = "class.binary.name";
       var ann = nativeS(loc(filePath, 1), stringS(classBinaryName));
-      var natFuncS = natFuncS(funcTS, "myFunc", nList(itemS(intTS(), "param")), ann);
+      var natFuncS = natFuncS(funcTS, "myFunc", nlist(itemS(intTS(), "param")), ann);
 
       var resT = intTB();
       ImmutableList<TypeB> paramTs = list(blobTB());
@@ -211,7 +211,7 @@ public class CompilerTest extends TestingContext {
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var byteFuncS = byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nList(), loc(filePath, 2));
+      var byteFuncS = byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nlist(), loc(filePath, 2));
 
       var funcB = funcB(stringB("abc"));
 
@@ -246,12 +246,12 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void def_func_compilation_result() {
-      assertCompilationIsCached(defFuncS("myFunc", nList(), stringS("abcdefghi")));
+      assertCompilationIsCached(defFuncS("myFunc", nlist(), stringS("abcdefghi")));
     }
 
     @Test
     public void nat_func_compilation_result() {
-      assertCompilationIsCached(natFuncS(funcTS(stringTS()), "myFunc", nList()));
+      assertCompilationIsCached(natFuncS(funcTS(stringTS()), "myFunc", nlist()));
     }
 
     @Test

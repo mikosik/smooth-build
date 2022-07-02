@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
 import java.util.Set;
@@ -88,7 +88,7 @@ public class TestedTSF {
       "abc"
   );
   public static final TestedTS STRUCT = new TestedTS(
-      TestingTS.struct("Person", nList(itemSigS(TestingTS.STRING, "name"))),
+      TestingTS.struct("Person", nlist(itemSigS(TestingTS.STRING, "name"))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
@@ -129,14 +129,14 @@ public class TestedTSF {
       STRUCT,
       A);
   public static final TestedTS STRUCT_WITH_BLOB = new TestedTS(
-      TestingTS.struct("Data", nList(itemSigS(TestingTS.BLOB, "value"))),
+      TestingTS.struct("Data", nlist(itemSigS(TestingTS.BLOB, "value"))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedTS STRUCT_WITH_BOOL = new TestedTS(
-      TestingTS.struct("Flag", nList(itemSigS(TestingTS.BOOL, "value"))),
+      TestingTS.struct("Flag", nlist(itemSigS(TestingTS.BOOL, "value"))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),
