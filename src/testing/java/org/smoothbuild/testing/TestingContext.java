@@ -161,13 +161,11 @@ public class TestingContext {
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
   private ObjDb objDb;
-  private ResolveMerges resolveMerges;
   private CatDb catDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
   private TempManager tempManager;
-  private ModS internalMod;
   private ConsoleReporter consoleReporter;
   private BytecodeLoader bytecodeLoader;
   private JarClassLoaderProv jarClassLoaderProv;
