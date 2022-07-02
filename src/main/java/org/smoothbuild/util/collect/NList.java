@@ -21,6 +21,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 /**
+ * Nameable list.
+ *
  * This class is thread-safe.
  */
 public class NList<T extends Nameable> extends AbstractList<T> {
