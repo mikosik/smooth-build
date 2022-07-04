@@ -3,14 +3,10 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.parse.AnalyzeSemantically.analyzeSemantically;
-import static org.smoothbuild.parse.LoadTopObj.loadTopObj;
+import static org.smoothbuild.parse.CreateModS.createModS;
 import static org.smoothbuild.parse.ParseModule.parseModule;
-import static org.smoothbuild.parse.ReferenceResolver.resolveReferences;
-import static org.smoothbuild.parse.TypeInferrer.inferTypes;
 import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.parse.ast.AstSorter.sortParsedByDeps;
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.fs.space.FilePath;
@@ -18,19 +14,9 @@ import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
-import org.smoothbuild.lang.define.MonoFuncS;
-import org.smoothbuild.lang.define.StructDefS;
-import org.smoothbuild.lang.define.SyntCtorS;
-import org.smoothbuild.lang.define.TDefS;
-import org.smoothbuild.lang.define.TopRefableS;
-import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeFS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.ItemP;
-import org.smoothbuild.parse.ast.StructP;
-import org.smoothbuild.util.bindings.ImmutableBindings;
 
 public class LoadMod {
   public static Maybe<ModS> loadModule(
@@ -57,52 +43,12 @@ public class LoadMod {
     }
     Ast sortedAst = maybeSortedAst.value();
 
-    resolveReferences(logBuffer, imported, sortedAst);
+    var mod = createModS(path, modFiles, sortedAst, imported);
+    logBuffer.logAll(mod.logs());
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
 
-    logBuffer.logAll(inferTypes(sortedAst, imported));
-    if (logBuffer.containsProblem()) {
-      return maybeLogs(logBuffer);
-    }
-
-    var types = immutableBindings(sortedAst.structs().map(s -> loadStructDef(path, s)).map());
-    var topRefables = loadTopRefables(path, sortedAst, imported);
-    var moduleS = new ModS(path, modFiles, types, topRefables);
-    return maybe(moduleS, logBuffer);
-  }
-
-  private static TDefS loadStructDef(ModPath path, StructP struct) {
-    var type = (StructTS) struct.typeS().get();
-    var loc = struct.loc();
-    return new StructDefS(type, path, loc);
-  }
-
-  private static ImmutableBindings<TopRefableS> loadTopRefables(
-      ModPath path, Ast ast, DefsS imported) {
-    var bindings = imported.topRefables()
-        .newMutableScope();
-
-    for (var structP : ast.structs()) {
-      var ctorS = loadSyntCtor(path, structP);
-      bindings.add(ctorS);
-    }
-
-    for (var refableP : ast.topRefables()) {
-      var loaded = loadTopObj(path, refableP, bindings);
-      bindings.add(loaded);
-    }
-    return bindings.innerScope();
-  }
-
-  private static MonoFuncS loadSyntCtor(ModPath path, StructP struct) {
-    var resultT = (StructTS) struct.typeS().get();
-    var name = struct.ctor().name();
-    var paramTs = map(struct.fields(), f -> f.typeS().get());
-    var type = TypeFS.func(resultT, paramTs);
-    var params = struct.fields().map(ItemP::toItemS);
-    var loc = struct.loc();
-    return new SyntCtorS(type, path, name, params, loc);
+    return maybe(mod.value(), logBuffer);
   }
 }

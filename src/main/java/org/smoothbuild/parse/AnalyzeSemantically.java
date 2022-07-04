@@ -36,7 +36,7 @@ import org.smoothbuild.parse.ast.TypeP;
 import org.smoothbuild.parse.ast.ValP;
 import org.smoothbuild.util.DecodeHexExc;
 import org.smoothbuild.util.UnescapingFailedExc;
-import org.smoothbuild.util.bindings.Bindings;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 
 public class AnalyzeSemantically {
   public static ImmutableLogs analyzeSemantically(DefsS imported, Ast ast) {
@@ -112,7 +112,7 @@ public class AnalyzeSemantically {
       private boolean isDefinedType(TypeP type) {
         return isVarName(type.name())
             || ast.structs().containsName(type.name())
-            || imported.tDefs().contains(type.name());
+            || imported.tDefs().getOpt(type.name()).isPresent();
       }
     }.visitAst(ast);
   }
@@ -135,7 +135,7 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static void logIfDuplicate(Logger logger, Bindings<? extends Nal> others, Nal nal) {
+  private static void logIfDuplicate(Logger logger, ImmutableBindings<? extends Nal> others, Nal nal) {
     others.getOpt(nal.name())
         .ifPresent(n -> logger.log(alreadyDefinedError(nal, n.loc())));
   }

@@ -28,7 +28,7 @@ public final class ItemP extends MonoRefableP {
   }
 
   @Override
-  public void setTypeS(Optional<MonoTS> type) {
+  public void setTypeS(Optional<? extends MonoTS> type) {
     super.setTypeS(type);
     sig = typeS().map(t -> new ItemSigS(t, Optional.of(name())));
   }

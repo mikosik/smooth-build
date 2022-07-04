@@ -66,7 +66,7 @@ public class TestingModLoader {
   private TopRefableS assertContainsTopRefable(String name) {
     var topRefables = modS.value().topRefables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(topRefables.contains(name))
+        .that(topRefables.getOpt(name).isPresent())
         .isTrue();
     return topRefables.get(name);
   }
@@ -75,7 +75,7 @@ public class TestingModLoader {
     var name = expected.name();
     var types = modS.value().tDefs();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
-        .that(types.contains(name))
+        .that(types.getOpt(name).isPresent())
         .isTrue();
     MonoTS actual = types.get(name).type();
     assertWithMessage(

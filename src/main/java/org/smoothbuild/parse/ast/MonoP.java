@@ -8,14 +8,14 @@ import org.smoothbuild.lang.type.MonoTS;
 
 public sealed abstract class MonoP extends WithLoc implements Parsed
     permits CallP, MonoNamedP, OrderP, SelectP {
-  private Optional<MonoTS> type;
+  private Optional<? extends MonoTS> type;
 
   public MonoP(Loc loc) {
     super(loc);
   }
 
   @Override
-  public Optional<MonoTS> typeS() {
+  public Optional<? extends MonoTS> typeS() {
     return type;
   }
 
@@ -23,7 +23,7 @@ public sealed abstract class MonoP extends WithLoc implements Parsed
     setTypeS(Optional.of(type));
   }
 
-  public void setTypeS(Optional<MonoTS> type) {
+  public void setTypeS(Optional<? extends MonoTS> type) {
     this.type = type;
   }
 }

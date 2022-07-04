@@ -2,12 +2,10 @@ package org.smoothbuild.parse.ast;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.like.common.RefableC;
-
 /**
  * Referencable.
  */
-public sealed interface RefableP extends Parsed, RefableC, NamedP
+public sealed interface RefableP extends Parsed, NamedP
     permits MonoRefableP, GenericRefableP, TopRefableP {
 
   public Optional<AnnP> ann();

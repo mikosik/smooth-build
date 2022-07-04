@@ -2,14 +2,11 @@ package org.smoothbuild.parse.ast;
 
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
-import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.like.common.FuncC;
-import org.smoothbuild.lang.like.common.ParamC;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.util.collect.NList;
@@ -17,7 +14,7 @@ import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncP extends GenericRefableP implements TopRefableP, FuncC {
+public final class FuncP extends GenericRefableP implements TopRefableP {
   private final Optional<TypeP> resTP;
   private final NList<ItemP> params;
   private Optional<FuncTS> type;
@@ -40,12 +37,6 @@ public final class FuncP extends GenericRefableP implements TopRefableP, FuncC {
 
   public NList<ItemP> params() {
     return params;
-  }
-
-  @Override
-  public Optional<NList<ParamC>> paramsC() {
-    var params = map(params().list(), p -> p.sig().map(sig -> new ParamC(sig, p.body())));
-    return pullUp(params).map(NList::nlist);
   }
 
   @Override

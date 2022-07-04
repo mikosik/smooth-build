@@ -18,7 +18,7 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.report.TaskMatchers.ALL;
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;

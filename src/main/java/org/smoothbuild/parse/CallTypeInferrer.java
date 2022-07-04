@@ -18,14 +18,15 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.like.common.FuncC;
-import org.smoothbuild.lang.like.common.ObjC;
-import org.smoothbuild.lang.like.common.ParamC;
+import org.smoothbuild.lang.define.MonoObjS;
+import org.smoothbuild.lang.define.RefableS;
 import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.TypeFS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.lang.type.solver.ConstrDecomposeExc;
 import org.smoothbuild.lang.type.solver.ConstrSolver;
@@ -37,12 +38,23 @@ import org.smoothbuild.parse.ast.ArgP;
 import org.smoothbuild.parse.ast.CallP;
 import org.smoothbuild.parse.ast.ObjP;
 import org.smoothbuild.parse.ast.RefP;
+import org.smoothbuild.util.bindings.OptionalBindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 public class CallTypeInferrer {
-  public Optional<MonoTS> inferCallT(CallP call, LogBuffer logBuffer) {
+  private final CallP call;
+  private final OptionalBindings<RefableS> nameBindings;
+  private final LogBuffer logBuffer;
+
+  public CallTypeInferrer(CallP call, OptionalBindings<RefableS> nameBindings, LogBuffer logBuffer) {
+    this.call = call;
+    this.nameBindings = nameBindings;
+    this.logBuffer = logBuffer;
+  }
+
+  public Optional<MonoTS> inferCallT() {
     ObjP callee = call.callee();
 
     if (callee.typeS().isEmpty()) {
@@ -55,7 +67,7 @@ public class CallTypeInferrer {
       return empty();
     }
 
-    var funcParams = funcParams(callee, calleeT);
+    var funcParams = calleeParams(callee, calleeT);
     if (funcParams.isEmpty()) {
       return empty();
     }
@@ -69,16 +81,29 @@ public class CallTypeInferrer {
       return empty();
     } else {
       call.setExplicitArgs(args.value());
-      return inferCallT(call, params, calleeT, logBuffer);
+      return inferCallT(params, calleeT, args.value());
     }
   }
 
-  public static Optional<NList<ParamC>> funcParams(ObjP callee, FuncTS calleeT) {
-    if (callee instanceof RefP refP && refP.referenced() instanceof FuncC funcC) {
-      return funcC.paramsC();
+  private Optional<NList<Param>> calleeParams(ObjP callee, FuncTS calleeT) {
+    if (callee instanceof RefP refP) {
+      return nameBindings.get(refP.name()).value()
+          .map(r -> calleeParams(r, calleeT));
     } else {
-      return Optional.of(nlist(map(calleeT.params(), p -> new ParamC(itemSigS(p), empty()))));
+      return Optional.of(calleeParams(calleeT));
     }
+  }
+
+  private static NList<Param> calleeParams(RefableS refableS, FuncTS calleeT) {
+    if (refableS instanceof FuncS funcS) {
+      return funcS.params().map(p -> new Param(p.sig(), p.body().map(MonoObjS::type)));
+    } else {
+      return calleeParams(calleeT);
+    }
+  }
+
+  private static NList<Param> calleeParams(FuncTS calleeT) {
+    return nlist(map(calleeT.params(), p -> new Param(itemSigS(p), empty())));
   }
 
   private static boolean someArgHasNotInferredType(ImmutableList<Optional<ArgP>> args) {
@@ -94,19 +119,19 @@ public class CallTypeInferrer {
     return "expression";
   }
 
-  public Optional<MonoTS> inferCallT(CallP call, NList<ParamC> paramCs, FuncTS calleeT,
-      LogBuffer logBuffer) {
-    var args = explicitAndDefaultArgs(call, paramCs);
-    var prefixedArgTs = prefixFreeVarsWithIndex(map(args, a -> a.typeS().get()));
+  private Optional<MonoTS> inferCallT(NList<Param> params, FuncTS calleeT,
+      ImmutableList<Optional<ArgP>> explicitArgs) {
+    var argTs = explicitAndDefaultArgTs(params, explicitArgs);
+    var prefixedArgTs = prefixFreeVarsWithIndex(argTs);
     var prefixedCalleeT = (FuncTS) calleeT.mapFreeVars(v -> v.prefixed("callee"));
     var prefixedParamTs = prefixedCalleeT.params();
     var solver = new ConstrSolver();
-    for (int i = 0; i < args.size(); i++) {
+    for (int i = 0; i < argTs.size(); i++) {
       try {
         solver.addConstr(constrS(prefixedArgTs.get(i), prefixedParamTs.get(i)));
       } catch (ConstrDecomposeExc e) {
-        NList<ItemSigS> paramSigs = paramCs.map(ParamC::sig);
-        logBuffer.log(illegalAssignmentError(call, args, i, paramSigs));
+        NList<ItemSigS> paramSigs = params.map(Param::sig);
+        logBuffer.log(illegalAssignmentError(argTs, i, paramSigs));
         return empty();
       }
     }
@@ -120,13 +145,15 @@ public class CallTypeInferrer {
         return empty();
       }
     }
-    for (int i = 0; i < args.size(); i++) {
-      storeActualTypeIfNeeded(args.get(i), prefixedArgTs.get(i), denormalizer);
+    for (int i = 0; i < argTs.size(); i++) {
+      int index = i;
+      explicitArgs.get(i)
+          .ifPresent(a -> storeActualTypeIfNeeded(a.obj(), prefixedArgTs.get(index), denormalizer));
     }
     var prefixedResT = prefixedCalleeT.res();
     var actualResT = denormalize(denormalizer, prefixedResT);
     if (actualResT.includes(TypeFS.any())) {
-      logBuffer.log(resInferringError(call, calleeT.res()));
+      logBuffer.log(resInferringError(calleeT.res()));
       return empty();
     }
 
@@ -134,27 +161,30 @@ public class CallTypeInferrer {
     return Optional.of(actualResT);
   }
 
-  private ImmutableList<ObjC> explicitAndDefaultArgs(CallP call, NList<ParamC> paramCs) {
-    ImmutableList<Optional<ArgP>> explicitArgs = call.explicitArgs();
-    return IntStream.range(0, paramCs.size())
-        .mapToObj(i -> explicitOrDefaultArg(i, explicitArgs, paramCs))
+  private ImmutableList<TypeS> explicitAndDefaultArgTs(NList<Param> params,
+      ImmutableList<Optional<ArgP>> explicitArgs) {
+    return IntStream.range(0, params.size())
+        .mapToObj(i -> explicitOrDefaultArgT(i, explicitArgs, params))
         .collect(toImmutableList());
   }
 
-  private ObjC explicitOrDefaultArg(
-      int i, ImmutableList<Optional<ArgP>> explicitArgs, NList<ParamC> paramCs) {
+  private static TypeS explicitOrDefaultArgT(
+      int i, ImmutableList<Optional<ArgP>> explicitArgs, NList<Param> params) {
     return explicitArgs.get(i)
-        .map(argP -> (ObjC) argP.obj())
-        .orElseGet(() -> paramCs.get(i).body().get());
+        .map(argP -> (TypeS) argP.obj().typeS().get())
+        .orElseGet(() -> params.get(i).bodyT().get());
   }
 
-  private void storeActualTypeIfNeeded(ObjC objC, MonoTS monoTS, Denormalizer denormalizer) {
-    if (objC instanceof RefP refP && refP.referenced().typeS().get() instanceof PolyTS) {
-      refP.setInferredMonoType(denormalize(denormalizer, monoTS));
+  private void storeActualTypeIfNeeded(ObjP obj, MonoTS monoTS, Denormalizer denormalizer) {
+    if (obj instanceof RefP refP) {
+      Optional<? extends RefableS> refableS = nameBindings.get(refP.name()).value();
+      if (refableS.isPresent() && refableS.get().type() instanceof PolyTS) {
+        refP.setInferredMonoType(denormalize(denormalizer, monoTS));
+      }
     }
   }
 
-  private MonoTS denormalize(Denormalizer denormalizer, MonoTS typeS) {
+  private static MonoTS denormalize(Denormalizer denormalizer, MonoTS typeS) {
     return denormalizer.denormalizeVars(typeS, LOWER);
   }
 
@@ -163,18 +193,18 @@ public class CallTypeInferrer {
         + paramT.mapVars(VarS::unprefixed).q() + ".");
   }
 
-  private static Log resInferringError(CallP call, MonoTS resT) {
+  private Log resInferringError(MonoTS resT) {
     return error(call.loc() + ": Cannot infer call actual result type " + resT.q() + ".");
   }
 
   private Log illegalAssignmentError(
-      CallP call, ImmutableList<ObjC> args, int i, NList<ItemSigS> paramSigs) {
-    var param = paramSigs.get(i);
+      ImmutableList<TypeS> argTs, int i, NList<ItemSigS> paramSigs) {
+    var paramSig = paramSigs.get(i);
     var loc = call.args().get(i).loc();
-    var argT = args.get(i).typeS().get();
+    var argT = argTs.get(i);
     return parseError(loc, messagePrefix(paramSigs)
         + "Cannot assign argument of type " + argT.q() + " to parameter "
-        + param.q() + " of type " + param.type().q() + ".");
+        + paramSig.q() + " of type " + paramSig.type().q() + ".");
   }
 
   private static String messagePrefix(List<ItemSigS> params) {

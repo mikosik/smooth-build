@@ -40,7 +40,9 @@ public class ItemSigS extends NameableImpl {
   }
 
   public String typeAndName() {
-    return nameO().map(n -> type().name() + " " + n).orElseGet(() -> type().name());
+    return nameO()
+        .map(n -> type().name() + " " + n)
+        .orElseGet(() -> type().name());
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength) {

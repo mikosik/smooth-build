@@ -1,7 +1,5 @@
 package org.smoothbuild.parse.ast;
 
-import org.smoothbuild.lang.like.common.TopRefableC;
-
-public sealed interface TopRefableP extends RefableP, TopRefableC
+public sealed interface TopRefableP extends RefableP
     permits FuncP, MonoTopRefableP {
 }

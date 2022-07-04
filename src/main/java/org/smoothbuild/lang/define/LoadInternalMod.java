@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.define;
 
 import static org.smoothbuild.lang.type.TypeFS.baseTs;
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 import static org.smoothbuild.util.collect.Maps.toMap;
 
 import org.smoothbuild.lang.type.BaseTS;

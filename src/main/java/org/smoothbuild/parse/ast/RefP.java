@@ -1,12 +1,11 @@
 package org.smoothbuild.parse.ast;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.like.common.RefableC;
 import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.util.Strings;
 
 public final class RefP extends GenericP implements ExprP {
   private final String name;
-  private RefableC referenced;
   private MonoTS inferredMonoT;
 
   public RefP(String name, Loc loc) {
@@ -18,12 +17,8 @@ public final class RefP extends GenericP implements ExprP {
     return name;
   }
 
-  public void setReferenced(RefableC referenced) {
-    this.referenced = referenced;
-  }
-
-  public RefableC referenced() {
-    return referenced;
+  public String q() {
+    return Strings.q(name);
   }
 
   @Override

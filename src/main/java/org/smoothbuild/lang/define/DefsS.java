@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.define;
 
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 
 import java.util.HashMap;
 
