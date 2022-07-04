@@ -1068,9 +1068,5 @@ public class VisibilityTest extends TestContext {
     private static String alreadyDefinedIn(FilePath filePath, int line, String name) {
       return "`" + name + "` is already defined at " + filePath.path() + ":" + line + ".";
     }
-
-    private static String alreadyDefinedInternally(String name) {
-      return "`" + name + "` is already defined internally.";
-    }
   }
 }
