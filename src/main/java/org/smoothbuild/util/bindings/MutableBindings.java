@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.smoothbuild.util.collect.Nameable;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 
-public final class MutableBindings<E extends Nameable> extends Bindings<E> {
+public final class MutableBindings<E extends Named> extends Bindings<E> {
   private final Bindings<E> outerScopeBindings;
   private final Map<String, E> bindings;
 

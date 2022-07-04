@@ -5,7 +5,7 @@ import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import java.util.HashMap;
 
 import org.smoothbuild.util.bindings.ImmutableBindings;
-import org.smoothbuild.util.collect.Nameable;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -24,7 +24,7 @@ public record DefsS(
     );
   }
 
-  public <E extends Nameable> ImmutableBindings<E> merge(
+  public <E extends Named> ImmutableBindings<E> merge(
       ImmutableBindings<E> outer, ImmutableBindings<? extends E> inner) {
     var map = new HashMap<String, E>();
     map.putAll(outer.asMap());

@@ -132,7 +132,7 @@ import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.collect.Nameable;
+import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
@@ -1158,7 +1158,7 @@ public class TestContext {
     return new SynchronizedFileSystem(new MemoryFileSystem());
   }
 
-  public static <E extends Nameable> ImmutableBindings<E> oneBinding(E elem) {
+  public static <E extends Named> ImmutableBindings<E> oneBinding(E elem) {
     return immutableBindings(ImmutableMap.of(elem.nameO().get(), elem));
   }
 }

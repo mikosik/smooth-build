@@ -5,17 +5,17 @@ import static java.util.stream.Collectors.joining;
 import java.util.Map;
 import java.util.Optional;
 
-import org.smoothbuild.util.collect.Nameable;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 
-public sealed abstract class Bindings<E extends Nameable>
+public sealed abstract class Bindings<E extends Named>
     permits MutableBindings, ImmutableBindings {
-  public static <E extends Nameable> ImmutableBindings<E> immutableBindings() {
+  public static <E extends Named> ImmutableBindings<E> immutableBindings() {
     return immutableBindings(ImmutableMap.of());
   }
 
-  public static <E extends Nameable> ImmutableBindings<E> immutableBindings(
+  public static <E extends Named> ImmutableBindings<E> immutableBindings(
       ImmutableMap<String, ? extends E> map) {
     return new ImmutableBindings<>(map);
   }

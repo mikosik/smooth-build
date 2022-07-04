@@ -2,11 +2,11 @@ package org.smoothbuild.util.bindings;
 
 import java.util.Optional;
 
-import org.smoothbuild.util.collect.Nameable;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 
-public final class ImmutableBindings<E extends Nameable> extends Bindings<E> {
+public final class ImmutableBindings<E extends Named> extends Bindings<E> {
   private final ImmutableMap<String, E> bindings;
 
   protected ImmutableBindings(ImmutableMap<String, ? extends E> map) {
