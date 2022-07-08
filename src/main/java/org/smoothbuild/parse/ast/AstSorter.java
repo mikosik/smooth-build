@@ -79,7 +79,7 @@ public class AstSorter {
       @Override
       public void visitField(ItemP field) {
         super.visitField(field);
-        addToDeps(field.typeP());
+        addToDeps(field.type());
       }
 
       private void addToDeps(TypeP type) {

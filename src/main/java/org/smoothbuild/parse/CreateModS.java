@@ -128,7 +128,7 @@ public class CreateModS {
     @Override
     public void visitField(ItemP itemP) {
       super.visitField(itemP);
-      var typeOpt = itemP.typeP().typeS();
+      var typeOpt = itemP.type().typeS();
 
       itemP.setTypeS(typeOpt.flatMap((t) -> {
         if (!t.vars().isEmpty()) {

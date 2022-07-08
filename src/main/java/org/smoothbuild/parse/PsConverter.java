@@ -113,7 +113,7 @@ public class PsConverter {
   }
 
   public Optional<ItemS> convertParam(ItemP param) {
-    var type = param.typeP().typeS();
+    var type = param.type().typeS();
     var name = param.name();
     var body = param.body().flatMap(this::convertObj);
     return type.map(t -> new ItemS(t, name, body, param.loc()));

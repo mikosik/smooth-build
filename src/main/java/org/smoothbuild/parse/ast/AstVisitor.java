@@ -22,7 +22,7 @@ public class AstVisitor {
   }
 
   public void visitField(ItemP field) {
-    visitType(field.typeP());
+    visitType(field.type());
   }
 
   public void visitRefable(List<TopRefableP> refableObjs) {
@@ -58,7 +58,7 @@ public class AstVisitor {
   }
 
   public void visitParam(int index, ItemP param) {
-    visitType(param.typeP());
+    visitType(param.type());
     param.body().ifPresent(this::visitObj);
   }
 

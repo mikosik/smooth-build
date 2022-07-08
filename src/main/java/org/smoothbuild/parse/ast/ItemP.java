@@ -10,21 +10,21 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.type.MonoTS;
 
 public final class ItemP extends MonoRefableP {
-  private final TypeP typeP;
+  private final TypeP type;
   private Optional<ItemSigS> sig;
 
-  public ItemP(TypeP typeP, String name, Optional<ObjP> body, Loc loc) {
+  public ItemP(TypeP type, String name, Optional<ObjP> body, Loc loc) {
     super(name, body, Optional.empty(), loc);
-    this.typeP = typeP;
+    this.type = type;
   }
 
-  public TypeP typeP() {
-    return typeP;
+  public TypeP type() {
+    return type;
   }
 
   @Override
   public Optional<TypeP> evalT() {
-    return Optional.of(typeP);
+    return Optional.of(type);
   }
 
   @Override
