@@ -32,32 +32,32 @@ import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class CompilerTest extends TestContext {
+public class SbConverterTest extends TestContext {
   @Nested
-  class _compiling {
+  class _converting {
     @Test
     public void blob() {
       var blob = blobS(37);
-      assertCompilation(blob, blobB(37));
+      assertConversion(blob, blobB(37));
     }
 
     @Test
     public void call() {
       var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
       var call = callS(stringTS(), refS(defFunc));
-      assertCompilation(defFunc, call, callB(funcB(stringB("abc"))));
+      assertConversion(defFunc, call, callB(funcB(stringB("abc"))));
     }
 
     @Test
     public void int_() {
       var int_ = intS(1);
-      assertCompilation(int_, intB(1));
+      assertConversion(int_, intB(1));
     }
 
     @Test
     public void order() {
       var order = orderS(stringTS(), stringS("abc"), stringS("def"));
-      assertCompilation(order, orderB(stringB("abc"), stringB("def")));
+      assertConversion(order, orderB(stringB("abc"), stringB("def")));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class CompilerTest extends TestContext {
       var intIdentityTS = funcTS(intTS(), list(intTS()));
       var monoizeS = monoizeS(intIdentityTS, refS(identity));
       var funcB = funcB(intTB(), list(intTB()), paramRefB(intTB(), 0));
-      assertCompilation(identity, monoizeS, funcB);
+      assertConversion(identity, monoizeS, funcB);
     }
 
     @Test
@@ -87,9 +87,9 @@ public class CompilerTest extends TestContext {
       var funcB = funcB(funcTB, bodyB);
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-      var compiler = newCompiler(defs(natFuncS), fileLoader);
+      var converter = newConverter(defs(natFuncS), fileLoader);
       var monoizeS = monoizeS(funcTS(intTS(), list(intTS())), refS(natFuncS));
-      assertThat(compiler.compileObj(monoizeS))
+      assertThat(converter.convertObj(monoizeS))
           .isEqualTo(funcB);
     }
 
@@ -107,16 +107,16 @@ public class CompilerTest extends TestContext {
 
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-      var compiler = newCompiler(defs(byteFuncS), fileLoader);
+      var converter = newConverter(defs(byteFuncS), fileLoader);
       var monoizeS = monoizeS(funcTS(intTS(), list(intTS())), refS(byteFuncS));
-      assertThat(compiler.compileObj(monoizeS))
+      assertThat(converter.convertObj(monoizeS))
           .isEqualTo(idFuncB());
     }
 
     @Test
     public void paramRef() {
       var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-      assertCompilation(func, refS(func),
+      assertConversion(func, refS(func),
           idFuncB());
     }
 
@@ -129,19 +129,19 @@ public class CompilerTest extends TestContext {
 
       var ctorB = funcB(list(stringTB()), combineB(paramRefB(stringTB(), 0)));
       var callB = callB(ctorB, stringB("abc"));
-      assertCompilation(syntCtorS, selectS, selectB(callB, intB(0)));
+      assertConversion(syntCtorS, selectS, selectB(callB, intB(0)));
     }
 
     @Test
     public void string() {
       var string = stringS("abc");
-      assertCompilation(string, stringB("abc"));
+      assertConversion(string, stringB("abc"));
     }
 
     @Test
     public void topRef_to_val() {
       var defVal = defValS("myVal", stringS("abc"));
-      assertCompilation(defVal, refS(defVal), stringB("abc"));
+      assertConversion(defVal, refS(defVal), stringB("abc"));
     }
 
     @Test
@@ -156,21 +156,21 @@ public class CompilerTest extends TestContext {
 
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-      var compiler = newCompiler(defs(annValS), fileLoader);
-      assertThat(compiler.compileObj(refS(annValS)))
+      var converter = newConverter(defs(annValS), fileLoader);
+      assertThat(converter.convertObj(refS(annValS)))
           .isEqualTo(valB);
     }
 
     @Test
     public void topRef_to_def_func() {
       var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
-      assertCompilation(defFunc, refS(defFunc), funcB(stringB("abc")));
+      assertConversion(defFunc, refS(defFunc), funcB(stringB("abc")));
     }
 
     @Test
     public void topRef_to_def_func_with_bodyT_being_subtype_of_resT() {
       var defFunc = defFuncS(arrayTS(stringTS()), "myFunc", nlist(), orderS(nothingTS()));
-      assertCompilation(defFunc, refS(defFunc),
+      assertConversion(defFunc, refS(defFunc),
           funcB(arrayTB(stringTB()), list(), orderB(nothingTB())));
     }
 
@@ -179,7 +179,7 @@ public class CompilerTest extends TestContext {
       var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
       var syntCtorS = syntCtorS(structTS);
       var expected = funcB(list(intTB()), combineB(paramRefB(intTB(), 0)));
-      assertCompilation(syntCtorS, refS(syntCtorS), expected);
+      assertConversion(syntCtorS, refS(syntCtorS), expected);
     }
 
     @Test
@@ -199,8 +199,8 @@ public class CompilerTest extends TestContext {
       var funcB = funcB(funcTB, bodyB);
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-      var compiler = newCompiler(defs(natFuncS), fileLoader);
-      assertThat(compiler.compileObj(refS(natFuncS)))
+      var converter = newConverter(defs(natFuncS), fileLoader);
+      assertThat(converter.convertObj(refS(natFuncS)))
           .isEqualTo(funcB);
     }
 
@@ -217,22 +217,22 @@ public class CompilerTest extends TestContext {
 
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-      var compiler = newCompiler(defs(byteFuncS), fileLoader);
-      assertThat(compiler.compileObj(refS(byteFuncS)))
+      var converter = newConverter(defs(byteFuncS), fileLoader);
+      assertThat(converter.convertObj(refS(byteFuncS)))
           .isEqualTo(funcB);
     }
 
-    private void assertCompilation(MonoObjS objS, ObjB expected) {
-      assertCompilation(defs(), objS, expected);
+    private void assertConversion(MonoObjS objS, ObjB expected) {
+      assertConversion(defs(), objS, expected);
     }
 
-    private void assertCompilation(TopRefableS topRefable, MonoObjS objS, ObjB expected) {
-      assertCompilation(defs(topRefable), objS, expected);
+    private void assertConversion(TopRefableS topRefable, MonoObjS objS, ObjB expected) {
+      assertConversion(defs(topRefable), objS, expected);
     }
 
-    private void assertCompilation(DefsS defs, MonoObjS objS, ObjB expected) {
-      var compiler = newCompiler(defs);
-      assertThat(compiler.compileObj(objS))
+    private void assertConversion(DefsS defs, MonoObjS objS, ObjB expected) {
+      var converter = newConverter(defs);
+      assertThat(converter.convertObj(objS))
           .isEqualTo(expected);
     }
   }
@@ -240,49 +240,49 @@ public class CompilerTest extends TestContext {
   @Nested
   class _caching {
     @Test
-    public void val_compilation_result() {
-      assertCompilationIsCached(defValS("myVal", stringS("abcdefghi")));
+    public void val_conversion_result() {
+      assertConversionIsCached(defValS("myVal", stringS("abcdefghi")));
     }
 
     @Test
-    public void def_func_compilation_result() {
-      assertCompilationIsCached(defFuncS("myFunc", nlist(), stringS("abcdefghi")));
+    public void def_func_conversion_result() {
+      assertConversionIsCached(defFuncS("myFunc", nlist(), stringS("abcdefghi")));
     }
 
     @Test
-    public void nat_func_compilation_result() {
-      assertCompilationIsCached(natFuncS(funcTS(stringTS()), "myFunc", nlist()));
+    public void nat_func_conversion_result() {
+      assertConversionIsCached(natFuncS(funcTS(stringTS()), "myFunc", nlist()));
     }
 
     @Test
-    public void monoized_poly_func_compilation_result() {
+    public void monoized_poly_func_conversion_result() {
       var monoizeS = monoizeS(funcTS(intTS(), list(intTS())), refS(idFuncS()));
-      assertCompilationIsCached(monoizeS, defs(idFuncS()));
+      assertConversionIsCached(monoizeS, defs(idFuncS()));
     }
 
-    private void assertCompilationIsCached(MonoTopRefableS valS) {
-      assertCompilationIsCached(refS(valS), defs(valS));
+    private void assertConversionIsCached(MonoTopRefableS valS) {
+      assertConversionIsCached(refS(valS), defs(valS));
     }
 
-    private void assertCompilationIsCached(MonoObjS monoObjS, DefsS defs) {
-      var compiler = newCompiler(defs);
-      assertThat(compiler.compileObj(monoObjS))
-          .isSameInstanceAs(compiler.compileObj(monoObjS));
+    private void assertConversionIsCached(MonoObjS monoObjS, DefsS defs) {
+      var converter = newConverter(defs);
+      assertThat(converter.convertObj(monoObjS))
+          .isSameInstanceAs(converter.convertObj(monoObjS));
     }
   }
 
-  private Compiler newCompiler(DefsS defs) {
+  private SbConverter newConverter(DefsS defs) {
     try {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(any())).thenReturn(blobB(1));
-      return newCompiler(defs, mock);
+      return newConverter(defs, mock);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private Compiler newCompiler(DefsS defs, FileLoader fileLoader) {
-    return compilerProv(fileLoader).get(defs);
+  private SbConverter newConverter(DefsS defs, FileLoader fileLoader) {
+    return sbConverterProv(fileLoader).get(defs);
   }
 
   private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {

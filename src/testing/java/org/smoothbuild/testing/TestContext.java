@@ -74,7 +74,7 @@ import org.smoothbuild.bytecode.type.expr.ParamRefCB;
 import org.smoothbuild.bytecode.type.expr.SelectCB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.compile.BytecodeMethodLoader;
-import org.smoothbuild.compile.CompilerProv;
+import org.smoothbuild.compile.SbConverterProv;
 import org.smoothbuild.compile.TypeSbConverter;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
@@ -187,16 +187,16 @@ public class TestContext {
     return new VmProv(jobCreatorProv, parallelExecutor);
   }
 
-  public CompilerProv compilerProv() {
-    return compilerProv(null);
+  public SbConverterProv sbConverterProv() {
+    return sbConverterProv(null);
   }
 
-  public CompilerProv compilerProv(FileLoader fileLoader) {
-    return compilerProv(fileLoader, bytecodeLoader());
+  public SbConverterProv sbConverterProv(FileLoader fileLoader) {
+    return sbConverterProv(fileLoader, bytecodeLoader());
   }
 
-  public CompilerProv compilerProv(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new CompilerProv(typeSbConverter(), bytecodeF(), fileLoader, bytecodeLoader);
+  public SbConverterProv sbConverterProv(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+    return new SbConverterProv(typeSbConverter(), bytecodeF(), fileLoader, bytecodeLoader);
   }
 
   private BytecodeLoader bytecodeLoader() {

@@ -245,8 +245,8 @@ public class EvaluatorTest  extends TestContext {
   }
 
   private Evaluator newEvaluator() {
-    var compilerProv = compilerProv(fileLoader, bytecodeLoader);
+    var sbConverterProv = sbConverterProv(fileLoader, bytecodeLoader);
     var vmProv = vmProv(nativeMethodLoader);
-    return new Evaluator(compilerProv, vmProv, reporter());
+    return new Evaluator(sbConverterProv, vmProv, reporter());
   }
 }
