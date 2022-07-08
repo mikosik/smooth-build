@@ -75,7 +75,7 @@ import org.smoothbuild.bytecode.type.expr.SelectCB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.compile.BytecodeMethodLoader;
 import org.smoothbuild.compile.CompilerProv;
-import org.smoothbuild.compile.TypeSbConv;
+import org.smoothbuild.compile.TypeSbConverter;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.fs.base.FileSystem;
@@ -196,7 +196,7 @@ public class TestContext {
   }
 
   public CompilerProv compilerProv(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new CompilerProv(typeShConv(), bytecodeF(), fileLoader, bytecodeLoader);
+    return new CompilerProv(typeSbConverter(), bytecodeF(), fileLoader, bytecodeLoader);
   }
 
   private BytecodeLoader bytecodeLoader() {
@@ -279,8 +279,8 @@ public class TestContext {
     return new Container(fullFileSystem(), bytecodeF());
   }
 
-  public TypeSbConv typeShConv() {
-    return new TypeSbConv(bytecodeF());
+  public TypeSbConverter typeSbConverter() {
+    return new TypeSbConverter(bytecodeF());
   }
 
   public BytecodeF bytecodeF() {

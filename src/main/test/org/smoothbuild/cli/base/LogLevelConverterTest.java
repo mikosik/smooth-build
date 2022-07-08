@@ -14,11 +14,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.out.log.Level;
 
-public class LogLevelConvTest {
+public class LogLevelConverterTest {
   @ParameterizedTest
   @MethodSource("conversions")
   public void converter(String value, Level expectedLevel) {
-    LogLevelConv converter = new LogLevelConv();
+    LogLevelConverter converter = new LogLevelConverter();
     assertThat(converter.convert(value))
         .isEqualTo(expectedLevel);
   }

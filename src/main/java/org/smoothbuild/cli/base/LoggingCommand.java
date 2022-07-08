@@ -11,7 +11,7 @@ public class LoggingCommand extends ACommand {
       names = { "--log-level", "-l" },
       defaultValue = "info",
       paramLabel = "<level>",
-      converter = LogLevelConv.class,
+      converter = LogLevelConverter.class,
       description =
           """
               Show logs with specified level or above.

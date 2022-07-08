@@ -74,7 +74,7 @@ import com.google.common.collect.ImmutableMap;
 public class Compiler {
   private final BytecodeF bytecodeF;
   private final DefsS defs;
-  private final TypeSbConv typeSbConv;
+  private final TypeSbConverter typeSbConverter;
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
   private final Deque<NList<ItemS>> callStack;
@@ -83,11 +83,11 @@ public class Compiler {
   private final Map<ObjB, Nal> nals;
 
   @Inject
-  public Compiler(BytecodeF bytecodeF, DefsS defs, TypeSbConv typeSbConv, FileLoader fileLoader,
-      BytecodeLoader bytecodeLoader) {
+  public Compiler(BytecodeF bytecodeF, DefsS defs, TypeSbConverter typeSbConverter,
+      FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
     this.bytecodeF = bytecodeF;
     this.defs = defs;
-    this.typeSbConv = typeSbConv;
+    this.typeSbConverter = typeSbConverter;
     this.fileLoader = fileLoader;
     this.bytecodeLoader = bytecodeLoader;
     this.callStack = new LinkedList<>();
@@ -148,7 +148,7 @@ public class Compiler {
   private FuncB compileMonoize(MonoizeS monoizeS) {
     var varMap = deduceVarMap(monoizeS.funcRef().type().mono(), monoizeS.type());
     var varMapB = mapEntries(varMap, MonoTS::name, this::convertT);
-    typeSbConv.addLastVarMap(varMapB);
+    typeSbConverter.addLastVarMap(varMapB);
     try {
       var topRefableS = defs.topRefables().get(monoizeS.funcRef().name());
       return switch (topRefableS) {
@@ -156,7 +156,7 @@ public class Compiler {
         default -> throw unexpectedCaseExc(topRefableS);
       };
     } finally {
-      typeSbConv.removeLastVarMap();
+      typeSbConverter.removeLastVarMap();
     }
   }
 
@@ -280,7 +280,7 @@ public class Compiler {
       case AnnValS annValS -> compileAnnVal(annValS);
       case DefValS defValS -> compileObj(defValS.body());
     };
-    var typeB = typeSbConv.convert(valS.type());
+    var typeB = typeSbConverter.convert(valS.type());
     if (!typeB.equals(objB.type())) {
       var funcB = bytecodeF.func(bytecodeF.funcT(typeB, list()), objB);
       var callB = bytecodeF.call(typeB, funcB, bytecodeF.combine(bytecodeF.tupleT(list()), list()));
@@ -335,15 +335,15 @@ public class Compiler {
   }
 
   private TypeB convertT(MonoTS monoTS) {
-    return typeSbConv.convert(monoTS);
+    return typeSbConverter.convert(monoTS);
   }
 
   private ArrayTB convertArrayT(ArrayTS typeS) {
-    return typeSbConv.convert(typeS);
+    return typeSbConverter.convert(typeS);
   }
 
   private FuncTB convertFuncT(MonoFuncTS monoFuncTS) {
-    return typeSbConv.convert(monoFuncTS);
+    return typeSbConverter.convert(monoFuncTS);
   }
 
   private static record CacheKey(String funcName, Map<String, TypeB> varMap) {

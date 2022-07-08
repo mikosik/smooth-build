@@ -29,12 +29,12 @@ import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.StructTS;
 import org.smoothbuild.lang.type.VarS;
 
-public class TypeSbConv {
+public class TypeSbConverter {
   private final BytecodeF bytecodeF;
   private final Deque<Map<String, TypeB>> varMaps;
 
   @Inject
-  public TypeSbConv(BytecodeF bytecodeF) {
+  public TypeSbConverter(BytecodeF bytecodeF) {
     this.bytecodeF = bytecodeF;
     this.varMaps = new ArrayDeque<>();
   }
