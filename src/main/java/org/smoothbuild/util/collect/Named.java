@@ -2,6 +2,8 @@ package org.smoothbuild.util.collect;
 
 import java.util.Optional;
 
+import org.smoothbuild.util.Strings;
+
 public interface Named extends Nameable {
   public String name();
 
@@ -12,6 +14,6 @@ public interface Named extends Nameable {
 
   @Override
   public default String q() {
-    return "`" + name() + "`";
+    return Strings.q(name());
   }
 }
