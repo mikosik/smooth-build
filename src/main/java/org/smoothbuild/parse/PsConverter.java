@@ -132,24 +132,28 @@ public class PsConverter {
   }
 
   private Optional<MonoObjS> convertOrder(OrderP order) {
-    var type = (ArrayTS) order.typeS().get();
-    var elems = pullUp(map(order.elems(), this::convertObj));
-    return elems.map(es -> new OrderS(type, es, order.loc()));
+    return order.typeS().flatMap(t -> {
+      var elems = pullUp(map(order.elems(), this::convertObj));
+      return elems.map(es -> new OrderS((ArrayTS) t, es, order.loc()));
+    });
   }
 
   private Optional<MonoObjS> convertCall(CallP call) {
     var callee = convertObj(call.callee());
-    var argObjs = callee.flatMap(c -> convertArgs(call, c));
-    var resT = call.typeS().get();
-    if (callee.isPresent() && argObjs.isPresent()) {
-      return Optional.of(new CallS(resT, callee.get(), argObjs.get(), call.loc()));
-    } else {
-      return Optional.empty();
-    }
+    return callee.flatMap(c -> {
+      var argObjs = convertArgs(call, c);
+      return argObjs.flatMap(as -> {
+        var resT = call.typeS();
+        return resT.map(t -> new CallS(t, callee.get(), argObjs.get(), call.loc()));
+      });
+    });
   }
 
   private Optional<ImmutableList<MonoObjS>> convertArgs(CallP call, MonoObjS callee) {
     var explicitArgs = call.explicitArgs();
+    if (explicitArgs == null) {
+      return Optional.empty();
+    }
     var args = IntStream.range(0, explicitArgs.size())
         .mapToObj(i -> convertArg(callee, explicitArgs, i))
         .collect(toImmutableList());
@@ -169,14 +173,16 @@ public class PsConverter {
   }
 
   private Optional<MonoObjS> convertSelect(SelectP selectP) {
-    if (selectP.selectable().typeS().get() instanceof StructTS structT) {
-      var fieldName = selectP.field();
-      var fieldT = structT.fields().get(fieldName).type();
-      var selectable = convertObj(selectP.selectable());
-      return selectable.map(s -> new SelectS(fieldT, s, fieldName, selectP.loc()));
-    } else {
-      return Optional.empty();
-    }
+    return selectP.selectable().typeS().flatMap(t -> {
+      if (t instanceof StructTS structT) {
+        var fieldName = selectP.field();
+        var fieldT = structT.fields().get(fieldName).type();
+        var selectable = convertObj(selectP.selectable());
+        return selectable.map(s -> new SelectS(fieldT, s, fieldName, selectP.loc()));
+      } else {
+        return Optional.empty();
+      }
+    });
   }
 
   private Optional<MonoObjS> convertRef(RefP ref) {

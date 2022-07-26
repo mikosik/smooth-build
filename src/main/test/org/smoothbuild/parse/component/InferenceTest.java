@@ -784,4 +784,69 @@ public class InferenceTest extends TestContext {
           .containsTopRefableWithType("result", arrayTS(stringTS()));
     }
   }
+
+  /**
+   * Tests verifying that inferring error doesn't cause NPE when inferring type of expression
+   * that uses element with inferring error.
+   */
+  @Nested
+  class _regression {
+    @Test
+    public void select_with_selectable_with_infer_type_error() {
+      var code = """
+          @Native("impl")
+          A firstElem([A] array);
+          valueWithNoninferableType = firstElem(7);
+          Int myValue = valueWithNoninferableType.field;
+          """;
+      module(code)
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void order_with_element_with_infer_type_error() {
+      var code = """
+          @Native("impl")
+          A firstElem([A] array);
+          valueWithNoninferableType = firstElem(7);
+          [Int] myValue = [valueWithNoninferableType];
+          """;
+      module(code)
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void call_with_callee_with_infer_type_error() {
+      var code = """
+          @Native("impl")
+          A firstElem([A] array);
+          valueWithNoninferableType = firstElem(7);
+          Int myValue = valueWithNoninferableType(7);
+          """;
+      module(code)
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void monofunc_call_with_illegal_params() {
+      var code = """
+          @Native("impl")
+          Int myFunc(String string);
+          Int myValue = myFunc(7);
+          """;
+      module(code)
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void polyfunc_call_with_illegal_params() {
+      var code = """
+          @Native("impl")
+          A myId(A a, String string);
+          Int myValue = myId(7, 7);
+          """;
+      module(code)
+          .loadsWithProblems();
+    }
+  }
 }

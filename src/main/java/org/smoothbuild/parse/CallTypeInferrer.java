@@ -23,6 +23,7 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.define.MonoObjS;
 import org.smoothbuild.lang.define.RefableS;
 import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.MonoFuncTS;
 import org.smoothbuild.lang.type.MonoTS;
 import org.smoothbuild.lang.type.PolyTS;
 import org.smoothbuild.lang.type.TypeFS;
@@ -69,16 +70,16 @@ public class CallTypeInferrer {
 
     var funcParams = calleeParams(callee, calleeT);
     if (funcParams.isEmpty()) {
-      return empty();
+      return inferredResTypeWithoutAssigningArgsToParams(calleeT);
     }
 
     var params = funcParams.get();
     Maybe<ImmutableList<Optional<ArgP>>> args = constructExplicitArgs(call, params);
     if (args.containsProblem()) {
       logBuffer.logAll(args.logs());
-      return empty();
+      return inferredResTypeWithoutAssigningArgsToParams(calleeT);
     } else if (someArgHasNotInferredType(args.value())) {
-      return empty();
+      return inferredResTypeWithoutAssigningArgsToParams(calleeT);
     } else {
       call.setExplicitArgs(args.value());
       return inferCallT(params, calleeT, args.value());
@@ -104,6 +105,14 @@ public class CallTypeInferrer {
 
   private static NList<Param> calleeParams(FuncTS calleeT) {
     return nlist(map(calleeT.params(), p -> new Param(itemSigS(p), empty())));
+  }
+
+  private static Optional<MonoTS> inferredResTypeWithoutAssigningArgsToParams(FuncTS calleeT) {
+    if (calleeT instanceof MonoFuncTS) {
+      return Optional.of(calleeT.res());
+    } else {
+      return empty();
+    }
   }
 
   private static boolean someArgHasNotInferredType(ImmutableList<Optional<ArgP>> args) {
@@ -132,7 +141,7 @@ public class CallTypeInferrer {
       } catch (ConstrDecomposeExc e) {
         NList<ItemSigS> paramSigs = params.map(Param::sig);
         logBuffer.log(illegalAssignmentError(argTs, i, paramSigs));
-        return empty();
+        return inferredResTypeWithoutAssigningArgsToParams(calleeT);
       }
     }
 
@@ -142,7 +151,7 @@ public class CallTypeInferrer {
       var typeS = denormalize(denormalizer, prefixedParamT);
       if (typeS.includes(TypeFS.any())) {
         logBuffer.log(paramInferringError(call.loc(), prefixedParamT));
-        return empty();
+        return inferredResTypeWithoutAssigningArgsToParams(calleeT);
       }
     }
     for (int i = 0; i < argTs.size(); i++) {
