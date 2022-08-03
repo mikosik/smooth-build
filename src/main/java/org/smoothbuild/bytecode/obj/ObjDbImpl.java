@@ -5,10 +5,10 @@ import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
 import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.cannotReadRootException;
 import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.wrongSizeOfRootSeqException;
-import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
-import static org.smoothbuild.bytecode.type.IsAssignable.validateArgs;
+import static org.smoothbuild.bytecode.type.ValidateArgs.validateArgs;
 import static org.smoothbuild.bytecode.type.cnst.TNamesB.BOOL;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -96,7 +96,7 @@ public class ObjDbImpl implements ObjDb {
   }
 
   private void checkBodyTypeAssignableToFuncResT(FuncTB type, ObjB body) {
-    if (!isAssignable(type.res(), body.type())) {
+    if (!type.res().equals(body.type())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.res().q()
           + " but body.type() is " + body.type().q() + ".");
     }
@@ -259,7 +259,7 @@ public class ObjDbImpl implements ObjDb {
     CallableTB callableTB = castTypeToFuncTB(func);
     validateArgsInCall(callableTB, args);
     var resT = callableTB.res();
-    if (!isAssignable(evalT, resT)) {
+    if (!evalT.equals(resT)) {
       throw new IllegalArgumentException(
           "Call's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
     }
@@ -284,10 +284,14 @@ public class ObjDbImpl implements ObjDb {
     );
   }
 
-  private IllegalArgumentException illegalArgs(CallableTB callableTB, TypeB argsT) {
+  private IllegalArgumentException illegalArgs(CallableTB callableTB, TupleTB argsT) {
     return new IllegalArgumentException(
         "Argument evaluation types %s should be equal to callable parameter types %s."
-            .formatted(argsT.q(), callableTB.paramsTuple().q()));
+            .formatted(itemTsToString(argsT), itemTsToString(callableTB.paramsTuple())));
+  }
+
+  private static String itemTsToString(TupleTB argsT) {
+    return "(" + toCommaSeparatedString(argsT.items()) + ")";
   }
 
   private OrderB newOrder(ArrayTB evalT, ImmutableList<ObjB> elems) throws HashedDbExc {
@@ -301,7 +305,7 @@ public class ObjDbImpl implements ObjDb {
   private void validateOrderElems(TypeB elemT, ImmutableList<ObjB> elems) {
     for (int i = 0; i < elems.size(); i++) {
       var iElemT = elems.get(i).type();
-      if (!isAssignable(elemT, iElemT)) {
+      if (!elemT.equals(iElemT)) {
         throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
             + " but element at index " + i + " has type " + iElemT.q() + ".");
       }
@@ -318,10 +322,14 @@ public class ObjDbImpl implements ObjDb {
 
   private void validateCombineItems(TupleTB evalT, ImmutableList<ObjB> items) {
     var expectedItemTs = evalT.items();
+    if (expectedItemTs.size() != items.size()) {
+      throw new IllegalArgumentException(
+          "Expected " + expectedItemTs.size() + " items, got " + items.size() + ".");
+    }
     for (int i = 0; i < items.size(); i++) {
       var expectedItemT = expectedItemTs.get(i);
       var actualItemT = items.get(i).type();
-      if (!isAssignable(expectedItemT, actualItemT)) {
+      if (!expectedItemT.equals(actualItemT)) {
         throw new IllegalArgumentException("Illegal item type. Expected " + expectedItemT.q()
             + " at index " + i + " has type " + actualItemT.q() + ".");
       }
@@ -331,8 +339,10 @@ public class ObjDbImpl implements ObjDb {
   private IfB newIf(TypeB evalT, ObjB condition, ObjB then, ObjB else_) throws HashedDbExc {
     checkArgument(condition.type().equals(catDb.bool()),
         "`condition` component must evaluate to " + BOOL + " but is " + condition.type().q() + ".");
-    checkArgument(isAssignable(evalT, then.type()));
-    checkArgument(isAssignable(evalT, else_.type()));
+    checkArgument(evalT.equals(then.type()),
+        "`then` component must evaluate to " + evalT.q() + " but is " + then.type().q() + ".");
+    checkArgument(evalT.equals(else_.type()),
+        "`else` component must evaluate to " + evalT.q() + " but is " + else_.type().q() + ".");
     var type = catDb.if_(evalT);
     var data = writeIfData(condition, then, else_);
     var root = newRoot(type, data);
@@ -343,7 +353,7 @@ public class ObjDbImpl implements ObjDb {
     CallableTB callableTB = castTypeToMethodTB(method);
     validateArgsInCall(callableTB, args);
     var resT = callableTB.res();
-    if (!isAssignable(evalT, resT)) {
+    if (!evalT.equals(resT)) {
       throw new IllegalArgumentException(
           "Method's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
     }
@@ -378,7 +388,7 @@ public class ObjDbImpl implements ObjDb {
     }
     var elemT = arrayT.elem();
     var funcParamT = funcT.params().get(0);
-    if (!isAssignable(funcParamT, elemT)) {
+    if (!funcParamT.equals(elemT)) {
       throw new IllegalArgumentException("array element type " + elemT
           + " is not assignable to func parameter type " + funcParamT + ".");
     }
@@ -392,7 +402,7 @@ public class ObjDbImpl implements ObjDb {
 
   private SelectB newSelect(TypeB evalT, ObjB selectable, IntB index) throws HashedDbExc {
     var inferredEvalT = selectEvalT(selectable, index);
-    if (!isAssignable(evalT, inferredEvalT)) {
+    if (!evalT.equals(inferredEvalT)) {
       throw new IllegalArgumentException("Selected item type " + inferredEvalT.q()
           + " cannot be assigned to evalT " + evalT.q() + ".");
     }

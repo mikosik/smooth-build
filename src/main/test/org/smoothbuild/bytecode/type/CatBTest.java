@@ -7,7 +7,6 @@ import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_FUNCTION;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_INT;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_NOTHING;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_PERSON_TUPLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_STR;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BLOB;
@@ -15,7 +14,6 @@ import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_FUNCTION;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_INT;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_METHOD;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_NOTHING;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_PERSON_TUPLE;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_STR;
 import static org.smoothbuild.testing.type.TestingCatsB.BLOB;
@@ -29,7 +27,6 @@ import static org.smoothbuild.testing.type.TestingCatsB.INT;
 import static org.smoothbuild.testing.type.TestingCatsB.INVOKE;
 import static org.smoothbuild.testing.type.TestingCatsB.MAP;
 import static org.smoothbuild.testing.type.TestingCatsB.METHOD;
-import static org.smoothbuild.testing.type.TestingCatsB.NOTHING;
 import static org.smoothbuild.testing.type.TestingCatsB.ORDER;
 import static org.smoothbuild.testing.type.TestingCatsB.PARAM_REF;
 import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
@@ -48,7 +45,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.bytecode.obj.cnst.BoolB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.FuncB;
 import org.smoothbuild.bytecode.obj.cnst.IntB;
 import org.smoothbuild.bytecode.obj.cnst.MethodB;
@@ -80,7 +76,7 @@ public class CatBTest extends TestContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindB.values())
-        .hasLength(17);
+        .hasLength(16);
   }
 
   @ParameterizedTest
@@ -110,19 +106,16 @@ public class CatBTest extends TestContext {
         args(f -> f.blob(), "Blob"),
         args(f -> f.bool(), "Bool"),
         args(f -> f.int_(), "Int"),
-        args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
 
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
         args(f -> f.array(f.int_()), "[Int]"),
-        args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
 
         args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
-        args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
         args(f -> f.func(f.string(), list()), "String()"),
@@ -221,7 +214,7 @@ public class CatBTest extends TestContext {
     @MethodSource("elemType_test_data")
     public void elemType(Function<CatDb, TypeB> factoryCall) {
       TypeB elem = execute(factoryCall);
-      ArrayTB array = typeFB().array(elem);
+      ArrayTB array = catDb().array(elem);
       assertThat(array.elem())
           .isEqualTo(elem);
     }
@@ -233,7 +226,6 @@ public class CatBTest extends TestContext {
           args(f -> f.func(f.string(), list())),
           args(f -> f.method(f.string(), list())),
           args(f -> f.int_()),
-          args(f -> f.nothing()),
           args(f -> f.string()),
           args(f -> f.tuple(list(f.int_()))),
 
@@ -242,7 +234,6 @@ public class CatBTest extends TestContext {
           args(f -> f.array(f.func(f.string(), list()))),
           args(f -> f.array(f.method(f.string(), list()))),
           args(f -> f.array(f.int_())),
-          args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string()))
       );
     }
@@ -253,16 +244,6 @@ public class CatBTest extends TestContext {
     @Test
     public void _without_items_can_be_created() {
       tupleTB();
-    }
-
-    @Test
-    public void first_item_type_can_be_nothing() {
-      tupleTB(nothingTB());
-    }
-
-    @Test
-    public void first_item_type_can_be_nothing_array() {
-      tupleTB(arrayTB(nothingTB()));
     }
 
     @ParameterizedTest
@@ -297,7 +278,6 @@ public class CatBTest extends TestContext {
         arguments(FUNC, FuncB.class),
         arguments(INT, IntB.class),
         arguments(METHOD, MethodB.class),
-        arguments(NOTHING, CnstB.class),
         arguments(PERSON, TupleB.class),
         arguments(STRING, StringB.class),
 
@@ -306,7 +286,6 @@ public class CatBTest extends TestContext {
         arguments(ARRAY_FUNCTION, ArrayB.class),
         arguments(ARRAY_INT, ArrayB.class),
         arguments(ARRAY_METHOD, ArrayB.class),
-        arguments(ARRAY_NOTHING, ArrayB.class),
         arguments(ARRAY_PERSON_TUPLE, ArrayB.class),
         arguments(ARRAY_STR, ArrayB.class),
 
@@ -386,7 +365,6 @@ public class CatBTest extends TestContext {
     tester.addEqualityGroup(BOOL, BOOL);
     tester.addEqualityGroup(FUNC, FUNC);
     tester.addEqualityGroup(INT, INT);
-    tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STRING, STRING);
     tester.addEqualityGroup(PERSON, PERSON);
 
@@ -394,7 +372,6 @@ public class CatBTest extends TestContext {
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
     tester.addEqualityGroup(ARRAY_FUNCTION, ARRAY_FUNCTION);
     tester.addEqualityGroup(ARRAY_INT, ARRAY_INT);
-    tester.addEqualityGroup(ARRAY_NOTHING, ARRAY_NOTHING);
     tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
     tester.addEqualityGroup(ARRAY_PERSON_TUPLE, ARRAY_PERSON_TUPLE);
 
@@ -402,7 +379,6 @@ public class CatBTest extends TestContext {
     tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
     tester.addEqualityGroup(ARRAY2_FUNCTION, ARRAY2_FUNCTION);
     tester.addEqualityGroup(ARRAY2_INT, ARRAY2_INT);
-    tester.addEqualityGroup(ARRAY2_NOTHING, ARRAY2_NOTHING);
     tester.addEqualityGroup(ARRAY2_STR, ARRAY2_STR);
     tester.addEqualityGroup(ARRAY2_PERSON_TUPLE, ARRAY2_PERSON_TUPLE);
 

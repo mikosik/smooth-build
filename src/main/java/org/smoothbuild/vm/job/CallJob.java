@@ -14,37 +14,37 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 import com.google.common.collect.ImmutableList;
 
 public class CallJob extends AbstractJob {
-  private final Job callableJ;
+  private final Job funcJ;
   private final ImmutableList<Job> argJs;
-  private final List<Job> params;
+  private final List<Job> bindings;
   private final JobCreator jobCreator;
 
-  public CallJob(TypeB type, Job callableJ, ImmutableList<Job> argJs, Loc loc,
-      List<Job> params, JobCreator jobCreator) {
+  public CallJob(TypeB type, Job funcJ, ImmutableList<Job> argJs, Loc loc,
+      List<Job> bindings, JobCreator jobCreator) {
     super(type, loc);
-    this.callableJ = callableJ;
+    this.funcJ = funcJ;
     this.argJs = argJs;
-    this.params = params;
+    this.bindings = bindings;
     this.jobCreator = jobCreator;
   }
 
   @Override
   public Promise<CnstB> scheduleImpl(Worker worker) {
     var result = new PromisedValue<CnstB>();
-    funcJob()
+    funcJ()
         .schedule(worker)
-        .addConsumer(valueH -> onFuncJobCompleted(valueH, worker, result));
+        .addConsumer(cnstB -> onFuncJobCompleted(cnstB, worker, result));
     return result;
   }
 
-  private void onFuncJobCompleted(CnstB cnst, Worker worker, Consumer<CnstB> res) {
-    var funcH = (FuncB) cnst;
-    jobCreator.callFuncEagerJob(type(), funcH, argJs, loc(), params)
+  private void onFuncJobCompleted(CnstB cnstB, Worker worker, Consumer<CnstB> res) {
+    var funcB = (FuncB) cnstB;
+    jobCreator.callFuncEagerJob(funcB, argJs, loc(), bindings)
         .schedule(worker)
         .addConsumer(res);
   }
 
-  private Job funcJob() {
-    return callableJ;
+  private Job funcJ() {
+    return funcJ;
   }
 }

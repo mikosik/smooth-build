@@ -14,7 +14,6 @@ import static org.smoothbuild.bytecode.type.CatKindB.INT;
 import static org.smoothbuild.bytecode.type.CatKindB.INVOKE;
 import static org.smoothbuild.bytecode.type.CatKindB.MAP;
 import static org.smoothbuild.bytecode.type.CatKindB.METHOD;
-import static org.smoothbuild.bytecode.type.CatKindB.NOTHING;
 import static org.smoothbuild.bytecode.type.CatKindB.ORDER;
 import static org.smoothbuild.bytecode.type.CatKindB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.CatKindB.SELECT;
@@ -34,7 +33,6 @@ import org.smoothbuild.bytecode.type.cnst.BoolTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.IntTB;
 import org.smoothbuild.bytecode.type.cnst.MethodTB;
-import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
@@ -62,7 +60,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public class CatDb implements TypeFB {
+public class CatDb {
   public static final String DATA_PATH = "data";
   private static final int DATA_IDX = 1;
   private static final int CALLABLE_RES_IDX = 0;
@@ -76,7 +74,6 @@ public class CatDb implements TypeFB {
   private final BlobTB blob;
   private final BoolTB bool;
   private final IntTB int_;
-  private final NothingTB nothing;
   private final StringTB string;
 
   public CatDb(HashedDb hashedDb) {
@@ -87,20 +84,14 @@ public class CatDb implements TypeFB {
       this.blob = cache(new BlobTB(writeBaseRoot(BLOB)));
       this.bool = cache(new BoolTB(writeBaseRoot(BOOL)));
       this.int_ = cache(new IntTB(writeBaseRoot(INT)));
-      this.nothing = cache(new NothingTB(writeBaseRoot(NOTHING)));
       this.string = cache(new StringTB(writeBaseRoot(STRING)));
     } catch (HashedDbExc e) {
       throw new CatDbExc(e);
     }
   }
 
-  public ImmutableList<TypeB> baseTs() {
-    return ImmutableList.of(blob, bool, int_, nothing, string);
-  }
-
   // methods for getting Val-s types
 
-  @Override
   public ArrayTB array(TypeB elemT) {
     return wrapHashedDbExcAsObjDbExc(() -> newArray(elemT));
   }
@@ -113,7 +104,6 @@ public class CatDb implements TypeFB {
     return bool;
   }
 
-  @Override
   public FuncTB func(TypeB res, List<? extends TypeB> params) {
     return wrapHashedDbExcAsObjDbExc(() -> newFunc(res, tuple(params)));
   }
@@ -126,12 +116,6 @@ public class CatDb implements TypeFB {
     return wrapHashedDbExcAsObjDbExc(() -> newMethod(res, tuple(params)));
   }
 
-  @Override
-  public NothingTB nothing() {
-    return nothing;
-  }
-
-  @Override
   public TupleTB tuple(List<? extends TypeB> itemTs) {
     return wrapHashedDbExcAsObjDbExc(() -> newTuple(ImmutableList.copyOf(itemTs)));
   }
@@ -184,7 +168,7 @@ public class CatDb implements TypeFB {
     List<Hash> rootSeq = readCatRootSeq(hash);
     CatKindB kind = decodeCatMarker(hash, rootSeq.get(0));
     return switch (kind) {
-      case BLOB, BOOL, INT, NOTHING, STRING -> {
+      case BLOB, BOOL, INT, STRING -> {
         assertCatRootSeqSize(hash, kind, rootSeq, 1);
         throw new RuntimeException(
             "Internal error: Category with kind " + kind + " should be found in cache.");

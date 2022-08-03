@@ -8,7 +8,6 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.bytecode.obj.cnst.BoolB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.FuncB;
 import org.smoothbuild.bytecode.obj.cnst.IntB;
 import org.smoothbuild.bytecode.obj.cnst.MethodB;
@@ -33,7 +32,7 @@ public enum CatKindB {
   METHOD(         (byte) 3,  MethodB.class,     MethodB::new),
   INT(            (byte) 4,  IntB.class,        IntB::new),
   IF(             (byte) 5,  IfB.class,         IfB::new),
-  NOTHING(        (byte) 6,  CnstB.class,        CatKindB::throwException),
+  // TODO unused 6
   TUPLE(          (byte) 7,  TupleB.class,      TupleB::new),
   STRING(         (byte) 8,  StringB.class,     StringB::new),
   CALL(           (byte) 9,  CallB.class,       CallB::new),
@@ -63,7 +62,6 @@ public enum CatKindB {
           .put((byte) 3, METHOD)
           .put((byte) 4, INT)
           .put((byte) 5, IF)
-          .put((byte) 6, NOTHING)
           .put((byte) 7, TUPLE)
           .put((byte) 8, STRING)
           .put((byte) 9, CALL)

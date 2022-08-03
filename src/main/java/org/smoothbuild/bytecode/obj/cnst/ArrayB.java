@@ -9,7 +9,6 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
-import org.smoothbuild.bytecode.type.cnst.NothingTB;
 
 import com.google.common.collect.ImmutableList;
 
@@ -41,7 +40,7 @@ public final class ArrayB extends CnstB {
 
   private <T extends CnstB> void assertIsIterableAs(Class<T> clazz) {
     CatB elem = this.cat().elem();
-    if (!(elem instanceof NothingTB || clazz.isAssignableFrom(elem.typeJ()))) {
+    if (!clazz.isAssignableFrom(elem.typeJ())) {
       throw new IllegalArgumentException(this.cat().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
     }

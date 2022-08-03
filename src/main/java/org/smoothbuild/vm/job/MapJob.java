@@ -3,6 +3,7 @@ package org.smoothbuild.vm.job;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.vm.job.TaskKind.ORDER;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -19,15 +20,15 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 public class MapJob extends AbstractJob {
   private final Job arrayJ;
   private final Job funcJ;
-  private final List<Job> params;
+  private final List<Job> bindings;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, List<Job> params,
+  public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, List<Job> bindings,
       JobCreator jobCreator) {
     super(type, loc);
     this.arrayJ = arrayJ;
     this.funcJ = funcJ;
-    this.params = params;
+    this.bindings = bindings;
     this.jobCreator = jobCreator;
   }
 
@@ -43,19 +44,18 @@ public class MapJob extends AbstractJob {
 
   private void onDepsCompleted(ArrayB array, Worker worker, Consumer<CnstB> result) {
     var outputArrayT = (ArrayTB) type();
-    var outputElemT = outputArrayT.elem();
     var mapElemJs = map(
         array.elems(CnstB.class),
-        o -> mapElementJob(outputElemT, o));
-    var info = new TaskInfo(TaskKind.ORDER, "[]", loc());
+        this::mapElementJob);
+    var info = new TaskInfo(ORDER, "[]", loc());
     jobCreator.orderEager(outputArrayT, mapElemJs, info)
         .schedule(worker)
         .addConsumer(result);
   }
 
-  private Job mapElementJob(TypeB elemT, CnstB elem) {
+  private Job mapElementJob(CnstB elem) {
     var elemJ = elemJob(elem);
-    return jobCreator.callEagerJob(elemT, funcJ, list(elemJ), funcJ.loc(), params);
+    return jobCreator.callEagerJob(funcJ, list(elemJ), funcJ.loc(), bindings);
   }
 
   private Job elemJob(CnstB elem) {

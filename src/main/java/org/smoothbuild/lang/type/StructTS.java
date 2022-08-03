@@ -6,7 +6,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public final class StructTS extends MonoTS {
+public final class StructTS extends TypeS {
   private final NList<ItemSigS> fields;
 
   public StructTS(String name, NList<ItemSigS> fields) {

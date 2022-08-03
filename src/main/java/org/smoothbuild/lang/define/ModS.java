@@ -6,5 +6,5 @@ public record ModS(
     ModPath path,
     ModFiles files,
     ImmutableBindings<TDefS> tDefs,
-    ImmutableBindings<TopRefableS> topRefables) {
+    ImmutableBindings<PolyRefableS> refables) {
 }

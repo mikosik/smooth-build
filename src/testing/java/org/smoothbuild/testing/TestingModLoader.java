@@ -13,9 +13,10 @@ import org.smoothbuild.lang.define.DefsS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
-import org.smoothbuild.lang.define.TopRefableS;
-import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.define.PolyRefableS;
+import org.smoothbuild.lang.define.RefableS;
 import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.TypelikeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 
@@ -49,35 +50,34 @@ public class TestingModLoader {
     return this;
   }
 
-  public void containsTopRefable(TopRefableS expected) {
+  public void containsRefable(RefableS expected) {
     String name = expected.name();
-    TopRefableS actual = assertContainsTopRefable(name);
-    boolean equals = actual.equals(expected);
+    var actual = assertContainsRefable(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
-  public void containsTopRefableWithType(String name, TypeS expectedT) {
-    TopRefableS topRefable = assertContainsTopRefable(name);
-    assertThat(topRefable.type())
+  public void containsRefableWithType(String name, TypelikeS expectedT) {
+    var refable = assertContainsRefable(name);
+    assertThat(refable.typelike())
         .isEqualTo(expectedT);
   }
 
-  private TopRefableS assertContainsTopRefable(String name) {
-    var topRefables = modS.value().topRefables();
+  private PolyRefableS assertContainsRefable(String name) {
+    var refables = modS.value().refables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(topRefables.getOpt(name).isPresent())
+        .that(refables.contains(name))
         .isTrue();
-    return topRefables.get(name);
+    return refables.get(name);
   }
 
-  public void containsType(MonoTS expected) {
+  public void containsType(TypeS expected) {
     var name = expected.name();
     var types = modS.value().tDefs();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
-        .that(types.getOpt(name).isPresent())
+        .that(types.contains(name))
         .isTrue();
-    MonoTS actual = types.get(name).type();
+    TypeS actual = types.get(name).type();
     assertWithMessage(
         "Module contains type '" + name + "', but")
         .that(actual)

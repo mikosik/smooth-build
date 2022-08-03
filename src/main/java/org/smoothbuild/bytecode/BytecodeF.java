@@ -39,7 +39,6 @@ import org.smoothbuild.bytecode.type.cnst.BoolTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.IntTB;
 import org.smoothbuild.bytecode.type.cnst.MethodTB;
-import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.StringTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
@@ -183,10 +182,6 @@ public class BytecodeF {
 
   public MethodTB methodT(TypeB resT, ImmutableList<TypeB> paramTs) {
     return catDb.method(resT, paramTs);
-  }
-
-  public NothingTB nothingT() {
-    return catDb.nothing();
   }
 
   public StringTB stringT() {

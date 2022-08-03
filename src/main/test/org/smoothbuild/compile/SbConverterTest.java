@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
@@ -19,15 +19,14 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.MonoObjS;
-import org.smoothbuild.lang.define.MonoTopRefableS;
-import org.smoothbuild.lang.define.TopRefableS;
+import org.smoothbuild.lang.define.ExprS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
+import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -35,213 +34,292 @@ import com.google.common.collect.ImmutableMap;
 public class SbConverterTest extends TestContext {
   @Nested
   class _converting {
-    @Test
-    public void blob() {
-      var blob = blobS(37);
-      assertConversion(blob, blobB(37));
+    @Nested
+    class _obj {
+      @Test
+      public void blob() {
+        var blobS = blobS(37);
+        assertConversion(blobS, blobB(37));
+      }
+
+      @Test
+      public void int_() {
+        var intS = intS(1);
+        assertConversion(intS, intB(1));
+      }
+
+      @Test
+      public void string() {
+        var stringS = stringS("abc");
+        assertConversion(stringS, stringB("abc"));
+      }
+
+      @Nested
+      class _val {
+        @Test
+        public void def_val() {
+          var valS = defValS("myValue", intS(7));
+          assertConversion(valS, intB(7));
+        }
+
+        @Test
+        public void def_val_referencing_other_def_val() {
+          var valS = defValS("myValue", defValS("otherValue", intS(7)));
+          assertConversion(valS, intB(7));
+        }
+
+        @Test
+        public void native_val() {
+          var filePath = filePath(PRJ, path("my/path"));
+          var classBinaryName = "class.binary.name";
+          var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
+          var natValS = annValS(ann, stringTS(), modPath(filePath), "myValue", loc(filePath, 2));
+
+          var jar = blobB(37);
+          var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
+          var converter = newConverter(fileLoader);
+
+          assertCall(() -> converter.convertExpr(natValS))
+              .throwsException(new ConvertSbExc("Illegal value annotation: `@Native`."));
+        }
+
+        @Test
+        public void bytecode_val() throws IOException {
+          var clazz = ReturnAbc.class;
+          var filePath = filePath(PRJ, path("my/path"));
+          var classBinaryName = clazz.getCanonicalName();
+          var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
+          var byteValS = annValS(ann, stringTS(), modPath(filePath), "myValue", loc(filePath, 2));
+
+          var fileLoader = createFileLoaderMock(
+              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          var converter = newConverter(fileLoader);
+          assertThat(converter.convertExpr(byteValS))
+              .isEqualTo(stringB("abc"));
+        }
+      }
+
+      @Nested
+      class _func {
+        @Test
+        public void def_func() {
+          var funcS = defFuncS("myFunc", nlist(), intS(7));
+          assertConversion(funcS, funcB(intB(7)));
+        }
+
+        @Test
+        public void native_func() {
+          var funcTS = funcTS(intTS(), blobTS());
+          var filePath = filePath(PRJ, path("my/path"));
+          var classBinaryName = "class.binary.name";
+          var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
+          var natFuncS = natFuncS(funcTS, "myFunc", nlist(), ann);
+
+          var resT = intTB();
+          ImmutableList<TypeB> paramTs = list(blobTB());
+          var funcTB = funcTB(resT, paramTs);
+          var jar = blobB(37);
+          var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
+          var bodyB = invokeB(method, paramRefB(blobTB(), 0));
+          var funcB = funcB(funcTB, bodyB);
+
+          var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
+          var converter = newConverter(fileLoader);
+          assertThat(converter.convertExpr(natFuncS))
+              .isEqualTo(funcB);
+        }
+
+        @Test
+        public void bytecode_func() throws IOException {
+          var clazz = ReturnReturnAbcFunc.class;
+          var funcTS = funcTS(stringTS());
+          var filePath = filePath(PRJ, path("my/path"));
+          var classBinaryName = clazz.getCanonicalName();
+          var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
+          var byteFuncS = annFuncS(ann, funcTS, modPath(filePath), "myFunc",
+              nlist(itemS(blobTS(), "p")), loc(filePath, 2));
+
+          var fileLoader = createFileLoaderMock(
+              filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+          var converter = newConverter(fileLoader);
+          assertThat(converter.convertExpr(byteFuncS))
+              .isEqualTo(returnAbcFuncB());
+        }
+      }
     }
 
-    @Test
-    public void call() {
-      var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
-      var call = callS(stringTS(), refS(defFunc));
-      assertConversion(defFunc, call, callB(funcB(stringB("abc"))));
-    }
+    @Nested
+    class _operator {
+      @Test
+      public void call() {
+        var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
+        var call = callS(stringTS(), defFunc);
+        assertConversion(call, callB(funcB(stringB("abc"))));
+      }
 
-    @Test
-    public void int_() {
-      var int_ = intS(1);
-      assertConversion(int_, intB(1));
-    }
+      @Test
+      public void order() {
+        var order = orderS(intTS(), intS(3), intS(7));
+        assertConversion(order, orderB(intB(3), intB(7)));
+      }
 
-    @Test
-    public void order() {
-      var order = orderS(stringTS(), stringS("abc"), stringS("def"));
-      assertConversion(order, orderB(stringB("abc"), stringB("def")));
-    }
+      @Test
+      public void paramRef() {
+        var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
+        assertConversion(func, idFuncB());
+      }
 
-    @Test
-    public void monoize_def_func() {
-      var identity = idFuncS();
-      var intIdentityTS = funcTS(intTS(), list(intTS()));
-      var monoizeS = monoizeS(intIdentityTS, refS(identity));
-      var funcB = funcB(intTB(), list(intTB()), paramRefB(intTB(), 0));
-      assertConversion(identity, monoizeS, funcB);
-    }
+      @Test
+      public void select() {
+        var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
+        var syntCtorS = syntCtorS(structTS);
+        var callS = callS(structTS, syntCtorS, stringS("abc"));
+        var selectS = selectS(stringTS(), callS, "field");
 
-    @Test
-    public void monoize_nat_func() {
-      var a = varA();
-      var funcTS = funcTS(a, list(a));
-      var filePath = filePath(PRJ, path("my/path"));
-      var classBinaryName = "class.binary.name";
-      var ann = nativeS(loc(filePath, 1), stringS(classBinaryName));
-      var natFuncS = poly(natFuncS(funcTS, "myIdentity", nlist(itemS(a, "param")), ann));
+        var ctorB = funcB(list(stringTB()), combineB(paramRefB(stringTB(), 0)));
+        var callB = callB(ctorB, stringB("abc"));
+        assertConversion(selectS, selectB(callB, intB(0)));
+      }
 
-      var resT = intTB();
-      ImmutableList<TypeB> paramTs = list(intTB());
-      var funcTB = funcTB(resT, paramTs);
-      var jar = blobB(37);
-      var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
-      var bodyB = invokeB(method, paramRefB(intTB(), 0));
-      var funcB = funcB(funcTB, bodyB);
+      @Nested
+      class _monoize {
+        @Nested
+        class _val {
+          @Test
+          public void defined() {
+            var emptyArrayVal = emptyArrayValS();
+            var monoizeS = monoizeS(aToIntVarMapS(), emptyArrayVal);
+            var arrayB = orderB(intTB());
+            assertConversion(monoizeS, arrayB);
+          }
 
-      var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-      var converter = newConverter(defs(natFuncS), fileLoader);
-      var monoizeS = monoizeS(funcTS(intTS(), list(intTS())), refS(natFuncS));
-      assertThat(converter.convertObj(monoizeS))
-          .isEqualTo(funcB);
-    }
+          @Test
+          public void defined_monoized_with_type_parameter_of_enclosing_val_type_param() {
+            var a = varA();
+            var b = varB();
 
-    @Test
-    public void monoize_bytecode_func() throws IOException {
-      Class<?> clazz = ReturnIdFunc.class;
-      var varTS = varA();
-      var funcTS = funcTS(varTS, list(varTS));
-      var filePath = filePath(PRJ, path("my/path"));
-      var classBinaryName = clazz.getCanonicalName();
-      var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var byteFuncS = poly(
-          byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nlist(itemS(varTS, "p")),
-              loc(filePath, 2)));
+            var emptyArrayValS = emptyArrayValS();
+            var bEmptyArrayMonoValS = monoizeS(ImmutableMap.of(a, b), emptyArrayValS);
 
-      var fileLoader = createFileLoaderMock(
-          filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-      var converter = newConverter(defs(byteFuncS), fileLoader);
-      var monoizeS = monoizeS(funcTS(intTS(), list(intTS())), refS(byteFuncS));
-      assertThat(converter.convertObj(monoizeS))
-          .isEqualTo(idFuncB());
-    }
+            var referencingValS = polyDefValS("referencing", bEmptyArrayMonoValS);
+            var referencingMonoValS = monoizeS(ImmutableMap.of(b, intTS()), referencingValS);
 
-    @Test
-    public void paramRef() {
-      var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-      assertConversion(func, refS(func),
-          idFuncB());
-    }
+            var referencingValB = orderB(intTB());
+            assertConversion(referencingMonoValS, referencingValB);
+          }
 
-    @Test
-    public void select() {
-      var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-      var syntCtorS = syntCtorS(structTS);
-      var callS = callS(structTS, refS(syntCtorS), stringS("abc"));
-      var selectS = selectS(stringTS(), callS, "field");
+          @Test
+          public void bytecode() throws IOException {
+            var clazz = ReturnIdFunc.class;
+            var a = varA();
+            var funcTS = funcTS(a, list(a));
+            var filePath = smoothFilePath();
+            var classBinaryName = clazz.getCanonicalName();
+            var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
+            var byteValS = polyByteValS(2, ann, funcTS, "myFunc");
 
-      var ctorB = funcB(list(stringTB()), combineB(paramRefB(stringTB(), 0)));
-      var callB = callB(ctorB, stringB("abc"));
-      assertConversion(syntCtorS, selectS, selectB(callB, intB(0)));
-    }
+            var fileLoader = createFileLoaderMock(
+                filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+            var converter = newConverter(fileLoader);
+            var monoizeS = monoizeS(aToIntVarMapS(), byteValS);
+            assertThat(converter.convertExpr(monoizeS))
+                .isEqualTo(idFuncB());
+          }
+        }
 
-    @Test
-    public void string() {
-      var string = stringS("abc");
-      assertConversion(string, stringB("abc"));
-    }
+        @Nested
+        class _func {
+          @Test
+          public void defined() {
+            var identity = idFuncS();
+            var monoizeS = monoizeS(aToIntVarMapS(), identity);
+            var funcB = funcB(intTB(), list(intTB()), paramRefB(intTB(), 0));
+            assertConversion(monoizeS, funcB);
+          }
 
-    @Test
-    public void topRef_to_val() {
-      var defVal = defValS("myVal", stringS("abc"));
-      assertConversion(defVal, refS(defVal), stringB("abc"));
-    }
+          @Test
+          public void defined_monoized_with_type_parameter_of_enclosing_func_type_param() {
+            var a = varA();
+            var b = varB();
 
-    @Test
-    public void topRef_to_bytecode_val() throws IOException {
-      Class<?> clazz = ReturnAbc.class;
-      var filePath = filePath(PRJ, path("my/path"));
-      var classBinaryName = clazz.getCanonicalName();
-      var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var annValS = annValS(ann, stringTS(), modPath(filePath), "myVal", loc(filePath, 2));
+            var idFuncS = idFuncS();
+            var bIdMonoFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
 
-      var valB = stringB("abc");
+            var bodyS = callS(b, bIdMonoFuncS, paramRefS(b, "p"));
+            var wrapFuncS = polyS(defFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS));
+            var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
 
-      var fileLoader = createFileLoaderMock(
-          filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-      var converter = newConverter(defs(annValS), fileLoader);
-      assertThat(converter.convertObj(refS(annValS)))
-          .isEqualTo(valB);
-    }
+            var idFuncB = funcB(intTB(), list(intTB()), paramRefB(intTB(), 0));
+            var wrapFuncB = funcB(intTB(), list(intTB()), callB(idFuncB, paramRefB(intTB(), 0)));
+            assertConversion(wrapMonoFuncS, wrapFuncB);
+          }
 
-    @Test
-    public void topRef_to_def_func() {
-      var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
-      assertConversion(defFunc, refS(defFunc), funcB(stringB("abc")));
-    }
+          @Test
+          public void native_() {
+            var a = varA();
+            var funcTS = funcTS(a, list(a));
+            var filePath = filePath(PRJ, path("my/path"));
+            var classBinaryName = "class.binary.name";
+            var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
+            var natFuncS = polyS(natFuncS(funcTS, "myIdentity", nlist(itemS(a, "param")), ann));
 
-    @Test
-    public void topRef_to_def_func_with_bodyT_being_subtype_of_resT() {
-      var defFunc = defFuncS(arrayTS(stringTS()), "myFunc", nlist(), orderS(nothingTS()));
-      assertConversion(defFunc, refS(defFunc),
-          funcB(arrayTB(stringTB()), list(), orderB(nothingTB())));
-    }
+            var resT = intTB();
+            ImmutableList<TypeB> paramTs = list(intTB());
+            var funcTB = funcTB(resT, paramTs);
+            var jar = blobB(37);
+            var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
+            var bodyB = invokeB(method, paramRefB(intTB(), 0));
+            var funcB = funcB(funcTB, bodyB);
 
-    @Test
-    public void topRef_to_synt_ctor() {
-      var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
-      var syntCtorS = syntCtorS(structTS);
-      var expected = funcB(list(intTB()), combineB(paramRefB(intTB(), 0)));
-      assertConversion(syntCtorS, refS(syntCtorS), expected);
-    }
+            var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
+            var converter = newConverter(fileLoader);
+            var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), natFuncS);
+            assertThat(converter.convertExpr(monoizeS))
+                .isEqualTo(funcB);
+          }
 
-    @Test
-    public void topRef_to_native_func() {
-      var funcTS = funcTS(intTS(), list(blobTS()));
-      var filePath = filePath(PRJ, path("my/path"));
-      var classBinaryName = "class.binary.name";
-      var ann = nativeS(loc(filePath, 1), stringS(classBinaryName));
-      var natFuncS = natFuncS(funcTS, "myFunc", nlist(itemS(intTS(), "param")), ann);
+          @Test
+          public void bytecode() throws IOException {
+            var clazz = ReturnIdFunc.class;
+            var a = varA();
+            var funcTS = funcTS(a, list(a));
+            var filePath = filePath(PRJ, path("my/path"));
+            var classBinaryName = clazz.getCanonicalName();
+            var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
+            var byteFuncS = polyS(
+                annFuncS(ann, funcTS, modPath(filePath), "myFunc", nlist(itemS(a, "p")),
+                    loc(filePath, 2)));
 
-      var resT = intTB();
-      ImmutableList<TypeB> paramTs = list(blobTB());
-      var funcTB = funcTB(resT, paramTs);
-      var jar = blobB(37);
-      var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
-      var bodyB = invokeB(method, paramRefB(blobTB(), 0));
-      var funcB = funcB(funcTB, bodyB);
-
-      var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-      var converter = newConverter(defs(natFuncS), fileLoader);
-      assertThat(converter.convertObj(refS(natFuncS)))
-          .isEqualTo(funcB);
-    }
-
-    @Test
-    public void topRef_to_bytecode_func() throws IOException {
-      Class<?> clazz = ReturnReturnAbcFunc.class;
-      var funcTS = funcTS(stringTS());
-      var filePath = filePath(PRJ, path("my/path"));
-      var classBinaryName = clazz.getCanonicalName();
-      var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var byteFuncS = byteFuncS(ann, funcTS, modPath(filePath), "myFunc", nlist(), loc(filePath, 2));
-
-      var funcB = funcB(stringB("abc"));
-
-      var fileLoader = createFileLoaderMock(
-          filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-      var converter = newConverter(defs(byteFuncS), fileLoader);
-      assertThat(converter.convertObj(refS(byteFuncS)))
-          .isEqualTo(funcB);
-    }
-
-    private void assertConversion(MonoObjS objS, ObjB expected) {
-      assertConversion(defs(), objS, expected);
-    }
-
-    private void assertConversion(TopRefableS topRefable, MonoObjS objS, ObjB expected) {
-      assertConversion(defs(topRefable), objS, expected);
-    }
-
-    private void assertConversion(DefsS defs, MonoObjS objS, ObjB expected) {
-      var converter = newConverter(defs);
-      assertThat(converter.convertObj(objS))
-          .isEqualTo(expected);
+            var fileLoader = createFileLoaderMock(
+                filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+            var converter = newConverter(fileLoader);
+            var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), byteFuncS);
+            assertThat(converter.convertExpr(monoizeS))
+                .isEqualTo(idFuncB());
+          }
+        }
+      }
     }
   }
 
   @Nested
   class _caching {
     @Test
-    public void val_conversion_result() {
+    public void def_val_conversion_result() {
       assertConversionIsCached(defValS("myVal", stringS("abcdefghi")));
+    }
+
+    @Test
+    public void bytecode_val_conversion_result() throws IOException {
+      var clazz = ReturnAbc.class;
+      var filePath = filePath(PRJ, path("my/path"));
+      var classBinaryName = clazz.getCanonicalName();
+      var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
+      var bytecodeValS = annValS(ann, stringTS(), modPath(filePath), "myFunc", loc(filePath, 2));
+      var fileLoader = createFileLoaderMock(
+          filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+
+      assertConversionIsCached(bytecodeValS, newConverter(fileLoader));
     }
 
     @Test
@@ -255,34 +333,58 @@ public class SbConverterTest extends TestContext {
     }
 
     @Test
+    public void bytecode_func_conversion_result() throws IOException {
+      var clazz = ReturnReturnAbcFunc.class;
+      var funcTS = funcTS(stringTS(), Lists.<TypeS>list());
+      var filePath = filePath(PRJ, path("my/path"));
+      var classBinaryName = clazz.getCanonicalName();
+      var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
+      var bytecodeFuncS = annFuncS(ann, funcTS, modPath(filePath), "myFunc", nlist(), loc(filePath, 2));
+      var fileLoader = createFileLoaderMock(
+          filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
+
+      assertConversionIsCached(bytecodeFuncS, newConverter(fileLoader));
+    }
+
+    @Test
+    public void synt_ctor_conversion_result() {
+      assertConversionIsCached(syntCtorS(structTS("MyStruct", nlist(sigS(stringTS(), "name")))));
+    }
+
+    @Test
     public void monoized_poly_func_conversion_result() {
-      var monoizeS = monoizeS(funcTS(intTS(), list(intTS())), refS(idFuncS()));
-      assertConversionIsCached(monoizeS, defs(idFuncS()));
+      var monoizeS = monoizeS(aToIntVarMapS(), idFuncS());
+      assertConversionIsCached(monoizeS);
     }
 
-    private void assertConversionIsCached(MonoTopRefableS valS) {
-      assertConversionIsCached(refS(valS), defs(valS));
+    private void assertConversionIsCached(ExprS exprS) {
+      var converter = newConverter();
+      assertConversionIsCached(exprS, converter);
     }
 
-    private void assertConversionIsCached(MonoObjS monoObjS, DefsS defs) {
-      var converter = newConverter(defs);
-      assertThat(converter.convertObj(monoObjS))
-          .isSameInstanceAs(converter.convertObj(monoObjS));
+    private void assertConversionIsCached(ExprS exprS, SbConverter converter) {
+      assertThat(converter.convertExpr(exprS))
+          .isSameInstanceAs(converter.convertExpr(exprS));
     }
   }
 
-  private SbConverter newConverter(DefsS defs) {
+  private void assertConversion(ExprS exprS, ObjB expected) {
+    assertThat(newConverter().convertExpr(exprS))
+        .isEqualTo(expected);
+  }
+
+  private SbConverter newConverter() {
     try {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(any())).thenReturn(blobB(1));
-      return newConverter(defs, mock);
+      return newConverter(mock);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private SbConverter newConverter(DefsS defs, FileLoader fileLoader) {
-    return sbConverterProv(fileLoader).get(defs);
+  private SbConverter newConverter(FileLoader fileLoader) {
+    return sbConverterProv(fileLoader).get();
   }
 
   private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {
@@ -293,14 +395,5 @@ public class SbConverterTest extends TestContext {
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private DefsS defs() {
-    return DefsS.empty();
-  }
-
-  private DefsS defs(TopRefableS topRefable) {
-    return new DefsS(
-        immutableBindings(), immutableBindings(ImmutableMap.of(topRefable.name(), topRefable)));
   }
 }

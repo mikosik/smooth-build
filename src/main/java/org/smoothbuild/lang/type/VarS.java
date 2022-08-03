@@ -7,10 +7,9 @@ import java.util.function.Function;
 
 /**
  * Type variable.
- *
  * This class is immutable.
  */
-public final class VarS extends MonoTS {
+public final class VarS extends TypeS {
   private static final char PREFIX_SEPARATOR = '.';
   private final VarSetS vars;
 
@@ -25,7 +24,7 @@ public final class VarS extends MonoTS {
   }
 
   @Override
-  public MonoTS mapVars(Function<VarS, VarS> varMapper) {
+  public TypeS mapVars(Function<VarS, TypeS> varMapper) {
     return varMapper.apply(this);
   }
 

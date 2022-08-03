@@ -249,12 +249,11 @@ public class VisibilityTest extends TestContext {
         @Test
         public void value() {
           var code = """
-              @Native("Impl.met")
-              Nothing nothingFunc();
-              Undefined myValue = nothingFunc();
+              @Bytecode("Impl.met")
+              Undefined myValue;
               """;
           module(code)
-              .loadsWithError(3, "`Undefined` type is undefined.");
+              .loadsWithError(2, "`Undefined` type is undefined.");
         }
 
         @Test

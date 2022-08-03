@@ -40,13 +40,29 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.parse.ast.expr.BlobP;
+import org.smoothbuild.parse.ast.expr.CallP;
+import org.smoothbuild.parse.ast.expr.ExprP;
+import org.smoothbuild.parse.ast.expr.IntP;
+import org.smoothbuild.parse.ast.expr.NamedArgP;
+import org.smoothbuild.parse.ast.expr.OrderP;
+import org.smoothbuild.parse.ast.expr.RefP;
+import org.smoothbuild.parse.ast.expr.SelectP;
+import org.smoothbuild.parse.ast.expr.StringP;
+import org.smoothbuild.parse.ast.refable.FuncP;
+import org.smoothbuild.parse.ast.refable.ItemP;
+import org.smoothbuild.parse.ast.refable.PolyRefableP;
+import org.smoothbuild.parse.ast.refable.ValP;
+import org.smoothbuild.parse.ast.type.ArrayTP;
+import org.smoothbuild.parse.ast.type.FuncTP;
+import org.smoothbuild.parse.ast.type.TypeP;
 
 import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
   public static Ast fromParseTree(FilePath filePath, ModContext module) {
     List<StructP> structs = new ArrayList<>();
-    List<TopRefableP> refables = new ArrayList<>();
+    List<PolyRefableP> refables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
@@ -81,7 +97,7 @@ public class AstCreator {
         visitChildren(top);
         Optional<TypeP> type = createTypeSane(top.type());
         String name = nameNode.getText();
-        Optional<ObjP> obj = createObjSane(top.expr());
+        Optional<ExprP> obj = createExprSane(top.expr());
         Optional<AnnP> annotation = createNativeSane(top.ann());
         Loc loc = locOf(filePath, nameNode);
         if (top.paramList() == null) {
@@ -118,27 +134,26 @@ public class AstCreator {
       private ItemP createParam(ParamContext param) {
         var type = createT(param.type());
         var name = param.NAME().getText();
-        var defaultArg = Optional.ofNullable(param.expr()).map(this::createObj);
+        var defaultArg = Optional.ofNullable(param.expr()).map(this::createExpr);
         var loc = locOf(filePath, param);
         return new ItemP(type, name, defaultArg, loc);
       }
 
-      private Optional<ObjP> createObjSane(ExprContext expr) {
-        return expr == null ? Optional.empty() : Optional.of(createObj(expr));
+      private Optional<ExprP> createExprSane(ExprContext expr) {
+        return expr == null ? Optional.empty() : Optional.of(createExpr(expr));
       }
 
-      private ObjP createObj(ExprContext expr) {
-        ObjP result = createChainHead(expr.exprHead());
+      private ExprP createExpr(ExprContext expr) {
+        ExprP result = createChainHead(expr.exprHead());
         List<ChainCallContext> chainCallsInPipe = expr.chainCall();
         for (int i = 0; i < chainCallsInPipe.size(); i++) {
-          var pipedArg = pipedArg(result, expr.p.get(i));
           ChainCallContext chain = chainCallsInPipe.get(i);
-          result = createChainCallObj(pipedArg, chain);
+          result = createChainCallObj(result, chain);
         }
         return result;
       }
 
-      private ObjP createChainHead(ExprHeadContext expr) {
+      private ExprP createChainHead(ExprHeadContext expr) {
         if (expr.chain() != null) {
           return createChainObj(expr.chain());
         }
@@ -148,20 +163,14 @@ public class AstCreator {
         throw newRuntimeException(ExprHeadContext.class);
       }
 
-      private ObjP createChainObj(ChainContext chain) {
-        ObjP result = newRefNode(chain.NAME());
+      private ExprP createChainObj(ChainContext chain) {
+        ExprP result = newRefNode(chain.NAME());
         return createChainParts(result, chain.chainPart());
       }
 
-      private ArgP pipedArg(ObjP result, Token pipeCharacter) {
-        // Loc of nameless piped arg is set to the loc of pipe character '|'.
-        Loc loc = locOf(filePath, pipeCharacter);
-        return new ArgP(Optional.empty(), result, loc);
-      }
-
-      private ObjP createLiteral(LiteralContext expr) {
+      private ExprP createLiteral(LiteralContext expr) {
         if (expr.array() != null) {
-          List<ObjP> elems = map(expr.array().expr(), this::createObj);
+          List<ExprP> elems = map(expr.array().expr(), this::createExpr);
           return new OrderP(elems, locOf(filePath, expr));
         }
         if (expr.BLOB() != null) {
@@ -182,14 +191,14 @@ public class AstCreator {
         return new StringP(unquoted, loc);
       }
 
-      private ObjP createChainCallObj(ArgP pipedArg, ChainCallContext chainCall) {
-        ObjP result = newRefNode(chainCall.NAME());
+      private ExprP createChainCallObj(ExprP expr, ChainCallContext chainCall) {
+        ExprP result = newRefNode(chainCall.NAME());
         for (SelectContext fieldRead : chainCall.select()) {
           result = createSelect(result, fieldRead);
         }
 
         var args = createArgList(chainCall.argList());
-        result = createCall(result, concat(pipedArg, args), chainCall.argList());
+        result = createCall(result, concat(expr, args), chainCall.argList());
 
         return createChainParts(result, chainCall.chainPart());
       }
@@ -198,14 +207,14 @@ public class AstCreator {
         return new RefP(name.getText(), locOf(filePath, name));
       }
 
-      private SelectP createSelect(ObjP selectable, SelectContext fieldRead) {
+      private SelectP createSelect(ExprP selectable, SelectContext fieldRead) {
         String name = fieldRead.NAME().getText();
         Loc loc = locOf(filePath, fieldRead);
         return new SelectP(selectable, name, loc);
       }
 
-      private ObjP createChainParts(ObjP obj, List<ChainPartContext> chainParts) {
-        ObjP result = obj;
+      private ExprP createChainParts(ExprP obj, List<ChainPartContext> chainParts) {
+        ExprP result = obj;
         for (ChainPartContext chainPart : chainParts) {
           if (chainPart.argList() != null) {
             var args = createArgList(chainPart.argList());
@@ -219,19 +228,22 @@ public class AstCreator {
         return result;
       }
 
-      private List<ArgP> createArgList(ArgListContext argList) {
-        List<ArgP> result = new ArrayList<>();
+      private List<ExprP> createArgList(ArgListContext argList) {
+        List<ExprP> result = new ArrayList<>();
         for (ArgContext arg : argList.arg()) {
           ExprContext expr = arg.expr();
           TerminalNode nameNode = arg.NAME();
-          var name = nameNode == null ? Optional.<String>empty() : Optional.of(nameNode.getText());
-          var objP = createObj(expr);
-          result.add(new ArgP(name, objP, locOf(filePath, arg)));
+          ExprP exprP = createExpr(expr);
+          if (nameNode == null) {
+            result.add(exprP);
+          } else {
+            result.add(new NamedArgP(nameNode.getText(), exprP, locOf(filePath, arg)));
+          }
         }
         return result;
       }
 
-      private MonoObjP createCall(ObjP callable, List<ArgP> args, ArgListContext argListContext) {
+      private ExprP createCall(ExprP callable, List<ExprP> args, ArgListContext argListContext) {
         Loc loc = locOf(filePath, argListContext);
         return new CallP(callable, args, loc);
       }

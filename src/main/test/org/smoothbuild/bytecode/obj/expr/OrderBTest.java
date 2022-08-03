@@ -34,14 +34,6 @@ public class OrderBTest extends TestContext {
   }
 
   @Test
-  public void elemT_can_be_subtype_of_elemT_specified_in_category() {
-    var elem = arrayB(nothingTB());
-    var orderB = orderB(arrayTB(intTB()), elem);
-    assertThat(orderB.elems().get(0))
-        .isEqualTo(elem);
-  }
-
-  @Test
   public void elems_returns_elems() {
     assertThat(orderB(intB(2)).elems())
         .isEqualTo(list(intB(2)));

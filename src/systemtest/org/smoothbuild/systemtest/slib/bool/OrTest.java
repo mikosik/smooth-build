@@ -60,7 +60,7 @@ public class OrTest extends SystemTestCase {
     createNativeJar(ThrowException.class);
     createUserModule(format("""
             @Native("%s")
-            Nothing throwException();
+            A throwException();
             result = or(true, throwException());
             """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");

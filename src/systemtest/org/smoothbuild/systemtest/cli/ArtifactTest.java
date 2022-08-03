@@ -138,15 +138,13 @@ public class ArtifactTest extends SystemTestCase {
   }
 
   @Test
-  public void store_empty_array_of_nothings_artifact() throws Exception {
+  public void store_generic_array_artifact_fails() throws Exception {
     createUserModule("""
             result = [];
             """);
     runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list());
+    assertFinishedWithError();
+    assertSysOutContains("`result` cannot be calculated as it is a polymorphic value.");
   }
 
   @Test

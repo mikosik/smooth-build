@@ -9,45 +9,28 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.expr.IfCB;
 import org.smoothbuild.testing.TestContext;
 
 public class IfBTest extends TestContext {
-  @Test
-  public void then_clauses_can_be_subtype_of_evalT() {
-    var evalT = arrayTB(stringTB());
-    var ifCB = ifCB(evalT);
-    var then = arrayB(stringTB());
-    var else_ = arrayB(nothingTB());
-    test_clauses(ifCB, evalT, then, else_);
-  }
-
-  @Test
-  public void else_clauses_can_be_subtype_of_then_clause() {
-    var evalT = arrayTB(stringTB());
-    var ifCB = ifCB(evalT);
-    var then = arrayB(stringTB());
-    var else_ = arrayB(nothingTB());
-    test_clauses(ifCB, evalT, then, else_);
-  }
-
-  private void test_clauses(IfCB ifCB, TypeB evalT, ArrayB then, ArrayB else_) {
-    var ifB = ifB(evalT, boolB(true), then, else_);
-    assertThat(ifB.cat())
-        .isEqualTo(ifCB);
-    assertThat(ifB.data().then())
-        .isEqualTo(then);
-    assertThat(ifB.data().else_())
-        .isEqualTo(else_);
-  }
-
   @Test
   public void creating_if_with_condition_not_being_bool_causes_exception() {
     assertCall(() -> ifB(intTB(), blobB(0), intB(1), intB(2)))
         .throwsException(new IllegalArgumentException(
             "`condition` component must evaluate to Bool but is `Blob`."));
+  }
+
+  @Test
+  public void creating_if_with_then_clause_of_wrong_type_causes_exception() {
+    assertCall(() -> ifB(intTB(), boolB(), blobB(), intB()))
+        .throwsException(new IllegalArgumentException(
+            "`then` component must evaluate to `Int` but is `Blob`."));
+  }
+
+  @Test
+  public void creating_if_with_else_clause_of_wrong_type_causes_exception() {
+    assertCall(() -> ifB(intTB(), boolB(), intB(), blobB()))
+        .throwsException(new IllegalArgumentException(
+            "`else` component must evaluate to `Int` but is `Blob`."));
   }
 
   @Test

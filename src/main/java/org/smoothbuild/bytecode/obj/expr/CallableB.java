@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.obj.expr;
 
-import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
-import static org.smoothbuild.bytecode.type.IsAssignable.validateArgs;
+import static org.smoothbuild.bytecode.type.ValidateArgs.validateArgs;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
@@ -23,7 +22,7 @@ public class CallableB extends ExprB {
     var resT = callableTB.res();
     validateArgs(callableTB, argsCombine.type().items(),
         () -> illegalArgsExc(callableTB, argsCombine.type()));
-    if (!isAssignable(type(), resT)) {
+    if (!type().equals(resT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "callable.result", type(), resT);
     }
   }

@@ -10,7 +10,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.lang.define.MonoRefS;
+import org.smoothbuild.lang.define.MonoRefableS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.Evaluator;
@@ -47,7 +47,7 @@ public class BuildRunner {
     return exitCode;
   }
 
-  public Optional<Map<MonoRefS, CnstB>> evaluate(List<String> names) {
+  public Optional<Map<MonoRefableS, CnstB>> evaluate(List<String> names) {
     if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
       return Optional.empty();
     }
@@ -64,7 +64,7 @@ public class BuildRunner {
     }
 
     var refables = refablesOpt.get();
-    var evaluationsOpt = evaluator.evaluate(defs, refables);
+    var evaluationsOpt = evaluator.evaluate(refables);
     if (evaluationsOpt.isEmpty()) {
       return Optional.empty();
     }

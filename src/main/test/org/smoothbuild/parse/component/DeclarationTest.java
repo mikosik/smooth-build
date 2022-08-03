@@ -2,7 +2,7 @@ package org.smoothbuild.parse.component;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.testing.TestingModLoader.err;
-import static org.smoothbuild.testing.type.TestedTSF.TESTED_MONOTYPES;
+import static org.smoothbuild.testing.type.TestedTSF.TESTED_TYPES;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
@@ -101,7 +101,7 @@ public class DeclarationTest extends TestContext {
         @Nested
         class _type {
           @ParameterizedTest
-          @ArgumentsSource(TestedMonotypes.class)
+          @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS testedT) {
             module(unlines(
                 testedT.typeDeclarationsAsString(),
@@ -299,7 +299,7 @@ public class DeclarationTest extends TestContext {
         }
 
         @ParameterizedTest
-        @ArgumentsSource(TestedMonotypes.class)
+        @ArgumentsSource(TestedTypes.class)
         public void can_be_monotype(TestedTS type) {
           module(unlines(
               "@Native(\"Impl.met\")",
@@ -310,25 +310,22 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void cannot_be_polytype() {
+        public void can_be_polytype() {
           var code = """
-              @Native("Impl.met")
-              A myId(A param);
-              A myValue = myId("abc");
+              [A] myValue = [];
           """;
           module(code)
-              .loadsWithError(3, "Unknown type variable(s): A");
+              .loadsWithSuccess();
         }
 
         @Test
-        public void cannot_be_polytype_assigned_from_func() {
+        public void can_be_polytype_assigned_from_func() {
           var code = """
-              @Native("Impl.met")
-              A myId(A param);
+              A myId(A a) = a;
               A(A) myValue = myId;
           """;
           module(code)
-              .loadsWithError(3, "Unknown type variable(s): A");
+              .loadsWithSuccess();
         }
 
         @Test
@@ -340,28 +337,6 @@ public class DeclarationTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess();
-        }
-
-        @Test
-        public void can_be_type_which_is_supertype_of_its_body_type() {
-          module("""
-              @Native("impl")
-              Nothing nothingFunc();
-              String myValue = nothingFunc();
-              """)
-              .loadsWithSuccess();
-        }
-
-        @Test
-        public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_is_convertible() {
-          module("""
-              @Native("impl")
-              Nothing nothingFunc();
-              String myValue = nothingFunc();
-              Nothing result = myValue;
-              """)
-              .loadsWithError(4, "`result` has body which type is `String` and it is not "
-                  + "convertible to its declared type `Nothing`.");
         }
       }
 
@@ -569,7 +544,7 @@ public class DeclarationTest extends TestContext {
           }
 
           @ParameterizedTest
-          @ArgumentsSource(TestedMonotypes.class)
+          @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS type) {
             module(unlines(
                 "@Native(\"impl\")",
@@ -596,28 +571,6 @@ public class DeclarationTest extends TestContext {
                 """;
             module(code)
                 .loadsWithSuccess();
-          }
-
-          @Test
-          public void can_be_supertype_of_func_body() {
-            module("""
-                @Native("impl")
-                Nothing nothingFunc();
-                String myFunc() = nothingFunc();
-                """)
-                .loadsWithSuccess();
-          }
-
-          @Test
-          public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_type_is_convertible() {
-            module("""
-                @Native("impl")
-                Nothing nothingFunc();
-                String myFunc() = nothingFunc();
-                Nothing result = myFunc();
-                """)
-                .loadsWithError(4, "`result` has body which type is `String` and it is not "
-                    + "convertible to its declared type `Nothing`.");
           }
         }
       }
@@ -671,7 +624,7 @@ public class DeclarationTest extends TestContext {
         @Nested
         class _type {
           @ParameterizedTest
-          @ArgumentsSource(TestedMonotypes.class)
+          @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS type) {
             module(unlines(
                 "@Native(\"Impl.met\")",
@@ -754,9 +707,9 @@ public class DeclarationTest extends TestContext {
               String nonDefault);
             """)
               .loadsWithSuccess()
-              .containsTopRefable(natFuncS(2, stringTS(), "myFunc", nlist(
+              .containsRefable(polyNatFuncS(2, stringTS(), "myFunc", nlist(
                   itemS(3, stringTS(), "default", stringS(3, "value")),
-                  itemS(4, stringTS(), "nonDefault")), nativeS(1, stringS(1, "Impl.met"))));
+                  itemS(4, stringTS(), "nonDefault")), natAnnS(1, stringS(1, "Impl.met"))));
         }
 
         @Test
@@ -783,7 +736,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcDeclaration("String param1,"))
               .loadsWithSuccess()
-              .containsTopRefable(defFuncS(1, stringTS(), "myFunc", stringS(1, "abc"),
+              .containsRefable(polyDefFuncS(1, stringTS(), "myFunc", stringS(1, "abc"),
                   nlist(itemS(1, stringTS(), "param1"))));
         }
 
@@ -818,8 +771,8 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcTDeclaration("String,"))
               .loadsWithSuccess()
-              .containsTopRefable(natFuncS(2, funcTS(funcTS(blobTS(), list(stringTS()))), "myFunc",
-                  nlist(), nativeS(1, stringS(1, "Impl.met"))));
+              .containsRefable(polyNatFuncS(2, funcTS(funcTS(blobTS(), list(stringTS()))), "myFunc",
+                  nlist(), natAnnS(1, stringS(1, "Impl.met"))));
         }
 
         @Test
@@ -863,8 +816,7 @@ public class DeclarationTest extends TestContext {
               result = myIdentity("abc", "def");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with parameters `(String param)`:"
-                  + " Too many positional arguments.");
+              .loadsWithError(2, "Illegal call.");
         }
 
         @Test
@@ -874,8 +826,7 @@ public class DeclarationTest extends TestContext {
               result = returnFirst("abc");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with parameters `(String param1,"
-                  + " String param2)`: Parameter `param2` must be specified.");
+              .loadsWithError(2, "Parameter `param2` must be specified.");
         }
 
         @Test
@@ -886,8 +837,8 @@ public class DeclarationTest extends TestContext {
               result = funcValue("abc");
               """;
           module(code)
-              .loadsWithError(3, "In call to function with parameters `(String, String)`:"
-                  + " Parameter #2 must be specified.");
+              .loadsWithError(3, "Illegal call.");
+//              .loadsWithError(3, "Too few parameters. Expected 2 found 1.");
         }
 
         @Test
@@ -897,8 +848,7 @@ public class DeclarationTest extends TestContext {
               result = myIdentity(wrongName="abc");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with parameters `(String param)`: "
-                  + "Unknown parameter `wrongName`.");
+              .loadsWithError(2, "Unknown parameter `wrongName`.");
         }
 
         @Test
@@ -928,9 +878,7 @@ public class DeclarationTest extends TestContext {
               result = returnFirst(param2="def", "abc");
               """;
           module(code)
-              .loadsWithError(2,
-                  "In call to function with parameters `(String param1, String param2)`: "
-                      + "Positional arguments must be placed before named arguments.");
+              .loadsWithError(2, "Positional arguments must be placed before named arguments.");
         }
 
         @Test
@@ -940,8 +888,7 @@ public class DeclarationTest extends TestContext {
               result = myIdentity(param="abc", param="abc");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with parameters `(String param)`:"
-                  + " `param` is already assigned.");
+              .loadsWithError(2, "`param` is already assigned.");
         }
 
         @Test
@@ -951,8 +898,7 @@ public class DeclarationTest extends TestContext {
               result = myIdentity("abc", param="abc");
               """;
           module(code)
-              .loadsWithError(2, "In call to function with parameters `(String param)`: "
-                  + "`param` is already assigned.");
+              .loadsWithError(2, "`param` is already assigned.");
         }
 
         @Test
@@ -983,8 +929,7 @@ public class DeclarationTest extends TestContext {
             result = valueReferencingFunc(param="abc");
             """;
           module(code)
-              .loadsWithError(3,
-                  "In call to function with parameters `(String)`: Unknown parameter `param`.");
+              .loadsWithError(3, "Unknown parameter `param`.");
         }
 
         @Test
@@ -995,8 +940,7 @@ public class DeclarationTest extends TestContext {
             result = valueReferencingFunc();
             """;
           module(code)
-              .loadsWithError(3, "In call to function with parameters `(String)`: "
-                  + "Parameter #1 must be specified.");
+              .loadsWithError(3, "Illegal call.");
         }
       }
 
@@ -1033,8 +977,7 @@ public class DeclarationTest extends TestContext {
               result = myStruct();
               """;
           module(code)
-              .loadsWithError(4, "In call to function with parameters `(String field)`:" +
-                  " Parameter `field` must be specified.");
+              .loadsWithError(4, "Parameter `field` must be specified.");
         }
       }
 
@@ -1042,12 +985,10 @@ public class DeclarationTest extends TestContext {
       class _arg_list {
         @Test
         public void can_have_trailing_comma() {
-          module(funcCall("0x07,"))
+          module(funcCall("7,"))
               .loadsWithSuccess()
-              .containsTopRefable(defValS(2, blobTS(), "result",
-                  callS(2, blobTS(),
-                      refS(2, funcTS(blobTS(), list(blobTS())), "myFunc"),
-                      blobS(2, 7))));
+              .containsRefable(polyDefValS(2, intTS(), "result",
+                  callS(2, intTS(), intIdFuncS(), intS(2, 7))));
         }
 
         @Test
@@ -1058,20 +999,20 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void cannot_have_leading_comma() {
-          module(funcCall(","))
+          module(funcCall(",7"))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          module(funcCall("0x01,,"))
+          module(funcCall("1,,"))
               .loadsWithProblems();
         }
 
         private String funcCall(String string) {
           return """
-              Blob myFunc(Blob b) = b;
-              result = myFunc(PLACEHOLDER);
+              Int myIntId(Int i) = i;
+              result = myIntId(PLACEHOLDER);
               """.replace("PLACEHOLDER", string);
         }
       }
@@ -1100,7 +1041,7 @@ public class DeclarationTest extends TestContext {
             result = myStruct("abc").otherField;
             """;
         module(code)
-            .loadsWithError(4, "Struct `MyStruct` doesn't have field `otherField`.");
+            .loadsWithError(4, "Unknown field `otherField`.");
       }
     }
 
@@ -1319,7 +1260,7 @@ public class DeclarationTest extends TestContext {
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
                 .loadsWithSuccess()
-                .containsTopRefable(defValS(1, arrayTS(blobTS()), "result",
+                .containsRefable(polyDefValS(1, arrayTS(blobTS()), "result",
                     orderS(1, blobTS(), blobS(1, 7))));
           }
 
@@ -1369,8 +1310,8 @@ public class DeclarationTest extends TestContext {
             ];
             """)
               .loadsWith(
-                  err(3, "In call to function with parameters `()`: Unknown parameter `unknown1`."),
-                  err(4, "In call to function with parameters `()`: Unknown parameter `unknown2`.")
+                  err(3, "Unknown parameter `unknown1`."),
+                  err(4, "Unknown parameter `unknown2`.")
               );
         }
       }
@@ -1406,21 +1347,6 @@ public class DeclarationTest extends TestContext {
 
     @Nested
     class _pipe {
-      @Test
-      public void regression_test_error_in_expression_of_arg_of_not_first_elem_of_pipe() {
-        module("""
-            String myFunc(String a, String b) = "abc";
-            String myIdentity(String s) = s;
-            result = "abc" | myIdentity(myFunc(unknown=""));
-            """)
-                .loadsWith(
-                    err(3, "In call to function with parameters `(String a, String b)`:"
-                        + " Unknown parameter `unknown`."),
-                    err(3, "In call to function with parameters `(String s)`:"
-                        + " Too many positional arguments.")
-        );
-      }
-
       @Test
       public void non_first_chain_in_a_pipe_must_have_func_call() {
         module("""
@@ -1458,10 +1384,10 @@ public class DeclarationTest extends TestContext {
     }
   }
 
-  private static class TestedMonotypes implements ArgumentsProvider {
+  private static class TestedTypes implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return TESTED_MONOTYPES.stream()
+      return TESTED_TYPES.stream()
           .map(Arguments::of);
     }
   }

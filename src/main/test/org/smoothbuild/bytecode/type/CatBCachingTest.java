@@ -35,7 +35,6 @@ public class CatBCachingTest extends TestContext {
         CatDb::bool,
         CatBCachingTest::funcT,
         CatDb::int_,
-        CatDb::nothing,
         CatDb::string,
         CatBCachingTest::tupleT,
 
@@ -52,7 +51,6 @@ public class CatBCachingTest extends TestContext {
         catDb -> catDb.array(catDb.blob()),
         catDb -> catDb.array(catDb.bool()),
         catDb -> catDb.array(catDb.int_()),
-        catDb -> catDb.array(catDb.nothing()),
         catDb -> catDb.array(catDb.string()),
         catDb -> catDb.array(tupleT(catDb)),
         catDb -> catDb.array(funcT(catDb)),
@@ -60,7 +58,6 @@ public class CatBCachingTest extends TestContext {
         catDb -> catDb.array(catDb.array(catDb.blob())),
         catDb -> catDb.array(catDb.array(catDb.bool())),
         catDb -> catDb.array(catDb.array(catDb.int_())),
-        catDb -> catDb.array(catDb.array(catDb.nothing())),
         catDb -> catDb.array(catDb.array(catDb.string())),
         catDb -> catDb.array(catDb.array(tupleT(catDb))),
         catDb -> catDb.array(catDb.array(funcT(catDb)))

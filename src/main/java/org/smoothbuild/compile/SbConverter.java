@@ -3,13 +3,11 @@ package org.smoothbuild.compile;
 import static org.smoothbuild.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.lang.type.solver.DeduceVarMap.deduceVarMap;
 import static org.smoothbuild.util.Strings.q;
-import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.util.collect.Maps.mapEntries;
+import static org.smoothbuild.util.collect.Maps.mapKeys;
+import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -46,24 +44,24 @@ import org.smoothbuild.lang.define.BlobS;
 import org.smoothbuild.lang.define.CallS;
 import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefValS;
-import org.smoothbuild.lang.define.DefsS;
+import org.smoothbuild.lang.define.ExprS;
+import org.smoothbuild.lang.define.FuncS;
 import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.ItemS;
-import org.smoothbuild.lang.define.MonoFuncS;
-import org.smoothbuild.lang.define.MonoObjS;
-import org.smoothbuild.lang.define.MonoRefS;
 import org.smoothbuild.lang.define.MonoizeS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
 import org.smoothbuild.lang.define.PolyFuncS;
+import org.smoothbuild.lang.define.PolyValS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.SyntCtorS;
 import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.type.ArrayTS;
-import org.smoothbuild.lang.type.MonoFuncTS;
-import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.FuncTS;
 import org.smoothbuild.lang.type.StructTS;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.util.collect.NList;
 
@@ -73,26 +71,22 @@ import com.google.common.collect.ImmutableMap;
 
 public class SbConverter {
   private final BytecodeF bytecodeF;
-  private final DefsS defs;
-  private final TypeSbConverter typeSbConverter;
+  private TypeSbConverter typeSbConverter;
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
   private final Deque<NList<ItemS>> callStack;
-  private final Map<CacheKey, FuncB> funcCache;
-  private final Map<String, ObjB> valCache;
+  private final Map<CacheKey, ObjB> cache;
   private final Map<ObjB, Nal> nals;
 
   @Inject
-  public SbConverter(BytecodeF bytecodeF, DefsS defs, TypeSbConverter typeSbConverter,
-      FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+  public SbConverter(BytecodeF bytecodeF, FileLoader fileLoader,
+      BytecodeLoader bytecodeLoader) {
     this.bytecodeF = bytecodeF;
-    this.defs = defs;
-    this.typeSbConverter = typeSbConverter;
+    this.typeSbConverter = new TypeSbConverter(bytecodeF, ImmutableMap.of());
     this.fileLoader = fileLoader;
     this.bytecodeLoader = bytecodeLoader;
     this.callStack = new LinkedList<>();
-    this.funcCache = new HashMap<>();
-    this.valCache = new HashMap<>();
+    this.cache = new HashMap<>();
     this.nals = new HashMap<>();
   }
 
@@ -100,30 +94,28 @@ public class SbConverter {
     return ImmutableMap.copyOf(nals);
   }
 
-
-  private ImmutableList<ObjB> convertObjs(ImmutableList<MonoObjS> objs) {
-    return map(objs, this::convertObj);
+  private ImmutableList<ObjB> convertExprs(ImmutableList<ExprS> exprs) {
+    return map(exprs, this::convertExpr);
   }
 
-  public ObjB convertObj(MonoObjS objS) {
-    return switch (objS) {
+  public ObjB convertExpr(ExprS exprS) {
+    return switch (exprS) {
       case BlobS blobS -> convertAndCacheNal(blobS, this::convertBlob);
       case CallS callS -> convertAndCacheNal(callS, this::convertCall);
       case IntS intS -> convertAndCacheNal(intS, this::convertInt);
       case MonoizeS monoizeS -> convertMonoize(monoizeS);
-      case MonoFuncS monoFuncS -> convertMonoFunc(monoFuncS, ImmutableMap.of());
-      case MonoRefS monoRefS -> convertMonoRef(monoRefS);
+      case FuncS funcS -> convertFunc(funcS, ImmutableMap.of());
       case OrderS orderS -> convertAndCacheNal(orderS, this::convertOrder);
       case ParamRefS paramRefS -> convertAndCacheNal(paramRefS, this::convertParamRef);
       case SelectS selectS -> convertAndCacheNal(selectS, this::convertSelect);
       case StringS stringS -> convertAndCacheNal(stringS, this::convertString);
-      case ValS v -> convertVal(v);
+      case ValS valS -> convertVal(valS, ImmutableMap.of());
     };
   }
 
-  private <T extends MonoObjS> ObjB convertAndCacheNal(T objS, Function<T, ObjB> mapping) {
-    var objB = mapping.apply(objS);
-    nals.put(objB, objS);
+  private <T extends ExprS> ObjB convertAndCacheNal(T exprS, Function<T, ObjB> mapping) {
+    var objB = mapping.apply(exprS);
+    nals.put(objB, exprS);
     return objB;
   }
 
@@ -132,8 +124,8 @@ public class SbConverter {
   }
 
   private CallB convertCall(CallS callS) {
-    var callableB = convertObj(callS.callee());
-    var argsB = convertObjs(callS.args());
+    var callableB = convertExpr(callS.callee());
+    var argsB = convertExprs(callS.args());
     var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
     var combineB = bytecodeF.combine(paramTupleT, argsB);
 
@@ -145,27 +137,26 @@ public class SbConverter {
     return bytecodeF.int_(intS.bigInteger());
   }
 
-  private FuncB convertMonoize(MonoizeS monoizeS) {
-    var varMap = deduceVarMap(monoizeS.funcRef().type().mono(), monoizeS.type());
-    var varMapB = mapEntries(varMap, MonoTS::name, this::convertT);
-    typeSbConverter.addLastVarMap(varMapB);
+  private ObjB convertMonoize(MonoizeS monoizeS) {
+    var varMap = mapValues(monoizeS.varMap(), typeSbConverter::convert);
+    var oldTypeSbConverter = typeSbConverter;
+    typeSbConverter = new TypeSbConverter(bytecodeF, varMap);
     try {
-      var topRefableS = defs.topRefables().get(monoizeS.funcRef().name());
-      return switch (topRefableS) {
-        case PolyFuncS polyFuncS -> convertMonoFunc(polyFuncS.func(), varMapB);
-        default -> throw unexpectedCaseExc(topRefableS);
+      return switch (monoizeS.refable()) {
+        case PolyFuncS polyFuncS -> convertFunc(polyFuncS.mono(), varMap);
+        case PolyValS polyValS -> convertVal(polyValS.mono(), varMap);
       };
     } finally {
-      typeSbConverter.removeLastVarMap();
+      typeSbConverter = oldTypeSbConverter;
     }
   }
 
-  private FuncB convertMonoFunc(MonoFuncS monoFuncS, Map<String, TypeB> varMap) {
-    var key = new CacheKey(monoFuncS.name(), varMap);
-    return computeIfAbsent(funcCache, key, name -> convertMonoFuncImpl(monoFuncS, varMap));
+  private ObjB convertFunc(FuncS funcS, ImmutableMap<VarS, TypeB> varMap) {
+    var key = new CacheKey(funcS.name(), varMap);
+    return computeIfAbsent(cache, key, name -> convertFuncImpl(funcS, varMap));
   }
 
-  private FuncB convertMonoFuncImpl(MonoFuncS funcS, Map<String, TypeB> varMap) {
+  private ObjB convertFuncImpl(FuncS funcS, ImmutableMap<VarS, TypeB> varMap) {
     try {
       callStack.push(funcS.params());
       var funcB = switch (funcS) {
@@ -180,7 +171,7 @@ public class SbConverter {
     }
   }
 
-  private FuncB convertAnnFunc(AnnFuncS annFuncS, Map<String, TypeB> varMap) {
+  private ObjB convertAnnFunc(AnnFuncS annFuncS, ImmutableMap<VarS, TypeB> varMap) {
     var annName = annFuncS.ann().name();
     return switch (annName) {
       case BYTECODE -> fetchFuncBytecode(annFuncS, varMap);
@@ -189,16 +180,9 @@ public class SbConverter {
     };
   }
 
-  private FuncB fetchFuncBytecode(AnnFuncS annFuncS, Map<String, TypeB> varMap) {
-    var ann = annFuncS.ann();
-    var funcTB = convertFuncT(annFuncS.type());
-    var name = annFuncS.name();
-    return (FuncB) fetchBytecode(ann, funcTB, name, varMap);
-  }
-
   private FuncB convertDefFunc(DefFuncS defFuncS) {
     var funcTB = convertFuncT(defFuncS.type());
-    var body = convertObj(defFuncS.body());
+    var body = convertExpr(defFuncS.body());
     return bytecodeF.func(funcTB, body);
   }
 
@@ -239,17 +223,9 @@ public class SbConverter {
     return builder.build();
   }
 
-  private ObjB convertMonoRef(MonoRefS monoRefS) {
-    return switch (defs.topRefables().get(monoRefS.name())) {
-      case MonoFuncS monoFuncS -> convertObj(monoFuncS);
-      case ValS valS -> convertObj(valS);
-      case PolyFuncS f -> throw unexpectedCaseExc(f);
-    };
-  }
-
   private OrderB convertOrder(OrderS orderS) {
     var arrayTB = convertArrayT(orderS.type());
-    var elemsB = convertObjs(orderS.elems());
+    var elemsB = convertExprs(orderS.elems());
     return bytecodeF.order(arrayTB, elemsB);
   }
 
@@ -259,7 +235,7 @@ public class SbConverter {
   }
 
   private SelectB convertSelect(SelectS selectS) {
-    var selectableB = convertObj(selectS.selectable());
+    var selectableB = convertExpr(selectS.selectable());
     var structTS = (StructTS) selectS.selectable().type();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
@@ -271,47 +247,42 @@ public class SbConverter {
     return bytecodeF.string(stringS.string());
   }
 
-  private ObjB convertVal(ValS valS) {
-    return computeIfAbsent(valCache, valS.name(), name -> convertValImpl(valS));
+  private ObjB convertVal(ValS valS, ImmutableMap<VarS, TypeB> varMap) {
+    var key = new CacheKey(valS.name(), varMap);
+    return computeIfAbsent(cache, key, name -> convertValImpl(valS, varMap));
   }
 
-  private ObjB convertValImpl(ValS valS) {
-    var objB = switch (valS) {
-      case AnnValS annValS -> convertAnnVal(annValS);
-      case DefValS defValS -> convertObj(defValS.body());
+  private ObjB convertValImpl(ValS valS, ImmutableMap<VarS, TypeB> varMap) {
+    return switch (valS) {
+      case AnnValS annValS -> convertAnnVal(annValS, varMap);
+      case DefValS defValS -> convertExpr(defValS.body());
     };
-    var typeB = typeSbConverter.convert(valS.type());
-    if (!typeB.equals(objB.type())) {
-      var funcB = bytecodeF.func(bytecodeF.funcT(typeB, list()), objB);
-      var callB = bytecodeF.call(typeB, funcB, bytecodeF.combine(bytecodeF.tupleT(list()), list()));
-      nals.put(funcB, valS);
-      nals.put(callB, valS);
-      return callB;
-    }
-    return objB;
   }
 
-  private ObjB convertAnnVal(AnnValS annValS) {
+  private ObjB convertAnnVal(AnnValS annValS, ImmutableMap<VarS, TypeB> varMap) {
     var annName = annValS.ann().name();
     return switch (annName) {
-      case BYTECODE ->  fetchValBytecode(annValS);
-      default -> throw new ConvertSbExc("Illegal value annotation: " + annName + ".");
+      case BYTECODE ->  fetchValBytecode(annValS, varMap);
+      default -> throw new ConvertSbExc("Illegal value annotation: " + q("@" + annName) + ".");
     };
-  }
-
-  private ObjB fetchValBytecode(AnnValS annValS) {
-    var ann = annValS.ann();
-    var typeB = convertT(annValS.type());
-    var name = annValS.name();
-    var varMap = ImmutableMap.<String, TypeB>of();
-    return fetchBytecode(ann, typeB, name, varMap);
   }
 
   // helpers
 
-  private ObjB fetchBytecode(AnnS ann, TypeB typeB, String name, Map<String, TypeB> varMap) {
+  private ObjB fetchValBytecode(AnnValS annValS, ImmutableMap<VarS, TypeB> varMap) {
+    var typeB = convertT(annValS.type());
+    return fetchBytecode(annValS.ann(), typeB, annValS.name(), varMap);
+  }
+
+  private ObjB fetchFuncBytecode(AnnFuncS annFuncS, ImmutableMap<VarS, TypeB> varMap) {
+    var typeB = convertT(annFuncS.type());
+    return fetchBytecode(annFuncS.ann(), typeB, annFuncS.name(), varMap);
+  }
+
+  private ObjB fetchBytecode(AnnS ann, TypeB typeB, String name, Map<VarS, TypeB> varMap) {
+    var varNameToTypeMap = mapKeys(varMap, VarS::name);
     var jar = loadNativeJar(ann.loc());
-    var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string(), varMap);
+    var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string(), varNameToTypeMap);
     if (!bytecodeTry.isPresent()) {
       throw new ConvertSbExc(ann.loc() + ": " + bytecodeTry.error());
     }
@@ -334,18 +305,18 @@ public class SbConverter {
     }
   }
 
-  private TypeB convertT(MonoTS monoTS) {
-    return typeSbConverter.convert(monoTS);
+  private TypeB convertT(TypeS typeS) {
+    return typeSbConverter.convert(typeS);
   }
 
   private ArrayTB convertArrayT(ArrayTS typeS) {
     return typeSbConverter.convert(typeS);
   }
 
-  private FuncTB convertFuncT(MonoFuncTS monoFuncTS) {
-    return typeSbConverter.convert(monoFuncTS);
+  private FuncTB convertFuncT(FuncTS funcTS) {
+    return typeSbConverter.convert(funcTS);
   }
 
-  private static record CacheKey(String funcName, Map<String, TypeB> varMap) {
+  private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {
   }
 }

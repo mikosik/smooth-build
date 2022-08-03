@@ -51,11 +51,12 @@ public class InferenceTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [], second = []);
+            inferred = testConcat(first = [], second = []);
+            [Int] result = inferred;
             """, Concat.class.getCanonicalName()));
     evaluate("result");
     assertThat(artifact())
-        .isEqualTo(arrayB(nothingTB()));
+        .isEqualTo(arrayB(intTB()));
   }
 
   @Test
@@ -95,35 +96,6 @@ public class InferenceTest extends AcceptanceTestCase {
     evaluate("result");
     assertThat(artifact())
         .isEqualTo(arrayB(stringB("bbb")));
-  }
-
-  @Test
-  public void infer_actual_type_of_params_in_concat_func_5() throws Exception {
-    createUserNativeJar(Concat.class);
-    createUserModule(format("""
-            @Native("%s")
-            [A] testConcat([A] first, [A] second);
-            wrapper([Nothing] f, [[A]] s) = testConcat(first = f, second = s);
-            result = wrapper(f = [], s = [["aaa"]]);
-            """, Concat.class.getCanonicalName()));
-    evaluate("result");
-    assertThat(artifact())
-        .isEqualTo(arrayB(arrayB(stringB("aaa"))));
-  }
-
-  @Test
-  public void infer_actual_type_of_params_in_concat_func_6() throws Exception {
-    createUserNativeJar(Concat.class);
-    createUserModule(format("""
-            @Native("%s")
-            [A] testConcat([A] first, [A] second);
-            [A] testConcatW([A] f, [A] s) = testConcat(first = f, second = s);
-            wrapper([Nothing] f, [[A]] s) = testConcatW(f = f, s = s);
-            result = wrapper(f = [], s = [["aaa"]]);
-            """, Concat.class.getCanonicalName()));
-    evaluate("result");
-    assertThat(artifact())
-        .isEqualTo(arrayB(arrayB(stringB("aaa"))));
   }
 
   // testAppend([A] array, a elem)

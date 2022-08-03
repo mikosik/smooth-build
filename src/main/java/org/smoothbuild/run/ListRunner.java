@@ -10,7 +10,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.Nal;
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.ValS;
+import org.smoothbuild.lang.define.PolyRefableS;
+import org.smoothbuild.lang.define.PolyValS;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.report.Reporter;
 
@@ -31,12 +32,11 @@ public class ListRunner {
     if (defsS.isPresent()) {
       reporter.startNewPhase("Values that can be evaluated:");
       defsS.get()
-          .topRefables()
+          .refables()
           .asMap()
           .values()
           .stream()
-          .filter(f -> f.loc().file().space().equals(PRJ))
-          .filter(ValS.class::isInstance)
+          .filter(ListRunner::isEvaluableValue)
           .map(Nal::name)
           .sorted()
           .forEach(console::println);
@@ -44,5 +44,11 @@ public class ListRunner {
     } else {
       return EXIT_CODE_ERROR;
     }
+  }
+
+  private static boolean isEvaluableValue(PolyRefableS polyRefableS) {
+    return polyRefableS.loc().file().space().equals(PRJ)
+        && polyRefableS instanceof PolyValS
+        && polyRefableS.schema().quantifiedVars().isEmpty();
   }
 }

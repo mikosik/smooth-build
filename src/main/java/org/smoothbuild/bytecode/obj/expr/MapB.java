@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.obj.expr;
 
-import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
-import static org.smoothbuild.bytecode.type.IsAssignable.validateArgs;
+import static org.smoothbuild.bytecode.type.ValidateArgs.validateArgs;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
@@ -60,7 +59,7 @@ public final class MapB extends ExprB {
     var elemT = arrayT.elem();
     validateArgs(funcT, list(elemT), () -> illegalArgs(funcT, elemT));
     var expectedElemT = type().elem();
-    if (!isAssignable(expectedElemT, funcT.res())) {
+    if (!expectedElemT.equals(funcT.res())) {
       throw new DecodeObjWrongNodeTypeExc(
           hash(), cat(), "func.result", expectedElemT, funcT.res());
     }

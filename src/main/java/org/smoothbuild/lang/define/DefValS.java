@@ -1,25 +1,34 @@
 package org.smoothbuild.lang.define;
 
+import static org.smoothbuild.lang.define.ItemS.mapParams;
+
 import java.util.Objects;
+import java.util.function.Function;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.VarS;
 
 /**
  * Defined value (one that has a body).
- *
  * This class is immutable.
  */
 public final class DefValS extends ValS {
-  private final MonoObjS body;
+  private final ExprS body;
 
-  public DefValS(MonoTS type, ModPath modPath, String name, MonoObjS body, Loc loc) {
+  public DefValS(TypeS type, ModPath modPath, String name, ExprS body, Loc loc) {
     super(type, modPath, name, loc);
     this.body = body;
   }
 
-  public MonoObjS body() {
+  public ExprS body() {
     return body;
+  }
+
+  @Override
+  public ExprS mapVars(Function<VarS, TypeS> mapper) {
+    return new DefValS(type().mapVars(mapper), modPath(), name(),
+        body.mapVars(b -> b.mapVars(mapper)), loc());
   }
 
   @Override

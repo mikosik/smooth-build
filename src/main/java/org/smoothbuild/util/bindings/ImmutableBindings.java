@@ -1,14 +1,10 @@
 package org.smoothbuild.util.bindings;
 
-import static java.util.stream.Collectors.joining;
-
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
-public final class ImmutableBindings<E> {
+public final class ImmutableBindings<E> extends Bindings<E> {
   private final ImmutableMap<String, E> bindings;
 
   public static <E> ImmutableBindings<E> immutableBindings() {
@@ -26,35 +22,19 @@ public final class ImmutableBindings<E> {
     this.bindings = castMap;
   }
 
-  public OptionalBindings<E> newInnerScope() {
-    return OptionalBindings.newOptionalBindings(this);
+  @Override
+  public E getOrNull(String name) {
+    return bindings.get(name);
   }
 
-  public E get(String name) {
-    return getOpt(name).get();
-  }
-
-  public Optional<E> getOpt(String name) {
-    return Optional.ofNullable(bindings.get(name));
-  }
-
+  @Override
   public ImmutableMap<String, E> asMap() {
     return bindings;
   }
 
   @Override
   public String toString() {
-    return prettyPrint(bindings);
-  }
-
-  private String prettyPrint(Map<String, E> bindings) {
-    return bindings.values().stream()
-        .map(s -> indent() + s)
-        .collect(joining("\n"));
-  }
-
-  private String indent() {
-    return "";
+    return bindingsToString(asMap());
   }
 
   @Override

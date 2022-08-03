@@ -51,8 +51,8 @@ public class LoggingTest extends SystemTestCase {
     testCase.createNativeJar(ReportError.class);
     testCase.createUserModule(format("""
             @Native("%s")
-            Nothing reportError(String message);
-            result = reportError("%s");
+            A reportError(String message);
+            Int result = reportError("%s");
             """, ReportError.class.getCanonicalName(), LOG_MESSAGE));
   }
 

@@ -1,0 +1,23 @@
+package org.smoothbuild.bytecode.type;
+
+import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
+
+import java.util.function.Supplier;
+
+import org.smoothbuild.bytecode.type.cnst.CallableTB;
+import org.smoothbuild.bytecode.type.cnst.TypeB;
+
+import com.google.common.collect.ImmutableList;
+
+public class ValidateArgs {
+  public static void validateArgs(CallableTB callableTB,
+      ImmutableList<TypeB> argTs, Supplier<RuntimeException> illegalArgsExcThrower) {
+    allMatchOtherwise(
+        callableTB.params(),
+        argTs,
+        CatB::equals,
+        (expectedSize, actualSize) -> { throw illegalArgsExcThrower.get(); },
+        i -> { throw illegalArgsExcThrower.get(); }
+    );
+  }
+}

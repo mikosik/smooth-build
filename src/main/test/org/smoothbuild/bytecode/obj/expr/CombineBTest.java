@@ -26,11 +26,15 @@ public class CombineBTest extends TestContext {
   }
 
   @Test
-  public void item_can_be_subtype_of_item_type_specified_in_category() {
-    var elemT = arrayB(nothingTB());
-    var combineB = combineB(tupleTB(arrayTB(intTB())), elemT);
-    assertThat(combineB.items().get(0))
-        .isEqualTo(elemT);
+  public void item_size_greater_than_type_items_size_causes_exc() {
+    assertCall(() -> combineB(tupleTB(intTB()), intB(), intB()))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void item_size_lower_than_type_items_size_causes_exc() {
+    assertCall(() -> combineB(tupleTB(intTB())))
+        .throwsException(IllegalArgumentException.class);
   }
 
   @Test

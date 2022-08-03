@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
@@ -40,10 +39,8 @@ public class CombineB extends ExprB {
     allMatchOtherwise(
         expectedItemTs,
         items,
-        (type, item) -> isAssignable(type, item.type()),
-        (type, item) -> {
-          throw new DecodeCombineWrongItemsSizeExc(hash(), cat(), item);
-        },
+        (type, item) -> type.equals(item.type()),
+        (type, item) -> { throw new DecodeCombineWrongItemsSizeExc(hash(), cat(), item); },
         (index) -> {
           throw new DecodeObjWrongNodeTypeExc(
               hash(), cat(), "items", index, expectedItemTs.get(index), items.get(index).type());

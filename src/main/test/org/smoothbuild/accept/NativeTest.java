@@ -90,8 +90,8 @@ public class NativeTest extends AcceptanceTestCase {
       createUserNativeJar(ThrowException.class);
       createUserModule(format("""
             @Native("%s")
-            Nothing throwException();
-            result = throwException();
+            A throwException();
+            Int result = throwException();
             """, ThrowException.class.getCanonicalName()));
       evaluate("result");
       assertThat(logs().size())
@@ -132,8 +132,8 @@ public class NativeTest extends AcceptanceTestCase {
       createUserNativeJar(ReportFixedError.class);
       createUserModule(format("""
             @Native("%s")
-            Nothing reportFixedError();
-            result = reportFixedError();
+            A reportFixedError();
+            Int result = reportFixedError();
             """, ReportFixedError.class.getCanonicalName()));
       evaluate("result");
       assertThat(logs())
@@ -204,11 +204,11 @@ public class NativeTest extends AcceptanceTestCase {
         createUserModule(format("""
             @Native("%s")
             A brokenIdentity(A value);
-            result = brokenIdentity(value=[]);
+            Int result = brokenIdentity(7);
             """, BrokenIdentity.class.getCanonicalName()));
         evaluate("result");
         assertThat(logs())
-            .containsExactly(faultyTypeOfReturnedObject("brokenIdentity", "[Nothing]", "String"));
+            .containsExactly(faultyTypeOfReturnedObject("brokenIdentity", "Int", "String"));
       }
 
       @Test

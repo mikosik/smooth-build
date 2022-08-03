@@ -38,12 +38,6 @@ public class ObjBStableHashTest extends TestContext {
     }
 
     @Test
-    public void empty_nothing_array() {
-      assertThat(arrayB(nothingTB()).hash())
-          .isEqualTo(Hash.decode("fc21e8e3b2e04f46fa35cdd3fa0b932cb59c38a0"));
-    }
-
-    @Test
     public void empty_string_array() {
       assertThat(arrayB(stringTB()).hash())
           .isEqualTo(Hash.decode("5e8edad671513a73f56c6bb216789c6f85de320f"));

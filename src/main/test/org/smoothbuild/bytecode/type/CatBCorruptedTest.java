@@ -14,7 +14,6 @@ import static org.smoothbuild.bytecode.type.CatKindB.INT;
 import static org.smoothbuild.bytecode.type.CatKindB.INVOKE;
 import static org.smoothbuild.bytecode.type.CatKindB.MAP;
 import static org.smoothbuild.bytecode.type.CatKindB.METHOD;
-import static org.smoothbuild.bytecode.type.CatKindB.NOTHING;
 import static org.smoothbuild.bytecode.type.CatKindB.ORDER;
 import static org.smoothbuild.bytecode.type.CatKindB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.CatKindB.SELECT;
@@ -104,11 +103,6 @@ public class CatBCorruptedTest extends TestContext {
     @Test
     public void int_with_additional_child() throws Exception {
       test_base_type_with_additional_child(INT);
-    }
-
-    @Test
-    public void nothing_with_additional_child() throws Exception {
-      test_base_type_with_additional_child(NOTHING);
     }
 
     @Test

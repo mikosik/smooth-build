@@ -1,14 +1,16 @@
 package org.smoothbuild.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.define.PolyFuncS.polyFuncS;
-import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.util.bindings.OptionalBindings.newOptionalBindings;
+import static org.smoothbuild.lang.define.PolyValS.polyValS;
+import static org.smoothbuild.lang.type.TypeFS.BLOB;
+import static org.smoothbuild.lang.type.TypeFS.INT;
+import static org.smoothbuild.lang.type.TypeFS.STRING;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Optionals.mapPair;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import org.smoothbuild.lang.define.AnnFuncS;
 import org.smoothbuild.lang.define.AnnS;
@@ -17,94 +19,96 @@ import org.smoothbuild.lang.define.BlobS;
 import org.smoothbuild.lang.define.CallS;
 import org.smoothbuild.lang.define.DefFuncS;
 import org.smoothbuild.lang.define.DefValS;
-import org.smoothbuild.lang.define.FuncS;
+import org.smoothbuild.lang.define.ExprS;
 import org.smoothbuild.lang.define.IntS;
 import org.smoothbuild.lang.define.ItemS;
 import org.smoothbuild.lang.define.ModPath;
-import org.smoothbuild.lang.define.MonoFuncS;
-import org.smoothbuild.lang.define.MonoObjS;
-import org.smoothbuild.lang.define.MonoRefS;
+import org.smoothbuild.lang.define.MonoRefableS;
 import org.smoothbuild.lang.define.MonoizeS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
-import org.smoothbuild.lang.define.PolyRefS;
+import org.smoothbuild.lang.define.PolyRefableS;
 import org.smoothbuild.lang.define.RefableS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
-import org.smoothbuild.lang.define.TopRefableS;
 import org.smoothbuild.lang.type.ArrayTS;
-import org.smoothbuild.lang.type.MonoTS;
-import org.smoothbuild.lang.type.PolyTS;
+import org.smoothbuild.lang.type.FuncSchemaS;
+import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.SchemaS;
 import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeFS;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.VarS;
 import org.smoothbuild.parse.ast.AnnP;
-import org.smoothbuild.parse.ast.ArgP;
-import org.smoothbuild.parse.ast.BlobP;
-import org.smoothbuild.parse.ast.CallP;
-import org.smoothbuild.parse.ast.FuncP;
-import org.smoothbuild.parse.ast.IntP;
-import org.smoothbuild.parse.ast.ItemP;
-import org.smoothbuild.parse.ast.ObjP;
-import org.smoothbuild.parse.ast.OrderP;
-import org.smoothbuild.parse.ast.RefP;
-import org.smoothbuild.parse.ast.SelectP;
-import org.smoothbuild.parse.ast.StringP;
-import org.smoothbuild.parse.ast.ValP;
-import org.smoothbuild.util.bindings.OptionalBindings;
+import org.smoothbuild.parse.ast.expr.BlobP;
+import org.smoothbuild.parse.ast.expr.CallP;
+import org.smoothbuild.parse.ast.expr.DefaultArgP;
+import org.smoothbuild.parse.ast.expr.ExprP;
+import org.smoothbuild.parse.ast.expr.IntP;
+import org.smoothbuild.parse.ast.expr.NamedArgP;
+import org.smoothbuild.parse.ast.expr.OrderP;
+import org.smoothbuild.parse.ast.expr.RefP;
+import org.smoothbuild.parse.ast.expr.SelectP;
+import org.smoothbuild.parse.ast.expr.StringP;
+import org.smoothbuild.parse.ast.refable.FuncP;
+import org.smoothbuild.parse.ast.refable.ItemP;
+import org.smoothbuild.parse.ast.refable.ValP;
+import org.smoothbuild.util.bindings.Bindings;
+import org.smoothbuild.util.bindings.ScopedBindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class PsConverter {
-  private final OptionalBindings<? extends RefableS> bindings;
+  private final Bindings<? extends Optional<? extends RefableS>> bindings;
 
-  public PsConverter(OptionalBindings<? extends RefableS> bindings) {
+  public PsConverter(Bindings<? extends Optional<? extends RefableS>> bindings) {
     this.bindings = bindings;
   }
 
-  public Optional<TopRefableS> convertVal(ModPath path, ValP valP) {
-    var type = valP.typeS().get();
+  public Optional<PolyRefableS> convertVal(ModPath path, ValP valP, TypeS t) {
+    var schema = new SchemaS(t.vars(), t);
     var name = valP.name();
     var loc = valP.loc();
     if (valP.ann().isPresent()) {
       var ann = convertAnn(valP.ann().get());
-      return Optional.of(new AnnValS(ann, type, path, name, loc));
+      return Optional.of(polyValS(schema, new AnnValS(ann, schema.type(), path, name, loc)));
     } else {
-      var body = convertObj(valP.body().get());
-      return body.map(b -> new DefValS(type, path, name, b, loc));
+      var body = convertExpr(valP.body().get());
+      return body.map(b -> polyValS(schema, new DefValS(schema.type(), path, name, b, loc)));
     }
   }
 
-  public Optional<TopRefableS> convertFunc(ModPath modPath, FuncP funcP) {
-    return convertParams(funcP)
-        .flatMap(params -> convertFunc(modPath, funcP, params));
+  public Optional<PolyRefableS> convertFunc(ModPath modPath, FuncP funcP, FuncTS funcT) {
+    return convertFunc(modPath, funcP, convertParams(funcP), funcT);
   }
 
-  private Optional<NList<ItemS>> convertParams(FuncP funcP) {
-    return pullUp(map(funcP.params().list(), this::convertParam)).map(NList::nlist);
+  private NList<ItemS> convertParams(FuncP funcP) {
+    return NList.nlist(map(funcP.params().list(), this::convertParam));
   }
 
-  private Optional<TopRefableS> convertFunc(ModPath modPath, FuncP funcP, NList<ItemS> params) {
-    var resT = funcP.typeS().get().res();
+  public ItemS convertParam(ItemP param) {
+    var type = param.typeS();
+    var name = param.name();
+    var body = param.body().flatMap(this::convertExpr);
+    return new ItemS(type, name, body, param.loc());
+  }
+
+  private Optional<PolyRefableS> convertFunc(ModPath modPath, FuncP funcP, NList<ItemS> params,
+      FuncTS funcT) {
+    var schema = new FuncSchemaS(funcT.vars(), funcT);
     var name = funcP.name();
     var loc = funcP.loc();
-    var paramTs = map(params, ItemS::type);
-    var funcT = TypeFS.func(resT, paramTs);
     if (funcP.ann().isPresent()) {
       var ann = convertAnn(funcP.ann().get());
-      return Optional.of(
-          polimorphizeIfNeeded(new AnnFuncS(ann, funcT, modPath, name, params, loc)));
+      return Optional.of(polyFuncS(schema, new AnnFuncS(ann, funcT, modPath, name, params, loc)));
     } else {
-      OptionalBindings<RefableS> bindingsInBody = newOptionalBindings(bindings);
+      var bindingsInBody = new ScopedBindings<Optional<? extends RefableS>>(bindings);
       params.forEach(p -> bindingsInBody.add(p.name(), Optional.of(p)));
-      var body = new PsConverter(bindingsInBody).convertObj(funcP.body().get());
+      var body = new PsConverter(bindingsInBody).convertExpr(funcP.body().get());
       return body.map(
-          b -> polimorphizeIfNeeded(new DefFuncS(funcT, modPath, name, params, b, loc)));
+          b -> polyFuncS(schema, new DefFuncS(funcT, modPath, name, params, b, loc)));
     }
-  }
-
-  private TopRefableS polimorphizeIfNeeded(MonoFuncS funcS) {
-    return funcS.type().vars().isEmpty() ? funcS : polyFuncS(funcS);
   }
 
   private AnnS convertAnn(AnnP annP) {
@@ -112,108 +116,82 @@ public class PsConverter {
     return new AnnS(annP.name(), path, annP.loc());
   }
 
-  public Optional<ItemS> convertParam(ItemP param) {
-    var type = param.type().typeS();
-    var name = param.name();
-    var body = param.body().flatMap(this::convertObj);
-    return type.map(t -> new ItemS(t, name, body, param.loc()));
+  private Optional<ImmutableList<ExprS>> convertExprs(List<ExprP> positionedArgs) {
+    return pullUp(map(positionedArgs, this::convertExpr));
   }
 
-  private Optional<MonoObjS> convertObj(ObjP obj) {
-    return switch (obj) {
-      case OrderP orderP -> convertOrder(orderP);
+  private Optional<ExprS> convertExpr(ExprP expr) {
+    return switch (expr) {
       case BlobP blobP -> Optional.of(convertBlob(blobP));
       case CallP callP -> convertCall(callP);
+      case DefaultArgP defaultArgP -> convertDefaultArg(defaultArgP);
       case IntP intP -> Optional.of(convertInt(intP));
+      case NamedArgP namedArgP -> convertExpr(namedArgP.expr());
+      case OrderP orderP -> convertOrder(orderP);
       case RefP refP -> convertRef(refP);
       case SelectP selectP -> convertSelect(selectP);
       case StringP stringP -> Optional.of(convertString(stringP));
     };
   }
 
-  private Optional<MonoObjS> convertOrder(OrderP order) {
-    return order.typeS().flatMap(t -> {
-      var elems = pullUp(map(order.elems(), this::convertObj));
-      return elems.map(es -> new OrderS((ArrayTS) t, es, order.loc()));
+  private static Optional<ExprS> convertDefaultArg(DefaultArgP defaultArg) {
+    return Optional.of(defaultArg.exprS().mapVars(defaultArg.refP().monoizationMapper()));
+  }
+
+  private Optional<ExprS> convertOrder(OrderP order) {
+    var elems = convertExprs(order.elems());
+    return elems.map(es -> new OrderS((ArrayTS) order.typeS(), es, order.loc()));
+  }
+
+  private Optional<ExprS> convertCall(CallP call) {
+    var callee = convertExpr(call.callee());
+    var argExprs = call.positionedArgs().flatMap(this::convertExprs);
+    return mapPair(callee, argExprs, (c, as) -> new CallS(call.typeS(), c, as, call.loc()));
+  }
+
+  private Optional<ExprS> convertSelect(SelectP selectP) {
+    var selectable = convertExpr(selectP.selectable());
+    return selectable.map(s -> {
+      var fieldName = selectP.field();
+      var fieldT = ((StructTS) s.type()).fields().get(fieldName).type();
+      return new SelectS(fieldT, s, fieldName, selectP.loc());
     });
   }
 
-  private Optional<MonoObjS> convertCall(CallP call) {
-    var callee = convertObj(call.callee());
-    return callee.flatMap(c -> {
-      var argObjs = convertArgs(call, c);
-      return argObjs.flatMap(as -> {
-        var resT = call.typeS();
-        return resT.map(t -> new CallS(t, callee.get(), argObjs.get(), call.loc()));
-      });
-    });
-  }
-
-  private Optional<ImmutableList<MonoObjS>> convertArgs(CallP call, MonoObjS callee) {
-    var explicitArgs = call.explicitArgs();
-    if (explicitArgs == null) {
-      return Optional.empty();
-    }
-    var args = IntStream.range(0, explicitArgs.size())
-        .mapToObj(i -> convertArg(callee, explicitArgs, i))
-        .collect(toImmutableList());
-    return pullUp(args);
-  }
-
-  private Optional<MonoObjS> convertArg(MonoObjS callee,
-      ImmutableList<Optional<ArgP>> explicitArgs, int i) {
-    return explicitArgs.get(i)
-        .flatMap(a -> convertObj(a.obj()))
-        .or(() -> defaultArgumentFor(callee.name(), i));
-  }
-
-  private Optional<MonoObjS> defaultArgumentFor(String funcName, int parameterIndex) {
-    return bindings.get(funcName).value()
-        .map(f -> ((FuncS) f).params().get(parameterIndex).body().get());
-  }
-
-  private Optional<MonoObjS> convertSelect(SelectP selectP) {
-    return selectP.selectable().typeS().flatMap(t -> {
-      if (t instanceof StructTS structT) {
-        var fieldName = selectP.field();
-        var fieldT = structT.fields().get(fieldName).type();
-        var selectable = convertObj(selectP.selectable());
-        return selectable.map(s -> new SelectS(fieldT, s, fieldName, selectP.loc()));
-      } else {
-        return Optional.empty();
-      }
-    });
-  }
-
-  private Optional<MonoObjS> convertRef(RefP ref) {
+  private Optional<ExprS> convertRef(RefP ref) {
     return bindings.get(ref.name())
-        .toOptional()
-        .map(r -> handleRef(ref, r));
+        .map(r -> convertRef(ref, r));
   }
 
-  private MonoObjS handleRef(RefP ref, RefableS refable) {
+  private ExprS convertRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemP -> new ParamRefS(itemP.type(), ref.name(), ref.loc());
-      case TopRefableS topRefableS -> switch (topRefableS.type()) {
-        case MonoTS monoTS -> new MonoRefS(monoTS, ref.name(), ref.loc());
-        case PolyTS polyTS -> {
-          var funcRefS = new PolyRefS(polyTS, ref.name(), ref.loc());
-          yield new MonoizeS(ref.inferredMonoT(), funcRefS, ref.loc());
-        }
-        default -> throw unexpectedCaseExc(topRefableS.type());
-      };
+      case MonoRefableS monoRefableS -> monoRefableS;
+      case PolyRefableS polyRefableS -> convertRefToPolyRefable(ref, polyRefableS);
     };
   }
 
+  private static ExprS convertRefToPolyRefable(RefP ref, PolyRefableS polyRefableS) {
+    if (polyRefableS.schema().quantifiedVars().isEmpty()) {
+      return polyRefableS.mono();
+    } else {
+      // cast is safe because varMap is immutable
+      @SuppressWarnings("unchecked")
+      var varMap = (ImmutableMap<VarS, TypeS>) ref.monoizationMapping();
+      var type = polyRefableS.schema().mapQuantifiedVars(ref.monoizationMapper());
+      return new MonoizeS(type, varMap, polyRefableS, ref.loc());
+    }
+  }
+
   private BlobS convertBlob(BlobP blob) {
-    return new BlobS(TypeFS.blob(), blob.byteString(), blob.loc());
+    return new BlobS(BLOB, blob.byteString(), blob.loc());
   }
 
   private IntS convertInt(IntP intP) {
-    return new IntS(TypeFS.int_(), intP.bigInteger(), intP.loc());
+    return new IntS(INT, intP.bigInteger(), intP.loc());
   }
 
   private StringS convertString(StringP string) {
-    return new StringS(TypeFS.string(), string.unescapedValue(), string.loc());
+    return new StringS(STRING, string.unescapedValue(), string.loc());
   }
 }

@@ -36,7 +36,7 @@ public class IfTest extends SystemTestCase {
     createNativeJar(ThrowException.class);
     createUserModule(format("""
             @Native("%s")
-            Nothing throwException();
+            A throwException();
             result = if(false, throwException(), "else clause");
             """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
@@ -50,7 +50,7 @@ public class IfTest extends SystemTestCase {
     createNativeJar(ThrowException.class);
     createUserModule(format("""
             @Native("%s")
-            Nothing throwException();
+            A throwException();
             result = if(true, "then clause", throwException());
             """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
@@ -66,7 +66,7 @@ public class IfTest extends SystemTestCase {
       createNativeJar(ThrowException.class);
       createUserModule(format("""
             @Native("%s")
-            Nothing throwException();
+            A throwException();
             result = if(true, if(false, throwException(), "else clause"), "ignored");
             """, ThrowException.class.getCanonicalName()));
       runSmoothBuild("result");
@@ -81,7 +81,7 @@ public class IfTest extends SystemTestCase {
       createNativeJar(ThrowException.class);
       createUserModule(format("""
             @Native("%s")
-            Nothing throwException();
+            A throwException();
             result = if(true, if(true, "then clause", throwException()), "ignored");
             """, ThrowException.class.getCanonicalName()));
       runSmoothBuild("result");

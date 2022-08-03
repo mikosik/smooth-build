@@ -24,7 +24,6 @@ public class TestingCatsB {
   public static final TypeB INT = CONTEXT.intTB();
   public static final TypeB FUNC = func(BLOB, list(BOOL));
   public static final TypeB METHOD = method(BLOB, list(BOOL));
-  public static final TypeB NOTHING = CONTEXT.nothingTB();
   public static final TypeB STRING = CONTEXT.stringTB();
 
   public static final TupleTB PERSON = CONTEXT.personTB();
@@ -44,7 +43,6 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY_FUNCTION = array(FUNC);
   public static final ArrayTB ARRAY_INT = array(INT);
   public static final ArrayTB ARRAY_METHOD = array(METHOD);
-  public static final ArrayTB ARRAY_NOTHING = array(NOTHING);
   public static final ArrayTB ARRAY_STR = array(STRING);
   public static final ArrayTB ARRAY_PERSON_TUPLE = array(PERSON);
   public static final ArrayTB ARRAY_PERSON = array(PERSON);
@@ -54,7 +52,6 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY2_FUNCTION = array(ARRAY_FUNCTION);
   public static final ArrayTB ARRAY2_INT = array(ARRAY_INT);
   public static final ArrayTB ARRAY2_METHOD = array(ARRAY_METHOD);
-  public static final ArrayTB ARRAY2_NOTHING = array(ARRAY_NOTHING);
   public static final ArrayTB ARRAY2_STR = array(ARRAY_STR);
   public static final ArrayTB ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
   public static final ArrayTB ARRAY2_PERSON = array(ARRAY_PERSON);
@@ -65,7 +62,6 @@ public class TestingCatsB {
       FUNC,
       INT,
       METHOD,
-      NOTHING,
       STRING,
       PERSON
   );
@@ -76,7 +72,6 @@ public class TestingCatsB {
       ARRAY_FUNCTION,
       ARRAY_INT,
       ARRAY_METHOD,
-      ARRAY_NOTHING,
       ARRAY_STR,
       ARRAY_PERSON_TUPLE,
 
@@ -85,7 +80,6 @@ public class TestingCatsB {
       ARRAY2_FUNCTION,
       ARRAY2_INT,
       ARRAY2_METHOD,
-      ARRAY2_NOTHING,
       ARRAY2_STR,
       ARRAY2_PERSON_TUPLE
   );
@@ -108,7 +102,6 @@ public class TestingCatsB {
         method(BLOB, list(BLOB)),
         method(BLOB, list(BLOB, BLOB)),
         method(STRING, list()),
-        NOTHING,
         STRING,
         tuple(list()),
         tuple(list(BLOB)),

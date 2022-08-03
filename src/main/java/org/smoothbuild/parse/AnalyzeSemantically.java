@@ -21,22 +21,21 @@ import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.parse.ast.ArrayTP;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
-import org.smoothbuild.parse.ast.BlobP;
-import org.smoothbuild.parse.ast.FuncP;
-import org.smoothbuild.parse.ast.FuncTP;
-import org.smoothbuild.parse.ast.IntP;
-import org.smoothbuild.parse.ast.ItemP;
-import org.smoothbuild.parse.ast.MonoNamedP;
-import org.smoothbuild.parse.ast.StringP;
 import org.smoothbuild.parse.ast.StructP;
-import org.smoothbuild.parse.ast.TypeP;
-import org.smoothbuild.parse.ast.ValP;
+import org.smoothbuild.parse.ast.expr.BlobP;
+import org.smoothbuild.parse.ast.expr.IntP;
+import org.smoothbuild.parse.ast.expr.StringP;
+import org.smoothbuild.parse.ast.refable.FuncP;
+import org.smoothbuild.parse.ast.refable.ItemP;
+import org.smoothbuild.parse.ast.refable.ValP;
+import org.smoothbuild.parse.ast.type.ArrayTP;
+import org.smoothbuild.parse.ast.type.FuncTP;
+import org.smoothbuild.parse.ast.type.TypeP;
 import org.smoothbuild.util.DecodeHexExc;
 import org.smoothbuild.util.UnescapingFailedExc;
-import org.smoothbuild.util.bindings.ImmutableBindings;
+import org.smoothbuild.util.bindings.Bindings;
 
 public class AnalyzeSemantically {
   public static ImmutableLogs analyzeSemantically(DefsS imported, Ast ast) {
@@ -112,7 +111,7 @@ public class AnalyzeSemantically {
       private boolean isDefinedType(TypeP type) {
         return isVarName(type.name())
             || ast.structs().containsName(type.name())
-            || imported.tDefs().getOpt(type.name()).isPresent();
+            || imported.tDefs().contains(type.name());
       }
     }.visitAst(ast);
   }
@@ -121,12 +120,12 @@ public class AnalyzeSemantically {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
     nals.addAll(map(ast.structs(), StructP::ctor));
-    nals.addAll(ast.topRefables());
+    nals.addAll(ast.refables());
     nals.sort(comparing(n -> n.loc().line()));
 
     for (Nal nal : nals) {
       logIfDuplicate(logger, imported.tDefs(), nal);
-      logIfDuplicate(logger, imported.topRefables(), nal);
+      logIfDuplicate(logger, imported.refables(), nal);
     }
     Map<String, Nal> checked = new HashMap<>();
     for (Nal nal : nals) {
@@ -135,9 +134,11 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static void logIfDuplicate(Logger logger, ImmutableBindings<? extends Nal> others, Nal nal) {
-    others.getOpt(nal.name())
-        .ifPresent(n -> logger.log(alreadyDefinedError(nal, n.loc())));
+  private static void logIfDuplicate(Logger logger, Bindings<? extends Nal> others, Nal nal) {
+    Nal other = others.getOrNull(nal.name());
+    if (other != null) {
+      logger.log(alreadyDefinedError(nal, other.loc()));
+    }
   }
 
   private static void logIfDuplicate(Logger logger, Map<String, ? extends Nal> others, Nal nal) {
@@ -169,9 +170,9 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void findDuplicateNames(Logger logger, List<? extends MonoNamedP> nodes) {
+  private static void findDuplicateNames(Logger logger, List<? extends Nal> nodes) {
     Map<String, Loc> alreadyDefined = new HashMap<>();
-    for (MonoNamedP named : nodes) {
+    for (Nal named : nodes) {
       String name = named.name();
       if (alreadyDefined.containsKey(name)) {
         logger.log(alreadyDefinedError(named, alreadyDefined.get(name)));
@@ -206,12 +207,12 @@ public class AnalyzeSemantically {
               logger.log(parseError(funcP,
                   "Function " + funcP.q() + " with @" + annName + " annotation cannot have body."));
             }
-            if (funcP.resTP().isEmpty()) {
+            if (funcP.resT().isEmpty()) {
               logger.log(parseError(funcP, "Function " + funcP.q() + " with @" + annName
                   + " annotation must declare result type."));
             }
           } else {
-            logger.log(parseError(ann, "Unknown annotation " + ann.q() + "."));
+            logger.log(parseError(ann.loc(), "Unknown annotation " + ann.q() + "."));
           }
         } else if (funcP.body().isEmpty()) {
           logger.log(parseError(funcP, "Function body is missing."));
@@ -230,7 +231,7 @@ public class AnalyzeSemantically {
                 logger.log(
                     parseError(valP, "Value with @" + annName + " annotation cannot have body."));
               }
-              if (valP.typeP().isEmpty()) {
+              if (valP.type().isEmpty()) {
                 logger.log(parseError(valP, "Value " + valP.q() + " with @" + annName
                     + " annotation must declare type."));
               }

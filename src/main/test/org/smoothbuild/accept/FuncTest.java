@@ -43,7 +43,7 @@ public class FuncTest extends AcceptanceTestCase {
         createUserNativeJar(ThrowException.class);
         createUserModule(format("""
           @Native("%s")
-          Nothing throwException();
+          A throwException();
           func(String withDefault = throwException()) = withDefault;
           result = func("def");
           """, ThrowException.class.getCanonicalName()));
@@ -88,7 +88,7 @@ public class FuncTest extends AcceptanceTestCase {
             @Native("%s")
             String stringIdentity(String value = throwException());
             @Native("%s")
-            Nothing throwException();
+            A throwException();
             result = stringIdentity("def");
             """, StringIdentity.class.getCanonicalName(), ThrowException.class.getCanonicalName()));
         evaluate("result");
@@ -180,7 +180,7 @@ public class FuncTest extends AcceptanceTestCase {
     createUserNativeJar(ThrowException.class);
     createUserModule("""
             @Native("impl")
-            Nothing throwException();
+            A throwException();
             func(String notUsedParameter) = "abc";
             result = func(throwException());
             """);

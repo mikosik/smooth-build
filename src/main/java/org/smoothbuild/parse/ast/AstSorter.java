@@ -14,8 +14,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.base.Nal;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.parse.ast.expr.RefP;
+import org.smoothbuild.parse.ast.refable.ItemP;
+import org.smoothbuild.parse.ast.refable.PolyRefableP;
+import org.smoothbuild.parse.ast.type.ArrayTP;
+import org.smoothbuild.parse.ast.type.FuncTP;
+import org.smoothbuild.parse.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Sets;
 import org.smoothbuild.util.graph.GraphEdge;
@@ -31,7 +38,7 @@ public class AstSorter {
       Log error = createCycleError("Type hierarchy", sortedTs.cycle());
       return maybeLogs(error);
     }
-    var sortedRefables = sortRefablesByDeps(ast.topRefables());
+    var sortedRefables = sortRefablesByDeps(ast.refables());
     if (sortedRefables.sorted() == null) {
       Log error = createCycleError("Dependency graph", sortedRefables.cycle());
       return maybeLogs(error);
@@ -40,17 +47,17 @@ public class AstSorter {
     return maybe(sorted);
   }
 
-  private static TopologicalSortingRes<String, TopRefableP, Loc> sortRefablesByDeps(
-      ImmutableList<TopRefableP> topRefables) {
+  private static TopologicalSortingRes<String, PolyRefableP, Loc> sortRefablesByDeps(
+      ImmutableList<PolyRefableP> refables) {
     HashSet<String> names = new HashSet<>();
-    topRefables.forEach(v -> names.add(v.name()));
+    refables.forEach(r -> names.add(r.name()));
 
-    HashSet<GraphNode<String, TopRefableP, Loc>> nodes = new HashSet<>();
-    nodes.addAll(map(topRefables, value -> refable(value, names)));
+    HashSet<GraphNode<String, PolyRefableP, Loc>> nodes = new HashSet<>();
+    nodes.addAll(map(refables, r -> refable(r, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, TopRefableP, Loc> refable(TopRefableP refable,
+  private static GraphNode<String, PolyRefableP, Loc> refable(PolyRefableP refable,
       Set<String> names) {
     Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {
@@ -67,7 +74,7 @@ public class AstSorter {
 
   private static TopologicalSortingRes<String, StructP, Loc> sortStructsByDeps(
       NList<StructP> structs) {
-    var structNames = Sets.map(structs, MonoNamedP::name);
+    var structNames = Sets.map(structs, Nal::name);
     var nodes = map(structs, struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }

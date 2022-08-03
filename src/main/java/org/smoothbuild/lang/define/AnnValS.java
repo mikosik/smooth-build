@@ -1,25 +1,31 @@
 package org.smoothbuild.lang.define;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.VarS;
 
 /**
  * Annotated value (one that has not a body).
- *
  * This class is immutable.
  */
 public final class AnnValS extends ValS {
   private final AnnS ann;
 
-  public AnnValS(AnnS ann, MonoTS type, ModPath modPath, String name, Loc loc) {
+  public AnnValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
     super(type, modPath, name, loc);
     this.ann = ann;
   }
 
   public AnnS ann() {
     return ann;
+  }
+
+  @Override
+  public ExprS mapVars(Function<VarS, TypeS> mapper) {
+    return new AnnValS(ann, type().mapVars(mapper), modPath(), name(), loc());
   }
 
   @Override
@@ -42,7 +48,7 @@ public final class AnnValS extends ValS {
 
   @Override
   public String toString() {
-    return "DefVal(`" + ann() + " " + type().name() + " " + name() + "`)";
+    return "AnnVal(`" + ann() + " " + type().name() + " " + name() + "`)";
   }
 }
 

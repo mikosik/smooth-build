@@ -33,7 +33,6 @@ public class CatKindBTest {
         Arguments.of(3, CatKindB.METHOD),
         Arguments.of(4, CatKindB.INT),
         Arguments.of(5, CatKindB.IF),
-        Arguments.of(6, CatKindB.NOTHING),
         Arguments.of(7, CatKindB.TUPLE),
         Arguments.of(8, CatKindB.STRING),
         Arguments.of(9, CatKindB.CALL),

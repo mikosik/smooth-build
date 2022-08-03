@@ -59,7 +59,7 @@ public class AndTest extends SystemTestCase {
     createNativeJar(ThrowException.class);
     createUserModule(format("""
             @Native("%s")
-            Nothing throwException();
+            A throwException();
             result = and(false, throwException());
             """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");

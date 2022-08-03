@@ -20,7 +20,7 @@ public class ValTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void val_body_cannot_be_reference_to_polymorphic_func_when_value_has_no_explicit_type()
+  public void val_body_can_be_reference_to_polymorphic_func_when_value_has_no_explicit_type()
       throws Exception {
     createUserModule("""
           A myId(A a) = a;
@@ -28,8 +28,7 @@ public class ValTest extends AcceptanceTestCase {
           result = myId2("abc");
           """);
     evaluate("result");
-    assertThat(logs())
-        .containsExactly(userError(2, "Cannot infer type parameters to convert function reference"
-            + " `myId` to monomorphic function. You need to specify type of `myId2` explicitly."));
+    assertThat(artifact())
+        .isEqualTo(stringB("abc"));
   }
 }

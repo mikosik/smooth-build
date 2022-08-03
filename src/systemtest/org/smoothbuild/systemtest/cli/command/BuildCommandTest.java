@@ -294,35 +294,6 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class _convert_matcher extends SystemTestCase {
-      private static final String CONVERT = """
-          result = [
-            [123],
-            [],
-          ];
-          """;
-      private static final String CONVERT_TASK_HEADER = """
-          [Int] <- [Nothing]                          build.smooth:3                 exec
-          """;
-
-      @Test
-      public void shows_when_enabled() throws IOException {
-        createUserModule(CONVERT);
-        runSmooth(buildCommand("--show-tasks=convert", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(CONVERT_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_when_not_enabled() throws IOException {
-        createUserModule(CONVERT);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(CONVERT_TASK_HEADER);
-      }
-    }
-
-    @Nested
     class _invoke_matcher extends SystemTestCase {
       private static final String INVOKE = """
             result = not(true);
@@ -457,8 +428,8 @@ public class BuildCommandTest {
         createNativeJar(ReportError.class);
         createUserModule(format("""
             @Native("%s")
-            Nothing reportError(String message);
-            result = reportError("my-error-message");
+            A reportError(String message);
+            Int result = reportError("my-error-message");
             """, ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=error", "result"));
         assertFinishedWithError();
@@ -499,8 +470,8 @@ public class BuildCommandTest {
         createNativeJar(ReportError.class);
         createUserModule(format("""
             @Native("%s")
-            Nothing reportError(String message);
-            result = reportError("my-error-message");
+            A reportError(String message);
+            Int result = reportError("my-error-message");
             """, ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithError();
@@ -541,8 +512,8 @@ public class BuildCommandTest {
         createNativeJar(ReportError.class);
         createUserModule(format("""
             @Native("%s")
-            Nothing reportError(String message);
-            result = reportError("my-error-message");
+            A reportError(String message);
+            Int result = reportError("my-error-message");
             """, ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithError();

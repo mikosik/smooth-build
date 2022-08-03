@@ -1,11 +1,19 @@
 package org.smoothbuild.lang.define;
 
-import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.type.MonoTS;
+import java.util.function.Function;
 
-public record SelectS(MonoTS type, MonoObjS selectable, String field, Loc loc) implements MonoExprS {
+import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.lang.type.TypeS;
+import org.smoothbuild.lang.type.VarS;
+
+public record SelectS(TypeS type, ExprS selectable, String field, Loc loc) implements OperatorS {
   @Override
   public String name() {
     return "." + field;
+  }
+
+  @Override
+  public ExprS mapVars(Function<VarS, TypeS> mapper) {
+    return new SelectS(type().mapVars(mapper), selectable.mapVars(mapper), field, loc);
   }
 }

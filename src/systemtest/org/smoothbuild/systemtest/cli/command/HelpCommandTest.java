@@ -102,8 +102,6 @@ public class HelpCommandTest extends SystemTestCase {
                                       (combined elements)
                                       t, const           - evaluates compile time
                                       constant
-                                      r, convert         - evaluates conversion of
-                                      value to compatible type
                                       i, invoke          - evaluates native
                                       implementation
                                       o, order           - evaluates array literal

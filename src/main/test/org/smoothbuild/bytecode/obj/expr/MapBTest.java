@@ -20,13 +20,6 @@ public class MapBTest extends TestContext {
       assertThat(mapB.type())
           .isEqualTo(arrayTB(stringTB()));
     }
-
-    @Test
-    public void with_array_elemT_being_subtype_of_mapping_func_paramT() {
-      var mapB = mapB(arrayB(arrayB(nothingTB())), funcB(list(arrayTB(intTB())), stringB("abc")));
-      assertThat(mapB.type())
-          .isEqualTo(arrayTB(stringTB()));
-    }
   }
 
   @Test

@@ -1,7 +1,5 @@
 package org.smoothbuild.bytecode.obj.cnst;
 
-import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
-
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
@@ -31,7 +29,7 @@ public final class FuncB extends CnstB {
     var body = readObj(DATA_PATH, dataHash(), ObjB.class);
     var resT = cat().res();
     var bodyT = body.type();
-    if (!isAssignable(resT, bodyT)) {
+    if (!resT.equals(bodyT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), DATA_PATH, resT, bodyT);
     }
     return body;

@@ -4,12 +4,30 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
 import com.google.common.testing.EqualsTester;
 
 public class VarSetSTest extends TestContext {
+  @Nested
+  class _filter {
+    @Test
+    public void filter_empty() {
+      var varSet = varSetS();
+      assertThat(varSet.filter(v -> !v.equals(varC())))
+          .isEqualTo(varSetS());
+    }
+
+    @Test
+    public void filter() {
+      var varSet = varSetS(varB(), varC(), varA());
+      assertThat(varSet.filter(v -> !v.equals(varC())))
+          .isEqualTo(varSetS(varA(), varB()));
+    }
+  }
+
   @Test
   public void as_list() {
     var varSet = varSetS(varB(), varC(), varA());

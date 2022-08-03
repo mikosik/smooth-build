@@ -22,41 +22,25 @@ public class CallBTest extends TestContext {
   @Test
   public void creating_call_with_too_few_args_causes_exception() {
     assertCall(() -> callB(funcB(list(stringTB()), intB())))
-        .throwsException(argsNotMatchingParamsException("{}", "{String}"));
+        .throwsException(argsNotMatchingParamsException("", "String"));
   }
 
   @Test
   public void creating_call_with_too_many_args_causes_exception() {
     assertCall(() -> callB(funcB(list(stringTB()), intB()), intB(), intB()))
-        .throwsException(argsNotMatchingParamsException("{Int, Int}", "{String}"));
-  }
-
-  @Test
-  public void creating_call_with_args_being_subtype_of_required_args_is_allowed() {
-    var func = funcB(list(arrayTB(intTB())), paramRefB(arrayTB(intTB()), 0));
-    var call = callB(func, arrayB(nothingTB()));
-    assertThat(call.data().args())
-        .isEqualTo(combineB(arrayB(nothingTB())));
+        .throwsException(argsNotMatchingParamsException("Int, Int", "String"));
   }
 
   @Test
   public void creating_call_with_arg_not_matching_param_type_causes_exception() {
     assertCall(() -> callB(funcB(list(stringTB()), intB()), intB(3)))
-        .throwsException(argsNotMatchingParamsException("{Int}", "{String}"));
+        .throwsException(argsNotMatchingParamsException("Int", "String"));
   }
 
   private static IllegalArgumentException argsNotMatchingParamsException(
       String args, String params) {
-    return new IllegalArgumentException("Argument evaluation types `" + args + "` should be"
-        + " equal to callable parameter types `" + params + "`.");
-  }
-
-  @Test
-  public void creating_call_with_resT_being_subtype_of_evalT() {
-    var func = funcB(list(), arrayB(nothingTB()));
-    var callB = callB(arrayTB(intTB()), func);
-    assertThat(callB.data().args())
-        .isEqualTo(combineB());
+    return new IllegalArgumentException("Argument evaluation types (" + args + ") should be"
+        + " equal to callable parameter types (" + params + ").");
   }
 
   @Test

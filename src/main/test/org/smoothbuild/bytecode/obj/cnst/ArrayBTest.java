@@ -12,7 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.bytecode.type.CatB;
-import org.smoothbuild.bytecode.type.cnst.NothingTB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
@@ -21,10 +20,10 @@ import okio.ByteString;
 
 public class ArrayBTest extends TestContext {
   @Test
-  public void empty_nothing_array_can_be_iterated_as_tuple() {
-    ArrayB array = objDb().arrayBuilder(arrayTB(nothingTB()))
+  public void empty_int_array_can_be_iterated_as_int() {
+    ArrayB array = objDb().arrayBuilder(arrayTB(intTB()))
         .build();
-    assertThat(array.elems(TupleB.class))
+    assertThat(array.elems(IntB.class))
         .isEmpty();
   }
 
@@ -57,13 +56,6 @@ public class ArrayBTest extends TestContext {
   public void adding_elem_with_wrong_type_is_forbidden() {
     ArrayBBuilder arrayBuilder = objDb().arrayBuilder(arrayTB());
     assertCall(() -> arrayBuilder.add(blobB(ByteString.of())))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void adding_elem_with_sub_type_is_forbidden() {
-    ArrayBBuilder arrayBuilder = objDb().arrayBuilder(arrayTB(arrayTB(intTB())));
-    assertCall(() -> arrayBuilder.add(arrayB(nothingTB())))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -197,46 +189,5 @@ public class ArrayBTest extends TestContext {
     assertThat(array.toString())
         .isEqualTo("""
             ["abc", "def"]@""" + array.hash());
-  }
-
-  @Nested
-  class _nothing_array {
-    @Test
-    public void type_of_nothing_array_is_nothing_array() {
-      ArrayB array = emptyArrayOf(nothingTB());
-      assertThat(array.cat())
-          .isEqualTo(arrayTB(nothingTB()));
-    }
-
-    @Test
-    public void nothing_array_is_empty() {
-      assertThat(emptyArrayOf(nothingTB()).elems(CnstB.class))
-          .isEmpty();
-    }
-
-    @Test
-    public void nothing_array_can_be_read_by_hash() {
-      ArrayB array = emptyArrayOf(nothingTB());
-      assertThat(objDbOther().get(array.hash()))
-          .isEqualTo(array);
-    }
-
-    @Test
-    public void nothing_array_read_by_hash_is_empty() {
-      ArrayB array = emptyArrayOf(nothingTB());
-      assertThat(((ArrayB) objDbOther().get(array.hash())).elems(CnstB.class))
-          .isEmpty();
-    }
-
-    @Test
-    public void nothing_array_to_string() {
-      ArrayB array = emptyArrayOf(nothingTB());
-      assertThat(array.toString())
-          .isEqualTo("[]@" + array.hash());
-    }
-
-    private ArrayB emptyArrayOf(NothingTB elemT) {
-      return objDb().arrayBuilder(arrayTB(elemT)).build();
-    }
   }
 }

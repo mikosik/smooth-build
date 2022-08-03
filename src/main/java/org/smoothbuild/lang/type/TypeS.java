@@ -1,29 +1,60 @@
 package org.smoothbuild.lang.type;
 
-import java.util.List;
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.lang.type.VarSetS.varSetS;
+
+import java.util.Objects;
 import java.util.function.Function;
 
-import org.smoothbuild.util.collect.Named;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-
 /**
- * Type (either polimorphic or monomorphic) in smooth language.
+ * Monomorphic type.
+ * This class and all its subclasses are immutable.
  */
-public sealed interface TypeS extends Named
-    permits FuncTS, MonoTS, PolyTS {
+public abstract sealed class TypeS implements TypelikeS
+    permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
+  private final VarSetS vars;
+  private final String name;
 
-  public MonoTS mapQuantifiedVars(Function<VarS, VarS> varMapper);
+  protected TypeS(String name) {
+    this(name, varSetS());
+  }
 
-  public static ImmutableList<MonoTS> prefixQuantifiedVarsWithIndex(List<? extends TypeS> types) {
-    Builder<MonoTS> builder = ImmutableList.builder();
-    for (int i = 0; i < types.size(); i++) {
-      var type = types.get(i);
-      var fullPrefix = Integer.toString(i);
-      var prefixed = type.mapQuantifiedVars(v -> v.prefixed(fullPrefix));
-      builder.add(prefixed);
+  protected TypeS(String name, VarSetS vars) {
+    checkArgument(!name.isBlank());
+    this.name = name;
+    this.vars = vars;
+  }
+
+  @Override
+  public String name() {
+    return name;
+  }
+
+  public VarSetS vars() {
+    return vars;
+  }
+
+  public TypeS mapVars(Function<VarS, TypeS> varMapper) {
+    return this;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
     }
-    return builder.build();
+    return object instanceof TypeS that
+        && getClass().equals(object.getClass())
+        && this.name().equals(that.name());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name());
+  }
+
+  @Override
+  public String toString() {
+    return name();
   }
 }

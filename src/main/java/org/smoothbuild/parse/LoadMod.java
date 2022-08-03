@@ -3,7 +3,8 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.parse.AnalyzeSemantically.analyzeSemantically;
-import static org.smoothbuild.parse.CreateModS.createModS;
+import static org.smoothbuild.parse.DetectUndefinedRefs.detectUndefinedRefs;
+import static org.smoothbuild.parse.ModuleCreator.createModuleS;
 import static org.smoothbuild.parse.ParseModule.parseModule;
 import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.parse.ast.AstSorter.sortParsedByDeps;
@@ -15,6 +16,7 @@ import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.ModS;
 import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.parse.ast.Ast;
 
@@ -43,7 +45,13 @@ public class LoadMod {
     }
     Ast sortedAst = maybeSortedAst.value();
 
-    var mod = createModS(path, modFiles, sortedAst, imported);
+    Logs undefinedRefsProblems = detectUndefinedRefs(sortedAst, imported);
+    logBuffer.logAll(undefinedRefsProblems);
+    if (logBuffer.containsProblem()) {
+      return maybeLogs(logBuffer);
+    }
+
+    var mod = createModuleS(path, modFiles, sortedAst, imported);
     logBuffer.logAll(mod.logs());
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);

@@ -8,6 +8,31 @@ import org.smoothbuild.systemtest.SystemTestCase;
 
 public class EqualTest extends SystemTestCase {
   @Nested
+  class _int {
+    @Test
+    public void int_is_equal_to_itself() throws Exception {
+      createUserModule("""
+          result = equal(7, 7);
+          """);
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactAsBoolean("result"))
+          .isEqualTo(true);
+    }
+
+    @Test
+    public void int_is_not_equal_to_different_int() throws Exception {
+      createUserModule("""
+          result = equal(7, 17);
+          """);
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactAsBoolean("result"))
+          .isEqualTo(false);
+    }
+  }
+
+  @Nested
   class _string {
     @Test
     public void string_is_equal_to_itself() throws Exception {
@@ -138,33 +163,20 @@ public class EqualTest extends SystemTestCase {
   @Nested
   class _array {
     @Test
+    public void int_array_is_equal_to_itself() throws Exception {
+      createUserModule("""
+          result = equal([7, 17], [7, 17]);
+          """);
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactAsBoolean("result"))
+          .isEqualTo(true);
+    }
+
+    @Test
     public void string_array_is_equal_to_itself() throws Exception {
       createUserModule("""
           result = equal(["aaa", "bbb"], ["aaa", "bbb"]);
-          """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
-    }
-
-    @Test
-    public void empty_nothing_array_is_equal_to_itself() throws Exception {
-      createUserModule("""
-          result = equal([], []);
-          """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
-    }
-
-    @Test
-    public void empty_nothing_arrays_is_equal_to_empty_string_array() throws Exception {
-      createUserModule("""
-          [Nothing] nothingArray = [];
-          [String] stringArray = [];
-          result = equal(nothingArray, stringArray);
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();

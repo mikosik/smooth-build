@@ -226,20 +226,6 @@ public class ObjBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void with_elem_with_type_being_subtype_of_require_type() throws Exception {
-      ArrayTB type = arrayTB(arrayTB(intTB()));
-      Hash objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(arrayB(nothingTB()))
-              ));
-      assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(ArrayB.class))
-          .throwsException(new DecodeObjWrongNodeTypeExc(
-              objHash, type, DATA_PATH, 0, arrayTB(intTB()), arrayTB(nothingTB())));
-    }
-
-    @Test
     public void with_one_elem_being_expr() throws Exception {
       ArrayTB type = arrayTB(stringTB());
       Hash objHash =
@@ -1488,19 +1474,6 @@ public class ObjBCorruptedTest extends TestContext {
   }
 
   @Nested
-  class _nothing {
-    @Test
-    public void learning_test() throws Exception {
-      Hash objHash =
-          hash(
-              hash(nothingTB()),
-              hash("aaa"));
-      assertCall(() -> objDb().get(objHash))
-          .throwsException(UnsupportedOperationException.class);
-    }
-  }
-
-  @Nested
   class _order {
     @Test
     public void learning_test() throws Exception {
@@ -1508,11 +1481,11 @@ public class ObjBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save Order expr
        * in HashedDb.
        */
-      var expr1 = arrayB(intTB(), intB(1));
-      var expr2 = arrayB(nothingTB());
+      var expr1 = intB(1);
+      var expr2 = intB(2);
       Hash objHash =
           hash(
-              hash(orderCB(arrayTB(intTB()))),
+              hash(orderCB(intTB())),
               hash(
                   hash(expr1),
                   hash(expr2)
@@ -1966,22 +1939,6 @@ public class ObjBCorruptedTest extends TestContext {
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, personTB(), DATA_PATH, 1, stringTB(), boolTB()));
-    }
-
-    @Test
-    public void with_elem_being_subtype_of_required_type() throws Exception {
-      var type = tupleTB(arrayTB(intTB()));
-      var objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(arrayB(nothingTB()))
-              )
-          );
-      var tuple = (TupleB) objDb().get(objHash);
-      assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeObjWrongNodeTypeExc(
-              objHash, type, DATA_PATH, 0, arrayTB(intTB()), arrayTB(nothingTB())));
     }
 
     @Test

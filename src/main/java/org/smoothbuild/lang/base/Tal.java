@@ -1,21 +1,19 @@
 package org.smoothbuild.lang.base;
 
-import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.TypeS;
 
-public class Tal {
-  private final MonoTS type;
-  private final Loc loc;
+/**
+ * TAL = Type and Loc.
+ */
+public class Tal extends WithLocImpl {
+  private final TypeS type;
 
-  public Tal(MonoTS type, Loc loc) {
+  public Tal(TypeS type, Loc loc) {
+    super(loc);
     this.type = type;
-    this.loc = loc;
   }
 
-  public MonoTS type() {
+  public TypeS type() {
     return type;
-  }
-
-  public Loc loc() {
-    return loc;
   }
 }

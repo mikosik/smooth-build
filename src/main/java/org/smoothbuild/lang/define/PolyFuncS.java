@@ -1,52 +1,18 @@
 package org.smoothbuild.lang.define;
 
-import static java.util.Objects.requireNonNull;
+import org.smoothbuild.lang.type.FuncSchemaS;
 
-import java.util.Objects;
-
-import org.smoothbuild.lang.type.PolyFuncTS;
-
-public final class PolyFuncS extends FuncS implements PolyTopRefableS {
-  private final PolyFuncTS type;
-  private final MonoFuncS func;
-
-  public PolyFuncS(PolyFuncTS type, MonoFuncS func) {
-    super(func.modPath(), func.name(), func.params(), func.loc());
-    this.type = requireNonNull(type);
-    this.func = requireNonNull(func);
+public final class PolyFuncS extends PolyRefableS {
+  private PolyFuncS(FuncSchemaS schema, FuncS funcS) {
+    super(schema, funcS);
   }
 
-  public static PolyFuncS polyFuncS(MonoFuncS funcS) {
-    var type = funcS.type();
-    return new PolyFuncS(new PolyFuncTS(type.vars(), type), funcS);
+  public static PolyFuncS polyFuncS(FuncSchemaS schema, FuncS funcS) {
+    return new PolyFuncS(schema, funcS);
   }
 
   @Override
-  public PolyFuncTS type() {
-    return type;
-  }
-
-  public MonoFuncS func() {
-    return func;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (this == object) {
-      return true;
-    }
-    return object instanceof PolyFuncS polyFuncS
-        && type.equals(polyFuncS.type)
-        && func.equals(polyFuncS.func);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(type, func);
-  }
-
-  @Override
-  public String toString() {
-    return type.quantifiedVars() + func.toString();
+  public FuncS mono() {
+    return (FuncS) super.mono();
   }
 }

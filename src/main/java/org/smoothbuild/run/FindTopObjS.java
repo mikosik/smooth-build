@@ -1,33 +1,34 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.lang.base.Loc.commandLineLoc;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.MonoRefS;
-import org.smoothbuild.lang.define.ValS;
+import org.smoothbuild.lang.define.MonoRefableS;
+import org.smoothbuild.lang.define.PolyValS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
 public class FindTopObjS {
-  public static Optional<List<MonoRefS>> findTopObjS(
+  public static Optional<List<MonoRefableS>> findTopObjS(
       Reporter reporter, DefsS defs, List<String> names) {
-    var topRefables = defs.topRefables();
-    var topRefs = new HashSet<MonoRefS>();
+    var topRefables = defs.refables();
+    var topRefs = new HashSet<MonoRefableS>();
     var logs = new LogBuffer();
     for (String name : names) {
-      var topRefable = topRefables.getOpt(name);
-      if (topRefable.isPresent()) {
-        if (topRefable.get() instanceof ValS value) {
-          topRefs.add(new MonoRefS(value.type(), value.name(), commandLineLoc()));
+      var topRefable = topRefables.getOrNull(name);
+      if (topRefable != null) {
+        if (topRefable instanceof PolyValS polyValS) {
+          if (polyValS.schema().quantifiedVars().isEmpty()) {
+            topRefs.add(polyValS.mono());
+          } else {
+            logs.error("`" + name + "` cannot be calculated as it is a polymorphic value.");
+          }
         } else {
-          logs.error(
-              "`" + name + "` cannot be calculated as it is not a value but a function.");
+          logs.error("`" + name + "` cannot be calculated as it is not a value but a function.");
         }
       } else {
         logs.error("Unknown value `" + name + "`.\n"

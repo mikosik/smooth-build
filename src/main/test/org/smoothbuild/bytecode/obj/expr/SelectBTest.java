@@ -14,12 +14,6 @@ import org.smoothbuild.testing.TestContext;
 
 public class SelectBTest extends TestContext {
   @Test
-  public void selected_fieldT_can_be_subtype_of_evalT() {
-    var select = selectB(arrayTB(intTB()), tupleB(arrayB(nothingTB())), intB(0));
-    select.data();
-  }
-
-  @Test
   public void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> selectB(boolTB(), intB(3), intB(2)))
         .throwsException(new IllegalArgumentException(
@@ -41,15 +35,7 @@ public class SelectBTest extends TestContext {
   }
 
   @Test
-  public void tuple_itemT_can_be_subtype_of_elemT_specified_in_category() {
-    var combine = combineB(tupleTB(arrayTB(nothingTB())), arrayB(nothingTB()));
-    var select = selectB(arrayTB(intTB()), combine, intB(0));
-    assertThat(select.data().selectable())
-        .isEqualTo(combine);
-  }
-
-  @Test
-  public void tuple_itemT_not_being_subtype_of_elemT_specified_in_category_causes_exc() {
+  public void tuple_itemT_different_than_elemT_specified_in_category_causes_exc() {
     var tuple = tupleB(intB(7));
     assertCall(() -> selectB(stringTB(), tuple, intB(0)))
         .throwsException(new IllegalArgumentException(

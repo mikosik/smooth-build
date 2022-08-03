@@ -1,11 +1,10 @@
 package org.smoothbuild.vm.job;
 
+import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.vm.job.TaskKind.CALL;
 import static org.smoothbuild.vm.job.TaskKind.COMBINE;
-import static org.smoothbuild.vm.job.TaskKind.CONVERT;
 import static org.smoothbuild.vm.job.TaskKind.INVOKE;
 import static org.smoothbuild.vm.job.TaskKind.ORDER;
 import static org.smoothbuild.vm.job.TaskKind.SELECT;
@@ -35,13 +34,11 @@ import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.bytecode.type.cnst.FuncTB;
 import org.smoothbuild.bytecode.type.cnst.TupleTB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.base.Nal;
 import org.smoothbuild.lang.base.NalImpl;
 import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.algorithm.CombineAlgorithm;
-import org.smoothbuild.vm.algorithm.ConvertAlgorithm;
 import org.smoothbuild.vm.algorithm.InvokeAlgorithm;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.algorithm.OrderAlgorithm;
@@ -92,23 +89,23 @@ public class JobCreator {
   }
 
   public Job eagerJobFor(ObjB obj) {
-    return eagerJobFor(list(), obj);
+    return eagerJobFor(obj, list());
   }
 
-  private ImmutableList<Job> eagerJobsFor(ImmutableList<? extends ObjB> objs, List<Job> scope) {
-    return map(objs, e -> eagerJobFor(scope, e));
+  private ImmutableList<Job> eagerJobsFor(ImmutableList<? extends ObjB> objs, List<Job> bindings) {
+    return map(objs, e -> eagerJobFor(e, bindings));
   }
 
-  private Job jobFor(List<Job> scope, ObjB expr, boolean eager) {
-    return handlerFor(expr).job(eager).apply(expr, scope);
+  private Job jobFor(ObjB expr, boolean eager, List<Job> bindings) {
+    return handlerFor(expr).job(eager).apply(expr, bindings);
   }
 
-  private Job eagerJobFor(List<Job> scope, ObjB expr) {
-    return handlerFor(expr).eagerJob().apply(expr, scope);
+  private Job eagerJobFor(ObjB expr, List<Job> bindings) {
+    return handlerFor(expr).eagerJob().apply(expr, bindings);
   }
 
-  private Job lazyJobFor(List<Job> scope, ObjB expr) {
-    return handlerFor(expr).lazyJob().apply(expr, scope);
+  private Job lazyJobFor(ObjB expr, List<Job> bindings) {
+    return handlerFor(expr).lazyJob().apply(expr, bindings);
   }
 
   private <T> Handler<T> handlerFor(ObjB obj) {
@@ -119,237 +116,195 @@ public class JobCreator {
 
   // Call
 
-  private Job callLazy(CallB call, List<Job> scope) {
-    return callJob(call, false, scope);
+  private Job callLazy(CallB call, List<Job> bindings) {
+    return callJob(call, false, bindings);
   }
 
-  private Job callEager(CallB call, List<Job> scope) {
-    return callJob(call, true, scope);
+  private Job callEager(CallB call, List<Job> bindings) {
+    return callJob(call, true, bindings);
   }
 
-  private Job callJob(CallB call, boolean eager, List<Job> scope) {
+  private Job callJob(CallB call, boolean eager, List<Job> bindings) {
     var callData = call.data();
-    var funcJ = jobFor(scope, callData.callable(), eager);
-    var argsJ = map(callData.args().items(), a -> lazyJobFor(scope, a));
+    var funcJ = jobFor(callData.callable(), eager, bindings);
+    var argsJ = map(callData.args().items(), a -> lazyJobFor(a, bindings));
     var loc = locFor(call);
-    var actualEvalT = call.type();
-    return callJob(actualEvalT, funcJ, argsJ, loc, eager, scope);
+    return callJob(funcJ, argsJ, loc, eager, bindings);
   }
 
-  private Job callJob(TypeB actualEvalT, Job func, ImmutableList<Job> args, Loc loc, boolean eager,
-      List<Job> scope) {
+  private Job callJob(Job func, ImmutableList<Job> args, Loc loc, boolean eager, List<Job> bindings) {
     if (eager) {
-      return callEagerJob(actualEvalT, func, args, loc, scope);
+      return callEagerJob(func, args, loc, bindings);
     } else {
-      var funcT = (FuncTB) func.type();
-      var resT = funcT.res();
-      return new LazyJob(actualEvalT, loc,
-          () -> callEagerJob(actualEvalT, resT, func, args, loc, scope));
+      var resT = ((FuncTB) func.type()).res();
+      return new LazyJob(resT, loc,
+          () -> new CallJob(resT, func, args, loc, bindings, this));
     }
   }
 
-  public Job callEagerJob(TypeB actualEvalT, Job func, ImmutableList<Job> args, Loc loc,
-      List<Job> scope) {
-    var funcT = (FuncTB) func.type();
-    var resT = funcT.res();
-    return callEagerJob(actualEvalT, resT, func, args, loc, scope);
-  }
-
-  private Job callEagerJob(TypeB actualEvalT, TypeB actualResT, Job func, ImmutableList<Job> args,
-      Loc loc, List<Job> scope) {
-    var callJ = new CallJob(actualResT, func, args, loc, scope, JobCreator.this);
-    return convertIfNeeded(actualEvalT, loc, callJ);
+  public Job callEagerJob(Job func, ImmutableList<Job> args, Loc loc, List<Job> bindings) {
+    var resT = ((FuncTB) func.type()).res();
+    return new CallJob(resT, func, args, loc, bindings, this);
   }
 
   // Combine
 
-  private Job combineLazy(CombineB combine, List<Job> scope) {
+  private Job combineLazy(CombineB combine, List<Job> bindings) {
     var nal = nalFor(combine);
     var loc = nal.loc();
-    return new LazyJob(combine.type(), loc, () -> combineEager(scope, combine, nal));
+    return new LazyJob(combine.type(), loc, () -> combineEager(bindings, combine, nal));
   }
 
-  private Job combineEager(CombineB combine, List<Job> scope) {
+  private Job combineEager(CombineB combine, List<Job> bindings) {
     var nal = nalFor(combine);
-    return combineEager(scope, combine, nal);
+    return combineEager(bindings, combine, nal);
   }
 
-  private Job combineEager(List<Job> scope, CombineB combine, Nal nal) {
+  private Job combineEager(List<Job> bindings, CombineB combine, Nal nal) {
     var evalT = combine.type();
-    var itemJs = eagerJobsFor(combine.items(), scope);
-    var convertedItemJs = convertJobs(evalT.items(), nal, itemJs);
+    var itemJs = eagerJobsFor(combine.items(), bindings);
     var info = new TaskInfo(COMBINE, nal);
     var algorithm = new CombineAlgorithm(evalT);
-    return taskCreator.newTask(algorithm, convertedItemJs, info);
+    return taskCreator.newTask(algorithm, itemJs, info);
   }
 
   // If
 
-  private Job ifLazy(IfB if_, List<Job> scope) {
+  private Job ifLazy(IfB if_, List<Job> bindings) {
     var nal = nalFor(if_);
-    return new LazyJob(if_.type(), nal.loc(), () -> ifEager(if_, nal, scope));
+    return new LazyJob(if_.type(), nal.loc(), () -> ifEager(if_, nal, bindings));
   }
 
-  private Job ifEager(IfB if_, List<Job> scope) {
+  private Job ifEager(IfB if_, List<Job> bindings) {
     var nal = nalFor(if_);
-    return ifEager(if_, nal, scope);
+    return ifEager(if_, nal, bindings);
   }
 
-  private Job ifEager(IfB if_, Nal nal, List<Job> scope) {
+  private Job ifEager(IfB if_, Nal nal, List<Job> bindings) {
     var ifData = if_.data();
-    var conditionJ = eagerJobFor(scope, ifData.condition());
+    var conditionJ = eagerJobFor(ifData.condition(), bindings);
     var evalT = if_.type();
-    var thenJ = clauseJob(evalT, nal, ifData.then(), scope);
-    var elseJ = clauseJob(evalT, nal, ifData.else_(), scope);
+    var thenJ = lazyJobFor(ifData.then(), bindings);
+    var elseJ = lazyJobFor(ifData.else_(), bindings);
     return new IfJob(evalT, conditionJ, thenJ, elseJ, nal.loc());
-  }
-
-  private Job clauseJob(TypeB actualEvalT, Nal nal, ObjB clause, List<Job> scope) {
-    return convertIfNeeded(actualEvalT, nal.loc(), lazyJobFor(scope, clause));
   }
 
   // Invoke
 
-  private Job invokeLazy(InvokeB invoke, List<Job> scope) {
+  private Job invokeLazy(InvokeB invoke, List<Job> bindings) {
     var nal = nalFor(invoke);
-    return new LazyJob(invoke.type(), nal.loc(), () -> invokeEager(invoke, nal, scope));
+    return new LazyJob(invoke.type(), nal.loc(), () -> invokeEager(invoke, nal, bindings));
   }
 
-  private Job invokeEager(InvokeB invoke, List<Job> scope) {
+  private Job invokeEager(InvokeB invoke, List<Job> bindings) {
     var nal = nalFor(invoke);
-    return invokeEager(invoke, nal, scope);
+    return invokeEager(invoke, nal, bindings);
   }
 
-  private Job invokeEager(InvokeB invoke, Nal nal, List<Job> scope) {
+  private Job invokeEager(InvokeB invoke, Nal nal, List<Job> bindings) {
     var name = nal.name();
     var invokeData = invoke.data();
     var methodT = invokeData.method().type();
-    var argJs = eagerJobsFor(invokeData.args().items(), scope);
-    var actualResT = methodT.res();
-    var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), nativeMethodLoader);
+    var argJs = eagerJobsFor(invokeData.args().items(), bindings);
+    var resT = methodT.res();
+    var algorithm = new InvokeAlgorithm(resT, name, invokeData.method(), nativeMethodLoader);
     var info = new TaskInfo(INVOKE, name + PARENTHESES_INVOKE, nal.loc());
-    var convertedArgJs = convertJobs(methodT.params(), nal, argJs);
-    var task = taskCreator.newTask(algorithm, convertedArgJs, info);
-    var type = invoke.type();
-    return convertIfNeeded(type, nal.loc(), task);
+    return taskCreator.newTask(algorithm, argJs, info);
   }
 
   // Map
 
-  private Job mapLazy(MapB map, List<Job> scope) {
+  private Job mapLazy(MapB map, List<Job> bindings) {
     var nal = nalFor(map);
-    return new LazyJob(map.type(), nal.loc(), () -> mapEager(map, nal, scope));
+    return new LazyJob(map.type(), nal.loc(), () -> mapEager(map, nal, bindings));
   }
 
-  private Job mapEager(MapB map, List<Job> scope) {
+  private Job mapEager(MapB map, List<Job> bindings) {
     var nal = nalFor(map);
-    return mapEager(map, nal, scope);
+    return mapEager(map, nal, bindings);
   }
 
-  private Job mapEager(MapB mapB, Nal nal, List<Job> scope) {
+  private Job mapEager(MapB mapB, Nal nal, List<Job> bindings) {
     MapB.Data data = mapB.data();
-    var arrayJ = eagerJobFor(scope, data.array());
-    var funcJ = eagerJobFor(scope, data.func());
-    var actualType = mapB.type();
-    return new MapJob(actualType, arrayJ, funcJ, nal.loc(), scope, this);
+    var arrayJ = eagerJobFor(data.array(), bindings);
+    var funcJ = eagerJobFor(data.func(), bindings);
+    var resT = mapB.type();
+    return new MapJob(resT, arrayJ, funcJ, nal.loc(), bindings, this);
   }
 
   // Order
 
-  private Job orderLazy(OrderB order, List<Job> scope) {
+  private Job orderLazy(OrderB order, List<Job> bindings) {
     var nal = nalFor(order);
-    return new LazyJob(order.type(), nal.loc(), () -> orderEager(order, nal, scope));
+    return new LazyJob(order.type(), nal.loc(), () -> orderEager(order, nal, bindings));
   }
 
-  private Job orderEager(OrderB order, List<Job> scope) {
+  private Job orderEager(OrderB order, List<Job> bindings) {
     var nal = nalFor(order);
-    return orderEager(order, nal, scope);
+    return orderEager(order, nal, bindings);
   }
 
-  private Task orderEager(OrderB order, Nal nal, List<Job> scope) {
+  private Task orderEager(OrderB order, Nal nal, List<Job> bindings) {
     var type = order.type();
-    var elemJs = map(order.elems(), e -> eagerJobFor(scope, e));
+    var elemJs = map(order.elems(), e -> eagerJobFor(e, bindings));
     var info = new TaskInfo(ORDER, nal);
     return orderEager(type, elemJs, info);
   }
 
   public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, TaskInfo info) {
-    var convertedElemJs = convertIfNeeded(arrayTB.elem(), elemJs);
     var algorithm = new OrderAlgorithm(arrayTB);
-    return taskCreator.newTask(algorithm, convertedElemJs, info);
+    return taskCreator.newTask(algorithm, elemJs, info);
   }
 
   // ParamRef
 
-  private Job paramRefLazy(ParamRefB paramRef, List<Job> scope) {
-    return scope.get(paramRef.value().intValue());
+  private Job paramRefLazy(ParamRefB paramRef, List<Job> bindings) {
+    return bindings.get(paramRef.value().intValue());
   }
 
   // Select
 
-  private Job selectLazy(SelectB select, List<Job> scope) {
+  private Job selectLazy(SelectB select, List<Job> bindings) {
     var nal = nalFor(select);
-    return new LazyJob(select.type(), nal.loc(), () -> selectEager(select, nal, scope));
+    return new LazyJob(select.type(), nal.loc(), () -> selectEager(select, nal, bindings));
   }
 
-  private Job selectEager(SelectB select, List<Job> scope) {
+  private Job selectEager(SelectB select, List<Job> bindings) {
     var nal = nalFor(select);
-    return selectEager(select, nal, scope);
+    return selectEager(select, nal, bindings);
   }
 
   private Job selectEager(
-      SelectB select, Nal nal, List<Job> scope) {
+      SelectB select, Nal nal, List<Job> bindings) {
     var data = select.data();
-    var selectableJ = eagerJobFor(scope, data.selectable());
-    var indexJ = eagerJobFor(scope, data.index());
+    var selectableJ = eagerJobFor(data.selectable(), bindings);
+    var indexJ = eagerJobFor(data.index(), bindings);
     var algorithmT = ((TupleTB) selectableJ.type()).items().get(data.index().toJ().intValue());
     var algorithm = new SelectAlgorithm(algorithmT);
     var info = new TaskInfo(SELECT, nal);
-    var task = taskCreator.newTask(algorithm, list(selectableJ, indexJ), info);
-    return convertIfNeeded(select.type(), nal.loc(), task);
+    return taskCreator.newTask(algorithm, list(selectableJ, indexJ), info);
   }
 
   // Value
 
-  private Job constLazy(CnstB cnst, List<Job> scope) {
+  private Job constLazy(CnstB cnst, List<Job> bindings) {
     var nal = nalFor(cnst);
     var loc = nal.loc();
     return new LazyJob(cnst.cat(), loc, () -> new ConstTask(cnst, nal));
   }
 
-  private Job constEager(CnstB cnst, List<Job> scope) {
+  private Job constEager(CnstB cnst, List<Job> bindings) {
     var nal = nalFor(cnst);
     return new ConstTask(cnst, nal);
   }
 
   // helper methods
 
-  public Job callFuncEagerJob(TypeB actualEvalT, FuncB func, ImmutableList<Job> args, Loc loc,
-      List<Job> scope) {
-    var job = eagerJobFor(args, func.body());
+  public Job callFuncEagerJob(FuncB func, ImmutableList<Job> args, Loc loc, List<Job> bindings) {
+    var job = eagerJobFor(func.body(), concat(args, bindings));
     var nal = nalFor(func);
     var name = nal.name() + PARENTHESES;
-    var convertedJ = convertIfNeeded(actualEvalT, nal.loc(), job);
-    return new VirtualTask(convertedJ, new TaskInfo(CALL, name, loc));
-  }
-
-  private ImmutableList<Job> convertJobs(
-      ImmutableList<TypeB> types, Nal nal, ImmutableList<Job> jobs) {
-    return zip(types, jobs, (t, j) -> convertIfNeeded(t, nal.loc(), j));
-  }
-
-  private ImmutableList<Job> convertIfNeeded(TypeB type, ImmutableList<Job> elemJs) {
-    return map(elemJs, j -> convertIfNeeded(type, j.loc(), j));
-  }
-
-  private Job convertIfNeeded(TypeB type, Loc loc, Job job) {
-    if (job.type().equals(type)) {
-      return job;
-    } else {
-      var algorithm = new ConvertAlgorithm(type);
-      var info = new TaskInfo(CONVERT, type.name() + " <- " + job.type().name(), loc);
-      return taskCreator.newTask(algorithm, list(job), info);
-    }
+    return new VirtualTask(job, new TaskInfo(CALL, name, loc));
   }
 
   private Nal nalFor(ObjB obj) {

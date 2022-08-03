@@ -7,35 +7,34 @@ import static java.util.Optional.empty;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.lang.type.MonoTS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.util.collect.NameableImpl;
 
 /**
  * Item signature.
- *
  * This class is immutable.
  */
 public class ItemSigS extends NameableImpl {
-  private final MonoTS type;
+  private final TypeS type;
 
-  public ItemSigS(MonoTS type, String name) {
+  public ItemSigS(TypeS type, String name) {
     this(type, Optional.of(name));
   }
 
-  public ItemSigS(MonoTS type, Optional<String> name) {
+  public ItemSigS(TypeS type, Optional<String> name) {
     super(name);
     this.type = requireNonNull(type);
   }
 
-  public static ItemSigS itemSigS(MonoTS type) {
+  public static ItemSigS itemSigS(TypeS type) {
     return new ItemSigS(type, empty());
   }
 
-  public static ItemSigS itemSigS(MonoTS type, String name) {
+  public static ItemSigS itemSigS(TypeS type, String name) {
     return new ItemSigS(type, name);
   }
 
-  public MonoTS type() {
+  public TypeS type() {
     return type;
   }
 

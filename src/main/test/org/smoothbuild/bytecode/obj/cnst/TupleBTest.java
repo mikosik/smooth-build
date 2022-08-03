@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.collect.Lists;
 
 public class TupleBTest extends TestContext {
   @Test
@@ -22,13 +21,6 @@ public class TupleBTest extends TestContext {
   @Test
   public void creating_tuple_with_item_with_different_type_than_specified_in_tuple_type_causes_exception() {
     assertCall(() -> objDb().tuple(personTB(), list(stringB(), intB())))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void creating_tuple_with_item_type_being_subtype_of_specified_in_tupleT_causes_exc() {
-    var tupleT = tupleTB(arrayTB(intTB()));
-    assertCall(() -> objDb().tuple(tupleT, Lists.list(arrayB(nothingTB()))))
         .throwsException(IllegalArgumentException.class);
   }
 

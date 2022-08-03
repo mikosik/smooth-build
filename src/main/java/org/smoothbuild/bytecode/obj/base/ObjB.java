@@ -3,7 +3,6 @@ package org.smoothbuild.bytecode.obj.base;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsDecodeObjNodeException;
 import static org.smoothbuild.bytecode.obj.Helpers.wrapObjDbExcAsDecodeObjNodeException;
-import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
@@ -193,7 +192,7 @@ public abstract class ObjB {
 
   protected ObjB validateType(ObjB obj, String path, int index, TypeB expectedT) {
     var objT = obj.type();
-    if (!isAssignable(expectedT, objT)) {
+    if (!expectedT.equals(objT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), path, index, expectedT, objT);
     }
     return obj;

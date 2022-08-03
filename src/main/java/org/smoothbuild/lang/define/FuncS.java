@@ -4,18 +4,20 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.base.Panal;
+import org.smoothbuild.lang.base.Tapanal;
+import org.smoothbuild.lang.type.FuncTS;
+import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
 
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends Panal implements TopRefableS
-    permits MonoFuncS, PolyFuncS {
+public sealed abstract class FuncS extends Tapanal implements MonoRefableS, InstanceS
+    permits AnnFuncS, DefFuncS, SyntCtorS {
   private final NList<ItemS> params;
 
-  public FuncS(ModPath modPath, String name, NList<ItemS> params, Loc loc) {
-    super(modPath, name, loc);
+  public FuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
+    super(type, modPath, name, loc);
     this.params = requireNonNull(params);
   }
 
@@ -28,6 +30,29 @@ public sealed abstract class FuncS extends Panal implements TopRefableS
   }
 
   private static String paramToString(ItemS itemS) {
-    return itemS.type().name() + " " + itemS.name();
+    return itemS.type().name() + " " + itemS.name() + itemS.body().map(b -> " = " + b).orElse("");
+  }
+
+  @Override
+  public FuncTS type() {
+    return (FuncTS) super.type();
+  }
+
+  public TypeS resT() {
+    return type().res();
+  }
+
+  public boolean canBeCalledArgless() {
+    return params().stream()
+        .allMatch(p -> p.body().isPresent());
+  }
+
+  protected String signature() {
+    return resT().name() + " " + name() + "(" + paramsToString() + ")";
+  }
+
+  @Override
+  public String toString() {
+    return this.getClass().getSimpleName() + "(`" + signature() + "`)";
   }
 }

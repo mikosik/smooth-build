@@ -8,6 +8,46 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
 public class InferenceTest extends TestContext {
+
+  @Nested
+  class _rankness {
+    @Test
+    public void of_higher_order_is_not_possible() {
+      var code = """
+            Pair {
+              String string,
+              Int int,
+            }
+            Pair f(String s, Int i, A(A) id) = pair(id(s), id(i));
+            """;
+      module(code)
+          .loadsWithError(5, "Illegal call.");
+    }
+
+    @Test
+    public void of_higher_order_is_not_possible_2() {
+      var code = """
+            f(String s, A(A) id) = id(s);
+            """;
+      module(code)
+          .loadsWithError(1, "<Add error message here> 4");
+    }
+  }
+
+  @Test
+  public void two_differently_monoized_calls_to_poly_func_with_poly_default_arg() {
+    var code = """
+          [A] empty([A] array = []) = array;
+          Pair {
+            [String] s,
+            [Int] i
+          }
+          myValue = pair(empty(), empty());
+          """;
+    module(code)
+        .loadsWithSuccess();
+  }
+
   @Nested
   class _infer_value_type_from {
     @Test
@@ -17,7 +57,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myValue", stringTS());
+          .containsRefableWithType("myValue", schemaS(stringTS()));
     }
 
     @Test
@@ -27,7 +67,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myValue", blobTS());
+          .containsRefableWithType("myValue", schemaS(blobTS()));
     }
 
     @Test
@@ -37,7 +77,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myValue", intTS());
+          .containsRefableWithType("myValue", schemaS(intTS()));
     }
 
     @Test
@@ -47,7 +87,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myValue", arrayTS(stringTS()));
+          .containsRefableWithType("myValue", schemaS(arrayTS(stringTS())));
     }
 
     @Test
@@ -58,7 +98,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myValue", stringTS());
+          .containsRefableWithType("myValue", schemaS(stringTS()));
     }
 
     @Test
@@ -69,18 +109,18 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myValue", funcTS(stringTS(), list(blobTS())));
+          .containsRefableWithType("myValue", schemaS(funcTS(stringTS(), list(blobTS()))));
     }
 
     @Test
-    public void poly_func_ref_fails() {
+    public void poly_func_ref() {
       var code = """
           A myId(A a) = a;
           myValue = myId;
           """;
       module(code)
-          .loadsWithError(2, "Cannot infer type parameters to convert function reference `myId` "
-              + "to monomorphic function. You need to specify type of `myValue` explicitly.");
+          .loadsWithSuccess()
+          .containsRefableWithType("myValue", schemaS(funcTS(varA(), varA())));
     }
 
     @Test
@@ -91,7 +131,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myValue", stringTS());
+          .containsRefableWithType("myValue", schemaS(stringTS()));
     }
 
     @Test
@@ -102,50 +142,56 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myValue", intTS());
+          .containsRefableWithType("myValue", schemaS(intTS()));
     }
   }
 
   @Nested
   class _infer_mono_func_result_type_from {
-    @Test
-    public void string_literal() {
-      var code = """
+    @Nested
+    class _literal {
+      @Test
+      public void string_literal() {
+        var code = """
           myFunc() = "abc";
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(stringTS()));
-    }
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", schemaS(funcTS(stringTS())));
+      }
 
-    @Test
-    public void blob_literal() {
-      var code = """
+      @Test
+      public void blob_literal() {
+        var code = """
           myFunc() = 0x07;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(blobTS()));
-    }
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", schemaS(funcTS(blobTS())));
+      }
 
-    @Test
-    public void int_literal() {
-      var code = """
+      @Test
+      public void int_literal() {
+        var code = """
           myFunc() = 123;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(intTS()));
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", schemaS(funcTS(intTS())));
+      }
     }
 
-    @Test
-    public void array_literal() {
-      var code = """
+    @Nested
+    class _array {
+      @Test
+      public void mono_array() {
+        var code = """
           myFunc() = ["abc"];
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(arrayTS(stringTS())));
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", schemaS(funcTS(arrayTS(stringTS()))));
+      }
     }
 
     @Test
@@ -156,7 +202,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(stringTS()));
+          .containsRefableWithType("myFunc", schemaS(funcTS(stringTS())));
     }
 
     @Test
@@ -166,7 +212,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(intTS(), list(intTS())));
+          .containsRefableWithType("myFunc", schemaS(funcTS(intTS(), list(intTS()))));
     }
 
     @Test
@@ -176,7 +222,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(intTS(), list(funcTS(intTS()))));
+          .containsRefableWithType("myFunc", schemaS(funcTS(intTS(), list(funcTS(intTS())))));
     }
 
     @Test
@@ -187,18 +233,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(funcTS(stringTS(), list(blobTS()))));
-    }
-
-    @Test
-    public void poly_func_ref_fails() {
-      var code = """
-          A myId(A a) = a;
-          myFunc() = myId;
-          """;
-      module(code)
-          .loadsWithError(2, "Cannot infer type parameters to convert function reference `myId` "
-              + "to monomorphic function. You need to specify type of `myFunc` explicitly.");
+          .containsRefableWithType("myFunc", schemaS(funcTS(funcTS(stringTS(), list(blobTS())))));
     }
 
     @Test
@@ -209,7 +244,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(stringTS()));
+          .containsRefableWithType("myFunc", schemaS(funcTS(stringTS())));
     }
 
     @Test
@@ -220,7 +255,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(intTS()));
+          .containsRefableWithType("myFunc", schemaS(funcTS(intTS())));
     }
 
     @Test
@@ -230,159 +265,286 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", funcTS(stringTS(), list(stringTS())));
+          .containsRefableWithType("myFunc", schemaS(funcTS(stringTS(), list(stringTS()))));
     }
   }
 
   @Nested
   class _infer_poly_func_result_type_from {
-    @Test
-    public void string_literal() {
-      var code = """
+    @Nested
+    class _literal {
+      @Test
+      public void string_literal() {
+        var code = """
           myFunc(A a) = "abc";
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varA())));
-    }
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(stringTS(), list(varA())));
+      }
 
-    @Test
-    public void blob_literal() {
-      var code = """
+      @Test
+      public void blob_literal() {
+        var code = """
           myFunc(A a) = 0x07;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(blobTS(), list(varA())));
-    }
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(blobTS(), list(varA())));
+      }
 
-    @Test
-    public void int_literal() {
-      var code = """
+      @Test
+      public void int_literal() {
+        var code = """
           myFunc(A a) = 123;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varA())));
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(intTS(), list(varA())));
+      }
     }
 
-    @Test
-    public void array_literal() {
-      var code = """
+    @Nested
+    class _array {
+      @Test
+      public void mono_array() {
+        var code = """
           myFunc(A a) = ["abc"];
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(arrayTS(stringTS()), list(varA())));
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(arrayTS(stringTS()), list(varA())));
+      }
+
+      @Test
+      public void poly_array() {
+        var code = """
+          myFunc() = [];
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varA())));
+      }
+
+      @Test
+      public void poly_array_when_func_type_param_shadows_array_generic_param() {
+        var code = """
+          myFunc(A a) = [];
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varB()), list(varA())));
+      }
+
+      @Test
+      public void poly_array_with_when_func_type_param_forces_array_type() {
+        var code = """
+          [B] myFunc() = [];
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varB())));
+      }
     }
 
-    @Test
-    public void value_ref() {
-      var code = """
+    @Nested
+    class _value {
+      @Test
+      public void mono_value_ref() {
+        var code = """
           String stringValue = "abc";
+          myFunc() = stringValue;
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(stringTS(), list()));
+      }
+
+      @Test
+      public void poly_value_ref() {
+        var code = """
+          [A] stringValue = [];
+          myFunc() = stringValue;
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varA()), list()));
+      }
+
+      @Test
+      public void poly_value_ref_when_func_type_param_shadows_value_type() {
+        var code = """
+          [A] stringValue = [];
           myFunc(A a) = stringValue;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varA())));
-    }
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varB()), list(varA())));
+      }
 
-    @Test
-    public void param_ref() {
-      var code = """
-          myFunc(A a, Int int) = int;
+      @Test
+      public void poly_value_ref_when_func_type_param_forces_value_type() {
+        var code = """
+          [A] stringValue = [];
+          [B] myFunc() = stringValue;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varA(), intTS())));
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varB())));
+      }
     }
 
-    @Test
-    public void param_mono_func_call() {
-      var code = """
-          myFunc(A a, Int() f) = f();
+    @Nested
+    class _param_ref {
+      @Test
+      public void param_ref_with_base_type() {
+        var code = """
+          myFunc(Int int) = int;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc",
-              polyFuncTS(intTS(), list(varA(), funcTS(intTS()))));
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(intTS(), list(intTS())));
+      }
+
+      @Test
+      public void param_ref_with_poly_type() {
+        var code = """
+          myFunc(A param) = param;
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(varA(), list(varA())));
+      }
+
+      @Test
+      public void param_ref_with_mono_func_type() {
+        var code = """
+          myFunc(Int(Bool) func) = func;
+          """;
+        var funcT = funcTS(intTS(), boolTS());
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(funcT, list(funcT)));
+      }
+
+      @Test
+      public void param_ref_with_poly_func_type() {
+        var code = """
+          myFunc(A(A) param) = param;
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc",
+                funcSchemaS(funcTS(varA(), list(varA())), list(funcTS(varA(), list(varA())))));
+      }
     }
 
-    @Test
-    public void mono_func_ref() {
-      var code = """
+    @Nested
+    class _call {
+      @Test
+      public void call_to_mono_param() {
+        var code = """
+          myFunc(Int() f) = f();
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc",
+                funcSchemaS(intTS(), list(funcTS(intTS()))));
+      }
+
+      @Test
+      public void call_to_poly_param() {
+        var code = """
+          myFunc(A() f) = f();
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc",
+                funcSchemaS(varA(), list(funcTS(varA()))));
+      }
+
+      @Test
+      public void call_to_mono_func() {
+        var code = """
+          Int otherFunc() = 7;
+          myFunc() = otherFunc();
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc",
+                funcSchemaS(intTS(), list()));
+      }
+
+      @Test
+      public void call_to_poly_func() {
+        var code = """
+          A myIdentity(A a) = a;
+          myFunc() = myIdentity(7);
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc",
+                funcSchemaS(intTS(), list()));
+      }
+
+      @Test
+      public void call_to_poly_func_when_argument_type_is_our_type_param() {
+        var code = """
+          A myIdentity(A a) = a;
+          myFunc(B b) = myIdentity(b);
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(varB(), list(varB())));
+      }
+    }
+
+    @Nested
+    class _func_ref {
+      @Test
+      public void mono_func_ref() {
+        var code = """
           String otherFunc(Blob param) = "abc";
-          myFunc(A a) = otherFunc;
+          myFunc() = otherFunc;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc",
-              polyFuncTS(funcTS(stringTS(), list(blobTS())), list(varA())));
-    }
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc",
+                funcSchemaS(funcTS(stringTS(), list(blobTS())), list()));
+      }
 
-    @Test
-    public void poly_func_ref_fails() {
-      var code = """
+      @Test
+      public void poly_func_ref() {
+        var code = """
+          A myId(A a) = a;
+          myFunc() = myId;
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(funcTS(varA(), list(varA())), list()));
+      }
+
+      @Test
+      public void poly_func_ref_when_func_type_param_shadows_referenced_func_type_param() {
+        var code = """
           A myId(A a) = a;
           myFunc(A a) = myId;
           """;
-      module(code)
-          .loadsWithError(2, "Cannot infer type parameters to convert function reference `myId` "
-              + "to monomorphic function. You need to specify type of `myFunc` explicitly.");
-    }
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(funcTS(varB(), varB()), list(varA())));
+      }
 
-    @Test
-    public void mono_func_ref_call() {
-      var code = """
-          String otherFunc() = "abc";
-          myFunc(A a) = otherFunc();
-          """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(stringTS(), list(varA())));
-    }
-
-    @Test
-    public void poly_func_ref_call() {
-      var code = """
+      @Test
+      public void poly_func_ref_when_func_type_param_forces_referenced_func_type_param() {
+        var code = """
           A myId(A a) = a;
-          myFunc(A a) = myId(7);
+          B(B) myFunc() = myId;
           """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(intTS(), list(varA())));
-    }
-
-    @Test
-    public void func_mono_param() {
-      var code = """
-          myFunc(A a, String param) = param;
-          """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc",
-              polyFuncTS(stringTS(), list(varA(), stringTS())));
-    }
-
-    @Test
-    public void func_poly_param() {
-      var code = """
-          myFunc(A param) = param;
-          """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc", polyFuncTS(varA(), list(varA())));
-    }
-
-    @Test
-    public void func_poly_param_func() {
-      var code = """
-          myFunc(A(A) param) = param;
-          """;
-      module(code)
-          .loadsWithSuccess()
-          .containsTopRefableWithType("myFunc",
-              polyFuncTS(funcTS(varA(), list(varA())), list(funcTS(varA(), list(varA())))));
+        module(code)
+            .loadsWithSuccess()
+            .containsRefableWithType("myFunc", funcSchemaS(funcTS(varB(), varB()), list()));
+      }
     }
   }
 
@@ -397,7 +559,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(stringTS()));
+            .containsRefableWithType("result", schemaS(arrayTS(stringTS())));
       }
 
       @Test
@@ -407,7 +569,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(intTS()));
+            .containsRefableWithType("result", schemaS(arrayTS(intTS())));
       }
 
       @Test
@@ -417,7 +579,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(blobTS()));
+            .containsRefableWithType("result", schemaS(arrayTS(blobTS())));
       }
 
       @Test
@@ -427,7 +589,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(arrayTS(intTS())));
+            .containsRefableWithType("result", schemaS(arrayTS(arrayTS(intTS()))));
       }
 
       @Test
@@ -438,7 +600,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(intTS()));
+            .containsRefableWithType("result", schemaS(arrayTS(intTS())));
       }
 
       @Test
@@ -449,47 +611,35 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(funcTS(intTS(), list(intTS()))));
+            .containsRefableWithType("result", schemaS(arrayTS(funcTS(intTS(), list(intTS())))));
       }
 
       @Test
-      public void with_poly_func_ref_fails() {
+      public void with_poly_func_ref() {
         var code = """
           A myId(A a) = a;
           result = [myId];
           """;
         module(code)
-            .loadsWithError(2, "Cannot infer type parameters to convert function reference "
-                + "`myId` to monomorphic function.");
+            .loadsWithSuccess()
+            .containsRefableWithType("result", schemaS(arrayTS(funcTS(varA(), list(varA())))));
       }
     }
 
     @Nested
     class _two_elems {
       @Test
-      public void with_the_same_base_type() {
+      public void with_same_base_type() {
         var code = """
           result = ["abc", "def"];
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(stringTS()));
+            .containsRefableWithType("result", schemaS(arrayTS(stringTS())));
       }
 
       @Test
-      public void with_convertible_types() {
-        var code = """
-          @Native("impl.met")
-          Nothing myNothing();
-          result = ["abc", myNothing()];
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(stringTS()));
-      }
-
-      @Test
-      public void with_base_types_that_have_no_common_super_type() {
+      public void with_different_base_types() {
         var code = """
           result = [
             "abc",
@@ -497,14 +647,15 @@ public class InferenceTest extends TestContext {
           ];
           """;
         module(code)
-            .loadsWithError(1,"Array elements don't have common super type.");
+            .loadsWithError(1,
+                "Cannot infer type for array literal. Its element types are not compatible.");
       }
 
       @Test
-      public void with_mono_func_types_that_have_common_super_type() {
+      public void with_same_mono_func_types() {
         var code = """
-          [Int] firstFunc() = [7];
-          [Nothing] secondFunc() = [];
+          Int firstFunc() = 7;
+          Int secondFunc() = 3;
           result = [
             firstFunc,
             secondFunc,
@@ -512,11 +663,11 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(funcTS(arrayTS(intTS()))));
+            .containsRefableWithType("result", schemaS(arrayTS(funcTS(intTS()))));
       }
 
       @Test
-      public void with_mono_func_types_that_have_no_common_super_type() {
+      public void with_different_mono_func_types() {
         var code = """
           String firstFunc() = "abc";
           Blob secondFunc() = 0x01;
@@ -526,19 +677,32 @@ public class InferenceTest extends TestContext {
           ];
           """;
         module(code)
-            .loadsWithError(3, "Array elements don't have common super type.");
+            .loadsWithError(3,
+                "Cannot infer type for array literal. Its element types are not compatible.");
       }
 
       @Test
-      public void with_poly_func_type_fails() {
+      public void with_same_poly_funcs_types() {
         var code = """
           A myId(A a) = a;
-          A myOtherId(A a) = a;
+          B myOtherId(B b) = b;
           result = [myId, myOtherId];
           """;
         module(code)
-            .loadsWithError(3, "Cannot infer type parameters to convert function reference "
-                + "`myId` to monomorphic function.");
+            .loadsWithSuccess()
+            .containsRefableWithType("result", schemaS(arrayTS(idFuncS().mono().type())));
+      }
+
+      @Test
+      public void with_different_poly_funcs_types() {
+        var code = """
+          A myId(A a) = a;
+          B otherFunc(B b, C c) = b;
+          result = [myId, otherFunc];
+          """;
+        module(code)
+            .loadsWithError(3,
+                "Cannot infer type for array literal. Its element types are not compatible.");
       }
 
       @Test
@@ -550,7 +714,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("result", arrayTS(funcTS(intTS(), list(intTS()))));
+            .containsRefableWithType("result", schemaS(arrayTS(funcTS(intTS(), list(intTS())))));
       }
 
       @Test
@@ -561,7 +725,8 @@ public class InferenceTest extends TestContext {
           result = [myIntId, myId];
           """;
         module(code)
-            .loadsWithError(3, "Array elements don't have common super type.");
+            .loadsWithError(3,
+                "Cannot infer type for array literal. Its element types are not compatible.");
       }
     }
   }
@@ -569,7 +734,7 @@ public class InferenceTest extends TestContext {
   @Nested
   class _infer_poly_func_call_type {
     @Nested
-    class _fails_when_var_has_two_inconvertible_lower_bounds {
+    class _fails_when_var_unifies_two_incompatible_types {
       @Test
       public void base_types() {
         var code = """
@@ -577,7 +742,7 @@ public class InferenceTest extends TestContext {
             result = myEqual("def", 0x01);
             """;
         module(code)
-            .loadsWithError(2, "Cannot infer actual type for `A`.");
+            .loadsWithError(2, "Illegal call.");
       }
 
       @Test
@@ -587,7 +752,7 @@ public class InferenceTest extends TestContext {
             result = myEqual(["def"], [0x01]);
             """;
         module(code)
-            .loadsWithError(2, "Cannot infer actual type for `A`.");
+            .loadsWithError(2, "Illegal call.");
       }
 
       @Test
@@ -605,25 +770,12 @@ public class InferenceTest extends TestContext {
             result = myEqual(vector("aaa", "bbb"), tuple("aaa", "bbb"));
             """;
         module(code)
-            .loadsWithError(10, "Cannot infer actual type for `A`.");
+            .loadsWithError(10, "Illegal call.");
       }
     }
 
     @Nested
     class _identity_func_applied_to {
-      @Test
-      public void nothing() {
-        var code = """
-            @Native("impl.met")
-            Nothing nothingFunc();
-            A myIdentity(A a) = a;
-            myValue = myIdentity(nothingFunc());
-            """;
-        module(code)
-            .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", nothingTS());
-      }
-
       @Test
       public void arg_of_base_type() {
         var code = """
@@ -632,7 +784,7 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", stringTS());
+            .containsRefableWithType("myValue", schemaS(stringTS()));
       }
 
       @Test
@@ -643,7 +795,7 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", arrayTS(stringTS()));
+            .containsRefableWithType("myValue", schemaS(arrayTS(stringTS())));
       }
 
       @Test
@@ -655,24 +807,12 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", funcTS(stringTS(), list(blobTS())));
+            .containsRefableWithType("myValue", schemaS(funcTS(stringTS(), list(blobTS()))));
       }
     }
 
     @Nested
     class _first_elem_func_applied_to {
-      @Test
-      public void nothing_array() {
-        var code = """
-            @Native("impl.met")
-            A firstElement([A] array);
-            myValue = firstElement([]);
-            """;
-        module(code)
-            .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", nothingTS());
-      }
-
       @Test
       public void array() {
         var code = """
@@ -682,7 +822,7 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", stringTS());
+            .containsRefableWithType("myValue", schemaS(stringTS()));
       }
 
       @Test
@@ -694,39 +834,12 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", arrayTS(stringTS()));
-      }
-
-      @Test
-      public void func_array_with_convertible_funcs() {
-        var code = """
-            @Native("impl.met")
-            A firstElement([A] array);
-            String myFunc1(Blob param) = "abc";
-            String myFunc2(String param) = "abc";
-            myValue = firstElement([myFunc1, myFunc2]);
-            """;
-        module(code)
-            .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", funcTS(stringTS(), list(nothingTS())));
+            .containsRefableWithType("myValue", schemaS(arrayTS(stringTS())));
       }
     }
 
     @Nested
     class _single_elem_array_func_applied_to {
-      @Test
-      public void nothing() {
-        var code = """
-            @Native("impl.met")
-            Nothing nothingFunc();
-            [A] singleElement(A a) = [a];
-            myValue = singleElement(nothingFunc());
-            """;
-        module(code)
-            .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", arrayTS(nothingTS()));
-      }
-
       @Test
       public void arg_of_base_type() {
         var code = """
@@ -735,7 +848,7 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", arrayTS(stringTS()));
+            .containsRefableWithType("myValue", schemaS(arrayTS(stringTS())));
       }
 
       @Test
@@ -746,7 +859,7 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", arrayTS(arrayTS(stringTS())));
+            .containsRefableWithType("myValue", schemaS(arrayTS(arrayTS(stringTS()))));
       }
 
       @Test
@@ -758,7 +871,8 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsTopRefableWithType("myValue", arrayTS(funcTS(stringTS(), list(blobTS()))));
+            .containsRefableWithType("myValue",
+                schemaS(arrayTS(funcTS(stringTS(), list(blobTS())))));
       }
     }
 
@@ -781,7 +895,7 @@ public class InferenceTest extends TestContext {
           """;
       module(code)
           .loadsWithSuccess()
-          .containsTopRefableWithType("result", arrayTS(stringTS()));
+          .containsRefableWithType("result", arrayTS(stringTS()));
     }
   }
 

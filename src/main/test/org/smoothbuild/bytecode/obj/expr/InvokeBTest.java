@@ -23,39 +23,21 @@ public class InvokeBTest extends TestContext {
   public void creating_invoke_with_too_few_args_causes_exception() {
     var methodT = methodTB(intTB(), list(stringTB()));
     assertCall(() -> invokeB(methodB(methodT)))
-        .throwsException(argsNotMatchingParamsException("{}", "{String}"));
+        .throwsException(argsNotMatchingParamsException("", "String"));
   }
 
   @Test
   public void creating_invoke_with_too_many_args_causes_exception() {
     var methodT = methodTB(intTB(), list(stringTB()));
     assertCall(() -> invokeB(methodB(methodT), intB(), intB()))
-        .throwsException(argsNotMatchingParamsException("{Int, Int}", "{String}"));
-  }
-
-  @Test
-  public void creating_invoke_with_args_being_subtype_of_required_args_is_allowed() {
-    var methodT = methodTB(intTB(), list(arrayTB(intTB())));
-    var method = methodB(methodT);
-    var arg = arrayB(nothingTB());
-    var invoke = invokeB(method, arg);
-    assertThat(invoke.data().args())
-        .isEqualTo(combineB(arg));
+        .throwsException(argsNotMatchingParamsException("Int, Int", "String"));
   }
 
   @Test
   public void creating_invoke_with_arg_not_matching_param_type_causes_exception() {
     var method = methodB(methodTB(intTB(), list(stringTB())));
     assertCall(() -> invokeB(method, intB(3)))
-        .throwsException(argsNotMatchingParamsException("{Int}", "{String}"));
-  }
-
-  @Test
-  public void creating_invoke_with_resT_being_subtype_of_evalT() {
-    var method = methodB(methodTB(arrayTB(nothingTB()), list()));
-    var invokeB = invokeB(arrayTB(intTB()), method);
-    assertThat(invokeB.data().args())
-        .isEqualTo(combineB());
+        .throwsException(argsNotMatchingParamsException("Int", "String"));
   }
 
   @Test
@@ -68,8 +50,8 @@ public class InvokeBTest extends TestContext {
 
   private static IllegalArgumentException argsNotMatchingParamsException(
       String args, String params) {
-    return new IllegalArgumentException("Argument evaluation types `" + args + "` should be"
-        + " equal to callable parameter types `" + params + "`.");
+    return new IllegalArgumentException("Argument evaluation types (" + args + ") should be"
+        + " equal to callable parameter types (" + params + ").");
   }
 
   @Test

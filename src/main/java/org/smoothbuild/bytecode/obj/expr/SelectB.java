@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.IsAssignable.isAssignable;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
@@ -42,7 +41,7 @@ public class SelectB extends ExprB {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), cat(), i, size);
       }
       var fieldT = tupleEvalT.items().get(i);
-      if (!isAssignable(type(), fieldT)) {
+      if (!type().equals(fieldT)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), cat(), fieldT);
       }
       return new Data(selectable, index);

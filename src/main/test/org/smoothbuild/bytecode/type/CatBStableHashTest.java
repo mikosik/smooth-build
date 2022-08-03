@@ -14,7 +14,6 @@ public class CatBStableHashTest extends TestContext {
     assertHash(funcTB(), "270b743243db48d70aaa745ebd27900338efe7ba");
     assertHash(intTB(), "8be891c7170d4d1bbca0ffcb3fce71285c55aee4");
     assertHash(methodTB(), "4bb62c6608008ed97a7c8d532218c55e7ca42c34");
-    assertHash(nothingTB(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(stringTB(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
     assertHash(tupleTB(blobTB()), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
 
@@ -23,7 +22,6 @@ public class CatBStableHashTest extends TestContext {
     assertHash(arrayTB(funcTB()), "0bc454089c7d5eb8209d53b8ac2022f3aa67a54a");
     assertHash(arrayTB(methodTB()), "fd2ee843d9c7b08dd259d08e6f9775474bd44be0");
     assertHash(arrayTB(intTB()), "ff10a58462549d6f2a55c51be139ae52b62bf801");
-    assertHash(arrayTB(nothingTB()), "223052eec1e2f74ed0234fd1ba43f4d49e7e43db");
     assertHash(arrayTB(stringTB()), "dfeac8190688130683d51d719055d46c47cec4d2");
     assertHash(arrayTB(tupleTB(blobTB())), "e843737d83eb150a51a81d9e43a00142982bd959");
 

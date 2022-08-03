@@ -4,6 +4,7 @@ import static org.smoothbuild.testing.TestContext.loc;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.parse.ast.refable.FuncP;
 
 import com.google.common.testing.EqualsTester;
 

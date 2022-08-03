@@ -35,7 +35,6 @@ public class ObjBCollisionTest extends TestContext {
     return List.of(
         // values
         arrayB(blobTB()),
-        arrayB(nothingTB()),
         arrayB(stringTB()),
         arrayB(blob1),
         arrayB(blob2),
@@ -82,11 +81,9 @@ public class ObjBCollisionTest extends TestContext {
         mapB(arrayB(intB(1)), funcB(funcTB(intTB(), list(intTB())), intB(3))),
         mapB(arrayB(intB(2)), funcB(funcTB(intTB(), list(intTB())), paramRefB(intTB(), 0))),
         orderB(stringTB()),
-        orderB(nothingTB()),
         orderB(intTB(), intB(1)),
         orderB(intTB(), intB(2)),
         orderB(arrayTB(intTB()), arrayB(intTB())),
-        orderB(arrayTB(intTB()), arrayB(nothingTB())),
         paramRefB(intTB(), 0),
         paramRefB(intTB(), 1),
         paramRefB(stringTB(), 0),

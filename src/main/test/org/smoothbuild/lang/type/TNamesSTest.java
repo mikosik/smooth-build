@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.type.TNamesS.arrayTypeName;
 import static org.smoothbuild.lang.type.TNamesS.funcTypeName;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
+import static org.smoothbuild.lang.type.TNamesS.structNameToCtorName;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
@@ -73,6 +74,15 @@ public class TNamesSTest {
     public void func_type_name() {
       assertThat(funcTypeName(STRING, list(BLOB, BOOL)))
           .isEqualTo("String(Blob, Bool)");
+    }
+  }
+
+  @Nested
+  class _struct_name_to_ctor_name {
+    @Test
+    public void func_type_name() {
+      assertThat(structNameToCtorName("MyStruct"))
+          .isEqualTo("myStruct");
     }
   }
 }
