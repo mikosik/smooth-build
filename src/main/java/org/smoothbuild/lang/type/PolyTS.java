@@ -12,17 +12,17 @@ import java.util.function.Function;
 public sealed abstract class PolyTS implements TypeS
     permits PolyFuncTS {
   private final String name;
-  private final VarSetS freeVars;
+  private final VarSetS quantifiedVars;
   private final MonoTS type;
 
-  public PolyTS(VarSetS freeVars, MonoTS type) {
-    assertFreeVarsArePresentInType(freeVars, type);
-    this.name = calculateName(freeVars, type);
-    this.freeVars = requireNonNull(freeVars);
+  public PolyTS(VarSetS quantifiedVars, MonoTS type) {
+    assertQuantifiedVarsArePresentInType(quantifiedVars, type);
+    this.name = calculateName(quantifiedVars, type);
+    this.quantifiedVars = requireNonNull(quantifiedVars);
     this.type = requireNonNull(type);
   }
 
-  private static void assertFreeVarsArePresentInType(VarSetS freeVars, MonoTS type) {
+  private static void assertQuantifiedVarsArePresentInType(VarSetS freeVars, MonoTS type) {
     checkArgument(type.vars().containsAll(freeVars),
         "Free variable(s) " + freeVars + " are not present in type " + type.q() + ".");
   }
@@ -36,8 +36,8 @@ public sealed abstract class PolyTS implements TypeS
     return name;
   }
 
-  public VarSetS freeVars() {
-    return freeVars;
+  public VarSetS quantifiedVars() {
+    return quantifiedVars;
   }
 
   public MonoTS mono() {
@@ -45,8 +45,8 @@ public sealed abstract class PolyTS implements TypeS
   }
 
   @Override
-  public MonoTS mapFreeVars(Function<VarS, VarS> varMapper) {
-    return type.mapVars(v -> freeVars.contains(v) ? varMapper.apply(v) : v);
+  public MonoTS mapQuantifiedVars(Function<VarS, VarS> varMapper) {
+    return type.mapVars(v -> quantifiedVars.contains(v) ? varMapper.apply(v) : v);
   }
 
   @Override
@@ -55,13 +55,13 @@ public sealed abstract class PolyTS implements TypeS
       return true;
     }
     return object instanceof PolyTS polyFuncS
-        && freeVars.equals(polyFuncS.freeVars)
+        && quantifiedVars.equals(polyFuncS.quantifiedVars)
         && type.equals(polyFuncS.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, freeVars, type);
+    return Objects.hash(name, quantifiedVars, type);
   }
 
   @Override

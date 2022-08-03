@@ -47,6 +47,6 @@ public final class PolyFuncS extends FuncS implements PolyTopRefableS {
 
   @Override
   public String toString() {
-    return type.freeVars() + func.toString();
+    return type.quantifiedVars() + func.toString();
   }
 }

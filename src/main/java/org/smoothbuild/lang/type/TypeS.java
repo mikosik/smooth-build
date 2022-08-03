@@ -14,14 +14,14 @@ import com.google.common.collect.ImmutableList.Builder;
 public sealed interface TypeS extends Named
     permits FuncTS, MonoTS, PolyTS {
 
-  public MonoTS mapFreeVars(Function<VarS, VarS> varMapper);
+  public MonoTS mapQuantifiedVars(Function<VarS, VarS> varMapper);
 
-  public static ImmutableList<MonoTS> prefixFreeVarsWithIndex(List<? extends TypeS> types) {
+  public static ImmutableList<MonoTS> prefixQuantifiedVarsWithIndex(List<? extends TypeS> types) {
     Builder<MonoTS> builder = ImmutableList.builder();
     for (int i = 0; i < types.size(); i++) {
       var type = types.get(i);
       var fullPrefix = Integer.toString(i);
-      var prefixed = type.mapFreeVars(v -> v.prefixed(fullPrefix));
+      var prefixed = type.mapQuantifiedVars(v -> v.prefixed(fullPrefix));
       builder.add(prefixed);
     }
     return builder.build();

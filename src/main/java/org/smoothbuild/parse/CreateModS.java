@@ -4,7 +4,7 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.lang.type.Side.LOWER;
 import static org.smoothbuild.lang.type.TNamesS.isVarName;
-import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
+import static org.smoothbuild.lang.type.TypeS.prefixQuantifiedVarsWithIndex;
 import static org.smoothbuild.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
@@ -201,7 +201,7 @@ public class CreateModS {
     }
 
     private Optional<MonoTS> inferMonoizedBodyT(TypeS bodyT, MonoTS targetT) {
-      var mappedBodyT = bodyT.mapFreeVars(v -> v.prefixed("body"));
+      var mappedBodyT = bodyT.mapQuantifiedVars(v -> v.prefixed("body"));
       var solver = new ConstrSolver();
       try {
         solver.addConstr(constrS(mappedBodyT, targetT));
@@ -357,7 +357,7 @@ public class CreateModS {
             +  funcName + " to monomorphic function.");
         return empty();
       }
-      var prefixedElemTs = prefixFreeVarsWithIndex(elemTs);
+      var prefixedElemTs = prefixQuantifiedVarsWithIndex(elemTs);
       var solver = new ConstrSolver();
 
       var a = TypeFS.var("array.A");

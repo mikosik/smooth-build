@@ -5,7 +5,7 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.type.ConstrS.constrS;
 import static org.smoothbuild.lang.type.Side.LOWER;
-import static org.smoothbuild.lang.type.TypeS.prefixFreeVarsWithIndex;
+import static org.smoothbuild.lang.type.TypeS.prefixQuantifiedVarsWithIndex;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.parse.ConstructExplicitArgs.constructExplicitArgs;
 import static org.smoothbuild.parse.ParseError.parseError;
@@ -131,8 +131,8 @@ public class CallTypeInferrer {
   private Optional<MonoTS> inferCallT(NList<Param> params, FuncTS calleeT,
       ImmutableList<Optional<ArgP>> explicitArgs) {
     var argTs = explicitAndDefaultArgTs(params, explicitArgs);
-    var prefixedArgTs = prefixFreeVarsWithIndex(argTs);
-    var prefixedCalleeT = (FuncTS) calleeT.mapFreeVars(v -> v.prefixed("callee"));
+    var prefixedArgTs = prefixQuantifiedVarsWithIndex(argTs);
+    var prefixedCalleeT = (FuncTS) calleeT.mapQuantifiedVars(v -> v.prefixed("callee"));
     var prefixedParamTs = prefixedCalleeT.params();
     var solver = new ConstrSolver();
     for (int i = 0; i < argTs.size(); i++) {

@@ -27,7 +27,7 @@ public abstract sealed class MonoTS implements TypeS
   }
 
   @Override
-  public MonoTS mapFreeVars(Function<VarS, VarS> varMapper) {
+  public MonoTS mapQuantifiedVars(Function<VarS, VarS> varMapper) {
     return this;
   }
 
