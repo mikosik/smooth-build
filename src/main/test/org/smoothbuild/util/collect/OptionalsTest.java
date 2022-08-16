@@ -1,16 +1,49 @@
 package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Optional.empty;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Optionals.flatMapPair;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class OptionalsTest {
+  private static final BiFunction<Boolean, Integer, Optional<String>> concatBoolAndInt =
+      (Boolean a, Integer b) -> Optional.of(Boolean.toString(a) + b);
+
+  @Nested
+  class _flat_map_pair {
+    @Test
+    public void both_empty() {
+      assertThat(flatMapPair(empty(), empty(), concatBoolAndInt))
+          .isEqualTo(empty());
+    }
+
+    @Test
+    public void first_empty() {
+      assertThat(flatMapPair(empty(), Optional.of(7), concatBoolAndInt))
+          .isEqualTo(empty());
+    }
+
+    @Test
+    public void second_empty() {
+      assertThat(flatMapPair(Optional.of(true), empty(), concatBoolAndInt))
+          .isEqualTo(empty());
+    }
+
+    @Test
+    public void both_present() {
+      assertThat(flatMapPair(Optional.of(true), Optional.of(7), concatBoolAndInt))
+          .isEqualTo(Optional.of("true7"));
+    }
+  }
+
   @Nested
   class _pull_up_iterable {
     @Test
@@ -21,8 +54,8 @@ public class OptionalsTest {
 
     @Test
     public void iterable_with_empty_optional() {
-      assertThat(pullUp(list(Optional.of("abc"), Optional.empty())))
-          .isEqualTo(Optional.empty());
+      assertThat(pullUp(list(Optional.of("abc"), empty())))
+          .isEqualTo(empty());
     }
 
     @Test
@@ -42,8 +75,8 @@ public class OptionalsTest {
 
     @Test
     public void map_with_empty_optional() {
-      assertThat(pullUp(Map.of("key1", Optional.of("abc"), "key2", Optional.empty())))
-          .isEqualTo(Optional.empty());
+      assertThat(pullUp(Map.of("key1", Optional.of("abc"), "key2", empty())))
+          .isEqualTo(empty());
     }
 
     @Test
