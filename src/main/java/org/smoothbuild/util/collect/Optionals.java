@@ -12,6 +12,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 
 public class Optionals {
+  public static <T, S, R> Optional<R> mapPair(Optional<T> first, Optional<S> second,
+      BiFunction<T, S, R> biFunction) {
+    return first.flatMap(f -> second.map(s -> biFunction.apply(f, s)));
+  }
+
   public static <T, S, R> Optional<R> flatMapPair(Optional<T> first, Optional<S> second,
       BiFunction<T, S, Optional<R>> biFunction) {
     return first.flatMap(f -> second.flatMap(s -> biFunction.apply(f, s)));
