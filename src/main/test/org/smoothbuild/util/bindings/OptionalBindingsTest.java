@@ -159,4 +159,33 @@ public class OptionalBindingsTest {
           .isEqualTo(immutableBindings(ImmutableMap.of("name", 3)));
     }
   }
+
+  @Nested
+  class _map {
+    @Test
+    public void map_value() {
+      OptionalBindings<Integer> wrapped = newOptionalBindings(immutableBindings());
+      wrapped.add("name", Optional.of(7));
+      var bindings = wrapped.map(i -> Integer.toString(i));
+      assertThat(bindings.get("name"))
+          .isEqualTo(new Bound<>(Optional.of("7")));
+    }
+
+    @Test
+    public void map_empty_value() {
+      OptionalBindings<Integer> wrapped = newOptionalBindings(immutableBindings());
+      wrapped.add("name", Optional.empty());
+      var bindings = wrapped.map(i -> Integer.toString(i));
+      assertThat(bindings.get("name"))
+          .isEqualTo(new Bound<>(Optional.empty()));
+    }
+
+    @Test
+    public void map_missing_value() {
+      OptionalBindings<Integer> wrapped = newOptionalBindings(immutableBindings());
+      var bindings = wrapped.map(i -> Integer.toString(i));
+      assertThat(bindings.get("name"))
+          .isEqualTo(new Bound<>());
+    }
+  }
 }

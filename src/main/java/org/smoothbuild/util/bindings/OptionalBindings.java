@@ -7,6 +7,7 @@ import static org.smoothbuild.util.collect.Maps.mapValues;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 public abstract class OptionalBindings<E> {
   protected final Map<String, Bound<? extends E>> bindings;
@@ -32,6 +33,20 @@ public abstract class OptionalBindings<E> {
       @Override
       protected Bound<? extends T> getFromOuterScope(String name) {
         return outerScope.get(name);
+      }
+    };
+  }
+
+  public <T> OptionalBindings<T> map(Function<E, T> mapper) {
+    return new OptionalBindings<>() {
+      @Override
+      protected Bound<? extends T> getFromOuterScope(String name) {
+        Bound<? extends E> bound = OptionalBindings.this.get(name);
+        if (bound.value() == null) {
+          return (Bound<? extends T>) bound;
+        } else {
+          return new Bound<>(bound.value().map(mapper));
+        }
       }
     };
   }
