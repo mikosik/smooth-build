@@ -58,6 +58,6 @@ public class VarSetSTest extends TestContext {
   public void to_string() {
     var varSet = varSetS(varC(), varA(), varB());
     assertThat(varSet.toString())
-        .isEqualTo("<A, B, C>");
+        .isEqualTo("<A,B,C>");
   }
 }

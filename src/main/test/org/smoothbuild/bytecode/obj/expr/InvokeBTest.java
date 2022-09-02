@@ -30,7 +30,7 @@ public class InvokeBTest extends TestContext {
   public void creating_invoke_with_too_many_args_causes_exception() {
     var methodT = methodTB(intTB(), list(stringTB()));
     assertCall(() -> invokeB(methodB(methodT), intB(), intB()))
-        .throwsException(argsNotMatchingParamsException("Int, Int", "String"));
+        .throwsException(argsNotMatchingParamsException("Int,Int", "String"));
   }
 
   @Test

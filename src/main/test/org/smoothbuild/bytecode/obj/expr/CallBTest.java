@@ -28,7 +28,7 @@ public class CallBTest extends TestContext {
   @Test
   public void creating_call_with_too_many_args_causes_exception() {
     assertCall(() -> callB(funcB(list(stringTB()), intB()), intB(), intB()))
-        .throwsException(argsNotMatchingParamsException("Int, Int", "String"));
+        .throwsException(argsNotMatchingParamsException("Int,Int", "String"));
   }
 
   @Test

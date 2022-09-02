@@ -73,7 +73,7 @@ public class TNamesSTest {
     @Test
     public void func_type_name() {
       assertThat(funcTypeName(STRING, list(BLOB, BOOL)))
-          .isEqualTo("String(Blob, Bool)");
+          .isEqualTo("String(Blob,Bool)");
     }
   }
 

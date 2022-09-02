@@ -24,7 +24,7 @@ public class TNamesBTest extends TestContext {
     @Test
     public void func_type_name() {
       assertThat(funcTypeName(stringTB(), list(blobTB(), boolTB())))
-          .isEqualTo("String(Blob, Bool)");
+          .isEqualTo("String(Blob,Bool)");
     }
   }
 
@@ -33,7 +33,7 @@ public class TNamesBTest extends TestContext {
     @Test
     public void func_type_name() {
       assertThat(TNamesB.tupleTypeName(list(blobTB(), boolTB())))
-          .isEqualTo("{Blob, Bool}");
+          .isEqualTo("{Blob,Bool}");
     }
   }
 }

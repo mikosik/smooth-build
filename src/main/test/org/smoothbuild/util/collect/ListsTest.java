@@ -462,13 +462,13 @@ public class ListsTest {
       @Test
       public void two_elems_list(){
         assertThat(toCommaSeparatedString(asList(" one ", " two "), String::trim))
-            .isEqualTo("one, two");
+            .isEqualTo("one,two");
       }
 
       @Test
       public void three_elems_list(){
         assertThat(toCommaSeparatedString(asList(" one ", " two ", " three "), String::trim))
-            .isEqualTo("one, two, three");
+            .isEqualTo("one,two,three");
       }
     }
 
@@ -489,13 +489,13 @@ public class ListsTest {
       @Test
       public void two_elems_list(){
         assertThat(toCommaSeparatedString(asList(1, 2)))
-            .isEqualTo("1, 2");
+            .isEqualTo("1,2");
       }
 
       @Test
       public void three_elems_list(){
         assertThat(toCommaSeparatedString(asList(1, 2, 3)))
-            .isEqualTo("1, 2, 3");
+            .isEqualTo("1,2,3");
       }
     }
   }
