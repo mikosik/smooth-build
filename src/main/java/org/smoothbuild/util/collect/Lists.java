@@ -3,7 +3,6 @@ package org.smoothbuild.util.collect;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -61,13 +60,6 @@ public class Lists {
     return stream(iterable)
         .map(func)
         .collect(toImmutableList());
-  }
-
-  public static <E, R> List<R> mapM(
-      Iterable<E> iterable, Function<? super E, ? extends R> func) {
-    return stream(iterable)
-        .map(func)
-        .collect(toList());
   }
 
   public static <T, S, R> ImmutableList<R> zip(

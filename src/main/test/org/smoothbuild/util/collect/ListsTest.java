@@ -10,7 +10,6 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Lists.mapM;
 import static org.smoothbuild.util.collect.Lists.sane;
 import static org.smoothbuild.util.collect.Lists.skip;
 import static org.smoothbuild.util.collect.Lists.sort;
@@ -272,27 +271,6 @@ public class ListsTest {
     @Test
     public void mapping_with_two_elems(){
       assertThat(map(asList("abc", "def"), String::toUpperCase))
-          .containsExactly("ABC", "DEF");
-    }
-  }
-
-  @Nested
-  class _mapM {
-    @Test
-    public void returns_empty_list_for_empty_arg(){
-      assertThat(mapM(new ArrayList<String>(), String::toUpperCase))
-          .isEmpty();
-    }
-
-    @Test
-    public void returns_mapped_one_elem(){
-      assertThat(mapM(asList("abc"), String::toUpperCase))
-          .containsExactly("ABC");
-    }
-
-    @Test
-    public void mapping_with_two_elems(){
-      assertThat(mapM(asList("abc", "def"), String::toUpperCase))
           .containsExactly("ABC", "DEF");
     }
   }
