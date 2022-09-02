@@ -1,10 +1,12 @@
 package org.smoothbuild.lang.base;
 
+import static java.util.Objects.requireNonNull;
+
 public class WithLocImpl implements WithLoc {
   private final Loc loc;
 
   public WithLocImpl(Loc loc) {
-    this.loc = loc;
+    this.loc = requireNonNull(loc);
   }
 
   @Override
