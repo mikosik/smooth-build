@@ -16,15 +16,12 @@ import com.google.common.collect.ImmutableList;
 public class CallJob extends AbstractJob {
   private final Job funcJ;
   private final ImmutableList<Job> argJs;
-  private final List<Job> bindings;
   private final JobCreator jobCreator;
 
-  public CallJob(TypeB type, Job funcJ, ImmutableList<Job> argJs, Loc loc,
-      List<Job> bindings, JobCreator jobCreator) {
+  public CallJob(TypeB type, Job funcJ, ImmutableList<Job> argJs, Loc loc, JobCreator jobCreator) {
     super(type, loc);
     this.funcJ = funcJ;
     this.argJs = argJs;
-    this.bindings = bindings;
     this.jobCreator = jobCreator;
   }
 
@@ -39,7 +36,7 @@ public class CallJob extends AbstractJob {
 
   private void onFuncJobCompleted(CnstB cnstB, Worker worker, Consumer<CnstB> res) {
     var funcB = (FuncB) cnstB;
-    jobCreator.callFuncEagerJob(funcB, argJs, loc(), bindings)
+    jobCreator.callFuncEagerJob(funcB, argJs, loc())
         .schedule(worker)
         .addConsumer(res);
   }

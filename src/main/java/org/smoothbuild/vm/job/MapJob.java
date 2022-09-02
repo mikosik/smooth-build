@@ -5,7 +5,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.vm.job.TaskKind.ORDER;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
@@ -20,15 +19,12 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 public class MapJob extends AbstractJob {
   private final Job arrayJ;
   private final Job funcJ;
-  private final List<Job> bindings;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, List<Job> bindings,
-      JobCreator jobCreator) {
+  public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, JobCreator jobCreator) {
     super(type, loc);
     this.arrayJ = arrayJ;
     this.funcJ = funcJ;
-    this.bindings = bindings;
     this.jobCreator = jobCreator;
   }
 
@@ -55,7 +51,7 @@ public class MapJob extends AbstractJob {
 
   private Job mapElementJob(CnstB elem) {
     var elemJ = elemJob(elem);
-    return jobCreator.callEagerJob(funcJ, list(elemJ), funcJ.loc(), bindings);
+    return jobCreator.callEagerJob(funcJ, list(elemJ), funcJ.loc());
   }
 
   private Job elemJob(CnstB elem) {
