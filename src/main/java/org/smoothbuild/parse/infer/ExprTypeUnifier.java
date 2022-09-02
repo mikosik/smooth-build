@@ -156,7 +156,7 @@ public class ExprTypeUnifier {
   private Optional<TypeS> unifyPolyRef(RefP ref, SchemaS schema) {
     var monoizationMapping = toMap(
         schema.quantifiedVars().asList(), v -> unifier.generateUniqueVar());
-    var mappedSchema = schema.mapQuantifiedVars(monoizationMapping::get);
+    var mappedSchema = schema.monoize(monoizationMapping::get);
     ref.setMonoizationMapping(monoizationMapping);
     return Optional.of(mappedSchema);
   }

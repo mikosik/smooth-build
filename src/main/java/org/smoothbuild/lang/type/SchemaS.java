@@ -44,8 +44,8 @@ public sealed class SchemaS implements TypelikeS
     return type;
   }
 
-  public TypeS mapQuantifiedVars(Function<VarS, TypeS> varMapper) {
-    return type.mapVars(v -> quantifiedVars.contains(v) ? varMapper.apply(v) : v);
+  public TypeS monoize(Function<VarS, TypeS> mapper) {
+    return type.mapVars(v -> quantifiedVars.contains(v) ? mapper.apply(v) : v);
   }
 
   @Override

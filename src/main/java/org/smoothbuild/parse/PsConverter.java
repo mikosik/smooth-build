@@ -178,7 +178,7 @@ public class PsConverter {
       // cast is safe because varMap is immutable
       @SuppressWarnings("unchecked")
       var varMap = (ImmutableMap<VarS, TypeS>) ref.monoizationMapping();
-      var type = polyRefableS.schema().mapQuantifiedVars(ref.monoizationMapper());
+      var type = polyRefableS.schema().monoize(ref.monoizationMapper());
       return new MonoizeS(type, varMap, polyRefableS, ref.loc());
     }
   }

@@ -872,7 +872,7 @@ public class TestContext {
 
   public static MonoizeS monoizeS(int loc, ImmutableMap<VarS, TypeS> varMap,
       PolyRefableS polyRefableS) {
-    var type = polyRefableS.schema().mapQuantifiedVars(varMap::get);
+    var type = polyRefableS.schema().monoize(varMap::get);
     return new MonoizeS(type, varMap, polyRefableS, loc(loc));
   }
 
