@@ -8,11 +8,12 @@ import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.Hash;
+import org.smoothbuild.util.collect.Named;
 
 /**
  * Category of ObjH.
  */
-public abstract class CatB {
+public abstract class CatB implements Named {
   private final String name;
   private final Hash hash;
   private final CatKindB kind;
@@ -23,12 +24,9 @@ public abstract class CatB {
     this.kind = kind;
   }
 
+  @Override
   public String name() {
     return name;
-  }
-
-  public String q() {
-    return "`" + name() + "`";
   }
 
   /**

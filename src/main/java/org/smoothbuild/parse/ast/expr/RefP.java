@@ -5,33 +5,22 @@ import static java.util.Objects.requireNonNullElse;
 import java.util.function.Function;
 
 import org.smoothbuild.lang.base.Loc;
-import org.smoothbuild.lang.base.WithLocImpl;
+import org.smoothbuild.lang.base.NalImpl;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
-import org.smoothbuild.util.Strings;
 
 import com.google.common.collect.ImmutableMap;
 
-public final class RefP extends WithLocImpl implements ExprP {
-  private final String name;
+public final class RefP extends NalImpl implements ExprP {
   private ImmutableMap<VarS, ? extends TypeS> monoizationMapping;
 
   public RefP(String name, Loc loc) {
-    super(loc);
-    this.name = name;
-  }
-
-  public String name() {
-    return name;
-  }
-
-  public String q() {
-    return Strings.q(name);
+    super(name, loc);
   }
 
   @Override
   public String toString() {
-    return "RefP(`" + name + "`)";
+    return "RefP(`" + q() + "`)";
   }
 
   public void setMonoizationMapping(ImmutableMap<VarS, ? extends TypeS> monoizationMapping) {
