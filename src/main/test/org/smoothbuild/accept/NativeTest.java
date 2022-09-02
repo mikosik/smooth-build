@@ -31,190 +31,192 @@ import org.smoothbuild.testing.func.nativ.ThrowRandomException;
 
 public class NativeTest extends AcceptanceTestCase {
   @Nested
-  class _native_value {
-    @Test
-    public void without_body_is_not_legal() throws Exception {
-      createUserNativeJar(ReturnAbc.class);
-      createUserModule(format("""
+  class _native {
+    @Nested
+    class _value {
+      @Test
+      public void without_body_is_not_legal() throws Exception {
+        createUserNativeJar(ReturnAbc.class);
+        createUserModule(format("""
           @Native("%s")
           String illegalValue;
           """, ReturnAbc.class.getCanonicalName()));
-      evaluate("result");
-      assertThat(logs())
-          .contains(userError(1, "Value cannot have @Native annotation."));
-    }
+        evaluate("result");
+        assertThat(logs())
+            .contains(userError(1, "Value cannot have @Native annotation."));
+      }
 
-    @Test
-    public void with_body_is_not_legal() throws Exception {
-      createUserNativeJar(ReturnAbc.class);
-      createUserModule(format("""
+      @Test
+      public void with_body_is_not_legal() throws Exception {
+        createUserNativeJar(ReturnAbc.class);
+        createUserModule(format("""
           @Native("%s")
           String illegalValue = "abc";
           """, ReturnAbc.class.getCanonicalName()));
-      evaluate("result");
-      assertThat(logs())
-          .contains(userError(1, "Value cannot have @Native annotation."));
+        evaluate("result");
+        assertThat(logs())
+            .contains(userError(1, "Value cannot have @Native annotation."));
+      }
     }
-  }
 
-  @Nested
-  class _native_func {
-    @Test
-    public void can_return_passed_arg() throws Exception {
-      createUserNativeJar(StringIdentity.class);
-      createUserModule(format("""
+    @Nested
+    class func_ {
+      @Test
+      public void can_return_passed_arg() throws Exception {
+        createUserNativeJar(StringIdentity.class);
+        createUserModule(format("""
             @Native("%s")
             String stringIdentity(String string);
             result = stringIdentity("abc");
             """, StringIdentity.class.getCanonicalName()));
-      evaluate("result");
-      assertThat(artifact())
-          .isEqualTo(stringB("abc"));
-    }
+        evaluate("result");
+        assertThat(artifact())
+            .isEqualTo(stringB("abc"));
+      }
 
-    @Test
-    public void without_native_jar_file_causes_error() throws Exception {
-      createUserModule("""
+      @Test
+      public void without_native_jar_file_causes_error() throws Exception {
+        createUserModule("""
             @Native("MissingClass")
             String myFunc();
             result = myFunc();
             """);
-      evaluate("result");
-      assertThat(logs())
-          .contains(
-              userFatal(1, "Error loading native jar: File '{prj}/build.jar' doesn't exist."));
-    }
+        evaluate("result");
+        assertThat(logs())
+            .contains(
+                userFatal(1, "Error loading native jar: File '{prj}/build.jar' doesn't exist."));
+      }
 
-    @Test
-    public void exception_from_native_is_reported_as_error() throws Exception {
-      createUserNativeJar(ThrowException.class);
-      createUserModule(format("""
+      @Test
+      public void exception_from_native_is_reported_as_error() throws Exception {
+        createUserNativeJar(ThrowException.class);
+        createUserModule(format("""
             @Native("%s")
             A throwException();
             Int result = throwException();
             """, ThrowException.class.getCanonicalName()));
-      evaluate("result");
-      assertThat(logs().size())
-          .isEqualTo(1);
-      var log = logs().get(0);
-      assertThat(log.level())
-          .isEqualTo(ERROR);
-      assertThat(log.message())
-          .startsWith("Execution failed with:\n"
-              + "java.lang.RuntimeException: `throwException` threw java exception from its "
-              + "native code.");
-    }
+        evaluate("result");
+        assertThat(logs().size())
+            .isEqualTo(1);
+        var log = logs().get(0);
+        assertThat(log.level())
+            .isEqualTo(ERROR);
+        assertThat(log.message())
+            .startsWith("Execution failed with:\n"
+                + "java.lang.RuntimeException: `throwException` threw java exception from its "
+                + "native code.");
+      }
 
-    @Test
-    public void error_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
-      createUserNativeJar(ThrowRandomException.class);
-      createUserModule(format("""
+      @Test
+      public void error_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
+        createUserNativeJar(ThrowRandomException.class);
+        createUserModule(format("""
             @Native("%s")
             String throwRandomException();
             result = throwRandomException();
             """, ThrowRandomException.class.getCanonicalName()));
 
-      evaluate("result");
-      assertLogsContainProblem();
-      String timestamp1 = fetchTimestamp(logs().get(0).message());
+        evaluate("result");
+        assertLogsContainProblem();
+        String timestamp1 = fetchTimestamp(logs().get(0).message());
 
-      resetState();
-      evaluate("result");
-      assertLogsContainProblem();
-      String timestamp2 = fetchTimestamp(logs().get(0).message());
+        resetState();
+        evaluate("result");
+        assertLogsContainProblem();
+        String timestamp2 = fetchTimestamp(logs().get(0).message());
 
-      assertThat(timestamp1)
-          .isNotEqualTo(timestamp2);
-    }
+        assertThat(timestamp1)
+            .isNotEqualTo(timestamp2);
+      }
 
-    @Test
-    public void error_reported_is_logged() throws Exception {
-      createUserNativeJar(ReportFixedError.class);
-      createUserModule(format("""
+      @Test
+      public void error_reported_is_logged() throws Exception {
+        createUserNativeJar(ReportFixedError.class);
+        createUserModule(format("""
             @Native("%s")
             A reportFixedError();
             Int result = reportFixedError();
             """, ReportFixedError.class.getCanonicalName()));
-      evaluate("result");
-      assertThat(logs())
-          .containsExactly(error("some error message"));
-    }
+        evaluate("result");
+        assertThat(logs())
+            .containsExactly(error("some error message"));
+      }
 
-    @Test
-    public void func_with_illegal_impl_causes_error() throws Exception {
-      var clazz = MissingMethod.class;
-      createUserNativeJar(clazz);
-      String className = clazz.getCanonicalName();
-      createUserModule(format("""
+      @Test
+      public void func_with_illegal_impl_causes_error() throws Exception {
+        var clazz = MissingMethod.class;
+        createUserNativeJar(clazz);
+        String className = clazz.getCanonicalName();
+        createUserModule(format("""
               @Native("%s")
               String wrongMethodName();
               result = wrongMethodName();
               """, className));
-      evaluate("result");
-      assertThat(logs())
-          .containsExactly(methodLoadingError(className, "wrongMethodName",
-              "Class '" + className + "' does not have 'func' method."));
-    }
+        evaluate("result");
+        assertThat(logs())
+            .containsExactly(methodLoadingError(className, "wrongMethodName",
+                "Class '" + className + "' does not have 'func' method."));
+      }
 
-    @Nested
-    class _error_is_reported_when_java_method_returns {
-      @Test
-      public void null_without_logging_error() throws Exception {
-        createUserNativeJar(ReturnNull.class);
-        String className = ReturnNull.class.getCanonicalName();
-        createUserModule(format("""
+      @Nested
+      class _error_is_reported_when_java_method_returns {
+        @Test
+        public void null_without_logging_error() throws Exception {
+          createUserNativeJar(ReturnNull.class);
+          String className = ReturnNull.class.getCanonicalName();
+          createUserModule(format("""
             @Native("%s")
             String returnNull();
             result = returnNull();
             """, className));
-        evaluate("result");
-        assertThat(logs())
-            .containsExactly(faultyNullReturnedError("returnNull"));
-      }
+          evaluate("result");
+          assertThat(logs())
+              .containsExactly(faultyNullReturnedError("returnNull"));
+        }
 
-      @Test
-      public void null_and_logs_only_warning() throws Exception {
-        createUserNativeJar(ReportWarningAndReturnNull.class);
-        createUserModule(format("""
+        @Test
+        public void null_and_logs_only_warning() throws Exception {
+          createUserNativeJar(ReportWarningAndReturnNull.class);
+          createUserModule(format("""
             @Native("%s")
             String reportWarning();
             result = reportWarning();
             """, ReportWarningAndReturnNull.class.getCanonicalName()));
-        evaluate("result");
-        assertThat(logs())
-            .contains(faultyNullReturnedError("reportWarning"));
-      }
+          evaluate("result");
+          assertThat(logs())
+              .contains(faultyNullReturnedError("reportWarning"));
+        }
 
-      @Test
-      public void non_null_and_logs_error() throws Exception {
-        createUserNativeJar(ReportErrorAndReturnNonNull.class);
-        createUserModule(format("""
+        @Test
+        public void non_null_and_logs_error() throws Exception {
+          createUserNativeJar(ReportErrorAndReturnNonNull.class);
+          createUserModule(format("""
             @Native("%s")
             String reportErrorAndReturnValue();
             result = reportErrorAndReturnValue();
             """, ReportErrorAndReturnNonNull.class.getCanonicalName()));
-        evaluate("result");
-        assertThat(logs())
-            .contains(nonNullValueAndError("reportErrorAndReturnValue"));
-      }
+          evaluate("result");
+          assertThat(logs())
+              .contains(nonNullValueAndError("reportErrorAndReturnValue"));
+        }
 
-      @Test
-      public void object_of_wrong_type() throws Exception {
-        createUserNativeJar(BrokenIdentity.class);
-        createUserModule(format("""
+        @Test
+        public void object_of_wrong_type() throws Exception {
+          createUserNativeJar(BrokenIdentity.class);
+          createUserModule(format("""
             @Native("%s")
             A brokenIdentity(A value);
             Int result = brokenIdentity(7);
             """, BrokenIdentity.class.getCanonicalName()));
-        evaluate("result");
-        assertThat(logs())
-            .containsExactly(faultyTypeOfReturnedObject("brokenIdentity", "Int", "String"));
-      }
+          evaluate("result");
+          assertThat(logs())
+              .containsExactly(faultyTypeOfReturnedObject("brokenIdentity", "Int", "String"));
+        }
 
-      @Test
-      public void struct_of_wrong_type() throws Exception {
-        createUserNativeJar(ReturnStringStruct.class);
-        createUserModule(format("""
+        @Test
+        public void struct_of_wrong_type() throws Exception {
+          createUserNativeJar(ReturnStringStruct.class);
+          createUserModule(format("""
             Person {
               String firstName,
               String lastName,
@@ -223,42 +225,43 @@ public class NativeTest extends AcceptanceTestCase {
             Person returnStringStruct();
             result = returnStringStruct();
             """, ReturnStringStruct.class.getCanonicalName()));
-        evaluate("result");
-        assertThat(logs())
-            .containsExactly(
-                faultyTypeOfReturnedObject("returnStringStruct", "{String,String}", "{String}"));
-      }
+          evaluate("result");
+          assertThat(logs())
+              .containsExactly(
+                  faultyTypeOfReturnedObject("returnStringStruct", "{String,String}", "{String}"));
+        }
 
-      @Test
-      public void array_of_wrong_type() throws Exception {
-        createUserNativeJar(EmptyStringArray.class);
-        createUserModule(format("""
+        @Test
+        public void array_of_wrong_type() throws Exception {
+          createUserNativeJar(EmptyStringArray.class);
+          createUserModule(format("""
             @Native("%s")
             [Blob] emptyStringArray();
             result = emptyStringArray();
             """, EmptyStringArray.class.getCanonicalName()));
-        evaluate("result");
-        assertThat(logs())
-            .containsExactly(
-                faultyTypeOfReturnedObject("emptyStringArray", "[Blob]", "[String]"));
-      }
+          evaluate("result");
+          assertThat(logs())
+              .containsExactly(
+                  faultyTypeOfReturnedObject("emptyStringArray", "[Blob]", "[String]"));
+        }
 
-      @Test
-      public void array_with_added_elem_of_wrong_type() throws Exception {
-        createUserNativeJar(AddElementOfWrongTypeToArray.class);
-        createUserModule(format("""
+        @Test
+        public void array_with_added_elem_of_wrong_type() throws Exception {
+          createUserNativeJar(AddElementOfWrongTypeToArray.class);
+          createUserModule(format("""
             @Native("%s")
             [Blob] addElementOfWrongTypeToArray();
             result = addElementOfWrongTypeToArray();
             """, AddElementOfWrongTypeToArray.class.getCanonicalName()));
-        evaluate("result");
-        String message = logs().get(0).message();
-        assertThat(message)
-            .startsWith("Execution failed with:\n"
-                + "java.lang.RuntimeException: `addElementOfWrongTypeToArray`"
-                + " threw java exception from its native code.");
-        assertThat(message)
-            .contains("Element type must be Blob but was String.");
+          evaluate("result");
+          String message = logs().get(0).message();
+          assertThat(message)
+              .startsWith("Execution failed with:\n"
+                  + "java.lang.RuntimeException: `addElementOfWrongTypeToArray`"
+                  + " threw java exception from its native code.");
+          assertThat(message)
+              .contains("Element type must be Blob but was String.");
+        }
       }
     }
   }
