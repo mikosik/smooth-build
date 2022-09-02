@@ -397,8 +397,8 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyS(natFuncS(
-                2, stringTS(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), false))));
+            .containsRefable(polyNatFuncS(
+                2, stringTS(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), false)));
       }
 
       @Test
@@ -408,8 +408,8 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyS(natFuncS(
-                2, stringTS(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), true))));
+            .containsRefable(polyNatFuncS(
+                2, stringTS(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), true)));
       }
 
       @Test
@@ -429,12 +429,11 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void bytecode_func() {
         module("""
-          @Bytecode("Impl.met")
+          @Bytecode("impl")
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyS(annFuncS(
-                2, bytecodeS(stringS(1, "Impl.met"), loc(1)), stringTS(), "myFunc", nlist())));
+            .containsRefable(polyByteFuncS(2, stringTS(), "myFunc", nlist()));
       }
 
       @Test

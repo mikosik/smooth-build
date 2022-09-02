@@ -68,8 +68,7 @@ public class EvaluatorTest  extends TestContext {
     @Test
     public void call_polymorphic() {
       var a = varA();
-      var funcS = polyS(defFuncS(
-          arrayTS(a), "n", nlist(itemS(a, "e")), orderS(a, paramRefS(a, "e"))));
+      var funcS = polyDefFuncS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS(a, paramRefS(a, "e")));
       var callS = callS(arrayTS(intTS()), monoizeS(varMap(a, intTS()), funcS), intS(7));
       assertThat(evaluate(callS))
           .isEqualTo(arrayB(intTB(), intB(7)));
@@ -96,7 +95,7 @@ public class EvaluatorTest  extends TestContext {
           .thenReturn(Try.result(funcB));
 
       var a = varA();
-      var byteFuncS = polyS(byteFuncS(className, a, "myFunc", nlist(itemS(a, "p"))));
+      var byteFuncS = polyByteFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
       assertThat(evaluate(monoizeS(varMap(a, intTS()), byteFuncS)))
           .isEqualTo(funcB);
     }
@@ -158,7 +157,7 @@ public class EvaluatorTest  extends TestContext {
     @Test
     public void monoize_poly_func() {
       var a = varA();
-      var funcS = polyS(defFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e")));
+      var funcS = polyDefFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
       var monoizeS = monoizeS(varMap(a, intTS()), funcS);
       assertThat(evaluate(monoizeS))
           .isEqualTo(idFuncB());

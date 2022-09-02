@@ -974,6 +974,10 @@ public class TestContext {
     return new ItemS(type, name, body, loc(line));
   }
 
+  public PolyFuncS polyByteFuncS(AnnS ann, int line, TypeS resT, String name, NList<ItemS> params) {
+    return polyS(annFuncS(line, ann, resT, name, params));
+  }
+
   public PolyFuncS polyByteFuncS(int line, TypeS resT, String name, NList<ItemS> params) {
     return polyS(byteFuncS(line, resT, name, params));
   }
@@ -1192,7 +1196,7 @@ public class TestContext {
 
   public PolyFuncS idFuncS() {
     var a = varA();
-    return polyS(defFuncS(a, "myId", nlist(itemS(a, "p")), paramRefS(a, "p")));
+    return polyS(defFuncS(a, "myId", nlist(itemS(a, "a")), paramRefS(a, "a")));
   }
 
   public DefFuncS intIdFuncS() {
@@ -1203,7 +1207,7 @@ public class TestContext {
     return defFuncS(intTS(), "myReturnInt", nlist(), intS(1, 3));
   }
 
-  public PolyFuncS polyS(FuncS funcS) {
+  private PolyFuncS polyS(FuncS funcS) {
     return PolyFuncS.polyFuncS(newFuncSchema(funcS.type()), funcS);
   }
 

@@ -246,7 +246,7 @@ public class SbConverterTest extends TestContext {
             var bIdMonoFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
 
             var bodyS = callS(b, bIdMonoFuncS, paramRefS(b, "p"));
-            var wrapFuncS = polyS(defFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS));
+            var wrapFuncS = polyDefFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
             var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
 
             var idFuncB = funcB(intTB(), list(intTB()), paramRefB(intTB(), 0));
@@ -261,7 +261,7 @@ public class SbConverterTest extends TestContext {
             var filePath = filePath(PRJ, path("my/path"));
             var classBinaryName = "class.binary.name";
             var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-            var natFuncS = polyS(natFuncS(funcTS, "myIdentity", nlist(itemS(a, "param")), ann));
+            var natFuncS = polyNatFuncS(funcTS, "myIdentity", nlist(itemS(a, "param")), ann);
 
             var resT = intTB();
             ImmutableList<TypeB> paramTs = list(intTB());
@@ -283,12 +283,10 @@ public class SbConverterTest extends TestContext {
             var clazz = ReturnIdFunc.class;
             var a = varA();
             var funcTS = funcTS(a, list(a));
-            var filePath = filePath(PRJ, path("my/path"));
+            var filePath = smoothFilePath();
             var classBinaryName = clazz.getCanonicalName();
-            var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-            var byteFuncS = polyS(
-                annFuncS(ann, funcTS, modPath(filePath), "myFunc", nlist(itemS(a, "p")),
-                    loc(filePath, 2)));
+            var ann = bytecodeS(classBinaryName, loc(filePath, 1));
+            var byteFuncS = polyByteFuncS(ann, 1, funcTS.res(), "myFunc", nlist(itemS(a, "p")));
 
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
