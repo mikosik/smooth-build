@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.run.FindTopObjS.findTopObjS;
+import static org.smoothbuild.run.FindTopRefables.findTopRefables;
 
 import java.util.List;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class BuildRunner {
     }
 
     var defs = defsOpt.get();
-    var refablesOpt = findTopObjS(reporter, defs, names);
+    var refablesOpt = findTopRefables(reporter, defs, names);
     if (refablesOpt.isEmpty()) {
       return Optional.empty();
     }

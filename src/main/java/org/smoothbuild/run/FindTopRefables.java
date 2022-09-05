@@ -12,8 +12,8 @@ import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
-public class FindTopObjS {
-  public static Optional<List<MonoRefableS>> findTopObjS(
+public class FindTopRefables {
+  public static Optional<List<MonoRefableS>> findTopRefables(
       Reporter reporter, DefsS defs, List<String> names) {
     var topRefables = defs.refables();
     var topRefs = new HashSet<MonoRefableS>();
