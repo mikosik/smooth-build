@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.ps.infer;
 
 import static com.google.common.collect.Maps.toMap;
-import static org.smoothbuild.compile.ps.ParseError.parseError;
+import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.compile.ps.infer.InferPositionedArgs.inferPositionedArgs;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Optionals.flatMapPair;
@@ -105,7 +105,7 @@ public class ExprTypeUnifier {
       unifier.unify(funcT, calleeT);
       return Optional.of(resT);
     } catch (UnifierExc e) {
-      logger.log(parseError(loc, "Illegal call."));
+      logger.log(compileError(loc, "Illegal call."));
       return Optional.empty();
     }
   }
@@ -132,7 +132,7 @@ public class ExprTypeUnifier {
       try {
         unifier.unify(elemVar, elemT);
       } catch (UnifierExc e) {
-        logger.log(parseError(
+        logger.log(compileError(
             loc, "Cannot infer type for array literal. Its element types are not compatible."));
         return Optional.empty();
       }
@@ -167,13 +167,13 @@ public class ExprTypeUnifier {
       if (unifier.resolve(t) instanceof StructTS structTS) {
         var itemSigS = structTS.fields().get(select.field());
         if (itemSigS == null) {
-          logger.log(parseError(select.loc(), "Unknown field `" + select.field() + "`."));
+          logger.log(compileError(select.loc(), "Unknown field `" + select.field() + "`."));
           return Optional.empty();
         } else {
           return Optional.of(itemSigS.type());
         }
       } else {
-        logger.log(parseError(select.loc(), "Illegal field access."));
+        logger.log(compileError(select.loc(), "Illegal field access."));
         return Optional.empty();
       }
     });

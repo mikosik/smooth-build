@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.ps.infer;
 
+import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Maps.mapValues;
@@ -15,7 +16,6 @@ import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.lang.type.tool.UnusedVarsGenerator;
-import org.smoothbuild.compile.ps.ParseError;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -60,7 +60,7 @@ public class TypeInferrerResolve {
     var unresolvedParamTs = unresolvedFuncT.params();
     var resolvedParamTs = resolvedFuncT.params();
     if (!allMatch(unresolvedParamTs, resolvedParamTs, TypeS::equals)) {
-      logger.log(ParseError.parseError(func.loc(), "<Add error message here> 4"));
+      logger.log(compileError(func.loc(), "<Add error message here> 4"));
       return Optional.empty();
     }
 
@@ -149,7 +149,7 @@ public class TypeInferrerResolve {
     var resolvedMonoizationMapping = mapValues(refP.monoizationMapping(), unifier::resolve);
     refP.setMonoizationMapping(resolvedMonoizationMapping);
     if (resolvedMonoizationMapping.values().stream().anyMatch(this::hasPrefixedVar)) {
-      logger.log(ParseError.parseError(refP.loc(), "Cannot infer actual type parameters."));
+      logger.log(compileError(refP.loc(), "Cannot infer actual type parameters."));
       return false;
     }
     return true;

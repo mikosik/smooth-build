@@ -6,12 +6,12 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.WithLoc;
 import org.smoothbuild.out.log.Log;
 
-public class ParseError {
-  public static Log parseError(WithLoc withLoc, String message) {
-    return parseError(withLoc.loc(), message);
+public class CompileError {
+  public static Log compileError(WithLoc withLoc, String message) {
+    return compileError(withLoc.loc(), message);
   }
 
-  public static Log parseError(Loc loc, String message) {
+  public static Log compileError(Loc loc, String message) {
     return error(loc.toString() + ": " + message);
   }
 }

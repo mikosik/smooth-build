@@ -2,7 +2,7 @@ package org.smoothbuild.compile.ps;
 
 import static java.lang.String.join;
 import static org.smoothbuild.compile.lang.base.Loc.loc;
-import static org.smoothbuild.compile.ps.ParseError.parseError;
+import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.util.Antlr.errorLine;
 import static org.smoothbuild.util.Antlr.markingLine;
@@ -61,7 +61,7 @@ public class ParseModule {
           message,
           errorLine(recognizer, lineNumber),
           markingLine((Token) offendingSymbol, charNumber));
-      logger.log(parseError(loc, text));
+      logger.log(compileError(loc, text));
     }
 
     private Loc createLoc(Object offendingSymbol, int line) {
@@ -101,7 +101,7 @@ public class ParseModule {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      logger.log(parseError(locOf(filePath, token), message));
+      logger.log(compileError(locOf(filePath, token), message));
     }
   }
 

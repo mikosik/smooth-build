@@ -5,6 +5,7 @@ import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.smoothbuild.compile.lang.define.ItemS;
-import org.smoothbuild.compile.ps.ParseError;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -85,7 +85,7 @@ public class InferPositionedArgs {
         .stream()
         .dropWhile(a -> !(a instanceof NamedArgP))
         .dropWhile(a -> a instanceof NamedArgP)
-        .map(a -> ParseError.parseError(a, "Positional arguments must be placed before named arguments."))
+        .map(a -> compileError(a, "Positional arguments must be placed before named arguments."))
         .collect(toList());
   }
 
@@ -95,7 +95,7 @@ public class InferPositionedArgs {
         .filter(a -> a instanceof NamedArgP)
         .map(a -> (NamedArgP) a)
         .filter(a -> params.isEmpty() || !params.get().containsName(a.name()))
-        .map(a -> ParseError.parseError(a, "Unknown parameter " + a.q() + "."))
+        .map(a -> compileError(a, "Unknown parameter " + a.q() + "."))
         .collect(toList());
   }
 
@@ -108,7 +108,7 @@ public class InferPositionedArgs {
           .filter(a -> a instanceof NamedArgP)
           .map(a -> (NamedArgP) a)
           .filter(a -> !names.add(a.name()))
-          .map(a -> ParseError.parseError(a, a.q() + " is already assigned."))
+          .map(a -> compileError(a, a.q() + " is already assigned."))
           .collect(toList());
     } else {
       return list();
@@ -124,6 +124,6 @@ public class InferPositionedArgs {
 
   private static Log paramsMustBeSpecifiedError(CallP call, int i, NList<ItemS> params) {
     String paramName = params.get(i).nameO().map(n -> "`" + n + "`").orElse("#" + (i + 1));
-    return ParseError.parseError(call, "Parameter " + paramName + " must be specified.");
+    return compileError(call, "Parameter " + paramName + " must be specified.");
   }
 }

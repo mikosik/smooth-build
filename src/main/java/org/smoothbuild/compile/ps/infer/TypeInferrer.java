@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.ps.infer;
 
+import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Optional;
@@ -17,7 +18,6 @@ import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
-import org.smoothbuild.compile.ps.ParseError;
 import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
@@ -70,7 +70,7 @@ public class TypeInferrer {
           } else {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
                 .formatted(field.q(), t.q());
-            logger.log(ParseError.parseError(field.type(), message));
+            logger.log(compileError(field.type(), message));
             return Optional.empty();
           }
         });
@@ -190,7 +190,7 @@ public class TypeInferrer {
       unifier.unify(evalT, bodyT);
       return resolver.apply(refable, evalT);
     } catch (UnifierExc e) {
-      logger.log(ParseError.parseError(
+      logger.log(compileError(
           refable.loc(), refable.q() + " body type is not equal to declared type."));
       return Optional.empty();
     }

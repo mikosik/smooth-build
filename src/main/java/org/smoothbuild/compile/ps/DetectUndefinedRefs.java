@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps;
 
-import static org.smoothbuild.compile.ps.ParseError.parseError;
+import static org.smoothbuild.compile.ps.CompileError.compileError;
 
 import java.util.HashSet;
 import java.util.List;
@@ -94,7 +94,7 @@ public class DetectUndefinedRefs {
   private void visitRef(RefP refP) {
     var name = refP.name();
     if (!definedNames.contains(name)) {
-      logs.log(parseError(refP, Strings.q(name) + " is undefined."));
+      logs.log(compileError(refP, Strings.q(name) + " is undefined."));
     }
   }
 }

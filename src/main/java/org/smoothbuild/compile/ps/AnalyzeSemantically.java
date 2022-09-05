@@ -6,7 +6,7 @@ import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.lang.type.TNamesS.isVarName;
-import static org.smoothbuild.compile.ps.ParseError.parseError;
+import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class AnalyzeSemantically {
         try {
           blob.decodeByteString();
         } catch (DecodeHexExc e) {
-          logger.log(parseError(blob, "Illegal Blob literal. " + e.getMessage()));
+          logger.log(compileError(blob, "Illegal Blob literal. " + e.getMessage()));
         }
       }
     }.visitAst(ast);
@@ -74,7 +74,7 @@ public class AnalyzeSemantically {
         try {
           intP.decodeBigInteger();
         } catch (NumberFormatException e) {
-          logger.log(parseError(intP, "Illegal Int literal: `" + intP.literal() + "`."));
+          logger.log(compileError(intP, "Illegal Int literal: `" + intP.literal() + "`."));
         }
       }
     }.visitAst(ast);
@@ -88,7 +88,7 @@ public class AnalyzeSemantically {
         try {
           string.calculateUnescaped();
         } catch (UnescapingFailedExc e) {
-          logger.log(parseError(string, e.getMessage()));
+          logger.log(compileError(string, e.getMessage()));
         }
       }
     }.visitAst(ast);
@@ -104,7 +104,7 @@ public class AnalyzeSemantically {
           visitType(func.resT());
           func.paramTs().forEach(this::visitType);
         } else if (!isDefinedType(type)) {
-          logger.log(parseError(type.loc(), type.q() + " type is undefined."));
+          logger.log(compileError(type.loc(), type.q() + " type is undefined."));
         }
       }
 
@@ -187,7 +187,7 @@ public class AnalyzeSemantically {
       public void visitStruct(StructP struct) {
         String name = struct.name();
         if (isVarName(name)) {
-          logger.log(parseError(struct.loc(),
+          logger.log(compileError(struct.loc(),
               "`" + name + "` is illegal struct name. It must have at least two characters."));
         }
       }
@@ -204,18 +204,18 @@ public class AnalyzeSemantically {
           var annName = ann.name();
           if (ANNOTATION_NAMES.contains(annName)) {
             if (funcP.body().isPresent()) {
-              logger.log(parseError(funcP,
+              logger.log(compileError(funcP,
                   "Function " + funcP.q() + " with @" + annName + " annotation cannot have body."));
             }
             if (funcP.resT().isEmpty()) {
-              logger.log(parseError(funcP, "Function " + funcP.q() + " with @" + annName
+              logger.log(compileError(funcP, "Function " + funcP.q() + " with @" + annName
                   + " annotation must declare result type."));
             }
           } else {
-            logger.log(parseError(ann.loc(), "Unknown annotation " + ann.q() + "."));
+            logger.log(compileError(ann.loc(), "Unknown annotation " + ann.q() + "."));
           }
         } else if (funcP.body().isEmpty()) {
-          logger.log(parseError(funcP, "Function body is missing."));
+          logger.log(compileError(funcP, "Function body is missing."));
         }
       }
 
@@ -229,19 +229,19 @@ public class AnalyzeSemantically {
             case BYTECODE -> {
               if (valP.body().isPresent()) {
                 logger.log(
-                    parseError(valP, "Value with @" + annName + " annotation cannot have body."));
+                    compileError(valP, "Value with @" + annName + " annotation cannot have body."));
               }
               if (valP.type().isEmpty()) {
-                logger.log(parseError(valP, "Value " + valP.q() + " with @" + annName
+                logger.log(compileError(valP, "Value " + valP.q() + " with @" + annName
                     + " annotation must declare type."));
               }
             }
             case NATIVE_PURE, NATIVE_IMPURE -> logger.log(
-                parseError(valP.ann().get(), "Value cannot have @" + annName + " annotation."));
-            default -> logger.log(parseError(ann, "Unknown annotation " + ann.q() + "."));
+                compileError(valP.ann().get(), "Value cannot have @" + annName + " annotation."));
+            default -> logger.log(compileError(ann, "Unknown annotation " + ann.q() + "."));
           }
         } else if (valP.body().isEmpty()) {
-          logger.log(parseError(valP, "Value cannot have empty body."));
+          logger.log(compileError(valP, "Value cannot have empty body."));
         }
 
       }
@@ -252,6 +252,6 @@ public class AnalyzeSemantically {
     String atLoc = loc.equals(Loc.internal())
         ? " internally."
         : " at " + loc + ".";
-    return parseError(nal.loc(), "`" + nal.name() + "` is already defined" + atLoc);
+    return compileError(nal.loc(), "`" + nal.name() + "` is already defined" + atLoc);
   }
 }

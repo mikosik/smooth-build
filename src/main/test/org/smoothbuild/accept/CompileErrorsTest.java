@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.accept.AcceptanceTestCase;
 
-public class ParseErrorsTest extends AcceptanceTestCase {
+public class CompileErrorsTest extends AcceptanceTestCase {
   @Test
   public void syntax_error_is_reported() throws Exception {
     createUserModule("result =");
