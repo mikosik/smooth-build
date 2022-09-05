@@ -228,7 +228,7 @@ public class TestContext {
   }
 
   public TestingModLoader module(String code) {
-    return new TestingModLoader(this, code);
+    return new TestingModLoader(code);
   }
 
   private ExecutionReporter executionReporter() {

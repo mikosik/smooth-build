@@ -18,10 +18,10 @@ public record DefsS(
     return new DefsS(immutableBindings(), immutableBindings());
   }
 
-  public DefsS withModule(ModS mod) {
+  public DefsS withModule(ModuleS module) {
     return new DefsS(
-        merge(tDefs, mod.tDefs()),
-        merge(refables, mod.refables())
+        merge(tDefs, module.tDefs()),
+        merge(refables, module.refables())
     );
   }
 

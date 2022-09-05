@@ -9,7 +9,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
-import org.smoothbuild.compile.lang.define.ModS;
+import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.out.log.LogBuffer;
@@ -17,7 +17,7 @@ import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
 
 public class LoadMod {
-  public static Maybe<ModS> loadModule(
+  public static Maybe<ModuleS> loadModule(
       ModPath path, ModFiles modFiles, String sourceCode, DefsS imported) {
 
     var logBuffer = new LogBuffer();

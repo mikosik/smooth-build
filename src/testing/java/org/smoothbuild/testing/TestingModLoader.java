@@ -2,7 +2,7 @@ package org.smoothbuild.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalMod;
+import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
 import static org.smoothbuild.compile.ps.LoadMod.loadModule;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
@@ -12,7 +12,7 @@ import static org.smoothbuild.testing.TestContext.modFiles;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
-import org.smoothbuild.compile.lang.define.ModS;
+import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.PolyRefableS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -21,14 +21,12 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 
 public class TestingModLoader {
-  private final TestContext testContext;
   private final String sourceCode;
   private ModFiles modFiles;
   private DefsS imported;
-  private Maybe<ModS> modS;
+  private Maybe<ModuleS> moduleS;
 
-  TestingModLoader(TestContext testContext, String sourceCode) {
-    this.testContext = testContext;
+  TestingModLoader(String sourceCode) {
     this.sourceCode = sourceCode;
   }
 
@@ -43,9 +41,9 @@ public class TestingModLoader {
   }
 
   public TestingModLoader loadsWithSuccess() {
-    modS = load();
+    moduleS = load();
     assertWithMessage(messageWithSourceCode())
-        .that(modS.logs().toList())
+        .that(moduleS.logs().toList())
         .isEmpty();
     return this;
   }
@@ -64,7 +62,7 @@ public class TestingModLoader {
   }
 
   private PolyRefableS assertContainsRefable(String name) {
-    var refables = modS.value().refables();
+    var refables = moduleS.value().refables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(refables.contains(name))
         .isTrue();
@@ -73,7 +71,7 @@ public class TestingModLoader {
 
   public void containsType(TypeS expected) {
     var name = expected.name();
-    var types = modS.value().tDefs();
+    var types = moduleS.value().tDefs();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.contains(name))
         .isTrue();
@@ -84,10 +82,10 @@ public class TestingModLoader {
         .isEqualTo(expected);
   }
 
-  public DefsS getModAsDefinitions() {
+  public DefsS getModuleAsDefinitions() {
     return DefsS.empty()
-        .withModule(loadInternalMod())
-        .withModule(modS.value());
+        .withModule(loadInternalModule())
+        .withModule(moduleS.value());
   }
 
   public void loadsWithProblems() {
@@ -119,8 +117,8 @@ public class TestingModLoader {
         + "\n====================\n";
   }
 
-  private Maybe<ModS> load() {
-    DefsS importedSane = imported != null ? imported : DefsS.empty().withModule(loadInternalMod());
+  private Maybe<ModuleS> load() {
+    DefsS importedSane = imported != null ? imported : DefsS.empty().withModule(loadInternalModule());
     ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();
     return loadModule(
         ModPath.of(modFilesSane.smoothFile()), modFilesSane, sourceCode, importedSane);

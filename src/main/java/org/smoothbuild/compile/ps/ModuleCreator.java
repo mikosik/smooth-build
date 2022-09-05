@@ -16,7 +16,7 @@ import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
-import org.smoothbuild.compile.lang.define.ModS;
+import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.PolyRefableS;
 import org.smoothbuild.compile.lang.define.StructDefS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -41,7 +41,7 @@ public class ModuleCreator {
   private final ScopedBindings<Optional<PolyRefableS>> bindings;
   private final LogBuffer logBuffer;
 
-  public static Maybe<ModS> createModuleS(
+  public static Maybe<ModuleS> createModuleS(
       ModPath path, ModFiles modFiles, Ast ast, DefsS imported) {
     var logBuffer = new LogBuffer();
     var topTypes = newOptionalMutableBindings(imported.tDefs());
@@ -54,7 +54,7 @@ public class ModuleCreator {
       return maybeLogs(logBuffer);
     } else {
       var cast = innerScopeBindings(topRefables);
-      var modS = new ModS(path, modFiles, innerScopeBindings(topTypes), cast);
+      var modS = new ModuleS(path, modFiles, innerScopeBindings(topTypes), cast);
       return maybe(modS, logBuffer);
     }
   }

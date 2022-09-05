@@ -87,7 +87,7 @@ public class ExprSLoadingTest extends TestContext {
 
           MonoRefableS result = module(code)
               .loadsWithSuccess()
-              .getModAsDefinitions().refables().get("result").mono();
+              .getModuleAsDefinitions().refables().get("result").mono();
           ExprS actualDefArg = ((CallS) ((DefValS) result).body()).args().get(0);
           assertThat(actualDefArg)
               .isEqualTo(defArg);

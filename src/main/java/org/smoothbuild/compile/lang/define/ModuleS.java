@@ -2,7 +2,7 @@ package org.smoothbuild.compile.lang.define;
 
 import org.smoothbuild.util.bindings.ImmutableBindings;
 
-public record ModS(
+public record ModuleS(
     ModPath path,
     ModFiles files,
     ImmutableBindings<TDefS> tDefs,

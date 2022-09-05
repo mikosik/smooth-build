@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalMod;
+import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
 import static org.smoothbuild.compile.ps.LoadMod.loadModule;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
-import org.smoothbuild.compile.lang.define.ModS;
+import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.install.ModFilesDetector;
@@ -49,12 +49,12 @@ public class DefsLoader {
   public Optional<DefsS> loadDefs() {
     reporter.startNewPhase("Parsing");
 
-    var internalMod = loadInternalMod();
+    var internalMod = loadInternalModule();
     var allDefs = DefsS.empty().withModule(internalMod);
     var files = modFilesDetector.detect(MODULES);
     for (Entry<ModPath, ModFiles> entry : files.entrySet()) {
       ModFiles modFiles = entry.getValue();
-      Maybe<ModS> module = load(allDefs, entry.getKey(), modFiles);
+      Maybe<ModuleS> module = load(allDefs, entry.getKey(), modFiles);
       reporter.report(modFiles.smoothFile().toString(), module.logs().toList());
       if (module.containsProblem()) {
         return Optional.empty();
@@ -65,7 +65,7 @@ public class DefsLoader {
     return Optional.of(allDefs);
   }
 
-  private Maybe<ModS> load(DefsS imported, ModPath path, ModFiles modFiles) {
+  private Maybe<ModuleS> load(DefsS imported, ModPath path, ModFiles modFiles) {
     var sourceCode = readFileContent(modFiles.smoothFile());
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());
