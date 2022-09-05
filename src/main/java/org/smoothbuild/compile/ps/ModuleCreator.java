@@ -102,13 +102,13 @@ public class ModuleCreator {
 
   public void visitValue(ValP valP) {
     var schema = inferValSchema(types, bindings, logBuffer, valP);
-    var valS = schema.flatMap(s -> new PsConverter(bindings).convertVal(path, valP, s.type()));
+    var valS = schema.flatMap(s -> new PsTranslator(bindings).translateVal(path, valP, s.type()));
     bindings.add(valP.name(), valS);
   }
 
   public void visitFunc(FuncP funcP) {
     var schema = inferFuncSchema(types, bindings, logBuffer, funcP);
-    var funcS = schema.flatMap(s -> new PsConverter(bindings).convertFunc(path, funcP, s.type()));
+    var funcS = schema.flatMap(s -> new PsTranslator(bindings).translateFunc(path, funcP, s.type()));
     bindings.add(funcP.name(), funcS);
   }
 }

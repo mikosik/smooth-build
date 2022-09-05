@@ -31,19 +31,19 @@ import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 
 public class TypeInferrer {
-  private final TypePsConverter typePsConverter;
+  private final TypePsTranslator typePsTranslator;
   private final Bindings<? extends Optional<? extends RefableS>> bindings;
   private final Logger logger;
   private final Unifier unifier;
 
   public TypeInferrer(Bindings<Optional<TDefS>> types,
       Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger) {
-    this(new TypePsConverter(types), bindings, logger);
+    this(new TypePsTranslator(types), bindings, logger);
   }
 
-  public TypeInferrer(TypePsConverter typePsConverter,
+  public TypeInferrer(TypePsTranslator typePsTranslator,
       Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger) {
-    this.typePsConverter = typePsConverter;
+    this.typePsTranslator = typePsTranslator;
     this.bindings = bindings;
     this.logger = logger;
     this.unifier = new Unifier();
@@ -63,7 +63,7 @@ public class TypeInferrer {
   }
 
   private Optional<ItemSigS> inferFieldSig(ItemP field) {
-    return typePsConverter.convert(field.type())
+    return typePsTranslator.translate(field.type())
         .flatMap(t -> {
           if (t.vars().isEmpty()) {
             return Optional.of(new ItemSigS(t, field.name()));
@@ -85,7 +85,7 @@ public class TypeInferrer {
   }
 
   private Optional<SchemaS> inferValSchema(ValP val) {
-    return convertOrGenerateT(val.type())
+    return translateOrGenerateT(val.type())
         .flatMap(r -> unifyAndResolve(val, r, this::newBodyUnifier, this::resolveValSchema));
   }
 
@@ -96,7 +96,7 @@ public class TypeInferrer {
   // default arg
 
   private void inferDefaultArg(ItemP param) {
-    new TypeInferrer(typePsConverter, bindings, logger)
+    new TypeInferrer(typePsTranslator, bindings, logger)
         .inferDefaultArgImpl(param.typeS(), param);
   }
 
@@ -147,7 +147,7 @@ public class TypeInferrer {
 
   private boolean inferParamTs(NList<ItemP> params) {
     for (var param : params) {
-      var type = typePsConverter.convert(param.type());
+      var type = typePsTranslator.translate(param.type());
       if (type.isPresent()) {
         type.get().vars().forEach(unifier::addVar);
         param.setTypeS(type.get());
@@ -160,7 +160,7 @@ public class TypeInferrer {
 
   private Optional<FuncSchemaS> inferFuncSchemaImpl(
       FuncP func, Supplier<ExprTypeUnifier> funcBodyUnifierSupplier) {
-    var resT = convertOrGenerateT(func.resT());
+    var resT = translateOrGenerateT(func.resT());
     return resT.flatMap(
         r -> unifyAndResolve(func, r, funcBodyUnifierSupplier, this::resolveFuncSchema));
   }
@@ -198,13 +198,13 @@ public class TypeInferrer {
 
   // helpers
 
-  private Optional<TypeS> convertOrGenerateT(Optional<TypeP> typeP) {
-    return typeP.map(this::convertT)
+  private Optional<TypeS> translateOrGenerateT(Optional<TypeP> typeP) {
+    return typeP.map(this::translateT)
         .orElseGet(() -> Optional.of(unifier.generateUniqueVar()));
   }
 
-  private Optional<TypeS> convertT(TypeP type) {
-    var evalT = typePsConverter.convert(type);
+  private Optional<TypeS> translateT(TypeP type) {
+    var evalT = typePsTranslator.translate(type);
     evalT.ifPresent(typeS -> typeS.vars().forEach(unifier::addVar));
     return evalT;
   }

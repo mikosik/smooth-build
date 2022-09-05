@@ -20,43 +20,43 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 import com.google.common.collect.ImmutableMap;
 
-public class TypeSbConverter {
+public class TypeSbTranslator {
   private final BytecodeF bytecodeF;
   private final ImmutableMap<VarS, TypeB> varMap;
 
-  public TypeSbConverter(BytecodeF bytecodeF, ImmutableMap<VarS, TypeB> varMap) {
+  public TypeSbTranslator(BytecodeF bytecodeF, ImmutableMap<VarS, TypeB> varMap) {
     this.bytecodeF = bytecodeF;
     this.varMap = varMap;
   }
 
-  public TypeB convert(TypeS type) {
+  public TypeB translate(TypeS type) {
     return switch (type) {
-      case ArrayTS a -> convert(a);
+      case ArrayTS a -> translate(a);
       case BlobTS blob -> bytecodeF.blobT();
       case BoolTS bool -> bytecodeF.boolT();
       case IntTS i -> bytecodeF.intT();
-      case VarS v ->  convert(v);
+      case VarS v ->  translate(v);
       case StringTS s -> bytecodeF.stringT();
-      case StructTS st -> convert(st);
-      case FuncTS f -> convert(f);
+      case StructTS st -> translate(st);
+      case FuncTS f -> translate(f);
     };
   }
 
-  public TypeB convert(VarS var) {
+  public TypeB translate(VarS var) {
     return requireNonNull(varMap.get(var));
   }
 
-  public TupleTB convert(StructTS struct) {
-    return bytecodeF.tupleT(map(struct.fields(), isig -> convert(isig.type())));
+  public TupleTB translate(StructTS struct) {
+    return bytecodeF.tupleT(map(struct.fields(), isig -> translate(isig.type())));
   }
 
-  public ArrayTB convert(ArrayTS array) {
-    return bytecodeF.arrayT(convert(array.elem()));
+  public ArrayTB translate(ArrayTS array) {
+    return bytecodeF.arrayT(translate(array.elem()));
   }
 
-  public FuncTB convert(FuncTS func) {
-    var res = convert(func.res());
-    var params = map(func.params(), this::convert);
+  public FuncTB translate(FuncTS func) {
+    var res = translate(func.res());
+    var params = map(func.params(), this::translate);
     return bytecodeF.funcT(res, params);
   }
 }

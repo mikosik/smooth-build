@@ -59,98 +59,98 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class PsConverter {
+public class PsTranslator {
   private final Bindings<? extends Optional<? extends RefableS>> bindings;
 
-  public PsConverter(Bindings<? extends Optional<? extends RefableS>> bindings) {
+  public PsTranslator(Bindings<? extends Optional<? extends RefableS>> bindings) {
     this.bindings = bindings;
   }
 
-  public Optional<PolyRefableS> convertVal(ModPath path, ValP valP, TypeS t) {
+  public Optional<PolyRefableS> translateVal(ModPath path, ValP valP, TypeS t) {
     var schema = new SchemaS(t.vars(), t);
     var name = valP.name();
     var loc = valP.loc();
     if (valP.ann().isPresent()) {
-      var ann = convertAnn(valP.ann().get());
+      var ann = translateAnn(valP.ann().get());
       return Optional.of(polyValS(schema, new AnnValS(ann, schema.type(), path, name, loc)));
     } else {
-      var body = convertExpr(valP.body().get());
+      var body = translateExpr(valP.body().get());
       return body.map(b -> polyValS(schema, new DefValS(schema.type(), path, name, b, loc)));
     }
   }
 
-  public Optional<PolyRefableS> convertFunc(ModPath modPath, FuncP funcP, FuncTS funcT) {
-    return convertFunc(modPath, funcP, convertParams(funcP), funcT);
+  public Optional<PolyRefableS> translateFunc(ModPath modPath, FuncP funcP, FuncTS funcT) {
+    return translateFunc(modPath, funcP, translateParams(funcP), funcT);
   }
 
-  private NList<ItemS> convertParams(FuncP funcP) {
-    return NList.nlist(map(funcP.params().list(), this::convertParam));
+  private NList<ItemS> translateParams(FuncP funcP) {
+    return NList.nlist(map(funcP.params().list(), this::translateParam));
   }
 
-  public ItemS convertParam(ItemP param) {
+  public ItemS translateParam(ItemP param) {
     var type = param.typeS();
     var name = param.name();
-    var body = param.body().flatMap(this::convertExpr);
+    var body = param.body().flatMap(this::translateExpr);
     return new ItemS(type, name, body, param.loc());
   }
 
-  private Optional<PolyRefableS> convertFunc(ModPath modPath, FuncP funcP, NList<ItemS> params,
+  private Optional<PolyRefableS> translateFunc(ModPath modPath, FuncP funcP, NList<ItemS> params,
       FuncTS funcT) {
     var schema = new FuncSchemaS(funcT.vars(), funcT);
     var name = funcP.name();
     var loc = funcP.loc();
     if (funcP.ann().isPresent()) {
-      var ann = convertAnn(funcP.ann().get());
+      var ann = translateAnn(funcP.ann().get());
       return Optional.of(polyFuncS(schema, new AnnFuncS(ann, funcT, modPath, name, params, loc)));
     } else {
       var bindingsInBody = new ScopedBindings<Optional<? extends RefableS>>(bindings);
       params.forEach(p -> bindingsInBody.add(p.name(), Optional.of(p)));
-      var body = new PsConverter(bindingsInBody).convertExpr(funcP.body().get());
+      var body = new PsTranslator(bindingsInBody).translateExpr(funcP.body().get());
       return body.map(
           b -> polyFuncS(schema, new DefFuncS(funcT, modPath, name, params, b, loc)));
     }
   }
 
-  private AnnS convertAnn(AnnP annP) {
-    var path = convertString(annP.path());
+  private AnnS translateAnn(AnnP annP) {
+    var path = translateString(annP.path());
     return new AnnS(annP.name(), path, annP.loc());
   }
 
-  private Optional<ImmutableList<ExprS>> convertExprs(List<ExprP> positionedArgs) {
-    return pullUp(map(positionedArgs, this::convertExpr));
+  private Optional<ImmutableList<ExprS>> translateExprs(List<ExprP> positionedArgs) {
+    return pullUp(map(positionedArgs, this::translateExpr));
   }
 
-  private Optional<ExprS> convertExpr(ExprP expr) {
+  private Optional<ExprS> translateExpr(ExprP expr) {
     return switch (expr) {
-      case BlobP blobP -> Optional.of(convertBlob(blobP));
-      case CallP callP -> convertCall(callP);
-      case DefaultArgP defaultArgP -> convertDefaultArg(defaultArgP);
-      case IntP intP -> Optional.of(convertInt(intP));
-      case NamedArgP namedArgP -> convertExpr(namedArgP.expr());
-      case OrderP orderP -> convertOrder(orderP);
-      case RefP refP -> convertRef(refP);
-      case SelectP selectP -> convertSelect(selectP);
-      case StringP stringP -> Optional.of(convertString(stringP));
+      case BlobP blobP -> Optional.of(translateBlob(blobP));
+      case CallP callP -> translateCall(callP);
+      case DefaultArgP defaultArgP -> translateDefaultArg(defaultArgP);
+      case IntP intP -> Optional.of(translateInt(intP));
+      case NamedArgP namedArgP -> translateExpr(namedArgP.expr());
+      case OrderP orderP -> translateOrder(orderP);
+      case RefP refP -> translateRef(refP);
+      case SelectP selectP -> translateSelect(selectP);
+      case StringP stringP -> Optional.of(translateString(stringP));
     };
   }
 
-  private static Optional<ExprS> convertDefaultArg(DefaultArgP defaultArg) {
+  private static Optional<ExprS> translateDefaultArg(DefaultArgP defaultArg) {
     return Optional.of(defaultArg.exprS().mapVars(defaultArg.refP().monoizationMapper()));
   }
 
-  private Optional<ExprS> convertOrder(OrderP order) {
-    var elems = convertExprs(order.elems());
+  private Optional<ExprS> translateOrder(OrderP order) {
+    var elems = translateExprs(order.elems());
     return elems.map(es -> new OrderS((ArrayTS) order.typeS(), es, order.loc()));
   }
 
-  private Optional<ExprS> convertCall(CallP call) {
-    var callee = convertExpr(call.callee());
-    var argExprs = call.positionedArgs().flatMap(this::convertExprs);
+  private Optional<ExprS> translateCall(CallP call) {
+    var callee = translateExpr(call.callee());
+    var argExprs = call.positionedArgs().flatMap(this::translateExprs);
     return mapPair(callee, argExprs, (c, as) -> new CallS(call.typeS(), c, as, call.loc()));
   }
 
-  private Optional<ExprS> convertSelect(SelectP selectP) {
-    var selectable = convertExpr(selectP.selectable());
+  private Optional<ExprS> translateSelect(SelectP selectP) {
+    var selectable = translateExpr(selectP.selectable());
     return selectable.map(s -> {
       var fieldName = selectP.field();
       var fieldT = ((StructTS) s.type()).fields().get(fieldName).type();
@@ -158,20 +158,20 @@ public class PsConverter {
     });
   }
 
-  private Optional<ExprS> convertRef(RefP ref) {
+  private Optional<ExprS> translateRef(RefP ref) {
     return bindings.get(ref.name())
-        .map(r -> convertRef(ref, r));
+        .map(r -> translateRef(ref, r));
   }
 
-  private ExprS convertRef(RefP ref, RefableS refable) {
+  private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemP -> new ParamRefS(itemP.type(), ref.name(), ref.loc());
       case MonoRefableS monoRefableS -> monoRefableS;
-      case PolyRefableS polyRefableS -> convertRefToPolyRefable(ref, polyRefableS);
+      case PolyRefableS polyRefableS -> translateRefToPolyRefable(ref, polyRefableS);
     };
   }
 
-  private static ExprS convertRefToPolyRefable(RefP ref, PolyRefableS polyRefableS) {
+  private static ExprS translateRefToPolyRefable(RefP ref, PolyRefableS polyRefableS) {
     if (polyRefableS.schema().quantifiedVars().isEmpty()) {
       return polyRefableS.mono();
     } else {
@@ -183,15 +183,15 @@ public class PsConverter {
     }
   }
 
-  private BlobS convertBlob(BlobP blob) {
+  private BlobS translateBlob(BlobP blob) {
     return new BlobS(BLOB, blob.byteString(), blob.loc());
   }
 
-  private IntS convertInt(IntP intP) {
-    return new IntS(INT, intP.bigInteger(), intP.loc());
+  private IntS translateInt(IntP int_) {
+    return new IntS(INT, int_.bigInteger(), int_.loc());
   }
 
-  private StringS convertString(StringP string) {
+  private StringS translateString(StringP string) {
     return new StringS(STRING, string.unescapedValue(), string.loc());
   }
 }

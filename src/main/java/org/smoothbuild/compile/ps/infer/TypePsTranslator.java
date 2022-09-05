@@ -18,22 +18,22 @@ import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.bindings.Bindings;
 
-public class TypePsConverter {
+public class TypePsTranslator {
   private final Bindings<Optional<TDefS>> types;
 
-  public TypePsConverter(Bindings<Optional<TDefS>> types) {
+  public TypePsTranslator(Bindings<Optional<TDefS>> types) {
     this.types = types;
   }
 
-  public Optional<TypeS> convert(TypeP type) {
+  public Optional<TypeS> translate(TypeP type) {
     if (isVarName(type.name())) {
       return Optional.of(new VarS(type.name()));
     }
     return switch (type) {
-      case ArrayTP array -> convert(array.elemT()).map(ArrayTS::new);
+      case ArrayTP array -> translate(array.elemT()).map(ArrayTS::new);
       case FuncTP func -> {
-        var resultOpt = convert(func.resT());
-        var paramsOpt = pullUp(map(func.paramTs(), this::convert));
+        var resultOpt = translate(func.resT());
+        var paramsOpt = pullUp(map(func.paramTs(), this::translate));
         yield mapPair(resultOpt, paramsOpt, (r, p) -> new FuncTS(r, p));
       }
       default -> types.get(type.name()).map(Tapanal::type);

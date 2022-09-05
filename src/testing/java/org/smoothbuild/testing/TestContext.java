@@ -110,7 +110,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.compile.sb.BytecodeMethodLoader;
-import org.smoothbuild.compile.sb.SbConverterProv;
+import org.smoothbuild.compile.sb.SbTranslatorProv;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.fs.base.FileSystem;
@@ -183,16 +183,16 @@ public class TestContext {
     return new VmProv(jobCreatorProv, parallelExecutor);
   }
 
-  public SbConverterProv sbConverterProv() {
-    return sbConverterProv(null);
+  public SbTranslatorProv sbTranslatorProv() {
+    return sbTranslatorProv(null);
   }
 
-  public SbConverterProv sbConverterProv(FileLoader fileLoader) {
-    return sbConverterProv(fileLoader, bytecodeLoader());
+  public SbTranslatorProv sbTranslatorProv(FileLoader fileLoader) {
+    return sbTranslatorProv(fileLoader, bytecodeLoader());
   }
 
-  public SbConverterProv sbConverterProv(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new SbConverterProv(bytecodeF(), fileLoader, bytecodeLoader);
+  public SbTranslatorProv sbTranslatorProv(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+    return new SbTranslatorProv(bytecodeF(), fileLoader, bytecodeLoader);
   }
 
   private BytecodeLoader bytecodeLoader() {
