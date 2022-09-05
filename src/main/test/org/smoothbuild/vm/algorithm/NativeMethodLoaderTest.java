@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.algorithm;
 
 import static com.google.common.truth.Truth.assertThat;
-import static java.lang.ClassLoader.getPlatformClassLoader;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,7 +13,9 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.load.JarClassLoaderProv;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
@@ -25,6 +27,7 @@ import org.smoothbuild.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.testing.func.nativ.TooFewParameters;
 import org.smoothbuild.testing.func.nativ.TooManyParameters;
 import org.smoothbuild.testing.func.nativ.WrongParameterType;
+import org.smoothbuild.testing.func.nativ.WrongReturnType;
 import org.smoothbuild.util.collect.Try;
 
 public class NativeMethodLoaderTest extends TestContext {
@@ -39,12 +42,17 @@ public class NativeMethodLoaderTest extends TestContext {
   }
 
   @Test
-  public void to_few_parameters_in_method_causes_error() throws IOException {
+  public void wrong_return_type_in_method_causes_error() throws IOException {
+    assertLoadingCausesError(WrongReturnType.class, wrongReturnTypeErrorMessage());
+  }
+
+  @Test
+  public void too_few_parameters_in_method_causes_error() throws IOException {
     assertLoadingCausesError(TooFewParameters.class, wrongParametersErrorMessage());
   }
 
   @Test
-  public void to_many_parameters_in_method_causes_error() throws IOException {
+  public void too_many_parameters_in_method_causes_error() throws IOException {
     assertLoadingCausesError(TooManyParameters.class, wrongParametersErrorMessage());
   }
 
@@ -59,6 +67,11 @@ public class NativeMethodLoaderTest extends TestContext {
         .isEqualTo(loadingError("name", clazz, message));
   }
 
+  private String wrongReturnTypeErrorMessage() {
+    return "Providing method should declare return type as " + CnstB.class.getCanonicalName()
+        + " but is " + OrderB.class.getCanonicalName() + ".";
+  }
+
   private String wrongParametersErrorMessage() {
     return "Providing method should have two parameters " + NativeApi.class.getCanonicalName()
         + " and " + TupleB.class.getCanonicalName() + ".";
@@ -66,7 +79,7 @@ public class NativeMethodLoaderTest extends TestContext {
 
   private NativeMethodLoader nativeMethodLoaderWithPlatformClassLoader() {
     return new NativeMethodLoader(new MethodLoader(
-        new JarClassLoaderProv(bytecodeF(), getPlatformClassLoader())));
+        new JarClassLoaderProv(bytecodeF(), getSystemClassLoader())));
   }
 
   private Try<Object> loadingError(String name, Class<?> clazz, String message) {

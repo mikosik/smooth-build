@@ -1,6 +1,5 @@
 package org.smoothbuild.vm.job;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.obj.cnst.CnstB;

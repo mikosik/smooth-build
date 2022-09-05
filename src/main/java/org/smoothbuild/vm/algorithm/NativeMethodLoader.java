@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.MethodB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.load.MethodLoader;
@@ -54,6 +55,12 @@ public class NativeMethodLoader {
   }
 
   private String validateMethodParams(Method method) {
+    Class<?> returnType = method.getReturnType();
+    if (!returnType.equals(CnstB.class)) {
+      var clazz = CnstB.class;
+      return "Providing method should declare return type as " + CnstB.class.getCanonicalName()
+          + " but is " + returnType.getCanonicalName() + ".";
+    }
     Class<?>[] types = method.getParameterTypes();
     boolean valid = types.length == 2
         && (types[0].equals(NativeApi.class) || types[0].equals(Container.class))

@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.type.cnst.ArrayTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Flatten {
-  public static ArrayB func(NativeApi nativeApi, TupleB args) {
+  public static CnstB func(NativeApi nativeApi, TupleB args) {
     ArrayB array = (ArrayB) args.get(0);
 
     ArrayBBuilder builder = nativeApi.factory().arrayBuilder((ArrayTB) array.cat().elem());

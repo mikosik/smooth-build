@@ -6,7 +6,7 @@ import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Concat {
-  public static ArrayB func(NativeApi nativeApi, TupleB args) {
+  public static CnstB func(NativeApi nativeApi, TupleB args) {
     ArrayB first = (ArrayB) args.get(0);
     ArrayB second = (ArrayB) args.get(1);
 

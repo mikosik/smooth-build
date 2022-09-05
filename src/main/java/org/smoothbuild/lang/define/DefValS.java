@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.define;
 
-import static org.smoothbuild.lang.define.ItemS.mapParams;
-
 import java.util.Objects;
 import java.util.function.Function;
 

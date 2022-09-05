@@ -1,11 +1,11 @@
 package org.smoothbuild.testing.func.nativ;
 
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.plugin.NativeApi;
 
-public class TooManyParameters {
-  public static CnstB func(NativeApi nativeApi, TupleB args, TupleB args2) {
+public class WrongReturnType {
+  public static OrderB func(NativeApi nativeApi, TupleB args) {
     return null;
   }
 }

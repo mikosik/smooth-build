@@ -10,15 +10,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.bytecode.obj.cnst.BlobBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSource;
 
 public class ZipFunc {
-  public static BlobB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static CnstB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB files = (ArrayB) args.get(0);
     var duplicatesDetector = new HashSet<String>();
     BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();

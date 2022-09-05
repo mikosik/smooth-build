@@ -2,10 +2,6 @@ package org.smoothbuild.parse.ast.expr;
 
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.define.ExprS;
-import org.smoothbuild.lang.type.TypeS;
-import org.smoothbuild.lang.type.VarS;
-
-import com.google.common.collect.ImmutableMap;
 
 public final class DefaultArgP extends OperatorP {
   private final RefP refP;

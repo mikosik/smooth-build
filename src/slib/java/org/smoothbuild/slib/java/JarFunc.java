@@ -16,6 +16,7 @@ import java.util.jar.Manifest;
 import org.smoothbuild.bytecode.obj.cnst.ArrayB;
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
 import org.smoothbuild.bytecode.obj.cnst.BlobBBuilder;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -23,7 +24,7 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class JarFunc {
-  public static BlobB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static CnstB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB files = (ArrayB) args.get(0);
     BlobB manifest = (BlobB) args.get(1);
 

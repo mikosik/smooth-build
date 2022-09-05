@@ -1,10 +1,10 @@
 package org.smoothbuild.testing.func.nativ;
 
-import org.smoothbuild.bytecode.obj.cnst.StringB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class WrongParameterType {
-  public static StringB func(NativeApi nativeApi, NativeApi nativeApi2) {
-    return nativeApi.factory().string("abc");
+  public static CnstB func(NativeApi nativeApi, NativeApi nativeApi2) {
+    return null;
   }
 }

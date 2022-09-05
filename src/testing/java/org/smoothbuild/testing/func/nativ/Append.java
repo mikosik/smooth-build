@@ -6,7 +6,7 @@ import org.smoothbuild.bytecode.obj.cnst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Append {
-  public static ArrayB func(NativeApi nativeApi, TupleB args) {
+  public static CnstB func(NativeApi nativeApi, TupleB args) {
     ArrayB array = (ArrayB) args.get(0);
     CnstB elem = args.get(1);
     return nativeApi.factory()
