@@ -5,9 +5,9 @@ import static org.smoothbuild.bytecode.type.CatKindB.MAP;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.oper.MapB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
 
 public class MapCB extends OperCatB {
   public MapCB(Hash hash, TypeB evalT) {

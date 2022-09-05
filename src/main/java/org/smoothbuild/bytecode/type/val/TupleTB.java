@@ -6,7 +6,7 @@ import static org.smoothbuild.bytecode.type.val.TNamesB.tupleTypeName;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
 

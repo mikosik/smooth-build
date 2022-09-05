@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.expr.exc;
 
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 
 public class DecodeExprRootExc extends DecodeExprExc {
   public static DecodeExprRootExc cannotReadRootException(Hash hash, Throwable cause) {

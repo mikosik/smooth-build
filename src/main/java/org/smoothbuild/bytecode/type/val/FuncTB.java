@@ -6,7 +6,7 @@ import static org.smoothbuild.bytecode.type.val.TNamesB.funcTypeName;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.val.FuncB;
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
 

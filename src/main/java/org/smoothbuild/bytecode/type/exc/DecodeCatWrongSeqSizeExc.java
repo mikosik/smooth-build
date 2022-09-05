@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.exc;
 
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CatKindB;
-import org.smoothbuild.db.Hash;
 
 public class DecodeCatWrongSeqSizeExc extends DecodeCatNodeExc {
   public DecodeCatWrongSeqSizeExc(Hash hash, CatKindB kind, String path, int expectedSize,

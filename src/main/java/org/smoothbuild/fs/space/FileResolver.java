@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.SmoothConstants;
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathState;
 

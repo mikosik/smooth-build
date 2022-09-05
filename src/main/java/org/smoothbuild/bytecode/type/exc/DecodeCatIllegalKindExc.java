@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.type.exc;
 
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 
 public class DecodeCatIllegalKindExc extends DecodeCatExc {
   public DecodeCatIllegalKindExc(Hash hash, byte marker) {

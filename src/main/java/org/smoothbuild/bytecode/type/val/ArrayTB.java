@@ -7,7 +7,7 @@ import static org.smoothbuild.bytecode.type.val.TNamesB.arrayTypeName;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
 

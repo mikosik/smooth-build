@@ -6,8 +6,8 @@ import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
+import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.install.TempManager;

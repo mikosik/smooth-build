@@ -2,8 +2,8 @@ package org.smoothbuild.vm.algorithm;
 
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 
 public class OrderAlgorithm extends Algorithm {

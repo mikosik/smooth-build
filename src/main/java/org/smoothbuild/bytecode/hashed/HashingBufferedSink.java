@@ -1,4 +1,4 @@
-package org.smoothbuild.db;
+package org.smoothbuild.bytecode.hashed;
 
 import static org.smoothbuild.fs.base.AssertPath.newUnknownPathState;
 
@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-import org.smoothbuild.db.exc.HashedDbExc;
+import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.PathState;

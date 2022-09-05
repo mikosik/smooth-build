@@ -5,8 +5,8 @@ import static org.smoothbuild.bytecode.type.CatKindB.SELECT;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
 
 /**
  * This class is immutable.

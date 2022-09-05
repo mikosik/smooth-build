@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.expr.exc;
 
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CatB;
-import org.smoothbuild.db.Hash;
 
 public class DecodeSelectIndexOutOfBoundsExc extends DecodeExprExc {
   public DecodeSelectIndexOutOfBoundsExc(Hash hash, CatB cat, int index, int size) {

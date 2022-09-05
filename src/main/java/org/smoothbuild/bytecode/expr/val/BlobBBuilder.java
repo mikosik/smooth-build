@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.Helpers;
-import org.smoothbuild.db.HashingBufferedSink;
-import org.smoothbuild.db.exc.HashedDbExc;
+import org.smoothbuild.bytecode.hashed.HashingBufferedSink;
+import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.util.io.DataWriter;
 
 import okio.BufferedSink;

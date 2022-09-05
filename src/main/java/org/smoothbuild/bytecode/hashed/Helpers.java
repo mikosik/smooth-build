@@ -1,8 +1,8 @@
-package org.smoothbuild.db;
+package org.smoothbuild.bytecode.hashed;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.exc.HashedDbExc;
+import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 
 public class Helpers {
   public static void wrapIOExceptionAsHashedDbException(IoRunnable runnable)

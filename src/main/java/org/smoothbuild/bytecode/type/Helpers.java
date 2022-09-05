@@ -1,10 +1,10 @@
 package org.smoothbuild.bytecode.type;
 
+import org.smoothbuild.bytecode.hashed.Hash;
+import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatNodeExc;
-import org.smoothbuild.db.Hash;
-import org.smoothbuild.db.exc.HashedDbExc;
 
 public class Helpers {
   public static <T> T wrapHashedDbExcAsDecodeCatExc(Hash hash, HashedDbCallable<T> callable) {

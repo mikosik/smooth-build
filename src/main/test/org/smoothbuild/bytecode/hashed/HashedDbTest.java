@@ -1,4 +1,4 @@
-package org.smoothbuild.db;
+package org.smoothbuild.bytecode.hashed;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.Byte.MAX_VALUE;
@@ -22,10 +22,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.db.exc.CorruptedHashedDbExc;
-import org.smoothbuild.db.exc.DecodeHashSeqExc;
-import org.smoothbuild.db.exc.DecodeStringExc;
-import org.smoothbuild.db.exc.NoSuchDataExc;
+import org.smoothbuild.bytecode.hashed.exc.CorruptedHashedDbExc;
+import org.smoothbuild.bytecode.hashed.exc.DecodeHashSeqExc;
+import org.smoothbuild.bytecode.hashed.exc.DecodeStringExc;
+import org.smoothbuild.bytecode.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.testing.TestContext;
 
 import okio.ByteString;

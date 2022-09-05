@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CatKindB;
-import org.smoothbuild.db.Hash;
 
 /**
  * This class is immutable.

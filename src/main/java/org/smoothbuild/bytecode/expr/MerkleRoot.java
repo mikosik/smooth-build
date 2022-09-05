@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.expr;
 
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CatB;
-import org.smoothbuild.db.Hash;
 
 public class MerkleRoot {
   private final Hash hash;

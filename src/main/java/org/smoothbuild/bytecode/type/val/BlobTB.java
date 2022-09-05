@@ -5,7 +5,7 @@ import static org.smoothbuild.bytecode.type.CatKindB.BLOB;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.val.BlobB;
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 
 /**
  * This class is immutable.

@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.expr.exc;
 
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 
 public class DecodeExprCatExc extends DecodeExprExc {
   public DecodeExprCatExc(Hash hash) {

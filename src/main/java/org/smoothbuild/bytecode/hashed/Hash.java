@@ -1,4 +1,4 @@
-package org.smoothbuild.db;
+package org.smoothbuild.bytecode.hashed;
 
 import static okio.Okio.blackhole;
 import static okio.Okio.buffer;

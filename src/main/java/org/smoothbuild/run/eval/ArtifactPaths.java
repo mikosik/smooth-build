@@ -4,7 +4,7 @@ import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.db.HashedDb;
+import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.fs.base.PathS;
 
 public class ArtifactPaths {

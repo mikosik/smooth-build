@@ -27,6 +27,9 @@ import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNo
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.smoothbuild.bytecode.hashed.Hash;
+import org.smoothbuild.bytecode.hashed.HashedDb;
+import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
@@ -49,9 +52,6 @@ import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
-import org.smoothbuild.db.HashedDb;
-import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.function.TriFunction;
 

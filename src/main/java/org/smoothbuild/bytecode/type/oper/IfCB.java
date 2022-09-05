@@ -5,8 +5,8 @@ import static org.smoothbuild.bytecode.type.CatKindB.IF;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.oper.IfB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
 
 public class IfCB extends OperCatB {
   public IfCB(Hash hash, TypeB evalT) {

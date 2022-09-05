@@ -5,8 +5,8 @@ import static org.smoothbuild.bytecode.type.CatKindB.INVOKE;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.oper.InvokeB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
 
 public class InvokeCB extends OperCatB {
   public InvokeCB(Hash hash, TypeB evalT) {

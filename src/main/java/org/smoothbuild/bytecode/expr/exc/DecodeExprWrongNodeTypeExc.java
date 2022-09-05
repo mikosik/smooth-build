@@ -1,8 +1,8 @@
 package org.smoothbuild.bytecode.expr.exc;
 
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
 
 public class DecodeExprWrongNodeTypeExc extends DecodeExprNodeExc {
   public DecodeExprWrongNodeTypeExc(Hash hash, CatB cat, String path, int pathIndex,

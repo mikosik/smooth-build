@@ -3,8 +3,8 @@ package org.smoothbuild.bytecode.exc;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
-import org.smoothbuild.db.Hash;
 
 public class DecodeCatExcTest {
   @Test

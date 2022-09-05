@@ -1,4 +1,4 @@
-package org.smoothbuild.db;
+package org.smoothbuild.bytecode.hashed;
 
 import static java.lang.String.format;
 import static java.nio.ByteBuffer.wrap;
@@ -11,14 +11,14 @@ import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 
-import org.smoothbuild.db.exc.CorruptedHashedDbExc;
-import org.smoothbuild.db.exc.DecodeBigIntegerExc;
-import org.smoothbuild.db.exc.DecodeBooleanExc;
-import org.smoothbuild.db.exc.DecodeByteExc;
-import org.smoothbuild.db.exc.DecodeHashSeqExc;
-import org.smoothbuild.db.exc.DecodeStringExc;
-import org.smoothbuild.db.exc.HashedDbExc;
-import org.smoothbuild.db.exc.NoSuchDataExc;
+import org.smoothbuild.bytecode.hashed.exc.CorruptedHashedDbExc;
+import org.smoothbuild.bytecode.hashed.exc.DecodeBigIntegerExc;
+import org.smoothbuild.bytecode.hashed.exc.DecodeBooleanExc;
+import org.smoothbuild.bytecode.hashed.exc.DecodeByteExc;
+import org.smoothbuild.bytecode.hashed.exc.DecodeHashSeqExc;
+import org.smoothbuild.bytecode.hashed.exc.DecodeStringExc;
+import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
+import org.smoothbuild.bytecode.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.PathState;

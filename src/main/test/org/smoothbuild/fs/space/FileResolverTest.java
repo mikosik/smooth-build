@@ -14,7 +14,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 

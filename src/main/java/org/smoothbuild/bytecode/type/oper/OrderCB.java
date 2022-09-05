@@ -5,8 +5,8 @@ import static org.smoothbuild.bytecode.type.CatKindB.ORDER;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.db.Hash;
 
 /**
  * This class is immutable.

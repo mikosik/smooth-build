@@ -9,8 +9,8 @@ import java.lang.reflect.Method;
 import org.smoothbuild.bytecode.expr.val.MethodB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 
 public class InvokeAlgorithm extends Algorithm {

@@ -12,10 +12,10 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprNodeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongSeqSizeExc;
+import org.smoothbuild.bytecode.hashed.Hash;
+import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
-import org.smoothbuild.db.HashedDb;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

@@ -2,7 +2,7 @@ package org.smoothbuild.fs.space;
 
 import static java.util.Arrays.asList;
 
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.fs.base.PathS;
 
 /**

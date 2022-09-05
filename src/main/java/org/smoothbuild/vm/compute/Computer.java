@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;
 import org.smoothbuild.vm.algorithm.Algorithm;

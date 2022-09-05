@@ -3,9 +3,9 @@ package org.smoothbuild.vm.algorithm;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.db.Hash;
 
 public class AlgorithmHashes {
   public static Hash combineAlgorithmHash(TupleTB type) {

@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.exc;
 
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CatKindB;
-import org.smoothbuild.db.Hash;
 
 public class DecodeCatRootExc extends DecodeCatExc {
   public DecodeCatRootExc(Hash hash, int actualSize) {

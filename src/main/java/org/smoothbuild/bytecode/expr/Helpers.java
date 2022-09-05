@@ -2,9 +2,9 @@ package org.smoothbuild.bytecode.expr;
 
 import org.smoothbuild.bytecode.expr.exc.BytecodeDbExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprNodeExc;
+import org.smoothbuild.bytecode.hashed.Hash;
+import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.bytecode.type.CatB;
-import org.smoothbuild.db.Hash;
-import org.smoothbuild.db.exc.HashedDbExc;
 
 public class Helpers {
   public static void wrapHashedDbExcAsBytecodeDbExc(HashedDbRunnable runnable) {

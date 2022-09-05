@@ -1,8 +1,8 @@
-package org.smoothbuild.db.exc;
+package org.smoothbuild.bytecode.hashed.exc;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.bytecode.hashed.Hash;
 
 public class HashedDbExc extends Exception {
   public HashedDbExc(String message) {
