@@ -348,7 +348,7 @@ public class TestContext {
     return fullFileSystem;
   }
 
-  // H types
+  // ValB types
 
   public TupleTB animalTB() {
     return catDb().tuple(list(stringTB(), intTB()));
@@ -406,7 +406,7 @@ public class TestContext {
     return catDb().tuple(ImmutableList.copyOf(itemTs));
   }
 
-  // Expr types
+  // OperB categories
 
   public CallCB callCB() {
     return callCB(intTB());
@@ -468,7 +468,7 @@ public class TestContext {
     return catDb().select(evalT);
   }
 
-  // Obj (values)
+  // ValB-s
 
   public TupleB animalB() {
     return animalB("rabbit", 7);
@@ -673,7 +673,7 @@ public class TestContext {
     return bytecodeF().infoMessage(text);
   }
 
-  // Expr-s
+  // OperB-s
 
   public CallB callB(FuncB func, ExprB... args) {
     var combineB = combineB(args);
@@ -744,7 +744,7 @@ public class TestContext {
     return bytecodeDb().select(evalT, tuple, index);
   }
 
-  // Types Smooth
+  // ValS types
 
   public ArrayTS arrayTS(TypeS elemT) {
     return new ArrayTS(elemT);
@@ -831,7 +831,7 @@ public class TestContext {
     return new VarS(name);
   }
 
-  // Expressions
+  // ExprS-s
 
   public BlobS blobS(int data) {
     return blobS(1, data);
@@ -916,6 +916,7 @@ public class TestContext {
   }
 
   // other smooth language thingies
+
   private AnnS bytecodeS(String path) {
     return bytecodeS(1, path);
   }
