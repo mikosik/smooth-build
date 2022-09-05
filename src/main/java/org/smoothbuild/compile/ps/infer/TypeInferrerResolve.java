@@ -24,8 +24,9 @@ import org.smoothbuild.compile.ps.ast.expr.OperP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
+import org.smoothbuild.compile.ps.ast.expr.ValP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValP;
 import org.smoothbuild.out.log.Logger;
 
 public class TypeInferrerResolve {
@@ -37,7 +38,7 @@ public class TypeInferrerResolve {
     this.logger = logger;
   }
 
-  public Optional<SchemaS> resolve(ValP val, TypeS unresolvedValT) {
+  public Optional<SchemaS> resolve(NamedValP val, TypeS unresolvedValT) {
     TypeS resolvedEvalT = unifier.resolve(unresolvedValT);
     if (val.evalT().isPresent()) {
       if (!unresolvedValT.equals(resolvedEvalT)) {
@@ -109,7 +110,7 @@ public class TypeInferrerResolve {
   public boolean resolve(ExprP expr) {
     return switch (expr) {
       case CallP callP -> resolve(callP);
-      case org.smoothbuild.compile.ps.ast.expr.ValP valP -> true;
+      case ValP valP -> true;
       case NamedArgP namedArgP -> resolve(namedArgP);
       case OrderP orderP -> resolve(orderP);
       case SelectP selectP -> resolve(selectP);

@@ -50,8 +50,8 @@ import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValP;
 import org.smoothbuild.compile.ps.ast.refable.PolyRefableP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -101,7 +101,7 @@ public class AstCreator {
         Optional<AnnP> annotation = createNativeSane(top.ann());
         Loc loc = locOf(filePath, nameNode);
         if (top.paramList() == null) {
-          refables.add(new ValP(type, name, expr, annotation, loc));
+          refables.add(new NamedValP(type, name, expr, annotation, loc));
         } else {
           List<ItemP> params = createParams(top.paramList());
           refables.add(new FuncP(type, name, params, expr, annotation, loc));

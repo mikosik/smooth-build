@@ -15,9 +15,10 @@ import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
+import org.smoothbuild.compile.ps.ast.expr.ValP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValP;
 import org.smoothbuild.compile.ps.ast.refable.PolyRefableP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.Strings;
@@ -53,7 +54,7 @@ public class DetectUndefinedRefs {
   private void visitRefable(PolyRefableP polyRefableP) {
     switch (polyRefableP) {
       case FuncP funcP -> visitFunc(funcP);
-      case ValP valP -> visitVal(valP);
+      case NamedValP namedValP -> visitVal(namedValP);
     }
   }
 
@@ -66,8 +67,8 @@ public class DetectUndefinedRefs {
     });
   }
 
-  private void visitVal(ValP valP) {
-    valP.body().ifPresent(this::visitExpr);
+  private void visitVal(NamedValP namedValP) {
+    namedValP.body().ifPresent(this::visitExpr);
   }
 
   private void visitExprs(List<ExprP> exprs) {
@@ -77,7 +78,7 @@ public class DetectUndefinedRefs {
   private void visitExpr(ExprP expr) {
     switch (expr) {
       case CallP callP -> visitCall(callP);
-      case org.smoothbuild.compile.ps.ast.expr.ValP valP -> {}
+      case ValP valP -> {}
       case NamedArgP namedArgP -> visitExpr(namedArgP.expr());
       case OrderP orderP -> visitExprs(orderP.elems());
       case RefP refP -> visitRef(refP);

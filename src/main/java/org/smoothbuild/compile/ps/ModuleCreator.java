@@ -28,8 +28,8 @@ import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.bindings.ImmutableBindings;
@@ -95,15 +95,15 @@ public class ModuleCreator {
   public void visitRefable(RefableP refableP) {
     switch (refableP) {
       case FuncP funcP -> visitFunc(funcP);
-      case ValP valP -> visitValue(valP);
+      case NamedValP namedValP -> visitValue(namedValP);
       case ItemP itemP -> throw new RuntimeException("shouldn't happen");
     }
   }
 
-  public void visitValue(ValP valP) {
-    var schema = inferValSchema(types, bindings, logBuffer, valP);
-    var valS = schema.flatMap(s -> new PsTranslator(bindings).translateVal(path, valP, s.type()));
-    bindings.add(valP.name(), valS);
+  public void visitValue(NamedValP namedValP) {
+    var schema = inferValSchema(types, bindings, logBuffer, namedValP);
+    var valS = schema.flatMap(s -> new PsTranslator(bindings).translateVal(path, namedValP, s.type()));
+    bindings.add(namedValP.name(), valS);
   }
 
   public void visitFunc(FuncP funcP) {
