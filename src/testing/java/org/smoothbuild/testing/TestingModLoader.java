@@ -3,7 +3,7 @@ package org.smoothbuild.testing;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
-import static org.smoothbuild.compile.ps.LoadMod.loadModule;
+import static org.smoothbuild.compile.ps.LoadModule.loadModule;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestContext.importedModFiles;

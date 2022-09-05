@@ -19,7 +19,7 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
 
-public class LoadMod {
+public class LoadModule {
   public static Maybe<ModuleS> loadModule(
       ModPath path, ModFiles modFiles, String sourceCode, DefsS imported) {
 
