@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.compile.lang.define.ModFiles;
+import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
-import org.smoothbuild.lang.define.ModFiles;
-import org.smoothbuild.lang.define.ModPath;
 
 import com.google.common.collect.ImmutableMap;
 

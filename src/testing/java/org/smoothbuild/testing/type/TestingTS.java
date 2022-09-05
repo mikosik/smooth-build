@@ -1,20 +1,20 @@
 package org.smoothbuild.testing.type;
 
-import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
-import org.smoothbuild.lang.define.ItemSigS;
-import org.smoothbuild.lang.type.ArrayTS;
-import org.smoothbuild.lang.type.BlobTS;
-import org.smoothbuild.lang.type.BoolTS;
-import org.smoothbuild.lang.type.FuncTS;
-import org.smoothbuild.lang.type.IntTS;
-import org.smoothbuild.lang.type.StringTS;
-import org.smoothbuild.lang.type.StructTS;
-import org.smoothbuild.lang.type.TypeFS;
-import org.smoothbuild.lang.type.TypeS;
-import org.smoothbuild.lang.type.VarS;
+import org.smoothbuild.compile.lang.define.ItemSigS;
+import org.smoothbuild.compile.lang.type.ArrayTS;
+import org.smoothbuild.compile.lang.type.BlobTS;
+import org.smoothbuild.compile.lang.type.BoolTS;
+import org.smoothbuild.compile.lang.type.FuncTS;
+import org.smoothbuild.compile.lang.type.IntTS;
+import org.smoothbuild.compile.lang.type.StringTS;
+import org.smoothbuild.compile.lang.type.StructTS;
+import org.smoothbuild.compile.lang.type.TypeFS;
+import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;

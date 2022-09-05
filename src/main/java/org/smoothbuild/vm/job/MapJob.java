@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;

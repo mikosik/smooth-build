@@ -10,10 +10,10 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.ConvertSbExc;
-import org.smoothbuild.compile.SbConverter;
-import org.smoothbuild.compile.SbConverterProv;
-import org.smoothbuild.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.sb.ConvertSbExc;
+import org.smoothbuild.compile.sb.SbConverter;
+import org.smoothbuild.compile.sb.SbConverterProv;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;

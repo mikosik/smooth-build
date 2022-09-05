@@ -3,7 +3,7 @@ package org.smoothbuild.testing.type;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
-import static org.smoothbuild.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.smoothbuild.lang.define.ItemSigS;
+import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.testing.type.TestedTS.TestedArrayTS;
 import org.smoothbuild.testing.type.TestedTS.TestedFuncTS;
 

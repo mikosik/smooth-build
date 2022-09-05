@@ -3,7 +3,7 @@ package org.smoothbuild.vm;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.lang.base.Nal;
+import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.vm.job.JobCreatorProv;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 

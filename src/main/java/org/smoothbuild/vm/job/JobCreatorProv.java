@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.lang.base.Nal;
+import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableMap;

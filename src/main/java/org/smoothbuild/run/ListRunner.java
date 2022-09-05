@@ -8,10 +8,10 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.Nal;
-import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.PolyRefableS;
-import org.smoothbuild.lang.define.PolyValS;
+import org.smoothbuild.compile.lang.base.Nal;
+import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.PolyRefableS;
+import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.report.Reporter;
 

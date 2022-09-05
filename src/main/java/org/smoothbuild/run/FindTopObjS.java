@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.MonoRefableS;
-import org.smoothbuild.lang.define.PolyValS;
+import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.MonoRefableS;
+import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 

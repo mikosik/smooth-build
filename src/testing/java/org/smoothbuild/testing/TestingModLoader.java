@@ -2,21 +2,21 @@ package org.smoothbuild.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static org.smoothbuild.lang.define.LoadInternalMod.loadInternalMod;
+import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalMod;
+import static org.smoothbuild.compile.ps.LoadMod.loadModule;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.parse.LoadMod.loadModule;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestContext.importedModFiles;
 import static org.smoothbuild.testing.TestContext.modFiles;
 
-import org.smoothbuild.lang.define.DefsS;
-import org.smoothbuild.lang.define.ModFiles;
-import org.smoothbuild.lang.define.ModPath;
-import org.smoothbuild.lang.define.ModS;
-import org.smoothbuild.lang.define.PolyRefableS;
-import org.smoothbuild.lang.define.RefableS;
-import org.smoothbuild.lang.type.TypeS;
-import org.smoothbuild.lang.type.TypelikeS;
+import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.ModFiles;
+import org.smoothbuild.compile.lang.define.ModPath;
+import org.smoothbuild.compile.lang.define.ModS;
+import org.smoothbuild.compile.lang.define.PolyRefableS;
+import org.smoothbuild.compile.lang.define.RefableS;
+import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.compile.lang.type.TypelikeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 

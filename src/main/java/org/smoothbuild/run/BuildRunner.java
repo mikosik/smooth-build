@@ -10,7 +10,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.lang.define.MonoRefableS;
+import org.smoothbuild.compile.lang.define.MonoRefableS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.Evaluator;
