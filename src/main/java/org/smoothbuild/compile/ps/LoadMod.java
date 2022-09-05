@@ -1,5 +1,9 @@
 package org.smoothbuild.compile.ps;
 
+import static org.smoothbuild.compile.ps.AnalyzeSemantically.analyzeSemantically;
+import static org.smoothbuild.compile.ps.DetectUndefinedRefs.detectUndefinedRefs;
+import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
+import static org.smoothbuild.compile.ps.ParseModule.parseModule;
 import static org.smoothbuild.compile.ps.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.compile.ps.ast.AstSorter.sortParsedByDeps;
 import static org.smoothbuild.out.log.Maybe.maybe;
@@ -11,7 +15,6 @@ import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.ps.ast.Ast;
-import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
@@ -21,15 +24,15 @@ public class LoadMod {
       ModPath path, ModFiles modFiles, String sourceCode, DefsS imported) {
 
     var logBuffer = new LogBuffer();
-    FilePath filePath = modFiles.smoothFile();
-    Maybe<ModContext> moduleContext = ParseModule.parseModule(filePath, sourceCode);
+    var filePath = modFiles.smoothFile();
+    Maybe<ModContext> moduleContext = parseModule(filePath, sourceCode);
     logBuffer.logAll(moduleContext.logs());
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
 
     Ast ast = fromParseTree(filePath, moduleContext.value());
-    logBuffer.logAll(AnalyzeSemantically.analyzeSemantically(imported, ast));
+    logBuffer.logAll(analyzeSemantically(imported, ast));
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
@@ -41,13 +44,13 @@ public class LoadMod {
     }
     Ast sortedAst = maybeSortedAst.value();
 
-    Logs undefinedRefsProblems = DetectUndefinedRefs.detectUndefinedRefs(sortedAst, imported);
+    Logs undefinedRefsProblems = detectUndefinedRefs(sortedAst, imported);
     logBuffer.logAll(undefinedRefsProblems);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
 
-    var mod = ModuleCreator.createModuleS(path, modFiles, sortedAst, imported);
+    var mod = createModuleS(path, modFiles, sortedAst, imported);
     logBuffer.logAll(mod.logs());
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
