@@ -12,7 +12,7 @@ import org.smoothbuild.lang.type.VarS;
 import com.google.common.collect.ImmutableMap;
 
 public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyRefableS refable,
-    Loc loc) implements OperatorS {
+    Loc loc) implements OperS {
   @Override
   public String name() {
     return "<" + type + ">";

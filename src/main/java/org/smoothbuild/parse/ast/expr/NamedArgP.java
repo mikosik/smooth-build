@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast.expr;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.util.Strings;
 
-public final class NamedArgP extends OperatorP {
+public final class NamedArgP extends OperP {
   private final String name;
   private final ExprP expr;
 

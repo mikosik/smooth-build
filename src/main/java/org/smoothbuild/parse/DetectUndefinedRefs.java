@@ -11,16 +11,15 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.expr.CallP;
-import org.smoothbuild.parse.ast.expr.ConstantP;
 import org.smoothbuild.parse.ast.expr.DefaultArgP;
 import org.smoothbuild.parse.ast.expr.ExprP;
 import org.smoothbuild.parse.ast.expr.NamedArgP;
 import org.smoothbuild.parse.ast.expr.OrderP;
 import org.smoothbuild.parse.ast.expr.RefP;
 import org.smoothbuild.parse.ast.expr.SelectP;
+import org.smoothbuild.parse.ast.expr.ValP;
 import org.smoothbuild.parse.ast.refable.FuncP;
 import org.smoothbuild.parse.ast.refable.PolyRefableP;
-import org.smoothbuild.parse.ast.refable.ValP;
 import org.smoothbuild.util.Strings;
 
 import com.google.common.collect.ImmutableSet;
@@ -54,7 +53,7 @@ public class DetectUndefinedRefs {
   private void visitRefable(PolyRefableP polyRefableP) {
     switch (polyRefableP) {
       case FuncP funcP -> visitFunc(funcP);
-      case ValP valP -> visitVal(valP);
+      case org.smoothbuild.parse.ast.refable.ValP valP -> visitVal(valP);
     }
   }
 
@@ -67,7 +66,7 @@ public class DetectUndefinedRefs {
     });
   }
 
-  private void visitVal(ValP valP) {
+  private void visitVal(org.smoothbuild.parse.ast.refable.ValP valP) {
     valP.body().ifPresent(this::visitExpr);
   }
 
@@ -78,7 +77,7 @@ public class DetectUndefinedRefs {
   private void visitExpr(ExprP expr) {
     switch (expr) {
       case CallP callP -> visitCall(callP);
-      case ConstantP constantP -> {}
+      case ValP valP -> {}
       case NamedArgP namedArgP -> visitExpr(namedArgP.expr());
       case OrderP orderP -> visitExprs(orderP.elems());
       case RefP refP -> visitRef(refP);

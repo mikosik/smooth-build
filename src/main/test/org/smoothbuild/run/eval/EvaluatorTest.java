@@ -13,11 +13,11 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.IntB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.IntB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.lang.define.ExprS;
 import org.smoothbuild.load.FileLoader;
@@ -194,7 +194,7 @@ public class EvaluatorTest  extends TestContext {
     }
   }
 
-  private ObjB evaluate(ExprS exprS) {
+  private ExprB evaluate(ExprS exprS) {
     var resultMap = newEvaluator().evaluate(list(exprS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);

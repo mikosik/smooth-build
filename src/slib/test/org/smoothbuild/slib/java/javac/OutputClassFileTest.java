@@ -7,8 +7,8 @@ import static okio.Okio.sink;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.cnst.ArrayBBuilder;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
+import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.testing.TestContext;
 
@@ -22,7 +22,7 @@ public class OutputClassFileTest extends TestContext {
   @Test
   public void open_output_stream() throws IOException {
     var factory = nativeApi().factory();
-    ArrayBBuilder fileArrayBuilder = objDb().arrayBuilder(factory.arrayT(factory.fileT()));
+    ArrayBBuilder fileArrayBuilder = bytecodeDb().arrayBuilder(factory.arrayT(factory.fileT()));
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi());
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
@@ -35,7 +35,7 @@ public class OutputClassFileTest extends TestContext {
   public void get_name_returns_file_path() {
     var arrayTH = arrayTB(fileTB());
     OutputClassFile outputClassFile =
-        new OutputClassFile(objDb().arrayBuilder(arrayTH), path, nativeApi());
+        new OutputClassFile(bytecodeDb().arrayBuilder(arrayTH), path, nativeApi());
     assertThat(outputClassFile.getName())
         .isEqualTo("/" + path);
   }

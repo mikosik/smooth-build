@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type;
 
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
-import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
+import static org.smoothbuild.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.bytecode.type.CatKindB.ARRAY;
 import static org.smoothbuild.bytecode.type.CatKindB.BLOB;
 import static org.smoothbuild.bytecode.type.CatKindB.BOOL;
@@ -27,28 +27,28 @@ import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNo
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.bytecode.type.cnst.ArrayTB;
-import org.smoothbuild.bytecode.type.cnst.BlobTB;
-import org.smoothbuild.bytecode.type.cnst.BoolTB;
-import org.smoothbuild.bytecode.type.cnst.FuncTB;
-import org.smoothbuild.bytecode.type.cnst.IntTB;
-import org.smoothbuild.bytecode.type.cnst.MethodTB;
-import org.smoothbuild.bytecode.type.cnst.StringTB;
-import org.smoothbuild.bytecode.type.cnst.TupleTB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
-import org.smoothbuild.bytecode.type.expr.CallCB;
-import org.smoothbuild.bytecode.type.expr.CombineCB;
-import org.smoothbuild.bytecode.type.expr.IfCB;
-import org.smoothbuild.bytecode.type.expr.InvokeCB;
-import org.smoothbuild.bytecode.type.expr.MapCB;
-import org.smoothbuild.bytecode.type.expr.OrderCB;
-import org.smoothbuild.bytecode.type.expr.ParamRefCB;
-import org.smoothbuild.bytecode.type.expr.SelectCB;
+import org.smoothbuild.bytecode.type.oper.CallCB;
+import org.smoothbuild.bytecode.type.oper.CombineCB;
+import org.smoothbuild.bytecode.type.oper.IfCB;
+import org.smoothbuild.bytecode.type.oper.InvokeCB;
+import org.smoothbuild.bytecode.type.oper.MapCB;
+import org.smoothbuild.bytecode.type.oper.OrderCB;
+import org.smoothbuild.bytecode.type.oper.ParamRefCB;
+import org.smoothbuild.bytecode.type.oper.SelectCB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.BlobTB;
+import org.smoothbuild.bytecode.type.val.BoolTB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IntTB;
+import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.StringTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
@@ -93,7 +93,7 @@ public class CatDb {
   // methods for getting Val-s types
 
   public ArrayTB array(TypeB elemT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newArray(elemT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newArray(elemT));
   }
 
   public BlobTB blob() {
@@ -105,7 +105,7 @@ public class CatDb {
   }
 
   public FuncTB func(TypeB res, List<? extends TypeB> params) {
-    return wrapHashedDbExcAsObjDbExc(() -> newFunc(res, tuple(params)));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newFunc(res, tuple(params)));
   }
 
   public IntTB int_() {
@@ -113,11 +113,11 @@ public class CatDb {
   }
 
   public MethodTB method(TypeB res, ImmutableList<TypeB> params) {
-    return wrapHashedDbExcAsObjDbExc(() -> newMethod(res, tuple(params)));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newMethod(res, tuple(params)));
   }
 
   public TupleTB tuple(List<? extends TypeB> itemTs) {
-    return wrapHashedDbExcAsObjDbExc(() -> newTuple(ImmutableList.copyOf(itemTs)));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(ImmutableList.copyOf(itemTs)));
   }
 
   public StringTB string() {
@@ -127,35 +127,35 @@ public class CatDb {
   // methods for getting Expr-s types
 
   public CallCB call(TypeB evalT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newCall(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(evalT));
   }
 
   public CombineCB combine(TupleTB evalT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newCombine(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newCombine(evalT));
   }
 
   public IfCB if_(TypeB evalT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newIf(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newIf(evalT));
   }
 
   public InvokeCB invoke(TypeB evalT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newInvoke(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newInvoke(evalT));
   }
 
   public MapCB map(ArrayTB evalT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newMap(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newMap(evalT));
   }
 
   public OrderCB order(ArrayTB evalT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newOrder(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT));
   }
 
   public ParamRefCB paramRef(TypeB evalT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newParamRef(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newParamRef(evalT));
   }
 
   public SelectCB select(TypeB evalT) {
-    return wrapHashedDbExcAsObjDbExc(() -> newSelect(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newSelect(evalT));
   }
 
   // methods for reading from db
@@ -331,10 +331,10 @@ public class CatDb {
     return cache(new TupleTB(rootHash, itemTs));
   }
 
-  // methods for creating Expr types
+  // methods for creating Oper types
 
   private CallCB newCall(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(CALL, evalT);
+    var rootHash = writeOperRoot(CALL, evalT);
     return newCall(rootHash, evalT);
   }
 
@@ -343,7 +343,7 @@ public class CatDb {
   }
 
   private CombineCB newCombine(TupleTB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(COMBINE, evalT);
+    var rootHash = writeOperRoot(COMBINE, evalT);
     return newCombine(rootHash, evalT);
   }
 
@@ -352,7 +352,7 @@ public class CatDb {
   }
 
   private IfCB newIf(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(IF, evalT);
+    var rootHash = writeOperRoot(IF, evalT);
     return newIf(rootHash, evalT);
   }
 
@@ -361,7 +361,7 @@ public class CatDb {
   }
 
   private InvokeCB newInvoke(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(INVOKE, evalT);
+    var rootHash = writeOperRoot(INVOKE, evalT);
     return newInvoke(rootHash, evalT);
   }
 
@@ -370,7 +370,7 @@ public class CatDb {
   }
 
   private MapCB newMap(ArrayTB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(MAP, evalT);
+    var rootHash = writeOperRoot(MAP, evalT);
     return newMap(rootHash, evalT);
   }
 
@@ -379,7 +379,7 @@ public class CatDb {
   }
 
   private OrderCB newOrder(ArrayTB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(ORDER, evalT);
+    var rootHash = writeOperRoot(ORDER, evalT);
     return newOrder(rootHash, evalT);
   }
 
@@ -388,7 +388,7 @@ public class CatDb {
   }
 
   private ParamRefCB newParamRef(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(PARAM_REF, evalT);
+    var rootHash = writeOperRoot(PARAM_REF, evalT);
     return newParamRef(rootHash, evalT);
   }
 
@@ -397,7 +397,7 @@ public class CatDb {
   }
 
   private SelectCB newSelect(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(SELECT, evalT);
+    var rootHash = writeOperRoot(SELECT, evalT);
     return newSelect(rootHash, evalT);
   }
 
@@ -434,7 +434,7 @@ public class CatDb {
 
   // Helper methods for writing roots
 
-  private Hash writeExprRoot(CatKindB kind, CatB evalT) throws HashedDbExc {
+  private Hash writeOperRoot(CatKindB kind, CatB evalT) throws HashedDbExc {
     return writeNonBaseRoot(kind, evalT.hash());
   }
 

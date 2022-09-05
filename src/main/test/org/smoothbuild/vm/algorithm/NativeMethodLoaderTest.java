@@ -13,9 +13,9 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.obj.expr.OrderB;
+import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.load.JarClassLoaderProv;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
@@ -68,7 +68,7 @@ public class NativeMethodLoaderTest extends TestContext {
   }
 
   private String wrongReturnTypeErrorMessage() {
-    return "Providing method should declare return type as " + CnstB.class.getCanonicalName()
+    return "Providing method should declare return type as " + ValB.class.getCanonicalName()
         + " but is " + OrderB.class.getCanonicalName() + ".";
   }
 

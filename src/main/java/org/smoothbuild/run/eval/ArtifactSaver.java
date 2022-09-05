@@ -9,6 +9,8 @@ import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.run.eval.ArtifactPaths.artifactPath;
+import static org.smoothbuild.run.eval.ArtifactPaths.targetPath;
+import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.sort;
 
@@ -19,10 +21,9 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
@@ -43,7 +44,7 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<MonoRefableS, CnstB> artifacts) {
+  public int saveArtifacts(Map<MonoRefableS, ValB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
     var sortedPairs = sort(artifacts, comparing(e -> e.getKey().name()));
     for (var pair : sortedPairs.entrySet()) {
@@ -54,10 +55,10 @@ public class ArtifactSaver {
     return EXIT_CODE_SUCCESS;
   }
 
-  private boolean save(MonoRefableS topRef, CnstB objB) {
+  private boolean save(MonoRefableS topRef, ValB valB) {
     String name = topRef.name();
     try {
-      PathS path = write(topRef, objB);
+      PathS path = write(topRef, valB);
       reportSuccess(name, path);
       return true;
     } catch (IOException e) {
@@ -71,20 +72,20 @@ public class ArtifactSaver {
     }
   }
 
-  private PathS write(MonoRefableS topRef, ObjB objB) throws IOException, DuplicatedPathsExc {
+  private PathS write(MonoRefableS topRef, ValB valB) throws IOException, DuplicatedPathsExc {
     PathS artifactPath = artifactPath(topRef.name());
     if (topRef.type() instanceof ArrayTS arrayTS) {
-      return saveArray(arrayTS, artifactPath, (ArrayB) objB);
+      return saveArray(arrayTS, artifactPath, (ArrayB) valB);
     } else if (topRef.type().name().equals(FileStruct.NAME)) {
-      return saveFile(artifactPath, (TupleB) objB);
+      return saveFile(artifactPath, (TupleB) valB);
     } else {
-      return saveBaseObject(artifactPath, objB);
+      return saveBaseVal(artifactPath, valB);
     }
   }
 
   private PathS saveFile(PathS artifactPath, TupleB file) throws IOException, DuplicatedPathsExc {
     saveFileArray(artifactPath, list(file));
-    return artifactPath.append(fileObjectPath(file));
+    return artifactPath.append(fileValPath(file));
   }
 
   private PathS saveArray(ArrayTS arrayTS, PathS artifactPath, ArrayB arrayB)
@@ -100,16 +101,16 @@ public class ArtifactSaver {
     } else if (elemTS.name().equals(FileStruct.NAME)) {
       saveFileArray(artifactPath, arrayB.elems(TupleB.class));
     } else {
-      saveObjectArray(artifactPath, arrayB);
+      saveNonFileArray(artifactPath, arrayB);
     }
     return artifactPath;
   }
 
-  private void saveObjectArray(PathS artifactPath, ArrayB arrayB) throws IOException {
+  private void saveNonFileArray(PathS artifactPath, ArrayB arrayB) throws IOException {
     int i = 0;
-    for (CnstB cnstB : arrayB.elems(CnstB.class)) {
+    for (ValB valB : arrayB.elems(ValB.class)) {
       PathS sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
-      PathS targetPath = ArtifactPaths.targetPath(cnstB);
+      PathS targetPath = targetPath(valB);
       fileSystem.createLink(sourcePath, targetPath);
       i++;
     }
@@ -119,10 +120,10 @@ public class ArtifactSaver {
       DuplicatedPathsExc {
     DuplicatesDetector<PathS> duplicatesDetector = new DuplicatesDetector<>();
     for (TupleB file : files) {
-      PathS filePath = fileObjectPath(file);
+      PathS filePath = fileValPath(file);
       PathS sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
-        PathS targetPath = ArtifactPaths.targetPath(FileStruct.fileContent(file));
+        PathS targetPath = targetPath(fileContent(file));
         fileSystem.createLink(sourcePath, targetPath);
       }
     }
@@ -143,14 +144,14 @@ public class ArtifactSaver {
             + delimiter + list);
   }
 
-  private PathS saveBaseObject(PathS artifactPath, ObjB objB) throws IOException {
-    PathS targetPath = ArtifactPaths.targetPath(objB);
+  private PathS saveBaseVal(PathS artifactPath, ValB valB) throws IOException {
+    PathS targetPath = targetPath(valB);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;
   }
 
-  private static PathS fileObjectPath(TupleB file) {
+  private static PathS fileValPath(TupleB file) {
     return path(FileStruct.filePath(file).toJ());
   }
 

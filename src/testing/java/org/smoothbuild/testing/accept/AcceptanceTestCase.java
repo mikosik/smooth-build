@@ -27,7 +27,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.bytecode.BytecodeModule;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
@@ -58,7 +58,7 @@ public class AcceptanceTestCase extends TestContext {
   private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
-  private Optional<Map<MonoRefableS, CnstB>> artifacts;
+  private Optional<Map<MonoRefableS, ValB>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
@@ -114,7 +114,7 @@ public class AcceptanceTestCase extends TestContext {
     }
   }
 
-  protected CnstB artifact() {
+  protected ValB artifact() {
     var artifactsMap = artifactsMap();
     int size = artifactsMap.size();
     return switch (size) {
@@ -124,7 +124,7 @@ public class AcceptanceTestCase extends TestContext {
     };
   }
 
-  protected CnstB artifact(int index) {
+  protected ValB artifact(int index) {
     checkArgument(0 <= index);
     var artifactsMap = artifactsMap();
     int size = artifactsMap.size();
@@ -134,7 +134,7 @@ public class AcceptanceTestCase extends TestContext {
     return newArrayList(artifactsMap.values()).get(index);
   }
 
-  private Map<MonoRefableS, CnstB> artifactsMap() {
+  private Map<MonoRefableS, ValB> artifactsMap() {
     if (artifacts == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }

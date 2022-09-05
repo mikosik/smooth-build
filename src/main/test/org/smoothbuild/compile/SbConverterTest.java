@@ -15,9 +15,9 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.define.ExprS;
 import org.smoothbuild.lang.type.TypeS;
@@ -366,7 +366,7 @@ public class SbConverterTest extends TestContext {
     }
   }
 
-  private void assertConversion(ExprS exprS, ObjB expected) {
+  private void assertConversion(ExprS exprS, ExprB expected) {
     assertThat(newConverter().convertExpr(exprS))
         .isEqualTo(expected);
   }

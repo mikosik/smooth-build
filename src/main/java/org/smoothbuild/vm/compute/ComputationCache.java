@@ -13,13 +13,13 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.ObjDb;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.type.cnst.ArrayTB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.expr.BytecodeDb;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
@@ -35,14 +35,14 @@ import okio.BufferedSource;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final ObjDb objDb;
+  private final BytecodeDb bytecodeDb;
   private final BytecodeF bytecodeF;
 
   @Inject
-  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjDb objDb,
+  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, BytecodeDb bytecodeDb,
       BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;
-    this.objDb = objDb;
+    this.bytecodeDb = bytecodeDb;
     this.bytecodeF = bytecodeF;
   }
 
@@ -52,7 +52,7 @@ public class ComputationCache {
       ArrayB messages = output.messages();
       sink.write(messages.hash().toByteString());
       if (!containsErrors(messages)) {
-        sink.write(output.cnst().hash().toByteString());
+        sink.write(output.valB().hash().toByteString());
       }
     } catch (IOException e) {
       throw computationCacheException(e);
@@ -71,14 +71,14 @@ public class ComputationCache {
 
   public synchronized Output read(Hash taskHash, TypeB type) throws ComputationCacheExc {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      ObjB messagesObj = objDb.get(Hash.read(source));
+      ExprB message = bytecodeDb.get(Hash.read(source));
       ArrayTB messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
-      if (!messagesObj.cat().equals(messageArrayT)) {
+      if (!message.cat().equals(messageArrayT)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayT
-            + " as first child of its Merkle root, but got " + messagesObj.cat());
+            + " as first child of its Merkle root, but got " + message.cat());
       }
 
-      ArrayB messages = (ArrayB) messagesObj;
+      ArrayB messages = (ArrayB) message;
       Iterable<TupleB> tuples = messages.elems(TupleB.class);
       for (TupleB m : tuples) {
         String severity = severity(m);
@@ -91,12 +91,12 @@ public class ComputationCache {
         return new Output(null, messages);
       } else {
         Hash resultObjectHash = Hash.read(source);
-        ObjB obj = objDb.get(resultObjectHash);
-        if (!type.equals(obj.cat())) {
+        ExprB expr = bytecodeDb.get(resultObjectHash);
+        if (!type.equals(expr.cat())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
-              + " as second child of its Merkle root, but got " + obj.cat());
+              + " as second child of its Merkle root, but got " + expr.cat());
         } else {
-          return new Output((CnstB) obj, messages);
+          return new Output((ValB) expr, messages);
         }
       }
     } catch (IOException e) {

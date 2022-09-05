@@ -97,14 +97,14 @@ public class AstCreator {
         visitChildren(top);
         Optional<TypeP> type = createTypeSane(top.type());
         String name = nameNode.getText();
-        Optional<ExprP> obj = createExprSane(top.expr());
+        Optional<ExprP> expr = createExprSane(top.expr());
         Optional<AnnP> annotation = createNativeSane(top.ann());
         Loc loc = locOf(filePath, nameNode);
         if (top.paramList() == null) {
-          refables.add(new ValP(type, name, obj, annotation, loc));
+          refables.add(new ValP(type, name, expr, annotation, loc));
         } else {
           List<ItemP> params = createParams(top.paramList());
-          refables.add(new FuncP(type, name, params, obj, annotation, loc));
+          refables.add(new FuncP(type, name, params, expr, annotation, loc));
         }
         return null;
       }
@@ -213,8 +213,8 @@ public class AstCreator {
         return new SelectP(selectable, name, loc);
       }
 
-      private ExprP createChainParts(ExprP obj, List<ChainPartContext> chainParts) {
-        ExprP result = obj;
+      private ExprP createChainParts(ExprP expr, List<ChainPartContext> chainParts) {
+        ExprP result = expr;
         for (ChainPartContext chainPart : chainParts) {
           if (chainPart.argList() != null) {
             var args = createArgList(chainPart.argList());

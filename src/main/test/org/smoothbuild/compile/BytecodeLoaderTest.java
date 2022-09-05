@@ -11,8 +11,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
@@ -41,7 +41,8 @@ public class BytecodeLoaderTest extends TestContext {
             + ".UnsupportedOperationException: detailed message"));
   }
 
-  private Try<ObjB> loadBytecode(Class<?> clazz, Map<String, TypeB> varMap) throws NoSuchMethodException {
+  private Try<ExprB> loadBytecode(Class<?> clazz, Map<String, TypeB> varMap)
+      throws NoSuchMethodException {
     var jar = blobB();
     var classBinaryName = "binary.name";
     var bytecodeMethodLoader = mock(BytecodeMethodLoader.class);

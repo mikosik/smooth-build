@@ -2,25 +2,25 @@ package org.smoothbuild.bytecode.type;
 
 import java.util.function.BiFunction;
 
-import org.smoothbuild.bytecode.obj.ObjDbImpl;
-import org.smoothbuild.bytecode.obj.base.MerkleRoot;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.obj.cnst.BoolB;
-import org.smoothbuild.bytecode.obj.cnst.FuncB;
-import org.smoothbuild.bytecode.obj.cnst.IntB;
-import org.smoothbuild.bytecode.obj.cnst.MethodB;
-import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.obj.expr.CallB;
-import org.smoothbuild.bytecode.obj.expr.CombineB;
-import org.smoothbuild.bytecode.obj.expr.IfB;
-import org.smoothbuild.bytecode.obj.expr.InvokeB;
-import org.smoothbuild.bytecode.obj.expr.MapB;
-import org.smoothbuild.bytecode.obj.expr.OrderB;
-import org.smoothbuild.bytecode.obj.expr.ParamRefB;
-import org.smoothbuild.bytecode.obj.expr.SelectB;
+import org.smoothbuild.bytecode.expr.BytecodeDb;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.MerkleRoot;
+import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.CombineB;
+import org.smoothbuild.bytecode.expr.oper.IfB;
+import org.smoothbuild.bytecode.expr.oper.InvokeB;
+import org.smoothbuild.bytecode.expr.oper.MapB;
+import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.expr.val.BoolB;
+import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.IntB;
+import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.StringB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -50,7 +50,7 @@ public enum CatKindB {
   ;
   // @formatter:on
 
-  private static ObjB throwException(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+  private static ExprB throwException(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     throw new UnsupportedOperationException();
   }
 
@@ -75,11 +75,11 @@ public enum CatKindB {
           .build();
 
   private final byte marker;
-  private final Class<? extends ObjB> typeJ;
-  private final BiFunction<MerkleRoot, ObjDbImpl, ObjB> instantiator;
+  private final Class<? extends ExprB> typeJ;
+  private final BiFunction<MerkleRoot, BytecodeDb, ExprB> instantiator;
 
-  CatKindB(byte marker, Class<? extends ObjB> typeJ,
-      BiFunction<MerkleRoot, ObjDbImpl, ObjB> instantiator) {
+  CatKindB(byte marker, Class<? extends ExprB> typeJ,
+      BiFunction<MerkleRoot, BytecodeDb, ExprB> instantiator) {
     this.marker = marker;
     this.typeJ = typeJ;
     this.instantiator = instantiator;
@@ -93,11 +93,11 @@ public enum CatKindB {
     return marker;
   }
 
-  public Class<? extends ObjB> typeJ() {
+  public Class<? extends ExprB> typeJ() {
     return typeJ;
   }
 
-  public ObjB newInstanceJ(MerkleRoot merkleRoot, ObjDbImpl objDb) {
-    return instantiator.apply(merkleRoot, objDb);
+  public ExprB newInstanceJ(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+    return instantiator.apply(merkleRoot, bytecodeDb);
   }
 }

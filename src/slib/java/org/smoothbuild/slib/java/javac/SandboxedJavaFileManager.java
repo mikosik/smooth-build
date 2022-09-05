@@ -15,8 +15,8 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.ArrayBBuilder;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.Lists;

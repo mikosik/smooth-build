@@ -55,14 +55,14 @@ public class AstVisitor {
   public void visitValue(ValP valP) {
     valP.ann().ifPresent(this::visitAnn);
     valP.type().ifPresent(this::visitType);
-    valP.body().ifPresent(this::visitObj);
+    valP.body().ifPresent(this::visitExpr);
   }
 
   public void visitFunc(FuncP funcP) {
     funcP.ann().ifPresent(this::visitAnn);
     funcP.resT().ifPresent(this::visitType);
     visitParams(funcP.params());
-    funcP.body().ifPresent(this::visitObj);
+    funcP.body().ifPresent(this::visitExpr);
   }
 
   public void visitAnn(AnnP annotation) {
@@ -75,13 +75,13 @@ public class AstVisitor {
 
   public void visitParam(int index, ItemP param) {
     visitType(param.type());
-    param.body().ifPresent(this::visitObj);
+    param.body().ifPresent(this::visitExpr);
   }
 
   public void visitType(TypeP type) {}
 
-  public void visitObj(ExprP obj) {
-    switch (obj) {
+  public void visitExpr(ExprP expr) {
+    switch (expr) {
       case OrderP orderP -> visitOrder(orderP);
       case BlobP blobP -> visitBlob(blobP);
       case CallP callP -> visitCall(callP);
@@ -99,14 +99,14 @@ public class AstVisitor {
   }
 
   public void visitArg(ExprP arg) {
-    visitObj(arg);
+    visitExpr(arg);
   }
 
   public void visitBlob(BlobP blob) {
   }
 
   public void visitCall(CallP call) {
-    visitObj(call.callee());
+    visitExpr(call.callee());
     visitArgs(call.args());
   }
 
@@ -117,15 +117,15 @@ public class AstVisitor {
   }
 
   public void visitNamedArg(NamedArgP namedArg) {
-    visitObj(namedArg.expr());
+    visitExpr(namedArg.expr());
   }
 
   public void visitOrder(OrderP order) {
-    order.elems().forEach(this::visitObj);
+    order.elems().forEach(this::visitExpr);
   }
 
   public void visitSelect(SelectP select) {
-    visitObj(select.selectable());
+    visitExpr(select.selectable());
   }
 
   public void visitRef(RefP ref) {}

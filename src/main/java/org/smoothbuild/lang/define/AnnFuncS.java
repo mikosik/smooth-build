@@ -29,7 +29,7 @@ public final class AnnFuncS extends FuncS {
   }
 
   @Override
-  public ExprS mapVars(Function<VarS, TypeS> mapper) {
+  public AnnFuncS mapVars(Function<VarS, TypeS> mapper) {
     return new AnnFuncS(
         ann, type().mapVars(mapper), modPath(), name(), mapParams(params(), mapper), loc());
   }

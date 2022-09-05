@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.fs.base.PathS.path;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.testing.TestContext;
 

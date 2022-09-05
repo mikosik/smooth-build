@@ -8,8 +8,8 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.compile.ConvertSbExc;
 import org.smoothbuild.compile.SbConverter;
 import org.smoothbuild.compile.SbConverterProv;
@@ -32,7 +32,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<CnstB>> evaluate(List<? extends ExprS> exprsS) {
+  public Optional<ImmutableList<ValB>> evaluate(List<? extends ExprS> exprsS) {
     reporter.startNewPhase("Compiling");
     var sbCoverter = sbConverterProv.get();
     var exprsB = convert(exprsS, sbCoverter);
@@ -45,7 +45,7 @@ public class Evaluator {
     return evaluate(vm, exprsB.get());
   }
 
-  private Optional<ImmutableList<CnstB>> evaluate(Vm vm, ImmutableList<ObjB> exprs) {
+  private Optional<ImmutableList<ValB>> evaluate(Vm vm, ImmutableList<ExprB> exprs) {
     try {
       return vm.evaluate(exprs);
     } catch (InterruptedException e) {
@@ -54,7 +54,7 @@ public class Evaluator {
     }
   }
 
-  private Optional<ImmutableList<ObjB>> convert(
+  private Optional<ImmutableList<ExprB>> convert(
       List<? extends ExprS> exprsS, SbConverter sbConverter) {
     try {
       return Optional.of(map(exprsS, sbConverter::convertExpr));

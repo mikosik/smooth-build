@@ -10,7 +10,7 @@ import org.smoothbuild.lang.type.StringTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 
-public record StringS(StringTS type, String string, Loc loc) implements InstanceS {
+public record StringS(StringTS type, String string, Loc loc) implements ValS {
   @Override
   public String name() {
     return escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);

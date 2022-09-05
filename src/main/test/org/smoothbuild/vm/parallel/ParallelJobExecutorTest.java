@@ -27,10 +27,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.StringB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
@@ -281,11 +281,11 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private ObjB executeSingleJob(Job job) throws InterruptedException {
+  private ExprB executeSingleJob(Job job) throws InterruptedException {
     return executeSingleJob(parallelJobExecutor, job);
   }
 
-  private static ObjB executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
+  private static ExprB executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
     return parallelJobExecutor.executeAll(list(job)).get(0).get();
   }

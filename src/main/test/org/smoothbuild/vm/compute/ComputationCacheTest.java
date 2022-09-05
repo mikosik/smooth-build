@@ -7,12 +7,12 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.obj.cnst.BoolB;
-import org.smoothbuild.bytecode.obj.cnst.IntB;
-import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.expr.val.BoolB;
+import org.smoothbuild.bytecode.expr.val.IntB;
+import org.smoothbuild.bytecode.expr.val.StringB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.algorithm.Output;
@@ -68,7 +68,7 @@ public class ComputationCacheTest extends TestContext {
     computationCache().write(hash, new Output(arrayB(file), messageArrayEmtpy()));
     var arrayT = arrayTB(bytecodeF().fileT());
 
-    assertThat(((ArrayB) computationCache().read(hash, arrayT).cnst()).elems(TupleB.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).valB()).elems(TupleB.class))
         .containsExactly(file);
   }
 
@@ -78,7 +78,7 @@ public class ComputationCacheTest extends TestContext {
     computationCache().write(hash, new Output(arrayB(blob), messageArrayEmtpy()));
     var arrayT = arrayTB(blobTB());
 
-    assertThat(((ArrayB) computationCache().read(hash, arrayT).cnst()).elems(BlobB.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).valB()).elems(BlobB.class))
         .containsExactly(blob);
   }
 
@@ -88,7 +88,7 @@ public class ComputationCacheTest extends TestContext {
     computationCache().write(hash, new Output(arrayB(boolV), messageArrayEmtpy()));
     var arrayT = arrayTB(boolTB());
 
-    assertThat(((ArrayB) computationCache().read(hash, arrayT).cnst()).elems(BoolB.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).valB()).elems(BoolB.class))
         .containsExactly(boolV);
   }
 
@@ -98,7 +98,7 @@ public class ComputationCacheTest extends TestContext {
     computationCache().write(hash, new Output(arrayB(intV), messageArrayEmtpy()));
     var arrayT = arrayTB(intTB());
 
-    assertThat(((ArrayB) computationCache().read(hash, arrayT).cnst()).elems(IntB.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).valB()).elems(IntB.class))
         .containsExactly(intV);
   }
 
@@ -109,7 +109,7 @@ public class ComputationCacheTest extends TestContext {
     computationCache().write(hash, new Output(array, messageArrayEmtpy()));
     var arrayT = arrayTB(stringTB());
 
-    assertThat(((ArrayB) computationCache().read(hash, arrayT).cnst()).elems(StringB.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).valB()).elems(StringB.class))
         .containsExactly(string);
   }
 
@@ -118,7 +118,7 @@ public class ComputationCacheTest extends TestContext {
     var file = fileB(path("file/path"), bytes);
     computationCache().write(hash, new Output(file, messageArrayEmtpy()));
 
-    assertThat(computationCache().read(hash, bytecodeF().fileT()).cnst())
+    assertThat(computationCache().read(hash, bytecodeF().fileT()).valB())
         .isEqualTo(file);
   }
 
@@ -127,7 +127,7 @@ public class ComputationCacheTest extends TestContext {
     var blob = blobB(bytes);
     computationCache().write(hash, new Output(blob, messageArrayEmtpy()));
 
-    assertThat(computationCache().read(hash, blobTB()).cnst())
+    assertThat(computationCache().read(hash, blobTB()).valB())
         .isEqualTo(blob);
   }
 
@@ -136,7 +136,7 @@ public class ComputationCacheTest extends TestContext {
     var boolV = boolB(true);
     computationCache().write(hash, new Output(boolV, messageArrayEmtpy()));
 
-    assertThat(((BoolB) computationCache().read(hash, boolTB()).cnst()).toJ())
+    assertThat(((BoolB) computationCache().read(hash, boolTB()).valB()).toJ())
         .isTrue();
   }
 
@@ -145,7 +145,7 @@ public class ComputationCacheTest extends TestContext {
     var intV = intB(123);
     computationCache().write(hash, new Output(intV, messageArrayEmtpy()));
 
-    assertThat(((IntB) computationCache().read(hash, intTB()).cnst()).toJ())
+    assertThat(((IntB) computationCache().read(hash, intTB()).valB()).toJ())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -154,7 +154,7 @@ public class ComputationCacheTest extends TestContext {
     var string = "some string";
     var strV = stringB(string);
     computationCache().write(hash, new Output(strV, messageArrayEmtpy()));
-    assertThat(((StringB) computationCache().read(hash, stringTB()).cnst()).toJ())
+    assertThat(((StringB) computationCache().read(hash, stringTB()).valB()).toJ())
         .isEqualTo(string);
   }
 }

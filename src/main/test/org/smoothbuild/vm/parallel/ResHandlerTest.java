@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.algorithm.Output;
@@ -22,8 +22,8 @@ import org.smoothbuild.vm.job.TaskInfo;
 public class ResHandlerTest extends TestContext {
   private ExecutionReporter reporter;
   private SoftTerminationExecutor executor;
-  private Consumer<CnstB> consumer;
-  private CnstB cnst;
+  private Consumer<ValB> consumer;
+  private ValB val;
 
   @BeforeEach
   @SuppressWarnings("unchecked")
@@ -31,7 +31,7 @@ public class ResHandlerTest extends TestContext {
     reporter = mock(ExecutionReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
-    cnst = stringB();
+    val = stringB();
   }
 
   @Nested
@@ -39,14 +39,14 @@ public class ResHandlerTest extends TestContext {
     @Test
     public void object_is_forwarded_to_consumer() {
       ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
-      resHandler.accept(maybeComputed(cnst));
-      verify(consumer, only()).accept(cnst);
+      resHandler.accept(maybeComputed(val));
+      verify(consumer, only()).accept(val);
     }
 
     @Test
     public void executor_is_not_stopped() {
       ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
-      resHandler.accept(maybeComputed(cnst));
+      resHandler.accept(maybeComputed(val));
       verifyNoInteractions(executor);
     }
   }
@@ -85,12 +85,12 @@ public class ResHandlerTest extends TestContext {
     }
   }
 
-  private CompRes maybeComputed(CnstB cnst) {
-    return new CompRes(output(cnst), DISK);
+  private CompRes maybeComputed(ValB val) {
+    return new CompRes(output(val), DISK);
   }
 
-  private Output output(CnstB cnst) {
-    return new Output(cnst, arrayB(stringTB()));
+  private Output output(ValB val) {
+    return new Output(val, arrayB(stringTB()));
   }
 
   private TaskInfo taskInfo() {

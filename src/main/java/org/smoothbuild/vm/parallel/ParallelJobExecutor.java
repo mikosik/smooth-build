@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.compute.Computer;
@@ -38,7 +38,7 @@ public class ParallelJobExecutor {
     this.threadCount = threadCount;
   }
 
-  public List<Optional<CnstB>> executeAll(List<Job> jobs) throws InterruptedException {
+  public List<Optional<ValB>> executeAll(List<Job> jobs) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(jobs);
   }
@@ -59,7 +59,7 @@ public class ParallelJobExecutor {
       return reporter;
     }
 
-    public List<Optional<CnstB>> executeAll(List<Job> jobs)
+    public List<Optional<ValB>> executeAll(List<Job> jobs)
         throws InterruptedException {
       var results = map(jobs, job -> job.schedule(this));
       runWhenAllAvailable(results, executor::terminate);
@@ -68,7 +68,7 @@ public class ParallelJobExecutor {
       return map(results, promise -> Optional.ofNullable(promise.get()));
     }
 
-    public void enqueue(TaskInfo info, Algorithm algorithm, TupleB input, Consumer<CnstB> consumer) {
+    public void enqueue(TaskInfo info, Algorithm algorithm, TupleB input, Consumer<ValB> consumer) {
       executor.enqueue(() -> {
         try {
           var resHandler = new ResHandler(info, consumer, reporter, executor);

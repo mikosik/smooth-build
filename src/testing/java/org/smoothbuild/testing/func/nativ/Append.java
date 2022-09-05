@@ -1,17 +1,17 @@
 package org.smoothbuild.testing.func.nativ;
 
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Append {
-  public static CnstB func(NativeApi nativeApi, TupleB args) {
+  public static ValB func(NativeApi nativeApi, TupleB args) {
     ArrayB array = (ArrayB) args.get(0);
-    CnstB elem = args.get(1);
+    ValB elem = args.get(1);
     return nativeApi.factory()
         .arrayBuilderWithElems(array.cat().elem())
-        .addAll(array.elems(CnstB.class))
+        .addAll(array.elems(ValB.class))
         .add(elem)
         .build();
   }

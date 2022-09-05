@@ -5,8 +5,8 @@ import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
 
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 
@@ -21,9 +21,9 @@ public class Vm {
     this.parallelExecutor = parallelExecutor;
   }
 
-  public Optional<ImmutableList<CnstB>> evaluate(ImmutableList<ObjB> objs)
+  public Optional<ImmutableList<ValB>> evaluate(ImmutableList<ExprB> exprs)
       throws InterruptedException {
-    var jobs = map(objs, jobCreator::eagerJobFor);
+    var jobs = map(exprs, jobCreator::eagerJobFor);
     var result = parallelExecutor.executeAll(jobs);
     return pullUp(result);
   }

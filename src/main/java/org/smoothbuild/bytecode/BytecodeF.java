@@ -11,37 +11,37 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.bytecode.obj.ObjDb;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.ArrayBBuilder;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.obj.cnst.BlobBBuilder;
-import org.smoothbuild.bytecode.obj.cnst.BoolB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.FuncB;
-import org.smoothbuild.bytecode.obj.cnst.IntB;
-import org.smoothbuild.bytecode.obj.cnst.MethodB;
-import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.obj.exc.ObjDbExc;
-import org.smoothbuild.bytecode.obj.expr.CallB;
-import org.smoothbuild.bytecode.obj.expr.CombineB;
-import org.smoothbuild.bytecode.obj.expr.IfB;
-import org.smoothbuild.bytecode.obj.expr.InvokeB;
-import org.smoothbuild.bytecode.obj.expr.MapB;
-import org.smoothbuild.bytecode.obj.expr.OrderB;
-import org.smoothbuild.bytecode.obj.expr.ParamRefB;
-import org.smoothbuild.bytecode.obj.expr.SelectB;
+import org.smoothbuild.bytecode.expr.BytecodeDb;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.exc.BytecodeDbExc;
+import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.CombineB;
+import org.smoothbuild.bytecode.expr.oper.IfB;
+import org.smoothbuild.bytecode.expr.oper.InvokeB;
+import org.smoothbuild.bytecode.expr.oper.MapB;
+import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
+import org.smoothbuild.bytecode.expr.val.BoolB;
+import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.IntB;
+import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.StringB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.cnst.ArrayTB;
-import org.smoothbuild.bytecode.type.cnst.BlobTB;
-import org.smoothbuild.bytecode.type.cnst.BoolTB;
-import org.smoothbuild.bytecode.type.cnst.FuncTB;
-import org.smoothbuild.bytecode.type.cnst.IntTB;
-import org.smoothbuild.bytecode.type.cnst.MethodTB;
-import org.smoothbuild.bytecode.type.cnst.StringTB;
-import org.smoothbuild.bytecode.type.cnst.TupleTB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.BlobTB;
+import org.smoothbuild.bytecode.type.val.BoolTB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IntTB;
+import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.StringTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -53,14 +53,14 @@ import com.google.common.collect.ImmutableList;
  */
 @Singleton
 public class BytecodeF {
-  private final ObjDb objDb;
+  private final BytecodeDb bytecodeDb;
   private final CatDb catDb;
   private final TupleTB messageT;
   private final TupleTB fileT;
 
   @Inject
-  public BytecodeF(ObjDb objDb, CatDb catDb) {
-    this.objDb = objDb;
+  public BytecodeF(BytecodeDb bytecodeDb, CatDb catDb) {
+    this.bytecodeDb = bytecodeDb;
     this.catDb = catDb;
     this.messageT = createMessageT(catDb);
     this.fileT = createFileT(catDb);
@@ -69,11 +69,11 @@ public class BytecodeF {
   // Objects
 
   public ArrayBBuilder arrayBuilderWithElems(TypeB elemT) {
-    return objDb.arrayBuilder(catDb.array(elemT));
+    return bytecodeDb.arrayBuilder(catDb.array(elemT));
   }
 
   public ArrayBBuilder arrayBuilder(ArrayTB type) {
-    return objDb.arrayBuilder(type);
+    return bytecodeDb.arrayBuilder(type);
   }
 
   public BlobB blob(DataWriter dataWriter) {
@@ -81,77 +81,77 @@ public class BytecodeF {
       builder.write(dataWriter);
       return builder.build();
     } catch (IOException e) {
-      throw new ObjDbExc(e);
+      throw new BytecodeDbExc(e);
     }
   }
 
   public BlobBBuilder blobBuilder() {
-    return objDb.blobBuilder();
+    return bytecodeDb.blobBuilder();
   }
 
   public BoolB bool(boolean value) {
-    return objDb.bool(value);
+    return bytecodeDb.bool(value);
   }
 
-  public CallB call(TypeB evalT, ObjB func, CombineB args) {
-    return objDb.call(evalT, func, args);
+  public CallB call(TypeB evalT, ExprB func, CombineB args) {
+    return bytecodeDb.call(evalT, func, args);
   }
 
-  public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items) {
-    return objDb.combine(evalT, items);
+  public CombineB combine(TupleTB evalT, ImmutableList<ExprB> items) {
+    return bytecodeDb.combine(evalT, items);
   }
 
   public TupleB file(StringB path, BlobB content) {
-    return objDb.tuple(fileT(), list(path, content));
+    return bytecodeDb.tuple(fileT(), list(path, content));
   }
 
-  public IfB if_(TypeB evalT, ObjB condition, ObjB then, ObjB else_) {
-    return objDb.if_(evalT, condition, then, else_);
+  public IfB if_(TypeB evalT, ExprB condition, ExprB then, ExprB else_) {
+    return bytecodeDb.if_(evalT, condition, then, else_);
   }
 
-  public FuncB func(FuncTB type, ObjB body) {
-    return objDb.func(type, body);
+  public FuncB func(FuncTB type, ExprB body) {
+    return bytecodeDb.func(type, body);
   }
 
   public MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return objDb.method(type, jar, classBinaryName, isPure);
+    return bytecodeDb.method(type, jar, classBinaryName, isPure);
   }
 
   public IntB int_(BigInteger value) {
-    return objDb.int_(value);
+    return bytecodeDb.int_(value);
   }
 
-  public MapB map(ObjB array, ObjB func) {
-    return objDb.map(array, func);
+  public MapB map(ExprB array, ExprB func) {
+    return bytecodeDb.map(array, func);
   }
 
-  public InvokeB invoke(TypeB evalT, ObjB method, CombineB args) {
-    return objDb.invoke(evalT, method, args);
+  public InvokeB invoke(TypeB evalT, ExprB method, CombineB args) {
+    return bytecodeDb.invoke(evalT, method, args);
   }
 
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
-    return objDb.paramRef(evalT, value);
+    return bytecodeDb.paramRef(evalT, value);
   }
 
-  public SelectB select(TypeB evalT, ObjB tuple, IntB index) {
-    return objDb.select(evalT, tuple, index);
+  public SelectB select(TypeB evalT, ExprB tuple, IntB index) {
+    return bytecodeDb.select(evalT, tuple, index);
   }
 
   public StringB string(String string) {
-    return objDb.string(string);
+    return bytecodeDb.string(string);
   }
 
-  public TupleB tuple(ImmutableList<CnstB> items) {
-    var tupleTB = catDb.tuple(Lists.map(items, CnstB::type));
-    return objDb.tuple(tupleTB, items);
+  public TupleB tuple(ImmutableList<ValB> items) {
+    var tupleTB = catDb.tuple(Lists.map(items, ValB::type));
+    return bytecodeDb.tuple(tupleTB, items);
   }
 
-  public TupleB tuple(TupleTB type, ImmutableList<CnstB> items) {
-    return objDb.tuple(type, items);
+  public TupleB tuple(TupleTB type, ImmutableList<ValB> items) {
+    return bytecodeDb.tuple(type, items);
   }
 
-  public OrderB order(ArrayTB arrayTB, ImmutableList<ObjB> elems) {
-    return objDb.order(arrayTB, elems);
+  public OrderB order(ArrayTB arrayTB, ImmutableList<ExprB> elems) {
+    return bytecodeDb.order(arrayTB, elems);
   }
 
   // Types
@@ -211,9 +211,9 @@ public class BytecodeF {
   }
 
   private TupleB message(String severity, String text) {
-    CnstB textObject = objDb.string(text);
-    CnstB severityObject = objDb.string(severity);
-    return objDb.tuple(messageT(), list(textObject, severityObject));
+    ValB textObject = bytecodeDb.string(text);
+    ValB severityObject = bytecodeDb.string(severity);
+    return bytecodeDb.tuple(messageT(), list(textObject, severityObject));
   }
 
   private static TupleTB createMessageT(CatDb catDb) {

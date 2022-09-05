@@ -14,14 +14,14 @@ import java.util.zip.ZipException;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.StringB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class JavacFunc {
-  public static CnstB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB srcs = (ArrayB) args.get(0);
     ArrayB libs = (ArrayB) args.get(1);
     ArrayB options = (ArrayB) args.get(2);

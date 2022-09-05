@@ -11,7 +11,7 @@ import org.smoothbuild.lang.type.VarS;
  * Annotated value (one that has not a body).
  * This class is immutable.
  */
-public final class AnnValS extends ValS {
+public final class AnnValS extends NamedValS {
   private final AnnS ann;
 
   public AnnValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
@@ -24,7 +24,7 @@ public final class AnnValS extends ValS {
   }
 
   @Override
-  public ExprS mapVars(Function<VarS, TypeS> mapper) {
+  public AnnValS mapVars(Function<VarS, TypeS> mapper) {
     return new AnnValS(ann, type().mapVars(mapper), modPath(), name(), loc());
   }
 

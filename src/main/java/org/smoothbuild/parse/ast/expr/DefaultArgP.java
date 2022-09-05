@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast.expr;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.define.ExprS;
 
-public final class DefaultArgP extends OperatorP {
+public final class DefaultArgP extends OperP {
   private final RefP refP;
   private final ExprS exprS;
 

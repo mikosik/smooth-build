@@ -3,7 +3,7 @@ package org.smoothbuild.vm.job;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.lang.base.Nal;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 
@@ -19,7 +19,7 @@ public class JobCreatorProv {
     this.bytecodeF = bytecodeF;
   }
 
-  public JobCreator get(ImmutableMap<ObjB, Nal> nals) {
+  public JobCreator get(ImmutableMap<ExprB, Nal> nals) {
     return new JobCreator(nativeMethodLoader, bytecodeF, nals);
   }
 }

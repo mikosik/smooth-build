@@ -9,9 +9,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.util.collect.Try;
 
 public class BytecodeLoader {
@@ -24,15 +24,15 @@ public class BytecodeLoader {
     this.bytecodeF = bytecodeF;
   }
 
-  public Try<ObjB> load(String name, BlobB jar, String classBinaryName, Map<String, TypeB> varMap) {
+  public Try<ExprB> load(String name, BlobB jar, String classBinaryName, Map<String, TypeB> varMap) {
     return methodLoader.load(jar, classBinaryName)
         .flatMap(method -> invoke(method, varMap))
         .mapError(e -> loadingError(name, classBinaryName, e));
   }
 
-  private Try<ObjB> invoke(Method method, Map<String, TypeB> varMap) {
+  private Try<ExprB> invoke(Method method, Map<String, TypeB> varMap) {
     try {
-      return Try.result((ObjB) method.invoke(null, bytecodeF, varMap));
+      return Try.result((ExprB) method.invoke(null, bytecodeF, varMap));
     } catch (IllegalAccessException e) {
       return Try.error("Cannot access provider method: " + e);
     } catch (InvocationTargetException e) {

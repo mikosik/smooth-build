@@ -7,7 +7,7 @@ import java.math.BigInteger;
 
 import org.smoothbuild.lang.base.Loc;
 
-public final class IntP extends ConstantP {
+public final class IntP extends ValP {
   private final String literal;
   private BigInteger bigInteger;
 

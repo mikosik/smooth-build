@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.StringB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
@@ -27,7 +27,7 @@ import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 import com.google.common.collect.ImmutableMap;
 
 public class JunitFunc {
-  public static CnstB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValB func(NativeApi nativeApi, TupleB args) throws IOException {
     TupleB tests = (TupleB) args.get(0);
     ArrayB deps = (ArrayB) args.get(1);
     StringB include = (StringB) args.get(2);

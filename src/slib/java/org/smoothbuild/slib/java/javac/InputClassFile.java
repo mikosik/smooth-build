@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final TupleB file;

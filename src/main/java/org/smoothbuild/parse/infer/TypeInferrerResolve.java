@@ -18,16 +18,15 @@ import org.smoothbuild.lang.type.tool.UnifierExc;
 import org.smoothbuild.lang.type.tool.UnusedVarsGenerator;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.parse.ast.expr.CallP;
-import org.smoothbuild.parse.ast.expr.ConstantP;
 import org.smoothbuild.parse.ast.expr.DefaultArgP;
 import org.smoothbuild.parse.ast.expr.ExprP;
 import org.smoothbuild.parse.ast.expr.NamedArgP;
-import org.smoothbuild.parse.ast.expr.OperatorP;
+import org.smoothbuild.parse.ast.expr.OperP;
 import org.smoothbuild.parse.ast.expr.OrderP;
 import org.smoothbuild.parse.ast.expr.RefP;
 import org.smoothbuild.parse.ast.expr.SelectP;
+import org.smoothbuild.parse.ast.expr.ValP;
 import org.smoothbuild.parse.ast.refable.FuncP;
-import org.smoothbuild.parse.ast.refable.ValP;
 
 public class TypeInferrerResolve {
   private final Unifier unifier;
@@ -38,7 +37,7 @@ public class TypeInferrerResolve {
     this.logger = logger;
   }
 
-  public Optional<SchemaS> resolve(ValP val, TypeS unresolvedValT) {
+  public Optional<SchemaS> resolve(org.smoothbuild.parse.ast.refable.ValP val, TypeS unresolvedValT) {
     TypeS resolvedEvalT = unifier.resolve(unresolvedValT);
     if (val.evalT().isPresent()) {
       if (!unresolvedValT.equals(resolvedEvalT)) {
@@ -110,7 +109,7 @@ public class TypeInferrerResolve {
   public boolean resolve(ExprP expr) {
     return switch (expr) {
       case CallP callP -> resolve(callP);
-      case ConstantP constantP -> true;
+      case ValP valP -> true;
       case NamedArgP namedArgP -> resolve(namedArgP);
       case OrderP orderP -> resolve(orderP);
       case SelectP selectP -> resolve(selectP);
@@ -141,8 +140,8 @@ public class TypeInferrerResolve {
         && resolveOperator(selectP);
   }
 
-  private boolean resolveOperator(OperatorP operatorP) {
-    operatorP.setTypeS(unifier.resolve(operatorP.typeS()));
+  private boolean resolveOperator(OperP operP) {
+    operP.setTypeS(unifier.resolve(operP.typeS()));
     return true;
   }
 

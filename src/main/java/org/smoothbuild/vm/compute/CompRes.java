@@ -30,6 +30,6 @@ public record CompRes(Output output, Exception exception, ResSource resSource) {
   }
 
   public boolean hasOutputWithValue() {
-    return output != null && output.hasValue();
+    return output != null && output.hasVal();
   }
 }

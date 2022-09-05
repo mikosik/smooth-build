@@ -11,7 +11,7 @@ import org.smoothbuild.lang.type.VarS;
 
 import okio.ByteString;
 
-public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements InstanceS {
+public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements ValS {
   @Override
   public String name() {
     int limit = NAME_LENGTH_LIMIT;
@@ -24,7 +24,7 @@ public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements Inst
   }
 
   @Override
-  public ExprS mapVars(Function<VarS, TypeS> mapper) {
+  public BlobS mapVars(Function<VarS, TypeS> mapper) {
     return this;
   }
 }

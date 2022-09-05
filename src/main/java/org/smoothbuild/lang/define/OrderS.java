@@ -11,7 +11,7 @@ import org.smoothbuild.lang.type.VarS;
 
 import com.google.common.collect.ImmutableList;
 
-public record OrderS(ArrayTS type, ImmutableList<ExprS> elems, Loc loc) implements OperatorS {
+public record OrderS(ArrayTS type, ImmutableList<ExprS> elems, Loc loc) implements OperS {
   @Override
   public String name() {
     return "[]";

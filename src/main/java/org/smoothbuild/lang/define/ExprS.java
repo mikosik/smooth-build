@@ -9,7 +9,7 @@ import org.smoothbuild.lang.type.VarS;
 /**
  * Expression.
  */
-public sealed interface ExprS extends Nal permits MonoRefableS, InstanceS, OperatorS {
+public sealed interface ExprS extends Nal permits MonoRefableS, ValS, OperS {
   public TypeS type();
   public ExprS mapVars(Function<VarS, TypeS> mapper);
 }

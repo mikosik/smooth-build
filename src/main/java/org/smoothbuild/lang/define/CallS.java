@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public record CallS(TypeS type, ExprS callee, ImmutableList<ExprS> args, Loc loc)
-    implements OperatorS {
+    implements OperS {
   public CallS {
     validateArgsSize(callee, args);
   }

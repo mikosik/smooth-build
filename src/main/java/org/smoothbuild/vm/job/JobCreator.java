@@ -13,26 +13,26 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.obj.cnst.BoolB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.FuncB;
-import org.smoothbuild.bytecode.obj.cnst.IntB;
-import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.obj.expr.CallB;
-import org.smoothbuild.bytecode.obj.expr.CombineB;
-import org.smoothbuild.bytecode.obj.expr.IfB;
-import org.smoothbuild.bytecode.obj.expr.InvokeB;
-import org.smoothbuild.bytecode.obj.expr.MapB;
-import org.smoothbuild.bytecode.obj.expr.OrderB;
-import org.smoothbuild.bytecode.obj.expr.ParamRefB;
-import org.smoothbuild.bytecode.obj.expr.SelectB;
-import org.smoothbuild.bytecode.type.cnst.ArrayTB;
-import org.smoothbuild.bytecode.type.cnst.FuncTB;
-import org.smoothbuild.bytecode.type.cnst.TupleTB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.CombineB;
+import org.smoothbuild.bytecode.expr.oper.IfB;
+import org.smoothbuild.bytecode.expr.oper.InvokeB;
+import org.smoothbuild.bytecode.expr.oper.MapB;
+import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.expr.val.BoolB;
+import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.IntB;
+import org.smoothbuild.bytecode.expr.val.StringB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.lang.base.Nal;
 import org.smoothbuild.lang.base.NalImpl;
@@ -50,28 +50,28 @@ public class JobCreator {
   private static final String PARENTHESES = "()";
   private static final String PARENTHESES_INVOKE = "()~";
   private final NativeMethodLoader nativeMethodLoader;
-  private final ImmutableMap<ObjB, Nal> nals;
+  private final ImmutableMap<ExprB, Nal> nals;
   private final TaskCreator taskCreator;
   private final Map<Class<?>, Handler<?>> handler;
   private final ImmutableList<Job> bindings;
 
   public JobCreator(NativeMethodLoader nativeMethodLoader, BytecodeF bytecodeF,
-      ImmutableMap<ObjB, Nal> nals) {
+      ImmutableMap<ExprB, Nal> nals) {
     this(nativeMethodLoader, bytecodeF, nals, ImmutableList.of());
   }
 
   public JobCreator(NativeMethodLoader nativeMethodLoader, BytecodeF bytecodeF,
-      ImmutableMap<ObjB, Nal> nals, ImmutableList<Job> bindings) {
+      ImmutableMap<ExprB, Nal> nals, ImmutableList<Job> bindings) {
     this(nativeMethodLoader, nals, (a,  d, i) -> new Task(a, d, i, bytecodeF), bindings);
   }
 
   public JobCreator(NativeMethodLoader nativeMethodLoader,
-      ImmutableMap<ObjB, Nal> nals, TaskCreator taskCreator) {
+      ImmutableMap<ExprB, Nal> nals, TaskCreator taskCreator) {
     this(nativeMethodLoader, nals, taskCreator, ImmutableList.of());
   }
 
   public JobCreator(NativeMethodLoader nativeMethodLoader,
-      ImmutableMap<ObjB, Nal> nals, TaskCreator taskCreator, ImmutableList<Job> bindings) {
+      ImmutableMap<ExprB, Nal> nals, TaskCreator taskCreator, ImmutableList<Job> bindings) {
     this.nativeMethodLoader = nativeMethodLoader;
     this.nals = nals;
     this.taskCreator = taskCreator;
@@ -99,25 +99,25 @@ public class JobCreator {
         .build();
   }
 
-  private ImmutableList<Job> eagerJobsFor(ImmutableList<? extends ObjB> objs) {
-    return map(objs, this::eagerJobFor);
+  private ImmutableList<Job> eagerJobsFor(ImmutableList<? extends ExprB> exprs) {
+    return map(exprs, this::eagerJobFor);
   }
 
-  private Job jobFor(ObjB expr, boolean eager) {
+  private Job jobFor(ExprB expr, boolean eager) {
     return handlerFor(expr).job(eager).apply(expr);
   }
 
-  public Job eagerJobFor(ObjB expr) {
+  public Job eagerJobFor(ExprB expr) {
     return handlerFor(expr).eagerJob().apply(expr);
   }
 
-  private Job lazyJobFor(ObjB expr) {
+  private Job lazyJobFor(ExprB expr) {
     return handlerFor(expr).lazyJob().apply(expr);
   }
 
-  private <T> Handler<T> handlerFor(ObjB obj) {
+  private <T> Handler<T> handlerFor(ExprB expr) {
     @SuppressWarnings("unchecked")
-    Handler<T> result = (Handler<T>) handler.get(obj.getClass());
+    Handler<T> result = (Handler<T>) handler.get(expr.getClass());
     return result;
   }
 
@@ -294,15 +294,15 @@ public class JobCreator {
 
   // Value
 
-  private Job constLazy(CnstB cnst) {
-    var nal = nalFor(cnst);
+  private Job constLazy(ValB val) {
+    var nal = nalFor(val);
     var loc = nal.loc();
-    return new LazyJob(cnst.cat(), loc, () -> new ConstTask(cnst, nal));
+    return new LazyJob(val.cat(), loc, () -> new ConstTask(val, nal));
   }
 
-  private Job constEager(CnstB cnst) {
-    var nal = nalFor(cnst);
-    return new ConstTask(cnst, nal);
+  private Job constEager(ValB val) {
+    var nal = nalFor(val);
+    return new ConstTask(val, nal);
   }
 
   // helper methods
@@ -315,17 +315,17 @@ public class JobCreator {
     return new VirtualTask(job, new TaskInfo(CALL, name, loc));
   }
 
-  private Nal nalFor(ObjB obj) {
-    Nal nal = nals.get(obj);
+  private Nal nalFor(ExprB expr) {
+    Nal nal = nals.get(expr);
     if (nal == null) {
-      return new NalImpl("@" + obj.hash(), Loc.unknown());
+      return new NalImpl("@" + expr.hash(), Loc.unknown());
     } else {
       return nal;
     }
   }
 
-  private Loc locFor(ObjB obj) {
-    Nal nal = nals.get(obj);
+  private Loc locFor(ExprB expr) {
+    Nal nal = nals.get(expr);
     if (nal == null) {
       return Loc.unknown();
     } else {

@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;

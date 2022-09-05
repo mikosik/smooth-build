@@ -8,7 +8,7 @@ import org.smoothbuild.lang.type.IntTS;
 import org.smoothbuild.lang.type.TypeS;
 import org.smoothbuild.lang.type.VarS;
 
-public record IntS(IntTS type, BigInteger bigInteger, Loc loc) implements InstanceS {
+public record IntS(IntTS type, BigInteger bigInteger, Loc loc) implements ValS {
   @Override
   public String name() {
     return bigInteger.toString();

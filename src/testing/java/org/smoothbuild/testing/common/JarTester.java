@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.testing.TestContext;
 
 import okio.Buffer;

@@ -16,10 +16,10 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.IntB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.IntB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Try;
@@ -44,9 +44,9 @@ public class VmTest extends TestContext {
     @Test
     public void learning_test() {
       // This test makes sure that it is possible to detect Task creation using a mock.
-      var expr = orderB(intB(7));
+      var order = orderB(intB(7));
 
-      assertThat(evaluate(spyingVm(), expr))
+      assertThat(evaluate(spyingVm(), order))
           .isEqualTo(arrayB(intB(7)));
 
       verify(taskCreator, times(1)).newTask(isA(OrderAlgorithm.class), any(), any());
@@ -55,9 +55,9 @@ public class VmTest extends TestContext {
     @Test
     public void no_task_is_created_for_func_arg_that_is_not_used() {
       var func = funcB(list(arrayTB(boolTB())), intB(7));
-      var expr = callB(func, orderB(boolTB()));
+      var call = callB(func, orderB(boolTB()));
 
-      assertThat(evaluate(spyingVm(), expr))
+      assertThat(evaluate(spyingVm(), call))
           .isEqualTo(intB(7));
 
       verify(taskCreator, never()).newTask(isA(OrderAlgorithm.class), any(), any());
@@ -68,9 +68,9 @@ public class VmTest extends TestContext {
       var innerFunc = funcB(list(arrayTB(boolTB())), intB(7));
       var outerFunc = funcB(list(arrayTB(boolTB())),
           callB(innerFunc, paramRefB(arrayTB(boolTB()), 0)));
-      var expr = callB(outerFunc, orderB(boolTB()));
+      var call = callB(outerFunc, orderB(boolTB()));
 
-      assertThat(evaluate(spyingVm(), expr))
+      assertThat(evaluate(spyingVm(), call))
           .isEqualTo(intB(7));
 
       verify(taskCreator, never()).newTask(isA(OrderAlgorithm.class), any(), any());
@@ -80,9 +80,9 @@ public class VmTest extends TestContext {
     public void only_one_task_is_created_for_func_arg_that_is_used_twice() {
       var arrayT = arrayTB(intTB());
       var func = funcB(list(arrayT), combineB(paramRefB(arrayT, 0), paramRefB(arrayT, 0)));
-      var expr = callB(func, orderB(intB(7)));
+      var call = callB(func, orderB(intB(7)));
 
-      assertThat(evaluate(spyingVm(), expr))
+      assertThat(evaluate(spyingVm(), call))
           .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
 
       verify(taskCreator, times(1)).newTask(isA(OrderAlgorithm.class), any(), any());
@@ -234,14 +234,14 @@ public class VmTest extends TestContext {
     }
   }
 
-  private ObjB evaluate(ObjB obj) {
+  private ExprB evaluate(ExprB expr) {
     var vm = vmProv(nativeMethodLoader).get(ImmutableMap.of());
-    return evaluate(vm, obj);
+    return evaluate(vm, expr);
   }
 
-  private CnstB evaluate(Vm vm, ObjB obj) {
+  private ValB evaluate(Vm vm, ExprB expr) {
     try {
-      var results = vm.evaluate(list(obj)).get();
+      var results = vm.evaluate(list(expr)).get();
       assertThat(results.size())
           .isEqualTo(1);
       return results.get(0);

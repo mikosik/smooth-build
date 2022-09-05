@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.util.Strings;
 import org.smoothbuild.util.UnescapingFailedExc;
 
-public final class StringP extends ConstantP {
+public final class StringP extends ValP {
   private final String value;
   private String unescaped;
 

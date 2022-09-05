@@ -8,7 +8,7 @@ import org.smoothbuild.util.Hex;
 
 import okio.ByteString;
 
-public final class BlobP extends ConstantP {
+public final class BlobP extends ValP {
   private final String literal;
   private ByteString byteString;
 

@@ -13,18 +13,18 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.obj.cnst.BlobBBuilder;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class JarFunc {
-  public static CnstB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB files = (ArrayB) args.get(0);
     BlobB manifest = (BlobB) args.get(1);
 

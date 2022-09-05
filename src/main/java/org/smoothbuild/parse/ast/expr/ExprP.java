@@ -6,5 +6,5 @@ import org.smoothbuild.lang.base.WithLoc;
  * Expression in smooth language.
  */
 public sealed interface ExprP extends WithLoc
-    permits OperatorP, ConstantP, RefP {
+    permits OperP, ValP, RefP {
 }

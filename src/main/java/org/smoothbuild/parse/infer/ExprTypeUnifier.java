@@ -24,14 +24,14 @@ import org.smoothbuild.lang.type.tool.Unifier;
 import org.smoothbuild.lang.type.tool.UnifierExc;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.parse.ast.expr.CallP;
-import org.smoothbuild.parse.ast.expr.ConstantP;
 import org.smoothbuild.parse.ast.expr.DefaultArgP;
 import org.smoothbuild.parse.ast.expr.ExprP;
 import org.smoothbuild.parse.ast.expr.NamedArgP;
-import org.smoothbuild.parse.ast.expr.OperatorP;
+import org.smoothbuild.parse.ast.expr.OperP;
 import org.smoothbuild.parse.ast.expr.OrderP;
 import org.smoothbuild.parse.ast.expr.RefP;
 import org.smoothbuild.parse.ast.expr.SelectP;
+import org.smoothbuild.parse.ast.expr.ValP;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.collect.NList;
 
@@ -53,7 +53,7 @@ public class ExprTypeUnifier {
   public Optional<TypeS> unifyExpr(ExprP expr) {
     return switch (expr) {
       case CallP callP -> unifyAndMemoize(this::unifyCall, callP);
-      case ConstantP constantP -> Optional.of(constantP.type());
+      case ValP valP -> Optional.of(valP.type());
       case DefaultArgP defaultArgP -> unifyAndMemoize(this::unifyDefaultArg, defaultArgP);
       case NamedArgP namedArgP -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP orderP -> unifyAndMemoize(this::unifyOrder, orderP);
@@ -62,7 +62,7 @@ public class ExprTypeUnifier {
     };
   }
 
-  private <T extends OperatorP> Optional<TypeS> unifyAndMemoize(
+  private <T extends OperP> Optional<TypeS> unifyAndMemoize(
       Function<T, Optional<TypeS>> inferer, T expr) {
     var type = inferer.apply(expr);
     type.ifPresent(expr::setTypeS);

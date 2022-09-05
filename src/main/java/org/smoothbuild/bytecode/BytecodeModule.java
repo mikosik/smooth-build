@@ -5,8 +5,7 @@ import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.bytecode.obj.ObjDb;
-import org.smoothbuild.bytecode.obj.ObjDbImpl;
+import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.fs.base.FileSystem;
@@ -22,8 +21,8 @@ public class BytecodeModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ObjDb provideObjDb(HashedDb hashedDb, CatDb catDb) {
-    return new ObjDbImpl(hashedDb, catDb);
+  public BytecodeDb provideBytecodeDb(HashedDb hashedDb, CatDb catDb) {
+    return new BytecodeDb(hashedDb, catDb);
   }
 
   @Provides

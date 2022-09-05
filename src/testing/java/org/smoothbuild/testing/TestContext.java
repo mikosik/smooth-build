@@ -33,45 +33,44 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.ObjDb;
-import org.smoothbuild.bytecode.obj.ObjDbImpl;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.cnst.ArrayB;
-import org.smoothbuild.bytecode.obj.cnst.BlobB;
-import org.smoothbuild.bytecode.obj.cnst.BlobBBuilder;
-import org.smoothbuild.bytecode.obj.cnst.BoolB;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.obj.cnst.FuncB;
-import org.smoothbuild.bytecode.obj.cnst.IntB;
-import org.smoothbuild.bytecode.obj.cnst.MethodB;
-import org.smoothbuild.bytecode.obj.cnst.StringB;
-import org.smoothbuild.bytecode.obj.cnst.TupleB;
-import org.smoothbuild.bytecode.obj.expr.CallB;
-import org.smoothbuild.bytecode.obj.expr.CombineB;
-import org.smoothbuild.bytecode.obj.expr.IfB;
-import org.smoothbuild.bytecode.obj.expr.InvokeB;
-import org.smoothbuild.bytecode.obj.expr.MapB;
-import org.smoothbuild.bytecode.obj.expr.OrderB;
-import org.smoothbuild.bytecode.obj.expr.ParamRefB;
-import org.smoothbuild.bytecode.obj.expr.SelectB;
+import org.smoothbuild.bytecode.expr.BytecodeDb;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.CombineB;
+import org.smoothbuild.bytecode.expr.oper.IfB;
+import org.smoothbuild.bytecode.expr.oper.InvokeB;
+import org.smoothbuild.bytecode.expr.oper.MapB;
+import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
+import org.smoothbuild.bytecode.expr.val.BoolB;
+import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.IntB;
+import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.StringB;
+import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.cnst.ArrayTB;
-import org.smoothbuild.bytecode.type.cnst.BlobTB;
-import org.smoothbuild.bytecode.type.cnst.BoolTB;
-import org.smoothbuild.bytecode.type.cnst.FuncTB;
-import org.smoothbuild.bytecode.type.cnst.IntTB;
-import org.smoothbuild.bytecode.type.cnst.MethodTB;
-import org.smoothbuild.bytecode.type.cnst.StringTB;
-import org.smoothbuild.bytecode.type.cnst.TupleTB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
-import org.smoothbuild.bytecode.type.expr.CallCB;
-import org.smoothbuild.bytecode.type.expr.CombineCB;
-import org.smoothbuild.bytecode.type.expr.IfCB;
-import org.smoothbuild.bytecode.type.expr.InvokeCB;
-import org.smoothbuild.bytecode.type.expr.MapCB;
-import org.smoothbuild.bytecode.type.expr.OrderCB;
-import org.smoothbuild.bytecode.type.expr.ParamRefCB;
-import org.smoothbuild.bytecode.type.expr.SelectCB;
+import org.smoothbuild.bytecode.type.oper.CallCB;
+import org.smoothbuild.bytecode.type.oper.CombineCB;
+import org.smoothbuild.bytecode.type.oper.IfCB;
+import org.smoothbuild.bytecode.type.oper.InvokeCB;
+import org.smoothbuild.bytecode.type.oper.MapCB;
+import org.smoothbuild.bytecode.type.oper.OrderCB;
+import org.smoothbuild.bytecode.type.oper.ParamRefCB;
+import org.smoothbuild.bytecode.type.oper.SelectCB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.BlobTB;
+import org.smoothbuild.bytecode.type.val.BoolTB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IntTB;
+import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.StringTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.compile.BytecodeLoader;
 import org.smoothbuild.compile.BytecodeMethodLoader;
 import org.smoothbuild.compile.SbConverterProv;
@@ -100,6 +99,7 @@ import org.smoothbuild.lang.define.ItemSigS;
 import org.smoothbuild.lang.define.ModFiles;
 import org.smoothbuild.lang.define.ModPath;
 import org.smoothbuild.lang.define.MonoizeS;
+import org.smoothbuild.lang.define.NamedValS;
 import org.smoothbuild.lang.define.OrderS;
 import org.smoothbuild.lang.define.ParamRefS;
 import org.smoothbuild.lang.define.PolyFuncS;
@@ -108,7 +108,6 @@ import org.smoothbuild.lang.define.PolyValS;
 import org.smoothbuild.lang.define.SelectS;
 import org.smoothbuild.lang.define.StringS;
 import org.smoothbuild.lang.define.SyntCtorS;
-import org.smoothbuild.lang.define.ValS;
 import org.smoothbuild.lang.type.ArrayTS;
 import org.smoothbuild.lang.type.BlobTS;
 import org.smoothbuild.lang.type.BoolTS;
@@ -155,7 +154,7 @@ public class TestContext {
   private BytecodeF bytecodeF;
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
-  private ObjDb objDb;
+  private BytecodeDb bytecodeDb;
   private CatDb catDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -278,7 +277,7 @@ public class TestContext {
 
   public BytecodeF bytecodeF() {
     if (bytecodeF == null) {
-      bytecodeF = new BytecodeF(objDb(), catDb());
+      bytecodeF = new BytecodeF(bytecodeDb(), catDb());
     }
     return bytecodeF;
   }
@@ -290,17 +289,17 @@ public class TestContext {
     return catDb;
   }
 
-  public ObjDb objDb() {
-    if (objDb == null) {
-      objDb = new ObjDbImpl(hashedDb(), catDb());
+  public BytecodeDb bytecodeDb() {
+    if (bytecodeDb == null) {
+      bytecodeDb = new BytecodeDb(hashedDb(), catDb());
     }
-    return objDb;
+    return bytecodeDb;
   }
 
   public ComputationCache computationCache() {
     if (computationCache == null) {
       computationCache = new ComputationCache(
-          computationCacheFileSystem(), objDb(), bytecodeF());
+          computationCacheFileSystem(), bytecodeDb(), bytecodeF());
     }
     return computationCache;
   }
@@ -312,8 +311,8 @@ public class TestContext {
     return computationCacheFileSystem;
   }
 
-  public ObjDb objDbOther() {
-    return new ObjDbImpl(hashedDb(), catDbOther());
+  public BytecodeDb bytecodeDbOther() {
+    return new BytecodeDb(hashedDb(), catDbOther());
   }
 
   public CatDb catDbOther() {
@@ -483,12 +482,12 @@ public class TestContext {
     return tupleB(animalTB(), species, speed);
   }
 
-  public ArrayB arrayB(CnstB... elems) {
+  public ArrayB arrayB(ValB... elems) {
     return arrayB(elems[0].type(), elems);
   }
 
-  public ArrayB arrayB(TypeB elemT, CnstB... elems) {
-    return objDb()
+  public ArrayB arrayB(TypeB elemT, ValB... elems) {
+    return bytecodeDb()
         .arrayBuilder(arrayTB(elemT))
         .addAll(list(elems))
         .build();
@@ -500,10 +499,10 @@ public class TestContext {
             .addAll(list(classes))
             .add(BlobB.class)
             .add(NativeApi.class)
-            .add(ObjB.class)
+            .add(ExprB.class)
             .add(StringB.class)
             .add(TupleB.class)
-            .add(CnstB.class)
+            .add(ValB.class)
             .build());
   }
 
@@ -512,7 +511,7 @@ public class TestContext {
   }
 
   private BlobB blobBWith(List<Class<?>> list) throws IOException {
-    var blobBBuilder = objDb().blobBuilder();
+    var blobBBuilder = bytecodeDb().blobBuilder();
     try (var outputStream = blobBBuilder.sink()) {
       saveBytecodeInJar(outputStream, list);
     }
@@ -532,7 +531,7 @@ public class TestContext {
   }
 
   public BlobBBuilder blobBBuilder() {
-    return objDb().blobBuilder();
+    return bytecodeDb().blobBuilder();
   }
 
   public BoolB boolB() {
@@ -540,7 +539,7 @@ public class TestContext {
   }
 
   public BoolB boolB(boolean value) {
-    return objDb().bool(value);
+    return bytecodeDb().bool(value);
   }
 
   public TupleB fileB(PathS path) {
@@ -572,21 +571,21 @@ public class TestContext {
     return funcB(intB());
   }
 
-  public FuncB funcB(ObjB body) {
+  public FuncB funcB(ExprB body) {
     return funcB(list(), body);
   }
 
-  public FuncB funcB(ImmutableList<TypeB> paramTs, ObjB body) {
+  public FuncB funcB(ImmutableList<TypeB> paramTs, ExprB body) {
     return funcB(body.type(), paramTs, body);
   }
 
-  public FuncB funcB(TypeB resT, ImmutableList<TypeB> paramTs, ObjB body) {
+  public FuncB funcB(TypeB resT, ImmutableList<TypeB> paramTs, ExprB body) {
     var type = funcTB(resT, paramTs);
     return funcB(type, body);
   }
 
-  public FuncB funcB(FuncTB type, ObjB body) {
-    return objDb().func(type, body);
+  public FuncB funcB(FuncTB type, ExprB body) {
+    return bytecodeDb().func(type, body);
   }
 
   public FuncB idFuncB() {
@@ -606,7 +605,7 @@ public class TestContext {
   }
 
   public IntB intB(BigInteger value) {
-    return objDb().int_(value);
+    return bytecodeDb().int_(value);
   }
 
   public MethodB methodB(Class<?> clazz) throws IOException {
@@ -630,7 +629,7 @@ public class TestContext {
   }
 
   public MethodB methodB(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return objDb().method(type, jar, classBinaryName, isPure);
+    return bytecodeDb().method(type, jar, classBinaryName, isPure);
   }
 
   public TupleB personB(String firstName, String lastName) {
@@ -638,20 +637,20 @@ public class TestContext {
   }
 
   public StringB stringB() {
-    return objDb().string("abc");
+    return bytecodeDb().string("abc");
   }
 
   public StringB stringB(String string) {
-    return objDb().string(string);
+    return bytecodeDb().string(string);
   }
 
-  public TupleB tupleB(CnstB... items) {
-    var tupleTB = tupleTB(stream(items).map(CnstB::type).toArray(TypeB[]::new));
+  public TupleB tupleB(ValB... items) {
+    var tupleTB = tupleTB(stream(items).map(ValB::type).toArray(TypeB[]::new));
     return tupleB(tupleTB, items);
   }
 
-  public TupleB tupleB(TupleTB tupleT, CnstB... items) {
-    return objDb().tuple(tupleT, ImmutableList.copyOf(items));
+  public TupleB tupleB(TupleTB tupleT, ValB... items) {
+    return bytecodeDb().tuple(tupleT, ImmutableList.copyOf(items));
   }
 
   public ArrayB messageArrayWithOneError() {
@@ -676,56 +675,56 @@ public class TestContext {
 
   // Expr-s
 
-  public CallB callB(FuncB func, ObjB... args) {
+  public CallB callB(FuncB func, ExprB... args) {
     var combineB = combineB(args);
     return callBImpl(func.type().res(), func, combineB);
   }
 
-  public CallB callB(TypeB evalT, ObjB func, ObjB... args) {
+  public CallB callB(TypeB evalT, ExprB func, ExprB... args) {
     return callBImpl(evalT, func, combineB(args));
   }
 
-  public CallB callBImpl(TypeB evalT, ObjB func, CombineB args) {
-    return objDb().call(evalT, func, args);
+  public CallB callBImpl(TypeB evalT, ExprB func, CombineB args) {
+    return bytecodeDb().call(evalT, func, args);
   }
 
-  public CombineB combineB(ObjB... items) {
-    var evalT = tupleTB(stream(items).map(ObjB::type).toArray(TypeB[]::new));
+  public CombineB combineB(ExprB... items) {
+    var evalT = tupleTB(stream(items).map(ExprB::type).toArray(TypeB[]::new));
     return combineB(evalT, items);
   }
 
-  public CombineB combineB(TupleTB evalT, ObjB... items) {
-    return objDb().combine(evalT, ImmutableList.copyOf(items));
+  public CombineB combineB(TupleTB evalT, ExprB... items) {
+    return bytecodeDb().combine(evalT, ImmutableList.copyOf(items));
   }
 
-  public IfB ifB(TypeB evalT, ObjB condition, ObjB then, ObjB else_) {
-    return objDb().if_(evalT, condition, then, else_);
+  public IfB ifB(TypeB evalT, ExprB condition, ExprB then, ExprB else_) {
+    return bytecodeDb().if_(evalT, condition, then, else_);
   }
 
-  public InvokeB invokeB(MethodB method, ObjB... args) {
+  public InvokeB invokeB(MethodB method, ExprB... args) {
     var combineB = combineB(args);
     return invokeBImpl(method.type().res(), method, combineB);
   }
 
-  public InvokeB invokeB(TypeB evalT, ObjB method, ObjB... args) {
+  public InvokeB invokeB(TypeB evalT, ExprB method, ExprB... args) {
     return invokeBImpl(evalT, method, combineB(args));
   }
 
-  private InvokeB invokeBImpl(TypeB evalT, ObjB method, CombineB args) {
-    return objDb().invoke(evalT, method, args);
+  private InvokeB invokeBImpl(TypeB evalT, ExprB method, CombineB args) {
+    return bytecodeDb().invoke(evalT, method, args);
   }
 
-  public MapB mapB(ObjB array, ObjB func) {
-    return objDb().map(array, func);
+  public MapB mapB(ExprB array, ExprB func) {
+    return bytecodeDb().map(array, func);
   }
 
-  public OrderB orderB(ObjB... elems) {
+  public OrderB orderB(ExprB... elems) {
     return orderB(elems[0].type(), elems);
   }
 
-  public OrderB orderB(TypeB elemT, ObjB... elems) {
+  public OrderB orderB(TypeB elemT, ExprB... elems) {
     var elemList = ImmutableList.copyOf(elems);
-    return objDb().order(arrayTB(elemT), elemList);
+    return bytecodeDb().order(arrayTB(elemT), elemList);
   }
 
   public ParamRefB paramRefB(int index) {
@@ -733,16 +732,16 @@ public class TestContext {
   }
 
   public ParamRefB paramRefB(TypeB evalT, int index) {
-    return objDb().paramRef(evalT, BigInteger.valueOf(index));
+    return bytecodeDb().paramRef(evalT, BigInteger.valueOf(index));
   }
 
-  public SelectB selectB(ObjB tuple, IntB index) {
+  public SelectB selectB(ExprB tuple, IntB index) {
     var evalT = ((TupleTB) tuple.type()).items().get(index.toJ().intValue());
     return selectB(evalT, tuple, index);
   }
 
-  public SelectB selectB(TypeB evalT, ObjB tuple, IntB index) {
-    return objDb().select(evalT, tuple, index);
+  public SelectB selectB(TypeB evalT, ExprB tuple, IntB index) {
+    return bytecodeDb().select(evalT, tuple, index);
   }
 
   // Types Smooth
@@ -1060,8 +1059,8 @@ public class TestContext {
     return polyS(defValS("emptyArray", orderS(varA())));
   }
 
-  private PolyValS polyS(ValS valS) {
-    return polyValS(schemaS(valS.type()), valS);
+  private PolyValS polyS(NamedValS namedValS) {
+    return polyValS(schemaS(namedValS.type()), namedValS);
   }
 
   public SchemaS schemaS(TypeS typeS) {

@@ -25,21 +25,21 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.smoothbuild.bytecode.obj.IllegalArrayByteSizesProvider;
-import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.type.cnst.ArrayTB;
-import org.smoothbuild.bytecode.type.cnst.FuncTB;
-import org.smoothbuild.bytecode.type.cnst.IntTB;
-import org.smoothbuild.bytecode.type.cnst.StringTB;
-import org.smoothbuild.bytecode.type.cnst.TupleTB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.IllegalArrayByteSizesProvider;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatNodeExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
-import org.smoothbuild.bytecode.type.expr.ParamRefCB;
+import org.smoothbuild.bytecode.type.oper.ParamRefCB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IntTB;
+import org.smoothbuild.bytecode.type.val.StringTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashingBufferedSink;
 import org.smoothbuild.db.exc.DecodeHashSeqExc;
@@ -159,7 +159,7 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_elem_type_being_expr_type() throws Exception {
+      public void with_elem_type_being_oper_type() throws Exception {
         Hash hash = hash(
             hash(ARRAY.marker()),
             hash(paramRefCB())
@@ -310,7 +310,7 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_result_being_expr_type() throws Exception {
+      public void with_result_being_oper_type() throws Exception {
         var paramT = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
             hash(catKind().marker()),
@@ -369,7 +369,7 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_params_being_expr_type() throws Exception {
+      public void with_params_being_oper_type() throws Exception {
         var typeHash = hash(
             hash(catKind().marker()),
             hash(
@@ -459,7 +459,7 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_elems_being_seq_of_expr_type() throws Exception {
+      public void with_elems_being_seq_of_oper_types() throws Exception {
         Hash hash =
             hash(
                 hash(TUPLE.marker()),
@@ -584,8 +584,8 @@ public class CatBCorruptedTest extends TestContext {
     }
   }
 
-  protected Hash hash(ObjB obj) {
-    return obj.hash();
+  protected Hash hash(ExprB expr) {
+    return expr.hash();
   }
 
   protected Hash hash(CatB type) {
@@ -615,8 +615,8 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
           super(CALL);
         }
       }
@@ -639,8 +639,8 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
           super(COMBINE, TupleTB.class);
         }
       }
@@ -674,8 +674,8 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
           super(IF);
         }
       }
@@ -698,8 +698,8 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
           super(INVOKE);
         }
       }
@@ -722,8 +722,8 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
           super(MAP, ArrayTB.class);
         }
       }
@@ -757,8 +757,8 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
           super(ORDER, ArrayTB.class);
         }
       }
@@ -792,8 +792,8 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
           super(PARAM_REF);
         }
       }
@@ -816,22 +816,22 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
           super(SELECT);
         }
       }
     }
 
-    private abstract class ExprCatTestSet {
+    private abstract class OperCatTestSet {
       private final CatKindB catKindB;
       private final Class<? extends CatB> type;
 
-      protected ExprCatTestSet(CatKindB catKindB) {
+      protected OperCatTestSet(CatKindB catKindB) {
         this(catKindB, TypeB.class);
       }
 
-      protected ExprCatTestSet(CatKindB catKindB, Class<? extends CatB> type) {
+      protected OperCatTestSet(CatKindB catKindB, Class<? extends CatB> type) {
         this.catKindB = catKindB;
         this.type = type;
       }
@@ -857,7 +857,7 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_evaluation_type_being_expr_type() throws Exception {
+      public void with_evaluation_type_being_oper_type() throws Exception {
         Hash hash = hash(
             hash(catKindB.marker()),
             hash(paramRefCB())

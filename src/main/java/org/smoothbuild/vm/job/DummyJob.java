@@ -1,22 +1,22 @@
 package org.smoothbuild.vm.job;
 
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
+import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
 public class DummyJob extends AbstractJob {
-  private final PromisedValue<CnstB> promisedValue;
+  private final PromisedValue<ValB> promisedValue;
 
-  public DummyJob(CnstB cnst, Loc loc) {
-    super(cnst.type(), loc);
+  public DummyJob(ValB valB, Loc loc) {
+    super(valB.type(), loc);
     this.promisedValue = new PromisedValue<>();
-    this.promisedValue.accept(cnst);
+    this.promisedValue.accept(valB);
   }
 
   @Override
-  protected Promise<CnstB> scheduleImpl(Worker worker) {
+  protected Promise<ValB> scheduleImpl(Worker worker) {
     return promisedValue;
   }
 }

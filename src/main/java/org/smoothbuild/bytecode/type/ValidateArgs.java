@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.function.Supplier;
 
-import org.smoothbuild.bytecode.type.cnst.CallableTB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.type.val.CallableTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 
 import com.google.common.collect.ImmutableList;
 

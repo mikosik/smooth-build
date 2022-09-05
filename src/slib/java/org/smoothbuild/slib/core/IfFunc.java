@@ -8,11 +8,11 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.util.Map;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.cnst.CnstB;
-import org.smoothbuild.bytecode.type.cnst.TypeB;
+import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 
 public class IfFunc {
-  public static CnstB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
+  public static ValB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
     var a = varMap.get("A");
     var type = f.funcT(a, list(f.boolT(), a, a));
     var body = f.if_(

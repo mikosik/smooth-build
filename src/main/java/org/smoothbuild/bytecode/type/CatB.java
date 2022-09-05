@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.bytecode.obj.ObjDbImpl;
-import org.smoothbuild.bytecode.obj.base.MerkleRoot;
-import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.expr.BytecodeDb;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.util.collect.Named;
 
@@ -32,9 +32,9 @@ public abstract class CatB implements Named {
   /**
    * Creates new java instance of Obj represented by merkleRoot.
    */
-  public ObjB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+  public ExprB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(this.equals(merkleRoot.cat()));
-    return kind.newInstanceJ(merkleRoot, objDb);
+    return kind.newInstanceJ(merkleRoot, bytecodeDb);
   }
 
   public Hash hash() {
@@ -55,7 +55,7 @@ public abstract class CatB implements Named {
     return kind;
   }
 
-  public Class<? extends ObjB> typeJ() {
+  public Class<? extends ExprB> typeJ() {
     return kind.typeJ();
   }
 

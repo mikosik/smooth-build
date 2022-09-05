@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.exc;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.obj.exc.DecodeSelectIndexOutOfBoundsExc;
+import org.smoothbuild.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestContext;
 
