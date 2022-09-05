@@ -10,8 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.cnst.BlobB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.util.collect.Try;
@@ -51,8 +51,8 @@ public class BytecodeMethodLoader {
           + BytecodeF.class.getCanonicalName() + ".";
     } else if (method.getParameterTypes().length != 2) {
       return "Providing method parameter count is different than 2.";
-    } else if (!method.getReturnType().equals(ObjB.class)) {
-      return "Providing method result type is not " + ObjB.class.getName() + ".";
+    } else if (!method.getReturnType().equals(CnstB.class)) {
+      return "Providing method result type is not " + CnstB.class.getName() + ".";
     } else {
       return null;
     }

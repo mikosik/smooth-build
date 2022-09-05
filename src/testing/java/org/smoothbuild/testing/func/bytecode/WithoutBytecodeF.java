@@ -1,9 +1,9 @@
 package org.smoothbuild.testing.func.bytecode;
 
-import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 
 public class WithoutBytecodeF {
-  public static ObjB bytecode() {
+  public static CnstB bytecode() {
     return null;
   }
 }

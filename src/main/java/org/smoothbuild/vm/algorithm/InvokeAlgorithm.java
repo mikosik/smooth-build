@@ -47,7 +47,7 @@ public class InvokeAlgorithm extends Algorithm {
       }
       return new Output(null, nativeApi.messages());
     }
-    if (!outputT().equals(result.cat())) {
+    if (!outputT().equals(result.type())) {
       logFaultyImplementationError(nativeApi, "Its declared result type == "
           + outputT().q() + " but it returned object with type == " + result.cat().q() + ".");
       return new Output(null, nativeApi.messages());

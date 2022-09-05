@@ -7,14 +7,14 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.util.Map;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.cnst.CnstB;
 import org.smoothbuild.bytecode.type.cnst.TypeB;
 
 /**
  * [R] map([S] array, R(S) mapper)
  */
 public class MapFunc {
-  public static ObjB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
+  public static CnstB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
     var s = varMap.get("S");
     var r = varMap.get("R");
     var type = f.funcT(
