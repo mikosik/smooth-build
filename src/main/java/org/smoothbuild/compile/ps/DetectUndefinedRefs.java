@@ -3,21 +3,14 @@ package org.smoothbuild.compile.ps;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.ps.ast.Ast;
-import org.smoothbuild.compile.ps.ast.expr.CallP;
-import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
-import org.smoothbuild.compile.ps.ast.expr.ExprP;
-import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
-import org.smoothbuild.compile.ps.ast.expr.OrderP;
+import org.smoothbuild.compile.ps.ast.AstVisitor;
+import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
-import org.smoothbuild.compile.ps.ast.expr.SelectP;
-import org.smoothbuild.compile.ps.ast.expr.ValP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
-import org.smoothbuild.compile.ps.ast.refable.NamedValP;
 import org.smoothbuild.compile.ps.ast.refable.PolyRefableP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
@@ -25,7 +18,7 @@ import org.smoothbuild.util.Strings;
 
 import com.google.common.collect.ImmutableSet;
 
-public class DetectUndefinedRefs {
+public class DetectUndefinedRefs extends AstVisitor {
   private final Ast ast;
   private final Set<String> definedNames;
   private final LogBuffer logs;
@@ -38,27 +31,25 @@ public class DetectUndefinedRefs {
 
   public static Logs detectUndefinedRefs(Ast ast, DefsS imported) {
     ImmutableSet<String> definedNames = imported.refables().asMap().keySet();
-    return new DetectUndefinedRefs(ast, definedNames, new LogBuffer())
-        .visit();
+    var detectUndefinedRefs = new DetectUndefinedRefs(ast, definedNames, new LogBuffer());
+    detectUndefinedRefs.visitAst(ast);
+    return detectUndefinedRefs.logs;
   }
 
-  private Logs visit() {
-    ast.structs().forEach(s -> definedNames.add(s.ctor().name()));
-    ast.refables().forEach(polyRefableP -> {
-      visitRefable(polyRefableP);
-      definedNames.add(polyRefableP.name());
-    });
-    return logs;
+  @Override
+  public void visitStruct(StructP struct) {
+    super.visitStruct(struct);
+    definedNames.add(struct.ctor().name());
   }
 
-  private void visitRefable(PolyRefableP polyRefableP) {
-    switch (polyRefableP) {
-      case FuncP funcP -> visitFunc(funcP);
-      case NamedValP namedValP -> visitVal(namedValP);
-    }
+  @Override
+  public void visitRefable(PolyRefableP refable) {
+    super.visitRefable(refable);
+    definedNames.add(refable.name());
   }
 
-  private void visitFunc(FuncP funcP) {
+  @Override
+  public void visitFunc(FuncP funcP) {
     funcP.params().forEach(p -> p.body().ifPresent(this::visitExpr));
     funcP.body().ifPresent(body -> {
       var definedNamesWithParams = new HashSet<>(definedNames);
@@ -67,32 +58,8 @@ public class DetectUndefinedRefs {
     });
   }
 
-  private void visitVal(NamedValP namedValP) {
-    namedValP.body().ifPresent(this::visitExpr);
-  }
-
-  private void visitExprs(List<ExprP> exprs) {
-    exprs.forEach(this::visitExpr);
-  }
-
-  private void visitExpr(ExprP expr) {
-    switch (expr) {
-      case CallP callP -> visitCall(callP);
-      case ValP valP -> {}
-      case NamedArgP namedArgP -> visitExpr(namedArgP.expr());
-      case OrderP orderP -> visitExprs(orderP.elems());
-      case RefP refP -> visitRef(refP);
-      case SelectP selectP -> visitExpr(selectP.selectable());
-      case DefaultArgP defaultArgP -> throw new RuntimeException("shouldn't happen");
-    }
-  }
-
-  private void visitCall(CallP callP) {
-    visitExpr(callP.callee());
-    visitExprs(callP.args());
-  }
-
-  private void visitRef(RefP refP) {
+  @Override
+  public void visitRef(RefP refP) {
     var name = refP.name();
     if (!definedNames.contains(name)) {
       logs.log(compileError(refP, Strings.q(name) + " is undefined."));
