@@ -60,7 +60,7 @@ public class NativeTest extends AcceptanceTestCase {
     }
 
     @Nested
-    class func_ {
+    class _func {
       @Test
       public void can_return_passed_arg() throws Exception {
         createUserNativeJar(StringIdentity.class);
