@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -114,7 +113,7 @@ public class NativeMethodLoaderTest extends TestContext {
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
-      var methodB = methodB(methodTB(stringTB(), list()), jar, stringB(classBinaryName));
+      var methodB = methodB(methodTB(stringTB()), jar, stringB(classBinaryName));
       var resultMethod1 = nativeMethodLoader.load("smoothName", methodB);
       var resultMethod2 = nativeMethodLoader.load("smoothName", methodB);
       assertThat(resultMethod1)

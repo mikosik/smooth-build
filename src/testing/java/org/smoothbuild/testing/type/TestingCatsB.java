@@ -22,8 +22,8 @@ public class TestingCatsB {
   public static final TypeB BLOB = CONTEXT.blobTB();
   public static final TypeB BOOL = CONTEXT.boolTB();
   public static final TypeB INT = CONTEXT.intTB();
-  public static final TypeB FUNC = func(BLOB, list(BOOL));
-  public static final TypeB METHOD = method(BLOB, list(BOOL));
+  public static final TypeB FUNC = func(BLOB, BOOL);
+  public static final TypeB METHOD = method(BLOB, BOOL);
   public static final TypeB STRING = CONTEXT.stringTB();
 
   public static final TupleTB PERSON = CONTEXT.personTB();
@@ -93,15 +93,15 @@ public class TestingCatsB {
     var baseCs = list(
         BLOB,
         BOOL,
-        func(BLOB, list()),
-        func(BLOB, list(BLOB)),
-        func(BLOB, list(BLOB, BLOB)),
-        func(STRING, list()),
+        func(BLOB),
+        func(BLOB, BLOB),
+        func(BLOB, BLOB, BLOB),
+        func(STRING),
         INT,
-        method(BLOB, list()),
-        method(BLOB, list(BLOB)),
-        method(BLOB, list(BLOB, BLOB)),
-        method(STRING, list()),
+        method(BLOB),
+        method(BLOB, BLOB),
+        method(BLOB, BLOB, BLOB),
+        method(STRING),
         STRING,
         tuple(list()),
         tuple(list(BLOB)),
@@ -136,11 +136,11 @@ public class TestingCatsB {
     return CAT_DB.array(elemT);
   }
 
-  public static FuncTB func(TypeB res, ImmutableList<TypeB> params) {
+  public static FuncTB func(TypeB res, TypeB... params) {
     return CONTEXT.funcTB(res, params);
   }
 
-  public static MethodTB method(TypeB res, ImmutableList<TypeB> params) {
+  public static MethodTB method(TypeB res, TypeB... params) {
     return CONTEXT.methodTB(res, params);
   }
 

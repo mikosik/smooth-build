@@ -48,8 +48,6 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
-import com.google.common.collect.ImmutableList;
-
 import okio.ByteString;
 
 public class CatBCorruptedTest extends TestContext {
@@ -178,7 +176,7 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Override
-      protected Hash hashOfNewTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+      protected Hash hashOfNewTB(TypeB resT, TypeB... paramTs) {
         return funcTB(resT, paramTs).hash();
       }
     }
@@ -191,19 +189,17 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Override
-      protected Hash hashOfNewTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+      protected Hash hashOfNewTB(TypeB resT, TypeB... paramTs) {
         return methodTB(resT, paramTs).hash();
       }
     }
 
-    class _callable_test_case {
+    abstract class _callable_test_case {
       protected CatKindB catKind() {
         throw new UnsupportedOperationException("implement in subclasses");
       }
 
-      protected Hash hashOfNewTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-        throw new UnsupportedOperationException("implement in subclasses");
-      }
+      protected abstract Hash hashOfNewTB(TypeB resT, TypeB... paramTs);
 
       @Test
       public void learning_test() throws Exception {
@@ -220,7 +216,7 @@ public class CatBCorruptedTest extends TestContext {
             )
         );
         assertThat(specHash)
-            .isEqualTo(hashOfNewTB(intTB(), paramsTuple.items()));
+            .isEqualTo(hashOfNewTB(intTB(), stringTB(), boolTB()));
       }
 
       @Test

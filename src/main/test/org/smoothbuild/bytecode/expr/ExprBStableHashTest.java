@@ -96,21 +96,21 @@ public class ExprBStableHashTest extends TestContext {
   class _func {
     @Test
     public void with_no_params() {
-      var defFunc = funcB(funcTB(intTB(), list()), intB(1));
+      var defFunc = funcB(funcTB(intTB()), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("998efe35e88cbf9dc973880f96f5fc5dea3f2664"));
     }
 
     @Test
     public void with_one_param() {
-      var defFunc = funcB(funcTB(intTB(), list(intTB())), intB(1));
+      var defFunc = funcB(funcTB(intTB(), intTB()), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("5a69dadd0f5d07869ba7676dc2d1f25500d7a1a0"));
     }
 
     @Test
     public void with_two_params() {
-      var defFunc = funcB(funcTB(intTB(), list(intTB(), stringTB())), intB(1));
+      var defFunc = funcB(funcTB(intTB(), intTB(), stringTB()), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("8450b8f6b33d766600b980d143f24090f5c54936"));
     }
@@ -142,7 +142,7 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void method() {
       assertThat(
-          methodB(methodTB(intTB(), list(boolTB())), blobB(1), stringB("cbn"), boolB(true)).hash())
+          methodB(methodTB(intTB(), boolTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
           .isEqualTo(Hash.decode("1590b8ef2a27b91e1036df55d513e2423f196d89"));
     }
   }
@@ -189,7 +189,7 @@ public class ExprBStableHashTest extends TestContext {
 
     @Test
     public void call_without_args() {
-      var type = funcTB(intTB(), list(stringTB()));
+      var type = funcTB(intTB(), stringTB());
       var defFunc = funcB(type, intB());
       assertThat(callB(defFunc, stringB("abc")).hash())
           .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
@@ -224,7 +224,7 @@ public class ExprBStableHashTest extends TestContext {
   class _invoke {
     @Test
     public void invoke() {
-      var methodTB = methodTB(blobTB(), list(boolTB()));
+      var methodTB = methodTB(blobTB(), boolTB());
       var methodB = methodB(methodTB, blobB(7), stringB("class binary name"), boolB(true));
       assertThat(invokeB(methodB, boolB(true)).hash())
           .isEqualTo(Hash.decode("781a8c37890c14f8a0d09158881052c1dffaf81c"));

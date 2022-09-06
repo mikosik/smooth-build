@@ -16,7 +16,7 @@ public class MethodBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var methodTH = methodTB(stringTB(), list(intTB()));
+    var methodTH = methodTB(stringTB(), intTB());
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
     assertThat(methodH.type())
         .isEqualTo(methodTH);
@@ -27,7 +27,7 @@ public class MethodBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
+    var type = methodTB(stringTB(), intTB());
     var methodH = methodB(type, jar, classBinaryName, isPure);
 
     assertThat(methodH.jar())
@@ -43,19 +43,19 @@ public class MethodBTest extends TestContext {
     @Override
     protected List<MethodB> equalExprs() {
       return list(
-          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("a"), boolB(true)),
-          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("a"), boolB(true))
+          methodB(methodTB(stringTB(), intTB()), blobB(7), stringB("a"), boolB(true)),
+          methodB(methodTB(stringTB(), intTB()), blobB(7), stringB("a"), boolB(true))
       );
     }
 
     @Override
     protected List<MethodB> nonEqualExprs() {
       return list(
-          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("a"), boolB(true)),
-          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("a"), boolB(false)),
-          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("b"), boolB(true)),
-          methodB(methodTB(stringTB(), list(intTB())), blobB(9), stringB("a"), boolB(true)),
-          methodB(methodTB(stringTB(), list(stringTB())), blobB(7), stringB("a"), boolB(true))
+          methodB(methodTB(stringTB(), intTB()), blobB(7), stringB("a"), boolB(true)),
+          methodB(methodTB(stringTB(), intTB()), blobB(7), stringB("a"), boolB(false)),
+          methodB(methodTB(stringTB(), intTB()), blobB(7), stringB("b"), boolB(true)),
+          methodB(methodTB(stringTB(), intTB()), blobB(9), stringB("a"), boolB(true)),
+          methodB(methodTB(stringTB(), stringTB()), blobB(7), stringB("a"), boolB(true))
       );
     }
   }
@@ -65,7 +65,7 @@ public class MethodBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var methodTH = methodTB(stringTB(), list(intTB()));
+    var methodTH = methodTB(stringTB(), intTB());
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
     assertThat(bytecodeDbOther().get(methodH.hash()))
         .isEqualTo(methodH);
@@ -76,7 +76,7 @@ public class MethodBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var methodTH = methodTB(stringTB(), list(intTB()));
+    var methodTH = methodTB(stringTB(), intTB());
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
     var readMethodH = (MethodB) bytecodeDbOther().get(methodH.hash());
     assertThat(readMethodH.classBinaryName())
@@ -92,7 +92,7 @@ public class MethodBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var methodTH = methodTB(stringTB(), list(intTB()));
+    var methodTH = methodTB(stringTB(), intTB());
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
     assertThat(methodH.toString())
         .isEqualTo("Method(_String(Int))@" + methodH.hash());

@@ -4,7 +4,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.testing.TestingModLoader.err;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_TYPES;
 import static org.smoothbuild.util.Strings.unlines;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.stream.Stream;
@@ -771,7 +770,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcTDeclaration("String,"))
               .loadsWithSuccess()
-              .containsRefable(polyNatFuncS(2, funcTS(funcTS(blobTS(), list(stringTS()))), "myFunc",
+              .containsRefable(polyNatFuncS(2, funcTS(funcTS(blobTS(), stringTS())), "myFunc",
                   nlist(), natAnnS(1, stringS(1, "Impl.met"))));
         }
 

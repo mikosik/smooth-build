@@ -17,18 +17,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
-import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
-import org.smoothbuild.util.collect.Lists;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class SbTranslatorTest extends TestContext {
@@ -116,10 +112,10 @@ public class SbTranslatorTest extends TestContext {
           var natFuncS = natFuncS(funcTS, "myFunc", nlist(), ann);
 
           var resT = intTB();
-          ImmutableList<TypeB> paramTs = list(blobTB());
-          var funcTB = funcTB(resT, paramTs);
+          var funcTB = funcTB(resT, blobTB());
           var jar = blobB(37);
-          var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
+          var method = methodB(
+              methodTB(resT, blobTB()), jar, stringB(classBinaryName), boolB(true));
           var bodyB = invokeB(method, paramRefB(blobTB(), 0));
           var funcB = funcB(funcTB, bodyB);
 
@@ -212,7 +208,7 @@ public class SbTranslatorTest extends TestContext {
           public void bytecode() throws IOException {
             var clazz = ReturnIdFunc.class;
             var a = varA();
-            var funcTS = funcTS(a, list(a));
+            var funcTS = funcTS(a, a);
             var filePath = smoothFilePath();
             var classBinaryName = clazz.getCanonicalName();
             var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
@@ -257,17 +253,17 @@ public class SbTranslatorTest extends TestContext {
           @Test
           public void native_() {
             var a = varA();
-            var funcTS = funcTS(a, list(a));
+            var funcTS = funcTS(a, a);
             var filePath = filePath(PRJ, path("my/path"));
             var classBinaryName = "class.binary.name";
             var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
             var natFuncS = polyNatFuncS(funcTS, "myIdentity", nlist(itemS(a, "param")), ann);
 
             var resT = intTB();
-            ImmutableList<TypeB> paramTs = list(intTB());
-            var funcTB = funcTB(resT, paramTs);
+            var funcTB = funcTB(resT, intTB());
             var jar = blobB(37);
-            var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
+            var method = methodB(
+                methodTB(resT, intTB()), jar, stringB(classBinaryName), boolB(true));
             var bodyB = invokeB(method, paramRefB(intTB(), 0));
             var funcB = funcB(funcTB, bodyB);
 
@@ -282,7 +278,7 @@ public class SbTranslatorTest extends TestContext {
           public void bytecode() throws IOException {
             var clazz = ReturnIdFunc.class;
             var a = varA();
-            var funcTS = funcTS(a, list(a));
+            var funcTS = funcTS(a, a);
             var filePath = smoothFilePath();
             var classBinaryName = clazz.getCanonicalName();
             var ann = bytecodeS(classBinaryName, loc(filePath, 1));
@@ -333,7 +329,7 @@ public class SbTranslatorTest extends TestContext {
     @Test
     public void bytecode_func_conversion_result() throws IOException {
       var clazz = ReturnReturnAbcFunc.class;
-      var funcTS = funcTS(stringTS(), Lists.<TypeS>list());
+      var funcTS = funcTS(stringTS());
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));

@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.type.TestingCatsB.INT;
 import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
 import static org.smoothbuild.testing.type.TestingCatsB.STRING;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.compute.Computer.computationHash;
 
 import org.junit.jupiter.api.Test;
@@ -72,7 +71,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_invoke_algorithm_and_empty_input_is_stable() {
-    var method = methodB(methodTB(intTB(), list()), blobB(1), stringB("1"), boolB(true));
+    var method = methodB(methodTB(intTB()), blobB(1), stringB("1"), boolB(true));
     var algorithm = new InvokeAlgorithm(stringTB(), "name", method, null);
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), algorithm, input))
@@ -81,7 +80,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_invoke_algorithm_and_non_empty_input_is_stable() {
-    var method = methodB(methodTB(intTB(), list()), blobB(1), stringB("1"), boolB(true));
+    var method = methodB(methodTB(intTB()), blobB(1), stringB("1"), boolB(true));
     var algorithm = new InvokeAlgorithm(stringTB(), "name", method, null);
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), algorithm, input))

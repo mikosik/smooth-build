@@ -21,28 +21,28 @@ public class InvokeBTest extends TestContext {
 
   @Test
   public void creating_invoke_with_too_few_args_causes_exception() {
-    var methodT = methodTB(intTB(), list(stringTB()));
+    var methodT = methodTB(intTB(), stringTB());
     assertCall(() -> invokeB(methodB(methodT)))
         .throwsException(argsNotMatchingParamsException("", "String"));
   }
 
   @Test
   public void creating_invoke_with_too_many_args_causes_exception() {
-    var methodT = methodTB(intTB(), list(stringTB()));
+    var methodT = methodTB(intTB(), stringTB());
     assertCall(() -> invokeB(methodB(methodT), intB(), intB()))
         .throwsException(argsNotMatchingParamsException("Int,Int", "String"));
   }
 
   @Test
   public void creating_invoke_with_arg_not_matching_param_type_causes_exception() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
+    var method = methodB(methodTB(intTB(), stringTB()));
     assertCall(() -> invokeB(method, intB(3)))
         .throwsException(argsNotMatchingParamsException("Int", "String"));
   }
 
   @Test
   public void creating_invoke_with_resT_not_assignable_to_evalT_causes_exc() {
-    var method = methodB(methodTB(intTB(), list()));
+    var method = methodB(methodTB(intTB()));
     assertCall(() -> invokeB(stringTB(), method))
         .throwsException(new IllegalArgumentException(
             "Method's result type `Int` cannot be assigned to evalT `String`."));
@@ -56,14 +56,14 @@ public class InvokeBTest extends TestContext {
 
   @Test
   public void method_returns_method_expr() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
+    var method = methodB(methodTB(intTB(), stringTB()));
     assertThat(invokeB(method, stringB()).data().method())
         .isEqualTo(method);
   }
 
   @Test
   public void args_returns_arg_exprs() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
+    var method = methodB(methodTB(intTB(), stringTB()));
     assertThat(invokeB(method, stringB()).data().args())
         .isEqualTo(combineB(stringB()));
   }
@@ -73,19 +73,19 @@ public class InvokeBTest extends TestContext {
     @Override
     protected List<InvokeB> equalExprs() {
       return list(
-          invokeB(methodB(methodTB(intTB(), list(stringTB()))), stringB()),
-          invokeB(methodB(methodTB(intTB(), list(stringTB()))), stringB())
+          invokeB(methodB(methodTB(intTB(), stringTB())), stringB()),
+          invokeB(methodB(methodTB(intTB(), stringTB())), stringB())
       );
     }
 
     @Override
     protected List<InvokeB> nonEqualExprs() {
-      var m1 = methodB(methodTB(intTB(), list(stringTB())), blobB(7), stringB("a"), boolB(true));
-      var m2 = methodB(methodTB(intTB(), list(stringTB())), blobB(7), stringB("a"), boolB(false));
-      var m3 = methodB(methodTB(intTB(), list(stringTB())), blobB(7), stringB("b"), boolB(true));
-      var m4 = methodB(methodTB(intTB(), list(stringTB())), blobB(0), stringB("a"), boolB(true));
-      var m5 = methodB(methodTB(intTB(), list(blobTB())), blobB(7), stringB("a"), boolB(true));
-      var m6 = methodB(methodTB(blobTB(), list(stringTB())), blobB(7), stringB("a"), boolB(true));
+      var m1 = methodB(methodTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true));
+      var m2 = methodB(methodTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(false));
+      var m3 = methodB(methodTB(intTB(), stringTB()), blobB(7), stringB("b"), boolB(true));
+      var m4 = methodB(methodTB(intTB(), stringTB()), blobB(0), stringB("a"), boolB(true));
+      var m5 = methodB(methodTB(intTB(), blobTB()), blobB(7), stringB("a"), boolB(true));
+      var m6 = methodB(methodTB(blobTB(), stringTB()), blobB(7), stringB("a"), boolB(true));
 
       var stringArg = stringB();
       var blobArg = blobB();
@@ -103,7 +103,7 @@ public class InvokeBTest extends TestContext {
 
   @Test
   public void invoke_can_be_read_back_by_hash() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
+    var method = methodB(methodTB(intTB(), stringTB()));
     var invoke = invokeB(method, stringB());
     assertThat(bytecodeDbOther().get(invoke.hash()))
         .isEqualTo(invoke);
@@ -111,7 +111,7 @@ public class InvokeBTest extends TestContext {
 
   @Test
   public void invoke_read_back_by_hash_has_same_data() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
+    var method = methodB(methodTB(intTB(), stringTB()));
     var invoke = invokeB(method, stringB());
     var readInvoke = (InvokeB) bytecodeDbOther().get(invoke.hash());
     var readInvokeData = readInvoke.data();
@@ -124,7 +124,7 @@ public class InvokeBTest extends TestContext {
 
   @Test
   public void to_string() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
+    var method = methodB(methodTB(intTB(), stringTB()));
     var invoke = invokeB(method, stringB());
     assertThat(invoke.toString())
         .isEqualTo("Invoke:Int(???)@" + invoke.hash());

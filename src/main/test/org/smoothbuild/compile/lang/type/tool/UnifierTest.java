@@ -2,7 +2,6 @@ package org.smoothbuild.compile.lang.type.tool;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -131,8 +129,8 @@ public class UnifierTest extends TestContext {
         @Test
         public void unify_equal_func_types() throws UnifierExc {
           unifier.unify(
-              funcTS(intTS(), list(blobTS())),
-              funcTS(intTS(), list(blobTS())));
+              funcTS(intTS(), blobTS()),
+              funcTS(intTS(), blobTS()));
         }
 
         @Test
@@ -145,8 +143,8 @@ public class UnifierTest extends TestContext {
         @Test
         public void unify_equal_func_types_with_param_being_func() throws UnifierExc {
           unifier.unify(
-              funcTS(blobTS(), Lists.list(funcTS(intTS()))),
-              funcTS(blobTS(), Lists.list(funcTS(intTS()))));
+              funcTS(blobTS(), funcTS(intTS())),
+              funcTS(blobTS(), funcTS(intTS())));
         }
 
         @Test
@@ -291,13 +289,13 @@ public class UnifierTest extends TestContext {
 
     @Test
     public void one_elem_cycle_through_func_param() {
-      assertUnifyFails(varA(), funcTS(intTS(), list(varA())));
+      assertUnifyFails(varA(), funcTS(intTS(), varA()));
     }
 
     @Test
     public void two_elem_cycle_through_func_param() throws UnifierExc {
-      unifier.unify(varA(), funcTS(intTS(), list(varB())));
-      assertUnifyFails(varB(), funcTS(intTS(), list(varA())));
+      unifier.unify(varA(), funcTS(intTS(), varB()));
+      assertUnifyFails(varB(), funcTS(intTS(), varA()));
     }
   }
 

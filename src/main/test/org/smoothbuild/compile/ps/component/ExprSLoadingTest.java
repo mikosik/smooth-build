@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.ps.component;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
@@ -10,9 +9,7 @@ import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.MonoRefableS;
-import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.collect.Lists;
 
 public class ExprSLoadingTest extends TestContext {
   @Nested
@@ -139,8 +136,7 @@ public class ExprSLoadingTest extends TestContext {
             .containsRefable(
                 polyDefValS(3, intTS(), "result",
                     callS(3, intTS(),
-                        defValS(2,
-                            funcTS(intTS(), Lists.<TypeS>list()), "myValue", returnIntFuncS()))));
+                        defValS(2, funcTS(intTS()), "myValue", returnIntFuncS()))));
       }
 
       @Test
@@ -155,7 +151,7 @@ public class ExprSLoadingTest extends TestContext {
             .containsRefable(
                 polyDefValS(3, intTS(), "result",
                     callS(3, intTS(),
-                        defValS(2, funcTS(intTS(), list(intTS())), "myValue", intIdFuncS()),
+                        defValS(2, funcTS(intTS(), intTS()), "myValue", intIdFuncS()),
                         intS(4, 7))));
       }
 
@@ -205,8 +201,8 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsRefable(polyDefFuncS(1, stringTS(), "result",
-                callS(1, stringTS(), paramRefS(funcTS(stringTS(), list(blobTS())), "f"), blobS(1, 9)),
-                nlist(itemS(1, funcTS(stringTS(), list(blobTS())), "f"))));
+                callS(1, stringTS(), paramRefS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9)),
+                nlist(itemS(1, funcTS(stringTS(), blobTS()), "f"))));
       }
     }
     @Nested
@@ -256,9 +252,7 @@ public class ExprSLoadingTest extends TestContext {
             myId;
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(
-                2, funcTS(intTS(), list(intTS())),
-                "result",
+            .containsRefable(polyDefValS(2, funcTS(intTS(), intTS()), "result",
                 monoizeS(3, varMap(varA(), intTS()),
                     polyDefFuncS(1, "myId", nlist(itemS(varA(), "a")), paramRefS(1, varA(), "a")))));
       }

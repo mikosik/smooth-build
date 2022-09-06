@@ -375,10 +375,14 @@ public class TestContext {
   }
 
   public FuncTB funcTB() {
-    return funcTB(intTB(), list(blobTB(), stringTB()));
+    return funcTB(intTB(), blobTB(), stringTB());
   }
 
- public FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+ public FuncTB funcTB(TypeB resT, TypeB... paramTs) {
+    return funcTB(resT, list(paramTs));
+  }
+
+ private FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
     return catDb().func(resT, paramTs);
   }
 
@@ -387,11 +391,11 @@ public class TestContext {
   }
 
   public MethodTB methodTB() {
-    return methodTB(blobTB(), list(boolTB()));
+    return methodTB(blobTB(), boolTB());
   }
 
-  public MethodTB methodTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb().method(resT, paramTs);
+  public MethodTB methodTB(TypeB resT, TypeB... paramTs) {
+    return catDb().method(resT, list(paramTs));
   }
 
   public TupleTB personTB() {
@@ -403,7 +407,7 @@ public class TestContext {
   }
 
   public TupleTB tupleTB(TypeB... itemTs) {
-    return catDb().tuple(ImmutableList.copyOf(itemTs));
+    return catDb().tuple(list(itemTs));
   }
 
   // OperB categories
@@ -650,7 +654,7 @@ public class TestContext {
   }
 
   public TupleB tupleB(TupleTB tupleT, ValB... items) {
-    return bytecodeDb().tuple(tupleT, ImmutableList.copyOf(items));
+    return bytecodeDb().tuple(tupleT, list(items));
   }
 
   public ArrayB messageArrayWithOneError() {
@@ -694,7 +698,7 @@ public class TestContext {
   }
 
   public CombineB combineB(TupleTB evalT, ExprB... items) {
-    return bytecodeDb().combine(evalT, ImmutableList.copyOf(items));
+    return bytecodeDb().combine(evalT, list(items));
   }
 
   public IfB ifB(TypeB evalT, ExprB condition, ExprB then, ExprB else_) {
@@ -723,7 +727,7 @@ public class TestContext {
   }
 
   public OrderB orderB(TypeB elemT, ExprB... elems) {
-    var elemList = ImmutableList.copyOf(elems);
+    var elemList = list(elems);
     return bytecodeDb().order(arrayTB(elemT), elemList);
   }
 
@@ -758,19 +762,11 @@ public class TestContext {
     return TypeFS.BOOL;
   }
 
-  public FuncTS funcTS(TypeS resT) {
-    return funcTS(resT, ImmutableList.<TypeS>of());
-  }
-
-  public FuncTS funcTS(TypeS resT, List<? extends ItemS> params) {
-    return funcTS(resT, toTypes(params));
-  }
-
   public FuncTS funcTS(TypeS resT, TypeS... paramTs) {
-    return new FuncTS(resT, ImmutableList.copyOf(paramTs));
+    return new FuncTS(resT, list(paramTs));
   }
 
-  public FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
+  private FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
     return new FuncTS(resT, paramTs);
   }
 
@@ -778,11 +774,7 @@ public class TestContext {
     return TypeFS.INT;
   }
 
-  public FuncSchemaS funcSchemaS(TypeS resT) {
-    return newFuncSchema(funcTS(resT));
-  }
-
-  public FuncSchemaS funcSchemaS(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public FuncSchemaS funcSchemaS(TypeS resT, TypeS... paramTs) {
     return newFuncSchema(funcTS(resT, paramTs));
   }
 
@@ -880,7 +872,7 @@ public class TestContext {
   }
 
   public OrderS orderS(int line, TypeS elemT, ExprS... exprs) {
-    return new OrderS(arrayTS(elemT), ImmutableList.copyOf(exprs), loc(line));
+    return new OrderS(arrayTS(elemT), list(exprs), loc(line));
   }
 
   public ParamRefS paramRefS(TypeS type) {
@@ -1004,7 +996,7 @@ public class TestContext {
   }
 
   public AnnFuncS annFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
-    return annFuncS(ann, funcTS(resT, params.list()), modPath(), name, params, loc(line));
+    return annFuncS(ann, funcTS(resT, toTypes(params.list())), modPath(), name, params, loc(line));
   }
 
   public AnnFuncS annFuncS(AnnS ann, FuncTS type, ModPath modPath, String name,
@@ -1096,7 +1088,7 @@ public class TestContext {
   public SyntCtorS syntCtorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
     var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(2)));
-    return syntCtorS(line, funcTS(structT, params.list()), modPath(), name, params);
+    return syntCtorS(line, funcTS(structT, toTypes(params.list())), modPath(), name, params);
   }
 
   public SyntCtorS syntCtorS(int line, FuncTS type, ModPath modPath, String name,
@@ -1137,7 +1129,7 @@ public class TestContext {
   }
 
   public AnnFuncS natFuncS(int line, TypeS resT, String name, NList<ItemS> params, AnnS ann) {
-    return natFuncS(line, funcTS(resT, params.list()), modPath(), name, params, ann);
+    return natFuncS(line, funcTS(resT, toTypes(params.list())), modPath(), name, params, ann);
   }
 
   public AnnFuncS natFuncS(FuncTS type, String name, NList<ItemS> params) {

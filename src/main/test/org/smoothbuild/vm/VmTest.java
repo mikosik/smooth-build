@@ -175,7 +175,7 @@ public class VmTest extends TestContext {
 
     @Test
     public void invoke_argless() throws Exception {
-      var method = methodB(methodTB(intTB(), list()), blobB(77), stringB("classBinaryName"));
+      var method = methodB(methodTB(intTB()), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method);
       when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(
@@ -186,7 +186,7 @@ public class VmTest extends TestContext {
 
     @Test
     public void invoke_with_param() throws Exception {
-      var method = methodB(methodTB(intTB(), list(intTB())), blobB(77), stringB("classBinaryName"));
+      var method = methodB(methodTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method, intB(33));
       when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(

@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.algorithm;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,15 +24,15 @@ public class AlgorithmHashesCollisionTest extends TestContext {
     addHash(list, set, AlgorithmHashes.convertAlgorithmHash(intTB()));
     addHash(list, set, AlgorithmHashes.convertAlgorithmHash(stringTB()));
     addHash(list, set, AlgorithmHashes.invokeAlgorithmHash(
-        methodB(methodTB(intTB(), list()), blobB(1), stringB("1"), boolB(true))));
+        methodB(methodTB(intTB()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, AlgorithmHashes.invokeAlgorithmHash(
-        methodB(methodTB(intTB(), list()), blobB(1), stringB("1"), boolB(false))));
+        methodB(methodTB(intTB()), blobB(1), stringB("1"), boolB(false))));
     addHash(list, set, AlgorithmHashes.invokeAlgorithmHash(
-        methodB(methodTB(intTB(), list()), blobB(1), stringB("2"), boolB(true))));
+        methodB(methodTB(intTB()), blobB(1), stringB("2"), boolB(true))));
     addHash(list, set, AlgorithmHashes.invokeAlgorithmHash(
-        methodB(methodTB(intTB(), list()), blobB(2), stringB("1"), boolB(true))));
+        methodB(methodTB(intTB()), blobB(2), stringB("1"), boolB(true))));
     addHash(list, set, AlgorithmHashes.invokeAlgorithmHash(
-        methodB(methodTB(boolTB(), list()), blobB(1), stringB("1"), boolB(true))));
+        methodB(methodTB(boolTB()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, AlgorithmHashes.orderAlgorithmHash(arrayTB(intTB())));
     addHash(list, set, AlgorithmHashes.orderAlgorithmHash(arrayTB(boolTB())));
     addHash(list, set, AlgorithmHashes.selectAlgorithmHash());

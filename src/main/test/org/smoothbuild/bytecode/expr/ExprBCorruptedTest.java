@@ -367,7 +367,7 @@ public class ExprBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+      var funcT = funcTB(intTB(), stringTB(), intTB());
       var func = funcB(funcT, intB());
       var args = combineB(stringB(), intB());
       var exprHash =
@@ -392,7 +392,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+      var funcT = funcTB(intTB(), stringTB(), intTB());
       var func = funcB(funcT, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(
@@ -414,7 +414,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
-      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+      var funcT = funcTB(intTB(), stringTB(), intTB());
       var func = funcB(funcT, intB());
       var dataHash = hash(
           hash(func)
@@ -431,7 +431,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void data_is_seq_with_three_elems() throws Exception {
-      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+      var funcT = funcTB(intTB(), stringTB(), intTB());
       var func = funcB(funcT, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(
@@ -469,7 +469,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void args_is_val_instead_of_combine() throws Exception {
-      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+      var funcT = funcTB(intTB(), stringTB(), intTB());
       var func = funcB(funcT, intB());
       var type = callCB(intTB());
       var exprHash =
@@ -486,9 +486,8 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void args_component_evalT_is_not_combine_but_different_oper()
-        throws Exception {
-      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+    public void args_component_evalT_is_not_combine_but_different_oper() throws Exception {
+      var funcT = funcTB(intTB(), stringTB(), intTB());
       var func = funcB(funcT, intB());
       var type = callCB(intTB());
       var exprHash =
@@ -505,9 +504,8 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void evalT_is_different_than_func_evalT_result()
-        throws Exception {
-      var funcT = funcTB(intTB(), list(stringTB()));
+    public void evalT_is_different_than_func_evalT_result() throws Exception {
+      var funcT = funcTB(intTB(), stringTB());
       var func = funcB(funcT, intB());
       var args = combineB(stringB());
       var type = callCB(stringTB());
@@ -525,9 +523,8 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void func_evalT_params_does_not_match_args_evalTs()
-        throws Exception {
-      var funcT = funcTB(intTB(), list(stringTB(), boolTB()));
+    public void func_evalT_params_does_not_match_args_evalTs() throws Exception {
+      var funcT = funcTB(intTB(), stringTB(), boolTB());
       var func = funcB(funcT, intB());
       var args = combineB(stringB(), intB());
       var spec = callCB(intTB());
@@ -674,7 +671,7 @@ public class ExprBCorruptedTest extends TestContext {
        * in HashedDb.
        */
       var bodyExpr = boolB(true);
-      FuncTB type = funcTB(boolTB(), list(intTB(), stringTB()));
+      FuncTB type = funcTB(boolTB(), intTB(), stringTB());
       Hash exprHash =
           hash(
               hash(type),
@@ -692,7 +689,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var bodyExpr = boolB(true);
-      var type = funcTB(boolTB(), list(intTB(), stringTB()));
+      var type = funcTB(boolTB(), intTB(), stringTB());
       var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           type,
@@ -709,7 +706,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
       var bodyExpr = intB(3);
-      var type = funcTB(boolTB(), list(intTB(), stringTB()));
+      var type = funcTB(boolTB(), intTB(), stringTB());
       Hash exprHash =
           hash(
               hash(type),
@@ -949,7 +946,7 @@ public class ExprBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save invoke
        * in HashedDb.
        */
-      var methodT = methodTB(intTB(), list(stringTB(), intTB()));
+      var methodT = methodTB(intTB(), stringTB(), intTB());
       var method = methodB(methodT, blobB(), stringB(), boolB());
       var args = combineB(stringB(), intB());
       Hash exprHash =
@@ -973,7 +970,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var methodT = methodTB(intTB(), list(stringTB(), intTB()));
+      var methodT = methodTB(intTB(), stringTB(), intTB());
       var method = methodB(methodT, blobB(), stringB(), boolB());
       var args = combineB(stringB(), intB());
       Hash dataHash = hash(
@@ -995,7 +992,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
-      var methodT = methodTB(intTB(), list(stringTB(), intTB()));
+      var methodT = methodTB(intTB(), stringTB(), intTB());
       var method = methodB(methodT, blobB(), stringB(), boolB());
       var dataHash = hash(
           hash(method)
@@ -1031,7 +1028,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void args_is_val_instead_of_expr() throws Exception {
-      var methodT = methodTB(intTB(), list(stringTB(), intTB()));
+      var methodT = methodTB(intTB(), stringTB(), intTB());
       var method = methodB(methodT, blobB(), stringB(), boolB());
       var cat = invokeCB(intTB());
       var exprHash =
@@ -1050,7 +1047,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void args_component_evalT_is_not_combine_but_different_oper()
         throws Exception {
-      var methodT = methodTB(intTB(), list(stringTB(), intTB()));
+      var methodT = methodTB(intTB(), stringTB(), intTB());
       var method = methodB(methodT, blobB(), stringB(), boolB());
       var type = invokeCB(intTB());
       Hash exprHash =
@@ -1069,7 +1066,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void evalT_is_different_than_method_evalT_result()
         throws Exception {
-      var methodT = methodTB(intTB(), list(stringTB(), intTB()));
+      var methodT = methodTB(intTB(), stringTB(), intTB());
       var method = methodB(methodT, blobB(), stringB(), boolB());
       var args = combineB(stringB(), intB());
       var type = invokeCB(stringTB());
@@ -1088,7 +1085,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void method_evalT_params_does_not_match_args_evalTs() throws Exception {
-      var methodT = methodTB(intTB(), list(stringTB(), boolTB()));
+      var methodT = methodTB(intTB(), stringTB(), boolTB());
       var method = methodB(methodT, blobB(), stringB(), boolB());
       var args = combineB(stringB(), intB());
       var spec = invokeCB(intTB());
@@ -1270,7 +1267,7 @@ public class ExprBCorruptedTest extends TestContext {
       );
       assertCall(() -> ((MapB) bytecodeDb().get(exprHash)).data())
           .throwsException(new DecodeMapIllegalMappingFuncExc(
-              exprHash, cat, funcTB(stringTB(), list(intTB(), intTB()))));
+              exprHash, cat, funcTB(stringTB(), intTB(), intTB())));
     }
 
     @Test
@@ -1317,7 +1314,7 @@ public class ExprBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save
        * Method in HashedDb.
        */
-      var type = methodTB(stringTB(), list(intTB()));
+      var type = methodTB(stringTB(), intTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -1341,12 +1338,12 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(methodTB(stringTB(), list(intTB())));
+      obj_root_without_data_hash(methodTB(stringTB(), intTB()));
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var type = methodTB(stringTB(), list(intTB()));
+      var type = methodTB(stringTB(), intTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -1361,14 +1358,14 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      var type = methodTB(stringTB(), list(intTB()));
+      var type = methodTB(stringTB(), intTB());
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(type,
           (Hash exprHash) -> ((MethodB) bytecodeDb().get(exprHash)).classBinaryName());
     }
 
     @Test
     public void data_is_seq_with_two_elem() throws Exception {
-      var type = methodTB(stringTB(), list(intTB()));
+      var type = methodTB(stringTB(), intTB());
       var jar = blobB();
       var classBinaryName = stringB();
       Hash dataHash = hash(
@@ -1388,7 +1385,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void data_is_seq_with_four_elems() throws Exception {
-      var type = methodTB(stringTB(), list(intTB()));
+      var type = methodTB(stringTB(), intTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -1411,7 +1408,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
-      var type = methodTB(stringTB(), list(intTB()));
+      var type = methodTB(stringTB(), intTB());
       var jar = stringB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -1431,7 +1428,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
-      var type = methodTB(stringTB(), list(intTB()));
+      var type = methodTB(stringTB(), intTB());
       var jar = blobB();
       var classBinaryName = intB();
       var isPure = boolB(true);
@@ -1452,7 +1449,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void is_pure_is_not_bool_value() throws Exception {
-      var type = methodTB(stringTB(), list(intTB()));
+      var type = methodTB(stringTB(), intTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = stringB();
