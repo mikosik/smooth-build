@@ -1,8 +1,6 @@
 package org.smoothbuild.testing.type;
 
-import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.stream.Collectors.toList;
-import static okio.ByteString.encodeString;
 import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -24,33 +22,16 @@ import com.google.common.collect.ImmutableSet;
 public class TestedTSF {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedTS A = new TestedTS(var("A"), null, null);
-  public static final TestedTS B = new TestedTS(var("B"), null, null);
-  public static final TestedTS BLOB = new TestedTS(
-      TestingTS.BLOB,
-      "0x" + encodeString("xyz", US_ASCII).hex(),
-      "xyz"
+  public static final TestedTS A = new TestedTS(var("A"));
+  public static final TestedTS B = new TestedTS(var("B"));
+  public static final TestedTS BLOB = new TestedTS(TestingTS.BLOB
   );
-  public static final TestedTS BOOL = new TestedTS(
-      TestingTS.BOOL,
-      "true",
-      new String(new byte[] {1})
-  );
+  public static final TestedTS BOOL = new TestedTS(TestingTS.BOOL);
 
-  public static final TestedTS INT = new TestedTS(
-      TestingTS.INT,
-      "123",
-      new String(new byte[] {123})
-  );
-  public static final TestedTS STRING = new TestedTS(
-      TestingTS.STRING,
-      "\"abc\"",
-      "abc"
-  );
+  public static final TestedTS INT = new TestedTS(TestingTS.INT);
+  public static final TestedTS STRING = new TestedTS(TestingTS.STRING);
   public static final TestedTS STRUCT = new TestedTS(
       TestingTS.struct("Person", nlist(itemSigS(TestingTS.STRING, "name"))),
-      "person(\"John\")",
-      null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
@@ -101,17 +82,10 @@ public class TestedTSF {
     return a(type);
   }
 
-  public static TestedTS a(TestedTS type) {
-    Object value = type.value() == null ? null : list(type.value());
-    return a(type, value);
-  }
-
-  private static TestedTS a(TestedTS type, Object value) {
+  private static TestedTS a(TestedTS type) {
     return new TestedArrayTS(
         type,
         TestingTS.a(type.type()),
-        "[" + type.literal() + "]",
-        value,
         type.typeDeclarations(),
         type.allDeclarations()
     );
@@ -149,8 +123,6 @@ public class TestedTSF {
         resT,
         paramTestedTs,
         TestingTS.f(resT.type(), map(paramSigs, ItemSigS::type)),
-        name,
-        null,
         typeDeclarations,
         declarations
     );
