@@ -1019,6 +1019,105 @@ public class DeclarationTest extends TestContext {
     }
 
     @Nested
+    class _order {
+      @ParameterizedTest
+      @ArgumentsSource(ArrayElements.class)
+      public void with_one_elem(String literal) {
+        module("result = [" + literal + "];")
+            .loadsWithSuccess();
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(ArrayElements.class)
+      public void with_two_elems(String literal) {
+        module("result = [" + literal + ", " + literal + "];")
+            .loadsWithSuccess();
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(ArrayElements.class)
+      public void with_array_containing_one_elem(String literal) {
+        module("result = [[" + literal + "]];")
+            .loadsWithSuccess();
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(ArrayElements.class)
+      public void with_array_and_empty_array_elems(String literal) {
+        module("result = [[" + literal + "], []];")
+            .loadsWithSuccess();
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(ArrayElements.class)
+      public void with_array_containing_two_elems(String literal) {
+        module("result = [[" + literal + ", " + literal + "]];")
+            .loadsWithSuccess();
+      }
+
+      @Nested
+      class _elem_list {
+        @Test
+        public void can_have_trailing_comma() {
+          module(arrayLiteral("0x07,"))
+              .loadsWithSuccess()
+              .containsRefable(polyDefValS(1, arrayTS(blobTS()), "result",
+                  orderS(1, blobTS(), blobS(1, 7))));
+        }
+
+        @Test
+        public void cannot_have_only_comma() {
+          module(arrayLiteral(","))
+              .loadsWithProblems();
+        }
+
+        @Test
+        public void cannot_have_leading_comma() {
+          module(arrayLiteral(",0x01"))
+              .loadsWithProblems();
+        }
+
+        @Test
+        public void cannot_have_two_trailing_commas() {
+          module(arrayLiteral("0x01,,"))
+              .loadsWithProblems();
+        }
+
+        private String arrayLiteral(String string) {
+          return """
+              result = [PLACEHOLDER];
+              """.replace("PLACEHOLDER", string);
+        }
+      }
+
+      private static class ArrayElements implements ArgumentsProvider {
+        @Override
+        public Stream<Arguments> provideArguments(ExtensionContext context) {
+          return Stream.of(
+              arguments("[]"),
+              arguments("0x01"),
+              arguments("\"abc\"")
+          );
+        }
+      }
+
+      @Test
+      public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
+        module("""
+            myFunc() = "abc";
+            result = [
+              myFunc(unknown1=""),
+              myFunc(unknown2="")
+            ];
+            """)
+            .loadsWith(
+                err(3, "Unknown parameter `unknown1`."),
+                err(4, "Unknown parameter `unknown2`.")
+            );
+      }
+    }
+
+    @Nested
     class _select {
       @Test
       public void reading_field() {
@@ -1214,105 +1313,6 @@ public class DeclarationTest extends TestContext {
              """)
                 .loadsWithError(1, "Missing escape code after backslash \\ at char index = 0.");
           }
-        }
-      }
-
-      @Nested
-      class _declaring_array_literal {
-        @ParameterizedTest
-        @ArgumentsSource(ArrayElements.class)
-        public void with_one_elem(String literal) {
-          module("result = [" + literal + "];")
-              .loadsWithSuccess();
-        }
-
-        @ParameterizedTest
-        @ArgumentsSource(ArrayElements.class)
-        public void with_two_elems(String literal) {
-          module("result = [" + literal + ", " + literal + "];")
-              .loadsWithSuccess();
-        }
-
-        @ParameterizedTest
-        @ArgumentsSource(ArrayElements.class)
-        public void with_array_containing_one_elem(String literal) {
-          module("result = [[" + literal + "]];")
-              .loadsWithSuccess();
-        }
-
-        @ParameterizedTest
-        @ArgumentsSource(ArrayElements.class)
-        public void with_array_and_empty_array_elems(String literal) {
-          module("result = [[" + literal + "], []];")
-              .loadsWithSuccess();
-        }
-
-        @ParameterizedTest
-        @ArgumentsSource(ArrayElements.class)
-        public void with_array_containing_two_elems(String literal) {
-          module("result = [[" + literal + ", " + literal + "]];")
-              .loadsWithSuccess();
-        }
-
-        @Nested
-        class _elem_list {
-          @Test
-          public void can_have_trailing_comma() {
-            module(arrayLiteral("0x07,"))
-                .loadsWithSuccess()
-                .containsRefable(polyDefValS(1, arrayTS(blobTS()), "result",
-                    orderS(1, blobTS(), blobS(1, 7))));
-          }
-
-          @Test
-          public void cannot_have_only_comma() {
-            module(arrayLiteral(","))
-                .loadsWithProblems();
-          }
-
-          @Test
-          public void cannot_have_leading_comma() {
-            module(arrayLiteral(",0x01"))
-                .loadsWithProblems();
-          }
-
-          @Test
-          public void cannot_have_two_trailing_commas() {
-            module(arrayLiteral("0x01,,"))
-                .loadsWithProblems();
-          }
-
-          private String arrayLiteral(String string) {
-            return """
-              result = [PLACEHOLDER];
-              """.replace("PLACEHOLDER", string);
-          }
-        }
-
-        private static class ArrayElements implements ArgumentsProvider {
-          @Override
-          public Stream<Arguments> provideArguments(ExtensionContext context) {
-            return Stream.of(
-                arguments("[]"),
-                arguments("0x01"),
-                arguments("\"abc\"")
-            );
-          }
-        }
-
-        @Test
-        public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
-          module("""
-            myFunc() = "abc";
-            result = [
-              myFunc(unknown1=""),
-              myFunc(unknown2="")
-            ];
-            """)
-              .loadsWith(
-                  err(3, "Unknown parameter `unknown1`."),
-                  err(4, "Unknown parameter `unknown2`.")
-              );
         }
       }
 
