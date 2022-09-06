@@ -8,7 +8,7 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 public record ParamRefS(TypeS type, String paramName, Loc loc) implements OperS {
   @Override
-  public String name() {
+  public String label() {
     return "(" + paramName + ")";
   }
 

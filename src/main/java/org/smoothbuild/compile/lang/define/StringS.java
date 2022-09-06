@@ -12,7 +12,7 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 public record StringS(StringTS type, String string, Loc loc) implements ValS {
   @Override
-  public String name() {
+  public String label() {
     return escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
   }
 

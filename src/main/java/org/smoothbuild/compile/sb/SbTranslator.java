@@ -34,9 +34,9 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.ExprInfoImpl;
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.Nal;
-import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValS;
@@ -76,7 +76,7 @@ public class SbTranslator {
   private final BytecodeLoader bytecodeLoader;
   private final Deque<NList<ItemS>> callStack;
   private final Map<CacheKey, ExprB> cache;
-  private final Map<ExprB, Nal> nals;
+  private final Map<ExprB, ExprInfo> descriptions;
 
   @Inject
   public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader,
@@ -87,11 +87,11 @@ public class SbTranslator {
     this.bytecodeLoader = bytecodeLoader;
     this.callStack = new LinkedList<>();
     this.cache = new HashMap<>();
-    this.nals = new HashMap<>();
+    this.descriptions = new HashMap<>();
   }
 
-  public ImmutableMap<ExprB, Nal> nals() {
-    return ImmutableMap.copyOf(nals);
+  public ImmutableMap<ExprB, ExprInfo> descriptions() {
+    return ImmutableMap.copyOf(descriptions);
   }
 
   private ImmutableList<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
@@ -115,7 +115,7 @@ public class SbTranslator {
 
   private <T extends ExprS> ExprB translateAndCacheNal(T exprS, Function<T, ExprB> mapping) {
     var exprB = mapping.apply(exprS);
-    nals.put(exprB, exprS);
+    descriptions.put(exprB, exprS);
     return exprB;
   }
 
@@ -129,7 +129,7 @@ public class SbTranslator {
     var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
     var combineB = bytecodeF.combine(paramTupleT, argsB);
 
-    nals.put(combineB, new NalImpl("{}", callS.loc()));
+    descriptions.put(combineB, new ExprInfoImpl("{}", callS.loc()));
     return bytecodeF.call(translateT(callS.type()), callableB, combineB);
   }
 
@@ -164,7 +164,7 @@ public class SbTranslator {
         case DefFuncS d -> translateDefFunc(d);
         case SyntCtorS c -> translateSyntCtor(c);
       };
-      nals.put(funcB, funcS);
+      descriptions.put(funcB, funcS);
       return funcB;
     } finally {
       callStack.pop();
@@ -194,7 +194,7 @@ public class SbTranslator {
     var paramsTB = bytecodeF.tupleT(map(paramRefsB, ExprB::type));
     var argsB = bytecodeF.combine(paramsTB, paramRefsB);
     var bodyB = bytecodeF.invoke(funcTB.res(), methodB, argsB);
-    nals.put(bodyB, natFuncS);
+    descriptions.put(bodyB, natFuncS);
     return bytecodeF.func(funcTB, bodyB);
   }
 
@@ -210,7 +210,7 @@ public class SbTranslator {
     var paramRefsB = createParamRefsB(funcTB.params());
     var paramsTB = bytecodeF.tupleT(map(paramRefsB, ExprB::type));
     var bodyB = bytecodeF.combine(paramsTB, paramRefsB);
-    nals.put(bodyB, new NalImpl("{}", syntCtorS.loc()));
+    descriptions.put(bodyB, new ExprInfoImpl("{}", syntCtorS.loc()));
     return bytecodeF.func(funcTB, bodyB);
   }
 
@@ -239,7 +239,7 @@ public class SbTranslator {
     var structTS = (StructTS) selectS.selectable().type();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
-    nals.put(indexB, selectS);
+    descriptions.put(indexB, selectS);
     return bytecodeF.select(translateT(selectS.type()), selectableB, indexB);
   }
 

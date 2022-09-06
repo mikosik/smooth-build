@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableMap;
 public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyRefableS refable,
     Loc loc) implements OperS {
   @Override
-  public String name() {
+  public String label() {
     return "<" + type + ">";
   }
 

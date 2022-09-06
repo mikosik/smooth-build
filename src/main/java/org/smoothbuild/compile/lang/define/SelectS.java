@@ -8,7 +8,7 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 public record SelectS(TypeS type, ExprS selectable, String field, Loc loc) implements OperS {
   @Override
-  public String name() {
+  public String label() {
     return "." + field;
   }
 

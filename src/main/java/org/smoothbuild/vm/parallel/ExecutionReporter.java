@@ -68,10 +68,10 @@ public class ExecutionReporter {
 
   // Visible for testing
   static String header(TaskInfo taskInfo, String resultSource) {
-    String nameString = taskInfo.name();
+    String labelString = taskInfo.label();
     String locString = taskInfo.loc().toString();
 
-    String nameColumn = padEnd(nameString, NAME_LENGTH_LIMIT + 1, ' ');
+    String nameColumn = padEnd(labelString, NAME_LENGTH_LIMIT + 1, ' ');
     String locColumn = resultSource.isEmpty()
         ? locString
         : padEnd(locString, 30, ' ') + " ";

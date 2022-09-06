@@ -41,7 +41,7 @@ public class Evaluator {
     }
 
     reporter.startNewPhase("Evaluating");
-    var vm = vmProv.get(sbTranslator.nals());
+    var vm = vmProv.get(sbTranslator.descriptions());
     return evaluate(vm, exprsB.get());
   }
 

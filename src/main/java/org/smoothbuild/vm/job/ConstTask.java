@@ -4,7 +4,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.job.TaskKind.CONST;
 
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.base.Nal;
+import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
@@ -13,10 +13,10 @@ public class ConstTask extends AbstractJob {
   private final ValB val;
   private final TaskInfo taskInfo;
 
-  public ConstTask(ValB val, Nal nal) {
-    super(val.type(), nal.loc());
+  public ConstTask(ValB val, ExprInfo description) {
+    super(val.type(), description.loc());
     this.val = val;
-    this.taskInfo = new TaskInfo(CONST, nal);
+    this.taskInfo = new TaskInfo(CONST, description);
   }
 
   @Override

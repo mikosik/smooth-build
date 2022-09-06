@@ -10,7 +10,7 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 public record IntS(IntTS type, BigInteger bigInteger, Loc loc) implements ValS {
   @Override
-  public String name() {
+  public String label() {
     return bigInteger.toString();
   }
 

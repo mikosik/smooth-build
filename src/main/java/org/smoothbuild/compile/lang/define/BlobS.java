@@ -13,7 +13,7 @@ import okio.ByteString;
 
 public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements ValS {
   @Override
-  public String name() {
+  public String label() {
     int limit = NAME_LENGTH_LIMIT;
     String string = "0x" + byteString.hex();
     if (string.length() <= limit) {

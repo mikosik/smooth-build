@@ -30,7 +30,7 @@ public record CallS(TypeS type, ExprS callee, ImmutableList<ExprS> args, Loc loc
   }
 
   @Override
-  public String name() {
+  public String label() {
     return "()";
   }
 

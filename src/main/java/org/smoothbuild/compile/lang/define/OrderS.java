@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 
 public record OrderS(ArrayTS type, ImmutableList<ExprS> elems, Loc loc) implements OperS {
   @Override
-  public String name() {
+  public String label() {
     return "[]";
   }
 
