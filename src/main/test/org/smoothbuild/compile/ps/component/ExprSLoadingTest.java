@@ -92,7 +92,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void with_func_reference() {
+      public void with_mono_func_reference() {
         module("""
           Int myReturnInt() = 3;
           result = myReturnInt();
@@ -103,7 +103,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void with_func_reference_and_arg() {
+      public void with_mono_func_reference_and_arg() {
         module("""
           Int myIntId(Int i) = i;
           result = myIntId(3);
@@ -114,7 +114,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void with_func_reference_and_named_arg() {
+      public void with_mono_func_reference_and_named_arg() {
         module("""
           Int myIntId(Int i) = i;
           result = myIntId(i=
@@ -123,6 +123,19 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsRefable(polyDefValS(2, intTS(), "result",
                 callS(2, intTS(), intIdFuncS(), intS(3, 7))));
+      }
+
+      @Test
+      public void with_poly_func_reference_and_arg() {
+        module("""
+          A myId(A a) = a;
+          result = myId(7);
+          """)
+            .loadsWithSuccess()
+            .containsRefable(polyDefValS(2, intTS(), "result",
+                callS(2, intTS(),
+                    monoizeS(2, varMap(varA(), intTS()), idFuncS()),
+                    intS(2, 7))));
       }
 
       @Test
@@ -189,9 +202,9 @@ public class ExprSLoadingTest extends TestContext {
           result(String() f) = f();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(1, stringTS(), "result",
-                callS(1, stringTS(), paramRefS(funcTS(stringTS()), "f")), nlist(itemS(1,
-                    funcTS(stringTS()), "f"))));
+            .containsRefable(polyDefFuncS(
+                1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS()), "f")),
+                callS(1, stringTS(), paramRefS(funcTS(stringTS()), "f"))));
       }
 
       @Test
@@ -200,9 +213,9 @@ public class ExprSLoadingTest extends TestContext {
           result(String(Blob) f) = f(0x09);
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(1, stringTS(), "result",
-                callS(1, stringTS(), paramRefS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9)),
-                nlist(itemS(1, funcTS(stringTS(), blobTS()), "f"))));
+            .containsRefable(polyDefFuncS(
+                1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS(), blobTS()), "f")),
+                callS(1, stringTS(), paramRefS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
       }
     }
     @Nested
@@ -291,8 +304,8 @@ public class ExprSLoadingTest extends TestContext {
             = param1;
           """)
           .loadsWithSuccess()
-          .containsRefable(polyDefFuncS(1, blobTS(), "myFunc",
-              paramRefS(2, blobTS(), "param1"), nlist(itemS(1, blobTS(), "param1"))));
+          .containsRefable(polyDefFuncS(1, blobTS(), "myFunc", nlist(itemS(1, blobTS(), "param1")),
+              paramRefS(2, blobTS(), "param1")));
     }
 
     @Test
@@ -320,7 +333,7 @@ public class ExprSLoadingTest extends TestContext {
     @Nested
     class _value {
       @Test
-      public void def_value() {
+      public void def_mono_value() {
         var code = """
           Blob myValue =
             0x07;
@@ -331,7 +344,18 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void bytecode_value() {
+      public void def_poly_value() {
+        var code = """
+          [A] myValue =
+            [];
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefable(polyDefValS(1, arrayTS(varA()), "myValue", orderS(2, varA())));
+      }
+
+      @Test
+      public void bytecode_mono_value() {
         var code = """
           @Bytecode("impl")
           Blob myValue;
@@ -340,34 +364,70 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsRefable(polyByteValS(2, blobTS(), "myValue"));
       }
+
+      @Test
+      public void bytecode_poly_value() {
+        var code = """
+          @Bytecode("impl")
+          A myValue;
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsRefable(polyByteValS(2, varA(), "myValue"));
+      }
     }
 
     @Nested
     class _func {
       @Test
-      public void def_func() {
+      public void def_mono_func() {
         module("""
           Blob myFunc() =
             0x07;
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(1, blobTS(), "myFunc", blobS(2, 7), nlist()));
+            .containsRefable(polyDefFuncS(1, blobTS(), "myFunc", nlist(), blobS(2, 7)));
       }
 
       @Test
-      public void def_func_with_param() {
+      public void def_poly_func() {
+        module("""
+          [A] myFunc() =
+            [];
+          """)
+            .loadsWithSuccess()
+            .containsRefable(polyDefFuncS(1, arrayTS(varA()), "myFunc", nlist(),
+                orderS(2, varA())));
+      }
+
+      @Test
+      public void def_mono_func_with_param() {
         module("""
           String myFunc(
             Blob param1)
             = "abc";
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(1, stringTS(), "myFunc", stringS(3, "abc"),
-                nlist(itemS(2, blobTS(), "param1"))));
+            .containsRefable(
+                polyDefFuncS(1, stringTS(), "myFunc", nlist(itemS(2, blobTS(), "param1")),
+                    stringS(3, "abc")));
       }
 
       @Test
-      public void def_func_with_param_with_default_arg() {
+      public void def_poly_func_with_param() {
+        module("""
+          A myFunc(
+            A a)
+            = a;
+          """)
+            .loadsWithSuccess()
+            .containsRefable(
+                polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a")),
+                    paramRefS(3, varA(), "a")));
+      }
+
+      @Test
+      public void def_mono_func_with_param_with_default_arg() {
         module("""
           String myFunc(
             Blob param1 =
@@ -375,12 +435,26 @@ public class ExprSLoadingTest extends TestContext {
               = "abc";
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(1, stringTS(), "myFunc", stringS(4, "abc"),
-                nlist(itemS(2, blobTS(), "param1", blobS(3, 7)))));
+            .containsRefable(polyDefFuncS(1, stringTS(), "myFunc",
+                nlist(itemS(2, blobTS(), "param1", blobS(3, 7))), stringS(4, "abc")));
       }
 
       @Test
-      public void native_impure_func() {
+      public void def_poly_func_with_param_with_default_arg() {
+        module("""
+          A myFunc(
+            A a =
+              7)
+              = a;
+          """)
+            .loadsWithSuccess()
+            .containsRefable(
+                polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a", intS(3, 7))),
+                    paramRefS(4, varA(), "a")));
+      }
+
+      @Test
+      public void native_impure_mono_func() {
         module("""
           @NativeImpure("Impl.met")
           String myFunc();
@@ -391,7 +465,18 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void native_pure_func() {
+      public void native_impure_poly_func() {
+        module("""
+          @NativeImpure("Impl.met")
+          A myFunc();
+          """)
+            .loadsWithSuccess()
+            .containsRefable(polyNatFuncS(
+                2, varA(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), false)));
+      }
+
+      @Test
+      public void native_pure_mono_func() {
         module("""
           @Native("Impl.met")
           String myFunc();
@@ -402,7 +487,18 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void native_pure_func_with_default_argument() {
+      public void native_pure_poly_func() {
+        module("""
+          @Native("Impl.met")
+          A myFunc();
+          """)
+            .loadsWithSuccess()
+            .containsRefable(polyNatFuncS(
+                2, varA(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), true)));
+      }
+
+      @Test
+      public void native_pure_mono_func_with_default_argument() {
         module("""
           @Native("Impl.met")
           String myFunc(
@@ -416,7 +512,21 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void bytecode_func() {
+      public void native_pure_poly_func_with_default_argument() {
+        module("""
+          @Native("Impl.met")
+          A myFunc(
+            Blob p1 =
+              0x07);
+          """)
+            .loadsWithSuccess()
+            .containsRefable(
+                polyNatFuncS(2, varA(), "myFunc", nlist(itemS(3, blobTS(), "p1", blobS(4, 7))),
+                    natAnnS(1, stringS(1, "Impl.met"), true)));
+      }
+
+      @Test
+      public void bytecode_mono_func() {
         module("""
           @Bytecode("impl")
           String myFunc();
@@ -426,7 +536,17 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void bytecode_func_with_default_argument() {
+      public void bytecode_poly_func() {
+        module("""
+          @Bytecode("impl")
+          A myFunc();
+          """)
+            .loadsWithSuccess()
+            .containsRefable(polyByteFuncS(2, varA(), "myFunc", nlist()));
+      }
+
+      @Test
+      public void bytecode_mono_func_with_default_argument() {
         module("""
           @Bytecode("Impl.met")
           String myFunc(
@@ -436,6 +556,20 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsRefable(
                 polyByteFuncS(2, "Impl.met", stringTS(), "myFunc",
+                    nlist(itemS(3, blobTS(), "param1", blobS(4, 7)))));
+      }
+
+      @Test
+      public void bytecode_poly_func_with_default_argument() {
+        module("""
+          @Bytecode("Impl.met")
+          A myFunc(
+            Blob param1 =
+              0x07);
+          """)
+            .loadsWithSuccess()
+            .containsRefable(
+                polyByteFuncS(2, "Impl.met", varA(), "myFunc",
                     nlist(itemS(3, blobTS(), "param1", blobS(4, 7)))));
       }
     }
@@ -478,7 +612,7 @@ public class ExprSLoadingTest extends TestContext {
         var defaultArg = monoizeS(
             3, varMap(varA(), intTS()), polyDefValS(5, "empty", orderS(5, varA())));
         var params = nlist(itemS(2, arrayTS(intTS()), "param1", defaultArg));
-        var func = polyDefFuncS(1, intTS(), "myFunc", intS(4, 7), params);
+        var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
             .containsRefable(func);
@@ -496,7 +630,7 @@ public class ExprSLoadingTest extends TestContext {
         var defaultArg = monoizeS(
             3, varMap(varA(), varB()), polyDefValS(5, "empty", orderS(5, varA())));
         var params = nlist(itemS(2, arrayTS(varB()), "param1", defaultArg));
-        var func = polyDefFuncS(1, intTS(), "myFunc", intS(4, 7), params);
+        var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
             .containsRefable(func);
@@ -512,7 +646,7 @@ public class ExprSLoadingTest extends TestContext {
             """;
         var defaultArg = intS(3, 11);
         var params = nlist(itemS(2, intTS(), "param1", defaultArg));
-        var func = polyDefFuncS(1, intTS(), "myFunc", intS(4, 7), params);
+        var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
             .containsRefable(func);

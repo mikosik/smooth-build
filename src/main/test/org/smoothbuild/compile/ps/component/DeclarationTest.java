@@ -735,8 +735,9 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcDeclaration("String param1,"))
               .loadsWithSuccess()
-              .containsRefable(polyDefFuncS(1, stringTS(), "myFunc", stringS(1, "abc"),
-                  nlist(itemS(1, stringTS(), "param1"))));
+              .containsRefable(
+                  polyDefFuncS(1, stringTS(), "myFunc", nlist(itemS(1, stringTS(), "param1")),
+                      stringS(1, "abc")));
         }
 
         @Test

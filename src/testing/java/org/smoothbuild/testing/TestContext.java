@@ -1149,29 +1149,25 @@ public class TestContext {
     return new AnnFuncS(ann, type, modPath, name, params, loc(line));
   }
 
-  public PolyFuncS polyDefFuncS(int line, TypeS type, String name, ExprS body, NList<ItemS> params) {
-    return polyS(defFuncS(line, type, name, params, body));
+  public PolyFuncS polyDefFuncS(int line, String name, NList<ItemS> params, ExprS body) {
+    return polyS(defFuncS(line, name, params, body));
   }
 
-  public PolyFuncS polyDefFuncS(int loc, String name, NList<ItemS> params, ExprS expr) {
-    return polyS(defFuncS(loc, name, params, expr));
-  }
-
-  public PolyFuncS polyDefFuncS(String name, NList<ItemS> params, ExprS expr) {
-    return polyS(defFuncS(name, params, expr));
+  public PolyFuncS polyDefFuncS(String name, NList<ItemS> params, ExprS body) {
+    return polyS(defFuncS(name, params, body));
   }
 
   public PolyFuncS polyDefFuncS(TypeS resT, String name, NList<ItemS> params, ExprS body) {
     return polyS(defFuncS(resT, name, params, body));
   }
 
-  private PolyFuncS polyDefFuncS(int loc, TypeS resT, String name, NList<ItemS> params,
+  public PolyFuncS polyDefFuncS(int line, TypeS resT, String name, NList<ItemS> params,
       ExprS body) {
-    return polyS(defFuncS(loc, resT, name, params, body));
+    return polyS(defFuncS(line, resT, name, params, body));
   }
 
-  public DefFuncS defFuncS(int loc, String name, NList<ItemS> params, ExprS body) {
-    return defFuncS(loc, body.type(), name, params, body);
+  public DefFuncS defFuncS(int line, String name, NList<ItemS> params, ExprS body) {
+    return defFuncS(line, body.type(), name, params, body);
   }
 
   public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS body) {

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class TypeCheckingTest extends TestContext {
+public class AssignmentTest extends TestContext {
   @Nested
   class _value_type_and_its_body_type {
     @Test
