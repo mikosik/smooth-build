@@ -89,7 +89,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Test
-    public void value_ref() {
+    public void mono_value_ref() {
       var code = """
           String stringValue = "abc";
           myValue = stringValue;
@@ -97,6 +97,17 @@ public class InferenceTest extends TestContext {
       module(code)
           .loadsWithSuccess()
           .containsRefableWithType("myValue", schemaS(stringTS()));
+    }
+
+    @Test
+    public void poly_value_ref() {
+      var code = """
+          [A] emptyArray = [];
+          myValue = emptyArray;
+          """;
+      module(code)
+          .loadsWithSuccess()
+          .containsRefableWithType("myValue", schemaS(arrayTS(varA())));
     }
 
     @Test
