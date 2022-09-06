@@ -33,8 +33,7 @@ A elem(
 
 @Native("org.smoothbuild.slib.array.ConcatFunc")
 [A] concat(
-  [A] array1,
-  [A] array2,
+  [[A]] array
 );
 
 @NativeImpure("org.smoothbuild.slib.file.ProjectFileFunc")
@@ -68,7 +67,7 @@ Blob jar(
 ) = javac_(
     srcs = srcs,
     libs = libs,
-    options = concat(["-source", source, "-target", target], options));
+    options = concat([["-source", source, "-target", target], options]));
 
 @Native("org.smoothbuild.slib.java.javac.JavacFunc")
 [File] javac_(
