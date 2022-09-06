@@ -38,12 +38,6 @@ public class ItemSigS extends NameableImpl {
     return type;
   }
 
-  public String typeAndName() {
-    return nameO()
-        .map(n -> type().name() + " " + n)
-        .orElseGet(() -> type().name());
-  }
-
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
     String namePart = padEnd(nameSane(), minNameLength, ' ');
