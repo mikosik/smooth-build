@@ -5,58 +5,32 @@ File {
 }
 
 @Native("org.smoothbuild.slib.bool.NotFunc")
-Bool not(
-  Bool value,
-);
+Bool not(Bool value);
 
-Bool and(
-  Bool first,
-  Bool second,
-) = if(first, second, false);
+Bool and(Bool first, Bool second) = if(first, second, false);
 
-Bool or(
-  Bool first,
-  Bool second,
-) = if(first, true, second);
+Bool or(Bool first, Bool second) = if(first, true, second);
 
 @Native("org.smoothbuild.slib.common.EqualFunc")
-Bool equal(
-  A first,
-  A second,
-);
+Bool equal(A first, A second);
 
 @Native("org.smoothbuild.slib.array.ElemFunc")
-A elem(
-  [A] array,
-  Int index,
-);
+A elem([A] array, Int index);
 
 @Native("org.smoothbuild.slib.array.ConcatFunc")
-[A] concat(
-  [[A]] array
-);
+[A] concat([[A]] array);
 
 @NativeImpure("org.smoothbuild.slib.file.ProjectFileFunc")
-File projectFile(
-  String path,
-);
+File projectFile(String path);
 
 @NativeImpure("org.smoothbuild.slib.file.ProjectFilesFunc")
-[File] projectFiles(
-  String dir,
-);
+[File] projectFiles(String dir);
 
 @Native("org.smoothbuild.slib.file.FilterFunc")
-[File] filter(
-  [File] files,
-  String pattern,
-);
+[File] filter([File] files, String pattern);
 
 @Native("org.smoothbuild.slib.java.JarFunc")
-Blob jar(
-  [File] files,
-  Blob manifest = 0x,
-);
+Blob jar([File] files, Blob manifest = 0x);
 
 [File] javac(
   [File] srcs,
@@ -70,43 +44,25 @@ Blob jar(
     options = concat([["-source", source, "-target", target], options]));
 
 @Native("org.smoothbuild.slib.java.javac.JavacFunc")
-[File] javac_(
-  [File] srcs,
-  [File] libs = [],
-  [String] options = [],
-);
+[File] javac_([File] srcs, [File] libs = [], [String] options = []);
 
 @Native("org.smoothbuild.slib.java.junit.JunitFunc")
-String junit(
-  File tests,
-  [File] deps = [],
-  String include = "**Test.class",
-);
+String junit(File tests, [File] deps = [], String include = "**Test.class");
 
 @Native("org.smoothbuild.slib.string.ToBlobFunc")
-Blob toBlob(
-  String string,
-);
+Blob toBlob(String string);
 
 @Native("org.smoothbuild.slib.blob.ToStringFunc")
-String toString(
-  Blob blob,
-);
+String toString(Blob blob);
 
 @Native("org.smoothbuild.slib.java.UnjarFunc")
-[File] unjar(
-  Blob jar,
-);
+[File] unjar(Blob jar);
 
 @Native("org.smoothbuild.slib.compress.UnzipFunc")
-[File] unzip(
-  Blob blob,
-);
+[File] unzip(Blob blob);
 
 @Native("org.smoothbuild.slib.compress.ZipFunc")
-Blob zip(
-  [File] files,
-);
+Blob zip([File] files);
 
 A id(A a) = a;
 
