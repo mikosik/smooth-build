@@ -34,7 +34,6 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.testing.type.TestingCatsB;
 import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.algorithm.Output;
 import org.smoothbuild.vm.compute.CompRes;
@@ -208,8 +207,8 @@ public class ParallelJobExecutorTest extends TestContext {
     return job("concat", algorithm, deps);
   }
 
-  private static Algorithm concatAlgorithm() {
-    return new TestAlgorithm(Hash.of(1)) {
+  private Algorithm concatAlgorithm() {
+    return new TestAlgorithm(stringTB(), Hash.of(1)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         String joinedArgs = toCommaSeparatedString(input.items(), v -> ((StringB) v).toJ());
@@ -229,7 +228,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Algorithm valueAlgorithm(String value) {
-    return new TestAlgorithm(Hash.of(asList(Hash.of(2), Hash.of(value)))) {
+    return new TestAlgorithm(stringTB(), Hash.of(asList(Hash.of(2), Hash.of(value)))) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         StringB result = nativeApi.factory().string(value);
@@ -239,7 +238,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Algorithm throwingAlgorithm(ArithmeticException exception) {
-    return new TestAlgorithm(Hash.of(3)) {
+    return new TestAlgorithm(stringTB(), Hash.of(3)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         throw exception;
@@ -252,7 +251,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Algorithm sleepGetIncrementAlgorithm(AtomicInteger counter, boolean isPure) {
-    return new TestAlgorithm(Hash.of(4), isPure) {
+    return new TestAlgorithm(stringTB(), Hash.of(4), isPure) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         sleep1000ms();
@@ -262,7 +261,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Algorithm getIncrementAlgorithm(AtomicInteger counter) {
-    return new TestAlgorithm(Hash.of(5)) {
+    return new TestAlgorithm(stringTB(), Hash.of(5)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         return toStr(nativeApi, counter.getAndIncrement());
@@ -271,7 +270,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Algorithm sleepyWriteReadAlgorithm(Hash hash, AtomicInteger write, AtomicInteger read) {
-    return new TestAlgorithm(hash) {
+    return new TestAlgorithm(stringTB(), hash) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         write.incrementAndGet();
@@ -305,23 +304,18 @@ public class ParallelJobExecutorTest extends TestContext {
   private static abstract class TestAlgorithm extends Algorithm {
     private final Hash hash;
 
-    protected TestAlgorithm(Hash hash) {
-      this(hash, true);
+    protected TestAlgorithm(TypeB type, Hash hash) {
+      this(type, hash, true);
     }
 
-    protected TestAlgorithm(Hash hash, boolean isPure) {
-      super(TestingCatsB.STRING, isPure);
+    protected TestAlgorithm(TypeB type, Hash hash, boolean isPure) {
+      super(type, isPure);
       this.hash = hash;
     }
 
     @Override
     public Hash hash() {
       return hash;
-    }
-
-    @Override
-    public TypeB outputT() {
-      return TestingCatsB.STRING;
     }
   }
 }
