@@ -1,5 +1,6 @@
 package org.smoothbuild.bytecode.type.oper;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.CatKindB.MAP;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
@@ -21,6 +22,7 @@ public class MapCB extends OperCatB {
 
   @Override
   public MapB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    return (MapB) super.newObj(merkleRoot, bytecodeDb);
+    checkArgument(merkleRoot.cat() instanceof MapCB);
+    return new MapB(merkleRoot, bytecodeDb);
   }
 }

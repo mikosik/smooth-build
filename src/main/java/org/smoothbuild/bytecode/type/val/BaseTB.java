@@ -6,7 +6,7 @@ import org.smoothbuild.bytecode.type.CatKindB;
 /**
  * This class is immutable.
  */
-public class BaseTB extends TypeB {
+public abstract class BaseTB extends TypeB {
   public BaseTB(Hash hash, String name, CatKindB kind) {
     super(hash, name, kind);
   }

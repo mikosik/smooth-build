@@ -1,7 +1,5 @@
 package org.smoothbuild.bytecode.type;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.Objects;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
@@ -29,13 +27,7 @@ public abstract class CatB implements Named {
     return name;
   }
 
-  /**
-   * Creates new java instance of Obj represented by merkleRoot.
-   */
-  public ExprB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(this.equals(merkleRoot.cat()));
-    return kind.newInstanceJ(merkleRoot, bytecodeDb);
-  }
+  public abstract ExprB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb);
 
   public Hash hash() {
     return hash;

@@ -1,5 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.CatKindB.BLOB;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
@@ -17,6 +18,7 @@ public class BlobTB extends BaseTB {
 
   @Override
   public BlobB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    return (BlobB) super.newObj(merkleRoot, bytecodeDb);
+    checkArgument(merkleRoot.cat() instanceof BlobTB);
+    return new BlobB(merkleRoot, bytecodeDb);
   }
 }

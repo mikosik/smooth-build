@@ -1,5 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.CatKindB.FUNC;
 import static org.smoothbuild.bytecode.type.val.TNamesB.funcTypeName;
 
@@ -37,7 +38,8 @@ public final class FuncTB extends TypeB implements CallableTB, ComposedTB {
 
   @Override
   public FuncB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    return (FuncB) super.newObj(merkleRoot, bytecodeDb);
+    checkArgument(merkleRoot.cat() instanceof FuncTB);
+    return new FuncB(merkleRoot, bytecodeDb);
   }
 
   @Override

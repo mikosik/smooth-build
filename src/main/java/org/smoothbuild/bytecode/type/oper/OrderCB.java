@@ -1,5 +1,6 @@
 package org.smoothbuild.bytecode.type.oper;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.CatKindB.ORDER;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
@@ -23,6 +24,7 @@ public class OrderCB extends OperCatB {
 
   @Override
   public OrderB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    return (OrderB) super.newObj(merkleRoot, bytecodeDb);
+    checkArgument(merkleRoot.cat() instanceof OrderCB);
+    return new OrderB(merkleRoot, bytecodeDb);
   }
 }

@@ -1,5 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.val.TNamesB.tupleTypeName;
 
@@ -23,7 +24,8 @@ public final class TupleTB extends TypeB implements ComposedTB {
 
   @Override
   public TupleB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    return (TupleB) super.newObj(merkleRoot, bytecodeDb);
+    checkArgument(merkleRoot.cat() instanceof TupleTB);
+    return new TupleB(merkleRoot, bytecodeDb);
   }
 
   public ImmutableList<TypeB> items() {

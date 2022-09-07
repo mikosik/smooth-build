@@ -1,5 +1,6 @@
 package org.smoothbuild.bytecode.type.oper;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.CatKindB.INVOKE;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
@@ -15,6 +16,7 @@ public class InvokeCB extends OperCatB {
 
   @Override
   public InvokeB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    return (InvokeB) super.newObj(merkleRoot, bytecodeDb);
+    checkArgument(merkleRoot.cat() instanceof InvokeCB);
+    return new InvokeB(merkleRoot, bytecodeDb);
   }
 }

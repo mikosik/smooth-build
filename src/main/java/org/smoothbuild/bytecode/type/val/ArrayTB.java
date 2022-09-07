@@ -1,5 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.bytecode.type.CatKindB.ARRAY;
 import static org.smoothbuild.bytecode.type.val.TNamesB.arrayTypeName;
@@ -28,7 +29,8 @@ public final class ArrayTB extends TypeB implements ComposedTB {
 
   @Override
   public ArrayB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    return (ArrayB) super.newObj(merkleRoot, bytecodeDb);
+    checkArgument(merkleRoot.cat() instanceof ArrayTB);
+    return new ArrayB(merkleRoot, bytecodeDb);
   }
 
   @Override
