@@ -490,7 +490,7 @@ public class BytecodeDb {
     return hashedDb.writeSeq(hashes);
   }
 
-  // TODO visible for classes from db.object package tree until creating Obj is cached and
+  // visible for classes from db.object package tree until creating Obj is cached and
   // moved completely to ObjectDb class
   public HashedDb hashedDb() {
     return hashedDb;
