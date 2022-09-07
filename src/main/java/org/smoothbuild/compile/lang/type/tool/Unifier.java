@@ -1,11 +1,10 @@
 package org.smoothbuild.compile.lang.type.tool;
 
-import static com.google.common.collect.Sets.newIdentityHashSet;
+import static java.util.stream.Collectors.toCollection;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,6 +14,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 
 public class Unifier {
   private final UniqueVarGenerator uniqueVarGenerator;
@@ -201,28 +201,28 @@ public class Unifier {
   // Unified helpers
 
   private void failIfCycleExists(Unified unified) throws UnifierExc {
-    var visited = new HashSet<>();
-    var queue = new LinkedList<Unified>();
-    queue.add(unified);
-    while (!queue.isEmpty()) {
-      var nextUnified = queue.removeFirst();
-      boolean justAdded = visited.add(nextUnified);
-      if (justAdded) {
-        queue.addAll(referencedBy(nextUnified));
-      } else {
-        throw new UnifierExc();
+    failIfCycleExists(new HashSet<>(), unified);
+  }
+
+  private void failIfCycleExists(HashSet<Unified> visited, Unified unified) throws UnifierExc {
+    if (visited.add(unified)) {
+      for (Unified u : referencedBy(unified)) {
+        failIfCycleExists(visited, u);
       }
+      visited.remove(unified);
+    } else {
+      throw new UnifierExc();
     }
   }
 
   private Set<Unified> referencedBy(Unified unified) {
-    Set<Unified> uniqueUnifiedSet = newIdentityHashSet();
     if (unified.normal != null) {
-      unified.normal.vars().stream()
+      return unified.normal.vars().stream()
           .map(varToUnified::get)
-          .forEach(uniqueUnifiedSet::add);
+          .collect(toCollection(Sets::newIdentityHashSet));
+    } else {
+      return Set.of();
     }
-    return uniqueUnifiedSet;
   }
 
   private static class Unified {
@@ -235,6 +235,15 @@ public class Unifier {
       this.vars = new HashSet<>();
       this.vars.add(var);
       this.normal = normal;
+    }
+
+    @Override
+    public String toString() {
+      return "Unified{" +
+          "mainVar=" + mainVar +
+          ", vars=" + vars +
+          ", normal=" + normal +
+          '}';
     }
   }
 }

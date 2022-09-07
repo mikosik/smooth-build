@@ -297,6 +297,13 @@ public class UnifierTest extends TestContext {
       unifier.unify(varA(), funcTS(intTS(), varB()));
       assertUnifyFails(varB(), funcTS(intTS(), varA()));
     }
+
+    @Test
+    public void regression_test() throws UnifierExc {
+      // Cycle detection algorithm had a bug which is detected by this test.
+      unifier.unify(varA(), arrayTS(varB()));
+      unifier.unify(varC(), funcTS(varA(), varB()));
+    }
   }
 
   @Nested
