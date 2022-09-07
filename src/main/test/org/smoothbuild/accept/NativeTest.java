@@ -269,7 +269,7 @@ public class NativeTest extends AcceptanceTestCase {
   @Nested
   class _bytecode {
     @Test
-    public void func_can_be_called() throws Exception {
+    public void func_call_can_be_evaluated() throws Exception {
       createUserNativeJar(ReturnIdFunc.class);
       createUserModule(format("""
             @Bytecode("%s")
@@ -298,7 +298,7 @@ public class NativeTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void value_can_be_called() throws Exception {
+    public void value_can_be_evaluated() throws Exception {
       Class<?> clazz = org.smoothbuild.testing.func.bytecode.ReturnAbc.class;
       createUserNativeJar(clazz);
       createUserModule(format("""
