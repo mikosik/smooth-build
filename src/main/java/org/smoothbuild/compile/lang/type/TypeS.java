@@ -34,6 +34,10 @@ public abstract sealed class TypeS implements TypelikeS
     return vars;
   }
 
+  public TypeS mapComponents(Function<TypeS, TypeS> mapper) {
+    return this;
+  }
+
   public TypeS mapVars(Function<VarS, TypeS> varMapper) {
     return this;
   }

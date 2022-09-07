@@ -28,6 +28,11 @@ public final class FuncTS extends TypeS {
   }
 
   @Override
+  public TypeS mapComponents(Function<TypeS, TypeS> mapper) {
+    return new FuncTS(mapper.apply(res), map(params, mapper));
+  }
+
+  @Override
   public FuncTS mapVars(Function<VarS, TypeS> varMapper) {
     if (vars().isEmpty()) {
       return this;

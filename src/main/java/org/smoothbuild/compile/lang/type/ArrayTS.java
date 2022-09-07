@@ -16,6 +16,11 @@ public final class ArrayTS extends TypeS {
   }
 
   @Override
+  public TypeS mapComponents(Function<TypeS, TypeS> mapper) {
+    return new ArrayTS(mapper.apply(elem));
+  }
+
+  @Override
   public ArrayTS mapVars(Function<VarS, TypeS> varMapper) {
     if (vars().isEmpty()) {
       return this;
