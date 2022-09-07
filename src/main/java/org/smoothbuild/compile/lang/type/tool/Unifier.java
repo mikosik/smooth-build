@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.lang.type.tool;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +12,6 @@ import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
 public class Unifier {
@@ -42,6 +40,7 @@ public class Unifier {
     createUnifiedIfMissing(var);
     return var;
   }
+
   // unification
 
   private void unifyNormalized(TypeS normal1, TypeS normal2) throws UnifierExc {
@@ -127,21 +126,11 @@ public class Unifier {
 
   private TypeS normalize(TypeS type) {
     return switch (type) {
-      case ArrayTS arrayTS -> normalizeArray(arrayTS);
-      case FuncTS funcTS -> normalizeFunc(funcTS);
+      case ArrayTS array -> array.mapComponents(this::toVar);
+      case FuncTS func -> func.mapComponents(this::toVar);
       case VarS var -> normalizeVar(var);
       default -> type;
     };
-  }
-
-  private TypeS normalizeArray(ArrayTS arrayT) {
-    return new ArrayTS(toVar(arrayT.elem()));
-  }
-
-  private TypeS normalizeFunc(FuncTS funcT) {
-    var resVar = toVar(funcT.res());
-    ImmutableList<TypeS> paramVars = map(funcT.params(), this::toVar);
-    return new FuncTS(resVar, paramVars);
   }
 
   private VarS normalizeVar(VarS var) {
@@ -169,21 +158,11 @@ public class Unifier {
 
   private TypeS denormalize(TypeS normal) {
     return switch (normal) {
-      case ArrayTS array -> denormalizeArray(array);
-      case FuncTS func -> denormalizeFunc(func);
+      case ArrayTS array -> array.mapComponents(this::denormalize);
+      case FuncTS func -> func.mapComponents(this::denormalize);
       case VarS var -> denormalizeVar(var);
       default -> normal;
     };
-  }
-
-  private ArrayTS denormalizeArray(ArrayTS arrayT) {
-    return new ArrayTS(denormalize(arrayT.elem()));
-  }
-
-  private TypeS denormalizeFunc(FuncTS funcT) {
-    var res = denormalize(funcT.res());
-    var params = map(funcT.params(), this::denormalize);
-    return new FuncTS(res, params);
   }
 
   private TypeS denormalizeVar(VarS var) {
@@ -239,11 +218,7 @@ public class Unifier {
 
     @Override
     public String toString() {
-      return "Unified{" +
-          "mainVar=" + mainVar +
-          ", vars=" + vars +
-          ", normal=" + normal +
-          '}';
+      return "Unified{" + mainVar + ", " + vars + ", " + normal + '}';
     }
   }
 }
