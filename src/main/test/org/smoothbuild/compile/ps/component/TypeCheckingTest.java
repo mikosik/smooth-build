@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class AssignmentTest extends TestContext {
+public class TypeCheckingTest extends TestContext {
   @Nested
   class _value_type_and_its_body_type {
     @Test
@@ -78,13 +78,8 @@ public class AssignmentTest extends TestContext {
           String myFunc([Blob] blobArray) = "abc";
           result = myFunc(blobArray = [1, 2, 3]);
           """;
-      var blobArray = arrayTS(blobTS());
       module(sourceCode)
           .loadsWithError(2, "Illegal call.");
-//          .loadsWithError(2,
-//              "In call to function with parameters ([Blob] blobArray):"
-//                  + " Cannot assign argument of type " + arrayTS(intTS()).q()
-//                  + " to parameter `blobArray` of type " + blobArray.q() + ".");
     }
 
     @Test
@@ -137,6 +132,31 @@ public class AssignmentTest extends TestContext {
           """;
       module(sourceCode)
           .loadsWithSuccess();
+    }
+  }
+
+  @Nested
+  class _rankness {
+    @Test
+    public void of_higher_order_is_not_possible() {
+      var code = """
+            Pair {
+              String string,
+              Int int,
+            }
+            Pair f(String s, Int i, A(A) id) = pair(id(s), id(i));
+            """;
+      module(code)
+          .loadsWithError(5, "Illegal call.");
+    }
+
+    @Test
+    public void of_higher_order_is_not_possible_2() {
+      var code = """
+            f(String s, A(A) id) = id(s);
+            """;
+      module(code)
+          .loadsWithError(1, "<Add error message here> 4");
     }
   }
 }

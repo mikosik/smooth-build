@@ -6,31 +6,6 @@ import org.smoothbuild.testing.TestContext;
 
 public class InferenceTest extends TestContext {
   @Nested
-  class _rankness {
-    @Test
-    public void of_higher_order_is_not_possible() {
-      var code = """
-            Pair {
-              String string,
-              Int int,
-            }
-            Pair f(String s, Int i, A(A) id) = pair(id(s), id(i));
-            """;
-      module(code)
-          .loadsWithError(5, "Illegal call.");
-    }
-
-    @Test
-    public void of_higher_order_is_not_possible_2() {
-      var code = """
-            f(String s, A(A) id) = id(s);
-            """;
-      module(code)
-          .loadsWithError(1, "<Add error message here> 4");
-    }
-  }
-
-  @Nested
   class _value {
     @Nested
     class _infer_mono_type_from {
@@ -569,6 +544,16 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
+        public void base_type_and_array_of_that_base_type() {
+          var code = """
+            String myEqual(A p1, A p2) = "true";
+            result = myEqual(7, [7]);
+            """;
+          module(code)
+              .loadsWithError(2, "Illegal call.");
+        }
+
+        @Test
         public void arrays() {
           var code = """
             String myEqual(A p1, A p2) = "true";
@@ -700,7 +685,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Nested
-      class _default_arg_forces_unification {
+      class _from_default_arg {
         @Test
         public void generic_param_with_default_argument_with_concrete_type() {
           var code = """
@@ -709,8 +694,19 @@ public class InferenceTest extends TestContext {
               """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue",
-                  schemaS(intTS()));
+              .containsRefableWithType("myValue", schemaS(intTS()));
+        }
+
+        @Test
+        public void generic_param_with_default_argument_with_polymorphic_type() {
+          var code = """
+              A myId(A a) = a;
+              A(B) myFunc(A a, A(B) f = myId) = f;
+              myValue = myFunc(7);
+              """;
+          module(code)
+              .loadsWithSuccess()
+              .containsRefableWithType("myValue", funcSchemaS(intTS(), intTS()));
         }
 
         @Test
