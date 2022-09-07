@@ -745,6 +745,17 @@ public class InferenceTest extends TestContext {
         module(code)
             .loadsWithSuccess();
       }
+
+      @Test
+      public void two_default_args_referencing_same_poly_func() {
+        var code = """
+          A myId(A a) = a;
+          myFunc(A a, B b, A(A) f1 = myId, B(B) f2 = myId) = 0x33;
+          myValue = myFunc(7, "abc");
+          """;
+        module(code)
+            .loadsWithSuccess();
+      }
     }
   }
 
