@@ -113,8 +113,8 @@ public class SbTranslator {
     };
   }
 
-  private <T extends ExprS> ExprB translateAndCacheNal(T exprS, Function<T, ExprB> mapping) {
-    var exprB = mapping.apply(exprS);
+  private <T extends ExprS> ExprB translateAndCacheNal(T exprS, Function<T, ExprB> translator) {
+    var exprB = translator.apply(exprS);
     descriptions.put(exprB, exprS);
     return exprB;
   }
