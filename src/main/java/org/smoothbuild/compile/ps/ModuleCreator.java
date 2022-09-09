@@ -40,6 +40,7 @@ public class ModuleCreator {
   private final ScopedBindings<Optional<TDefS>> types;
   private final ScopedBindings<Optional<PolyRefableS>> bindings;
   private final LogBuffer logBuffer;
+  private final PsTranslator psTranslator;
 
   public static Maybe<ModuleS> createModuleS(
       ModPath path, ModFiles modFiles, Ast ast, DefsS imported) {
@@ -70,6 +71,7 @@ public class ModuleCreator {
     this.types = types;
     this.bindings = bindings;
     this.logBuffer = logBuffer;
+    this.psTranslator = new PsTranslator(bindings);
   }
 
   public void visitStruct(StructP struct) {
@@ -102,13 +104,13 @@ public class ModuleCreator {
 
   public void visitValue(NamedValP namedValP) {
     var schema = inferValSchema(types, bindings, logBuffer, namedValP);
-    var valS = schema.flatMap(s -> new PsTranslator(bindings).translateVal(path, namedValP, s.type()));
+    var valS = schema.flatMap(s -> psTranslator.translateVal(path, namedValP, s.type()));
     bindings.add(namedValP.name(), valS);
   }
 
   public void visitFunc(FuncP funcP) {
     var schema = inferFuncSchema(types, bindings, logBuffer, funcP);
-    var funcS = schema.flatMap(s -> new PsTranslator(bindings).translateFunc(path, funcP, s.type()));
+    var funcS = schema.flatMap(s -> psTranslator.translateFunc(path, funcP, s.type()));
     bindings.add(funcP.name(), funcS);
   }
 }
