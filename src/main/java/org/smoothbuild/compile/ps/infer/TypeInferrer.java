@@ -2,6 +2,7 @@ package org.smoothbuild.compile.ps.infer;
 
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -28,7 +29,6 @@ import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.collect.Optionals;
 
 public class TypeInferrer {
   private final TypePsTranslator typePsTranslator;
@@ -57,7 +57,7 @@ public class TypeInferrer {
   }
 
   private Optional<StructTS> inferStructT(StructP struct) {
-    return Optionals.pullUp(map(struct.fields().list(), this::inferFieldSig))
+    return pullUp(map(struct.fields().list(), this::inferFieldSig))
         .map(NList::nlist)
         .map(is -> new StructTS(struct.name(), is));
   }
@@ -86,7 +86,7 @@ public class TypeInferrer {
 
   private Optional<SchemaS> inferValSchema(NamedValP val) {
     return translateOrGenerateT(val.type())
-        .flatMap(r -> unifyAndResolve(val, r, this::newBodyUnifier, this::resolveValSchema));
+        .flatMap(r -> unifyBodyAndResolve(val, r, this::newBodyUnifier, this::resolveValSchema));
   }
 
   private Optional<SchemaS> resolveValSchema(NamedValP namedValP, TypeS evalT) {
@@ -101,7 +101,7 @@ public class TypeInferrer {
   }
 
   private void inferDefaultArgImpl(TypeS type, ItemP param) {
-    unifyAndResolve(param, type, this::newBodyUnifier, this::resolveDefaultArg);
+    unifyBodyAndResolve(param, type, this::newBodyUnifier, this::resolveDefaultArg);
   }
 
   private ExprTypeUnifier newBodyUnifier() {
@@ -128,21 +128,7 @@ public class TypeInferrer {
     if (!inferParamTs(params)) {
       return Optional.empty();
     }
-    params.stream()
-        .filter(p -> p.body().isPresent())
-        .forEach(this::inferDefaultArg);
-    return inferFuncSchemaImpl(func, () -> new ExprTypeUnifier(
-        unifier, funcBodyScopeBindings(params), logger));
-  }
-
-  private ScopedBindings<Optional<? extends RefableS>> funcBodyScopeBindings(NList<ItemP> params) {
-    var bodyScopeBindings = new ScopedBindings<Optional<? extends RefableS>>(bindings);
-    params.forEach(p -> bodyScopeBindings.add(p.name(), Optional.of(itemS(p))));
-    return bodyScopeBindings;
-  }
-
-  private static ItemS itemS(ItemP p) {
-    return new ItemS(p.typeS(), p.name(), Optional.empty(), p.loc());
+    return inferFuncSchemaImpl(func, params);
   }
 
   private boolean inferParamTs(NList<ItemP> params) {
@@ -158,11 +144,24 @@ public class TypeInferrer {
     return true;
   }
 
-  private Optional<FuncSchemaS> inferFuncSchemaImpl(
-      FuncP func, Supplier<ExprTypeUnifier> funcBodyUnifierSupplier) {
+  private Optional<FuncSchemaS> inferFuncSchemaImpl(FuncP func, NList<ItemP> params) {
+    params.stream()
+        .filter(p -> p.body().isPresent())
+        .forEach(this::inferDefaultArg);
     var resT = translateOrGenerateT(func.resT());
     return resT.flatMap(
-        r -> unifyAndResolve(func, r, funcBodyUnifierSupplier, this::resolveFuncSchema));
+        r -> unifyBodyAndResolve(func, r, () -> new ExprTypeUnifier(
+        unifier, funcBodyScopeBindings(params), logger), this::resolveFuncSchema));
+  }
+
+  private ScopedBindings<Optional<? extends RefableS>> funcBodyScopeBindings(NList<ItemP> params) {
+    var bodyScopeBindings = new ScopedBindings<Optional<? extends RefableS>>(bindings);
+    params.forEach(p -> bodyScopeBindings.add(p.name(), Optional.of(itemS(p))));
+    return bodyScopeBindings;
+  }
+
+  private static ItemS itemS(ItemP p) {
+    return new ItemS(p.typeS(), p.name(), Optional.empty(), p.loc());
   }
 
   private Optional<FuncSchemaS> resolveFuncSchema(FuncP funcP, TypeS resT) {
@@ -172,7 +171,7 @@ public class TypeInferrer {
 
   // body
 
-  private <R extends RefableP, T> Optional<T> unifyAndResolve(
+  private <R extends RefableP, T> Optional<T> unifyBodyAndResolve(
       R refable, TypeS evalT, Supplier<ExprTypeUnifier> bodyUnifierSupplier,
       BiFunction<R, TypeS, Optional<T>> resolver) {
     if (refable.body().isPresent()) {
