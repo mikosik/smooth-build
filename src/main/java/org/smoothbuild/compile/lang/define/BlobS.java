@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.lang.define;
 
-import static org.smoothbuild.vm.job.TaskInfo.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.vm.execute.TaskInfo.NAME_LENGTH_LIMIT;
 
 import java.util.function.Function;
 

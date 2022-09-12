@@ -3,58 +3,58 @@ package org.smoothbuild.vm.job;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
-import static org.smoothbuild.vm.job.TaskKind.ORDER;
 
 import java.util.function.Consumer;
 
+import org.smoothbuild.bytecode.BytecodeF;
+import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.oper.CombineB;
+import org.smoothbuild.bytecode.expr.oper.MapB;
+import org.smoothbuild.bytecode.expr.oper.MapB.Data;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.FuncB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
-public class MapJob extends AbstractJob {
-  private final Job arrayJ;
-  private final Job funcJ;
-  private final JobCreator jobCreator;
+public class MapJob extends ExecutingJob {
+  private final MapB mapB;
+  private final ExecutionContext context;
 
-  public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, JobCreator jobCreator) {
-    super(type, loc);
-    this.arrayJ = arrayJ;
-    this.funcJ = funcJ;
-    this.jobCreator = jobCreator;
+  public MapJob(MapB mapB, ExecutionContext context) {
+    super(context);
+    this.mapB = mapB;
+    this.context = context;
   }
 
   @Override
-  public Promise<ValB> scheduleImpl(Worker worker) {
-    PromisedValue<ValB> result = new PromisedValue<>();
-    Promise<ValB> array = arrayJ.schedule(worker);
-    Promise<ValB> func = funcJ.schedule(worker);
+  public Promise<ValB> evaluateImpl() {
+    var result = new PromisedValue<ValB>();
+    Data data = mapB.data();
+    var array = context.jobFor(data.array()).evaluate();
+    var func = context.jobFor(data.func()).evaluate();
     runWhenAllAvailable(list(array, func),
-        () -> onDepsCompleted((ArrayB) array.get(), worker, result));
+        () -> onDepsCompleted((ArrayB) array.get(), (FuncB) func.get(), result));
     return result;
   }
 
-  private void onDepsCompleted(ArrayB array, Worker worker, Consumer<ValB> result) {
-    var outputArrayT = (ArrayTB) type();
-    var mapElemJs = map(
-        array.elems(ValB.class),
-        this::mapElementJob);
-    var info = new TaskInfo(ORDER, "[]", loc());
-    jobCreator.orderEager(outputArrayT, mapElemJs, info)
-        .schedule(worker)
+  private void onDepsCompleted(ArrayB array, FuncB funcB, Consumer<ValB> result) {
+    var callBs = map(array.elems(ValB.class), e -> newCallB(funcB, e));
+    var orderB = bytecodeF().order(mapB.type(), callBs);
+    context.jobFor(orderB)
+        .evaluate()
         .addConsumer(result);
   }
 
-  private Job mapElementJob(ValB elem) {
-    var elemJ = elemJob(elem);
-    return jobCreator.callEagerJob(funcJ, list(elemJ), funcJ.loc());
+  private ExprB newCallB(FuncB funcB, ValB val) {
+    return bytecodeF().call(funcB.type().res(), funcB, singleArg(val));
   }
 
-  private Job elemJob(ValB elem) {
-    return new DummyJob(elem, arrayJ.loc());
+  private CombineB singleArg(ValB val) {
+    return bytecodeF().combine(bytecodeF().tupleT(list(val.type())), list(val));
+  }
+
+  private BytecodeF bytecodeF() {
+    return context().bytecodeF();
   }
 }

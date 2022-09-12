@@ -1,22 +1,38 @@
 package org.smoothbuild.vm.job;
 
+import static org.smoothbuild.util.collect.Lists.list;
+
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.out.log.Log;
 import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
+import org.smoothbuild.vm.execute.ExecutionReporter;
+import org.smoothbuild.vm.execute.TaskInfo;
 
-public class DummyJob extends AbstractJob {
-  private final PromisedValue<ValB> promisedValue;
+import com.google.common.collect.ImmutableList;
 
-  public DummyJob(ValB valB, Loc loc) {
-    super(valB.type(), loc);
-    this.promisedValue = new PromisedValue<>();
-    this.promisedValue.accept(valB);
+public abstract class DummyJob extends Job {
+  private final ExecutionReporter reporter;
+  private final TaskInfo taskInfo;
+
+  public DummyJob(TaskInfo taskInfo, ExecutionReporter reporter) {
+    this.reporter = reporter;
+    this.taskInfo = taskInfo;
   }
 
   @Override
-  protected Promise<ValB> scheduleImpl(Worker worker) {
-    return promisedValue;
+  public final Promise<ValB> evaluateImpl() {
+    return resultPromise()
+        .chain(v -> {
+          if (v != null) {
+            reporter.print(taskInfo, list());
+          }
+          return v;
+        });
+  }
+
+  protected abstract Promise<ValB> resultPromise();
+
+  protected void report(TaskInfo taskInfo, ImmutableList<Log> logs) {
+    reporter.print(taskInfo, logs);
   }
 }

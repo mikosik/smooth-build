@@ -130,18 +130,17 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
-import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.compute.ComputationCache;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
-import org.smoothbuild.vm.job.JobCreatorProv;
-import org.smoothbuild.vm.parallel.ExecutionReporter;
-import org.smoothbuild.vm.parallel.ParallelJobExecutor;
+import org.smoothbuild.vm.execute.ExecutionReporter;
+import org.smoothbuild.vm.execute.TaskExecutor;
+import org.smoothbuild.vm.job.ExecutionContext;
+import org.smoothbuild.vm.job.JobCreator;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.util.Providers;
 
 import okio.ByteString;
 
@@ -167,24 +166,57 @@ public class TestContext {
   private BytecodeMethodLoader bytecodeMethodLoader;
 
   public Vm vm() {
-    return vmProv().get(ImmutableMap.of());
+    return vm(null);
   }
 
-  public VmProv vmProv() {
-    return vmProv((NativeMethodLoader) null);
+  public Vm vm(NativeMethodLoader nativeMethodLoader) {
+    return new Vm(() -> executionContext(nativeMethodLoader));
   }
 
-  public VmProv vmProv(NativeMethodLoader nativeMethodLoader) {
-    return vmProv(new JobCreatorProv(nativeMethodLoader, bytecodeF()));
+  public ExecutionContext executionContext() {
+    return executionContext(taskExecutor());
   }
 
-  public VmProv vmProv(JobCreatorProv jobCreatorProv) {
-    var parallelExecutor = new ParallelJobExecutor(computer(), executionReporter());
-    return new VmProv(jobCreatorProv, parallelExecutor);
+  public ExecutionContext executionContext(NativeMethodLoader nativeMethodLoader) {
+    return executionContext(taskExecutor(), nativeMethodLoader);
   }
 
-  public SbTranslatorProv sbTranslatorProv() {
-    return sbTranslatorProv(null);
+  public ExecutionContext executionContext(TaskExecutor taskExecutor) {
+    return executionContext(taskExecutor, null);
+  }
+
+  private ExecutionContext executionContext(TaskExecutor taskExecutor,
+      NativeMethodLoader nativeMethodLoader) {
+    return new ExecutionContext(
+        taskExecutor, executionReporter(), bytecodeF(), nativeMethodLoader, new JobCreator());
+  }
+
+  public ExecutionContext executionContext(ExecutionReporter reporter, int threadCount) {
+    return executionContext(computer(), reporter, threadCount);
+  }
+
+  public ExecutionContext executionContext(
+      Computer computer, ExecutionReporter reporter, int threadCount) {
+    return executionContext(reporter, taskExecutor(computer, reporter, threadCount));
+  }
+
+  public ExecutionContext executionContext(ExecutionReporter reporter, TaskExecutor taskExecutor) {
+    NativeMethodLoader nativeMethodLoader = null;
+    return new ExecutionContext(
+        taskExecutor, reporter, bytecodeF(), nativeMethodLoader, new JobCreator());
+  }
+
+  private TaskExecutor taskExecutor() {
+    return taskExecutor(executionReporter());
+  }
+
+  public TaskExecutor taskExecutor(ExecutionReporter reporter) {
+    return new TaskExecutor(computer(), reporter);
+  }
+
+  private TaskExecutor taskExecutor(
+      Computer computer, ExecutionReporter reporter, int threadCount) {
+    return new TaskExecutor(computer, reporter, threadCount);
   }
 
   public SbTranslatorProv sbTranslatorProv(FileLoader fileLoader) {
@@ -223,15 +255,11 @@ public class TestContext {
     return jarClassLoaderProv;
   }
 
-  public ParallelJobExecutor parallelJobExecutor() {
-    return new ParallelJobExecutor(computer(), executionReporter());
-  }
-
   public TestingModLoader module(String code) {
     return new TestingModLoader(code);
   }
 
-  private ExecutionReporter executionReporter() {
+  public ExecutionReporter executionReporter() {
     return new ExecutionReporter(reporter());
   }
 
@@ -251,7 +279,7 @@ public class TestContext {
 
   public Computer computer() {
     if (computer == null) {
-      computer = new Computer(computationCache(), Hash.of(123), Providers.of(newContainer()));
+      computer = new Computer(computationCache(), Hash.of(123), this::newContainer);
     }
     return computer;
   }

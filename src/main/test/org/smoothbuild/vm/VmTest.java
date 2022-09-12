@@ -10,6 +10,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.math.BigInteger;
@@ -20,24 +21,19 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Try;
-import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.algorithm.OrderAlgorithm;
-import org.smoothbuild.vm.job.Job;
-import org.smoothbuild.vm.job.JobCreator;
-import org.smoothbuild.vm.job.JobCreator.TaskCreator;
-import org.smoothbuild.vm.job.Task;
-import org.smoothbuild.vm.job.TaskInfo;
+import org.smoothbuild.vm.execute.TaskExecutor;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class VmTest extends TestContext {
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
-  private TaskCreator taskCreator;
+  private TaskExecutor spyingExecutor;
 
   @Nested
   class _laziness {
@@ -46,10 +42,10 @@ public class VmTest extends TestContext {
       // This test makes sure that it is possible to detect Task creation using a mock.
       var order = orderB(intB(7));
 
-      assertThat(evaluate(spyingVm(), order))
+      assertThat(evaluate(vmWithSpyingExecutor(), order))
           .isEqualTo(arrayB(intB(7)));
 
-      verify(taskCreator, times(1)).newTask(isA(OrderAlgorithm.class), any(), any());
+      verify(spyingExecutor, times(1)).enqueue(any(), isA(OrderAlgorithm.class), any(), any());
     }
 
     @Test
@@ -57,10 +53,10 @@ public class VmTest extends TestContext {
       var func = funcB(list(arrayTB(boolTB())), intB(7));
       var call = callB(func, orderB(boolTB()));
 
-      assertThat(evaluate(spyingVm(), call))
+      assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(intB(7));
 
-      verify(taskCreator, never()).newTask(isA(OrderAlgorithm.class), any(), any());
+      verify(spyingExecutor, never()).enqueue(any(), isA(OrderAlgorithm.class), any(), any());
     }
 
     @Test
@@ -70,10 +66,10 @@ public class VmTest extends TestContext {
           callB(innerFunc, paramRefB(arrayTB(boolTB()), 0)));
       var call = callB(outerFunc, orderB(boolTB()));
 
-      assertThat(evaluate(spyingVm(), call))
+      assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(intB(7));
 
-      verify(taskCreator, never()).newTask(isA(OrderAlgorithm.class), any(), any());
+      verify(spyingExecutor, never()).enqueue(any(), isA(OrderAlgorithm.class), any(), any());
     }
 
     @Test
@@ -82,10 +78,10 @@ public class VmTest extends TestContext {
       var func = funcB(list(arrayT), combineB(paramRefB(arrayT, 0), paramRefB(arrayT, 0)));
       var call = callB(func, orderB(intB(7)));
 
-      assertThat(evaluate(spyingVm(), call))
+      assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
 
-      verify(taskCreator, times(1)).newTask(isA(OrderAlgorithm.class), any(), any());
+      verify(spyingExecutor, times(1)).enqueue(any(), isA(OrderAlgorithm.class), any(), any());
     }
   }
 
@@ -218,11 +214,11 @@ public class VmTest extends TestContext {
     }
 
     @Test
-    public void param_ref_to_param_of_outer_func() {
+    public void param_ref_with_index_outside_of_func_param_bounds_causes_exception() {
       var innerFuncB = funcB(list(), paramRefB(intTB(), 0));
       var outerFuncB = funcB(list(intTB()), callB(innerFuncB));
-      assertThat(evaluate(callB(outerFuncB, intB(7))))
-          .isEqualTo(intB(7));
+      assertCall(() -> evaluate(callB(outerFuncB, intB(7))))
+          .throwsException(ArrayIndexOutOfBoundsException.class);
     }
 
     @Test
@@ -235,13 +231,17 @@ public class VmTest extends TestContext {
   }
 
   private ExprB evaluate(ExprB expr) {
-    var vm = vmProv(nativeMethodLoader).get(ImmutableMap.of());
-    return evaluate(vm, expr);
+    var vm = vm(nativeMethodLoader);
+    return evaluate(vm, expr, ImmutableMap.of());
   }
 
   private ValB evaluate(Vm vm, ExprB expr) {
+    return evaluate(vm, expr, ImmutableMap.of());
+  }
+
+  private ValB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, ExprInfo> descriptions) {
     try {
-      var results = vm.evaluate(list(expr)).get();
+      var results = vm.evaluate(list(expr), descriptions).get();
       assertThat(results.size())
           .isEqualTo(1);
       return results.get(0);
@@ -250,17 +250,9 @@ public class VmTest extends TestContext {
     }
   }
 
-  private Vm spyingVm() {
-    // This anonymous TaskCreator cannot be replaced with Task::new because
-    // the latter is final and cannot be mocked by Mockito.
-    taskCreator = spy(new TaskCreator() {
-      @Override
-      public Task newTask(Algorithm algorithm, ImmutableList<Job> depJs, TaskInfo info) {
-        return new Task(algorithm, depJs, info, bytecodeF());
-      }
-    });
-    var jobCreator = new JobCreator(null, ImmutableMap.of(), taskCreator);
-    return new Vm(jobCreator, parallelJobExecutor());
+  private Vm vmWithSpyingExecutor() {
+    spyingExecutor = spy(new TaskExecutor(computer(), executionReporter()));
+    return new Vm(() -> executionContext(spyingExecutor));
   }
 
   public static IntB returnInt(NativeApi nativeApi, TupleB args) {

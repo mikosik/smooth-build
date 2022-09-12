@@ -41,7 +41,7 @@ import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.BuildRunner;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.SandboxHash;
-import org.smoothbuild.vm.parallel.TaskReporter;
+import org.smoothbuild.vm.execute.TaskReporter;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

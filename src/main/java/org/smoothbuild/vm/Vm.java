@@ -2,29 +2,47 @@ package org.smoothbuild.vm;
 
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
+import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
+import java.util.List;
 import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.vm.job.JobCreator;
-import org.smoothbuild.vm.parallel.ParallelJobExecutor;
+import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.vm.execute.TaskExecutor;
+import org.smoothbuild.vm.job.ExecutionContext;
+import org.smoothbuild.vm.job.Job;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class Vm {
-  private final JobCreator jobCreator;
-  private final ParallelJobExecutor parallelExecutor;
+  private final Provider<ExecutionContext> contextProv;
 
-  public Vm(JobCreator jobCreator, ParallelJobExecutor parallelExecutor) {
-    this.jobCreator = jobCreator;
-    this.parallelExecutor = parallelExecutor;
+  @Inject
+  public Vm(Provider<ExecutionContext> contextProv) {
+    this.contextProv = contextProv;
   }
 
-  public Optional<ImmutableList<ValB>> evaluate(ImmutableList<ExprB> exprs)
+  public Optional<ImmutableList<ValB>> evaluate(ImmutableList<ExprB> exprs,
+      ImmutableMap<ExprB, ExprInfo> exprInfos)
       throws InterruptedException {
-    var jobs = map(exprs, jobCreator::eagerJobFor);
-    var result = parallelExecutor.executeAll(jobs);
-    return pullUp(result);
+    var context = contextProv.get().withExprInfos(exprInfos);
+    var executor = context.taskExecutor();
+    var jobs = map(exprs, context::jobFor);
+    return pullUp(evaluate(executor, jobs));
+  }
+
+  // Visible for testing
+  public static ImmutableList<Optional<ValB>> evaluate(TaskExecutor executor, List<Job> jobs)
+      throws InterruptedException {
+    var evaluationResults = map(jobs, Job::evaluate);
+    runWhenAllAvailable(evaluationResults, executor::terminate);
+    executor.awaitTermination();
+    return map(evaluationResults, r -> Optional.ofNullable(r.get()));
   }
 }

@@ -10,25 +10,26 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.sb.SbTranslator;
 import org.smoothbuild.compile.sb.SbTranslatorProv;
 import org.smoothbuild.compile.sb.TranslateSbExc;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.Vm;
-import org.smoothbuild.vm.VmProv;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class Evaluator {
   private final SbTranslatorProv sbTranslatorProv;
-  private final VmProv vmProv;
+  private final Vm vm;
   private final Reporter reporter;
 
   @Inject
-  public Evaluator(SbTranslatorProv sbTranslatorProv, VmProv vmProv, Reporter reporter) {
+  public Evaluator(SbTranslatorProv sbTranslatorProv, Vm vm, Reporter reporter) {
     this.sbTranslatorProv = sbTranslatorProv;
-    this.vmProv = vmProv;
+    this.vm = vm;
     this.reporter = reporter;
   }
 
@@ -41,13 +42,13 @@ public class Evaluator {
     }
 
     reporter.startNewPhase("Evaluating");
-    var vm = vmProv.get(sbTranslator.descriptions());
-    return evaluate(vm, exprsB.get());
+    return evaluate(vm, exprsB.get(), sbTranslator.descriptions());
   }
 
-  private Optional<ImmutableList<ValB>> evaluate(Vm vm, ImmutableList<ExprB> exprs) {
+  private Optional<ImmutableList<ValB>> evaluate(Vm vm, ImmutableList<ExprB> exprs,
+      ImmutableMap<ExprB, ExprInfo> descriptions) {
     try {
-      return vm.evaluate(exprs);
+      return vm.evaluate(exprs, descriptions);
     } catch (InterruptedException e) {
       reporter.report(fatal("Evaluation process has been interrupted."));
       return Optional.empty();

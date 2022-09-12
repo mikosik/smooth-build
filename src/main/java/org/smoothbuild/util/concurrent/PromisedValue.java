@@ -17,6 +17,14 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   private final List<Consumer<T>> consumers = new ArrayList<>();
   private T value;
 
+  public PromisedValue() {
+    this.value = null;
+  }
+
+  public PromisedValue(T value) {
+    this.value = value;
+  }
+
   @Override
   public void accept(T value) {
     requireNonNull(value);

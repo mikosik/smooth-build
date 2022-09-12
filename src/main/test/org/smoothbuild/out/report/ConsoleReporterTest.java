@@ -10,7 +10,7 @@ import static org.smoothbuild.out.report.TaskMatchers.ALL;
 import static org.smoothbuild.out.report.TaskMatchers.NONE;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.vm.job.TaskKind.CALL;
+import static org.smoothbuild.vm.execute.TaskKind.CALL;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
@@ -26,7 +26,7 @@ import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.job.TaskInfo;
+import org.smoothbuild.vm.execute.TaskInfo;
 
 public class ConsoleReporterTest extends TestContext {
   private static final String HEADER = "TASK NAME";

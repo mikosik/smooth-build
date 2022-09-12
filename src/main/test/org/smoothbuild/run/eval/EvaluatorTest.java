@@ -203,7 +203,7 @@ public class EvaluatorTest  extends TestContext {
 
   private Evaluator newEvaluator() {
     var sbConverterProv = sbTranslatorProv(fileLoader, bytecodeLoader);
-    var vmProv = vmProv(nativeMethodLoader);
-    return new Evaluator(sbConverterProv, vmProv, reporter());
+    var vm = vm(nativeMethodLoader);
+    return new Evaluator(sbConverterProv, vm, reporter());
   }
 }

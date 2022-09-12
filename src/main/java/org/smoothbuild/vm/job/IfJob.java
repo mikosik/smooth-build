@@ -2,38 +2,36 @@ package org.smoothbuild.vm.job;
 
 import java.util.function.Consumer;
 
+import org.smoothbuild.bytecode.expr.oper.IfB;
 import org.smoothbuild.bytecode.expr.val.BoolB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
-public class IfJob extends AbstractJob {
-  private final Job conditionJ;
-  private final Job thenJ;
-  private final Job elseJ;
+public class IfJob extends ExecutingJob {
+  private final IfB ifB;
+  private final ExecutionContext context;
 
-  public IfJob(TypeB type, Job conditionJ, Job thenJ, Job elseJ, Loc loc) {
-    super(type, loc);
-    this.conditionJ = conditionJ;
-    this.thenJ = thenJ;
-    this.elseJ = elseJ;
+  public IfJob(IfB ifB, ExecutionContext context) {
+    super(context);
+    this.ifB = ifB;
+    this.context = context;
   }
 
   @Override
-  public Promise<ValB> scheduleImpl(Worker worker) {
+  public Promise<ValB> evaluateImpl() {
     var res = new PromisedValue<ValB>();
-    conditionJ.schedule(worker)
-        .addConsumer(val -> onConditionCalculated(val, worker, res));
+    context.jobFor(ifB.data().condition())
+        .evaluate()
+        .addConsumer(val -> onConditionCalculated(val, res));
     return res;
   }
 
-  private void onConditionCalculated(ValB condition, Worker worker, Consumer<ValB> res) {
+  private void onConditionCalculated(ValB condition, Consumer<ValB> res) {
     var conditionJ = ((BoolB) condition).toJ();
-    var job = conditionJ ? thenJ : elseJ;
-    job.schedule(worker)
+    IfB.Data data = ifB.data();
+    context.jobFor(conditionJ ? data.then() : data.else_())
+        .evaluate()
         .addConsumer(res);
   }
 }

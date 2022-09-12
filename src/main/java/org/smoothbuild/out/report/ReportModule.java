@@ -1,7 +1,7 @@
 package org.smoothbuild.out.report;
 
 import org.smoothbuild.out.log.Level;
-import org.smoothbuild.vm.parallel.TaskReporter;
+import org.smoothbuild.vm.execute.TaskReporter;
 
 import com.google.inject.AbstractModule;
 

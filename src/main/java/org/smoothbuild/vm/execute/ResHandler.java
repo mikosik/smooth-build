@@ -1,24 +1,23 @@
-package org.smoothbuild.vm.parallel;
+package org.smoothbuild.vm.execute;
 
 import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.CompRes;
-import org.smoothbuild.vm.job.TaskInfo;
 
 public class ResHandler implements Consumer<CompRes> {
   private final TaskInfo taskInfo;
-  private final Consumer<ValB> consumer;
+  private final SoftTerminationExecutor executor;
   private final ExecutionReporter reporter;
-  private final SoftTerminationExecutor jobExecutor;
+  private final Consumer<ValB> consumer;
 
-  public ResHandler(TaskInfo taskInfo, Consumer<ValB> consumer,
-      ExecutionReporter reporter, SoftTerminationExecutor jobExecutor) {
+  public ResHandler(TaskInfo taskInfo, SoftTerminationExecutor executor, ExecutionReporter reporter,
+      Consumer<ValB> consumer) {
     this.taskInfo = taskInfo;
-    this.consumer = consumer;
+    this.executor = executor;
     this.reporter = reporter;
-    this.jobExecutor = jobExecutor;
+    this.consumer = consumer;
   }
 
   @Override
@@ -27,7 +26,7 @@ public class ResHandler implements Consumer<CompRes> {
     if (compRes.hasOutputWithValue()) {
       consumer.accept(compRes.output().valB());
     } else {
-      jobExecutor.terminate();
+      executor.terminate();
     }
   }
 }

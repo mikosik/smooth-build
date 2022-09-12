@@ -1,15 +1,25 @@
 package org.smoothbuild.vm.job;
 
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
-public interface Job {
-  public TypeB type();
+public abstract class Job {
+  private volatile Promise<ValB> promise;
 
-  public Loc loc();
+  public final Promise<ValB> evaluate() {
+    // Double-checked locking.
+    Promise<ValB> result = promise;
+    if (result != null) {
+      return result;
+    }
+    synchronized (this) {
+      result = promise;
+      if (result == null) {
+        promise = result = evaluateImpl();
+      }
+      return result;
+    }
+  }
 
-  public Promise<ValB> schedule(Worker worker);
+  protected abstract Promise<ValB> evaluateImpl();
 }

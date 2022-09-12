@@ -16,8 +16,8 @@ import javax.inject.Singleton;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.vm.job.TaskInfo;
-import org.smoothbuild.vm.parallel.TaskReporter;
+import org.smoothbuild.vm.execute.TaskInfo;
+import org.smoothbuild.vm.execute.TaskReporter;
 
 import com.google.common.collect.ImmutableMap;
 
