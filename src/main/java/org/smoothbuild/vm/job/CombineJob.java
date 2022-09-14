@@ -1,11 +1,8 @@
 package org.smoothbuild.vm.job;
 
-import static org.smoothbuild.vm.execute.TaskKind.COMBINE;
-
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.vm.execute.TaskInfo;
 import org.smoothbuild.vm.task.CombineTask;
 
 public class CombineJob extends ExecutingJob {
@@ -18,8 +15,7 @@ public class CombineJob extends ExecutingJob {
 
   @Override
   protected Promise<ValB> evaluateImpl() {
-    var task = new CombineTask(combineB.type());
-    var taskInfo = new TaskInfo(COMBINE, context().infoFor(combineB));
-    return evaluateTransitively(taskInfo, task, combineB.items());
+    var task = new CombineTask(combineB.type(), context().infoFor(combineB));
+    return evaluateTransitively(task, combineB.items());
   }
 }

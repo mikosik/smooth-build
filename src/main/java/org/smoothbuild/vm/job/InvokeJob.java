@@ -1,11 +1,9 @@
 package org.smoothbuild.vm.job;
 
-import static org.smoothbuild.vm.execute.TaskKind.INVOKE;
-
 import org.smoothbuild.bytecode.expr.oper.InvokeB;
 import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.compile.lang.base.ExprInfoImpl;
 import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.vm.execute.TaskInfo;
 import org.smoothbuild.vm.task.InvokeTask;
 
 public class InvokeJob extends ExecutingJob {
@@ -23,8 +21,8 @@ public class InvokeJob extends ExecutingJob {
     var name = exprInfo.label();
     var data = invokeB.data();
     var resT = data.method().type().res();
-    var task = new InvokeTask(resT, name, data.method(), context().nativeMethodLoader());
-    var taskInfo = new TaskInfo(INVOKE, name + PARENTHESES_INVOKE, exprInfo.loc());
-    return evaluateTransitively(taskInfo, task, data.args().items());
+    var task = new InvokeTask(resT, name, data.method(), context().nativeMethodLoader(),
+        new ExprInfoImpl(name + PARENTHESES_INVOKE, exprInfo.loc()));
+    return evaluateTransitively(task, data.args().items());
   }
 }

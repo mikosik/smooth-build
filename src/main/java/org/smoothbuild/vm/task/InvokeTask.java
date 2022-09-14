@@ -2,6 +2,7 @@ package org.smoothbuild.vm.task;
 
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.vm.execute.TaskKind.INVOKE;
 import static org.smoothbuild.vm.task.TaskHashes.invokeTaskHash;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,6 +13,7 @@ import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.plugin.NativeApi;
 
 public class InvokeTask extends Task {
@@ -20,8 +22,8 @@ public class InvokeTask extends Task {
   private final NativeMethodLoader nativeMethodLoader;
 
   public InvokeTask(TypeB outputT, String name, MethodB method,
-      NativeMethodLoader methodLoader) {
-    super(outputT, method.isPure().toJ());
+      NativeMethodLoader methodLoader, ExprInfo exprInfo) {
+    super(outputT, INVOKE, exprInfo, method.isPure().toJ());
     this.name = name;
     this.nativeMethodLoader = methodLoader;
     this.methodB = method;

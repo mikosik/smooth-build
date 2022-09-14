@@ -73,6 +73,8 @@ import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.ExprInfoImpl;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
@@ -1309,5 +1311,13 @@ public class TestContext {
 
   public static ImmutableBindings<PolyRefableS> oneBinding(PolyRefableS elem) {
     return immutableBindings(ImmutableMap.of(elem.nameO().get(), elem));
+  }
+
+  public static ExprInfo exprInfo() {
+    return exprInfo("description");
+  }
+
+  public static ExprInfo exprInfo(String description) {
+    return new ExprInfoImpl(description, Loc.unknown());
   }
 }

@@ -26,13 +26,13 @@ public class TaskExecutor {
     this.reporter = reporter;
   }
 
-  public void enqueue(TaskInfo info, Task task, TupleB input, Consumer<ValB> consumer) {
+  public void enqueue(Task task, TupleB input, Consumer<ValB> consumer) {
     executor.enqueue(() -> {
       try {
-        var resHandler = new ResHandler(info, executor, reporter, consumer);
+        var resHandler = new ResHandler(task.info(), executor, reporter, consumer);
         computer.compute(task, input, resHandler);
       } catch (Throwable e) {
-        reporter.reportComputerException(info, e);
+        reporter.reportComputerException(task.info(), e);
         executor.terminate();
       }
     });

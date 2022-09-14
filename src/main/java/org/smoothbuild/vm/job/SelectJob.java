@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.vm.execute.TaskKind.SELECT;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
@@ -10,7 +9,6 @@ import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.vm.execute.TaskInfo;
 import org.smoothbuild.vm.task.SelectTask;
 
 public class SelectJob extends ExecutingJob {
@@ -26,9 +24,8 @@ public class SelectJob extends ExecutingJob {
     var data = selectB.data();
     var selectable = data.selectable();
     var index = data.index();
-    var task = new SelectTask(outputT(selectable, index));
-    var taskInfo = new TaskInfo(SELECT, context().infoFor(selectB));
-    return evaluateTransitively(taskInfo, task, list(selectable, index));
+    var task = new SelectTask(outputT(selectable, index), context().infoFor(selectB));
+    return evaluateTransitively(task, list(selectable, index));
   }
 
   private static TypeB outputT(ExprB selectable, IntB index) {

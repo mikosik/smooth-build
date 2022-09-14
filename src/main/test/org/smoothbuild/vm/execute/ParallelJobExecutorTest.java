@@ -19,7 +19,7 @@ import static org.smoothbuild.vm.compute.ResSource.DISK;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResSource.MEMORY;
 import static org.smoothbuild.vm.execute.ExecutionReporter.header;
-import static org.smoothbuild.vm.execute.TaskKind.CALL;
+import static org.smoothbuild.vm.execute.TaskKind.COMBINE;
 
 import java.util.List;
 import java.util.Optional;
@@ -213,12 +213,11 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private MyJob concat(Job... deps) {
-    var task = concatTask();
-    return job("concat", task, deps);
+    return job(concatTask(), deps);
   }
 
   private Task concatTask() {
-    return new TestTask(stringTB(), Hash.of(1)) {
+    return new TestTask("concat", stringTB(), Hash.of(1)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         String joinedArgs = toCommaSeparatedString(input.items(), v -> ((StringB) v).toJ());
@@ -229,16 +228,11 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private MyJob job(Task task, Job... deps) {
-    return job("task_name", task, deps);
-  }
-
-  private MyJob job(String name, Task task, Job... deps) {
-    TaskInfo info = new TaskInfo(CALL, name, loc());
-    return new MyJob(task, list(deps), info, bytecodeF(), context);
+    return new MyJob(task, list(deps), bytecodeF(), context);
   }
 
   private Task valueTask(String value) {
-    return new TestTask(stringTB(), Hash.of(asList(Hash.of(2), Hash.of(value)))) {
+    return new TestTask("value", stringTB(), Hash.of(asList(Hash.of(2), Hash.of(value)))) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         StringB result = nativeApi.factory().string(value);
@@ -248,7 +242,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Task throwingTask(ArithmeticException exception) {
-    return new TestTask(stringTB(), Hash.of(3)) {
+    return new TestTask("throwing", stringTB(), Hash.of(3)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         throw exception;
@@ -261,7 +255,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Task sleepGetIncrementTask(AtomicInteger counter, boolean isPure) {
-    return new TestTask(stringTB(), Hash.of(4), isPure) {
+    return new TestTask("getIncrement", stringTB(), Hash.of(4), isPure) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         sleep1000ms();
@@ -271,7 +265,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Task incrementTask(AtomicInteger counter) {
-    return new TestTask(stringTB(), Hash.of(5)) {
+    return new TestTask("increment", stringTB(), Hash.of(5)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         return toStr(nativeApi, counter.getAndIncrement());
@@ -280,7 +274,7 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private Task sleepyWriteReadTask(Hash hash, AtomicInteger write, AtomicInteger read) {
-    return new TestTask(stringTB(), hash) {
+    return new TestTask("sleepyWriteRead", stringTB(), hash) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         write.incrementAndGet();
@@ -319,12 +313,12 @@ public class ParallelJobExecutorTest extends TestContext {
   private static abstract class TestTask extends Task {
     private final Hash hash;
 
-    protected TestTask(TypeB type, Hash hash) {
-      this(type, hash, true);
+    protected TestTask(String name, TypeB type, Hash hash) {
+      this(name, type, hash, true);
     }
 
-    protected TestTask(TypeB type, Hash hash, boolean isPure) {
-      super(type, isPure);
+    protected TestTask(String name, TypeB type, Hash hash, boolean isPure) {
+      super(type, COMBINE, exprInfo(name), isPure);
       this.hash = hash;
     }
 
@@ -337,20 +331,18 @@ public class ParallelJobExecutorTest extends TestContext {
   private static class MyJob extends ExecutingJob {
     private final Task task;
     private final ImmutableList<Job> depJs;
-    private final TaskInfo info;
     private final BytecodeF bytecodeF;
 
-    public MyJob(Task task, ImmutableList<Job> depJs, TaskInfo info, BytecodeF bytecodeF,
+    public MyJob(Task task, ImmutableList<Job> depJs, BytecodeF bytecodeF,
         ExecutionContext context) {
       super(context);
       this.task = task;
       this.depJs = depJs;
-      this.info = info;
       this.bytecodeF = bytecodeF;
     }
 
     public TaskInfo info() {
-      return info;
+      return task.info();
     }
 
     @Override
@@ -358,7 +350,7 @@ public class ParallelJobExecutorTest extends TestContext {
       PromisedValue<ValB> result = new PromisedValue<>();
       var depResults = map(depJs, Job::evaluate);
       runWhenAllAvailable(depResults,
-          () -> context().taskExecutor().enqueue(info, task, toInput(depResults), result));
+          () -> context().taskExecutor().enqueue(task, toInput(depResults), result));
       return result;
     }
 

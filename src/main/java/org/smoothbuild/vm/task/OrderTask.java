@@ -1,16 +1,18 @@
 package org.smoothbuild.vm.task;
 
+import static org.smoothbuild.vm.execute.TaskKind.ORDER;
 import static org.smoothbuild.vm.task.TaskHashes.orderTaskHash;
 
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.plugin.NativeApi;
 
 public class OrderTask extends Task {
-  public OrderTask(ArrayTB arrayT) {
-    super(arrayT);
+  public OrderTask(ArrayTB arrayT, ExprInfo exprInfo) {
+    super(arrayT, ORDER, exprInfo);
   }
 
   @Override

@@ -45,7 +45,7 @@ public class VmTest extends TestContext {
       assertThat(evaluate(vmWithSpyingExecutor(), order))
           .isEqualTo(arrayB(intB(7)));
 
-      verify(spyingExecutor, times(1)).enqueue(any(), isA(OrderTask.class), any(), any());
+      verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class VmTest extends TestContext {
       assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(intB(7));
 
-      verify(spyingExecutor, never()).enqueue(any(), isA(OrderTask.class), any(), any());
+      verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class VmTest extends TestContext {
       assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(intB(7));
 
-      verify(spyingExecutor, never()).enqueue(any(), isA(OrderTask.class), any(), any());
+      verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class VmTest extends TestContext {
       assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
 
-      verify(spyingExecutor, times(1)).enqueue(any(), isA(OrderTask.class), any(), any());
+      verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
     }
   }
 
