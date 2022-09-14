@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncTB extends TypeB implements CallableTB, ComposedTB {
+public final class FuncTB extends TypeB implements CallableTB {
   private final TypeB res;
   private final TupleTB params;
 
@@ -40,15 +40,5 @@ public final class FuncTB extends TypeB implements CallableTB, ComposedTB {
   public FuncB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof FuncTB);
     return new FuncB(merkleRoot, bytecodeDb);
-  }
-
-  @Override
-  public ImmutableList<TypeB> covars() {
-    return ImmutableList.of(res());
-  }
-
-  @Override
-  public ImmutableList<TypeB> contravars() {
-    return params();
   }
 }

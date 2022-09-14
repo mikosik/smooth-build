@@ -10,12 +10,10 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.hashed.Hash;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * This class is immutable.
  */
-public final class ArrayTB extends TypeB implements ComposedTB {
+public final class ArrayTB extends TypeB {
   private final TypeB elem;
 
   public ArrayTB(Hash hash, TypeB elem) {
@@ -31,15 +29,5 @@ public final class ArrayTB extends TypeB implements ComposedTB {
   public ArrayB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof ArrayTB);
     return new ArrayB(merkleRoot, bytecodeDb);
-  }
-
-  @Override
-  public ImmutableList<TypeB> covars() {
-    return ImmutableList.of(elem);
-  }
-
-  @Override
-  public ImmutableList<TypeB> contravars() {
-    return ImmutableList.of();
   }
 }

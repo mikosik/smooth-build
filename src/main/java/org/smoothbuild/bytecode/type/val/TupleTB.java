@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public final class TupleTB extends TypeB implements ComposedTB {
+public final class TupleTB extends TypeB {
   private final ImmutableList<TypeB> itemTs;
 
   public TupleTB(Hash hash, ImmutableList<TypeB> itemTs) {
@@ -34,15 +34,5 @@ public final class TupleTB extends TypeB implements ComposedTB {
 
   private static String calculateName(Iterable<? extends TypeB> itemTs) {
     return tupleTypeName(itemTs);
-  }
-
-  @Override
-  public ImmutableList<TypeB> covars() {
-    return items();
-  }
-
-  @Override
-  public ImmutableList<TypeB> contravars() {
-    return ImmutableList.of();
   }
 }
