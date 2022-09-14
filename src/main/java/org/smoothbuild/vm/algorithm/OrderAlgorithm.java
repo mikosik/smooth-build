@@ -1,5 +1,7 @@
 package org.smoothbuild.vm.algorithm;
 
+import static org.smoothbuild.vm.algorithm.AlgorithmHashes.orderAlgorithmHash;
+
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
@@ -13,7 +15,7 @@ public class OrderAlgorithm extends Algorithm {
 
   @Override
   public Hash hash() {
-    return AlgorithmHashes.orderAlgorithmHash(outputT());
+    return orderAlgorithmHash(outputT());
   }
 
   @Override

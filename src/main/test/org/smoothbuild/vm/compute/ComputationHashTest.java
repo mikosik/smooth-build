@@ -92,7 +92,7 @@ public class ComputationHashTest extends TestContext {
     var algorithm = new CombineAlgorithm(PERSON);
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("54e3ce86af9aab50564c1eb086d1b6310d347b7b"));
+        .isEqualTo(Hash.decode("1b06a8340051d9c875d0d92e3552e2c91336b016"));
   }
 
   @Test
@@ -100,7 +100,7 @@ public class ComputationHashTest extends TestContext {
     var algorithm = new CombineAlgorithm(PERSON);
     var input = tupleB(stringB("abc"));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("67525bc73ac50b8e7e3578fff17d7ae07bb6dabc"));
+        .isEqualTo(Hash.decode("5d29a481f10d703e72ad4bd32de1458808ab1e70"));
   }
 
   @Test
@@ -108,7 +108,7 @@ public class ComputationHashTest extends TestContext {
     var algorithm = new CombineAlgorithm(PERSON);
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("e36cc569f40ee06740f06566d491045b02473886"));
+        .isEqualTo(Hash.decode("0c4dd2848c3cb653c2a4874a32fe0b6a488cbaf4"));
   }
 
   @Test

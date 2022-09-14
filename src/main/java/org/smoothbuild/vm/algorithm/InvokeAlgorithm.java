@@ -2,6 +2,7 @@ package org.smoothbuild.vm.algorithm;
 
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.vm.algorithm.AlgorithmHashes.invokeAlgorithmHash;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +29,7 @@ public class InvokeAlgorithm extends Algorithm {
 
   @Override
   public Hash hash() {
-    return AlgorithmHashes.invokeAlgorithmHash(methodB);
+    return invokeAlgorithmHash(methodB);
   }
 
   @Override

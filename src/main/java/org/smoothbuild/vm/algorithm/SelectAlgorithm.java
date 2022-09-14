@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.vm.algorithm.AlgorithmHashes.selectAlgorithmHash;
 
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
@@ -18,7 +19,7 @@ public class SelectAlgorithm extends Algorithm {
 
   @Override
   public Hash hash() {
-    return AlgorithmHashes.selectAlgorithmHash();
+    return selectAlgorithmHash();
   }
 
   @Override

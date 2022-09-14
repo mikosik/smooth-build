@@ -9,7 +9,7 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 
 public class AlgorithmHashes {
   public static Hash combineAlgorithmHash(TupleTB type) {
-    return hash(0, type.hash());
+    return hash(1, type.hash());
   }
 
   public static Hash invokeAlgorithmHash(MethodB method) {
