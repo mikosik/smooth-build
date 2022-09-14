@@ -1,6 +1,6 @@
-package org.smoothbuild.vm.algorithm;
+package org.smoothbuild.vm.task;
 
-import static org.smoothbuild.vm.algorithm.AlgorithmHashes.orderAlgorithmHash;
+import static org.smoothbuild.vm.task.TaskHashes.orderTaskHash;
 
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
@@ -8,14 +8,14 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.plugin.NativeApi;
 
-public class OrderAlgorithm extends Algorithm {
-  public OrderAlgorithm(ArrayTB arrayT) {
+public class OrderTask extends Task {
+  public OrderTask(ArrayTB arrayT) {
     super(arrayT);
   }
 
   @Override
   public Hash hash() {
-    return orderAlgorithmHash(outputT());
+    return orderTaskHash(outputT());
   }
 
   @Override

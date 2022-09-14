@@ -7,8 +7,8 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
-import org.smoothbuild.vm.algorithm.Algorithm;
 import org.smoothbuild.vm.compute.Computer;
+import org.smoothbuild.vm.task.Task;
 
 public class TaskExecutor {
   private final SoftTerminationExecutor executor;
@@ -26,11 +26,11 @@ public class TaskExecutor {
     this.reporter = reporter;
   }
 
-  public void enqueue(TaskInfo info, Algorithm algorithm, TupleB input, Consumer<ValB> consumer) {
+  public void enqueue(TaskInfo info, Task task, TupleB input, Consumer<ValB> consumer) {
     executor.enqueue(() -> {
       try {
         var resHandler = new ResHandler(info, executor, reporter, consumer);
-        computer.compute(algorithm, input, resHandler);
+        computer.compute(task, input, resHandler);
       } catch (Throwable e) {
         reporter.reportComputerException(info, e);
         executor.terminate();

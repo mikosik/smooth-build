@@ -42,14 +42,14 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.Vm;
-import org.smoothbuild.vm.algorithm.Algorithm;
-import org.smoothbuild.vm.algorithm.Output;
 import org.smoothbuild.vm.compute.CompRes;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.job.ExecutingJob;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
+import org.smoothbuild.vm.task.Output;
+import org.smoothbuild.vm.task.Task;
 
 import com.google.common.collect.ImmutableList;
 
@@ -67,11 +67,11 @@ public class ParallelJobExecutorTest extends TestContext {
   public void tasks_are_executed() throws Exception {
     var job = concat(
         concat(
-            job(valueAlgorithm("A")),
-            job(valueAlgorithm("B"))),
+            job(valueTask("A")),
+            job(valueTask("B"))),
         concat(
-            job(valueAlgorithm("C")),
-            job(valueAlgorithm("D"))));
+            job(valueTask("C")),
+            job(valueTask("D"))));
 
     assertThat(executeSingleJob(job))
         .isEqualTo(stringB("((A,B),(C,D))"));
@@ -82,8 +82,8 @@ public class ParallelJobExecutorTest extends TestContext {
     var counterA = new AtomicInteger(10);
     var counterB = new AtomicInteger(20);
     var job = concat(
-        job(sleepyWriteReadAlgorithm(Hash.of(102), counterB, counterA)),
-        job(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
+        job(sleepyWriteReadTask(Hash.of(102), counterB, counterA)),
+        job(sleepyWriteReadTask(Hash.of(101), counterA, counterB)));
 
     assertThat(executeSingleJob(job))
         .isEqualTo(stringB("(11,21)"));
@@ -94,10 +94,10 @@ public class ParallelJobExecutorTest extends TestContext {
       throws Exception {
     context = executionContext(reporter, 4);
     var counter = new AtomicInteger();
-    var job1 = job(sleepGetIncrementAlgorithm(counter));
-    var job2 = job(sleepGetIncrementAlgorithm(counter));
-    var job3 = job(sleepGetIncrementAlgorithm(counter));
-    var job4 = job(sleepGetIncrementAlgorithm(counter));
+    var job1 = job(sleepGetIncrementTask(counter));
+    var job2 = job(sleepGetIncrementTask(counter));
+    var job3 = job(sleepGetIncrementTask(counter));
+    var job4 = job(sleepGetIncrementTask(counter));
     var job = concat(job1, job2, job3, job4);
 
     assertThat(executeSingleJob(job))
@@ -122,8 +122,8 @@ public class ParallelJobExecutorTest extends TestContext {
         throws Exception {
       context = executionContext(reporter, 2);
       var counter = new AtomicInteger();
-      var job1 = job(sleepGetIncrementAlgorithm(counter, false));
-      var job2 = job(sleepGetIncrementAlgorithm(counter, false));
+      var job1 = job(sleepGetIncrementTask(counter, false));
+      var job2 = job(sleepGetIncrementTask(counter, false));
       var job = concat(job1, job2);
 
       assertThat(executeSingleJob(job))
@@ -145,8 +145,8 @@ public class ParallelJobExecutorTest extends TestContext {
         throws Exception {
       context = executionContext(reporter, 2);
       AtomicInteger counter = new AtomicInteger();
-      var job1 = job(sleepGetIncrementAlgorithm(counter));
-      var job2 = job(sleepGetIncrementAlgorithm(counter));
+      var job1 = job(sleepGetIncrementTask(counter));
+      var job2 = job(sleepGetIncrementTask(counter));
       var job = concat(job1, job2);
 
       assertThat(executeSingleJob(job))
@@ -170,9 +170,9 @@ public class ParallelJobExecutorTest extends TestContext {
     context = executionContext(reporter, 2);
     var counter = new AtomicInteger();
     var job = concat(
-        job(sleepGetIncrementAlgorithm(counter)),
-        job(sleepGetIncrementAlgorithm(counter)),
-        job(getIncrementAlgorithm(counter)));
+        job(sleepGetIncrementTask(counter)),
+        job(sleepGetIncrementTask(counter)),
+        job(incrementTask(counter)));
 
     assertThat(executeSingleJob(job))
         .isEqualTo(stringB("(1,1,0)"));
@@ -183,7 +183,7 @@ public class ParallelJobExecutorTest extends TestContext {
     var reporter = mock(TaskReporter.class);
     context = executionContext(new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
-    var job = job(throwingAlgorithm(exception));
+    var job = job(throwingTask(exception));
 
     assertThat(executeJobs(context, list(job)).get(0).isEmpty())
         .isTrue();
@@ -198,12 +198,12 @@ public class ParallelJobExecutorTest extends TestContext {
     RuntimeException exception = new RuntimeException();
     Computer computer = new Computer(null, null, null) {
       @Override
-      public void compute(Algorithm algorithm, TupleB input, Consumer<CompRes> consumer) {
+      public void compute(Task task, TupleB input, Consumer<CompRes> consumer) {
         throw exception;
       }
     };
     context = executionContext(computer, reporter, 4);
-    var job = job(valueAlgorithm("A"));
+    var job = job(valueTask("A"));
 
     var val = executeJobs(context, list(job)).get(0);
 
@@ -213,12 +213,12 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private MyJob concat(Job... deps) {
-    var algorithm = concatAlgorithm();
-    return job("concat", algorithm, deps);
+    var task = concatTask();
+    return job("concat", task, deps);
   }
 
-  private Algorithm concatAlgorithm() {
-    return new TestAlgorithm(stringTB(), Hash.of(1)) {
+  private Task concatTask() {
+    return new TestTask(stringTB(), Hash.of(1)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         String joinedArgs = toCommaSeparatedString(input.items(), v -> ((StringB) v).toJ());
@@ -228,17 +228,17 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private MyJob job(Algorithm algorithm, Job... deps) {
-    return job("task_name", algorithm, deps);
+  private MyJob job(Task task, Job... deps) {
+    return job("task_name", task, deps);
   }
 
-  private MyJob job(String name, Algorithm algorithm, Job... deps) {
+  private MyJob job(String name, Task task, Job... deps) {
     TaskInfo info = new TaskInfo(CALL, name, loc());
-    return new MyJob(algorithm, list(deps), info, bytecodeF(), context);
+    return new MyJob(task, list(deps), info, bytecodeF(), context);
   }
 
-  private Algorithm valueAlgorithm(String value) {
-    return new TestAlgorithm(stringTB(), Hash.of(asList(Hash.of(2), Hash.of(value)))) {
+  private Task valueTask(String value) {
+    return new TestTask(stringTB(), Hash.of(asList(Hash.of(2), Hash.of(value)))) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         StringB result = nativeApi.factory().string(value);
@@ -247,8 +247,8 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private Algorithm throwingAlgorithm(ArithmeticException exception) {
-    return new TestAlgorithm(stringTB(), Hash.of(3)) {
+  private Task throwingTask(ArithmeticException exception) {
+    return new TestTask(stringTB(), Hash.of(3)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         throw exception;
@@ -256,12 +256,12 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private Algorithm sleepGetIncrementAlgorithm(AtomicInteger counter) {
-    return sleepGetIncrementAlgorithm(counter, true);
+  private Task sleepGetIncrementTask(AtomicInteger counter) {
+    return sleepGetIncrementTask(counter, true);
   }
 
-  private Algorithm sleepGetIncrementAlgorithm(AtomicInteger counter, boolean isPure) {
-    return new TestAlgorithm(stringTB(), Hash.of(4), isPure) {
+  private Task sleepGetIncrementTask(AtomicInteger counter, boolean isPure) {
+    return new TestTask(stringTB(), Hash.of(4), isPure) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         sleep1000ms();
@@ -270,8 +270,8 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private Algorithm getIncrementAlgorithm(AtomicInteger counter) {
-    return new TestAlgorithm(stringTB(), Hash.of(5)) {
+  private Task incrementTask(AtomicInteger counter) {
+    return new TestTask(stringTB(), Hash.of(5)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         return toStr(nativeApi, counter.getAndIncrement());
@@ -279,8 +279,8 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private Algorithm sleepyWriteReadAlgorithm(Hash hash, AtomicInteger write, AtomicInteger read) {
-    return new TestAlgorithm(stringTB(), hash) {
+  private Task sleepyWriteReadTask(Hash hash, AtomicInteger write, AtomicInteger read) {
+    return new TestTask(stringTB(), hash) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         write.incrementAndGet();
@@ -316,14 +316,14 @@ public class ParallelJobExecutorTest extends TestContext {
     }
   }
 
-  private static abstract class TestAlgorithm extends Algorithm {
+  private static abstract class TestTask extends Task {
     private final Hash hash;
 
-    protected TestAlgorithm(TypeB type, Hash hash) {
+    protected TestTask(TypeB type, Hash hash) {
       this(type, hash, true);
     }
 
-    protected TestAlgorithm(TypeB type, Hash hash, boolean isPure) {
+    protected TestTask(TypeB type, Hash hash, boolean isPure) {
       super(type, isPure);
       this.hash = hash;
     }
@@ -335,22 +335,18 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private static class MyJob extends ExecutingJob {
-    private final Algorithm algorithm;
+    private final Task task;
     private final ImmutableList<Job> depJs;
     private final TaskInfo info;
     private final BytecodeF bytecodeF;
 
-    public MyJob(Algorithm algorithm, ImmutableList<Job> depJs, TaskInfo info, BytecodeF bytecodeF,
+    public MyJob(Task task, ImmutableList<Job> depJs, TaskInfo info, BytecodeF bytecodeF,
         ExecutionContext context) {
       super(context);
-      this.algorithm = algorithm;
+      this.task = task;
       this.depJs = depJs;
       this.info = info;
       this.bytecodeF = bytecodeF;
-    }
-
-    public Algorithm algorithm() {
-      return algorithm;
     }
 
     public TaskInfo info() {
@@ -362,7 +358,7 @@ public class ParallelJobExecutorTest extends TestContext {
       PromisedValue<ValB> result = new PromisedValue<>();
       var depResults = map(depJs, Job::evaluate);
       runWhenAllAvailable(depResults,
-          () -> context().taskExecutor().enqueue(info, algorithm, toInput(depResults), result));
+          () -> context().taskExecutor().enqueue(info, task, toInput(depResults), result));
       return result;
     }
 

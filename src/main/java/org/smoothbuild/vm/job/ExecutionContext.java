@@ -9,9 +9,9 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.compile.lang.base.ExprInfoImpl;
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
+import org.smoothbuild.vm.task.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

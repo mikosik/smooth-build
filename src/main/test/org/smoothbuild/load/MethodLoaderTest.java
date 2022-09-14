@@ -6,7 +6,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.vm.algorithm.NativeMethodLoader.NATIVE_METHOD_NAME;
+import static org.smoothbuild.vm.task.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

@@ -1,8 +1,8 @@
-package org.smoothbuild.vm.algorithm;
+package org.smoothbuild.vm.task;
 
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
-import static org.smoothbuild.vm.algorithm.AlgorithmHashes.invokeAlgorithmHash;
+import static org.smoothbuild.vm.task.TaskHashes.invokeTaskHash;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,12 +14,12 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.plugin.NativeApi;
 
-public class InvokeAlgorithm extends Algorithm {
+public class InvokeTask extends Task {
   private final MethodB methodB;
   private final String name;
   private final NativeMethodLoader nativeMethodLoader;
 
-  public InvokeAlgorithm(TypeB outputT, String name, MethodB method,
+  public InvokeTask(TypeB outputT, String name, MethodB method,
       NativeMethodLoader methodLoader) {
     super(outputT, method.isPure().toJ());
     this.name = name;
@@ -29,7 +29,7 @@ public class InvokeAlgorithm extends Algorithm {
 
   @Override
   public Hash hash() {
-    return invokeAlgorithmHash(methodB);
+    return invokeTaskHash(methodB);
   }
 
   @Override

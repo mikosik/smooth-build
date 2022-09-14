@@ -130,7 +130,6 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
-import org.smoothbuild.vm.algorithm.NativeMethodLoader;
 import org.smoothbuild.vm.compute.ComputationCache;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
@@ -138,6 +137,7 @@ import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.JobCreator;
+import org.smoothbuild.vm.task.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.algorithm;
+package org.smoothbuild.vm.task;
 
 import static java.util.Arrays.asList;
 
@@ -7,20 +7,20 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 
-public class AlgorithmHashes {
-  public static Hash combineAlgorithmHash(TupleTB type) {
+public class TaskHashes {
+  public static Hash combineTaskHash(TupleTB type) {
     return hash(1, type.hash());
   }
 
-  public static Hash invokeAlgorithmHash(MethodB method) {
+  public static Hash invokeTaskHash(MethodB method) {
     return hash(2, method.hash());
   }
 
-  public static Hash orderAlgorithmHash(TypeB typeB) {
+  public static Hash orderTaskHash(TypeB typeB) {
     return hash(3, typeB.hash());
   }
 
-  public static Hash selectAlgorithmHash() {
+  public static Hash selectTaskHash() {
     return hash(4);
   }
 

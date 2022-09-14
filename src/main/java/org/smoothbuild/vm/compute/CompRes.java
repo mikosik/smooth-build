@@ -3,7 +3,7 @@ package org.smoothbuild.vm.compute;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.vm.algorithm.Output;
+import org.smoothbuild.vm.task.Output;
 
 /**
  * Computation result.

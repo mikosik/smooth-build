@@ -25,7 +25,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.fs.space.ForSpace;
-import org.smoothbuild.vm.algorithm.Output;
+import org.smoothbuild.vm.task.Output;
 
 import okio.BufferedSink;
 import okio.BufferedSource;

@@ -25,7 +25,7 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.util.collect.Try;
-import org.smoothbuild.vm.algorithm.NativeMethodLoader;
+import org.smoothbuild.vm.task.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableMap;
 

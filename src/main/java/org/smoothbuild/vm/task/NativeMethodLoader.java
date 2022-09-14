@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.algorithm;
+package org.smoothbuild.vm.task;
 
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.reflect.Methods.isPublic;

@@ -1,20 +1,20 @@
-package org.smoothbuild.vm.algorithm;
+package org.smoothbuild.vm.task;
 
-import static org.smoothbuild.vm.algorithm.AlgorithmHashes.combineAlgorithmHash;
+import static org.smoothbuild.vm.task.TaskHashes.combineTaskHash;
 
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.plugin.NativeApi;
 
-public class CombineAlgorithm extends Algorithm {
-  public CombineAlgorithm(TupleTB tupleT) {
+public class CombineTask extends Task {
+  public CombineTask(TupleTB tupleT) {
     super(tupleT);
   }
 
   @Override
   public Hash hash() {
-    return combineAlgorithmHash((TupleTB) outputT());
+    return combineTaskHash((TupleTB) outputT());
   }
 
   @Override

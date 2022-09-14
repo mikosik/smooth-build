@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.algorithm;
+package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;

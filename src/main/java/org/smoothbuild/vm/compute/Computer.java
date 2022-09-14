@@ -16,8 +16,8 @@ import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;
-import org.smoothbuild.vm.algorithm.Algorithm;
-import org.smoothbuild.vm.algorithm.Output;
+import org.smoothbuild.vm.task.Output;
+import org.smoothbuild.vm.task.Task;
 
 /**
  * This class is thread-safe.
@@ -37,24 +37,24 @@ public class Computer {
     this.promisedValues = new ConcurrentHashMap<>();
   }
 
-  public void compute(Algorithm algorithm, TupleB input, Consumer<CompRes> consumer)
+  public void compute(Task task, TupleB input, Consumer<CompRes> consumer)
       throws ComputationCacheExc, IOException {
-    Hash hash = computationHash(algorithm, input);
+    Hash hash = computationHash(task, input);
     PromisedValue<CompRes> newPromised = new PromisedValue<>();
     PromisedValue<CompRes> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       prevPromised
-          .chain(c -> asCachedComputation(c, algorithm.isPure()))
+          .chain(c -> asCachedComputation(c, task.isPure()))
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
       if (computationCache.contains(hash)) {
-        var output = computationCache.read(hash, algorithm.outputT());
+        var output = computationCache.read(hash, task.outputT());
         newPromised.accept(new CompRes(output, DISK));
         promisedValues.remove(hash);
       } else {
-        var computed = runComputation(algorithm, input);
-        boolean cacheOnDisk = algorithm.isPure() && computed.hasOutput();
+        var computed = runComputation(task, input);
+        boolean cacheOnDisk = task.isPure() && computed.hasOutput();
         if (cacheOnDisk) {
           computationCache.write(hash, computed.output());
           promisedValues.remove(hash);
@@ -71,11 +71,11 @@ public class Computer {
         compRes.resSource() == EXECUTION && isPure ? DISK : MEMORY);
   }
 
-  private CompRes runComputation(Algorithm algorithm, TupleB input) {
+  private CompRes runComputation(Task task, TupleB input) {
     var container = containerProvider.get();
     Output output;
     try {
-      output = algorithm.run(input, container);
+      output = task.run(input, container);
     } catch (Exception e) {
       return new CompRes(e, EXECUTION);
     }
@@ -84,11 +84,11 @@ public class Computer {
     return new CompRes(output, EXECUTION);
   }
 
-  private Hash computationHash(Algorithm algorithm, TupleB args) {
-    return computationHash(sandboxHash, algorithm, args);
+  private Hash computationHash(Task task, TupleB args) {
+    return computationHash(sandboxHash, task, args);
   }
 
-  public static Hash computationHash(Hash sandboxHash, Algorithm algorithm, TupleB args) {
-    return Hash.of(asList(sandboxHash, algorithm.hash(), args.hash()));
+  public static Hash computationHash(Hash sandboxHash, Task task, TupleB args) {
+    return Hash.of(asList(sandboxHash, task.hash(), args.hash()));
   }
 }

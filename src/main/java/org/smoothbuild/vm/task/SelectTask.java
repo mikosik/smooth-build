@@ -1,7 +1,7 @@
-package org.smoothbuild.vm.algorithm;
+package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.vm.algorithm.AlgorithmHashes.selectAlgorithmHash;
+import static org.smoothbuild.vm.task.TaskHashes.selectTaskHash;
 
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
@@ -12,14 +12,14 @@ import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public class SelectAlgorithm extends Algorithm {
-  public SelectAlgorithm(TypeB outputT) {
+public class SelectTask extends Task {
+  public SelectTask(TypeB outputT) {
     super(outputT);
   }
 
   @Override
   public Hash hash() {
-    return selectAlgorithmHash();
+    return selectTaskHash();
   }
 
   @Override

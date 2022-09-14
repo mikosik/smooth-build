@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
-import org.smoothbuild.vm.algorithm.Output;
 import org.smoothbuild.vm.compute.CompRes;
+import org.smoothbuild.vm.task.Output;
 
 public class ResHandlerTest extends TestContext {
   private ExecutionReporter reporter;

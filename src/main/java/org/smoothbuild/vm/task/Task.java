@@ -1,19 +1,19 @@
-package org.smoothbuild.vm.algorithm;
+package org.smoothbuild.vm.task;
 
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.plugin.NativeApi;
 
-public abstract class Algorithm {
+public abstract class Task {
   private final boolean isPure;
   private final TypeB outputT;
 
-  protected Algorithm(TypeB outputT) {
+  protected Task(TypeB outputT) {
     this(outputT, true);
   }
 
-  protected Algorithm(TypeB outputT, boolean isPure) {
+  protected Task(TypeB outputT, boolean isPure) {
     this.outputT = outputT;
     this.isPure = isPure;
   }

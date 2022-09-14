@@ -25,9 +25,9 @@ import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Try;
-import org.smoothbuild.vm.algorithm.NativeMethodLoader;
-import org.smoothbuild.vm.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.execute.TaskExecutor;
+import org.smoothbuild.vm.task.NativeMethodLoader;
+import org.smoothbuild.vm.task.OrderTask;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -45,7 +45,7 @@ public class VmTest extends TestContext {
       assertThat(evaluate(vmWithSpyingExecutor(), order))
           .isEqualTo(arrayB(intB(7)));
 
-      verify(spyingExecutor, times(1)).enqueue(any(), isA(OrderAlgorithm.class), any(), any());
+      verify(spyingExecutor, times(1)).enqueue(any(), isA(OrderTask.class), any(), any());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class VmTest extends TestContext {
       assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(intB(7));
 
-      verify(spyingExecutor, never()).enqueue(any(), isA(OrderAlgorithm.class), any(), any());
+      verify(spyingExecutor, never()).enqueue(any(), isA(OrderTask.class), any(), any());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class VmTest extends TestContext {
       assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(intB(7));
 
-      verify(spyingExecutor, never()).enqueue(any(), isA(OrderAlgorithm.class), any(), any());
+      verify(spyingExecutor, never()).enqueue(any(), isA(OrderTask.class), any(), any());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class VmTest extends TestContext {
       assertThat(evaluate(vmWithSpyingExecutor(), call))
           .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
 
-      verify(spyingExecutor, times(1)).enqueue(any(), isA(OrderAlgorithm.class), any(), any());
+      verify(spyingExecutor, times(1)).enqueue(any(), isA(OrderTask.class), any(), any());
     }
   }
 

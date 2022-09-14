@@ -5,8 +5,8 @@ import static org.smoothbuild.vm.execute.TaskKind.INVOKE;
 import org.smoothbuild.bytecode.expr.oper.InvokeB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.vm.algorithm.InvokeAlgorithm;
 import org.smoothbuild.vm.execute.TaskInfo;
+import org.smoothbuild.vm.task.InvokeTask;
 
 public class InvokeJob extends ExecutingJob {
   private static final String PARENTHESES_INVOKE = "()~";
@@ -23,9 +23,8 @@ public class InvokeJob extends ExecutingJob {
     var name = exprInfo.label();
     var data = invokeB.data();
     var resT = data.method().type().res();
-    var algorithm = new InvokeAlgorithm(
-        resT, name, data.method(), context().nativeMethodLoader());
+    var task = new InvokeTask(resT, name, data.method(), context().nativeMethodLoader());
     var taskInfo = new TaskInfo(INVOKE, name + PARENTHESES_INVOKE, exprInfo.loc());
-    return evaluateTransitively(taskInfo, algorithm, data.args().items());
+    return evaluateTransitively(taskInfo, task, data.args().items());
   }
 }
