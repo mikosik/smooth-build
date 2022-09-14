@@ -12,10 +12,6 @@ public class AlgorithmHashes {
     return hash(0, type.hash());
   }
 
-  public static Hash convertAlgorithmHash(TypeB type) {
-    return hash(1, type.hash());
-  }
-
   public static Hash invokeAlgorithmHash(MethodB method) {
     return hash(2, method.hash());
   }
