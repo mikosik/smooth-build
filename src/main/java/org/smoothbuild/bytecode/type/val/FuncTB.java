@@ -9,8 +9,6 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.val.FuncB;
 import org.smoothbuild.bytecode.hashed.Hash;
 
-import com.google.common.collect.ImmutableList;
-
 public final class FuncTB extends TypeB implements CallableTB {
   private final TypeB res;
   private final TupleTB params;
@@ -27,12 +25,7 @@ public final class FuncTB extends TypeB implements CallableTB {
   }
 
   @Override
-  public ImmutableList<TypeB> params() {
-    return params.items();
-  }
-
-  @Override
-  public TupleTB paramsTuple() {
+  public TupleTB params() {
     return params;
   }
 

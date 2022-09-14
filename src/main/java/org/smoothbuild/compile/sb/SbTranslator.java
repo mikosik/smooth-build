@@ -33,6 +33,7 @@ import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.compile.lang.base.ExprInfoImpl;
@@ -126,7 +127,7 @@ public class SbTranslator {
   private CallB translateCall(CallS callS) {
     var callableB = translateExpr(callS.callee());
     var argsB = translateExprs(callS.args());
-    var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
+    var paramTupleT = ((FuncTB) callableB.type()).params();
     var combineB = bytecodeF.combine(paramTupleT, argsB);
 
     descriptions.put(combineB, new ExprInfoImpl("{}", callS.loc()));
@@ -214,7 +215,7 @@ public class SbTranslator {
     return bytecodeF.func(funcTB, bodyB);
   }
 
-  private ImmutableList<ExprB> createParamRefsB(ImmutableList<TypeB> paramTs) {
+  private ImmutableList<ExprB> createParamRefsB(TupleTB paramTs) {
     Builder<ExprB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
       var closedT = paramTs.get(i);

@@ -67,7 +67,7 @@ public final class MapB extends OperB {
 
   private RuntimeException illegalArgs(CallableTB callableTB, TypeB arrayElemT) {
     return new DecodeExprWrongNodeTypeExc(
-        hash(), this.cat(), "array element", callableTB.paramsTuple().items().get(0), arrayElemT);
+        hash(), this.cat(), "array element", callableTB.params().items().get(0), arrayElemT);
   }
 
   public record Data(ExprB array, ExprB func) {}

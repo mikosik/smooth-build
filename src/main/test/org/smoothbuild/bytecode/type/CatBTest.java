@@ -167,9 +167,9 @@ public class CatBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.func(f.int_(), list()), f -> list()),
-          args(f -> f.func(f.blob(), list(f.bool())), f -> list(f.bool())),
-          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+          args(f -> f.func(f.int_(), list()), f -> f.tuple(list())),
+          args(f -> f.func(f.blob(), list(f.bool())), f -> f.tuple(list(f.bool()))),
+          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(list(f.bool(), f.int_())))
       );
     }
   }
@@ -201,9 +201,9 @@ public class CatBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.method(f.int_(), list()), f -> list()),
-          args(f -> f.method(f.blob(), list(f.bool())), f -> list(f.bool())),
-          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+          args(f -> f.method(f.int_(), list()), f -> f.tuple(list())),
+          args(f -> f.method(f.blob(), list(f.bool())), f -> f.tuple(list(f.bool()))),
+          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(list(f.bool(), f.int_())))
       );
     }
   }

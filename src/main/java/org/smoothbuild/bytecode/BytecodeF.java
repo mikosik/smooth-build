@@ -180,7 +180,7 @@ public class BytecodeF {
     return messageT;
   }
 
-  public MethodTB methodT(TypeB resT, ImmutableList<TypeB> paramTs) {
+  public MethodTB methodT(TypeB resT, TupleTB paramTs) {
     return catDb.method(resT, paramTs);
   }
 

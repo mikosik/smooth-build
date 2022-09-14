@@ -15,11 +15,11 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class TupleTB extends TypeB {
-  private final ImmutableList<TypeB> itemTs;
+  private final ImmutableList<TypeB> items;
 
-  public TupleTB(Hash hash, ImmutableList<TypeB> itemTs) {
-    super(hash, calculateName(itemTs), TUPLE);
-    this.itemTs = ImmutableList.copyOf(itemTs);
+  public TupleTB(Hash hash, ImmutableList<TypeB> items) {
+    super(hash, calculateName(items), TUPLE);
+    this.items = ImmutableList.copyOf(items);
   }
 
   @Override
@@ -28,8 +28,16 @@ public final class TupleTB extends TypeB {
     return new TupleB(merkleRoot, bytecodeDb);
   }
 
+  public TypeB get(int i) {
+    return items.get(i);
+  }
+
+  public int size() {
+    return items().size();
+  }
+
   public ImmutableList<TypeB> items() {
-    return itemTs;
+    return items;
   }
 
   private static String calculateName(Iterable<? extends TypeB> itemTs) {

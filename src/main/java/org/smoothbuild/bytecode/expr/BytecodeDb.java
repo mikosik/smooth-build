@@ -260,15 +260,15 @@ public class BytecodeDb {
   }
 
   private void validateArgsInCall(CallableTB callableTB, CombineB args) {
-    validateArgs(callableTB, args.type().items(),
-        () -> {throw illegalArgs(callableTB, args.type());}
+    validateArgs(callableTB,
+        args.type().items(), () -> {throw illegalArgs(callableTB, args.type());}
     );
   }
 
   private IllegalArgumentException illegalArgs(CallableTB callableTB, TupleTB argsT) {
     return new IllegalArgumentException(
         "Argument evaluation types %s should be equal to callable parameter types %s."
-            .formatted(itemTsToString(argsT), itemTsToString(callableTB.paramsTuple())));
+            .formatted(itemTsToString(argsT), itemTsToString(callableTB.params())));
   }
 
   private static String itemTsToString(TupleTB argsT) {

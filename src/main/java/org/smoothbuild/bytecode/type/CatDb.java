@@ -113,7 +113,11 @@ public class CatDb {
   }
 
   public MethodTB method(TypeB res, ImmutableList<TypeB> params) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newMethod(res, tuple(params)));
+    return method(res, tuple(params));
+  }
+
+  public MethodTB method(TypeB res, TupleTB params) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newMethod(res, params));
   }
 
   public TupleTB tuple(List<? extends TypeB> itemTs) {

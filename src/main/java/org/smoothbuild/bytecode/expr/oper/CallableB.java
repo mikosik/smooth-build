@@ -19,8 +19,8 @@ public class CallableB extends OperB {
 
   protected void validate(CallableTB callableTB, CombineB argsCombine) {
     var resT = callableTB.res();
-    validateArgs(callableTB, argsCombine.type().items(),
-        () -> illegalArgsExc(callableTB, argsCombine.type()));
+    validateArgs(callableTB,
+        argsCombine.type().items(), () -> illegalArgsExc(callableTB, argsCombine.type()));
     if (!type().equals(resT)) {
       throw new DecodeExprWrongNodeTypeExc(hash(), cat(), "callable.result", type(), resT);
     }
@@ -28,6 +28,6 @@ public class CallableB extends OperB {
 
   private RuntimeException illegalArgsExc(CallableTB callableTB, TupleTB argsType) {
     return new DecodeExprWrongNodeTypeExc(
-        hash(), this.cat(), "args", callableTB.paramsTuple(), argsType);
+        hash(), this.cat(), "args", callableTB.params(), argsType);
   }
 }

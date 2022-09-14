@@ -10,11 +10,11 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 import com.google.common.collect.ImmutableList;
 
 public class ValidateArgs {
-  public static void validateArgs(CallableTB callableTB,
-      ImmutableList<TypeB> argTs, Supplier<RuntimeException> illegalArgsExcThrower) {
+  public static void validateArgs(CallableTB callableTB, ImmutableList<TypeB> items,
+      Supplier<RuntimeException> illegalArgsExcThrower) {
     allMatchOtherwise(
-        callableTB.params(),
-        argTs,
+        callableTB.params().items(),
+        items,
         CatB::equals,
         (expectedSize, actualSize) -> { throw illegalArgsExcThrower.get(); },
         i -> { throw illegalArgsExcThrower.get(); }
