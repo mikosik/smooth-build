@@ -129,7 +129,6 @@ import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.compute.ComputationCache;
@@ -1294,23 +1293,19 @@ public class TestContext {
   }
 
   public static Log userFatal(int line, String message) {
-    return fatal(userFileMessagge(line, message));
+    return fatal(userFileMessage(line, message));
   }
 
   public static Log userError(int line, String message) {
-    return error(userFileMessagge(line, message));
+    return error(userFileMessage(line, message));
   }
 
-  private static String userFileMessagge(int line, String message) {
+  private static String userFileMessage(int line, String message) {
     return PRJ_MOD_FILE_NAME + ":" + line + ": " + message;
   }
 
   public static SynchronizedFileSystem synchronizedMemoryFileSystem() {
     return new SynchronizedFileSystem(new MemoryFileSystem());
-  }
-
-  public static ImmutableBindings<PolyRefableS> oneBinding(PolyRefableS elem) {
-    return immutableBindings(ImmutableMap.of(elem.nameO().get(), elem));
   }
 
   public static ExprInfo exprInfo() {
