@@ -120,8 +120,8 @@ public class CatDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newMethod(res, params));
   }
 
-  public TupleTB tuple(List<? extends TypeB> itemTs) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(ImmutableList.copyOf(itemTs)));
+  public TupleTB tuple(List<? extends TypeB> items) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(ImmutableList.copyOf(items)));
   }
 
   public StringTB string() {
@@ -299,13 +299,13 @@ public class CatDb {
 
   // methods for creating Val types
 
-  private ArrayTB newArray(TypeB elemT) throws HashedDbExc {
-    var rootHash = writeArrayRoot(elemT);
-    return newArray(rootHash, elemT);
+  private ArrayTB newArray(TypeB elem) throws HashedDbExc {
+    var rootHash = writeArrayRoot(elem);
+    return newArray(rootHash, elem);
   }
 
-  private ArrayTB newArray(Hash rootHash, TypeB elemT) {
-    return cache(new ArrayTB(rootHash, elemT));
+  private ArrayTB newArray(Hash rootHash, TypeB elem) {
+    return cache(new ArrayTB(rootHash, elem));
   }
 
   private FuncTB newFunc(TypeB res, TupleTB params) throws HashedDbExc {
@@ -326,13 +326,13 @@ public class CatDb {
     return cache(new MethodTB(rootHash, res, params));
   }
 
-  private TupleTB newTuple(ImmutableList<TypeB> itemTs) throws HashedDbExc {
-    var hash = writeTupleRoot(itemTs);
-    return newTuple(hash, itemTs);
+  private TupleTB newTuple(ImmutableList<TypeB> items) throws HashedDbExc {
+    var hash = writeTupleRoot(items);
+    return newTuple(hash, items);
   }
 
-  private TupleTB newTuple(Hash rootHash, ImmutableList<TypeB> itemTs) {
-    return cache(new TupleTB(rootHash, itemTs));
+  private TupleTB newTuple(Hash rootHash, ImmutableList<TypeB> items) {
+    return cache(new TupleTB(rootHash, items));
   }
 
   // methods for creating Oper types
@@ -417,8 +417,8 @@ public class CatDb {
 
   // Methods for writing Val type root
 
-  private Hash writeArrayRoot(CatB elemT) throws HashedDbExc {
-    return writeNonBaseRoot(ARRAY, elemT.hash());
+  private Hash writeArrayRoot(CatB elem) throws HashedDbExc {
+    return writeNonBaseRoot(ARRAY, elem.hash());
   }
 
   private Hash writeFuncLikeRoot(TypeB res, TupleTB params, CatKindB kind) throws HashedDbExc {
@@ -426,8 +426,8 @@ public class CatDb {
     return writeNonBaseRoot(kind, hash);
   }
 
-  private Hash writeTupleRoot(ImmutableList<TypeB> itemTs) throws HashedDbExc {
-    var itemsHash = hashedDb.writeSeq(Lists.map(itemTs, CatB::hash));
+  private Hash writeTupleRoot(ImmutableList<TypeB> items) throws HashedDbExc {
+    var itemsHash = hashedDb.writeSeq(Lists.map(items, CatB::hash));
     return writeNonBaseRoot(TUPLE, itemsHash);
   }
 
