@@ -1,6 +1,8 @@
 package org.smoothbuild.compile.lang.type;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.compile.lang.type.TNamesS.funcTypeName;
+import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -18,13 +20,13 @@ public final class FuncTS extends TypeS {
   private final ImmutableList<TypeS> params;
 
   public FuncTS(TypeS res, List<? extends TypeS> params) {
-    super(TNamesS.funcTypeName(res, params), calculateFuncVars(res, params));
+    super(funcTypeName(res, params), calculateFuncVars(res, params));
     this.res = requireNonNull(res);
     this.params = ImmutableList.copyOf(params);
   }
 
   public static VarSetS calculateFuncVars(TypeS resT, List<? extends TypeS> paramTs) {
-    return VarSetS.varSetS(concat(resT, paramTs));
+    return varSetS(concat(resT, paramTs));
   }
 
   @Override
