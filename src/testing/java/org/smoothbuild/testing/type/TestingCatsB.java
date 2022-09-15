@@ -103,18 +103,18 @@ public class TestingCatsB {
         method(BLOB, BLOB, BLOB),
         method(STRING),
         STRING,
-        tuple(list()),
-        tuple(list(BLOB)),
-        tuple(list(BLOB, BLOB)),
-        tuple(list(STRING))
+        tuple(),
+        tuple(BLOB),
+        tuple(BLOB, BLOB),
+        tuple(STRING)
     );
     var arrayCs = map(baseCs, CAT_DB::array);
     var valueCs = concat(baseCs, arrayCs);
     var exprCs = list(
         CAT_DB.call(BLOB),
         CAT_DB.call(STRING),
-        CAT_DB.combine(CAT_DB.tuple(list(BLOB))),
-        CAT_DB.combine(CAT_DB.tuple(list(STRING))),
+        CAT_DB.combine(CAT_DB.tuple(BLOB)),
+        CAT_DB.combine(CAT_DB.tuple(STRING)),
         CAT_DB.if_(BLOB),
         CAT_DB.if_(STRING),
         CAT_DB.invoke(BLOB),
@@ -144,7 +144,7 @@ public class TestingCatsB {
     return CONTEXT.methodTB(res, params);
   }
 
-  public static TupleTB tuple(ImmutableList<TypeB> params) {
+  public static TupleTB tuple(TypeB... params) {
     return CAT_DB.tuple(params);
   }
 }

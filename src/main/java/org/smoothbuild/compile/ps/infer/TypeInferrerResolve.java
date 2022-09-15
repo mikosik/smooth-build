@@ -60,7 +60,7 @@ public class TypeInferrerResolve {
     var resolvedFuncT = (FuncTS) unifier.resolve(unresolvedFuncT);
     var unresolvedParamTs = unresolvedFuncT.params();
     var resolvedParamTs = resolvedFuncT.params();
-    if (!allMatch(unresolvedParamTs, resolvedParamTs, TypeS::equals)) {
+    if (!allMatch(unresolvedParamTs.items(), resolvedParamTs.items(), TypeS::equals)) {
       logger.log(compileError(func.loc(), "<Add error message here> 4"));
       return Optional.empty();
     }

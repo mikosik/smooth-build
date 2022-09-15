@@ -23,6 +23,7 @@ import static org.smoothbuild.bytecode.type.CatKindB.fromMarker;
 import static org.smoothbuild.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -104,8 +105,12 @@ public class CatDb {
     return bool;
   }
 
-  public FuncTB func(TypeB res, List<? extends TypeB> params) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newFunc(res, tuple(params)));
+  public FuncTB func(TypeB res, ImmutableList<TypeB> params) {
+    return func(res, tuple(params));
+  }
+
+  public FuncTB func(TypeB res, TupleTB params) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newFunc(res, params));
   }
 
   public IntTB int_() {
@@ -120,8 +125,12 @@ public class CatDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newMethod(res, params));
   }
 
-  public TupleTB tuple(List<? extends TypeB> items) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(ImmutableList.copyOf(items)));
+  public TupleTB tuple(TypeB... items) {
+    return tuple(list(items));
+  }
+
+  public TupleTB tuple(ImmutableList<TypeB> items) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(items));
   }
 
   public StringTB string() {

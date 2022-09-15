@@ -231,9 +231,9 @@ public class TypeSTest {
 
     public static List<Arguments> func_params_cases() {
       return asList(
-          arguments(f(INT), list()),
-          arguments(f(BLOB, BOOL), list(BOOL)),
-          arguments(f(BLOB, BOOL, INT), list(BOOL, INT))
+          arguments(f(INT), tuple()),
+          arguments(f(BLOB, BOOL), tuple(BOOL)),
+          arguments(f(BLOB, BOOL, INT), tuple(BOOL, INT))
       );
     }
   }

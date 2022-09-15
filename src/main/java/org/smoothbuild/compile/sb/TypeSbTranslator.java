@@ -52,13 +52,17 @@ public class TypeSbTranslator {
     return bytecodeF.tupleT(map(struct.fields(), isig -> translate(isig.type())));
   }
 
+  public TupleTB translate(TupleTS tuple) {
+    return bytecodeF.tupleT(map(tuple.items(), this::translate));
+  }
+
   public ArrayTB translate(ArrayTS array) {
     return bytecodeF.arrayT(translate(array.elem()));
   }
 
   public FuncTB translate(FuncTS func) {
     var res = translate(func.res());
-    var params = map(func.params(), this::translate);
+    var params = translate(func.params());
     return bytecodeF.funcT(res, params);
   }
 }

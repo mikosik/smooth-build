@@ -124,12 +124,12 @@ public class CatBTest extends TestContext {
         args(f -> f.method(f.string(), list()), "_String()"),
         args(f -> f.method(f.string(), list(f.string())), "_String(String)"),
 
-        args(f -> f.tuple(list()), "{}"),
-        args(f -> f.tuple(list(f.string(), f.bool())), "{String,Bool}"),
-        args(f -> f.tuple(list(f.tuple(list(f.int_())))), "{{Int}}"),
+        args(f -> f.tuple(), "{}"),
+        args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
+        args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
 
         args(f -> f.call(f.int_()), "Call:Int"),
-        args(f -> f.combine(f.tuple(list(f.string(), f.int_()))), "Combine:{String,Int}"),
+        args(f -> f.combine(f.tuple(f.string(), f.int_())), "Combine:{String,Int}"),
         args(f -> f.if_(f.int_()), "If:Int"),
         args(f -> f.map(f.array(f.int_())), "Map:[Int]"),
         args(f -> f.invoke(f.int_()), "Invoke:Int"),
@@ -167,9 +167,9 @@ public class CatBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.func(f.int_(), list()), f -> f.tuple(list())),
-          args(f -> f.func(f.blob(), list(f.bool())), f -> f.tuple(list(f.bool()))),
-          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(list(f.bool(), f.int_())))
+          args(f -> f.func(f.int_(), list()), f -> f.tuple()),
+          args(f -> f.func(f.blob(), list(f.bool())), f -> f.tuple(f.bool())),
+          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
@@ -201,9 +201,9 @@ public class CatBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.method(f.int_(), list()), f -> f.tuple(list())),
-          args(f -> f.method(f.blob(), list(f.bool())), f -> f.tuple(list(f.bool()))),
-          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(list(f.bool(), f.int_())))
+          args(f -> f.method(f.int_(), list()), f -> f.tuple()),
+          args(f -> f.method(f.blob(), list(f.bool())), f -> f.tuple(f.bool())),
+          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
@@ -227,7 +227,7 @@ public class CatBTest extends TestContext {
           args(f -> f.method(f.string(), list())),
           args(f -> f.int_()),
           args(f -> f.string()),
-          args(f -> f.tuple(list(f.int_()))),
+          args(f -> f.tuple(f.int_())),
 
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
@@ -257,9 +257,9 @@ public class CatBTest extends TestContext {
 
     public static List<Arguments> tuple_item_cases() {
       return asList(
-          args(f -> f.tuple(list()), f -> list()),
-          args(f -> f.tuple(list(f.string())), f -> list(f.string())),
-          args(f -> f.tuple(list(f.string(), f.int_())), f -> list(f.string(), f.int_()))
+          args(f -> f.tuple(), f -> list()),
+          args(f -> f.tuple(f.string()), f -> list(f.string())),
+          args(f -> f.tuple(f.string(), f.int_()), f -> list(f.string(), f.int_()))
       );
     }
   }
@@ -319,8 +319,8 @@ public class CatBTest extends TestContext {
     public static List<Arguments> combine_cases() {
       CatDb db = CAT_DB;
       return list(
-          arguments(db.combine(db.tuple(list())), db.tuple(list())),
-          arguments(db.combine(db.tuple(list(STRING))), db.tuple(list(STRING)))
+          arguments(db.combine(db.tuple()), db.tuple()),
+          arguments(db.combine(db.tuple(STRING)), db.tuple(STRING))
       );
     }
 

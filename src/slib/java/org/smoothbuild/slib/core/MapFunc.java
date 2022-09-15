@@ -17,9 +17,7 @@ public class MapFunc {
   public static ValB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
     var s = varMap.get("S");
     var r = varMap.get("R");
-    var type = f.funcT(
-        f.arrayT(r),
-        list(f.arrayT(s), f.funcT(r, list(s))));
+    var type = f.funcT(f.arrayT(r), list(f.arrayT(s), f.funcT(r, list(s))));
     var body = f.map(
         f.paramRef(f.arrayT(s), ZERO),
         f.paramRef(f.funcT(r, list(s)), ONE));

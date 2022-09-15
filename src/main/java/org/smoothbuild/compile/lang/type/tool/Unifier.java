@@ -109,8 +109,8 @@ public class Unifier {
   private void unifyNormalizedFunc(FuncTS func1, TypeS normal2) throws UnifierExc {
     if (normal2 instanceof FuncTS func2) {
       unifyNormalized(func1.res(), func2.res());
-      var params1 = func1.params();
-      var params2 = func2.params();
+      var params1 = func1.params().items();
+      var params2 = func2.params().items();
       if (params1.size() != params2.size()) {
         throw new UnifierExc();
       }

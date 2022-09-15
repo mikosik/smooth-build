@@ -4,9 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.compile.lang.type.TNamesS.funcTypeName;
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.map;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -17,21 +15,25 @@ import com.google.common.collect.ImmutableList;
  */
 public final class FuncTS extends TypeS {
   private final TypeS res;
-  private final ImmutableList<TypeS> params;
+  private final TupleTS params;
 
-  public FuncTS(TypeS res, List<? extends TypeS> params) {
-    super(funcTypeName(res, params), calculateFuncVars(res, params));
-    this.res = requireNonNull(res);
-    this.params = ImmutableList.copyOf(params);
+  public FuncTS(TypeS resT, ImmutableList<TypeS> paramTs) {
+    this(resT, new TupleTS(paramTs));
   }
 
-  public static VarSetS calculateFuncVars(TypeS resT, List<? extends TypeS> paramTs) {
-    return varSetS(concat(resT, paramTs));
+  public FuncTS(TypeS res, TupleTS params) {
+    super(funcTypeName(res, params), calculateFuncVars(res, params));
+    this.res = requireNonNull(res);
+    this.params = requireNonNull(params);
+  }
+
+  public static VarSetS calculateFuncVars(TypeS resT, TupleTS paramTs) {
+    return varSetS(concat(resT, paramTs.items()));
   }
 
   @Override
   public TypeS mapComponents(Function<TypeS, TypeS> mapper) {
-    return new FuncTS(mapper.apply(res), map(params, mapper));
+    return new FuncTS(mapper.apply(res), params.mapComponents(mapper));
   }
 
   @Override
@@ -39,7 +41,7 @@ public final class FuncTS extends TypeS {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new FuncTS(res.mapVars(varMapper), map(params, t -> t.mapVars(varMapper)));
+      return new FuncTS(res.mapVars(varMapper), params.mapVars(varMapper));
     }
   }
 
@@ -47,7 +49,7 @@ public final class FuncTS extends TypeS {
     return res;
   }
 
-  public ImmutableList<TypeS> params() {
+  public TupleTS params() {
     return params;
   }
 

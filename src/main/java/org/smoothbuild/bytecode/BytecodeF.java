@@ -172,6 +172,10 @@ public class BytecodeF {
     return catDb.func(resT, paramTs);
   }
 
+  public FuncTB funcT(TypeB resT, TupleTB paramTs) {
+    return catDb.func(resT, paramTs);
+  }
+
   public IntTB intT() {
     return catDb.int_();
   }
@@ -186,6 +190,10 @@ public class BytecodeF {
 
   public StringTB stringT() {
     return catDb.string();
+  }
+
+  public TupleTB tupleT(TypeB... itemTs) {
+    return catDb.tuple(itemTs);
   }
 
   public TupleTB tupleT(ImmutableList<TypeB> itemTs) {
@@ -218,10 +226,10 @@ public class BytecodeF {
 
   private static TupleTB createMessageT(CatDb catDb) {
     var stringT = catDb.string();
-    return catDb.tuple(list(stringT, stringT));
+    return catDb.tuple(stringT, stringT);
   }
 
   private static TupleTB createFileT(CatDb catDb) {
-    return catDb.tuple(list(catDb.string(), catDb.blob()));
+    return catDb.tuple(catDb.string(), catDb.blob());
   }
 }

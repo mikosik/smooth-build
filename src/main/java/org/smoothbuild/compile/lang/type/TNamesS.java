@@ -21,8 +21,8 @@ public class TNamesS {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(TypeS resT, List<? extends TypeS> paramTs) {
-    return resT.name() + "(" + commaSeparatedTypeNames(paramTs) + ")";
+  public static String funcTypeName(TypeS resT, TupleTS paramTs) {
+    return resT.name() + "(" + commaSeparatedTypeNames(paramTs.items()) + ")";
   }
 
   public static String tupleTypeName(List<? extends TypeS> elemTs) {

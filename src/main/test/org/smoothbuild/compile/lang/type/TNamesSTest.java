@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.lang.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,7 +65,7 @@ public class TNamesSTest extends TestContext {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(TNamesS.funcTypeName(stringTS(), list(blobTS(), boolTS())))
+      assertThat(TNamesS.funcTypeName(stringTS(), tupleTS(blobTS(), boolTS())))
           .isEqualTo("String(Blob,Bool)");
     }
   }

@@ -39,8 +39,8 @@ public class CatBCachingTest extends TestContext {
         CatBCachingTest::tupleT,
 
         catDb -> catDb.call(catDb.int_()),
-        catDb -> catDb.combine(catDb.tuple(list())),
-        catDb -> catDb.combine(catDb.tuple(list(catDb.int_()))),
+        catDb -> catDb.combine(catDb.tuple()),
+        catDb -> catDb.combine(catDb.tuple(catDb.int_())),
         catDb -> catDb.if_(catDb.int_()),
         catDb -> catDb.invoke(catDb.int_()),
         catDb -> catDb.map(catDb.array(catDb.int_())),
@@ -65,7 +65,7 @@ public class CatBCachingTest extends TestContext {
   }
 
   private static TupleTB tupleT(CatDb catDb) {
-    return catDb.tuple(list(catDb.string(), catDb.string()));
+    return catDb.tuple(catDb.string(), catDb.string());
   }
 
   private static FuncTB funcT(CatDb catDb) {

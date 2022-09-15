@@ -173,8 +173,7 @@ public class VmTest extends TestContext {
     public void call_func_passed_as_arg() {
       var func = funcB(intB(7));
       var paramT = func.type();
-      var outerFunc = funcB(list(paramT),
-          callB(intTB(), paramRefB(paramT, 0)));
+      var outerFunc = funcB(list(paramT), callB(intTB(), paramRefB(paramT, 0)));
       var call = callB(outerFunc, func);
       assertThat(evaluate(call))
           .isEqualTo(intB(7));

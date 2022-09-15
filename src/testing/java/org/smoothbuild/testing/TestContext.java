@@ -108,6 +108,7 @@ import org.smoothbuild.compile.lang.type.IntTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StringTS;
 import org.smoothbuild.compile.lang.type.StructTS;
+import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
@@ -393,7 +394,7 @@ public class TestContext {
   // ValB types
 
   public TupleTB animalTB() {
-    return catDb().tuple(list(stringTB(), intTB()));
+    return catDb().tuple(stringTB(), intTB());
   }
 
   public ArrayTB arrayTB() {
@@ -421,12 +422,8 @@ public class TestContext {
   }
 
  public FuncTB funcTB(TypeB resT, TypeB... paramTs) {
-    return funcTB(resT, list(paramTs));
-  }
-
- private FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb().func(resT, paramTs);
-  }
+   return catDb().func(resT, list(paramTs));
+ }
 
   public IntTB intTB() {
     return catDb().int_();
@@ -449,7 +446,7 @@ public class TestContext {
   }
 
   public TupleTB tupleTB(TypeB... itemTs) {
-    return catDb().tuple(list(itemTs));
+    return catDb().tuple(itemTs);
   }
 
   // OperB categories
@@ -626,7 +623,7 @@ public class TestContext {
   }
 
   public FuncB funcB(TypeB resT, ImmutableList<TypeB> paramTs, ExprB body) {
-    var type = funcTB(resT, paramTs);
+    var type = catDb().func(resT, paramTs);
     return funcB(type, body);
   }
 
@@ -809,7 +806,15 @@ public class TestContext {
   }
 
   private FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return new FuncTS(resT, paramTs);
+    return new FuncTS(resT, tupleTS(paramTs));
+  }
+
+  public TupleTS tupleTS(TypeS... itemTs) {
+    return tupleTS(list(itemTs));
+  }
+
+  public TupleTS tupleTS(ImmutableList<TypeS> paramTs) {
+    return new TupleTS(paramTs);
   }
 
   public IntTS intTS() {

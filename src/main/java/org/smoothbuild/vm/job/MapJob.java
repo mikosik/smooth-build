@@ -50,7 +50,7 @@ public class MapJob extends ExecutingJob {
   }
 
   private CombineB singleArg(ValB val) {
-    return bytecodeF().combine(bytecodeF().tupleT(list(val.type())), list(val));
+    return bytecodeF().combine(bytecodeF().tupleT(val.type()), list(val));
   }
 
   private BytecodeF bytecodeF() {
