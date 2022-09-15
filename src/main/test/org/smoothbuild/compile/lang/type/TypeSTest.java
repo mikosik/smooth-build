@@ -107,12 +107,12 @@ public class TypeSTest {
         arguments(a(a(struct("MyStruct", nlist(itemSigS(INT))))), "[[MyStruct]]"),
         arguments(a(a(STRING)), "[[String]]"),
 
-        arguments(f(A, list(a(A))), "A([A])"),
-        arguments(f(STRING, list(a(A))), "String([A])"),
-        arguments(f(A, list(A)), "A(A)"),
-        arguments(f(STRING, list()), "String()"),
-        arguments(f(STRING, list(STRING)), "String(String)"),
-        arguments(f(STRING, list(tuple(INT))), "String({Int})")
+        arguments(f(A, a(A)), "A([A])"),
+        arguments(f(STRING, a(A)), "String([A])"),
+        arguments(f(A, A), "A(A)"),
+        arguments(f(STRING), "String()"),
+        arguments(f(STRING, STRING), "String(String)"),
+        arguments(f(STRING, tuple(INT)), "String({Int})")
     );
   }
 
@@ -135,10 +135,10 @@ public class TypeSTest {
         arguments(a(INT), varSetS()),
         arguments(a(A), varSetS(A)),
 
-        arguments(f(BLOB, list(BOOL)), varSetS()),
-        arguments(f(A, list(BOOL)), varSetS(A)),
-        arguments(f(BLOB, list(A)), varSetS(A)),
-        arguments(f(A, list(B)), varSetS(A, B))
+        arguments(f(BLOB, BOOL), varSetS()),
+        arguments(f(A, BOOL), varSetS(A)),
+        arguments(f(BLOB, A), varSetS(A)),
+        arguments(f(A, B), varSetS(A, B))
     );
   }
 
@@ -167,12 +167,11 @@ public class TypeSTest {
         arguments(a(var("A")), addPrefix, a(var("prefix.A"))),
         arguments(a(var("p.A")), addPrefix, a(var("prefix.p.A"))),
 
-        arguments(f(BLOB, list(BOOL)), addPrefix, f(BLOB, list(BOOL))),
-        arguments(f(var("A"), list(BOOL)), addPrefix, f(var("prefix.A"), list(BOOL))),
-        arguments(f(BLOB, list(var("A"))), addPrefix, f(BLOB, list(var("prefix.A")))),
-        arguments(
-            f(var("p.A"), list(BOOL)), addPrefix, f(var("prefix.p.A"), list(BOOL))),
-        arguments(f(BLOB, list(var("p.A"))), addPrefix, f(BLOB, list(var("prefix.p.A"))))
+        arguments(f(BLOB, BOOL), addPrefix, f(BLOB, BOOL)),
+        arguments(f(var("A"), BOOL), addPrefix, f(var("prefix.A"), BOOL)),
+        arguments(f(BLOB, var("A")), addPrefix, f(BLOB, var("prefix.A"))),
+        arguments(f(var("p.A"), BOOL), addPrefix, f(var("prefix.p.A"), BOOL)),
+        arguments(f(BLOB, var("p.A")), addPrefix, f(BLOB, var("prefix.p.A")))
     );
   }
 
@@ -190,7 +189,7 @@ public class TypeSTest {
       return asList(
           arguments(BLOB),
           arguments(BOOL),
-          arguments(f(STRING, list())),
+          arguments(f(STRING)),
           arguments(INT),
           arguments(STRING),
           arguments(struct("MyStruct", nlist())),
@@ -198,7 +197,7 @@ public class TypeSTest {
 
           arguments(a(BLOB)),
           arguments(a(BOOL)),
-          arguments(a(f(STRING, list()))),
+          arguments(a(f(STRING))),
           arguments(a(INT)),
           arguments(a(STRING)),
           arguments(a(A))
@@ -217,9 +216,9 @@ public class TypeSTest {
 
     public static List<Arguments> func_result_cases() {
       return asList(
-          arguments(f(INT, list()), INT),
-          arguments(f(BLOB, list(BOOL)), BLOB),
-          arguments(f(BLOB, list(BOOL, INT)), BLOB)
+          arguments(f(INT), INT),
+          arguments(f(BLOB, BOOL), BLOB),
+          arguments(f(BLOB, BOOL, INT), BLOB)
       );
     }
 
@@ -232,9 +231,9 @@ public class TypeSTest {
 
     public static List<Arguments> func_params_cases() {
       return asList(
-          arguments(f(INT, list()), list()),
-          arguments(f(BLOB, list(BOOL)), list(BOOL)),
-          arguments(f(BLOB, list(BOOL, INT)), list(BOOL, INT))
+          arguments(f(INT), list()),
+          arguments(f(BLOB, BOOL), list(BOOL)),
+          arguments(f(BLOB, BOOL, INT), list(BOOL, INT))
       );
     }
   }
@@ -295,10 +294,10 @@ public class TypeSTest {
         B,
         C,
 
-        f(BLOB, list()),
-        f(STRING, list()),
-        f(BLOB, list(STRING)),
-        f(BLOB, list(BLOB))
+        f(BLOB),
+        f(STRING),
+        f(BLOB, STRING),
+        f(BLOB, BLOB)
     );
 
     for (TypeS type : types) {
@@ -352,7 +351,7 @@ public class TypeSTest {
     @Test
     public void remove_var_prefixes_fails_when_var_has_no_prefix() {
       var var = var("A");
-      assertCall(() -> var.unprefixed())
+      assertCall(var::unprefixed)
           .throwsException(IllegalStateException.class);
     }
 

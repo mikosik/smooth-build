@@ -35,10 +35,6 @@ public class TestingTS {
     return new ArrayTS(elemT);
   }
 
-  public static FuncTS f(TypeS resT) {
-    return f(resT, list());
-  }
-
   public static FuncTS f(TypeS resT, TypeS... paramTs) {
     return f(resT, list(paramTs));
   }
@@ -63,10 +59,6 @@ public class TestingTS {
     return a(elemT);
   }
 
-  public TypeS func(TypeS resT, ImmutableList<TypeS> params) {
-    return TestingTS.f(resT, params);
-  }
-
   public TypeS blob() {
     return BLOB;
   }
@@ -85,21 +77,5 @@ public class TestingTS {
 
   public TypeS struct() {
     return PERSON;
-  }
-
-  public static VarS v0() {
-    return var("0").prefixed("_");
-  }
-
-  public static VarS v1() {
-    return var("1").prefixed("_");
-  }
-
-  public static VarS v2() {
-    return var("2").prefixed("_");
-  }
-
-  public static VarS v3() {
-    return var("3").prefixed("_");
   }
 }
