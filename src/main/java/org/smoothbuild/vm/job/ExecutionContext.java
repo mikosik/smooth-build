@@ -47,8 +47,8 @@ public class ExecutionContext {
   }
 
   public ExecutionContext withBindings(ImmutableList<Job> args) {
-    return new ExecutionContext(
-        taskExecutor, reporter, bytecodeF, nativeMethodLoader, new JobCreator(args), exprInfos);
+    return new ExecutionContext(taskExecutor, reporter, bytecodeF, nativeMethodLoader,
+        jobCreator.withBindings(args), exprInfos);
   }
 
   public ExecutionContext withExprInfos(ImmutableMap<ExprB, ExprInfo> exprInfos) {

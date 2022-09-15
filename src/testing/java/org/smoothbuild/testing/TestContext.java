@@ -20,7 +20,6 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.report.TaskMatchers.ALL;
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
@@ -167,11 +166,15 @@ public class TestContext {
   private BytecodeMethodLoader bytecodeMethodLoader;
 
   public Vm vm() {
-    return vm(null);
+    return new Vm(this::executionContext);
   }
 
   public Vm vm(NativeMethodLoader nativeMethodLoader) {
     return new Vm(() -> executionContext(nativeMethodLoader));
+  }
+
+  public Vm vm(JobCreator jobCreator) {
+    return new Vm(() -> executionContext(jobCreator));
   }
 
   public ExecutionContext executionContext() {
@@ -205,6 +208,12 @@ public class TestContext {
     NativeMethodLoader nativeMethodLoader = null;
     return new ExecutionContext(
         taskExecutor, reporter, bytecodeF(), nativeMethodLoader, new JobCreator());
+  }
+
+  public ExecutionContext executionContext(JobCreator jobCreator) {
+    NativeMethodLoader nativeMethodLoader = null;
+    return new ExecutionContext(
+        taskExecutor(), executionReporter(), bytecodeF(), nativeMethodLoader, jobCreator);
   }
 
   private TaskExecutor taskExecutor() {

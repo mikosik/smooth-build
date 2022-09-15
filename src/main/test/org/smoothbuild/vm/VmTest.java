@@ -14,10 +14,12 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.BoolB;
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
@@ -26,9 +28,13 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.execute.TaskExecutor;
+import org.smoothbuild.vm.job.ExecutionContext;
+import org.smoothbuild.vm.job.Job;
+import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 import org.smoothbuild.vm.task.OrderTask;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class VmTest extends TestContext {
@@ -37,51 +43,86 @@ public class VmTest extends TestContext {
 
   @Nested
   class _laziness {
-    @Test
-    public void learning_test() {
-      // This test makes sure that it is possible to detect Task creation using a mock.
-      var order = orderB(intB(7));
+    @Nested
+    class _task_execution {
+      @Test
+      public void learning_test() {
+        // This test makes sure that it is possible to detect Task creation using a mock.
+        var order = orderB(intB(7));
 
-      assertThat(evaluate(vmWithSpyingExecutor(), order))
-          .isEqualTo(arrayB(intB(7)));
+        assertThat(evaluate(vmWithSpyingExecutor(), order))
+            .isEqualTo(arrayB(intB(7)));
 
-      verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
+        verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
+      }
+
+      @Test
+      public void no_task_is_executed_for_func_arg_that_is_not_used() {
+        var func = funcB(list(arrayTB(boolTB())), intB(7));
+        var call = callB(func, orderB(boolTB()));
+
+        assertThat(evaluate(vmWithSpyingExecutor(), call))
+            .isEqualTo(intB(7));
+
+        verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
+      }
+
+      @Test
+      public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used() {
+        var innerFunc = funcB(list(arrayTB(boolTB())), intB(7));
+        var outerFunc = funcB(list(arrayTB(boolTB())),
+            callB(innerFunc, paramRefB(arrayTB(boolTB()), 0)));
+        var call = callB(outerFunc, orderB(boolTB()));
+
+        assertThat(evaluate(vmWithSpyingExecutor(), call))
+            .isEqualTo(intB(7));
+
+        verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
+      }
+
+      @Test
+      public void task_for_func_arg_that_is_used_twice_is_executed_only_once() {
+        var arrayT = arrayTB(intTB());
+        var func = funcB(list(arrayT), combineB(paramRefB(arrayT, 0), paramRefB(arrayT, 0)));
+        var call = callB(func, orderB(intB(7)));
+
+        assertThat(evaluate(vmWithSpyingExecutor(), call))
+            .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
+
+        verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
+      }
     }
 
-    @Test
-    public void no_task_is_created_for_func_arg_that_is_not_used() {
-      var func = funcB(list(arrayTB(boolTB())), intB(7));
-      var call = callB(func, orderB(boolTB()));
+    @Nested
+    class _job_creation {
+      @Test
+      public void learning_test() {
+        // Learning test verifies that job creation is counted also inside func body.
+        var func = funcB(orderB(intB(7)));
+        var call = callB(func);
 
-      assertThat(evaluate(vmWithSpyingExecutor(), call))
-          .isEqualTo(intB(7));
+        var countingJobCreator = new CountingJobCreator(IntB.class);
+        var spyingJobCreator = spy(countingJobCreator);
+        assertThat(evaluate(vm(spyingJobCreator), call))
+            .isEqualTo(arrayB(intB(7)));
 
-      verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
-    }
+        assertThat(countingJobCreator.counter().get())
+            .isEqualTo(1);
+      }
 
-    @Test
-    public void no_task_is_created_for_func_arg_that_is_passed_to_func_where_it_is_not_used() {
-      var innerFunc = funcB(list(arrayTB(boolTB())), intB(7));
-      var outerFunc = funcB(list(arrayTB(boolTB())),
-          callB(innerFunc, paramRefB(arrayTB(boolTB()), 0)));
-      var call = callB(outerFunc, orderB(boolTB()));
+      @Test
+      public void job_for_unused_func_arg_is_created_but_not_jobs_for_its_dependencies() {
+        var func = funcB(list(arrayTB(boolTB())), intB(7));
+        var call = callB(func, orderB(boolTB()));
 
-      assertThat(evaluate(vmWithSpyingExecutor(), call))
-          .isEqualTo(intB(7));
+        var countingJobCreator = new CountingJobCreator(BoolB.class);
+        var spyingJobCreator = spy(countingJobCreator);
+        assertThat(evaluate(vm(spyingJobCreator), call))
+            .isEqualTo(intB(7));
 
-      verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
-    }
-
-    @Test
-    public void only_one_task_is_created_for_func_arg_that_is_used_twice() {
-      var arrayT = arrayTB(intTB());
-      var func = funcB(list(arrayT), combineB(paramRefB(arrayT, 0), paramRefB(arrayT, 0)));
-      var call = callB(func, orderB(intB(7)));
-
-      assertThat(evaluate(vmWithSpyingExecutor(), call))
-          .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
-
-      verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
+        assertThat(countingJobCreator.counter().get())
+            .isEqualTo(0);
+      }
     }
   }
 
@@ -261,5 +302,38 @@ public class VmTest extends TestContext {
 
   public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {
     return (IntB) args.get(0);
+  }
+
+  private static class CountingJobCreator extends JobCreator {
+    private final AtomicInteger counter;
+    private final Class<? extends ExprB> classToCount;
+
+    public CountingJobCreator(Class<? extends ExprB> classToCount) {
+      this(list(), classToCount, new AtomicInteger());
+    }
+
+    protected CountingJobCreator(ImmutableList<Job> bindings, Class<? extends ExprB> classToCount,
+        AtomicInteger counter) {
+      super(bindings);
+      this.classToCount = classToCount;
+      this.counter = counter;
+    }
+
+    @Override
+    public Job jobFor(ExprB expr, ExecutionContext context) {
+      if (expr.getClass().equals(classToCount)) {
+        counter.incrementAndGet();
+      }
+      return super.jobFor(expr, context);
+    }
+
+    @Override
+    public JobCreator withBindings(ImmutableList<Job> args) {
+      return new CountingJobCreator(args, classToCount, counter);
+    }
+
+    public AtomicInteger counter() {
+      return counter;
+    }
   }
 }

@@ -25,7 +25,7 @@ public class JobCreator {
     this(list());
   }
 
-  public JobCreator(ImmutableList<Job> bindings) {
+  protected JobCreator(ImmutableList<Job> bindings) {
     this.bindings = bindings;
   }
 
@@ -44,5 +44,9 @@ public class JobCreator {
       // than its subclasses and code is not modularized.
       default -> throw new RuntimeException("shouldn't happen");
     };
+  }
+
+  public JobCreator withBindings(ImmutableList<Job> args) {
+    return new JobCreator(args);
   }
 }
