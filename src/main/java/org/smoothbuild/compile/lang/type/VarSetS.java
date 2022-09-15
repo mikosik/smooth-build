@@ -26,7 +26,7 @@ public final class VarSetS implements Set<VarS> {
     return new VarSetS(Set.of(vars));
   }
 
-  public static VarSetS varSetS(Collection<TypeS> types) {
+  public static VarSetS varSetS(Collection<? extends TypeS> types) {
     return types.stream()
         .flatMap(t -> t.vars().stream())
         .collect(toVarSetS());

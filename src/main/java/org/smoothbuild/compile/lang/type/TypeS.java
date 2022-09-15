@@ -11,7 +11,7 @@ import java.util.function.Function;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class TypeS implements TypelikeS
-    permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
+    permits ArrayTS, BaseTS, FuncTS, StructTS, TupleTS, VarS {
   private final VarSetS vars;
   private final String name;
 

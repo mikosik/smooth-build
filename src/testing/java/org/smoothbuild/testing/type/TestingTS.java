@@ -12,6 +12,7 @@ import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.IntTS;
 import org.smoothbuild.compile.lang.type.StringTS;
 import org.smoothbuild.compile.lang.type.StructTS;
+import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
@@ -48,6 +49,10 @@ public class TestingTS {
 
   public static VarS var(String a) {
     return new VarS(a);
+  }
+
+  public static TupleTS tuple(TypeS... items) {
+    return new TupleTS(ImmutableList.copyOf(items));
   }
 
   public static StructTS struct(String name, NList<ItemSigS> fields) {

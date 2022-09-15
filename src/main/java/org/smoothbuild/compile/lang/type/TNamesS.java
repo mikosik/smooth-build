@@ -22,8 +22,15 @@ public class TNamesS {
   }
 
   public static String funcTypeName(TypeS resT, List<? extends TypeS> paramTs) {
-    var params = toCommaSeparatedString(paramTs, TypeS::name);
-    return resT.name() + "(" + params + ")";
+    return resT.name() + "(" + commaSeparatedTypeNames(paramTs) + ")";
+  }
+
+  public static String tupleTypeName(List<? extends TypeS> elemTs) {
+    return "{" + commaSeparatedTypeNames(elemTs) + "}";
+  }
+
+  private static String commaSeparatedTypeNames(List<? extends TypeS> elemTs) {
+    return toCommaSeparatedString(elemTs, TypeS::name);
   }
 
   public static String structNameToCtorName(String name) {

@@ -16,6 +16,7 @@ import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.testing.type.TestingTS.a;
 import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.testing.type.TestingTS.struct;
+import static org.smoothbuild.testing.type.TestingTS.tuple;
 import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
@@ -68,28 +69,50 @@ public class TypeSTest {
         arguments(BOOL, "Bool"),
         arguments(INT, "Int"),
         arguments(STRING, "String"),
-        arguments(struct("MyStruct", nlist()), "MyStruct"),
         arguments(A, "A"),
+
+        arguments(tuple(), "{}"),
+        arguments(tuple(INT), "{Int}"),
+        arguments(tuple(INT, BOOL), "{Int,Bool}"),
+        arguments(tuple(A), "{A}"),
+        arguments(tuple(A, B), "{A,B}"),
+
+        arguments(struct("MyStruct", nlist()), "MyStruct"),
+        arguments(struct("MyStruct", nlist(itemSigS(INT))), "MyStruct"),
 
         arguments(a(BLOB), "[Blob]"),
         arguments(a(BOOL), "[Bool]"),
         arguments(a(INT), "[Int]"),
         arguments(a(STRING), "[String]"),
+        arguments(a(tuple()), "[{}]"),
+        arguments(a(tuple(INT)), "[{Int}]"),
+        arguments(a(tuple(INT, BOOL)), "[{Int,Bool}]"),
+        arguments(a(tuple(A)), "[{A}]"),
+        arguments(a(tuple(A, B)), "[{A,B}]"),
         arguments(a(struct("MyStruct", nlist())), "[MyStruct]"),
+        arguments(a(struct("MyStruct", nlist(itemSigS(INT)))), "[MyStruct]"),
         arguments(a(A), "[A]"),
+
 
         arguments(a(a(A)), "[[A]]"),
         arguments(a(a(BLOB)), "[[Blob]]"),
         arguments(a(a(BOOL)), "[[Bool]]"),
         arguments(a(a(INT)), "[[Int]]"),
+        arguments(a(tuple()), "[{}]"),
+        arguments(a(a(tuple(INT))), "[[{Int}]]"),
+        arguments(a(a(tuple(INT, BOOL))), "[[{Int,Bool}]]"),
+        arguments(a(a(tuple(A))), "[[{A}]]"),
+        arguments(a(a(tuple(A, B))), "[[{A,B}]]"),
         arguments(a(a(struct("MyStruct", nlist()))), "[[MyStruct]]"),
+        arguments(a(a(struct("MyStruct", nlist(itemSigS(INT))))), "[[MyStruct]]"),
         arguments(a(a(STRING)), "[[String]]"),
 
         arguments(f(A, list(a(A))), "A([A])"),
         arguments(f(STRING, list(a(A))), "String([A])"),
         arguments(f(A, list(A)), "A(A)"),
         arguments(f(STRING, list()), "String()"),
-        arguments(f(STRING, list(STRING)), "String(String)")
+        arguments(f(STRING, list(STRING)), "String(String)"),
+        arguments(f(STRING, list(tuple(INT))), "String({Int})")
     );
   }
 
@@ -107,12 +130,15 @@ public class TypeSTest {
         arguments(INT, varSetS()),
         arguments(STRING, varSetS()),
 
+        arguments(tuple(INT), varSetS()),
+        arguments(tuple(A, B), varSetS(A, B)),
         arguments(a(INT), varSetS()),
         arguments(a(A), varSetS(A)),
 
         arguments(f(BLOB, list(BOOL)), varSetS()),
         arguments(f(A, list(BOOL)), varSetS(A)),
-        arguments(f(BLOB, list(A)), varSetS(A))
+        arguments(f(BLOB, list(A)), varSetS(A)),
+        arguments(f(A, list(B)), varSetS(A, B))
     );
   }
 
@@ -133,6 +159,9 @@ public class TypeSTest {
 
         arguments(var("A"), addPrefix, var("prefix.A")),
         arguments(var("pre.A"), addPrefix, var("prefix.pre.A")),
+
+        arguments(tuple(INT), addPrefix, tuple(INT)),
+        arguments(tuple(A, B), addPrefix, tuple(var("prefix.A"), var("prefix.B"))),
 
         arguments(a(INT), addPrefix, a(INT)),
         arguments(a(var("A")), addPrefix, a(var("prefix.A"))),
@@ -258,6 +287,8 @@ public class TypeSTest {
         BOOL,
         INT,
         STRING,
+        tuple(),
+        tuple(INT, BOOL),
         struct("MyStruct", nlist()),
         struct("MyStruct", nlist(itemSigS(INT, "field"))),
         A,
@@ -272,10 +303,29 @@ public class TypeSTest {
 
     for (TypeS type : types) {
       equalsTester.addEqualityGroup(type, type);
+      equalsTester.addEqualityGroup(tuple(type), tuple(type));
       equalsTester.addEqualityGroup(a(type), a(type));
       equalsTester.addEqualityGroup(a(a(type)), a(a(type)));
     }
     equalsTester.testEquals();
+  }
+
+  @Nested
+  class _tuple {
+    @ParameterizedTest
+    @MethodSource("tuple_items_cases")
+    public void func_params(TupleTS type, Object expected) {
+      assertThat(type.items())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> tuple_items_cases() {
+      return asList(
+          arguments(tuple(), list()),
+          arguments(tuple(BOOL), list(BOOL)),
+          arguments(tuple(BOOL, INT), list(BOOL, INT))
+      );
+    }
   }
 
   @Nested

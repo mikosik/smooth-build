@@ -15,6 +15,7 @@ import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.IntTS;
 import org.smoothbuild.compile.lang.type.StringTS;
 import org.smoothbuild.compile.lang.type.StructTS;
+import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 
@@ -34,11 +35,12 @@ public class TypeSbTranslator {
       case ArrayTS a -> translate(a);
       case BlobTS blob -> bytecodeF.blobT();
       case BoolTS bool -> bytecodeF.boolT();
+      case FuncTS f -> translate(f);
       case IntTS i -> bytecodeF.intT();
       case VarS v ->  translate(v);
       case StringTS s -> bytecodeF.stringT();
       case StructTS st -> translate(st);
-      case FuncTS f -> translate(f);
+      case TupleTS tupleTS -> throw new RuntimeException("Tuple is not supported");
     };
   }
 
