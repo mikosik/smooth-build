@@ -805,7 +805,7 @@ public class TestContext {
   }
 
   public FuncTS funcTS(TypeS resT, TypeS... paramTs) {
-    return new FuncTS(resT, list(paramTs));
+    return funcTS(resT, list(paramTs));
   }
 
   private FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
