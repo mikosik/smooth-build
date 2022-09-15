@@ -10,7 +10,6 @@ import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.MapB;
-import org.smoothbuild.bytecode.expr.oper.MapB.Data;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.FuncB;
 import org.smoothbuild.bytecode.expr.val.ValB;
@@ -30,7 +29,7 @@ public class MapJob extends ExecutingJob {
   @Override
   public Promise<ValB> evaluateImpl() {
     var result = new PromisedValue<ValB>();
-    Data data = mapB.data();
+    var data = mapB.data();
     var array = context.jobFor(data.array()).evaluate();
     var func = context.jobFor(data.func()).evaluate();
     runWhenAllAvailable(list(array, func),
