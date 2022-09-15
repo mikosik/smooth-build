@@ -177,6 +177,10 @@ public class TestContext {
     return new Vm(() -> executionContext(jobCreator));
   }
 
+  public Vm vm(TaskExecutor taskExecutor) {
+    return new Vm(() -> executionContext(taskExecutor));
+  }
+
   public ExecutionContext executionContext() {
     return executionContext(taskExecutor());
   }
@@ -216,7 +220,7 @@ public class TestContext {
         taskExecutor(), executionReporter(), bytecodeF(), nativeMethodLoader, jobCreator);
   }
 
-  private TaskExecutor taskExecutor() {
+  public TaskExecutor taskExecutor() {
     return taskExecutor(executionReporter());
   }
 

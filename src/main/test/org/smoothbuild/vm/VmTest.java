@@ -27,7 +27,6 @@ import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Try;
-import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.JobCreator;
@@ -38,9 +37,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class VmTest extends TestContext {
-  private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
-  private TaskExecutor spyingExecutor;
-
   @Nested
   class _laziness {
     @Nested
@@ -50,7 +46,8 @@ public class VmTest extends TestContext {
         // This test makes sure that it is possible to detect Task creation using a mock.
         var order = orderB(intB(7));
 
-        assertThat(evaluate(vmWithSpyingExecutor(), order))
+        var spyingExecutor = spy(taskExecutor());
+        assertThat(evaluate(vm(spyingExecutor), order))
             .isEqualTo(arrayB(intB(7)));
 
         verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
@@ -61,7 +58,8 @@ public class VmTest extends TestContext {
         var func = funcB(list(arrayTB(boolTB())), intB(7));
         var call = callB(func, orderB(boolTB()));
 
-        assertThat(evaluate(vmWithSpyingExecutor(), call))
+        var spyingExecutor = spy(taskExecutor());
+        assertThat(evaluate(vm(spyingExecutor), call))
             .isEqualTo(intB(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
@@ -74,7 +72,8 @@ public class VmTest extends TestContext {
             callB(innerFunc, paramRefB(arrayTB(boolTB()), 0)));
         var call = callB(outerFunc, orderB(boolTB()));
 
-        assertThat(evaluate(vmWithSpyingExecutor(), call))
+        var spyingExecutor = spy(taskExecutor());
+        assertThat(evaluate(vm(spyingExecutor), call))
             .isEqualTo(intB(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
@@ -86,7 +85,8 @@ public class VmTest extends TestContext {
         var func = funcB(list(arrayT), combineB(paramRefB(arrayT, 0), paramRefB(arrayT, 0)));
         var call = callB(func, orderB(intB(7)));
 
-        assertThat(evaluate(vmWithSpyingExecutor(), call))
+        var spyingExecutor = spy(taskExecutor());
+        assertThat(evaluate(vm(spyingExecutor), call))
             .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
 
         verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
@@ -214,10 +214,11 @@ public class VmTest extends TestContext {
     public void invoke_argless() throws Exception {
       var method = methodB(methodTB(intTB()), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method);
+      var nativeMethodLoader = mock(NativeMethodLoader.class);
       when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(
               Try.result(VmTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(invoke))
+      assertThat(evaluate(vm(nativeMethodLoader), invoke))
           .isEqualTo(intB(173));
     }
 
@@ -225,10 +226,11 @@ public class VmTest extends TestContext {
     public void invoke_with_param() throws Exception {
       var method = methodB(methodTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
       var invoke = invokeB(method, intB(33));
+      var nativeMethodLoader = mock(NativeMethodLoader.class);
       when(nativeMethodLoader.load(any(), eq(method)))
           .thenReturn(
               Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(invoke))
+      assertThat(evaluate(vm(nativeMethodLoader), invoke))
           .isEqualTo(intB(33));
     }
 
@@ -272,7 +274,7 @@ public class VmTest extends TestContext {
   }
 
   private ExprB evaluate(ExprB expr) {
-    var vm = vm(nativeMethodLoader);
+    var vm = vm();
     return evaluate(vm, expr, ImmutableMap.of());
   }
 
@@ -289,11 +291,6 @@ public class VmTest extends TestContext {
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private Vm vmWithSpyingExecutor() {
-    spyingExecutor = spy(new TaskExecutor(computer(), executionReporter()));
-    return new Vm(() -> executionContext(spyingExecutor));
   }
 
   public static IntB returnInt(NativeApi nativeApi, TupleB args) {
