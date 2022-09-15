@@ -3,6 +3,8 @@ package org.smoothbuild.compile.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.type.TestingTS.A;
 import static org.smoothbuild.testing.type.TestingTS.B;
@@ -12,6 +14,7 @@ import static org.smoothbuild.testing.type.TestingTS.C;
 import static org.smoothbuild.testing.type.TestingTS.INT;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.testing.type.TestingTS.a;
+import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.testing.type.TestingTS.struct;
 import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -27,11 +30,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.compile.lang.define.ItemSigS;
-import org.smoothbuild.testing.type.TestingTS;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.testing.EqualsTester;
-import com.google.common.truth.Truth;
 
 public class TypeSTest {
   @Test
@@ -84,11 +85,11 @@ public class TypeSTest {
         arguments(a(a(struct("MyStruct", nlist()))), "[[MyStruct]]"),
         arguments(a(a(STRING)), "[[String]]"),
 
-        arguments(TestingTS.f(A, list(a(A))), "A([A])"),
-        arguments(TestingTS.f(STRING, list(a(A))), "String([A])"),
-        arguments(TestingTS.f(A, list(A)), "A(A)"),
-        arguments(TestingTS.f(STRING, list()), "String()"),
-        arguments(TestingTS.f(STRING, list(STRING)), "String(String)")
+        arguments(f(A, list(a(A))), "A([A])"),
+        arguments(f(STRING, list(a(A))), "String([A])"),
+        arguments(f(A, list(A)), "A(A)"),
+        arguments(f(STRING, list()), "String()"),
+        arguments(f(STRING, list(STRING)), "String(String)")
     );
   }
 
@@ -101,17 +102,17 @@ public class TypeSTest {
 
   public static List<Arguments> vars_test_data() {
     return List.of(
-        arguments(BLOB, VarSetS.varSetS()),
-        arguments(BOOL, VarSetS.varSetS()),
-        arguments(INT, VarSetS.varSetS()),
-        arguments(STRING, VarSetS.varSetS()),
+        arguments(BLOB, varSetS()),
+        arguments(BOOL, varSetS()),
+        arguments(INT, varSetS()),
+        arguments(STRING, varSetS()),
 
-        arguments(a(INT), VarSetS.varSetS()),
-        arguments(a(A), VarSetS.varSetS(A)),
+        arguments(a(INT), varSetS()),
+        arguments(a(A), varSetS(A)),
 
-        arguments(TestingTS.f(BLOB, list(BOOL)), VarSetS.varSetS()),
-        arguments(TestingTS.f(A, list(BOOL)), VarSetS.varSetS(A)),
-        arguments(TestingTS.f(BLOB, list(A)), VarSetS.varSetS(A))
+        arguments(f(BLOB, list(BOOL)), varSetS()),
+        arguments(f(A, list(BOOL)), varSetS(A)),
+        arguments(f(BLOB, list(A)), varSetS(A))
     );
   }
 
@@ -137,12 +138,12 @@ public class TypeSTest {
         arguments(a(var("A")), addPrefix, a(var("prefix.A"))),
         arguments(a(var("p.A")), addPrefix, a(var("prefix.p.A"))),
 
-        arguments(TestingTS.f(BLOB, list(BOOL)), addPrefix, TestingTS.f(BLOB, list(BOOL))),
-        arguments(TestingTS.f(var("A"), list(BOOL)), addPrefix, TestingTS.f(var("prefix.A"), list(BOOL))),
-        arguments(TestingTS.f(BLOB, list(var("A"))), addPrefix, TestingTS.f(BLOB, list(var("prefix.A")))),
+        arguments(f(BLOB, list(BOOL)), addPrefix, f(BLOB, list(BOOL))),
+        arguments(f(var("A"), list(BOOL)), addPrefix, f(var("prefix.A"), list(BOOL))),
+        arguments(f(BLOB, list(var("A"))), addPrefix, f(BLOB, list(var("prefix.A")))),
         arguments(
-            TestingTS.f(var("p.A"), list(BOOL)), addPrefix, TestingTS.f(var("prefix.p.A"), list(BOOL))),
-        arguments(TestingTS.f(BLOB, list(var("p.A"))), addPrefix, TestingTS.f(BLOB, list(var("prefix.p.A"))))
+            f(var("p.A"), list(BOOL)), addPrefix, f(var("prefix.p.A"), list(BOOL))),
+        arguments(f(BLOB, list(var("p.A"))), addPrefix, f(BLOB, list(var("prefix.p.A"))))
     );
   }
 
@@ -158,20 +159,20 @@ public class TypeSTest {
 
     public static List<Arguments> elemType_test_data() {
       return asList(
-          Arguments.arguments(BLOB),
-          Arguments.arguments(BOOL),
-          arguments(TestingTS.f(STRING, list())),
-          Arguments.arguments(INT),
-          Arguments.arguments(STRING),
-          Arguments.arguments(struct("MyStruct", nlist())),
-          Arguments.arguments(A),
+          arguments(BLOB),
+          arguments(BOOL),
+          arguments(f(STRING, list())),
+          arguments(INT),
+          arguments(STRING),
+          arguments(struct("MyStruct", nlist())),
+          arguments(A),
 
-          Arguments.arguments(a(BLOB)),
-          Arguments.arguments(a(BOOL)),
-          Arguments.arguments(a(TestingTS.f(STRING, list()))),
-          Arguments.arguments(a(INT)),
-          Arguments.arguments(a(STRING)),
-          Arguments.arguments(a(A))
+          arguments(a(BLOB)),
+          arguments(a(BOOL)),
+          arguments(a(f(STRING, list()))),
+          arguments(a(INT)),
+          arguments(a(STRING)),
+          arguments(a(A))
       );
     }
   }
@@ -187,9 +188,9 @@ public class TypeSTest {
 
     public static List<Arguments> func_result_cases() {
       return asList(
-          arguments(TestingTS.f(INT, list()), INT),
-          arguments(TestingTS.f(BLOB, list(BOOL)), BLOB),
-          arguments(TestingTS.f(BLOB, list(BOOL, INT)), BLOB)
+          arguments(f(INT, list()), INT),
+          arguments(f(BLOB, list(BOOL)), BLOB),
+          arguments(f(BLOB, list(BOOL, INT)), BLOB)
       );
     }
 
@@ -202,9 +203,9 @@ public class TypeSTest {
 
     public static List<Arguments> func_params_cases() {
       return asList(
-          arguments(TestingTS.f(INT, list()), list()),
-          arguments(TestingTS.f(BLOB, list(BOOL)), list(BOOL)),
-          arguments(TestingTS.f(BLOB, list(BOOL, INT)), list(BOOL, INT))
+          arguments(f(INT, list()), list()),
+          arguments(f(BLOB, list(BOOL)), list(BOOL)),
+          arguments(f(BLOB, list(BOOL, INT)), list(BOOL, INT))
       );
     }
   }
@@ -219,7 +220,7 @@ public class TypeSTest {
     @Test
     public void struct_name() {
       var struct = struct("MyStruct", nlist());
-      Truth.assertThat(struct.name())
+      assertThat(struct.name())
           .isEqualTo("MyStruct");
     }
 
@@ -240,11 +241,11 @@ public class TypeSTest {
     public static List<Arguments> struct_fields_cases() {
       return asList(
           arguments(struct("Person", nlist()), nlist()),
-          arguments(struct("Person", NList.nlist(ItemSigS.itemSigS(STRING, "field"))),
-              NList.nlist(ItemSigS.itemSigS(STRING, "field"))),
+          arguments(struct("Person", nlist(itemSigS(STRING, "field"))),
+              nlist(itemSigS(STRING, "field"))),
           arguments(struct("Person",
-              nlist(ItemSigS.itemSigS(STRING, "field"), ItemSigS.itemSigS(INT, "field2"))),
-              nlist(ItemSigS.itemSigS(STRING, "field"), ItemSigS.itemSigS(INT, "field2")))
+              nlist(itemSigS(STRING, "field"), itemSigS(INT, "field2"))),
+              nlist(itemSigS(STRING, "field"), itemSigS(INT, "field2")))
       );
     }
   }
@@ -258,15 +259,15 @@ public class TypeSTest {
         INT,
         STRING,
         struct("MyStruct", nlist()),
-        struct("MyStruct", NList.nlist(ItemSigS.itemSigS(INT, "field"))),
+        struct("MyStruct", nlist(itemSigS(INT, "field"))),
         A,
         B,
         C,
 
-        TestingTS.f(BLOB, list()),
-        TestingTS.f(STRING, list()),
-        TestingTS.f(BLOB, list(STRING)),
-        TestingTS.f(BLOB, list(BLOB))
+        f(BLOB, list()),
+        f(STRING, list()),
+        f(BLOB, list(STRING)),
+        f(BLOB, list(BLOB))
     );
 
     for (TypeS type : types) {
@@ -282,7 +283,7 @@ public class TypeSTest {
     @Test
     public void prefixed() {
       var var = var("A");
-      Truth.assertThat(var.prefixed("abc"))
+      assertThat(var.prefixed("abc"))
           .isEqualTo(var("abc.A"));
     }
 
@@ -294,7 +295,7 @@ public class TypeSTest {
 
     @Test
     public void unprefixed() {
-      Truth.assertThat(var("pref.A").unprefixed())
+      assertThat(var("pref.A").unprefixed())
           .isEqualTo(var("A"));
     }
 
@@ -307,13 +308,13 @@ public class TypeSTest {
 
     @Test
     public void has_prefix_returns_false_for_not_prefixed_var() {
-      Truth.assertThat(var("A").hasPrefix())
+      assertThat(var("A").hasPrefix())
           .isFalse();
     }
 
     @Test
     public void has_prefix_returns_true_for_prefixed_var() {
-      Truth.assertThat(var("pref.A").hasPrefix())
+      assertThat(var("pref.A").hasPrefix())
           .isTrue();
     }
   }
