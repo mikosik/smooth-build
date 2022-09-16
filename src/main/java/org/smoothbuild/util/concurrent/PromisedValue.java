@@ -18,7 +18,7 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   private T value;
 
   public PromisedValue() {
-    this.value = null;
+    this(null);
   }
 
   public PromisedValue(T value) {
