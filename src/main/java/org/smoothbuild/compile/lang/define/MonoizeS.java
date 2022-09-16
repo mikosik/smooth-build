@@ -11,6 +11,9 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Monomorphization of polymorphic referencable.
+ */
 public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyRefableS refable,
     Loc loc) implements OperS {
   @Override
