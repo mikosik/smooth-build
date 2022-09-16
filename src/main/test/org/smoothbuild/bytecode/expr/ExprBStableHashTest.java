@@ -16,49 +16,49 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void empty_blob_array() {
       assertThat(arrayB(blobTB()).hash())
-          .isEqualTo(Hash.decode("fd11e3a7a0eca23315da184c8ce90c051724e90b"));
+          .isEqualTo(Hash.decode("7991c72100363a6b211441ddd7604cf8c2475319"));
     }
 
     @Test
     public void non_empty_blob_array() {
       assertThat(arrayB(blobB(ByteString.of())).hash())
-          .isEqualTo(Hash.decode("f3515ba2d7af14cb995b07179ff3f3e9a97b52a9"));
+          .isEqualTo(Hash.decode("3888153634fcae728a3c223d1ac426b3c7e8070e"));
     }
 
     @Test
     public void empty_bool_array() {
       assertThat(arrayB(boolTB()).hash())
-          .isEqualTo(Hash.decode("e4478355c1f6ea8d4a9edef0a7213cb1aa5b44d4"));
+          .isEqualTo(Hash.decode("e73d629f082f0e2e59c24b375133f1ea56690be6"));
     }
 
     @Test
     public void non_empty_bool_array() {
       assertThat(arrayB(boolB(true)).hash())
-          .isEqualTo(Hash.decode("20fbf2c6d0b35a92bb1552a309ef724ce722a1e4"));
+          .isEqualTo(Hash.decode("f0ba42371214f2f9cc8bd94c2a97cbb1a63e2a50"));
     }
 
     @Test
     public void empty_string_array() {
       assertThat(arrayB(stringTB()).hash())
-          .isEqualTo(Hash.decode("5e8edad671513a73f56c6bb216789c6f85de320f"));
+          .isEqualTo(Hash.decode("e345567c0a165254a6798f84d865715e95146e33"));
     }
 
     @Test
     public void non_empty_string_array() {
       assertThat(arrayB(stringB("")).hash())
-          .isEqualTo(Hash.decode("c4e16e36229651682138e517ed97491946e3e3b9"));
+          .isEqualTo(Hash.decode("1fcfa71539f86e48e089a7e2763574ed8f6537f2"));
     }
 
     @Test
     public void empty_tuple_array() {
       assertThat(arrayB(personTB()).hash())
-          .isEqualTo(Hash.decode("a9688c71bf2aae5f4a8e219ce92e8ab8e6b46e27"));
+          .isEqualTo(Hash.decode("2d1cbc2ca0f62157a707d2035cf1b74af9b39715"));
     }
 
     @Test
     public void non_empty_tuple_array() {
       assertThat(arrayB(personB("John", "Doe")).hash())
-          .isEqualTo(Hash.decode("4f98d430a9c3b36fec6a89ad64e19bef31da7a39"));
+          .isEqualTo(Hash.decode("1fd6edc1e024b0b77157b26f7b2e10e363252b84"));
     }
   }
 
@@ -67,13 +67,13 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void empty_blob() {
       assertThat(blobBBuilder().build().hash())
-          .isEqualTo(Hash.decode("080d59deb0dab374a40f4919fed3fa0cd6bcbded"));
+          .isEqualTo(Hash.decode("268479f0b3b4c136f72395d6c7f7eaf32ca5fb63"));
     }
 
     @Test
     public void some_blob() {
       assertThat(blobB(ByteString.encodeUtf8("aaa")).hash())
-          .isEqualTo(Hash.decode("669cf1da5b2b0a7791089a2da12213dde61e8b8b"));
+          .isEqualTo(Hash.decode("8fa2712b2a42f360e1b5642311ac51b83c918043"));
     }
   }
 
@@ -82,13 +82,13 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void true_bool() {
       assertThat(boolB(true).hash())
-          .isEqualTo(Hash.decode("721efcc95000fe4bf3bb4985b456bac91c8db596"));
+          .isEqualTo(Hash.decode("1ed40755143539e64cb53054c4f783ad4b912d48"));
     }
 
     @Test
     public void false_bool() {
       assertThat(boolB(false).hash())
-          .isEqualTo(Hash.decode("b8f423d48c90466a4ec449b70c22a526841a1bb1"));
+          .isEqualTo(Hash.decode("64c2a127c558f460cc9b696d2324fd79b3486914"));
     }
   }
 
@@ -98,21 +98,21 @@ public class ExprBStableHashTest extends TestContext {
     public void with_no_params() {
       var defFunc = funcB(funcTB(intTB()), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("998efe35e88cbf9dc973880f96f5fc5dea3f2664"));
+          .isEqualTo(Hash.decode("fdaf805674c39f98d9d5bcef292e50b76c7ea3d3"));
     }
 
     @Test
     public void with_one_param() {
       var defFunc = funcB(funcTB(intTB(), intTB()), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("5a69dadd0f5d07869ba7676dc2d1f25500d7a1a0"));
+          .isEqualTo(Hash.decode("b62dee82a18b1d8c919529a7b03afd9ed6bebbff"));
     }
 
     @Test
     public void with_two_params() {
       var defFunc = funcB(funcTB(intTB(), intTB(), stringTB()), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("8450b8f6b33d766600b980d143f24090f5c54936"));
+          .isEqualTo(Hash.decode("f6a84bda7a9c61aaedd0eb7472df492136ef39e2"));
     }
   }
 
@@ -121,19 +121,19 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void zero_int() {
       assertThat(intB(0).hash())
-          .isEqualTo(Hash.decode("3ce602708b7be67d736ece10605f5bccb2469b19"));
+          .isEqualTo(Hash.decode("b8f423d48c90466a4ec449b70c22a526841a1bb1"));
     }
 
     @Test
     public void positive_int() {
       assertThat(intB(123).hash())
-          .isEqualTo(Hash.decode("1bb0ed034cf637193455b30239ba8f0dc2f2bd74"));
+          .isEqualTo(Hash.decode("2a4bd1678aca4e88e27e33fceff0ac21312b2a16"));
     }
 
     @Test
     public void negative_int() {
       assertThat(intB(-123).hash())
-          .isEqualTo(Hash.decode("0e29da471c4e2cc3ef8bf161a9d1406a7204709a"));
+          .isEqualTo(Hash.decode("6e33fe5b02ad6547407cc4cb5ca5cbc2a0ef1fdc"));
     }
   }
 
@@ -143,7 +143,7 @@ public class ExprBStableHashTest extends TestContext {
     public void method() {
       assertThat(
           methodB(methodTB(intTB(), boolTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
-          .isEqualTo(Hash.decode("1590b8ef2a27b91e1036df55d513e2423f196d89"));
+          .isEqualTo(Hash.decode("a6b9b6e45147e23d8840a1ee9bdd5a50e5db59d2"));
     }
   }
 
@@ -152,13 +152,13 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void empty_string() {
       assertThat(stringB("").hash())
-          .isEqualTo(Hash.decode("707159057595e7c06a56fc09167364493620aa38"));
+          .isEqualTo(Hash.decode("a53684bb4332e7cf8d14528b86b9e88f53e4b46e"));
     }
 
     @Test
     public void some_string() {
       assertThat(stringB("abc").hash())
-          .isEqualTo(Hash.decode("2f79dcd289cb78ca01f0f24a250203987145d9fa"));
+          .isEqualTo(Hash.decode("1d628f3fabf68bdce58564a788e8d547a7f8b38f"));
     }
   }
 
@@ -167,13 +167,13 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void empty_tuple() {
       assertThat(tupleB().hash())
-          .isEqualTo(Hash.decode("54d8451fd0f31c5111433cddf501fabd26e2a9ab"));
+          .isEqualTo(Hash.decode("c36dc381590b0735064d2d5c9aab8a67a2a5f8f9"));
     }
 
     @Test
     public void some_tuple() {
       assertThat(personB("John", "Doe").hash())
-          .isEqualTo(Hash.decode("b83eb2d3c38918c2a563c693d817c6c09589bb28"));
+          .isEqualTo(Hash.decode("8579dac659c7caf963b02ad39a8afb8df0bb8d8e"));
     }
   }
 
@@ -184,7 +184,7 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void call_with_one_arg() {
       assertThat(callB(funcB(list(stringTB()), intB()), stringB("abc")).hash())
-          .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
+          .isEqualTo(Hash.decode("4b91acc4786e3fe9abc7174704d6133d20c54f1d"));
     }
 
     @Test
@@ -192,7 +192,7 @@ public class ExprBStableHashTest extends TestContext {
       var type = funcTB(intTB(), stringTB());
       var defFunc = funcB(type, intB());
       assertThat(callB(defFunc, stringB("abc")).hash())
-          .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
+          .isEqualTo(Hash.decode("4b91acc4786e3fe9abc7174704d6133d20c54f1d"));
     }
   }
 
@@ -201,13 +201,13 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void combine_with_one_arg() {
       assertThat(combineB(intB(1)).hash())
-          .isEqualTo(Hash.decode("16913cad3fbbe28270c3e51765de40c636944d0f"));
+          .isEqualTo(Hash.decode("0c03a905f857e031ad7b04e8930ff64b0748d145"));
     }
 
     @Test
     public void combine_without_args() {
       assertThat(combineB().hash())
-          .isEqualTo(Hash.decode("3b2048ce36decfa28bc39b783dd88502103c73fd"));
+          .isEqualTo(Hash.decode("1fb99d59d6f07ce00139990658a49150e22fff2d"));
     }
   }
 
@@ -216,7 +216,7 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void if_() {
       assertThat(ifB(intTB(), boolB(true), intB(1), intB(2)).hash())
-          .isEqualTo(Hash.decode("d2fadb5c97a33675d3854149734c8a0bca9779d1"));
+          .isEqualTo(Hash.decode("0a666078c8f4bc67ba25bbf6ad1e9d3aad52cdaf"));
     }
   }
 
@@ -227,7 +227,7 @@ public class ExprBStableHashTest extends TestContext {
       var methodTB = methodTB(blobTB(), boolTB());
       var methodB = methodB(methodTB, blobB(7), stringB("class binary name"), boolB(true));
       assertThat(invokeB(methodB, boolB(true)).hash())
-          .isEqualTo(Hash.decode("781a8c37890c14f8a0d09158881052c1dffaf81c"));
+          .isEqualTo(Hash.decode("7ca3d3bd37d21be23806951ab768a5ef4e5f2e4b"));
     }
   }
 
@@ -236,7 +236,7 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void map() {
       assertThat(mapB(arrayB(intB(1)), funcB(list(intTB()), intB(1))).hash())
-          .isEqualTo(Hash.decode("c09ea55c05c98df2689ae12009448b3ee27a2378"));
+          .isEqualTo(Hash.decode("af6804a5a6053dce265c8f48f29ef75031765d29"));
     }
   }
 
@@ -245,13 +245,13 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void empty_order() {
       assertThat(orderB(stringTB()).hash())
-          .isEqualTo(Hash.decode("f37765f87d6b95ddd98af9fcf7a1e3e9554cbe3b"));
+          .isEqualTo(Hash.decode("dd887811d106b4c25ca092c1d84edd18a491da6d"));
     }
 
     @Test
     public void order() {
       assertThat(orderB(intB(1)).hash())
-          .isEqualTo(Hash.decode("f05ca9450196cec30ab9ac0bc06bcf2c182f7434"));
+          .isEqualTo(Hash.decode("0b3210b4fdd1a3c5e872060ce84f9b274f7baf23"));
     }
   }
 
@@ -260,19 +260,19 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void zero_ref() {
       assertThat(paramRefB(intTB(), 0).hash())
-          .isEqualTo(Hash.decode("c41708244b3367007e1a216c7712cb2235371707"));
+          .isEqualTo(Hash.decode("b4ac839b88e92ebacf9ffe244a452837a2284d57"));
     }
 
     @Test
     public void positive_ref() {
       assertThat(paramRefB(intTB(), 123).hash())
-          .isEqualTo(Hash.decode("130112c820a58abd4b90086ff7abfcf29f39a8e8"));
+          .isEqualTo(Hash.decode("bf6b5c6be0c652b2184bb3df4924f3593a9f3f5e"));
     }
 
     @Test
     public void negative_ref() {
       assertThat(paramRefB(intTB(), -123).hash())
-          .isEqualTo(Hash.decode("f7ccbc4c95d78604753662395b5c5357f833fd64"));
+          .isEqualTo(Hash.decode("7732155785f68d3b3677753b0f8fbf2d8ec8deb7"));
     }
   }
 
@@ -281,7 +281,7 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void select() {
       assertThat(selectB(animalB(), intB(0)).hash())
-          .isEqualTo(Hash.decode("43cea8a5fe2387317f40c1ba960f0753c952909e"));
+          .isEqualTo(Hash.decode("51b9eb2ccdb5aef1be210523bb72c0b37bf0c39a"));
     }
   }
 }

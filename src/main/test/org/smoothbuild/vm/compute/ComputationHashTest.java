@@ -59,7 +59,7 @@ public class ComputationHashTest extends TestContext {
     var task = new OrderTask(arrayTB(stringTB()), exprInfo());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("bf12b71e9cfb738ee7ffb6e57667aea0e5478c6c"));
+        .isEqualTo(Hash.decode("30604c02da975812b604e4ef6c64a70ebb3f2558"));
   }
 
   @Test
@@ -67,7 +67,7 @@ public class ComputationHashTest extends TestContext {
     var task = new OrderTask(arrayTB(stringTB()), exprInfo());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("a9116fd5e113887efe896d6e15263cc3f31dbf23"));
+        .isEqualTo(Hash.decode("033006f518778bb169b838591f713dec1b6569b3"));
   }
 
   @Test
@@ -76,7 +76,7 @@ public class ComputationHashTest extends TestContext {
     var task = new InvokeTask(stringTB(), "name", method, null, exprInfo());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("b52d91d785a4b35449b0f667423c82527eca83bb"));
+        .isEqualTo(Hash.decode("8af4786abb7b096b17aaedf1feb5e51834f71d20"));
   }
 
   @Test
@@ -85,7 +85,7 @@ public class ComputationHashTest extends TestContext {
     var task = new InvokeTask(stringTB(), "name", method, null, exprInfo());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("640b3acc88c7aec5ff496c5976d09eaeaeffdfa5"));
+        .isEqualTo(Hash.decode("f48d503014f4d834c91aa40c056866e992c513a0"));
   }
 
   @Test
@@ -93,7 +93,7 @@ public class ComputationHashTest extends TestContext {
     var task = new CombineTask(PERSON, exprInfo());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("1b06a8340051d9c875d0d92e3552e2c91336b016"));
+        .isEqualTo(Hash.decode("2113bf2108731cfc09ecb7aaee468bfb9df2dd94"));
   }
 
   @Test
@@ -101,7 +101,7 @@ public class ComputationHashTest extends TestContext {
     var task = new CombineTask(PERSON, exprInfo());
     var input = tupleB(stringB("abc"));
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("5d29a481f10d703e72ad4bd32de1458808ab1e70"));
+        .isEqualTo(Hash.decode("3eed1bde59bea1a71d15bd5bd9a12fbfa8c62d36"));
   }
 
   @Test
@@ -109,7 +109,7 @@ public class ComputationHashTest extends TestContext {
     var task = new CombineTask(PERSON, exprInfo());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("0c4dd2848c3cb653c2a4874a32fe0b6a488cbaf4"));
+        .isEqualTo(Hash.decode("3c2e1f674f254bd1c1df971541ada79da8fcf3ce"));
   }
 
   @Test
@@ -117,7 +117,7 @@ public class ComputationHashTest extends TestContext {
     var task = new SelectTask(STRING, exprInfo());
     var input = tupleB(stringB("abc"));
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("11e4a89011aa0972ea9b785529d0320a7cdfed14"));
+        .isEqualTo(Hash.decode("4ae0c582dfeccb5a7ed2ce0420a25197e1b070f1"));
   }
 
   private static Task task(Hash hash) {

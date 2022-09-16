@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Collection;
@@ -27,22 +28,21 @@ public class CatKindBTest {
 
   private static Collection<Arguments> marker_to_obj_kind_map() {
     return list(
-        Arguments.of(0, CatKindB.ARRAY),
-        Arguments.of(1, CatKindB.BLOB),
-        Arguments.of(2, CatKindB.BOOL),
-        Arguments.of(3, CatKindB.METHOD),
-        Arguments.of(4, CatKindB.INT),
-        Arguments.of(5, CatKindB.IF),
-        Arguments.of(7, CatKindB.TUPLE),
-        Arguments.of(8, CatKindB.STRING),
-        Arguments.of(9, CatKindB.CALL),
-        Arguments.of(10, CatKindB.FUNC),
-        Arguments.of(11, CatKindB.ORDER),
-        Arguments.of(12, CatKindB.SELECT),
-        Arguments.of(14, CatKindB.PARAM_REF),
-        Arguments.of(15, CatKindB.COMBINE),
-        Arguments.of(19, CatKindB.INVOKE),
-        Arguments.of(20, CatKindB.MAP)
+        arguments(0, CatKindB.BLOB),
+        arguments(1, CatKindB.BOOL),
+        arguments(2, CatKindB.INT),
+        arguments(3, CatKindB.STRING),
+        arguments(4, CatKindB.ARRAY),
+        arguments(5, CatKindB.TUPLE),
+        arguments(7, CatKindB.METHOD),
+        arguments(8, CatKindB.ORDER),
+        arguments(9, CatKindB.COMBINE),
+        arguments(10, CatKindB.SELECT),
+        arguments(11, CatKindB.CALL),
+        arguments(12, CatKindB.INVOKE),
+        arguments(13, CatKindB.IF),
+        arguments(14, CatKindB.PARAM_REF),
+        arguments(15, CatKindB.MAP)
     );
   }
 
