@@ -440,11 +440,6 @@ public class CatDb {
     return writeNonBaseRoot(TUPLE, itemsHash);
   }
 
-  private Hash writeVarRoot(String name, CatKindB kind) throws HashedDbExc {
-    var nameHash = hashedDb.writeString(name);
-    return writeNonBaseRoot(kind, nameHash);
-  }
-
   // Helper methods for writing roots
 
   private Hash writeOperRoot(CatKindB kind, CatB evalT) throws HashedDbExc {
