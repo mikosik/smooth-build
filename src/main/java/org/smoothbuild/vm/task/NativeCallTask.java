@@ -2,13 +2,13 @@ package org.smoothbuild.vm.task;
 
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
-import static org.smoothbuild.vm.execute.TaskKind.INVOKE;
+import static org.smoothbuild.vm.execute.TaskKind.CALL;
 import static org.smoothbuild.vm.task.TaskHashes.invokeTaskHash;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
@@ -16,27 +16,27 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.compile.lang.base.ExprInfo;
 import org.smoothbuild.plugin.NativeApi;
 
-public class InvokeTask extends Task {
-  private final MethodB methodB;
+public class NativeCallTask extends Task {
+  private final NatFuncB natFuncB;
   private final String name;
   private final NativeMethodLoader nativeMethodLoader;
 
-  public InvokeTask(TypeB outputT, String name, MethodB method,
+  public NativeCallTask(TypeB outputT, String name, NatFuncB natFunc,
       NativeMethodLoader methodLoader, ExprInfo exprInfo) {
-    super(outputT, INVOKE, exprInfo, method.isPure().toJ());
+    super(outputT, CALL, exprInfo, natFunc.isPure().toJ());
     this.name = name;
     this.nativeMethodLoader = methodLoader;
-    this.methodB = method;
+    this.natFuncB = natFunc;
   }
 
   @Override
   public Hash hash() {
-    return invokeTaskHash(methodB);
+    return invokeTaskHash(natFuncB);
   }
 
   @Override
   public Output run(TupleB input, NativeApi nativeApi) {
-    return nativeMethodLoader.load(name, methodB)
+    return nativeMethodLoader.load(name, natFuncB)
         .map(m -> invokeMethod(m, input, nativeApi))
         .orElse(e -> logErrorAndReturnNullOutput(nativeApi, e));
   }

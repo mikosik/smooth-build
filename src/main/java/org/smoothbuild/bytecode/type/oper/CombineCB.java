@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKindB.COMBINE;
+import static org.smoothbuild.bytecode.type.CatKinds.COMBINE;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;

@@ -2,7 +2,7 @@ package org.smoothbuild.vm.task;
 
 import static java.util.Arrays.asList;
 
-import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
@@ -12,7 +12,7 @@ public class TaskHashes {
     return hash(1, type.hash());
   }
 
-  public static Hash invokeTaskHash(MethodB method) {
+  public static Hash invokeTaskHash(NatFuncB method) {
     return hash(2, method.hash());
   }
 

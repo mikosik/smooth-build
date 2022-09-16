@@ -122,7 +122,7 @@ public class BuildCommandTest {
           result = concat([["a"], ["b"]]);
           """;
       private static final String NATIVE_CALL_TASK_HEADER = """
-          concat()                                    build.smooth:1
+          concat()                                    build.smooth:1                 exec
           """;
       private static final String IF_FUNCTION_CALL = """
           result = if(true, "true", "false");
@@ -290,31 +290,6 @@ public class BuildCommandTest {
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain(headerThatShouldNotBeShown);
-      }
-    }
-
-    @Nested
-    class _invoke_matcher extends SystemTestCase {
-      private static final String INVOKE = """
-            result = not(true);
-            """;
-      private static final String INVOKE_TASK_HEADER = """
-          not()~                                      slib.smooth:""";
-
-      @Test
-      public void shows_when_enabled() throws IOException {
-        createUserModule(INVOKE);
-        runSmooth(buildCommand("--show-tasks=invoke", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(INVOKE_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_when_not_enabled() throws IOException {
-        createUserModule(INVOKE);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(INVOKE_TASK_HEADER);
       }
     }
 

@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.task.CombineTask;
-import org.smoothbuild.vm.task.InvokeTask;
+import org.smoothbuild.vm.task.NativeCallTask;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.SelectTask;
@@ -72,20 +72,20 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_invoke_task_and_empty_input_is_stable() {
-    var method = methodB(methodTB(intTB()), blobB(1), stringB("1"), boolB(true));
-    var task = new InvokeTask(stringTB(), "name", method, null, exprInfo());
+    var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
+    var task = new NativeCallTask(stringTB(), "name", natFuncB, null, exprInfo());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("8af4786abb7b096b17aaedf1feb5e51834f71d20"));
+        .isEqualTo(Hash.decode("768a18308c96099b14ecdead9ef4fc8cd0858d5a"));
   }
 
   @Test
   public void hash_of_computation_with_invoke_task_and_non_empty_input_is_stable() {
-    var method = methodB(methodTB(intTB()), blobB(1), stringB("1"), boolB(true));
-    var task = new InvokeTask(stringTB(), "name", method, null, exprInfo());
+    var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
+    var task = new NativeCallTask(stringTB(), "name", natFuncB, null, exprInfo());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("f48d503014f4d834c91aa40c056866e992c513a0"));
+        .isEqualTo(Hash.decode("49c8bb994eddedd9b642c9f03f3d32b5005c3fc4"));
   }
 
   @Test

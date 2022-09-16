@@ -104,7 +104,7 @@ public class EvaluatorTest  extends TestContext {
     public void synt_ctor() {
       var syntCtorS = syntCtorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
       assertThat(evaluate(syntCtorS))
-          .isEqualTo(funcB(list(intTB()), combineB(paramRefB(intTB(), 0))));
+          .isEqualTo(defFuncB(list(intTB()), combineB(paramRefB(intTB(), 0))));
     }
   }
 

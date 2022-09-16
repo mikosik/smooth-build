@@ -7,12 +7,13 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
 import org.smoothbuild.bytecode.type.oper.CallCB;
+import org.smoothbuild.bytecode.type.val.FuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 
 /**
  * This class is thread-safe.
  */
-public class CallB extends CallableB {
+public class CallB extends CallLikeB {
   public CallB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
     checkArgument(merkleRoot.cat() instanceof CallCB);
@@ -37,7 +38,7 @@ public class CallB extends CallableB {
       validate(funcT, argsCombine);
     } else {
       throw new DecodeExprWrongNodeClassExc(
-          hash(), cat(), "func", FuncTB.class, func.type().getClass());
+          hash(), cat(), "func", FuncCB.class, func.type().getClass());
     }
   }
 

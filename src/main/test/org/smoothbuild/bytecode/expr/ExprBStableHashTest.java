@@ -93,26 +93,26 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
-  class _func {
+  class _def_func {
     @Test
     public void with_no_params() {
-      var defFunc = funcB(funcTB(intTB()), intB(1));
+      var defFunc = defFuncB(funcTB(intTB()), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("fdaf805674c39f98d9d5bcef292e50b76c7ea3d3"));
+          .isEqualTo(Hash.decode("182ca4fe8a2d0587c06fbeb94b89fa0b87ad9a15"));
     }
 
     @Test
     public void with_one_param() {
-      var defFunc = funcB(funcTB(intTB(), intTB()), intB(1));
+      var defFunc = defFuncB(funcTB(intTB(), intTB()), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("b62dee82a18b1d8c919529a7b03afd9ed6bebbff"));
+          .isEqualTo(Hash.decode("4a50a1090ba76d28d6fbd598ddd808453b7b53d6"));
     }
 
     @Test
     public void with_two_params() {
-      var defFunc = funcB(funcTB(intTB(), intTB(), stringTB()), intB(1));
+      var defFunc = defFuncB(funcTB(intTB(), intTB(), stringTB()), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("f6a84bda7a9c61aaedd0eb7472df492136ef39e2"));
+          .isEqualTo(Hash.decode("550f72372ec4ce104d1abb20a6c38c206c7f3572"));
     }
   }
 
@@ -138,12 +138,12 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
-  class _method {
+  class _nat_func {
     @Test
-    public void method() {
+    public void nat_func() {
       assertThat(
-          methodB(methodTB(intTB(), boolTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
-          .isEqualTo(Hash.decode("a6b9b6e45147e23d8840a1ee9bdd5a50e5db59d2"));
+          natFuncB(funcTB(intTB(), boolTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
+          .isEqualTo(Hash.decode("bb4fab02e531f5ed1cf67856ab50aeff12b437cc"));
     }
   }
 
@@ -183,16 +183,16 @@ public class ExprBStableHashTest extends TestContext {
   class _call {
     @Test
     public void call_with_one_arg() {
-      assertThat(callB(funcB(list(stringTB()), intB()), stringB("abc")).hash())
-          .isEqualTo(Hash.decode("4b91acc4786e3fe9abc7174704d6133d20c54f1d"));
+      assertThat(callB(defFuncB(list(stringTB()), intB()), stringB("abc")).hash())
+          .isEqualTo(Hash.decode("9e74f80c19a4526e1df19da0fba5a118ff1cf447"));
     }
 
     @Test
     public void call_without_args() {
       var type = funcTB(intTB(), stringTB());
-      var defFunc = funcB(type, intB());
+      var defFunc = defFuncB(type, intB());
       assertThat(callB(defFunc, stringB("abc")).hash())
-          .isEqualTo(Hash.decode("4b91acc4786e3fe9abc7174704d6133d20c54f1d"));
+          .isEqualTo(Hash.decode("9e74f80c19a4526e1df19da0fba5a118ff1cf447"));
     }
   }
 
@@ -212,31 +212,20 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
-  class _if {
+  class _if_func {
     @Test
-    public void if_() {
-      assertThat(ifB(intTB(), boolB(true), intB(1), intB(2)).hash())
-          .isEqualTo(Hash.decode("0a666078c8f4bc67ba25bbf6ad1e9d3aad52cdaf"));
+    public void if_func() {
+      assertThat(ifFuncB(intTB()).hash())
+          .isEqualTo(Hash.decode("9b525dac777f1f1b4e1a73a9b11f228309d57d17"));
     }
   }
 
   @Nested
-  class _invoke {
+  class _map_func {
     @Test
-    public void invoke() {
-      var methodTB = methodTB(blobTB(), boolTB());
-      var methodB = methodB(methodTB, blobB(7), stringB("class binary name"), boolB(true));
-      assertThat(invokeB(methodB, boolB(true)).hash())
-          .isEqualTo(Hash.decode("7ca3d3bd37d21be23806951ab768a5ef4e5f2e4b"));
-    }
-  }
-
-  @Nested
-  class _map {
-    @Test
-    public void map() {
-      assertThat(mapB(arrayB(intB(1)), funcB(list(intTB()), intB(1))).hash())
-          .isEqualTo(Hash.decode("af6804a5a6053dce265c8f48f29ef75031765d29"));
+    public void map_func() {
+      assertThat(mapFuncB(intTB(), stringTB()).hash())
+          .isEqualTo(Hash.decode("870fb7677d8f5eb447ecfc4bc9183b5eee25eb9e"));
     }
   }
 

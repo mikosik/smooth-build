@@ -1,12 +1,10 @@
 package org.smoothbuild.bytecode.expr;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.bytecode.expr.exc.DecodeExprRootExc.cannotReadRootException;
 import static org.smoothbuild.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.bytecode.type.ValidateArgs.validateArgs;
-import static org.smoothbuild.bytecode.type.val.TNamesB.BOOL;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
@@ -18,9 +16,6 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprCatExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprNoSuchExprExc;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
-import org.smoothbuild.bytecode.expr.oper.IfB;
-import org.smoothbuild.bytecode.expr.oper.InvokeB;
-import org.smoothbuild.bytecode.expr.oper.MapB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.ParamRefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
@@ -29,9 +24,11 @@ import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
 import org.smoothbuild.bytecode.expr.val.BlobB;
 import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.val.BoolB;
-import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.DefFuncB;
+import org.smoothbuild.bytecode.expr.val.IfFuncB;
 import org.smoothbuild.bytecode.expr.val.IntB;
-import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.MapFuncB;
+import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
@@ -43,9 +40,9 @@ import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.CallableTB;
+import org.smoothbuild.bytecode.type.val.DefFuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.NatFuncCB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.util.collect.Lists;
@@ -78,14 +75,16 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newBool(value));
   }
 
-  public MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+  public NatFuncB natFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+    var cat = catDb.natFunc(type);
     return wrapHashedDbExcAsBytecodeDbExc(
-        () -> newMethod(type, jar, classBinaryName, isPure));
+        () -> newNatFunc(cat, jar, classBinaryName, isPure));
   }
 
-  public FuncB func(FuncTB type, ExprB body) {
+  public DefFuncB defFunc(FuncTB type, ExprB body) {
     checkBodyTypeAssignableToFuncResT(type, body);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newFunc(type, body));
+    var cat = catDb.defFunc(type);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newDefFunc(cat, body));
   }
 
   private void checkBodyTypeAssignableToFuncResT(FuncTB type, ExprB body) {
@@ -130,16 +129,12 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newCombine(evalT, items));
   }
 
-  public IfB if_(TypeB evalT, ExprB condition, ExprB then, ExprB else_) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newIf(evalT, condition, then, else_));
+  public IfFuncB ifFunc(TypeB t) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newIfFunc(t));
   }
 
-  public InvokeB invoke(TypeB evalT, ExprB method, CombineB args) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newInvoke(evalT, method, args));
-  }
-
-  public MapB map(ExprB array, ExprB func) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newMap(array, func));
+  public MapFuncB mapFunc(TypeB r, TypeB s) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newMapFunc(r, s));
   }
 
   public OrderB order(ArrayTB evalT, ImmutableList<ExprB> elems) {
@@ -158,12 +153,23 @@ public class BytecodeDb {
 
   public ExprB get(Hash rootHash) {
     List<Hash> hashes = decodeRootSeq(rootHash);
-    if (hashes.size() != 2) {
-      throw wrongSizeOfRootSeqException(rootHash, hashes.size());
+    int rootSeqSize = hashes.size();
+    if (rootSeqSize != 2 && rootSeqSize != 1) {
+      throw wrongSizeOfRootSeqException(rootHash, rootSeqSize);
     }
     CatB cat = getCatOrChainException(rootHash, hashes.get(0));
-    Hash dataHash = hashes.get(1);
-    return cat.newExpr(new MerkleRoot(rootHash, cat, dataHash), this);
+    if (cat.containsData()) {
+      if (rootSeqSize != 2) {
+        throw wrongSizeOfRootSeqException(rootHash, cat, rootSeqSize);
+      }
+      Hash dataHash = hashes.get(1);
+      return cat.newExpr(new MerkleRoot(rootHash, cat, dataHash), this);
+    } else {
+      if (rootSeqSize != 1) {
+        throw wrongSizeOfRootSeqException(rootHash, cat, rootSeqSize);
+      }
+      return cat.newExpr(new MerkleRoot(rootHash, cat, null), this);
+    }
   }
 
   private CatB getCatOrChainException(Hash rootHash, Hash typeHash) {
@@ -203,8 +209,8 @@ public class BytecodeDb {
     return catDb.bool().newExpr(root, this);
   }
 
-  private FuncB newFunc(FuncTB type, ExprB body) throws HashedDbExc {
-    var data = writeFuncData(body);
+  private DefFuncB newDefFunc(DefFuncCB type, ExprB body) throws HashedDbExc {
+    var data = writeDefFuncData(body);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
@@ -215,9 +221,9 @@ public class BytecodeDb {
     return catDb.int_().newExpr(root, this);
   }
 
-  private MethodB newMethod(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
+  private NatFuncB newNatFunc(NatFuncCB type, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws HashedDbExc {
-    var data = writeMethodData(jar, classBinaryName, isPure);
+    var data = writeNatFuncData(jar, classBinaryName, isPure);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
@@ -237,7 +243,7 @@ public class BytecodeDb {
   // methods for creating Expr-s
 
   private CallB newCall(TypeB evalT, ExprB func, CombineB args) throws HashedDbExc {
-    CallableTB callableTB = castTypeToFuncTB(func);
+    FuncTB callableTB = castTypeToFuncTB(func);
     validateArgsInCall(callableTB, args);
     var resT = callableTB.res();
     if (!evalT.equals(resT)) {
@@ -259,16 +265,16 @@ public class BytecodeDb {
     }
   }
 
-  private void validateArgsInCall(CallableTB callableTB, CombineB args) {
-    validateArgs(callableTB,
-        args.type().items(), () -> {throw illegalArgs(callableTB, args.type());}
+  private void validateArgsInCall(FuncTB funcTB, CombineB args) {
+    validateArgs(funcTB,
+        args.type().items(), () -> {throw illegalArgs(funcTB, args.type());}
     );
   }
 
-  private IllegalArgumentException illegalArgs(CallableTB callableTB, TupleTB argsT) {
+  private IllegalArgumentException illegalArgs(FuncTB funcTB, TupleTB argsT) {
     return new IllegalArgumentException(
-        "Argument evaluation types %s should be equal to callable parameter types %s."
-            .formatted(itemTsToString(argsT), itemTsToString(callableTB.params())));
+        "Argument evaluation types %s should be equal to function parameter types %s."
+            .formatted(itemTsToString(argsT), itemTsToString(funcTB.params())));
   }
 
   private static String itemTsToString(TupleTB argsT) {
@@ -312,73 +318,21 @@ public class BytecodeDb {
       var actualItemT = items.get(i).type();
       if (!expectedItemT.equals(actualItemT)) {
         throw new IllegalArgumentException("Illegal item type. Expected " + expectedItemT.q()
-            + " at index " + i + " has type " + actualItemT.q() + ".");
+            + " at index " + i + " but item type is " + actualItemT.q() + ".");
       }
     }
   }
 
-  private IfB newIf(TypeB evalT, ExprB condition, ExprB then, ExprB else_) throws HashedDbExc {
-    checkArgument(condition.type().equals(catDb.bool()),
-        "`condition` component must evaluate to " + BOOL + " but is " + condition.type().q() + ".");
-    checkArgument(evalT.equals(then.type()),
-        "`then` component must evaluate to " + evalT.q() + " but is " + then.type().q() + ".");
-    checkArgument(evalT.equals(else_.type()),
-        "`else` component must evaluate to " + evalT.q() + " but is " + else_.type().q() + ".");
-    var type = catDb.if_(evalT);
-    var data = writeIfData(condition, then, else_);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
+  private IfFuncB newIfFunc(TypeB t) throws HashedDbExc {
+    var ifFuncCB = catDb.ifFunc(t);
+    var root = newRoot(ifFuncCB);
+    return ifFuncCB.newExpr(root, this);
   }
 
-  private InvokeB newInvoke(TypeB evalT, ExprB method, CombineB args) throws HashedDbExc {
-    CallableTB callableTB = castTypeToMethodTB(method);
-    validateArgsInCall(callableTB, args);
-    var resT = callableTB.res();
-    if (!evalT.equals(resT)) {
-      throw new IllegalArgumentException(
-          "Method's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
-    }
-    var type = catDb.invoke(evalT);
-    var data = writeInvokeData(method, args);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
-  }
-
-  private MethodTB castTypeToMethodTB(ExprB method) {
-    if (method.type() instanceof MethodTB methodTB) {
-      return methodTB;
-    } else {
-      throw new IllegalArgumentException("`method` component doesn't evaluate to MethodB.");
-    }
-  }
-
-  private MapB newMap(ExprB array, ExprB func) throws HashedDbExc {
-    if (!(array.type() instanceof ArrayTB arrayT)) {
-      throw new IllegalArgumentException("array.type() must be instance of "
-          + ArrayTB.class.getSimpleName() + " but is "
-          + array.type().getClass().getSimpleName() + ".");
-    }
-    if (!(func.type() instanceof FuncTB funcT)) {
-      throw new IllegalArgumentException("func.type() must be instance of "
-          + FuncTB.class.getSimpleName() + " but is "
-          + func.type().getClass().getSimpleName() + ".");
-    }
-    if (funcT.params().size() != 1) {
-      throw new IllegalArgumentException(
-          "func parameter count must be 1 but is " + funcT.params().size() + ".");
-    }
-    var elemT = arrayT.elem();
-    var funcParamT = funcT.params().get(0);
-    if (!funcParamT.equals(elemT)) {
-      throw new IllegalArgumentException("array element type " + elemT
-          + " is not assignable to func parameter type " + funcParamT + ".");
-    }
-    var evalT = catDb.array(funcT.res());
-    var type = catDb.map(evalT);
-
-    var data = writeMapData(array, func);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
+  private MapFuncB newMapFunc(TypeB r, TypeB s) throws HashedDbExc {
+    var mapFuncCB = catDb.mapFunc(r, s);
+    var root = newRoot(mapFuncCB);
+    return mapFuncCB.newExpr(root, this);
   }
 
   private SelectB newSelect(TypeB evalT, ExprB selectable, IntB index) throws HashedDbExc {
@@ -418,6 +372,11 @@ public class BytecodeDb {
     return new MerkleRoot(rootHash, cat, dataHash);
   }
 
+  private MerkleRoot newRoot(CatB cat) throws HashedDbExc {
+    Hash rootHash = hashedDb.writeSeq(cat.hash());
+    return new MerkleRoot(rootHash, cat, null);
+  }
+
   // methods for writing data of Expr-s
 
   private Hash writeCallData(ExprB func, CombineB args) throws HashedDbExc {
@@ -430,10 +389,6 @@ public class BytecodeDb {
 
   private Hash writeIfData(ExprB condition, ExprB then, ExprB else_) throws HashedDbExc {
     return hashedDb.writeSeq(condition.hash(), then.hash(), else_.hash());
-  }
-
-  private Hash writeInvokeData(ExprB method, CombineB args) throws HashedDbExc {
-    return hashedDb.writeSeq(method.hash(), args.hash());
   }
 
   private Hash writeMapData(ExprB array, ExprB func) throws HashedDbExc {
@@ -462,7 +417,7 @@ public class BytecodeDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeFuncData(ExprB body) {
+  private Hash writeDefFuncData(ExprB body) {
     return body.hash();
   }
 
@@ -470,7 +425,7 @@ public class BytecodeDb {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeMethodData(BlobB jar, StringB classBinaryName, BoolB isPure)
+  private Hash writeNatFuncData(BlobB jar, StringB classBinaryName, BoolB isPure)
       throws HashedDbExc {
     return hashedDb.writeSeq(jar.hash(), classBinaryName.hash(), isPure.hash());
   }

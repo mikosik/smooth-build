@@ -10,7 +10,7 @@ public class Append {
     ArrayB array = (ArrayB) args.get(0);
     ValB elem = args.get(1);
     return nativeApi.factory()
-        .arrayBuilderWithElems(array.cat().elem())
+        .arrayBuilderWithElems(array.type().elem())
         .addAll(array.elems(ValB.class))
         .add(elem)
         .build();

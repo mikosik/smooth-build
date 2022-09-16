@@ -29,7 +29,6 @@ public class TaskMatchers {
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
   static final TaskMatcher COMBINE = kindMatcher(TaskKind.COMBINE);
   static final TaskMatcher CONST = kindMatcher(TaskKind.CONST);
-  static final TaskMatcher INVOKE = kindMatcher(TaskKind.INVOKE);
   static final TaskMatcher ORDER = kindMatcher(TaskKind.ORDER);
   static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
 
@@ -63,8 +62,6 @@ public class TaskMatchers {
           .put("b", COMBINE)
           .put("const", CONST)
           .put("t", CONST)
-          .put("invoke", INVOKE)
-          .put("i", INVOKE)
           .put("order", ORDER)
           .put("o", ORDER)
           .put("select", SELECT)

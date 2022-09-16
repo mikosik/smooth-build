@@ -3,6 +3,7 @@ package org.smoothbuild.bytecode.expr.val;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
+import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 
 /**
@@ -10,18 +11,18 @@ import org.smoothbuild.bytecode.type.val.TypeB;
  * This class is thread-safe.
  */
 public sealed abstract class ValB extends ExprB
-    permits ArrayB, BlobB, BoolB, FuncB, IntB, MethodB, StringB, TupleB {
+    permits FuncB, ArrayB, BlobB, BoolB, IntB, StringB, TupleB {
   public ValB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
   }
 
   @Override
-  public TypeB cat() {
-    return (TypeB) super.cat();
+  public CatB cat() {
+    return super.cat();
   }
 
   @Override
   public TypeB type() {
-    return cat();
+    return (TypeB) cat();
   }
 }

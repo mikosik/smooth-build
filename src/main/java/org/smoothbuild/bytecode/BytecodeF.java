@@ -16,9 +16,6 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.exc.BytecodeDbExc;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
-import org.smoothbuild.bytecode.expr.oper.IfB;
-import org.smoothbuild.bytecode.expr.oper.InvokeB;
-import org.smoothbuild.bytecode.expr.oper.MapB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.ParamRefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
@@ -26,9 +23,11 @@ import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
 import org.smoothbuild.bytecode.expr.val.BlobB;
 import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.val.BoolB;
-import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.DefFuncB;
+import org.smoothbuild.bytecode.expr.val.IfFuncB;
 import org.smoothbuild.bytecode.expr.val.IntB;
-import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.MapFuncB;
+import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
@@ -38,7 +37,6 @@ import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
@@ -105,28 +103,34 @@ public class BytecodeF {
     return bytecodeDb.tuple(fileT(), list(path, content));
   }
 
-  public IfB if_(TypeB evalT, ExprB condition, ExprB then, ExprB else_) {
-    return bytecodeDb.if_(evalT, condition, then, else_);
+  public DefFuncB defFunc(TypeB resT, ImmutableList<TypeB> paramTs, ExprB body) {
+    var type = catDb.funcT(resT, paramTs);
+    return defFunc(type, body);
   }
 
-  public FuncB func(FuncTB type, ExprB body) {
-    return bytecodeDb.func(type, body);
+  public DefFuncB defFunc(TypeB resT, TupleTB paramTs, ExprB body) {
+    var type = catDb.funcT(resT, paramTs);
+    return defFunc(type, body);
   }
 
-  public MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return bytecodeDb.method(type, jar, classBinaryName, isPure);
+  public DefFuncB defFunc(FuncTB type, ExprB body) {
+    return bytecodeDb.defFunc(type, body);
+  }
+
+  public NatFuncB natFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure) {
+    return bytecodeDb.natFunc(funcTB, jar, classBinaryName, isPure);
+  }
+
+  public IfFuncB ifFunc(TypeB t) {
+    return bytecodeDb.ifFunc(t);
   }
 
   public IntB int_(BigInteger value) {
     return bytecodeDb.int_(value);
   }
 
-  public MapB map(ExprB array, ExprB func) {
-    return bytecodeDb.map(array, func);
-  }
-
-  public InvokeB invoke(TypeB evalT, ExprB method, CombineB args) {
-    return bytecodeDb.invoke(evalT, method, args);
+  public MapFuncB mapFunc(TypeB r, TypeB s) {
+    return bytecodeDb.mapFunc(r, s);
   }
 
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
@@ -169,11 +173,11 @@ public class BytecodeF {
   }
 
   public FuncTB funcT(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb.func(resT, paramTs);
+    return catDb.funcT(resT, paramTs);
   }
 
   public FuncTB funcT(TypeB resT, TupleTB paramTs) {
-    return catDb.func(resT, paramTs);
+    return catDb.funcT(resT, paramTs);
   }
 
   public IntTB intT() {
@@ -182,10 +186,6 @@ public class BytecodeF {
 
   public TupleTB messageT() {
     return messageT;
-  }
-
-  public MethodTB methodT(TypeB resT, TupleTB paramTs) {
-    return catDb.method(resT, paramTs);
   }
 
   public StringTB stringT() {

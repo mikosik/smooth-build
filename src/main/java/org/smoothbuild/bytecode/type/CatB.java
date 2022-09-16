@@ -55,4 +55,8 @@ public abstract class CatB implements Named {
   public String toString() {
     return name();
   }
+
+  public boolean containsData() {
+    return true;
+  }
 }

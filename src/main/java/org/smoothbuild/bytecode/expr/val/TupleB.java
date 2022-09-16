@@ -23,13 +23,8 @@ public final class TupleB extends ValB {
   }
 
   @Override
-  public TupleTB cat() {
-    return (TupleTB) super.cat();
-  }
-
-  @Override
   public TupleTB type() {
-    return cat();
+    return (TupleTB) super.cat();
   }
 
   public ValB get(int index) {
@@ -48,7 +43,7 @@ public final class TupleB extends ValB {
     for (int i = 0; i < itemTs.size(); i++) {
       var val = objs.get(i);
       var expectedT = itemTs.get(i);
-      var actualT = val.cat();
+      var actualT = val.type();
       if (!expectedT.equals(actualT)) {
         throw new DecodeExprWrongNodeTypeExc(hash(), cat(), DATA_PATH, i, expectedT, actualT);
       }

@@ -3,34 +3,51 @@ package org.smoothbuild.bytecode.type;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
-import static org.smoothbuild.bytecode.type.CatKindB.ARRAY;
-import static org.smoothbuild.bytecode.type.CatKindB.BLOB;
-import static org.smoothbuild.bytecode.type.CatKindB.BOOL;
-import static org.smoothbuild.bytecode.type.CatKindB.CALL;
-import static org.smoothbuild.bytecode.type.CatKindB.COMBINE;
-import static org.smoothbuild.bytecode.type.CatKindB.FUNC;
-import static org.smoothbuild.bytecode.type.CatKindB.IF;
-import static org.smoothbuild.bytecode.type.CatKindB.INT;
-import static org.smoothbuild.bytecode.type.CatKindB.INVOKE;
-import static org.smoothbuild.bytecode.type.CatKindB.MAP;
-import static org.smoothbuild.bytecode.type.CatKindB.METHOD;
-import static org.smoothbuild.bytecode.type.CatKindB.ORDER;
-import static org.smoothbuild.bytecode.type.CatKindB.PARAM_REF;
-import static org.smoothbuild.bytecode.type.CatKindB.SELECT;
-import static org.smoothbuild.bytecode.type.CatKindB.STRING;
-import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.CatKindB.fromMarker;
+import static org.smoothbuild.bytecode.type.CatKinds.ARRAY;
+import static org.smoothbuild.bytecode.type.CatKinds.BLOB;
+import static org.smoothbuild.bytecode.type.CatKinds.BOOL;
+import static org.smoothbuild.bytecode.type.CatKinds.CALL;
+import static org.smoothbuild.bytecode.type.CatKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CatKinds.DEF_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.IF_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.INT;
+import static org.smoothbuild.bytecode.type.CatKinds.MAP_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CatKinds.PARAM_REF;
+import static org.smoothbuild.bytecode.type.CatKinds.SELECT;
+import static org.smoothbuild.bytecode.type.CatKinds.STRING;
+import static org.smoothbuild.bytecode.type.CatKinds.TUPLE;
 import static org.smoothbuild.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
+import static org.smoothbuild.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc;
+import static org.smoothbuild.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
+import org.smoothbuild.bytecode.type.CatKindB.AbstFuncKindB;
+import org.smoothbuild.bytecode.type.CatKindB.ArrayKindB;
+import org.smoothbuild.bytecode.type.CatKindB.BaseKindB;
+import org.smoothbuild.bytecode.type.CatKindB.CallKindB;
+import org.smoothbuild.bytecode.type.CatKindB.CombineKindB;
+import org.smoothbuild.bytecode.type.CatKindB.DefFuncKindB;
+import org.smoothbuild.bytecode.type.CatKindB.FuncKindB;
+import org.smoothbuild.bytecode.type.CatKindB.IfFuncKindB;
+import org.smoothbuild.bytecode.type.CatKindB.MapFuncKindB;
+import org.smoothbuild.bytecode.type.CatKindB.NatFuncKindB;
+import org.smoothbuild.bytecode.type.CatKindB.OrderKindB;
+import org.smoothbuild.bytecode.type.CatKindB.ParamRefKindB;
+import org.smoothbuild.bytecode.type.CatKindB.SelectKindB;
+import org.smoothbuild.bytecode.type.CatKindB.TupleKindB;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
@@ -38,23 +55,23 @@ import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.oper.CallCB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
-import org.smoothbuild.bytecode.type.oper.IfCB;
-import org.smoothbuild.bytecode.type.oper.InvokeCB;
-import org.smoothbuild.bytecode.type.oper.MapCB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
 import org.smoothbuild.bytecode.type.oper.ParamRefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
+import org.smoothbuild.bytecode.type.val.DefFuncCB;
+import org.smoothbuild.bytecode.type.val.FuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IfFuncCB;
 import org.smoothbuild.bytecode.type.val.IntTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.MapFuncCB;
+import org.smoothbuild.bytecode.type.val.NatFuncCB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.util.collect.Lists;
-import org.smoothbuild.util.function.TriFunction;
 
 import com.google.common.collect.ImmutableList;
 
@@ -64,10 +81,10 @@ import com.google.common.collect.ImmutableList;
 public class CatDb {
   public static final String DATA_PATH = "data";
   private static final int DATA_IDX = 1;
-  private static final int CALLABLE_RES_IDX = 0;
-  public static final String CALLABLE_RES_PATH = DATA_PATH + "[" + CALLABLE_RES_IDX + "]";
-  private static final int CALLABLE_PARAMS_IDX = 1;
-  public static final String CALLABLE_PARAMS_PATH = DATA_PATH + "[" + CALLABLE_PARAMS_IDX + "]";
+  private static final int FUNC_RES_IDX = 0;
+  public static final String FUNC_RES_PATH = DATA_PATH + "[" + FUNC_RES_IDX + "]";
+  private static final int FUNC_PARAMS_IDX = 1;
+  public static final String FUNC_PARAMS_PATH = DATA_PATH + "[" + FUNC_PARAMS_IDX + "]";
 
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, CatB> cache;
@@ -105,24 +122,51 @@ public class CatDb {
     return bool;
   }
 
-  public FuncTB func(TypeB res, ImmutableList<TypeB> params) {
-    return func(res, tuple(params));
+  public DefFuncCB defFunc(TypeB res, ImmutableList<TypeB> params) {
+    return funcC(DEF_FUNC, res, params);
   }
 
-  public FuncTB func(TypeB res, TupleTB params) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newFunc(res, params));
+  public DefFuncCB defFunc(FuncTB funcTB) {
+    return funcC(DEF_FUNC, funcTB);
+  }
+
+  private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, TypeB res,
+      ImmutableList<TypeB> params) {
+    return funcC(funcKind, funcT(res, params));
+  }
+
+  private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, FuncTB funcTB) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newFuncC(funcKind, funcTB));
+  }
+
+  public FuncTB funcT(TypeB res, ImmutableList<TypeB> params) {
+    return funcT(res, tuple(params));
+  }
+
+  public FuncTB funcT(TypeB res, TupleTB params) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newFuncT(res, params));
+  }
+
+  public IfFuncCB ifFunc(TypeB t) {
+    var funcT = funcT(t, list(bool(), t, t));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> funcC(IF_FUNC, funcT));
   }
 
   public IntTB int_() {
     return int_;
   }
 
-  public MethodTB method(TypeB res, ImmutableList<TypeB> params) {
-    return method(res, tuple(params));
+  public MapFuncCB mapFunc(TypeB r, TypeB s) {
+    var funcT = funcT(array(r), list(array(s), funcT(r, list(s))));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> funcC(MAP_FUNC, funcT));
   }
 
-  public MethodTB method(TypeB res, TupleTB params) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newMethod(res, params));
+  public NatFuncCB natFunc(TypeB res, ImmutableList<TypeB> params) {
+    return funcC(NAT_FUNC, res, params);
+  }
+
+  public NatFuncCB natFunc(FuncTB funcTB) {
+    return funcC(NAT_FUNC, funcTB);
   }
 
   public TupleTB tuple(TypeB... items) {
@@ -147,18 +191,6 @@ public class CatDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newCombine(evalT));
   }
 
-  public IfCB if_(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newIf(evalT));
-  }
-
-  public InvokeCB invoke(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newInvoke(evalT));
-  }
-
-  public MapCB map(ArrayTB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newMap(evalT));
-  }
-
   public OrderCB order(ArrayTB evalT) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT));
   }
@@ -181,24 +213,26 @@ public class CatDb {
     List<Hash> rootSeq = readCatRootSeq(hash);
     CatKindB kind = decodeCatMarker(hash, rootSeq.get(0));
     return switch (kind) {
-      case BLOB, BOOL, INT, STRING -> {
-        assertCatRootSeqSize(hash, kind, rootSeq, 1);
-        throw new RuntimeException(
-            "Internal error: Category with kind " + kind + " should be found in cache.");
-      }
-      case ARRAY -> newArray(hash, readDataAsValT(hash, rootSeq, kind));
-      case CALL -> newCall(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case COMBINE -> newCombine(hash, readDataAsTupleT(hash, rootSeq, kind));
-      case FUNC -> readFunc(hash, rootSeq, kind);
-      case IF -> newIf(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case INVOKE -> newInvoke(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case MAP -> newMap(hash, readDataAsArrayT(hash, rootSeq, kind));
-      case METHOD -> readMethod(hash, rootSeq, kind);
-      case ORDER -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
-      case PARAM_REF -> newParamRef(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case SELECT -> newSelect(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case TUPLE -> readTuple(hash, rootSeq);
+      case BaseKindB base -> handleBaseType(hash, rootSeq, kind);
+      case ArrayKindB array -> newArray(hash, readDataAsValT(hash, rootSeq, kind));
+      case CallKindB call -> newCall(hash, readDataAsEvalT(hash, rootSeq, kind));
+      case CombineKindB combine -> newCombine(hash, readDataAsTupleT(hash, rootSeq, kind));
+      case DefFuncKindB defFuncKind -> readFuncCat(hash, rootSeq, defFuncKind);
+      case FuncKindB defFuncKind -> readFuncT(hash, rootSeq);
+      case IfFuncKindB ifFuncKind -> readIfFuncCat(hash, rootSeq, ifFuncKind);
+      case MapFuncKindB mapFuncKind -> readMapFuncCat(hash, rootSeq, mapFuncKind);
+      case NatFuncKindB natFuncKind -> readFuncCat(hash, rootSeq, natFuncKind);
+      case OrderKindB order -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
+      case ParamRefKindB paramRef -> newParamRef(hash, readDataAsEvalT(hash, rootSeq, kind));
+      case SelectKindB select -> newSelect(hash, readDataAsEvalT(hash, rootSeq, kind));
+      case TupleKindB tuple -> readTuple(hash, rootSeq);
     };
+  }
+
+  private static CatB handleBaseType(Hash hash, List<Hash> rootSeq, CatKindB kind) {
+    assertCatRootSeqSize(hash, kind, rootSeq, 1);
+    throw new RuntimeException(
+        "Internal error: Category with kind " + kind + " should be found in cache.");
   }
 
   private List<Hash> readCatRootSeq(Hash hash) {
@@ -249,51 +283,110 @@ public class CatDb {
     return readNode(kind, rootHash, hash, DATA_PATH, expectedCatClass);
   }
 
-  private CatB readFunc(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
-    return readCallable(rootHash, rootSeq, kind, this::newFunc);
-  }
-
-  private CatB readMethod(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
-    return readCallable(rootHash, rootSeq, kind, this::newMethod);
-  }
-
-  private CatB readCallable(Hash rootHash, List<Hash> rootSeq, CatKindB kind,
-      TriFunction<Hash, TypeB, TupleTB, CatB> instantiator) {
+  private FuncTB readFuncT(Hash rootHash, List<Hash> rootSeq) {
+    var kind = FUNC;
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
-    Hash dataHash = rootSeq.get(DATA_IDX);
-    List<Hash> data = readSeqHashes(rootHash, dataHash, kind, DATA_PATH);
+    ImmutableList<TypeB> nodes = readNodes(rootHash, kind, rootSeq.get(DATA_IDX));
     int expectedSize = 2;
-    if (data.size() != expectedSize) {
-      throw new DecodeCatWrongSeqSizeExc(rootHash, kind, DATA_PATH, expectedSize, data.size());
+    if (nodes.size() != expectedSize) {
+      throw new DecodeCatWrongSeqSizeExc(rootHash, kind, DATA_PATH, expectedSize, nodes.size());
     }
-    var res = readNode(kind, rootHash, data.get(CALLABLE_RES_IDX), CALLABLE_RES_PATH, TypeB.class);
-    var params = readNode(kind, rootHash, data.get(CALLABLE_PARAMS_IDX), CALLABLE_PARAMS_PATH, TupleTB.class);
-    return instantiator.apply(rootHash, res, params);
+    var res = nodes.get(FUNC_RES_IDX);
+    var params = nodes.get(FUNC_PARAMS_IDX);
+    if (params instanceof TupleTB paramsTuple) {
+      return cache(new FuncTB(rootHash, res, paramsTuple));
+    } else {
+      throw new DecodeCatWrongNodeCatExc(
+          rootHash, kind, FUNC_PARAMS_PATH, TupleTB.class, params.getClass());
+    }
+  }
+
+  private CatB readIfFuncCat(Hash hash, List<Hash> rootSeq, IfFuncKindB ifFuncKind) {
+    return readFuncCat(hash, rootSeq, ifFuncKind, (FuncTB funcTB) -> {
+      var params = funcTB.params();
+      if (params.size() != 3) {
+        throw illegalIfFuncTypeExc(hash, funcTB);
+      }
+      var res = funcTB.res();
+      boolean first = params.get(0).equals(bool);
+      boolean second = res.equals(params.get(1));
+      boolean third = res.equals(params.get(2));
+      if (!(first && second && third)) {
+        throw illegalIfFuncTypeExc(hash, funcTB);
+      }
+    });
+  }
+
+  private CatB readMapFuncCat(Hash hash, List<Hash> rootSeq, MapFuncKindB mapFuncKind) {
+    return readFuncCat(hash, rootSeq, mapFuncKind, (FuncTB funcTB) -> {
+      var params = funcTB.params();
+      if (!(funcTB.res() instanceof ArrayTB outputArrayT)) {
+        throw illegalMapFuncTypeExc(hash, funcTB);
+      }
+      if (params.size() != 2) {
+        throw illegalMapFuncTypeExc(hash, funcTB);
+      }
+      if (!(params.get(0) instanceof ArrayTB inputArrayT)) {
+        throw illegalMapFuncTypeExc(hash, funcTB);
+      }
+      if (!(params.get(1) instanceof FuncTB mappingFuncT)) {
+        throw illegalMapFuncTypeExc(hash, funcTB);
+      }
+      if (mappingFuncT.params().size() != 1) {
+        throw illegalMapFuncTypeExc(hash, funcTB);
+      }
+      if (!inputArrayT.elem().equals(mappingFuncT.params().get(0))) {
+        throw illegalMapFuncTypeExc(hash, funcTB);
+      }
+      if (!outputArrayT.elem().equals(mappingFuncT.res())) {
+        throw illegalMapFuncTypeExc(hash, funcTB);
+      }
+    });
+  }
+
+  private <T extends FuncCB> CatB readFuncCat(Hash rootHash, List<Hash> rootSeq,
+      AbstFuncKindB<T> kind) {
+    return readFuncCat(rootHash, rootSeq, kind, t -> {});
+  }
+
+  private <T extends FuncCB> CatB readFuncCat(Hash rootHash, List<Hash> rootSeq,
+      AbstFuncKindB<T> kind, Consumer<FuncTB> typeVerifier) {
+    assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
+    var dataHash = rootSeq.get(DATA_IDX);
+    var typeComponent = wrapCatDbExcAsDecodeCatNodeExc(
+        kind, rootHash, DATA_PATH, () -> read(dataHash));
+    if (typeComponent instanceof FuncTB funcTB) {
+      typeVerifier.accept(funcTB);
+      return cache(kind.instantiator().apply(rootHash, funcTB));
+    } else {
+      throw new DecodeCatWrongNodeCatExc(
+          rootHash, kind, DATA_PATH, FuncTB.class, typeComponent.getClass());
+    }
   }
 
   private TupleTB readTuple(Hash rootHash, List<Hash> rootSeq) {
     assertCatRootSeqSize(rootHash, TUPLE, rootSeq, 2);
-    var items = readTupleItems(rootHash, rootSeq.get(DATA_IDX));
+    var items = readNodes(rootHash, TUPLE, rootSeq.get(DATA_IDX));
     return newTuple(rootHash, items);
   }
 
-  private ImmutableList<TypeB> readTupleItems(Hash rootHash, Hash hash) {
+  private ImmutableList<TypeB> readNodes(Hash rootHash, CatKindB kind, Hash hash) {
     var builder = ImmutableList.<TypeB>builder();
-    var itemTypeHashes = readSeqHashes(rootHash, hash, TUPLE, DATA_PATH);
+    var itemTypeHashes = readSeqHashes(rootHash, hash, kind, DATA_PATH);
     for (int i = 0; i < itemTypeHashes.size(); i++) {
-      builder.add(readNode(TUPLE, rootHash, itemTypeHashes.get(i), DATA_PATH, i));
+      builder.add(readNode(kind, rootHash, itemTypeHashes.get(i), DATA_PATH, i));
     }
     return builder.build();
   }
 
-  private <T> T readNode(CatKindB kind, Hash outerHash, Hash hash, String path, Class<T> clazz) {
-    CatB result = wrapCatDbExcAsDecodeCatNodeExc(kind, outerHash, path, () -> get(hash));
+  private <T> T readNode(CatKindB kind, Hash rootHash, Hash hash, String path, Class<T> clazz) {
+    CatB result = wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, path, () -> get(hash));
     if (clazz.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
       return castResult;
     } else {
-      throw new DecodeCatWrongNodeCatExc(outerHash, kind, path, clazz, result.getClass());
+      throw new DecodeCatWrongNodeCatExc(rootHash, kind, path, clazz, result.getClass());
     }
   }
 
@@ -302,7 +395,8 @@ public class CatDb {
     if (result instanceof TypeB typeB) {
       return typeB;
     } else {
-      throw new DecodeCatWrongNodeCatExc(outerHash, kind, path, index, TypeB.class, result.getClass());
+      throw new DecodeCatWrongNodeCatExc(
+          outerHash, kind, path, index, TypeB.class, result.getClass());
     }
   }
 
@@ -317,22 +411,16 @@ public class CatDb {
     return cache(new ArrayTB(rootHash, elem));
   }
 
-  private FuncTB newFunc(TypeB res, TupleTB params) throws HashedDbExc {
-    var rootHash = writeFuncLikeRoot(res, params, FUNC);
-    return newFunc(rootHash, res, params);
-  }
-
-  private FuncTB newFunc(Hash rootHash, TypeB res, TupleTB params) {
+  private FuncTB newFuncT(TypeB res, TupleTB params) throws HashedDbExc {
+    var rootHash = writeFuncTypeRoot(res, params);
     return cache(new FuncTB(rootHash, res, params));
   }
 
-  private MethodTB newMethod(TypeB res, TupleTB params) throws HashedDbExc {
-    var rootHash = writeFuncLikeRoot(res, params, METHOD);
-    return newMethod(rootHash, res, params);
-  }
-
-  private MethodTB newMethod(Hash rootHash, TypeB res, TupleTB params) {
-    return cache(new MethodTB(rootHash, res, params));
+  private <T extends FuncCB> T newFuncC(AbstFuncKindB<T> funcKind, FuncTB funcTB)
+      throws HashedDbExc {
+    var rootHash = writeFuncCategoryRoot(funcKind, funcTB);
+    var instantiator = funcKind.instantiator();
+    return cache(instantiator.apply(rootHash, funcTB));
   }
 
   private TupleTB newTuple(ImmutableList<TypeB> items) throws HashedDbExc {
@@ -362,33 +450,6 @@ public class CatDb {
 
   private CombineCB newCombine(Hash rootHash, TupleTB evalT) {
     return cache(new CombineCB(rootHash, evalT));
-  }
-
-  private IfCB newIf(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(IF, evalT);
-    return newIf(rootHash, evalT);
-  }
-
-  private IfCB newIf(Hash rootHash, TypeB evalT) {
-    return cache(new IfCB(rootHash, evalT));
-  }
-
-  private InvokeCB newInvoke(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(INVOKE, evalT);
-    return newInvoke(rootHash, evalT);
-  }
-
-  private InvokeCB newInvoke(Hash rootHash, TypeB evalT) {
-    return cache(new InvokeCB(rootHash, evalT));
-  }
-
-  private MapCB newMap(ArrayTB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(MAP, evalT);
-    return newMap(rootHash, evalT);
-  }
-
-  private MapCB newMap(Hash rootHash, ArrayTB evalT) {
-    return cache(new MapCB(rootHash, evalT));
   }
 
   private OrderCB newOrder(ArrayTB evalT) throws HashedDbExc {
@@ -430,14 +491,19 @@ public class CatDb {
     return writeNonBaseRoot(ARRAY, elem.hash());
   }
 
-  private Hash writeFuncLikeRoot(TypeB res, TupleTB params, CatKindB kind) throws HashedDbExc {
-    var hash = hashedDb.writeSeq(res.hash(), params.hash());
-    return writeNonBaseRoot(kind, hash);
+  private Hash writeFuncTypeRoot(TypeB res, TupleTB params) throws HashedDbExc {
+    var dataHash = hashedDb.writeSeq(res.hash(), params.hash());
+    return writeNonBaseRoot(FUNC, dataHash);
+  }
+
+  private Hash writeFuncCategoryRoot(CatKindB kind, FuncTB funcTB) throws HashedDbExc {
+    var dataHash = funcTB.hash();
+    return writeNonBaseRoot(kind, dataHash);
   }
 
   private Hash writeTupleRoot(ImmutableList<TypeB> items) throws HashedDbExc {
-    var itemsHash = hashedDb.writeSeq(Lists.map(items, CatB::hash));
-    return writeNonBaseRoot(TUPLE, itemsHash);
+    var dataHash = hashedDb.writeSeq(Lists.map(items, CatB::hash));
+    return writeNonBaseRoot(TUPLE, dataHash);
   }
 
   // Helper methods for writing roots

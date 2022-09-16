@@ -35,7 +35,7 @@ public class TypeSbTranslator {
       case ArrayTS a -> translate(a);
       case BlobTS blob -> bytecodeF.blobT();
       case BoolTS bool -> bytecodeF.boolT();
-      case FuncTS f -> translate(f);
+      case FuncTS f -> translateFunc(f);
       case IntTS i -> bytecodeF.intT();
       case VarS v ->  translate(v);
       case StringTS s -> bytecodeF.stringT();
@@ -52,6 +52,10 @@ public class TypeSbTranslator {
     return bytecodeF.tupleT(map(struct.fields(), isig -> translate(isig.type())));
   }
 
+  public FuncTB translate(FuncTS func) {
+    return bytecodeF.funcT(translate(func.res()), translate(func.params()));
+  }
+
   public TupleTB translate(TupleTS tuple) {
     return bytecodeF.tupleT(map(tuple.items(), this::translate));
   }
@@ -60,9 +64,7 @@ public class TypeSbTranslator {
     return bytecodeF.arrayT(translate(array.elem()));
   }
 
-  public FuncTB translate(FuncTS func) {
-    var res = translate(func.res());
-    var params = translate(func.params());
-    return bytecodeF.funcT(res, params);
+  public FuncTB translateFunc(FuncTS func) {
+    return bytecodeF.funcT(translate(func.res()), translate(func.params()));
   }
 }

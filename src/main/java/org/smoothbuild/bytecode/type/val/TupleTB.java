@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
+import static org.smoothbuild.bytecode.type.CatKinds.TUPLE;
 import static org.smoothbuild.bytecode.type.val.TNamesB.tupleTypeName;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;

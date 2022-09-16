@@ -41,9 +41,8 @@ public class CatBCachingTest extends TestContext {
         catDb -> catDb.call(catDb.int_()),
         catDb -> catDb.combine(catDb.tuple()),
         catDb -> catDb.combine(catDb.tuple(catDb.int_())),
-        catDb -> catDb.if_(catDb.int_()),
-        catDb -> catDb.invoke(catDb.int_()),
-        catDb -> catDb.map(catDb.array(catDb.int_())),
+        catDb -> catDb.ifFunc(catDb.int_()),
+        catDb -> catDb.mapFunc(catDb.int_(), catDb.string()),
         catDb -> catDb.order(catDb.array(catDb.int_())),
         catDb -> catDb.paramRef(catDb.int_()),
         catDb -> catDb.select(catDb.int_()),
@@ -69,6 +68,6 @@ public class CatBCachingTest extends TestContext {
   }
 
   private static FuncTB funcT(CatDb catDb) {
-    return catDb.func(catDb.string(), list(catDb.bool(), catDb.blob()));
+    return catDb.funcT(catDb.string(), list(catDb.bool(), catDb.blob()));
   }
 }

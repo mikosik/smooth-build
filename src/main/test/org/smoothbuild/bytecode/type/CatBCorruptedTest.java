@@ -1,24 +1,27 @@
 package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.bytecode.type.CatDb.CALLABLE_PARAMS_PATH;
-import static org.smoothbuild.bytecode.type.CatDb.CALLABLE_RES_PATH;
 import static org.smoothbuild.bytecode.type.CatDb.DATA_PATH;
-import static org.smoothbuild.bytecode.type.CatKindB.ARRAY;
-import static org.smoothbuild.bytecode.type.CatKindB.BLOB;
-import static org.smoothbuild.bytecode.type.CatKindB.BOOL;
-import static org.smoothbuild.bytecode.type.CatKindB.CALL;
-import static org.smoothbuild.bytecode.type.CatKindB.COMBINE;
-import static org.smoothbuild.bytecode.type.CatKindB.IF;
-import static org.smoothbuild.bytecode.type.CatKindB.INT;
-import static org.smoothbuild.bytecode.type.CatKindB.INVOKE;
-import static org.smoothbuild.bytecode.type.CatKindB.MAP;
-import static org.smoothbuild.bytecode.type.CatKindB.METHOD;
-import static org.smoothbuild.bytecode.type.CatKindB.ORDER;
-import static org.smoothbuild.bytecode.type.CatKindB.PARAM_REF;
-import static org.smoothbuild.bytecode.type.CatKindB.SELECT;
-import static org.smoothbuild.bytecode.type.CatKindB.STRING;
-import static org.smoothbuild.bytecode.type.CatKindB.TUPLE;
+import static org.smoothbuild.bytecode.type.CatDb.FUNC_PARAMS_PATH;
+import static org.smoothbuild.bytecode.type.CatDb.FUNC_RES_PATH;
+import static org.smoothbuild.bytecode.type.CatKinds.ARRAY;
+import static org.smoothbuild.bytecode.type.CatKinds.BLOB;
+import static org.smoothbuild.bytecode.type.CatKinds.BOOL;
+import static org.smoothbuild.bytecode.type.CatKinds.CALL;
+import static org.smoothbuild.bytecode.type.CatKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CatKinds.DEF_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.IF_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.INT;
+import static org.smoothbuild.bytecode.type.CatKinds.MAP_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CatKinds.PARAM_REF;
+import static org.smoothbuild.bytecode.type.CatKinds.SELECT;
+import static org.smoothbuild.bytecode.type.CatKinds.STRING;
+import static org.smoothbuild.bytecode.type.CatKinds.TUPLE;
+import static org.smoothbuild.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc;
+import static org.smoothbuild.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
@@ -169,55 +172,118 @@ public class CatBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _func extends _callable_test_case{
-      @Override
-      protected CatKindB catKind() {
-        return CatKindB.FUNC;
-      }
-
-      @Override
-      protected Hash hashOfNewTB(TypeB resT, TypeB... paramTs) {
-        return funcTB(resT, paramTs).hash();
-      }
-    }
-
-    @Nested
-    class _method extends _callable_test_case{
-      @Override
-      protected CatKindB catKind() {
-        return METHOD;
-      }
-
-      @Override
-      protected Hash hashOfNewTB(TypeB resT, TypeB... paramTs) {
-        return methodTB(resT, paramTs).hash();
-      }
-    }
-
-    abstract class _callable_test_case {
-      protected CatKindB catKind() {
-        throw new UnsupportedOperationException("implement in subclasses");
-      }
-
-      protected abstract Hash hashOfNewTB(TypeB resT, TypeB... paramTs);
-
+    class _def_func extends _func_category_test_case {
       @Test
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
          * to save func type in HashedDb.
          */
-        var paramsTuple = tupleTB(stringTB(), boolTB());
         var specHash = hash(
-            hash(catKind().marker()),
-            hash(
-                hash(intTB()),
-                hash(paramsTuple)
-            )
+            hash(DEF_FUNC.marker()),
+            hash(funcTB(intTB(), stringTB(), boolTB()))
         );
         assertThat(specHash)
-            .isEqualTo(hashOfNewTB(intTB(), stringTB(), boolTB()));
+            .isEqualTo(defFuncCB(intTB(), stringTB(), boolTB()).hash());
       }
+
+      @Override
+      protected CatKindB catKind() {
+        return DEF_FUNC;
+      }
+    }
+
+    @Nested
+    class _if_func extends _func_category_test_case {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save if func category in HashedDb.
+         */
+        var specHash = hash(
+            hash(IF_FUNC.marker()),
+            hash(funcTB(intTB(), boolTB(), intTB(), intTB()))
+        );
+        assertThat(specHash)
+            .isEqualTo(ifFuncCB(intTB()).hash());
+      }
+
+      @Test
+      public void illegal_func_type_causes_error() throws Exception {
+        var illegalIfType = funcTB(blobTB(), boolTB(), intTB(), intTB());
+        var categoryHash = hash(
+            hash(IF_FUNC.marker()),
+            hash(illegalIfType)
+        );
+        assertCall(() -> catDb().get(categoryHash))
+            .throwsException(
+                illegalIfFuncTypeExc(categoryHash, illegalIfType));
+      }
+
+      @Override
+      protected CatKindB catKind() {
+        return IF_FUNC;
+      }
+    }
+
+    @Nested
+    class _map_func extends _func_category_test_case {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save map func category in HashedDb.
+         */
+        var specHash = hash(
+            hash(MAP_FUNC.marker()),
+            hash(funcTB(arrayTB(intTB()), arrayTB(blobTB()), funcTB(intTB(), blobTB())))
+        );
+        assertThat(specHash)
+            .isEqualTo(mapFuncCB(intTB(), blobTB()).hash());
+      }
+
+      @Test
+      public void illegal_func_type_causes_error() throws Exception {
+        var illegalType = funcTB(arrayTB(intTB()), arrayTB(blobTB()), funcTB(intTB(), stringTB()));
+        var categoryHash = hash(
+            hash(MAP_FUNC.marker()),
+            hash(illegalType)
+        );
+        assertCall(() -> catDb().get(categoryHash))
+            .throwsException(illegalMapFuncTypeExc(categoryHash, illegalType));
+      }
+
+      @Override
+      protected CatKindB catKind() {
+        return MAP_FUNC;
+      }
+    }
+
+    @Nested
+    class _nat_func extends _func_category_test_case {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save func type in HashedDb.
+         */
+        var specHash = hash(
+            hash(NAT_FUNC.marker()),
+            hash(funcTB(intTB(), stringTB(), boolTB()))
+        );
+        assertThat(specHash)
+            .isEqualTo(natFuncCB(intTB(), stringTB(), boolTB()).hash());
+      }
+
+      @Override
+      protected CatKindB catKind() {
+        return NAT_FUNC;
+      }
+    }
+
+    abstract class _func_category_test_case {
+      protected abstract CatKindB catKind();
 
       @Test
       public void without_data() throws Exception {
@@ -230,8 +296,61 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Test
+      public void with_func_type_hash_pointing_nowhere() throws Exception {
+        var dataHash = Hash.of(33);
+        var typeHash = hash(
+            hash(catKind().marker()),
+            dataHash
+        );
+        assertCall(() -> catDb().get(typeHash))
+            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), DATA_PATH))
+            .withCause(new DecodeCatExc(dataHash));
+      }
+
+      @Test
+      public void with_func_type_being_oper_type() throws Exception {
+        var notFuncTB = paramRefCB(intTB());
+        var typeHash = hash(
+            hash(catKind().marker()),
+            hash(notFuncTB)
+        );
+        assertCall(() -> catDb().get(typeHash))
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                typeHash, catKind(), DATA_PATH, FuncTB.class, ParamRefCB.class));
+      }
+    }
+
+    @Nested
+    class _func {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save func type in HashedDb.
+         */
+        var specHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(intTB()),
+                hash(tupleTB(stringTB(), boolTB())))
+        );
+        assertThat(specHash)
+            .isEqualTo(funcTB(intTB(), stringTB(), boolTB()).hash());
+      }
+
+      @Test
+      public void without_data() throws Exception {
+        assert_reading_cat_without_data_causes_exc(FUNC);
+      }
+
+      @Test
+      public void with_additional_data() throws Exception {
+        assert_reading_cat_with_additional_data_causes_exc(FUNC);
+      }
+
+      @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
-        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(catKind());
+        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(FUNC);
       }
 
       @Test
@@ -239,18 +358,18 @@ public class CatBCorruptedTest extends TestContext {
         var notHashOfSeq = hash("abc");
         var hash =
             hash(
-                hash(catKind().marker()),
+                hash(FUNC.marker()),
                 notHashOfSeq
             );
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, catKind(), DATA_PATH));
+            .throwsException(new DecodeCatNodeExc(hash, FUNC, DATA_PATH));
       }
 
       @Test
       public void with_data_having_three_elems() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var hash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(intTB()),
                 hash(paramTs),
@@ -258,20 +377,20 @@ public class CatBCorruptedTest extends TestContext {
             )
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeExc(hash, catKind(), DATA_PATH, 2, 3));
+            .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 3));
       }
 
       @Test
       public void with_data_having_one_elems() throws Exception {
         var res = intTB();
         var hash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(res)
             )
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeExc(hash, catKind(), DATA_PATH, 2, 1));
+            .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 1));
       }
 
       @ParameterizedTest
@@ -280,11 +399,11 @@ public class CatBCorruptedTest extends TestContext {
           throws Exception {
         var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             notHashOfSeq
         );
         assertCall(() -> ((FuncTB) catDb().get(typeHash)).res())
-            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), DATA_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, DATA_PATH))
             .withCause(new DecodeHashSeqExc(
                 notHashOfSeq, byteCount % Hash.lengthInBytes()));
       }
@@ -294,14 +413,14 @@ public class CatBCorruptedTest extends TestContext {
         var paramTs = tupleTB(stringTB(), boolTB());
         var nowhere = Hash.of(33);
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 nowhere,
                 hash(paramTs)
             )
         );
         assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), CALLABLE_RES_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
             .withCause(new DecodeCatExc(nowhere));
       }
 
@@ -309,7 +428,7 @@ public class CatBCorruptedTest extends TestContext {
       public void with_result_being_oper_type() throws Exception {
         var paramT = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(paramRefCB()),
                 hash(paramT)
@@ -317,21 +436,21 @@ public class CatBCorruptedTest extends TestContext {
         );
         assertCall(() -> catDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, catKind(), CALLABLE_RES_PATH, TypeB.class, ParamRefCB.class));
+                typeHash, FUNC, FUNC_RES_PATH, TypeB.class, ParamRefCB.class));
       }
 
       @Test
       public void with_result_type_corrupted() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 corruptedArrayTHash(),
                 hash(paramTs)
             )
         );
         assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), CALLABLE_RES_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
             .withCause(corruptedArrayTypeExc());
       }
 
@@ -339,21 +458,21 @@ public class CatBCorruptedTest extends TestContext {
       public void with_params_pointing_nowhere() throws Exception {
         var nowhere = Hash.of(33);
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(intTB()),
                 nowhere
             )
         );
         assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), CALLABLE_PARAMS_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(new DecodeCatExc(nowhere));
       }
 
       @Test
       public void with_params_not_being_tuple() throws Exception {
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(intTB()),
                 hash(stringTB())
@@ -361,13 +480,13 @@ public class CatBCorruptedTest extends TestContext {
         );
         assertThatGet(typeHash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, catKind(), DATA_PATH, 1, TupleTB.class, StringTB.class));
+                typeHash, FUNC, DATA_PATH, 1, TupleTB.class, StringTB.class));
       }
 
       @Test
       public void with_params_being_oper_type() throws Exception {
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(intTB()),
                 hash(paramRefCB())
@@ -375,20 +494,20 @@ public class CatBCorruptedTest extends TestContext {
         );
         assertCall(() -> catDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, catKind(), CALLABLE_PARAMS_PATH, TupleTB.class, ParamRefCB.class));
+                typeHash, FUNC, FUNC_PARAMS_PATH, TypeB.class, ParamRefCB.class));
       }
 
       @Test
       public void with_params_type_corrupted() throws Exception {
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(intTB()),
                 corruptedArrayTHash()
             )
         );
         assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), CALLABLE_PARAMS_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(corruptedArrayTypeExc());
       }
     }
@@ -650,89 +769,6 @@ public class CatBCorruptedTest extends TestContext {
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
                 hash, COMBINE, DATA_PATH, TupleTB.class, IntTB.class));
-      }
-    }
-
-    @Nested
-    class _if {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save if category in HashedDb.
-         */
-        Hash hash = hash(
-            hash(IF.marker()),
-            hash(intTB())
-        );
-        assertThat(hash)
-            .isEqualTo(ifCB(intTB()).hash());
-      }
-
-      @Nested
-      class _oper_cat_tests extends OperCatTestSet {
-        protected _oper_cat_tests() {
-          super(IF);
-        }
-      }
-    }
-
-    @Nested
-    class _invoke {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save `invoke` category in HashedDb.
-         */
-        Hash hash = hash(
-            hash(INVOKE.marker()),
-            hash(intTB())
-        );
-        assertThat(hash)
-            .isEqualTo(invokeCB(intTB()).hash());
-      }
-
-      @Nested
-      class _oper_cat_tests extends OperCatTestSet {
-        protected _oper_cat_tests() {
-          super(INVOKE);
-        }
-      }
-    }
-
-    @Nested
-    class _map {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save `map` type in HashedDb.
-         */
-        Hash hash = hash(
-            hash(MAP.marker()),
-            hash(arrayTB(intTB()))
-        );
-        assertThat(hash)
-            .isEqualTo(mapCB(arrayTB(intTB())).hash());
-      }
-
-      @Nested
-      class _oper_cat_tests extends OperCatTestSet {
-        protected _oper_cat_tests() {
-          super(MAP, ArrayTB.class);
-        }
-      }
-
-      @Test
-      public void eval_type_not_being_array_type() throws Exception {
-        Hash hash = hash(
-            hash(MAP.marker()),
-            hash(intTB())
-        );
-        assertThatGet(hash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, MAP, DATA_PATH, ArrayTB.class, IntTB.class));
       }
     }
 

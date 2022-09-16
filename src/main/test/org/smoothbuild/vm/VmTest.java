@@ -55,7 +55,7 @@ public class VmTest extends TestContext {
 
       @Test
       public void no_task_is_executed_for_func_arg_that_is_not_used() {
-        var func = funcB(list(arrayTB(boolTB())), intB(7));
+        var func = defFuncB(list(arrayTB(boolTB())), intB(7));
         var call = callB(func, orderB(boolTB()));
 
         var spyingExecutor = spy(taskExecutor());
@@ -67,8 +67,8 @@ public class VmTest extends TestContext {
 
       @Test
       public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used() {
-        var innerFunc = funcB(list(arrayTB(boolTB())), intB(7));
-        var outerFunc = funcB(list(arrayTB(boolTB())),
+        var innerFunc = defFuncB(list(arrayTB(boolTB())), intB(7));
+        var outerFunc = defFuncB(list(arrayTB(boolTB())),
             callB(innerFunc, paramRefB(arrayTB(boolTB()), 0)));
         var call = callB(outerFunc, orderB(boolTB()));
 
@@ -82,7 +82,7 @@ public class VmTest extends TestContext {
       @Test
       public void task_for_func_arg_that_is_used_twice_is_executed_only_once() {
         var arrayT = arrayTB(intTB());
-        var func = funcB(list(arrayT), combineB(paramRefB(arrayT, 0), paramRefB(arrayT, 0)));
+        var func = defFuncB(list(arrayT), combineB(paramRefB(arrayT, 0), paramRefB(arrayT, 0)));
         var call = callB(func, orderB(intB(7)));
 
         var spyingExecutor = spy(taskExecutor());
@@ -98,7 +98,7 @@ public class VmTest extends TestContext {
       @Test
       public void learning_test() {
         // Learning test verifies that job creation is counted also inside func body.
-        var func = funcB(orderB(intB(7)));
+        var func = defFuncB(orderB(intB(7)));
         var call = callB(func);
 
         var countingJobCreator = new CountingJobCreator(IntB.class);
@@ -112,7 +112,7 @@ public class VmTest extends TestContext {
 
       @Test
       public void job_for_unused_func_arg_is_created_but_not_jobs_for_its_dependencies() {
-        var func = funcB(list(arrayTB(boolTB())), intB(7));
+        var func = defFuncB(list(arrayTB(boolTB())), intB(7));
         var call = callB(func, orderB(boolTB()));
 
         var countingJobCreator = new CountingJobCreator(BoolB.class);
@@ -162,29 +162,97 @@ public class VmTest extends TestContext {
   @Nested
   class _operators {
     @Test
-    public void call() {
-      var func = funcB(intB(7));
+    public void call_def_func() {
+      var func = defFuncB(intB(7));
       var call = callB(func);
       assertThat(evaluate(call))
           .isEqualTo(intB(7));
     }
 
     @Test
-    public void call_func_passed_as_arg() {
-      var func = funcB(intB(7));
+    public void call_def_func_passed_as_arg() {
+      var func = defFuncB(intB(7));
       var paramT = func.type();
-      var outerFunc = funcB(list(paramT), callB(intTB(), paramRefB(paramT, 0)));
+      var outerFunc = defFuncB(list(paramT), callB(intTB(), paramRefB(paramT, 0)));
       var call = callB(outerFunc, func);
       assertThat(evaluate(call))
           .isEqualTo(intB(7));
     }
 
     @Test
-    public void call_func_returned_from_call() {
-      var func = funcB(intB(7));
-      var outerFunc = funcB(func);
+    public void call_def_func_returned_from_call() {
+      var func = defFuncB(intB(7));
+      var outerFunc = defFuncB(func);
       var call = callB(intTB(), callB(outerFunc));
       assertThat(evaluate(call))
+          .isEqualTo(intB(7));
+    }
+
+    @Test
+    public void if_true_condition() {
+      var ifFunc = ifFuncB(intTB());
+      var call = callB(ifFunc, boolB(true), intB(7), intB(0));
+      assertThat(evaluate(call))
+          .isEqualTo(intB(7));
+    }
+
+    @Test
+    public void if_false_condition() {
+      var ifFunc = ifFuncB(intTB());
+      var call = callB(ifFunc, boolB(false), intB(7), intB(0));
+      assertThat(evaluate(call))
+          .isEqualTo(intB(0));
+    }
+
+    @Test
+    public void call_map_func() {
+      var s = intTB();
+      var r = tupleTB(s);
+      var func = defFuncB(funcTB(r, s), combineB(paramRefB(s, 0)));
+      var mapFunc = mapFuncB(r, s);
+      var map = callB(mapFunc, arrayB(intB(1), intB(2)), func);
+      assertThat(evaluate(map))
+          .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
+    }
+
+    @Test
+    public void call_nat_func() throws Exception {
+      var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+      var call = callB(natFunc, intB(33));
+      var nativeMethodLoader = mock(NativeMethodLoader.class);
+      when(nativeMethodLoader.load(any(), eq(natFunc)))
+          .thenReturn(
+              Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+      assertThat(evaluate(vm(nativeMethodLoader), call))
+          .isEqualTo(intB(33));
+    }
+
+    @Test
+    public void call_nat_func_passed_as_arg() throws NoSuchMethodException {
+      var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+      var nativeMethodLoader = mock(NativeMethodLoader.class);
+      when(nativeMethodLoader.load(any(), eq(natFunc)))
+          .thenReturn(
+              Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+
+      var natFuncT = natFunc.type();
+      var outerFunc = defFuncB(list(natFuncT), callB(intTB(), paramRefB(natFuncT, 0), intB(7)));
+      var call = callB(outerFunc, natFunc);
+      assertThat(evaluate(vm(nativeMethodLoader), call))
+          .isEqualTo(intB(7));
+    }
+
+    @Test
+    public void call_nat_func_returned_from_call() throws NoSuchMethodException {
+      var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+      var nativeMethodLoader = mock(NativeMethodLoader.class);
+      when(nativeMethodLoader.load(any(), eq(natFunc)))
+          .thenReturn(
+              Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+
+      var outerFunc = defFuncB(natFunc);
+      var call = callB(intTB(), callB(outerFunc), intB(7));
+      assertThat(evaluate(vm(nativeMethodLoader), call))
           .isEqualTo(intB(7));
     }
 
@@ -193,53 +261,6 @@ public class VmTest extends TestContext {
       var combine = combineB(intB(7));
       assertThat(evaluate(combine))
           .isEqualTo(tupleB(intB(7)));
-    }
-
-    @Test
-    public void if_true_condition() {
-      var if_ = ifB(intTB(), boolB(true), intB(1), intB(2));
-      assertThat(evaluate(if_))
-          .isEqualTo(intB(1));
-    }
-
-    @Test
-    public void if_false_condition() {
-      var if_ = ifB(intTB(), boolB(false), intB(1), intB(2));
-      assertThat(evaluate(if_))
-          .isEqualTo(intB(2));
-    }
-
-    @Test
-    public void invoke_argless() throws Exception {
-      var method = methodB(methodTB(intTB()), blobB(77), stringB("classBinaryName"));
-      var invoke = invokeB(method);
-      var nativeMethodLoader = mock(NativeMethodLoader.class);
-      when(nativeMethodLoader.load(any(), eq(method)))
-          .thenReturn(
-              Try.result(VmTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(vm(nativeMethodLoader), invoke))
-          .isEqualTo(intB(173));
-    }
-
-    @Test
-    public void invoke_with_param() throws Exception {
-      var method = methodB(methodTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-      var invoke = invokeB(method, intB(33));
-      var nativeMethodLoader = mock(NativeMethodLoader.class);
-      when(nativeMethodLoader.load(any(), eq(method)))
-          .thenReturn(
-              Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(vm(nativeMethodLoader), invoke))
-          .isEqualTo(intB(33));
-    }
-
-    @Test
-    public void map() {
-      var t = intTB();
-      var func = funcB(tupleTB(t), list(t), combineB(paramRefB(t, 0)));
-      var map = mapB(arrayB(intB(1), intB(2)), func);
-      assertThat(evaluate(map))
-          .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
     }
 
     @Test
@@ -257,8 +278,8 @@ public class VmTest extends TestContext {
 
     @Test
     public void param_ref_with_index_outside_of_func_param_bounds_causes_exception() {
-      var innerFuncB = funcB(list(), paramRefB(intTB(), 0));
-      var outerFuncB = funcB(list(intTB()), callB(innerFuncB));
+      var innerFuncB = defFuncB(list(), paramRefB(intTB(), 0));
+      var outerFuncB = defFuncB(list(intTB()), callB(innerFuncB));
       assertCall(() -> evaluate(callB(outerFuncB, intB(7))))
           .throwsException(ArrayIndexOutOfBoundsException.class);
     }

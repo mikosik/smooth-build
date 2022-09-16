@@ -100,7 +100,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_func() {
           var funcS = defFuncS("myFunc", nlist(), intS(7));
-          assertConversion(funcS, funcB(intB(7)));
+          assertConversion(funcS, defFuncB(intB(7)));
         }
 
         @Test
@@ -111,18 +111,13 @@ public class SbTranslatorTest extends TestContext {
           var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
           var natFuncS = natFuncS(funcTS, "myFunc", nlist(), ann);
 
-          var resT = intTB();
-          var funcTB = funcTB(resT, blobTB());
-          var jar = blobB(37);
-          var method = methodB(
-              methodTB(resT, blobTB()), jar, stringB(classBinaryName), boolB(true));
-          var bodyB = invokeB(method, paramRefB(blobTB(), 0));
-          var funcB = funcB(funcTB, bodyB);
+          var funcTB = funcTB(intTB(), blobTB());
+          var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
-          var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
+          var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
           var converter = newTranslator(fileLoader);
           assertThat(converter.translateExpr(natFuncS))
-              .isEqualTo(funcB);
+              .isEqualTo(natFuncB);
         }
 
         @Test
@@ -150,7 +145,7 @@ public class SbTranslatorTest extends TestContext {
       public void call() {
         var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
         var call = callS(stringTS(), defFunc);
-        assertConversion(call, callB(funcB(stringB("abc"))));
+        assertConversion(call, callB(defFuncB(stringB("abc"))));
       }
 
       @Test
@@ -172,7 +167,7 @@ public class SbTranslatorTest extends TestContext {
         var callS = callS(structTS, syntCtorS, stringS("abc"));
         var selectS = selectS(stringTS(), callS, "field");
 
-        var ctorB = funcB(list(stringTB()), combineB(paramRefB(stringTB(), 0)));
+        var ctorB = defFuncB(list(stringTB()), combineB(paramRefB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
         assertConversion(selectS, selectB(callB, intB(0)));
       }
@@ -229,7 +224,7 @@ public class SbTranslatorTest extends TestContext {
           public void defined() {
             var identity = idFuncS();
             var monoizeS = monoizeS(aToIntVarMapS(), identity);
-            var funcB = funcB(intTB(), list(intTB()), paramRefB(intTB(), 0));
+            var funcB = defFuncB(funcTB(intTB(), intTB()), paramRefB(intTB(), 0));
             assertConversion(monoizeS, funcB);
           }
 
@@ -245,8 +240,9 @@ public class SbTranslatorTest extends TestContext {
             var wrapFuncS = polyDefFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
             var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
 
-            var idFuncB = funcB(intTB(), list(intTB()), paramRefB(intTB(), 0));
-            var wrapFuncB = funcB(intTB(), list(intTB()), callB(idFuncB, paramRefB(intTB(), 0)));
+            var idFuncB = defFuncB(funcTB(intTB(), intTB()), paramRefB(intTB(), 0));
+            var wrapFuncB = defFuncB(funcTB(intTB(), intTB()),
+                callB(idFuncB, paramRefB(intTB(), 0)));
             assertConversion(wrapMonoFuncS, wrapFuncB);
           }
 
@@ -259,19 +255,14 @@ public class SbTranslatorTest extends TestContext {
             var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
             var natFuncS = polyNatFuncS(funcTS, "myIdentity", nlist(itemS(a, "param")), ann);
 
-            var resT = intTB();
-            var funcTB = funcTB(resT, intTB());
-            var jar = blobB(37);
-            var method = methodB(
-                methodTB(resT, intTB()), jar, stringB(classBinaryName), boolB(true));
-            var bodyB = invokeB(method, paramRefB(intTB(), 0));
-            var funcB = funcB(funcTB, bodyB);
+            var funcTB = funcTB(intTB(), intTB());
+            var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
-            var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
+            var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
             var converter = newTranslator(fileLoader);
             var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), natFuncS);
             assertThat(converter.translateExpr(monoizeS))
-                .isEqualTo(funcB);
+                .isEqualTo(natFuncB);
           }
 
           @Test

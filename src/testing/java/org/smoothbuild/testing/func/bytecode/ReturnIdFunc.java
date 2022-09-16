@@ -12,7 +12,6 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 public class ReturnIdFunc {
   public static ValB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
     var a = varMap.get("A");
-    var type = f.funcT(a, list(a));
-    return f.func(type, f.paramRef(a, ZERO));
+    return f.defFunc(a, list(a), f.paramRef(a, ZERO));
   }
 }

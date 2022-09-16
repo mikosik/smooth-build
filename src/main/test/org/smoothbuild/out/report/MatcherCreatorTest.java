@@ -103,8 +103,6 @@ public class MatcherCreatorTest {
         arguments("b", TaskMatchers.COMBINE),
         arguments("const", TaskMatchers.CONST),
         arguments("t", TaskMatchers.CONST),
-        arguments("invoke", TaskMatchers.INVOKE),
-        arguments("i", TaskMatchers.INVOKE),
         arguments("order", TaskMatchers.ORDER),
         arguments("o", TaskMatchers.ORDER),
         arguments("select", TaskMatchers.SELECT),

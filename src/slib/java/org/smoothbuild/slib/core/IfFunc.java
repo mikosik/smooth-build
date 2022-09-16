@@ -1,10 +1,5 @@
 package org.smoothbuild.slib.core;
 
-import static java.math.BigInteger.ONE;
-import static java.math.BigInteger.TWO;
-import static java.math.BigInteger.ZERO;
-import static org.smoothbuild.util.collect.Lists.list;
-
 import java.util.Map;
 
 import org.smoothbuild.bytecode.BytecodeF;
@@ -13,13 +8,7 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 
 public class IfFunc {
   public static ValB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
-    var a = varMap.get("A");
-    var type = f.funcT(a, list(f.boolT(), a, a));
-    var body = f.if_(
-        a,
-        f.paramRef(f.boolT(), ZERO),
-        f.paramRef(a, ONE),
-        f.paramRef(a, TWO));
-    return f.func(type, body);
+    var t = varMap.get("A");
+    return f.ifFunc(t);
   }
 }

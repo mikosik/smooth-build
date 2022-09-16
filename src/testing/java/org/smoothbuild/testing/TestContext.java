@@ -36,9 +36,6 @@ import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
-import org.smoothbuild.bytecode.expr.oper.IfB;
-import org.smoothbuild.bytecode.expr.oper.InvokeB;
-import org.smoothbuild.bytecode.expr.oper.MapB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.ParamRefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
@@ -46,9 +43,12 @@ import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
 import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.val.BoolB;
+import org.smoothbuild.bytecode.expr.val.DefFuncB;
 import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.IfFuncB;
 import org.smoothbuild.bytecode.expr.val.IntB;
-import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.MapFuncB;
+import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
@@ -57,18 +57,18 @@ import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.oper.CallCB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
-import org.smoothbuild.bytecode.type.oper.IfCB;
-import org.smoothbuild.bytecode.type.oper.InvokeCB;
-import org.smoothbuild.bytecode.type.oper.MapCB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
 import org.smoothbuild.bytecode.type.oper.ParamRefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
+import org.smoothbuild.bytecode.type.val.DefFuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IfFuncCB;
 import org.smoothbuild.bytecode.type.val.IntTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.MapFuncCB;
+import org.smoothbuild.bytecode.type.val.NatFuncCB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
@@ -287,7 +287,7 @@ public class TestContext {
 
   private Console console() {
     // Use System.out if you want to see smooth logs in junit output
-    // var outputStream = System.out;
+//     var outputStream = System.out;
     var outputStream = nullOutputStream();
     return new Console(new PrintWriter(outputStream, true));
   }
@@ -417,24 +417,36 @@ public class TestContext {
     return tupleTB(stringTB(), blobTB());
   }
 
+  public DefFuncCB defFuncCB() {
+    return defFuncCB(intTB(), blobTB(), stringTB());
+  }
+
+  public DefFuncCB defFuncCB(TypeB resT, TypeB... paramTs) {
+    return catDb().defFunc(funcTB(resT, paramTs));
+  }
+
   public FuncTB funcTB() {
     return funcTB(intTB(), blobTB(), stringTB());
   }
 
- public FuncTB funcTB(TypeB resT, TypeB... paramTs) {
-   return catDb().func(resT, list(paramTs));
- }
+  public FuncTB funcTB(TypeB resT, TypeB... paramTs) {
+    return funcTB(resT, list(paramTs));
+  }
+
+  private FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+    return catDb().funcT(resT, paramTs);
+  }
 
   public IntTB intTB() {
     return catDb().int_();
   }
 
-  public MethodTB methodTB() {
-    return methodTB(blobTB(), boolTB());
+  public NatFuncCB natFuncCB() {
+    return natFuncCB(blobTB(), boolTB());
   }
 
-  public MethodTB methodTB(TypeB resT, TypeB... paramTs) {
-    return catDb().method(resT, list(paramTs));
+  public NatFuncCB natFuncCB(TypeB resT, TypeB... paramTs) {
+    return catDb().natFunc(funcTB(resT, paramTs));
   }
 
   public TupleTB personTB() {
@@ -463,28 +475,20 @@ public class TestContext {
     return catDb().combine(tupleTB(itemTs));
   }
 
-  public IfCB ifCB() {
-    return ifCB(intTB());
+  public IfFuncCB ifFuncCB() {
+    return ifFuncCB(intTB());
   }
 
-  public IfCB ifCB(TypeB evalT) {
-    return catDb().if_(evalT);
+  public IfFuncCB ifFuncCB(TypeB t) {
+    return catDb().ifFunc(t);
   }
 
-  public InvokeCB invokeCB() {
-    return invokeCB(blobTB());
+  public MapFuncCB mapFuncCB() {
+    return mapFuncCB(intTB(), boolTB());
   }
 
-  public InvokeCB invokeCB(TypeB evalT) {
-    return catDb().invoke(evalT);
-  }
-
-  public MapCB mapCB() {
-    return mapCB(arrayTB(intTB()));
-  }
-
-  public MapCB mapCB(ArrayTB evalT) {
-    return catDb().map(evalT);
+  public MapFuncCB mapFuncCB(TypeB r, TypeB s) {
+    return catDb().mapFunc(r, s);
   }
 
   public OrderCB orderCB() {
@@ -610,33 +614,29 @@ public class TestContext {
     return bytecodeF().file(string, blob);
   }
 
-  public FuncB funcB() {
-    return funcB(intB());
+  public DefFuncB defFuncB() {
+    return defFuncB(intB());
   }
 
-  public FuncB funcB(ExprB body) {
-    return funcB(list(), body);
+  public DefFuncB defFuncB(ExprB body) {
+    return defFuncB(list(), body);
   }
 
-  public FuncB funcB(ImmutableList<TypeB> paramTs, ExprB body) {
-    return funcB(body.type(), paramTs, body);
+  public DefFuncB defFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
+    var funcTB = funcTB(body.type(), paramTs);
+    return defFuncB(funcTB, body);
   }
 
-  public FuncB funcB(TypeB resT, ImmutableList<TypeB> paramTs, ExprB body) {
-    var type = catDb().func(resT, paramTs);
-    return funcB(type, body);
+  public DefFuncB defFuncB(FuncTB type, ExprB body) {
+    return bytecodeDb().defFunc(type, body);
   }
 
-  public FuncB funcB(FuncTB type, ExprB body) {
-    return bytecodeDb().func(type, body);
+  public DefFuncB idFuncB() {
+    return defFuncB(list(intTB()), paramRefB(intTB(), 0));
   }
 
-  public FuncB idFuncB() {
-    return funcB(list(intTB()), paramRefB(intTB(), 0));
-  }
-
-  public FuncB returnAbcFuncB() {
-    return funcB(stringB("abc"));
+  public DefFuncB returnAbcFuncB() {
+    return defFuncB(stringB("abc"));
   }
 
   public IntB intB() {
@@ -651,28 +651,28 @@ public class TestContext {
     return bytecodeDb().int_(value);
   }
 
-  public MethodB methodB(Class<?> clazz) throws IOException {
-    return methodB(blobBJarWithPluginApi(clazz), stringB(clazz.getCanonicalName()));
+  public NatFuncB natFuncB(Class<?> clazz) throws IOException {
+    return natFuncB(blobBJarWithPluginApi(clazz), stringB(clazz.getCanonicalName()));
   }
 
-  public MethodB methodB() {
-    return methodB(methodTB());
+  public NatFuncB natFuncB() {
+    return natFuncB(funcTB());
   }
 
-  public MethodB methodB(MethodTB methodTB) {
-    return methodB(methodTB, blobB(7), stringB("class binary name"), boolB(true));
+  public NatFuncB natFuncB(FuncTB funcTB) {
+    return natFuncB(funcTB, blobB(7), stringB("class binary name"), boolB(true));
   }
 
-  public MethodB methodB(BlobB jar, StringB classBinaryName) {
-    return methodB(methodTB(), jar, classBinaryName);
+  public NatFuncB natFuncB(BlobB jar, StringB classBinaryName) {
+    return natFuncB(funcTB(), jar, classBinaryName);
   }
 
-  public MethodB methodB(MethodTB type, BlobB jar, StringB classBinaryName) {
-    return methodB(type, jar, classBinaryName, boolB(true));
+  public NatFuncB natFuncB(FuncTB type, BlobB jar, StringB classBinaryName) {
+    return natFuncB(type, jar, classBinaryName, boolB(true));
   }
 
-  public MethodB methodB(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return bytecodeDb().method(type, jar, classBinaryName, isPure);
+  public NatFuncB natFuncB(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+    return bytecodeDb().natFunc(type, jar, classBinaryName, isPure);
   }
 
   public TupleB personB(String firstName, String lastName) {
@@ -740,25 +740,12 @@ public class TestContext {
     return bytecodeDb().combine(evalT, list(items));
   }
 
-  public IfB ifB(TypeB evalT, ExprB condition, ExprB then, ExprB else_) {
-    return bytecodeDb().if_(evalT, condition, then, else_);
+  public IfFuncB ifFuncB(TypeB t) {
+    return bytecodeDb().ifFunc(t);
   }
 
-  public InvokeB invokeB(MethodB method, ExprB... args) {
-    var combineB = combineB(args);
-    return invokeBImpl(method.type().res(), method, combineB);
-  }
-
-  public InvokeB invokeB(TypeB evalT, ExprB method, ExprB... args) {
-    return invokeBImpl(evalT, method, combineB(args));
-  }
-
-  private InvokeB invokeBImpl(TypeB evalT, ExprB method, CombineB args) {
-    return bytecodeDb().invoke(evalT, method, args);
-  }
-
-  public MapB mapB(ExprB array, ExprB func) {
-    return bytecodeDb().map(array, func);
+  public MapFuncB mapFuncB(TypeB r, TypeB s) {
+    return bytecodeDb().mapFunc(r, s);
   }
 
   public OrderB orderB(ExprB... elems) {

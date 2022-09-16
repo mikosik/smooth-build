@@ -8,24 +8,22 @@ import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_FUNCTION;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_INT;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_PERSON_TUPLE;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_STR;
+import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_STRING;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BOOL;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_FUNCTION;
+import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_FUNC;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_INT;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_METHOD;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_PERSON_TUPLE;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_STR;
+import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_STRING;
 import static org.smoothbuild.testing.type.TestingCatsB.BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.CALL;
 import static org.smoothbuild.testing.type.TestingCatsB.CAT_DB;
 import static org.smoothbuild.testing.type.TestingCatsB.COMBINE;
 import static org.smoothbuild.testing.type.TestingCatsB.FUNC;
-import static org.smoothbuild.testing.type.TestingCatsB.IF;
+import static org.smoothbuild.testing.type.TestingCatsB.IF_FUNC;
 import static org.smoothbuild.testing.type.TestingCatsB.INT;
-import static org.smoothbuild.testing.type.TestingCatsB.INVOKE;
-import static org.smoothbuild.testing.type.TestingCatsB.MAP;
+import static org.smoothbuild.testing.type.TestingCatsB.MAP_FUNC;
 import static org.smoothbuild.testing.type.TestingCatsB.METHOD;
 import static org.smoothbuild.testing.type.TestingCatsB.ORDER;
 import static org.smoothbuild.testing.type.TestingCatsB.PARAM_REF;
@@ -44,9 +42,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
-import org.smoothbuild.bytecode.expr.oper.IfB;
-import org.smoothbuild.bytecode.expr.oper.InvokeB;
-import org.smoothbuild.bytecode.expr.oper.MapB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.ParamRefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
@@ -54,14 +49,17 @@ import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
 import org.smoothbuild.bytecode.expr.val.BoolB;
 import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.IfFuncB;
 import org.smoothbuild.bytecode.expr.val.IntB;
-import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.MapFuncB;
+import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.DefFuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.NatFuncCB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.testing.TestContext;
@@ -73,12 +71,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
 public class CatBTest extends TestContext {
-  @Test
-  public void verify_all_base_cats_are_tested() {
-    assertThat(CatKindB.values())
-        .hasLength(16);
-  }
-
   @ParameterizedTest
   @MethodSource("names")
   public void name(Function<CatDb, CatB> factoryCall, String name) {
@@ -118,11 +110,14 @@ public class CatBTest extends TestContext {
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.func(f.string(), list()), "String()"),
-        args(f -> f.func(f.string(), list(f.string())), "String(String)"),
-
-        args(f -> f.method(f.string(), list()), "_String()"),
-        args(f -> f.method(f.string(), list(f.string())), "_String(String)"),
+        args(f -> f.defFunc(f.string(), list()), "DEF_FUNC:String()"),
+        args(f -> f.defFunc(f.string(), list(f.string())), "DEF_FUNC:String(String)"),
+        args(f -> f.ifFunc(f.int_()), "IF_FUNC:Int(Bool,Int,Int)"),
+        args(f -> f.mapFunc(f.int_(), f.string()), "MAP_FUNC:[Int]([String],Int(String))"),
+        args(f -> f.natFunc(f.string(), list()), "NAT_FUNC:String()"),
+        args(f -> f.natFunc(f.string(), list(f.string())), "NAT_FUNC:String(String)"),
+        args(f -> f.funcT(f.string(), list()), "String()"),
+        args(f -> f.funcT(f.string(), list(f.string())), "String(String)"),
 
         args(f -> f.tuple(), "{}"),
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
@@ -130,9 +125,6 @@ public class CatBTest extends TestContext {
 
         args(f -> f.call(f.int_()), "Call:Int"),
         args(f -> f.combine(f.tuple(f.string(), f.int_())), "Combine:{String,Int}"),
-        args(f -> f.if_(f.int_()), "If:Int"),
-        args(f -> f.map(f.array(f.int_())), "Map:[Int]"),
-        args(f -> f.invoke(f.int_()), "Invoke:Int"),
         args(f -> f.order(f.array(f.string())), "Order:[String]"),
         args(f -> f.paramRef(f.int_()), "ParamRef:Int"),
         args(f -> f.select(f.int_()), "Select:Int")
@@ -151,9 +143,9 @@ public class CatBTest extends TestContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.func(f.int_(), list()), f -> f.int_()),
-          args(f -> f.func(f.blob(), list(f.bool())), f -> f.blob()),
-          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+          args(f -> f.funcT(f.int_(), list()), f -> f.int_()),
+          args(f -> f.funcT(f.blob(), list(f.bool())), f -> f.blob()),
+          args(f -> f.funcT(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
       );
     }
 
@@ -167,43 +159,79 @@ public class CatBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.func(f.int_(), list()), f -> f.tuple()),
-          args(f -> f.func(f.blob(), list(f.bool())), f -> f.tuple(f.bool())),
-          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(f.bool(), f.int_()))
+          args(f -> f.funcT(f.int_(), list()), f -> f.tuple()),
+          args(f -> f.funcT(f.blob(), list(f.bool())), f -> f.tuple(f.bool())),
+          args(f -> f.funcT(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
+
   @Nested
-  class _method {
+  class _def_func {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CatDb, MethodTB> factoryCall,
+    public void result(Function<CatDb, DefFuncCB> factoryCall,
         Function<CatDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).res())
+      assertThat(execute(factoryCall).type().res())
           .isEqualTo(execute(expected));
     }
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.method(f.int_(), list()), f -> f.int_()),
-          args(f -> f.method(f.blob(), list(f.bool())), f -> f.blob()),
-          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+          args(f -> f.defFunc(f.funcT(f.int_(), list())), f -> f.int_()),
+          args(f -> f.defFunc(f.funcT(f.blob(), list(f.bool()))), f -> f.blob()),
+          args(f -> f.defFunc(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.blob())
       );
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CatDb, MethodTB> factoryCall,
+    public void params(Function<CatDb, DefFuncCB> factoryCall,
         Function<CatDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).params())
+      assertThat(execute(factoryCall).type().params())
           .isEqualTo(execute(expected));
     }
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.method(f.int_(), list()), f -> f.tuple()),
-          args(f -> f.method(f.blob(), list(f.bool())), f -> f.tuple(f.bool())),
-          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(f.bool(), f.int_()))
+          args(f -> f.defFunc(f.funcT(f.int_(), list())), f -> f.tuple()),
+          args(f -> f.defFunc(f.funcT(f.blob(), list(f.bool()))), f -> f.tuple(f.bool())),
+          args(f -> f.defFunc(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.tuple(f.bool(), f.int_()))
+      );
+    }
+  }
+
+  @Nested
+  class _method {
+    @ParameterizedTest
+    @MethodSource("result_cases")
+    public void result(Function<CatDb, NatFuncCB> factoryCall,
+        Function<CatDb, List<TypeB>> expected) {
+      assertThat(execute(factoryCall).type().res())
+          .isEqualTo(execute(expected));
+    }
+
+    public static List<Arguments> result_cases() {
+      return asList(
+          args(f -> f.natFunc(f.funcT(f.int_(), list())), f -> f.int_()),
+          args(f -> f.natFunc(f.funcT(f.blob(), list(f.bool()))), f -> f.blob()),
+          args(f -> f.natFunc(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.blob())
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("params_cases")
+    public void params(Function<CatDb, NatFuncCB> factoryCall,
+        Function<CatDb, List<TypeB>> expected) {
+      assertThat(execute(factoryCall).type().params())
+          .isEqualTo(execute(expected));
+    }
+
+    public static List<Arguments> params_cases() {
+      return asList(
+          args(f -> f.natFunc(f.funcT(f.int_(), list())), f -> f.tuple()),
+          args(f -> f.natFunc(f.funcT(f.blob(), list(f.bool()))), f -> f.tuple(f.bool())),
+          args(f -> f.natFunc(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
@@ -223,16 +251,14 @@ public class CatBTest extends TestContext {
       return asList(
           args(f -> f.blob()),
           args(f -> f.bool()),
-          args(f -> f.func(f.string(), list())),
-          args(f -> f.method(f.string(), list())),
+          args(f -> f.funcT(f.string(), list())),
           args(f -> f.int_()),
           args(f -> f.string()),
           args(f -> f.tuple(f.int_())),
 
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
-          args(f -> f.array(f.func(f.string(), list()))),
-          args(f -> f.array(f.method(f.string(), list()))),
+          args(f -> f.array(f.funcT(f.string(), list()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.string()))
       );
@@ -276,25 +302,23 @@ public class CatBTest extends TestContext {
         arguments(BLOB, BlobB.class),
         arguments(BOOL, BoolB.class),
         arguments(FUNC, FuncB.class),
+        arguments(IF_FUNC, IfFuncB.class),
+        arguments(MAP_FUNC, MapFuncB.class),
         arguments(INT, IntB.class),
-        arguments(METHOD, MethodB.class),
+        arguments(METHOD, NatFuncB.class),
         arguments(PERSON, TupleB.class),
         arguments(STRING, StringB.class),
 
         arguments(ARRAY_BLOB, ArrayB.class),
         arguments(ARRAY_BOOL, ArrayB.class),
-        arguments(ARRAY_FUNCTION, ArrayB.class),
+        arguments(ARRAY_FUNC, ArrayB.class),
         arguments(ARRAY_INT, ArrayB.class),
-        arguments(ARRAY_METHOD, ArrayB.class),
         arguments(ARRAY_PERSON_TUPLE, ArrayB.class),
-        arguments(ARRAY_STR, ArrayB.class),
+        arguments(ARRAY_STRING, ArrayB.class),
 
         arguments(CALL, CallB.class),
         arguments(ORDER, OrderB.class),
         arguments(COMBINE, CombineB.class),
-        arguments(IF, IfB.class),
-        arguments(INVOKE, InvokeB.class),
-        arguments(MAP, MapB.class),
         arguments(PARAM_REF, ParamRefB.class),
         arguments(SELECT, SelectB.class)
     );
@@ -322,13 +346,6 @@ public class CatBTest extends TestContext {
           arguments(db.combine(db.tuple()), db.tuple()),
           arguments(db.combine(db.tuple(STRING)), db.tuple(STRING))
       );
-    }
-
-    @ParameterizedTest
-    @MethodSource("types")
-    public void invoke(TypeB type) {
-      assertThat(CAT_DB.invoke(type).evalT())
-          .isEqualTo(type);
     }
 
     @ParameterizedTest
@@ -370,23 +387,22 @@ public class CatBTest extends TestContext {
 
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
-    tester.addEqualityGroup(ARRAY_FUNCTION, ARRAY_FUNCTION);
+    tester.addEqualityGroup(ARRAY_FUNC, ARRAY_FUNC);
     tester.addEqualityGroup(ARRAY_INT, ARRAY_INT);
-    tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
+    tester.addEqualityGroup(ARRAY_STRING, ARRAY_STRING);
     tester.addEqualityGroup(ARRAY_PERSON_TUPLE, ARRAY_PERSON_TUPLE);
 
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
     tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
     tester.addEqualityGroup(ARRAY2_FUNCTION, ARRAY2_FUNCTION);
     tester.addEqualityGroup(ARRAY2_INT, ARRAY2_INT);
-    tester.addEqualityGroup(ARRAY2_STR, ARRAY2_STR);
+    tester.addEqualityGroup(ARRAY2_STRING, ARRAY2_STRING);
     tester.addEqualityGroup(ARRAY2_PERSON_TUPLE, ARRAY2_PERSON_TUPLE);
 
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(COMBINE, COMBINE);
-    tester.addEqualityGroup(IF, IF);
-    tester.addEqualityGroup(INVOKE, INVOKE);
-    tester.addEqualityGroup(MAP, MAP);
+    tester.addEqualityGroup(IF_FUNC, IF_FUNC);
+    tester.addEqualityGroup(MAP_FUNC, MAP_FUNC);
     tester.addEqualityGroup(ORDER, ORDER);
     tester.addEqualityGroup(PARAM_REF, PARAM_REF);
     tester.addEqualityGroup(SELECT, SELECT);

@@ -4,16 +4,16 @@ import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.function.Supplier;
 
-import org.smoothbuild.bytecode.type.val.CallableTB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 
 import com.google.common.collect.ImmutableList;
 
 public class ValidateArgs {
-  public static void validateArgs(CallableTB callableTB, ImmutableList<TypeB> items,
+  public static void validateArgs(FuncTB funcTB, ImmutableList<TypeB> items,
       Supplier<RuntimeException> illegalArgsExcThrower) {
     allMatchOtherwise(
-        callableTB.params().items(),
+        funcTB.params().items(),
         items,
         CatB::equals,
         (expectedSize, actualSize) -> { throw illegalArgsExcThrower.get(); },

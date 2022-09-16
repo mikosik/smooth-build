@@ -26,15 +26,15 @@ public class TaskHashesCollisionTest extends TestContext {
     addHash(list, set, combineTaskHash(tupleTB(stringTB())));
     addHash(list, set, combineTaskHash(tupleTB(intTB(), stringTB())));
     addHash(list, set, invokeTaskHash(
-        methodB(methodTB(intTB()), blobB(1), stringB("1"), boolB(true))));
+        natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, invokeTaskHash(
-        methodB(methodTB(intTB()), blobB(1), stringB("1"), boolB(false))));
+        natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false))));
     addHash(list, set, invokeTaskHash(
-        methodB(methodTB(intTB()), blobB(1), stringB("2"), boolB(true))));
+        natFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true))));
     addHash(list, set, invokeTaskHash(
-        methodB(methodTB(intTB()), blobB(2), stringB("1"), boolB(true))));
+        natFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true))));
     addHash(list, set, invokeTaskHash(
-        methodB(methodTB(boolTB()), blobB(1), stringB("1"), boolB(true))));
+        natFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, orderTaskHash(arrayTB(intTB())));
     addHash(list, set, orderTaskHash(arrayTB(boolTB())));
     addHash(list, set, selectTaskHash());

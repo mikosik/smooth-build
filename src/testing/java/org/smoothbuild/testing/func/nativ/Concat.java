@@ -10,7 +10,7 @@ public class Concat {
     ArrayB first = (ArrayB) args.get(0);
     ArrayB second = (ArrayB) args.get(1);
 
-    var elemT = first.cat().elem();
+    var elemT = first.type().elem();
     return nativeApi.factory()
         .arrayBuilderWithElems(elemT)
         .addAll(first.elems(ValB.class))

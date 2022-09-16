@@ -26,13 +26,12 @@ import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.ParamRefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
-import org.smoothbuild.bytecode.expr.val.FuncB;
+import org.smoothbuild.bytecode.expr.val.DefFuncB;
 import org.smoothbuild.bytecode.expr.val.IntB;
-import org.smoothbuild.bytecode.expr.val.MethodB;
+import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.compile.lang.base.ExprInfo;
@@ -61,6 +60,7 @@ import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
+import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.load.FileLoader;
@@ -181,38 +181,30 @@ public class SbTranslator {
     };
   }
 
-  private FuncB translateDefFunc(DefFuncS defFuncS) {
-    var funcTB = translateFuncT(defFuncS.type());
-    var body = translateExpr(defFuncS.body());
-    return bytecodeF.func(funcTB, body);
+  private DefFuncB translateDefFunc(DefFuncS defFuncS) {
+    return bytecodeF.defFunc(
+        translateT(defFuncS.type()),
+        translateExpr(defFuncS.body()));
   }
 
-  private FuncB translateNatFunc(AnnFuncS natFuncS) {
-    var funcTB = translateFuncT(natFuncS.type());
-    var methodTB = bytecodeF.methodT(funcTB.res(), funcTB.params());
-    var methodB = createMethodB(natFuncS.ann(), methodTB);
-    var paramRefsB = createParamRefsB(funcTB.params());
-    var paramsTB = bytecodeF.tupleT(map(paramRefsB, ExprB::type));
-    var argsB = bytecodeF.combine(paramsTB, paramRefsB);
-    var bodyB = bytecodeF.invoke(funcTB.res(), methodB, argsB);
-    descriptions.put(bodyB, natFuncS);
-    return bytecodeF.func(funcTB, bodyB);
-  }
-
-  private MethodB createMethodB(AnnS annS, MethodTB methodTB) {
+  private NatFuncB translateNatFunc(AnnFuncS natFuncS) {
+    var funcTB = translateT(natFuncS.type());
+    var annS = natFuncS.ann();
     var jarB = loadNativeJar(annS.loc());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
     var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
-    return bytecodeF.method(methodTB, jarB, classBinaryNameB, isPureB);
+    return bytecodeF.natFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private FuncB translateSyntCtor(SyntCtorS syntCtorS) {
-    var funcTB = translateFuncT(syntCtorS.type());
-    var paramRefsB = createParamRefsB(funcTB.params());
+  private DefFuncB translateSyntCtor(SyntCtorS syntCtorS) {
+    var funcTS = syntCtorS.type();
+    var resTB = translateT(funcTS.res());
+    var paramTBs = translateT(funcTS.params());
+    var paramRefsB = createParamRefsB(paramTBs);
     var paramsTB = bytecodeF.tupleT(map(paramRefsB, ExprB::type));
     var bodyB = bytecodeF.combine(paramsTB, paramRefsB);
     descriptions.put(bodyB, new ExprInfoImpl("{}", syntCtorS.loc()));
-    return bytecodeF.func(funcTB, bodyB);
+    return bytecodeF.defFunc(resTB, paramTBs, bodyB);
   }
 
   private ImmutableList<ExprB> createParamRefsB(TupleTB paramTs) {
@@ -310,12 +302,16 @@ public class SbTranslator {
     return typeSbTranslator.translate(typeS);
   }
 
-  private ArrayTB translateArrayT(ArrayTS typeS) {
-    return typeSbTranslator.translate(typeS);
+  private FuncTB translateT(FuncTS funcTS) {
+    return typeSbTranslator.translate(funcTS);
   }
 
-  private FuncTB translateFuncT(FuncTS funcTS) {
-    return typeSbTranslator.translate(funcTS);
+  private TupleTB translateT(TupleTS tupleTS) {
+    return typeSbTranslator.translate(tupleTS);
+  }
+
+  private ArrayTB translateArrayT(ArrayTS arrayTS) {
+    return typeSbTranslator.translate(arrayTS);
   }
 
   private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {

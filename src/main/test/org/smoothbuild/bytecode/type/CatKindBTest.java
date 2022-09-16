@@ -2,6 +2,21 @@ package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.bytecode.type.CatKinds.ARRAY;
+import static org.smoothbuild.bytecode.type.CatKinds.BLOB;
+import static org.smoothbuild.bytecode.type.CatKinds.BOOL;
+import static org.smoothbuild.bytecode.type.CatKinds.CALL;
+import static org.smoothbuild.bytecode.type.CatKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CatKinds.FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.IF_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.INT;
+import static org.smoothbuild.bytecode.type.CatKinds.MAP_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CatKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CatKinds.PARAM_REF;
+import static org.smoothbuild.bytecode.type.CatKinds.SELECT;
+import static org.smoothbuild.bytecode.type.CatKinds.STRING;
+import static org.smoothbuild.bytecode.type.CatKinds.TUPLE;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Collection;
@@ -28,21 +43,22 @@ public class CatKindBTest {
 
   private static Collection<Arguments> marker_to_obj_kind_map() {
     return list(
-        arguments(0, CatKindB.BLOB),
-        arguments(1, CatKindB.BOOL),
-        arguments(2, CatKindB.INT),
-        arguments(3, CatKindB.STRING),
-        arguments(4, CatKindB.ARRAY),
-        arguments(5, CatKindB.TUPLE),
-        arguments(7, CatKindB.METHOD),
-        arguments(8, CatKindB.ORDER),
-        arguments(9, CatKindB.COMBINE),
-        arguments(10, CatKindB.SELECT),
-        arguments(11, CatKindB.CALL),
-        arguments(12, CatKindB.INVOKE),
-        arguments(13, CatKindB.IF),
-        arguments(14, CatKindB.PARAM_REF),
-        arguments(15, CatKindB.MAP)
+        arguments(0, BLOB),
+        arguments(1, BOOL),
+        arguments(2, INT),
+        arguments(3, STRING),
+        arguments(4, ARRAY),
+        arguments(5, TUPLE),
+        arguments(7, NAT_FUNC),
+        arguments(8, ORDER),
+        arguments(9, COMBINE),
+        arguments(10, SELECT),
+        arguments(11, CALL),
+        // TODO 12 is unused
+        arguments(13, IF_FUNC),
+        arguments(14, PARAM_REF),
+        arguments(15, MAP_FUNC),
+        arguments(16, FUNC)
     );
   }
 
