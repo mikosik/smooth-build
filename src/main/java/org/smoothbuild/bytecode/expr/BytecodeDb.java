@@ -163,7 +163,7 @@ public class BytecodeDb {
     }
     CatB cat = getCatOrChainException(rootHash, hashes.get(0));
     Hash dataHash = hashes.get(1);
-    return cat.newObj(new MerkleRoot(rootHash, cat, dataHash), this);
+    return cat.newExpr(new MerkleRoot(rootHash, cat, dataHash), this);
   }
 
   private CatB getCatOrChainException(Hash rootHash, Hash typeHash) {
@@ -189,49 +189,49 @@ public class BytecodeDb {
   public ArrayB newArray(ArrayTB type, List<ValB> elems) throws HashedDbExc {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   public BlobB newBlob(Hash dataHash) throws HashedDbExc {
     var root = newRoot(catDb.blob(), dataHash);
-    return catDb.blob().newObj(root, this);
+    return catDb.blob().newExpr(root, this);
   }
 
   private BoolB newBool(boolean value) throws HashedDbExc {
     var data = writeBoolData(value);
     var root = newRoot(catDb.bool(), data);
-    return catDb.bool().newObj(root, this);
+    return catDb.bool().newExpr(root, this);
   }
 
   private FuncB newFunc(FuncTB type, ExprB body) throws HashedDbExc {
     var data = writeFuncData(body);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private IntB newInt(BigInteger value) throws HashedDbExc {
     var data = writeIntData(value);
     var root = newRoot(catDb.int_(), data);
-    return catDb.int_().newObj(root, this);
+    return catDb.int_().newExpr(root, this);
   }
 
   private MethodB newMethod(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws HashedDbExc {
     var data = writeMethodData(jar, classBinaryName, isPure);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private StringB newString(String string) throws HashedDbExc {
     var data = writeStringData(string);
     var root = newRoot(catDb.string(), data);
-    return catDb.string().newObj(root, this);
+    return catDb.string().newExpr(root, this);
   }
 
   private TupleB newTuple(TupleTB type, ImmutableList<ValB> items) throws HashedDbExc {
     var data = writeTupleData(items);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   // methods for creating Expr-s
@@ -248,7 +248,7 @@ public class BytecodeDb {
     var type = catDb.call(evalT);
     var data = writeCallData(func, args);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private FuncTB castTypeToFuncTB(ExprB callable) {
@@ -280,7 +280,7 @@ public class BytecodeDb {
     var type = catDb.order(evalT);
     var data = writeOrderData(elems);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private void validateOrderElems(TypeB elemT, ImmutableList<ExprB> elems) {
@@ -298,7 +298,7 @@ public class BytecodeDb {
     var type = catDb.combine(evalT);
     var data = writeCombineData(items);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private void validateCombineItems(TupleTB evalT, ImmutableList<ExprB> items) {
@@ -327,7 +327,7 @@ public class BytecodeDb {
     var type = catDb.if_(evalT);
     var data = writeIfData(condition, then, else_);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private InvokeB newInvoke(TypeB evalT, ExprB method, CombineB args) throws HashedDbExc {
@@ -341,7 +341,7 @@ public class BytecodeDb {
     var type = catDb.invoke(evalT);
     var data = writeInvokeData(method, args);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private MethodTB castTypeToMethodTB(ExprB method) {
@@ -378,7 +378,7 @@ public class BytecodeDb {
 
     var data = writeMapData(array, func);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private SelectB newSelect(TypeB evalT, ExprB selectable, IntB index) throws HashedDbExc {
@@ -390,7 +390,7 @@ public class BytecodeDb {
     var data = writeSelectData(selectable, index);
     var cat = catDb.select(evalT);
     var root = newRoot(cat, data);
-    return cat.newObj(root, this);
+    return cat.newExpr(root, this);
   }
 
   private TypeB selectEvalT(ExprB selectable, IntB index) {
@@ -410,7 +410,7 @@ public class BytecodeDb {
     var data = writeParamRefData(index);
     var type = catDb.paramRef(evalT);
     var root = newRoot(type, data);
-    return type.newObj(root, this);
+    return type.newExpr(root, this);
   }
 
   private MerkleRoot newRoot(CatB cat, Hash dataHash) throws HashedDbExc {

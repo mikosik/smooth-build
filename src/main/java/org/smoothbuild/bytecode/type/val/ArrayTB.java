@@ -26,7 +26,7 @@ public final class ArrayTB extends TypeB {
   }
 
   @Override
-  public ArrayB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public ArrayB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof ArrayTB);
     return new ArrayB(merkleRoot, bytecodeDb);
   }

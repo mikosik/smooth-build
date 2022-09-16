@@ -15,7 +15,7 @@ public class ParamRefCB extends OperCatB {
   }
 
   @Override
-  public ParamRefB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public ParamRefB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof ParamRefCB);
     return new ParamRefB(merkleRoot, bytecodeDb);
   }

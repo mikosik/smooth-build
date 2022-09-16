@@ -15,7 +15,7 @@ public class IfCB extends OperCatB {
   }
 
   @Override
-  public IfB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public IfB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof IfCB);
     return new IfB(merkleRoot, bytecodeDb);
   }

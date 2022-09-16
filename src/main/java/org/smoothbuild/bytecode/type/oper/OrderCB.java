@@ -23,7 +23,7 @@ public class OrderCB extends OperCatB {
   }
 
   @Override
-  public OrderB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public OrderB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof OrderCB);
     return new OrderB(merkleRoot, bytecodeDb);
   }

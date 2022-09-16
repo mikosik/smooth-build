@@ -30,7 +30,7 @@ public final class FuncTB extends TypeB implements CallableTB {
   }
 
   @Override
-  public FuncB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public FuncB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof FuncTB);
     return new FuncB(merkleRoot, bytecodeDb);
   }

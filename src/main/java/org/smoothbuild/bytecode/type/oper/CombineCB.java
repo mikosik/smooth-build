@@ -23,7 +23,7 @@ public class CombineCB extends OperCatB {
   }
 
   @Override
-  public CombineB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public CombineB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof CombineCB);
     return new CombineB(merkleRoot, bytecodeDb);
   }

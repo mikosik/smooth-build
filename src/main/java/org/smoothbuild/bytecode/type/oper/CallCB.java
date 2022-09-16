@@ -18,7 +18,7 @@ public class CallCB extends OperCatB {
   }
 
   @Override
-  public CallB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public CallB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof CallCB);
     return new CallB(merkleRoot, bytecodeDb);
   }

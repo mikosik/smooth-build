@@ -27,7 +27,7 @@ public abstract class CatB implements Named {
     return name;
   }
 
-  public abstract ExprB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb);
+  public abstract ExprB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb);
 
   public Hash hash() {
     return hash;

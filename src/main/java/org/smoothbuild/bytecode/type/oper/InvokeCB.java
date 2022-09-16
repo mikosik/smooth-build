@@ -15,7 +15,7 @@ public class InvokeCB extends OperCatB {
   }
 
   @Override
-  public InvokeB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public InvokeB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof InvokeCB);
     return new InvokeB(merkleRoot, bytecodeDb);
   }

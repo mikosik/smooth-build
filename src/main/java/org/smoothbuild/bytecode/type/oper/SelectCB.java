@@ -18,7 +18,7 @@ public class SelectCB extends OperCatB {
   }
 
   @Override
-  public SelectB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public SelectB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof SelectCB);
     return new SelectB(merkleRoot, bytecodeDb);
   }

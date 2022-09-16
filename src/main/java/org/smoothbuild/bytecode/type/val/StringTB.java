@@ -17,7 +17,7 @@ public class StringTB extends BaseTB {
   }
 
   @Override
-  public StringB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public StringB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof StringTB);
     return new StringB(merkleRoot, bytecodeDb);
   }

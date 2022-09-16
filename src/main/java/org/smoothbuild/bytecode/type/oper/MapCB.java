@@ -21,7 +21,7 @@ public class MapCB extends OperCatB {
   }
 
   @Override
-  public MapB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public MapB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof MapCB);
     return new MapB(merkleRoot, bytecodeDb);
   }

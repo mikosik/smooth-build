@@ -30,7 +30,7 @@ public final class MethodTB extends TypeB implements CallableTB {
   }
 
   @Override
-  public MethodB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public MethodB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof MethodTB);
     return new MethodB(merkleRoot, bytecodeDb);
   }

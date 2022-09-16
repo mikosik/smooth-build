@@ -17,7 +17,7 @@ public class IntTB extends BaseTB {
   }
 
   @Override
-  public IntB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public IntB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof IntTB);
     return new IntB(merkleRoot, bytecodeDb);
   }

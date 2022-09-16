@@ -17,7 +17,7 @@ public class BoolTB extends BaseTB {
   }
 
   @Override
-  public BoolB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public BoolB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof BoolTB);
     return new BoolB(merkleRoot, bytecodeDb);
   }

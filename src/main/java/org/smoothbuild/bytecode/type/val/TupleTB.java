@@ -23,7 +23,7 @@ public final class TupleTB extends TypeB {
   }
 
   @Override
-  public TupleB newObj(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public TupleB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     checkArgument(merkleRoot.cat() instanceof TupleTB);
     return new TupleB(merkleRoot, bytecodeDb);
   }
