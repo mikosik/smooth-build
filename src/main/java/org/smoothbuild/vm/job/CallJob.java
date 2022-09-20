@@ -69,11 +69,11 @@ public class CallJob extends ExecutingJob {
   // handling NatFunc
 
   private void handleNatFunc(Consumer<ValB> res, NatFuncB natFuncB) {
-    var exprInfo = context().infoFor(natFuncB);
+    var exprInfo = context().labeledLoc(natFuncB);
     var name = exprInfo.label();
     var resT = natFuncB.type().res();
-    var task = new NativeCallTask(resT, name, natFuncB, context().nativeMethodLoader(),
-        callTaskInfo(natFuncB).asExprInfo());
+    var task = new NativeCallTask(
+        resT, name, natFuncB, context().nativeMethodLoader(), callTaskInfo(natFuncB));
     evaluateTransitively(task, callB.data().args().items())
         .addConsumer(res);
   }
@@ -133,12 +133,12 @@ public class CallJob extends ExecutingJob {
   //helpers
 
   private TaskInfo callTaskInfo(FuncB funcB) {
-    var info = context().infoFor(funcB);
+    var info = context().labeledLoc(funcB);
     return new TaskInfo(CALL, info.label() + "()", locFor(callB));
   }
 
   private Loc locFor(ExprB expr) {
-    var info = context().infoFor(expr);
+    var info = context().labeledLoc(expr);
     if (info == null) {
       return Loc.unknown();
     } else {
