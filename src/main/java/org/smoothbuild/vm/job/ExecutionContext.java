@@ -6,8 +6,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
-import org.smoothbuild.compile.lang.base.ExprInfoImpl;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
+import org.smoothbuild.compile.lang.base.LabeledLocImpl;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
@@ -22,7 +22,7 @@ public class ExecutionContext {
   private final BytecodeF bytecodeF;
   private final NativeMethodLoader nativeMethodLoader;
   private final JobCreator jobCreator;
-  private final ImmutableMap<ExprB, ExprInfo> exprInfos;
+  private final ImmutableMap<ExprB, LabeledLoc> exprInfos;
 
   @Inject
   public ExecutionContext(TaskExecutor taskExecutor, ExecutionReporter reporter,
@@ -33,7 +33,7 @@ public class ExecutionContext {
   public ExecutionContext(TaskExecutor taskExecutor, ExecutionReporter reporter,
       BytecodeF bytecodeF,
       NativeMethodLoader nativeMethodLoader, JobCreator jobCreator,
-      ImmutableMap<ExprB, ExprInfo> exprInfos) {
+      ImmutableMap<ExprB, LabeledLoc> exprInfos) {
     this.taskExecutor = taskExecutor;
     this.reporter = reporter;
     this.bytecodeF = bytecodeF;
@@ -51,14 +51,14 @@ public class ExecutionContext {
         jobCreator.withBindings(args), exprInfos);
   }
 
-  public ExecutionContext withExprInfos(ImmutableMap<ExprB, ExprInfo> exprInfos) {
+  public ExecutionContext withExprInfos(ImmutableMap<ExprB, LabeledLoc> exprInfos) {
     return new ExecutionContext(
         taskExecutor, reporter, bytecodeF, nativeMethodLoader, jobCreator, exprInfos);
   }
 
-  public ExprInfo infoFor(ExprB expr) {
+  public LabeledLoc infoFor(ExprB expr) {
     return requireNonNullElseGet(exprInfos.get(expr),
-        () -> new ExprInfoImpl("@" + expr.hash(), Loc.unknown()));
+        () -> new LabeledLocImpl("@" + expr.hash(), Loc.unknown()));
   }
 
   public ExecutionReporter reporter() {

@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NativeCallTask extends Task {
@@ -22,8 +22,8 @@ public class NativeCallTask extends Task {
   private final NativeMethodLoader nativeMethodLoader;
 
   public NativeCallTask(TypeB outputT, String name, NatFuncB natFunc,
-      NativeMethodLoader methodLoader, ExprInfo exprInfo) {
-    super(outputT, CALL, exprInfo, natFunc.isPure().toJ());
+      NativeMethodLoader methodLoader, LabeledLoc labeledLoc) {
+    super(outputT, CALL, labeledLoc, natFunc.isPure().toJ());
     this.name = name;
     this.nativeMethodLoader = methodLoader;
     this.natFuncB = natFunc;

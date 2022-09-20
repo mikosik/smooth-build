@@ -7,12 +7,12 @@ import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 
 public class OrderTask extends Task {
-  public OrderTask(ArrayTB arrayT, ExprInfo exprInfo) {
-    super(arrayT, ORDER, exprInfo);
+  public OrderTask(ArrayTB arrayT, LabeledLoc labeledLoc) {
+    super(arrayT, ORDER, labeledLoc);
   }
 
   @Override

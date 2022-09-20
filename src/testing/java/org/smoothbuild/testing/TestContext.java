@@ -72,8 +72,8 @@ import org.smoothbuild.bytecode.type.val.NatFuncCB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
-import org.smoothbuild.compile.lang.base.ExprInfoImpl;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
+import org.smoothbuild.compile.lang.base.LabeledLocImpl;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
@@ -1313,11 +1313,11 @@ public class TestContext {
     return new SynchronizedFileSystem(new MemoryFileSystem());
   }
 
-  public static ExprInfo exprInfo() {
+  public static LabeledLoc exprInfo() {
     return exprInfo("description");
   }
 
-  public static ExprInfo exprInfo(String description) {
-    return new ExprInfoImpl(description, Loc.unknown());
+  public static LabeledLoc exprInfo(String description) {
+    return new LabeledLocImpl(description, Loc.unknown());
   }
 }

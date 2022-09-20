@@ -6,12 +6,12 @@ import static org.smoothbuild.vm.task.TaskHashes.combineTaskHash;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CombineTask extends Task {
-  public CombineTask(TupleTB tupleT, ExprInfo exprInfo) {
-    super(tupleT, COMBINE, exprInfo);
+  public CombineTask(TupleTB tupleT, LabeledLoc labeledLoc) {
+    super(tupleT, COMBINE, labeledLoc);
   }
 
   @Override

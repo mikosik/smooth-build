@@ -23,7 +23,7 @@ import org.smoothbuild.bytecode.expr.val.BoolB;
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.Try;
@@ -302,7 +302,7 @@ public class VmTest extends TestContext {
     return evaluate(vm, expr, ImmutableMap.of());
   }
 
-  private ValB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, ExprInfo> descriptions) {
+  private ValB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, LabeledLoc> descriptions) {
     try {
       var results = vm.evaluate(list(expr), descriptions).get();
       assertThat(results.size())

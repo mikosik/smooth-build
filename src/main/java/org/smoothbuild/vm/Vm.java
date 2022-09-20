@@ -12,7 +12,7 @@ import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
@@ -29,7 +29,7 @@ public class Vm {
   }
 
   public Optional<ImmutableList<ValB>> evaluate(ImmutableList<ExprB> exprs,
-      ImmutableMap<ExprB, ExprInfo> exprInfos)
+      ImmutableMap<ExprB, LabeledLoc> exprInfos)
       throws InterruptedException {
     var context = contextProv.get().withExprInfos(exprInfos);
     var executor = context.taskExecutor();

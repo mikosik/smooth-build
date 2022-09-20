@@ -1,5 +1,5 @@
 package org.smoothbuild.compile.lang.base;
 
-public interface ExprInfo extends WithLoc {
+public interface LabeledLoc extends WithLoc {
   public String label();
 }

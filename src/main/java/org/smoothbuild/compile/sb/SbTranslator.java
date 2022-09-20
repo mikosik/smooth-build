@@ -34,8 +34,8 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
-import org.smoothbuild.compile.lang.base.ExprInfoImpl;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
+import org.smoothbuild.compile.lang.base.LabeledLocImpl;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
@@ -77,7 +77,7 @@ public class SbTranslator {
   private final BytecodeLoader bytecodeLoader;
   private final Deque<NList<ItemS>> callStack;
   private final Map<CacheKey, ExprB> cache;
-  private final Map<ExprB, ExprInfo> descriptions;
+  private final Map<ExprB, LabeledLoc> descriptions;
 
   @Inject
   public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader,
@@ -91,7 +91,7 @@ public class SbTranslator {
     this.descriptions = new HashMap<>();
   }
 
-  public ImmutableMap<ExprB, ExprInfo> descriptions() {
+  public ImmutableMap<ExprB, LabeledLoc> descriptions() {
     return ImmutableMap.copyOf(descriptions);
   }
 
@@ -130,7 +130,7 @@ public class SbTranslator {
     var paramTupleT = ((FuncTB) callableB.type()).params();
     var combineB = bytecodeF.combine(paramTupleT, argsB);
 
-    descriptions.put(combineB, new ExprInfoImpl("{}", callS.loc()));
+    descriptions.put(combineB, new LabeledLocImpl("{}", callS.loc()));
     return bytecodeF.call(translateT(callS.type()), callableB, combineB);
   }
 
@@ -203,7 +203,7 @@ public class SbTranslator {
     var paramRefsB = createParamRefsB(paramTBs);
     var paramsTB = bytecodeF.tupleT(map(paramRefsB, ExprB::type));
     var bodyB = bytecodeF.combine(paramsTB, paramRefsB);
-    descriptions.put(bodyB, new ExprInfoImpl("{}", syntCtorS.loc()));
+    descriptions.put(bodyB, new LabeledLocImpl("{}", syntCtorS.loc()));
     return bytecodeF.defFunc(resTB, paramTBs, bodyB);
   }
 

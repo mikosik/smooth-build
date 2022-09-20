@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.sb.SbTranslator;
 import org.smoothbuild.compile.sb.SbTranslatorProv;
@@ -46,7 +46,7 @@ public class Evaluator {
   }
 
   private Optional<ImmutableList<ValB>> evaluate(Vm vm, ImmutableList<ExprB> exprs,
-      ImmutableMap<ExprB, ExprInfo> descriptions) {
+      ImmutableMap<ExprB, LabeledLoc> descriptions) {
     try {
       return vm.evaluate(exprs, descriptions);
     } catch (InterruptedException e) {

@@ -9,14 +9,14 @@ import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.compile.lang.base.ExprInfo;
+import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
 public class SelectTask extends Task {
-  public SelectTask(TypeB outputT, ExprInfo exprInfo) {
-    super(outputT, SELECT, exprInfo);
+  public SelectTask(TypeB outputT, LabeledLoc labeledLoc) {
+    super(outputT, SELECT, labeledLoc);
   }
 
   @Override
