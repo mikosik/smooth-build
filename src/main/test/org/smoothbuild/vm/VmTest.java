@@ -348,8 +348,8 @@ public class VmTest extends TestContext {
     }
 
     @Override
-    public JobCreator withBindings(ImmutableList<Job> args) {
-      return new CountingJobCreator(args, classToCount, counter);
+    public JobCreator withEnvironment(ImmutableList<Job> environment) {
+      return new CountingJobCreator(environment, classToCount, counter);
     }
 
     public AtomicInteger counter() {

@@ -15,15 +15,15 @@ import org.smoothbuild.bytecode.expr.val.ValB;
 import com.google.common.collect.ImmutableList;
 
 public class JobCreator {
-  private final ImmutableList<Job> bindings;
+  private final ImmutableList<Job> environment;
 
   @Inject
   public JobCreator() {
     this(list());
   }
 
-  protected JobCreator(ImmutableList<Job> bindings) {
-    this.bindings = bindings;
+  protected JobCreator(ImmutableList<Job> environment) {
+    this.environment = environment;
   }
 
   public Job jobFor(ExprB expr, ExecutionContext context) {
@@ -32,7 +32,7 @@ public class JobCreator {
       case CallB call -> new CallJob(call, context);
       case CombineB combine -> new CombineJob(combine, context);
       case OrderB order -> new OrderJob(order, context);
-      case RefB ref -> bindings.get(ref.value().intValue());
+      case RefB ref -> environment.get(ref.value().intValue());
       case SelectB select -> new SelectJob(select, context);
       // `default` is needed because ExprB is not sealed because it is in different package
       // than its subclasses and code is not modularized.
@@ -40,7 +40,7 @@ public class JobCreator {
     };
   }
 
-  public JobCreator withBindings(ImmutableList<Job> args) {
-    return new JobCreator(args);
+  public JobCreator withEnvironment(ImmutableList<Job> environment) {
+    return new JobCreator(environment);
   }
 }

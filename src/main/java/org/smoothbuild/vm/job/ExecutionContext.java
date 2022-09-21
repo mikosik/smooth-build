@@ -46,9 +46,9 @@ public class ExecutionContext {
     return jobCreator.jobFor(expr, this);
   }
 
-  public ExecutionContext withBindings(ImmutableList<Job> args) {
+  public ExecutionContext withEnvironment(ImmutableList<Job> args) {
     return new ExecutionContext(taskExecutor, reporter, bytecodeF, nativeMethodLoader,
-        jobCreator.withBindings(args), labeledLocs);
+        jobCreator.withEnvironment(args), labeledLocs);
   }
 
   public ExecutionContext withExprInfos(ImmutableMap<ExprB, LabeledLoc> exprInfos) {

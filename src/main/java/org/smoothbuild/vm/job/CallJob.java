@@ -58,7 +58,7 @@ public class CallJob extends ExecutingJob {
   private void handleDefFunc(DefFuncB defFuncB, Consumer<ValB> resultConsumer) {
     var argsJ = map(args(), context()::jobFor);
     var bodyJob = context()
-        .withBindings(argsJ)
+        .withEnvironment(argsJ)
         .jobFor(defFuncB.body());
     var taskInfo = callTaskInfo(defFuncB);
     evaluateInsideVirtualJob(bodyJob, taskInfo, resultConsumer);
