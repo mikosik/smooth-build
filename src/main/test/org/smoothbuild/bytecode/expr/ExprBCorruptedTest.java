@@ -58,7 +58,7 @@ import org.smoothbuild.bytecode.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.bytecode.type.CatB;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.FuncCB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.testing.TestContext;
@@ -458,8 +458,8 @@ public class ExprBCorruptedTest extends TestContext {
               )
           );
       assertCall(() -> ((CallB) bytecodeDb().get(exprHash)).data())
-          .throwsException(new DecodeExprWrongNodeClassExc(
-              exprHash, type, "func", FuncCB.class, IntTB.class));
+          .throwsException(new DecodeExprWrongNodeTypeExc(
+              exprHash, type, "func", FuncTB.class, intTB()));
     }
 
     @Test
@@ -514,7 +514,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((CallB) bytecodeDb().get(exprHash)).data())
           .throwsException(new DecodeExprWrongNodeTypeExc(
-                  exprHash, type, "callable.result", stringTB(), intTB()));
+                  exprHash, type, "call.result", stringTB(), intTB()));
     }
 
     @Test
@@ -1422,7 +1422,7 @@ public class ExprBCorruptedTest extends TestContext {
       TupleB tuple = (TupleB) bytecodeDb().get(exprHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              exprHash, personTB(), DATA_PATH, 1, stringTB(), boolTB()));
+              exprHash, personTB(), DATA_PATH, personTB(), "`{String,Bool}`"));
     }
 
     @Test

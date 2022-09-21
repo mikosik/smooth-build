@@ -3,7 +3,7 @@ package org.smoothbuild.vm.task;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
-import static org.smoothbuild.vm.task.TaskHashes.invokeTaskHash;
+import static org.smoothbuild.vm.task.TaskHashes.nativeCallTaskHash;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,7 +31,7 @@ public class NativeCallTask extends Task {
 
   @Override
   public Hash hash() {
-    return invokeTaskHash(natFuncB);
+    return nativeCallTaskHash(natFuncB);
   }
 
   @Override

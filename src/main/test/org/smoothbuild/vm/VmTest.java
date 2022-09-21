@@ -161,99 +161,102 @@ public class VmTest extends TestContext {
 
   @Nested
   class _operators {
-    @Test
-    public void call_def_func() {
-      var func = defFuncB(intB(7));
-      var call = callB(func);
-      assertThat(evaluate(call))
-          .isEqualTo(intB(7));
-    }
+    @Nested
+    class _call {
+      @Test
+      public void def_func() {
+        var func = defFuncB(intB(7));
+        var call = callB(func);
+        assertThat(evaluate(call))
+            .isEqualTo(intB(7));
+      }
 
-    @Test
-    public void call_def_func_passed_as_arg() {
-      var func = defFuncB(intB(7));
-      var paramT = func.type();
-      var outerFunc = defFuncB(list(paramT), callB(intTB(), paramRefB(paramT, 0)));
-      var call = callB(outerFunc, func);
-      assertThat(evaluate(call))
-          .isEqualTo(intB(7));
-    }
+      @Test
+      public void def_func_passed_as_arg() {
+        var func = defFuncB(intB(7));
+        var paramT = func.type();
+        var outerFunc = defFuncB(list(paramT), callB(intTB(), paramRefB(paramT, 0)));
+        var call = callB(outerFunc, func);
+        assertThat(evaluate(call))
+            .isEqualTo(intB(7));
+      }
 
-    @Test
-    public void call_def_func_returned_from_call() {
-      var func = defFuncB(intB(7));
-      var outerFunc = defFuncB(func);
-      var call = callB(intTB(), callB(outerFunc));
-      assertThat(evaluate(call))
-          .isEqualTo(intB(7));
-    }
+      @Test
+      public void def_func_returned_from_call() {
+        var func = defFuncB(intB(7));
+        var outerFunc = defFuncB(func);
+        var call = callB(intTB(), callB(outerFunc));
+        assertThat(evaluate(call))
+            .isEqualTo(intB(7));
+      }
 
-    @Test
-    public void if_true_condition() {
-      var ifFunc = ifFuncB(intTB());
-      var call = callB(ifFunc, boolB(true), intB(7), intB(0));
-      assertThat(evaluate(call))
-          .isEqualTo(intB(7));
-    }
+      @Test
+      public void if_func_with_true_condition() {
+        var ifFunc = ifFuncB(intTB());
+        var call = callB(ifFunc, boolB(true), intB(7), intB(0));
+        assertThat(evaluate(call))
+            .isEqualTo(intB(7));
+      }
 
-    @Test
-    public void if_false_condition() {
-      var ifFunc = ifFuncB(intTB());
-      var call = callB(ifFunc, boolB(false), intB(7), intB(0));
-      assertThat(evaluate(call))
-          .isEqualTo(intB(0));
-    }
+      @Test
+      public void if_func_with_false_condition() {
+        var ifFunc = ifFuncB(intTB());
+        var call = callB(ifFunc, boolB(false), intB(7), intB(0));
+        assertThat(evaluate(call))
+            .isEqualTo(intB(0));
+      }
 
-    @Test
-    public void call_map_func() {
-      var s = intTB();
-      var r = tupleTB(s);
-      var func = defFuncB(funcTB(r, s), combineB(paramRefB(s, 0)));
-      var mapFunc = mapFuncB(r, s);
-      var map = callB(mapFunc, arrayB(intB(1), intB(2)), func);
-      assertThat(evaluate(map))
-          .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
-    }
+      @Test
+      public void map_func() {
+        var s = intTB();
+        var r = tupleTB(s);
+        var func = defFuncB(funcTB(r, s), combineB(paramRefB(s, 0)));
+        var mapFunc = mapFuncB(r, s);
+        var map = callB(mapFunc, arrayB(intB(1), intB(2)), func);
+        assertThat(evaluate(map))
+            .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
+      }
 
-    @Test
-    public void call_nat_func() throws Exception {
-      var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-      var call = callB(natFunc, intB(33));
-      var nativeMethodLoader = mock(NativeMethodLoader.class);
-      when(nativeMethodLoader.load(any(), eq(natFunc)))
-          .thenReturn(
-              Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(vm(nativeMethodLoader), call))
-          .isEqualTo(intB(33));
-    }
+      @Test
+      public void nat_func() throws Exception {
+        var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+        var call = callB(natFunc, intB(33));
+        var nativeMethodLoader = mock(NativeMethodLoader.class);
+        when(nativeMethodLoader.load(any(), eq(natFunc)))
+            .thenReturn(
+                Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+        assertThat(evaluate(vm(nativeMethodLoader), call))
+            .isEqualTo(intB(33));
+      }
 
-    @Test
-    public void call_nat_func_passed_as_arg() throws NoSuchMethodException {
-      var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-      var nativeMethodLoader = mock(NativeMethodLoader.class);
-      when(nativeMethodLoader.load(any(), eq(natFunc)))
-          .thenReturn(
-              Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+      @Test
+      public void nat_func_passed_as_arg() throws NoSuchMethodException {
+        var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+        var nativeMethodLoader = mock(NativeMethodLoader.class);
+        when(nativeMethodLoader.load(any(), eq(natFunc)))
+            .thenReturn(
+                Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
-      var natFuncT = natFunc.type();
-      var outerFunc = defFuncB(list(natFuncT), callB(intTB(), paramRefB(natFuncT, 0), intB(7)));
-      var call = callB(outerFunc, natFunc);
-      assertThat(evaluate(vm(nativeMethodLoader), call))
-          .isEqualTo(intB(7));
-    }
+        var natFuncT = natFunc.type();
+        var outerFunc = defFuncB(list(natFuncT), callB(intTB(), paramRefB(natFuncT, 0), intB(7)));
+        var call = callB(outerFunc, natFunc);
+        assertThat(evaluate(vm(nativeMethodLoader), call))
+            .isEqualTo(intB(7));
+      }
 
-    @Test
-    public void call_nat_func_returned_from_call() throws NoSuchMethodException {
-      var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-      var nativeMethodLoader = mock(NativeMethodLoader.class);
-      when(nativeMethodLoader.load(any(), eq(natFunc)))
-          .thenReturn(
-              Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+      @Test
+      public void nat_func_returned_from_call() throws NoSuchMethodException {
+        var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+        var nativeMethodLoader = mock(NativeMethodLoader.class);
+        when(nativeMethodLoader.load(any(), eq(natFunc)))
+            .thenReturn(
+                Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
-      var outerFunc = defFuncB(natFunc);
-      var call = callB(intTB(), callB(outerFunc), intB(7));
-      assertThat(evaluate(vm(nativeMethodLoader), call))
-          .isEqualTo(intB(7));
+        var outerFunc = defFuncB(natFunc);
+        var call = callB(intTB(), callB(outerFunc), intB(7));
+        assertThat(evaluate(vm(nativeMethodLoader), call))
+            .isEqualTo(intB(7));
+      }
     }
 
     @Test

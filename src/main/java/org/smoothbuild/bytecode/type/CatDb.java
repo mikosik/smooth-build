@@ -217,11 +217,11 @@ public class CatDb {
       case ArrayKindB array -> newArray(hash, readDataAsValT(hash, rootSeq, kind));
       case CallKindB call -> newCall(hash, readDataAsEvalT(hash, rootSeq, kind));
       case CombineKindB combine -> newCombine(hash, readDataAsTupleT(hash, rootSeq, kind));
-      case DefFuncKindB defFuncKind -> readFuncCat(hash, rootSeq, defFuncKind);
-      case FuncKindB defFuncKind -> readFuncT(hash, rootSeq);
-      case IfFuncKindB ifFuncKind -> readIfFuncCat(hash, rootSeq, ifFuncKind);
-      case MapFuncKindB mapFuncKind -> readMapFuncCat(hash, rootSeq, mapFuncKind);
-      case NatFuncKindB natFuncKind -> readFuncCat(hash, rootSeq, natFuncKind);
+      case DefFuncKindB defFunc -> readFuncCat(hash, rootSeq, defFunc);
+      case FuncKindB func -> readFuncT(hash, rootSeq);
+      case IfFuncKindB ifFunc -> readIfFuncCat(hash, rootSeq, ifFunc);
+      case MapFuncKindB mapFunc -> readMapFuncCat(hash, rootSeq, mapFunc);
+      case NatFuncKindB natFunc -> readFuncCat(hash, rootSeq, natFunc);
       case OrderKindB order -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
       case ParamRefKindB paramRef -> newParamRef(hash, readDataAsEvalT(hash, rootSeq, kind));
       case SelectKindB select -> newSelect(hash, readDataAsEvalT(hash, rootSeq, kind));
@@ -284,12 +284,10 @@ public class CatDb {
   }
 
   private FuncTB readFuncT(Hash rootHash, List<Hash> rootSeq) {
-    var kind = FUNC;
-    assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
-    ImmutableList<TypeB> nodes = readNodes(rootHash, kind, rootSeq.get(DATA_IDX));
-    int expectedSize = 2;
-    if (nodes.size() != expectedSize) {
-      throw new DecodeCatWrongSeqSizeExc(rootHash, kind, DATA_PATH, expectedSize, nodes.size());
+    assertCatRootSeqSize(rootHash, FUNC, rootSeq, 2);
+    var nodes = readNodes(rootHash, FUNC, rootSeq.get(DATA_IDX));
+    if (nodes.size() != 2) {
+      throw new DecodeCatWrongSeqSizeExc(rootHash, FUNC, DATA_PATH, 2, nodes.size());
     }
     var res = nodes.get(FUNC_RES_IDX);
     var params = nodes.get(FUNC_PARAMS_IDX);
@@ -297,7 +295,7 @@ public class CatDb {
       return cache(new FuncTB(rootHash, res, paramsTuple));
     } else {
       throw new DecodeCatWrongNodeCatExc(
-          rootHash, kind, FUNC_PARAMS_PATH, TupleTB.class, params.getClass());
+          rootHash, FUNC, FUNC_PARAMS_PATH, TupleTB.class, params.getClass());
     }
   }
 
@@ -309,8 +307,8 @@ public class CatDb {
       }
       var res = funcTB.res();
       boolean first = params.get(0).equals(bool);
-      boolean second = res.equals(params.get(1));
-      boolean third = res.equals(params.get(2));
+      boolean second = params.get(1).equals(res);
+      boolean third = params.get(2).equals(res);
       if (!(first && second && third)) {
         throw illegalIfFuncTypeExc(hash, funcTB);
       }

@@ -12,8 +12,8 @@ public class TaskHashes {
     return hash(1, type.hash());
   }
 
-  public static Hash invokeTaskHash(NatFuncB method) {
-    return hash(2, method.hash());
+  public static Hash nativeCallTaskHash(NatFuncB natFunc) {
+    return hash(2, natFunc.hash());
   }
 
   public static Hash orderTaskHash(TypeB typeB) {

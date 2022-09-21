@@ -2,7 +2,7 @@ package org.smoothbuild.vm.task;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.vm.task.TaskHashes.combineTaskHash;
-import static org.smoothbuild.vm.task.TaskHashes.invokeTaskHash;
+import static org.smoothbuild.vm.task.TaskHashes.nativeCallTaskHash;
 import static org.smoothbuild.vm.task.TaskHashes.orderTaskHash;
 import static org.smoothbuild.vm.task.TaskHashes.selectTaskHash;
 
@@ -25,15 +25,15 @@ public class TaskHashesCollisionTest extends TestContext {
     addHash(list, set, combineTaskHash(tupleTB(intTB())));
     addHash(list, set, combineTaskHash(tupleTB(stringTB())));
     addHash(list, set, combineTaskHash(tupleTB(intTB(), stringTB())));
-    addHash(list, set, invokeTaskHash(
+    addHash(list, set, nativeCallTaskHash(
         natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true))));
-    addHash(list, set, invokeTaskHash(
+    addHash(list, set, nativeCallTaskHash(
         natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false))));
-    addHash(list, set, invokeTaskHash(
+    addHash(list, set, nativeCallTaskHash(
         natFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true))));
-    addHash(list, set, invokeTaskHash(
+    addHash(list, set, nativeCallTaskHash(
         natFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true))));
-    addHash(list, set, invokeTaskHash(
+    addHash(list, set, nativeCallTaskHash(
         natFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, orderTaskHash(arrayTB(intTB())));
     addHash(list, set, orderTaskHash(arrayTB(boolTB())));

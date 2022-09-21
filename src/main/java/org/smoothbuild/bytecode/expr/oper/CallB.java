@@ -1,19 +1,24 @@
 package org.smoothbuild.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.bytecode.type.Validator.validateArgs;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
-import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
+import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.oper.CallCB;
-import org.smoothbuild.bytecode.type.val.FuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
 
 /**
  * This class is thread-safe.
  */
-public class CallB extends CallLikeB {
+public class CallB extends OperB {
+  private static final int DATA_SEQ_SIZE = 2;
+  private static final int CALLABLE_IDX = 0;
+  private static final int ARGS_IDX = 1;
+
   public CallB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
     checkArgument(merkleRoot.cat() instanceof CallCB);
@@ -34,12 +39,24 @@ public class CallB extends CallLikeB {
   public record Data(ExprB callable, CombineB args) {}
 
   private void validate(ExprB func, CombineB argsCombine) {
-    if (func.type() instanceof FuncTB funcT) {
-      validate(funcT, argsCombine);
+    if (func.type() instanceof FuncTB funcTB) {
+      validate(funcTB, argsCombine);
     } else {
-      throw new DecodeExprWrongNodeClassExc(
-          hash(), cat(), "func", FuncCB.class, func.type().getClass());
+      throw new DecodeExprWrongNodeTypeExc(hash(), cat(), "func", FuncTB.class, func.type());
     }
+  }
+
+  protected void validate(FuncTB funcTB, CombineB argsCombine) {
+    var argsT = argsCombine.type();
+    validateArgs(funcTB, argsT.items(), () -> illegalArgsExc(funcTB.params(), argsT));
+    var resT = funcTB.res();
+    if (!type().equals(resT)) {
+      throw new DecodeExprWrongNodeTypeExc(hash(), cat(), "call.result", type(), resT);
+    }
+  }
+
+  private RuntimeException illegalArgsExc(TupleTB params, TupleTB argsType) {
+    return new DecodeExprWrongNodeTypeExc(hash(), cat(), "args", params, argsType);
   }
 
   private ExprB readFunc() {

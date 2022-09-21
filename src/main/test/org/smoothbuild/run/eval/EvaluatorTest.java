@@ -73,6 +73,35 @@ public class EvaluatorTest  extends TestContext {
       assertThat(evaluate(callS))
           .isEqualTo(arrayB(intTB(), intB(7)));
     }
+
+    @Test
+    public void native_call_argless() throws Exception {
+      var funcS = natFuncS(intTS(), "f", nlist(), natAnnS(1, stringS("class binary name")));
+      var callS = callS(intTS(), funcS);
+      var jarB = blobB(137);
+      when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
+          .thenReturn(jarB);
+      when(nativeMethodLoader.load(any(), any()))
+          .thenReturn(Try.result(
+              EvaluatorTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
+      assertThat(evaluate(callS))
+          .isEqualTo(intB(173));
+    }
+
+    @Test
+    public void native_call_with_param() throws Exception {
+      var funcS = natFuncS(intTS(), "f", nlist(itemS(intTS(), "p")),
+          natAnnS(1, stringS("class binary name")));
+      var callS = callS(intTS(), funcS, intS(77));
+      var jarB = blobB(137);
+      when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
+          .thenReturn(jarB);
+      when(nativeMethodLoader.load(any(), any()))
+          .thenReturn(Try.result(
+              EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+      assertThat(evaluate(callS))
+          .isEqualTo(intB(77));
+    }
   }
 
   @Nested
@@ -105,38 +134,6 @@ public class EvaluatorTest  extends TestContext {
       var syntCtorS = syntCtorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
       assertThat(evaluate(syntCtorS))
           .isEqualTo(defFuncB(list(intTB()), combineB(paramRefB(intTB(), 0))));
-    }
-  }
-
-  @Nested
-  class _invoke {
-    @Test
-    public void invoke_argless() throws Exception {
-      var funcS = natFuncS(intTS(), "f", nlist(), natAnnS(1, stringS("class binary name")));
-      var callS = callS(intTS(), funcS);
-      var jarB = blobB(137);
-      when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
-          .thenReturn(jarB);
-      when(nativeMethodLoader.load(any(), any()))
-          .thenReturn(Try.result(
-              EvaluatorTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(callS))
-          .isEqualTo(intB(173));
-    }
-
-    @Test
-    public void invoke_with_param() throws Exception {
-      var funcS = natFuncS(intTS(), "f", nlist(itemS(intTS(), "p")),
-          natAnnS(1, stringS("class binary name")));
-      var callS = callS(intTS(), funcS, intS(77));
-      var jarB = blobB(137);
-      when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
-          .thenReturn(jarB);
-      when(nativeMethodLoader.load(any(), any()))
-          .thenReturn(Try.result(
-              EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-      assertThat(evaluate(callS))
-          .isEqualTo(intB(77));
     }
   }
 

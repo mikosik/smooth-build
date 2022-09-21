@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.bytecode.expr.exc.DecodeExprRootExc.cannotReadRootException;
 import static org.smoothbuild.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;
-import static org.smoothbuild.bytecode.type.ValidateArgs.validateArgs;
+import static org.smoothbuild.bytecode.type.Validator.validateArgs;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
@@ -157,18 +157,18 @@ public class BytecodeDb {
     if (rootSeqSize != 2 && rootSeqSize != 1) {
       throw wrongSizeOfRootSeqException(rootHash, rootSeqSize);
     }
-    CatB cat = getCatOrChainException(rootHash, hashes.get(0));
-    if (cat.containsData()) {
+    CatB category = getCatOrChainException(rootHash, hashes.get(0));
+    if (category.containsData()) {
       if (rootSeqSize != 2) {
-        throw wrongSizeOfRootSeqException(rootHash, cat, rootSeqSize);
+        throw wrongSizeOfRootSeqException(rootHash, category, rootSeqSize);
       }
-      Hash dataHash = hashes.get(1);
-      return cat.newExpr(new MerkleRoot(rootHash, cat, dataHash), this);
+      var dataHash = hashes.get(1);
+      return category.newExpr(new MerkleRoot(rootHash, category, dataHash), this);
     } else {
       if (rootSeqSize != 1) {
-        throw wrongSizeOfRootSeqException(rootHash, cat, rootSeqSize);
+        throw wrongSizeOfRootSeqException(rootHash, category, rootSeqSize);
       }
-      return cat.newExpr(new MerkleRoot(rootHash, cat, null), this);
+      return category.newExpr(new MerkleRoot(rootHash, category, null), this);
     }
   }
 
@@ -243,9 +243,9 @@ public class BytecodeDb {
   // methods for creating Expr-s
 
   private CallB newCall(TypeB evalT, ExprB func, CombineB args) throws HashedDbExc {
-    FuncTB callableTB = castTypeToFuncTB(func);
-    validateArgsInCall(callableTB, args);
-    var resT = callableTB.res();
+    var funcTB = castTypeToFuncTB(func);
+    validateArgsInCall(funcTB, args);
+    var resT = funcTB.res();
     if (!evalT.equals(resT)) {
       throw new IllegalArgumentException(
           "Call's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
@@ -266,9 +266,9 @@ public class BytecodeDb {
   }
 
   private void validateArgsInCall(FuncTB funcTB, CombineB args) {
-    validateArgs(funcTB,
-        args.type().items(), () -> {throw illegalArgs(funcTB, args.type());}
-    );
+    validateArgs(funcTB, args.type().items(), () -> {
+      throw illegalArgs(funcTB, args.type());
+    });
   }
 
   private IllegalArgumentException illegalArgs(FuncTB funcTB, TupleTB argsT) {

@@ -217,7 +217,7 @@ public class SbTranslator {
   }
 
   private OrderB translateOrder(OrderS orderS) {
-    var arrayTB = translateArrayT(orderS.type());
+    var arrayTB = translateT(orderS.type());
     var elemsB = translateExprs(orderS.elems());
     return bytecodeF.order(arrayTB, elemsB);
   }
@@ -310,7 +310,7 @@ public class SbTranslator {
     return typeSbTranslator.translate(tupleTS);
   }
 
-  private ArrayTB translateArrayT(ArrayTS arrayTS) {
+  private ArrayTB translateT(ArrayTS arrayTS) {
     return typeSbTranslator.translate(arrayTS);
   }
 

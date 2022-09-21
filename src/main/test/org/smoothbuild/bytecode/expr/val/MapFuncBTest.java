@@ -25,7 +25,7 @@ public class MapFuncBTest extends TestContext {
     protected List<MapFuncB> nonEqualExprs() {
       return list(
           mapFuncB(intTB(), boolTB()),
-          mapFuncB(boolTB(), stringTB()),
+          mapFuncB(intTB(), stringTB()),
           mapFuncB(stringTB(), stringTB())
       );
     }

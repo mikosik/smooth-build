@@ -71,7 +71,7 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_invoke_task_and_empty_input_is_stable() {
+  public void hash_of_computation_with_nat_call_task_and_empty_input_is_stable() {
     var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
     var task = new NativeCallTask(stringTB(), "name", natFuncB, null, exprInfo());
     var input = tupleB();
@@ -80,7 +80,7 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hash_of_computation_with_invoke_task_and_non_empty_input_is_stable() {
+  public void hash_of_computation_with_nat_call_task_and_non_empty_input_is_stable() {
     var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
     var task = new NativeCallTask(stringTB(), "name", natFuncB, null, exprInfo());
     var input = tupleB(stringB("abc"), stringB("def"));

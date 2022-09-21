@@ -44,78 +44,62 @@ public class CallJob extends ExecutingJob {
     return result;
   }
 
-  private void onFuncJobCompleted(ValB valB, Consumer<ValB> res) {
+  private void onFuncJobCompleted(ValB valB, Consumer<ValB> resConsumer) {
     switch ((FuncB) valB) {
-      case DefFuncB defFuncB -> handleDefFunc(res, defFuncB);
-      case NatFuncB natFuncB -> handleNatFunc(res, natFuncB);
-      case MapFuncB mapFuncB -> handleMapFunc(mapFuncB, callB.data().args().items(), res);
-      case IfFuncB ifFuncB -> handleIfFunc(ifFuncB, callB.data().args().items(), res);
+      case DefFuncB defFuncB -> handleDefFunc(defFuncB, resConsumer);
+      case IfFuncB ifFuncB -> handleIfFunc(ifFuncB, resConsumer);
+      case MapFuncB mapFuncB -> handleMapFunc(mapFuncB, resConsumer);
+      case NatFuncB natFuncB -> handleNatFunc(natFuncB, resConsumer);
     }
   }
 
   // handling DefFunc
 
-  private void handleDefFunc(Consumer<ValB> res, DefFuncB defFuncB) {
-    var argsJ = map(callB.data().args().items(), context()::jobFor);
+  private void handleDefFunc(DefFuncB defFuncB, Consumer<ValB> resultConsumer) {
+    var argsJ = map(args(), context()::jobFor);
     var bodyJob = context()
         .withBindings(argsJ)
         .jobFor(defFuncB.body());
     var taskInfo = callTaskInfo(defFuncB);
-    new VirtualJob(bodyJob, taskInfo, context().reporter())
-        .evaluate()
-        .addConsumer(res);
-  }
-
-  // handling NatFunc
-
-  private void handleNatFunc(Consumer<ValB> res, NatFuncB natFuncB) {
-    var exprInfo = context().labeledLoc(natFuncB);
-    var name = exprInfo.label();
-    var resT = natFuncB.type().res();
-    var task = new NativeCallTask(
-        resT, name, natFuncB, context().nativeMethodLoader(), callTaskInfo(natFuncB));
-    evaluateTransitively(task, callB.data().args().items())
-        .addConsumer(res);
+    evaluateInsideVirtualJob(bodyJob, taskInfo, resultConsumer);
   }
 
   // handling if function
 
-  private void handleIfFunc(IfFuncB ifFuncB, ImmutableList<ExprB> args, Consumer<ValB> res) {
+  private void handleIfFunc(IfFuncB ifFuncB, Consumer<ValB> res) {
+    var args = args();
     context()
         .jobFor(args.get(0))
         .evaluate()
-        .addConsumer(v -> onConditionCalculated(v, ifFuncB, args, res));
+        .addConsumer(v -> onConditionEvaluated(v, ifFuncB, args, res));
   }
 
-  private void onConditionCalculated(ValB conditionValB, IfFuncB ifFuncB, ImmutableList<ExprB> args,
+  private void onConditionEvaluated(ValB conditionValB, IfFuncB ifFuncB, ImmutableList<ExprB> args,
       Consumer<ValB> resultConsumer) {
     var condition = ((BoolB) conditionValB).toJ();
     var job = context().jobFor(args.get(condition ? 1 : 2));
     var taskInfo = callTaskInfo(ifFuncB);
-    new VirtualJob(job, taskInfo, context().reporter())
-        .evaluate()
-        .addConsumer(resultConsumer);
+    evaluateInsideVirtualJob(job, taskInfo, resultConsumer);
   }
 
   // handling map function
 
-  private void handleMapFunc(MapFuncB mapFuncB, ImmutableList<ExprB> args, Consumer<ValB> result) {
+  private void handleMapFunc(MapFuncB mapFuncB, Consumer<ValB> result) {
+    var args = args();
     var argJobs = map(args, context()::jobFor);
     var argResults = map(argJobs, Job::evaluate);
-    runWhenAllAvailable(argResults, () -> mapOnDepsCompleted(argResults, mapFuncB, result));
+    runWhenAllAvailable(argResults, () -> onMapDepsEvaluated(argResults, mapFuncB, result));
   }
 
-  private void mapOnDepsCompleted(ImmutableList<Promise<ValB>> argResults,
-      MapFuncB mapFuncB, Consumer<ValB> result) {
+  private void onMapDepsEvaluated(ImmutableList<Promise<ValB>> argResults,
+      MapFuncB mapFuncB, Consumer<ValB> resultConsumer) {
     var arrayB = (ArrayB) argResults.get(0).get();
     var funcB = (FuncB) argResults.get(1).get();
     var callBs = map(arrayB.elems(ValB.class), e -> newCallB(funcB, e));
     var orderB = bytecodeF().order(bytecodeF().arrayT(funcB.type().res()), callBs);
     var orderJob = context().jobFor(orderB);
     var taskInfo = callTaskInfo(mapFuncB);
-    new VirtualJob(orderJob, taskInfo, context().reporter())
-        .evaluate()
-        .addConsumer(result);
+    evaluateInsideVirtualJob(orderJob, taskInfo, resultConsumer);
   }
 
   private ExprB newCallB(FuncB funcB, ValB val) {
@@ -130,7 +114,25 @@ public class CallJob extends ExecutingJob {
     return context().bytecodeF();
   }
 
+  // handling NatFunc
+
+  private void handleNatFunc(NatFuncB natFuncB, Consumer<ValB> res) {
+    var exprInfo = context().labeledLoc(natFuncB);
+    var name = exprInfo.label();
+    var resT = natFuncB.type().res();
+    var task = new NativeCallTask(
+        resT, name, natFuncB, context().nativeMethodLoader(), callTaskInfo(natFuncB));
+    evaluateTransitively(task, args())
+        .addConsumer(res);
+  }
+
   //helpers
+
+  private void evaluateInsideVirtualJob(Job job, TaskInfo taskInfo, Consumer<ValB> resultConsumer) {
+    new VirtualJob(job, taskInfo, context().reporter())
+        .evaluate()
+        .addConsumer(resultConsumer);
+  }
 
   private TaskInfo callTaskInfo(FuncB funcB) {
     var info = context().labeledLoc(funcB);
@@ -144,5 +146,9 @@ public class CallJob extends ExecutingJob {
     } else {
       return info.loc();
     }
+  }
+
+  private ImmutableList<ExprB> args() {
+    return callB.data().args().items();
   }
 }

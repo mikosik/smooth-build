@@ -117,10 +117,6 @@ public class BytecodeF {
     return bytecodeDb.defFunc(type, body);
   }
 
-  public NatFuncB natFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return bytecodeDb.natFunc(funcTB, jar, classBinaryName, isPure);
-  }
-
   public IfFuncB ifFunc(TypeB t) {
     return bytecodeDb.ifFunc(t);
   }
@@ -131,6 +127,10 @@ public class BytecodeF {
 
   public MapFuncB mapFunc(TypeB r, TypeB s) {
     return bytecodeDb.mapFunc(r, s);
+  }
+
+  public NatFuncB natFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure) {
+    return bytecodeDb.natFunc(funcTB, jar, classBinaryName, isPure);
   }
 
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {

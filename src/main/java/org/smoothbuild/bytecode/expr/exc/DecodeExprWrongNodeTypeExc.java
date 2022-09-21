@@ -16,6 +16,20 @@ public class DecodeExprWrongNodeTypeExc extends DecodeExprNodeExc {
   }
 
   private static String buildMessage(CatB expected, CatB actual) {
-    return "Node has unexpected type. Expected " + expected.q() + " but was " + actual.q() + ".";
+    return buildMessage(expected.q(), actual.q());
+  }
+
+  public DecodeExprWrongNodeTypeExc(
+      Hash hash, CatB cat, String path, TypeB expected, String actual) {
+    super(hash, cat, path, buildMessage(expected.q(), actual));
+  }
+
+  public DecodeExprWrongNodeTypeExc(
+      Hash hash, CatB cat, String path, Class<?> expected, TypeB actual) {
+    super(hash, cat, path, buildMessage("instance of " + expected.getSimpleName(), actual.q()));
+  }
+
+  private static String buildMessage(String expected, String actual) {
+    return "Node has unexpected type. Expected " + expected + " but was " + actual + ".";
   }
 }

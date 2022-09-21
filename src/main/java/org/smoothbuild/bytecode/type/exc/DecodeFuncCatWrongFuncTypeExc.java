@@ -11,12 +11,12 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
 public class DecodeFuncCatWrongFuncTypeExc extends DecodeCatNodeExc {
   public static DecodeFuncCatWrongFuncTypeExc illegalIfFuncTypeExc(Hash hash, FuncTB funcTB) {
     return new DecodeFuncCatWrongFuncTypeExc(hash, IF_FUNC,
-        "Function type " + funcTB.q() + " doesn't match type of if function.");
+        "Function type " + funcTB.q() + " doesn't match type of `if` function.");
   }
 
   public static DecodeFuncCatWrongFuncTypeExc illegalMapFuncTypeExc(Hash hash, FuncTB funcTB) {
     return new DecodeFuncCatWrongFuncTypeExc(hash, MAP_FUNC,
-        "Function type " + funcTB.q() + " doesn't match type of map function.");
+        "Function type " + funcTB.q() + " doesn't match type of `map` function.");
   }
 
   public DecodeFuncCatWrongFuncTypeExc(Hash hash, CatKindB kind, String message) {

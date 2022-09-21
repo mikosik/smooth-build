@@ -287,7 +287,7 @@ public class TestContext {
 
   private Console console() {
     // Use System.out if you want to see smooth logs in junit output
-//     var outputStream = System.out;
+    // var outputStream = System.out;
     var outputStream = nullOutputStream();
     return new Console(new PrintWriter(outputStream, true));
   }

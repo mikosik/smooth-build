@@ -2,11 +2,15 @@ package org.smoothbuild.bytecode.expr.val;
 
 import static com.google.common.base.Suppliers.memoize;
 import static java.util.Objects.checkIndex;
+import static org.smoothbuild.bytecode.type.Validator.validateTuple;
+import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.val.TypeB;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
@@ -38,17 +42,17 @@ public final class TupleB extends ValB {
   }
 
   private ImmutableList<ValB> instantiateItems() {
-    var itemTs = type().items();
-    var objs = readSeqExprs(DATA_PATH, dataHash(), itemTs.size(), ValB.class);
-    for (int i = 0; i < itemTs.size(); i++) {
-      var val = objs.get(i);
-      var expectedT = itemTs.get(i);
-      var actualT = val.type();
-      if (!expectedT.equals(actualT)) {
-        throw new DecodeExprWrongNodeTypeExc(hash(), cat(), DATA_PATH, i, expectedT, actualT);
-      }
-    }
-    return objs;
+    var type = type();
+    var expectedItemTs = type.items();
+    var items = readSeqExprs(DATA_PATH, dataHash(), expectedItemTs.size(), ValB.class);
+    var itemTs = map(items, ValB::type);
+    validateTuple(type, itemTs, () -> {throw new DecodeExprWrongNodeTypeExc(hash(),
+        cat(), DATA_PATH, type, asTupleToString(itemTs));});
+    return items;
+  }
+
+  private static String asTupleToString(ImmutableList<TypeB> ItemTs) {
+    return "`{" + toCommaSeparatedString(ItemTs) + "}`";
   }
 
   @Override

@@ -35,7 +35,7 @@ public class TypeSbTranslator {
       case ArrayTS a -> translate(a);
       case BlobTS blob -> bytecodeF.blobT();
       case BoolTS bool -> bytecodeF.boolT();
-      case FuncTS f -> translateFunc(f);
+      case FuncTS f -> translate(f);
       case IntTS i -> bytecodeF.intT();
       case VarS v ->  translate(v);
       case StringTS s -> bytecodeF.stringT();
@@ -62,9 +62,5 @@ public class TypeSbTranslator {
 
   public ArrayTB translate(ArrayTS array) {
     return bytecodeF.arrayT(translate(array.elem()));
-  }
-
-  public FuncTB translateFunc(FuncTS func) {
-    return bytecodeF.funcT(translate(func.res()), translate(func.params()));
   }
 }

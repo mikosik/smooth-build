@@ -17,9 +17,15 @@ public class DecodeExprRootExc extends DecodeExprExc {
       Hash hash, CatB category, int actualSize) {
     return new DecodeExprRootExc(hash, "Its root points to hash sequence with " + actualSize
         + " elements. First element is " + category.name() + " category which means "
-        + (category.containsData() ? "its root should point to sequence of 2 elements." :
-        "its root should point to sequence of 1 element.")
-        );
+        + rootShouldPointToSequence(category));
+  }
+
+  private static String rootShouldPointToSequence(CatB category) {
+    if (category.containsData()) {
+      return "its root should point to sequence of 2 elements.";
+    } else {
+      return "its root should point to sequence of 1 element.";
+    }
   }
 
   private DecodeExprRootExc(Hash hash, String message) {
