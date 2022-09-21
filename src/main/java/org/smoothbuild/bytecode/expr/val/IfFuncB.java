@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.type.val.IfFuncCB;
 public final class IfFuncB extends FuncB {
   public IfFuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof IfFuncCB);
+    checkArgument(merkleRoot.category() instanceof IfFuncCB);
   }
 
   @Override

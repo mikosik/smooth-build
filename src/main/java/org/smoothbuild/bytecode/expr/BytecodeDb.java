@@ -36,9 +36,9 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.bytecode.hashed.exc.NoSuchDataExc;
-import org.smoothbuild.bytecode.type.CatB;
-import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.exc.CatDbExc;
+import org.smoothbuild.bytecode.type.CategoryB;
+import org.smoothbuild.bytecode.type.CategoryDb;
+import org.smoothbuild.bytecode.type.exc.CategoryDbExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.DefFuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
@@ -54,11 +54,11 @@ import com.google.common.collect.ImmutableList;
  */
 public class BytecodeDb {
   private final HashedDb hashedDb;
-  private final CatDb catDb;
+  private final CategoryDb categoryDb;
 
-  public BytecodeDb(HashedDb hashedDb, CatDb catDb) {
+  public BytecodeDb(HashedDb hashedDb, CategoryDb categoryDb) {
     this.hashedDb = hashedDb;
-    this.catDb = catDb;
+    this.categoryDb = categoryDb;
   }
 
   // methods for creating ValB subclasses
@@ -76,14 +76,14 @@ public class BytecodeDb {
   }
 
   public NatFuncB natFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    var cat = catDb.natFunc(type);
+    var cat = categoryDb.natFunc(type);
     return wrapHashedDbExcAsBytecodeDbExc(
         () -> newNatFunc(cat, jar, classBinaryName, isPure));
   }
 
   public DefFuncB defFunc(FuncTB type, ExprB body) {
     checkBodyTypeAssignableToFuncResT(type, body);
-    var cat = catDb.defFunc(type);
+    var cat = categoryDb.defFunc(type);
     return wrapHashedDbExcAsBytecodeDbExc(() -> newDefFunc(cat, body));
   }
 
@@ -104,7 +104,7 @@ public class BytecodeDb {
 
   public TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items) {
     var itemTs = tupleT.items();
-    allMatchOtherwise(itemTs, items, (s, i) -> Objects.equals(s, i.cat()),
+    allMatchOtherwise(itemTs, items, (s, i) -> Objects.equals(s, i.category()),
         (i, j) -> {
           throw new IllegalArgumentException(
               "tupleType specifies " + i + " items but provided " + j + ".");
@@ -112,7 +112,7 @@ public class BytecodeDb {
         (i) -> {
           throw new IllegalArgumentException("tupleType specifies item at index " + i
               + " with type " + itemTs.get(i).name() + " but provided item has type "
-              + items.get(i).cat().name() + " at that index.");
+              + items.get(i).category().name() + " at that index.");
         }
     );
 
@@ -157,7 +157,7 @@ public class BytecodeDb {
     if (rootSeqSize != 2 && rootSeqSize != 1) {
       throw wrongSizeOfRootSeqException(rootHash, rootSeqSize);
     }
-    CatB category = getCatOrChainException(rootHash, hashes.get(0));
+    CategoryB category = getCatOrChainException(rootHash, hashes.get(0));
     if (category.containsData()) {
       if (rootSeqSize != 2) {
         throw wrongSizeOfRootSeqException(rootHash, category, rootSeqSize);
@@ -172,10 +172,10 @@ public class BytecodeDb {
     }
   }
 
-  private CatB getCatOrChainException(Hash rootHash, Hash typeHash) {
+  private CategoryB getCatOrChainException(Hash rootHash, Hash typeHash) {
     try {
-      return catDb.get(typeHash);
-    } catch (CatDbExc e) {
+      return categoryDb.get(typeHash);
+    } catch (CategoryDbExc e) {
       throw new DecodeExprCatExc(rootHash, e);
     }
   }
@@ -199,14 +199,14 @@ public class BytecodeDb {
   }
 
   public BlobB newBlob(Hash dataHash) throws HashedDbExc {
-    var root = newRoot(catDb.blob(), dataHash);
-    return catDb.blob().newExpr(root, this);
+    var root = newRoot(categoryDb.blob(), dataHash);
+    return categoryDb.blob().newExpr(root, this);
   }
 
   private BoolB newBool(boolean value) throws HashedDbExc {
     var data = writeBoolData(value);
-    var root = newRoot(catDb.bool(), data);
-    return catDb.bool().newExpr(root, this);
+    var root = newRoot(categoryDb.bool(), data);
+    return categoryDb.bool().newExpr(root, this);
   }
 
   private DefFuncB newDefFunc(DefFuncCB type, ExprB body) throws HashedDbExc {
@@ -217,8 +217,8 @@ public class BytecodeDb {
 
   private IntB newInt(BigInteger value) throws HashedDbExc {
     var data = writeIntData(value);
-    var root = newRoot(catDb.int_(), data);
-    return catDb.int_().newExpr(root, this);
+    var root = newRoot(categoryDb.int_(), data);
+    return categoryDb.int_().newExpr(root, this);
   }
 
   private NatFuncB newNatFunc(NatFuncCB type, BlobB jar, StringB classBinaryName, BoolB isPure)
@@ -230,8 +230,8 @@ public class BytecodeDb {
 
   private StringB newString(String string) throws HashedDbExc {
     var data = writeStringData(string);
-    var root = newRoot(catDb.string(), data);
-    return catDb.string().newExpr(root, this);
+    var root = newRoot(categoryDb.string(), data);
+    return categoryDb.string().newExpr(root, this);
   }
 
   private TupleB newTuple(TupleTB type, ImmutableList<ValB> items) throws HashedDbExc {
@@ -251,7 +251,7 @@ public class BytecodeDb {
           "Call's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
     }
 
-    var type = catDb.call(evalT);
+    var type = categoryDb.call(evalT);
     var data = writeCallData(func, args);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -283,7 +283,7 @@ public class BytecodeDb {
 
   private OrderB newOrder(ArrayTB evalT, ImmutableList<ExprB> elems) throws HashedDbExc {
     validateOrderElems(evalT.elem(), elems);
-    var type = catDb.order(evalT);
+    var type = categoryDb.order(evalT);
     var data = writeOrderData(elems);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -301,7 +301,7 @@ public class BytecodeDb {
 
   private CombineB newCombine(TupleTB evalT, ImmutableList<ExprB> items) throws HashedDbExc {
     validateCombineItems(evalT, items);
-    var type = catDb.combine(evalT);
+    var type = categoryDb.combine(evalT);
     var data = writeCombineData(items);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -324,13 +324,13 @@ public class BytecodeDb {
   }
 
   private IfFuncB newIfFunc(TypeB t) throws HashedDbExc {
-    var ifFuncCB = catDb.ifFunc(t);
+    var ifFuncCB = categoryDb.ifFunc(t);
     var root = newRoot(ifFuncCB);
     return ifFuncCB.newExpr(root, this);
   }
 
   private MapFuncB newMapFunc(TypeB r, TypeB s) throws HashedDbExc {
-    var mapFuncCB = catDb.mapFunc(r, s);
+    var mapFuncCB = categoryDb.mapFunc(r, s);
     var root = newRoot(mapFuncCB);
     return mapFuncCB.newExpr(root, this);
   }
@@ -342,7 +342,7 @@ public class BytecodeDb {
           + " cannot be assigned to evalT " + evalT.q() + ".");
     }
     var data = writeSelectData(selectable, index);
-    var cat = catDb.select(evalT);
+    var cat = categoryDb.select(evalT);
     var root = newRoot(cat, data);
     return cat.newExpr(root, this);
   }
@@ -362,17 +362,17 @@ public class BytecodeDb {
 
   private ParamRefB newParamRef(TypeB evalT, BigInteger index) throws HashedDbExc {
     var data = writeParamRefData(index);
-    var type = catDb.paramRef(evalT);
+    var type = categoryDb.paramRef(evalT);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
-  private MerkleRoot newRoot(CatB cat, Hash dataHash) throws HashedDbExc {
+  private MerkleRoot newRoot(CategoryB cat, Hash dataHash) throws HashedDbExc {
     Hash rootHash = hashedDb.writeSeq(cat.hash(), dataHash);
     return new MerkleRoot(rootHash, cat, dataHash);
   }
 
-  private MerkleRoot newRoot(CatB cat) throws HashedDbExc {
+  private MerkleRoot newRoot(CategoryB cat) throws HashedDbExc {
     Hash rootHash = hashedDb.writeSeq(cat.hash());
     return new MerkleRoot(rootHash, cat, null);
   }
@@ -445,13 +445,9 @@ public class BytecodeDb {
     return hashedDb.writeSeq(hashes);
   }
 
-  // visible for classes from db.object package tree until creating Obj is cached and
+  // visible for classes from db.object package tree until creating ExprB is cached and
   // moved completely to ObjectDb class
   public HashedDb hashedDb() {
     return hashedDb;
-  }
-
-  public CatDb catDb() {
-    return catDb;
   }
 }

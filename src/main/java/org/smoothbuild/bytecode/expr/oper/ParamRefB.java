@@ -20,6 +20,6 @@ public class ParamRefB extends OperB {
 
   @Override
   public String exprToString() {
-    return cat().name() + "(" + value() + ")";
+    return category().name() + "(" + value() + ")";
   }
 }

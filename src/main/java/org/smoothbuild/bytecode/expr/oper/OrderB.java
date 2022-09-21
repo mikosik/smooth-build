@@ -17,26 +17,26 @@ import com.google.common.collect.ImmutableList;
 public class OrderB extends OperB {
   public OrderB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof OrderCB);
+    checkArgument(merkleRoot.category() instanceof OrderCB);
   }
 
   @Override
-  public OrderCB cat() {
-    return (OrderCB) super.cat();
+  public OrderCB category() {
+    return (OrderCB) super.category();
   }
 
   @Override
   public ArrayTB type() {
-    return cat().evalT();
+    return category().evalT();
   }
 
   public ImmutableList<ExprB> elems() {
     var elems = readSeqExprs(DATA_PATH, dataHash(), ExprB.class);
-    var expectedElemT = cat().evalT().elem();
+    var expectedElemT = category().evalT().elem();
     for (int i = 0; i < elems.size(); i++) {
       var actualT = elems.get(i).type();
       if (!expectedElemT.equals(actualT)) {
-        throw new DecodeExprWrongNodeTypeExc(hash(), cat(), "elems", i, expectedElemT, actualT);
+        throw new DecodeExprWrongNodeTypeExc(hash(), category(), "elems", i, expectedElemT, actualT);
       }
     }
     return elems;

@@ -28,7 +28,7 @@ public final class TupleB extends ValB {
 
   @Override
   public TupleTB type() {
-    return (TupleTB) super.cat();
+    return (TupleTB) super.category();
   }
 
   public ValB get(int index) {
@@ -47,7 +47,7 @@ public final class TupleB extends ValB {
     var items = readSeqExprs(DATA_PATH, dataHash(), expectedItemTs.size(), ValB.class);
     var itemTs = map(items, ValB::type);
     validateTuple(type, itemTs, () -> {throw new DecodeExprWrongNodeTypeExc(hash(),
-        cat(), DATA_PATH, type, asTupleToString(itemTs));});
+        category(), DATA_PATH, type, asTupleToString(itemTs));});
     return items;
   }
 

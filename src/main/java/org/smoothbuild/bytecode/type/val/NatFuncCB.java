@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -15,7 +15,7 @@ public final class NatFuncCB extends FuncCB {
 
   @Override
   public NatFuncB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(merkleRoot.cat() instanceof NatFuncCB);
+    checkArgument(merkleRoot.category() instanceof NatFuncCB);
     return new NatFuncB(merkleRoot, bytecodeDb);
   }
 }

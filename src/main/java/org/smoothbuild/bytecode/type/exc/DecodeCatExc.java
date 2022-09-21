@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.exc;
 
 import org.smoothbuild.bytecode.hashed.Hash;
 
-public class DecodeCatExc extends CatDbExc {
+public class DecodeCatExc extends CategoryDbExc {
   public DecodeCatExc(Hash hash) {
     this(hash, null, null);
   }

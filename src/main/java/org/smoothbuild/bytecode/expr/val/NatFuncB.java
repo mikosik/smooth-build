@@ -18,7 +18,7 @@ public final class NatFuncB extends FuncB {
 
   public NatFuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof NatFuncCB);
+    checkArgument(merkleRoot.category() instanceof NatFuncCB);
   }
 
   public BlobB jar() {

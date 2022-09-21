@@ -55,7 +55,7 @@ import org.smoothbuild.bytecode.hashed.exc.DecodeHashSeqExc;
 import org.smoothbuild.bytecode.hashed.exc.DecodeStringExc;
 import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.bytecode.hashed.exc.NoSuchDataExc;
-import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.CategoryB;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
@@ -1440,7 +1440,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
   }
 
-  private void obj_root_without_data_hash(CatB cat) throws HashedDbExc {
+  private void obj_root_without_data_hash(CategoryB cat) throws HashedDbExc {
     var exprHash =
         hash(
             hash(cat));
@@ -1448,7 +1448,7 @@ public class ExprBCorruptedTest extends TestContext {
         .throwsException(wrongSizeOfRootSeqException(exprHash, cat, 1));
   }
 
-  private void obj_root_with_data_hash(CatB category) throws HashedDbExc {
+  private void obj_root_with_data_hash(CategoryB category) throws HashedDbExc {
     var hash =
         hash(
             hash(category),
@@ -1458,7 +1458,7 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   private void obj_root_with_two_data_hashes(
-      CatB type, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbExc {
+      CategoryB type, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbExc {
     Hash exprHash =
         hash(
             hash(type),
@@ -1469,7 +1469,7 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   private void obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-      CatB type, Function<Hash, ?> readClosure) throws HashedDbExc {
+      CategoryB type, Function<Hash, ?> readClosure) throws HashedDbExc {
     Hash dataHash = Hash.of(33);
     Hash exprHash =
         hash(
@@ -1481,7 +1481,7 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-      CatB category, Consumer<Hash> readClosure) throws HashedDbExc {
+      CategoryB category, Consumer<Hash> readClosure) throws HashedDbExc {
     Hash dataHash = Hash.of(33);
     Hash exprHash =
         hash(
@@ -1533,7 +1533,7 @@ public class ExprBCorruptedTest extends TestContext {
     return expr.hash();
   }
 
-  protected Hash hash(CatB type) {
+  protected Hash hash(CategoryB type) {
     return type.hash();
   }
 

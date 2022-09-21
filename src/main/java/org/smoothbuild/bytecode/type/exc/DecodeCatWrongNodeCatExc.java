@@ -1,10 +1,10 @@
 package org.smoothbuild.bytecode.type.exc;
 
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.CatKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB;
 
 public class DecodeCatWrongNodeCatExc extends DecodeCatNodeExc {
-  public DecodeCatWrongNodeCatExc(Hash hash, CatKindB kind, String memberPath, int pathIndex,
+  public DecodeCatWrongNodeCatExc(Hash hash, CategoryKindB kind, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, kind, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -13,7 +13,7 @@ public class DecodeCatWrongNodeCatExc extends DecodeCatNodeExc {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public DecodeCatWrongNodeCatExc(Hash hash, CatKindB kind, String path, Class<?> expected,
+  public DecodeCatWrongNodeCatExc(Hash hash, CategoryKindB kind, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }

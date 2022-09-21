@@ -54,7 +54,7 @@ import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.hashed.HashedDb;
-import org.smoothbuild.bytecode.type.CatDb;
+import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.oper.CallCB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
@@ -155,7 +155,7 @@ public class TestContext {
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
   private BytecodeDb bytecodeDb;
-  private CatDb catDb;
+  private CategoryDb categoryDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
@@ -320,21 +320,21 @@ public class TestContext {
 
   public BytecodeF bytecodeF() {
     if (bytecodeF == null) {
-      bytecodeF = new BytecodeF(bytecodeDb(), catDb());
+      bytecodeF = new BytecodeF(bytecodeDb(), categoryDb());
     }
     return bytecodeF;
   }
 
-  public CatDb catDb() {
-    if (catDb == null) {
-      catDb = new CatDb(hashedDb());
+  public CategoryDb categoryDb() {
+    if (categoryDb == null) {
+      categoryDb = new CategoryDb(hashedDb());
     }
-    return catDb;
+    return categoryDb;
   }
 
   public BytecodeDb bytecodeDb() {
     if (bytecodeDb == null) {
-      bytecodeDb = new BytecodeDb(hashedDb(), catDb());
+      bytecodeDb = new BytecodeDb(hashedDb(), categoryDb());
     }
     return bytecodeDb;
   }
@@ -355,11 +355,11 @@ public class TestContext {
   }
 
   public BytecodeDb bytecodeDbOther() {
-    return new BytecodeDb(hashedDb(), catDbOther());
+    return new BytecodeDb(hashedDb(), categoryDbOther());
   }
 
-  public CatDb catDbOther() {
-    return new CatDb(hashedDb());
+  public CategoryDb categoryDbOther() {
+    return new CategoryDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -394,7 +394,7 @@ public class TestContext {
   // ValB types
 
   public TupleTB animalTB() {
-    return catDb().tuple(stringTB(), intTB());
+    return categoryDb().tuple(stringTB(), intTB());
   }
 
   public ArrayTB arrayTB() {
@@ -402,15 +402,15 @@ public class TestContext {
   }
 
   public ArrayTB arrayTB(TypeB elemT) {
-    return catDb().array(elemT);
+    return categoryDb().array(elemT);
   }
 
   public BlobTB blobTB() {
-    return catDb().blob();
+    return categoryDb().blob();
   }
 
   public BoolTB boolTB() {
-    return catDb().bool();
+    return categoryDb().bool();
   }
 
   public TupleTB fileTB() {
@@ -422,7 +422,7 @@ public class TestContext {
   }
 
   public DefFuncCB defFuncCB(TypeB resT, TypeB... paramTs) {
-    return catDb().defFunc(funcTB(resT, paramTs));
+    return categoryDb().defFunc(funcTB(resT, paramTs));
   }
 
   public FuncTB funcTB() {
@@ -434,11 +434,11 @@ public class TestContext {
   }
 
   private FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb().funcT(resT, paramTs);
+    return categoryDb().funcT(resT, paramTs);
   }
 
   public IntTB intTB() {
-    return catDb().int_();
+    return categoryDb().int_();
   }
 
   public NatFuncCB natFuncCB() {
@@ -446,7 +446,7 @@ public class TestContext {
   }
 
   public NatFuncCB natFuncCB(TypeB resT, TypeB... paramTs) {
-    return catDb().natFunc(funcTB(resT, paramTs));
+    return categoryDb().natFunc(funcTB(resT, paramTs));
   }
 
   public TupleTB personTB() {
@@ -454,11 +454,11 @@ public class TestContext {
   }
 
   public StringTB stringTB() {
-    return catDb().string();
+    return categoryDb().string();
   }
 
   public TupleTB tupleTB(TypeB... itemTs) {
-    return catDb().tuple(itemTs);
+    return categoryDb().tuple(itemTs);
   }
 
   // OperB categories
@@ -468,11 +468,11 @@ public class TestContext {
   }
 
   public CallCB callCB(TypeB evalT) {
-    return catDb().call(evalT);
+    return categoryDb().call(evalT);
   }
 
   public CombineCB combineCB(TypeB... itemTs) {
-    return catDb().combine(tupleTB(itemTs));
+    return categoryDb().combine(tupleTB(itemTs));
   }
 
   public IfFuncCB ifFuncCB() {
@@ -480,7 +480,7 @@ public class TestContext {
   }
 
   public IfFuncCB ifFuncCB(TypeB t) {
-    return catDb().ifFunc(t);
+    return categoryDb().ifFunc(t);
   }
 
   public MapFuncCB mapFuncCB() {
@@ -488,7 +488,7 @@ public class TestContext {
   }
 
   public MapFuncCB mapFuncCB(TypeB r, TypeB s) {
-    return catDb().mapFunc(r, s);
+    return categoryDb().mapFunc(r, s);
   }
 
   public OrderCB orderCB() {
@@ -496,7 +496,7 @@ public class TestContext {
   }
 
   public OrderCB orderCB(TypeB elemT) {
-    return catDb().order(arrayTB(elemT));
+    return categoryDb().order(arrayTB(elemT));
   }
 
   public ParamRefCB paramRefCB() {
@@ -504,7 +504,7 @@ public class TestContext {
   }
 
   public ParamRefCB paramRefCB(TypeB evalT) {
-    return catDb().paramRef(evalT);
+    return categoryDb().paramRef(evalT);
   }
 
   public SelectCB selectCB() {
@@ -512,7 +512,7 @@ public class TestContext {
   }
 
   public SelectCB selectCB(TypeB evalT) {
-    return catDb().select(evalT);
+    return categoryDb().select(evalT);
   }
 
   // ValB-s

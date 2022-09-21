@@ -73,9 +73,9 @@ public class ComputationCache {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       ExprB message = bytecodeDb.get(Hash.read(source));
       ArrayTB messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
-      if (!message.cat().equals(messageArrayT)) {
+      if (!message.category().equals(messageArrayT)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayT
-            + " as first child of its Merkle root, but got " + message.cat());
+            + " as first child of its Merkle root, but got " + message.category());
       }
 
       ArrayB messages = (ArrayB) message;
@@ -92,9 +92,9 @@ public class ComputationCache {
       } else {
         Hash resultObjectHash = Hash.read(source);
         ExprB expr = bytecodeDb.get(resultObjectHash);
-        if (!type.equals(expr.cat())) {
+        if (!type.equals(expr.category())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
-              + " as second child of its Merkle root, but got " + expr.cat());
+              + " as second child of its Merkle root, but got " + expr.category());
         } else {
           return new Output((ValB) expr, messages);
         }

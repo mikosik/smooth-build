@@ -1,31 +1,31 @@
 package org.smoothbuild.bytecode.expr.exc;
 
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.CategoryB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 
 public class DecodeExprWrongNodeTypeExc extends DecodeExprNodeExc {
-  public DecodeExprWrongNodeTypeExc(Hash hash, CatB cat, String path, int pathIndex,
+  public DecodeExprWrongNodeTypeExc(Hash hash, CategoryB cat, String path, int pathIndex,
       TypeB expected, TypeB actual) {
     this(hash, cat, indexedPath(path, pathIndex), expected, actual);
   }
 
   public DecodeExprWrongNodeTypeExc(
-      Hash hash, CatB cat, String path, TypeB expected, TypeB actual) {
+      Hash hash, CategoryB cat, String path, TypeB expected, TypeB actual) {
     super(hash, cat, path, buildMessage(expected, actual));
   }
 
-  private static String buildMessage(CatB expected, CatB actual) {
+  private static String buildMessage(CategoryB expected, CategoryB actual) {
     return buildMessage(expected.q(), actual.q());
   }
 
   public DecodeExprWrongNodeTypeExc(
-      Hash hash, CatB cat, String path, TypeB expected, String actual) {
+      Hash hash, CategoryB cat, String path, TypeB expected, String actual) {
     super(hash, cat, path, buildMessage(expected.q(), actual));
   }
 
   public DecodeExprWrongNodeTypeExc(
-      Hash hash, CatB cat, String path, Class<?> expected, TypeB actual) {
+      Hash hash, CategoryB cat, String path, Class<?> expected, TypeB actual) {
     super(hash, cat, path, buildMessage("instance of " + expected.getSimpleName(), actual.q()));
   }
 

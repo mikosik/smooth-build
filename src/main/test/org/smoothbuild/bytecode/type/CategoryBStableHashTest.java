@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.testing.TestContext;
 
-public class CatBStableHashTest extends TestContext {
+public class CategoryBStableHashTest extends TestContext {
   @Test
   public void hashes_of_types_are_stable() {
     assertHash(blobTB(), "7ab8dc8456c25f132551f157c77a1888ef918fac");
@@ -34,7 +34,7 @@ public class CatBStableHashTest extends TestContext {
     assertHash(selectCB(intTB()), "342238445679fe525c975544fc216f01961650df");
   }
 
-  private static void assertHash(CatB type, String hash) {
+  private static void assertHash(CategoryB type, String hash) {
     assertThat(type.hash())
         .isEqualTo(Hash.decode(hash));
   }

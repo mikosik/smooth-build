@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.bytecode.type.CatKinds.ARRAY;
+import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.bytecode.type.val.TNamesB.arrayTypeName;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
@@ -27,7 +27,7 @@ public final class ArrayTB extends TypeB {
 
   @Override
   public ArrayB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(merkleRoot.cat() instanceof ArrayTB);
+    checkArgument(merkleRoot.category() instanceof ArrayTB);
     return new ArrayB(merkleRoot, bytecodeDb);
   }
 }

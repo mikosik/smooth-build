@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKinds.MAP_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -15,7 +15,7 @@ public final class MapFuncCB extends FuncCB {
 
   @Override
   public MapFuncB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(merkleRoot.cat() instanceof MapFuncCB);
+    checkArgument(merkleRoot.category() instanceof MapFuncCB);
     return new MapFuncB(merkleRoot, bytecodeDb);
   }
 

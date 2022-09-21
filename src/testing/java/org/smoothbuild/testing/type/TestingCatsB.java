@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
-import org.smoothbuild.bytecode.type.CatB;
-import org.smoothbuild.bytecode.type.CatDb;
+import org.smoothbuild.bytecode.type.CategoryB;
+import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
@@ -16,24 +16,24 @@ import com.google.common.collect.ImmutableList;
 
 public class TestingCatsB {
   private static final TestContext CONTEXT = new TestContext();
-  public static final CatDb CAT_DB = CONTEXT.catDb();
+  public static final CategoryDb CATEGORY_DB = CONTEXT.categoryDb();
   public static final TypeB BLOB = CONTEXT.blobTB();
   public static final TypeB BOOL = CONTEXT.boolTB();
   public static final TypeB INT = CONTEXT.intTB();
   public static final TypeB FUNC = func(BLOB, BOOL);
-  public static final CatB METHOD = CONTEXT.natFuncCB(BLOB, BOOL);
+  public static final CategoryB METHOD = CONTEXT.natFuncCB(BLOB, BOOL);
   public static final TypeB STRING = CONTEXT.stringTB();
 
   public static final TupleTB PERSON = CONTEXT.personTB();
   public static final TupleTB FILE = CONTEXT.fileTB();
 
-  public static final CatB CALL = CONTEXT.callCB();
-  public static final CatB COMBINE = CONTEXT.combineCB(INT, STRING);
-  public static final CatB IF_FUNC = CONTEXT.ifFuncCB();
-  public static final CatB MAP_FUNC = CONTEXT.mapFuncCB();
-  public static final CatB ORDER = CONTEXT.orderCB();
-  public static final CatB PARAM_REF = CONTEXT.paramRefCB(INT);
-  public static final CatB SELECT = CONTEXT.selectCB(INT);
+  public static final CategoryB CALL = CONTEXT.callCB();
+  public static final CategoryB COMBINE = CONTEXT.combineCB(INT, STRING);
+  public static final CategoryB IF_FUNC = CONTEXT.ifFuncCB();
+  public static final CategoryB MAP_FUNC = CONTEXT.mapFuncCB();
+  public static final CategoryB ORDER = CONTEXT.orderCB();
+  public static final CategoryB PARAM_REF = CONTEXT.paramRefCB(INT);
+  public static final CategoryB SELECT = CONTEXT.selectCB(INT);
 
   public static final ArrayTB ARRAY_BLOB = array(BLOB);
   public static final ArrayTB ARRAY_BOOL = array(BOOL);
@@ -60,7 +60,7 @@ public class TestingCatsB {
       PERSON
   );
 
-  public static final ImmutableList<CatB> ARRAY_CATS_TO_TEST = list(
+  public static final ImmutableList<CategoryB> ARRAY_CATS_TO_TEST = list(
       ARRAY_BLOB,
       ARRAY_BOOL,
       ARRAY_FUNC,
@@ -76,12 +76,12 @@ public class TestingCatsB {
       ARRAY2_PERSON_TUPLE
   );
 
-  public static final ImmutableList<CatB> CATS_TO_TEST =
+  public static final ImmutableList<CategoryB> CATS_TO_TEST =
       concat(BASE_CATS_TO_TEST, ARRAY_CATS_TO_TEST);
 
-  public static final ImmutableList<CatB> ALL_CATS_TO_TEST = createAllCats();
+  public static final ImmutableList<CategoryB> ALL_CATS_TO_TEST = createAllCats();
 
-  private static ImmutableList<CatB> createAllCats() {
+  private static ImmutableList<CategoryB> createAllCats() {
     var baseCs = list(
         BLOB,
         BOOL,

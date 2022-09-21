@@ -16,7 +16,7 @@ public class StringBTest extends TestContext {
 
   @Test
   public void type_of_string_is_string_type() {
-    assertThat(stringB(string).cat())
+    assertThat(stringB(string).category())
         .isEqualTo(stringTB());
   }
 

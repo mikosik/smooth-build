@@ -25,7 +25,7 @@ public class BlobBTest extends TestContext {
 
   @Test
   public void type_of_blob_is_blob_type() {
-    assertThat(blobB(bytes).cat())
+    assertThat(blobB(bytes).category())
         .isEqualTo(blobTB());
   }
 

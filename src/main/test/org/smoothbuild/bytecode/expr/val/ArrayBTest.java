@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.expr.ExprBTestCase;
-import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.CategoryB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
@@ -170,11 +170,11 @@ public class ArrayBTest extends TestContext {
   public void type(TypeB elemT) {
     var arrayTH = arrayTB(elemT);
     var arrayH = bytecodeDb().arrayBuilder(arrayTH).build();
-    assertThat(arrayH.cat())
+    assertThat(arrayH.category())
         .isEqualTo(arrayTH);
   }
 
-  private static List<CatB> type_test_data() {
+  private static List<CategoryB> type_test_data() {
     return TestingCatsB.CATS_TO_TEST;
   }
 

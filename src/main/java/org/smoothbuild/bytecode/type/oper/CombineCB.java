@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -12,7 +12,7 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 /**
  * This class is immutable.
  */
-public class CombineCB extends OperCatB {
+public class CombineCB extends OperCB {
   public CombineCB(Hash hash, TupleTB evalT) {
     super(hash, "Combine", COMBINE, evalT);
   }
@@ -24,7 +24,7 @@ public class CombineCB extends OperCatB {
 
   @Override
   public CombineB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(merkleRoot.cat() instanceof CombineCB);
+    checkArgument(merkleRoot.category() instanceof CombineCB);
     return new CombineB(merkleRoot, bytecodeDb);
   }
 }

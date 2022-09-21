@@ -14,7 +14,7 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongSeqSizeExc;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.hashed.HashedDb;
-import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.CategoryB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 
 import com.google.common.collect.ImmutableList;
@@ -55,8 +55,8 @@ public abstract class ExprB {
     return merkleRoot.dataHash();
   }
 
-  public CatB cat() {
-    return merkleRoot.cat();
+  public CategoryB category() {
+    return merkleRoot.category();
   }
 
   public abstract TypeB type();
@@ -79,12 +79,12 @@ public abstract class ExprB {
   }
 
   protected <T> T readData(HashedDbCallable<T> reader) {
-    return wrapHashedDbExcAsDecodeExprNodeException(hash(), cat(), DATA_PATH, reader);
+    return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
   }
 
   protected <T> T readExpr(String path, Hash hash, Class<T> clazz) {
     var expr = Helpers.wrapBytecodeDbExcAsDecodeExprNodeException(
-        hash(), cat(), path, () -> bytecodeDb().get(hash));
+        hash(), category(), path, () -> bytecodeDb().get(hash));
     return castExpr(expr, path, clazz);
   }
 
@@ -102,7 +102,7 @@ public abstract class ExprB {
   private ExprB readSeqElemExpr(String path, Hash hash, int i, int expectedSize) {
     var elemHash = readSeqElemHash(path, hash, i, expectedSize);
     var expr = wrapBytecodeDbExcAsDecodeExprNodeException(
-        hash(), cat(), path, i, () -> bytecodeDb().get(elemHash));
+        hash(), category(), path, i, () -> bytecodeDb().get(elemHash));
     return expr;
   }
 
@@ -133,7 +133,7 @@ public abstract class ExprB {
     Builder<ExprB> builder = ImmutableList.builder();
     for (int i = 0; i < seq.size(); i++) {
       int index = i;
-      var expr = wrapBytecodeDbExcAsDecodeExprNodeException(hash(), cat(), path, index,
+      var expr = wrapBytecodeDbExcAsDecodeExprNodeException(hash(), category(), path, index,
           () -> bytecodeDb.get(seq.get(index)));
       builder.add(expr);
     }
@@ -143,13 +143,13 @@ public abstract class ExprB {
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash, int expectedSize) {
     ImmutableList<Hash> data = readSeqHashes(path, hash);
     if (data.size() != expectedSize) {
-      throw new DecodeExprWrongSeqSizeExc(hash(), cat(), path, expectedSize, data.size());
+      throw new DecodeExprWrongSeqSizeExc(hash(), category(), path, expectedSize, data.size());
     }
     return data;
   }
 
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash) {
-    return wrapHashedDbExcAsDecodeExprNodeException(hash(), cat(), path,
+    return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), path,
         () -> bytecodeDb.hashedDb().readSeq(hash));
   }
 
@@ -163,7 +163,7 @@ public abstract class ExprB {
       T result = (T) expr;
       return result;
     } else {
-      throw new DecodeExprWrongNodeClassExc(hash(), cat(), path, clazz, expr.getClass());
+      throw new DecodeExprWrongNodeClassExc(hash(), category(), path, clazz, expr.getClass());
     }
   }
 
@@ -173,7 +173,7 @@ public abstract class ExprB {
       T result = (T) expr;
       return result;
     } else {
-      throw new DecodeExprWrongNodeClassExc(hash(), cat(), path, index, clazz, expr.getClass());
+      throw new DecodeExprWrongNodeClassExc(hash(), category(), path, index, clazz, expr.getClass());
     }
   }
 
@@ -181,7 +181,7 @@ public abstract class ExprB {
     for (int i = 0; i < elems.size(); i++) {
       ExprB elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
-        throw new DecodeExprWrongNodeClassExc(hash(), cat(), path, i, clazz, elem.getClass());
+        throw new DecodeExprWrongNodeClassExc(hash(), category(), path, i, clazz, elem.getClass());
       }
     }
     @SuppressWarnings("unchecked")
@@ -192,7 +192,7 @@ public abstract class ExprB {
   protected ExprB validateType(ExprB expr, String path, int index, TypeB expectedT) {
     var exprT = expr.type();
     if (!expectedT.equals(exprT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), cat(), path, index, expectedT, exprT);
+      throw new DecodeExprWrongNodeTypeExc(hash(), category(), path, index, expectedT, exprT);
     }
     return expr;
   }

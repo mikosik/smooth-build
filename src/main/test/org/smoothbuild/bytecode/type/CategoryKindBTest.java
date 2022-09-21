@@ -2,21 +2,21 @@ package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.bytecode.type.CatKinds.ARRAY;
-import static org.smoothbuild.bytecode.type.CatKinds.BLOB;
-import static org.smoothbuild.bytecode.type.CatKinds.BOOL;
-import static org.smoothbuild.bytecode.type.CatKinds.CALL;
-import static org.smoothbuild.bytecode.type.CatKinds.COMBINE;
-import static org.smoothbuild.bytecode.type.CatKinds.FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.IF_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.INT;
-import static org.smoothbuild.bytecode.type.CatKinds.MAP_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.NAT_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.ORDER;
-import static org.smoothbuild.bytecode.type.CatKinds.PARAM_REF;
-import static org.smoothbuild.bytecode.type.CatKinds.SELECT;
-import static org.smoothbuild.bytecode.type.CatKinds.STRING;
-import static org.smoothbuild.bytecode.type.CatKinds.TUPLE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
+import static org.smoothbuild.bytecode.type.CategoryKinds.BLOB;
+import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
+import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PARAM_REF;
+import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
+import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
+import static org.smoothbuild.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Collection;
@@ -26,18 +26,18 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class CatKindBTest {
+public class CategoryKindBTest {
   @ParameterizedTest
   @MethodSource("marker_to_obj_kind_map")
-  public void marker(int marker, CatKindB kind) {
+  public void marker(int marker, CategoryKindB kind) {
     assertThat(kind.marker())
         .isEqualTo(marker);
   }
 
   @ParameterizedTest
   @MethodSource("marker_to_obj_kind_map")
-  public void from_marker(int marker, CatKindB kind) {
-    assertThat(CatKindB.fromMarker((byte) marker))
+  public void from_marker(int marker, CategoryKindB kind) {
+    assertThat(CategoryKindB.fromMarker((byte) marker))
         .isEqualTo(kind);
   }
 
@@ -65,7 +65,7 @@ public class CatKindBTest {
   @ParameterizedTest
   @ValueSource(bytes = {-1, 21})
   public void from_marker_returns_null_for_illegal_marker(int marker) {
-    assertThat(CatKindB.fromMarker((byte) marker))
+    assertThat(CategoryKindB.fromMarker((byte) marker))
         .isNull();
   }
 }

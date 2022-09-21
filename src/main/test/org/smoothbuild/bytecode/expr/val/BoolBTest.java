@@ -14,7 +14,7 @@ import org.smoothbuild.testing.TestContext;
 public class BoolBTest extends TestContext {
   @Test
   public void type_of_bool_is_bool_type() {
-    assertThat(boolB(true).cat())
+    assertThat(boolB(true).category())
         .isEqualTo(boolTB());
   }
 

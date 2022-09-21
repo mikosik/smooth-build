@@ -21,12 +21,12 @@ public class CallB extends OperB {
 
   public CallB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof CallCB);
+    checkArgument(merkleRoot.category() instanceof CallCB);
   }
 
   @Override
-  public CallCB cat() {
-    return (CallCB) super.cat();
+  public CallCB category() {
+    return (CallCB) super.category();
   }
 
   public Data data() {
@@ -42,7 +42,7 @@ public class CallB extends OperB {
     if (func.type() instanceof FuncTB funcTB) {
       validate(funcTB, argsCombine);
     } else {
-      throw new DecodeExprWrongNodeTypeExc(hash(), cat(), "func", FuncTB.class, func.type());
+      throw new DecodeExprWrongNodeTypeExc(hash(), this.category(), "func", FuncTB.class, func.type());
     }
   }
 
@@ -51,12 +51,12 @@ public class CallB extends OperB {
     validateArgs(funcTB, argsT.items(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resT = funcTB.res();
     if (!type().equals(resT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), cat(), "call.result", type(), resT);
+      throw new DecodeExprWrongNodeTypeExc(hash(), this.category(), "call.result", type(), resT);
     }
   }
 
   private RuntimeException illegalArgsExc(TupleTB params, TupleTB argsType) {
-    return new DecodeExprWrongNodeTypeExc(hash(), cat(), "args", params, argsType);
+    return new DecodeExprWrongNodeTypeExc(hash(), this.category(), "args", params, argsType);
   }
 
   private ExprB readFunc() {

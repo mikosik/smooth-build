@@ -13,15 +13,15 @@ import org.smoothbuild.testing.TestContext;
 
 public class OrderBTest extends TestContext {
   @Test
-  public void cat_returns_category() {
+  public void category_returns_category() {
     var orderH = orderB(intTB());
-    assertThat(orderH.cat())
+    assertThat(orderH.category())
         .isEqualTo(orderCB(intTB()));
   }
 
   @Test
   public void creating_order_with_elemT_different_than_required_causes_exception() {
-    assertCall(() -> orderB(intTB(), stringB("abc")).cat())
+    assertCall(() -> orderB(intTB(), stringB("abc")).category())
         .throwsException(new IllegalArgumentException("Illegal elem type. Expected " + intTB().q()
             + " but element at index 0 has type " + stringTB().q() + "."));
   }

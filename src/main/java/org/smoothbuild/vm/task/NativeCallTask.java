@@ -52,7 +52,7 @@ public class NativeCallTask extends Task {
     }
     if (!outputT().equals(result.type())) {
       logFaultyImplementationError(nativeApi, "Its declared result type == "
-          + outputT().q() + " but it returned object with type == " + result.cat().q() + ".");
+          + outputT().q() + " but it returned object with type == " + result.category().q() + ".");
       return new Output(null, nativeApi.messages());
     }
     if (hasErrors) {

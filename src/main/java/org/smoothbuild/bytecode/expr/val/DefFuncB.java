@@ -15,7 +15,7 @@ import org.smoothbuild.bytecode.type.val.DefFuncCB;
 public final class DefFuncB extends FuncB {
   public DefFuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof DefFuncCB);
+    checkArgument(merkleRoot.category() instanceof DefFuncCB);
   }
 
   public ExprB body() {
@@ -23,7 +23,7 @@ public final class DefFuncB extends FuncB {
     var resT = type().res();
     var bodyT = body.type();
     if (!resT.equals(bodyT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), cat(), DATA_PATH, resT, bodyT);
+      throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, resT, bodyT);
     }
     return body;
   }

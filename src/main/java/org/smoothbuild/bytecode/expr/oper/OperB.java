@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
-import org.smoothbuild.bytecode.type.oper.OperCatB;
+import org.smoothbuild.bytecode.type.oper.OperCB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 
 /**
@@ -15,21 +15,21 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 public abstract class OperB extends ExprB {
   public OperB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof OperCatB);
+    checkArgument(merkleRoot.category() instanceof OperCB);
   }
 
   @Override
-  public OperCatB cat() {
-    return (OperCatB) super.cat();
+  public OperCB category() {
+    return (OperCB) super.category();
   }
 
   @Override
   public TypeB type() {
-    return cat().evalT();
+    return category().evalT();
   }
 
   @Override
   public String exprToString() {
-    return cat().name() + "(???)";
+    return category().name() + "(???)";
   }
 }

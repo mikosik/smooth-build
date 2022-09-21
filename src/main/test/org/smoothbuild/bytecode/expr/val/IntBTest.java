@@ -14,7 +14,7 @@ import org.smoothbuild.testing.TestContext;
 public class IntBTest extends TestContext {
   @Test
   public void type_of_int_is_int_type() {
-    assertThat(intB(123).cat())
+    assertThat(intB(123).category())
         .isEqualTo(intTB());
   }
 

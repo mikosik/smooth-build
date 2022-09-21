@@ -12,31 +12,31 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.testing.TestContext;
 
-public class CatBCachingTest extends TestContext {
+public class CategoryBCachingTest extends TestContext {
   @ParameterizedTest
   @MethodSource("factories")
-  public void created_type_is_cached(Function<CatDb, CatB> factory) {
-    assertThat(factory.apply(catDb()))
-        .isSameInstanceAs(factory.apply(catDb()));
+  public void created_type_is_cached(Function<CategoryDb, CategoryB> factory) {
+    assertThat(factory.apply(categoryDb()))
+        .isSameInstanceAs(factory.apply(categoryDb()));
   }
 
   @ParameterizedTest
   @MethodSource("factories")
-  public void read_type_is_cached(Function<CatDb, CatB> factory) {
-    var hash = factory.apply(catDb()).hash();
-    var catDb = catDbOther();
+  public void read_type_is_cached(Function<CategoryDb, CategoryB> factory) {
+    var hash = factory.apply(categoryDb()).hash();
+    var catDb = categoryDbOther();
     assertThat(catDb.get(hash))
         .isSameInstanceAs(catDb.get(hash));
   }
 
-  private static List<Function<CatDb, CatB>> factories() {
+  private static List<Function<CategoryDb, CategoryB>> factories() {
     return list(
-        CatDb::blob,
-        CatDb::bool,
-        CatBCachingTest::funcT,
-        CatDb::int_,
-        CatDb::string,
-        CatBCachingTest::tupleT,
+        CategoryDb::blob,
+        CategoryDb::bool,
+        CategoryBCachingTest::funcT,
+        CategoryDb::int_,
+        CategoryDb::string,
+        CategoryBCachingTest::tupleT,
 
         catDb -> catDb.call(catDb.int_()),
         catDb -> catDb.combine(catDb.tuple()),
@@ -63,11 +63,11 @@ public class CatBCachingTest extends TestContext {
     );
   }
 
-  private static TupleTB tupleT(CatDb catDb) {
-    return catDb.tuple(catDb.string(), catDb.string());
+  private static TupleTB tupleT(CategoryDb categoryDb) {
+    return categoryDb.tuple(categoryDb.string(), categoryDb.string());
   }
 
-  private static FuncTB funcT(CatDb catDb) {
-    return catDb.funcT(catDb.string(), list(catDb.bool(), catDb.blob()));
+  private static FuncTB funcT(CategoryDb categoryDb) {
+    return categoryDb.funcT(categoryDb.string(), list(categoryDb.bool(), categoryDb.blob()));
   }
 }

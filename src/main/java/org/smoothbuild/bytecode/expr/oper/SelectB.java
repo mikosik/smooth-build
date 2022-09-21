@@ -22,12 +22,12 @@ public class SelectB extends OperB {
 
   public SelectB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof SelectCB);
+    checkArgument(merkleRoot.category() instanceof SelectCB);
   }
 
   @Override
-  public SelectCB cat() {
-    return (SelectCB) super.cat();
+  public SelectCB category() {
+    return (SelectCB) super.category();
   }
 
   public Data data() {
@@ -37,16 +37,16 @@ public class SelectB extends OperB {
       int i = index.toJ().intValue();
       int size = tupleEvalT.items().size();
       if (i < 0 || size <= i) {
-        throw new DecodeSelectIndexOutOfBoundsExc(hash(), cat(), i, size);
+        throw new DecodeSelectIndexOutOfBoundsExc(hash(), this.category(), i, size);
       }
       var fieldT = tupleEvalT.items().get(i);
       if (!type().equals(fieldT)) {
-        throw new DecodeSelectWrongEvalTypeExc(hash(), cat(), fieldT);
+        throw new DecodeSelectWrongEvalTypeExc(hash(), this.category(), fieldT);
       }
       return new Data(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassExc(
-          hash(), cat(), "tuple", TupleTB.class, selectable.type().getClass());
+          hash(), this.category(), "tuple", TupleTB.class, selectable.type().getClass());
     }
   }
 

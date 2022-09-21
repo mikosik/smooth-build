@@ -18,7 +18,7 @@ import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_STRING;
 import static org.smoothbuild.testing.type.TestingCatsB.BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.CALL;
-import static org.smoothbuild.testing.type.TestingCatsB.CAT_DB;
+import static org.smoothbuild.testing.type.TestingCatsB.CATEGORY_DB;
 import static org.smoothbuild.testing.type.TestingCatsB.COMBINE;
 import static org.smoothbuild.testing.type.TestingCatsB.FUNC;
 import static org.smoothbuild.testing.type.TestingCatsB.IF_FUNC;
@@ -70,24 +70,24 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
-public class CatBTest extends TestContext {
+public class CategoryBTest extends TestContext {
   @ParameterizedTest
   @MethodSource("names")
-  public void name(Function<CatDb, CatB> factoryCall, String name) {
+  public void name(Function<CategoryDb, CategoryB> factoryCall, String name) {
     assertThat(execute(factoryCall).name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(Function<CatDb, CatB> factoryCall, String name) {
+  public void quoted_name(Function<CategoryDb, CategoryB> factoryCall, String name) {
     assertThat(execute(factoryCall).q())
         .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(Function<CatDb, CatB> factoryCall, String name) {
+  public void to_string(Function<CategoryDb, CategoryB> factoryCall, String name) {
     var catH = execute(factoryCall);
     assertThat(catH.toString())
         .isEqualTo(name);
@@ -135,8 +135,8 @@ public class CatBTest extends TestContext {
   class _func {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CatDb, FuncTB> factoryCall,
-        Function<CatDb, List<TypeB>> expected) {
+    public void result(Function<CategoryDb, FuncTB> factoryCall,
+        Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).res())
           .isEqualTo(execute(expected));
     }
@@ -151,8 +151,8 @@ public class CatBTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CatDb, FuncTB> factoryCall,
-        Function<CatDb, List<TypeB>> expected) {
+    public void params(Function<CategoryDb, FuncTB> factoryCall,
+        Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).params())
           .isEqualTo(execute(expected));
     }
@@ -170,8 +170,8 @@ public class CatBTest extends TestContext {
   class _def_func {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CatDb, DefFuncCB> factoryCall,
-        Function<CatDb, List<TypeB>> expected) {
+    public void result(Function<CategoryDb, DefFuncCB> factoryCall,
+        Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().res())
           .isEqualTo(execute(expected));
     }
@@ -186,8 +186,8 @@ public class CatBTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CatDb, DefFuncCB> factoryCall,
-        Function<CatDb, List<TypeB>> expected) {
+    public void params(Function<CategoryDb, DefFuncCB> factoryCall,
+        Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().params())
           .isEqualTo(execute(expected));
     }
@@ -205,8 +205,8 @@ public class CatBTest extends TestContext {
   class _method {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CatDb, NatFuncCB> factoryCall,
-        Function<CatDb, List<TypeB>> expected) {
+    public void result(Function<CategoryDb, NatFuncCB> factoryCall,
+        Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().res())
           .isEqualTo(execute(expected));
     }
@@ -221,8 +221,8 @@ public class CatBTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CatDb, NatFuncCB> factoryCall,
-        Function<CatDb, List<TypeB>> expected) {
+    public void params(Function<CategoryDb, NatFuncCB> factoryCall,
+        Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().params())
           .isEqualTo(execute(expected));
     }
@@ -240,9 +240,9 @@ public class CatBTest extends TestContext {
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
-    public void elemType(Function<CatDb, TypeB> factoryCall) {
+    public void elemType(Function<CategoryDb, TypeB> factoryCall) {
       TypeB elem = execute(factoryCall);
-      ArrayTB array = catDb().array(elem);
+      ArrayTB array = categoryDb().array(elem);
       assertThat(array.elem())
           .isEqualTo(elem);
     }
@@ -275,8 +275,8 @@ public class CatBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("tuple_item_cases")
     public void tuple_item(
-        Function<CatDb, TupleTB> factoryCall,
-        Function<CatDb, NList<Labeled<TypeB>>> expected) {
+        Function<CategoryDb, TupleTB> factoryCall,
+        Function<CategoryDb, NList<Labeled<TypeB>>> expected) {
       assertThat(execute(factoryCall).items())
           .isEqualTo(execute(expected));
     }
@@ -292,7 +292,7 @@ public class CatBTest extends TestContext {
 
   @ParameterizedTest
   @MethodSource("typeJ_test_data")
-  public void typeJ(CatB type, Class<?> expected) {
+  public void typeJ(CategoryB type, Class<?> expected) {
     assertThat(type.typeJ())
         .isEqualTo(expected);
   }
@@ -329,7 +329,7 @@ public class CatBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
-      assertThat(CAT_DB.call(type).evalT())
+      assertThat(CATEGORY_DB.call(type).evalT())
           .isEqualTo(type);
     }
 
@@ -341,7 +341,7 @@ public class CatBTest extends TestContext {
     }
 
     public static List<Arguments> combine_cases() {
-      CatDb db = CAT_DB;
+      CategoryDb db = CATEGORY_DB;
       return list(
           arguments(db.combine(db.tuple()), db.tuple()),
           arguments(db.combine(db.tuple(STRING)), db.tuple(STRING))
@@ -351,26 +351,26 @@ public class CatBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void order(TypeB type) {
-      var array = CAT_DB.array(type);
-      assertThat(CAT_DB.order(array).evalT())
+      var array = CATEGORY_DB.array(type);
+      assertThat(CATEGORY_DB.order(array).evalT())
           .isEqualTo(array);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void ref(TypeB type) {
-      assertThat(CAT_DB.paramRef(type).evalT())
+      assertThat(CATEGORY_DB.paramRef(type).evalT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeB type) {
-      assertThat(CAT_DB.select(type).evalT())
+      assertThat(CATEGORY_DB.select(type).evalT())
           .isEqualTo(type);
     }
 
-    public static ImmutableList<CatB> types() {
+    public static ImmutableList<CategoryB> types() {
       return TestingCatsB.CATS_TO_TEST;
     }
   }
@@ -410,8 +410,8 @@ public class CatBTest extends TestContext {
     tester.testEquals();
   }
 
-  private <R> R execute(Function<CatDb, R> f) {
-    return f.apply(catDb());
+  private <R> R execute(Function<CategoryDb, R> f) {
+    return f.apply(categoryDb());
   }
 
   /**
@@ -419,8 +419,8 @@ public class CatBTest extends TestContext {
    * exact type of lambda expression passed to factoryCall.
    */
   private static <R> Arguments args(
-      Function<CatDb, R> factoryCall1,
-      Function<CatDb, R> factoryCall2) {
+      Function<CategoryDb, R> factoryCall1,
+      Function<CategoryDb, R> factoryCall2) {
     return arguments(factoryCall1, factoryCall2);
   }
 
@@ -428,7 +428,7 @@ public class CatBTest extends TestContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <R> Arguments args(Function<CatDb, R> factoryCall, Object arg) {
+  private static <R> Arguments args(Function<CategoryDb, R> factoryCall, Object arg) {
     return arguments(factoryCall, arg);
   }
 
@@ -436,7 +436,7 @@ public class CatBTest extends TestContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <R> Arguments args(Function<CatDb, R> factoryCall) {
+  private static <R> Arguments args(Function<CategoryDb, R> factoryCall) {
     return arguments(factoryCall);
   }
 }

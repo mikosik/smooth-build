@@ -1,21 +1,21 @@
 package org.smoothbuild.bytecode.type;
 
-import static org.smoothbuild.bytecode.type.CatKinds.ARRAY;
-import static org.smoothbuild.bytecode.type.CatKinds.BLOB;
-import static org.smoothbuild.bytecode.type.CatKinds.BOOL;
-import static org.smoothbuild.bytecode.type.CatKinds.CALL;
-import static org.smoothbuild.bytecode.type.CatKinds.COMBINE;
-import static org.smoothbuild.bytecode.type.CatKinds.DEF_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.IF_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.INT;
-import static org.smoothbuild.bytecode.type.CatKinds.MAP_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.NAT_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.ORDER;
-import static org.smoothbuild.bytecode.type.CatKinds.PARAM_REF;
-import static org.smoothbuild.bytecode.type.CatKinds.SELECT;
-import static org.smoothbuild.bytecode.type.CatKinds.STRING;
-import static org.smoothbuild.bytecode.type.CatKinds.TUPLE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
+import static org.smoothbuild.bytecode.type.CategoryKinds.BLOB;
+import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.DEF_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
+import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PARAM_REF;
+import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
+import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
+import static org.smoothbuild.bytecode.type.CategoryKinds.TUPLE;
 
 import java.util.function.BiFunction;
 
@@ -37,16 +37,16 @@ import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.CatKindB.AbstFuncKindB;
-import org.smoothbuild.bytecode.type.CatKindB.ArrayKindB;
-import org.smoothbuild.bytecode.type.CatKindB.BaseKindB;
-import org.smoothbuild.bytecode.type.CatKindB.CallKindB;
-import org.smoothbuild.bytecode.type.CatKindB.CombineKindB;
-import org.smoothbuild.bytecode.type.CatKindB.FuncKindB;
-import org.smoothbuild.bytecode.type.CatKindB.OrderKindB;
-import org.smoothbuild.bytecode.type.CatKindB.ParamRefKindB;
-import org.smoothbuild.bytecode.type.CatKindB.SelectKindB;
-import org.smoothbuild.bytecode.type.CatKindB.TupleKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.AbstFuncKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.ArrayKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.BaseKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.CallKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.CombineKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.OrderKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.ParamRefKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.SelectKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
 import org.smoothbuild.bytecode.type.val.DefFuncCB;
 import org.smoothbuild.bytecode.type.val.FuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
@@ -54,10 +54,10 @@ import org.smoothbuild.bytecode.type.val.IfFuncCB;
 import org.smoothbuild.bytecode.type.val.MapFuncCB;
 import org.smoothbuild.bytecode.type.val.NatFuncCB;
 
-public sealed abstract class CatKindB
+public sealed abstract class CategoryKindB
     permits AbstFuncKindB, ArrayKindB, BaseKindB, CallKindB, CombineKindB, FuncKindB, OrderKindB,
     ParamRefKindB, SelectKindB, TupleKindB {
-  public static sealed class BaseKindB extends CatKindB permits BlobKindB, BoolKindB, IntKindB,
+  public static sealed class BaseKindB extends CategoryKindB permits BlobKindB, BoolKindB, IntKindB,
       StringKindB {
     private BaseKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
       super(name, marker, typeJ);
@@ -88,25 +88,25 @@ public sealed abstract class CatKindB
     }
   }
 
-  public static final class ArrayKindB extends CatKindB {
+  public static final class ArrayKindB extends CategoryKindB {
     ArrayKindB() {
       super("ARRAY", (byte) 4, ArrayB.class);
     }
   }
 
-  public static final class TupleKindB extends CatKindB {
+  public static final class TupleKindB extends CategoryKindB {
     TupleKindB() {
       super("TUPLE", (byte) 5, TupleB.class);
     }
   }
 
-  public static final class FuncKindB extends CatKindB {
+  public static final class FuncKindB extends CategoryKindB {
     FuncKindB() {
       super("FUNC", (byte) 16, FuncB.class);
     }
   }
 
-  public static sealed abstract class AbstFuncKindB<T extends FuncCB> extends CatKindB {
+  public static sealed abstract class AbstFuncKindB<T extends FuncCB> extends CategoryKindB {
     private final BiFunction<Hash, FuncTB, T> instantiator;
 
     private AbstFuncKindB(String name, byte marker, Class<? extends ExprB> typeJ,
@@ -132,25 +132,25 @@ public sealed abstract class CatKindB
     }
   }
 
-  public static final class OrderKindB extends CatKindB {
+  public static final class OrderKindB extends CategoryKindB {
     OrderKindB() {
       super("ORDER", (byte) 8, OrderB.class);
     }
   }
 
-  public static final class CombineKindB extends CatKindB {
+  public static final class CombineKindB extends CategoryKindB {
     CombineKindB() {
       super("COMBINE", (byte) 9, CombineB.class);
     }
   }
 
-  public static final class SelectKindB extends CatKindB {
+  public static final class SelectKindB extends CategoryKindB {
     SelectKindB() {
       super("SELECT", (byte) 10, SelectB.class);
     }
   }
 
-  public static final class CallKindB extends CatKindB {
+  public static final class CallKindB extends CategoryKindB {
     CallKindB() {
       super("CALL", (byte) 11, CallB.class);
     }
@@ -162,7 +162,7 @@ public sealed abstract class CatKindB
     }
   }
 
-  public static final class ParamRefKindB extends CatKindB {
+  public static final class ParamRefKindB extends CategoryKindB {
     ParamRefKindB() {
       super("PARAM_REF", (byte) 14, ParamRefB.class);
     }
@@ -178,7 +178,7 @@ public sealed abstract class CatKindB
   private final byte marker;
   private final Class<? extends ExprB> typeJ;
 
-  private CatKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
+  private CategoryKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
     this.name = name;
     this.marker = marker;
     this.typeJ = typeJ;
@@ -196,7 +196,7 @@ public sealed abstract class CatKindB
     return typeJ;
   }
 
-  public static CatKindB fromMarker(byte marker) {
+  public static CategoryKindB fromMarker(byte marker) {
     return switch (marker) {
       case 0 -> BLOB;
       case 1 -> BOOL;

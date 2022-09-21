@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.type.val.MapFuncCB;
 public final class MapFuncB extends FuncB {
   public MapFuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof MapFuncCB);
+    checkArgument(merkleRoot.category() instanceof MapFuncCB);
   }
 
   @Override

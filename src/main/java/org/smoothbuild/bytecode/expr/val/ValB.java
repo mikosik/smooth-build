@@ -17,6 +17,6 @@ public sealed abstract class ValB extends ExprB
 
   @Override
   public TypeB type() {
-    return (TypeB) cat();
+    return (TypeB) category();
   }
 }

@@ -9,14 +9,14 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.util.collect.Named;
 
 /**
- * Category of ObjH.
+ * Category of ExprB.
  */
-public abstract class CatB implements Named {
+public abstract class CategoryB implements Named {
   private final String name;
   private final Hash hash;
-  private final CatKindB kind;
+  private final CategoryKindB kind;
 
-  protected CatB(Hash hash, String name, CatKindB kind) {
+  protected CategoryB(Hash hash, String name, CategoryKindB kind) {
     this.name = name;
     this.hash = hash;
     this.kind = kind;
@@ -35,7 +35,7 @@ public abstract class CatB implements Named {
 
   @Override
   public boolean equals(Object object) {
-    return (object instanceof CatB that) && Objects.equals(hash(), that.hash());
+    return (object instanceof CategoryB that) && Objects.equals(hash(), that.hash());
   }
 
   @Override
@@ -43,7 +43,7 @@ public abstract class CatB implements Named {
     return hash().hashCode();
   }
 
-  public CatKindB kind() {
+  public CategoryKindB kind() {
     return kind;
   }
 

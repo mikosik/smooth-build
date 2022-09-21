@@ -26,9 +26,9 @@ public class ArrayBBuilder {
   }
 
   public ArrayBBuilder add(ValB elem) {
-    if (!type.elem().equals(elem.cat())) {
+    if (!type.elem().equals(elem.category())) {
       throw new IllegalArgumentException("Element type must be " + type.elem().name()
-          + " but was " + elem.cat().name() + ".");
+          + " but was " + elem.category().name() + ".");
     }
     Class<?> required = type.elem().typeJ();
     if (!required.equals(elem.getClass())) {

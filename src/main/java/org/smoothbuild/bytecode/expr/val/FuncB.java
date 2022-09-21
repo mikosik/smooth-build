@@ -11,11 +11,11 @@ public abstract sealed class FuncB extends ValB
     permits IfFuncB, MapFuncB, DefFuncB, NatFuncB {
   public FuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof FuncCB);
+    checkArgument(merkleRoot.category() instanceof FuncCB);
   }
 
   @Override
   public FuncTB type() {
-    return ((FuncCB) cat()).type();
+    return ((FuncCB) category()).type();
   }
 }

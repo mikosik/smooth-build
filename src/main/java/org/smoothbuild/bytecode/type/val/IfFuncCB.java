@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKinds.IF_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -15,7 +15,7 @@ public final class IfFuncCB extends FuncCB {
 
   @Override
   public IfFuncB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(merkleRoot.cat() instanceof IfFuncCB);
+    checkArgument(merkleRoot.category() instanceof IfFuncCB);
     return new IfFuncB(merkleRoot, bytecodeDb);
   }
 

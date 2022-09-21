@@ -46,14 +46,14 @@ public class TupleBTest extends TestContext {
   @Test
   public void type_of_person_tuple_is_person_type() {
     TupleB person = johnDoePerson();
-    assertThat(person.cat())
+    assertThat(person.category())
         .isEqualTo(personTB());
   }
 
   @Test
   public void item_contains_object_passed_to_builder() {
     TupleB person = johnDoePerson();
-    assertThat(person.cat())
+    assertThat(person.category())
         .isEqualTo(personTB());
     assertThat(person.get(0))
         .isEqualTo(stringB("John"));

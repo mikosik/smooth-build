@@ -31,7 +31,7 @@ import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.bytecode.type.CatDb;
+import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
@@ -52,22 +52,22 @@ import com.google.common.collect.ImmutableList;
 @Singleton
 public class BytecodeF {
   private final BytecodeDb bytecodeDb;
-  private final CatDb catDb;
+  private final CategoryDb categoryDb;
   private final TupleTB messageT;
   private final TupleTB fileT;
 
   @Inject
-  public BytecodeF(BytecodeDb bytecodeDb, CatDb catDb) {
+  public BytecodeF(BytecodeDb bytecodeDb, CategoryDb categoryDb) {
     this.bytecodeDb = bytecodeDb;
-    this.catDb = catDb;
-    this.messageT = createMessageT(catDb);
-    this.fileT = createFileT(catDb);
+    this.categoryDb = categoryDb;
+    this.messageT = createMessageT(categoryDb);
+    this.fileT = createFileT(categoryDb);
   }
 
   // Objects
 
   public ArrayBBuilder arrayBuilderWithElems(TypeB elemT) {
-    return bytecodeDb.arrayBuilder(catDb.array(elemT));
+    return bytecodeDb.arrayBuilder(categoryDb.array(elemT));
   }
 
   public ArrayBBuilder arrayBuilder(ArrayTB type) {
@@ -104,12 +104,12 @@ public class BytecodeF {
   }
 
   public DefFuncB defFunc(TypeB resT, ImmutableList<TypeB> paramTs, ExprB body) {
-    var type = catDb.funcT(resT, paramTs);
+    var type = categoryDb.funcT(resT, paramTs);
     return defFunc(type, body);
   }
 
   public DefFuncB defFunc(TypeB resT, TupleTB paramTs, ExprB body) {
-    var type = catDb.funcT(resT, paramTs);
+    var type = categoryDb.funcT(resT, paramTs);
     return defFunc(type, body);
   }
 
@@ -146,7 +146,7 @@ public class BytecodeF {
   }
 
   public TupleB tuple(ImmutableList<ValB> items) {
-    var tupleTB = catDb.tuple(Lists.map(items, ValB::type));
+    var tupleTB = categoryDb.tuple(Lists.map(items, ValB::type));
     return bytecodeDb.tuple(tupleTB, items);
   }
 
@@ -161,27 +161,27 @@ public class BytecodeF {
   // Types
 
   public ArrayTB arrayT(TypeB elemT) {
-    return catDb.array(elemT);
+    return categoryDb.array(elemT);
   }
 
   public BlobTB blobT() {
-    return catDb.blob();
+    return categoryDb.blob();
   }
 
   public BoolTB boolT() {
-    return catDb.bool();
+    return categoryDb.bool();
   }
 
   public FuncTB funcT(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return catDb.funcT(resT, paramTs);
+    return categoryDb.funcT(resT, paramTs);
   }
 
   public FuncTB funcT(TypeB resT, TupleTB paramTs) {
-    return catDb.funcT(resT, paramTs);
+    return categoryDb.funcT(resT, paramTs);
   }
 
   public IntTB intT() {
-    return catDb.int_();
+    return categoryDb.int_();
   }
 
   public TupleTB messageT() {
@@ -189,15 +189,15 @@ public class BytecodeF {
   }
 
   public StringTB stringT() {
-    return catDb.string();
+    return categoryDb.string();
   }
 
   public TupleTB tupleT(TypeB... itemTs) {
-    return catDb.tuple(itemTs);
+    return categoryDb.tuple(itemTs);
   }
 
   public TupleTB tupleT(ImmutableList<TypeB> itemTs) {
-    return catDb.tuple(itemTs);
+    return categoryDb.tuple(itemTs);
   }
 
   // other values and its types
@@ -224,12 +224,12 @@ public class BytecodeF {
     return bytecodeDb.tuple(messageT(), list(textObject, severityObject));
   }
 
-  private static TupleTB createMessageT(CatDb catDb) {
-    var stringT = catDb.string();
-    return catDb.tuple(stringT, stringT);
+  private static TupleTB createMessageT(CategoryDb categoryDb) {
+    var stringT = categoryDb.string();
+    return categoryDb.tuple(stringT, stringT);
   }
 
-  private static TupleTB createFileT(CatDb catDb) {
-    return catDb.tuple(catDb.string(), catDb.blob());
+  private static TupleTB createFileT(CategoryDb categoryDb) {
+    return categoryDb.tuple(categoryDb.string(), categoryDb.blob());
   }
 }

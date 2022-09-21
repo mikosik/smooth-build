@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.exc;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.bytecode.type.CatKinds.INT;
+import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.hashed.Hash;

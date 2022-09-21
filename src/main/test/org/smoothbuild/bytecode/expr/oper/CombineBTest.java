@@ -13,9 +13,9 @@ import org.smoothbuild.testing.TestContext;
 
 public class CombineBTest extends TestContext {
   @Test
-  public void cat_returns_category() {
+  public void category_returns_category() {
     var combineH = combineB(tupleTB(intTB()), intB(3));
-    assertThat(combineH.cat())
+    assertThat(combineH.category())
         .isEqualTo(combineCB(intTB()));
   }
 

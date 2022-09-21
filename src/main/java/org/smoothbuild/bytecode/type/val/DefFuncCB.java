@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKinds.DEF_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.DEF_FUNC;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -15,7 +15,7 @@ public final class DefFuncCB extends FuncCB {
 
   @Override
   public DefFuncB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(merkleRoot.cat() instanceof DefFuncCB);
+    checkArgument(merkleRoot.category() instanceof DefFuncCB);
     return new DefFuncB(merkleRoot, bytecodeDb);
   }
 }

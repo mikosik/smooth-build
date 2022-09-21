@@ -1,25 +1,25 @@
 package org.smoothbuild.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.bytecode.type.CatDb.DATA_PATH;
-import static org.smoothbuild.bytecode.type.CatDb.FUNC_PARAMS_PATH;
-import static org.smoothbuild.bytecode.type.CatDb.FUNC_RES_PATH;
-import static org.smoothbuild.bytecode.type.CatKinds.ARRAY;
-import static org.smoothbuild.bytecode.type.CatKinds.BLOB;
-import static org.smoothbuild.bytecode.type.CatKinds.BOOL;
-import static org.smoothbuild.bytecode.type.CatKinds.CALL;
-import static org.smoothbuild.bytecode.type.CatKinds.COMBINE;
-import static org.smoothbuild.bytecode.type.CatKinds.DEF_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.IF_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.INT;
-import static org.smoothbuild.bytecode.type.CatKinds.MAP_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.NAT_FUNC;
-import static org.smoothbuild.bytecode.type.CatKinds.ORDER;
-import static org.smoothbuild.bytecode.type.CatKinds.PARAM_REF;
-import static org.smoothbuild.bytecode.type.CatKinds.SELECT;
-import static org.smoothbuild.bytecode.type.CatKinds.STRING;
-import static org.smoothbuild.bytecode.type.CatKinds.TUPLE;
+import static org.smoothbuild.bytecode.type.CategoryDb.DATA_PATH;
+import static org.smoothbuild.bytecode.type.CategoryDb.FUNC_PARAMS_PATH;
+import static org.smoothbuild.bytecode.type.CategoryDb.FUNC_RES_PATH;
+import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
+import static org.smoothbuild.bytecode.type.CategoryKinds.BLOB;
+import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.DEF_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
+import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PARAM_REF;
+import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
+import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
+import static org.smoothbuild.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc;
 import static org.smoothbuild.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -53,7 +53,7 @@ import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
 import okio.ByteString;
 
-public class CatBCorruptedTest extends TestContext {
+public class CategoryBCorruptedTest extends TestContext {
   @Nested
   class _illegal_type_marker {
     @Test
@@ -111,7 +111,7 @@ public class CatBCorruptedTest extends TestContext {
       test_base_type_with_additional_child(STRING);
     }
 
-    private void test_base_type_with_additional_child(CatKindB kind) throws Exception {
+    private void test_base_type_with_additional_child(CategoryKindB kind) throws Exception {
       Hash hash = hash(
           hash(kind.marker()),
           hash("abc")
@@ -188,7 +188,7 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Override
-      protected CatKindB catKind() {
+      protected CategoryKindB categoryKind() {
         return DEF_FUNC;
       }
     }
@@ -216,13 +216,13 @@ public class CatBCorruptedTest extends TestContext {
             hash(IF_FUNC.marker()),
             hash(illegalIfType)
         );
-        assertCall(() -> catDb().get(categoryHash))
+        assertCall(() -> categoryDb().get(categoryHash))
             .throwsException(
                 illegalIfFuncTypeExc(categoryHash, illegalIfType));
       }
 
       @Override
-      protected CatKindB catKind() {
+      protected CategoryKindB categoryKind() {
         return IF_FUNC;
       }
     }
@@ -250,12 +250,12 @@ public class CatBCorruptedTest extends TestContext {
             hash(MAP_FUNC.marker()),
             hash(illegalType)
         );
-        assertCall(() -> catDb().get(categoryHash))
+        assertCall(() -> categoryDb().get(categoryHash))
             .throwsException(illegalMapFuncTypeExc(categoryHash, illegalType));
       }
 
       @Override
-      protected CatKindB catKind() {
+      protected CategoryKindB categoryKind() {
         return MAP_FUNC;
       }
     }
@@ -277,33 +277,33 @@ public class CatBCorruptedTest extends TestContext {
       }
 
       @Override
-      protected CatKindB catKind() {
+      protected CategoryKindB categoryKind() {
         return NAT_FUNC;
       }
     }
 
     abstract class _func_category_test_case {
-      protected abstract CatKindB catKind();
+      protected abstract CategoryKindB categoryKind();
 
       @Test
       public void without_data() throws Exception {
-        assert_reading_cat_without_data_causes_exc(catKind());
+        assert_reading_cat_without_data_causes_exc(categoryKind());
       }
 
       @Test
       public void with_additional_data() throws Exception {
-        assert_reading_cat_with_additional_data_causes_exc(catKind());
+        assert_reading_cat_with_additional_data_causes_exc(categoryKind());
       }
 
       @Test
       public void with_func_type_hash_pointing_nowhere() throws Exception {
         var dataHash = Hash.of(33);
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(categoryKind().marker()),
             dataHash
         );
-        assertCall(() -> catDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, catKind(), DATA_PATH))
+        assertCall(() -> categoryDb().get(typeHash))
+            .throwsException(new DecodeCatNodeExc(typeHash, categoryKind(), DATA_PATH))
             .withCause(new DecodeCatExc(dataHash));
       }
 
@@ -311,12 +311,12 @@ public class CatBCorruptedTest extends TestContext {
       public void with_func_type_being_oper_type() throws Exception {
         var notFuncTB = paramRefCB(intTB());
         var typeHash = hash(
-            hash(catKind().marker()),
+            hash(categoryKind().marker()),
             hash(notFuncTB)
         );
-        assertCall(() -> catDb().get(typeHash))
+        assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, catKind(), DATA_PATH, FuncTB.class, ParamRefCB.class));
+                typeHash, categoryKind(), DATA_PATH, FuncTB.class, ParamRefCB.class));
       }
     }
 
@@ -402,7 +402,7 @@ public class CatBCorruptedTest extends TestContext {
             hash(FUNC.marker()),
             notHashOfSeq
         );
-        assertCall(() -> ((FuncTB) catDb().get(typeHash)).res())
+        assertCall(() -> ((FuncTB) categoryDb().get(typeHash)).res())
             .throwsException(new DecodeCatNodeExc(typeHash, FUNC, DATA_PATH))
             .withCause(new DecodeHashSeqExc(
                 notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -419,7 +419,7 @@ public class CatBCorruptedTest extends TestContext {
                 hash(paramTs)
             )
         );
-        assertCall(() -> catDb().get(typeHash))
+        assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
             .withCause(new DecodeCatExc(nowhere));
       }
@@ -434,7 +434,7 @@ public class CatBCorruptedTest extends TestContext {
                 hash(paramT)
             )
         );
-        assertCall(() -> catDb().get(typeHash))
+        assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatExc(
                 typeHash, FUNC, FUNC_RES_PATH, TypeB.class, ParamRefCB.class));
       }
@@ -449,7 +449,7 @@ public class CatBCorruptedTest extends TestContext {
                 hash(paramTs)
             )
         );
-        assertCall(() -> catDb().get(typeHash))
+        assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
             .withCause(corruptedArrayTypeExc());
       }
@@ -464,7 +464,7 @@ public class CatBCorruptedTest extends TestContext {
                 nowhere
             )
         );
-        assertCall(() -> catDb().get(typeHash))
+        assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(new DecodeCatExc(nowhere));
       }
@@ -492,7 +492,7 @@ public class CatBCorruptedTest extends TestContext {
                 hash(paramRefCB())
             )
         );
-        assertCall(() -> catDb().get(typeHash))
+        assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatExc(
                 typeHash, FUNC, FUNC_PARAMS_PATH, TypeB.class, ParamRefCB.class));
       }
@@ -506,7 +506,7 @@ public class CatBCorruptedTest extends TestContext {
                 corruptedArrayTHash()
             )
         );
-        assertCall(() -> catDb().get(typeHash))
+        assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(corruptedArrayTypeExc());
       }
@@ -602,7 +602,7 @@ public class CatBCorruptedTest extends TestContext {
     }
   }
 
-  private void assert_reading_cat_without_data_causes_exc(CatKindB speckKind) throws Exception {
+  private void assert_reading_cat_without_data_causes_exc(CategoryKindB speckKind) throws Exception {
     Hash hash =
         hash(
             hash(speckKind.marker())
@@ -611,7 +611,7 @@ public class CatBCorruptedTest extends TestContext {
         .throwsException(new DecodeCatRootExc(hash, speckKind, 1, 2));
   }
 
-  private void assert_reading_cat_with_additional_data_causes_exc(CatKindB kind) throws Exception {
+  private void assert_reading_cat_with_additional_data_causes_exc(CategoryKindB kind) throws Exception {
     Hash hash = hash(
         hash(kind.marker()),
         hash(stringTB()),
@@ -621,31 +621,31 @@ public class CatBCorruptedTest extends TestContext {
         .throwsException(new DecodeCatRootExc(hash, 3));
   }
 
-  private void assert_reading_cat_with_data_pointing_nowhere_causes_exc(CatKindB kind)
+  private void assert_reading_cat_with_data_pointing_nowhere_causes_exc(CategoryKindB kind)
       throws Exception {
     Hash dataHash = Hash.of(33);
     Hash typeHash = hash(
         hash(kind.marker()),
         dataHash
     );
-    assertCall(() -> catDb().get(typeHash))
+    assertCall(() -> categoryDb().get(typeHash))
         .throwsException(new DecodeCatNodeExc(typeHash, kind, DATA_PATH))
         .withCause(new DecodeCatExc(dataHash));
   }
 
   private void assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
-      CatKindB kind) throws Exception {
+      CategoryKindB kind) throws Exception {
     Hash dataHash = Hash.of(33);
     Hash typeHash = hash(
         hash(kind.marker()),
         dataHash
     );
-    assertCall(() -> catDb().get(typeHash))
+    assertCall(() -> categoryDb().get(typeHash))
         .throwsException(new DecodeCatNodeExc(typeHash, kind, DATA_PATH))
         .withCause(new NoSuchDataExc(dataHash));
   }
 
-  private void assert_reading_cat_with_corrupted_type_as_data_causes_exc(CatKindB kind)
+  private void assert_reading_cat_with_corrupted_type_as_data_causes_exc(CategoryKindB kind)
       throws Exception {
     Hash hash =
         hash(
@@ -657,7 +657,7 @@ public class CatBCorruptedTest extends TestContext {
   }
 
   private ThrownExceptionSubject assertThatGet(Hash hash) {
-      return assertCall(() -> catDb().get(hash));
+      return assertCall(() -> categoryDb().get(hash));
   }
 
   private DecodeCatExc illegalTypeMarkerException(Hash hash, int marker) {
@@ -703,7 +703,7 @@ public class CatBCorruptedTest extends TestContext {
     return expr.hash();
   }
 
-  protected Hash hash(CatB type) {
+  protected Hash hash(CategoryB type) {
     return type.hash();
   }
 
@@ -856,47 +856,47 @@ public class CatBCorruptedTest extends TestContext {
     }
 
     private abstract class OperCatTestSet {
-      private final CatKindB catKindB;
-      private final Class<? extends CatB> type;
+      private final CategoryKindB categoryKindB;
+      private final Class<? extends CategoryB> type;
 
-      protected OperCatTestSet(CatKindB catKindB) {
-        this(catKindB, TypeB.class);
+      protected OperCatTestSet(CategoryKindB categoryKindB) {
+        this(categoryKindB, TypeB.class);
       }
 
-      protected OperCatTestSet(CatKindB catKindB, Class<? extends CatB> type) {
-        this.catKindB = catKindB;
+      protected OperCatTestSet(CategoryKindB categoryKindB, Class<? extends CategoryB> type) {
+        this.categoryKindB = categoryKindB;
         this.type = type;
       }
 
       @Test
       public void without_data() throws Exception {
-        assert_reading_cat_without_data_causes_exc(catKindB);
+        assert_reading_cat_without_data_causes_exc(categoryKindB);
       }
 
       @Test
       public void with_additional_data() throws Exception {
-        assert_reading_cat_with_additional_data_causes_exc(catKindB);
+        assert_reading_cat_with_additional_data_causes_exc(categoryKindB);
       }
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
-        assert_reading_cat_with_data_pointing_nowhere_causes_exc(catKindB);
+        assert_reading_cat_with_data_pointing_nowhere_causes_exc(categoryKindB);
       }
 
       @Test
       public void with_corrupted_type_as_data() throws Exception {
-        assert_reading_cat_with_corrupted_type_as_data_causes_exc(catKindB);
+        assert_reading_cat_with_corrupted_type_as_data_causes_exc(categoryKindB);
       }
 
       @Test
       public void with_evaluation_type_being_oper_type() throws Exception {
         Hash hash = hash(
-            hash(catKindB.marker()),
+            hash(categoryKindB.marker()),
             hash(paramRefCB())
         );
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, catKindB, DATA_PATH, type, ParamRefCB.class));
+                hash, categoryKindB, DATA_PATH, type, ParamRefCB.class));
       }
     }
   }

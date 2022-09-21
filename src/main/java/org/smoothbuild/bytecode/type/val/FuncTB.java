@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
-import static org.smoothbuild.bytecode.type.CatKinds.FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.val.TNamesB.funcTypeName;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;

@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKinds.CALL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -12,14 +12,14 @@ import org.smoothbuild.bytecode.type.val.TypeB;
 /**
  * This class is immutable.
  */
-public class CallCB extends OperCatB {
+public class CallCB extends OperCB {
   public CallCB(Hash hash, TypeB evalT) {
     super(hash, "Call", CALL, evalT);
   }
 
   @Override
   public CallB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(merkleRoot.cat() instanceof CallCB);
+    checkArgument(merkleRoot.category() instanceof CallCB);
     return new CallB(merkleRoot, bytecodeDb);
   }
 }

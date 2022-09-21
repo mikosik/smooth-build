@@ -4,7 +4,7 @@ import org.smoothbuild.bytecode.expr.exc.BytecodeDbExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprNodeExc;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
-import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.CategoryB;
 
 public class Helpers {
   public static void wrapHashedDbExcAsBytecodeDbExc(HashedDbRunnable runnable) {
@@ -24,7 +24,7 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExcAsDecodeExprNodeException(
-      Hash hash, CatB cat, String path, HashedDbCallable<T> callable) {
+      Hash hash, CategoryB cat, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbExc e) {
@@ -33,7 +33,7 @@ public class Helpers {
   }
 
   public static <T> T wrapBytecodeDbExcAsDecodeExprNodeException(
-      Hash hash, CatB cat, String path, BytecodeDbCallable<T> callable) {
+      Hash hash, CategoryB cat, String path, BytecodeDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (BytecodeDbExc e) {
@@ -42,7 +42,7 @@ public class Helpers {
   }
 
   public static <T> T wrapBytecodeDbExcAsDecodeExprNodeException(
-      Hash hash, CatB cat, String path, int pathIndex, BytecodeDbCallable<T> callable) {
+      Hash hash, CategoryB cat, String path, int pathIndex, BytecodeDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (BytecodeDbExc e) {

@@ -23,14 +23,14 @@ public class SelectBTest extends TestContext {
   @Test
   public void creating_select_with_too_great_index_causes_exception() {
     TupleB tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(boolTB(), tuple, intB(2)).cat())
+    assertCall(() -> selectB(boolTB(), tuple, intB(2)).category())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   public void creating_select_with_index_lower_than_zero_causes_exception() {
     TupleB tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(stringTB(), tuple, intB(-1)).cat())
+    assertCall(() -> selectB(stringTB(), tuple, intB(-1)).category())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
   }
 

@@ -1,25 +1,25 @@
 package org.smoothbuild.bytecode.expr;
 
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.CatB;
+import org.smoothbuild.bytecode.type.CategoryB;
 
 public class MerkleRoot {
   private final Hash hash;
-  private final CatB cat;
+  private final CategoryB category;
   private final Hash dataHash;
 
-  public MerkleRoot(Hash hash, CatB cat, Hash dataHash) {
+  public MerkleRoot(Hash hash, CategoryB category, Hash dataHash) {
     this.hash = hash;
     this.dataHash = dataHash;
-    this.cat = cat;
+    this.category = category;
   }
 
   public Hash hash() {
     return hash;
   }
 
-  public CatB cat() {
-    return cat;
+  public CategoryB category() {
+    return category;
   }
 
   public Hash dataHash() {

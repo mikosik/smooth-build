@@ -19,30 +19,30 @@ import com.google.common.collect.ImmutableList;
 public class CombineB extends OperB {
   public CombineB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.cat() instanceof CombineCB);
+    checkArgument(merkleRoot.category() instanceof CombineCB);
   }
 
   @Override
-  public CombineCB cat() {
-    return (CombineCB) super.cat();
+  public CombineCB category() {
+    return (CombineCB) super.category();
   }
 
   @Override
   public TupleTB type() {
-    return cat().evalT();
+    return category().evalT();
   }
 
   public ImmutableList<ExprB> items() {
-    var expectedItemTs = cat().evalT().items();
+    var expectedItemTs = category().evalT().items();
     var items = readSeqExprs(DATA_PATH, dataHash(), ExprB.class);
     allMatchOtherwise(
         expectedItemTs,
         items,
         (type, item) -> type.equals(item.type()),
-        (type, item) -> { throw new DecodeCombineWrongItemsSizeExc(hash(), cat(), item); },
+        (type, item) -> { throw new DecodeCombineWrongItemsSizeExc(hash(), category(), item); },
         (index) -> {
           throw new DecodeExprWrongNodeTypeExc(
-              hash(), cat(), "items", index, expectedItemTs.get(index), items.get(index).type());
+              hash(), category(), "items", index, expectedItemTs.get(index), items.get(index).type());
         }
     );
     return items;

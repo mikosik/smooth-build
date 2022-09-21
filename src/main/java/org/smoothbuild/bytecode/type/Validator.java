@@ -21,7 +21,7 @@ public class Validator {
     allMatchOtherwise(
         tupleTB.items(),
         itemTs,
-        CatB::equals,
+        CategoryB::equals,
         (expectedSize, actualSize) -> { throw exceptionThrower.get(); },
         i -> { throw exceptionThrower.get(); }
     );

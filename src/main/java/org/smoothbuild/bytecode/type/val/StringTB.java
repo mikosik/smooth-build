@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CatKinds.STRING;
+import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -18,7 +18,7 @@ public class StringTB extends BaseTB {
 
   @Override
   public StringB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    checkArgument(merkleRoot.cat() instanceof StringTB);
+    checkArgument(merkleRoot.category() instanceof StringTB);
     return new StringB(merkleRoot, bytecodeDb);
   }
 }
