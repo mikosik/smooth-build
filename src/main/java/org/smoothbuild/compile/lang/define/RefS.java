@@ -6,7 +6,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 
-public record ParamRefS(TypeS type, String paramName, Loc loc) implements OperS {
+public record RefS(TypeS type, String paramName, Loc loc) implements OperS {
   @Override
   public String label() {
     return "(" + paramName + ")";
@@ -14,6 +14,6 @@ public record ParamRefS(TypeS type, String paramName, Loc loc) implements OperS 
 
   @Override
   public ExprS mapVars(Function<VarS, TypeS> mapper) {
-    return new ParamRefS(type.mapVars(mapper), paramName, loc);
+    return new RefS(type.mapVars(mapper), paramName, loc);
   }
 }

@@ -30,7 +30,7 @@ public class CategoryBStableHashTest extends TestContext {
     assertHash(combineCB(), "eced763485dfe3cf62431dcfaca0345aa9ed436d");
     assertHash(combineCB(intTB()), "ab67fcfb2ff1bcfe601019231f1332aeb11bc3e3");
     assertHash(orderCB(intTB()), "c9918a676b1fee41885c7993a262f9cf5e733345");
-    assertHash(paramRefCB(intTB()), "abecf47b6bf69f0198fdc49ade92d14379759db7");
+    assertHash(refCB(intTB()), "abecf47b6bf69f0198fdc49ade92d14379759db7");
     assertHash(selectCB(intTB()), "342238445679fe525c975544fc216f01961650df");
   }
 

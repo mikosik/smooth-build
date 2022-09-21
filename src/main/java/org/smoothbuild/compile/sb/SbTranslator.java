@@ -23,7 +23,7 @@ import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
-import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
 import org.smoothbuild.bytecode.expr.val.DefFuncB;
@@ -51,9 +51,9 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.define.OrderS;
-import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyValS;
+import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -107,7 +107,7 @@ public class SbTranslator {
       case MonoizeS monoizeS -> translateMonoize(monoizeS);
       case FuncS funcS -> translateFunc(funcS, ImmutableMap.of());
       case OrderS orderS -> translateAndCacheNal(orderS, this::translateOrder);
-      case ParamRefS paramRefS -> translateAndCacheNal(paramRefS, this::translateParamRef);
+      case RefS refS -> translateAndCacheNal(refS, this::translateRef);
       case SelectS selectS -> translateAndCacheNal(selectS, this::translateSelect);
       case StringS stringS -> translateAndCacheNal(stringS, this::translateString);
       case NamedValS namedValS -> translateVal(namedValS, ImmutableMap.of());
@@ -200,18 +200,18 @@ public class SbTranslator {
     var funcTS = syntCtorS.type();
     var resTB = translateT(funcTS.res());
     var paramTBs = translateT(funcTS.params());
-    var paramRefsB = createParamRefsB(paramTBs);
-    var paramsTB = bytecodeF.tupleT(map(paramRefsB, ExprB::type));
-    var bodyB = bytecodeF.combine(paramsTB, paramRefsB);
+    var refsB = createRefsB(paramTBs);
+    var paramsTB = bytecodeF.tupleT(map(refsB, ExprB::type));
+    var bodyB = bytecodeF.combine(paramsTB, refsB);
     descriptions.put(bodyB, new LabeledLocImpl("{}", syntCtorS.loc()));
     return bytecodeF.defFunc(resTB, paramTBs, bodyB);
   }
 
-  private ImmutableList<ExprB> createParamRefsB(TupleTB paramTs) {
+  private ImmutableList<ExprB> createRefsB(TupleTB paramTs) {
     Builder<ExprB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
       var closedT = paramTs.get(i);
-      builder.add(bytecodeF.paramRef(closedT, BigInteger.valueOf(i)));
+      builder.add(bytecodeF.ref(closedT, BigInteger.valueOf(i)));
     }
     return builder.build();
   }
@@ -222,9 +222,9 @@ public class SbTranslator {
     return bytecodeF.order(arrayTB, elemsB);
   }
 
-  private ParamRefB translateParamRef(ParamRefS paramRefS) {
-    var index = callStack.peek().indexMap().get(paramRefS.paramName());
-    return bytecodeF.paramRef(translateT(paramRefS.type()), BigInteger.valueOf(index));
+  private RefB translateRef(RefS refS) {
+    var index = callStack.peek().indexMap().get(refS.paramName());
+    return bytecodeF.ref(translateT(refS.type()), BigInteger.valueOf(index));
   }
 
   private SelectB translateSelect(SelectS selectS) {

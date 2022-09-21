@@ -26,8 +26,8 @@ import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoRefableS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.OrderS;
-import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyRefableS;
+import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -165,7 +165,7 @@ public class PsTranslator {
 
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
-      case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.loc());
+      case ItemS itemS -> new RefS(itemS.type(), ref.name(), ref.loc());
       case MonoRefableS monoRefableS -> monoRefableS;
       case PolyRefableS polyRefableS -> translateRefToPolyRefable(ref, polyRefableS);
     };

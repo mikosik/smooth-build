@@ -155,8 +155,8 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void paramRef() {
-        var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
+      public void ref() {
+        var func = defFuncS("f", nlist(itemS(intTS(), "p")), refS(intTS(), "p"));
         assertConversion(func, idFuncB());
       }
 
@@ -167,7 +167,7 @@ public class SbTranslatorTest extends TestContext {
         var callS = callS(structTS, syntCtorS, stringS("abc"));
         var selectS = selectS(stringTS(), callS, "field");
 
-        var ctorB = defFuncB(list(stringTB()), combineB(paramRefB(stringTB(), 0)));
+        var ctorB = defFuncB(list(stringTB()), combineB(refB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
         assertConversion(selectS, selectB(callB, intB(0)));
       }
@@ -224,7 +224,7 @@ public class SbTranslatorTest extends TestContext {
           public void defined() {
             var identity = idFuncS();
             var monoizeS = monoizeS(aToIntVarMapS(), identity);
-            var funcB = defFuncB(funcTB(intTB(), intTB()), paramRefB(intTB(), 0));
+            var funcB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
             assertConversion(monoizeS, funcB);
           }
 
@@ -236,13 +236,13 @@ public class SbTranslatorTest extends TestContext {
             var idFuncS = idFuncS();
             var bIdMonoFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
 
-            var bodyS = callS(b, bIdMonoFuncS, paramRefS(b, "p"));
+            var bodyS = callS(b, bIdMonoFuncS, refS(b, "p"));
             var wrapFuncS = polyDefFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
             var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
 
-            var idFuncB = defFuncB(funcTB(intTB(), intTB()), paramRefB(intTB(), 0));
+            var idFuncB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
             var wrapFuncB = defFuncB(funcTB(intTB(), intTB()),
-                callB(idFuncB, paramRefB(intTB(), 0)));
+                callB(idFuncB, refB(intTB(), 0)));
             assertConversion(wrapMonoFuncS, wrapFuncB);
           }
 

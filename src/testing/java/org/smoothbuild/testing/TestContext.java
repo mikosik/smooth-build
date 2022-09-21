@@ -37,7 +37,7 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
-import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
@@ -58,7 +58,7 @@ import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.oper.CallCB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
-import org.smoothbuild.bytecode.type.oper.ParamRefCB;
+import org.smoothbuild.bytecode.type.oper.RefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
@@ -92,10 +92,10 @@ import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.define.OrderS;
-import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyRefableS;
 import org.smoothbuild.compile.lang.define.PolyValS;
+import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -499,12 +499,12 @@ public class TestContext {
     return categoryDb().order(arrayTB(elemT));
   }
 
-  public ParamRefCB paramRefCB() {
-    return paramRefCB(intTB());
+  public RefCB refCB() {
+    return refCB(intTB());
   }
 
-  public ParamRefCB paramRefCB(TypeB evalT) {
-    return categoryDb().paramRef(evalT);
+  public RefCB refCB(TypeB evalT) {
+    return categoryDb().ref(evalT);
   }
 
   public SelectCB selectCB() {
@@ -632,7 +632,7 @@ public class TestContext {
   }
 
   public DefFuncB idFuncB() {
-    return defFuncB(list(intTB()), paramRefB(intTB(), 0));
+    return defFuncB(list(intTB()), refB(intTB(), 0));
   }
 
   public DefFuncB returnAbcFuncB() {
@@ -757,12 +757,12 @@ public class TestContext {
     return bytecodeDb().order(arrayTB(elemT), elemList);
   }
 
-  public ParamRefB paramRefB(int index) {
-    return paramRefB(intTB(), index);
+  public RefB refB(int index) {
+    return refB(intTB(), index);
   }
 
-  public ParamRefB paramRefB(TypeB evalT, int index) {
-    return bytecodeDb().paramRef(evalT, BigInteger.valueOf(index));
+  public RefB refB(TypeB evalT, int index) {
+    return bytecodeDb().ref(evalT, BigInteger.valueOf(index));
   }
 
   public SelectB selectB(ExprB tuple, IntB index) {
@@ -909,16 +909,16 @@ public class TestContext {
     return new OrderS(arrayTS(elemT), list(exprs), loc(line));
   }
 
-  public ParamRefS paramRefS(TypeS type) {
-    return paramRefS(type, "refName");
+  public RefS refS(TypeS type) {
+    return refS(type, "refName");
   }
 
-  public ParamRefS paramRefS(TypeS type, String name) {
-    return paramRefS(1, type, name);
+  public RefS refS(TypeS type, String name) {
+    return refS(1, type, name);
   }
 
-  public ParamRefS paramRefS(int line, TypeS type, String name) {
-    return new ParamRefS(type, name, loc(line));
+  public RefS refS(int line, TypeS type, String name) {
+    return new RefS(type, name, loc(line));
   }
 
   public SelectS selectS(TypeS type, ExprS selectable, String field) {
@@ -1218,11 +1218,11 @@ public class TestContext {
 
   public PolyFuncS idFuncS() {
     var a = varA();
-    return polyS(defFuncS(a, "myId", nlist(itemS(a, "a")), paramRefS(a, "a")));
+    return polyS(defFuncS(a, "myId", nlist(itemS(a, "a")), refS(a, "a")));
   }
 
   public DefFuncS intIdFuncS() {
-    return defFuncS(intTS(), "myIntId", nlist(itemS(intTS(), "i")), paramRefS(intTS(), "i"));
+    return defFuncS(intTS(), "myIntId", nlist(itemS(intTS(), "i")), refS(intTS(), "i"));
   }
 
   public DefFuncS returnIntFuncS() {

@@ -12,7 +12,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
-import static org.smoothbuild.bytecode.type.CategoryKinds.PARAM_REF;
+import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
 import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
 import static org.smoothbuild.bytecode.type.CategoryKinds.TUPLE;
@@ -23,7 +23,7 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
-import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
@@ -44,7 +44,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.CallKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.CombineKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OrderKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.ParamRefKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.RefKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.SelectKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
 import org.smoothbuild.bytecode.type.val.DefFuncCB;
@@ -56,7 +56,7 @@ import org.smoothbuild.bytecode.type.val.NatFuncCB;
 
 public sealed abstract class CategoryKindB
     permits AbstFuncKindB, ArrayKindB, BaseKindB, CallKindB, CombineKindB, FuncKindB, OrderKindB,
-    ParamRefKindB, SelectKindB, TupleKindB {
+    RefKindB, SelectKindB, TupleKindB {
   public static sealed class BaseKindB extends CategoryKindB permits BlobKindB, BoolKindB, IntKindB,
       StringKindB {
     private BaseKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
@@ -162,9 +162,9 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class ParamRefKindB extends CategoryKindB {
-    ParamRefKindB() {
-      super("PARAM_REF", (byte) 14, ParamRefB.class);
+  public static final class RefKindB extends CategoryKindB {
+    RefKindB() {
+      super("REF", (byte) 14, RefB.class);
     }
   }
 
@@ -212,7 +212,7 @@ public sealed abstract class CategoryKindB
       case 11 -> CALL;
       // TODO 12 is unused
       case 13 -> IF_FUNC;
-      case 14 -> PARAM_REF;
+      case 14 -> REF;
       case 15 -> MAP_FUNC;
       case 16 -> FUNC;
       default -> null;

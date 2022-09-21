@@ -17,7 +17,7 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprNoSuchExprExc;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
-import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
@@ -141,8 +141,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT, elems));
   }
 
-  public ParamRefB paramRef(TypeB evalT, BigInteger value) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newParamRef(evalT, value));
+  public RefB ref(TypeB evalT, BigInteger value) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newRef(evalT, value));
   }
 
   public SelectB select(TypeB evalT, ExprB selectable, IntB index) {
@@ -360,9 +360,9 @@ public class BytecodeDb {
     }
   }
 
-  private ParamRefB newParamRef(TypeB evalT, BigInteger index) throws HashedDbExc {
-    var data = writeParamRefData(index);
-    var type = categoryDb.paramRef(evalT);
+  private RefB newRef(TypeB evalT, BigInteger index) throws HashedDbExc {
+    var data = writeRefData(index);
+    var type = categoryDb.ref(evalT);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
@@ -399,7 +399,7 @@ public class BytecodeDb {
     return writeSeq(elems);
   }
 
-  private Hash writeParamRefData(BigInteger value) throws HashedDbExc {
+  private Hash writeRefData(BigInteger value) throws HashedDbExc {
     return hashedDb.writeBigInteger(value);
   }
 

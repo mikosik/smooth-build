@@ -26,8 +26,8 @@ import static org.smoothbuild.testing.type.TestingCatsB.INT;
 import static org.smoothbuild.testing.type.TestingCatsB.MAP_FUNC;
 import static org.smoothbuild.testing.type.TestingCatsB.METHOD;
 import static org.smoothbuild.testing.type.TestingCatsB.ORDER;
-import static org.smoothbuild.testing.type.TestingCatsB.PARAM_REF;
 import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
+import static org.smoothbuild.testing.type.TestingCatsB.REF;
 import static org.smoothbuild.testing.type.TestingCatsB.SELECT;
 import static org.smoothbuild.testing.type.TestingCatsB.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -43,7 +43,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
-import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
@@ -126,7 +126,7 @@ public class CategoryBTest extends TestContext {
         args(f -> f.call(f.int_()), "Call:Int"),
         args(f -> f.combine(f.tuple(f.string(), f.int_())), "Combine:{String,Int}"),
         args(f -> f.order(f.array(f.string())), "Order:[String]"),
-        args(f -> f.paramRef(f.int_()), "ParamRef:Int"),
+        args(f -> f.ref(f.int_()), "Ref:Int"),
         args(f -> f.select(f.int_()), "Select:Int")
     );
   }
@@ -319,7 +319,7 @@ public class CategoryBTest extends TestContext {
         arguments(CALL, CallB.class),
         arguments(ORDER, OrderB.class),
         arguments(COMBINE, CombineB.class),
-        arguments(PARAM_REF, ParamRefB.class),
+        arguments(REF, RefB.class),
         arguments(SELECT, SelectB.class)
     );
   }
@@ -359,7 +359,7 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void ref(TypeB type) {
-      assertThat(CATEGORY_DB.paramRef(type).evalT())
+      assertThat(CATEGORY_DB.ref(type).evalT())
           .isEqualTo(type);
     }
 
@@ -404,7 +404,7 @@ public class CategoryBTest extends TestContext {
     tester.addEqualityGroup(IF_FUNC, IF_FUNC);
     tester.addEqualityGroup(MAP_FUNC, MAP_FUNC);
     tester.addEqualityGroup(ORDER, ORDER);
-    tester.addEqualityGroup(PARAM_REF, PARAM_REF);
+    tester.addEqualityGroup(REF, REF);
     tester.addEqualityGroup(SELECT, SELECT);
 
     tester.testEquals();

@@ -36,7 +36,7 @@ import org.smoothbuild.bytecode.expr.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
-import org.smoothbuild.bytecode.expr.oper.ParamRefB;
+import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.BlobB;
@@ -230,11 +230,11 @@ public class ExprBCorruptedTest extends TestContext {
                       hash(stringTB()),
                       hash("aaa")
                   ),
-                  hash(paramRefB(1))
+                  hash(refB(1))
               ));
       assertCall(() -> ((ArrayB) bytecodeDb().get(exprHash)).elems(StringB.class))
           .throwsException(new DecodeExprWrongNodeClassExc(
-              exprHash, type, DATA_PATH, 1, ValB.class, ParamRefB.class));
+              exprHash, type, DATA_PATH, 1, ValB.class, RefB.class));
     }
   }
 
@@ -490,12 +490,12 @@ public class ExprBCorruptedTest extends TestContext {
               hash(type),
               hash(
                   hash(func),
-                  hash(paramRefB(1))
+                  hash(refB(1))
               )
           );
       assertCall(() -> ((CallB) bytecodeDb().get(exprHash)).data())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              exprHash, type, DATA_PATH + "[1]", CombineB.class, ParamRefB.class));
+              exprHash, type, DATA_PATH + "[1]", CombineB.class, RefB.class));
     }
 
     @Test
@@ -1058,7 +1058,7 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   @Nested
-  class _param_ref {
+  class _ref {
     @Test
     public void learning_test() throws Exception {
       /*
@@ -1068,15 +1068,15 @@ public class ExprBCorruptedTest extends TestContext {
       ByteString byteString = ByteString.of((byte) 3, (byte) 2);
       Hash exprHash =
           hash(
-              hash(paramRefCB(stringTB())),
+              hash(refCB(stringTB())),
               hash(byteString));
-      assertThat(((ParamRefB) bytecodeDb().get(exprHash)).value())
+      assertThat(((RefB) bytecodeDb().get(exprHash)).value())
           .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(paramRefCB());
+      obj_root_without_data_hash(refCB());
     }
 
     @Test
@@ -1084,17 +1084,17 @@ public class ExprBCorruptedTest extends TestContext {
       var index = intB(0);
       Hash dataHash = hash(index);
       obj_root_with_two_data_hashes(
-          paramRefCB(intTB()),
+          refCB(intTB()),
           dataHash,
-          (Hash exprHash) -> ((ParamRefB) bytecodeDb().get(exprHash)).value()
+          (Hash exprHash) -> ((RefB) bytecodeDb().get(exprHash)).value()
       );
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          paramRefCB(intTB()),
-          (Hash exprHash) -> ((ParamRefB) bytecodeDb().get(exprHash)).value());
+          refCB(intTB()),
+          (Hash exprHash) -> ((RefB) bytecodeDb().get(exprHash)).value());
     }
   }
 
@@ -1432,11 +1432,11 @@ public class ExprBCorruptedTest extends TestContext {
               hash(personTB()),
               hash(
                   hash(stringB("John")),
-                  hash(paramRefB(1))));
+                  hash(refB(1))));
       TupleB tuple = (TupleB) bytecodeDb().get(exprHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeExprWrongNodeClassExc(
-              exprHash, personTB(), DATA_PATH + "[1]", ValB.class, ParamRefB.class));
+              exprHash, personTB(), DATA_PATH + "[1]", ValB.class, RefB.class));
     }
   }
 

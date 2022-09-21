@@ -32,7 +32,7 @@ public class TestingCatsB {
   public static final CategoryB IF_FUNC = CONTEXT.ifFuncCB();
   public static final CategoryB MAP_FUNC = CONTEXT.mapFuncCB();
   public static final CategoryB ORDER = CONTEXT.orderCB();
-  public static final CategoryB PARAM_REF = CONTEXT.paramRefCB(INT);
+  public static final CategoryB REF = CONTEXT.refCB(INT);
   public static final CategoryB SELECT = CONTEXT.selectCB(INT);
 
   public static final ArrayTB ARRAY_BLOB = array(BLOB);
@@ -105,8 +105,8 @@ public class TestingCatsB {
         CONTEXT.combineCB(CONTEXT.tupleTB(STRING)),
         CONTEXT.orderCB(ARRAY_BLOB),
         CONTEXT.orderCB(ARRAY_STRING),
-        CONTEXT.paramRefCB(BLOB),
-        CONTEXT.paramRefCB(STRING),
+        CONTEXT.refCB(BLOB),
+        CONTEXT.refCB(STRING),
         CONTEXT.selectCB(BLOB),
         CONTEXT.selectCB(STRING),
         CONTEXT.ifFuncCB(BLOB),

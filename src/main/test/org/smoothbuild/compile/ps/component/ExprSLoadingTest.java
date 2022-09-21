@@ -197,25 +197,25 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void with_param_reference() {
+      public void with_ref() {
         module("""
           result(String() f) = f();
           """)
             .loadsWithSuccess()
             .containsRefable(polyDefFuncS(
                 1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS()), "f")),
-                callS(1, stringTS(), paramRefS(funcTS(stringTS()), "f"))));
+                callS(1, stringTS(), refS(funcTS(stringTS()), "f"))));
       }
 
       @Test
-      public void with_param_reference_and_arg() {
+      public void with_ref_and_arg() {
         module("""
           result(String(Blob) f) = f(0x09);
           """)
             .loadsWithSuccess()
             .containsRefable(polyDefFuncS(
                 1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS(), blobTS()), "f")),
-                callS(1, stringTS(), paramRefS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
+                callS(1, stringTS(), refS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
       }
     }
     @Nested
@@ -267,7 +267,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsRefable(polyDefValS(2, funcTS(intTS(), intTS()), "result",
                 monoizeS(3, varMap(varA(), intTS()),
-                    polyDefFuncS(1, "myId", nlist(itemS(varA(), "a")), paramRefS(1, varA(), "a")))));
+                    polyDefFuncS(1, "myId", nlist(itemS(varA(), "a")), refS(1, varA(), "a")))));
       }
 
       @Test
@@ -298,14 +298,14 @@ public class ExprSLoadingTest extends TestContext {
     }
 
     @Test
-    public void param_ref() {
+    public void ref() {
       module("""
           Blob myFunc(Blob param1)
             = param1;
           """)
           .loadsWithSuccess()
           .containsRefable(polyDefFuncS(1, blobTS(), "myFunc", nlist(itemS(1, blobTS(), "param1")),
-              paramRefS(2, blobTS(), "param1")));
+              refS(2, blobTS(), "param1")));
     }
 
     @Test
@@ -423,7 +423,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsRefable(
                 polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a")),
-                    paramRefS(3, varA(), "a")));
+                    refS(3, varA(), "a")));
       }
 
       @Test
@@ -450,7 +450,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsRefable(
                 polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a", intS(3, 7))),
-                    paramRefS(4, varA(), "a")));
+                    refS(4, varA(), "a")));
       }
 
       @Test

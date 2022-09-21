@@ -245,22 +245,22 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
-  class _param_ref {
+  class _ref {
     @Test
     public void zero_ref() {
-      assertThat(paramRefB(intTB(), 0).hash())
+      assertThat(refB(intTB(), 0).hash())
           .isEqualTo(Hash.decode("b4ac839b88e92ebacf9ffe244a452837a2284d57"));
     }
 
     @Test
     public void positive_ref() {
-      assertThat(paramRefB(intTB(), 123).hash())
+      assertThat(refB(intTB(), 123).hash())
           .isEqualTo(Hash.decode("bf6b5c6be0c652b2184bb3df4924f3593a9f3f5e"));
     }
 
     @Test
     public void negative_ref() {
-      assertThat(paramRefB(intTB(), -123).hash())
+      assertThat(refB(intTB(), -123).hash())
           .isEqualTo(Hash.decode("7732155785f68d3b3677753b0f8fbf2d8ec8deb7"));
     }
   }

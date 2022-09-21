@@ -12,7 +12,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.IntKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.MapFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.NatFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OrderKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.ParamRefKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.RefKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.SelectKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.StringKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
@@ -32,6 +32,6 @@ public class CategoryKinds {
   public static final CategoryKindB COMBINE = new CombineKindB();
   public static final CategoryKindB SELECT = new SelectKindB();
   public static final CategoryKindB CALL = new CallKindB();
-  public static final CategoryKindB PARAM_REF = new ParamRefKindB();
+  public static final CategoryKindB REF = new RefKindB();
   public static final CategoryKindB FUNC = new FuncKindB();
 }

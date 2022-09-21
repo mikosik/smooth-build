@@ -6,11 +6,11 @@ import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 
 /**
- * Parameter reference.
+ * Reference to environment value.
  * This class is thread-safe.
  */
-public class ParamRefB extends OperB {
-  public ParamRefB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+public class RefB extends OperB {
+  public RefB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
   }
 

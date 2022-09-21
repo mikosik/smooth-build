@@ -192,7 +192,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void param_ref() {
+      public void ref() {
         var code = """
           myFunc(Int int) = int;
           """;
@@ -381,9 +381,9 @@ public class InferenceTest extends TestContext {
       }
 
       @Nested
-      class _param_ref {
+      class _ref {
         @Test
-        public void param_ref_with_base_type() {
+        public void ref_with_base_type() {
           var code = """
           myFunc(Int int) = int;
           """;
@@ -393,7 +393,7 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void param_ref_with_poly_type() {
+        public void ref_with_poly_type() {
           var code = """
           myFunc(A param) = param;
           """;
@@ -403,7 +403,7 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void param_ref_with_mono_func_type() {
+        public void ref_with_mono_func_type() {
           var code = """
           myFunc(Int(Bool) func) = func;
           """;
@@ -414,7 +414,7 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void param_ref_with_poly_func_type() {
+        public void ref_with_poly_func_type() {
           var code = """
           myFunc(A(A) param) = param;
           """;
