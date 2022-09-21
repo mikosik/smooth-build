@@ -165,7 +165,7 @@ public class PsTranslator {
 
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
-      case ItemS itemP -> new ParamRefS(itemP.type(), ref.name(), ref.loc());
+      case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.loc());
       case MonoRefableS monoRefableS -> monoRefableS;
       case PolyRefableS polyRefableS -> translateRefToPolyRefable(ref, polyRefableS);
     };
