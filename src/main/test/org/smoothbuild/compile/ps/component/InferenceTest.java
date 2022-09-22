@@ -566,16 +566,16 @@ public class InferenceTest extends TestContext {
         @Test
         public void structs_with_the_same_object_db_representation() {
           var code = """
-            Vector {
+            MyStruct1 {
               String x,
               String y,
             }
-            Tuple {
+            MyStruct2 {
               String a,
               String b,
             }
-            String myEqual(A p1, A p2) = "true";
-            result = myEqual(vector("aaa", "bbb"), tuple("aaa", "bbb"));
+            A myEqual(A a1, A a2) = a1;
+            result = myEqual(myStruct1("aaa", "bbb"), myStruct2("aaa", "bbb"));
             """;
           module(code)
               .loadsWithError(10, "Illegal call.");
