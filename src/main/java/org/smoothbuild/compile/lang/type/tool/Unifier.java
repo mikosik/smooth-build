@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
+import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 
@@ -89,6 +90,7 @@ public class Unifier {
     switch (normal1) {
       case ArrayTS array1 -> unifyNormalizedArray(array1, normal2);
       case FuncTS func1 -> unifyNormalizedFunc(func1, normal2);
+      case TupleTS tuple1 -> unifyNormalizedTuple(tuple1, normal2);
       case VarS varS -> throw new RuntimeException("shouldn't happen");
       default -> {
         if (!normal1.equals(normal2)) {
@@ -122,12 +124,28 @@ public class Unifier {
     }
   }
 
+  private void unifyNormalizedTuple(TupleTS tuple1, TypeS normal2) throws UnifierExc {
+    if (normal2 instanceof TupleTS tuple2) {
+      var items1 = tuple1.items();
+      var items2 = tuple2.items();
+      if (items1.size() != items2.size()) {
+        throw new UnifierExc();
+      }
+      for (int i = 0; i < items1.size(); i++) {
+        unifyNormalized(items1.get(i), items2.get(i));
+      }
+    } else {
+      throw new UnifierExc();
+    }
+  }
+
   // normalization
 
   private TypeS normalize(TypeS type) {
     return switch (type) {
       case ArrayTS array -> array.mapComponents(this::toVar);
       case FuncTS func -> func.mapComponents(this::toVar);
+      case TupleTS tuple -> tuple.mapComponents(this::toVar);
       case VarS var -> normalizeVar(var);
       default -> type;
     };
@@ -160,6 +178,7 @@ public class Unifier {
     return switch (normal) {
       case ArrayTS array -> array.mapComponents(this::denormalize);
       case FuncTS func -> func.mapComponents(this::denormalize);
+      case TupleTS tuple -> tuple.mapComponents(this::denormalize);
       case VarS var -> denormalizeVar(var);
       default -> normal;
     };
