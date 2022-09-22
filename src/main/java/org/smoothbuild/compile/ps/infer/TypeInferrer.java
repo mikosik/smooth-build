@@ -86,7 +86,7 @@ public class TypeInferrer {
 
   private Optional<SchemaS> inferValSchema(NamedValP val) {
     return translateOrGenerateT(val.type())
-        .flatMap(r -> unifyBodyAndResolve(val, r, this::newBodyUnifier, this::resolveValSchema));
+        .flatMap(r -> unifyBodyAndResolve(val, r, () -> bindings, this::resolveValSchema));
   }
 
   private Optional<SchemaS> resolveValSchema(NamedValP namedValP, TypeS evalT) {
@@ -101,11 +101,7 @@ public class TypeInferrer {
   }
 
   private void inferDefaultArgImpl(TypeS type, ItemP param) {
-    unifyBodyAndResolve(param, type, this::newBodyUnifier, this::resolveDefaultArg);
-  }
-
-  private ExprTypeUnifier newBodyUnifier() {
-    return new ExprTypeUnifier(unifier, bindings, logger);
+    unifyBodyAndResolve(param, type, () -> bindings, this::resolveDefaultArg);
   }
 
   private Optional<Void> resolveDefaultArg(ItemP param, TypeS type) {
@@ -149,9 +145,8 @@ public class TypeInferrer {
         .filter(p -> p.body().isPresent())
         .forEach(this::inferDefaultArg);
     var resT = translateOrGenerateT(func.resT());
-    return resT.flatMap(
-        r -> unifyBodyAndResolve(func, r, () -> new ExprTypeUnifier(
-        unifier, funcBodyScopeBindings(params), logger), this::resolveFuncSchema));
+    return resT.flatMap(r -> unifyBodyAndResolve(
+        func, r, () -> funcBodyScopeBindings(params), this::resolveFuncSchema));
   }
 
   private ScopedBindings<Optional<? extends RefableS>> funcBodyScopeBindings(NList<ItemP> params) {
@@ -172,10 +167,11 @@ public class TypeInferrer {
   // body
 
   private <R extends RefableP, T> Optional<T> unifyBodyAndResolve(
-      R refable, TypeS evalT, Supplier<ExprTypeUnifier> bodyUnifierSupplier,
+      R refable, TypeS evalT,
+      Supplier<? extends Bindings<? extends Optional<? extends RefableS>>> bindingsSupplier,
       BiFunction<R, TypeS, Optional<T>> resolver) {
     if (refable.body().isPresent()) {
-      return bodyUnifierSupplier.get()
+      return new ExprTypeUnifier(unifier, bindingsSupplier.get(), logger)
           .unifyExpr(refable.body().get())
           .flatMap(bodyT -> unifyBodyWithEvalAndResolve(refable, evalT, bodyT, resolver));
     } else {
