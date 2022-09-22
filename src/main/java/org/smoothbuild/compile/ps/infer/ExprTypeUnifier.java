@@ -53,12 +53,12 @@ public class ExprTypeUnifier {
   public Optional<TypeS> unifyExpr(ExprP expr) {
     return switch (expr) {
       case CallP callP -> unifyAndMemoize(this::unifyCall, callP);
-      case ValP valP -> Optional.of(valP.type());
       case DefaultArgP defaultArgP -> unifyAndMemoize(this::unifyDefaultArg, defaultArgP);
       case NamedArgP namedArgP -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP orderP -> unifyAndMemoize(this::unifyOrder, orderP);
       case RefP refP -> unifyRef(refP);
       case SelectP selectP -> unifyAndMemoize(this::unifySelect, selectP);
+      case ValP valP -> Optional.of(valP.type());
     };
   }
 
