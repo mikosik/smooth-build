@@ -26,6 +26,7 @@ import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.ValP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
+import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValP;
 import org.smoothbuild.out.log.Logger;
 
@@ -48,12 +49,16 @@ public class TypeInferrerResolve {
     } else {
       resolvedEvalT = fixPrefixedVars(resolvedEvalT);
     }
-    if (val.body().isPresent() && !resolve(val.body().get())) {
+    if (!resolveBody(val.body())) {
       return Optional.empty();
     }
     // This only works because val so far cannot be enclosed within other val.
     var quantifiedVars = resolvedEvalT.vars();
     return Optional.of(new SchemaS(quantifiedVars, resolvedEvalT));
+  }
+
+  public void resolve(ItemP param) {
+    resolveBody(param.body());
   }
 
   public Optional<FuncSchemaS> resolve(FuncP func, FuncTS unresolvedFuncT) {
@@ -73,15 +78,24 @@ public class TypeInferrerResolve {
     } else {
       resolvedFuncT = (FuncTS) fixPrefixedVars(resolvedFuncT);
     }
-    if (func.body().isPresent()) {
-      if (!resolve(func.body().get())) {
-        return Optional.empty();
-      }
+    if (!resolveBody(func.body())) {
+      return Optional.empty();
     }
-
     // This only works because function so far cannot be enclosed within other function.
     var quantifiedVars = resolvedFuncT.vars();
     return Optional.of(new FuncSchemaS(quantifiedVars, resolvedFuncT));
+  }
+
+  private boolean resolveBody(Optional<ExprP> body) {
+    if (body.isPresent()) {
+      setDefaultTypes(body.get());
+      return resolve(body.get());
+    }
+    return true;
+  }
+
+  private void setDefaultTypes(ExprP expr) {
+    new DefaultTypeInferrer(unifier).infer(expr);
   }
 
   private TypeS fixPrefixedVars(TypeS resolvedT) {

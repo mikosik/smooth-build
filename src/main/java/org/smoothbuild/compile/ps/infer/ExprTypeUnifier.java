@@ -142,10 +142,15 @@ public class ExprTypeUnifier {
 
   private Optional<TypeS> unifyRef(RefP ref) {
     var refable = bindings.get(ref.name());
-    return refable.flatMap((RefableS r) -> switch (r.typelike()) {
+    return refable.flatMap(r -> unifyRef(ref, r));
+  }
+
+  private Optional<? extends TypeS> unifyRef(RefP ref, RefableS r) {
+    ref.setTypelike(r.typelike());
+    return switch (r.typelike()) {
       case TypeS type -> unifyMonoRef(ref, type);
       case SchemaS schema -> unifyPolyRef(ref, schema);
-    });
+    };
   }
 
   private static Optional<TypeS> unifyMonoRef(RefP ref, TypeS type) {

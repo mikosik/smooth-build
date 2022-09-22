@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.ps.component;
 
+import static org.smoothbuild.util.collect.NList.nlist;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -717,6 +719,25 @@ public class InferenceTest extends TestContext {
               """;
           module(code)
               .loadsWithError(2, "Illegal call.");
+        }
+      }
+
+      @Nested
+      class _with_default_type {
+        @Test
+        public void test() {
+          var code = """
+              Int myFunc(A a1, A a2) = 7;
+              result = myFunc([], []);
+              """;
+          var myFunc = polyDefFuncS(1, "myFunc",
+              nlist(itemS(1, varA(), "a1"), itemS(1, varA(), "a2")), intS(1, 7));
+          var emptyArray = orderS(2, tupleTS());
+          var call = callS(2, intTS(), monoizeS(2, varMap(varA(), arrayTS(tupleTS())), myFunc),
+              emptyArray, emptyArray);
+          module(code)
+              .loadsWithSuccess()
+              .containsRefable(polyDefValS(2, "result", call));
         }
       }
 

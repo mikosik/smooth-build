@@ -106,7 +106,7 @@ public class TypeInferrer {
 
   private Optional<Void> resolveDefaultArg(ItemP param, TypeS type) {
     new TypeInferrerResolve(unifier, logger)
-        .resolve(param.body().get());
+        .resolve(param);
     // This optional is ignored by caller.
     return Optional.empty();
   }
