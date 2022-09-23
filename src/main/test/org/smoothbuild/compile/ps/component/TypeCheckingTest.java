@@ -8,42 +8,78 @@ public class TypeCheckingTest extends TestContext {
   @Nested
   class _value_type_and_its_body_type {
     @Test
+    public void succeeds_when_types_are_assignable() {
+      var sourceCode = """
+          Int result = 7;
+          """;
+      module(sourceCode)
+          .loadsWithSuccess();
+    }
+
+    @Test
     public void fails_when_types_are_not_assignable() {
       var sourceCode = """
-          [Blob] result = [1, 2, 3];
+          Blob result = "abc";
           """;
       module(sourceCode)
           .loadsWithError(1, "`result` body type is not equal to declared type.");
     }
 
     @Test
-    public void succeeds_when_types_are_assignable() {
+    public void succeeds_when_body_type_is_more_general_than_declared_type() {
       var sourceCode = """
-          [[Int]] result = [];
+          [Int] result = [];
           """;
       module(sourceCode)
           .loadsWithSuccess();
+    }
+
+    @Test
+    public void fails_when_body_type_is_more_specific_than_declared_type() {
+      var sourceCode = """
+          A result = 7;
+          """;
+      module(sourceCode)
+          .loadsWithError(1, "`result` body type is not equal to declared type.");
     }
   }
 
   @Nested
   class _func_res_type_and_its_body_type {
     @Test
+    public void succeeds_when_types_are_assignable() {
+      var sourceCode = """
+          Int myFunc() = 7;
+          """;
+      module(sourceCode)
+          .loadsWithSuccess();
+    }
+
+    @Test
     public void fails_when_types_are_not_assignable() {
       var sourceCode = """
-          [Blob] myFunc() = [1, 2, 3];
+          Int myFunc() = "abc";
           """;
       module(sourceCode)
           .loadsWithError(1, "`myFunc` body type is not equal to declared type.");
     }
 
     @Test
-    public void succeeds_when_types_are_assignable() {
+    public void succeeds_when_body_type_is_more_general_than_declared_result_type() {
       var sourceCode = """
-          [[Int]] myFunc() = [];
+          [Int] myFunc() = [];
           """;
       module(sourceCode)
           .loadsWithSuccess();
+    }
+
+    @Test
+    public void fails_when_body_type_is_more_specific_than_declared_result_type() {
+      var sourceCode = """
+          A myFunc() = 7;
+          """;
+      module(sourceCode)
+          .loadsWithError(1, "`myFunc` body type is not equal to declared type.");
     }
   }
 

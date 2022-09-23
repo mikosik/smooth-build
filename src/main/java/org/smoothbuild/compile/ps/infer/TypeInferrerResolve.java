@@ -38,11 +38,11 @@ public class TypeInferrerResolve {
     this.logger = logger;
   }
 
-  public Optional<SchemaS> resolve(NamedValP val, TypeS unresolvedValT) {
-    TypeS resolvedEvalT = unifier.resolve(unresolvedValT);
+  public Optional<SchemaS> resolve(NamedValP val, TypeS evalT) {
+    TypeS resolvedEvalT = unifier.resolve(evalT);
     if (val.evalT().isPresent()) {
-      if (!unresolvedValT.equals(resolvedEvalT)) {
-        logger.error("<Add error message here> 2");
+      if (!evalT.equals(resolvedEvalT)) {
+        logger.log(compileError(val.loc(), val.q() + " body type is not equal to declared type."));
         return Optional.empty();
       }
     } else {
@@ -71,7 +71,8 @@ public class TypeInferrerResolve {
 
     if (func.resT().isPresent()) {
       if (!unresolvedFuncT.res().equals(resolvedFuncT.res())) {
-        logger.error("<Add error message here> 5");
+        logger.log(compileError(func.resT().get().loc(),
+            func.q() + " body type is not equal to declared type."));
         return Optional.empty();
       }
     } else {
