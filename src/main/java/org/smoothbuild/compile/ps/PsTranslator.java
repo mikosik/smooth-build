@@ -96,7 +96,13 @@ public class PsTranslator {
   }
 
   private Optional<PolyEvaluableS> translateParamBody(ExprP expr) {
-    return translateExpr(expr).map(PolyEvaluableS::new);
+    return translateExpr(expr).map(exprS -> {
+      if (exprS instanceof MonoizeS monoizeS) {
+        return monoizeS.polyEvaluable();
+      } else {
+        return new PolyEvaluableS(exprS);
+      }
+    });
   }
 
   private Optional<NamedPolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP,

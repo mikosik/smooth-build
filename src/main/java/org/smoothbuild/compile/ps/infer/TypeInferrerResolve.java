@@ -1,12 +1,12 @@
 package org.smoothbuild.compile.ps.infer;
 
 import static org.smoothbuild.compile.ps.CompileError.compileError;
-import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
@@ -27,7 +27,6 @@ import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.ValP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
-import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValP;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.util.bindings.Bindings;
@@ -52,7 +51,7 @@ public class TypeInferrerResolve {
         return Optional.empty();
       }
     } else {
-      resolvedEvalT = fixPrefixedVars(resolvedEvalT);
+      resolvedEvalT = renameVars(resolvedEvalT, VarS::isTemporary);
     }
     if (!resolveBody(val.body())) {
       return Optional.empty();
@@ -62,19 +61,17 @@ public class TypeInferrerResolve {
     return Optional.of(new SchemaS(quantifiedVars, resolvedEvalT));
   }
 
-  public void resolve(ItemP param) {
-    resolveBody(param.body());
+  public boolean resolveParamBody(ExprP body) {
+    if (body instanceof OperP operP) {
+      var resolvedType = unifier.resolve(operP.typeS());
+      operP.setTypeS(renameVars(resolvedType, v -> true));
+      return resolveBody(operP);
+    }
+    return true;
   }
 
   public Optional<FuncSchemaS> resolve(FuncP func, FuncTS funcT) {
     var resolvedFuncT = (FuncTS) unifier.resolve(funcT);
-    var paramTs = funcT.params();
-    var resolvedParamTs = resolvedFuncT.params();
-    if (!allMatch(paramTs.items(), resolvedParamTs.items(), TypeS::equals)) {
-      logger.log(compileError(func.loc(), "<Add error message here> 4"));
-      return Optional.empty();
-    }
-
     if (func.resT().isPresent()) {
       if (!funcT.res().equals(resolvedFuncT.res())) {
         logger.log(compileError(func.resT().get().loc(),
@@ -82,7 +79,7 @@ public class TypeInferrerResolve {
         return Optional.empty();
       }
     } else {
-      resolvedFuncT = (FuncTS) fixPrefixedVars(resolvedFuncT);
+      resolvedFuncT = (FuncTS) renameVars(resolvedFuncT, VarS::isTemporary);
     }
     if (!resolveBody(func.body())) {
       return Optional.empty();
@@ -93,34 +90,35 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveBody(Optional<ExprP> body) {
-    if (body.isPresent()) {
-      setDefaultTypes(body.get());
-      return resolve(body.get());
-    }
-    return true;
+    return body.map(this::resolveBody).orElse(true);
+  }
+
+  private boolean resolveBody(ExprP body) {
+    setDefaultTypes(body);
+    return resolve(body);
   }
 
   private void setDefaultTypes(ExprP expr) {
     new DefaultTypeInferrer(unifier, bindings).infer(expr);
   }
 
-  private TypeS fixPrefixedVars(TypeS resolvedT) {
+  private TypeS renameVars(TypeS resolvedT, Predicate<VarS> shouldRename) {
     var vars = resolvedT.vars().asList();
-    var prefixedVars = filter(vars, VarS::isTemporary);
-    if (prefixedVars.isEmpty()) {
+    var varsToRename = filter(vars, shouldRename);
+    if (varsToRename.isEmpty()) {
       return resolvedT;
     }
-    var unprefixedVars = resolvedT.vars().filter(v -> !v.isTemporary());
-    var varGenerator = new UnusedVarsGenerator(unprefixedVars);
-    var mapping = toMap(prefixedVars, pv -> varGenerator.next());
-    var resolvedAndFixedEvalT = resolvedT.mapVars(key -> {
-      if (key.isTemporary()) {
+    var varsNotToRename = resolvedT.vars().filter(v -> !shouldRename.test(v));
+    var varGenerator = new UnusedVarsGenerator(varsNotToRename);
+    var mapping = toMap(varsToRename, pv -> varGenerator.next());
+    var resolvedAndRenamedEvalT = resolvedT.mapVars(key -> {
+      if (shouldRename.test(key)) {
         return mapping.get(key);
       } else {
         return key;
       }});
-    unifier.unifySafe(resolvedAndFixedEvalT, resolvedT);
-    return resolvedAndFixedEvalT;
+    unifier.unifySafe(resolvedAndRenamedEvalT, resolvedT);
+    return resolvedAndRenamedEvalT;
   }
 
   public boolean resolve(ExprP expr) {
@@ -164,14 +162,14 @@ public class TypeInferrerResolve {
   private boolean resolve(MonoizableP monoizableP) {
     var resolvedMonoizationMapping = mapValues(monoizableP.monoizationMapping(), unifier::resolve);
     monoizableP.setMonoizationMapping(resolvedMonoizationMapping);
-    if (resolvedMonoizationMapping.values().stream().anyMatch(this::hasPrefixedVar)) {
+    if (resolvedMonoizationMapping.values().stream().anyMatch(this::hasTempVar)) {
       logger.log(compileError(monoizableP.loc(), "Cannot infer actual type parameters."));
       return false;
     }
     return true;
   }
 
-  private boolean hasPrefixedVar(TypeS t) {
+  private boolean hasTempVar(TypeS t) {
     return t.vars().stream().anyMatch(VarS::isTemporary);
   }
 }

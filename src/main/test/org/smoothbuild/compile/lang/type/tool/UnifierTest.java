@@ -2,12 +2,12 @@ package org.smoothbuild.compile.lang.type.tool;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.collect.Lists.concat;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.compile.lang.type.BaseTS;
 import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
@@ -21,321 +21,402 @@ public class UnifierTest extends TestContext {
   @Nested
   class _single_unify_call {
     @Nested
-    class _var_vs_var {
+    class _temp_vs_temp {
       @Test
       public void unify_a_with_itself() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
         assertUnifyInfers(
-            varA(),
-            varA(),
-            varA(),
-            varA());
+            unifier,
+            a,
+            a,
+            a,
+            a);
       }
 
       @Test
       public void unify_a_with_b() throws UnifierExc {
-        assertUnifyInfersEquality(
-            varA(),
-            varB(),
-            varA(),
-            varB());
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(a))
+            .isEqualTo(unifier.resolve(b));
       }
 
       @Test
       public void unify_a_with_b_unified_with_c() throws UnifierExc {
-        unifier.unify(varA(), varB());
-        unifier.unify(varB(), varC());
-        assertThat(unifier.resolve(varA()))
-            .isEqualTo(unifier.resolve(varC()));
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var c = unifier.newTempVar();
+        unifier.unify(a, b);
+        unifier.unify(b, c);
+        assertThat(unifier.resolve(a))
+            .isEqualTo(unifier.resolve(c));
+      }
+
+      @Test
+      public void unify_temp_and_array_of_temp() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfers(
+            unifier,
+            a,
+            arrayTS(b),
+            a,
+            arrayTS(b));
+      }
+
+      @Test
+      public void unify_temp_and_tuple_of_temp() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfers(
+            unifier,
+            a,
+            tupleTS(b),
+            a,
+            tupleTS(b));
+      }
+
+      @Test
+      public void unify_temp_and_func_of_temp() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfers(
+            unifier,
+            a,
+            funcTS(intTS(), b),
+            a,
+            funcTS(intTS(), b));
+      }
+
+      @Test
+      public void unify_array_a_with_array_b() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfersEquality(
+            unifier,
+            arrayTS(a),
+            arrayTS(b),
+            a,
+            b);
+      }
+
+      @Test
+      public void unify_tuple_a_with_tuple_b() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfersEquality(
+            unifier,
+            tupleTS(a),
+            tupleTS(b),
+            a,
+            b
+        );
+      }
+
+      @Test
+      public void unify_func_with_res_a_with_func_with_res_b() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfersEquality(
+            unifier,
+            funcTS(a),
+            funcTS(b),
+            a,
+            b);
+      }
+
+      @Test
+      public void unify_func_with_param_a_with_func_with_param_b() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfersEquality(
+            unifier,
+            funcTS(intTS(), a),
+            funcTS(intTS(), b),
+            a,
+            b);
       }
     }
 
     @Nested
-    class _var_vs_non_var {
+    class _temp_vs_non_temp {
+      @Nested
+      class _temp_as_root {
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_temp_and_base(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var a = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              a,
+              type,
+              a,
+              type);
+        }
+
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_temp_and_array(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var a = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              a,
+              arrayTS(type),
+              a,
+              arrayTS(type));
+        }
+
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_temp_and_tuple(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var a = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              a,
+              tupleTS(type),
+              a,
+              tupleTS(type));
+        }
+
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_temp_and_func_with_res(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var a = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              a,
+              funcTS(type),
+              a,
+              funcTS(type));
+        }
+
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_temp_and_func_with_param(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var a = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              a,
+              funcTS(intTS(), type),
+              a,
+              funcTS(intTS(), type));
+        }
+
+        public static ImmutableList<TypeS> typesToTest() {
+          return concat(TypeFS.baseTs(), new VarS("A"));
+        }
+      }
+
+      @Nested
+      class _temp_as_component {
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_array_of_temp_a_with_array_of_base(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var var = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              arrayTS(var),
+              arrayTS(type),
+              var,
+              type);
+        }
+
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_tuple_of_a_with_tuple_of_base(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var var = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              tupleTS(var),
+              tupleTS(type),
+              var,
+              type);
+        }
+
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_func_with_res_a_with_func_with_res_base(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var var = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              funcTS(var),
+              funcTS(type),
+              var,
+              type);
+        }
+
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_func_with_param_a_with_func_with_param_base(TypeS type)
+            throws UnifierExc {
+          var unifier = new Unifier();
+          var var = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              funcTS(intTS(), var),
+              funcTS(intTS(), type),
+              var,
+              type);
+        }
+
+        public static ImmutableList<TypeS> typesToTest() {
+          return concat(TypeFS.baseTs(), new VarS("A"));
+        }
+      }
+    }
+
+    @Nested
+    class _non_temp_vs_non_temp_var {
       @ParameterizedTest
-      @MethodSource("baseTypes")
-      public void unify_var_and_base(BaseTS baseTS) throws UnifierExc {
-        assertUnifyInfers(
-            varA(),
-            baseTS,
-            varA(),
-            baseTS);
+      @MethodSource("typesToTest")
+      public void unify_equal_base_types(TypeS type) throws UnifierExc {
+        unifier.unify(type, type);
       }
 
       @Test
-      public void unify_var_and_array_of_base() throws UnifierExc {
-        assertUnifyInfers(
-            varA(),
+      public void unify_non_equal_base_types_fails() {
+        assertUnifyFails(intTS(), blobTS());
+      }
+
+      @Test
+      public void unify_var_and_base_type_fails() {
+        assertUnifyFails(varA(), blobTS());
+      }
+
+      @Test
+      public void unify_equal_array_types() throws UnifierExc {
+        unifier.unify(
             arrayTS(intTS()),
-            varA(),
             arrayTS(intTS()));
       }
 
       @Test
-      public void unify_var_and_array_of_var() throws UnifierExc {
-        assertUnifyInfers(
-            varA(),
-            arrayTS(varB()),
-            varA(),
-            arrayTS(varB()));
+      public void unify_equal_array2_types() throws UnifierExc {
+        unifier.unify(
+            arrayTS(arrayTS(intTS())),
+            arrayTS(arrayTS(intTS())));
       }
 
       @Test
-      public void unify_var_and_tuple_of_bases() throws UnifierExc {
-        assertUnifyInfers(
-            varA(),
+      public void unify_non_equal_array_types_fails() {
+        assertUnifyFails(arrayTS(intTS()), arrayTS(blobTS()));
+      }
+
+      @Test
+      public void unify_equal_tuple_types() throws UnifierExc {
+        unifier.unify(
             tupleTS(intTS(), blobTS()),
-            varA(),
             tupleTS(intTS(), blobTS()));
       }
 
       @Test
-      public void unify_var_and_tuple_of_vars() throws UnifierExc {
-        assertUnifyInfers(
-            varA(),
-            tupleTS(varB(), varC()),
-            varA(),
-            tupleTS(varB(), varC()));
+      public void unify_equal_tuple2_types() throws UnifierExc {
+        unifier.unify(
+            tupleTS(tupleTS(intTS(), blobTS())),
+            tupleTS(tupleTS(intTS(), blobTS())));
       }
 
       @Test
-      public void unify_var_and_func_of_base() throws UnifierExc {
-        assertUnifyInfers(
-            varA(),
+      public void unify_non_equal_tuple_types_with_different_elem_type_fails() {
+        assertUnifyFails(tupleTS(intTS(), blobTS()), tupleTS(intTS(), stringTS()));
+      }
+
+      @Test
+      public void unify_non_equal_tuple_types_with_different_size_fails() {
+        assertUnifyFails(tupleTS(intTS(), blobTS()), tupleTS(intTS()));
+      }
+
+      @Test
+      public void unify_equal_func_types() throws UnifierExc {
+        unifier.unify(
             funcTS(intTS(), blobTS()),
-            varA(),
             funcTS(intTS(), blobTS()));
       }
 
       @Test
-      public void unify_var_and_func_of_vars() throws UnifierExc {
-        assertUnifyInfers(
-            varA(),
-            funcTS(varB(), varC()),
-            varA(),
-            funcTS(varB(), varC()));
+      public void unify_equal_func_types_with_res_being_func() throws UnifierExc {
+        unifier.unify(
+            funcTS(funcTS(intTS())),
+            funcTS(funcTS(intTS())));
       }
 
-      public static ImmutableList<BaseTS> baseTypes() {
-        return TypeFS.baseTs();
-      }
-    }
-
-    @Nested
-    class _non_var_vs_non_var {
-      @Nested
-      class _monomorphic {
-        @ParameterizedTest
-        @MethodSource("baseTypes")
-        public void unify_equal_base_types(BaseTS baseTS) throws UnifierExc {
-          unifier.unify(baseTS, baseTS);
-        }
-
-        @Test
-        public void unify_non_equal_base_types_fails() {
-          assertUnifyFails(intTS(), blobTS());
-        }
-
-        @Test
-        public void unify_equal_array_types() throws UnifierExc {
-          unifier.unify(
-              arrayTS(intTS()),
-              arrayTS(intTS()));
-        }
-
-        @Test
-        public void unify_equal_array2_types() throws UnifierExc {
-          unifier.unify(
-              arrayTS(arrayTS(intTS())),
-              arrayTS(arrayTS(intTS())));
-        }
-
-        @Test
-        public void unify_non_equal_array_types_fails() {
-          assertUnifyFails(arrayTS(intTS()), arrayTS(blobTS()));
-        }
-
-        @Test
-        public void unify_equal_tuple_types() throws UnifierExc {
-          unifier.unify(
-              tupleTS(intTS(), blobTS()),
-              tupleTS(intTS(), blobTS()));
-        }
-
-        @Test
-        public void unify_equal_tuple2_types() throws UnifierExc {
-          unifier.unify(
-              tupleTS(tupleTS(intTS(), blobTS())),
-              tupleTS(tupleTS(intTS(), blobTS())));
-        }
-
-        @Test
-        public void unify_non_equal_tuple_types_with_different_elem_type_fails() {
-          assertUnifyFails(tupleTS(intTS(), blobTS()), tupleTS(intTS(), stringTS()));
-        }
-
-        @Test
-        public void unify_non_equal_tuple_types_with_different_size_fails() {
-          assertUnifyFails(tupleTS(intTS(), blobTS()), tupleTS(intTS()));
-        }
-
-        @Test
-        public void unify_equal_func_types() throws UnifierExc {
-          unifier.unify(
-              funcTS(intTS(), blobTS()),
-              funcTS(intTS(), blobTS()));
-        }
-
-        @Test
-        public void unify_equal_func_types_with_res_being_func() throws UnifierExc {
-          unifier.unify(
-              funcTS(funcTS(intTS())),
-              funcTS(funcTS(intTS())));
-        }
-
-        @Test
-        public void unify_equal_func_types_with_param_being_func() throws UnifierExc {
-          unifier.unify(
-              funcTS(blobTS(), funcTS(intTS())),
-              funcTS(blobTS(), funcTS(intTS())));
-        }
-
-        @Test
-        public void unify_non_equal_func_types_that_differs_with_res_fails() {
-          assertUnifyFails(funcTS(intTS()), funcTS(blobTS()));
-        }
-
-        @Test
-        public void unify_non_equal_func_types_that_differs_with_param_fails() {
-          assertUnifyFails(funcTS(intTS(), blobTS()), funcTS(intTS(), stringTS()));
-        }
-
-        @Test
-        public void unify_non_equal_func_types_that_differs_with_param_count_fails() {
-          assertUnifyFails(funcTS(intTS(), blobTS()), funcTS(intTS()));
-        }
-
-        @ParameterizedTest
-        @MethodSource("baseTypes")
-        public void unify_base_and_array_fails(BaseTS base) {
-          assertUnifyFails(base, arrayTS(base));
-        }
-
-        @ParameterizedTest
-        @MethodSource("baseTypes")
-        public void unify_base_and_tuple_fails(BaseTS base) {
-          assertUnifyFails(base, tupleTS(base));
-        }
-
-        @ParameterizedTest
-        @MethodSource("baseTypes")
-        public void unify_base_and_func_fails(BaseTS base) {
-          assertUnifyFails(base, funcTS(base));
-          assertUnifyFails(base, funcTS(base, base));
-        }
-
-        @Test
-        public void unify_array_and_tuple_fails() {
-          assertUnifyFails(arrayTS(intTS()), tupleTS(intTS()));
-        }
-
-        @Test
-        public void unify_array_and_func_fails() {
-          assertUnifyFails(arrayTS(intTS()), funcTS(intTS()));
-        }
-
-        @Test
-        public void unify_tuple_and_func_fails() {
-          assertUnifyFails(tupleTS(intTS()), funcTS(intTS()));
-        }
-
-        public static ImmutableList<BaseTS> baseTypes() {
-          return TypeFS.baseTs();
-        }
+      @Test
+      public void unify_equal_func_types_with_param_being_func() throws UnifierExc {
+        unifier.unify(
+            funcTS(blobTS(), funcTS(intTS())),
+            funcTS(blobTS(), funcTS(intTS())));
       }
 
-      @Nested
-      class _with_vars {
-        @ParameterizedTest
-        @MethodSource("baseTypes")
-        public void unify_array_of_a_with_array_of_base(BaseTS base) throws UnifierExc {
-          assertUnifyInfers(
-              arrayTS(varA()),
-              arrayTS(base),
-              varA(),
-              base);
-        }
+      @Test
+      public void unify_non_equal_func_types_that_differs_with_res_fails() {
+        assertUnifyFails(funcTS(intTS()), funcTS(blobTS()));
+      }
 
-        @Test
-        public void unify_array_of_a_with_array_of_b() throws UnifierExc {
-          assertUnifyInfersEquality(
-              arrayTS(varA()),
-              arrayTS(varB()),
-              varA(),
-              varB());
-        }
+      @Test
+      public void unify_non_equal_func_types_that_differs_with_param_fails() {
+        assertUnifyFails(funcTS(intTS(), blobTS()), funcTS(intTS(), stringTS()));
+      }
 
-        @ParameterizedTest
-        @MethodSource("baseTypes")
-        public void unify_tuple_of_a_with_tuple_of_base(BaseTS base) throws UnifierExc {
-          assertUnifyInfers(
-              tupleTS(varA()),
-              tupleTS(base),
-              varA(),
-              base);
-        }
+      @Test
+      public void unify_non_equal_func_types_that_differs_with_param_count_fails() {
+        assertUnifyFails(funcTS(intTS(), blobTS()), funcTS(intTS()));
+      }
 
-        @Test
-        public void unify_tuple_of_a_with_tuple_of_b() throws UnifierExc {
-          assertUnifyInfersEquality(
-              tupleTS(varA()),
-              tupleTS(varB()),
-              varA(),
-              varB());
-        }
+      @ParameterizedTest
+      @MethodSource("typesToTest")
+      public void unify_base_and_array_fails(TypeS type) {
+        assertUnifyFails(type, arrayTS(type));
+      }
 
-        @ParameterizedTest
-        @MethodSource("baseTypes")
-        public void unify_func_with_res_a_with_func_with_res_base(BaseTS base)
-            throws UnifierExc {
-          assertUnifyInfers(
-              funcTS(varA()),
-              funcTS(base),
-              varA(),
-              base);
-        }
+      @ParameterizedTest
+      @MethodSource("typesToTest")
+      public void unify_base_and_tuple_fails(TypeS type) {
+        assertUnifyFails(type, tupleTS(type));
+      }
 
-        @Test
-        public void unify_func_with_res_a_with_func_with_res_b() throws UnifierExc {
-          assertUnifyInfersEquality(
-              funcTS(varA()),
-              funcTS(varB()),
-              varA(),
-              varB());
-        }
+      @ParameterizedTest
+      @MethodSource("typesToTest")
+      public void unify_base_and_func_fails(TypeS type) {
+        assertUnifyFails(type, funcTS(type));
+        assertUnifyFails(type, funcTS(type, type));
+      }
 
-        @ParameterizedTest
-        @MethodSource("baseTypes")
-        public void unify_func_with_param_a_with_func_with_param_base(BaseTS base)
-            throws UnifierExc {
-          assertUnifyInfers(
-              funcTS(intTS(), varA()),
-              funcTS(intTS(), base),
-              varA(),
-              base);
-        }
+      @Test
+      public void unify_array_and_tuple_fails() {
+        assertUnifyFails(arrayTS(intTS()), tupleTS(intTS()));
+      }
 
-        @Test
-        public void unify_func_with_param_a_with_func_with_param_b() throws UnifierExc {
-          assertUnifyInfersEquality(
-              funcTS(intTS(), varA()),
-              funcTS(intTS(), varB()),
-              varA(),
-              varB());
-        }
+      @Test
+      public void unify_array_and_func_fails() {
+        assertUnifyFails(arrayTS(intTS()), funcTS(intTS()));
+      }
 
-        public static ImmutableList<BaseTS> baseTypes() {
-          return TypeFS.baseTs();
-        }
+      @Test
+      public void unify_tuple_and_func_fails() {
+        assertUnifyFails(tupleTS(intTS()), funcTS(intTS()));
+      }
+
+      public static ImmutableList<TypeS> typesToTest() {
+        return concat(TypeFS.baseTs(), new VarS("A"));
       }
     }
   }
@@ -349,8 +430,10 @@ public class UnifierTest extends TestContext {
 
     @Test
     public void two_elem_cycle_through_array_elem() throws UnifierExc {
-      unifier.unify(varA(), arrayTS(varB()));
-      assertUnifyFails(varB(), arrayTS(varA()));
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      unifier.unify(a, arrayTS(b));
+      assertUnifyFails(b, arrayTS(a));
     }
 
     @Test
@@ -360,8 +443,10 @@ public class UnifierTest extends TestContext {
 
     @Test
     public void two_elem_cycle_through_tuple_elem() throws UnifierExc {
-      unifier.unify(varA(), tupleTS(varB()));
-      assertUnifyFails(varB(), tupleTS(varA()));
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      unifier.unify(a, tupleTS(b));
+      assertUnifyFails(b, tupleTS(a));
     }
 
     @Test
@@ -371,8 +456,10 @@ public class UnifierTest extends TestContext {
 
     @Test
     public void two_elem_cycle_through_func_res() throws UnifierExc {
-      unifier.unify(varA(), funcTS(varB()));
-      assertUnifyFails(varB(), funcTS(varA()));
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      unifier.unify(a, funcTS(b));
+      assertUnifyFails(b, funcTS(a));
     }
 
     @Test
@@ -382,15 +469,20 @@ public class UnifierTest extends TestContext {
 
     @Test
     public void two_elem_cycle_through_func_param() throws UnifierExc {
-      unifier.unify(varA(), funcTS(intTS(), varB()));
-      assertUnifyFails(varB(), funcTS(intTS(), varA()));
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      unifier.unify(a, funcTS(intTS(), b));
+      assertUnifyFails(b, funcTS(intTS(), a));
     }
 
     @Test
     public void regression_test() throws UnifierExc {
       // Cycle detection algorithm had a bug which is detected by this test.
-      unifier.unify(varA(), arrayTS(varB()));
-      unifier.unify(varC(), funcTS(varA(), varB()));
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      var c = unifier.newTempVar();
+      unifier.unify(a, arrayTS(b));
+      unifier.unify(c, funcTS(a, b));
     }
   }
 
@@ -400,26 +492,34 @@ public class UnifierTest extends TestContext {
     class _transitive_cases {
       @Test
       public void unify_a_with_b_unified_with_concrete_type() throws UnifierExc {
-        unifier.unify(varA(), varB());
-        unifier.unify(varB(), intTS());
-        assertThat(unifier.resolve(varA()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, b);
+        unifier.unify(b, intTS());
+        assertThat(unifier.resolve(a))
             .isEqualTo(intTS());
       }
 
       @Test
       public void unify_a_with_array_b_unified_with_c() throws UnifierExc {
-        unifier.unify(varA(), arrayTS(varB()));
-        unifier.unify(arrayTS(varB()), varC());
-        assertThat(unifier.resolve(varA()))
-            .isEqualTo(unifier.resolve(varC()));
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var c = unifier.newTempVar();
+        unifier.unify(a, arrayTS(b));
+        unifier.unify(arrayTS(b), c);
+        assertThat(unifier.resolve(a))
+            .isEqualTo(unifier.resolve(c));
       }
 
       @Test
       public void unify_array_a_with_b_unified_with_array_c() throws UnifierExc {
-        unifier.unify(arrayTS(varA()), varB());
-        unifier.unify(varB(), arrayTS(varC()));
-        assertThat(unifier.resolve(varA()))
-            .isEqualTo(unifier.resolve(varC()));
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var c = unifier.newTempVar();
+        unifier.unify(arrayTS(a), b);
+        unifier.unify(b, arrayTS(c));
+        assertThat(unifier.resolve(a))
+            .isEqualTo(unifier.resolve(c));
       }
     }
 
@@ -427,138 +527,183 @@ public class UnifierTest extends TestContext {
     class _join_separate_unified_groups {
       @Test
       public void join_array_of_x_with_array_of_y() throws UnifierExc {
-        unifier.unify(varA(), arrayTS(varX()));
-        unifier.unify(varB(), arrayTS(varY()));
-        unifier.unify(varA(), varB());
-        assertThat(unifier.resolve(varX()))
-            .isEqualTo(unifier.resolve(varY()));
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var x = unifier.newTempVar();
+        var y = unifier.newTempVar();
+        unifier.unify(a, arrayTS(x));
+        unifier.unify(b, arrayTS(y));
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(x))
+            .isEqualTo(unifier.resolve(y));
       }
 
       @Test
       public void join_array_of_x_with_array_of_int() throws UnifierExc {
-        unifier.unify(varA(), arrayTS(varX()));
-        unifier.unify(varB(), arrayTS(intTS()));
-        unifier.unify(varA(), varB());
-        assertThat(unifier.resolve(varX()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var x = unifier.newTempVar();
+        unifier.unify(a, arrayTS(x));
+        unifier.unify(b, arrayTS(intTS()));
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(x))
             .isEqualTo(intTS());
       }
 
       @Test
       public void join_array_of_int_with_array_of_blob_fails() throws UnifierExc {
-        unifier.unify(varA(), arrayTS(intTS()));
-        unifier.unify(varB(), arrayTS(blobTS()));
-        assertCall(() -> unifier.unify(varA(), varB()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, arrayTS(intTS()));
+        unifier.unify(b, arrayTS(blobTS()));
+        assertCall(() -> unifier.unify(a, b))
             .throwsException(UnifierExc.class);
       }
 
       @Test
       public void join_tuple_of_x_with_tuple_of_y() throws UnifierExc {
-        unifier.unify(varA(), tupleTS(varX()));
-        unifier.unify(varB(), tupleTS(varY()));
-        unifier.unify(varA(), varB());
-        assertThat(unifier.resolve(varX()))
-            .isEqualTo(unifier.resolve(varY()));
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var x = unifier.newTempVar();
+        var y = unifier.newTempVar();
+        unifier.unify(a, tupleTS(x));
+        unifier.unify(b, tupleTS(y));
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(x))
+            .isEqualTo(unifier.resolve(y));
       }
 
       @Test
       public void join_tuple_of_x_with_tuple_of_int() throws UnifierExc {
-        unifier.unify(varA(), tupleTS(varX()));
-        unifier.unify(varB(), tupleTS(intTS()));
-        unifier.unify(varA(), varB());
-        assertThat(unifier.resolve(varX()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var x = unifier.newTempVar();
+        unifier.unify(a, tupleTS(x));
+        unifier.unify(b, tupleTS(intTS()));
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(x))
             .isEqualTo(intTS());
       }
 
       @Test
       public void join_tuple_of_int_with_tuple_of_blob_fails() throws UnifierExc {
-        unifier.unify(varA(), tupleTS(intTS()));
-        unifier.unify(varB(), tupleTS(blobTS()));
-        assertCall(() -> unifier.unify(varA(), varB()))
-            .throwsException(UnifierExc.class);
-      }
-
-      @Test
-      public void join_func_with_param_x_with_func_with_param_y() throws UnifierExc {
-        unifier.unify(varA(), funcTS(stringTS(), varX()));
-        unifier.unify(varB(), funcTS(stringTS(), varY()));
-        unifier.unify(varA(), varB());
-        assertThat(unifier.resolve(varX()))
-            .isEqualTo(unifier.resolve(varY()));
-      }
-
-      @Test
-      public void join_func_with_param_x_with_func_with_param_int() throws UnifierExc {
-        unifier.unify(varA(), funcTS(stringTS(), varX()));
-        unifier.unify(varB(), funcTS(stringTS(), intTS()));
-        unifier.unify(varA(), varB());
-        assertThat(unifier.resolve(varX()))
-            .isEqualTo(intTS());
-      }
-
-      @Test
-      public void join_func_with_param_int_with_func_with_param_blob_fails() throws UnifierExc {
-        unifier.unify(varA(), funcTS(stringTS(), intTS()));
-        unifier.unify(varB(), funcTS(stringTS(), blobTS()));
-        assertCall(() -> unifier.unify(varA(), varB()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, tupleTS(intTS()));
+        unifier.unify(b, tupleTS(blobTS()));
+        assertCall(() -> unifier.unify(a, b))
             .throwsException(UnifierExc.class);
       }
 
       @Test
       public void join_func_with_res_x_with_func_with_res_y() throws UnifierExc {
-        unifier.unify(varA(), funcTS(varX()));
-        unifier.unify(varB(), funcTS(varY()));
-        unifier.unify(varA(), varB());
-        assertThat(unifier.resolve(varX()))
-            .isEqualTo(unifier.resolve(varY()));
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var x = unifier.newTempVar();
+        var y = unifier.newTempVar();
+        unifier.unify(a, funcTS(x));
+        unifier.unify(b, funcTS(y));
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(x))
+            .isEqualTo(unifier.resolve(y));
       }
 
       @Test
       public void join_func_with_res_x_with_func_with_res_int() throws UnifierExc {
-        unifier.unify(varA(), funcTS(varX()));
-        unifier.unify(varB(), funcTS(intTS()));
-        unifier.unify(varA(), varB());
-        assertThat(unifier.resolve(varX()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var x = unifier.newTempVar();
+        unifier.unify(a, funcTS(x));
+        unifier.unify(b, funcTS(intTS()));
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(x))
             .isEqualTo(intTS());
       }
 
       @Test
       public void join_func_with_res_int_with_func_with_res_blob_fails() throws UnifierExc {
-        unifier.unify(varA(), funcTS(intTS()));
-        unifier.unify(varB(), funcTS(blobTS()));
-        assertCall(() -> unifier.unify(varA(), varB()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, funcTS(intTS()));
+        unifier.unify(b, funcTS(blobTS()));
+        assertCall(() -> unifier.unify(a, b))
+            .throwsException(UnifierExc.class);
+      }
+
+      @Test
+      public void join_func_with_param_x_with_func_with_param_y() throws UnifierExc {
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var x = unifier.newTempVar();
+        var y = unifier.newTempVar();
+        unifier.unify(a, funcTS(intTS(), x));
+        unifier.unify(b, funcTS(intTS(), y));
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(x))
+            .isEqualTo(unifier.resolve(y));
+      }
+
+      @Test
+      public void join_func_with_param_x_with_func_with_param_int() throws UnifierExc {
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        var x = unifier.newTempVar();
+        unifier.unify(a, funcTS(intTS(), x));
+        unifier.unify(b, funcTS(intTS(), intTS()));
+        unifier.unify(a, b);
+        assertThat(unifier.resolve(x))
+            .isEqualTo(intTS());
+      }
+
+      @Test
+      public void join_func_with_param_int_with_func_with_param_blob_fails() throws UnifierExc {
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, funcTS(intTS(), intTS()));
+        unifier.unify(b, funcTS(intTS(), blobTS()));
+        assertCall(() -> unifier.unify(a, b))
             .throwsException(UnifierExc.class);
       }
 
       @Test
       public void join_func_with_func_with_different_param_count_fails() throws UnifierExc {
-        unifier.unify(varA(), funcTS(intTS()));
-        unifier.unify(varB(), funcTS(intTS(), intTS()));
-        assertCall(() -> unifier.unify(varA(), varB()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, funcTS(intTS(), intTS()));
+        unifier.unify(b, funcTS(intTS()));
+        assertCall(() -> unifier.unify(a, b))
             .throwsException(UnifierExc.class);
       }
 
       @Test
       public void join_array_with_tuple_fails() throws UnifierExc {
-        unifier.unify(varA(), arrayTS(intTS()));
-        unifier.unify(varB(), tupleTS(intTS()));
-        assertCall(() -> unifier.unify(varA(), varB()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, arrayTS(intTS()));
+        unifier.unify(b, tupleTS(intTS()));
+        assertCall(() -> unifier.unify(a, b))
             .throwsException(UnifierExc.class);
       }
 
       @Test
       public void join_array_with_func_fails() throws UnifierExc {
-        unifier.unify(varA(), arrayTS(intTS()));
-        unifier.unify(varB(), funcTS(intTS()));
-        assertCall(() -> unifier.unify(varA(), varB()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, arrayTS(intTS()));
+        unifier.unify(b, funcTS(intTS()));
+        assertCall(() -> unifier.unify(a, b))
             .throwsException(UnifierExc.class);
       }
 
       @Test
       public void join_tuple_with_func_fails() throws UnifierExc {
-        unifier.unify(varA(), tupleTS(intTS()));
-        unifier.unify(varB(), funcTS(intTS()));
-        assertCall(() -> unifier.unify(varA(), varB()))
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        unifier.unify(a, tupleTS(intTS()));
+        unifier.unify(b, funcTS(intTS()));
+        assertCall(() -> unifier.unify(a, b))
             .throwsException(UnifierExc.class);
+
       }
     }
   }
@@ -566,9 +711,15 @@ public class UnifierTest extends TestContext {
   @Nested
   class _temporary_vars {
     @Test
+    public void resolve_unknown_temp_var_causes_exception() {
+      assertCall(() -> unifier.resolve(tempVarA()))
+          .throwsException(new IllegalStateException("Unknown temp var `A`."));
+    }
+
+    @Test
     public void non_temporary_var_has_priority_over_temporary() throws UnifierExc {
-      VarS a = tempVarA();
-      VarS b = tempVarB();
+      VarS a = unifier.newTempVar();
+      VarS b = unifier.newTempVar();
       VarS x = varX();
 
       unifier.unify(a, b);
@@ -583,54 +734,44 @@ public class UnifierTest extends TestContext {
     }
 
     @Test
-    public void resolve_returns_temporary_var_when_no_normal_var_is_unified() throws UnifierExc {
-      VarS a = tempVarA();
-      VarS b = tempVarB();
-      assertUnifyInfersEquality(a, b, a, b);
+    public void resolve_returns_temporary_var_when_no_normal_var_is_unified() {
+      var a = unifier.newTempVar();
+      assertThat(unifier.resolve(a))
+          .isEqualTo(a);
     }
   }
 
   @Nested
   class _resolve {
     @Test
-    public void unknown_var_cannot_be_resolved() {
-      assertCall(() -> unifier.resolve(varA()))
-          .throwsException(new IllegalStateException("Unknown variable A."));
-    }
-
-    @Test
-    public void added_var_can_be_resolved() {
-      unifier.addVar(varA());
-      assertThat(unifier.resolve(varA()))
-          .isEqualTo(varA());
-    }
-
-    @Test
-    public void added_var_can_be_resolved_inside_compound_type() {
-      unifier.addVar(varA());
-      assertThat(unifier.resolve(arrayTS(varA())))
-          .isEqualTo(arrayTS(varA()));
+    public void unknown_temp_var_cannot_be_resolved() {
+      assertCall(() -> unifier.resolve(tempVarA()))
+          .throwsException(new IllegalStateException("Unknown temp var `A`."));
     }
 
     @Test
     public void array_type() throws UnifierExc {
-      unifier.unify(varA(), intTS());
-      assertThat(unifier.resolve(arrayTS(varA())))
+      var temp = unifier.newTempVar();
+      unifier.unify(temp, intTS());
+      assertThat(unifier.resolve(arrayTS(temp)))
           .isEqualTo(arrayTS(intTS()));
     }
 
     @Test
     public void tuple_type() throws UnifierExc {
-      unifier.unify(varA(), intTS());
-      assertThat(unifier.resolve(tupleTS(varA())))
+      var temp = unifier.newTempVar();
+      unifier.unify(temp, intTS());
+      assertThat(unifier.resolve(tupleTS(temp)))
           .isEqualTo(tupleTS(intTS()));
     }
 
     @Test
     public void func_type() throws UnifierExc {
-      unifier.unify(varA(), intTS());
-      unifier.unify(varB(), boolTS());
-      assertThat(unifier.resolve(funcTS(varA(), varB())))
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      unifier.unify(a, intTS());
+      unifier.unify(b, boolTS());
+      assertThat(unifier.resolve(funcTS(a, b)))
           .isEqualTo(funcTS(intTS(), boolTS()));
     }
   }
@@ -647,6 +788,20 @@ public class UnifierTest extends TestContext {
     unifier.unify(type1, type2);
     assertThat(unifier.resolve(var1))
         .isEqualTo(unifier.resolve(var2));
+  }
+
+  private void assertUnifyInfers(Unifier unifier, TypeS type1, TypeS type2,
+      TypeS unresolved, TypeS expected) throws UnifierExc {
+    unifier.unify(type1, type2);
+    assertThat(unifier.resolve(unresolved))
+        .isEqualTo(expected);
+  }
+
+  private void assertUnifyInfersEquality(Unifier unifier, TypeS type1, TypeS type2,
+      TypeS unresolved1, TypeS unresolved2) throws UnifierExc {
+    unifier.unify(type1, type2);
+    assertThat(unifier.resolve(unresolved1))
+        .isEqualTo(unifier.resolve(unresolved2));
   }
 
   private void assertUnifyInfers(TypeS type1, TypeS type2, VarS var, TypeS expected)

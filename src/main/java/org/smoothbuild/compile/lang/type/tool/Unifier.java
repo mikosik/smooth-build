@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.lang.type.tool;
 
 import static java.util.stream.Collectors.toCollection;
+import static org.smoothbuild.util.Strings.q;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,69 +40,62 @@ public class Unifier {
   }
 
   public TypeS resolve(TypeS type) {
-    return type.mapVars(this::denormalizeVar);
+    return denormalize(type);
   }
 
-  public void addVar(VarS var) {
-    createUnifiedIfMissing(var);
-  }
-
-  public VarS generateUniqueVar() {
-    VarS var = newTempVar();
-    createUnifiedIfMissing(var);
-    return var;
+  public VarS newTempVar() {
+    return newTempVar(null);
   }
 
   // unification
 
   private void unifyNormalized(TypeS normal1, TypeS normal2) throws UnifierExc {
-    if (normal1 instanceof VarS var1) {
-      if (normal2 instanceof VarS var2) {
-        unifyNormalizedVarAndVar(var1, var2);
+    if (normal1 instanceof TempVarS tempVar1) {
+      if (normal2 instanceof TempVarS tempVar2) {
+        unifyNormalizedTempVarAndTempVar(tempVar1, tempVar2);
       } else {
-        unifyNormalizedVarAndNonVar(var1, normal2);
+        unifyNormalizedTempVarAndNonTempVar(tempVar1, normal2);
       }
-    } else if (normal2 instanceof VarS var2) {
-      unifyNormalizedVarAndNonVar(var2, normal1);
+    } else if (normal2 instanceof TempVarS tempVar2) {
+      unifyNormalizedTempVarAndNonTempVar(tempVar2, normal1);
     } else {
-      unifyNormalizedNonVars(normal1, normal2);
+      unifyNormalizedNonTempVars(normal1, normal2);
     }
   }
 
-  private void unifyNormalizedVarAndVar(VarS var1, VarS var2) throws UnifierExc {
-    var unified1 = varToUnified.get(var1);
-    var unified2 = varToUnified.get(var2);
+  private void unifyNormalizedTempVarAndTempVar(TempVarS tempVar1, TempVarS tempVar2)
+      throws UnifierExc {
+    var unified1 = unifiedFor(tempVar1);
+    var unified2 = unifiedFor(tempVar2);
     if (unified1 != unified2) {
-      if (unified1.mainVar.isTemporary() && !unified2.mainVar.isTemporary()) {
-        unified1.mainVar = unified2.mainVar;
-      }
       unified1.vars.addAll(unified2.vars);
       unified2.vars.forEach(v -> varToUnified.put(v, unified1));
       var oldNormal1 = unified1.normal;
       unified1.normal = unified1.normal != null ? unified1.normal : unified2.normal;
       if (oldNormal1 != null && unified2.normal != null) {
-        unifyNormalizedNonVars(oldNormal1, unified2.normal);
+        unifyNormalizedNonTempVars(oldNormal1, unified2.normal);
       }
       failIfCycleExists(unified1);
     }
   }
 
-  private void unifyNormalizedVarAndNonVar(VarS var, TypeS normal) throws UnifierExc {
-    Unified unified = varToUnified.get(var);
+  private void unifyNormalizedTempVarAndNonTempVar(TempVarS var, TypeS normal) throws UnifierExc {
+    var unified = unifiedFor(var);
     if (unified.normal == null) {
       unified.normal = normal;
     } else {
-      unifyNormalizedNonVars(unified.normal, normal);
+      unifyNormalizedNonTempVars(unified.normal, normal);
     }
     failIfCycleExists(unified);
   }
 
-  private void unifyNormalizedNonVars(TypeS normal1, TypeS normal2) throws UnifierExc {
+  private void unifyNormalizedNonTempVars(TypeS normal1, TypeS normal2) throws UnifierExc {
     switch (normal1) {
       case ArrayTS array1 -> unifyNormalizedArray(array1, normal2);
       case FuncTS func1 -> unifyNormalizedFunc(func1, normal2);
       case TupleTS tuple1 -> unifyNormalizedTuple(tuple1, normal2);
-      case VarS varS -> throw new RuntimeException("shouldn't happen");
+      case TempVarS tempVarS -> throw new RuntimeException("shouldn't happen");
+      // default case also handles VarS
       default -> {
         if (!normal1.equals(normal2)) {
           throw new UnifierExc();
@@ -152,52 +146,43 @@ public class Unifier {
   // normalization
 
   private TypeS normalize(TypeS type) {
-    return switch (type) {
-      case VarS var -> normalizeVar(var);
-      default -> type.mapComponents(this::toVar);
-    };
+    return type.mapComponents(this::normalizeComponent);
   }
 
-  private VarS normalizeVar(VarS var) {
-    createUnifiedIfMissing(var);
-    return var;
-  }
-
-  private VarS toVar(TypeS type) {
-    if (type instanceof VarS var) {
-      createUnifiedIfMissing(var);
+  private VarS normalizeComponent(TypeS type) {
+    if (type instanceof TempVarS var) {
       return var;
     } else {
-      var normal = normalize(type);
-      var var = newTempVar();
-      varToUnified.put(var, new Unified(var, normal));
-      return var;
+      return newTempVar(normalize(type));
     }
   }
 
-  private void createUnifiedIfMissing(VarS var) {
-    varToUnified.computeIfAbsent(var, v -> new Unified(var, null));
+  private TempVarS newTempVar(TypeS normal) {
+    var var = new TempVarS(Integer.toString(tempVarCounter++));
+    varToUnified.put(var, new Unified(var, normal));
+    return var;
   }
 
   // denormalization
 
   private TypeS denormalize(TypeS normal) {
     return switch (normal) {
-      case VarS var -> denormalizeVar(var);
-      default -> normal.mapComponents(this::denormalize);
+      case TempVarS tempVar -> denormalizeTempVar(tempVar);
+      default -> denormalizeNormal(normal);
     };
   }
 
-  private TypeS denormalizeVar(VarS var) {
-    Unified unified = varToUnified.get(var);
-    if (unified == null) {
-      throw new IllegalStateException("Unknown variable " + var + ".");
-    }
+  private TypeS denormalizeTempVar(TempVarS tempVar) {
+    var unified = unifiedFor(tempVar);
     if (unified.normal == null) {
       return unified.mainVar;
     } else {
-      return denormalize(unified.normal);
+      return denormalizeNormal(unified.normal);
     }
+  }
+
+  private TypeS denormalizeNormal(TypeS normal) {
+    return normal.mapComponents(this::denormalize);
   }
 
   // Unified helpers
@@ -220,6 +205,7 @@ public class Unifier {
   private Set<Unified> referencedBy(Unified unified) {
     if (unified.normal != null) {
       return unified.normal.vars().stream()
+          .filter(VarS::isTemporary)
           .map(varToUnified::get)
           .collect(toCollection(Sets::newIdentityHashSet));
     } else {
@@ -227,16 +213,20 @@ public class Unifier {
     }
   }
 
-  public VarS newTempVar() {
-    return new TempVarS(Integer.toString(tempVarCounter++));
+  private Unified unifiedFor(TempVarS tempVar) {
+    var unified = varToUnified.get(tempVar);
+    if (unified == null) {
+      throw new IllegalStateException("Unknown temp var " + q(tempVar.name()) + ".");
+    }
+    return unified;
   }
 
   private static class Unified {
-    private VarS mainVar;
-    private final Set<VarS> vars;
+    private final TempVarS mainVar;
+    private final Set<TempVarS> vars;
     private TypeS normal;
 
-    public Unified(VarS var, TypeS normal) {
+    public Unified(TempVarS var, TypeS normal) {
       this.mainVar = var;
       this.vars = new HashSet<>();
       this.vars.add(var);

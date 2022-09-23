@@ -2,6 +2,7 @@ package org.smoothbuild.compile.ps.infer;
 
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
@@ -95,21 +96,28 @@ public class TypeInferrer {
 
   // default arg
 
-  private void inferDefaultArg(ItemP param) {
-    new TypeInferrer(typePsTranslator, bindings, logger, new Unifier())
-        .inferDefaultArgImpl(param.typeS(), param);
+  private boolean inferParamDefaultValues(NList<ItemP> params) {
+    return params.stream()
+        .filter(p -> p.body().isPresent())
+        .allMatch(this::inferParamDefaultVal);
   }
 
-  private void inferDefaultArgImpl(TypeS type, ItemP param) {
-    unifyBodyAndResolve(param, type, this::resolveDefaultArg);
+  private boolean inferParamDefaultVal(ItemP param) {
+    return new TypeInferrer(typePsTranslator, bindings, logger, new Unifier())
+        .inferDefaultValImpl(param);
   }
 
-  private Optional<Void> resolveDefaultArg(ItemP param, TypeS type,
-      Bindings<? extends Optional<? extends RefableS>> bindings) {
-    new TypeInferrerResolve(unifier, logger, bindings)
-        .resolve(param);
-    // This optional is ignored by caller.
-    return Optional.empty();
+  private boolean inferDefaultValImpl(ItemP param) {
+    if (param.body().isPresent()) {
+      var body = param.body().get();
+      var bodyT = new ExprTypeUnifier(unifier, bindings, logger).unifyExpr(body);
+      if (bodyT.isPresent()) {
+        return new TypeInferrerResolve(unifier, logger, bindings).resolveParamBody(body);
+      } else {
+        return false;
+      }
+    }
+    return true;
   }
 
   // func
@@ -122,17 +130,23 @@ public class TypeInferrer {
 
   private Optional<FuncSchemaS> inferFuncSchema(FuncP func) {
     var params = func.params();
+    if (!inferParamDefaultValues(params)) {
+      return Optional.empty();
+    }
     if (!inferParamTs(params)) {
       return Optional.empty();
     }
-    return inferFuncSchemaImpl(func, params);
+    var resT = translateOrGenerateT(func.resT());
+    var funcSchemaS = resT.flatMap(
+        r -> funcBodyTypeInferrer(params).unifyBodyAndResolve(func, r, this::resolveFuncSchema));
+    funcSchemaS.ifPresent(schema -> detectTypeErrorsBetweenParamAndItsDefaultValue(schema, params));
+    return funcSchemaS;
   }
 
   private boolean inferParamTs(NList<ItemP> params) {
     for (var param : params) {
       var type = typePsTranslator.translate(param.type());
       if (type.isPresent()) {
-        type.get().vars().forEach(unifier::addVar);
         param.setTypeS(type.get());
       } else {
         return false;
@@ -141,18 +155,31 @@ public class TypeInferrer {
     return true;
   }
 
-  private Optional<FuncSchemaS> inferFuncSchemaImpl(FuncP func, NList<ItemP> params) {
-    params.stream()
-        .filter(p -> p.body().isPresent())
-        .forEach(this::inferDefaultArg);
-    var resT = translateOrGenerateT(func.resT());
-
-    return resT.flatMap(
-        r -> funcBodyTypeInferrer(params).unifyBodyAndResolve(func, r, this::resolveFuncSchema));
-  }
-
   private TypeInferrer funcBodyTypeInferrer(NList<ItemP> params) {
     return new TypeInferrer(typePsTranslator, funcBodyScopeBindings(params), logger, unifier);
+  }
+
+  private void detectTypeErrorsBetweenParamAndItsDefaultValue(
+      FuncSchemaS resolvedFuncSchema, NList<ItemP> params) {
+    var resolvedParamTs = resolvedFuncSchema.type().params().items();
+    var paramUnifier = new Unifier();
+    var paramMapping = toMap(resolvedFuncSchema.quantifiedVars(), v -> paramUnifier.newTempVar());
+    for (int i = 0; i < params.size(); i++) {
+      var resolvedParamT = resolvedParamTs.get(i);
+      var param = params.get(i);
+      param.body().ifPresent(body -> {
+        var paramT = resolvedParamT.mapVars(v -> paramMapping.getOrDefault(v, v));
+        var initializerMapping = toMap(body.typeS().vars(), v -> paramUnifier.newTempVar());
+        var bodyT = body.typeS().mapVars(v -> initializerMapping.getOrDefault(v, v));
+        try {
+          paramUnifier.unify(paramT, bodyT);
+        } catch (UnifierExc e) {
+          var message = "Parameter %s has type %s so it cannot have default value with type %s."
+                  .formatted(param.q(), resolvedParamT.q(), body.typeS().q());
+          this.logger.log(compileError(body.loc(), message));
+        }
+      });
+    }
   }
 
   private ScopedBindings<Optional<? extends RefableS>> funcBodyScopeBindings(NList<ItemP> params) {
@@ -178,13 +205,13 @@ public class TypeInferrer {
     if (refable.body().isPresent()) {
       return new ExprTypeUnifier(unifier, bindings, logger)
           .unifyExpr(refable.body().get())
-          .flatMap(bodyT -> unifyBodyWithEvalAndResolve(refable, evalT, bodyT, resolver));
+          .flatMap(bodyT -> unifyBodyWithEvalTypeAndResolve(refable, evalT, bodyT, resolver));
     } else {
       return resolver.apply(refable, evalT, bindings);
     }
   }
 
-  private <R extends RefableP, T> Optional<T> unifyBodyWithEvalAndResolve(
+  private <R extends RefableP, T> Optional<T> unifyBodyWithEvalTypeAndResolve(
       R refable, TypeS evalT, TypeS bodyT,
       TriFunction<R, TypeS, Bindings<? extends Optional<? extends RefableS>>, Optional<T>> resolver) {
     try {
@@ -200,13 +227,7 @@ public class TypeInferrer {
   // helpers
 
   private Optional<TypeS> translateOrGenerateT(Optional<TypeP> typeP) {
-    return typeP.map(this::translateT)
-        .orElseGet(() -> Optional.of(unifier.generateUniqueVar()));
-  }
-
-  private Optional<TypeS> translateT(TypeP type) {
-    var evalT = typePsTranslator.translate(type);
-    evalT.ifPresent(typeS -> typeS.vars().forEach(unifier::addVar));
-    return evalT;
+    return typeP.map(typePsTranslator::translate)
+        .orElseGet(() -> Optional.of(unifier.newTempVar()));
   }
 }

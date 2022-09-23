@@ -3,6 +3,8 @@ package org.smoothbuild.compile.ps.component;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.NList.nlist;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.lang.define.CallS;
@@ -55,19 +57,17 @@ public class ExprSLoadingTest extends TestContext {
       class _with_default_arg {
         @Test
         public void with_reference_to_poly_val() {
-          var polyVal = polyByteValS(4, varA(), "polyVal");
-          var monoizedVal = monoizeS(1, varMap(varA(), varB()), polyVal);
-          var paramBody = new PolyEvaluableS(monoizedVal);
-          var monoizedParamBody = monoizeS(1, varMap(varB(), intTS()), paramBody);
+          var paramBody = polyByteValS(4, varA(), "polyVal");
+          var monoizedParamBody = monoizeS(2, varMap(varA(), intTS()), paramBody);
           test_default_arg("polyVal", monoizedParamBody);
         }
 
         @Test
         public void with_reference_to_poly_func() {
           var polyFunc = polyByteFuncS(6, varA(), "polyFunc", nlist());
-          var monoizedFunc = monoizeS(1, varMap(varA(), varB()), polyFunc);
-          var paramBody = new PolyEvaluableS(callS(1, varB(), monoizedFunc));
-          var expected = monoizeS(1, varMap(varB(), intTS()), paramBody);
+          var monoizedFunc = monoizeS(1, varMap(varA(), varA()), polyFunc);
+          var paramBody = new PolyEvaluableS(callS(1, varA(), monoizedFunc));
+          var expected = monoizeS(2, varMap(varA(), intTS()), paramBody);
           test_default_arg("polyFunc()", expected);
         }
 
@@ -615,9 +615,8 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             [A] empty = [];
             """;
-        var defaultArg = monoizeS(
-            3, varMap(varA(), intTS()), polyDefValS(5, "empty", orderS(5, varA())));
-        var params = nlist(itemS(2, arrayTS(intTS()), "param1", defaultArg));
+        var defaultArg = Optional.<PolyEvaluableS>of(polyDefValS(5, "empty", orderS(5, varA())));
+        var params = nlist(itemSPoly(2, arrayTS(intTS()), "param1", defaultArg));
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
@@ -633,9 +632,8 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             [A] empty = [];
             """;
-        var defaultArg = monoizeS(
-            3, varMap(varA(), varB()), polyDefValS(5, "empty", orderS(5, varA())));
-        var params = nlist(itemS(2, arrayTS(varB()), "param1", defaultArg));
+        var defaultArg = Optional.<PolyEvaluableS>of(polyDefValS(5, "empty", orderS(5, varA())));
+        var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", defaultArg));
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()

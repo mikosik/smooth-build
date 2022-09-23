@@ -69,7 +69,7 @@ public class InferPositionedArgs {
         var defaultArg = params.get().get(i).body();
         if (defaultArg.isPresent()) {
           var exprS = defaultArg.get();
-          result.set(i, new DefaultArgP(exprS, exprS.loc()));
+          result.set(i, new DefaultArgP(exprS, call.loc()));
         } else {
           error = true;
           logBuffer.log(paramsMustBeSpecifiedError(call, i, params.get()));

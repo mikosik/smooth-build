@@ -1014,7 +1014,11 @@ public class TestContext {
   }
 
   public ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
-    return new ItemS(type, name, body.map(PolyEvaluableS::new), loc(line));
+    return itemSPoly(line, type, name, body.map(PolyEvaluableS::new));
+  }
+
+  public static ItemS itemSPoly(int line, TypeS type, String name, Optional<PolyEvaluableS> body) {
+    return new ItemS(type, name, body, loc(line));
   }
 
   public PolyFuncS polyByteFuncS(AnnS ann, int line, TypeS resT, String name, NList<ItemS> params) {

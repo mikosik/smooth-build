@@ -26,7 +26,7 @@ import com.google.common.base.Predicate;
  * Handles inferring default type (which is empty tuple) for each quantified var
  * in any call to polymorphic function when that quantified var:
  * - is not used in function result type
- * - is resolved as prefixed after inferring phase (= it is not constrained, nor present
+ * - is resolved as temp-var after inferring phase (= it is not constrained, nor present
  *   in enclosing function parameters).
  */
 public class DefaultTypeInferrer {

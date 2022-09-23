@@ -101,7 +101,7 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> unifyCall(TypeS calleeT, ImmutableList<TypeS> argTs, Loc loc) {
-    var resT = unifier.generateUniqueVar();
+    var resT = unifier.newTempVar();
     var funcT = new FuncTS(resT, argTs);
     try {
       unifier.unify(funcT, calleeT);
@@ -127,7 +127,7 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> unifyElemsWithArray(ImmutableList<TypeS> elemTs, Loc loc) {
-    var elemVar = unifier.generateUniqueVar();
+    var elemVar = unifier.newTempVar();
     for (TypeS elemT : elemTs) {
       try {
         unifier.unify(elemVar, elemT);
@@ -159,7 +159,7 @@ public class ExprTypeUnifier {
 
   private Optional<TypeS> unifyMonoizable(MonoizableP monoizableP, SchemaS schema) {
     var monoizationMapping = toMap(
-        schema.quantifiedVars().asList(), v -> unifier.generateUniqueVar());
+        schema.quantifiedVars().asList(), v -> unifier.newTempVar());
     monoizableP.setMonoizationMapping(monoizationMapping);
     return Optional.of(schema.monoize(monoizationMapping::get));
   }
