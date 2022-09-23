@@ -108,6 +108,7 @@ import org.smoothbuild.compile.lang.type.IntTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StringTS;
 import org.smoothbuild.compile.lang.type.StructTS;
+import org.smoothbuild.compile.lang.type.TempVarS;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -831,6 +832,18 @@ public class TestContext {
 
   public ImmutableMap<VarS, TypeS> aToIntVarMapS() {
     return ImmutableMap.of(varA(), intTS());
+  }
+
+  public VarS tempVarA() {
+    return tempVar("A");
+  }
+
+  public VarS tempVarB() {
+    return tempVar("B");
+  }
+
+  private static TempVarS tempVar(String name) {
+    return new TempVarS(name);
   }
 
   public VarS varA() {

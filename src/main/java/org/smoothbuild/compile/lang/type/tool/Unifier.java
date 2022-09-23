@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
+import org.smoothbuild.compile.lang.type.TempVarS;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
@@ -16,12 +17,12 @@ import org.smoothbuild.compile.lang.type.VarS;
 import com.google.common.collect.Sets;
 
 public class Unifier {
-  private final UniqueVarGenerator uniqueVarGenerator;
   private final Map<VarS, Unified> varToUnified;
+  private int tempVarCounter;
 
   public Unifier() {
     this.varToUnified = new HashMap<>();
-    this.uniqueVarGenerator = new UniqueVarGenerator("u");
+    this.tempVarCounter = 0;
   }
 
   public void unifySafe(TypeS type1, TypeS type2) {
@@ -46,7 +47,7 @@ public class Unifier {
   }
 
   public VarS generateUniqueVar() {
-    VarS var = uniqueVarGenerator.generate();
+    VarS var = newTempVar();
     createUnifiedIfMissing(var);
     return var;
   }
@@ -71,7 +72,7 @@ public class Unifier {
     var unified1 = varToUnified.get(var1);
     var unified2 = varToUnified.get(var2);
     if (unified1 != unified2) {
-      if (unified1.mainVar.hasPrefix() && !unified2.mainVar.hasPrefix()) {
+      if (unified1.mainVar.isTemporary() && !unified2.mainVar.isTemporary()) {
         unified1.mainVar = unified2.mainVar;
       }
       unified1.vars.addAll(unified2.vars);
@@ -168,7 +169,7 @@ public class Unifier {
       return var;
     } else {
       var normal = normalize(type);
-      var var = uniqueVarGenerator.generate();
+      var var = newTempVar();
       varToUnified.put(var, new Unified(var, normal));
       return var;
     }
@@ -224,6 +225,10 @@ public class Unifier {
     } else {
       return Set.of();
     }
+  }
+
+  public VarS newTempVar() {
+    return new TempVarS(Integer.toString(tempVarCounter++));
   }
 
   private static class Unified {

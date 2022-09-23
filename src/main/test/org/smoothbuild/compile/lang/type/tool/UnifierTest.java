@@ -564,11 +564,11 @@ public class UnifierTest extends TestContext {
   }
 
   @Nested
-  class _prefixed_vars {
+  class _temporary_vars {
     @Test
-    public void non_prefixed_var_has_priority_over_prefixed() throws UnifierExc {
-      VarS a = varA().prefixed("p");
-      VarS b = varB().prefixed("p");
+    public void non_temporary_var_has_priority_over_temporary() throws UnifierExc {
+      VarS a = tempVarA();
+      VarS b = tempVarB();
       VarS x = varX();
 
       unifier.unify(a, b);
@@ -583,10 +583,9 @@ public class UnifierTest extends TestContext {
     }
 
     @Test
-    public void when_no_non_prefixed_var_is_unified_then_prefixed_is_returned()
-        throws UnifierExc {
-      VarS a = varA().prefixed("p");
-      VarS b = varB().prefixed("p");
+    public void resolve_returns_temporary_var_when_no_normal_var_is_unified() throws UnifierExc {
+      VarS a = tempVarA();
+      VarS b = tempVarB();
       assertUnifyInfersEquality(a, b, a, b);
     }
   }

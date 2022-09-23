@@ -66,7 +66,7 @@ public class DefaultTypeInferrer {
       for (var type : paramOnlyVars.values()) {
         var resolved = unifier.resolve(type);
         resolved.vars().stream()
-            .filter(VarS::hasPrefix)
+            .filter(VarS::isTemporary)
             .forEach(v -> unifier.unifySafe(v, new TupleTS(list())));
       }
     }

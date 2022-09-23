@@ -100,15 +100,15 @@ public class TypeInferrerResolve {
 
   private TypeS fixPrefixedVars(TypeS resolvedT) {
     var vars = resolvedT.vars().asList();
-    var prefixedVars = filter(vars, VarS::hasPrefix);
+    var prefixedVars = filter(vars, VarS::isTemporary);
     if (prefixedVars.isEmpty()) {
       return resolvedT;
     }
-    var unprefixedVars = resolvedT.vars().filter(v -> !v.hasPrefix());
+    var unprefixedVars = resolvedT.vars().filter(v -> !v.isTemporary());
     var varGenerator = new UnusedVarsGenerator(unprefixedVars);
     var mapping = toMap(prefixedVars, pv -> varGenerator.next());
     var resolvedAndFixedEvalT = resolvedT.mapVars(key -> {
-      if (key.hasPrefix()) {
+      if (key.isTemporary()) {
         return mapping.get(key);
       } else {
         return key;
@@ -167,6 +167,6 @@ public class TypeInferrerResolve {
   }
 
   private boolean hasPrefixedVar(TypeS t) {
-    return t.vars().stream().anyMatch(VarS::hasPrefix);
+    return t.vars().stream().anyMatch(VarS::isTemporary);
   }
 }

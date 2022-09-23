@@ -150,7 +150,7 @@ public class TypeSTest {
   }
 
   public static List<Arguments> map_vars() {
-    Function<VarS, VarS> addPrefix = (VarS v) -> v.prefixed("prefix");
+    Function<VarS, VarS> addPrefix = (VarS v) -> new VarS("prefix." + v.name());
     return List.of(
         arguments(BLOB, addPrefix, BLOB),
         arguments(BOOL, addPrefix, BOOL),
@@ -324,34 +324,6 @@ public class TypeSTest {
           arguments(tuple(BOOL), list(BOOL)),
           arguments(tuple(BOOL, INT), list(BOOL, INT))
       );
-    }
-  }
-
-  @Nested
-  class _vars {
-    @Test
-    public void prefixed() {
-      var var = var("A");
-      assertThat(var.prefixed("abc"))
-          .isEqualTo(var("abc.A"));
-    }
-
-    @Test
-    public void prefixed_fails_when_prefix_contains_dot() {
-      assertCall(() -> var("A").prefixed("abc."))
-          .throwsException(IllegalArgumentException.class);
-    }
-
-    @Test
-    public void has_prefix_returns_false_for_not_prefixed_var() {
-      assertThat(var("A").hasPrefix())
-          .isFalse();
-    }
-
-    @Test
-    public void has_prefix_returns_true_for_prefixed_var() {
-      assertThat(var("pref.A").hasPrefix())
-          .isTrue();
     }
   }
 }
