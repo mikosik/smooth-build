@@ -6,10 +6,8 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TupleTS;
-import org.smoothbuild.compile.lang.type.TypelikeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
-import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -18,7 +16,6 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.ValP;
-import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.base.Predicate;
 
@@ -70,14 +67,7 @@ public class DefaultTypeInferrer {
         var resolved = unifier.resolve(type);
         resolved.vars().stream()
             .filter(VarS::hasPrefix)
-            .forEach(v -> {
-              var emptyTuple = new TupleTS(list());
-              try {
-                unifier.unify(v, emptyTuple);
-              } catch (UnifierExc e) {
-                throw new RuntimeException("shouldn't happen", e);
-              }
-            });
+            .forEach(v -> unifier.unifySafe(v, new TupleTS(list())));
       }
     }
   }

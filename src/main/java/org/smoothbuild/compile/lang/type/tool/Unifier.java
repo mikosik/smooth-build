@@ -24,6 +24,15 @@ public class Unifier {
     this.uniqueVarGenerator = new UniqueVarGenerator("u");
   }
 
+  public void unifySafe(TypeS type1, TypeS type2) {
+    try {
+      unifyNormalized(normalize(type1), normalize(type2));
+    } catch (UnifierExc e) {
+      throw new RuntimeException(
+          "unifySafe() caused exception. This means we have bug in code.", e);
+    }
+  }
+
   public void unify(TypeS type1, TypeS type2) throws UnifierExc {
     unifyNormalized(normalize(type1), normalize(type2));
   }

@@ -14,7 +14,6 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
-import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.lang.type.tool.UnusedVarsGenerator;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
@@ -113,12 +112,8 @@ public class TypeInferrerResolve {
       } else {
         return key;
       }});
-    try {
-      unifier.unify(resolvedAndFixedEvalT, resolvedT);
-      return resolvedAndFixedEvalT;
-    } catch (UnifierExc e) {
-      throw new RuntimeException("shouldn't happen");
-    }
+    unifier.unifySafe(resolvedAndFixedEvalT, resolvedT);
+    return resolvedAndFixedEvalT;
   }
 
   public boolean resolve(ExprP expr) {
