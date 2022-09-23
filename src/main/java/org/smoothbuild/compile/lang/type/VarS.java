@@ -33,16 +33,6 @@ public final class VarS extends TypeS {
     return new VarS(prefix + PREFIX_SEPARATOR + name());
   }
 
-  public VarS unprefixed() {
-    String name = name();
-    int index = name.indexOf(PREFIX_SEPARATOR);
-    if (0 <= index) {
-      return new VarS(name.substring(index + 1));
-    } else {
-      throw new IllegalStateException("Var `" + name + "` doesn't have prefix.");
-    }
-  }
-
   public boolean hasPrefix() {
     return containsPrefixSeparator(name());
   }

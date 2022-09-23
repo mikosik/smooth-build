@@ -343,19 +343,6 @@ public class TypeSTest {
     }
 
     @Test
-    public void unprefixed() {
-      assertThat(var("pref.A").unprefixed())
-          .isEqualTo(var("A"));
-    }
-
-    @Test
-    public void remove_var_prefixes_fails_when_var_has_no_prefix() {
-      var var = var("A");
-      assertCall(var::unprefixed)
-          .throwsException(IllegalStateException.class);
-    }
-
-    @Test
     public void has_prefix_returns_false_for_not_prefixed_var() {
       assertThat(var("A").hasPrefix())
           .isFalse();
