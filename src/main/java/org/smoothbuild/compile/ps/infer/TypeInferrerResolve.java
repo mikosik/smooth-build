@@ -60,17 +60,17 @@ public class TypeInferrerResolve {
     resolveBody(param.body());
   }
 
-  public Optional<FuncSchemaS> resolve(FuncP func, FuncTS unresolvedFuncT) {
-    var resolvedFuncT = (FuncTS) unifier.resolve(unresolvedFuncT);
-    var unresolvedParamTs = unresolvedFuncT.params();
+  public Optional<FuncSchemaS> resolve(FuncP func, FuncTS funcT) {
+    var resolvedFuncT = (FuncTS) unifier.resolve(funcT);
+    var paramTs = funcT.params();
     var resolvedParamTs = resolvedFuncT.params();
-    if (!allMatch(unresolvedParamTs.items(), resolvedParamTs.items(), TypeS::equals)) {
+    if (!allMatch(paramTs.items(), resolvedParamTs.items(), TypeS::equals)) {
       logger.log(compileError(func.loc(), "<Add error message here> 4"));
       return Optional.empty();
     }
 
     if (func.resT().isPresent()) {
-      if (!unresolvedFuncT.res().equals(resolvedFuncT.res())) {
+      if (!funcT.res().equals(resolvedFuncT.res())) {
         logger.log(compileError(func.resT().get().loc(),
             func.q() + " body type is not equal to declared type."));
         return Optional.empty();
