@@ -143,11 +143,8 @@ public class Unifier {
 
   private TypeS normalize(TypeS type) {
     return switch (type) {
-      case ArrayTS array -> array.mapComponents(this::toVar);
-      case FuncTS func -> func.mapComponents(this::toVar);
-      case TupleTS tuple -> tuple.mapComponents(this::toVar);
       case VarS var -> normalizeVar(var);
-      default -> type;
+      default -> type.mapComponents(this::toVar);
     };
   }
 
@@ -176,11 +173,8 @@ public class Unifier {
 
   private TypeS denormalize(TypeS normal) {
     return switch (normal) {
-      case ArrayTS array -> array.mapComponents(this::denormalize);
-      case FuncTS func -> func.mapComponents(this::denormalize);
-      case TupleTS tuple -> tuple.mapComponents(this::denormalize);
       case VarS var -> denormalizeVar(var);
-      default -> normal;
+      default -> normal.mapComponents(this::denormalize);
     };
   }
 
