@@ -13,8 +13,7 @@ import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
-import org.smoothbuild.compile.lang.define.PolyRefableS;
-import org.smoothbuild.compile.lang.define.RefableS;
+import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.TypelikeS;
 import org.smoothbuild.out.log.Log;
@@ -48,25 +47,25 @@ public class TestingModLoader {
     return this;
   }
 
-  public void containsRefable(RefableS expected) {
+  public void containsEvaluable(PolyEvaluableS expected) {
     String name = expected.name();
-    var actual = assertContainsRefable(name);
+    var actual = assertContainsEvaluable(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
-  public void containsRefableWithType(String name, TypelikeS expectedT) {
-    var refable = assertContainsRefable(name);
+  public void containsEvaluableWithType(String name, TypelikeS expectedT) {
+    var refable = assertContainsEvaluable(name);
     assertThat(refable.typelike())
         .isEqualTo(expectedT);
   }
 
-  private PolyRefableS assertContainsRefable(String name) {
-    var refables = moduleS.value().refables();
+  private PolyEvaluableS assertContainsEvaluable(String name) {
+    var evaluables = moduleS.value().evaluables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(refables.contains(name))
+        .that(evaluables.contains(name))
         .isTrue();
-    return refables.get(name);
+    return evaluables.get(name);
   }
 
   public void containsType(TypeS expected) {

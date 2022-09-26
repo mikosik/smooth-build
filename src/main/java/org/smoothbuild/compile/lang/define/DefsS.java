@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableMap;
 
 public record DefsS(
     ImmutableBindings<TDefS> tDefs,
-    ImmutableBindings<PolyRefableS> refables) {
+    ImmutableBindings<PolyEvaluableS> evaluables) {
 
   public static DefsS empty() {
     return new DefsS(immutableBindings(), immutableBindings());
@@ -21,7 +21,7 @@ public record DefsS(
   public DefsS withModule(ModuleS module) {
     return new DefsS(
         merge(tDefs, module.tDefs()),
-        merge(refables, module.refables())
+        merge(evaluables, module.evaluables())
     );
   }
 

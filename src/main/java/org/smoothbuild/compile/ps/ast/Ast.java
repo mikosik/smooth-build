@@ -4,22 +4,22 @@ import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
 
 import java.util.List;
 
-import org.smoothbuild.compile.ps.ast.refable.PolyRefableP;
+import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 public class Ast {
   private final NList<StructP> structs;
-  private final ImmutableList<PolyRefableP> refables;
+  private final ImmutableList<PolyEvaluableP> evaluables;
 
-  public Ast(List<StructP> structs, List<PolyRefableP> refables) {
+  public Ast(List<StructP> structs, List<PolyEvaluableP> evaluables) {
     this.structs = nlistWithNonUniqueNames(ImmutableList.copyOf(structs));
-    this.refables = ImmutableList.copyOf(refables);
+    this.evaluables = ImmutableList.copyOf(evaluables);
   }
 
-  public ImmutableList<PolyRefableP> refables() {
-    return refables;
+  public ImmutableList<PolyEvaluableP> evaluables() {
+    return evaluables;
   }
 
   public NList<StructP> structs() {

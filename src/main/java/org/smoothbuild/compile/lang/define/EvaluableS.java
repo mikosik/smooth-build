@@ -1,7 +1,10 @@
 package org.smoothbuild.compile.lang.define;
 
-public sealed interface MonoRefableS extends RefableS, ValS
+import org.smoothbuild.compile.lang.base.Nal;
+
+public sealed interface EvaluableS extends ValS, Nal
     permits FuncS, NamedValS {
+  public ModPath modPath();
 
   @Override
   public default String label() {

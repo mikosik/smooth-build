@@ -120,12 +120,12 @@ public class AnalyzeSemantically {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
     nals.addAll(map(ast.structs(), StructP::ctor));
-    nals.addAll(ast.refables());
+    nals.addAll(ast.evaluables());
     nals.sort(comparing(n -> n.loc().line()));
 
     for (Nal nal : nals) {
       logIfDuplicate(logger, imported.tDefs(), nal);
-      logIfDuplicate(logger, imported.refables(), nal);
+      logIfDuplicate(logger, imported.evaluables(), nal);
     }
     Map<String, Nal> checked = new HashMap<>();
     for (Nal nal : nals) {

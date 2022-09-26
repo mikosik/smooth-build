@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
@@ -92,7 +91,6 @@ public class ExprTypeUnifier {
 
   private static Optional<NList<ItemS>> refableParams(RefableS refableS) {
     return switch (refableS) {
-      case FuncS funcS -> Optional.of(funcS.params());
       case PolyFuncS polyFuncS -> Optional.of(polyFuncS.mono().params());
       default -> Optional.empty();
     };

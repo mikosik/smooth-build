@@ -6,5 +6,5 @@ public record ModuleS(
     ModPath path,
     ModFiles files,
     ImmutableBindings<TDefS> tDefs,
-    ImmutableBindings<PolyRefableS> refables) {
+    ImmutableBindings<PolyEvaluableS> evaluables) {
 }

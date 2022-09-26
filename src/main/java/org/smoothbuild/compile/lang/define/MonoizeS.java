@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Monomorphization of polymorphic referencable.
  */
-public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyRefableS refable,
+public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS evaluable,
     Loc loc) implements OperS {
   @Override
   public String label() {
@@ -23,7 +23,7 @@ public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyRefable
 
   @Override
   public ExprS mapVars(Function<VarS, TypeS> mapper) {
-    return new MonoizeS(type().mapVars(mapper), mapVarMap(mapper), refable, loc);
+    return new MonoizeS(type().mapVars(mapper), mapVarMap(mapper), evaluable, loc);
   }
 
   private ImmutableMap<VarS, TypeS> mapVarMap(Function<VarS, TypeS> mapper) {
@@ -46,12 +46,12 @@ public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyRefable
     if (!(o instanceof MonoizeS monoizeS)) {
       return false;
     }
-    return type.equals(monoizeS.type) && varMap.equals(monoizeS.varMap) && refable.equals(
-        monoizeS.refable) && loc.equals(monoizeS.loc);
+    return type.equals(monoizeS.type) && varMap.equals(monoizeS.varMap) && evaluable.equals(
+        monoizeS.evaluable) && loc.equals(monoizeS.loc);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, varMap, refable, loc);
+    return Objects.hash(type, varMap, evaluable, loc);
   }
 }

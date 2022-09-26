@@ -8,12 +8,12 @@ import org.smoothbuild.compile.lang.base.Panal;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypelikeS;
 
-public sealed abstract class PolyRefableS extends Panal implements RefableS
+public sealed abstract class PolyEvaluableS extends Panal implements RefableS
     permits PolyFuncS, PolyValS {
   private final SchemaS schema;
-  private final MonoRefableS mono;
+  private final EvaluableS mono;
 
-  public PolyRefableS(SchemaS schema, MonoRefableS mono) {
+  public PolyEvaluableS(SchemaS schema, EvaluableS mono) {
     super(mono.modPath(), mono.name(), mono.loc());
     this.schema = requireNonNull(schema);
     this.mono = requireNonNull(mono);
@@ -28,7 +28,7 @@ public sealed abstract class PolyRefableS extends Panal implements RefableS
     return schema;
   }
 
-  public MonoRefableS mono() {
+  public EvaluableS mono() {
     return mono;
   }
 
@@ -37,7 +37,7 @@ public sealed abstract class PolyRefableS extends Panal implements RefableS
     if (this == object) {
       return true;
     }
-    return object instanceof PolyRefableS poly
+    return object instanceof PolyEvaluableS poly
         && schema.equals(poly.schema)
         && mono.equals(poly.mono);
   }

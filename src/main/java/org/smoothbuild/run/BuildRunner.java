@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.run.FindTopRefables.findTopRefables;
+import static org.smoothbuild.run.FindTopEvaluables.findTopEvaluables;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.define.MonoRefableS;
+import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.Evaluator;
@@ -47,7 +47,7 @@ public class BuildRunner {
     return exitCode;
   }
 
-  public Optional<Map<MonoRefableS, ValB>> evaluate(List<String> names) {
+  public Optional<Map<EvaluableS, ValB>> evaluate(List<String> names) {
     if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
       return Optional.empty();
     }
@@ -58,17 +58,17 @@ public class BuildRunner {
     }
 
     var defs = defsOpt.get();
-    var refablesOpt = findTopRefables(reporter, defs, names);
-    if (refablesOpt.isEmpty()) {
+    var evaluablesOpt = findTopEvaluables(reporter, defs, names);
+    if (evaluablesOpt.isEmpty()) {
       return Optional.empty();
     }
 
-    var refables = refablesOpt.get();
-    var evaluationsOpt = evaluator.evaluate(refables);
+    var evaluables = evaluablesOpt.get();
+    var evaluationsOpt = evaluator.evaluate(evaluables);
     if (evaluationsOpt.isEmpty()) {
       return Optional.empty();
     }
     ImmutableList<ValB> values = evaluationsOpt.get();
-    return Optional.of(Maps.zip(refables, values));
+    return Optional.of(Maps.zip(evaluables, values));
   }
 }

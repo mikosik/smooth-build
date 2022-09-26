@@ -5,25 +5,25 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.define.DefsS;
-import org.smoothbuild.compile.lang.define.MonoRefableS;
+import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
-public class FindTopRefables {
-  public static Optional<List<MonoRefableS>> findTopRefables(
+public class FindTopEvaluables {
+  public static Optional<List<EvaluableS>> findTopEvaluables(
       Reporter reporter, DefsS defs, List<String> names) {
-    var topRefables = defs.refables();
-    var topRefs = new HashSet<MonoRefableS>();
+    var topEvaluables = defs.evaluables();
+    var matchingTopEvaluables = new HashSet<EvaluableS>();
     var logs = new LogBuffer();
     for (String name : names) {
-      var topRefable = topRefables.getOrNull(name);
-      if (topRefable != null) {
-        if (topRefable instanceof PolyValS polyValS) {
+      var topEvaluable = topEvaluables.getOrNull(name);
+      if (topEvaluable != null) {
+        if (topEvaluable instanceof PolyValS polyValS) {
           if (polyValS.schema().quantifiedVars().isEmpty()) {
-            topRefs.add(polyValS.mono());
+            matchingTopEvaluables.add(polyValS.mono());
           } else {
             logs.error("`" + name + "` cannot be calculated as it is a polymorphic value.");
           }
@@ -39,7 +39,7 @@ public class FindTopRefables {
     if (logs.containsProblem()) {
       return Optional.empty();
     } else {
-      return Optional.of(ImmutableList.copyOf(topRefs));
+      return Optional.of(ImmutableList.copyOf(matchingTopEvaluables));
     }
   }
 }

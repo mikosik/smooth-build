@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.define.MonoRefableS;
+import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.fs.base.FileSystem;
@@ -44,7 +44,7 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<MonoRefableS, ValB> artifacts) {
+  public int saveArtifacts(Map<EvaluableS, ValB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
     var sortedPairs = sort(artifacts, comparing(e -> e.getKey().name()));
     for (var pair : sortedPairs.entrySet()) {
@@ -55,10 +55,10 @@ public class ArtifactSaver {
     return EXIT_CODE_SUCCESS;
   }
 
-  private boolean save(MonoRefableS topRef, ValB valB) {
-    String name = topRef.name();
+  private boolean save(EvaluableS evaluable, ValB valB) {
+    String name = evaluable.name();
     try {
-      PathS path = write(topRef, valB);
+      PathS path = write(evaluable, valB);
       reportSuccess(name, path);
       return true;
     } catch (IOException e) {
@@ -72,11 +72,11 @@ public class ArtifactSaver {
     }
   }
 
-  private PathS write(MonoRefableS topRef, ValB valB) throws IOException, DuplicatedPathsExc {
-    PathS artifactPath = artifactPath(topRef.name());
-    if (topRef.type() instanceof ArrayTS arrayTS) {
+  private PathS write(EvaluableS evaluable, ValB valB) throws IOException, DuplicatedPathsExc {
+    PathS artifactPath = artifactPath(evaluable.name());
+    if (evaluable.type() instanceof ArrayTS arrayTS) {
       return saveArray(arrayTS, artifactPath, (ArrayB) valB);
-    } else if (topRef.type().name().equals(FileStruct.NAME)) {
+    } else if (evaluable.type().name().equals(FileStruct.NAME)) {
       return saveFile(artifactPath, (TupleB) valB);
     } else {
       return saveBaseVal(artifactPath, valB);

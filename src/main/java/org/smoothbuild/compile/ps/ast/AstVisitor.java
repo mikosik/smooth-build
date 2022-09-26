@@ -16,13 +16,13 @@ import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValP;
-import org.smoothbuild.compile.ps.ast.refable.PolyRefableP;
+import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitRefable(ast.refables());
+    visitEvaluable(ast.evaluables());
   }
 
   public void visitStructs(List<StructP> structs) {
@@ -41,12 +41,12 @@ public class AstVisitor {
     visitType(field.type());
   }
 
-  public void visitRefable(List<PolyRefableP> refables) {
-    refables.forEach(this::visitRefable);
+  public void visitEvaluable(List<PolyEvaluableP> evaluables) {
+    evaluables.forEach(this::visitEvaluable);
   }
 
-  public void visitRefable(PolyRefableP refable) {
-    switch (refable) {
+  public void visitEvaluable(PolyEvaluableP evaluable) {
+    switch (evaluable) {
       case FuncP func -> visitFunc(func);
       case NamedValP value -> visitValue(value);
     }

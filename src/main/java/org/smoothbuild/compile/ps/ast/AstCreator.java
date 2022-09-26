@@ -51,7 +51,7 @@ import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValP;
-import org.smoothbuild.compile.ps.ast.refable.PolyRefableP;
+import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -62,7 +62,7 @@ import com.google.common.collect.ImmutableList;
 public class AstCreator {
   public static Ast fromParseTree(FilePath filePath, ModContext module) {
     List<StructP> structs = new ArrayList<>();
-    List<PolyRefableP> refables = new ArrayList<>();
+    List<PolyEvaluableP> evaluables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
@@ -101,10 +101,10 @@ public class AstCreator {
         Optional<AnnP> annotation = createNativeSane(top.ann());
         Loc loc = locOf(filePath, nameNode);
         if (top.paramList() == null) {
-          refables.add(new NamedValP(type, name, expr, annotation, loc));
+          evaluables.add(new NamedValP(type, name, expr, annotation, loc));
         } else {
           List<ItemP> params = createParams(top.paramList());
-          refables.add(new FuncP(type, name, params, expr, annotation, loc));
+          evaluables.add(new FuncP(type, name, params, expr, annotation, loc));
         }
         return null;
       }
@@ -289,7 +289,7 @@ public class AstCreator {
             + " without children.");
       }
     }.visit(module);
-    return new Ast(structs, refables);
+    return new Ast(structs, evaluables);
   }
 
   private static String unquote(String quotedString) {

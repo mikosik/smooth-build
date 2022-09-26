@@ -92,8 +92,8 @@ import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.define.OrderS;
+import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
-import org.smoothbuild.compile.lang.define.PolyRefableS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
@@ -904,14 +904,14 @@ public class TestContext {
     return ImmutableMap.of(var, type);
   }
 
-  public MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyRefableS polyRefableS) {
-    return monoizeS(1, varMap, polyRefableS);
+  public MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS polyEvaluableS) {
+    return monoizeS(1, varMap, polyEvaluableS);
   }
 
   public static MonoizeS monoizeS(int loc, ImmutableMap<VarS, TypeS> varMap,
-      PolyRefableS polyRefableS) {
-    var type = polyRefableS.schema().monoize(varMap::get);
-    return new MonoizeS(type, varMap, polyRefableS, loc(loc));
+      PolyEvaluableS polyEvaluableS) {
+    var type = polyEvaluableS.schema().monoize(varMap::get);
+    return new MonoizeS(type, varMap, polyEvaluableS, loc(loc));
   }
 
   public OrderS orderS(TypeS elemT, ExprS... exprs) {

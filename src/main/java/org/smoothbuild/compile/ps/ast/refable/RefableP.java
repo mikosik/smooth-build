@@ -11,7 +11,7 @@ import org.smoothbuild.compile.ps.ast.type.TypeP;
  * Referencable.
  */
 public sealed interface RefableP extends Nal
-    permits PolyRefableP, ItemP {
+    permits PolyEvaluableP, ItemP {
 
   public Optional<AnnP> ann();
 

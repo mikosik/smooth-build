@@ -18,7 +18,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(stringTS()));
+            .containsEvaluableWithType("myValue", schemaS(stringTS()));
       }
 
       @Test
@@ -28,7 +28,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(blobTS()));
+            .containsEvaluableWithType("myValue", schemaS(blobTS()));
       }
 
       @Test
@@ -38,7 +38,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(intTS()));
+            .containsEvaluableWithType("myValue", schemaS(intTS()));
       }
 
       @Test
@@ -48,7 +48,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithType("myValue", schemaS(arrayTS(stringTS())));
       }
 
       @Test
@@ -59,7 +59,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(stringTS()));
+            .containsEvaluableWithType("myValue", schemaS(stringTS()));
       }
 
       @Test
@@ -70,7 +70,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(funcTS(stringTS(), blobTS())));
+            .containsEvaluableWithType("myValue", schemaS(funcTS(stringTS(), blobTS())));
       }
 
       @Test
@@ -81,7 +81,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(stringTS()));
+            .containsEvaluableWithType("myValue", schemaS(stringTS()));
       }
 
       @Test
@@ -92,7 +92,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(intTS()));
+            .containsEvaluableWithType("myValue", schemaS(intTS()));
       }
     }
 
@@ -105,7 +105,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(arrayTS(varA())));
+            .containsEvaluableWithType("myValue", schemaS(arrayTS(varA())));
       }
 
       @Test
@@ -116,7 +116,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(arrayTS(varA())));
+            .containsEvaluableWithType("myValue", schemaS(arrayTS(varA())));
       }
 
       @Test
@@ -127,7 +127,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myValue", schemaS(funcTS(varA(), varA())));
+            .containsEvaluableWithType("myValue", schemaS(funcTS(varA(), varA())));
       }
     }
   }
@@ -145,7 +145,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", schemaS(funcTS(stringTS())));
+              .containsEvaluableWithType("myFunc", schemaS(funcTS(stringTS())));
         }
 
         @Test
@@ -155,7 +155,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", schemaS(funcTS(blobTS())));
+              .containsEvaluableWithType("myFunc", schemaS(funcTS(blobTS())));
         }
 
         @Test
@@ -165,7 +165,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", schemaS(funcTS(intTS())));
+              .containsEvaluableWithType("myFunc", schemaS(funcTS(intTS())));
         }
       }
 
@@ -178,7 +178,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", schemaS(funcTS(arrayTS(stringTS()))));
+              .containsEvaluableWithType("myFunc", schemaS(funcTS(arrayTS(stringTS()))));
         }
       }
 
@@ -190,7 +190,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myFunc", schemaS(funcTS(stringTS())));
+            .containsEvaluableWithType("myFunc", schemaS(funcTS(stringTS())));
       }
 
       @Test
@@ -200,7 +200,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myFunc", schemaS(funcTS(intTS(), intTS())));
+            .containsEvaluableWithType("myFunc", schemaS(funcTS(intTS(), intTS())));
       }
 
       @Test
@@ -210,7 +210,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myFunc", schemaS(funcTS(intTS(), funcTS(intTS()))));
+            .containsEvaluableWithType("myFunc", schemaS(funcTS(intTS(), funcTS(intTS()))));
       }
 
       @Test
@@ -221,7 +221,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myFunc", schemaS(funcTS(funcTS(stringTS(), blobTS()))));
+            .containsEvaluableWithType("myFunc", schemaS(funcTS(funcTS(stringTS(), blobTS()))));
       }
 
       @Test
@@ -232,7 +232,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myFunc", schemaS(funcTS(stringTS())));
+            .containsEvaluableWithType("myFunc", schemaS(funcTS(stringTS())));
       }
 
       @Test
@@ -243,7 +243,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myFunc", schemaS(funcTS(intTS())));
+            .containsEvaluableWithType("myFunc", schemaS(funcTS(intTS())));
       }
 
       @Test
@@ -253,7 +253,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("myFunc", schemaS(funcTS(stringTS(), stringTS())));
+            .containsEvaluableWithType("myFunc", schemaS(funcTS(stringTS(), stringTS())));
       }
     }
 
@@ -268,7 +268,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(stringTS(), varA()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(stringTS(), varA()));
         }
 
         @Test
@@ -278,7 +278,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(blobTS(), varA()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(blobTS(), varA()));
         }
 
         @Test
@@ -288,7 +288,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(intTS(), varA()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(intTS(), varA()));
         }
       }
 
@@ -301,7 +301,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(arrayTS(stringTS()), varA()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(arrayTS(stringTS()), varA()));
         }
 
         @Test
@@ -311,7 +311,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varA())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(arrayTS(varA())));
         }
 
         @Test
@@ -321,7 +321,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varB()), varA()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(arrayTS(varB()), varA()));
         }
 
         @Test
@@ -331,7 +331,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varB())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(arrayTS(varB())));
         }
       }
 
@@ -345,7 +345,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(stringTS()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(stringTS()));
         }
 
         @Test
@@ -356,7 +356,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varA())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(arrayTS(varA())));
         }
 
         @Test
@@ -367,7 +367,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varB()), varA()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(arrayTS(varB()), varA()));
         }
 
         @Test
@@ -378,7 +378,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(arrayTS(varB())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(arrayTS(varB())));
         }
       }
 
@@ -391,7 +391,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(intTS(), intTS()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(intTS(), intTS()));
         }
 
         @Test
@@ -401,7 +401,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(varA(), varA()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(varA(), varA()));
         }
 
         @Test
@@ -412,7 +412,7 @@ public class InferenceTest extends TestContext {
           var funcT = funcTS(intTS(), boolTS());
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(funcT, funcT));
+              .containsEvaluableWithType("myFunc", funcSchemaS(funcT, funcT));
         }
 
         @Test
@@ -422,7 +422,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc",
+              .containsEvaluableWithType("myFunc",
                   funcSchemaS(funcTS(varA(), varA()), funcTS(varA(), varA())));
         }
       }
@@ -436,7 +436,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(intTS(), funcTS(intTS())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(intTS(), funcTS(intTS())));
         }
 
         @Test
@@ -446,7 +446,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(varA(), funcTS(varA())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(varA(), funcTS(varA())));
         }
 
         @Test
@@ -457,7 +457,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(intTS()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(intTS()));
         }
 
         @Test
@@ -468,7 +468,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(intTS()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(intTS()));
         }
 
         @Test
@@ -479,7 +479,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(varB(), varB()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(varB(), varB()));
         }
       }
 
@@ -493,7 +493,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(funcTS(stringTS(), blobTS())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(funcTS(stringTS(), blobTS())));
         }
 
         @Test
@@ -504,7 +504,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(funcTS(varA(), varA())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(funcTS(varA(), varA())));
         }
 
         @Test
@@ -515,7 +515,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(funcTS(varB(), varB()), varA()));
+              .containsEvaluableWithType("myFunc", funcSchemaS(funcTS(varB(), varB()), varA()));
         }
 
         @Test
@@ -526,7 +526,7 @@ public class InferenceTest extends TestContext {
           """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myFunc", funcSchemaS(funcTS(varB(), varB())));
+              .containsEvaluableWithType("myFunc", funcSchemaS(funcTS(varB(), varB())));
         }
       }
     }
@@ -594,7 +594,7 @@ public class InferenceTest extends TestContext {
             """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", schemaS(stringTS()));
+              .containsEvaluableWithType("myValue", schemaS(stringTS()));
         }
 
         @Test
@@ -605,7 +605,7 @@ public class InferenceTest extends TestContext {
             """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", schemaS(arrayTS(stringTS())));
+              .containsEvaluableWithType("myValue", schemaS(arrayTS(stringTS())));
         }
 
         @Test
@@ -617,7 +617,7 @@ public class InferenceTest extends TestContext {
             """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", schemaS(funcTS(stringTS(), blobTS())));
+              .containsEvaluableWithType("myValue", schemaS(funcTS(stringTS(), blobTS())));
         }
       }
 
@@ -632,7 +632,7 @@ public class InferenceTest extends TestContext {
             """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", schemaS(stringTS()));
+              .containsEvaluableWithType("myValue", schemaS(stringTS()));
         }
 
         @Test
@@ -644,7 +644,7 @@ public class InferenceTest extends TestContext {
             """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", schemaS(arrayTS(stringTS())));
+              .containsEvaluableWithType("myValue", schemaS(arrayTS(stringTS())));
         }
       }
 
@@ -658,7 +658,7 @@ public class InferenceTest extends TestContext {
             """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", schemaS(arrayTS(stringTS())));
+              .containsEvaluableWithType("myValue", schemaS(arrayTS(stringTS())));
         }
 
         @Test
@@ -669,7 +669,7 @@ public class InferenceTest extends TestContext {
             """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", schemaS(arrayTS(arrayTS(stringTS()))));
+              .containsEvaluableWithType("myValue", schemaS(arrayTS(arrayTS(stringTS()))));
         }
 
         @Test
@@ -681,7 +681,7 @@ public class InferenceTest extends TestContext {
             """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue",
+              .containsEvaluableWithType("myValue",
                   schemaS(arrayTS(funcTS(stringTS(), blobTS()))));
         }
       }
@@ -696,7 +696,7 @@ public class InferenceTest extends TestContext {
               """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", schemaS(intTS()));
+              .containsEvaluableWithType("myValue", schemaS(intTS()));
         }
 
         @Test
@@ -708,7 +708,7 @@ public class InferenceTest extends TestContext {
               """;
           module(code)
               .loadsWithSuccess()
-              .containsRefableWithType("myValue", funcSchemaS(intTS(), intTS()));
+              .containsEvaluableWithType("myValue", funcSchemaS(intTS(), intTS()));
         }
 
         @Test
@@ -737,7 +737,7 @@ public class InferenceTest extends TestContext {
               emptyArray, emptyArray);
           module(code)
               .loadsWithSuccess()
-              .containsRefable(polyDefValS(2, "result", call));
+              .containsEvaluable(polyDefValS(2, "result", call));
         }
       }
 
@@ -750,7 +750,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithType("result", schemaS(arrayTS(stringTS())));
       }
     }
 
@@ -791,7 +791,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithType("result", schemaS(arrayTS(stringTS())));
       }
 
       @Test
@@ -801,7 +801,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(intTS())));
+            .containsEvaluableWithType("result", schemaS(arrayTS(intTS())));
       }
 
       @Test
@@ -811,7 +811,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(blobTS())));
+            .containsEvaluableWithType("result", schemaS(arrayTS(blobTS())));
       }
 
       @Test
@@ -821,7 +821,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(arrayTS(intTS()))));
+            .containsEvaluableWithType("result", schemaS(arrayTS(arrayTS(intTS()))));
       }
 
       @Test
@@ -832,7 +832,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(intTS())));
+            .containsEvaluableWithType("result", schemaS(arrayTS(intTS())));
       }
 
       @Test
@@ -843,7 +843,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(funcTS(intTS(), intTS()))));
+            .containsEvaluableWithType("result", schemaS(arrayTS(funcTS(intTS(), intTS()))));
       }
 
       @Test
@@ -854,7 +854,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(funcTS(varA(), varA()))));
+            .containsEvaluableWithType("result", schemaS(arrayTS(funcTS(varA(), varA()))));
       }
     }
 
@@ -867,7 +867,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(stringTS())));
+            .containsEvaluableWithType("result", schemaS(arrayTS(stringTS())));
       }
 
       @Test
@@ -895,7 +895,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(funcTS(intTS()))));
+            .containsEvaluableWithType("result", schemaS(arrayTS(funcTS(intTS()))));
       }
 
       @Test
@@ -922,7 +922,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(idFuncS().mono().type())));
+            .containsEvaluableWithType("result", schemaS(arrayTS(idFuncS().mono().type())));
       }
 
       @Test
@@ -946,7 +946,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefableWithType("result", schemaS(arrayTS(funcTS(intTS(), intTS()))));
+            .containsEvaluableWithType("result", schemaS(arrayTS(funcTS(intTS(), intTS()))));
       }
 
       @Test

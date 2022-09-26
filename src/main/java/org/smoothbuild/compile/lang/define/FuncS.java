@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends Tapanal implements MonoRefableS
+public sealed abstract class FuncS extends Tapanal implements EvaluableS
     permits AnnFuncS, DefFuncS, SyntCtorS {
   private final NList<ItemS> params;
 

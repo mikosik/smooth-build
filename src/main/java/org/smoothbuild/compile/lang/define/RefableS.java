@@ -7,7 +7,7 @@ import org.smoothbuild.compile.lang.type.TypelikeS;
  * Referencable.
  */
 public sealed interface RefableS extends Nal
-    permits ItemS, MonoRefableS, PolyRefableS {
+    permits ItemS, PolyEvaluableS {
   public ModPath modPath();
   public TypelikeS typelike();
 }

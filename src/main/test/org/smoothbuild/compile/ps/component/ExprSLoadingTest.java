@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefValS;
+import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.MonoRefableS;
 import org.smoothbuild.testing.TestContext;
 
 public class ExprSLoadingTest extends TestContext {
@@ -21,7 +21,7 @@ public class ExprSLoadingTest extends TestContext {
             0x07;
           """)
           .loadsWithSuccess()
-          .containsRefable(polyDefValS(1, blobTS(), "result", blobS(2, 7)));
+          .containsEvaluable(polyDefValS(1, blobTS(), "result", blobS(2, 7)));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class ExprSLoadingTest extends TestContext {
             123;
           """)
           .loadsWithSuccess()
-          .containsRefable(polyDefValS(1, intTS(), "result", intS(2, 123)));
+          .containsEvaluable(polyDefValS(1, intTS(), "result", intS(2, 123)));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class ExprSLoadingTest extends TestContext {
             "abc";
           """)
           .loadsWithSuccess()
-          .containsRefable(polyDefValS(1, stringTS(), "result", stringS(2, "abc")));
+          .containsEvaluable(polyDefValS(1, stringTS(), "result", stringS(2, "abc")));
     }
   }
 
@@ -82,9 +82,9 @@ public class ExprSLoadingTest extends TestContext {
             
             """.replace("$$$", bodyCode);
 
-          MonoRefableS result = module(code)
+          EvaluableS result = module(code)
               .loadsWithSuccess()
-              .getModuleAsDefinitions().refables().get("result").mono();
+              .getModuleAsDefinitions().evaluables().get("result").mono();
           ExprS actualDefArg = ((CallS) ((DefValS) result).body()).args().get(0);
           assertThat(actualDefArg)
               .isEqualTo(defArg);
@@ -98,7 +98,7 @@ public class ExprSLoadingTest extends TestContext {
           result = myReturnInt();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, intTS(), "result",
+            .containsEvaluable(polyDefValS(2, intTS(), "result",
                 callS(2, intTS(), returnIntFuncS())));
       }
 
@@ -109,7 +109,7 @@ public class ExprSLoadingTest extends TestContext {
           result = myIntId(3);
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, intTS(), "result",
+            .containsEvaluable(polyDefValS(2, intTS(), "result",
                 callS(2, intTS(), intIdFuncS(), intS(2, 3))));
       }
 
@@ -121,7 +121,7 @@ public class ExprSLoadingTest extends TestContext {
             7);
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, intTS(), "result",
+            .containsEvaluable(polyDefValS(2, intTS(), "result",
                 callS(2, intTS(), intIdFuncS(), intS(3, 7))));
       }
 
@@ -132,7 +132,7 @@ public class ExprSLoadingTest extends TestContext {
           result = myId(7);
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, intTS(), "result",
+            .containsEvaluable(polyDefValS(2, intTS(), "result",
                 callS(2, intTS(),
                     monoizeS(2, varMap(varA(), intTS()), idFuncS()),
                     intS(2, 7))));
@@ -146,7 +146,7 @@ public class ExprSLoadingTest extends TestContext {
           result = myValue();
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyDefValS(3, intTS(), "result",
                     callS(3, intTS(),
                         defValS(2, funcTS(intTS()), "myValue", returnIntFuncS()))));
@@ -161,7 +161,7 @@ public class ExprSLoadingTest extends TestContext {
             7);
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyDefValS(3, intTS(), "result",
                     callS(3, intTS(),
                         defValS(2, funcTS(intTS(), intTS()), "myValue", intIdFuncS()),
@@ -178,7 +178,7 @@ public class ExprSLoadingTest extends TestContext {
           }
           """)
             .loadsWithSuccess()
-            .containsRefable(ctor);
+            .containsEvaluable(ctor);
       }
 
       @Test
@@ -192,7 +192,7 @@ public class ExprSLoadingTest extends TestContext {
             "aaa");
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(4, struct, "result",
+            .containsEvaluable(polyDefValS(4, struct, "result",
                 callS(4, struct, syntCtorS(1, struct), stringS(5, "aaa"))));
       }
 
@@ -202,7 +202,7 @@ public class ExprSLoadingTest extends TestContext {
           result(String() f) = f();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(
+            .containsEvaluable(polyDefFuncS(
                 1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS()), "f")),
                 callS(1, stringTS(), refS(funcTS(stringTS()), "f"))));
       }
@@ -213,7 +213,7 @@ public class ExprSLoadingTest extends TestContext {
           result(String(Blob) f) = f(0x09);
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(
+            .containsEvaluable(polyDefFuncS(
                 1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS(), blobTS()), "f")),
                 callS(1, stringTS(), refS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
       }
@@ -228,7 +228,7 @@ public class ExprSLoadingTest extends TestContext {
             myValue;
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, stringTS(), "result",
+            .containsEvaluable(polyDefValS(2, stringTS(), "result",
                 defValS(1, stringTS(), "myValue", stringS("abc"))));
       }
 
@@ -240,7 +240,7 @@ public class ExprSLoadingTest extends TestContext {
             myValue;
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, arrayTS(intTS()), "result",
+            .containsEvaluable(polyDefValS(2, arrayTS(intTS()), "result",
                 monoizeS(3, varMap(varA(), intTS()),
                     polyDefValS(1, arrayTS(varA()), "myValue", orderS(varA())))));
       }
@@ -253,7 +253,7 @@ public class ExprSLoadingTest extends TestContext {
             myFunc;
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, funcTS(stringTS()), "result",
+            .containsEvaluable(polyDefValS(2, funcTS(stringTS()), "result",
                 defFuncS(1, "myFunc", nlist(), stringS("abc"))));
       }
 
@@ -265,7 +265,7 @@ public class ExprSLoadingTest extends TestContext {
             myId;
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, funcTS(intTS(), intTS()), "result",
+            .containsEvaluable(polyDefValS(2, funcTS(intTS(), intTS()), "result",
                 monoizeS(3, varMap(varA(), intTS()),
                     polyDefFuncS(1, "myId", nlist(itemS(varA(), "a")), refS(1, varA(), "a")))));
       }
@@ -279,7 +279,7 @@ public class ExprSLoadingTest extends TestContext {
             myStruct;
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(2, funcTS(structT), "result", syntCtorS(1, structT)));
+            .containsEvaluable(polyDefValS(2, funcTS(structT), "result", syntCtorS(1, structT)));
       }
     }
 
@@ -293,7 +293,7 @@ public class ExprSLoadingTest extends TestContext {
           ];
           """)
           .loadsWithSuccess()
-          .containsRefable(polyDefValS(
+          .containsEvaluable(polyDefValS(
               1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
     }
 
@@ -304,7 +304,7 @@ public class ExprSLoadingTest extends TestContext {
             = param1;
           """)
           .loadsWithSuccess()
-          .containsRefable(polyDefFuncS(1, blobTS(), "myFunc", nlist(itemS(1, blobTS(), "param1")),
+          .containsEvaluable(polyDefFuncS(1, blobTS(), "myFunc", nlist(itemS(1, blobTS(), "param1")),
               refS(2, blobTS(), "param1")));
     }
 
@@ -321,7 +321,7 @@ public class ExprSLoadingTest extends TestContext {
             .field;
           """)
           .loadsWithSuccess()
-          .containsRefable(polyDefValS(6, stringTS(), "result",
+          .containsEvaluable(polyDefValS(6, stringTS(), "result",
               selectS(7, stringTS(),
                   callS(6, myStruct, natFuncS(2, myStruct, "getStruct", nlist(), natAnnS())),
                   "field")));
@@ -340,7 +340,7 @@ public class ExprSLoadingTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(1, blobTS(), "myValue", blobS(2, 7)));
+            .containsEvaluable(polyDefValS(1, blobTS(), "myValue", blobS(2, 7)));
       }
 
       @Test
@@ -351,7 +351,7 @@ public class ExprSLoadingTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefable(polyDefValS(1, arrayTS(varA()), "myValue", orderS(2, varA())));
+            .containsEvaluable(polyDefValS(1, arrayTS(varA()), "myValue", orderS(2, varA())));
       }
 
       @Test
@@ -362,7 +362,7 @@ public class ExprSLoadingTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefable(polyByteValS(2, blobTS(), "myValue"));
+            .containsEvaluable(polyByteValS(2, blobTS(), "myValue"));
       }
 
       @Test
@@ -373,7 +373,7 @@ public class ExprSLoadingTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsRefable(polyByteValS(2, varA(), "myValue"));
+            .containsEvaluable(polyByteValS(2, varA(), "myValue"));
       }
     }
 
@@ -386,7 +386,7 @@ public class ExprSLoadingTest extends TestContext {
             0x07;
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(1, blobTS(), "myFunc", nlist(), blobS(2, 7)));
+            .containsEvaluable(polyDefFuncS(1, blobTS(), "myFunc", nlist(), blobS(2, 7)));
       }
 
       @Test
@@ -396,7 +396,7 @@ public class ExprSLoadingTest extends TestContext {
             [];
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(1, arrayTS(varA()), "myFunc", nlist(),
+            .containsEvaluable(polyDefFuncS(1, arrayTS(varA()), "myFunc", nlist(),
                 orderS(2, varA())));
       }
 
@@ -408,7 +408,7 @@ public class ExprSLoadingTest extends TestContext {
             = "abc";
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyDefFuncS(1, stringTS(), "myFunc", nlist(itemS(2, blobTS(), "param1")),
                     stringS(3, "abc")));
       }
@@ -421,7 +421,7 @@ public class ExprSLoadingTest extends TestContext {
             = a;
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a")),
                     refS(3, varA(), "a")));
       }
@@ -435,7 +435,7 @@ public class ExprSLoadingTest extends TestContext {
               = "abc";
           """)
             .loadsWithSuccess()
-            .containsRefable(polyDefFuncS(1, stringTS(), "myFunc",
+            .containsEvaluable(polyDefFuncS(1, stringTS(), "myFunc",
                 nlist(itemS(2, blobTS(), "param1", blobS(3, 7))), stringS(4, "abc")));
       }
 
@@ -448,7 +448,7 @@ public class ExprSLoadingTest extends TestContext {
               = a;
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a", intS(3, 7))),
                     refS(4, varA(), "a")));
       }
@@ -460,7 +460,7 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyNatFuncS(
+            .containsEvaluable(polyNatFuncS(
                 2, stringTS(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), false)));
       }
 
@@ -471,7 +471,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyNatFuncS(
+            .containsEvaluable(polyNatFuncS(
                 2, varA(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), false)));
       }
 
@@ -482,7 +482,7 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyNatFuncS(
+            .containsEvaluable(polyNatFuncS(
                 2, stringTS(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), true)));
       }
 
@@ -493,7 +493,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyNatFuncS(
+            .containsEvaluable(polyNatFuncS(
                 2, varA(), "myFunc", nlist(), natAnnS(1, stringS(1, "Impl.met"), true)));
       }
 
@@ -506,7 +506,7 @@ public class ExprSLoadingTest extends TestContext {
               0x07);
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyNatFuncS(2, stringTS(), "myFunc", nlist(itemS(3, blobTS(), "p1", blobS(4, 7))),
                     natAnnS(1, stringS(1, "Impl.met"), true)));
       }
@@ -520,7 +520,7 @@ public class ExprSLoadingTest extends TestContext {
               0x07);
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyNatFuncS(2, varA(), "myFunc", nlist(itemS(3, blobTS(), "p1", blobS(4, 7))),
                     natAnnS(1, stringS(1, "Impl.met"), true)));
       }
@@ -532,7 +532,7 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyByteFuncS(2, stringTS(), "myFunc", nlist()));
+            .containsEvaluable(polyByteFuncS(2, stringTS(), "myFunc", nlist()));
       }
 
       @Test
@@ -542,7 +542,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsRefable(polyByteFuncS(2, varA(), "myFunc", nlist()));
+            .containsEvaluable(polyByteFuncS(2, varA(), "myFunc", nlist()));
       }
 
       @Test
@@ -554,7 +554,7 @@ public class ExprSLoadingTest extends TestContext {
               0x07);
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyByteFuncS(2, "Impl.met", stringTS(), "myFunc",
                     nlist(itemS(3, blobTS(), "param1", blobS(4, 7)))));
       }
@@ -568,7 +568,7 @@ public class ExprSLoadingTest extends TestContext {
               0x07);
           """)
             .loadsWithSuccess()
-            .containsRefable(
+            .containsEvaluable(
                 polyByteFuncS(2, "Impl.met", varA(), "myFunc",
                     nlist(itemS(3, blobTS(), "param1", blobS(4, 7)))));
       }
@@ -615,7 +615,7 @@ public class ExprSLoadingTest extends TestContext {
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
-            .containsRefable(func);
+            .containsEvaluable(func);
       }
 
       @Test
@@ -633,7 +633,7 @@ public class ExprSLoadingTest extends TestContext {
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
-            .containsRefable(func);
+            .containsEvaluable(func);
       }
 
       @Test
@@ -649,7 +649,7 @@ public class ExprSLoadingTest extends TestContext {
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
-            .containsRefable(func);
+            .containsEvaluable(func);
       }
     }
   }

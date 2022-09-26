@@ -11,7 +11,7 @@ import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
-import org.smoothbuild.compile.ps.ast.refable.PolyRefableP;
+import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.Strings;
@@ -30,7 +30,7 @@ public class DetectUndefinedRefs extends AstVisitor {
   }
 
   public static Logs detectUndefinedRefs(Ast ast, DefsS imported) {
-    ImmutableSet<String> definedNames = imported.refables().asMap().keySet();
+    ImmutableSet<String> definedNames = imported.evaluables().asMap().keySet();
     var detectUndefinedRefs = new DetectUndefinedRefs(ast, definedNames, new LogBuffer());
     detectUndefinedRefs.visitAst(ast);
     return detectUndefinedRefs.logs;
@@ -43,9 +43,9 @@ public class DetectUndefinedRefs extends AstVisitor {
   }
 
   @Override
-  public void visitRefable(PolyRefableP refable) {
-    super.visitRefable(refable);
-    definedNames.add(refable.name());
+  public void visitEvaluable(PolyEvaluableP evaluable) {
+    super.visitEvaluable(evaluable);
+    definedNames.add(evaluable.name());
   }
 
   @Override

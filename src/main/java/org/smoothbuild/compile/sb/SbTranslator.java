@@ -143,7 +143,7 @@ public class SbTranslator {
     var oldTypeSbConverter = typeSbTranslator;
     typeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     try {
-      return switch (monoizeS.refable()) {
+      return switch (monoizeS.evaluable()) {
         case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono(), varMap);
         case PolyValS polyValS -> translateVal(polyValS.mono(), varMap);
       };

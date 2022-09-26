@@ -23,10 +23,9 @@ import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModPath;
-import org.smoothbuild.compile.lang.define.MonoRefableS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.OrderS;
-import org.smoothbuild.compile.lang.define.PolyRefableS;
+import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
@@ -66,7 +65,7 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<PolyRefableS> translateVal(ModPath path, NamedValP namedValP, TypeS t) {
+  public Optional<PolyEvaluableS> translateVal(ModPath path, NamedValP namedValP, TypeS t) {
     var schema = new SchemaS(t.vars(), t);
     var name = namedValP.name();
     var loc = namedValP.loc();
@@ -79,7 +78,7 @@ public class PsTranslator {
     }
   }
 
-  public Optional<PolyRefableS> translateFunc(ModPath modPath, FuncP funcP, FuncTS funcT) {
+  public Optional<PolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP, FuncTS funcT) {
     return translateFunc(modPath, funcP, translateParams(funcP), funcT);
   }
 
@@ -94,7 +93,7 @@ public class PsTranslator {
     return new ItemS(type, name, body, param.loc());
   }
 
-  private Optional<PolyRefableS> translateFunc(ModPath modPath, FuncP funcP, NList<ItemS> params,
+  private Optional<PolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP, NList<ItemS> params,
       FuncTS funcT) {
     var schema = new FuncSchemaS(funcT.vars(), funcT);
     var name = funcP.name();
@@ -166,20 +165,19 @@ public class PsTranslator {
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemS -> new RefS(itemS.type(), ref.name(), ref.loc());
-      case MonoRefableS monoRefableS -> monoRefableS;
-      case PolyRefableS polyRefableS -> translateRefToPolyRefable(ref, polyRefableS);
+      case PolyEvaluableS polyEvaluableS -> translateRefToPolyEvaluable(ref, polyEvaluableS);
     };
   }
 
-  private static ExprS translateRefToPolyRefable(RefP ref, PolyRefableS polyRefableS) {
-    if (polyRefableS.schema().quantifiedVars().isEmpty()) {
-      return polyRefableS.mono();
+  private static ExprS translateRefToPolyEvaluable(RefP ref, PolyEvaluableS polyEvaluableS) {
+    if (polyEvaluableS.schema().quantifiedVars().isEmpty()) {
+      return polyEvaluableS.mono();
     } else {
       // cast is safe because varMap is immutable
       @SuppressWarnings("unchecked")
       var varMap = (ImmutableMap<VarS, TypeS>) ref.monoizationMapping();
-      var type = polyRefableS.schema().monoize(ref.monoizationMapper());
-      return new MonoizeS(type, varMap, polyRefableS, ref.loc());
+      var type = polyEvaluableS.schema().monoize(ref.monoizationMapper());
+      return new MonoizeS(type, varMap, polyEvaluableS, ref.loc());
     }
   }
 

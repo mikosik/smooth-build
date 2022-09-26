@@ -706,7 +706,7 @@ public class DeclarationTest extends TestContext {
               String nonDefault);
             """)
               .loadsWithSuccess()
-              .containsRefable(polyNatFuncS(2, stringTS(), "myFunc", nlist(
+              .containsEvaluable(polyNatFuncS(2, stringTS(), "myFunc", nlist(
                   itemS(3, stringTS(), "default", stringS(3, "value")),
                   itemS(4, stringTS(), "nonDefault")), natAnnS(1, stringS(1, "Impl.met"))));
         }
@@ -735,7 +735,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcDeclaration("String param1,"))
               .loadsWithSuccess()
-              .containsRefable(
+              .containsEvaluable(
                   polyDefFuncS(1, stringTS(), "myFunc", nlist(itemS(1, stringTS(), "param1")),
                       stringS(1, "abc")));
         }
@@ -771,7 +771,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcTDeclaration("String,"))
               .loadsWithSuccess()
-              .containsRefable(polyNatFuncS(2, funcTS(funcTS(blobTS(), stringTS())), "myFunc",
+              .containsEvaluable(polyNatFuncS(2, funcTS(funcTS(blobTS(), stringTS())), "myFunc",
                   nlist(), natAnnS(1, stringS(1, "Impl.met"))));
         }
 
@@ -987,7 +987,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcCall("7,"))
               .loadsWithSuccess()
-              .containsRefable(polyDefValS(2, intTS(), "result",
+              .containsEvaluable(polyDefValS(2, intTS(), "result",
                   callS(2, intTS(), intIdFuncS(), intS(2, 7))));
         }
 
@@ -1061,7 +1061,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(arrayLiteral("0x07,"))
               .loadsWithSuccess()
-              .containsRefable(polyDefValS(1, arrayTS(blobTS()), "result",
+              .containsEvaluable(polyDefValS(1, arrayTS(blobTS()), "result",
                   orderS(1, blobTS(), blobS(1, 7))));
         }
 

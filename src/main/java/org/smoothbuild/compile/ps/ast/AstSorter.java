@@ -17,7 +17,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
-import org.smoothbuild.compile.ps.ast.refable.PolyRefableP;
+import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -38,26 +38,26 @@ public class AstSorter {
       Log error = createCycleError("Type hierarchy", sortedTs.cycle());
       return maybeLogs(error);
     }
-    var sortedRefables = sortRefablesByDeps(ast.refables());
-    if (sortedRefables.sorted() == null) {
-      Log error = createCycleError("Dependency graph", sortedRefables.cycle());
+    var sortedEvaluables = sortEvaluablesByDeps(ast.evaluables());
+    if (sortedEvaluables.sorted() == null) {
+      Log error = createCycleError("Dependency graph", sortedEvaluables.cycle());
       return maybeLogs(error);
     }
-    Ast sorted = new Ast(sortedTs.valuesReversed(), sortedRefables.valuesReversed());
+    Ast sorted = new Ast(sortedTs.valuesReversed(), sortedEvaluables.valuesReversed());
     return maybe(sorted);
   }
 
-  private static TopologicalSortingRes<String, PolyRefableP, Loc> sortRefablesByDeps(
-      ImmutableList<PolyRefableP> refables) {
+  private static TopologicalSortingRes<String, PolyEvaluableP, Loc> sortEvaluablesByDeps(
+      ImmutableList<PolyEvaluableP> evaluables) {
     HashSet<String> names = new HashSet<>();
-    refables.forEach(r -> names.add(r.name()));
+    evaluables.forEach(r -> names.add(r.name()));
 
-    HashSet<GraphNode<String, PolyRefableP, Loc>> nodes = new HashSet<>();
-    nodes.addAll(map(refables, r -> refable(r, names)));
+    HashSet<GraphNode<String, PolyEvaluableP, Loc>> nodes = new HashSet<>();
+    nodes.addAll(map(evaluables, r -> evaluable(r, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, PolyRefableP, Loc> refable(PolyRefableP refable,
+  private static GraphNode<String, PolyEvaluableP, Loc> evaluable(PolyEvaluableP evaluable,
       Set<String> names) {
     Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {
@@ -68,8 +68,8 @@ public class AstSorter {
           deps.add(new GraphEdge<>(ref.loc(), ref.name()));
         }
       }
-    }.visitRefable(refable);
-    return new GraphNode<>(refable.name(), refable, ImmutableList.copyOf(deps));
+    }.visitEvaluable(evaluable);
+    return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(deps));
   }
 
   private static TopologicalSortingRes<String, StructP, Loc> sortStructsByDeps(
