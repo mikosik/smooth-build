@@ -78,7 +78,7 @@ public class SbTranslator {
   private final BytecodeLoader bytecodeLoader;
   private final Deque<NList<ItemS>> callStack;
   private final Map<CacheKey, ExprB> cache;
-  private final Map<ExprB, LabeledLoc> descriptions;
+  private final Map<ExprB, LabeledLoc> labels;
 
   @Inject
   public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader,
@@ -89,11 +89,11 @@ public class SbTranslator {
     this.bytecodeLoader = bytecodeLoader;
     this.callStack = new LinkedList<>();
     this.cache = new HashMap<>();
-    this.descriptions = new HashMap<>();
+    this.labels = new HashMap<>();
   }
 
-  public ImmutableMap<ExprB, LabeledLoc> descriptions() {
-    return ImmutableMap.copyOf(descriptions);
+  public ImmutableMap<ExprB, LabeledLoc> labels() {
+    return ImmutableMap.copyOf(labels);
   }
 
   private ImmutableList<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
@@ -118,7 +118,7 @@ public class SbTranslator {
 
   private <T extends ExprS> ExprB translateAndCacheNal(T exprS, Function<T, ExprB> translator) {
     var exprB = translator.apply(exprS);
-    descriptions.put(exprB, exprS);
+    labels.put(exprB, exprS);
     return exprB;
   }
 
@@ -132,7 +132,7 @@ public class SbTranslator {
     var paramTupleT = ((FuncTB) callableB.type()).params();
     var combineB = bytecodeF.combine(paramTupleT, argsB);
 
-    descriptions.put(combineB, new LabeledLocImpl("{}", callS.loc()));
+    labels.put(combineB, new LabeledLocImpl("{}", callS.loc()));
     return bytecodeF.call(translateT(callS.type()), callableB, combineB);
   }
 
@@ -167,7 +167,7 @@ public class SbTranslator {
         case DefFuncS d -> translateDefFunc(d);
         case SyntCtorS c -> translateSyntCtor(c);
       };
-      descriptions.put(funcB, funcS);
+      labels.put(funcB, funcS);
       return funcB;
     } finally {
       callStack.pop();
@@ -205,7 +205,7 @@ public class SbTranslator {
     var refsB = createRefsB(paramTBs);
     var paramsTB = bytecodeF.tupleT(map(refsB, ExprB::type));
     var bodyB = bytecodeF.combine(paramsTB, refsB);
-    descriptions.put(bodyB, new LabeledLocImpl("{}", syntCtorS.loc()));
+    labels.put(bodyB, new LabeledLocImpl("{}", syntCtorS.loc()));
     return bytecodeF.defFunc(resTB, paramTBs, bodyB);
   }
 
@@ -234,7 +234,7 @@ public class SbTranslator {
     var structTS = (StructTS) selectS.selectable().type();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
-    descriptions.put(indexB, selectS);
+    labels.put(indexB, selectS);
     return bytecodeF.select(translateT(selectS.type()), selectableB, indexB);
   }
 

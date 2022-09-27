@@ -22,7 +22,7 @@ public class ExecutionContext {
   private final BytecodeF bytecodeF;
   private final NativeMethodLoader nativeMethodLoader;
   private final JobCreator jobCreator;
-  private final ImmutableMap<ExprB, LabeledLoc> labeledLocs;
+  private final ImmutableMap<ExprB, LabeledLoc> labels;
 
   @Inject
   public ExecutionContext(TaskExecutor taskExecutor, ExecutionReporter reporter,
@@ -33,13 +33,13 @@ public class ExecutionContext {
   public ExecutionContext(TaskExecutor taskExecutor, ExecutionReporter reporter,
       BytecodeF bytecodeF,
       NativeMethodLoader nativeMethodLoader, JobCreator jobCreator,
-      ImmutableMap<ExprB, LabeledLoc> labeledLocs) {
+      ImmutableMap<ExprB, LabeledLoc> labels) {
     this.taskExecutor = taskExecutor;
     this.reporter = reporter;
     this.bytecodeF = bytecodeF;
     this.nativeMethodLoader = nativeMethodLoader;
     this.jobCreator = jobCreator;
-    this.labeledLocs = labeledLocs;
+    this.labels = labels;
   }
 
   public Job jobFor(ExprB expr) {
@@ -48,16 +48,16 @@ public class ExecutionContext {
 
   public ExecutionContext withEnvironment(ImmutableList<Job> args) {
     return new ExecutionContext(taskExecutor, reporter, bytecodeF, nativeMethodLoader,
-        jobCreator.withEnvironment(args), labeledLocs);
+        jobCreator.withEnvironment(args), labels);
   }
 
-  public ExecutionContext withExprInfos(ImmutableMap<ExprB, LabeledLoc> exprInfos) {
+  public ExecutionContext withLabels(ImmutableMap<ExprB, LabeledLoc> labels) {
     return new ExecutionContext(
-        taskExecutor, reporter, bytecodeF, nativeMethodLoader, jobCreator, exprInfos);
+        taskExecutor, reporter, bytecodeF, nativeMethodLoader, jobCreator, labels);
   }
 
   public LabeledLoc labeledLoc(ExprB expr) {
-    return requireNonNullElseGet(labeledLocs.get(expr),
+    return requireNonNullElseGet(labels.get(expr),
         () -> new LabeledLocImpl("@" + expr.hash(), Loc.unknown()));
   }
 

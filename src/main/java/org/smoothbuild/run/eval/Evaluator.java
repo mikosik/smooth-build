@@ -42,13 +42,13 @@ public class Evaluator {
     }
 
     reporter.startNewPhase("Evaluating");
-    return evaluate(vm, exprsB.get(), sbTranslator.descriptions());
+    return evaluate(vm, exprsB.get(), sbTranslator.labels());
   }
 
   private Optional<ImmutableList<ValB>> evaluate(Vm vm, ImmutableList<ExprB> exprs,
-      ImmutableMap<ExprB, LabeledLoc> descriptions) {
+      ImmutableMap<ExprB, LabeledLoc> labels) {
     try {
-      return vm.evaluate(exprs, descriptions);
+      return vm.evaluate(exprs, labels);
     } catch (InterruptedException e) {
       reporter.report(fatal("Evaluation process has been interrupted."));
       return Optional.empty();

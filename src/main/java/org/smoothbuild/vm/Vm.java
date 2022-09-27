@@ -29,9 +29,9 @@ public class Vm {
   }
 
   public Optional<ImmutableList<ValB>> evaluate(ImmutableList<ExprB> exprs,
-      ImmutableMap<ExprB, LabeledLoc> exprInfos)
+      ImmutableMap<ExprB, LabeledLoc> labels)
       throws InterruptedException {
-    var context = contextProv.get().withExprInfos(exprInfos);
+    var context = contextProv.get().withLabels(labels);
     var executor = context.taskExecutor();
     var jobs = map(exprs, context::jobFor);
     return pullUp(evaluate(executor, jobs));

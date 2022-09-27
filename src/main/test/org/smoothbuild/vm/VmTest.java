@@ -305,9 +305,9 @@ public class VmTest extends TestContext {
     return evaluate(vm, expr, ImmutableMap.of());
   }
 
-  private ValB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, LabeledLoc> descriptions) {
+  private ValB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, LabeledLoc> labels) {
     try {
-      var results = vm.evaluate(list(expr), descriptions).get();
+      var results = vm.evaluate(list(expr), labels).get();
       assertThat(results.size())
           .isEqualTo(1);
       return results.get(0);

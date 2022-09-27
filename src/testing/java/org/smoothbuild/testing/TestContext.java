@@ -1326,11 +1326,11 @@ public class TestContext {
     return new SynchronizedFileSystem(new MemoryFileSystem());
   }
 
-  public static LabeledLoc exprInfo() {
-    return exprInfo("description");
+  public static LabeledLoc labeledLoc() {
+    return labeledLoc("label");
   }
 
-  public static LabeledLoc exprInfo(String description) {
-    return new LabeledLocImpl(description, Loc.unknown());
+  public static LabeledLoc labeledLoc(String label) {
+    return new LabeledLocImpl(label, Loc.unknown());
   }
 }
