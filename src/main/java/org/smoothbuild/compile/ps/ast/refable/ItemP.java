@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
@@ -22,16 +21,6 @@ public final class ItemP extends NalImpl implements RefableP {
 
   public TypeP type() {
     return type;
-  }
-
-  @Override
-  public Optional<AnnP> ann() {
-    return Optional.empty();
-  }
-
-  @Override
-  public Optional<TypeP> evalT() {
-    return Optional.of(type);
   }
 
   @Override

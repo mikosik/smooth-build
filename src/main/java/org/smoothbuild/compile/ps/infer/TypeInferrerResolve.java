@@ -40,7 +40,7 @@ public class TypeInferrerResolve {
 
   public Optional<SchemaS> resolve(NamedValP val, TypeS evalT) {
     TypeS resolvedEvalT = unifier.resolve(evalT);
-    if (val.evalT().isPresent()) {
+    if (val.type().isPresent()) {
       if (!evalT.equals(resolvedEvalT)) {
         logger.log(compileError(val.loc(), val.q() + " body type is not equal to declared type."));
         return Optional.empty();

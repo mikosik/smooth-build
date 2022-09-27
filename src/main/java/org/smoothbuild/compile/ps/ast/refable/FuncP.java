@@ -39,11 +39,6 @@ public final class FuncP extends PolyEvaluableP {
     return params;
   }
 
-  @Override
-  public Optional<TypeP> evalT() {
-    return resT;
-  }
-
   public ImmutableList<TypeS> paramTs() {
     return map(params(), ItemP::typeS);
   }

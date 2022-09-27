@@ -19,9 +19,4 @@ public final class NamedValP extends PolyEvaluableP {
   public Optional<TypeP> type() {
     return type;
   }
-
-  @Override
-  public Optional<TypeP> evalT() {
-    return type();
-  }
 }
