@@ -90,9 +90,9 @@ import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.define.OrderS;
-import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefS;
@@ -904,14 +904,14 @@ public class TestContext {
     return ImmutableMap.of(var, type);
   }
 
-  public MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS polyEvaluableS) {
-    return monoizeS(1, varMap, polyEvaluableS);
+  public MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, NamedPolyEvaluableS evaluable) {
+    return monoizeS(1, varMap, evaluable);
   }
 
   public static MonoizeS monoizeS(int loc, ImmutableMap<VarS, TypeS> varMap,
-      PolyEvaluableS polyEvaluableS) {
-    var type = polyEvaluableS.schema().monoize(varMap::get);
-    return new MonoizeS(type, varMap, polyEvaluableS, loc(loc));
+      NamedPolyEvaluableS evaluable) {
+    var type = evaluable.schema().monoize(varMap::get);
+    return new MonoizeS(type, varMap, evaluable, loc(loc));
   }
 
   public OrderS orderS(TypeS elemT, ExprS... exprs) {

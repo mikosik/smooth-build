@@ -17,7 +17,7 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
-import org.smoothbuild.compile.lang.define.PolyEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.StructDefS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TDefS;
@@ -38,7 +38,7 @@ import org.smoothbuild.util.bindings.ScopedBindings;
 public class ModuleCreator {
   private final ModPath path;
   private final ScopedBindings<Optional<TDefS>> types;
-  private final ScopedBindings<Optional<PolyEvaluableS>> bindings;
+  private final ScopedBindings<Optional<NamedPolyEvaluableS>> bindings;
   private final LogBuffer logBuffer;
   private final PsTranslator psTranslator;
 
@@ -66,7 +66,7 @@ public class ModuleCreator {
   }
 
   private ModuleCreator(ModPath path, ScopedBindings<Optional<TDefS>> types,
-      ScopedBindings<Optional<PolyEvaluableS>> bindings, LogBuffer logBuffer) {
+      ScopedBindings<Optional<NamedPolyEvaluableS>> bindings, LogBuffer logBuffer) {
     this.path = path;
     this.types = types;
     this.bindings = bindings;
@@ -82,7 +82,7 @@ public class ModuleCreator {
     bindings.add(struct.ctor().name(), ctorS);
   }
 
-  private static PolyEvaluableS loadSyntCtor(ModPath path, StructP structP, StructTS structT) {
+  private static NamedPolyEvaluableS loadSyntCtor(ModPath path, StructP structP, StructTS structT) {
     var ctorP = structP.ctor();
     var name = ctorP.name();
     var fieldSigs = structT.fields();

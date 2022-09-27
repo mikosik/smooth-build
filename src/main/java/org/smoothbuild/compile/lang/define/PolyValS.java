@@ -2,7 +2,7 @@ package org.smoothbuild.compile.lang.define;
 
 import org.smoothbuild.compile.lang.type.SchemaS;
 
-public final class PolyValS extends PolyEvaluableS {
+public final class PolyValS extends NamedPolyEvaluableS {
   private PolyValS(SchemaS schema, NamedValS val) {
     super(schema, val);
   }

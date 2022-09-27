@@ -4,24 +4,18 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.Panal;
+import org.smoothbuild.compile.lang.base.WithLocImpl;
 import org.smoothbuild.compile.lang.type.SchemaS;
-import org.smoothbuild.compile.lang.type.TypelikeS;
 
-public sealed abstract class PolyEvaluableS extends Panal implements RefableS
-    permits PolyFuncS, PolyValS {
+public sealed abstract class PolyEvaluableS extends WithLocImpl
+    permits NamedPolyEvaluableS {
   private final SchemaS schema;
   private final EvaluableS mono;
 
   public PolyEvaluableS(SchemaS schema, EvaluableS mono) {
-    super(mono.modPath(), mono.name(), mono.loc());
+    super(mono.loc());
     this.schema = requireNonNull(schema);
     this.mono = requireNonNull(mono);
-  }
-
-  @Override
-  public TypelikeS typelike() {
-    return schema;
   }
 
   public SchemaS schema() {

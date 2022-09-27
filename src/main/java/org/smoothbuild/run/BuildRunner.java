@@ -2,6 +2,7 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.run.FindTopEvaluables.findTopEvaluables;
+import static org.smoothbuild.util.collect.Maps.zip;
 
 import java.util.List;
 import java.util.Map;
@@ -10,13 +11,10 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.define.EvaluableS;
+import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.Evaluator;
-import org.smoothbuild.util.collect.Maps;
-
-import com.google.common.collect.ImmutableList;
 
 public class BuildRunner {
   private final ArtifactsRemover artifactsRemover;
@@ -47,7 +45,7 @@ public class BuildRunner {
     return exitCode;
   }
 
-  public Optional<Map<EvaluableS, ValB>> evaluate(List<String> names) {
+  public Optional<Map<NamedEvaluableS, ValB>> evaluate(List<String> names) {
     if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
       return Optional.empty();
     }
@@ -68,7 +66,7 @@ public class BuildRunner {
     if (evaluationsOpt.isEmpty()) {
       return Optional.empty();
     }
-    ImmutableList<ValB> values = evaluationsOpt.get();
-    return Optional.of(Maps.zip(evaluables, values));
+    var values = evaluationsOpt.get();
+    return Optional.of(zip(evaluables, values));
   }
 }

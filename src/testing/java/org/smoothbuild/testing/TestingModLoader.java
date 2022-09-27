@@ -13,7 +13,7 @@ import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
-import org.smoothbuild.compile.lang.define.PolyEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.TypelikeS;
 import org.smoothbuild.out.log.Log;
@@ -47,7 +47,7 @@ public class TestingModLoader {
     return this;
   }
 
-  public void containsEvaluable(PolyEvaluableS expected) {
+  public void containsEvaluable(NamedPolyEvaluableS expected) {
     String name = expected.name();
     var actual = assertContainsEvaluable(name);
     assertThat(actual)
@@ -60,7 +60,7 @@ public class TestingModLoader {
         .isEqualTo(expectedT);
   }
 
-  private PolyEvaluableS assertContainsEvaluable(String name) {
+  private NamedPolyEvaluableS assertContainsEvaluable(String name) {
     var evaluables = moduleS.value().evaluables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(evaluables.contains(name))

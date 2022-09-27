@@ -57,6 +57,7 @@ import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
+import org.smoothbuild.compile.lang.define.UnnamedDefValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
@@ -103,14 +104,15 @@ public class SbTranslator {
     return switch (exprS) {
       case BlobS blobS -> translateAndCacheNal(blobS, this::translateBlob);
       case CallS callS -> translateAndCacheNal(callS, this::translateCall);
+      case FuncS funcS -> translateFunc(funcS, ImmutableMap.of());
       case IntS intS -> translateAndCacheNal(intS, this::translateInt);
       case MonoizeS monoizeS -> translateMonoize(monoizeS);
-      case FuncS funcS -> translateFunc(funcS, ImmutableMap.of());
+      case NamedValS namedValS -> translateNamedVal(namedValS, ImmutableMap.of());
       case OrderS orderS -> translateAndCacheNal(orderS, this::translateOrder);
       case RefS refS -> translateAndCacheNal(refS, this::translateRef);
       case SelectS selectS -> translateAndCacheNal(selectS, this::translateSelect);
       case StringS stringS -> translateAndCacheNal(stringS, this::translateString);
-      case NamedValS namedValS -> translateVal(namedValS, ImmutableMap.of());
+      case UnnamedDefValS unnamedDefValS -> translateExpr(unnamedDefValS.body());
     };
   }
 
@@ -143,9 +145,9 @@ public class SbTranslator {
     var oldTypeSbConverter = typeSbTranslator;
     typeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     try {
-      return switch (monoizeS.evaluable()) {
+      return switch (monoizeS.polyEvaluable()) {
         case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono(), varMap);
-        case PolyValS polyValS -> translateVal(polyValS.mono(), varMap);
+        case PolyValS polyValS -> translateNamedVal(polyValS.mono(), varMap);
       };
     } finally {
       typeSbTranslator = oldTypeSbConverter;
@@ -240,7 +242,7 @@ public class SbTranslator {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateVal(NamedValS namedValS, ImmutableMap<VarS, TypeB> varMap) {
+  private ExprB translateNamedVal(NamedValS namedValS, ImmutableMap<VarS, TypeB> varMap) {
     var key = new CacheKey(namedValS.name(), varMap);
     return computeIfAbsent(cache, key, name -> translateValImpl(namedValS, varMap));
   }

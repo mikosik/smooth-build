@@ -24,6 +24,7 @@ import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.RefS;
@@ -65,7 +66,7 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<PolyEvaluableS> translateVal(ModPath path, NamedValP namedValP, TypeS t) {
+  public Optional<NamedPolyEvaluableS> translateVal(ModPath path, NamedValP namedValP, TypeS t) {
     var schema = new SchemaS(t.vars(), t);
     var name = namedValP.name();
     var loc = namedValP.loc();
@@ -78,7 +79,7 @@ public class PsTranslator {
     }
   }
 
-  public Optional<PolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP, FuncTS funcT) {
+  public Optional<NamedPolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP, FuncTS funcT) {
     return translateFunc(modPath, funcP, translateParams(funcP), funcT);
   }
 
@@ -93,7 +94,7 @@ public class PsTranslator {
     return new ItemS(type, name, body, param.loc());
   }
 
-  private Optional<PolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP, NList<ItemS> params,
+  private Optional<NamedPolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP, NList<ItemS> params,
       FuncTS funcT) {
     var schema = new FuncSchemaS(funcT.vars(), funcT);
     var name = funcP.name();
@@ -165,7 +166,7 @@ public class PsTranslator {
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemS -> new RefS(itemS.type(), ref.name(), ref.loc());
-      case PolyEvaluableS polyEvaluableS -> translateRefToPolyEvaluable(ref, polyEvaluableS);
+      case NamedPolyEvaluableS evaluableS -> translateRefToPolyEvaluable(ref, evaluableS);
     };
   }
 

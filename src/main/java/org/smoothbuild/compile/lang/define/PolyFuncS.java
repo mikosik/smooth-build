@@ -2,7 +2,7 @@ package org.smoothbuild.compile.lang.define;
 
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 
-public final class PolyFuncS extends PolyEvaluableS {
+public final class PolyFuncS extends NamedPolyEvaluableS {
   private PolyFuncS(FuncSchemaS schema, FuncS funcS) {
     super(schema, funcS);
   }
