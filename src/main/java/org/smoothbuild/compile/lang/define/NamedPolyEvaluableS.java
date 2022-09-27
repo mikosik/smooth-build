@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.lang.define;
 
 import org.smoothbuild.compile.lang.type.SchemaS;
-import org.smoothbuild.compile.lang.type.TypelikeS;
 
 public sealed abstract class NamedPolyEvaluableS extends PolyEvaluableS implements RefableS
     permits PolyFuncS, PolyValS {
@@ -22,10 +21,5 @@ public sealed abstract class NamedPolyEvaluableS extends PolyEvaluableS implemen
   @Override
   public String name() {
     return mono().name();
-  }
-
-  @Override
-  public TypelikeS typelike() {
-    return schema();
   }
 }

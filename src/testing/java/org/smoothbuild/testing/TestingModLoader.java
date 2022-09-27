@@ -14,8 +14,8 @@ import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
+import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.TypelikeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 
@@ -54,9 +54,9 @@ public class TestingModLoader {
         .isEqualTo(expected);
   }
 
-  public void containsEvaluableWithType(String name, TypelikeS expectedT) {
+  public void containsEvaluableWithSchema(String name, SchemaS expectedT) {
     var refable = assertContainsEvaluable(name);
-    assertThat(refable.typelike())
+    assertThat(refable.schema())
         .isEqualTo(expectedT);
   }
 

@@ -10,7 +10,6 @@ import java.util.function.Function;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Tanal;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.TypelikeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.util.collect.NList;
 
@@ -59,11 +58,6 @@ public final class ItemS extends Tanal implements RefableS {
 
   public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
     return map(items, ItemS::type);
-  }
-
-  @Override
-  public TypelikeS typelike() {
-    return type();
   }
 
   public ItemS mapVars(Function<VarS, TypeS> mapper) {

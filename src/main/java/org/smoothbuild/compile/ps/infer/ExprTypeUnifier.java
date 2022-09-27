@@ -12,11 +12,11 @@ import java.util.function.Function;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.ItemS;
+import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
-import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
@@ -144,19 +144,22 @@ public class ExprTypeUnifier {
   }
 
   private Optional<? extends TypeS> unifyRef(RefP ref, RefableS r) {
-    ref.setTypelike(r.typelike());
-    return switch (r.typelike()) {
-      case TypeS type -> unifyMonoRef(ref, type);
-      case SchemaS schema -> unifyPolyRef(ref, schema);
+    return switch (r) {
+      case ItemS item -> unifyItemRef(ref, item);
+      case NamedPolyEvaluableS polyEvaluable -> unifyPolyRef(ref, polyEvaluable);
     };
   }
 
-  private static Optional<TypeS> unifyMonoRef(RefP ref, TypeS type) {
+  private static Optional<TypeS> unifyItemRef(RefP ref, ItemS item) {
+    var type = item.type();
+    ref.setTypelike(type);
     ref.setMonoizationMapping(ImmutableMap.of());
     return Optional.of(type);
   }
 
-  private Optional<TypeS> unifyPolyRef(RefP ref, SchemaS schema) {
+  private Optional<TypeS> unifyPolyRef(RefP ref, NamedPolyEvaluableS evaluable) {
+    var schema = evaluable.schema();
+    ref.setTypelike(schema);
     var monoizationMapping = toMap(
         schema.quantifiedVars().asList(), v -> unifier.generateUniqueVar());
     var mappedSchema = schema.monoize(monoizationMapping::get);
