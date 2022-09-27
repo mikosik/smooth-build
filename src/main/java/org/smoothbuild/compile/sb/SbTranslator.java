@@ -104,10 +104,10 @@ public class SbTranslator {
     return switch (exprS) {
       case BlobS blobS -> translateAndCacheNal(blobS, this::translateBlob);
       case CallS callS -> translateAndCacheNal(callS, this::translateCall);
-      case FuncS funcS -> translateFunc(funcS, ImmutableMap.of());
+      case FuncS funcS -> translateFunc(funcS);
       case IntS intS -> translateAndCacheNal(intS, this::translateInt);
       case MonoizeS monoizeS -> translateMonoize(monoizeS);
-      case NamedValS namedValS -> translateNamedVal(namedValS, ImmutableMap.of());
+      case NamedValS namedValS -> translateNamedVal(namedValS);
       case OrderS orderS -> translateAndCacheNal(orderS, this::translateOrder);
       case RefS refS -> translateAndCacheNal(refS, this::translateRef);
       case SelectS selectS -> translateAndCacheNal(selectS, this::translateSelect);
@@ -146,24 +146,24 @@ public class SbTranslator {
     typeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     try {
       return switch (monoizeS.polyEvaluable()) {
-        case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono(), varMap);
-        case PolyValS polyValS -> translateNamedVal(polyValS.mono(), varMap);
+        case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono());
+        case PolyValS polyValS -> translateNamedVal(polyValS.mono());
       };
     } finally {
       typeSbTranslator = oldTypeSbConverter;
     }
   }
 
-  private ExprB translateFunc(FuncS funcS, ImmutableMap<VarS, TypeB> varMap) {
-    var key = new CacheKey(funcS.name(), varMap);
-    return computeIfAbsent(cache, key, name -> translateFuncImpl(funcS, varMap));
+  private ExprB translateFunc(FuncS funcS) {
+    var key = new CacheKey(funcS.name(), typeSbTranslator.varMap());
+    return computeIfAbsent(cache, key, name -> translateFuncImpl(funcS));
   }
 
-  private ExprB translateFuncImpl(FuncS funcS, ImmutableMap<VarS, TypeB> varMap) {
+  private ExprB translateFuncImpl(FuncS funcS) {
     try {
       callStack.push(funcS.params());
       var funcB = switch (funcS) {
-        case AnnFuncS n -> translateAnnFunc(n, varMap);
+        case AnnFuncS n -> translateAnnFunc(n);
         case DefFuncS d -> translateDefFunc(d);
         case SyntCtorS c -> translateSyntCtor(c);
       };
@@ -174,10 +174,10 @@ public class SbTranslator {
     }
   }
 
-  private ExprB translateAnnFunc(AnnFuncS annFuncS, ImmutableMap<VarS, TypeB> varMap) {
+  private ExprB translateAnnFunc(AnnFuncS annFuncS) {
     var annName = annFuncS.ann().name();
     return switch (annName) {
-      case BYTECODE -> fetchFuncBytecode(annFuncS, varMap);
+      case BYTECODE -> fetchFuncBytecode(annFuncS);
       case NATIVE_PURE, NATIVE_IMPURE -> translateNatFunc(annFuncS);
       default -> throw new TranslateSbExc("Illegal function annotation: " + annName + ".");
     };
@@ -242,40 +242,40 @@ public class SbTranslator {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateNamedVal(NamedValS namedValS, ImmutableMap<VarS, TypeB> varMap) {
-    var key = new CacheKey(namedValS.name(), varMap);
-    return computeIfAbsent(cache, key, name -> translateValImpl(namedValS, varMap));
+  private ExprB translateNamedVal(NamedValS namedValS) {
+    var key = new CacheKey(namedValS.name(), typeSbTranslator.varMap());
+    return computeIfAbsent(cache, key, name -> translateNamedValImpl(namedValS));
   }
 
-  private ExprB translateValImpl(NamedValS namedValS, ImmutableMap<VarS, TypeB> varMap) {
+  private ExprB translateNamedValImpl(NamedValS namedValS) {
     return switch (namedValS) {
-      case AnnValS annValS -> translateAnnVal(annValS, varMap);
+      case AnnValS annValS -> translateAnnVal(annValS);
       case DefValS defValS -> translateExpr(defValS.body());
     };
   }
 
-  private ExprB translateAnnVal(AnnValS annValS, ImmutableMap<VarS, TypeB> varMap) {
+  private ExprB translateAnnVal(AnnValS annValS) {
     var annName = annValS.ann().name();
     return switch (annName) {
-      case BYTECODE ->  fetchValBytecode(annValS, varMap);
+      case BYTECODE ->  fetchValBytecode(annValS);
       default -> throw new TranslateSbExc("Illegal value annotation: " + q("@" + annName) + ".");
     };
   }
 
   // helpers
 
-  private ExprB fetchValBytecode(AnnValS annValS, ImmutableMap<VarS, TypeB> varMap) {
+  private ExprB fetchValBytecode(AnnValS annValS) {
     var typeB = translateT(annValS.type());
-    return fetchBytecode(annValS.ann(), typeB, annValS.name(), varMap);
+    return fetchBytecode(annValS.ann(), typeB, annValS.name());
   }
 
-  private ExprB fetchFuncBytecode(AnnFuncS annFuncS, ImmutableMap<VarS, TypeB> varMap) {
+  private ExprB fetchFuncBytecode(AnnFuncS annFuncS) {
     var typeB = translateT(annFuncS.type());
-    return fetchBytecode(annFuncS.ann(), typeB, annFuncS.name(), varMap);
+    return fetchBytecode(annFuncS.ann(), typeB, annFuncS.name());
   }
 
-  private ExprB fetchBytecode(AnnS ann, TypeB typeB, String name, Map<VarS, TypeB> varMap) {
-    var varNameToTypeMap = mapKeys(varMap, VarS::name);
+  private ExprB fetchBytecode(AnnS ann, TypeB typeB, String name) {
+    var varNameToTypeMap = mapKeys(typeSbTranslator.varMap(), VarS::name);
     var jar = loadNativeJar(ann.loc());
     var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string(), varNameToTypeMap);
     if (!bytecodeTry.isPresent()) {

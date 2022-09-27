@@ -30,6 +30,10 @@ public class TypeSbTranslator {
     this.varMap = varMap;
   }
 
+  public ImmutableMap<VarS, TypeB> varMap() {
+    return varMap;
+  }
+
   public TypeB translate(TypeS type) {
     return switch (type) {
       case ArrayTS a -> translate(a);
