@@ -27,15 +27,7 @@ public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyEvaluab
   }
 
   private ImmutableMap<VarS, TypeS> mapVarMap(Function<VarS, TypeS> mapper) {
-    return mapValues(varMap, value -> ma(value, mapper));
-  }
-
-  private static TypeS ma(TypeS type, Function<VarS, TypeS> mapper) {
-    if (type instanceof VarS var) {
-      return mapper.apply(var);
-    } else {
-      return type;
-    }
+    return mapValues(varMap, t -> t.mapVars(mapper));
   }
 
   @Override
@@ -43,10 +35,8 @@ public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyEvaluab
     if (this == o) {
       return true;
     }
-    if (!(o instanceof MonoizeS monoizeS)) {
-      return false;
-    }
-    return type.equals(monoizeS.type)
+    return o instanceof MonoizeS monoizeS
+        && type.equals(monoizeS.type)
         && varMap.equals(monoizeS.varMap)
         && polyEvaluable.equals(monoizeS.polyEvaluable)
         && loc.equals(monoizeS.loc);
