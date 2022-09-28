@@ -8,6 +8,7 @@ import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.Optional;
 
+import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
@@ -28,14 +29,18 @@ import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValP;
 import org.smoothbuild.out.log.Logger;
+import org.smoothbuild.util.bindings.Bindings;
 
 public class TypeInferrerResolve {
   private final Unifier unifier;
   private final Logger logger;
+  private final Bindings<? extends Optional<? extends RefableS>> bindings;
 
-  public TypeInferrerResolve(Unifier unifier, Logger logger) {
+  public TypeInferrerResolve(Unifier unifier, Logger logger,
+      Bindings<? extends Optional<? extends RefableS>> bindings) {
     this.unifier = unifier;
     this.logger = logger;
+    this.bindings = bindings;
   }
 
   public Optional<SchemaS> resolve(NamedValP val, TypeS evalT) {
@@ -95,7 +100,7 @@ public class TypeInferrerResolve {
   }
 
   private void setDefaultTypes(ExprP expr) {
-    new DefaultTypeInferrer(unifier).infer(expr);
+    new DefaultTypeInferrer(unifier, bindings).infer(expr);
   }
 
   private TypeS fixPrefixedVars(TypeS resolvedT) {

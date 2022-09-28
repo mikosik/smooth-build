@@ -3,8 +3,10 @@ package org.smoothbuild.compile.ps.infer;
 import static com.google.common.collect.Maps.filterKeys;
 import static org.smoothbuild.util.collect.Lists.list;
 
-import org.smoothbuild.compile.lang.type.FuncTS;
-import org.smoothbuild.compile.lang.type.SchemaS;
+import java.util.Optional;
+
+import org.smoothbuild.compile.lang.define.PolyFuncS;
+import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
@@ -16,6 +18,7 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.ValP;
+import org.smoothbuild.util.bindings.Bindings;
 
 import com.google.common.base.Predicate;
 
@@ -28,9 +31,12 @@ import com.google.common.base.Predicate;
  */
 public class DefaultTypeInferrer {
   private final Unifier unifier;
+  private final Bindings<? extends Optional<? extends RefableS>> bindings;
 
-  public DefaultTypeInferrer(Unifier unifier) {
+  public DefaultTypeInferrer(Unifier unifier,
+      Bindings<? extends Optional<? extends RefableS>> bindings) {
     this.unifier = unifier;
+    this.bindings = bindings;
   }
 
   public void infer(ExprP expr) {
@@ -59,9 +65,8 @@ public class DefaultTypeInferrer {
   }
 
   private void inferRef(RefP ref) {
-    var typelike = ref.typelike();
-    if (typelike instanceof SchemaS schemaS && schemaS.type() instanceof FuncTS funcTS) {
-      Predicate<VarS> presentOnlyInParam = v -> !funcTS.res().vars().contains(v);
+    if (bindings.get(ref.name()).get() instanceof PolyFuncS polyFuncS) {
+      Predicate<VarS> presentOnlyInParam = v -> !polyFuncS.mono().type().res().vars().contains(v);
       var paramOnlyVars = filterKeys(ref.monoizationMapping(), presentOnlyInParam);
       for (var type : paramOnlyVars.values()) {
         var resolved = unifier.resolve(type);

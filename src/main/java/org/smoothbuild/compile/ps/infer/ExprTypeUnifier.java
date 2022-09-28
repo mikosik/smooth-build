@@ -151,15 +151,12 @@ public class ExprTypeUnifier {
   }
 
   private static Optional<TypeS> unifyItemRef(RefP ref, ItemS item) {
-    var type = item.type();
-    ref.setTypelike(type);
     ref.setMonoizationMapping(ImmutableMap.of());
-    return Optional.of(type);
+    return Optional.of(item.type());
   }
 
   private Optional<TypeS> unifyPolyRef(RefP ref, NamedPolyEvaluableS evaluable) {
     var schema = evaluable.schema();
-    ref.setTypelike(schema);
     var monoizationMapping = toMap(
         schema.quantifiedVars().asList(), v -> unifier.generateUniqueVar());
     var mappedSchema = schema.monoize(monoizationMapping::get);

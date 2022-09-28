@@ -5,8 +5,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
 
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ItemSigS;
@@ -29,6 +27,7 @@ import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.function.TriFunction;
 
 public class TypeInferrer {
   private final TypePsTranslator typePsTranslator;
@@ -86,11 +85,12 @@ public class TypeInferrer {
 
   private Optional<SchemaS> inferValSchema(NamedValP val) {
     return translateOrGenerateT(val.type())
-        .flatMap(r -> unifyBodyAndResolve(val, r, () -> bindings, this::resolveValSchema));
+        .flatMap(r -> unifyBodyAndResolve(val, r, bindings, this::resolveValSchema));
   }
 
-  private Optional<SchemaS> resolveValSchema(NamedValP namedValP, TypeS evalT) {
-    return new TypeInferrerResolve(unifier, logger).resolve(namedValP, evalT);
+  private Optional<SchemaS> resolveValSchema(NamedValP namedValP, TypeS evalT,
+      Bindings<? extends Optional<? extends RefableS>> bindings) {
+    return new TypeInferrerResolve(unifier, logger, bindings).resolve(namedValP, evalT);
   }
 
   // default arg
@@ -101,11 +101,12 @@ public class TypeInferrer {
   }
 
   private void inferDefaultArgImpl(TypeS type, ItemP param) {
-    unifyBodyAndResolve(param, type, () -> bindings, this::resolveDefaultArg);
+    unifyBodyAndResolve(param, type, bindings, this::resolveDefaultArg);
   }
 
-  private Optional<Void> resolveDefaultArg(ItemP param, TypeS type) {
-    new TypeInferrerResolve(unifier, logger)
+  private Optional<Void> resolveDefaultArg(ItemP param, TypeS type,
+      Bindings<? extends Optional<? extends RefableS>> bindings) {
+    new TypeInferrerResolve(unifier, logger, bindings)
         .resolve(param);
     // This optional is ignored by caller.
     return Optional.empty();
@@ -145,8 +146,9 @@ public class TypeInferrer {
         .filter(p -> p.body().isPresent())
         .forEach(this::inferDefaultArg);
     var resT = translateOrGenerateT(func.resT());
+
     return resT.flatMap(r -> unifyBodyAndResolve(
-        func, r, () -> funcBodyScopeBindings(params), this::resolveFuncSchema));
+        func, r, funcBodyScopeBindings(params), this::resolveFuncSchema));
   }
 
   private ScopedBindings<Optional<? extends RefableS>> funcBodyScopeBindings(NList<ItemP> params) {
@@ -159,31 +161,33 @@ public class TypeInferrer {
     return new ItemS(p.typeS(), p.name(), Optional.empty(), p.loc());
   }
 
-  private Optional<FuncSchemaS> resolveFuncSchema(FuncP funcP, TypeS resT) {
-    return new TypeInferrerResolve(unifier, logger)
+  private Optional<FuncSchemaS> resolveFuncSchema(FuncP funcP, TypeS resT,
+      Bindings<? extends Optional<? extends RefableS>> bindings) {
+    return new TypeInferrerResolve(unifier, logger, bindings)
         .resolve(funcP, new FuncTS(resT, funcP.paramTs()));
   }
 
   // body
 
   private <R extends RefableP, T> Optional<T> unifyBodyAndResolve(
-      R refable, TypeS evalT,
-      Supplier<? extends Bindings<? extends Optional<? extends RefableS>>> bindingsSupplier,
-      BiFunction<R, TypeS, Optional<T>> resolver) {
+      R refable, TypeS evalT, Bindings<? extends Optional<? extends RefableS>> bindings,
+      TriFunction<R, TypeS, Bindings<? extends Optional<? extends RefableS>>, Optional<T>> resolver) {
     if (refable.body().isPresent()) {
-      return new ExprTypeUnifier(unifier, bindingsSupplier.get(), logger)
+      return new ExprTypeUnifier(unifier, bindings, logger)
           .unifyExpr(refable.body().get())
-          .flatMap(bodyT -> unifyBodyWithEvalAndResolve(refable, evalT, bodyT, resolver));
+          .flatMap(bodyT -> unifyBodyWithEvalAndResolve(refable, evalT, bodyT, bindings, resolver));
     } else {
-      return resolver.apply(refable, evalT);
+      return resolver.apply(refable, evalT, bindings);
     }
   }
 
   private <R extends RefableP, T> Optional<T> unifyBodyWithEvalAndResolve(
-      R refable, TypeS evalT, TypeS bodyT, BiFunction<R, TypeS, Optional<T>> resolver) {
+      R refable, TypeS evalT, TypeS bodyT,
+      Bindings<? extends Optional<? extends RefableS>> bindings,
+      TriFunction<R, TypeS, Bindings<? extends Optional<? extends RefableS>>, Optional<T>> resolver) {
     try {
       unifier.unify(evalT, bodyT);
-      return resolver.apply(refable, evalT);
+      return resolver.apply(refable, evalT, bindings);
     } catch (UnifierExc e) {
       logger.log(compileError(
           refable.loc(), refable.q() + " body type is not equal to declared type."));
