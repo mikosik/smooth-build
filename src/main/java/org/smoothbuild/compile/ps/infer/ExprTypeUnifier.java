@@ -84,18 +84,20 @@ public class ExprTypeUnifier {
   }
 
   private Optional<ImmutableList<ExprP>> positionedArgs(CallP callP) {
-    return switch (callP.callee()) {
-      case RefP refP -> bindings.get(refP.name())
+    if (callP.callee() instanceof RefP refP) {
+      return bindings.get(refP.name())
           .flatMap(refableS -> inferPositionedArgs(callP, refableParams(refableS), logger));
-      default -> inferPositionedArgs(callP, Optional.empty(), logger);
-    };
+    } else {
+      return inferPositionedArgs(callP, Optional.empty(), logger);
+    }
   }
 
   private static Optional<NList<ItemS>> refableParams(RefableS refableS) {
-    return switch (refableS) {
-      case PolyFuncS polyFuncS -> Optional.of(polyFuncS.mono().params());
-      default -> Optional.empty();
-    };
+    if (refableS instanceof PolyFuncS polyFuncS) {
+      return Optional.of(polyFuncS.mono().params());
+    } else {
+      return Optional.empty();
+    }
   }
 
   private Optional<TypeS> unifyCall(TypeS calleeT, ImmutableList<TypeS> argTs, Loc loc) {
