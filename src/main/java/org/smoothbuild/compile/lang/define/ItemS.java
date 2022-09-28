@@ -21,18 +21,15 @@ import com.google.common.collect.ImmutableList;
  */
 public final class ItemS extends Tanal implements RefableS {
   private final Optional<PolyEvaluableS> body;
-  private final ItemSigS sig;
 
   public ItemS(TypeS type, String name, Optional<PolyEvaluableS> body, Loc loc) {
     super(type, name, loc);
     this.body = body;
-    this.sig = new ItemSigS(type(), name());
   }
 
   public ItemS(ItemSigS sig, Optional<PolyEvaluableS> body, Loc loc) {
     super(sig.type(), sig.nameO().get(), loc);
     this.body = body;
-    this.sig = sig;
   }
 
   public static NList<ItemS> mapParams(NList<ItemS> params, Function<VarS, TypeS> mapper) {
@@ -42,10 +39,6 @@ public final class ItemS extends Tanal implements RefableS {
   @Override
   public ModPath modPath() {
     throw new UnsupportedOperationException();
-  }
-
-  public ItemSigS sig() {
-    return sig;
   }
 
   public Optional<PolyEvaluableS> body() {
