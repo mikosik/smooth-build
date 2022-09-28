@@ -814,7 +814,7 @@ public class TestContext {
   }
 
   private static FuncSchemaS newFuncSchema(FuncTS funcTS) {
-    return new FuncSchemaS(funcTS.vars(), funcTS);
+    return new FuncSchemaS(funcTS);
   }
 
   public StructTS personTS() {
@@ -1112,7 +1112,7 @@ public class TestContext {
   }
 
   public SchemaS schemaS(TypeS typeS) {
-    return new SchemaS(typeS.vars(), typeS);
+    return new SchemaS(typeS);
   }
 
   public PolyFuncS polySyntCtorS(StructTS structT) {

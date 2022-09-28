@@ -56,9 +56,7 @@ public class TypeInferrerResolve {
     if (!resolveBody(val.body())) {
       return Optional.empty();
     }
-    // This only works because val so far cannot be enclosed within other val.
-    var quantifiedVars = resolvedEvalT.vars();
-    return Optional.of(new SchemaS(quantifiedVars, resolvedEvalT));
+    return Optional.of(new SchemaS(resolvedEvalT));
   }
 
   public boolean resolveParamBody(ExprP body) {
@@ -84,9 +82,7 @@ public class TypeInferrerResolve {
     if (!resolveBody(func.body())) {
       return Optional.empty();
     }
-    // This only works because function so far cannot be enclosed within other function.
-    var quantifiedVars = resolvedFuncT.vars();
-    return Optional.of(new FuncSchemaS(quantifiedVars, resolvedFuncT));
+    return Optional.of(new FuncSchemaS(resolvedFuncT));
   }
 
   private boolean resolveBody(Optional<ExprP> body) {

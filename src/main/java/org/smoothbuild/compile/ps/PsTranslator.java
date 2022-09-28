@@ -67,8 +67,8 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<NamedPolyEvaluableS> translateVal(ModPath path, NamedValP namedValP, TypeS t) {
-    var schema = new SchemaS(t.vars(), t);
+  public Optional<NamedPolyEvaluableS> translateVal(ModPath path, NamedValP namedValP, TypeS type) {
+    var schema = new SchemaS(type);
     var name = namedValP.name();
     var loc = namedValP.loc();
     if (namedValP.ann().isPresent()) {
@@ -107,7 +107,7 @@ public class PsTranslator {
 
   private Optional<NamedPolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP,
       NList<ItemS> params, FuncTS funcT) {
-    var schema = new FuncSchemaS(funcT.vars(), funcT);
+    var schema = new FuncSchemaS(funcT);
     var name = funcP.name();
     var loc = funcP.loc();
     if (funcP.ann().isPresent()) {
