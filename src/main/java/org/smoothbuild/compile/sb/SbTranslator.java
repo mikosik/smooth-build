@@ -73,7 +73,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class SbTranslator {
   private final BytecodeF bytecodeF;
-  private TypeSbTranslator typeSbTranslator;
+  private final TypeSbTranslator typeSbTranslator;
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
   private final Deque<NList<ItemS>> callStack;
@@ -90,6 +90,18 @@ public class SbTranslator {
     this.callStack = new LinkedList<>();
     this.cache = new HashMap<>();
     this.labels = new HashMap<>();
+  }
+
+  public SbTranslator(BytecodeF bytecodeF, TypeSbTranslator typeSbTranslator, FileLoader fileLoader,
+      BytecodeLoader bytecodeLoader, Deque<NList<ItemS>> callStack, Map<CacheKey, ExprB> cache,
+      Map<ExprB, LabeledLoc> labels) {
+    this.bytecodeF = bytecodeF;
+    this.typeSbTranslator = typeSbTranslator;
+    this.fileLoader = fileLoader;
+    this.bytecodeLoader = bytecodeLoader;
+    this.callStack = callStack;
+    this.cache = cache;
+    this.labels = labels;
   }
 
   public ImmutableMap<ExprB, LabeledLoc> labels() {
@@ -142,16 +154,17 @@ public class SbTranslator {
 
   private ExprB translateMonoize(MonoizeS monoizeS) {
     var varMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
-    var oldTypeSbConverter = typeSbTranslator;
-    typeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
-    try {
-      return switch (monoizeS.polyEvaluable()) {
-        case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono());
-        case PolyValS polyValS -> translateNamedVal(polyValS.mono());
-      };
-    } finally {
-      typeSbTranslator = oldTypeSbConverter;
-    }
+    var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
+    var sbTranslator = new SbTranslator(
+        bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader, callStack, cache, labels);
+    return sbTranslator.translateMonoizeImpl(monoizeS);
+  }
+
+  private ExprB translateMonoizeImpl(MonoizeS monoizeS) {
+    return switch (monoizeS.polyEvaluable()) {
+      case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono());
+      case PolyValS polyValS -> translateNamedVal(polyValS.mono());
+    };
   }
 
   private ExprB translateFunc(FuncS funcS) {
