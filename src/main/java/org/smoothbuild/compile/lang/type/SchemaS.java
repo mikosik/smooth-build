@@ -6,10 +6,12 @@ import static java.util.Objects.requireNonNull;
 import java.util.Objects;
 import java.util.function.Function;
 
+import org.smoothbuild.util.collect.Named;
+
 /**
  * Polymorphic type (aka type schema).
  */
-public sealed class SchemaS implements TypelikeS
+public sealed class SchemaS implements Named
     permits FuncSchemaS {
   private final String name;
   private final VarSetS quantifiedVars;

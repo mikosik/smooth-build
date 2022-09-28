@@ -6,11 +6,13 @@ import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import java.util.Objects;
 import java.util.function.Function;
 
+import org.smoothbuild.util.collect.Named;
+
 /**
  * Monomorphic type.
  * This class and all its subclasses are immutable.
  */
-public abstract sealed class TypeS implements TypelikeS
+public abstract sealed class TypeS implements Named
     permits ArrayTS, BaseTS, FuncTS, StructTS, TupleTS, VarS {
   private final VarSetS vars;
   private final String name;
