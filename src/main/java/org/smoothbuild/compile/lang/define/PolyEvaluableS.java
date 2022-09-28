@@ -7,10 +7,14 @@ import java.util.Objects;
 import org.smoothbuild.compile.lang.base.WithLocImpl;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
-public sealed abstract class PolyEvaluableS extends WithLocImpl
+public sealed class PolyEvaluableS extends WithLocImpl
     permits NamedPolyEvaluableS {
   private final SchemaS schema;
   private final EvaluableS mono;
+
+  public PolyEvaluableS(ExprS exprS) {
+    this(new SchemaS(exprS.type()), new UnnamedDefValS(exprS));
+  }
 
   public PolyEvaluableS(SchemaS schema, EvaluableS mono) {
     super(mono.loc());

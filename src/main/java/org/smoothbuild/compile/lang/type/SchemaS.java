@@ -17,6 +17,10 @@ public sealed class SchemaS implements Named
   private final VarSetS quantifiedVars;
   private final TypeS type;
 
+  public SchemaS(TypeS type) {
+    this(type.vars(), type);
+  }
+
   public SchemaS(VarSetS quantifiedVars, TypeS type) {
     assertQuantifiedVarsArePresentInType(quantifiedVars, type);
     this.name = calculateName(quantifiedVars, type);

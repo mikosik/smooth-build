@@ -19,6 +19,7 @@ import org.smoothbuild.compile.lang.type.tool.UnusedVarsGenerator;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.OperP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
@@ -130,14 +131,13 @@ public class TypeInferrerResolve {
       case OrderP orderP -> resolve(orderP);
       case SelectP selectP -> resolve(selectP);
       case RefP refP -> resolve(refP);
-      // DefaultArgP are only present in callP.positionedArgs which is never visited during resolve.
-      case DefaultArgP defaultArgP -> throw new RuntimeException("shouldn't happen");
+      case DefaultArgP defaultArgP -> resolve(defaultArgP);
     };
   }
 
   private boolean resolve(CallP callP) {
     return resolve(callP.callee())
-        && callP.args().stream().allMatch(this::resolve)
+        && callP.positionedArgs().get().stream().allMatch(this::resolve)
         && resolveOperator(callP);
   }
 
@@ -161,11 +161,11 @@ public class TypeInferrerResolve {
     return true;
   }
 
-  private boolean resolve(RefP refP) {
-    var resolvedMonoizationMapping = mapValues(refP.monoizationMapping(), unifier::resolve);
-    refP.setMonoizationMapping(resolvedMonoizationMapping);
+  private boolean resolve(MonoizableP monoizableP) {
+    var resolvedMonoizationMapping = mapValues(monoizableP.monoizationMapping(), unifier::resolve);
+    monoizableP.setMonoizationMapping(resolvedMonoizationMapping);
     if (resolvedMonoizationMapping.values().stream().anyMatch(this::hasPrefixedVar)) {
-      logger.log(compileError(refP.loc(), "Cannot infer actual type parameters."));
+      logger.log(compileError(monoizableP.loc(), "Cannot infer actual type parameters."));
       return false;
     }
     return true;

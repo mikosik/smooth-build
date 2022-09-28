@@ -17,6 +17,7 @@ import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
+import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
@@ -24,6 +25,7 @@ import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.OperP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
@@ -55,16 +57,16 @@ public class ExprTypeUnifier {
       case DefaultArgP defaultArgP -> unifyAndMemoize(this::unifyDefaultArg, defaultArgP);
       case NamedArgP namedArgP -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP orderP -> unifyAndMemoize(this::unifyOrder, orderP);
-      case RefP refP -> unifyRef(refP);
+      case RefP refP -> unifyAndMemoize(this::unifyRef, refP);
       case SelectP selectP -> unifyAndMemoize(this::unifySelect, selectP);
       case ValP valP -> Optional.of(valP.type());
     };
   }
 
   private <T extends OperP> Optional<TypeS> unifyAndMemoize(
-      Function<T, Optional<TypeS>> inferer, T expr) {
-    var type = inferer.apply(expr);
-    type.ifPresent(expr::setTypeS);
+      Function<T, Optional<TypeS>> inferrer, T operP) {
+    var type = inferrer.apply(operP);
+    type.ifPresent(operP::setTypeS);
     return type;
   }
 
@@ -84,8 +86,8 @@ public class ExprTypeUnifier {
   private Optional<ImmutableList<ExprP>> positionedArgs(CallP callP) {
     return switch (callP.callee()) {
       case RefP refP -> bindings.get(refP.name())
-          .flatMap(refableS -> inferPositionedArgs(callP, refP, refableParams(refableS), logger));
-      default -> inferPositionedArgs(callP, null, Optional.empty(), logger);
+          .flatMap(refableS -> inferPositionedArgs(callP, refableParams(refableS), logger));
+      default -> inferPositionedArgs(callP, Optional.empty(), logger);
     };
   }
 
@@ -109,9 +111,7 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> unifyDefaultArg(DefaultArgP defaultArgP) {
-    var type = defaultArgP.exprS().type()
-        .mapVars(defaultArgP.refP().monoizationMapper());
-    return Optional.of(type);
+    return unifyMonoizable(defaultArgP, defaultArgP.polyEvaluableS().schema());
   }
 
   private Optional<TypeS> unifyNamedArg(NamedArgP namedArgP) {
@@ -146,7 +146,7 @@ public class ExprTypeUnifier {
   private Optional<? extends TypeS> unifyRef(RefP ref, RefableS r) {
     return switch (r) {
       case ItemS item -> unifyItemRef(ref, item);
-      case NamedPolyEvaluableS polyEvaluable -> unifyPolyRef(ref, polyEvaluable);
+      case NamedPolyEvaluableS polyEvaluable -> unifyMonoizable(ref, polyEvaluable.schema());
     };
   }
 
@@ -155,13 +155,11 @@ public class ExprTypeUnifier {
     return Optional.of(item.type());
   }
 
-  private Optional<TypeS> unifyPolyRef(RefP ref, NamedPolyEvaluableS evaluable) {
-    var schema = evaluable.schema();
+  private Optional<TypeS> unifyMonoizable(MonoizableP monoizableP, SchemaS schema) {
     var monoizationMapping = toMap(
         schema.quantifiedVars().asList(), v -> unifier.generateUniqueVar());
-    var mappedSchema = schema.monoize(monoizationMapping::get);
-    ref.setMonoizationMapping(monoizationMapping);
-    return Optional.of(mappedSchema);
+    monoizableP.setMonoizationMapping(monoizationMapping);
+    return Optional.of(schema.monoize(monoizationMapping::get));
   }
 
   private Optional<TypeS> unifySelect(SelectP select) {

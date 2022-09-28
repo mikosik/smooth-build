@@ -51,8 +51,6 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.define.OrderS;
-import org.smoothbuild.compile.lang.define.PolyFuncS;
-import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -157,14 +155,7 @@ public class SbTranslator {
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(
         bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader, callStack, cache, labels);
-    return sbTranslator.translateMonoizeImpl(monoizeS);
-  }
-
-  private ExprB translateMonoizeImpl(MonoizeS monoizeS) {
-    return switch (monoizeS.polyEvaluable()) {
-      case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono());
-      case PolyValS polyValS -> translateNamedVal(polyValS.mono());
-    };
+    return sbTranslator.translateExpr(monoizeS.polyEvaluable().mono());
   }
 
   private ExprB translateFunc(FuncS funcS) {

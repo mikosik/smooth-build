@@ -1,23 +1,17 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 
-public final class DefaultArgP extends OperP {
-  private final RefP refP;
-  private final ExprS exprS;
+public final class DefaultArgP extends MonoizableP {
+  private final PolyEvaluableS polyEvaluable;
 
-  public DefaultArgP(RefP refP, ExprS exprS, Loc loc) {
+  public DefaultArgP(PolyEvaluableS polyEvaluable, Loc loc) {
     super(loc);
-    this.refP = refP;
-    this.exprS = exprS;
+    this.polyEvaluable = polyEvaluable;
   }
 
-  public RefP refP() {
-    return refP;
-  }
-
-  public ExprS exprS() {
-    return exprS;
+  public PolyEvaluableS polyEvaluableS() {
+    return polyEvaluable;
   }
 }

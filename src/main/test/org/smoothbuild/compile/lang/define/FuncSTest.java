@@ -37,15 +37,11 @@ public class FuncSTest extends TestContext {
   }
 
   private ItemS paramWithDefault(String name) {
-    return param(name, Optional.of(stringS()));
+    return itemS(intTS(), name, Optional.of(stringS()));
   }
 
   private ItemS paramWithoutDefault(String name) {
-    return param(name, Optional.empty());
-  }
-
-  private ItemS param(String name, Optional<ExprS> body) {
-    return new ItemS(intTS(), name, body, loc());
+    return itemS(intTS(), name, Optional.empty());
   }
 
   private FuncS myFunc(TypeS resT, ImmutableList<ItemS> params) {

@@ -44,6 +44,7 @@ import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
+import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
@@ -90,12 +91,16 @@ public class PsTranslator {
   public ItemS translateParam(ItemP param) {
     var type = param.typeS();
     var name = param.name();
-    var body = param.body().flatMap(this::translateExpr);
+    var body = param.body().flatMap(this::translateParamBody);
     return new ItemS(type, name, body, param.loc());
   }
 
-  private Optional<NamedPolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP, NList<ItemS> params,
-      FuncTS funcT) {
+  private Optional<PolyEvaluableS> translateParamBody(ExprP expr) {
+    return translateExpr(expr).map(PolyEvaluableS::new);
+  }
+
+  private Optional<NamedPolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP,
+      NList<ItemS> params, FuncTS funcT) {
     var schema = new FuncSchemaS(funcT.vars(), funcT);
     var name = funcP.name();
     var loc = funcP.loc();
@@ -135,7 +140,7 @@ public class PsTranslator {
   }
 
   private static Optional<ExprS> translateDefaultArg(DefaultArgP defaultArg) {
-    return Optional.of(defaultArg.exprS().mapVars(defaultArg.refP().monoizationMapper()));
+    return Optional.of(translateMonoizable(defaultArg, defaultArg.polyEvaluableS()));
   }
 
   private Optional<ExprS> translateOrder(OrderP order) {
@@ -166,19 +171,20 @@ public class PsTranslator {
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemS -> new RefS(itemS.type(), ref.name(), ref.loc());
-      case NamedPolyEvaluableS evaluableS -> translateRefToPolyEvaluable(ref, evaluableS);
+      case NamedPolyEvaluableS evaluableS -> translateMonoizable(ref, evaluableS);
     };
   }
 
-  private static ExprS translateRefToPolyEvaluable(RefP ref, PolyEvaluableS polyEvaluableS) {
+  private static ExprS translateMonoizable(
+      MonoizableP monoizableP, PolyEvaluableS polyEvaluableS) {
     if (polyEvaluableS.schema().quantifiedVars().isEmpty()) {
       return polyEvaluableS.mono();
     } else {
       // cast is safe because varMap is immutable
       @SuppressWarnings("unchecked")
-      var varMap = (ImmutableMap<VarS, TypeS>) ref.monoizationMapping();
-      var type = polyEvaluableS.schema().monoize(ref.monoizationMapper());
-      return new MonoizeS(type, varMap, polyEvaluableS, ref.loc());
+      var varMap = (ImmutableMap<VarS, TypeS>) monoizableP.monoizationMapping();
+      var type = polyEvaluableS.schema().monoize(monoizableP.monoizationMapper());
+      return new MonoizeS(type, varMap, polyEvaluableS, monoizableP.loc());
     }
   }
 

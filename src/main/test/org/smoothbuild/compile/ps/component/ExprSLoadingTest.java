@@ -9,6 +9,8 @@ import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.PolyEvaluableS;
+import org.smoothbuild.compile.lang.define.UnnamedDefValS;
 import org.smoothbuild.testing.TestContext;
 
 public class ExprSLoadingTest extends TestContext {
@@ -54,24 +56,28 @@ public class ExprSLoadingTest extends TestContext {
         @Test
         public void with_reference_to_poly_val() {
           var polyVal = polyByteValS(4, varA(), "polyVal");
-          var defArgBodyMapped = monoizeS(1, varMap(varA(), intTS()), polyVal);
-          test_default_arg("polyVal", defArgBodyMapped);
+          var monoizedVal = monoizeS(1, varMap(varA(), varB()), polyVal);
+          var paramBody = new PolyEvaluableS(monoizedVal);
+          var monoizedParamBody = monoizeS(1, varMap(varB(), intTS()), paramBody);
+          test_default_arg("polyVal", monoizedParamBody);
         }
 
         @Test
         public void with_reference_to_poly_func() {
-          var polyVal = polyByteFuncS(6, varA(), "polyFunc", nlist());
-          var defArgBodyMapped = callS(1, intTS(), monoizeS(1, varMap(varA(), intTS()), polyVal));
-          test_default_arg("polyFunc()", defArgBodyMapped);
+          var polyFunc = polyByteFuncS(6, varA(), "polyFunc", nlist());
+          var monoizedFunc = monoizeS(1, varMap(varA(), varB()), polyFunc);
+          var paramBody = new PolyEvaluableS(callS(1, varB(), monoizedFunc));
+          var expected = monoizeS(1, varMap(varB(), intTS()), paramBody);
+          test_default_arg("polyFunc()", expected);
         }
 
         @Test
         public void with_reference_to_int() {
           var defArgBodyMapped = intS(1, 7);
-          test_default_arg("7", defArgBodyMapped);
+          test_default_arg("7", new UnnamedDefValS(defArgBodyMapped));
         }
 
-        private void test_default_arg(String bodyCode, ExprS defArg) {
+        private void test_default_arg(String bodyCode, ExprS expected) {
           var code = """
             B myFunc(B b = $$$) = b;
             Int result = myFunc();
@@ -87,7 +93,7 @@ public class ExprSLoadingTest extends TestContext {
               .getModuleAsDefinitions().evaluables().get("result").mono();
           ExprS actualDefArg = ((CallS) ((DefValS) result).body()).args().get(0);
           assertThat(actualDefArg)
-              .isEqualTo(defArg);
+              .isEqualTo(expected);
         }
       }
 

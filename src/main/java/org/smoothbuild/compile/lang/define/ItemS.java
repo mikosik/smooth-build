@@ -20,16 +20,16 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class ItemS extends Tanal implements RefableS {
-  private final Optional<ExprS> body;
+  private final Optional<PolyEvaluableS> body;
   private final ItemSigS sig;
 
-  public ItemS(TypeS type, String name, Optional<ExprS> body, Loc loc) {
+  public ItemS(TypeS type, String name, Optional<PolyEvaluableS> body, Loc loc) {
     super(type, name, loc);
     this.body = body;
     this.sig = new ItemSigS(type(), name());
   }
 
-  public ItemS(ItemSigS sig, Optional<ExprS> body, Loc loc) {
+  public ItemS(ItemSigS sig, Optional<PolyEvaluableS> body, Loc loc) {
     super(sig.type(), sig.nameO().get(), loc);
     this.body = body;
     this.sig = sig;
@@ -48,7 +48,7 @@ public final class ItemS extends Tanal implements RefableS {
     return sig;
   }
 
-  public Optional<ExprS> body() {
+  public Optional<PolyEvaluableS> body() {
     return body;
   }
 
@@ -61,7 +61,7 @@ public final class ItemS extends Tanal implements RefableS {
   }
 
   public ItemS mapVars(Function<VarS, TypeS> mapper) {
-    return new ItemS(type().mapVars(mapper), name(), body.map(b -> b.mapVars(mapper)), loc());
+    return new ItemS(type().mapVars(mapper), name(), body, loc());
   }
 
   @Override

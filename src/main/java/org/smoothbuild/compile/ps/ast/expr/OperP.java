@@ -5,7 +5,7 @@ import org.smoothbuild.compile.lang.base.WithLocImpl;
 import org.smoothbuild.compile.lang.type.TypeS;
 
 public sealed abstract class OperP extends WithLocImpl implements ExprP
-    permits CallP, DefaultArgP, NamedArgP, OrderP, RefP, SelectP {
+    permits CallP, MonoizableP, NamedArgP, OrderP, SelectP {
   private TypeS type;
 
   public OperP(Loc loc) {

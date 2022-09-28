@@ -3,7 +3,6 @@ package org.smoothbuild.compile.lang.define;
 import java.util.Objects;
 import java.util.function.Function;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 
@@ -14,8 +13,8 @@ import org.smoothbuild.compile.lang.type.VarS;
 public final class UnnamedDefValS extends EvaluableS {
   private final ExprS body;
 
-  public UnnamedDefValS(TypeS type, ExprS body, Loc loc) {
-    super(type, loc);
+  public UnnamedDefValS(ExprS body) {
+    super(body.type(), body.loc());
     this.body = body;
   }
 
@@ -25,7 +24,7 @@ public final class UnnamedDefValS extends EvaluableS {
 
   @Override
   public ExprS mapVars(Function<VarS, TypeS> mapper) {
-    return new UnnamedDefValS(type().mapVars(mapper), body.mapVars(b -> b.mapVars(mapper)), loc());
+    return new UnnamedDefValS(body.mapVars(b -> b.mapVars(mapper)));
   }
 
   @Override

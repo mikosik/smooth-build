@@ -90,9 +90,9 @@ import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.define.OrderS;
+import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefS;
@@ -904,12 +904,12 @@ public class TestContext {
     return ImmutableMap.of(var, type);
   }
 
-  public MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, NamedPolyEvaluableS evaluable) {
+  public MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS evaluable) {
     return monoizeS(1, varMap, evaluable);
   }
 
   public static MonoizeS monoizeS(int loc, ImmutableMap<VarS, TypeS> varMap,
-      NamedPolyEvaluableS evaluable) {
+      PolyEvaluableS evaluable) {
     var type = evaluable.schema().monoize(varMap::get);
     return new MonoizeS(type, varMap, evaluable, loc(loc));
   }
@@ -1009,8 +1009,12 @@ public class TestContext {
     return itemS(line, type, name, Optional.of(body));
   }
 
-  private ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
-    return new ItemS(type, name, body, loc(line));
+  public ItemS itemS(TypeS type, String name, Optional<ExprS> body) {
+    return itemS(1, type, name, body);
+  }
+
+  public ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
+    return new ItemS(type, name, body.map(PolyEvaluableS::new), loc(line));
   }
 
   public PolyFuncS polyByteFuncS(AnnS ann, int line, TypeS resT, String name, NList<ItemS> params) {

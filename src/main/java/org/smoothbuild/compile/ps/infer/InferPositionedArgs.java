@@ -18,7 +18,6 @@ import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
-import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
@@ -28,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 
 public class InferPositionedArgs {
   public static Optional<ImmutableList<ExprP>> inferPositionedArgs(CallP call,
-      RefP refP, Optional<NList<ItemS>> params, Logger logger) {
+      Optional<NList<ItemS>> params, Logger logger) {
     var logBuffer = new LogBuffer();
     var positionalArgs = leadingPositionalArgs(call);
     logBuffer.logAll(findPositionalArgAfterNamedArgError(call));
@@ -38,7 +37,7 @@ public class InferPositionedArgs {
     if (logBuffer.containsProblem()) {
       return Optional.empty();
     }
-    return positionedArgs(call, refP, params, positionalArgs.size(), logger);
+    return positionedArgs(call, params, positionalArgs.size(), logger);
   }
 
   private static ImmutableList<ExprP> leadingPositionalArgs(CallP call) {
@@ -48,7 +47,7 @@ public class InferPositionedArgs {
         .collect(toImmutableList());
   }
 
-  private static Optional<ImmutableList<ExprP>> positionedArgs(CallP call, RefP refP,
+  private static Optional<ImmutableList<ExprP>> positionedArgs(CallP call,
       Optional<NList<ItemS>> params, int positionalArgsCount, Logger logBuffer) {
     var args = call.args();
     // Case where positional args count exceeds function params count is reported as error
@@ -70,7 +69,7 @@ public class InferPositionedArgs {
         var defaultArg = params.get().get(i).body();
         if (defaultArg.isPresent()) {
           var exprS = defaultArg.get();
-          result.set(i, new DefaultArgP(refP, exprS, exprS.loc()));
+          result.set(i, new DefaultArgP(exprS, exprS.loc()));
         } else {
           error = true;
           logBuffer.log(paramsMustBeSpecifiedError(call, i, params.get()));
