@@ -37,15 +37,15 @@ public class TypeInferrer {
 
   public TypeInferrer(Bindings<Optional<TDefS>> types,
       Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger) {
-    this(new TypePsTranslator(types), bindings, logger);
+    this(new TypePsTranslator(types), bindings, logger, new Unifier());
   }
 
   public TypeInferrer(TypePsTranslator typePsTranslator,
-      Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger) {
+      Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger, Unifier unifier) {
     this.typePsTranslator = typePsTranslator;
     this.bindings = bindings;
     this.logger = logger;
-    this.unifier = new Unifier();
+    this.unifier = unifier;
   }
 
   public static Optional<StructTS> inferStructType(Bindings<Optional<TDefS>> types,
@@ -85,7 +85,7 @@ public class TypeInferrer {
 
   private Optional<SchemaS> inferValSchema(NamedValP val) {
     return translateOrGenerateT(val.type())
-        .flatMap(r -> unifyBodyAndResolve(val, r, bindings, this::resolveValSchema));
+        .flatMap(r -> unifyBodyAndResolve(val, r, this::resolveValSchema));
   }
 
   private Optional<SchemaS> resolveValSchema(NamedValP namedValP, TypeS evalT,
@@ -96,12 +96,12 @@ public class TypeInferrer {
   // default arg
 
   private void inferDefaultArg(ItemP param) {
-    new TypeInferrer(typePsTranslator, bindings, logger)
+    new TypeInferrer(typePsTranslator, bindings, logger, new Unifier())
         .inferDefaultArgImpl(param.typeS(), param);
   }
 
   private void inferDefaultArgImpl(TypeS type, ItemP param) {
-    unifyBodyAndResolve(param, type, bindings, this::resolveDefaultArg);
+    unifyBodyAndResolve(param, type, this::resolveDefaultArg);
   }
 
   private Optional<Void> resolveDefaultArg(ItemP param, TypeS type,
@@ -147,8 +147,12 @@ public class TypeInferrer {
         .forEach(this::inferDefaultArg);
     var resT = translateOrGenerateT(func.resT());
 
-    return resT.flatMap(r -> unifyBodyAndResolve(
-        func, r, funcBodyScopeBindings(params), this::resolveFuncSchema));
+    return resT.flatMap(
+        r -> funcBodyTypeInferrer(params).unifyBodyAndResolve(func, r, this::resolveFuncSchema));
+  }
+
+  private TypeInferrer funcBodyTypeInferrer(NList<ItemP> params) {
+    return new TypeInferrer(typePsTranslator, funcBodyScopeBindings(params), logger, unifier);
   }
 
   private ScopedBindings<Optional<? extends RefableS>> funcBodyScopeBindings(NList<ItemP> params) {
@@ -169,8 +173,7 @@ public class TypeInferrer {
 
   // body
 
-  private <R extends RefableP, T> Optional<T> unifyBodyAndResolve(
-      R refable, TypeS evalT, Bindings<? extends Optional<? extends RefableS>> bindings,
+  private <R extends RefableP, T> Optional<T> unifyBodyAndResolve(R refable, TypeS evalT,
       TriFunction<R, TypeS, Bindings<? extends Optional<? extends RefableS>>, Optional<T>> resolver) {
     if (refable.body().isPresent()) {
       return new ExprTypeUnifier(unifier, bindings, logger)
