@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
+import static org.smoothbuild.compile.lang.define.ItemS.mapParams;
+
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -21,7 +23,7 @@ public final class SyntCtorS extends FuncS {
   @Override
   public ExprS mapVars(Function<VarS, TypeS> mapper) {
     return new SyntCtorS(
-        type().mapVars(mapper), modPath(), name(), ItemS.mapParams(params(), mapper), loc());
+        type().mapVars(mapper), modPath(), name(), mapParams(params(), mapper), loc());
   }
 
   @Override

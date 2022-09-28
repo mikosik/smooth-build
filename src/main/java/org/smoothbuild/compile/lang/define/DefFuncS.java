@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
+import static org.smoothbuild.compile.lang.define.ItemS.mapParams;
+
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -28,7 +30,7 @@ public final class DefFuncS extends FuncS {
 
   @Override
   public ExprS mapVars(Function<VarS, TypeS> mapper) {
-    return new DefFuncS(type().mapVars(mapper), modPath(), name(), ItemS.mapParams(params(), mapper),
+    return new DefFuncS(type().mapVars(mapper), modPath(), name(), mapParams(params(), mapper),
         body.mapVars(b -> b.mapVars(mapper)), loc());
   }
 
