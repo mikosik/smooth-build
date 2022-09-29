@@ -27,11 +27,6 @@ public final class ItemS extends Tanal implements RefableS {
     this.body = body;
   }
 
-  public ItemS(ItemSigS sig, Optional<PolyEvaluableS> body, Loc loc) {
-    super(sig.type(), sig.nameO().get(), loc);
-    this.body = body;
-  }
-
   public static NList<ItemS> mapParams(NList<ItemS> params, Function<VarS, TypeS> mapper) {
     return params.map(i -> i.mapVars(mapper));
   }
