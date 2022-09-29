@@ -178,7 +178,7 @@ public class TypeInferrer {
     if (refable.body().isPresent()) {
       return new ExprTypeUnifier(unifier, bindings, logger)
           .unifyExpr(refable.body().get())
-          .flatMap(bodyT -> unifyBodyWithEvalAndResolve(refable, evalT, bodyT, bindings, resolver));
+          .flatMap(bodyT -> unifyBodyWithEvalAndResolve(refable, evalT, bodyT, resolver));
     } else {
       return resolver.apply(refable, evalT, bindings);
     }
@@ -186,7 +186,6 @@ public class TypeInferrer {
 
   private <R extends RefableP, T> Optional<T> unifyBodyWithEvalAndResolve(
       R refable, TypeS evalT, TypeS bodyT,
-      Bindings<? extends Optional<? extends RefableS>> bindings,
       TriFunction<R, TypeS, Bindings<? extends Optional<? extends RefableS>>, Optional<T>> resolver) {
     try {
       unifier.unify(evalT, bodyT);
