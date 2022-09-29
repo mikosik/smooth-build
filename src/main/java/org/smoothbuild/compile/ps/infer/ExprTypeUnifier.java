@@ -59,7 +59,7 @@ public class ExprTypeUnifier {
       case OrderP orderP -> unifyAndMemoize(this::unifyOrder, orderP);
       case RefP refP -> unifyAndMemoize(this::unifyRef, refP);
       case SelectP selectP -> unifyAndMemoize(this::unifySelect, selectP);
-      case ValP valP -> Optional.of(valP.type());
+      case ValP valP -> Optional.of(valP.typeS());
     };
   }
 
