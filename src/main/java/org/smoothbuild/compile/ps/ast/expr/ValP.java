@@ -13,6 +13,7 @@ public sealed abstract class ValP extends WithLocImpl implements ExprP
     this.typeS = typeS;
   }
 
+  @Override
   public TypeS typeS() {
     return typeS;
   }

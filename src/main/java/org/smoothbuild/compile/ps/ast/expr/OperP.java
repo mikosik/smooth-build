@@ -12,7 +12,8 @@ public sealed abstract class OperP extends WithLocImpl implements ExprP
     super(loc);
   }
 
-  public TypeS typeS(){
+  @Override
+  public TypeS typeS() {
     return type;
   }
 
