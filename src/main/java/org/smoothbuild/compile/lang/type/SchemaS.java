@@ -42,6 +42,11 @@ public sealed class SchemaS implements Named
     return name;
   }
 
+  /**
+   * Type variables that are quantified with for-all quantifier.
+   * Other variables present in this schema are type variables which are quantified variables
+   * of enclosing environment (enclosing function or value).
+   */
   public VarSetS quantifiedVars() {
     return quantifiedVars;
   }
