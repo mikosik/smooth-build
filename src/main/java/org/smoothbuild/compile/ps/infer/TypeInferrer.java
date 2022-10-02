@@ -168,9 +168,9 @@ public class TypeInferrer {
       var resolvedParamT = resolvedParamTs.get(i);
       var param = params.get(i);
       param.body().ifPresent(body -> {
-        var paramT = resolvedParamT.mapVars(v -> paramMapping.getOrDefault(v, v));
+        var paramT = resolvedParamT.mapVars(paramMapping);
         var initializerMapping = toMap(body.typeS().vars(), v -> paramUnifier.newTempVar());
-        var bodyT = body.typeS().mapVars(v -> initializerMapping.getOrDefault(v, v));
+        var bodyT = body.typeS().mapVars(initializerMapping);
         try {
           paramUnifier.unify(paramT, bodyT);
         } catch (UnifierExc e) {

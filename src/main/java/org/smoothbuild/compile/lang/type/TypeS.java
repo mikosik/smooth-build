@@ -3,6 +3,7 @@ package org.smoothbuild.compile.lang.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -38,6 +39,10 @@ public abstract sealed class TypeS implements Named
 
   public TypeS mapComponents(Function<TypeS, TypeS> mapper) {
     return this;
+  }
+
+  public TypeS mapVars(Map<VarS, VarS> map) {
+    return mapVars(v -> map.getOrDefault(v, v));
   }
 
   public TypeS mapVars(Function<VarS, TypeS> varMapper) {

@@ -107,7 +107,7 @@ public class TypeInferrerResolve {
     var varsNotToRename = resolvedT.vars().filter(v -> !shouldRename.test(v));
     var varGenerator = new UnusedVarsGenerator(varsNotToRename);
     var mapping = toMap(varsToRename, pv -> varGenerator.next());
-    var resolvedAndRenamedEvalT = resolvedT.mapVars(v -> mapping.getOrDefault(v, v));
+    var resolvedAndRenamedEvalT = resolvedT.mapVars(mapping);
     unifier.unifySafe(resolvedAndRenamedEvalT, resolvedT);
     return resolvedAndRenamedEvalT;
   }
