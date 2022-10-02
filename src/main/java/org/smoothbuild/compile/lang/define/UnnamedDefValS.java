@@ -1,10 +1,6 @@
 package org.smoothbuild.compile.lang.define;
 
 import java.util.Objects;
-import java.util.function.Function;
-
-import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
 
 /**
  * Unnamed Defined value (one that has a body).
@@ -20,11 +16,6 @@ public final class UnnamedDefValS extends EvaluableS {
 
   public ExprS body() {
     return body;
-  }
-
-  @Override
-  public ExprS mapVars(Function<VarS, TypeS> mapper) {
-    return new UnnamedDefValS(body.mapVars(b -> b.mapVars(mapper)));
   }
 
   @Override

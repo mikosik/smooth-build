@@ -1,9 +1,6 @@
 package org.smoothbuild.compile.lang.define;
 
-import static org.smoothbuild.util.collect.Maps.mapValues;
-
 import java.util.Objects;
-import java.util.function.Function;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -19,15 +16,6 @@ public record MonoizeS(TypeS type, ImmutableMap<VarS, TypeS> varMap, PolyEvaluab
   @Override
   public String label() {
     return "<" + type + ">";
-  }
-
-  @Override
-  public ExprS mapVars(Function<VarS, TypeS> mapper) {
-    return new MonoizeS(type().mapVars(mapper), mapVarMap(mapper), polyEvaluable, loc);
-  }
-
-  private ImmutableMap<VarS, TypeS> mapVarMap(Function<VarS, TypeS> mapper) {
-    return mapValues(varMap, t -> t.mapVars(mapper));
   }
 
   @Override

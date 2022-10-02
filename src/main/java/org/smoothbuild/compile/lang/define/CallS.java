@@ -1,14 +1,10 @@
 package org.smoothbuild.compile.lang.define;
 
-import static org.smoothbuild.util.collect.Lists.map;
-
 import java.util.Objects;
-import java.util.function.Function;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
 
 import com.google.common.collect.ImmutableList;
 
@@ -32,12 +28,6 @@ public record CallS(TypeS type, ExprS callee, ImmutableList<ExprS> args, Loc loc
   @Override
   public String label() {
     return "()";
-  }
-
-  @Override
-  public ExprS mapVars(Function<VarS, TypeS> mapper) {
-    return new CallS(type().mapVars(mapper), callee.mapVars(mapper),
-        map(args, a -> a.mapVars(mapper)), loc);
   }
 
   @Override

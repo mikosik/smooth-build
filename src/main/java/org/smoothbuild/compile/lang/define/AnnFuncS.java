@@ -1,14 +1,9 @@
 package org.smoothbuild.compile.lang.define;
 
-import static org.smoothbuild.compile.lang.define.ItemS.mapParams;
-
 import java.util.Objects;
-import java.util.function.Function;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.FuncTS;
-import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.util.collect.NList;
 
 /**
@@ -26,12 +21,6 @@ public final class AnnFuncS extends FuncS {
 
   public AnnS ann() {
     return ann;
-  }
-
-  @Override
-  public AnnFuncS mapVars(Function<VarS, TypeS> mapper) {
-    return new AnnFuncS(
-        ann, type().mapVars(mapper), modPath(), name(), mapParams(params(), mapper), loc());
   }
 
   @Override

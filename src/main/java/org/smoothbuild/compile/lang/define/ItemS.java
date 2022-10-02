@@ -5,13 +5,10 @@ import static org.smoothbuild.util.collect.Lists.map;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Tanal;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -25,10 +22,6 @@ public final class ItemS extends Tanal implements RefableS {
   public ItemS(TypeS type, String name, Optional<PolyEvaluableS> body, Loc loc) {
     super(type, name, loc);
     this.body = body;
-  }
-
-  public static NList<ItemS> mapParams(NList<ItemS> params, Function<VarS, TypeS> mapper) {
-    return params.map(i -> i.mapVars(mapper));
   }
 
   @Override
@@ -46,10 +39,6 @@ public final class ItemS extends Tanal implements RefableS {
 
   public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
     return map(items, ItemS::type);
-  }
-
-  public ItemS mapVars(Function<VarS, TypeS> mapper) {
-    return new ItemS(type().mapVars(mapper), name(), body, loc());
   }
 
   @Override
