@@ -19,6 +19,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.StructP;
+import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValP;
@@ -98,26 +99,25 @@ public class TypeInferrer {
 
   private boolean inferParamDefaultValues(NList<ItemP> params) {
     return params.stream()
-        .filter(p -> p.body().isPresent())
+        .flatMap(p -> p.body().stream())
         .allMatch(this::inferParamDefaultVal);
   }
 
-  private boolean inferParamDefaultVal(ItemP param) {
+  private boolean inferParamDefaultVal(ExprP body) {
     return new TypeInferrer(typePsTranslator, bindings, logger, new Unifier())
-        .inferDefaultValImpl(param);
+        .inferParamDefaultValImpl(body);
   }
 
-  private boolean inferDefaultValImpl(ItemP param) {
-    if (param.body().isPresent()) {
-      var body = param.body().get();
-      var bodyT = new ExprTypeUnifier(unifier, bindings, logger).unifyExpr(body);
-      if (bodyT.isPresent()) {
-        return new TypeInferrerResolve(unifier, logger, bindings).resolveParamBody(body);
-      } else {
-        return false;
-      }
-    }
-    return true;
+  private boolean inferParamDefaultValImpl(ExprP body) {
+    return new ExprTypeUnifier(unifier, bindings, logger)
+        .unifyExpr(body)
+        .map(t -> resolveParamBody(body))
+        .orElse(false);
+  }
+
+  private boolean resolveParamBody(ExprP body) {
+    return new TypeInferrerResolve(unifier, logger, bindings)
+        .resolveParamBody(body);
   }
 
   // func
