@@ -59,7 +59,7 @@ public class TypeInferrerResolve {
     return Optional.of(new SchemaS(resolvedEvalT));
   }
 
-  public boolean resolveParamBody(ExprP body) {
+  public boolean resolveParamDefaultValue(ExprP body) {
     if (body instanceof OperP operP) {
       var resolvedType = unifier.resolve(operP.typeS());
       operP.setTypeS(renameVars(resolvedType, v -> true));

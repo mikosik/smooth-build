@@ -100,24 +100,24 @@ public class TypeInferrer {
   private boolean inferParamDefaultValues(NList<ItemP> params) {
     return params.stream()
         .flatMap(p -> p.body().stream())
-        .allMatch(this::inferParamDefaultVal);
+        .allMatch(this::inferParamDefaultValue);
   }
 
-  private boolean inferParamDefaultVal(ExprP body) {
+  private boolean inferParamDefaultValue(ExprP body) {
     return new TypeInferrer(typePsTranslator, bindings, logger, new Unifier())
-        .inferParamDefaultValImpl(body);
+        .inferParamDefaultValueImpl(body);
   }
 
-  private boolean inferParamDefaultValImpl(ExprP body) {
+  private boolean inferParamDefaultValueImpl(ExprP body) {
     return new ExprTypeUnifier(unifier, bindings, logger)
         .unifyExpr(body)
-        .map(t -> resolveParamBody(body))
+        .map(t -> resolveParamDefaultValue(body))
         .orElse(false);
   }
 
-  private boolean resolveParamBody(ExprP body) {
+  private boolean resolveParamDefaultValue(ExprP body) {
     return new TypeInferrerResolve(unifier, logger, bindings)
-        .resolveParamBody(body);
+        .resolveParamDefaultValue(body);
   }
 
   // func
