@@ -85,7 +85,7 @@ public class TypeInferrer {
   }
 
   private Optional<SchemaS> inferValSchema(NamedValP val) {
-    return translateOrGenerateT(val.type())
+    return translateOrGenerateTempVar(val.type())
         .flatMap(r -> unifyBodyAndResolve(val, r, this::resolveValSchema));
   }
 
@@ -136,7 +136,7 @@ public class TypeInferrer {
     if (!inferParamTs(params)) {
       return Optional.empty();
     }
-    var resT = translateOrGenerateT(func.resT());
+    var resT = translateOrGenerateTempVar(func.resT());
     var funcSchemaS = resT.flatMap(
         r -> funcBodyTypeInferrer(params).unifyBodyAndResolve(func, r, this::resolveFuncSchema));
     funcSchemaS.ifPresent(schema -> detectTypeErrorsBetweenParamAndItsDefaultValue(schema, params));
@@ -226,7 +226,7 @@ public class TypeInferrer {
 
   // helpers
 
-  private Optional<TypeS> translateOrGenerateT(Optional<TypeP> typeP) {
+  private Optional<TypeS> translateOrGenerateTempVar(Optional<TypeP> typeP) {
     return typeP.map(typePsTranslator::translate)
         .orElseGet(() -> Optional.of(unifier.newTempVar()));
   }
