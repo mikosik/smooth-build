@@ -20,8 +20,6 @@ import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.ValP;
 import org.smoothbuild.util.bindings.Bindings;
 
-import com.google.common.base.Predicate;
-
 /**
  * Infers unit type (which is empty tuple) for each quantified var
  * in any call to polymorphic function when that quantified var:
@@ -65,8 +63,8 @@ public class UnitTypeInferrer {
 
   private void inferRef(RefP ref) {
     if (bindings.get(ref.name()).get() instanceof PolyFuncS polyFuncS) {
-      Predicate<VarS> presentOnlyInParam = v -> !polyFuncS.mono().type().res().vars().contains(v);
-      var paramOnlyVars = filterKeys(ref.monoizationMapping(), presentOnlyInParam);
+      var resultVars = polyFuncS.mono().type().res().vars();
+      var paramOnlyVars = filterKeys(ref.monoizationMapping(), v -> !resultVars.contains(v));
       for (var type : paramOnlyVars.values()) {
         var resolved = unifier.resolve(type);
         resolved.vars().stream()
