@@ -3,19 +3,20 @@
 Smooth uses `build.smooth` file located in project's root directory as
 a description of project's build process.
 `build.smooth` files are written in (statically typed and functional) smooth language.
-One of the simplest non trivial build files is:
+One of the simplest non-trivial build files is:
 
 ```
-release = files("src") | javac() | jar();
+release = projectFiles("src") | javac() | jar();
 ```
 
-This script defines `release` value which is calculated by performing following tasks:
-
- * Invoking `files` function that takes all files (recursively)
- from `src` directory located at project's root.
- Project root is a directory containing `build.smooth` file.
- * Passing them to `javac` function that compiles those files.
- * Passing compiled files to `jar` function that packs them into jar binary.
+This script defines value `release` which body contains function calls separated by `|`.
+Separator `|` means that expression on the left (of `|`) is passed as the first argument
+to function call on the right. So in our example call to [projectFiles](api/projectFiles.md) 
+function returns all files from `src` directory located at project's root.
+That result is passed as argument to call to [javac](api/javac.md) function that invokes java 
+compiler and compiles all the files.
+Result returned from [javac](api/javac.md) call is then passed as argument to 
+[jar](api/jar.md) function which compresses those files into a jar file.
 
 You can build `release` (evaluate `release` value) from command line by running:
 
@@ -30,20 +31,6 @@ That location is printed to console at the end of build process:
 ```
 Saving artifact(s)
   release -> '.smooth/artifacts/release'
-```
-
-If you want to choose a different name for produced artifact file than default (= value name), 
-you can do the following.
-
-```
-release = files("src") | javac() | jar() | file("myApp.jar");
-```
-
-and it will produce following output during build:
-
-```
-Saving artifact(s)
-  release -> '.smooth/artifacts/release/myApp.jar'
 ```
 
 If you want to try examples yourself then
@@ -63,8 +50,8 @@ Note that there's ugly duplicated code in this example.
 We make it clean further in this tutorial for now we just focus on parallelism. 
 
 ```
-main = files("src-main") | javac() | jar();
-deps = files("src-deps") | javac() | jar();
+main = projectFiles("src-main") | javac() | jar();
+deps = projectFiles("src-deps") | javac() | jar();
 ```
 
 As both functions (`main` and `deps`) do not depend on each other
@@ -77,7 +64,7 @@ It is enough to ask smooth to build those jars with `smooth build main deps`.
 If you run build command twice for our initial example
 
 ```
-release = files("src") | javac() | jar();
+release = projectFiles("src") | javac() | jar();
 ```
 
 you will notice that second run completes almost instantly.
@@ -85,10 +72,9 @@ That's because evaluation of `release` has been cached by smooth.
 This is nothing extraordinary as most build tools reuse result
 from previous execution.
 However, smooth is much smarter.
-Its cache system is much fine-grained as it keeps results
-of each function call it has ever executed and value it has evaluated.
-When it has to execute given call (function plus its arguments) again
-it just takes result from the cache.
+Its cache system is much fine-grained as it keeps on disk result
+of each function call (function plus its arguments).
+When it has to evaluate given call again it simply takes result from the cache.
 
 You can see how it works by running build for our initial example,
 then changing one of java files in `src` directory by adding empty
@@ -109,7 +95,7 @@ Now if you revert changes you introduced to mentioned java file
 and run build once again then result will be instantaneous.
 All function calls (function plus actual argument values) have been already executed
 during previous build runs so they are taken from cache.
-The only exception is `files("src")` call which reads files from disk
+The only exception is `projectFiles("src")` call which reads files from disk
 so its result is never cached between builds.
 
 Such solution is powerful as it gives you access to any build result you have ever executed.
@@ -120,19 +106,19 @@ and run build command that will provide results instantly.
 
 Smooth language is statically typed which means all types are known at compile time.
 It is also strongly typed, so it is not possible to assign value of one type
-to value of different type unless the former is convertible to the latter.
+to value of different type.
 First let's discuss all types available in smooth language.
 
 #### Base types
 Base types are predefined by the language (cannot be defined by user).
-Currently, we have following base types: Bool, String, Int, Blob, Nothing.
+Currently, we have following base types: Bool, String, Int, Blob.
 
 ##### _Bool_
-Boolean value that can be either `true` or `false`.
-The only values of that type are defined in standard library as:
+Boolean is a type with two values:
 [true](api/true.md)
 and
 [false](api/false.md).
+
 
 ##### _String_
 String is a sequence of characters.
@@ -145,11 +131,11 @@ String welcomeString = "Hello World";
 
 ##### _Int_
 Int is an arbitrary-precision integer.
-String value can be defined using Int literal,
+Int value can be defined using Int literal,
 which is a sequence of decimal digits optionally prefixed with minus sign (`-`).
 
 ```
-Int favoriteNumber = 123;
+Int favoriteNumber = 17;
 ```
 
 ##### _Blob_
@@ -162,11 +148,6 @@ It is allowed to use both capital and small letters.
 ```
 Blob binaryData = 0x48656C6C6F;
 ```
-
-##### _Nothing_
-Nothing is a type that is convertible to any type.
-It is not possible to create value of such type.
-This sounds strange but reasons for such type are explain below when discussing array types.
 
 #### Struct types
 Struct is a compound of named values known as its fields (like in most programming languages).
@@ -190,16 +171,15 @@ Dog {
 ```
 
 Definition of each struct automatically generates constructor for that struct.
-Constructor of given struct is a function that
- - returns value of given struct type
- - has the same name as given struct with first letter lowercased
- - has parameter for each struct's field with the same name and type as that field
-
-Let's create some value of type Person which we defined above as struct.
 
 ```
 Person person = person("John", "Doe");
 ```
+
+As one can guess constructor of given struct is a function that
+ - returns value of given struct type
+ - has the same name as given struct with first letter lowercased
+ - has parameter for each struct's field with the same name and type as that field
 
 Apart from being automatically generated, constructor is an ordinary function and
 behaves exactly like any other function.
@@ -213,7 +193,7 @@ String name = person.lastName;
 #### Array types
 Array is an ordered sequence of elements. Each element has the same type.
 Array value can be defined using array literal,
-which is a comma separated sequence of values enclosed in square brackets.
+which is a comma separated sequence of values enclosed in square brackets `[]`.
 Name of array type is name of its element type enclosed in square brackets.
 Let's create array of `String`s:
 
@@ -221,39 +201,11 @@ Let's create array of `String`s:
 [String] friends = [ "John", "Kate", "Alice" ];
 ```
 
-It's possible to nest arrays without any limit.
+It is possible to nest arrays without any limit.
 Below example of two level deep array (array of arrays of `String`).
 
 ```
 [[String]] groups = [ [ "circle" ], [ "triangle" ], [ "square", "rectangle" ] ];
-```
-
-Arrays are [covariant](https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)) which means that if value of type `A` can be assigned to value of type `B`, then array of type `[A]` (array of elements of type A) can be assigned to array of type `[B]`.
-
-One corner case of array types is empty array.
-As empty array does not hold any elements, it raises question what is the type of such empty array.
-Solution is pretty simple - empty array has type `[Nothing]`.
-
-```
-[Nothing] emptyArray = [];
-```
-
-Based on the fact that arrays are covariant and Nothing type is convertible to any other type,
-then empty array is assignable to any other array.
-
-```
-[Nothing] emptyArray = [];
-[String] strings = emptyArray;
-```
-
-#### Polymorphic functions
-
-Smooth allows declaring polymorphic functions.
-To define type variable simply use a single upper case letter as its type.
-Below declaration of `identity` function that returns its only parameter.
-
-```
-A identity(A value) = value;
 ```
 
 #### Type inference
@@ -279,7 +231,7 @@ strings = [ "dog", "cat", "donkey" ];
 Let's look once again at `release` value that we defined at the beginning of this tutorial.
 
 ```
-release = files("src") | javac() | jar();
+release = projectFiles("src") | javac() | jar();
 ```
 
 It uses function chaining (represented by pipe symbol `|`) to pass function call result as
@@ -288,7 +240,7 @@ In fact function chaining is just syntactic sugar for more standard function cal
 We can refactor above function definition to:
 
 ```
-release = jar(javac(files("src")));
+release = jar(javac(projectFiles("src")));
 ```
 
 This version is less readable despite being more familiar to people
@@ -298,34 +250,35 @@ We can define our own functions in `build.smooth` same way we defined values so 
 Let's refactor our initial example by splitting it into two functions and adding result types:
 
 ```
-[File] classes(String sourcePath) = files(sourcePath) | javac();
+[File] classes(String sourcePath) = projectFiles(sourcePath) | javac();
 File release = jar(classes("src"));
 ```
 
 We defined function `classes` that takes one `String` parameter being path to source file dir
-and compiles those files and returns as an array of `File`. 
+and compiles those files and returns as an array of `File`s. 
 
 This way we can build our own set of reusable functions.
 For example:
 
 ```
-javaJar(String srcPath) = files(srcPath) | javac() | jar();
+javaJar(String srcPath) = projectFiles(srcPath) | javac() | jar();
 main = javaJar("src/main");
 other = javaJar("src/other"); 
 ```
 
 #### Function parameter default argument
 
-When we define function parameter we can provide default argument for some of them.
+When we define function we can provide default value for some parameters.
 This way call to such function does not have to provide value for such parameters.
 
-Let's create function that creates text file:
+Let's create function that creates text file. Its `name` parameter has default value.
 
 ```
-File textFile(String text, String name = "file.txt") = file(toBlob(text), name);
+File textFile(String text, String name = "file.txt") 
+  = file(toBlob(text), name);
 ```
 
-We can call it without specifying `name` parameter as it has default argument:
+We can call it without specifying `name` parameter as it has default value:
 
 ```
 File myFile = textFile("I love text files.");
@@ -337,12 +290,48 @@ but we can also override default argument by specifying value for `name` paramet
 File myFile = textFile("I love text files.", "secret.txt");
 ```
 
-If a function has more than one parameter with default argument, and we want to specify
-values only for some of them then we can select those parameters by prefixing
-argument with parameter name and equal sign `=`. For example:
+So far our example exercised default value of parameter that comes last on
+parameter list. 
+However, when we skip some argument(s) in the middle of the list
+we need to inform compiler which are missing.
+If argument listed on n-th place in function call should not be assigned
+to parameter that is on n-th place in function signature then
+we have to explicitly provide name of parameter to which it should be assigned.
+
+For example function [javac](api/javac.md) 
+from [standard library](api.md) which signature is:
+```
+[File] javac(
+  [File] srcs,
+  [File] libs = [],
+  String source = "1.8",
+  String target = "1.8",
+  [String] options = [],
+)
+```
+
+can be invoked as
 
 ```
-File myFile = textFile("I love text files.", name="secret.txt");
+files = projectFiles("src");
+classes = javac(files, source="1.5");
+```
+
+### Polymorphism
+
+Smooth allows declaring polymorphic functions and values.
+To define type variable simply use a single upper case letter as its name.
+Below declaration of [id](api/id.md) function from [standard library](api.md) 
+that returns its only parameter.
+
+```
+A identity(A value) = value;
+```
+
+Example of polymorphic value can be:
+
+```
+[A] emptyArray = [];
 ```
 
 ### Trailing commas
