@@ -17,6 +17,17 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 import com.google.common.collect.Sets;
 
+/**
+ * Unifier allows unifying types and type parameters, so it is possible to infer types.
+ *
+ * Unifier treats differently VarS and TempVarS.
+ * VarS represents type parameter that is fixed and any unification with type different
+ * from itself causes error. For example VarS(A) can represent type of function parameter so
+ * unifying it with VarS(B) (type of different parameter) is type error.
+ * TempVarS is type variable that is unknown but can be inferred during unification. For example
+ * TempVarS(1) can represent result type of function which doesn't specify its result type.
+ * We can unify it with String and infer its type.
+ */
 public class Unifier {
   private final Map<VarS, Unified> varToUnified;
   private int tempVarCounter;
