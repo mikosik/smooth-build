@@ -9,7 +9,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
  * Defined value (one that has a body).
  * This class is immutable.
  */
-public final class DefValS extends NamedValS {
+public final class DefValS extends ValS {
   private final ExprS body;
 
   public DefValS(TypeS type, ModPath modPath, String name, ExprS body, Loc loc) {

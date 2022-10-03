@@ -49,13 +49,13 @@ import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.UnnamedDefValS;
+import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
@@ -117,7 +117,7 @@ public class SbTranslator {
       case FuncS funcS -> translateFunc(funcS);
       case IntS intS -> translateAndCacheNal(intS, this::translateInt);
       case MonoizeS monoizeS -> translateMonoize(monoizeS);
-      case NamedValS namedValS -> translateNamedVal(namedValS);
+      case ValS valS -> translateVal(valS);
       case OrderS orderS -> translateAndCacheNal(orderS, this::translateOrder);
       case RefS refS -> translateAndCacheNal(refS, this::translateRef);
       case SelectS selectS -> translateAndCacheNal(selectS, this::translateSelect);
@@ -246,13 +246,13 @@ public class SbTranslator {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateNamedVal(NamedValS namedValS) {
-    var key = new CacheKey(namedValS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateNamedValImpl(namedValS));
+  private ExprB translateVal(ValS valS) {
+    var key = new CacheKey(valS.name(), typeSbTranslator.varMap());
+    return computeIfAbsent(cache, key, name -> translateValImpl(valS));
   }
 
-  private ExprB translateNamedValImpl(NamedValS namedValS) {
-    return switch (namedValS) {
+  private ExprB translateValImpl(ValS valS) {
+    return switch (valS) {
       case AnnValS annValS -> translateAnnVal(annValS);
       case DefValS defValS -> translateExpr(defValS.body());
     };

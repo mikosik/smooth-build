@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.bytecode.BytecodeModule;
 import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.compile.lang.define.NamedValS;
+import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
@@ -58,7 +58,7 @@ public class AcceptanceTestCase extends TestContext {
   private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
-  private Optional<Map<NamedValS, InstB>> artifacts;
+  private Optional<Map<ValS, InstB>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
@@ -134,7 +134,7 @@ public class AcceptanceTestCase extends TestContext {
     return newArrayList(artifactsMap.values()).get(index);
   }
 
-  private Map<NamedValS, InstB> artifactsMap() {
+  private Map<ValS, InstB> artifactsMap() {
     if (artifacts == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }

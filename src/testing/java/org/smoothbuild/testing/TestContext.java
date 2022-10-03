@@ -90,7 +90,6 @@ import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
@@ -99,6 +98,7 @@ import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
+import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.BlobTS;
 import org.smoothbuild.compile.lang.type.BoolTS;
@@ -1107,8 +1107,8 @@ public class TestContext {
     return polyS(defValS("emptyArray", orderS(varA())));
   }
 
-  private PolyValS polyS(NamedValS namedValS) {
-    return polyValS(schemaS(namedValS.type()), namedValS);
+  private PolyValS polyS(ValS valS) {
+    return polyValS(schemaS(valS.type()), valS);
   }
 
   public SchemaS schemaS(TypeS typeS) {

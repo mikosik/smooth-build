@@ -52,7 +52,7 @@ import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
-import org.smoothbuild.compile.ps.ast.refable.NamedValP;
+import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
 import org.smoothbuild.util.collect.NList;
@@ -67,15 +67,15 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<NamedPolyEvaluableS> translateVal(ModPath path, NamedValP namedValP, TypeS type) {
+  public Optional<NamedPolyEvaluableS> translateVal(ModPath path, ValP valP, TypeS type) {
     var schema = new SchemaS(type);
-    var name = namedValP.name();
-    var loc = namedValP.loc();
-    if (namedValP.ann().isPresent()) {
-      var ann = translateAnn(namedValP.ann().get());
+    var name = valP.name();
+    var loc = valP.loc();
+    if (valP.ann().isPresent()) {
+      var ann = translateAnn(valP.ann().get());
       return Optional.of(polyValS(schema, new AnnValS(ann, schema.type(), path, name, loc)));
     } else {
-      var body = translateExpr(namedValP.body().get());
+      var body = translateExpr(valP.body().get());
       return body.map(b -> polyValS(schema, new DefValS(schema.type(), path, name, b, loc)));
     }
   }

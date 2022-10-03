@@ -9,7 +9,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
  * Annotated value (one that has not a body).
  * This class is immutable.
  */
-public final class AnnValS extends NamedValS {
+public final class AnnValS extends ValS {
   private final AnnS ann;
 
   public AnnValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
