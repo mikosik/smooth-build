@@ -64,7 +64,7 @@ public class CallJob extends ExecutingJob {
     evaluateInsideVirtualJob(bodyJob, taskInfo, resultConsumer);
   }
 
-  // handling if function
+  // handling IfFunc
 
   private void handleIfFunc(IfFuncB ifFuncB, Consumer<ValB> res) {
     var args = args();
@@ -82,7 +82,7 @@ public class CallJob extends ExecutingJob {
     evaluateInsideVirtualJob(job, taskInfo, resultConsumer);
   }
 
-  // handling map function
+  // handling MapFunc
 
   private void handleMapFunc(MapFuncB mapFuncB, Consumer<ValB> result) {
     var args = args();
