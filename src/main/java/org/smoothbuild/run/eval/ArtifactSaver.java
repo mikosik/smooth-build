@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.bytecode.expr.val.ValB;
-import org.smoothbuild.compile.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.fs.base.FileSystem;
@@ -44,7 +44,7 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<NamedEvaluableS, ValB> artifacts) {
+  public int saveArtifacts(Map<NamedValS, ValB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
     var sortedPairs = sort(artifacts, comparing(e -> e.getKey().name()));
     for (var pair : sortedPairs.entrySet()) {
@@ -55,7 +55,7 @@ public class ArtifactSaver {
     return EXIT_CODE_SUCCESS;
   }
 
-  private boolean save(NamedEvaluableS evaluable, ValB valB) {
+  private boolean save(NamedValS evaluable, ValB valB) {
     String name = evaluable.name();
     try {
       PathS path = write(evaluable, valB);
@@ -72,7 +72,7 @@ public class ArtifactSaver {
     }
   }
 
-  private PathS write(NamedEvaluableS evaluable, ValB valB)
+  private PathS write(NamedValS evaluable, ValB valB)
       throws IOException, DuplicatedPathsExc {
     PathS artifactPath = artifactPath(evaluable.name());
     if (evaluable.type() instanceof ArrayTS arrayTS) {
