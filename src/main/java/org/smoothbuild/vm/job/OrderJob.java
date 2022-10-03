@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.job;
 
 import org.smoothbuild.bytecode.expr.oper.OrderB;
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.task.OrderTask;
 
@@ -14,7 +14,7 @@ public class OrderJob extends ExecutingJob {
   }
 
   @Override
-  protected Promise<ValB> evaluateImpl() {
+  protected Promise<InstB> evaluateImpl() {
     var task = new OrderTask(orderB.type(), context().labeledLoc(orderB));
     return evaluateTransitively(task, orderB.elems());
   }

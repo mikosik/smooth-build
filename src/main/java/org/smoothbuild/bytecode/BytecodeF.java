@@ -25,12 +25,12 @@ import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.val.BoolB;
 import org.smoothbuild.bytecode.expr.val.DefFuncB;
 import org.smoothbuild.bytecode.expr.val.IfFuncB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.MapFuncB;
 import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
@@ -145,12 +145,12 @@ public class BytecodeF {
     return bytecodeDb.string(string);
   }
 
-  public TupleB tuple(ImmutableList<ValB> items) {
-    var tupleTB = categoryDb.tuple(Lists.map(items, ValB::type));
+  public TupleB tuple(ImmutableList<InstB> items) {
+    var tupleTB = categoryDb.tuple(Lists.map(items, InstB::type));
     return bytecodeDb.tuple(tupleTB, items);
   }
 
-  public TupleB tuple(TupleTB type, ImmutableList<ValB> items) {
+  public TupleB tuple(TupleTB type, ImmutableList<InstB> items) {
     return bytecodeDb.tuple(type, items);
   }
 
@@ -219,8 +219,8 @@ public class BytecodeF {
   }
 
   private TupleB message(String severity, String text) {
-    ValB textObject = bytecodeDb.string(text);
-    ValB severityObject = bytecodeDb.string(severity);
+    InstB textObject = bytecodeDb.string(text);
+    InstB severityObject = bytecodeDb.string(severity);
     return bytecodeDb.tuple(messageT(), list(textObject, severityObject));
   }
 

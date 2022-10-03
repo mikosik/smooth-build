@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.execute.TaskKind.SELECT;
 import static org.smoothbuild.vm.task.TaskHashes.selectTaskHash;
 
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
@@ -33,11 +33,11 @@ public class SelectTask extends Task {
     return new Output(tuple.get(index.toJ().intValue()), nativeApi.messages());
   }
 
-  private TupleB selectable(ImmutableList<ValB> components) {
+  private TupleB selectable(ImmutableList<InstB> components) {
     return (TupleB) components.get(0);
   }
 
-  private IntB index(ImmutableList<ValB> components) {
+  private IntB index(ImmutableList<InstB> components) {
     return (IntB) components.get(1);
   }
 }

@@ -9,9 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.plugin.NativeApi;
@@ -56,8 +56,8 @@ public class NativeMethodLoader {
 
   private String validateMethodParams(Method method) {
     Class<?> returnType = method.getReturnType();
-    if (!returnType.equals(ValB.class)) {
-      return "Providing method should declare return type as " + ValB.class.getCanonicalName()
+    if (!returnType.equals(InstB.class)) {
+      return "Providing method should declare return type as " + InstB.class.getCanonicalName()
           + " but is " + returnType.getCanonicalName() + ".";
     }
     Class<?>[] types = method.getParameterTypes();

@@ -7,7 +7,7 @@ import org.smoothbuild.compile.lang.type.BlobTS;
 
 import okio.ByteString;
 
-public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements ValS {
+public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements InstS {
   @Override
   public String label() {
     int limit = NAME_LENGTH_LIMIT;

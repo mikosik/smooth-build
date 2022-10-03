@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
@@ -45,7 +45,7 @@ public class BuildRunner {
     return exitCode;
   }
 
-  public Optional<Map<NamedValS, ValB>> evaluate(List<String> names) {
+  public Optional<Map<NamedValS, InstB>> evaluate(List<String> names) {
     if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
       return Optional.empty();
     }

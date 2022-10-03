@@ -22,8 +22,8 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.compile.lang.define.NamedValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -44,7 +44,7 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<NamedValS, ValB> artifacts) {
+  public int saveArtifacts(Map<NamedValS, InstB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
     var sortedPairs = sort(artifacts, comparing(e -> e.getKey().name()));
     for (var pair : sortedPairs.entrySet()) {
@@ -55,10 +55,10 @@ public class ArtifactSaver {
     return EXIT_CODE_SUCCESS;
   }
 
-  private boolean save(NamedValS evaluable, ValB valB) {
-    String name = evaluable.name();
+  private boolean save(NamedValS val, InstB instB) {
+    String name = val.name();
     try {
-      PathS path = write(evaluable, valB);
+      PathS path = write(val, instB);
       reportSuccess(name, path);
       return true;
     } catch (IOException e) {
@@ -72,15 +72,15 @@ public class ArtifactSaver {
     }
   }
 
-  private PathS write(NamedValS evaluable, ValB valB)
+  private PathS write(NamedValS val, InstB instB)
       throws IOException, DuplicatedPathsExc {
-    PathS artifactPath = artifactPath(evaluable.name());
-    if (evaluable.type() instanceof ArrayTS arrayTS) {
-      return saveArray(arrayTS, artifactPath, (ArrayB) valB);
-    } else if (evaluable.type().name().equals(FileStruct.NAME)) {
-      return saveFile(artifactPath, (TupleB) valB);
+    PathS artifactPath = artifactPath(val.name());
+    if (val.type() instanceof ArrayTS arrayTS) {
+      return saveArray(arrayTS, artifactPath, (ArrayB) instB);
+    } else if (val.type().name().equals(FileStruct.NAME)) {
+      return saveFile(artifactPath, (TupleB) instB);
     } else {
-      return saveBaseVal(artifactPath, valB);
+      return saveBaseVal(artifactPath, instB);
     }
   }
 
@@ -109,9 +109,9 @@ public class ArtifactSaver {
 
   private void saveNonFileArray(PathS artifactPath, ArrayB arrayB) throws IOException {
     int i = 0;
-    for (ValB valB : arrayB.elems(ValB.class)) {
+    for (InstB instB : arrayB.elems(InstB.class)) {
       PathS sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
-      PathS targetPath = targetPath(valB);
+      PathS targetPath = targetPath(instB);
       fileSystem.createLink(sourcePath, targetPath);
       i++;
     }
@@ -145,8 +145,8 @@ public class ArtifactSaver {
             + delimiter + list);
   }
 
-  private PathS saveBaseVal(PathS artifactPath, ValB valB) throws IOException {
-    PathS targetPath = targetPath(valB);
+  private PathS saveBaseVal(PathS artifactPath, InstB instB) throws IOException {
+    PathS targetPath = targetPath(instB);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;

@@ -1,14 +1,14 @@
 package org.smoothbuild.vm.job;
 
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.util.concurrent.Promise;
 
 public abstract class Job {
-  private volatile Promise<ValB> promise;
+  private volatile Promise<InstB> promise;
 
-  public final Promise<ValB> evaluate() {
+  public final Promise<InstB> evaluate() {
     // Double-checked locking.
-    Promise<ValB> result = promise;
+    Promise<InstB> result = promise;
     if (result != null) {
       return result;
     }
@@ -21,5 +21,5 @@ public abstract class Job {
     }
   }
 
-  protected abstract Promise<ValB> evaluateImpl();
+  protected abstract Promise<InstB> evaluateImpl();
 }

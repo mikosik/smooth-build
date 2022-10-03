@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.val.BlobB;
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.util.collect.Try;
@@ -51,8 +51,8 @@ public class BytecodeMethodLoader {
           + BytecodeF.class.getCanonicalName() + ".";
     } else if (method.getParameterTypes().length != 2) {
       return "Providing method parameter count is different than 2.";
-    } else if (!method.getReturnType().equals(ValB.class)) {
-      return "Providing method result type is not " + ValB.class.getName() + ".";
+    } else if (!method.getReturnType().equals(InstB.class)) {
+      return "Providing method result type is not " + InstB.class.getName() + ".";
     } else {
       return null;
     }

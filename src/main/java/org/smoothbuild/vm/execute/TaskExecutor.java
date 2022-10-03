@@ -4,8 +4,8 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.task.Task;
@@ -26,7 +26,7 @@ public class TaskExecutor {
     this.reporter = reporter;
   }
 
-  public void enqueue(Task task, TupleB input, Consumer<ValB> consumer) {
+  public void enqueue(Task task, TupleB input, Consumer<InstB> consumer) {
     executor.enqueue(() -> {
       try {
         var resHandler = new ResHandler(task.info(), executor, reporter, consumer);

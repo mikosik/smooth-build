@@ -20,9 +20,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.BoolB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
@@ -301,11 +301,11 @@ public class VmTest extends TestContext {
     return evaluate(vm, expr, ImmutableMap.of());
   }
 
-  private ValB evaluate(Vm vm, ExprB expr) {
+  private InstB evaluate(Vm vm, ExprB expr) {
     return evaluate(vm, expr, ImmutableMap.of());
   }
 
-  private ValB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, LabeledLoc> labels) {
+  private InstB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, LabeledLoc> labels) {
     try {
       var results = vm.evaluate(list(expr), labels).get();
       assertThat(results.size())

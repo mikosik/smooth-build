@@ -1,10 +1,10 @@
 package org.smoothbuild.testing.func.nativ;
 
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class WrongParameterType {
-  public static ValB func(NativeApi nativeApi, NativeApi nativeApi2) {
+  public static InstB func(NativeApi nativeApi, NativeApi nativeApi2) {
     return null;
   }
 }

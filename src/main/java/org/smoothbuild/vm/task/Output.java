@@ -4,20 +4,20 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.bytecode.expr.val.ArrayB;
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 
-public record Output(ValB valB, ArrayB messages) {
+public record Output(InstB instB, ArrayB messages) {
 
   public Output {
     requireNonNull(messages);
   }
 
   public boolean hasVal() {
-    return valB != null;
+    return instB != null;
   }
 
-  public ValB valB() {
+  public InstB instB() {
     checkState(hasVal(), "Output does not contain value.");
-    return valB;
+    return instB;
   }
 }

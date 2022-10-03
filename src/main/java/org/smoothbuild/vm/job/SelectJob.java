@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.IntB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.util.concurrent.Promise;
@@ -20,7 +20,7 @@ public class SelectJob extends ExecutingJob {
   }
 
   @Override
-  protected Promise<ValB> evaluateImpl() {
+  protected Promise<InstB> evaluateImpl() {
     var data = selectB.data();
     var selectable = data.selectable();
     var index = data.index();

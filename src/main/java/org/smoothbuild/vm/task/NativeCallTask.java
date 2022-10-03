@@ -8,9 +8,9 @@ import static org.smoothbuild.vm.task.TaskHashes.nativeCallTaskHash;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
@@ -62,9 +62,9 @@ public class NativeCallTask extends Task {
     return new Output(result, nativeApi.messages());
   }
 
-  private ValB invoke(Method method, TupleB args, NativeApi nativeApi) {
+  private InstB invoke(Method method, TupleB args, NativeApi nativeApi) {
     try {
-      return (ValB) method.invoke(null, new Object[] {nativeApi, args});
+      return (InstB) method.invoke(null, new Object[] {nativeApi, args});
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {

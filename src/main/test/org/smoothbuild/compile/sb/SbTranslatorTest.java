@@ -195,8 +195,8 @@ public class SbTranslatorTest extends TestContext {
             var referencingValS = polyDefValS("referencing", bEmptyArrayMonoValS);
             var referencingMonoValS = monoizeS(ImmutableMap.of(b, intTS()), referencingValS);
 
-            var referencingValB = orderB(intTB());
-            assertConversion(referencingMonoValS, referencingValB);
+            var referencingInstB = orderB(intTB());
+            assertConversion(referencingMonoValS, referencingInstB);
           }
 
           @Test

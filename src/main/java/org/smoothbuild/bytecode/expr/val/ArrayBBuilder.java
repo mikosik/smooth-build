@@ -12,7 +12,7 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 public class ArrayBBuilder {
   private final ArrayTB type;
   private final BytecodeDb bytecodeDb;
-  private final List<ValB> elems;
+  private final List<InstB> elems;
 
   public ArrayBBuilder(ArrayTB type, BytecodeDb bytecodeDb) {
     this.type = type;
@@ -20,12 +20,12 @@ public class ArrayBBuilder {
     this.elems = new ArrayList<>();
   }
 
-  public ArrayBBuilder addAll(Iterable<? extends ValB> elems) {
+  public ArrayBBuilder addAll(Iterable<? extends InstB> elems) {
     stream(elems).forEach(this::add);
     return this;
   }
 
-  public ArrayBBuilder add(ValB elem) {
+  public ArrayBBuilder add(InstB elem) {
     if (!type.elem().equals(elem.category())) {
       throw new IllegalArgumentException("Element type must be " + type.elem().name()
           + " but was " + elem.category().name() + ".");

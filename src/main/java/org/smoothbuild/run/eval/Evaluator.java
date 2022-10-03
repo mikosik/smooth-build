@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.sb.SbTranslator;
@@ -33,7 +33,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<ValB>> evaluate(List<? extends ExprS> exprsS) {
+  public Optional<ImmutableList<InstB>> evaluate(List<? extends ExprS> exprsS) {
     reporter.startNewPhase("Compiling");
     var sbTranslator = sbTranslatorProv.get();
     var exprsB = translate(exprsS, sbTranslator);
@@ -45,7 +45,7 @@ public class Evaluator {
     return evaluate(vm, exprsB.get(), sbTranslator.labels());
   }
 
-  private Optional<ImmutableList<ValB>> evaluate(Vm vm, ImmutableList<ExprB> exprs,
+  private Optional<ImmutableList<InstB>> evaluate(Vm vm, ImmutableList<ExprB> exprs,
       ImmutableMap<ExprB, LabeledLoc> labels) {
     try {
       return vm.evaluate(exprs, labels);

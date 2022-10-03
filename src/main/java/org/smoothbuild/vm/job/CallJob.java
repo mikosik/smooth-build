@@ -16,9 +16,9 @@ import org.smoothbuild.bytecode.expr.val.BoolB;
 import org.smoothbuild.bytecode.expr.val.DefFuncB;
 import org.smoothbuild.bytecode.expr.val.FuncB;
 import org.smoothbuild.bytecode.expr.val.IfFuncB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.MapFuncB;
 import org.smoothbuild.bytecode.expr.val.NatFuncB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -36,16 +36,16 @@ public class CallJob extends ExecutingJob {
   }
 
   @Override
-  public Promise<ValB> evaluateImpl() {
+  public Promise<InstB> evaluateImpl() {
     var funcJ = context().jobFor(callB.data().callable());
-    var result = new PromisedValue<ValB>();
+    var result = new PromisedValue<InstB>();
     funcJ.evaluate()
-        .addConsumer(valB -> onFuncJobCompleted(valB, result));
+        .addConsumer(instB -> onFuncJobCompleted(instB, result));
     return result;
   }
 
-  private void onFuncJobCompleted(ValB valB, Consumer<ValB> resConsumer) {
-    switch ((FuncB) valB) {
+  private void onFuncJobCompleted(InstB instB, Consumer<InstB> resConsumer) {
+    switch ((FuncB) instB) {
       case DefFuncB defFuncB -> handleDefFunc(defFuncB, resConsumer);
       case IfFuncB ifFuncB -> handleIfFunc(ifFuncB, resConsumer);
       case MapFuncB mapFuncB -> handleMapFunc(mapFuncB, resConsumer);
@@ -55,7 +55,7 @@ public class CallJob extends ExecutingJob {
 
   // handling DefFunc
 
-  private void handleDefFunc(DefFuncB defFuncB, Consumer<ValB> resultConsumer) {
+  private void handleDefFunc(DefFuncB defFuncB, Consumer<InstB> resultConsumer) {
     var argsJ = map(args(), context()::jobFor);
     var bodyJob = context()
         .withEnvironment(argsJ)
@@ -66,7 +66,7 @@ public class CallJob extends ExecutingJob {
 
   // handling IfFunc
 
-  private void handleIfFunc(IfFuncB ifFuncB, Consumer<ValB> res) {
+  private void handleIfFunc(IfFuncB ifFuncB, Consumer<InstB> res) {
     var args = args();
     context()
         .jobFor(args.get(0))
@@ -74,9 +74,9 @@ public class CallJob extends ExecutingJob {
         .addConsumer(v -> onConditionEvaluated(v, ifFuncB, args, res));
   }
 
-  private void onConditionEvaluated(ValB conditionValB, IfFuncB ifFuncB, ImmutableList<ExprB> args,
-      Consumer<ValB> resultConsumer) {
-    var condition = ((BoolB) conditionValB).toJ();
+  private void onConditionEvaluated(InstB conditionB, IfFuncB ifFuncB, ImmutableList<ExprB> args,
+      Consumer<InstB> resultConsumer) {
+    var condition = ((BoolB) conditionB).toJ();
     var job = context().jobFor(args.get(condition ? 1 : 2));
     var taskInfo = callTaskInfo(ifFuncB);
     evaluateInsideVirtualJob(job, taskInfo, resultConsumer);
@@ -84,27 +84,27 @@ public class CallJob extends ExecutingJob {
 
   // handling MapFunc
 
-  private void handleMapFunc(MapFuncB mapFuncB, Consumer<ValB> result) {
+  private void handleMapFunc(MapFuncB mapFuncB, Consumer<InstB> result) {
     var argResults = map(args(), arg -> context().jobFor(arg).evaluate());
     runWhenAllAvailable(argResults, () -> onMapDepsEvaluated(argResults, mapFuncB, result));
   }
 
-  private void onMapDepsEvaluated(ImmutableList<Promise<ValB>> argResults,
-      MapFuncB mapFuncB, Consumer<ValB> resultConsumer) {
+  private void onMapDepsEvaluated(ImmutableList<Promise<InstB>> argResults,
+      MapFuncB mapFuncB, Consumer<InstB> resultConsumer) {
     var arrayB = (ArrayB) argResults.get(0).get();
     var funcB = (FuncB) argResults.get(1).get();
-    var callBs = map(arrayB.elems(ValB.class), e -> newCallB(funcB, e));
+    var callBs = map(arrayB.elems(InstB.class), e -> newCallB(funcB, e));
     var orderB = bytecodeF().order(bytecodeF().arrayT(funcB.type().res()), callBs);
     var orderJob = context().jobFor(orderB);
     var taskInfo = callTaskInfo(mapFuncB);
     evaluateInsideVirtualJob(orderJob, taskInfo, resultConsumer);
   }
 
-  private ExprB newCallB(FuncB funcB, ValB val) {
+  private ExprB newCallB(FuncB funcB, InstB val) {
     return bytecodeF().call(funcB.type().res(), funcB, singleArg(val));
   }
 
-  private CombineB singleArg(ValB val) {
+  private CombineB singleArg(InstB val) {
     return bytecodeF().combine(bytecodeF().tupleT(val.type()), list(val));
   }
 
@@ -114,7 +114,7 @@ public class CallJob extends ExecutingJob {
 
   // handling NatFunc
 
-  private void handleNatFunc(NatFuncB natFuncB, Consumer<ValB> res) {
+  private void handleNatFunc(NatFuncB natFuncB, Consumer<InstB> res) {
     var exprInfo = context().labeledLoc(natFuncB);
     var name = exprInfo.label();
     var resT = natFuncB.type().res();
@@ -126,7 +126,7 @@ public class CallJob extends ExecutingJob {
 
   //helpers
 
-  private void evaluateInsideVirtualJob(Job job, TaskInfo taskInfo, Consumer<ValB> resultConsumer) {
+  private void evaluateInsideVirtualJob(Job job, TaskInfo taskInfo, Consumer<InstB> resultConsumer) {
     new VirtualJob(job, taskInfo, context().reporter())
         .evaluate()
         .addConsumer(resultConsumer);

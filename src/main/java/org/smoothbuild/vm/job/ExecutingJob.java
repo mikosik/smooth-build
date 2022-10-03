@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.task.Task;
@@ -19,8 +19,8 @@ public abstract class ExecutingJob extends Job {
     this.context = context;
   }
 
-  protected PromisedValue<ValB> evaluateTransitively(Task task, ImmutableList<ExprB> deps) {
-    var result = new PromisedValue<ValB>();
+  protected PromisedValue<InstB> evaluateTransitively(Task task, ImmutableList<ExprB> deps) {
+    var result = new PromisedValue<InstB>();
     var depJs = map(deps, context::jobFor);
     var depResults = map(depJs, Job::evaluate);
     runWhenAllAvailable(depResults,
@@ -28,7 +28,7 @@ public abstract class ExecutingJob extends Job {
     return result;
   }
 
-  private TupleB toInput(ImmutableList<Promise<ValB>> depResults) {
+  private TupleB toInput(ImmutableList<Promise<InstB>> depResults) {
     return context.bytecodeF().tuple(map(depResults, Promise::get));
   }
 

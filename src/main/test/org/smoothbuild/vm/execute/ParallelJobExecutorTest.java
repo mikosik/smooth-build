@@ -32,9 +32,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.TypeB;
 import org.smoothbuild.plugin.NativeApi;
@@ -293,7 +293,7 @@ public class ParallelJobExecutorTest extends TestContext {
     return executeJobs(context, list(job)).get(0).get();
   }
 
-  private static ImmutableList<Optional<ValB>> executeJobs(ExecutionContext context,
+  private static ImmutableList<Optional<InstB>> executeJobs(ExecutionContext context,
       ImmutableList<Job> jobs) throws InterruptedException {
     return Vm.evaluate(context.taskExecutor(), jobs);
   }
@@ -346,15 +346,15 @@ public class ParallelJobExecutorTest extends TestContext {
     }
 
     @Override
-    public Promise<ValB> evaluateImpl() {
-      PromisedValue<ValB> result = new PromisedValue<>();
+    public Promise<InstB> evaluateImpl() {
+      PromisedValue<InstB> result = new PromisedValue<>();
       var depResults = map(depJs, Job::evaluate);
       runWhenAllAvailable(depResults,
           () -> context().taskExecutor().enqueue(task, toInput(depResults), result));
       return result;
     }
 
-    private TupleB toInput(ImmutableList<Promise<ValB>> depResults) {
+    private TupleB toInput(ImmutableList<Promise<InstB>> depResults) {
       return bytecodeF.tuple(map(depResults, Promise::get));
     }
   }

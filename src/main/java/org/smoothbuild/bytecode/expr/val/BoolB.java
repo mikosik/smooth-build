@@ -6,7 +6,7 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 /**
  * This class is immutable.
  */
-public final class BoolB extends ValB {
+public final class BoolB extends InstB {
   public BoolB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
   }

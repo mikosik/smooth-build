@@ -16,8 +16,8 @@ import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
@@ -52,7 +52,7 @@ public class ComputationCache {
       ArrayB messages = output.messages();
       sink.write(messages.hash().toByteString());
       if (!containsErrors(messages)) {
-        sink.write(output.valB().hash().toByteString());
+        sink.write(output.instB().hash().toByteString());
       }
     } catch (IOException e) {
       throw computationCacheException(e);
@@ -96,7 +96,7 @@ public class ComputationCache {
           throw corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its Merkle root, but got " + expr.category());
         } else {
-          return new Output((ValB) expr, messages);
+          return new Output((InstB) expr, messages);
         }
       }
     } catch (IOException e) {

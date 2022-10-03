@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.CompRes;
@@ -21,8 +21,8 @@ import org.smoothbuild.vm.task.Output;
 public class ResHandlerTest extends TestContext {
   private ExecutionReporter reporter;
   private SoftTerminationExecutor executor;
-  private Consumer<ValB> consumer;
-  private ValB val;
+  private Consumer<InstB> consumer;
+  private InstB val;
 
   @BeforeEach
   @SuppressWarnings("unchecked")
@@ -84,11 +84,11 @@ public class ResHandlerTest extends TestContext {
     }
   }
 
-  private CompRes maybeComputed(ValB val) {
+  private CompRes maybeComputed(InstB val) {
     return new CompRes(output(val), DISK);
   }
 
-  private Output output(ValB val) {
+  private Output output(InstB val) {
     return new Output(val, arrayB(stringTB()));
   }
 

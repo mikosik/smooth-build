@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.val.BlobB;
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.testing.TestContext;
@@ -89,7 +89,7 @@ public class BytecodeMethodLoaderTest extends TestContext {
   @Test
   public void loading_method_with_non_val_result_causes_error() throws Exception {
     assertLoadingCausesError(WithNonValRes.class,
-        "Providing method result type is not " + ValB.class.getCanonicalName() + ".");
+        "Providing method result type is not " + InstB.class.getCanonicalName() + ".");
   }
 
   private void assertLoadingCausesError(Class<?> clazz, String message) throws Exception {

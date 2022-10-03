@@ -8,15 +8,15 @@ import java.util.function.Predicate;
 
 import org.smoothbuild.bytecode.expr.val.ArrayB;
 import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 
 public class FilterFunc {
-  public static ValB func(NativeApi nativeApi, TupleB args) {
+  public static InstB func(NativeApi nativeApi, TupleB args) {
     ArrayB files = (ArrayB) args.get(0);
     StringB pattern = (StringB) args.get(1);
 

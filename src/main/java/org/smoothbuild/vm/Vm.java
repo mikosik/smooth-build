@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.job.ExecutionContext;
@@ -28,7 +28,7 @@ public class Vm {
     this.contextProv = contextProv;
   }
 
-  public Optional<ImmutableList<ValB>> evaluate(ImmutableList<ExprB> exprs,
+  public Optional<ImmutableList<InstB>> evaluate(ImmutableList<ExprB> exprs,
       ImmutableMap<ExprB, LabeledLoc> labels)
       throws InterruptedException {
     var context = contextProv.get().withLabels(labels);
@@ -38,7 +38,7 @@ public class Vm {
   }
 
   // Visible for testing
-  public static ImmutableList<Optional<ValB>> evaluate(TaskExecutor executor, List<Job> jobs)
+  public static ImmutableList<Optional<InstB>> evaluate(TaskExecutor executor, List<Job> jobs)
       throws InterruptedException {
     var evaluationResults = map(jobs, Job::evaluate);
     runWhenAllAvailable(evaluationResults, executor::terminate);

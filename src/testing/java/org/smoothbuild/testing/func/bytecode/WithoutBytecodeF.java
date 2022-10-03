@@ -1,9 +1,9 @@
 package org.smoothbuild.testing.func.bytecode;
 
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 
 public class WithoutBytecodeF {
-  public static ValB bytecode() {
+  public static InstB bytecode() {
     return null;
   }
 }

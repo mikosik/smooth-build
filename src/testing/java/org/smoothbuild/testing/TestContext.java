@@ -46,12 +46,12 @@ import org.smoothbuild.bytecode.expr.val.BoolB;
 import org.smoothbuild.bytecode.expr.val.DefFuncB;
 import org.smoothbuild.bytecode.expr.val.FuncB;
 import org.smoothbuild.bytecode.expr.val.IfFuncB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.IntB;
 import org.smoothbuild.bytecode.expr.val.MapFuncB;
 import org.smoothbuild.bytecode.expr.val.NatFuncB;
 import org.smoothbuild.bytecode.expr.val.StringB;
 import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.expr.val.ValB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.bytecode.type.CategoryDb;
@@ -392,7 +392,7 @@ public class TestContext {
     return fullFileSystem;
   }
 
-  // ValB types
+  // InstB types
 
   public TupleTB animalTB() {
     return categoryDb().tuple(stringTB(), intTB());
@@ -516,7 +516,7 @@ public class TestContext {
     return categoryDb().select(evalT);
   }
 
-  // ValB-s
+  // InstB-s
 
   public TupleB animalB() {
     return animalB("rabbit", 7);
@@ -530,11 +530,11 @@ public class TestContext {
     return tupleB(animalTB(), species, speed);
   }
 
-  public ArrayB arrayB(ValB... elems) {
+  public ArrayB arrayB(InstB... elems) {
     return arrayB(elems[0].type(), elems);
   }
 
-  public ArrayB arrayB(TypeB elemT, ValB... elems) {
+  public ArrayB arrayB(TypeB elemT, InstB... elems) {
     return bytecodeDb()
         .arrayBuilder(arrayTB(elemT))
         .addAll(list(elems))
@@ -550,7 +550,7 @@ public class TestContext {
             .add(ExprB.class)
             .add(StringB.class)
             .add(TupleB.class)
-            .add(ValB.class)
+            .add(InstB.class)
             .build());
   }
 
@@ -688,12 +688,12 @@ public class TestContext {
     return bytecodeDb().string(string);
   }
 
-  public TupleB tupleB(ValB... items) {
-    var tupleTB = tupleTB(stream(items).map(ValB::type).toArray(TypeB[]::new));
+  public TupleB tupleB(InstB... items) {
+    var tupleTB = tupleTB(stream(items).map(InstB::type).toArray(TypeB[]::new));
     return tupleB(tupleTB, items);
   }
 
-  public TupleB tupleB(TupleTB tupleT, ValB... items) {
+  public TupleB tupleB(TupleTB tupleT, InstB... items) {
     return bytecodeDb().tuple(tupleT, list(items));
   }
 

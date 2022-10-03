@@ -10,7 +10,7 @@ import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 
 import com.google.common.collect.ImmutableList;
 
@@ -28,7 +28,7 @@ public class JobCreator {
 
   public Job jobFor(ExprB expr, ExecutionContext context) {
     return switch (expr) {
-      case ValB val -> new ConstJob(val, context);
+      case InstB val -> new ConstJob(val, context);
       case CallB call -> new CallJob(call, context);
       case CombineB combine -> new CombineJob(combine, context);
       case OrderB order -> new OrderJob(order, context);

@@ -2,7 +2,7 @@ package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
-import org.smoothbuild.bytecode.expr.val.ValB;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.execute.ExecutionReporter;
@@ -20,7 +20,7 @@ public abstract class DummyJob extends Job {
   }
 
   @Override
-  public final Promise<ValB> evaluateImpl() {
+  public final Promise<InstB> evaluateImpl() {
     return resultPromise()
         .chain(v -> {
           if (v != null) {
@@ -30,7 +30,7 @@ public abstract class DummyJob extends Job {
         });
   }
 
-  protected abstract Promise<ValB> resultPromise();
+  protected abstract Promise<InstB> resultPromise();
 
   protected void report(TaskInfo taskInfo, ImmutableList<Log> logs) {
     reporter.print(taskInfo, logs);

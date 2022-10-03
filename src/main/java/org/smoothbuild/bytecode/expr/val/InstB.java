@@ -6,12 +6,12 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.type.val.TypeB;
 
 /**
- * Value.
+ * Instance of a value.
  * This class is thread-safe.
  */
-public sealed abstract class ValB extends ExprB
+public sealed abstract class InstB extends ExprB
     permits FuncB, ArrayB, BlobB, BoolB, IntB, StringB, TupleB {
-  public ValB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public InstB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
   }
 

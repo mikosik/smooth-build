@@ -18,8 +18,8 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public final class TupleB extends ValB {
-  private final Supplier<ImmutableList<ValB>> itemsSupplier;
+public final class TupleB extends InstB {
+  private final Supplier<ImmutableList<InstB>> itemsSupplier;
 
   public TupleB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
@@ -31,21 +31,21 @@ public final class TupleB extends ValB {
     return (TupleTB) super.category();
   }
 
-  public ValB get(int index) {
-    ImmutableList<ValB> items = items();
+  public InstB get(int index) {
+    ImmutableList<InstB> items = items();
     checkIndex(index, items.size());
     return items.get(index);
   }
 
-  public ImmutableList<ValB> items() {
+  public ImmutableList<InstB> items() {
     return itemsSupplier.get();
   }
 
-  private ImmutableList<ValB> instantiateItems() {
+  private ImmutableList<InstB> instantiateItems() {
     var type = type();
     var expectedItemTs = type.items();
-    var items = readSeqExprs(DATA_PATH, dataHash(), expectedItemTs.size(), ValB.class);
-    var itemTs = map(items, ValB::type);
+    var items = readSeqExprs(DATA_PATH, dataHash(), expectedItemTs.size(), InstB.class);
+    var itemTs = map(items, InstB::type);
     validateTuple(type, itemTs, () -> {throw new DecodeExprWrongNodeTypeExc(hash(),
         category(), DATA_PATH, type, asTupleToString(itemTs));});
     return items;
