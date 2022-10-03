@@ -2,11 +2,14 @@ package org.smoothbuild.compile.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
+import org.smoothbuild.compile.lang.type.tool.UnusedVarsGenerator;
 import org.smoothbuild.util.collect.Named;
 
 /**
@@ -35,6 +38,18 @@ public abstract sealed class TypeS implements Named
 
   public VarSetS vars() {
     return vars;
+  }
+
+  public TypeS renameVars(Predicate<VarS> shouldRename) {
+    var vars = vars();
+    var varsToRename = vars.filter(shouldRename);
+    if (varsToRename.isEmpty()) {
+      return this;
+    }
+    var varsNotToRename = vars.filter(v -> !shouldRename.test(v));
+    var varGenerator = new UnusedVarsGenerator(varsNotToRename);
+    var mapping = toMap(varsToRename, v -> varGenerator.next());
+    return mapVars(mapping);
   }
 
   public TypeS mapComponents(Function<TypeS, TypeS> mapper) {

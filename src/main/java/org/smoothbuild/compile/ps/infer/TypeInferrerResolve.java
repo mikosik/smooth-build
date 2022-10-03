@@ -1,9 +1,7 @@
 package org.smoothbuild.compile.ps.infer;
 
 import static org.smoothbuild.compile.ps.CompileError.compileError;
-import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Maps.mapValues;
-import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -15,7 +13,6 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
-import org.smoothbuild.compile.lang.type.tool.UnusedVarsGenerator;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -50,7 +47,7 @@ public class TypeInferrerResolve {
         return Optional.empty();
       }
     } else {
-      resolvedEvalT = renameVars(resolvedEvalT, VarS::isTemporary);
+      resolvedEvalT = renameVarsAndUnify(resolvedEvalT, VarS::isTemporary);
     }
     if (!resolveBody(val.body())) {
       return Optional.empty();
@@ -61,7 +58,7 @@ public class TypeInferrerResolve {
   public boolean resolveParamDefaultValue(ExprP body) {
     if (body instanceof OperP operP) {
       var resolvedType = unifier.resolve(operP.typeS());
-      operP.setTypeS(renameVars(resolvedType, v -> true));
+      operP.setTypeS(renameVarsAndUnify(resolvedType, v -> true));
       return resolveBody(operP);
     }
     return true;
@@ -76,7 +73,7 @@ public class TypeInferrerResolve {
         return Optional.empty();
       }
     } else {
-      resolvedFuncT = (FuncTS) renameVars(resolvedFuncT, VarS::isTemporary);
+      resolvedFuncT = (FuncTS) renameVarsAndUnify(resolvedFuncT, VarS::isTemporary);
     }
     if (!resolveBody(func.body())) {
       return Optional.empty();
@@ -97,16 +94,8 @@ public class TypeInferrerResolve {
     new UnitTypeInferrer(unifier, bindings).infer(expr);
   }
 
-  private TypeS renameVars(TypeS resolvedT, Predicate<VarS> shouldRename) {
-    var vars = resolvedT.vars().asList();
-    var varsToRename = filter(vars, shouldRename);
-    if (varsToRename.isEmpty()) {
-      return resolvedT;
-    }
-    var varsNotToRename = resolvedT.vars().filter(v -> !shouldRename.test(v));
-    var varGenerator = new UnusedVarsGenerator(varsNotToRename);
-    var mapping = toMap(varsToRename, pv -> varGenerator.next());
-    var resolvedAndRenamedEvalT = resolvedT.mapVars(mapping);
+  private TypeS renameVarsAndUnify(TypeS resolvedT, Predicate<VarS> shouldRename) {
+    var resolvedAndRenamedEvalT = resolvedT.renameVars(shouldRename);
     unifier.unifySafe(resolvedAndRenamedEvalT, resolvedT);
     return resolvedAndRenamedEvalT;
   }
