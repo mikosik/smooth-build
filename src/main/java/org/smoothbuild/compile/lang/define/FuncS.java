@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.Tapanal;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
@@ -11,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends NamedEvaluableS
+public sealed abstract class FuncS extends Tapanal implements NamedEvaluableS
     permits AnnFuncS, DefFuncS, SyntCtorS {
   private final NList<ItemS> params;
 
