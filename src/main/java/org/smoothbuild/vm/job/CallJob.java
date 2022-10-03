@@ -85,9 +85,7 @@ public class CallJob extends ExecutingJob {
   // handling MapFunc
 
   private void handleMapFunc(MapFuncB mapFuncB, Consumer<ValB> result) {
-    var args = args();
-    var argJobs = map(args, context()::jobFor);
-    var argResults = map(argJobs, Job::evaluate);
+    var argResults = map(args(), arg -> context().jobFor(arg).evaluate());
     runWhenAllAvailable(argResults, () -> onMapDepsEvaluated(argResults, mapFuncB, result));
   }
 
