@@ -1,10 +1,11 @@
 package org.smoothbuild.compile.lang.define;
 
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.Tal;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.util.collect.Named;
 
-public abstract sealed class NamedEvaluableS extends EvaluableS implements Named
+public abstract sealed class NamedEvaluableS extends Tal implements EvaluableS, Named
     permits FuncS, NamedValS {
 
   private final ModPath modPath;

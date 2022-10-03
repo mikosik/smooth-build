@@ -2,11 +2,13 @@ package org.smoothbuild.compile.lang.define;
 
 import java.util.Objects;
 
+import org.smoothbuild.compile.lang.base.Tal;
+
 /**
  * Unnamed Defined value (one that has a body).
  * This class is immutable.
  */
-public final class UnnamedDefValS extends EvaluableS {
+public final class UnnamedDefValS extends Tal implements EvaluableS {
   private final ExprS body;
 
   public UnnamedDefValS(ExprS body) {
