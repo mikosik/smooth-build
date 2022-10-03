@@ -54,7 +54,7 @@ import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
-import org.smoothbuild.compile.lang.define.UnnamedDefValS;
+import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
@@ -122,7 +122,7 @@ public class SbTranslator {
       case RefS refS -> translateAndCacheNal(refS, this::translateRef);
       case SelectS selectS -> translateAndCacheNal(selectS, this::translateSelect);
       case StringS stringS -> translateAndCacheNal(stringS, this::translateString);
-      case UnnamedDefValS unnamedDefValS -> translateExpr(unnamedDefValS.body());
+      case UnnamedValS unnamedValS -> translateExpr(unnamedValS.body());
     };
   }
 

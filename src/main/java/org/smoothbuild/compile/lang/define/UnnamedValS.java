@@ -8,10 +8,10 @@ import org.smoothbuild.compile.lang.base.Tal;
  * Unnamed Defined value (one that has a body).
  * This class is immutable.
  */
-public final class UnnamedDefValS extends Tal implements EvaluableS {
+public final class UnnamedValS extends Tal implements EvaluableS {
   private final ExprS body;
 
-  public UnnamedDefValS(ExprS body) {
+  public UnnamedValS(ExprS body) {
     super(body.type(), body.loc());
     this.body = body;
   }
@@ -30,7 +30,7 @@ public final class UnnamedDefValS extends Tal implements EvaluableS {
     if (this == object) {
       return true;
     }
-    return object instanceof UnnamedDefValS that
+    return object instanceof UnnamedValS that
         && this.type().equals(that.type())
         && this.body().equals(that.body())
         && this.loc().equals(that.loc());

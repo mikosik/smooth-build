@@ -13,7 +13,7 @@ public sealed class PolyEvaluableS extends WithLocImpl
   private final EvaluableS mono;
 
   public PolyEvaluableS(ExprS exprS) {
-    this(new SchemaS(exprS.type()), new UnnamedDefValS(exprS));
+    this(new SchemaS(exprS.type()), new UnnamedValS(exprS));
   }
 
   public PolyEvaluableS(SchemaS schema, EvaluableS mono) {

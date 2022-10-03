@@ -12,7 +12,7 @@ import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
-import org.smoothbuild.compile.lang.define.UnnamedDefValS;
+import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.testing.TestContext;
 
 public class ExprSLoadingTest extends TestContext {
@@ -73,7 +73,7 @@ public class ExprSLoadingTest extends TestContext {
 
         @Test
         public void with_reference_to_int() {
-          var paramDefaultVal = new UnnamedDefValS(intS(1, 7));
+          var paramDefaultVal = new UnnamedValS(intS(1, 7));
           test_default_arg("7", paramDefaultVal);
         }
 
