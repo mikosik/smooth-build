@@ -31,6 +31,7 @@ import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
+import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
@@ -100,7 +101,7 @@ public class PsTranslator {
       if (exprS instanceof MonoizeS monoizeS) {
         return monoizeS.polyEvaluable();
       } else {
-        return new PolyEvaluableS(exprS);
+        return new UnnamedPolyValS(exprS);
       }
     });
   }

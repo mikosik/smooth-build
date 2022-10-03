@@ -98,6 +98,7 @@ import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
+import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.BlobTS;
@@ -1014,7 +1015,7 @@ public class TestContext {
   }
 
   public ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
-    return itemSPoly(line, type, name, body.map(PolyEvaluableS::new));
+    return itemSPoly(line, type, name, body.map(UnnamedPolyValS::new));
   }
 
   public static ItemS itemSPoly(int line, TypeS type, String name, Optional<PolyEvaluableS> body) {

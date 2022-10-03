@@ -12,6 +12,7 @@ import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
+import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
 import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.testing.TestContext;
 
@@ -66,7 +67,7 @@ public class ExprSLoadingTest extends TestContext {
         public void with_reference_to_poly_func() {
           var polyFunc = polyByteFuncS(6, varA(), "polyFunc", nlist());
           var monoizedFunc = monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramDefaultVal = new PolyEvaluableS(callS(1, varA(), monoizedFunc));
+          var paramDefaultVal = new UnnamedPolyValS(callS(1, varA(), monoizedFunc));
           var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
           test_default_arg("polyFunc()", expected);
         }
