@@ -23,6 +23,7 @@ import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValP;
+import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.out.log.Logger;
@@ -95,11 +96,11 @@ public class TypeInferrer {
     return new TypeInferrerResolve(unifier, logger, bindings).resolve(namedValP, evalT);
   }
 
-  // default arg
+  // param default value
 
   private boolean inferParamDefaultValues(NList<ItemP> params) {
     return params.stream()
-        .flatMap(p -> p.body().stream())
+        .flatMap(p -> p.defaultVal().stream())
         .allMatch(this::inferParamDefaultValue);
   }
 
@@ -167,7 +168,7 @@ public class TypeInferrer {
     for (int i = 0; i < params.size(); i++) {
       var resolvedParamT = resolvedParamTs.get(i);
       var param = params.get(i);
-      param.body().ifPresent(body -> {
+      param.defaultVal().ifPresent(body -> {
         var paramT = resolvedParamT.mapVars(paramMapping);
         var initializerMapping = toMap(body.typeS().vars(), v -> paramUnifier.newTempVar());
         var bodyT = body.typeS().mapVars(initializerMapping);
@@ -200,26 +201,26 @@ public class TypeInferrer {
 
   // body
 
-  private <R extends RefableP, T> Optional<T> unifyBodyAndResolve(R refable, TypeS evalT,
+  private <R extends PolyEvaluableP, T> Optional<T> unifyBodyAndResolve(R evaluable, TypeS evalT,
       TriFunction<R, TypeS, Bindings<? extends Optional<? extends RefableS>>, Optional<T>> resolver) {
-    if (refable.body().isPresent()) {
+    if (evaluable.body().isPresent()) {
       return new ExprTypeUnifier(unifier, bindings, logger)
-          .unifyExpr(refable.body().get())
-          .flatMap(bodyT -> unifyBodyWithEvalTypeAndResolve(refable, evalT, bodyT, resolver));
+          .unifyExpr(evaluable.body().get())
+          .flatMap(bodyT -> unifyBodyWithEvalTypeAndResolve(evaluable, evalT, bodyT, resolver));
     } else {
-      return resolver.apply(refable, evalT, bindings);
+      return resolver.apply(evaluable, evalT, bindings);
     }
   }
 
   private <R extends RefableP, T> Optional<T> unifyBodyWithEvalTypeAndResolve(
-      R refable, TypeS evalT, TypeS bodyT,
+      R evaluable, TypeS evalT, TypeS bodyT,
       TriFunction<R, TypeS, Bindings<? extends Optional<? extends RefableS>>, Optional<T>> resolver) {
     try {
       unifier.unify(evalT, bodyT);
-      return resolver.apply(refable, evalT, bindings);
+      return resolver.apply(evaluable, evalT, bindings);
     } catch (UnifierExc e) {
       logger.log(compileError(
-          refable.loc(), refable.q() + " body type is not equal to declared type."));
+          evaluable.loc(), evaluable.q() + " body type is not equal to declared type."));
       return Optional.empty();
     }
   }

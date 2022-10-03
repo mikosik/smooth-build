@@ -134,9 +134,9 @@ public class AstCreator {
       private ItemP createParam(ParamContext param) {
         var type = createT(param.type());
         var name = param.NAME().getText();
-        var defaultArg = Optional.ofNullable(param.expr()).map(this::createExpr);
+        var defaultVal = Optional.ofNullable(param.expr()).map(this::createExpr);
         var loc = locOf(filePath, param);
-        return new ItemP(type, name, defaultArg, loc);
+        return new ItemP(type, name, defaultVal, loc);
       }
 
       private Optional<ExprP> createExprSane(ExprContext expr) {

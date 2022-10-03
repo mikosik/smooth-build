@@ -75,7 +75,7 @@ public class AstVisitor {
 
   public void visitParam(int index, ItemP param) {
     visitType(param.type());
-    param.body().ifPresent(this::visitExpr);
+    param.defaultVal().ifPresent(this::visitExpr);
   }
 
   public void visitType(TypeP type) {}

@@ -171,7 +171,7 @@ public class EvaluateTest extends AcceptanceTestCase {
     @Nested
     class _param {
       @Nested
-      class _default_arg {
+      class _default_val {
         @Nested
         class _in_def_func {
           @Test

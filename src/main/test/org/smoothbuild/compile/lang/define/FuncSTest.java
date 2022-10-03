@@ -23,14 +23,14 @@ public class FuncSTest extends TestContext {
   }
 
   @Test
-  public void func_with_all_params_with_default_args_can_be_called_without_args() {
+  public void func_with_all_params_with_default_vals_can_be_called_without_args() {
     FuncS func = myFunc(intTS(), list(paramWithDefault("a"), paramWithDefault("b")));
     assertThat(func.canBeCalledArgless())
         .isTrue();
   }
 
   @Test
-  public void func_with_one_param_without_default_args_cannot_be_called_without_args() {
+  public void func_with_one_param_without_default_val_cannot_be_called_without_args() {
     FuncS func = myFunc(intTS(), list(paramWithDefault("a"), paramWithoutDefault("b")));
     assertThat(func.canBeCalledArgless())
         .isFalse();

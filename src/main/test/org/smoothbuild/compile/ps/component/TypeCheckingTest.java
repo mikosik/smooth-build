@@ -130,7 +130,7 @@ public class TypeCheckingTest extends TestContext {
   }
 
   @Nested
-  class _func_param_type_and_default_arg_type {
+  class _func_param_type_and_param_default_val_type {
     @Nested
     class _fails_when_types_are_not_assignable {
       @Test

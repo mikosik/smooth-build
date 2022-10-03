@@ -18,7 +18,6 @@ public sealed abstract class PolyEvaluableP extends NalImpl implements RefableP
     this.ann = ann;
   }
 
-  @Override
   public Optional<ExprP> body() {
     return body;
   }

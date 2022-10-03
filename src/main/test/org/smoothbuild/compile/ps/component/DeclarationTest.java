@@ -712,7 +712,7 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void param_with_vars_can_have_default_arg() {
+        public void param_with_vars_can_have_default_val() {
           module("""
               A myFunc(A value = "abc") = value;
               """)
@@ -902,7 +902,7 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void param_with_default_arg_can_be_assigned_positionally() {
+        public void param_with_default_val_can_be_assigned_positionally() {
           String code = """
               myIdentity(String param1="abc", String param2="def") = param1;
               result = myIdentity("abc", "def");
@@ -912,7 +912,7 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void param_with_default_arg_can_be_assigned_by_name() {
+        public void param_with_default_val_can_be_assigned_by_name() {
           String code = """
             myIdentity(String param1="abc", String param2="def") = param1;
             result = myIdentity(param1="abc", param2="def");
@@ -933,7 +933,7 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void func_default_arg_is_stripped_during_assignment() {
+        public void func_param_default_val_is_stripped_during_assignment() {
           String code = """
             myFunc(String param = "abc") = param;
             valueReferencingFunc = myFunc;

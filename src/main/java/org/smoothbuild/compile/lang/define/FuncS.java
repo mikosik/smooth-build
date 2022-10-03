@@ -29,7 +29,7 @@ public sealed abstract class FuncS extends NamedEvaluableS
   }
 
   private static String paramToString(ItemS itemS) {
-    return itemS.type().name() + " " + itemS.name() + itemS.body().map(b -> " = " + b).orElse("");
+    return itemS.type().name() + " " + itemS.name() + itemS.defaultVal().map(b -> " = " + b).orElse("");
   }
 
   @Override
@@ -43,7 +43,7 @@ public sealed abstract class FuncS extends NamedEvaluableS
 
   public boolean canBeCalledArgless() {
     return params().stream()
-        .allMatch(p -> p.body().isPresent());
+        .allMatch(p -> p.defaultVal().isPresent());
   }
 
   protected String signature() {

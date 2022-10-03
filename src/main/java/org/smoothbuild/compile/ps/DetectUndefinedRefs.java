@@ -50,7 +50,7 @@ public class DetectUndefinedRefs extends AstVisitor {
 
   @Override
   public void visitFunc(FuncP funcP) {
-    funcP.params().forEach(p -> p.body().ifPresent(this::visitExpr));
+    funcP.params().forEach(p -> p.defaultVal().ifPresent(this::visitExpr));
     funcP.body().ifPresent(body -> {
       var definedNamesWithParams = new HashSet<>(definedNames);
       funcP.params().forEach(p -> definedNamesWithParams.add(p.name()));

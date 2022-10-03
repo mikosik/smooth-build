@@ -168,7 +168,7 @@ public class VisibilityTest extends TestContext {
       }
 
       @Test
-      public void in_default_arg_body_of_other_param_is_not_visible() {
+      public void in_default_val_of_other_param_is_not_visible() {
         module("""
         func(String param, String withDefault = param) = param;
         """)
@@ -176,7 +176,7 @@ public class VisibilityTest extends TestContext {
       }
 
       @Test
-      public void in_its_default_arg_body_is_not_visible() {
+      public void in_its_default_val_is_not_visible() {
         module("""
         func(String withDefault = withDefault) = withDefault;
         """)
@@ -235,7 +235,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void param_default_arg() {
+        public void param_default_val() {
           var code = """
               String myFunc(Blob b = undefined) = "abc";
               """;

@@ -17,11 +17,11 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class ItemS extends Tanal implements RefableS {
-  private final Optional<PolyEvaluableS> body;
+  private final Optional<PolyEvaluableS> defaultVal;
 
-  public ItemS(TypeS type, String name, Optional<PolyEvaluableS> body, Loc loc) {
+  public ItemS(TypeS type, String name, Optional<PolyEvaluableS> defaultVal, Loc loc) {
     super(type, name, loc);
-    this.body = body;
+    this.defaultVal = defaultVal;
   }
 
   @Override
@@ -29,12 +29,12 @@ public final class ItemS extends Tanal implements RefableS {
     throw new UnsupportedOperationException();
   }
 
-  public Optional<PolyEvaluableS> body() {
-    return body;
+  public Optional<PolyEvaluableS> defaultVal() {
+    return defaultVal;
   }
 
   private String defaultValToString() {
-    return body.map(v -> " = " + v).orElse("");
+    return defaultVal.map(v -> " = " + v).orElse("");
   }
 
   public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
@@ -54,12 +54,12 @@ public final class ItemS extends Tanal implements RefableS {
     return (o instanceof ItemS that)
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.name(), that.name())
-        && Objects.equals(this.body, that.body)
+        && Objects.equals(this.defaultVal, that.defaultVal)
         && Objects.equals(this.loc(), that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), name(), body, loc());
+    return Objects.hash(type(), name(), defaultVal, loc());
   }
 }

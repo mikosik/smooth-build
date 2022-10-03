@@ -91,7 +91,7 @@ public class PsTranslator {
   public ItemS translateParam(ItemP param) {
     var type = param.typeS();
     var name = param.name();
-    var body = param.body().flatMap(this::translateParamBody);
+    var body = param.defaultVal().flatMap(this::translateParamBody);
     return new ItemS(type, name, body, param.loc());
   }
 

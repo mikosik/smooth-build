@@ -57,8 +57,8 @@ public class ExprSLoadingTest extends TestContext {
       class _with_default_arg {
         @Test
         public void with_reference_to_poly_val() {
-          var paramBody = polyByteValS(4, varA(), "polyVal");
-          var monoizedParamBody = monoizeS(2, varMap(varA(), intTS()), paramBody);
+          var paramDefaultVal = polyByteValS(4, varA(), "polyVal");
+          var monoizedParamBody = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
           test_default_arg("polyVal", monoizedParamBody);
         }
 
@@ -66,15 +66,15 @@ public class ExprSLoadingTest extends TestContext {
         public void with_reference_to_poly_func() {
           var polyFunc = polyByteFuncS(6, varA(), "polyFunc", nlist());
           var monoizedFunc = monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramBody = new PolyEvaluableS(callS(1, varA(), monoizedFunc));
-          var expected = monoizeS(2, varMap(varA(), intTS()), paramBody);
+          var paramDefaultVal = new PolyEvaluableS(callS(1, varA(), monoizedFunc));
+          var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
           test_default_arg("polyFunc()", expected);
         }
 
         @Test
         public void with_reference_to_int() {
-          var defArgBodyMapped = intS(1, 7);
-          test_default_arg("7", new UnnamedDefValS(defArgBodyMapped));
+          var paramDefaultVal = new UnnamedDefValS(intS(1, 7));
+          test_default_arg("7", paramDefaultVal);
         }
 
         private void test_default_arg(String bodyCode, ExprS expected) {
@@ -433,7 +433,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void def_mono_func_with_param_with_default_arg() {
+      public void def_mono_func_with_param_with_default_val() {
         module("""
           String myFunc(
             Blob param1 =
@@ -446,7 +446,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void def_poly_func_with_param_with_default_arg() {
+      public void def_poly_func_with_param_with_default_val() {
         module("""
           A myFunc(
             A a =
@@ -504,7 +504,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void native_pure_mono_func_with_default_argument() {
+      public void native_pure_mono_func_with_param_with_default_val() {
         module("""
           @Native("Impl.met")
           String myFunc(
@@ -518,7 +518,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void native_pure_poly_func_with_default_argument() {
+      public void native_pure_poly_func_with_param_with_default_val() {
         module("""
           @Native("Impl.met")
           A myFunc(
@@ -552,7 +552,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void bytecode_mono_func_with_default_argument() {
+      public void bytecode_mono_func_with_param_with_default_val() {
         module("""
           @Bytecode("Impl.met")
           String myFunc(
@@ -566,7 +566,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void bytecode_poly_func_with_default_argument() {
+      public void bytecode_poly_func_with_param_with_default_val() {
         module("""
           @Bytecode("Impl.met")
           A myFunc(
@@ -605,9 +605,9 @@ public class ExprSLoadingTest extends TestContext {
     }
 
     @Nested
-    class _default_arg {
+    class _param_default_val {
       @Test
-      public void default_arg_referencing_poly_val() {
+      public void default_val_referencing_poly_val() {
         var code = """
             Int myFunc(
               [Int] param1 =
@@ -615,8 +615,8 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             [A] empty = [];
             """;
-        var defaultArg = Optional.<PolyEvaluableS>of(polyDefValS(5, "empty", orderS(5, varA())));
-        var params = nlist(itemSPoly(2, arrayTS(intTS()), "param1", defaultArg));
+        var defaultVal = Optional.<PolyEvaluableS>of(polyDefValS(5, "empty", orderS(5, varA())));
+        var params = nlist(itemSPoly(2, arrayTS(intTS()), "param1", defaultVal));
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
@@ -624,7 +624,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void default_arg_for_generic_param_referencing_poly_val() {
+      public void default_val_for_generic_param_referencing_poly_val() {
         var code = """
             Int myFunc(
               [B] param1 =
@@ -632,8 +632,8 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             [A] empty = [];
             """;
-        var defaultArg = Optional.<PolyEvaluableS>of(polyDefValS(5, "empty", orderS(5, varA())));
-        var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", defaultArg));
+        var defaultVal = Optional.<PolyEvaluableS>of(polyDefValS(5, "empty", orderS(5, varA())));
+        var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", defaultVal));
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
@@ -641,15 +641,15 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void default_arg_using_literal() {
+      public void default_val_using_literal() {
         var code = """
             Int myFunc(
               Int param1 =
                 11)
                 = 7;
             """;
-        var defaultArg = intS(3, 11);
-        var params = nlist(itemS(2, intTS(), "param1", defaultArg));
+        var defaultVal = intS(3, 11);
+        var params = nlist(itemS(2, intTS(), "param1", defaultVal));
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
