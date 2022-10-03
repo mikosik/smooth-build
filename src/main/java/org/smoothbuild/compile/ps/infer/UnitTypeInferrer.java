@@ -23,17 +23,16 @@ import org.smoothbuild.util.bindings.Bindings;
 import com.google.common.base.Predicate;
 
 /**
- * Handles inferring default type (which is empty tuple) for each quantified var
+ * Infers unit type (which is empty tuple) for each quantified var
  * in any call to polymorphic function when that quantified var:
  * - is not used in function result type
- * - is resolved as temp-var after inferring phase (= it is not constrained, nor present
- *   in enclosing function parameters).
+ * - is resolved as temp-var after inferring phase (= it is not constrained).
  */
-public class DefaultTypeInferrer {
+public class UnitTypeInferrer {
   private final Unifier unifier;
   private final Bindings<? extends Optional<? extends RefableS>> bindings;
 
-  public DefaultTypeInferrer(Unifier unifier,
+  public UnitTypeInferrer(Unifier unifier,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
     this.unifier = unifier;
     this.bindings = bindings;

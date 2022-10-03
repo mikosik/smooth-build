@@ -95,7 +95,7 @@ public class TypeInferrerResolve {
   }
 
   private void setDefaultTypes(ExprP expr) {
-    new DefaultTypeInferrer(unifier, bindings).infer(expr);
+    new UnitTypeInferrer(unifier, bindings).infer(expr);
   }
 
   private TypeS renameVars(TypeS resolvedT, Predicate<VarS> shouldRename) {
