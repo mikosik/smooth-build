@@ -835,39 +835,31 @@ public class TestContext {
     return ImmutableMap.of(varA(), intTS());
   }
 
-  public VarS tempVarA() {
+  public static VarS tempVarA() {
     return tempVar("A");
-  }
-
-  public VarS tempVarB() {
-    return tempVar("B");
   }
 
   private static TempVarS tempVar(String name) {
     return new TempVarS(name);
   }
 
-  public VarS varA() {
+  public static VarS varA() {
     return varS("A");
   }
 
-  public VarS varB() {
+  public static VarS varB() {
     return varS("B");
   }
 
-  public VarS varC() {
+  public static VarS varC() {
     return varS("C");
   }
 
-  public VarS varX() {
+  public static VarS varX() {
     return varS("X");
   }
 
-  public VarS varY() {
-    return varS("Y");
-  }
-
-  public VarS varS(String name) {
+  public static VarS varS(String name) {
     return new VarS(name);
   }
 
