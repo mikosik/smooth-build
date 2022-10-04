@@ -96,31 +96,6 @@ public class TypeInferrer {
     return new TypeInferrerResolve(unifier, logger, bindings).resolve(valP, evalT);
   }
 
-  // param default value
-
-  private boolean inferParamDefaultValues(NList<ItemP> params) {
-    return params.stream()
-        .flatMap(p -> p.defaultVal().stream())
-        .allMatch(this::inferParamDefaultValue);
-  }
-
-  private boolean inferParamDefaultValue(ExprP body) {
-    return new TypeInferrer(typePsTranslator, bindings, logger, new Unifier())
-        .inferParamDefaultValueImpl(body);
-  }
-
-  private boolean inferParamDefaultValueImpl(ExprP body) {
-    return new ExprTypeUnifier(unifier, bindings, logger)
-        .unifyExpr(body)
-        .map(t -> resolveParamDefaultValue(body))
-        .orElse(false);
-  }
-
-  private boolean resolveParamDefaultValue(ExprP body) {
-    return new TypeInferrerResolve(unifier, logger, bindings)
-        .resolveParamDefaultValue(body);
-  }
-
   // func
 
   public static Optional<FuncSchemaS> inferFuncSchema(Bindings<Optional<TDefS>> types,
@@ -197,6 +172,31 @@ public class TypeInferrer {
       Bindings<? extends Optional<? extends RefableS>> bindings) {
     return new TypeInferrerResolve(unifier, logger, bindings)
         .resolve(funcP, new FuncTS(resT, funcP.paramTs()));
+  }
+
+  // param default value
+
+  private boolean inferParamDefaultValues(NList<ItemP> params) {
+    return params.stream()
+        .flatMap(p -> p.defaultVal().stream())
+        .allMatch(this::inferParamDefaultValue);
+  }
+
+  private boolean inferParamDefaultValue(ExprP body) {
+    return new TypeInferrer(typePsTranslator, bindings, logger, new Unifier())
+        .inferParamDefaultValueImpl(body);
+  }
+
+  private boolean inferParamDefaultValueImpl(ExprP body) {
+    return new ExprTypeUnifier(unifier, bindings, logger)
+        .unifyExpr(body)
+        .map(t -> resolveParamDefaultValue(body))
+        .orElse(false);
+  }
+
+  private boolean resolveParamDefaultValue(ExprP body) {
+    return new TypeInferrerResolve(unifier, logger, bindings)
+        .resolveParamDefaultValue(body);
   }
 
   // body
