@@ -778,35 +778,35 @@ public class TestContext {
 
   // ValS types
 
-  public ArrayTS arrayTS(TypeS elemT) {
+  public static ArrayTS arrayTS(TypeS elemT) {
     return new ArrayTS(elemT);
   }
 
-  public BlobTS blobTS() {
+  public static BlobTS blobTS() {
     return TypeFS.BLOB;
   }
 
-  public BoolTS boolTS() {
+  public static BoolTS boolTS() {
     return TypeFS.BOOL;
   }
 
-  public FuncTS funcTS(TypeS resT, TypeS... paramTs) {
+  public static FuncTS funcTS(TypeS resT, TypeS... paramTs) {
     return funcTS(resT, list(paramTs));
   }
 
-  private FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public static FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
     return new FuncTS(resT, tupleTS(paramTs));
   }
 
-  public TupleTS tupleTS(TypeS... itemTs) {
+  public static TupleTS tupleTS(TypeS... itemTs) {
     return tupleTS(list(itemTs));
   }
 
-  public TupleTS tupleTS(ImmutableList<TypeS> paramTs) {
+  public static TupleTS tupleTS(ImmutableList<TypeS> paramTs) {
     return new TupleTS(paramTs);
   }
 
-  public IntTS intTS() {
+  public static IntTS intTS() {
     return TypeFS.INT;
   }
 
@@ -818,16 +818,16 @@ public class TestContext {
     return new FuncSchemaS(funcTS);
   }
 
-  public StructTS personTS() {
-    return new StructTS("Person",
+  public static StructTS personTS() {
+    return structTS("Person",
         nlist(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
   }
 
-  public StringTS stringTS() {
+  public static StringTS stringTS() {
     return TypeFS.STRING;
   }
 
-  public StructTS structTS(String name, NList<ItemSigS> fields) {
+  public static StructTS structTS(String name, NList<ItemSigS> fields) {
     return new StructTS(name, fields);
   }
 
@@ -1247,7 +1247,7 @@ public class TestContext {
     return PolyFuncS.polyFuncS(newFuncSchema(funcS.type()), funcS);
   }
 
-  public ItemSigS sigS(TypeS type, String name) {
+  public static ItemSigS sigS(TypeS type, String name) {
     return new ItemSigS(type, name);
   }
 

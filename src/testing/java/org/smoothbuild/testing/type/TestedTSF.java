@@ -2,6 +2,13 @@ package org.smoothbuild.testing.type;
 
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.testing.TestContext.arrayTS;
+import static org.smoothbuild.testing.TestContext.blobTS;
+import static org.smoothbuild.testing.TestContext.boolTS;
+import static org.smoothbuild.testing.TestContext.funcTS;
+import static org.smoothbuild.testing.TestContext.intTS;
+import static org.smoothbuild.testing.TestContext.stringTS;
+import static org.smoothbuild.testing.TestContext.structTS;
 import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -24,14 +31,14 @@ public class TestedTSF {
 
   public static final TestedTS A = new TestedTS(varS("A"));
   public static final TestedTS B = new TestedTS(varS("B"));
-  public static final TestedTS BLOB = new TestedTS(TestingTS.BLOB
+  public static final TestedTS BLOB = new TestedTS(blobTS()
   );
-  public static final TestedTS BOOL = new TestedTS(TestingTS.BOOL);
+  public static final TestedTS BOOL = new TestedTS(boolTS());
 
-  public static final TestedTS INT = new TestedTS(TestingTS.INT);
-  public static final TestedTS STRING = new TestedTS(TestingTS.STRING);
+  public static final TestedTS INT = new TestedTS(intTS());
+  public static final TestedTS STRING = new TestedTS(stringTS());
   public static final TestedTS STRUCT = new TestedTS(
-      TestingTS.struct("Person", nlist(itemSigS(TestingTS.STRING, "name"))),
+      structTS("Person", nlist(itemSigS(stringTS(), "name"))),
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
@@ -85,7 +92,7 @@ public class TestedTSF {
   private static TestedTS a(TestedTS type) {
     return new TestedArrayTS(
         type,
-        TestingTS.a(type.type()),
+        arrayTS(type.type()),
         type.typeDeclarations(),
         type.allDeclarations()
     );
@@ -122,7 +129,7 @@ public class TestedTSF {
     return new TestedFuncTS(
         resT,
         paramTestedTs,
-        TestingTS.f(resT.type(), map(paramSigs, ItemSigS::type)),
+        funcTS(resT.type(), map(paramSigs, ItemSigS::type)),
         typeDeclarations,
         declarations
     );

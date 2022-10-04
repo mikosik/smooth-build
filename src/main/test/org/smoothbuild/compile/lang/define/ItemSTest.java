@@ -2,8 +2,8 @@ package org.smoothbuild.compile.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.TestContext.loc;
+import static org.smoothbuild.testing.TestContext.stringTS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.testing.type.TestingTS.STRING;
 
 import java.util.Optional;
 
@@ -23,27 +23,27 @@ public class ItemSTest {
 
   @Test
   public void null_name_is_forbidden() {
-    assertCall(() -> new ItemS(STRING, null, Optional.empty(), loc()))
+    assertCall(() -> new ItemS(stringTS(), null, Optional.empty(), loc()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void type_getter() {
-    param = new ItemS(STRING, name, Optional.empty(), loc());
+    param = new ItemS(stringTS(), name, Optional.empty(), loc());
     Truth.assertThat(param.type())
-        .isEqualTo(STRING);
+        .isEqualTo(stringTS());
   }
 
   @Test
   public void name_getter() {
-    param = new ItemS(STRING, name, Optional.empty(), loc());
+    param = new ItemS(stringTS(), name, Optional.empty(), loc());
     Truth.assertThat(param.name())
         .isEqualTo(name);
   }
 
   @Test
   public void to_string() {
-    param = new ItemS(STRING, name, Optional.empty(), loc());
+    param = new ItemS(stringTS(), name, Optional.empty(), loc());
     assertThat(param.toString())
         .isEqualTo("Item(`String name`)");
   }

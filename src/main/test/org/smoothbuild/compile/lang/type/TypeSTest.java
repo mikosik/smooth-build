@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.type;
 
+import static com.google.common.base.Predicates.alwaysFalse;
+import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -23,6 +25,7 @@ import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -65,54 +68,54 @@ public class TypeSTest {
 
   public static List<Arguments> names() {
     return asList(
-        arguments(BLOB, "Blob"),
-        arguments(BOOL, "Bool"),
-        arguments(INT, "Int"),
-        arguments(STRING, "String"),
+        arguments(blobTS(), "Blob"),
+        arguments(boolTS(), "Bool"),
+        arguments(intTS(), "Int"),
+        arguments(stringTS(), "String"),
         arguments(varA(), "A"),
 
-        arguments(tuple(), "{}"),
-        arguments(tuple(INT), "{Int}"),
-        arguments(tuple(INT, BOOL), "{Int,Bool}"),
-        arguments(tuple(varA()), "{A}"),
-        arguments(tuple(varA(), varB()), "{A,B}"),
+        arguments(tupleTS(), "{}"),
+        arguments(tupleTS(intTS()), "{Int}"),
+        arguments(tupleTS(intTS(), boolTS()), "{Int,Bool}"),
+        arguments(tupleTS(varA()), "{A}"),
+        arguments(tupleTS(varA(), varB()), "{A,B}"),
 
-        arguments(struct("MyStruct", nlist()), "MyStruct"),
-        arguments(struct("MyStruct", nlist(itemSigS(INT))), "MyStruct"),
+        arguments(structTS("MyStruct", nlist()), "MyStruct"),
+        arguments(structTS("MyStruct", nlist(itemSigS(intTS()))), "MyStruct"),
 
-        arguments(a(BLOB), "[Blob]"),
-        arguments(a(BOOL), "[Bool]"),
-        arguments(a(INT), "[Int]"),
-        arguments(a(STRING), "[String]"),
-        arguments(a(tuple()), "[{}]"),
-        arguments(a(tuple(INT)), "[{Int}]"),
-        arguments(a(tuple(INT, BOOL)), "[{Int,Bool}]"),
-        arguments(a(tuple(varA())), "[{A}]"),
-        arguments(a(tuple(varA(), varB())), "[{A,B}]"),
-        arguments(a(struct("MyStruct", nlist())), "[MyStruct]"),
-        arguments(a(struct("MyStruct", nlist(itemSigS(INT)))), "[MyStruct]"),
-        arguments(a(varA()), "[A]"),
+        arguments(arrayTS(blobTS()), "[Blob]"),
+        arguments(arrayTS(boolTS()), "[Bool]"),
+        arguments(arrayTS(intTS()), "[Int]"),
+        arguments(arrayTS(stringTS()), "[String]"),
+        arguments(arrayTS(tupleTS()), "[{}]"),
+        arguments(arrayTS(tupleTS(intTS())), "[{Int}]"),
+        arguments(arrayTS(tupleTS(intTS(), boolTS())), "[{Int,Bool}]"),
+        arguments(arrayTS(tupleTS(varA())), "[{A}]"),
+        arguments(arrayTS(tupleTS(varA(), varB())), "[{A,B}]"),
+        arguments(arrayTS(structTS("MyStruct", nlist())), "[MyStruct]"),
+        arguments(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS())))), "[MyStruct]"),
+        arguments(arrayTS(varA()), "[A]"),
 
 
-        arguments(a(a(varA())), "[[A]]"),
-        arguments(a(a(BLOB)), "[[Blob]]"),
-        arguments(a(a(BOOL)), "[[Bool]]"),
-        arguments(a(a(INT)), "[[Int]]"),
-        arguments(a(tuple()), "[{}]"),
-        arguments(a(a(tuple(INT))), "[[{Int}]]"),
-        arguments(a(a(tuple(INT, BOOL))), "[[{Int,Bool}]]"),
-        arguments(a(a(tuple(varA()))), "[[{A}]]"),
-        arguments(a(a(tuple(varA(), varB()))), "[[{A,B}]]"),
-        arguments(a(a(struct("MyStruct", nlist()))), "[[MyStruct]]"),
-        arguments(a(a(struct("MyStruct", nlist(itemSigS(INT))))), "[[MyStruct]]"),
-        arguments(a(a(STRING)), "[[String]]"),
+        arguments(arrayTS(arrayTS(varA())), "[[A]]"),
+        arguments(arrayTS(arrayTS(blobTS())), "[[Blob]]"),
+        arguments(arrayTS(arrayTS(boolTS())), "[[Bool]]"),
+        arguments(arrayTS(arrayTS(intTS())), "[[Int]]"),
+        arguments(arrayTS(tupleTS()), "[{}]"),
+        arguments(arrayTS(arrayTS(tupleTS(intTS()))), "[[{Int}]]"),
+        arguments(arrayTS(arrayTS(tupleTS(intTS(), boolTS()))), "[[{Int,Bool}]]"),
+        arguments(arrayTS(arrayTS(tupleTS(varA()))), "[[{A}]]"),
+        arguments(arrayTS(arrayTS(tupleTS(varA(), varB()))), "[[{A,B}]]"),
+        arguments(arrayTS(arrayTS(structTS("MyStruct", nlist()))), "[[MyStruct]]"),
+        arguments(arrayTS(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS()))))), "[[MyStruct]]"),
+        arguments(arrayTS(arrayTS(stringTS())), "[[String]]"),
 
-        arguments(f(varA(), a(varA())), "A([A])"),
-        arguments(f(STRING, a(varA())), "String([A])"),
-        arguments(f(varA(), varA()), "A(A)"),
-        arguments(f(STRING), "String()"),
-        arguments(f(STRING, STRING), "String(String)"),
-        arguments(f(STRING, tuple(INT)), "String({Int})")
+        arguments(funcTS(varA(), arrayTS(varA())), "A([A])"),
+        arguments(funcTS(stringTS(), arrayTS(varA())), "String([A])"),
+        arguments(funcTS(varA(), varA()), "A(A)"),
+        arguments(funcTS(stringTS()), "String()"),
+        arguments(funcTS(stringTS(), stringTS()), "String(String)"),
+        arguments(funcTS(stringTS(), tupleTS(intTS())), "String({Int})")
     );
   }
 
@@ -125,20 +128,63 @@ public class TypeSTest {
 
   public static List<Arguments> vars_test_data() {
     return List.of(
-        arguments(BLOB, varSetS()),
-        arguments(BOOL, varSetS()),
-        arguments(INT, varSetS()),
-        arguments(STRING, varSetS()),
+        arguments(blobTS(), varSetS()),
+        arguments(boolTS(), varSetS()),
+        arguments(intTS(), varSetS()),
+        arguments(stringTS(), varSetS()),
 
-        arguments(tuple(INT), varSetS()),
-        arguments(tuple(varA(), varB()), varSetS(varA(), varB())),
-        arguments(a(INT), varSetS()),
-        arguments(a(varA()), varSetS(varA())),
+        arguments(tupleTS(intTS()), varSetS()),
+        arguments(tupleTS(varA(), varB()), varSetS(varA(), varB())),
+        arguments(arrayTS(intTS()), varSetS()),
+        arguments(arrayTS(varA()), varSetS(varA())),
 
-        arguments(f(BLOB, BOOL), varSetS()),
-        arguments(f(varA(), BOOL), varSetS(varA())),
-        arguments(f(BLOB, varA()), varSetS(varA())),
-        arguments(f(varA(), varB()), varSetS(varA(), varB()))
+        arguments(funcTS(blobTS(), boolTS()), varSetS()),
+        arguments(funcTS(varA(), boolTS()), varSetS(varA())),
+        arguments(funcTS(blobTS(), varA()), varSetS(varA())),
+        arguments(funcTS(varA(), varB()), varSetS(varA(), varB()))
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("rename_vars")
+  public void rename_vars(TypeS type, Predicate<VarS> predicate, TypeS expected) {
+    assertThat(type.renameVars(predicate))
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> rename_vars() {
+    Function<VarS, VarS> addPrefix = (VarS v) -> new VarS("prefix." + v.name());
+    Predicate<VarS> matchC = (VarS v) -> v.name().equals("C");
+    return List.of(
+        arguments(BLOB, alwaysTrue(), BLOB),
+        arguments(BLOB, alwaysFalse(), BLOB),
+        arguments(BOOL, alwaysTrue(), BOOL),
+        arguments(BOOL, alwaysFalse(), BOOL),
+        arguments(INT, alwaysTrue(), INT),
+        arguments(INT, alwaysFalse(), INT),
+        arguments(STRING, alwaysTrue(), STRING),
+        arguments(STRING, alwaysFalse(), STRING),
+
+        arguments(varB(), alwaysTrue(), varA()),
+        arguments(varB(), alwaysFalse(), varB()),
+
+
+        arguments(tuple(INT), alwaysTrue(), tuple(INT)),
+        arguments(tuple(INT), alwaysFalse(), tuple(INT)),
+        arguments(tuple(varB(), varC()), alwaysTrue(), tuple(varA(), varB())),
+        arguments(tuple(varB(), varC()), alwaysFalse(), tuple(varB(), varC())),
+        arguments(tuple(varB(), varC()), matchC, tuple(varB(), varA())),
+
+        arguments(a(INT), alwaysTrue(), a(INT)),
+        arguments(a(INT), alwaysFalse(), a(INT)),
+        arguments(a(varB()), alwaysTrue(), a(varA())),
+        arguments(a(varB()), alwaysFalse(), a(varB())),
+
+        arguments(f(BLOB, BOOL), alwaysTrue(), f(BLOB, BOOL)),
+        arguments(f(BLOB, BOOL), alwaysFalse(), f(BLOB, BOOL)),
+        arguments(f(varB(), varC()), alwaysTrue(), f(varA(), varB())),
+        arguments(f(varB(), varC()), alwaysFalse(), f(varB(), varC())),
+        arguments(f(varB(), varC()), matchC, f(varB(), varA()))
     );
   }
 
@@ -152,26 +198,26 @@ public class TypeSTest {
   public static List<Arguments> map_vars() {
     Function<VarS, VarS> addPrefix = (VarS v) -> new VarS("prefix." + v.name());
     return List.of(
-        arguments(BLOB, addPrefix, BLOB),
-        arguments(BOOL, addPrefix, BOOL),
-        arguments(INT, addPrefix, INT),
-        arguments(STRING, addPrefix, STRING),
+        arguments(blobTS(), addPrefix, blobTS()),
+        arguments(boolTS(), addPrefix, boolTS()),
+        arguments(intTS(), addPrefix, intTS()),
+        arguments(stringTS(), addPrefix, stringTS()),
 
         arguments(varS("A"), addPrefix, varS("prefix.A")),
         arguments(varS("pre.A"), addPrefix, varS("prefix.pre.A")),
 
-        arguments(tuple(INT), addPrefix, tuple(INT)),
-        arguments(tuple(varA(), varB()), addPrefix, tuple(varS("prefix.A"), varS("prefix.B"))),
+        arguments(tupleTS(intTS()), addPrefix, tupleTS(intTS())),
+        arguments(tupleTS(varA(), varB()), addPrefix, tupleTS(varS("prefix.A"), varS("prefix.B"))),
 
-        arguments(a(INT), addPrefix, a(INT)),
-        arguments(a(varS("A")), addPrefix, a(varS("prefix.A"))),
-        arguments(a(varS("p.A")), addPrefix, a(varS("prefix.p.A"))),
+        arguments(arrayTS(intTS()), addPrefix, arrayTS(intTS())),
+        arguments(arrayTS(varS("A")), addPrefix, arrayTS(varS("prefix.A"))),
+        arguments(arrayTS(varS("p.A")), addPrefix, arrayTS(varS("prefix.p.A"))),
 
-        arguments(f(BLOB, BOOL), addPrefix, f(BLOB, BOOL)),
-        arguments(f(varS("A"), BOOL), addPrefix, f(varS("prefix.A"), BOOL)),
-        arguments(f(BLOB, varS("A")), addPrefix, f(BLOB, varS("prefix.A"))),
-        arguments(f(varS("p.A"), BOOL), addPrefix, f(varS("prefix.p.A"), BOOL)),
-        arguments(f(BLOB, varS("p.A")), addPrefix, f(BLOB, varS("prefix.p.A")))
+        arguments(funcTS(blobTS(), boolTS()), addPrefix, funcTS(blobTS(), boolTS())),
+        arguments(funcTS(varS("A"), boolTS()), addPrefix, funcTS(varS("prefix.A"), boolTS())),
+        arguments(funcTS(blobTS(), varS("A")), addPrefix, funcTS(blobTS(), varS("prefix.A"))),
+        arguments(funcTS(varS("p.A"), boolTS()), addPrefix, funcTS(varS("prefix.p.A"), boolTS())),
+        arguments(funcTS(blobTS(), varS("p.A")), addPrefix, funcTS(blobTS(), varS("prefix.p.A")))
     );
   }
 
@@ -180,27 +226,27 @@ public class TypeSTest {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
     public void elemType(TypeS type) {
-      ArrayTS array = a(type);
+      var array = arrayTS(type);
       assertThat(array.elem())
           .isEqualTo(type);
     }
 
     public static List<Arguments> elemType_test_data() {
       return asList(
-          arguments(BLOB),
-          arguments(BOOL),
-          arguments(f(STRING)),
-          arguments(INT),
-          arguments(STRING),
-          arguments(struct("MyStruct", nlist())),
+          arguments(blobTS()),
+          arguments(boolTS()),
+          arguments(funcTS(stringTS())),
+          arguments(intTS()),
+          arguments(stringTS()),
+          arguments(structTS("MyStruct", nlist())),
           arguments(varA()),
 
-          arguments(a(BLOB)),
-          arguments(a(BOOL)),
-          arguments(a(f(STRING))),
-          arguments(a(INT)),
-          arguments(a(STRING)),
-          arguments(a(varA()))
+          arguments(arrayTS(blobTS())),
+          arguments(arrayTS(boolTS())),
+          arguments(arrayTS(funcTS(stringTS()))),
+          arguments(arrayTS(intTS())),
+          arguments(arrayTS(stringTS())),
+          arguments(arrayTS(varA()))
       );
     }
   }
@@ -216,9 +262,9 @@ public class TypeSTest {
 
     public static List<Arguments> func_result_cases() {
       return asList(
-          arguments(f(INT), INT),
-          arguments(f(BLOB, BOOL), BLOB),
-          arguments(f(BLOB, BOOL, INT), BLOB)
+          arguments(funcTS(intTS()), intTS()),
+          arguments(funcTS(blobTS(), boolTS()), blobTS()),
+          arguments(funcTS(blobTS(), boolTS(), intTS()), blobTS())
       );
     }
 
@@ -231,9 +277,9 @@ public class TypeSTest {
 
     public static List<Arguments> func_params_cases() {
       return asList(
-          arguments(f(INT), tuple()),
-          arguments(f(BLOB, BOOL), tuple(BOOL)),
-          arguments(f(BLOB, BOOL, INT), tuple(BOOL, INT))
+          arguments(funcTS(intTS()), tupleTS()),
+          arguments(funcTS(blobTS(), boolTS()), tupleTS(boolTS())),
+          arguments(funcTS(blobTS(), boolTS(), intTS()), tupleTS(boolTS(), intTS()))
       );
     }
   }
@@ -242,12 +288,12 @@ public class TypeSTest {
   class _struct {
     @Test
     public void without_fields_can_be_created() {
-      struct("MyStruct", nlist());
+      structTS("MyStruct", nlist());
     }
 
     @Test
     public void struct_name() {
-      var struct = struct("MyStruct", nlist());
+      var struct = structTS("MyStruct", nlist());
       assertThat(struct.name())
           .isEqualTo("MyStruct");
     }
@@ -255,7 +301,7 @@ public class TypeSTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  "})
     public void illegal_struct_name(String name) {
-      assertCall(() -> struct(name, nlist()))
+      assertCall(() -> structTS(name, nlist()))
           .throwsException(IllegalArgumentException.class);
     }
 
@@ -268,12 +314,12 @@ public class TypeSTest {
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
-          arguments(struct("Person", nlist()), nlist()),
-          arguments(struct("Person", nlist(itemSigS(STRING, "field"))),
-              nlist(itemSigS(STRING, "field"))),
-          arguments(struct("Person",
-              nlist(itemSigS(STRING, "field"), itemSigS(INT, "field2"))),
-              nlist(itemSigS(STRING, "field"), itemSigS(INT, "field2")))
+          arguments(structTS("Person", nlist()), nlist()),
+          arguments(structTS("Person", nlist(itemSigS(stringTS(), "field"))),
+              nlist(itemSigS(stringTS(), "field"))),
+          arguments(
+              structTS("Person", nlist(itemSigS(stringTS(), "field"), itemSigS(intTS(), "field2"))),
+              nlist(itemSigS(stringTS(), "field"), itemSigS(intTS(), "field2")))
       );
     }
   }
@@ -282,29 +328,29 @@ public class TypeSTest {
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
     List<TypeS> types = asList(
-        BLOB,
-        BOOL,
-        INT,
-        STRING,
-        tuple(),
-        tuple(INT, BOOL),
-        struct("MyStruct", nlist()),
-        struct("MyStruct", nlist(itemSigS(INT, "field"))),
+        blobTS(),
+        boolTS(),
+        intTS(),
+        stringTS(),
+        tupleTS(),
+        tupleTS(intTS(), boolTS()),
+        structTS("MyStruct", nlist()),
+        structTS("MyStruct", nlist(itemSigS(intTS(), "field"))),
         varA(),
         varB(),
         varC(),
 
-        f(BLOB),
-        f(STRING),
-        f(BLOB, STRING),
-        f(BLOB, BLOB)
+        funcTS(blobTS()),
+        funcTS(stringTS()),
+        funcTS(blobTS(), stringTS()),
+        funcTS(blobTS(), blobTS())
     );
 
     for (TypeS type : types) {
       equalsTester.addEqualityGroup(type, type);
-      equalsTester.addEqualityGroup(tuple(type), tuple(type));
-      equalsTester.addEqualityGroup(a(type), a(type));
-      equalsTester.addEqualityGroup(a(a(type)), a(a(type)));
+      equalsTester.addEqualityGroup(tupleTS(type), tupleTS(type));
+      equalsTester.addEqualityGroup(arrayTS(type), arrayTS(type));
+      equalsTester.addEqualityGroup(arrayTS(arrayTS(type)), arrayTS(arrayTS(type)));
     }
     equalsTester.testEquals();
   }
@@ -320,9 +366,9 @@ public class TypeSTest {
 
     public static List<Arguments> tuple_items_cases() {
       return asList(
-          arguments(tuple(), list()),
-          arguments(tuple(BOOL), list(BOOL)),
-          arguments(tuple(BOOL, INT), list(BOOL, INT))
+          arguments(tupleTS(), list()),
+          arguments(tupleTS(boolTS()), list(boolTS())),
+          arguments(tupleTS(boolTS(), intTS()), list(boolTS(), intTS()))
       );
     }
   }
