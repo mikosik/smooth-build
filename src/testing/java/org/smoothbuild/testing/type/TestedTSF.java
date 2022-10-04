@@ -2,7 +2,7 @@ package org.smoothbuild.testing.type;
 
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
-import static org.smoothbuild.testing.type.TestingTS.var;
+import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nlist;
@@ -22,8 +22,8 @@ import com.google.common.collect.ImmutableSet;
 public class TestedTSF {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedTS A = new TestedTS(var("A"));
-  public static final TestedTS B = new TestedTS(var("B"));
+  public static final TestedTS A = new TestedTS(varS("A"));
+  public static final TestedTS B = new TestedTS(varS("B"));
   public static final TestedTS BLOB = new TestedTS(TestingTS.BLOB
   );
   public static final TestedTS BOOL = new TestedTS(TestingTS.BOOL);

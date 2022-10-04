@@ -5,19 +5,19 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.testing.TestContext.varA;
+import static org.smoothbuild.testing.TestContext.varB;
+import static org.smoothbuild.testing.TestContext.varC;
+import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.testing.type.TestingTS.A;
-import static org.smoothbuild.testing.type.TestingTS.B;
 import static org.smoothbuild.testing.type.TestingTS.BLOB;
 import static org.smoothbuild.testing.type.TestingTS.BOOL;
-import static org.smoothbuild.testing.type.TestingTS.C;
 import static org.smoothbuild.testing.type.TestingTS.INT;
 import static org.smoothbuild.testing.type.TestingTS.STRING;
 import static org.smoothbuild.testing.type.TestingTS.a;
 import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.testing.type.TestingTS.struct;
 import static org.smoothbuild.testing.type.TestingTS.tuple;
-import static org.smoothbuild.testing.type.TestingTS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
@@ -69,13 +69,13 @@ public class TypeSTest {
         arguments(BOOL, "Bool"),
         arguments(INT, "Int"),
         arguments(STRING, "String"),
-        arguments(A, "A"),
+        arguments(varA(), "A"),
 
         arguments(tuple(), "{}"),
         arguments(tuple(INT), "{Int}"),
         arguments(tuple(INT, BOOL), "{Int,Bool}"),
-        arguments(tuple(A), "{A}"),
-        arguments(tuple(A, B), "{A,B}"),
+        arguments(tuple(varA()), "{A}"),
+        arguments(tuple(varA(), varB()), "{A,B}"),
 
         arguments(struct("MyStruct", nlist()), "MyStruct"),
         arguments(struct("MyStruct", nlist(itemSigS(INT))), "MyStruct"),
@@ -87,29 +87,29 @@ public class TypeSTest {
         arguments(a(tuple()), "[{}]"),
         arguments(a(tuple(INT)), "[{Int}]"),
         arguments(a(tuple(INT, BOOL)), "[{Int,Bool}]"),
-        arguments(a(tuple(A)), "[{A}]"),
-        arguments(a(tuple(A, B)), "[{A,B}]"),
+        arguments(a(tuple(varA())), "[{A}]"),
+        arguments(a(tuple(varA(), varB())), "[{A,B}]"),
         arguments(a(struct("MyStruct", nlist())), "[MyStruct]"),
         arguments(a(struct("MyStruct", nlist(itemSigS(INT)))), "[MyStruct]"),
-        arguments(a(A), "[A]"),
+        arguments(a(varA()), "[A]"),
 
 
-        arguments(a(a(A)), "[[A]]"),
+        arguments(a(a(varA())), "[[A]]"),
         arguments(a(a(BLOB)), "[[Blob]]"),
         arguments(a(a(BOOL)), "[[Bool]]"),
         arguments(a(a(INT)), "[[Int]]"),
         arguments(a(tuple()), "[{}]"),
         arguments(a(a(tuple(INT))), "[[{Int}]]"),
         arguments(a(a(tuple(INT, BOOL))), "[[{Int,Bool}]]"),
-        arguments(a(a(tuple(A))), "[[{A}]]"),
-        arguments(a(a(tuple(A, B))), "[[{A,B}]]"),
+        arguments(a(a(tuple(varA()))), "[[{A}]]"),
+        arguments(a(a(tuple(varA(), varB()))), "[[{A,B}]]"),
         arguments(a(a(struct("MyStruct", nlist()))), "[[MyStruct]]"),
         arguments(a(a(struct("MyStruct", nlist(itemSigS(INT))))), "[[MyStruct]]"),
         arguments(a(a(STRING)), "[[String]]"),
 
-        arguments(f(A, a(A)), "A([A])"),
-        arguments(f(STRING, a(A)), "String([A])"),
-        arguments(f(A, A), "A(A)"),
+        arguments(f(varA(), a(varA())), "A([A])"),
+        arguments(f(STRING, a(varA())), "String([A])"),
+        arguments(f(varA(), varA()), "A(A)"),
         arguments(f(STRING), "String()"),
         arguments(f(STRING, STRING), "String(String)"),
         arguments(f(STRING, tuple(INT)), "String({Int})")
@@ -131,14 +131,14 @@ public class TypeSTest {
         arguments(STRING, varSetS()),
 
         arguments(tuple(INT), varSetS()),
-        arguments(tuple(A, B), varSetS(A, B)),
+        arguments(tuple(varA(), varB()), varSetS(varA(), varB())),
         arguments(a(INT), varSetS()),
-        arguments(a(A), varSetS(A)),
+        arguments(a(varA()), varSetS(varA())),
 
         arguments(f(BLOB, BOOL), varSetS()),
-        arguments(f(A, BOOL), varSetS(A)),
-        arguments(f(BLOB, A), varSetS(A)),
-        arguments(f(A, B), varSetS(A, B))
+        arguments(f(varA(), BOOL), varSetS(varA())),
+        arguments(f(BLOB, varA()), varSetS(varA())),
+        arguments(f(varA(), varB()), varSetS(varA(), varB()))
     );
   }
 
@@ -157,21 +157,21 @@ public class TypeSTest {
         arguments(INT, addPrefix, INT),
         arguments(STRING, addPrefix, STRING),
 
-        arguments(var("A"), addPrefix, var("prefix.A")),
-        arguments(var("pre.A"), addPrefix, var("prefix.pre.A")),
+        arguments(varS("A"), addPrefix, varS("prefix.A")),
+        arguments(varS("pre.A"), addPrefix, varS("prefix.pre.A")),
 
         arguments(tuple(INT), addPrefix, tuple(INT)),
-        arguments(tuple(A, B), addPrefix, tuple(var("prefix.A"), var("prefix.B"))),
+        arguments(tuple(varA(), varB()), addPrefix, tuple(varS("prefix.A"), varS("prefix.B"))),
 
         arguments(a(INT), addPrefix, a(INT)),
-        arguments(a(var("A")), addPrefix, a(var("prefix.A"))),
-        arguments(a(var("p.A")), addPrefix, a(var("prefix.p.A"))),
+        arguments(a(varS("A")), addPrefix, a(varS("prefix.A"))),
+        arguments(a(varS("p.A")), addPrefix, a(varS("prefix.p.A"))),
 
         arguments(f(BLOB, BOOL), addPrefix, f(BLOB, BOOL)),
-        arguments(f(var("A"), BOOL), addPrefix, f(var("prefix.A"), BOOL)),
-        arguments(f(BLOB, var("A")), addPrefix, f(BLOB, var("prefix.A"))),
-        arguments(f(var("p.A"), BOOL), addPrefix, f(var("prefix.p.A"), BOOL)),
-        arguments(f(BLOB, var("p.A")), addPrefix, f(BLOB, var("prefix.p.A")))
+        arguments(f(varS("A"), BOOL), addPrefix, f(varS("prefix.A"), BOOL)),
+        arguments(f(BLOB, varS("A")), addPrefix, f(BLOB, varS("prefix.A"))),
+        arguments(f(varS("p.A"), BOOL), addPrefix, f(varS("prefix.p.A"), BOOL)),
+        arguments(f(BLOB, varS("p.A")), addPrefix, f(BLOB, varS("prefix.p.A")))
     );
   }
 
@@ -193,14 +193,14 @@ public class TypeSTest {
           arguments(INT),
           arguments(STRING),
           arguments(struct("MyStruct", nlist())),
-          arguments(A),
+          arguments(varA()),
 
           arguments(a(BLOB)),
           arguments(a(BOOL)),
           arguments(a(f(STRING))),
           arguments(a(INT)),
           arguments(a(STRING)),
-          arguments(a(A))
+          arguments(a(varA()))
       );
     }
   }
@@ -290,9 +290,9 @@ public class TypeSTest {
         tuple(INT, BOOL),
         struct("MyStruct", nlist()),
         struct("MyStruct", nlist(itemSigS(INT, "field"))),
-        A,
-        B,
-        C,
+        varA(),
+        varB(),
+        varC(),
 
         f(BLOB),
         f(STRING),

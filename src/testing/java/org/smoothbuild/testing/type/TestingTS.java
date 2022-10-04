@@ -15,7 +15,6 @@ import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -27,9 +26,6 @@ public class TestingTS {
   public static final StringTS STRING = TypeFS.STRING;
   public static final StructTS PERSON = struct("Person",
       nlist(itemSigS(STRING, "firstName"), itemSigS(STRING, "lastName")));
-  public static final VarS A = var("A");
-  public static final VarS B = var("B");
-  public static final VarS C = var("C");
 
   public static ArrayTS a(TypeS elemT) {
     return new ArrayTS(elemT);
@@ -41,10 +37,6 @@ public class TestingTS {
 
   public static FuncTS f(TypeS resT, ImmutableList<TypeS> paramTs) {
     return new FuncTS(resT, paramTs);
-  }
-
-  public static VarS var(String a) {
-    return new VarS(a);
   }
 
   public static TupleTS tuple(TypeS... items) {
