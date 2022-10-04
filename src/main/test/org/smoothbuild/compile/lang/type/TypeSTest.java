@@ -7,19 +7,19 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.testing.TestContext.arrayTS;
+import static org.smoothbuild.testing.TestContext.blobTS;
+import static org.smoothbuild.testing.TestContext.boolTS;
+import static org.smoothbuild.testing.TestContext.funcTS;
+import static org.smoothbuild.testing.TestContext.intTS;
+import static org.smoothbuild.testing.TestContext.stringTS;
+import static org.smoothbuild.testing.TestContext.structTS;
+import static org.smoothbuild.testing.TestContext.tupleTS;
 import static org.smoothbuild.testing.TestContext.varA;
 import static org.smoothbuild.testing.TestContext.varB;
 import static org.smoothbuild.testing.TestContext.varC;
 import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.testing.type.TestingTS.BLOB;
-import static org.smoothbuild.testing.type.TestingTS.BOOL;
-import static org.smoothbuild.testing.type.TestingTS.INT;
-import static org.smoothbuild.testing.type.TestingTS.STRING;
-import static org.smoothbuild.testing.type.TestingTS.a;
-import static org.smoothbuild.testing.type.TestingTS.f;
-import static org.smoothbuild.testing.type.TestingTS.struct;
-import static org.smoothbuild.testing.type.TestingTS.tuple;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
@@ -153,38 +153,37 @@ public class TypeSTest {
   }
 
   public static List<Arguments> rename_vars() {
-    Function<VarS, VarS> addPrefix = (VarS v) -> new VarS("prefix." + v.name());
     Predicate<VarS> matchC = (VarS v) -> v.name().equals("C");
     return List.of(
-        arguments(BLOB, alwaysTrue(), BLOB),
-        arguments(BLOB, alwaysFalse(), BLOB),
-        arguments(BOOL, alwaysTrue(), BOOL),
-        arguments(BOOL, alwaysFalse(), BOOL),
-        arguments(INT, alwaysTrue(), INT),
-        arguments(INT, alwaysFalse(), INT),
-        arguments(STRING, alwaysTrue(), STRING),
-        arguments(STRING, alwaysFalse(), STRING),
+        arguments(blobTS(), alwaysTrue(), blobTS()),
+        arguments(blobTS(), alwaysFalse(), blobTS()),
+        arguments(boolTS(), alwaysTrue(), boolTS()),
+        arguments(boolTS(), alwaysFalse(), boolTS()),
+        arguments(intTS(), alwaysTrue(), intTS()),
+        arguments(intTS(), alwaysFalse(), intTS()),
+        arguments(stringTS(), alwaysTrue(), stringTS()),
+        arguments(stringTS(), alwaysFalse(), stringTS()),
 
         arguments(varB(), alwaysTrue(), varA()),
         arguments(varB(), alwaysFalse(), varB()),
 
 
-        arguments(tuple(INT), alwaysTrue(), tuple(INT)),
-        arguments(tuple(INT), alwaysFalse(), tuple(INT)),
-        arguments(tuple(varB(), varC()), alwaysTrue(), tuple(varA(), varB())),
-        arguments(tuple(varB(), varC()), alwaysFalse(), tuple(varB(), varC())),
-        arguments(tuple(varB(), varC()), matchC, tuple(varB(), varA())),
+        arguments(tupleTS(intTS()), alwaysTrue(), tupleTS(intTS())),
+        arguments(tupleTS(intTS()), alwaysFalse(), tupleTS(intTS())),
+        arguments(tupleTS(varB(), varC()), alwaysTrue(), tupleTS(varA(), varB())),
+        arguments(tupleTS(varB(), varC()), alwaysFalse(), tupleTS(varB(), varC())),
+        arguments(tupleTS(varB(), varC()), matchC, tupleTS(varB(), varA())),
 
-        arguments(a(INT), alwaysTrue(), a(INT)),
-        arguments(a(INT), alwaysFalse(), a(INT)),
-        arguments(a(varB()), alwaysTrue(), a(varA())),
-        arguments(a(varB()), alwaysFalse(), a(varB())),
+        arguments(arrayTS(intTS()), alwaysTrue(), arrayTS(intTS())),
+        arguments(arrayTS(intTS()), alwaysFalse(), arrayTS(intTS())),
+        arguments(arrayTS(varB()), alwaysTrue(), arrayTS(varA())),
+        arguments(arrayTS(varB()), alwaysFalse(), arrayTS(varB())),
 
-        arguments(f(BLOB, BOOL), alwaysTrue(), f(BLOB, BOOL)),
-        arguments(f(BLOB, BOOL), alwaysFalse(), f(BLOB, BOOL)),
-        arguments(f(varB(), varC()), alwaysTrue(), f(varA(), varB())),
-        arguments(f(varB(), varC()), alwaysFalse(), f(varB(), varC())),
-        arguments(f(varB(), varC()), matchC, f(varB(), varA()))
+        arguments(funcTS(blobTS(), boolTS()), alwaysTrue(), funcTS(blobTS(), boolTS())),
+        arguments(funcTS(blobTS(), boolTS()), alwaysFalse(), funcTS(blobTS(), boolTS())),
+        arguments(funcTS(varB(), varC()), alwaysTrue(), funcTS(varA(), varB())),
+        arguments(funcTS(varB(), varC()), alwaysFalse(), funcTS(varB(), varC())),
+        arguments(funcTS(varB(), varC()), matchC, funcTS(varB(), varA()))
     );
   }
 
