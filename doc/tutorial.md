@@ -6,7 +6,7 @@ a description of project's build process.
 One of the simplest non-trivial build files is:
 
 ```
-release = projectFiles("src") | javac() | jar();
+File release = projectFiles("src") | javac() | jar();
 ```
 
 This script defines value `release` which body contains function calls separated by `|`.
@@ -33,6 +33,14 @@ Saving artifact(s)
   release -> '.smooth/artifacts/release'
 ```
 
+Smooth is capable of inferring type of any expression, 
+so we don't have to declare it explicitly.
+Our initial example can be simplified to
+```
+release = projectFiles("src") | javac() | jar();
+```
+For educational reasons we will keep writing types explicitly in our examples.
+
 If you want to try examples yourself then
 [download and install smooth](install.md)
 first.
@@ -50,8 +58,8 @@ Note that there's ugly duplicated code in this example.
 We make it clean further in this tutorial for now we just focus on parallelism. 
 
 ```
-main = projectFiles("src-main") | javac() | jar();
-deps = projectFiles("src-deps") | javac() | jar();
+File main = projectFiles("src-main") | javac() | jar();
+File deps = projectFiles("src-deps") | javac() | jar();
 ```
 
 As both functions (`main` and `deps`) do not depend on each other
@@ -64,11 +72,11 @@ It is enough to ask smooth to build those jars with `smooth build main deps`.
 If you run build command twice for our initial example
 
 ```
-release = projectFiles("src") | javac() | jar();
+File release = projectFiles("src") | javac() | jar();
 ```
 
-you will notice that second run completes almost instantly.
-That's because evaluation of `release` has been cached by smooth.
+you will notice that second evaluation completes almost instantly.
+That's because result of `release` evaluation has been cached by smooth.
 This is nothing extraordinary as most build tools reuse result
 from previous execution.
 However, smooth is much smarter.
@@ -130,12 +138,14 @@ String welcomeString = "Hello World";
 ```
 
 ##### _Int_
-Int is an arbitrary-precision integer.
+Int is an integer with arbitrary-precision - its size is not bound.
+You can have Int value as big as you want unless it doesn't fit into memory.
 Int value can be defined using Int literal,
 which is a sequence of decimal digits optionally prefixed with minus sign (`-`).
 
 ```
 Int favoriteNumber = 17;
+Int enormousInt = 1234567890000000000;
 ```
 
 ##### _Blob_
@@ -208,30 +218,12 @@ Below example of two level deep array (array of arrays of `String`).
 [[String]] groups = [ [ "circle" ], [ "triangle" ], [ "square", "rectangle" ] ];
 ```
 
-#### Type inference
-
-Smooth is capable of inferring type of any expression, so we don't have to declare it explicitly.
-Most of our examples so far had declared type explicitly for educational reasons
-but it is possible to skip type declarations.
-We cal replace 
-
-```
-[String] strings = [ "dog", "cat", "donkey" ];
-```
-
-with equal version
-
-```
-strings = [ "dog", "cat", "donkey" ];
-```
-
-
 ### Functions
 
 Let's look once again at `release` value that we defined at the beginning of this tutorial.
 
 ```
-release = projectFiles("src") | javac() | jar();
+File release = projectFiles("src") | javac() | jar();
 ```
 
 It uses function chaining (represented by pipe symbol `|`) to pass function call result as
@@ -240,7 +232,7 @@ In fact function chaining is just syntactic sugar for more standard function cal
 We can refactor above function definition to:
 
 ```
-release = jar(javac(projectFiles("src")));
+File release = jar(javac(projectFiles("src")));
 ```
 
 This version is less readable despite being more familiar to people
@@ -261,17 +253,17 @@ This way we can build our own set of reusable functions.
 For example:
 
 ```
-javaJar(String srcPath) = projectFiles(srcPath) | javac() | jar();
-main = javaJar("src/main");
-other = javaJar("src/other"); 
+File javaJar(String srcPath) = projectFiles(srcPath) | javac() | jar();
+File main = javaJar("src/main");
+File other = javaJar("src/other"); 
 ```
 
-#### Function parameter default argument
+#### Function parameter default value
 
 When we define function we can provide default value for some parameters.
 This way call to such function does not have to provide value for such parameters.
 
-Let's create function that creates text file. Its `name` parameter has default value.
+Let's create function that creates text file. 
 
 ```
 File textFile(String text, String name = "file.txt") 
@@ -313,22 +305,28 @@ from [standard library](api.md) which signature is:
 can be invoked as
 
 ```
-files = projectFiles("src");
-classes = javac(files, source="1.5");
+[File] files = projectFiles("src");
+[File] classes = javac(files, source="1.5");
 ```
 
 ### Polymorphism
 
-Smooth allows declaring polymorphic functions and values.
+Smooth allows declaring polymorphic functions and values via 
+[parametric polymorphism](https://en.wikipedia.org/wiki/Parametric_polymorphism).
 To define type variable simply use a single upper case letter as its name.
 Below declaration of [id](api/id.md) function from [standard library](api.md) 
 that returns its only parameter.
 
 ```
-A identity(A value) = value;
+A id(A a) = a;
 ```
 
-Example of polymorphic value can be:
+When polymorphic function is invoked actual type are inferred automatically.
+```
+Int result = id(7);
+```
+
+Example of polymorphic value can be empty array:
 
 ```
 [A] emptyArray = [];
