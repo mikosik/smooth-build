@@ -11,7 +11,7 @@ public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements Inst
   @Override
   public String label() {
     int limit = NAME_LENGTH_LIMIT;
-    String string = "0x" + byteString.hex();
+    var string = "0x" + byteString.hex();
     if (string.length() <= limit) {
       return string;
     } else {
