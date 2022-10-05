@@ -55,7 +55,7 @@
     <property name="lib.truth" value="${dir.lib}/ivy/truth-1.1.3.jar"/>
     <property name="lib.diffutils" value="${dir.lib}/ivy/diffutils-1.3.0.jar"/>
     <property name="lib.picocli" value="${dir.lib}/ivy/picocli-4.6.1.jar"/>
-    <property name="lib.zip4j" value="${dir.lib}/ivy/zip4j-2.9.1.jar"/>
+    <property name="lib.zip4j" value="${dir.lib}/ivy/zip4j-2.11.2.jar"/>
 
     <target name="init">
         <delete dir="${dir.build}"/>
