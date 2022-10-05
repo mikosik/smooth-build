@@ -86,11 +86,11 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveBody(ExprP body) {
-    setDefaultTypes(body);
+    inferUnitTypes(body);
     return resolve(body);
   }
 
-  private void setDefaultTypes(ExprP expr) {
+  private void inferUnitTypes(ExprP expr) {
     new UnitTypeInferrer(unifier, bindings).infer(expr);
   }
 
