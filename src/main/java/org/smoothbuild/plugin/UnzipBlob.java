@@ -29,6 +29,6 @@ public class UnzipBlob {
   private static TupleB fileB(BytecodeF bytecodeF, String fileName, InputStream inputStream) {
     StringB path = bytecodeF.string(fileName);
     BlobB content = bytecodeF.blob(sink -> sink.writeAll(source(inputStream)));
-    return bytecodeF.file(path, content);
+    return bytecodeF.file(content, path);
   }
 }

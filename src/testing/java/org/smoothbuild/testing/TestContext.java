@@ -613,7 +613,7 @@ public class TestContext {
 
   public TupleB fileB(String path, BlobB blob) {
     StringB string = bytecodeF().string(path);
-    return bytecodeF().file(string, blob);
+    return bytecodeF().file(blob, string);
   }
 
   public DefFuncB defFuncB() {

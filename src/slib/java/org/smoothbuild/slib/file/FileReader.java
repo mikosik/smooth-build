@@ -18,7 +18,7 @@ public class FileReader {
   }
 
   public TupleB createFile(PathS path, PathS projectPath) throws IOException {
-    return container.factory().file(createPath(path), createContent(projectPath));
+    return container.factory().file(createContent(projectPath), createPath(path));
   }
 
   private StringB createPath(PathS path) {

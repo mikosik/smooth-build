@@ -9,7 +9,7 @@ public class FileTest extends SystemTestCase {
   @Test
   public void file_ctor() throws Exception {
     createUserModule("""
-            result = file("name.txt", 0x41);
+            result = file(0x41, "name.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();

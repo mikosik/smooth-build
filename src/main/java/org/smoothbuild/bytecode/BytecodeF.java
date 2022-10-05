@@ -99,8 +99,8 @@ public class BytecodeF {
     return bytecodeDb.combine(evalT, items);
   }
 
-  public TupleB file(StringB path, BlobB content) {
-    return bytecodeDb.tuple(fileT(), list(path, content));
+  public TupleB file(BlobB content, StringB path) {
+    return bytecodeDb.tuple(fileT(), list(content, path));
   }
 
   public DefFuncB defFunc(TypeB resT, ImmutableList<TypeB> paramTs, ExprB body) {
@@ -230,6 +230,6 @@ public class BytecodeF {
   }
 
   private static TupleTB createFileT(CategoryDb categoryDb) {
-    return categoryDb.tuple(categoryDb.string(), categoryDb.blob());
+    return categoryDb.tuple(categoryDb.blob(), categoryDb.string());
   }
 }

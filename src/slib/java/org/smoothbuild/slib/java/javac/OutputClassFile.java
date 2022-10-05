@@ -37,7 +37,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       public void close() throws IOException {
         super.close();
         StringB pathString = nativeApi.factory().string(path.toString());
-        TupleB file = nativeApi.factory().file(pathString, contentBuilder.build());
+        TupleB file = nativeApi.factory().file(contentBuilder.build(), pathString);
         fileArrayBuilder.add(file);
       }
     }).outputStream();
