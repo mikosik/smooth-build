@@ -32,6 +32,14 @@ import org.smoothbuild.util.bindings.ScopedBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.function.TriFunction;
 
+/**
+ * Type inferring consists of
+ *   - replacing not declared types with TempVar-s
+ *   - walking expression tree converting types to normalized
+ *       and unifying them {@link ExprTypeUnifier}
+ *   - inferring unit types {@link UnitTypeInferrer}
+ *   - resolving types from normalized {@link TypeInferrerResolve}
+ */
 public class TypeInferrer {
   private final TypePsTranslator typePsTranslator;
   private final Bindings<? extends Optional<? extends RefableS>> bindings;
