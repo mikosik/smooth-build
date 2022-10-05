@@ -13,6 +13,7 @@ Smooth standard library
 | [id](api/id.md)                     | Identity function - it returns its only argument.      |
 | [if](api/if.md)                     | Returns one of two values depending on bool condition. |
 | [jar](api/jar.md)                   | Jars (compresses) files.                               |
+| [jarFile](api/jarFile.md)           | Creates jar with (compresses) files.                   |
 | [javac](api/javac.md)               | Compiles java files.                                   |
 | [junit](api/junit.md)               | Runs junit tests.                                      |
 | [map](api/map.md)                   | Applies given function to each element of an array.    |

@@ -29,6 +29,10 @@ File projectFile(String path);
 @Native("org.smoothbuild.slib.file.FilterFunc")
 [File] filter([File] files, String pattern);
 
+File jarFile([File] files, String path, Blob manifest = 0x) =
+    jar(files, manifest)
+  | file(path);
+
 @Native("org.smoothbuild.slib.java.JarFunc")
 Blob jar([File] files, Blob manifest = 0x);
 
