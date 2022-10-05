@@ -8,6 +8,7 @@ import static org.smoothbuild.slib.compress.UnzipHelper.filesFromJar;
 import static org.smoothbuild.slib.compress.UnzipHelper.filesFromLibJars;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.junit.JUnitCoreWrapper.newInstance;
+import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 
@@ -37,7 +38,7 @@ public class JunitFunc {
       if (filesFromTests == null) {
         return null;
       }
-      var filesFromDeps = filesFromLibJars(nativeApi, deps);
+      var filesFromDeps = filesFromLibJars(nativeApi, deps, isClassFilePredicate());
       if (filesFromDeps == null) {
         return null;
       }
