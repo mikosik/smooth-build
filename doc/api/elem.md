@@ -10,7 +10,7 @@ Returns array element at given index.
 
 ### examples
 
-Returns array of all files from 'src/common' and 'src/main' directory.
+Take first element of an array.
 ```
 String firstElement = elem([ "first", "second", "third" ], 0);
 ```
