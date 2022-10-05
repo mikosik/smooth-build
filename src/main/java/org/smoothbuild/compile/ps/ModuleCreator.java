@@ -8,7 +8,6 @@ import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferStructType;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferValSchema;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
-import static org.smoothbuild.util.bindings.ScopedBindings.innerScopeBindings;
 
 import java.util.Optional;
 
@@ -33,6 +32,7 @@ import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.bindings.ImmutableBindings;
+import org.smoothbuild.util.bindings.OptionalScopedBindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
 
 public class ModuleCreator {
@@ -45,24 +45,24 @@ public class ModuleCreator {
   public static Maybe<ModuleS> createModuleS(
       ModPath path, ModFiles modFiles, Ast ast, DefsS imported) {
     var logBuffer = new LogBuffer();
-    var topTypes = newOptionalMutableBindings(imported.tDefs());
+    var types = newOptionalMutableBindings(imported.tDefs());
     var evaluables = newOptionalMutableBindings(imported.evaluables());
-    var createTopObjsVisitor = new ModuleCreator(path, topTypes, evaluables, logBuffer);
-    ast.structs().forEach(createTopObjsVisitor::visitStruct);
-    ast.evaluables().forEach(createTopObjsVisitor::visitRefable);
+    var moduleCreator = new ModuleCreator(path, types, evaluables, logBuffer);
+    ast.structs().forEach(moduleCreator::visitStruct);
+    ast.evaluables().forEach(moduleCreator::visitRefable);
 
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     } else {
-      var cast = innerScopeBindings(evaluables);
-      var modS = new ModuleS(path, modFiles, innerScopeBindings(topTypes), cast);
+      var modS = new ModuleS(
+          path, modFiles, types.innerScopeBindings(), evaluables.innerScopeBindings());
       return maybe(modS, logBuffer);
     }
   }
 
-  private static <T> ScopedBindings<Optional<T>> newOptionalMutableBindings(
+  private static <T> OptionalScopedBindings<T> newOptionalMutableBindings(
       ImmutableBindings<T> tDefSImmutableBindings) {
-    return new ScopedBindings<>(tDefSImmutableBindings.map(Optional::of));
+    return new OptionalScopedBindings<>(tDefSImmutableBindings.map(Optional::of));
   }
 
   private ModuleCreator(ModPath path, ScopedBindings<Optional<TDefS>> types,

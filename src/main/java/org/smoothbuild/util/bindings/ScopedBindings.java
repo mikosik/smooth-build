@@ -3,26 +3,19 @@ package org.smoothbuild.util.bindings;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Streams.stream;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
-import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import com.google.common.base.Splitter;
 
 public class ScopedBindings<E> extends Bindings<E> {
   private final Bindings<? extends E> outerScopeBindings;
-  private final Map<String, E> innerScopeBindings;
+  protected final Map<String, E> innerScopeBindings;
 
   public ScopedBindings(Bindings<? extends E> outerScopeBindings) {
     this.outerScopeBindings = outerScopeBindings;
     this.innerScopeBindings = new HashMap<>();
-  }
-
-  public static <T> ImmutableBindings<T> innerScopeBindings(ScopedBindings<Optional<T>> bindings) {
-    return immutableBindings(mapValues(bindings.innerScopeBindings, Optional::get));
   }
 
   public void add(String name, E element) {
