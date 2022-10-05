@@ -46,15 +46,15 @@ public class ModuleCreator {
       ModPath path, ModFiles modFiles, Ast ast, DefsS imported) {
     var logBuffer = new LogBuffer();
     var topTypes = newOptionalMutableBindings(imported.tDefs());
-    var topEvaluables = newOptionalMutableBindings(imported.evaluables());
-    var createTopObjsVisitor = new ModuleCreator(path, topTypes, topEvaluables, logBuffer);
+    var evaluables = newOptionalMutableBindings(imported.evaluables());
+    var createTopObjsVisitor = new ModuleCreator(path, topTypes, evaluables, logBuffer);
     ast.structs().forEach(createTopObjsVisitor::visitStruct);
     ast.evaluables().forEach(createTopObjsVisitor::visitRefable);
 
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     } else {
-      var cast = innerScopeBindings(topEvaluables);
+      var cast = innerScopeBindings(evaluables);
       var modS = new ModuleS(path, modFiles, innerScopeBindings(topTypes), cast);
       return maybe(modS, logBuffer);
     }
