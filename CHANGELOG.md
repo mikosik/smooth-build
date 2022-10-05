@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.20.0 (??????????)
+Version 0.20.0 (2022.10.05)
 
  * changed smooth language: added `Int` type
  * added slib functions: `map`, `id`, `flatten`, `jarFile`
@@ -15,6 +15,7 @@ Version 0.20.0 (??????????)
  * changed smooth language: introduced global values
  * changed smooth language: allowed pipe as default argument
  * changed smooth language: allowed pipe as element of array literal
+ * changed smooth language: added parametric polymorphism
 
 Version 0.19.0 (2020.08.03)
 ---------------------------
