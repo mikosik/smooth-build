@@ -5,11 +5,9 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import java.util.List;
 
 public class TNamesB {
-  public static final String ANY = "Any";
   public static final String BLOB = "Blob";
   public static final String BOOL = "Bool";
   public static final String INT = "Int";
-  public static final String NOTHING = "Nothing";
   public static final String STRING = "String";
 
   public static String arrayTypeName(TypeB elemT) {
