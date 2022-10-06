@@ -21,7 +21,7 @@ public final class IntP extends ValP {
   }
 
   public void decodeBigInteger() throws NumberFormatException {
-    assertNoLeadingZeros(this.literal);
+    assertNoLeadingZeros(literal);
     assertNotNegativeZero(literal);
     bigInteger = new BigInteger(literal, 10);
   }
