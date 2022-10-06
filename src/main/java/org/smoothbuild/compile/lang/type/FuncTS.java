@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.lang.type;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.compile.lang.type.TNamesS.funcTypeName;
+import static org.smoothbuild.compile.lang.type.TypeNamesS.funcTypeName;
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.concat;
 

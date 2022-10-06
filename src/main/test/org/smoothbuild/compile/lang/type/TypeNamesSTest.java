@@ -6,48 +6,48 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class TNamesSTest extends TestContext {
+public class TypeNamesSTest extends TestContext {
   @Nested
   class _var_name {
     @Test
     public void empty_string_is_not_type_var_name() {
-      assertThat(TNamesS.isVarName(""))
+      assertThat(TypeNamesS.isVarName(""))
           .isFalse();
     }
 
     @Test
     public void lowercase_a_character_is_not_type_var_name() {
-      assertThat(TNamesS.isVarName("a"))
+      assertThat(TypeNamesS.isVarName("a"))
           .isFalse();
     }
 
     @Test
     public void lowercase_b_character_is_not_type_var_name() {
-      assertThat(TNamesS.isVarName("b"))
+      assertThat(TypeNamesS.isVarName("b"))
           .isFalse();
     }
 
     @Test
     public void uppercase_a_character_is_type_var_name() {
-      assertThat(TNamesS.isVarName("A"))
+      assertThat(TypeNamesS.isVarName("A"))
           .isTrue();
     }
 
     @Test
     public void uppercase_b_character_is_type_var_name() {
-      assertThat(TNamesS.isVarName("B"))
+      assertThat(TypeNamesS.isVarName("B"))
           .isTrue();
     }
 
     @Test
     public void longer_string_starting_with_lowercase_is_not_type_var_name() {
-      assertThat(TNamesS.isVarName("alphabet"))
+      assertThat(TypeNamesS.isVarName("alphabet"))
           .isFalse();
     }
 
     @Test
     public void longer_string_starting_with_uppercase_is_not_type_var_name() {
-      assertThat(TNamesS.isVarName("Alphabet"))
+      assertThat(TypeNamesS.isVarName("Alphabet"))
           .isFalse();
     }
   }
@@ -56,7 +56,7 @@ public class TNamesSTest extends TestContext {
   class _array_type_name {
     @Test
     public void array_type_name() {
-      assertThat(TNamesS.arrayTypeName(stringTS()))
+      assertThat(TypeNamesS.arrayTypeName(stringTS()))
           .isEqualTo("[String]");
     }
   }
@@ -65,7 +65,7 @@ public class TNamesSTest extends TestContext {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(TNamesS.funcTypeName(stringTS(), tupleTS(blobTS(), boolTS())))
+      assertThat(TypeNamesS.funcTypeName(stringTS(), tupleTS(blobTS(), boolTS())))
           .isEqualTo("String(Blob,Bool)");
     }
   }
@@ -74,7 +74,7 @@ public class TNamesSTest extends TestContext {
   class _struct_name_to_ctor_name {
     @Test
     public void func_type_name() {
-      assertThat(TNamesS.structNameToCtorName("MyStruct"))
+      assertThat(TypeNamesS.structNameToCtorName("MyStruct"))
           .isEqualTo("myStruct");
     }
   }

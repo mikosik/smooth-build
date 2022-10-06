@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
  */
 public class BoolTB extends BaseTB {
   public BoolTB(Hash hash) {
-    super(hash, TNamesB.BOOL, BOOL);
+    super(hash, TypeNamesB.BOOL, BOOL);
   }
 
   @Override

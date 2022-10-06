@@ -5,7 +5,7 @@ import static org.smoothbuild.compile.lang.type.AnnotationNames.ANNOTATION_NAMES
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.compile.lang.type.TNamesS.isVarName;
+import static org.smoothbuild.compile.lang.type.TypeNamesS.isVarName;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.map;
 

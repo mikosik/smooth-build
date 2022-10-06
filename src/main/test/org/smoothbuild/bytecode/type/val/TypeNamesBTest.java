@@ -1,15 +1,15 @@
 package org.smoothbuild.bytecode.type.val;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.bytecode.type.val.TNamesB.arrayTypeName;
-import static org.smoothbuild.bytecode.type.val.TNamesB.funcTypeName;
+import static org.smoothbuild.bytecode.type.val.TypeNamesB.arrayTypeName;
+import static org.smoothbuild.bytecode.type.val.TypeNamesB.funcTypeName;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class TNamesBTest extends TestContext {
+public class TypeNamesBTest extends TestContext {
   @Nested
   class _array_type_name {
     @Test
@@ -32,7 +32,7 @@ public class TNamesBTest extends TestContext {
   class _tuple_type_name {
     @Test
     public void func_type_name() {
-      assertThat(TNamesB.tupleTypeName(list(blobTB(), boolTB())))
+      assertThat(TypeNamesB.tupleTypeName(list(blobTB(), boolTB())))
           .isEqualTo("{Blob,Bool}");
     }
   }

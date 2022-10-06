@@ -5,6 +5,6 @@ package org.smoothbuild.compile.lang.type;
  */
 public final class BoolTS extends BaseTS {
   public BoolTS() {
-    super(TNamesS.BOOL);
+    super(TypeNamesS.BOOL);
   }
 }

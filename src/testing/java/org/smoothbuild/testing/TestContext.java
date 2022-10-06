@@ -12,7 +12,7 @@ import static org.smoothbuild.compile.lang.define.PolyValS.polyValS;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.compile.lang.type.TNamesS.structNameToCtorName;
+import static org.smoothbuild.compile.lang.type.TypeNamesS.structNameToCtorName;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;

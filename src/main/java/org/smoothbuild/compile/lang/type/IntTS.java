@@ -5,6 +5,6 @@ package org.smoothbuild.compile.lang.type;
  */
 public final class IntTS extends BaseTS {
   public IntTS() {
-    super(TNamesS.INT);
+    super(TypeNamesS.INT);
   }
 }

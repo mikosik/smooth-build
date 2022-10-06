@@ -5,6 +5,6 @@ package org.smoothbuild.compile.lang.type;
  */
 public final class StringTS extends BaseTS {
   public StringTS() {
-    super(TNamesS.STRING);
+    super(TypeNamesS.STRING);
   }
 }
