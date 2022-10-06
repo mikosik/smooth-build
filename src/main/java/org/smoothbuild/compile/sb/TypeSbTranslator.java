@@ -36,14 +36,14 @@ public class TypeSbTranslator {
 
   public TypeB translate(TypeS type) {
     return switch (type) {
-      case ArrayTS a -> translate(a);
-      case BlobTS blob -> bytecodeF.blobT();
-      case BoolTS bool -> bytecodeF.boolT();
-      case FuncTS f -> translate(f);
-      case IntTS i -> bytecodeF.intT();
-      case VarS v ->  translate(v);
-      case StringTS s -> bytecodeF.stringT();
-      case StructTS st -> translate(st);
+      case ArrayTS arrayTS -> translate(arrayTS);
+      case BlobTS blobTS -> bytecodeF.blobT();
+      case BoolTS boolTS -> bytecodeF.boolT();
+      case FuncTS funcTS -> translate(funcTS);
+      case IntTS intTS -> bytecodeF.intT();
+      case VarS varS ->  translate(varS);
+      case StringTS stringTS -> bytecodeF.stringT();
+      case StructTS structTS -> translate(structTS);
       case TupleTS tupleTS -> translate(tupleTS);
     };
   }
