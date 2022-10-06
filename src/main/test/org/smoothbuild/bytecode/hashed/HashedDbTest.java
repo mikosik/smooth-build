@@ -273,4 +273,42 @@ public class HashedDbTest extends TestContext {
           .throwsException(new DecodeHashSeqExc(hash, 5));
     }
   }
+
+  @Nested
+  class _sequence_size {
+    @Test
+    public void with_no_elems_has_zero_size() throws Exception {
+      hash = hashedDb().writeSeq();
+      assertThat(hashedDb().readSeqSize(hash))
+          .isEqualTo(0);
+    }
+
+    @Test
+    public void with_one_elem_has_size_one() throws Exception {
+      hash = hashedDb().writeSeq(Hash.of("1"));
+      assertThat(hashedDb().readSeqSize(hash))
+          .isEqualTo(1);
+    }
+
+    @Test
+    public void with_three_elem_has_size_three() throws Exception {
+      hash = hashedDb().writeSeq(Hash.of("1"), Hash.of("2"), Hash.of("3"));
+      assertThat(hashedDb().readSeqSize(hash))
+          .isEqualTo(3);
+    }
+
+    @Test
+    public void reading_size_of_not_written_seq_of_hashes_causes_exception() {
+      hash = Hash.of("abc");
+      assertCall(() -> hashedDb().readSeqSize(hash))
+          .throwsException(new NoSuchDataExc(hash));
+    }
+
+    @Test
+    public void reading_size_of_corrupted_seq_of_hashes_causes_exception() throws Exception {
+      hash = hashedDb().writeString("12345");
+      assertCall(() -> hashedDb().readSeqSize(hash))
+          .throwsException(new DecodeHashSeqExc(hash, 5));
+    }
+  }
 }

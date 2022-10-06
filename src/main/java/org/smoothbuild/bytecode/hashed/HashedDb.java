@@ -146,6 +146,31 @@ public class HashedDb {
     }
   }
 
+  public long readSeqSize(Hash hash) throws HashedDbExc {
+    PathS path = toPath(hash);
+    PathState pathState = fileSystem.pathState(path);
+    return switch (pathState) {
+      case FILE -> readSeqSize(hash, path);
+      case DIR -> throw new CorruptedHashedDbExc(
+          format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
+      case NOTHING -> throw new NoSuchDataExc(hash);
+    };
+  }
+
+  private long readSeqSize(Hash hash, PathS path) throws HashedDbExc {
+    try {
+      var sizeInBytes = fileSystem.size(path);
+      long remainder = sizeInBytes % Hash.lengthInBytes();
+      if (remainder == 0) {
+        return sizeInBytes / Hash.lengthInBytes();
+      } else {
+        throw new DecodeHashSeqExc(hash, remainder);
+      }
+    } catch (IOException e) {
+      throw new HashedDbExc(hash, e);
+    }
+  }
+
   public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbExc {
     Builder<Hash> builder = ImmutableList.builder();
     try (BufferedSource source = source(hash)) {
