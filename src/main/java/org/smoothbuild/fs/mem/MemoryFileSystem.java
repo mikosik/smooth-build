@@ -85,6 +85,11 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
+  public long size(PathS path) throws IOException {
+    return getFile(path).size();
+  }
+
+  @Override
   public BufferedSource source(PathS path) throws IOException {
     return getFile(path).source();
   }

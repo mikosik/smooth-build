@@ -1,6 +1,7 @@
 package org.smoothbuild.fs.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.base.PathState.DIR;
 import static org.smoothbuild.fs.base.PathState.FILE;
 import static org.smoothbuild.fs.base.PathState.NOTHING;
@@ -17,23 +18,23 @@ import okio.ByteString;
 public abstract class GenericFileSystemTestCase {
   private static final ByteString bytes = ByteString.encodeUtf8("abc");
   protected FileSystem fileSystem;
-  protected PathS path = PathS.path("some/dir/myFile");
-  protected PathS path2 = PathS.path("other/dir/otherFile");
+  protected PathS path = path("some/dir/myFile");
+  protected PathS path2 = path("other/dir/otherFile");
 
-  private final PathS dir = PathS.path("my/dir");
-  private final PathS linkPath = PathS.path("my/link");
+  private final PathS dir = path("my/dir");
+  private final PathS linkPath = path("my/link");
 
   // pathKind()
 
   @Test
-  public void rooth_path_is_a_dir() {
+  public void root_path_is_a_dir() {
     assertThat(fileSystem.pathState(PathS.root()))
         .isEqualTo(DIR);
   }
 
   @Test
   public void non_root_path_are_initially_nothing_state() {
-    assertThat(fileSystem.pathState(PathS.path("abc")))
+    assertThat(fileSystem.pathState(path("abc")))
         .isEqualTo(NOTHING);
   }
 
@@ -70,7 +71,7 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void files_throws_exception_when_dir_does_not_exist() {
-    assertCall(() -> fileSystem.files(PathS.path("abc")))
+    assertCall(() -> fileSystem.files(path("abc")))
         .throwsException(new IOException("Dir 'abc' doesn't exist."));
   }
 
@@ -86,14 +87,59 @@ public abstract class GenericFileSystemTestCase {
     createEmptyFile("abc/dir1/file1.txt");
     createEmptyFile("abc/dir2/file2.txt");
     createEmptyFile("abc/text.txt");
-    assertThat(fileSystem.files(PathS.path("abc")))
-        .containsExactly(PathS.path("dir1"), PathS.path("dir2"), PathS.path("text.txt"));
+    assertThat(fileSystem.files(path("abc")))
+        .containsExactly(path("dir1"), path("dir2"), path("text.txt"));
   }
 
   @Test
   public void files_throws_exception_when_path_does_not_exist() {
-    assertCall(() -> fileSystem.files(PathS.path("abc")))
+    assertCall(() -> fileSystem.files(path("abc")))
         .throwsException(IOException.class);
+  }
+
+  // size
+
+  @Test
+  public void empty_file_has_zero_size() throws Exception {
+    createFile(path, ByteString.encodeUtf8(""));
+    assertThat(fileSystem.size(path))
+        .isEqualTo(0);
+  }
+
+  @Test
+  public void file_with_non_zero_size() throws Exception {
+    createFile(path, ByteString.encodeUtf8("abc"));
+    assertThat(fileSystem.size(path))
+        .isEqualTo(3);
+  }
+
+  @Test
+  public void reading_size_of_dir_causes_exception() throws Exception {
+    createEmptyFile(dir.append(path));
+    assertCall(() -> fileSystem.size(dir))
+        .throwsException(new IOException("File 'my/dir' doesn't exist. It is a dir."));
+  }
+
+  @Test
+  public void reading_size_of_nothing_causes_exception() {
+    assertCall(() -> fileSystem.size(dir))
+        .throwsException(new IOException("File 'my/dir' doesn't exist."));
+  }
+
+  @Test
+  public void reading_size_of_link_returns_size_of_target_file() throws IOException {
+    createFile(path, bytes);
+    fileSystem.createLink(linkPath, path);
+    assertThat(fileSystem.size(linkPath))
+        .isEqualTo(bytes.size());
+  }
+
+  @Test
+  public void reading_size_of_link_that_targets_dir_causes_exception() throws IOException {
+    createEmptyFile(dir.append(path));
+    fileSystem.createLink(linkPath, dir);
+    assertCall(() -> fileSystem.size(dir))
+        .throwsException(new IOException("File 'my/dir' doesn't exist. It is a dir."));
   }
 
   // source()
@@ -107,7 +153,7 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void source_throws_exception_when_file_does_not_exist() {
-    assertCall(() -> fileSystem.source(PathS.path("dir/file")))
+    assertCall(() -> fileSystem.source(path("dir/file")))
         .throwsException(new IOException("File 'dir/file' doesn't exist."));
   }
 
@@ -158,60 +204,60 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void moving_nonexistent_file_fails() {
-    assertCall(() -> fileSystem.move(PathS.path("source"), PathS.path("target")))
+    assertCall(() -> fileSystem.move(path("source"), path("target")))
         .throwsException(new IOException("Cannot move 'source'. It doesn't exist."));
   }
 
   @Test
   public void moving_directory_fails() throws Exception {
-    createEmptyFile(PathS.path("source/file"));
-    assertCall(() -> fileSystem.move(PathS.path("source"), PathS.path("target")))
+    createEmptyFile(path("source/file"));
+    assertCall(() -> fileSystem.move(path("source"), path("target")))
         .throwsException(new IOException("Cannot move 'source'. It is directory."));
   }
 
   @Test
   public void moving_to_directory_fails() throws Exception {
-    createEmptyFile(PathS.path("source"));
-    createEmptyFile(PathS.path("target/file"));
-    assertCall(() -> fileSystem.move(PathS.path("source"), PathS.path("target")))
+    createEmptyFile(path("source"));
+    createEmptyFile(path("target/file"));
+    assertCall(() -> fileSystem.move(path("source"), path("target")))
         .throwsException(new IOException(
             "Cannot move to 'target'. It is directory."));
   }
 
   @Test
   public void moved_file_is_deleted_from_source() throws Exception {
-    createEmptyFile(PathS.path("source"));
-    fileSystem.move(PathS.path("source"), PathS.path("target"));
-    assertThat(fileSystem.pathState(PathS.path("source")))
+    createEmptyFile(path("source"));
+    fileSystem.move(path("source"), path("target"));
+    assertThat(fileSystem.pathState(path("source")))
         .isEqualTo(NOTHING);
   }
 
   @Test
   public void moved_file_is_copied_to_target() throws Exception {
-    createFile(PathS.path("source"), bytes);
-    fileSystem.move(PathS.path("source"), PathS.path("target"));
-    assertThat(fileSystem.pathState(PathS.path("source")))
+    createFile(path("source"), bytes);
+    fileSystem.move(path("source"), path("target"));
+    assertThat(fileSystem.pathState(path("source")))
         .isEqualTo(NOTHING);
-    assertThat(fileSystem.source(PathS.path("target")).readByteString())
+    assertThat(fileSystem.source(path("target")).readByteString())
         .isEqualTo(bytes);
   }
 
   @Test
   public void moved_file_overwrites_target_file() throws Exception {
-    createFile(PathS.path("source"), bytes);
-    createEmptyFile(PathS.path("target"));
-    fileSystem.move(PathS.path("source"), PathS.path("target"));
-    assertThat(fileSystem.pathState(PathS.path("source")))
+    createFile(path("source"), bytes);
+    createEmptyFile(path("target"));
+    fileSystem.move(path("source"), path("target"));
+    assertThat(fileSystem.pathState(path("source")))
         .isEqualTo(NOTHING);
-    assertThat(fileSystem.source(PathS.path("target")).readByteString())
+    assertThat(fileSystem.source(path("target")).readByteString())
         .isEqualTo(bytes);
   }
 
   @Test
   public void moving_creates_missing_parent_directories_in_target_path() throws Exception {
-    createFile(PathS.path("source"), bytes);
-    fileSystem.move(PathS.path("source"), PathS.path("dir/target"));
-    assertThat(fileSystem.source(PathS.path("dir/target")).readByteString())
+    createFile(path("source"), bytes);
+    fileSystem.move(path("source"), path("dir/target"));
+    assertThat(fileSystem.source(path("dir/target")).readByteString())
         .isEqualTo(bytes);
   }
 
@@ -350,7 +396,7 @@ public abstract class GenericFileSystemTestCase {
   // helpers
 
   protected void createEmptyFile(String stringPath) throws IOException {
-    createFile(PathS.path(stringPath), ByteString.of());
+    createFile(path(stringPath), ByteString.of());
   }
 
   protected void createEmptyFile(PathS path) throws IOException {

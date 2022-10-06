@@ -79,6 +79,11 @@ public class MemoryDir implements MemoryElement {
   }
 
   @Override
+  public long size() {
+    return 0;
+  }
+
+  @Override
   public BufferedSource source() {
     throw new UnsupportedOperationException();
   }

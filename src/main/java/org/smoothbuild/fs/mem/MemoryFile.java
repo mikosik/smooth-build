@@ -64,6 +64,11 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
+  public long size() {
+    return data.size();
+  }
+
+  @Override
   public BufferedSource source() throws IOException {
     if (data == null) {
       throw new IOException("File does not exist");

@@ -26,6 +26,8 @@ public interface MemoryElement {
 
   public void addChild(MemoryElement elem);
 
+  public long size();
+
   public BufferedSource source() throws IOException;
 
   public BufferedSink sink();

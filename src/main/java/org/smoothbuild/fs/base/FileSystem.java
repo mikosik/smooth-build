@@ -1,13 +1,14 @@
 package org.smoothbuild.fs.base;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 
 public interface FileSystem {
-  public java.nio.file.Path rootDirJPath();
+  public Path rootDirJPath();
 
   public PathState pathState(PathS path);
 
@@ -16,6 +17,8 @@ public interface FileSystem {
   public void move(PathS source, PathS target) throws IOException;
 
   public void delete(PathS path) throws IOException;
+
+  public long size(PathS path) throws IOException;
 
   public BufferedSource source(PathS path) throws IOException;
 

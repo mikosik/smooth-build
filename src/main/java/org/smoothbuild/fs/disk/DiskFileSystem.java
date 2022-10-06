@@ -86,6 +86,12 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
+  public long size(PathS path) throws IOException {
+    assertPathIsFile(this, path);
+    return jdkPath(path).toFile().length();
+  }
+
+  @Override
   public BufferedSource source(PathS path) throws IOException {
     assertPathIsFile(this, path);
     return Okio.buffer(Okio.source(jdkPath(path)));

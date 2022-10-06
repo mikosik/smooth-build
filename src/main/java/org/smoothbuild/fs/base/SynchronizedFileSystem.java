@@ -43,6 +43,11 @@ public class SynchronizedFileSystem implements FileSystem {
   }
 
   @Override
+  public synchronized long size(PathS path) throws IOException {
+    return fileSystem.size(path);
+  }
+
+  @Override
   public synchronized BufferedSource source(PathS path) throws IOException {
     return fileSystem.source(path);
   }

@@ -61,6 +61,11 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
+  public long size() {
+    return target.size();
+  }
+
+  @Override
   public BufferedSource source() throws IOException {
     return target.source();
   }
