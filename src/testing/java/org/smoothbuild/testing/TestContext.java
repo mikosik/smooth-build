@@ -37,6 +37,7 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
@@ -58,6 +59,7 @@ import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.oper.CallCB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
+import org.smoothbuild.bytecode.type.oper.PickCB;
 import org.smoothbuild.bytecode.type.oper.RefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
@@ -138,6 +140,7 @@ import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
+import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.task.NativeMethodLoader;
@@ -181,6 +184,10 @@ public class TestContext {
     return new Vm(() -> executionContext(jobCreator));
   }
 
+  public Vm vm(TaskReporter taskReporter) {
+    return vm(taskExecutor(executionReporter(taskReporter)));
+  }
+
   public Vm vm(TaskExecutor taskExecutor) {
     return new Vm(() -> executionContext(taskExecutor));
   }
@@ -197,7 +204,7 @@ public class TestContext {
     return executionContext(taskExecutor, null);
   }
 
-  private ExecutionContext executionContext(TaskExecutor taskExecutor,
+  public ExecutionContext executionContext(TaskExecutor taskExecutor,
       NativeMethodLoader nativeMethodLoader) {
     return new ExecutionContext(
         taskExecutor, executionReporter(), bytecodeF(), nativeMethodLoader, new JobCreator());
@@ -278,7 +285,11 @@ public class TestContext {
   }
 
   public ExecutionReporter executionReporter() {
-    return new ExecutionReporter(reporter());
+    return executionReporter(reporter());
+  }
+
+  public ExecutionReporter executionReporter(TaskReporter reporter) {
+    return new ExecutionReporter(reporter);
   }
 
   public ConsoleReporter reporter() {
@@ -500,6 +511,14 @@ public class TestContext {
 
   public OrderCB orderCB(TypeB elemT) {
     return categoryDb().order(arrayTB(elemT));
+  }
+
+  public PickCB pickCB() {
+    return pickCB(intTB());
+  }
+
+  public PickCB pickCB(TypeB evalT) {
+    return categoryDb().pick(evalT);
   }
 
   public RefCB refCB() {
@@ -758,6 +777,15 @@ public class TestContext {
   public OrderB orderB(TypeB elemT, ExprB... elems) {
     var elemList = list(elems);
     return bytecodeDb().order(arrayTB(elemT), elemList);
+  }
+
+  public PickB pickB(ExprB array, IntB index) {
+    var evalT = ((ArrayTB) array.type()).elem();
+    return pickB(evalT, array, index);
+  }
+
+  public PickB pickB(TypeB evalT, ExprB array, ExprB index) {
+    return bytecodeDb().pick(evalT, array, index);
   }
 
   public RefB refB(int index) {

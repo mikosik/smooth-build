@@ -16,6 +16,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
 import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
@@ -45,6 +46,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.IfFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.MapFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.NatFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OrderKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.PickKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.RefKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.SelectKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
@@ -56,6 +58,7 @@ import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.oper.CallCB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
+import org.smoothbuild.bytecode.type.oper.PickCB;
 import org.smoothbuild.bytecode.type.oper.RefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
@@ -195,6 +198,10 @@ public class CategoryDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT));
   }
 
+  public PickCB pick(TypeB evalT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(evalT));
+  }
+
   public RefCB ref(TypeB evalT) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newRef(evalT));
   }
@@ -223,6 +230,7 @@ public class CategoryDb {
       case MapFuncKindB mapFunc -> readMapFuncCat(hash, rootSeq, mapFunc);
       case NatFuncKindB natFunc -> readFuncCat(hash, rootSeq, natFunc);
       case OrderKindB order -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
+      case PickKindB pick -> newPick(hash, readDataAsEvalT(hash, rootSeq, kind));
       case RefKindB ref -> newRef(hash, readDataAsEvalT(hash, rootSeq, kind));
       case SelectKindB select -> newSelect(hash, readDataAsEvalT(hash, rootSeq, kind));
       case TupleKindB tuple -> readTuple(hash, rootSeq);
@@ -457,6 +465,15 @@ public class CategoryDb {
 
   private OrderCB newOrder(Hash rootHash, ArrayTB evalT) {
     return cache(new OrderCB(rootHash, evalT));
+  }
+
+  private PickCB newPick(TypeB evalT) throws HashedDbExc {
+    var rootHash = writeOperRoot(PICK, evalT);
+    return newPick(rootHash, evalT);
+  }
+
+  private PickCB newPick(Hash rootHash, TypeB evalT) {
+    return cache(new PickCB(rootHash, evalT));
   }
 
   private RefCB newRef(TypeB evalT) throws HashedDbExc {

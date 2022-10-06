@@ -25,6 +25,11 @@ public class DecodeExprWrongNodeTypeExc extends DecodeExprNodeExc {
   }
 
   public DecodeExprWrongNodeTypeExc(
+      Hash hash, CategoryB cat, String path, int index, Class<?> expected, TypeB actual) {
+    this(hash, cat, indexedPath(path, index), expected, actual);
+  }
+
+  public DecodeExprWrongNodeTypeExc(
       Hash hash, CategoryB cat, String path, Class<?> expected, TypeB actual) {
     super(hash, cat, path, buildMessage("instance of " + expected.getSimpleName(), actual.q()));
   }

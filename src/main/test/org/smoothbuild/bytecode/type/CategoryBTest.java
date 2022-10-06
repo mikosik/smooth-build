@@ -126,6 +126,7 @@ public class CategoryBTest extends TestContext {
         args(f -> f.call(f.int_()), "Call:Int"),
         args(f -> f.combine(f.tuple(f.string(), f.int_())), "Combine:{String,Int}"),
         args(f -> f.order(f.array(f.string())), "Order:[String]"),
+        args(f -> f.pick(f.int_()), "Pick:Int"),
         args(f -> f.ref(f.int_()), "Ref:Int"),
         args(f -> f.select(f.int_()), "Select:Int")
     );
@@ -354,6 +355,13 @@ public class CategoryBTest extends TestContext {
       var array = CATEGORY_DB.array(type);
       assertThat(CATEGORY_DB.order(array).evalT())
           .isEqualTo(array);
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
+    public void pick(TypeB type) {
+      assertThat(CATEGORY_DB.pick(type).evalT())
+          .isEqualTo(type);
     }
 
     @ParameterizedTest

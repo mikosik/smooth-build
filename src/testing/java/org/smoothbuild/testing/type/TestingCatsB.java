@@ -105,6 +105,8 @@ public class TestingCatsB {
         CONTEXT.combineCB(CONTEXT.tupleTB(STRING)),
         CONTEXT.orderCB(ARRAY_BLOB),
         CONTEXT.orderCB(ARRAY_STRING),
+        CONTEXT.pickCB(BLOB),
+        CONTEXT.pickCB(STRING),
         CONTEXT.refCB(BLOB),
         CONTEXT.refCB(STRING),
         CONTEXT.selectCB(BLOB),

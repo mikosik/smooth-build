@@ -104,6 +104,8 @@ public class HelpCommandTest extends SystemTestCase {
                                       constant
                                       o, order           - evaluates array literal
                                       (ordered elements)
+                                      p, pick            - evaluates array element
+                                      picking
                                       s, select          - evaluates field selection
            """);
   }

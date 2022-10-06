@@ -12,6 +12,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
 import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
@@ -23,6 +24,7 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
@@ -44,6 +46,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.CallKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.CombineKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OrderKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.PickKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.RefKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.SelectKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
@@ -56,7 +59,7 @@ import org.smoothbuild.bytecode.type.val.NatFuncCB;
 
 public sealed abstract class CategoryKindB
     permits AbstFuncKindB, ArrayKindB, BaseKindB, CallKindB, CombineKindB, FuncKindB, OrderKindB,
-    RefKindB, SelectKindB, TupleKindB {
+    PickKindB, RefKindB, SelectKindB, TupleKindB {
   public static sealed class BaseKindB extends CategoryKindB permits BlobKindB, BoolKindB, IntKindB,
       StringKindB {
     private BaseKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
@@ -156,6 +159,12 @@ public sealed abstract class CategoryKindB
     }
   }
 
+  public static final class PickKindB extends CategoryKindB {
+    PickKindB() {
+      super("PICK", (byte) 12, PickB.class);
+    }
+  }
+
   public static final class IfFuncKindB extends AbstFuncKindB<IfFuncCB>  {
     IfFuncKindB() {
       super("IF_FUNC", (byte) 13, IfFuncB.class, IfFuncCB::new);
@@ -210,7 +219,7 @@ public sealed abstract class CategoryKindB
       case 9 -> COMBINE;
       case 10 -> SELECT;
       case 11 -> CALL;
-      // TODO 12 is unused
+      case 12 -> PICK;
       case 13 -> IF_FUNC;
       case 14 -> REF;
       case 15 -> MAP_FUNC;

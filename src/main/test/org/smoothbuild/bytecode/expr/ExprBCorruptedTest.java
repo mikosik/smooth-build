@@ -31,11 +31,13 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprNodeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongSeqSizeExc;
+import org.smoothbuild.bytecode.expr.exc.DecodePickWrongEvalTypeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
@@ -1054,6 +1056,144 @@ public class ExprBCorruptedTest extends TestContext {
       assertCall(() -> ((OrderB) bytecodeDb().get(exprHash)).elems())
           .throwsException(new DecodeExprWrongNodeTypeExc(
                   exprHash, type, "elems[1]", intTB(), stringTB()));
+    }
+  }
+
+  @Nested
+  class _pick {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save smooth
+       * pick in HashedDb.
+       */
+      var pickable = orderB(stringB("abc"));
+      var index = refB(intTB(), 7);
+      Hash exprHash =
+          hash(
+              hash(pickCB(stringTB())),
+              hash(
+                  hash(pickable),
+                  hash(index)
+              )
+          );
+      assertThat(((PickB) bytecodeDb().get(exprHash)).data())
+          .isEqualTo(new PickB.Data(pickable, index));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(pickCB(intTB()));
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var index = intB(2);
+      var expr = intB(123);
+      Hash dataHash = hash(
+          hash(expr),
+          hash(index)
+      );
+      obj_root_with_two_data_hashes(
+          pickCB(),
+          dataHash,
+          (Hash exprHash) -> ((PickB) bytecodeDb().get(exprHash)).data());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          pickCB(),
+          (Hash exprHash) -> ((PickB) bytecodeDb().get(exprHash)).data());
+    }
+
+    @Test
+    public void data_is_seq_with_one_elem() throws Exception {
+      var expr = intB(123);
+      var dataHash = hash(
+          hash(expr)
+      );
+      Hash exprHash =
+          hash(
+              hash(pickCB()),
+              dataHash
+          );
+      assertCall(() -> ((PickB) bytecodeDb().get(exprHash)).data())
+          .throwsException(new DecodeExprWrongSeqSizeExc(exprHash, pickCB(), DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_seq_with_three_elems() throws Exception {
+      var index = intB(2);
+      var expr = intB(123);
+      var dataHash = hash(
+          hash(expr),
+          hash(index),
+          hash(index)
+      );
+      Hash exprHash =
+          hash(
+              hash(pickCB()),
+              dataHash
+          );
+      assertCall(() -> ((PickB) bytecodeDb().get(exprHash)).data())
+          .throwsException(new DecodeExprWrongSeqSizeExc(exprHash, pickCB(), DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void array_is_not_array_expr() throws Exception {
+      var array = intB(3);
+      var index = intB(0);
+      var type = pickCB(stringTB());
+      var exprHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(array),
+                  hash(index)
+              )
+          );
+
+      assertCall(() -> ((PickB) bytecodeDb().get(exprHash)).data())
+          .throwsException(new DecodeExprWrongNodeTypeExc(
+              exprHash, type, "array", ArrayTB.class, intTB()));
+    }
+
+    @Test
+    public void index_is_not_int_expr() throws Exception {
+      var type = pickCB(stringTB());
+      var pickable = arrayB(stringB("abc"));
+      var index = refB(stringTB(), 7);
+      var hash =
+          hash(
+              hash(type),
+              hash(
+                  hash(pickable),
+                  hash(index)
+              )
+          );
+      assertCall(() -> ((PickB) bytecodeDb().get(hash)).data())
+          .throwsException(new DecodeExprWrongNodeTypeExc(
+              hash, type, DATA_PATH, 1, IntB.class, stringTB()));
+    }
+
+    @Test
+    public void evaluation_type_is_different_than_elem_type()
+        throws Exception {
+      var tuple = arrayB(stringB("abc"));
+      var index = intB(0);
+      var type = pickCB(intTB());
+      Hash exprHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(tuple),
+                  hash(index)
+              )
+          );
+
+      assertCall(() -> ((PickB) bytecodeDb().get(exprHash)).data())
+          .throwsException(new DecodePickWrongEvalTypeExc(exprHash, type, stringTB()));
     }
   }
 

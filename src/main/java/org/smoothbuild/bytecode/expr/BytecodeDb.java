@@ -17,6 +17,7 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprNoSuchExprExc;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayB;
@@ -42,6 +43,7 @@ import org.smoothbuild.bytecode.type.exc.CategoryDbExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.DefFuncCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.NatFuncCB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
@@ -141,6 +143,10 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT, elems));
   }
 
+  public PickB pick(TypeB evalT, ExprB pickable, ExprB index) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(evalT, pickable, index));
+  }
+
   public RefB ref(TypeB evalT, BigInteger value) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newRef(evalT, value));
   }
@@ -152,12 +158,12 @@ public class BytecodeDb {
   // generic getter
 
   public ExprB get(Hash rootHash) {
-    List<Hash> hashes = decodeRootSeq(rootHash);
+    var hashes = decodeRootSeq(rootHash);
     int rootSeqSize = hashes.size();
     if (rootSeqSize != 2 && rootSeqSize != 1) {
       throw wrongSizeOfRootSeqException(rootHash, rootSeqSize);
     }
-    CategoryB category = getCatOrChainException(rootHash, hashes.get(0));
+    var category = getCatOrChainException(rootHash, hashes.get(0));
     if (category.containsData()) {
       if (rootSeqSize != 2) {
         throw wrongSizeOfRootSeqException(rootHash, category, rootSeqSize);
@@ -335,10 +341,36 @@ public class BytecodeDb {
     return mapFuncCB.newExpr(root, this);
   }
 
+  private PickB newPick(TypeB evalT, ExprB pickable, ExprB index) throws HashedDbExc {
+    var inferredEvalT = pickEvalT(pickable);
+    if (!evalT.equals(inferredEvalT)) {
+      throw new IllegalArgumentException("pickable elem type " + inferredEvalT.q()
+          + " cannot be assigned to evalT " + evalT.q() + ".");
+    }
+    if (!(index.type() instanceof IntTB)) {
+      throw new IllegalArgumentException(
+          "index.type() should be IntTB but is " + index.type().q() + ".");
+    }
+    var data = writePickData(pickable, index);
+    var cat = categoryDb.pick(evalT);
+    var root = newRoot(cat, data);
+    return cat.newExpr(root, this);
+  }
+
+  private TypeB pickEvalT(ExprB pickable) {
+    var evalT = pickable.type();
+    if (evalT instanceof ArrayTB arrayT) {
+      return arrayT.elem();
+    } else {
+      throw new IllegalArgumentException(
+          "pickable.type() should be ArrayTB but is " + evalT.q() + ".");
+    }
+  }
+
   private SelectB newSelect(TypeB evalT, ExprB selectable, IntB index) throws HashedDbExc {
     var inferredEvalT = selectEvalT(selectable, index);
     if (!evalT.equals(inferredEvalT)) {
-      throw new IllegalArgumentException("Selected item type " + inferredEvalT.q()
+      throw new IllegalArgumentException("selectable item type " + inferredEvalT.q()
           + " cannot be assigned to evalT " + evalT.q() + ".");
     }
     var data = writeSelectData(selectable, index);
@@ -356,7 +388,7 @@ public class BytecodeDb {
       return items.get(intIndex);
     } else {
       throw new IllegalArgumentException(
-          "Selectable.type() should be instance of TupleTB but is " + evalT.q());
+          "Selectable.type() should be TupleTB but is " + evalT.q() + ".");
     }
   }
 
@@ -397,6 +429,10 @@ public class BytecodeDb {
 
   private Hash writeOrderData(ImmutableList<ExprB> elems) throws HashedDbExc {
     return writeSeq(elems);
+  }
+
+  private Hash writePickData(ExprB pickable, ExprB index) throws HashedDbExc {
+    return hashedDb.writeSeq(pickable.hash(), index.hash());
   }
 
   private Hash writeRefData(BigInteger value) throws HashedDbExc {

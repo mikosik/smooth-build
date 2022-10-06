@@ -10,10 +10,12 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.out.log.ImmutableLogs.logs;
+import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
-import java.math.BigInteger;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Nested;
@@ -26,6 +28,7 @@ import org.smoothbuild.bytecode.expr.val.TupleB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.testing.accept.MemoryReporter;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
@@ -274,6 +277,36 @@ public class VmTest extends TestContext {
     }
 
     @Test
+    public void pick() {
+      var tuple = arrayB(intB(10), intB(11), intB(12), intB(13));
+      var pick = pickB(tuple, intB(2));
+      assertThat(evaluate(pick))
+          .isEqualTo(intB(12));
+    }
+
+    @Test
+    public void pick_with_index_outside_of_bounds() {
+      var pick = pickB(
+          arrayB(intB(10), intB(11), intB(12), intB(13)),
+          intB(4));
+      var memoryReporter = new MemoryReporter();
+      evaluateWithFailure(vm(memoryReporter), pick, ImmutableMap.of());
+      assertThat(memoryReporter.logs())
+          .isEqualTo(logs(error("Index (4) out of bounds. Array size = 4.")));
+    }
+
+    @Test
+    public void pick_with_index_negative() {
+      var pick = pickB(
+          arrayB(intB(10), intB(11), intB(12), intB(13)),
+          intB(-1));
+      var memoryReporter = new MemoryReporter();
+      evaluateWithFailure(vm(memoryReporter), pick, ImmutableMap.of());
+      assertThat(memoryReporter.logs())
+          .isEqualTo(logs(error("Index (-1) out of bounds. Array size = 4.")));
+    }
+
+    @Test
     public void ref() {
       assertThat(evaluate(callB(idFuncB(), intB(7))))
           .isEqualTo(intB(7));
@@ -316,8 +349,14 @@ public class VmTest extends TestContext {
     }
   }
 
-  public static IntB returnInt(NativeApi nativeApi, TupleB args) {
-    return nativeApi.factory().int_(BigInteger.valueOf(173));
+  private void evaluateWithFailure(Vm vm, ExprB expr, ImmutableMap<ExprB, LabeledLoc> labels) {
+    try {
+      var results = vm.evaluate(list(expr), labels);
+      assertThat(results)
+          .isEqualTo(Optional.empty());
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {

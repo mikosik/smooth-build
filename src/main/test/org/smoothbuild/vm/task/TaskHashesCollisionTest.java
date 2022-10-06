@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.vm.task.TaskHashes.combineTaskHash;
 import static org.smoothbuild.vm.task.TaskHashes.nativeCallTaskHash;
 import static org.smoothbuild.vm.task.TaskHashes.orderTaskHash;
+import static org.smoothbuild.vm.task.TaskHashes.pickTaskHash;
 import static org.smoothbuild.vm.task.TaskHashes.selectTaskHash;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class TaskHashesCollisionTest extends TestContext {
         natFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, orderTaskHash(arrayTB(intTB())));
     addHash(list, set, orderTaskHash(arrayTB(boolTB())));
+    addHash(list, set, pickTaskHash());
     addHash(list, set, selectTaskHash());
   }
 

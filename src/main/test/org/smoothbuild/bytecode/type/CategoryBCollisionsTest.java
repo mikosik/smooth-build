@@ -13,12 +13,12 @@ public class CategoryBCollisionsTest extends TestContext {
   @Test
   public void collisions() {
     HashMap<Hash, CategoryB> map = new HashMap<>();
-    for (CategoryB type : TestingCatsB.ALL_CATS_TO_TEST) {
-      Hash hash = type.hash();
+    for (var categoryB : TestingCatsB.ALL_CATS_TO_TEST) {
+      Hash hash = categoryB.hash();
       if (map.containsKey(hash)) {
-        fail("Hash " + hash + " is used by two types " + type + " and " + map.get(hash) + ".");
+        fail("Hash " + hash + " is used by two types " + categoryB + " and " + map.get(hash) + ".");
       }
-      map.put(hash, type);
+      map.put(hash, categoryB);
     }
   }
 }

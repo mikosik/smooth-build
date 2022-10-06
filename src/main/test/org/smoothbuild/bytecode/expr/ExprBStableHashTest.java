@@ -245,6 +245,15 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
+  class _pick {
+    @Test
+    public void pick() {
+      assertThat(pickB(arrayB(intB(7)), intB(0)).hash())
+          .isEqualTo(Hash.decode("a56b3c2c161368750a3ed903a68da4cfe7532d82"));
+    }
+  }
+
+  @Nested
   class _ref {
     @Test
     public void zero_ref() {

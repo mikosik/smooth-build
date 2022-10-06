@@ -8,6 +8,10 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
 
 public class TaskHashes {
+  public static Hash pickTaskHash() {
+    return hash(0);
+  }
+
   public static Hash combineTaskHash(TupleTB type) {
     return hash(1, type.hash());
   }

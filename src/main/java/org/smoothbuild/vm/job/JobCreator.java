@@ -8,6 +8,7 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.InstB;
@@ -32,6 +33,7 @@ public class JobCreator {
       case CallB call -> new CallJob(call, context);
       case CombineB combine -> new CombineJob(combine, context);
       case OrderB order -> new OrderJob(order, context);
+      case PickB pick -> new PickJob(pick, context);
       case RefB ref -> environment.get(ref.value().intValue());
       case SelectB select -> new SelectJob(select, context);
       // `default` is needed because ExprB is not sealed because it is in different package

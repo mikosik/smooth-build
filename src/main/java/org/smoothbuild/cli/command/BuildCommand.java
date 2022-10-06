@@ -59,6 +59,7 @@ public class BuildCommand extends ProjectCommand {
             b, combine         - evaluates tuple creation (combined elements)
             t, const           - evaluates compile time constant
             o, order           - evaluates array literal (ordered elements)
+            p, pick            - evaluates array element picking
             s, select          - evaluates field selection
           """
   )

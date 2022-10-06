@@ -5,5 +5,6 @@ public enum TaskKind {
   COMBINE,
   CONST,
   ORDER,
-  SELECT
+  PICK,
+  SELECT,
 }

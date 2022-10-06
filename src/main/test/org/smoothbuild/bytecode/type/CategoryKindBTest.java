@@ -13,6 +13,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
 import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
@@ -54,7 +55,7 @@ public class CategoryKindBTest {
         arguments(9, COMBINE),
         arguments(10, SELECT),
         arguments(11, CALL),
-        // TODO 12 is unused
+        arguments(12, PICK),
         arguments(13, IF_FUNC),
         arguments(14, REF),
         arguments(15, MAP_FUNC),

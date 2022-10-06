@@ -294,6 +294,32 @@ public class BuildCommandTest {
     }
 
     @Nested
+    class _pick_matcher extends SystemTestCase {
+      private static final String PICK = """
+            result = elem([1, 2, 3], 0);
+            """;
+      private static final String PICK_TASK_HEADER = """
+          @8e4e38061b0cd666b8c7adbf773a1f52cd64a6a0   unknown                        exec
+          """;
+
+      @Test
+      public void shows_when_enabled() throws IOException {
+        createUserModule(PICK);
+        runSmooth(buildCommand("--show-tasks=pick", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(PICK_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_when_not_enabled() throws IOException {
+        createUserModule(PICK);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(PICK_TASK_HEADER);
+      }
+    }
+
+    @Nested
     class _order_matcher extends SystemTestCase {
       private static final String ORDER = """
           result = [

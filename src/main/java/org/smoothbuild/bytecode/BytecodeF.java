@@ -17,6 +17,7 @@ import org.smoothbuild.bytecode.expr.exc.BytecodeDbExc;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
@@ -131,6 +132,10 @@ public class BytecodeF {
 
   public NatFuncB natFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure) {
     return bytecodeDb.natFunc(funcTB, jar, classBinaryName, isPure);
+  }
+
+  public PickB pick(TypeB evalT, ExprB array, ExprB index) {
+    return bytecodeDb.pick(evalT, array, index);
   }
 
   public RefB ref(TypeB evalT, BigInteger value) {

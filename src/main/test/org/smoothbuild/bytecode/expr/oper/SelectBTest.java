@@ -17,7 +17,7 @@ public class SelectBTest extends TestContext {
   public void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> selectB(boolTB(), intB(3), intB(2)))
         .throwsException(new IllegalArgumentException(
-            "Selectable.type() should be instance of TupleTB but is `Int`"));
+            "Selectable.type() should be TupleTB but is `Int`."));
   }
 
   @Test
@@ -39,7 +39,7 @@ public class SelectBTest extends TestContext {
     var tuple = tupleB(intB(7));
     assertCall(() -> selectB(stringTB(), tuple, intB(0)))
         .throwsException(new IllegalArgumentException(
-            "Selected item type `Int` cannot be assigned to evalT `String`."));
+            "selectable item type `Int` cannot be assigned to evalT `String`."));
   }
 
   @Test

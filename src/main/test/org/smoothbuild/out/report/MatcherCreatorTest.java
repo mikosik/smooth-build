@@ -105,6 +105,8 @@ public class MatcherCreatorTest {
         arguments("t", TaskMatchers.CONST),
         arguments("order", TaskMatchers.ORDER),
         arguments("o", TaskMatchers.ORDER),
+        arguments("pick", TaskMatchers.PICK),
+        arguments("p", TaskMatchers.PICK),
         arguments("select", TaskMatchers.SELECT),
         arguments("s", TaskMatchers.SELECT),
 

@@ -16,6 +16,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
 import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.STRING;
@@ -804,6 +805,30 @@ public class CategoryBCorruptedTest extends TestContext {
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
                 hash, ORDER, DATA_PATH, ArrayTB.class, IntTB.class));
+      }
+    }
+
+    @Nested
+    class _pick {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save Pick type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(PICK.marker()),
+            hash(intTB())
+        );
+        assertThat(hash)
+            .isEqualTo(pickCB(intTB()).hash());
+      }
+
+      @Nested
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
+          super(PICK);
+        }
       }
     }
 
