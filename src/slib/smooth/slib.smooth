@@ -14,7 +14,7 @@ Bool or(Bool first, Bool second) = if(first, true, second);
 @Native("org.smoothbuild.slib.common.EqualFunc")
 Bool equal(A first, A second);
 
-@Native("org.smoothbuild.slib.array.ElemFunc")
+@Bytecode("org.smoothbuild.slib.array.ElemFunc")
 A elem([A] array, Int index);
 
 @Native("org.smoothbuild.slib.array.SizeFunc")

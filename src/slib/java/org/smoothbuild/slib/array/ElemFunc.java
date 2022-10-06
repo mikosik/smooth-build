@@ -1,23 +1,21 @@
 package org.smoothbuild.slib.array;
 
-import org.smoothbuild.bytecode.expr.val.ArrayB;
+import java.math.BigInteger;
+import java.util.Map;
+
+import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.val.InstB;
-import org.smoothbuild.bytecode.expr.val.IntB;
-import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.bytecode.type.val.TypeB;
 
 public class ElemFunc {
-  public static InstB func(NativeApi nativeApi, TupleB args) {
-    ArrayB array = (ArrayB) args.get(0);
-    IntB index = (IntB) args.get(1);
-    var elems = array.elems(InstB.class);
-    int indexJ = index.toJ().intValue();
-    if (indexJ < 0 || elems.size() <= indexJ) {
-      nativeApi.log()
-          .error("Index (" + indexJ + ") out of bounds. Array size = " + elems.size() + ".");
-      return null;
-    } else {
-      return elems.get(indexJ);
-    }
+  public static InstB bytecode(BytecodeF bytecodeF, Map<String, TypeB> varMap) {
+    var varA = varMap.get("A");
+    var arrayParamT = bytecodeF.arrayT(varA);
+    var indexParamT = bytecodeF.intT();
+    var paramTs = bytecodeF.tupleT(arrayParamT, indexParamT);
+    var arrayParamRef = bytecodeF.ref(arrayParamT, BigInteger.ZERO);
+    var indexParamRef = bytecodeF.ref(indexParamT, BigInteger.ONE);
+    var body = bytecodeF.pick(varA, arrayParamRef, indexParamRef);
+    return bytecodeF.defFunc(varA, paramTs, body);
   }
 }
