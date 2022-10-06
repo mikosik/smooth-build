@@ -21,6 +21,7 @@ Smooth standard library
 | [or](api/or.md)                     | Returns `true` if any argument is `true`.              |
 | [projectFile](api/projectFile.md)   | Reads single file from project filesystem.             |
 | [projectFiles](api/projectFiles.md) | Reads files from project filesystem.                   |
+| [size](api/size.md)                 | Returns size of an array.                              |
 | [toBlob](api/toBlob.md)             | Converts String to Blob using UTF-8 encoding.          |
 | [toString](api/toString.md)         | Converts Blob to String using UTF-8 encoding.          |
 | [unjar](api/unjar.md)               | Unjars (uncompresses) files from given jar file.       |

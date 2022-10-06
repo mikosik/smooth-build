@@ -17,6 +17,9 @@ Bool equal(A first, A second);
 @Native("org.smoothbuild.slib.array.ElemFunc")
 A elem([A] array, Int index);
 
+@Native("org.smoothbuild.slib.array.SizeFunc")
+Int size([A] array);
+
 @Native("org.smoothbuild.slib.array.ConcatFunc")
 [A] concat([[A]] array);
 

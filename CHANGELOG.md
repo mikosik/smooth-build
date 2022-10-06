@@ -5,6 +5,7 @@ Version 0.21.0 (??????????)
 ---------------------------
 
  * redesigned type parameter name: it a string containing only capital letters from A..Z range
+ * added slib function `size`
 
 Version 0.20.0 (2022.10.05)
 ---------------------------

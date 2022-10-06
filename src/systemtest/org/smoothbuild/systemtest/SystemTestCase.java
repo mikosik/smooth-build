@@ -34,6 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -284,6 +285,21 @@ public abstract class SystemTestCase {
           case 1 -> true;
           default -> throw new RuntimeException("Expected boolean artifact but got " + value);
         };
+      });
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public Integer artifactAsInt(String name) {
+    try {
+      return readAndClose(buffer(source(artifactAbsolutePath(name))), s -> {
+        ByteString value = s.readByteString();
+        if (4 < value.size()) {
+          throw new RuntimeException("Expected int artifact but got too many bytes: "
+              + value.size() + " .");
+        }
+        return new BigInteger(value.toByteArray()).intValue();
       });
     } catch (IOException e) {
       throw new RuntimeException(e);
