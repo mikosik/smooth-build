@@ -10,8 +10,8 @@ import java.util.Objects;
 import org.smoothbuild.bytecode.expr.Helpers.HashedDbCallable;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprNodeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
-import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongSeqSizeExc;
+import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.bytecode.type.CategoryB;
@@ -82,119 +82,95 @@ public abstract class ExprB {
     return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
   }
 
-  protected <T> T readExpr(String path, Hash hash, Class<T> clazz) {
-    var expr = Helpers.wrapBytecodeDbExcAsDecodeExprNodeException(
-        hash(), category(), path, () -> bytecodeDb().get(hash));
-    return castExpr(expr, path, clazz);
+  protected ExprB readDataAsExpr(Hash hash) {
+    return wrapBytecodeDbExcAsDecodeExprNodeException(
+        hash(), category(), DATA_PATH, () -> bytecodeDb.get(hash));
   }
 
-  protected <T> T readSeqElemExpr(String path, Hash hash, int i, int expectedSize, Class<T> clazz) {
-    var expr = readSeqElemExpr(path, hash, i, expectedSize);
-    return castExpr(expr, path, i, clazz);
+  protected ImmutableList<InstB> readDataSeqElems(int expectedSize) {
+    var seqHashes = readDataSeqHashes(expectedSize);
+    var exprs = readDataSeqElems(seqHashes);
+    return castDataSeqElem(exprs, InstB.class);
   }
 
-  protected ExprB readSeqElemExprWithType(
-      String path, Hash hash, int i, int expectedSize, TypeB type) {
-    var expr = readSeqElemExpr(path, hash, i, expectedSize);
-    return validateType(expr, DATA_PATH, i, type);
+  protected <T extends ExprB> ImmutableList<T> readDataSeqElems(Class<T> clazz) {
+    var exprs = readDataSeqElems();
+    return castDataSeqElem(exprs, clazz);
   }
 
-  private ExprB readSeqElemExpr(String path, Hash hash, int i, int expectedSize) {
-    var elemHash = readSeqElemHash(path, hash, i, expectedSize);
-    var expr = wrapBytecodeDbExcAsDecodeExprNodeException(
-        hash(), category(), path, i, () -> bytecodeDb().get(elemHash));
-    return expr;
+  protected ImmutableList<ExprB> readDataSeqElems() {
+    var seqHashes = readDataSeqHashes();
+    return readDataSeqElems(seqHashes);
   }
 
-  protected Hash readSeqElemHash(String path, Hash hash, int i, int expectedSize) {
-    checkElementIndex(i, expectedSize);
-    return readSeqHashes(path, hash, expectedSize)
-        .get(i);
-  }
-
-  protected <T> ImmutableList<T> readSeqExprs(
-      String path, Hash hash, int expectedSize, Class<T> clazz) {
-    var seqHashes = readSeqHashes(path, hash, expectedSize);
-    var exprs = readSeqExprs(path, seqHashes);
-    return castSeq(exprs, path, clazz);
-  }
-
-  protected <T> ImmutableList<T> readSeqExprs(String path, Hash hash, Class<T> clazz) {
-    var exprs = readSeqExprs(path, hash);
-    return castSeq(exprs, path, clazz);
-  }
-
-  protected ImmutableList<ExprB> readSeqExprs(String path, Hash hash) {
-    var seqHashes = readSeqHashes(path, hash);
-    return readSeqExprs(path, seqHashes);
-  }
-
-  private ImmutableList<ExprB> readSeqExprs(String path, ImmutableList<Hash> seq) {
+  private ImmutableList<ExprB> readDataSeqElems(ImmutableList<Hash> seq) {
     Builder<ExprB> builder = ImmutableList.builder();
     for (int i = 0; i < seq.size(); i++) {
-      int index = i;
-      var expr = wrapBytecodeDbExcAsDecodeExprNodeException(hash(), category(), path, index,
-          () -> bytecodeDb.get(seq.get(index)));
+      var expr = readDataSeqElem(i, seq.get(i));
       builder.add(expr);
     }
     return builder.build();
   }
 
-  private ImmutableList<Hash> readSeqHashes(String path, Hash hash, int expectedSize) {
-    ImmutableList<Hash> data = readSeqHashes(path, hash);
+  private ImmutableList<Hash> readDataSeqHashes(int expectedSize) {
+    ImmutableList<Hash> data = readDataSeqHashes();
     if (data.size() != expectedSize) {
-      throw new DecodeExprWrongSeqSizeExc(hash(), category(), path, expectedSize, data.size());
+      throw new DecodeExprWrongSeqSizeExc(hash(), category(), DATA_PATH, expectedSize, data.size());
     }
     return data;
   }
 
-  private ImmutableList<Hash> readSeqHashes(String path, Hash hash) {
-    return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), path,
-        () -> bytecodeDb.hashedDb().readSeq(hash));
+  private ImmutableList<Hash> readDataSeqHashes() {
+    return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH,
+        () -> bytecodeDb.hashedDb().readSeq(dataHash()));
+  }
+
+  protected <T> T readDataSeqElem(int i, int expectedSize, Class<T> clazz) {
+    var expr = readDataSeqElem(i, expectedSize);
+    return castDataSeqElem(expr, i, clazz);
+  }
+
+  private ExprB readDataSeqElem(int i, int expectedSize) {
+    var elemHash = readDataSeqElemHash(i, expectedSize);
+    return readDataSeqElem(i, elemHash);
+  }
+
+  private ExprB readDataSeqElem(int i, Hash elemHash) {
+    return wrapBytecodeDbExcAsDecodeExprNodeException(
+        hash(), category(), DATA_PATH, i, () -> bytecodeDb.get(elemHash));
+  }
+
+  protected Hash readDataSeqElemHash(int i, int expectedSize) {
+    checkElementIndex(i, expectedSize);
+    return readDataSeqHashes(expectedSize).get(i);
   }
 
   protected static String exprsToString(ImmutableList<? extends ExprB> exprs) {
     return toCommaSeparatedString(exprs, ExprB::valToStringSafe);
   }
 
-  private <T> T castExpr(ExprB expr, String path, Class<T> clazz) {
+  private <T> T castDataSeqElem(ExprB expr, int index, Class<T> clazz) {
     if (clazz.isInstance(expr)) {
       @SuppressWarnings("unchecked")
       T result = (T) expr;
       return result;
     } else {
-      throw new DecodeExprWrongNodeClassExc(hash(), category(), path, clazz, expr.getClass());
+      throw new DecodeExprWrongNodeClassExc(
+          hash(), category(), DATA_PATH, index, clazz, expr.getClass());
     }
   }
 
-  private <T> T castExpr(ExprB expr, String path, int index, Class<T> clazz) {
-    if (clazz.isInstance(expr)) {
-      @SuppressWarnings("unchecked")
-      T result = (T) expr;
-      return result;
-    } else {
-      throw new DecodeExprWrongNodeClassExc(hash(), category(), path, index, clazz, expr.getClass());
-    }
-  }
-
-  private <T> ImmutableList<T> castSeq(ImmutableList<ExprB> elems, String path, Class<T> clazz) {
+  private <T> ImmutableList<T> castDataSeqElem(ImmutableList<ExprB> elems, Class<T> clazz) {
     for (int i = 0; i < elems.size(); i++) {
       ExprB elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
-        throw new DecodeExprWrongNodeClassExc(hash(), category(), path, i, clazz, elem.getClass());
+        throw new DecodeExprWrongNodeClassExc(
+            hash(), category(), DATA_PATH, i, clazz, elem.getClass());
       }
     }
     @SuppressWarnings("unchecked")
     ImmutableList<T> result = (ImmutableList<T>) elems;
     return result;
-  }
-
-  protected ExprB validateType(ExprB expr, String path, int index, TypeB expectedT) {
-    var exprT = expr.type();
-    if (!expectedT.equals(exprT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), category(), path, index, expectedT, exprT);
-    }
-    return expr;
   }
 
   private String valToStringSafe() {

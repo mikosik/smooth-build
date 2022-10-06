@@ -34,7 +34,7 @@ public class CombineB extends OperB {
 
   public ImmutableList<ExprB> items() {
     var expectedItemTs = category().evalT().items();
-    var items = readSeqExprs(DATA_PATH, dataHash(), ExprB.class);
+    var items = readDataSeqElems(ExprB.class);
     allMatchOtherwise(
         expectedItemTs,
         items,

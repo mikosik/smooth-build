@@ -19,7 +19,7 @@ public final class DefFuncB extends FuncB {
   }
 
   public ExprB body() {
-    var body = readExpr(DATA_PATH, dataHash(), ExprB.class);
+    var body = readDataAsExpr(dataHash());
     var resT = type().res();
     var bodyT = body.type();
     if (!resT.equals(bodyT)) {

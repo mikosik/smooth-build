@@ -60,10 +60,10 @@ public class CallB extends OperB {
   }
 
   private ExprB readFunc() {
-    return readSeqElemExpr(DATA_PATH, dataHash(), CALLABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
+    return readDataSeqElem(CALLABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
   }
 
   private CombineB readArgs() {
-    return readSeqElemExpr(DATA_PATH, dataHash(), ARGS_IDX, DATA_SEQ_SIZE, CombineB.class);
+    return readDataSeqElem(ARGS_IDX, DATA_SEQ_SIZE, CombineB.class);
   }
 }

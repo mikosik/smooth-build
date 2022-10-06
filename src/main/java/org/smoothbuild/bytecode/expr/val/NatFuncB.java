@@ -22,16 +22,16 @@ public final class NatFuncB extends FuncB {
   }
 
   public BlobB jar() {
-    return readSeqElemExpr(DATA_PATH, dataHash(), JAR_IDX, DATA_SEQ_SIZE, BlobB.class);
+    return readDataSeqElem(JAR_IDX, DATA_SEQ_SIZE, BlobB.class);
   }
 
   public StringB classBinaryName() {
-    return readSeqElemExpr(
-        DATA_PATH, dataHash(), CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, StringB.class);
+    return readDataSeqElem(
+        CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, StringB.class);
   }
 
   public BoolB isPure() {
-    return readSeqElemExpr(DATA_PATH, dataHash(), IS_PURE_IDX, DATA_SEQ_SIZE, BoolB.class);
+    return readDataSeqElem(IS_PURE_IDX, DATA_SEQ_SIZE, BoolB.class);
   }
 
   @Override

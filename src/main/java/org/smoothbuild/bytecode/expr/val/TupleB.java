@@ -44,7 +44,7 @@ public final class TupleB extends InstB {
   private ImmutableList<InstB> instantiateItems() {
     var type = type();
     var expectedItemTs = type.items();
-    var items = readSeqExprs(DATA_PATH, dataHash(), expectedItemTs.size(), InstB.class);
+    var items = readDataSeqElems(expectedItemTs.size());
     var itemTs = map(items, InstB::type);
     validateTuple(type, itemTs, () -> {throw new DecodeExprWrongNodeTypeExc(hash(),
         category(), DATA_PATH, type, asTupleToString(itemTs));});

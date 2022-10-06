@@ -53,10 +53,10 @@ public class SelectB extends OperB {
   public record Data(ExprB selectable, IntB index) {}
 
   private ExprB readSelectable() {
-    return readSeqElemExpr(DATA_PATH, dataHash(), SELECTABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
+    return readDataSeqElem(SELECTABLE_IDX, DATA_SEQ_SIZE, ExprB.class);
   }
 
   private IntB readIndex() {
-    return readSeqElemExpr(DATA_PATH, dataHash(), IDX_IDX, DATA_SEQ_SIZE, IntB.class);
+    return readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, IntB.class);
   }
 }

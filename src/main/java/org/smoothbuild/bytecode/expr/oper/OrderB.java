@@ -31,7 +31,7 @@ public class OrderB extends OperB {
   }
 
   public ImmutableList<ExprB> elems() {
-    var elems = readSeqExprs(DATA_PATH, dataHash(), ExprB.class);
+    var elems = readDataSeqElems(ExprB.class);
     var expectedElemT = category().evalT().elem();
     for (int i = 0; i < elems.size(); i++) {
       var actualT = elems.get(i).type();

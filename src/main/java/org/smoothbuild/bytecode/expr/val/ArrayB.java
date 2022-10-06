@@ -53,7 +53,7 @@ public final class ArrayB extends InstB {
   }
 
   private ImmutableList<InstB> readElems() {
-    return readSeqExprs(DATA_PATH, dataHash(), InstB.class);
+    return readDataSeqElems(InstB.class);
   }
 
   @Override
