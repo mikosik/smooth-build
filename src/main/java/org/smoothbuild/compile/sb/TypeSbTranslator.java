@@ -44,7 +44,7 @@ public class TypeSbTranslator {
       case VarS v ->  translate(v);
       case StringTS s -> bytecodeF.stringT();
       case StructTS st -> translate(st);
-      case TupleTS tupleTS -> throw new RuntimeException("Tuple is not supported");
+      case TupleTS tupleTS -> translate(tupleTS);
     };
   }
 

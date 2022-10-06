@@ -163,6 +163,17 @@ public class EqualTest extends SystemTestCase {
   @Nested
   class _array {
     @Test
+    public void empty_arrays_are_equal() throws Exception {
+      createUserModule("""
+          result = equal([], []);
+          """);
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactAsBoolean("result"))
+          .isEqualTo(true);
+    }
+
+    @Test
     public void int_array_is_equal_to_itself() throws Exception {
       createUserModule("""
           result = equal([7, 17], [7, 17]);
