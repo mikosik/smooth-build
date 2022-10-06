@@ -187,8 +187,8 @@ public class AnalyzeSemantically {
       public void visitStruct(StructP struct) {
         String name = struct.name();
         if (isVarName(name)) {
-          logger.log(compileError(struct.loc(),
-              "`" + name + "` is illegal struct name. It must have at least two characters."));
+          logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name."
+              + " Names with all capitals letters can be used only for type parameters."));
         }
       }
     }.visitAst(ast);

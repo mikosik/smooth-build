@@ -313,7 +313,7 @@ can be invoked as
 
 Smooth allows declaring polymorphic functions and values via 
 [parametric polymorphism](https://en.wikipedia.org/wiki/Parametric_polymorphism).
-To define type variable simply use a single upper case letter as its name.
+To define type variable simply use a name which all characters are uppercase.
 Below declaration of [id](api/id.md) function from [standard library](api.md) 
 that returns its only parameter.
 

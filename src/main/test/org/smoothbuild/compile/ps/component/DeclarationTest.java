@@ -87,11 +87,21 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void that_is_single_large_letter_fails() {
+        public void that_is_single_capital_letter_fails() {
           module("""
              A{}
              """)
-              .loadsWithError(1, "`A` is illegal struct name. It must have at least two characters.");
+              .loadsWithError(1, "`A` is illegal struct name. "
+                  + "Names with all capitals letters can be used only for type parameters.");
+        }
+
+        @Test
+        public void that_is_multiple_capital_letters_fails() {
+          module("""
+             ABC{}
+             """)
+              .loadsWithError(1, "`ABC` is illegal struct name. "
+                  + "Names with all capitals letters can be used only for type parameters.");
         }
       }
 

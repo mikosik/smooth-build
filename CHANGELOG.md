@@ -1,7 +1,13 @@
 Change Log
 ==========
 
+Version 0.21.0 (??????????)
+---------------------------
+
+ * redesigned type parameter name: it a string containing only capital letters from A..Z range
+
 Version 0.20.0 (2022.10.05)
+---------------------------
 
  * changed smooth language: added `Int` type
  * added slib functions: `map`, `id`, `flatten`, `jarFile`

@@ -10,9 +10,9 @@ public class TypeNamesSTest extends TestContext {
   @Nested
   class _var_name {
     @Test
-    public void empty_string_is_not_type_var_name() {
-      assertThat(TypeNamesS.isVarName(""))
-          .isFalse();
+    public void uppercase_A_character_is_type_var_name() {
+      assertThat(TypeNamesS.isVarName("A"))
+          .isTrue();
     }
 
     @Test
@@ -22,21 +22,51 @@ public class TypeNamesSTest extends TestContext {
     }
 
     @Test
+    public void uppercase_AA_character_is_type_var_name() {
+      assertThat(TypeNamesS.isVarName("AA"))
+          .isTrue();
+    }
+
+    @Test
+    public void mixed_case_Aa_character_is_not_type_var_name() {
+      assertThat(TypeNamesS.isVarName("Aa"))
+          .isFalse();
+    }
+
+    @Test
+    public void uppercase_B_character_is_type_var_name() {
+      assertThat(TypeNamesS.isVarName("B"))
+          .isTrue();
+    }
+
+    @Test
     public void lowercase_b_character_is_not_type_var_name() {
       assertThat(TypeNamesS.isVarName("b"))
           .isFalse();
     }
 
     @Test
-    public void uppercase_a_character_is_type_var_name() {
-      assertThat(TypeNamesS.isVarName("A"))
-          .isTrue();
+    public void empty_string_is_not_type_var_name() {
+      assertThat(TypeNamesS.isVarName(""))
+          .isFalse();
     }
 
     @Test
-    public void uppercase_b_character_is_type_var_name() {
-      assertThat(TypeNamesS.isVarName("B"))
-          .isTrue();
+    public void underscore_character_is_not_type_var_name() {
+      assertThat(TypeNamesS.isVarName("_"))
+          .isFalse();
+    }
+
+    @Test
+    public void uppercase_A_with_underscore_character_is_not_type_var_name() {
+      assertThat(TypeNamesS.isVarName("A_"))
+          .isFalse();
+    }
+
+    @Test
+    public void whitespace_string_is_not_type_var_name() {
+      assertThat(TypeNamesS.isVarName(" "))
+          .isFalse();
     }
 
     @Test
