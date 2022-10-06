@@ -10,7 +10,7 @@ import org.smoothbuild.plugin.NativeApi;
 public class SizeFunc {
   public static InstB func(NativeApi nativeApi, TupleB args) {
     var arrayB = (ArrayB) args.get(0);
-    int size = arrayB.elems(InstB.class).size();
+    long size = arrayB.size();
     return nativeApi.factory().int_(BigInteger.valueOf(size));
   }
 }

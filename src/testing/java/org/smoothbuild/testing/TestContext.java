@@ -143,6 +143,7 @@ import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 import okio.ByteString;
@@ -396,7 +397,7 @@ public class TestContext {
   // InstB types
 
   public TupleTB animalTB() {
-    return categoryDb().tuple(stringTB(), intTB());
+    return tupleTB(stringTB(), intTB());
   }
 
   public ArrayTB arrayTB() {
@@ -823,8 +824,21 @@ public class TestContext {
         nlist(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
   }
 
+  public static StructTS animalTS() {
+    return structTS("Animal",
+        nlist(sigS(stringTS(), "name"), sigS(intTS(), "size")));
+  }
+
   public static StringTS stringTS() {
     return TypeFS.STRING;
+  }
+
+  public static StructTS structTS(TypeS... fieldTs) {
+    Builder<ItemSigS> builder = ImmutableList.builder();
+    for (int i = 0; i < fieldTs.length; i++) {
+      builder.add(sigS(fieldTs[i], "param" + i));
+    }
+    return structTS("MyStruct", nlist(builder.build()));
   }
 
   public static StructTS structTS(String name, NList<ItemSigS> fields) {

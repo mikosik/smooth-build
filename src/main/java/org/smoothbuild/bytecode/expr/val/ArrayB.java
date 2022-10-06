@@ -27,6 +27,10 @@ public final class ArrayB extends InstB {
     return (ArrayTB) super.category();
   }
 
+  public long size() {
+    return readDataSeqSize();
+  }
+
   public <T extends InstB> ImmutableList<T> elems(Class<T> elemTJ) {
     assertIsIterableAs(elemTJ);
     return (ImmutableList<T>) elemsSupplier.get();

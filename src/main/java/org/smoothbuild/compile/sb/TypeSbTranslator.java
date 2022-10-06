@@ -1,6 +1,5 @@
 package org.smoothbuild.compile.sb;
 
-import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import org.smoothbuild.bytecode.BytecodeF;
@@ -49,7 +48,12 @@ public class TypeSbTranslator {
   }
 
   public TypeB translate(VarS var) {
-    return requireNonNull(varMap.get(var));
+    TypeB typeB = varMap.get(var);
+    if (typeB == null) {
+      throw new IllegalStateException("Unknown variable " + var.q() + ".");
+    } else {
+      return typeB;
+    }
   }
 
   public TupleTB translate(StructTS struct) {
