@@ -87,6 +87,11 @@ public abstract class ExprB {
         hash(), category(), DATA_PATH, () -> bytecodeDb.get(hash));
   }
 
+  protected long readDataSeqSize() {
+    return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH,
+        () -> bytecodeDb.hashedDb().readSeqSize(dataHash()));
+  }
+
   protected ImmutableList<InstB> readDataSeqElems(int expectedSize) {
     var seqHashes = readDataSeqHashes(expectedSize);
     var exprs = readDataSeqElems(seqHashes);
