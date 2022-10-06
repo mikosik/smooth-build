@@ -32,14 +32,14 @@ public class SelectB extends OperB {
 
   public Data data() {
     ExprB selectable = readSelectable();
-    if (selectable.type() instanceof TupleTB tupleEvalT) {
+    if (selectable.type() instanceof TupleTB tupleT) {
       IntB index = readIndex();
       int i = index.toJ().intValue();
-      int size = tupleEvalT.items().size();
+      int size = tupleT.items().size();
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), this.category(), i, size);
       }
-      var fieldT = tupleEvalT.items().get(i);
+      var fieldT = tupleT.items().get(i);
       if (!type().equals(fieldT)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), this.category(), fieldT);
       }
