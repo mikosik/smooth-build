@@ -39,19 +39,19 @@ public class CallB extends OperB {
   public record Data(ExprB callable, CombineB args) {}
 
   private void validate(ExprB func, CombineB argsCombine) {
-    if (func.type() instanceof FuncTB funcTB) {
+    if (func.evalT() instanceof FuncTB funcTB) {
       validate(funcTB, argsCombine);
     } else {
-      throw new DecodeExprWrongNodeTypeExc(hash(), this.category(), "func", FuncTB.class, func.type());
+      throw new DecodeExprWrongNodeTypeExc(hash(), this.category(), "func", FuncTB.class, func.evalT());
     }
   }
 
   protected void validate(FuncTB funcTB, CombineB argsCombine) {
-    var argsT = argsCombine.type();
+    var argsT = argsCombine.evalT();
     validateArgs(funcTB, argsT.items(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resT = funcTB.res();
-    if (!type().equals(resT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), this.category(), "call.result", type(), resT);
+    if (!evalT().equals(resT)) {
+      throw new DecodeExprWrongNodeTypeExc(hash(), this.category(), "call.result", evalT(), resT);
     }
   }
 

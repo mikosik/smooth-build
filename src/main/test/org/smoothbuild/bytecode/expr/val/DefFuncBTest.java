@@ -29,7 +29,7 @@ public class DefFuncBTest extends TestContext {
   @Test
   public void type_of_func_is_func_type() {
     var funcT = funcTB(intTB(), stringTB());
-    assertThat(defFuncB(funcT, intB()).type())
+    assertThat(defFuncB(funcT, intB()).evalT())
         .isEqualTo(funcT);
   }
 

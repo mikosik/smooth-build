@@ -192,7 +192,7 @@ public class VmTest extends TestContext {
       @Test
       public void def_func_passed_as_arg() {
         var func = defFuncB(intB(7));
-        var paramT = func.type();
+        var paramT = func.evalT();
         var outerFunc = defFuncB(list(paramT), callB(refB(paramT, 0)));
         var call = callB(outerFunc, func);
         assertThat(evaluate(call))
@@ -255,7 +255,7 @@ public class VmTest extends TestContext {
             .thenReturn(
                 Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
-        var natFuncT = natFunc.type();
+        var natFuncT = natFunc.evalT();
         var outerFunc = defFuncB(list(natFuncT), callB(refB(natFuncT, 0), intB(7)));
         var call = callB(outerFunc, natFunc);
         assertThat(evaluate(vm(nativeMethodLoader), call))

@@ -26,7 +26,7 @@ public class OrderB extends OperB {
   }
 
   @Override
-  public ArrayTB type() {
+  public ArrayTB evalT() {
     return category().evalT();
   }
 
@@ -34,7 +34,7 @@ public class OrderB extends OperB {
     var elems = readDataSeqElems(ExprB.class);
     var expectedElemT = category().evalT().elem();
     for (int i = 0; i < elems.size(); i++) {
-      var actualT = elems.get(i).type();
+      var actualT = elems.get(i).evalT();
       if (!expectedElemT.equals(actualT)) {
         throw new DecodeExprWrongNodeTypeExc(hash(), category(), "elems", i, expectedElemT, actualT);
       }

@@ -15,7 +15,7 @@ public class OrderJob extends ExecutingJob {
 
   @Override
   protected Promise<InstB> evaluateImpl() {
-    var task = new OrderTask(orderB.type(), context().labeledLoc(orderB));
+    var task = new OrderTask(orderB.evalT(), context().labeledLoc(orderB));
     return evaluateTransitively(task, orderB.elems());
   }
 }

@@ -15,6 +15,11 @@ public abstract sealed class FuncB extends InstB
   }
 
   @Override
+  public FuncTB evalT() {
+    return type();
+  }
+
+  @Override
   public FuncTB type() {
     return ((FuncCB) category()).type();
   }

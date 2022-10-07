@@ -16,6 +16,10 @@ public sealed abstract class InstB extends ExprB
   }
 
   @Override
+  public TypeB evalT() {
+    return type();
+  }
+
   public TypeB type() {
     return (TypeB) category();
   }

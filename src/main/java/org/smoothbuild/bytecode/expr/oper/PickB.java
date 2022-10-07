@@ -32,15 +32,15 @@ public class PickB extends OperB {
 
   public Data data() {
     ExprB pickable = readPickable();
-    if (pickable.type() instanceof ArrayTB arrayT) {
+    if (pickable.evalT() instanceof ArrayTB arrayT) {
       var elemT = arrayT.elem();
-      if (!type().equals(elemT)) {
+      if (!evalT().equals(elemT)) {
         throw new DecodePickWrongEvalTypeExc(hash(), category(), elemT);
       }
       return new Data(pickable, readIndex());
     } else {
       throw new DecodeExprWrongNodeTypeExc(
-          hash(), category(), "array", ArrayTB.class, pickable.type());
+          hash(), category(), "array", ArrayTB.class, pickable.evalT());
     }
   }
 
@@ -52,9 +52,9 @@ public class PickB extends OperB {
 
   private ExprB readIndex() {
     ExprB index = readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
-    if (!(index.type() instanceof IntTB)) {
+    if (!(index.evalT() instanceof IntTB)) {
       throw new DecodeExprWrongNodeTypeExc(
-          hash(), category(), DATA_PATH, IDX_IDX, IntB.class, index.type());
+          hash(), category(), DATA_PATH, IDX_IDX, IntB.class, index.evalT());
     }
     return index;
   }

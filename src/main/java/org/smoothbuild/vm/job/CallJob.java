@@ -93,7 +93,7 @@ public class CallJob extends ExecutingJob {
       MapFuncB mapFuncB, Consumer<InstB> resultConsumer) {
     var mappingFuncExprB = args().get(1);
     var callBs = map(arrayB.elems(InstB.class), e -> newCallB(mappingFuncExprB, e));
-    var mappingFuncResT = ((FuncTB) mappingFuncExprB.type()).res();
+    var mappingFuncResT = ((FuncTB) mappingFuncExprB.evalT()).res();
     var orderB = bytecodeF().order(bytecodeF().arrayT(mappingFuncResT), callBs);
     var orderJob = context().jobFor(orderB);
     var taskInfo = callTaskInfo(mapFuncB);
@@ -117,7 +117,7 @@ public class CallJob extends ExecutingJob {
   private void handleNatFunc(NatFuncB natFuncB, Consumer<InstB> res) {
     var exprInfo = context().labeledLoc(natFuncB);
     var name = exprInfo.label();
-    var resT = natFuncB.type().res();
+    var resT = natFuncB.evalT().res();
     var task = new NativeCallTask(
         resT, name, natFuncB, context().nativeMethodLoader(), callTaskInfo(natFuncB));
     evaluateTransitively(task, args())

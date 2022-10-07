@@ -27,6 +27,11 @@ public final class TupleB extends InstB {
   }
 
   @Override
+  public TupleTB evalT() {
+    return type();
+  }
+
+  @Override
   public TupleTB type() {
     return (TupleTB) super.category();
   }

@@ -20,7 +20,7 @@ public class SelectJob extends ExecutingJob {
     var data = selectB.data();
     var selectable = data.selectable();
     var index = data.index();
-    var task = new SelectTask(selectB.type(), context().labeledLoc(selectB));
+    var task = new SelectTask(selectB.evalT(), context().labeledLoc(selectB));
     return evaluateTransitively(task, list(selectable, index));
   }
 }

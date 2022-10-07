@@ -17,7 +17,7 @@ public class SelectBTest extends TestContext {
   public void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> selectB(intB(3), intB(2)))
         .throwsException(new IllegalArgumentException(
-            "Selectable.type() should be TupleTB but is `Int`."));
+            "selectable.evalT() should be TupleTB but is `Int`."));
   }
 
   @Test

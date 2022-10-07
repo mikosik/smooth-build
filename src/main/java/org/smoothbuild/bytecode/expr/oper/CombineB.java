@@ -28,7 +28,7 @@ public class CombineB extends OperB {
   }
 
   @Override
-  public TupleTB type() {
+  public TupleTB evalT() {
     return category().evalT();
   }
 
@@ -38,11 +38,11 @@ public class CombineB extends OperB {
     allMatchOtherwise(
         expectedItemTs,
         items,
-        (type, item) -> type.equals(item.type()),
+        (type, item) -> type.equals(item.evalT()),
         (type, item) -> { throw new DecodeCombineWrongItemsSizeExc(hash(), category(), item); },
         (index) -> {
-          throw new DecodeExprWrongNodeTypeExc(
-              hash(), category(), "items", index, expectedItemTs.get(index), items.get(index).type());
+          throw new DecodeExprWrongNodeTypeExc(hash(), category(), "items", index,
+              expectedItemTs.get(index), items.get(index).evalT());
         }
     );
     return items;

@@ -284,9 +284,9 @@ public class SbTranslator {
       throw new TranslateSbExc(ann.loc() + ": " + bytecodeTry.error());
     }
     var bytecodeB = bytecodeTry.result();
-    if (!bytecodeB.type().equals(typeB)) {
+    if (!bytecodeB.evalT().equals(typeB)) {
       throw new TranslateSbExc(ann.loc() + ": Bytecode provider returned object of wrong type "
-          + bytecodeB.type().q() + " when " + q(name) + " is declared as " + typeB.q() + ".");
+          + bytecodeB.evalT().q() + " when " + q(name) + " is declared as " + typeB.q() + ".");
     }
     return bytecodeB;
   }

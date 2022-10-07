@@ -551,7 +551,7 @@ public class TestContext {
   }
 
   public ArrayB arrayB(InstB... elems) {
-    return arrayB(elems[0].type(), elems);
+    return arrayB(elems[0].evalT(), elems);
   }
 
   public ArrayB arrayB(TypeB elemT, InstB... elems) {
@@ -644,7 +644,7 @@ public class TestContext {
   }
 
   public DefFuncB defFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
-    var funcTB = funcTB(body.type(), paramTs);
+    var funcTB = funcTB(body.evalT(), paramTs);
     return defFuncB(funcTB, body);
   }
 
@@ -709,7 +709,7 @@ public class TestContext {
   }
 
   public TupleB tupleB(InstB... items) {
-    var tupleTB = tupleTB(stream(items).map(InstB::type).toArray(TypeB[]::new));
+    var tupleTB = tupleTB(stream(items).map(InstB::evalT).toArray(TypeB[]::new));
     return tupleB(tupleTB, items);
   }
 
@@ -760,7 +760,7 @@ public class TestContext {
   }
 
   public OrderB orderB(ExprB... elems) {
-    return orderB(elems[0].type(), elems);
+    return orderB(elems[0].evalT(), elems);
   }
 
   public OrderB orderB(TypeB elemT, ExprB... elems) {

@@ -15,7 +15,7 @@ public class CombineJob extends ExecutingJob {
 
   @Override
   protected Promise<InstB> evaluateImpl() {
-    var task = new CombineTask(combineB.type(), context().labeledLoc(combineB));
+    var task = new CombineTask(combineB.evalT(), context().labeledLoc(combineB));
     return evaluateTransitively(task, combineB.items());
   }
 }

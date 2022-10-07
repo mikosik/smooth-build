@@ -23,6 +23,11 @@ public final class ArrayB extends InstB {
   }
 
   @Override
+  public ArrayTB evalT() {
+    return type();
+  }
+
+  @Override
   public ArrayTB type() {
     return (ArrayTB) super.category();
   }
@@ -50,7 +55,8 @@ public final class ArrayB extends InstB {
     for (int i = 0; i < elems.size(); i++) {
       var elemT = elems.get(i).type();
       if (!expectedElemT.equals(elemT)) {
-        throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, i, expectedElemT, elemT);
+        throw new DecodeExprWrongNodeTypeExc(
+            hash(), category(), DATA_PATH, i, expectedElemT, elemT);
       }
     }
     return elems;

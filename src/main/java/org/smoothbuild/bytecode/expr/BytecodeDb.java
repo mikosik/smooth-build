@@ -90,9 +90,9 @@ public class BytecodeDb {
   }
 
   private void checkBodyTypeAssignableToFuncResT(FuncTB type, ExprB body) {
-    if (!type.res().equals(body.type())) {
+    if (!type.res().equals(body.evalT())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.res().q()
-          + " but body.type() is " + body.type().q() + ".");
+          + " but body.evalT() is " + body.evalT().q() + ".");
     }
   }
 
@@ -257,8 +257,8 @@ public class BytecodeDb {
     return type.newExpr(root, this);
   }
 
-  private FuncTB castTypeToFuncTB(ExprB callable) {
-    if (callable.type() instanceof FuncTB funcT) {
+  private FuncTB castTypeToFuncTB(ExprB func) {
+    if (func.evalT() instanceof FuncTB funcT) {
       return funcT;
     } else {
       throw new IllegalArgumentException("`func` component doesn't evaluate to FuncB.");
@@ -266,8 +266,8 @@ public class BytecodeDb {
   }
 
   private void validateArgsInCall(FuncTB funcTB, CombineB args) {
-    validateArgs(funcTB, args.type().items(), () -> {
-      throw illegalArgs(funcTB, args.type());
+    validateArgs(funcTB, args.evalT().items(), () -> {
+      throw illegalArgs(funcTB, args.evalT());
     });
   }
 
@@ -291,7 +291,7 @@ public class BytecodeDb {
 
   private void validateOrderElems(TypeB elemT, ImmutableList<ExprB> elems) {
     for (int i = 0; i < elems.size(); i++) {
-      var iElemT = elems.get(i).type();
+      var iElemT = elems.get(i).evalT();
       if (!elemT.equals(iElemT)) {
         throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
             + " but element at index " + i + " has type " + iElemT.q() + ".");
@@ -300,7 +300,7 @@ public class BytecodeDb {
   }
 
   private CombineB newCombine(ImmutableList<ExprB> items) throws HashedDbExc {
-    var type = categoryDb.combine(categoryDb.tuple(map(items, ExprB::type)));
+    var type = categoryDb.combine(categoryDb.tuple(map(items, ExprB::evalT)));
     var data = writeCombineData(items);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -320,9 +320,9 @@ public class BytecodeDb {
 
   private PickB newPick(ExprB pickable, ExprB index) throws HashedDbExc {
     var evalT = pickEvalT(pickable);
-    if (!(index.type() instanceof IntTB)) {
+    if (!(index.evalT() instanceof IntTB)) {
       throw new IllegalArgumentException(
-          "index.type() should be IntTB but is " + index.type().q() + ".");
+          "index.evalT() should be IntTB but is " + index.evalT().q() + ".");
     }
     var data = writePickData(pickable, index);
     var cat = categoryDb.pick(evalT);
@@ -331,12 +331,12 @@ public class BytecodeDb {
   }
 
   private TypeB pickEvalT(ExprB pickable) {
-    var evalT = pickable.type();
+    var evalT = pickable.evalT();
     if (evalT instanceof ArrayTB arrayT) {
       return arrayT.elem();
     } else {
       throw new IllegalArgumentException(
-          "pickable.type() should be ArrayTB but is " + evalT.q() + ".");
+          "pickable.evalT() should be ArrayTB but is " + evalT.q() + ".");
     }
   }
 
@@ -349,7 +349,7 @@ public class BytecodeDb {
   }
 
   private TypeB selectEvalT(ExprB selectable, IntB index) {
-    var evalT = selectable.type();
+    var evalT = selectable.evalT();
     if (evalT instanceof TupleTB tuple) {
       int intIndex = index.toJ().intValue();
       var items = tuple.items();
@@ -357,7 +357,7 @@ public class BytecodeDb {
       return items.get(intIndex);
     } else {
       throw new IllegalArgumentException(
-          "Selectable.type() should be TupleTB but is " + evalT.q() + ".");
+          "selectable.evalT() should be TupleTB but is " + evalT.q() + ".");
     }
   }
 

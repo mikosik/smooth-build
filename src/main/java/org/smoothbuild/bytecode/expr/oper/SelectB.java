@@ -32,7 +32,7 @@ public class SelectB extends OperB {
 
   public Data data() {
     ExprB selectable = readSelectable();
-    if (selectable.type() instanceof TupleTB tupleT) {
+    if (selectable.evalT() instanceof TupleTB tupleT) {
       IntB index = readIndex();
       int i = index.toJ().intValue();
       int size = tupleT.items().size();
@@ -40,13 +40,13 @@ public class SelectB extends OperB {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), category(), i, size);
       }
       var fieldT = tupleT.items().get(i);
-      if (!type().equals(fieldT)) {
+      if (!evalT().equals(fieldT)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), category(), fieldT);
       }
       return new Data(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassExc(
-          hash(), category(), "tuple", TupleTB.class, selectable.type().getClass());
+          hash(), category(), "tuple", TupleTB.class, selectable.evalT().getClass());
     }
   }
 

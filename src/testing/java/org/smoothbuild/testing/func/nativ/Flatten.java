@@ -11,7 +11,7 @@ public class Flatten {
   public static InstB func(NativeApi nativeApi, TupleB args) {
     ArrayB array = (ArrayB) args.get(0);
 
-    ArrayBBuilder builder = nativeApi.factory().arrayBuilder((ArrayTB) array.type().elem());
+    ArrayBBuilder builder = nativeApi.factory().arrayBuilder((ArrayTB) array.evalT().elem());
     for (ArrayB innerArray : array.elems(ArrayB.class)) {
       builder.addAll(innerArray.elems(InstB.class));
     }

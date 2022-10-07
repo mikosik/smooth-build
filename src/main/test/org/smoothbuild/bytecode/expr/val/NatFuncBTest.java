@@ -18,7 +18,7 @@ public class NatFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(stringTB(), intTB());
     var natFunc = natFuncB(funcT, jar, classBinaryName, isPure);
-    assertThat(natFunc.type())
+    assertThat(natFunc.evalT())
         .isEqualTo(funcT);
   }
 
