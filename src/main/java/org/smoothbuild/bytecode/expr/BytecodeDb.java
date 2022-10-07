@@ -388,14 +388,6 @@ public class BytecodeDb {
     return writeSeq(items);
   }
 
-  private Hash writeIfData(ExprB condition, ExprB then, ExprB else_) throws HashedDbExc {
-    return hashedDb.writeSeq(condition.hash(), then.hash(), else_.hash());
-  }
-
-  private Hash writeMapData(ExprB array, ExprB func) throws HashedDbExc {
-    return hashedDb.writeSeq(array.hash(), func.hash());
-  }
-
   private Hash writeOrderData(ImmutableList<ExprB> elems) throws HashedDbExc {
     return writeSeq(elems);
   }
