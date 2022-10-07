@@ -143,8 +143,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT, elems));
   }
 
-  public PickB pick(TypeB evalT, ExprB pickable, ExprB index) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(evalT, pickable, index));
+  public PickB pick(ExprB pickable, ExprB index) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(pickable, index));
   }
 
   public RefB ref(TypeB evalT, BigInteger value) {
@@ -341,12 +341,8 @@ public class BytecodeDb {
     return mapFuncCB.newExpr(root, this);
   }
 
-  private PickB newPick(TypeB evalT, ExprB pickable, ExprB index) throws HashedDbExc {
-    var inferredEvalT = pickEvalT(pickable);
-    if (!evalT.equals(inferredEvalT)) {
-      throw new IllegalArgumentException("pickable elem type " + inferredEvalT.q()
-          + " cannot be assigned to evalT " + evalT.q() + ".");
-    }
+  private PickB newPick(ExprB pickable, ExprB index) throws HashedDbExc {
+    var evalT = pickEvalT(pickable);
     if (!(index.type() instanceof IntTB)) {
       throw new IllegalArgumentException(
           "index.type() should be IntTB but is " + index.type().q() + ".");

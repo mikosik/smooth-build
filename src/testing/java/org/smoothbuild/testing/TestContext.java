@@ -779,13 +779,8 @@ public class TestContext {
     return bytecodeDb().order(arrayTB(elemT), elemList);
   }
 
-  public PickB pickB(ExprB array, IntB index) {
-    var evalT = ((ArrayTB) array.type()).elem();
-    return pickB(evalT, array, index);
-  }
-
-  public PickB pickB(TypeB evalT, ExprB array, ExprB index) {
-    return bytecodeDb().pick(evalT, array, index);
+  public PickB pickB(ExprB array, ExprB index) {
+    return bytecodeDb().pick(array, index);
   }
 
   public RefB refB(int index) {

@@ -14,24 +14,16 @@ import org.smoothbuild.testing.TestContext;
 public class PickBTest extends TestContext {
   @Test
   public void creating_pick_with_non_array_expr_as_pickable_causes_exception() {
-    assertCall(() -> pickB(boolTB(), intB(3), intB(2)))
+    assertCall(() -> pickB(intB(3), intB(2)))
         .throwsException(new IllegalArgumentException(
             "pickable.type() should be ArrayTB but is `Int`."));
   }
 
   @Test
   public void creating_pick_with_non_int_expr_as_index_causes_exception() {
-    assertCall(() -> pickB(boolTB(), arrayB(boolTB()), stringB()))
+    assertCall(() -> pickB(arrayB(boolTB()), stringB()))
         .throwsException(new IllegalArgumentException(
             "index.type() should be IntTB but is `String`."));
-  }
-
-  @Test
-  public void array_elemT_different_than_elemT_specified_in_category_causes_exc() {
-    var tuple = arrayB(intB(7));
-    assertCall(() -> pickB(stringTB(), tuple, intB(0)))
-        .throwsException(new IllegalArgumentException(
-            "pickable elem type `Int` cannot be assigned to evalT `String`."));
   }
 
   @Test

@@ -15,7 +15,7 @@ public class ElemFunc {
     var paramTs = bytecodeF.tupleT(arrayParamT, indexParamT);
     var arrayParamRef = bytecodeF.ref(arrayParamT, BigInteger.ZERO);
     var indexParamRef = bytecodeF.ref(indexParamT, BigInteger.ONE);
-    var body = bytecodeF.pick(varA, arrayParamRef, indexParamRef);
+    var body = bytecodeF.pick(arrayParamRef, indexParamRef);
     return bytecodeF.defFunc(varA, paramTs, body);
   }
 }

@@ -134,8 +134,8 @@ public class BytecodeF {
     return bytecodeDb.natFunc(funcTB, jar, classBinaryName, isPure);
   }
 
-  public PickB pick(TypeB evalT, ExprB array, ExprB index) {
-    return bytecodeDb.pick(evalT, array, index);
+  public PickB pick(ExprB array, ExprB index) {
+    return bytecodeDb.pick(array, index);
   }
 
   public RefB ref(TypeB evalT, BigInteger value) {
