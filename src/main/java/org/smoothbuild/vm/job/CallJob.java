@@ -101,7 +101,7 @@ public class CallJob extends ExecutingJob {
   }
 
   private ExprB newCallB(ExprB funcExprB, InstB val) {
-    return bytecodeF().call(((FuncTB) funcExprB.type()).res(), funcExprB, singleArg(val));
+    return bytecodeF().call(funcExprB, singleArg(val));
   }
 
   private CombineB singleArg(InstB val) {

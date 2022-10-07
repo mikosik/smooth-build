@@ -123,8 +123,8 @@ public class BytecodeDb {
 
   // methods for creating OperB subclasses
 
-  public CallB call(TypeB evalT, ExprB func, CombineB args) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(evalT, func, args));
+  public CallB call(ExprB func, CombineB args) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(func, args));
   }
 
   public CombineB combine(TupleTB evalT, ImmutableList<ExprB> items) {
@@ -248,16 +248,10 @@ public class BytecodeDb {
 
   // methods for creating Expr-s
 
-  private CallB newCall(TypeB evalT, ExprB func, CombineB args) throws HashedDbExc {
+  private CallB newCall(ExprB func, CombineB args) throws HashedDbExc {
     var funcTB = castTypeToFuncTB(func);
     validateArgsInCall(funcTB, args);
-    var resT = funcTB.res();
-    if (!evalT.equals(resT)) {
-      throw new IllegalArgumentException(
-          "Call's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
-    }
-
-    var type = categoryDb.call(evalT);
+    var type = categoryDb.call(funcTB.res());
     var data = writeCallData(func, args);
     var root = newRoot(type, data);
     return type.newExpr(root, this);

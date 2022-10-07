@@ -143,7 +143,7 @@ public class SbTranslator {
     var combineB = bytecodeF.combine(paramTupleT, argsB);
 
     labels.put(combineB, new LabeledLocImpl("{}", callS.loc()));
-    return bytecodeF.call(translateT(callS.type()), callableB, combineB);
+    return bytecodeF.call(callableB, combineB);
   }
 
   private IntB translateInt(IntS intS) {

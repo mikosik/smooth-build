@@ -45,7 +45,6 @@ import org.smoothbuild.bytecode.expr.val.BlobB;
 import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.val.BoolB;
 import org.smoothbuild.bytecode.expr.val.DefFuncB;
-import org.smoothbuild.bytecode.expr.val.FuncB;
 import org.smoothbuild.bytecode.expr.val.IfFuncB;
 import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.IntB;
@@ -740,17 +739,12 @@ public class TestContext {
 
   // OperB-s
 
-  public CallB callB(FuncB func, ExprB... args) {
-    var combineB = combineB(args);
-    return callBImpl(func.type().res(), func, combineB);
+  public CallB callB(ExprB func, ExprB... args) {
+    return callBImpl(func, combineB(args));
   }
 
-  public CallB callB(TypeB evalT, ExprB func, ExprB... args) {
-    return callBImpl(evalT, func, combineB(args));
-  }
-
-  public CallB callBImpl(TypeB evalT, ExprB func, CombineB args) {
-    return bytecodeDb().call(evalT, func, args);
+  public CallB callBImpl(ExprB func, CombineB args) {
+    return bytecodeDb().call(func, args);
   }
 
   public CombineB combineB(ExprB... items) {

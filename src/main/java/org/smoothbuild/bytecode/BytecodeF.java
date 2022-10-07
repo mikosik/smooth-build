@@ -92,8 +92,8 @@ public class BytecodeF {
     return bytecodeDb.bool(value);
   }
 
-  public CallB call(TypeB evalT, ExprB func, CombineB args) {
-    return bytecodeDb.call(evalT, func, args);
+  public CallB call(ExprB func, CombineB args) {
+    return bytecodeDb.call(func, args);
   }
 
   public CombineB combine(TupleTB evalT, ImmutableList<ExprB> items) {

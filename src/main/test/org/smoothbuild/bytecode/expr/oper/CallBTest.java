@@ -14,7 +14,7 @@ import org.smoothbuild.testing.TestContext;
 public class CallBTest extends TestContext {
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
-    assertCall(() -> callB(blobTB(), intB()))
+    assertCall(() -> callB(intB()))
         .throwsException(new IllegalArgumentException(
             "`func` component doesn't evaluate to FuncB."));
   }
@@ -41,14 +41,6 @@ public class CallBTest extends TestContext {
       String args, String params) {
     return new IllegalArgumentException("Argument evaluation types (" + args + ") should be"
         + " equal to function parameter types (" + params + ").");
-  }
-
-  @Test
-  public void creating_call_with_resT_not_assignable_to_evalT_causes_exc() {
-    var func = defFuncB(list(), intB(7));
-    assertCall(() -> callB(stringTB(), func))
-        .throwsException(new IllegalArgumentException(
-            "Call's result type `Int` cannot be assigned to evalT `String`."));
   }
 
   @Test

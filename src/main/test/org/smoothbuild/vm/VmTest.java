@@ -193,7 +193,7 @@ public class VmTest extends TestContext {
       public void def_func_passed_as_arg() {
         var func = defFuncB(intB(7));
         var paramT = func.type();
-        var outerFunc = defFuncB(list(paramT), callB(intTB(), refB(paramT, 0)));
+        var outerFunc = defFuncB(list(paramT), callB(refB(paramT, 0)));
         var call = callB(outerFunc, func);
         assertThat(evaluate(call))
             .isEqualTo(intB(7));
@@ -203,7 +203,7 @@ public class VmTest extends TestContext {
       public void def_func_returned_from_call() {
         var func = defFuncB(intB(7));
         var outerFunc = defFuncB(func);
-        var call = callB(intTB(), callB(outerFunc));
+        var call = callB(callB(outerFunc));
         assertThat(evaluate(call))
             .isEqualTo(intB(7));
       }
@@ -256,7 +256,7 @@ public class VmTest extends TestContext {
                 Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
         var natFuncT = natFunc.type();
-        var outerFunc = defFuncB(list(natFuncT), callB(intTB(), refB(natFuncT, 0), intB(7)));
+        var outerFunc = defFuncB(list(natFuncT), callB(refB(natFuncT, 0), intB(7)));
         var call = callB(outerFunc, natFunc);
         assertThat(evaluate(vm(nativeMethodLoader), call))
             .isEqualTo(intB(7));
@@ -271,7 +271,7 @@ public class VmTest extends TestContext {
                 Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
         var outerFunc = defFuncB(natFunc);
-        var call = callB(intTB(), callB(outerFunc), intB(7));
+        var call = callB(callB(outerFunc), intB(7));
         assertThat(evaluate(vm(nativeMethodLoader), call))
             .isEqualTo(intB(7));
       }
