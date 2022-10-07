@@ -239,7 +239,7 @@ public class SbTranslator {
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
     labels.put(indexB, selectS);
-    return bytecodeF.select(translateT(selectS.type()), selectableB, indexB);
+    return bytecodeF.select(selectableB, indexB);
   }
 
   private StringB translateString(StringS stringS) {

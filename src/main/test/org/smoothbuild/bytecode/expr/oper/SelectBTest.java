@@ -15,7 +15,7 @@ import org.smoothbuild.testing.TestContext;
 public class SelectBTest extends TestContext {
   @Test
   public void creating_select_with_non_tuple_expr_causes_exception() {
-    assertCall(() -> selectB(boolTB(), intB(3), intB(2)))
+    assertCall(() -> selectB(intB(3), intB(2)))
         .throwsException(new IllegalArgumentException(
             "Selectable.type() should be TupleTB but is `Int`."));
   }
@@ -23,23 +23,15 @@ public class SelectBTest extends TestContext {
   @Test
   public void creating_select_with_too_great_index_causes_exception() {
     TupleB tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(boolTB(), tuple, intB(2)).category())
+    assertCall(() -> selectB(tuple, intB(2)).category())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   public void creating_select_with_index_lower_than_zero_causes_exception() {
     TupleB tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(stringTB(), tuple, intB(-1)).category())
+    assertCall(() -> selectB(tuple, intB(-1)).category())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
-  }
-
-  @Test
-  public void tuple_itemT_different_than_elemT_specified_in_category_causes_exc() {
-    var tuple = tupleB(intB(7));
-    assertCall(() -> selectB(stringTB(), tuple, intB(0)))
-        .throwsException(new IllegalArgumentException(
-            "selectable item type `Int` cannot be assigned to evalT `String`."));
   }
 
   @Test

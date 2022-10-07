@@ -797,12 +797,7 @@ public class TestContext {
   }
 
   public SelectB selectB(ExprB tuple, IntB index) {
-    var evalT = ((TupleTB) tuple.type()).items().get(index.toJ().intValue());
-    return selectB(evalT, tuple, index);
-  }
-
-  public SelectB selectB(TypeB evalT, ExprB tuple, IntB index) {
-    return bytecodeDb().select(evalT, tuple, index);
+    return bytecodeDb().select(tuple, index);
   }
 
   // ValS types

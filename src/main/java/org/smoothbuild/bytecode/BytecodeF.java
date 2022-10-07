@@ -142,8 +142,8 @@ public class BytecodeF {
     return bytecodeDb.ref(evalT, value);
   }
 
-  public SelectB select(TypeB evalT, ExprB tuple, IntB index) {
-    return bytecodeDb.select(evalT, tuple, index);
+  public SelectB select(ExprB tuple, IntB index) {
+    return bytecodeDb.select(tuple, index);
   }
 
   public StringB string(String string) {

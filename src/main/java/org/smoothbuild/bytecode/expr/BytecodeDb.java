@@ -151,8 +151,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newRef(evalT, value));
   }
 
-  public SelectB select(TypeB evalT, ExprB selectable, IntB index) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newSelect(evalT, selectable, index));
+  public SelectB select(ExprB selectable, IntB index) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newSelect(selectable, index));
   }
 
   // generic getter
@@ -367,12 +367,8 @@ public class BytecodeDb {
     }
   }
 
-  private SelectB newSelect(TypeB evalT, ExprB selectable, IntB index) throws HashedDbExc {
-    var inferredEvalT = selectEvalT(selectable, index);
-    if (!evalT.equals(inferredEvalT)) {
-      throw new IllegalArgumentException("selectable item type " + inferredEvalT.q()
-          + " cannot be assigned to evalT " + evalT.q() + ".");
-    }
+  private SelectB newSelect(ExprB selectable, IntB index) throws HashedDbExc {
+    var evalT = selectEvalT(selectable, index);
     var data = writeSelectData(selectable, index);
     var cat = categoryDb.select(evalT);
     var root = newRoot(cat, data);
