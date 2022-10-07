@@ -144,7 +144,7 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void call() {
         var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
-        var call = callS(stringTS(), defFunc);
+        var call = callS(defFunc);
         assertConversion(call, callB(defFuncB(stringB("abc"))));
       }
 
@@ -164,7 +164,7 @@ public class SbTranslatorTest extends TestContext {
       public void select() {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var syntCtorS = syntCtorS(structTS);
-        var callS = callS(structTS, syntCtorS, stringS("abc"));
+        var callS = callS(syntCtorS, stringS("abc"));
         var selectS = selectS(callS, "field");
 
         var ctorB = defFuncB(list(stringTB()), combineB(refB(stringTB(), 0)));
@@ -236,7 +236,7 @@ public class SbTranslatorTest extends TestContext {
             var idFuncS = idFuncS();
             var bIdMonoFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
 
-            var bodyS = callS(b, bIdMonoFuncS, refS(b, "p"));
+            var bodyS = callS(bIdMonoFuncS, refS(b, "p"));
             var wrapFuncS = polyDefFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
             var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
 

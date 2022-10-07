@@ -67,7 +67,7 @@ public class ExprSLoadingTest extends TestContext {
         public void with_reference_to_poly_func() {
           var polyFunc = polyByteFuncS(6, varA(), "polyFunc", nlist());
           var monoizedFunc = monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramDefaultVal = new UnnamedPolyValS(callS(1, varA(), monoizedFunc));
+          var paramDefaultVal = new UnnamedPolyValS(callS(1, monoizedFunc));
           var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
           test_default_arg("polyFunc()", expected);
         }
@@ -105,8 +105,7 @@ public class ExprSLoadingTest extends TestContext {
           result = myReturnInt();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(2, intTS(), "result",
-                callS(2, intTS(), returnIntFuncS())));
+            .containsEvaluable(polyDefValS(2, intTS(), "result", callS(2, returnIntFuncS())));
       }
 
       @Test
@@ -117,7 +116,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(polyDefValS(2, intTS(), "result",
-                callS(2, intTS(), intIdFuncS(), intS(2, 3))));
+                callS(2, intIdFuncS(), intS(2, 3))));
       }
 
       @Test
@@ -129,7 +128,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(polyDefValS(2, intTS(), "result",
-                callS(2, intTS(), intIdFuncS(), intS(3, 7))));
+                callS(2, intIdFuncS(), intS(3, 7))));
       }
 
       @Test
@@ -140,7 +139,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(polyDefValS(2, intTS(), "result",
-                callS(2, intTS(),
+                callS(2,
                     monoizeS(2, varMap(varA(), intTS()), idFuncS()),
                     intS(2, 7))));
       }
@@ -155,7 +154,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(
                 polyDefValS(3, intTS(), "result",
-                    callS(3, intTS(),
+                    callS(3,
                         defValS(2, funcTS(intTS()), "myValue", returnIntFuncS()))));
       }
 
@@ -170,7 +169,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(
                 polyDefValS(3, intTS(), "result",
-                    callS(3, intTS(),
+                    callS(3,
                         defValS(2, funcTS(intTS(), intTS()), "myValue", intIdFuncS()),
                         intS(4, 7))));
       }
@@ -200,7 +199,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(polyDefValS(4, struct, "result",
-                callS(4, struct, syntCtorS(1, struct), stringS(5, "aaa"))));
+                callS(4, syntCtorS(1, struct), stringS(5, "aaa"))));
       }
 
       @Test
@@ -211,7 +210,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(polyDefFuncS(
                 1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS()), "f")),
-                callS(1, stringTS(), refS(funcTS(stringTS()), "f"))));
+                callS(1, refS(funcTS(stringTS()), "f"))));
       }
 
       @Test
@@ -222,7 +221,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(polyDefFuncS(
                 1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS(), blobTS()), "f")),
-                callS(1, stringTS(), refS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
+                callS(1, refS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
       }
     }
     @Nested
@@ -330,7 +329,7 @@ public class ExprSLoadingTest extends TestContext {
           .loadsWithSuccess()
           .containsEvaluable(polyDefValS(6, stringTS(), "result",
               selectS(7,
-                  callS(6, myStruct, natFuncS(2, myStruct, "getStruct", nlist(), natAnnS())),
+                  callS(6, natFuncS(2, myStruct, "getStruct", nlist(), natAnnS())),
                   "field")));
     }
   }

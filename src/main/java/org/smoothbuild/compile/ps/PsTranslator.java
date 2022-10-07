@@ -157,7 +157,7 @@ public class PsTranslator {
   private Optional<ExprS> translateCall(CallP call) {
     var callee = translateExpr(call.callee());
     var argExprs = call.positionedArgs().flatMap(this::translateExprs);
-    return mapPair(callee, argExprs, (c, as) -> new CallS(call.typeS(), c, as, call.loc()));
+    return mapPair(callee, argExprs, (c, as) -> new CallS(c, as, call.loc()));
   }
 
   private Optional<ExprS> translateSelect(SelectP selectP) {

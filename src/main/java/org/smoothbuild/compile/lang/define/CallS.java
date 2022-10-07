@@ -1,7 +1,5 @@
 package org.smoothbuild.compile.lang.define;
 
-import java.util.Objects;
-
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -11,14 +9,18 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public record CallS(TypeS type, ExprS callee, ImmutableList<ExprS> args, Loc loc)
+public record CallS(ExprS callee, ImmutableList<ExprS> args, Loc loc)
     implements OperS {
   public CallS {
-    validateArgsSize(callee, args);
+    if (callee.type() instanceof FuncTS funcTS) {
+      validateArgsSize(funcTS, args);
+    } else {
+      throw new IllegalArgumentException();
+    }
   }
 
-  private static void validateArgsSize(ExprS callee, ImmutableList<ExprS> args) {
-    int paramsCount = ((FuncTS) callee.type()).params().size();
+  private static void validateArgsSize(FuncTS funcTS, ImmutableList<ExprS> args) {
+    int paramsCount = funcTS.params().size();
     if (args.size() != paramsCount) {
       throw new IllegalArgumentException(
           "Call requires " + paramsCount + " but args size is " + args.size() + ".");
@@ -26,26 +28,12 @@ public record CallS(TypeS type, ExprS callee, ImmutableList<ExprS> args, Loc loc
   }
 
   @Override
+  public TypeS type() {
+    return ((FuncTS) callee.type()).res();
+  }
+
+  @Override
   public String label() {
     return "()";
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof CallS callS)) {
-      return false;
-    }
-    return type.equals(callS.type)
-        && callee.equals(callS.callee)
-        && args.equals(callS.args)
-        && loc.equals(callS.loc);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(type, callee, args, loc);
   }
 }

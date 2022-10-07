@@ -733,7 +733,7 @@ public class InferenceTest extends TestContext {
           var myFunc = polyDefFuncS(1, "myFunc",
               nlist(itemS(1, varA(), "a1"), itemS(1, varA(), "a2")), intS(1, 7));
           var emptyArray = orderS(2, tupleTS());
-          var call = callS(2, intTS(), monoizeS(2, varMap(varA(), arrayTS(tupleTS())), myFunc),
+          var call = callS(2, monoizeS(2, varMap(varA(), arrayTS(tupleTS())), myFunc),
               emptyArray, emptyArray);
           module(code)
               .loadsWithSuccess()

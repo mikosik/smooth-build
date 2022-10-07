@@ -905,12 +905,12 @@ public class TestContext {
     return new BlobS(blobTS(), intToByteString(data), loc(line));
   }
 
-  public CallS callS(TypeS type, ExprS callable, ExprS... args) {
-    return callS(1, type, callable, args);
+  public CallS callS(ExprS callable, ExprS... args) {
+    return callS(1, callable, args);
   }
 
-  public CallS callS(int line, TypeS type, ExprS callable, ExprS... args) {
-    return new CallS(type, callable, list(args), loc(line));
+  public CallS callS(int line, ExprS callable, ExprS... args) {
+    return new CallS(callable, list(args), loc(line));
   }
 
   public IntS intS(int value) {
