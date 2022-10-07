@@ -260,7 +260,7 @@ public class NativeTest extends AcceptanceTestCase {
                   + "java.lang.RuntimeException: `addElementOfWrongTypeToArray`"
                   + " threw java exception from its native code.");
           assertThat(message)
-              .contains("Element type must be Blob but was String.");
+              .contains("Element type must be `Blob` but was `String`.");
         }
       }
     }

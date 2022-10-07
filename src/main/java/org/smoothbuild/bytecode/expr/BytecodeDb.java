@@ -106,15 +106,15 @@ public class BytecodeDb {
 
   public TupleB tuple(TupleTB tupleT, ImmutableList<InstB> items) {
     var itemTs = tupleT.items();
-    allMatchOtherwise(itemTs, items, (s, i) -> Objects.equals(s, i.category()),
+    allMatchOtherwise(itemTs, items, (s, i) -> Objects.equals(s, i.type()),
         (i, j) -> {
           throw new IllegalArgumentException(
               "tupleType specifies " + i + " items but provided " + j + ".");
         },
         (i) -> {
           throw new IllegalArgumentException("tupleType specifies item at index " + i
-              + " with type " + itemTs.get(i).name() + " but provided item has type "
-              + items.get(i).category().name() + " at that index.");
+              + " with type " + itemTs.get(i).q() + " but provided item has type "
+              + items.get(i).type().q() + " at that index.");
         }
     );
 

@@ -26,12 +26,12 @@ public class ArrayBBuilder {
   }
 
   public ArrayBBuilder add(InstB elem) {
-    if (!type.elem().equals(elem.category())) {
-      throw new IllegalArgumentException("Element type must be " + type.elem().name()
-          + " but was " + elem.category().name() + ".");
+    if (!type.elem().equals(elem.type())) {
+      throw new IllegalArgumentException("Element type must be " + type.elem().q()
+          + " but was " + elem.type().q() + ".");
     }
     Class<?> required = type.elem().typeJ();
-    if (!required.equals(elem.getClass())) {
+    if (!required.isInstance(elem)) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "
           + elem.getClass().getCanonicalName() + ".");

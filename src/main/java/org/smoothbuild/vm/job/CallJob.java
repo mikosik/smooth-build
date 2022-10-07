@@ -2,7 +2,6 @@ package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
 
 import java.util.function.Consumer;
@@ -19,6 +18,7 @@ import org.smoothbuild.bytecode.expr.val.IfFuncB;
 import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.bytecode.expr.val.MapFuncB;
 import org.smoothbuild.bytecode.expr.val.NatFuncB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -85,23 +85,23 @@ public class CallJob extends ExecutingJob {
   // handling MapFunc
 
   private void handleMapFunc(MapFuncB mapFuncB, Consumer<InstB> result) {
-    var argResults = map(args(), arg -> context().jobFor(arg).evaluate());
-    runWhenAllAvailable(argResults, () -> onMapDepsEvaluated(argResults, mapFuncB, result));
+    Promise<InstB> arrayJob = context().jobFor(args().get(0)).evaluate();
+    arrayJob.addConsumer(a -> onMapDepsEvaluated((ArrayB) a, mapFuncB, result));
   }
 
-  private void onMapDepsEvaluated(ImmutableList<Promise<InstB>> argResults,
+  private void onMapDepsEvaluated(ArrayB arrayB,
       MapFuncB mapFuncB, Consumer<InstB> resultConsumer) {
-    var arrayB = (ArrayB) argResults.get(0).get();
-    var funcB = (FuncB) argResults.get(1).get();
-    var callBs = map(arrayB.elems(InstB.class), e -> newCallB(funcB, e));
-    var orderB = bytecodeF().order(bytecodeF().arrayT(funcB.type().res()), callBs);
+    var mappingFuncExprB = args().get(1);
+    var callBs = map(arrayB.elems(InstB.class), e -> newCallB(mappingFuncExprB, e));
+    var mappingFuncResT = ((FuncTB) mappingFuncExprB.type()).res();
+    var orderB = bytecodeF().order(bytecodeF().arrayT(mappingFuncResT), callBs);
     var orderJob = context().jobFor(orderB);
     var taskInfo = callTaskInfo(mapFuncB);
     evaluateInsideVirtualJob(orderJob, taskInfo, resultConsumer);
   }
 
-  private ExprB newCallB(FuncB funcB, InstB val) {
-    return bytecodeF().call(funcB.type().res(), funcB, singleArg(val));
+  private ExprB newCallB(ExprB funcExprB, InstB val) {
+    return bytecodeF().call(((FuncTB) funcExprB.type()).res(), funcExprB, singleArg(val));
   }
 
   private CombineB singleArg(InstB val) {

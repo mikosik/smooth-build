@@ -35,6 +35,7 @@ import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 import org.smoothbuild.vm.task.OrderTask;
+import org.smoothbuild.vm.task.PickTask;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -66,6 +67,20 @@ public class VmTest extends TestContext {
             .isEqualTo(intB(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
+      }
+
+      @Test
+      public void no_task_is_executed_for_func_expr_in_call_to_map_when_array_expr_is_empty() {
+        var mapFuncB = mapFuncB(intTB(), intTB());
+        var mappingFunc = pickB(orderB(idFuncB()), intB(0));
+        var emptyIntArray = arrayB(intTB());
+        var callB = callB(mapFuncB, emptyIntArray, mappingFunc);
+
+        var spyingExecutor = spy(taskExecutor());
+        assertThat(evaluate(vm(spyingExecutor), callB))
+            .isEqualTo(arrayB(intTB()));
+
+        verify(spyingExecutor, never()).enqueue(isA(PickTask.class), any(), any());
       }
 
       @Test
