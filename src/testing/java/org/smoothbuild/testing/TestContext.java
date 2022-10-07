@@ -4,7 +4,6 @@ import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static com.google.common.io.ByteStreams.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
@@ -547,7 +546,7 @@ public class TestContext {
   }
 
   public TupleB animalB(StringB species, IntB speed) {
-    return tupleB(animalTB(), species, speed);
+    return tupleB(species, speed);
   }
 
   public ArrayB arrayB(InstB... elems) {
@@ -709,12 +708,7 @@ public class TestContext {
   }
 
   public TupleB tupleB(InstB... items) {
-    var tupleTB = tupleTB(stream(items).map(InstB::evalT).toArray(TypeB[]::new));
-    return tupleB(tupleTB, items);
-  }
-
-  public TupleB tupleB(TupleTB tupleT, InstB... items) {
-    return bytecodeDb().tuple(tupleT, list(items));
+    return bytecodeDb().tuple(list(items));
   }
 
   public ArrayB messageArrayWithOneError() {

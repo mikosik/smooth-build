@@ -13,34 +13,9 @@ import org.smoothbuild.testing.TestContext;
 
 public class TupleBTest extends TestContext {
   @Test
-  public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> bytecodeDb().tuple(personTB(), list(stringB("John"))))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void creating_tuple_with_item_with_different_type_than_specified_in_tuple_type_causes_exception() {
-    assertCall(() -> bytecodeDb().tuple(personTB(), list(stringB(), intB())))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void creating_tuple_with_more_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> bytecodeDb().tuple(
-        personTB(), list(stringB("John"), stringB("Doe"), stringB("abc"))))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> bytecodeDb().tuple(personTB(), list(stringB("John"), null)))
+    assertCall(() -> bytecodeDb().tuple(list(stringB("John"), null)))
         .throwsException(NullPointerException.class);
-  }
-
-  @Test
-  public void setting_item_to_object_of_wrong_type_throws_exception() {
-    assertCall(() -> bytecodeDb().tuple(personTB(), list(stringB("John"), intB(123))))
-        .throwsException(IllegalArgumentException.class);
   }
 
   @Test

@@ -41,7 +41,6 @@ import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -101,7 +100,7 @@ public class BytecodeF {
   }
 
   public TupleB file(BlobB content, StringB path) {
-    return bytecodeDb.tuple(fileT(), list(content, path));
+    return bytecodeDb.tuple(list(content, path));
   }
 
   public DefFuncB defFunc(TypeB resT, ImmutableList<TypeB> paramTs, ExprB body) {
@@ -151,12 +150,7 @@ public class BytecodeF {
   }
 
   public TupleB tuple(ImmutableList<InstB> items) {
-    var tupleTB = categoryDb.tuple(Lists.map(items, InstB::type));
-    return bytecodeDb.tuple(tupleTB, items);
-  }
-
-  public TupleB tuple(TupleTB type, ImmutableList<InstB> items) {
-    return bytecodeDb.tuple(type, items);
+    return bytecodeDb.tuple(items);
   }
 
   public OrderB order(ArrayTB arrayTB, ImmutableList<ExprB> elems) {
@@ -226,7 +220,7 @@ public class BytecodeF {
   private TupleB message(String severity, String text) {
     InstB textObject = bytecodeDb.string(text);
     InstB severityObject = bytecodeDb.string(severity);
-    return bytecodeDb.tuple(messageT(), list(textObject, severityObject));
+    return bytecodeDb.tuple(list(textObject, severityObject));
   }
 
   private static TupleTB createMessageT(CategoryDb categoryDb) {

@@ -1246,8 +1246,7 @@ public class ExprBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * select in HashedDb.
        */
-      var tupleT = tupleTB(stringTB());
-      var tuple = tupleB(tupleT, stringB("abc"));
+      var tuple = tupleB(stringB("abc"));
       var selectable = (InstB) tuple;
       var index = intB(0);
       Hash exprHash =
@@ -1344,8 +1343,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void index_is_out_of_bounds() throws Exception {
-      var tupleT = tupleTB(stringTB());
-      var tuple = tupleB(tupleT, stringB("abc"));
+      var tuple = tupleB(stringB("abc"));
       var index = intB(1);
       var type = selectCB(stringTB());
       Hash exprHash =
@@ -1364,8 +1362,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void evaluation_type_is_different_than_type_of_item_pointed_to_by_index()
         throws Exception {
-      var tupleT = tupleTB(stringTB());
-      var tuple = tupleB(tupleT, stringB("abc"));
+      var tuple = tupleB(stringB("abc"));
       var index = intB(0);
       var type = selectCB(intTB());
       Hash exprHash =
@@ -1384,8 +1381,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void index_is_string_instead_of_int() throws Exception {
       var type = selectCB(stringTB());
-      var tupleT = tupleTB(stringTB());
-      var tuple = tupleB(tupleT, stringB("abc"));
+      var tuple = tupleB(stringB("abc"));
       var strVal = stringB("abc");
       Hash exprHash =
           hash(

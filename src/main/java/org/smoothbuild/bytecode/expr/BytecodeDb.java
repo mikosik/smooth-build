@@ -5,13 +5,11 @@ import static org.smoothbuild.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbE
 import static org.smoothbuild.bytecode.expr.exc.DecodeExprRootExc.cannotReadRootException;
 import static org.smoothbuild.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.bytecode.type.Validator.validateArgs;
-import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Objects;
 
 import org.smoothbuild.bytecode.expr.exc.DecodeExprCatExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprNoSuchExprExc;
@@ -104,21 +102,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newString(value));
   }
 
-  public TupleB tuple(TupleTB tupleT, ImmutableList<InstB> items) {
-    var itemTs = tupleT.items();
-    allMatchOtherwise(itemTs, items, (s, i) -> Objects.equals(s, i.type()),
-        (i, j) -> {
-          throw new IllegalArgumentException(
-              "tupleType specifies " + i + " items but provided " + j + ".");
-        },
-        (i) -> {
-          throw new IllegalArgumentException("tupleType specifies item at index " + i
-              + " with type " + itemTs.get(i).q() + " but provided item has type "
-              + items.get(i).type().q() + " at that index.");
-        }
-    );
-
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(tupleT, items));
+  public TupleB tuple(ImmutableList<InstB> items) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(items));
   }
 
   // methods for creating OperB subclasses
@@ -240,7 +225,8 @@ public class BytecodeDb {
     return categoryDb.string().newExpr(root, this);
   }
 
-  private TupleB newTuple(TupleTB type, ImmutableList<InstB> items) throws HashedDbExc {
+  private TupleB newTuple(ImmutableList<InstB> items) throws HashedDbExc {
+    var type = categoryDb.tuple(map(items, InstB::type));
     var data = writeTupleData(items);
     var root = newRoot(type, data);
     return type.newExpr(root, this);

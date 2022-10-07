@@ -36,7 +36,7 @@ public class SelectBTest extends TestContext {
 
   @Test
   public void data_returns_tuple_and_index() {
-    var selectable = tupleB(tupleTB(intTB()), intB(7));
+    var selectable = tupleB(intB(7));
     var index = intB(0);
     assertThat(selectB(selectable, index).data())
         .isEqualTo(new SelectB.Data(selectable, index));
