@@ -329,7 +329,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
           .loadsWithSuccess()
           .containsEvaluable(polyDefValS(6, stringTS(), "result",
-              selectS(7, stringTS(),
+              selectS(7,
                   callS(6, myStruct, natFuncS(2, myStruct, "getStruct", nlist(), natAnnS())),
                   "field")));
     }

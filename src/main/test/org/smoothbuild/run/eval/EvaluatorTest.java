@@ -186,7 +186,7 @@ public class EvaluatorTest  extends TestContext {
       var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
       var syntCtorS = syntCtorS(structTS);
       var callS = callS(structTS, syntCtorS, intS(7));
-      assertThat(evaluate(selectS(intTS(), callS, "f")))
+      assertThat(evaluate(selectS(callS, "f")))
           .isEqualTo(intB(7));
     }
   }

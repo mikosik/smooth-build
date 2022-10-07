@@ -36,7 +36,6 @@ import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
-import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.ps.ast.AnnP;
@@ -163,11 +162,7 @@ public class PsTranslator {
 
   private Optional<ExprS> translateSelect(SelectP selectP) {
     var selectable = translateExpr(selectP.selectable());
-    return selectable.map(s -> {
-      var fieldName = selectP.field();
-      var fieldT = ((StructTS) s.type()).fields().get(fieldName).type();
-      return new SelectS(fieldT, s, fieldName, selectP.loc());
-    });
+    return selectable.map(s -> new SelectS(s, selectP.field(), selectP.loc()));
   }
 
   private Optional<ExprS> translateRef(RefP ref) {

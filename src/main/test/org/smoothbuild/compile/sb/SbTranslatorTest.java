@@ -165,7 +165,7 @@ public class SbTranslatorTest extends TestContext {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var syntCtorS = syntCtorS(structTS);
         var callS = callS(structTS, syntCtorS, stringS("abc"));
-        var selectS = selectS(stringTS(), callS, "field");
+        var selectS = selectS(callS, "field");
 
         var ctorB = defFuncB(list(stringTB()), combineB(refB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));

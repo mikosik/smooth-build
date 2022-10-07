@@ -969,12 +969,12 @@ public class TestContext {
     return new RefS(type, name, loc(line));
   }
 
-  public SelectS selectS(TypeS type, ExprS selectable, String field) {
-    return selectS(1, type, selectable, field);
+  public SelectS selectS(ExprS selectable, String field) {
+    return selectS(1, selectable, field);
   }
 
-  public SelectS selectS(int line, TypeS type, ExprS selectable, String field) {
-    return new SelectS(type, selectable, field, loc(line));
+  public SelectS selectS(int line, ExprS selectable, String field) {
+    return new SelectS(selectable, field, loc(line));
   }
 
   public StringS stringS() {
