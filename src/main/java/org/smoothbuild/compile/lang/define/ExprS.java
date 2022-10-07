@@ -7,5 +7,5 @@ import org.smoothbuild.compile.lang.type.TypeS;
  * Expression.
  */
 public sealed interface ExprS extends LabeledLoc permits InstS, OperS {
-  public TypeS type();
+  public TypeS evalT();
 }

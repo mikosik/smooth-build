@@ -12,7 +12,7 @@ public final class UnnamedValS extends Tal implements EvaluableS {
   private final ExprS body;
 
   public UnnamedValS(ExprS body) {
-    super(body.type(), body.loc());
+    super(body.evalT(), body.loc());
     this.body = body;
   }
 

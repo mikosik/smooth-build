@@ -221,19 +221,19 @@ public class SbTranslator {
   }
 
   private OrderB translateOrder(OrderS orderS) {
-    var arrayTB = translateT(orderS.type());
+    var arrayTB = translateT(orderS.evalT());
     var elemsB = translateExprs(orderS.elems());
     return bytecodeF.order(arrayTB, elemsB);
   }
 
   private RefB translateRef(RefS refS) {
     var index = callStack.peek().indexMap().get(refS.paramName());
-    return bytecodeF.ref(translateT(refS.type()), BigInteger.valueOf(index));
+    return bytecodeF.ref(translateT(refS.evalT()), BigInteger.valueOf(index));
   }
 
   private SelectB translateSelect(SelectS selectS) {
     var selectableB = translateExpr(selectS.selectable());
-    var structTS = (StructTS) selectS.selectable().type();
+    var structTS = (StructTS) selectS.selectable().evalT();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
     labels.put(indexB, selectS);

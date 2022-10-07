@@ -1104,7 +1104,7 @@ public class TestContext {
   }
 
   public DefValS defValS(int loc, String name, ExprS body) {
-    return defValS(loc, body.type(), name, body);
+    return defValS(loc, body.evalT(), name, body);
   }
 
   public DefValS defValS(int line, TypeS type, String name, ExprS body) {
@@ -1230,11 +1230,11 @@ public class TestContext {
   }
 
   public DefFuncS defFuncS(int line, String name, NList<ItemS> params, ExprS body) {
-    return defFuncS(line, body.type(), name, params, body);
+    return defFuncS(line, body.evalT(), name, params, body);
   }
 
   public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS body) {
-    return defFuncS(body.type(), name, params, body);
+    return defFuncS(body.evalT(), name, params, body);
   }
 
   public DefFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ExprS body) {

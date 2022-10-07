@@ -8,7 +8,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 
 public record SelectS(ExprS selectable, String field, Loc loc) implements OperS {
   public SelectS {
-    checkArgument(selectable.type() instanceof StructTS);
+    checkArgument(selectable.evalT() instanceof StructTS);
   }
 
   @Override
@@ -17,8 +17,8 @@ public record SelectS(ExprS selectable, String field, Loc loc) implements OperS 
   }
 
   @Override
-  public TypeS type() {
-    var structTS = (StructTS) selectable.type();
+  public TypeS evalT() {
+    var structTS = (StructTS) selectable.evalT();
     return structTS.fields().get(field).type();
   }
 }

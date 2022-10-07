@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 public record CallS(ExprS callee, ImmutableList<ExprS> args, Loc loc)
     implements OperS {
   public CallS {
-    if (callee.type() instanceof FuncTS funcTS) {
+    if (callee.evalT() instanceof FuncTS funcTS) {
       validateArgsSize(funcTS, args);
     } else {
       throw new IllegalArgumentException();
@@ -28,8 +28,8 @@ public record CallS(ExprS callee, ImmutableList<ExprS> args, Loc loc)
   }
 
   @Override
-  public TypeS type() {
-    return ((FuncTS) callee.type()).res();
+  public TypeS evalT() {
+    return ((FuncTS) callee.evalT()).res();
   }
 
   @Override
