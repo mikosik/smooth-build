@@ -10,6 +10,8 @@ import static org.smoothbuild.out.log.Log.warning;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.testing.EqualsTester;
+
 public class ImmutableLogsTest {
   @Nested
   class _contains_problem_returns {
@@ -40,5 +42,23 @@ public class ImmutableLogsTest {
       assertThat(logs.containsProblem())
           .isTrue();
     }
+  }
+
+  @Test
+  public void equals_and_hashcode() {
+    new EqualsTester()
+        .addEqualityGroup(
+            logs(),
+            logs())
+        .addEqualityGroup(
+            logs(error("first")),
+            logs(error("first")))
+        .addEqualityGroup(
+            logs(error("first"), error("second")),
+            logs(error("first"), error("second")))
+        .addEqualityGroup(
+            logs(error("second")),
+            logs(error("second")))
+        .testEquals();
   }
 }
