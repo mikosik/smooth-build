@@ -37,16 +37,16 @@ public class SelectB extends OperB {
       int i = index.toJ().intValue();
       int size = tupleT.items().size();
       if (i < 0 || size <= i) {
-        throw new DecodeSelectIndexOutOfBoundsExc(hash(), this.category(), i, size);
+        throw new DecodeSelectIndexOutOfBoundsExc(hash(), category(), i, size);
       }
       var fieldT = tupleT.items().get(i);
       if (!type().equals(fieldT)) {
-        throw new DecodeSelectWrongEvalTypeExc(hash(), this.category(), fieldT);
+        throw new DecodeSelectWrongEvalTypeExc(hash(), category(), fieldT);
       }
       return new Data(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassExc(
-          hash(), this.category(), "tuple", TupleTB.class, selectable.type().getClass());
+          hash(), category(), "tuple", TupleTB.class, selectable.type().getClass());
     }
   }
 
