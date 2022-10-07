@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.expr.oper;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
@@ -14,27 +13,9 @@ import org.smoothbuild.testing.TestContext;
 public class CombineBTest extends TestContext {
   @Test
   public void category_returns_category() {
-    var combineH = combineB(tupleTB(intTB()), intB(3));
+    var combineH = combineB(intB(3));
     assertThat(combineH.category())
         .isEqualTo(combineCB(intTB()));
-  }
-
-  @Test
-  public void item_not_matching_type_specified_in_category_causes_exc() {
-    assertCall(() -> combineB(tupleTB(intTB()), stringB()))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void item_size_greater_than_type_items_size_causes_exc() {
-    assertCall(() -> combineB(tupleTB(intTB()), intB(), intB()))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void item_size_lower_than_type_items_size_causes_exc() {
-    assertCall(() -> combineB(tupleTB(intTB())))
-        .throwsException(IllegalArgumentException.class);
   }
 
   @Test

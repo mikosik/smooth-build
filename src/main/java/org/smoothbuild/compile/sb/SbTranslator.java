@@ -139,8 +139,7 @@ public class SbTranslator {
   private CallB translateCall(CallS callS) {
     var callableB = translateExpr(callS.callee());
     var argsB = translateExprs(callS.args());
-    var paramTupleT = ((FuncTB) callableB.type()).params();
-    var combineB = bytecodeF.combine(paramTupleT, argsB);
+    var combineB = bytecodeF.combine(argsB);
 
     labels.put(combineB, new LabeledLocImpl("{}", callS.loc()));
     return bytecodeF.call(callableB, combineB);
@@ -207,8 +206,7 @@ public class SbTranslator {
     var resTB = translateT(funcTS.res());
     var paramTBs = translateT(funcTS.params());
     var refsB = createRefsB(paramTBs);
-    var paramsTB = bytecodeF.tupleT(map(refsB, ExprB::type));
-    var bodyB = bytecodeF.combine(paramsTB, refsB);
+    var bodyB = bytecodeF.combine(refsB);
     labels.put(bodyB, new LabeledLocImpl("{}", syntCtorS.loc()));
     return bytecodeF.defFunc(resTB, paramTBs, bodyB);
   }

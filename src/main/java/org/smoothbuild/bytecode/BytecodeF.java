@@ -96,8 +96,8 @@ public class BytecodeF {
     return bytecodeDb.call(func, args);
   }
 
-  public CombineB combine(TupleTB evalT, ImmutableList<ExprB> items) {
-    return bytecodeDb.combine(evalT, items);
+  public CombineB combine(ImmutableList<ExprB> items) {
+    return bytecodeDb.combine(items);
   }
 
   public TupleB file(BlobB content, StringB path) {

@@ -748,12 +748,7 @@ public class TestContext {
   }
 
   public CombineB combineB(ExprB... items) {
-    var evalT = tupleTB(stream(items).map(ExprB::type).toArray(TypeB[]::new));
-    return combineB(evalT, items);
-  }
-
-  public CombineB combineB(TupleTB evalT, ExprB... items) {
-    return bytecodeDb().combine(evalT, list(items));
+    return bytecodeDb().combine(list(items));
   }
 
   public IfFuncB ifFuncB(TypeB t) {

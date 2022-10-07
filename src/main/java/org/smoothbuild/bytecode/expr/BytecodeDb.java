@@ -6,6 +6,7 @@ import static org.smoothbuild.bytecode.expr.exc.DecodeExprRootExc.cannotReadRoot
 import static org.smoothbuild.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.bytecode.type.Validator.validateArgs;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
+import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.math.BigInteger;
@@ -47,7 +48,6 @@ import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.NatFuncCB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.TypeB;
-import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -127,8 +127,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(func, args));
   }
 
-  public CombineB combine(TupleTB evalT, ImmutableList<ExprB> items) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newCombine(evalT, items));
+  public CombineB combine(ImmutableList<ExprB> items) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newCombine(items));
   }
 
   public IfFuncB ifFunc(TypeB t) {
@@ -299,28 +299,11 @@ public class BytecodeDb {
     }
   }
 
-  private CombineB newCombine(TupleTB evalT, ImmutableList<ExprB> items) throws HashedDbExc {
-    validateCombineItems(evalT, items);
-    var type = categoryDb.combine(evalT);
+  private CombineB newCombine(ImmutableList<ExprB> items) throws HashedDbExc {
+    var type = categoryDb.combine(categoryDb.tuple(map(items, ExprB::type)));
     var data = writeCombineData(items);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
-  }
-
-  private void validateCombineItems(TupleTB evalT, ImmutableList<ExprB> items) {
-    var expectedItemTs = evalT.items();
-    if (expectedItemTs.size() != items.size()) {
-      throw new IllegalArgumentException(
-          "Expected " + expectedItemTs.size() + " items, got " + items.size() + ".");
-    }
-    for (int i = 0; i < items.size(); i++) {
-      var expectedItemT = expectedItemTs.get(i);
-      var actualItemT = items.get(i).type();
-      if (!expectedItemT.equals(actualItemT)) {
-        throw new IllegalArgumentException("Illegal item type. Expected " + expectedItemT.q()
-            + " at index " + i + " but item type is " + actualItemT.q() + ".");
-      }
-    }
   }
 
   private IfFuncB newIfFunc(TypeB t) throws HashedDbExc {
@@ -463,7 +446,7 @@ public class BytecodeDb {
   // helpers
 
   private Hash writeSeq(List<? extends ExprB> exprs) throws HashedDbExc {
-    var hashes = Lists.map(exprs, ExprB::hash);
+    var hashes = map(exprs, ExprB::hash);
     return hashedDb.writeSeq(hashes);
   }
 

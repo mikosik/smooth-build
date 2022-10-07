@@ -105,7 +105,7 @@ public class CallJob extends ExecutingJob {
   }
 
   private CombineB singleArg(InstB val) {
-    return bytecodeF().combine(bytecodeF().tupleT(val.type()), list(val));
+    return bytecodeF().combine(list(val));
   }
 
   private BytecodeF bytecodeF() {
