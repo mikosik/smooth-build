@@ -2,7 +2,7 @@ package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.vm.execute.TaskKind.CONST;
 
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.execute.TaskInfo;

@@ -8,8 +8,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.val.ArrayB;
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.ArrayB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.plugin.MessageLogger;

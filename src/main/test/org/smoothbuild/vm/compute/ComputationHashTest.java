@@ -8,7 +8,7 @@ import static org.smoothbuild.vm.compute.Computer.computationHash;
 import static org.smoothbuild.vm.execute.TaskKind.COMBINE;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;

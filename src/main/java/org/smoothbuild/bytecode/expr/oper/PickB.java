@@ -7,10 +7,10 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodePickWrongEvalTypeExc;
-import org.smoothbuild.bytecode.expr.val.IntB;
+import org.smoothbuild.bytecode.expr.inst.IntB;
+import org.smoothbuild.bytecode.type.inst.ArrayTB;
+import org.smoothbuild.bytecode.type.inst.IntTB;
 import org.smoothbuild.bytecode.type.oper.PickCB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.IntTB;
 
 /**
  * This class is thread-safe.

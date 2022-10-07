@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.job;
 
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
-import org.smoothbuild.bytecode.expr.val.InstB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.task.OrderTask;
 

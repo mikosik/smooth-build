@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.job;
 
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.util.concurrent.Promise;
 
 public abstract class Job {

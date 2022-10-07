@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.expr.exc;
 
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CategoryB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.inst.TypeB;
 
 public class DecodeExprWrongNodeTypeExc extends DecodeExprNodeExc {
   public DecodeExprWrongNodeTypeExc(Hash hash, CategoryB cat, String path, int pathIndex,

@@ -1,10 +1,10 @@
 package org.smoothbuild.testing.func.nativ;
 
-import org.smoothbuild.bytecode.expr.val.ArrayB;
-import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
-import org.smoothbuild.bytecode.expr.val.InstB;
-import org.smoothbuild.bytecode.expr.val.TupleB;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.expr.inst.ArrayB;
+import org.smoothbuild.bytecode.expr.inst.ArrayBBuilder;
+import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Flatten {

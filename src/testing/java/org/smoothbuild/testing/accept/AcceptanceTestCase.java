@@ -27,7 +27,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.bytecode.BytecodeModule;
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.fs.base.FileSystem;

@@ -3,9 +3,9 @@ package org.smoothbuild.vm.task;
 import static org.smoothbuild.vm.execute.TaskKind.COMBINE;
 import static org.smoothbuild.vm.task.TaskHashes.combineTaskHash;
 
-import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 

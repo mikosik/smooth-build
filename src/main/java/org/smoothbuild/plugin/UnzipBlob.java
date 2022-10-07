@@ -8,10 +8,10 @@ import java.io.InputStream;
 import java.util.function.Predicate;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.val.ArrayB;
-import org.smoothbuild.bytecode.expr.val.BlobB;
-import org.smoothbuild.bytecode.expr.val.StringB;
-import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ArrayB;
+import org.smoothbuild.bytecode.expr.inst.BlobB;
+import org.smoothbuild.bytecode.expr.inst.StringB;
+import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.util.io.DuplicateFileNameExc;
 import org.smoothbuild.util.io.IllegalZipEntryFileNameExc;
 

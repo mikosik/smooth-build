@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.val.BlobB;
+import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.testing.TestContext;
 

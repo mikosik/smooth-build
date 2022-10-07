@@ -15,8 +15,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.val.ArrayB;
-import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ArrayB;
+import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.compute.CompRes;
 import org.smoothbuild.vm.compute.ResSource;

@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprBTestCase;
-import org.smoothbuild.bytecode.expr.val.IfFuncB;
+import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.testing.TestContext;
 
 public class IfFuncBTest extends TestContext {

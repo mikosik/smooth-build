@@ -8,8 +8,8 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
+import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
 
 import com.google.common.collect.ImmutableList;
 

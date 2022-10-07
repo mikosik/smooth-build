@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.Map;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.val.InstB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.type.inst.TypeB;
 
 public class ElemFunc {
   public static InstB bytecode(BytecodeF bytecodeF, Map<String, TypeB> varMap) {

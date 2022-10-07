@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.func.nativ;
 
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class WrongParameterType {

@@ -1,8 +1,8 @@
 package org.smoothbuild.testing.func.nativ;
 
-import org.smoothbuild.bytecode.expr.val.InstB;
-import org.smoothbuild.bytecode.expr.val.StringB;
-import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.StringB;
+import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReportInfo {

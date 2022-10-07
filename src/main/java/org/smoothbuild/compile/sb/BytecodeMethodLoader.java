@@ -10,8 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.val.BlobB;
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.BlobB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.util.collect.Try;

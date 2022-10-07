@@ -3,10 +3,10 @@ package org.smoothbuild.compile.sb;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.inst.ArrayTB;
+import org.smoothbuild.bytecode.type.inst.FuncTB;
+import org.smoothbuild.bytecode.type.inst.TupleTB;
+import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.BlobTS;
 import org.smoothbuild.compile.lang.type.BoolTS;

@@ -8,8 +8,8 @@ import java.util.function.Function;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.type.inst.FuncTB;
+import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.testing.TestContext;
 
 public class CategoryBCachingTest extends TestContext {

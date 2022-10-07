@@ -8,11 +8,11 @@ import static org.smoothbuild.vm.task.TaskHashes.nativeCallTaskHash;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.smoothbuild.bytecode.expr.val.InstB;
-import org.smoothbuild.bytecode.expr.val.NatFuncB;
-import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.NatFuncB;
+import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.val.TypeB;
+import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.plugin.NativeApi;
 

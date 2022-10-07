@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.job.ExecutionContext;

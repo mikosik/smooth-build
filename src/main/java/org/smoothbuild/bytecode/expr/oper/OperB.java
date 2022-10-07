@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
+import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.bytecode.type.oper.OperCB;
-import org.smoothbuild.bytecode.type.val.TypeB;
 
 /**
  * Operation.

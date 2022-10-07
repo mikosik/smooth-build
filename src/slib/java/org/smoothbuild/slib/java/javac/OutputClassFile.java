@@ -6,10 +6,10 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.bytecode.expr.val.ArrayBBuilder;
-import org.smoothbuild.bytecode.expr.val.BlobBBuilder;
-import org.smoothbuild.bytecode.expr.val.StringB;
-import org.smoothbuild.bytecode.expr.val.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ArrayBBuilder;
+import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
+import org.smoothbuild.bytecode.expr.inst.StringB;
+import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 

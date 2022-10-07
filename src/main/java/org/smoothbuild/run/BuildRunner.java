@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;

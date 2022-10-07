@@ -5,13 +5,13 @@ import static org.smoothbuild.util.collect.Lists.list;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
-import org.smoothbuild.bytecode.expr.val.InstB;
 
 import com.google.common.collect.ImmutableList;
 

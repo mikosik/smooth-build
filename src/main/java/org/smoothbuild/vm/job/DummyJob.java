@@ -2,7 +2,7 @@ package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
-import org.smoothbuild.bytecode.expr.val.InstB;
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.execute.ExecutionReporter;
