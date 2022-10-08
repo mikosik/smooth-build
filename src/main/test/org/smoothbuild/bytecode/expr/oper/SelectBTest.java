@@ -38,8 +38,8 @@ public class SelectBTest extends TestContext {
   public void data_returns_tuple_and_index() {
     var selectable = tupleB(intB(7));
     var index = intB(0);
-    assertThat(selectB(selectable, index).data())
-        .isEqualTo(new SelectB.Data(selectable, index));
+    assertThat(selectB(selectable, index).dataSeq())
+        .isEqualTo(list(selectable, index));
   }
 
   @Nested
@@ -78,8 +78,8 @@ public class SelectBTest extends TestContext {
     var selectable = animalB();
     var index = intB(0);
     var select = selectB(selectable, index);
-    assertThat(((SelectB) bytecodeDbOther().get(select.hash())).data())
-        .isEqualTo(new SelectB.Data(selectable, index));
+    assertThat(((SelectB) bytecodeDbOther().get(select.hash())).dataSeq())
+        .isEqualTo(list(selectable, index));
   }
 
   @Test

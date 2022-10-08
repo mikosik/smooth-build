@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
@@ -11,6 +12,8 @@ import org.smoothbuild.bytecode.expr.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -30,7 +33,8 @@ public class SelectB extends OperB {
     return (SelectCB) super.category();
   }
 
-  public Data data() {
+  @Override
+  public ImmutableList<ExprB> dataSeq() {
     ExprB selectable = readSelectable();
     if (selectable.evalT() instanceof TupleTB tupleT) {
       IntB index = readIndex();
@@ -43,14 +47,12 @@ public class SelectB extends OperB {
       if (!evalT().equals(fieldT)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), category(), fieldT);
       }
-      return new Data(selectable, index);
+      return list(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassExc(
           hash(), category(), "tuple", TupleTB.class, selectable.evalT().getClass());
     }
   }
-
-  public record Data(ExprB selectable, IntB index) {}
 
   private ExprB readSelectable() {
     return readDataSeqElem(SELECTABLE_IDX, DATA_SEQ_SIZE, ExprB.class);

@@ -30,8 +30,8 @@ public class PickBTest extends TestContext {
   public void data_returns_array_and_index() {
     var pickable = arrayB(intB(7));
     var index = intB(0);
-    assertThat(pickB(pickable, index).data())
-        .isEqualTo(new PickB.Data(pickable, index));
+    assertThat(pickB(pickable, index).dataSeq())
+        .isEqualTo(list(pickable, index));
   }
 
   @Nested
@@ -69,8 +69,8 @@ public class PickBTest extends TestContext {
     var array = arrayB(intB(17), intB(18));
     var index = intB(0);
     var pick = pickB(array, index);
-    assertThat(((PickB) bytecodeDbOther().get(pick.hash())).data())
-        .isEqualTo(new PickB.Data(array, index));
+    assertThat(((PickB) bytecodeDbOther().get(pick.hash())).dataSeq())
+        .isEqualTo(list(array, index));
   }
 
   @Test

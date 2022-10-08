@@ -1,9 +1,14 @@
 package org.smoothbuild.bytecode.expr.oper;
 
+import static org.smoothbuild.util.collect.Lists.list;
+
 import java.math.BigInteger;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
+import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Reference to environment value.
@@ -12,6 +17,11 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 public class RefB extends OperB {
   public RefB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
+  }
+
+  @Override
+  public ImmutableList<ExprB> dataSeq() {
+    return list();
   }
 
   public BigInteger value() {

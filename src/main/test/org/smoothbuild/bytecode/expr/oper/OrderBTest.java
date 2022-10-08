@@ -33,7 +33,7 @@ public class OrderBTest extends TestContext {
 
   @Test
   public void elems_returns_elems() {
-    assertThat(orderB(intB(2)).elems())
+    assertThat(orderB(intB(2)).dataSeq())
         .isEqualTo(list(intB(2)));
   }
 
@@ -70,7 +70,7 @@ public class OrderBTest extends TestContext {
   @Test
   public void array_read_back_by_hash_has_same_elems() {
     OrderB array = orderB(intB(1));
-    assertThat(((OrderB) bytecodeDbOther().get(array.hash())).elems())
+    assertThat(((OrderB) bytecodeDbOther().get(array.hash())).dataSeq())
         .isEqualTo(list(intB(1)));
   }
 

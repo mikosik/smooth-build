@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 
 public class TaskHashes {
@@ -12,8 +11,8 @@ public class TaskHashes {
     return hash(0);
   }
 
-  public static Hash combineTaskHash(TupleTB type) {
-    return hash(1, type.hash());
+  public static Hash combineTaskHash(TypeB tupleT) {
+    return hash(1, tupleT.hash());
   }
 
   public static Hash nativeCallTaskHash(NatFuncB natFunc) {

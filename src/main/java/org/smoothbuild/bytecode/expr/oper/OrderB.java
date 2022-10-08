@@ -30,7 +30,8 @@ public class OrderB extends OperB {
     return category().evalT();
   }
 
-  public ImmutableList<ExprB> elems() {
+  @Override
+  public ImmutableList<ExprB> dataSeq() {
     var elems = readDataSeqElems(ExprB.class);
     var expectedElemT = category().evalT().elem();
     for (int i = 0; i < elems.size(); i++) {

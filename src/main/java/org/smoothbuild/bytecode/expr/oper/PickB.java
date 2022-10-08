@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
@@ -11,6 +12,8 @@ import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.IntTB;
 import org.smoothbuild.bytecode.type.oper.PickCB;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -30,21 +33,20 @@ public class PickB extends OperB {
     return (PickCB) super.category();
   }
 
-  public Data data() {
+  @Override
+  public ImmutableList<ExprB> dataSeq() {
     ExprB pickable = readPickable();
     if (pickable.evalT() instanceof ArrayTB arrayT) {
       var elemT = arrayT.elem();
       if (!evalT().equals(elemT)) {
         throw new DecodePickWrongEvalTypeExc(hash(), category(), elemT);
       }
-      return new Data(pickable, readIndex());
+      return list(pickable, readIndex());
     } else {
       throw new DecodeExprWrongNodeTypeExc(
           hash(), category(), "array", ArrayTB.class, pickable.evalT());
     }
   }
-
-  public record Data(ExprB pickable, ExprB index) {}
 
   private ExprB readPickable() {
     return readDataSeqElem(PICKABLE_IDX, DATA_SEQ_SIZE, ExprB.class);

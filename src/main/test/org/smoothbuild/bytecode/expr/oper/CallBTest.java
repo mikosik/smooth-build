@@ -44,17 +44,11 @@ public class CallBTest extends TestContext {
   }
 
   @Test
-  public void func_returns_func_expr() {
+  public void dataSeq_returns_data() {
     var func = defFuncB(list(stringTB()), intB());
-    assertThat(callB(func, stringB()).data().callable())
-        .isEqualTo(func);
-  }
-
-  @Test
-  public void args_returns_arg_exprs() {
-    var func = defFuncB(list(stringTB()), intB());
-    assertThat(callB(func, stringB()).data().args())
-        .isEqualTo(combineB(stringB()));
+    var args = stringB();
+    assertThat(callB(func, args).dataSeq())
+        .isEqualTo(list(func, combineB(args)));
   }
 
   @Nested
@@ -88,8 +82,8 @@ public class CallBTest extends TestContext {
   public void call_read_back_by_hash_has_same_data() {
     var func = defFuncB(list(stringTB()), intB());
     var call = callB(func, stringB());
-    assertThat(((CallB) bytecodeDbOther().get(call.hash())).data())
-        .isEqualTo(new CallB.Data(func, combineB(stringB())));
+    assertThat(((CallB) bytecodeDbOther().get(call.hash())).dataSeq())
+        .isEqualTo(list(func, combineB(stringB())));
   }
 
   @Test

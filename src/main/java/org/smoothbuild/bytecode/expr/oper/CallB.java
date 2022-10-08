@@ -2,6 +2,7 @@ package org.smoothbuild.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.Validator.validateArgs;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
@@ -10,6 +11,8 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.oper.CallCB;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -29,11 +32,12 @@ public class CallB extends OperB {
     return (CallCB) super.category();
   }
 
-  public Data data() {
+  @Override
+  public ImmutableList<ExprB> dataSeq() {
     var func = readFunc();
     var args = readArgs();
     validate(func, args);
-    return new Data(func, args);
+    return list(func, args);
   }
 
   public record Data(ExprB callable, CombineB args) {}

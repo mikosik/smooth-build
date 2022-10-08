@@ -37,7 +37,7 @@ public class CallJob extends ExecutingJob {
 
   @Override
   public Promise<InstB> evaluateImpl() {
-    var funcJ = context().jobFor(callB.data().callable());
+    var funcJ = context().jobFor(callB.dataSeq().get(0));
     var result = new PromisedValue<InstB>();
     funcJ.evaluate()
         .addConsumer(instB -> onFuncJobCompleted(instB, result));
@@ -147,6 +147,6 @@ public class CallJob extends ExecutingJob {
   }
 
   private ImmutableList<ExprB> args() {
-    return callB.data().args().items();
+    return ((CombineB) callB.dataSeq().get(1)).dataSeq();
   }
 }

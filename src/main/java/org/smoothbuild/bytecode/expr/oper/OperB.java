@@ -8,6 +8,8 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.bytecode.type.oper.OperCB;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * Operation.
  * This class is thread-safe.
@@ -17,6 +19,8 @@ public abstract class OperB extends ExprB {
     super(merkleRoot, bytecodeDb);
     checkArgument(merkleRoot.category() instanceof OperCB);
   }
+
+  public abstract ImmutableList<ExprB> dataSeq();
 
   @Override
   public OperCB category() {
