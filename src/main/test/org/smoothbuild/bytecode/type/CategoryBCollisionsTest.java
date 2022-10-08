@@ -14,7 +14,7 @@ public class CategoryBCollisionsTest extends TestContext {
   public void collisions() {
     HashMap<Hash, CategoryB> map = new HashMap<>();
     for (var categoryB : TestingCatsB.ALL_CATS_TO_TEST) {
-      Hash hash = categoryB.hash();
+      var hash = categoryB.hash();
       if (map.containsKey(hash)) {
         fail("Hash " + hash + " is used by two types " + categoryB + " and " + map.get(hash) + ".");
       }
