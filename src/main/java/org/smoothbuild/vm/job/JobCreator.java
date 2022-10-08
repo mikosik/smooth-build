@@ -29,9 +29,9 @@ public class JobCreator {
 
   public Job jobFor(ExprB expr, ExecutionContext context) {
     return switch (expr) {
-      case InstB val -> new ConstJob(val, context);
       case CallB call -> new CallJob(call, context);
       case CombineB combine -> new CombineJob(combine, context);
+      case InstB inst -> new ConstJob(inst, context);
       case OrderB order -> new OrderJob(order, context);
       case PickB pick -> new PickJob(pick, context);
       case RefB ref -> environment.get(ref.value().intValue());
