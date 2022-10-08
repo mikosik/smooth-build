@@ -18,9 +18,7 @@ public class SelectJob extends ExecutingJob {
   @Override
   protected Promise<InstB> evaluateImpl() {
     var data = selectB.data();
-    var selectable = data.selectable();
-    var index = data.index();
     var task = new SelectTask(selectB.evalT(), context().labeledLoc(selectB));
-    return evaluateTransitively(task, list(selectable, index));
+    return evaluateTransitively(task, list(data.selectable(), data.index()));
   }
 }
