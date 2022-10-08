@@ -203,7 +203,7 @@ public class CategoryBTest extends TestContext {
   }
 
   @Nested
-  class _method {
+  class _nat_func {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(Function<CategoryDb, NatFuncCB> factoryCall,
@@ -326,7 +326,7 @@ public class CategoryBTest extends TestContext {
   }
 
   @Nested
-  class _eval_type {
+  class _oper {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
