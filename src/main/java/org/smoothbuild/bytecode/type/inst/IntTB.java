@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
 /**
  * This class is immutable.
  */
-public class IntTB extends BaseTB {
+public class IntTB extends TypeB {
   public IntTB(Hash hash) {
     super(hash, TypeNamesB.INT, INT);
   }
