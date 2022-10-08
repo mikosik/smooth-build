@@ -17,7 +17,7 @@ import org.smoothbuild.util.collect.Named;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class TypeS implements Named
-    permits ArrayTS, BaseTS, FuncTS, StructTS, TupleTS, VarS {
+    permits ArrayTS, BlobTS, BoolTS, FuncTS, IntTS, StringTS, StructTS, TupleTS, VarS {
   private final VarSetS vars;
   private final String name;
 
