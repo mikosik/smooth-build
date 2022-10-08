@@ -3,6 +3,7 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_FUNCTION;
@@ -412,6 +413,7 @@ public class CategoryBTest extends TestContext {
     tester.addEqualityGroup(IF_FUNC, IF_FUNC);
     tester.addEqualityGroup(MAP_FUNC, MAP_FUNC);
     tester.addEqualityGroup(ORDER, ORDER);
+    tester.addEqualityGroup(PICK, PICK);
     tester.addEqualityGroup(REF, REF);
     tester.addEqualityGroup(SELECT, SELECT);
 
