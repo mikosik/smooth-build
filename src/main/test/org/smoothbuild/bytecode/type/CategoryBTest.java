@@ -3,7 +3,6 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BLOB;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BOOL;
 import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_FUNCTION;
@@ -28,6 +27,7 @@ import static org.smoothbuild.testing.type.TestingCatsB.MAP_FUNC;
 import static org.smoothbuild.testing.type.TestingCatsB.METHOD;
 import static org.smoothbuild.testing.type.TestingCatsB.ORDER;
 import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
+import static org.smoothbuild.testing.type.TestingCatsB.PICK;
 import static org.smoothbuild.testing.type.TestingCatsB.REF;
 import static org.smoothbuild.testing.type.TestingCatsB.SELECT;
 import static org.smoothbuild.testing.type.TestingCatsB.STRING;
@@ -54,6 +54,7 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
+import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
@@ -321,6 +322,7 @@ public class CategoryBTest extends TestContext {
         arguments(CALL, CallB.class),
         arguments(ORDER, OrderB.class),
         arguments(COMBINE, CombineB.class),
+        arguments(PICK, PickB.class),
         arguments(REF, RefB.class),
         arguments(SELECT, SelectB.class)
     );

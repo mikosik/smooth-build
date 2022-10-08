@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.type.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.bytecode.type.CategoryKinds.SELECT;
+import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -14,7 +14,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
  */
 public class PickCB extends OperCB {
   public PickCB(Hash hash, TypeB evalT) {
-    super(hash, "Pick", SELECT, evalT);
+    super(hash, "Pick", PICK, evalT);
   }
 
   @Override

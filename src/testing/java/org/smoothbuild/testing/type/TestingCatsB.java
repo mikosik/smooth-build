@@ -32,6 +32,7 @@ public class TestingCatsB {
   public static final CategoryB IF_FUNC = CONTEXT.ifFuncCB();
   public static final CategoryB MAP_FUNC = CONTEXT.mapFuncCB();
   public static final CategoryB ORDER = CONTEXT.orderCB();
+  public static final CategoryB PICK = CONTEXT.pickCB();
   public static final CategoryB REF = CONTEXT.refCB(INT);
   public static final CategoryB SELECT = CONTEXT.selectCB(INT);
 
