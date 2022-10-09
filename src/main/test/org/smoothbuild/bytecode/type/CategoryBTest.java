@@ -3,34 +3,6 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BLOB;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_BOOL;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_FUNCTION;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_INT;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_PERSON_TUPLE;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY2_STRING;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BLOB;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_BOOL;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_FUNC;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_INT;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_PERSON_TUPLE;
-import static org.smoothbuild.testing.type.TestingCatsB.ARRAY_STRING;
-import static org.smoothbuild.testing.type.TestingCatsB.BLOB;
-import static org.smoothbuild.testing.type.TestingCatsB.BOOL;
-import static org.smoothbuild.testing.type.TestingCatsB.CALL;
-import static org.smoothbuild.testing.type.TestingCatsB.CATEGORY_DB;
-import static org.smoothbuild.testing.type.TestingCatsB.COMBINE;
-import static org.smoothbuild.testing.type.TestingCatsB.FUNC;
-import static org.smoothbuild.testing.type.TestingCatsB.IF_FUNC;
-import static org.smoothbuild.testing.type.TestingCatsB.INT;
-import static org.smoothbuild.testing.type.TestingCatsB.MAP_FUNC;
-import static org.smoothbuild.testing.type.TestingCatsB.METHOD;
-import static org.smoothbuild.testing.type.TestingCatsB.ORDER;
-import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
-import static org.smoothbuild.testing.type.TestingCatsB.PICK;
-import static org.smoothbuild.testing.type.TestingCatsB.REF;
-import static org.smoothbuild.testing.type.TestingCatsB.SELECT;
-import static org.smoothbuild.testing.type.TestingCatsB.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
@@ -301,30 +273,34 @@ public class CategoryBTest extends TestContext {
   }
 
   public static List<Arguments> typeJ_test_data() {
+    TestContext CONTEXT = new TestContext();
     return list(
-        arguments(BLOB, BlobB.class),
-        arguments(BOOL, BoolB.class),
-        arguments(FUNC, FuncB.class),
-        arguments(IF_FUNC, IfFuncB.class),
-        arguments(MAP_FUNC, MapFuncB.class),
-        arguments(INT, IntB.class),
-        arguments(METHOD, NatFuncB.class),
-        arguments(PERSON, TupleB.class),
-        arguments(STRING, StringB.class),
+        arguments(CONTEXT.blobTB(), BlobB.class),
+        arguments(CONTEXT.boolTB(), BoolB.class),
+        arguments(CONTEXT.funcTB(CONTEXT.blobTB(), CONTEXT.boolTB()), FuncB.class),
+        arguments(CONTEXT.ifFuncCB(), IfFuncB.class),
+        arguments(CONTEXT.mapFuncCB(), MapFuncB.class),
+        arguments(CONTEXT.intTB(), IntB.class),
+        arguments(
+            CONTEXT.natFuncCB(CONTEXT.blobTB(), CONTEXT.boolTB()), NatFuncB.class),
+        arguments(CONTEXT.personTB(), TupleB.class),
+        arguments(CONTEXT.stringTB(), StringB.class),
 
-        arguments(ARRAY_BLOB, ArrayB.class),
-        arguments(ARRAY_BOOL, ArrayB.class),
-        arguments(ARRAY_FUNC, ArrayB.class),
-        arguments(ARRAY_INT, ArrayB.class),
-        arguments(ARRAY_PERSON_TUPLE, ArrayB.class),
-        arguments(ARRAY_STRING, ArrayB.class),
+        arguments(CONTEXT.arrayTB(CONTEXT.blobTB()), ArrayB.class),
+        arguments(CONTEXT.arrayTB(CONTEXT.boolTB()), ArrayB.class),
+        arguments(
+            CONTEXT.arrayTB(CONTEXT.funcTB(CONTEXT.blobTB(), CONTEXT.boolTB())), ArrayB.class),
+        arguments(CONTEXT.arrayTB(CONTEXT.intTB()), ArrayB.class),
+        arguments(CONTEXT.arrayTB(CONTEXT.personTB()), ArrayB.class),
+        arguments(CONTEXT.arrayTB(CONTEXT.stringTB()), ArrayB.class),
 
-        arguments(CALL, CallB.class),
-        arguments(ORDER, OrderB.class),
-        arguments(COMBINE, CombineB.class),
-        arguments(PICK, PickB.class),
-        arguments(REF, RefB.class),
-        arguments(SELECT, SelectB.class)
+        arguments(CONTEXT.callCB(), CallB.class),
+        arguments(CONTEXT.orderCB(), OrderB.class),
+        arguments(
+            CONTEXT.combineCB(CONTEXT.intTB(), CONTEXT.stringTB()), CombineB.class),
+        arguments(CONTEXT.pickCB(), PickB.class),
+        arguments(CONTEXT.refCB(CONTEXT.intTB()), RefB.class),
+        arguments(CONTEXT.selectCB(CONTEXT.intTB()), SelectB.class)
     );
   }
 
@@ -333,7 +309,7 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
-      assertThat(CATEGORY_DB.call(type).evalT())
+      assertThat(categoryDb().call(type).evalT())
           .isEqualTo(type);
     }
 
@@ -345,39 +321,41 @@ public class CategoryBTest extends TestContext {
     }
 
     public static List<Arguments> combine_cases() {
-      CategoryDb db = CATEGORY_DB;
+      TestContext CONTEXT = new TestContext();
+      CategoryDb db = CONTEXT.categoryDb();
       return list(
           arguments(db.combine(db.tuple()), db.tuple()),
-          arguments(db.combine(db.tuple(STRING)), db.tuple(STRING))
+          arguments(db.combine(db.tuple(CONTEXT.stringTB())), db.tuple(
+              CONTEXT.stringTB()))
       );
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void order(TypeB type) {
-      var array = CATEGORY_DB.array(type);
-      assertThat(CATEGORY_DB.order(array).evalT())
+      var array = arrayTB(type);
+      assertThat(orderCB(type).evalT())
           .isEqualTo(array);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void pick(TypeB type) {
-      assertThat(CATEGORY_DB.pick(type).evalT())
+      assertThat(pickCB(type).evalT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void ref(TypeB type) {
-      assertThat(CATEGORY_DB.ref(type).evalT())
+      assertThat(refCB(type).evalT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeB type) {
-      assertThat(CATEGORY_DB.select(type).evalT())
+      assertThat(selectCB(type).evalT())
           .isEqualTo(type);
     }
 
@@ -388,36 +366,43 @@ public class CategoryBTest extends TestContext {
 
   @Test
   public void equals_and_hashcode() {
+    TestContext CONTEXT = new TestContext();
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(BLOB, BLOB);
-    tester.addEqualityGroup(BOOL, BOOL);
-    tester.addEqualityGroup(FUNC, FUNC);
-    tester.addEqualityGroup(INT, INT);
-    tester.addEqualityGroup(STRING, STRING);
-    tester.addEqualityGroup(PERSON, PERSON);
+    tester.addEqualityGroup(blobTB(), blobTB());
+    tester.addEqualityGroup(boolTB(), boolTB());
+    tester.addEqualityGroup(
+        funcTB(blobTB(), boolTB()),
+        funcTB(blobTB(), boolTB()));
+    tester.addEqualityGroup(intTB(), intTB());
+    tester.addEqualityGroup(stringTB(), stringTB());
+    tester.addEqualityGroup(personTB(), personTB());
 
-    tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
-    tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
-    tester.addEqualityGroup(ARRAY_FUNC, ARRAY_FUNC);
-    tester.addEqualityGroup(ARRAY_INT, ARRAY_INT);
-    tester.addEqualityGroup(ARRAY_STRING, ARRAY_STRING);
-    tester.addEqualityGroup(ARRAY_PERSON_TUPLE, ARRAY_PERSON_TUPLE);
+    tester.addEqualityGroup(arrayTB(blobTB()), arrayTB(blobTB()));
+    tester.addEqualityGroup(arrayTB(boolTB()), arrayTB(boolTB()));
+    tester.addEqualityGroup(
+        arrayTB(funcTB(blobTB(), boolTB())),
+        arrayTB(funcTB(blobTB(), boolTB())));
+    tester.addEqualityGroup(arrayTB(intTB()), arrayTB(intTB()));
+    tester.addEqualityGroup(arrayTB(stringTB()), arrayTB(stringTB()));
+    tester.addEqualityGroup(arrayTB(personTB()), arrayTB(personTB()));
 
-    tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
-    tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
-    tester.addEqualityGroup(ARRAY2_FUNCTION, ARRAY2_FUNCTION);
-    tester.addEqualityGroup(ARRAY2_INT, ARRAY2_INT);
-    tester.addEqualityGroup(ARRAY2_STRING, ARRAY2_STRING);
-    tester.addEqualityGroup(ARRAY2_PERSON_TUPLE, ARRAY2_PERSON_TUPLE);
+    tester.addEqualityGroup(arrayTB(arrayTB(blobTB())), arrayTB(arrayTB(blobTB())));
+    tester.addEqualityGroup(arrayTB(arrayTB(boolTB())), arrayTB(arrayTB(boolTB())));
+    tester.addEqualityGroup(arrayTB(arrayTB(funcTB(intTB()))), arrayTB(arrayTB(funcTB(intTB()))));
+    tester.addEqualityGroup(arrayTB(arrayTB(intTB())), arrayTB(arrayTB(intTB())));
+    tester.addEqualityGroup(arrayTB(arrayTB(stringTB())), arrayTB(arrayTB(stringTB())));
+    tester.addEqualityGroup(arrayTB(arrayTB(tupleTB(animalTB()))), arrayTB(arrayTB(tupleTB(animalTB()))));
 
-    tester.addEqualityGroup(CALL, CALL);
-    tester.addEqualityGroup(COMBINE, COMBINE);
-    tester.addEqualityGroup(IF_FUNC, IF_FUNC);
-    tester.addEqualityGroup(MAP_FUNC, MAP_FUNC);
-    tester.addEqualityGroup(ORDER, ORDER);
-    tester.addEqualityGroup(PICK, PICK);
-    tester.addEqualityGroup(REF, REF);
-    tester.addEqualityGroup(SELECT, SELECT);
+    tester.addEqualityGroup(callCB(), callCB());
+    tester.addEqualityGroup(
+        combineCB(intTB(), stringTB()),
+        combineCB(intTB(), stringTB()));
+    tester.addEqualityGroup(ifFuncCB(), ifFuncCB());
+    tester.addEqualityGroup(mapFuncCB(), mapFuncCB());
+    tester.addEqualityGroup(orderCB(), orderCB());
+    tester.addEqualityGroup(pickCB(), pickCB());
+    tester.addEqualityGroup(refCB(intTB()), refCB(intTB()));
+    tester.addEqualityGroup(selectCB(intTB()), selectCB(intTB()));
 
     tester.testEquals();
   }

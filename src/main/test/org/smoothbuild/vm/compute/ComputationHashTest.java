@@ -1,9 +1,6 @@
 package org.smoothbuild.vm.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.testing.type.TestingCatsB.INT;
-import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
-import static org.smoothbuild.testing.type.TestingCatsB.STRING;
 import static org.smoothbuild.vm.compute.Computer.computationHash;
 import static org.smoothbuild.vm.execute.TaskKind.COMBINE;
 
@@ -90,7 +87,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_combine_task_and_empty_input_is_stable() {
-    var task = new CombineTask(PERSON, labeledLoc());
+    var task = new CombineTask(personTB(), labeledLoc());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("2113bf2108731cfc09ecb7aaee468bfb9df2dd94"));
@@ -98,7 +95,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_combine_task_and_one_elem_input_is_stable() {
-    var task = new CombineTask(PERSON, labeledLoc());
+    var task = new CombineTask(personTB(), labeledLoc());
     var input = tupleB(stringB("abc"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("3eed1bde59bea1a71d15bd5bd9a12fbfa8c62d36"));
@@ -106,7 +103,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_combine_task_and_two_elems_input_is_stable() {
-    var task = new CombineTask(PERSON, labeledLoc());
+    var task = new CombineTask(personTB(), labeledLoc());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("3c2e1f674f254bd1c1df971541ada79da8fcf3ce"));
@@ -114,14 +111,14 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_select_task_and_one_elem_input_is_stable() {
-    var task = new SelectTask(STRING, labeledLoc());
+    var task = new SelectTask(stringTB(), labeledLoc());
     var input = tupleB(stringB("abc"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("4ae0c582dfeccb5a7ed2ce0420a25197e1b070f1"));
   }
 
-  private static Task task(Hash hash) {
-    return new Task(INT, COMBINE, labeledLoc()) {
+  private Task task(Hash hash) {
+    return new Task(intTB(), COMBINE, labeledLoc()) {
       @Override
       public Hash hash() {
         return hash;
