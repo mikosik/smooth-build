@@ -8,13 +8,15 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
+import org.smoothbuild.bytecode.type.inst.TypeB;
 
 /**
  * This class is immutable.
  */
 public class CombineCB extends OperCB {
-  public CombineCB(Hash hash, TupleTB evalT) {
+  public CombineCB(Hash hash, TypeB evalT) {
     super(hash, "Combine", COMBINE, evalT);
+    checkArgument(evalT instanceof TupleTB);
   }
 
   @Override

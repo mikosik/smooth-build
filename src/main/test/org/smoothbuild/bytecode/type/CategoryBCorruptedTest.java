@@ -59,7 +59,7 @@ public class CategoryBCorruptedTest extends TestContext {
   class _illegal_type_marker {
     @Test
     public void causes_exception() throws Exception {
-      Hash hash = hash(
+      var hash = hash(
           hash((byte) 99)
       );
       assertThatGet(hash)
@@ -68,7 +68,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
     @Test
     public void with_additional_child() throws Exception {
-      Hash hash = hash(
+      var hash = hash(
           hash((byte) 99),
           hash("corrupted")
       );
@@ -85,7 +85,7 @@ public class CategoryBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme
        * to save base type in HashedDb.
        */
-      Hash hash = hash(
+      var hash = hash(
           hash(STRING.marker())
       );
       assertThat(hash)
@@ -113,7 +113,7 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     private void test_base_type_with_additional_child(CategoryKindB kind) throws Exception {
-      Hash hash = hash(
+      var hash = hash(
           hash(kind.marker()),
           hash("abc")
       );
@@ -132,7 +132,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save array type in HashedDb.
          */
-        Hash hash = hash(
+        var hash = hash(
             hash(ARRAY.marker()),
             hash(stringTB())
         );
@@ -161,8 +161,8 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_elem_type_being_oper_type() throws Exception {
-        Hash hash = hash(
+      public void with_type_being_oper_type() throws Exception {
+        var hash = hash(
             hash(ARRAY.marker()),
             hash(refCB())
         );
@@ -521,7 +521,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Tuple type in HashedDb.
          */
-        Hash hash = hash(
+        var hash = hash(
             hash(TUPLE.marker()),
             hash(
                 hash(stringTB()),
@@ -613,7 +613,7 @@ public class CategoryBCorruptedTest extends TestContext {
   }
 
   private void assert_reading_cat_with_additional_data_causes_exc(CategoryKindB kind) throws Exception {
-    Hash hash = hash(
+    var hash = hash(
         hash(kind.marker()),
         hash(stringTB()),
         hash("corrupted")
@@ -722,7 +722,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save call type in HashedDb.
          */
-        Hash hash = hash(
+        var hash = hash(
             hash(CALL.marker()),
             hash(intTB())
         );
@@ -746,7 +746,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Combine type in HashedDb.
          */
-        Hash hash = hash(
+        var hash = hash(
             hash(COMBINE.marker()),
             hash(tupleTB(intTB(), stringTB()))
         );
@@ -763,7 +763,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_evaluation_type_not_being_tuple_type() throws Exception {
-        Hash hash = hash(
+        var hash = hash(
             hash(COMBINE.marker()),
             hash(intTB())
         );
@@ -781,7 +781,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Order type in HashedDb.
          */
-        Hash hash = hash(
+        var hash = hash(
             hash(ORDER.marker()),
             hash(arrayTB(intTB()))
         );
@@ -798,7 +798,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_evaluation_type_not_being_array_type() throws Exception {
-        Hash hash = hash(
+        var hash = hash(
             hash(ORDER.marker()),
             hash(intTB())
         );
@@ -816,7 +816,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Pick type in HashedDb.
          */
-        Hash hash = hash(
+        var hash = hash(
             hash(PICK.marker()),
             hash(intTB())
         );
@@ -840,7 +840,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save param-ref in HashedDb.
          */
-        Hash hash = hash(
+        var hash = hash(
             hash(REF.marker()),
             hash(intTB())
         );
@@ -864,7 +864,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Select type in HashedDb.
          */
-        Hash hash = hash(
+        var hash = hash(
             hash(SELECT.marker()),
             hash(intTB())
         );
@@ -915,7 +915,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_evaluation_type_being_oper_type() throws Exception {
-        Hash hash = hash(
+        var hash = hash(
             hash(categoryKindB.marker()),
             hash(refCB())
         );

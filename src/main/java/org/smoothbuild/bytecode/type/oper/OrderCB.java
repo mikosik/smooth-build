@@ -8,13 +8,15 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
+import org.smoothbuild.bytecode.type.inst.TypeB;
 
 /**
  * This class is immutable.
  */
 public class OrderCB extends OperCB {
-  public OrderCB(Hash hash, ArrayTB evalT) {
+  public OrderCB(Hash hash, TypeB evalT) {
     super(hash, "Order", ORDER, evalT);
+    checkArgument(evalT instanceof ArrayTB);
   }
 
   @Override

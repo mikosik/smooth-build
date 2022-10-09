@@ -30,6 +30,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.hashed.Hash;
@@ -38,17 +39,12 @@ import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.BaseKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.CallKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.CombineKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.DefFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IfFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.MapFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.NatFuncKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.OrderKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.PickKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.RefKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.SelectKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
 import org.smoothbuild.bytecode.type.exc.CategoryDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
@@ -70,6 +66,7 @@ import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.bytecode.type.oper.CallCB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
+import org.smoothbuild.bytecode.type.oper.OperCB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
 import org.smoothbuild.bytecode.type.oper.PickCB;
 import org.smoothbuild.bytecode.type.oper.RefCB;
@@ -187,27 +184,27 @@ public class CategoryDb {
   // methods for getting Expr-s types
 
   public CallCB call(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(CALL, evalT));
   }
 
   public CombineCB combine(TupleTB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newCombine(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(COMBINE, evalT));
   }
 
   public OrderCB order(ArrayTB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(ORDER, evalT));
   }
 
   public PickCB pick(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(PICK, evalT));
   }
 
   public RefCB ref(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newRef(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(REF, evalT));
   }
 
   public SelectCB select(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newSelect(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(SELECT, evalT));
   }
 
   // methods for reading from db
@@ -220,27 +217,16 @@ public class CategoryDb {
     List<Hash> rootSeq = readCatRootSeq(hash);
     CategoryKindB kind = decodeCatMarker(hash, rootSeq.get(0));
     return switch (kind) {
-      case BaseKindB base -> handleBaseType(hash, rootSeq, kind);
-      case ArrayKindB array -> newArray(hash, readDataAsValT(hash, rootSeq, kind));
-      case CallKindB call -> newCall(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case CombineKindB combine -> newCombine(hash, readDataAsTupleT(hash, rootSeq, kind));
+      case ArrayKindB array -> readArrayT(hash, rootSeq, kind);
+      case BaseKindB base -> handleBaseT(hash, rootSeq, kind);
       case DefFuncKindB defFunc -> readFuncCat(hash, rootSeq, defFunc);
       case FuncKindB func -> readFuncT(hash, rootSeq);
       case IfFuncKindB ifFunc -> readIfFuncCat(hash, rootSeq, ifFunc);
       case MapFuncKindB mapFunc -> readMapFuncCat(hash, rootSeq, mapFunc);
       case NatFuncKindB natFunc -> readFuncCat(hash, rootSeq, natFunc);
-      case OrderKindB order -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
-      case PickKindB pick -> newPick(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case RefKindB ref -> newRef(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case SelectKindB select -> newSelect(hash, readDataAsEvalT(hash, rootSeq, kind));
-      case TupleKindB tuple -> readTuple(hash, rootSeq);
+      case OperKindB oper -> readOperCat(hash, rootSeq, oper);
+      case TupleKindB tuple -> readTupleT(hash, rootSeq);
     };
-  }
-
-  private static CategoryB handleBaseType(Hash hash, List<Hash> rootSeq, CategoryKindB kind) {
-    assertCatRootSeqSize(hash, kind, rootSeq, 1);
-    throw new RuntimeException(
-        "Internal error: Category with kind " + kind + " should be found in cache.");
   }
 
   private List<Hash> readCatRootSeq(Hash hash) {
@@ -261,39 +247,24 @@ public class CategoryDb {
     return kind;
   }
 
-  private static void assertCatRootSeqSize(
-      Hash rootHash, CategoryKindB kind, List<Hash> hashes, int expectedSize) {
-    if (hashes.size() != expectedSize) {
-      throw new DecodeCatRootExc(rootHash, kind, hashes.size(), expectedSize);
-    }
+  private ArrayTB readArrayT(Hash hash, List<Hash> rootSeq, CategoryKindB kind) {
+    return newArray(hash, readDataAsType(hash, rootSeq, kind, TypeB.class));
   }
 
-  private TypeB readDataAsEvalT(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind) {
-    return readDataAsClass(rootHash, rootSeq, kind, TypeB.class);
+  private static CategoryB handleBaseT(Hash hash, List<Hash> rootSeq, CategoryKindB kind) {
+    assertCatRootSeqSize(hash, kind, rootSeq, 1);
+    throw new RuntimeException(
+        "Internal error: Category with kind " + kind + " should be found in cache.");
   }
 
-  private TypeB readDataAsValT(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind) {
-    return readDataAsClass(rootHash, rootSeq, kind, TypeB.class);
-  }
-
-  private ArrayTB readDataAsArrayT(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind) {
-    return readDataAsClass(rootHash, rootSeq, kind, ArrayTB.class);
-  }
-
-  private TupleTB readDataAsTupleT(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind) {
-    return readDataAsClass(rootHash, rootSeq, kind, TupleTB.class);
-  }
-
-  private <T extends CategoryB> T readDataAsClass(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind,
-      Class<T> expectedCatClass) {
-    assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
-    Hash hash = rootSeq.get(DATA_IDX);
-    return readNode(kind, rootHash, hash, DATA_PATH, expectedCatClass);
+  private OperCB readOperCat(Hash hash, List<Hash> rootSeq, OperKindB operKind) {
+    var evalT = readDataAsType(hash, rootSeq, operKind, operKind.dataClass());
+    return newOper(operKind.constructor(), hash, evalT);
   }
 
   private FuncTB readFuncT(Hash rootHash, List<Hash> rootSeq) {
     assertCatRootSeqSize(rootHash, FUNC, rootSeq, 2);
-    var nodes = readNodes(rootHash, FUNC, rootSeq.get(DATA_IDX));
+    var nodes = readDataSeqAsTypes(rootHash, FUNC, rootSeq);
     if (nodes.size() != 2) {
       throw new DecodeCatWrongSeqSizeExc(rootHash, FUNC, DATA_PATH, 2, nodes.size());
     }
@@ -370,43 +341,57 @@ public class CategoryDb {
     }
   }
 
-  private TupleTB readTuple(Hash rootHash, List<Hash> rootSeq) {
+  private TupleTB readTupleT(Hash rootHash, List<Hash> rootSeq) {
     assertCatRootSeqSize(rootHash, TUPLE, rootSeq, 2);
-    var items = readNodes(rootHash, TUPLE, rootSeq.get(DATA_IDX));
+    var items = readDataSeqAsTypes(rootHash, TUPLE, rootSeq);
     return newTuple(rootHash, items);
   }
 
-  private ImmutableList<TypeB> readNodes(Hash rootHash, CategoryKindB kind, Hash hash) {
+  // helper methods for reading
+
+  private TypeB readDataAsType(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind,
+      Class<? extends TypeB> typeClass) {
+    assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
+    var hash = rootSeq.get(DATA_IDX);
+    var categoryB = wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, DATA_PATH, () -> get(hash));
+    if (typeClass.isAssignableFrom(categoryB.getClass())) {
+      return (TypeB) categoryB;
+    } else {
+      throw new DecodeCatWrongNodeCatExc(
+          rootHash, kind, DATA_PATH, typeClass, categoryB.getClass());
+    }
+  }
+
+  private ImmutableList<TypeB> readDataSeqAsTypes(
+      Hash rootHash, CategoryKindB kind, List<Hash> rootSeq) {
+    var elemHashes = wrapHashedDbExcAsDecodeCatNodeExc(
+        rootHash, kind, DATA_PATH, () -> hashedDb.readSeq(rootSeq.get(DATA_IDX)));
     var builder = ImmutableList.<TypeB>builder();
-    var itemTypeHashes = readSeqHashes(rootHash, hash, kind, DATA_PATH);
-    for (int i = 0; i < itemTypeHashes.size(); i++) {
-      builder.add(readNode(kind, rootHash, itemTypeHashes.get(i), DATA_PATH, i));
+    for (int i = 0; i < elemHashes.size(); i++) {
+      builder.add(readDataSeqElemAsType(kind, rootHash, elemHashes.get(i), i));
     }
     return builder.build();
   }
 
-  private <T> T readNode(CategoryKindB kind, Hash rootHash, Hash hash, String path, Class<T> clazz) {
-    CategoryB result = wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, path, () -> get(hash));
-    if (clazz.isInstance(result)) {
-      @SuppressWarnings("unchecked")
-      T castResult = (T) result;
-      return castResult;
-    } else {
-      throw new DecodeCatWrongNodeCatExc(rootHash, kind, path, clazz, result.getClass());
-    }
-  }
-
-  private TypeB readNode(CategoryKindB kind, Hash outerHash, Hash hash, String path, int index) {
-    CategoryB result = wrapCatDbExcAsDecodeCatNodeExc(kind, outerHash, path, index, () -> get(hash));
-    if (result instanceof TypeB typeB) {
+  private TypeB readDataSeqElemAsType(CategoryKindB kind, Hash rootHash, Hash hash, int index) {
+    var categoryB = wrapCatDbExcAsDecodeCatNodeExc(
+        kind, rootHash, DATA_PATH, index, () -> get(hash));
+    if (categoryB instanceof TypeB typeB) {
       return typeB;
     } else {
       throw new DecodeCatWrongNodeCatExc(
-          outerHash, kind, path, index, TypeB.class, result.getClass());
+          rootHash, kind, DATA_PATH, index, TypeB.class, categoryB.getClass());
     }
   }
 
-  // methods for creating Val types
+  private static void assertCatRootSeqSize(
+      Hash rootHash, CategoryKindB kind, List<Hash> hashes, int expectedSize) {
+    if (hashes.size() != expectedSize) {
+      throw new DecodeCatRootExc(rootHash, kind, hashes.size(), expectedSize);
+    }
+  }
+
+  // methods for creating java instances of CategoryB
 
   private ArrayTB newArray(TypeB elem) throws HashedDbExc {
     var rootHash = writeArrayRoot(elem);
@@ -438,60 +423,14 @@ public class CategoryDb {
     return cache(new TupleTB(rootHash, items));
   }
 
-  // methods for creating Oper types
-
-  private CallCB newCall(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(CALL, evalT);
-    return newCall(rootHash, evalT);
+  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evalT) throws HashedDbExc {
+    var rootHash = writeOperRoot(kind, evalT);
+    return newOper(kind.constructor(), rootHash, evalT);
   }
 
-  private CallCB newCall(Hash rootHash, TypeB evalT) {
-    return cache(new CallCB(rootHash, evalT));
-  }
-
-  private CombineCB newCombine(TupleTB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(COMBINE, evalT);
-    return newCombine(rootHash, evalT);
-  }
-
-  private CombineCB newCombine(Hash rootHash, TupleTB evalT) {
-    return cache(new CombineCB(rootHash, evalT));
-  }
-
-  private OrderCB newOrder(ArrayTB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(ORDER, evalT);
-    return newOrder(rootHash, evalT);
-  }
-
-  private OrderCB newOrder(Hash rootHash, ArrayTB evalT) {
-    return cache(new OrderCB(rootHash, evalT));
-  }
-
-  private PickCB newPick(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(PICK, evalT);
-    return newPick(rootHash, evalT);
-  }
-
-  private PickCB newPick(Hash rootHash, TypeB evalT) {
-    return cache(new PickCB(rootHash, evalT));
-  }
-
-  private RefCB newRef(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(REF, evalT);
-    return newRef(rootHash, evalT);
-  }
-
-  private RefCB newRef(Hash rootHash, TypeB evalT) {
-    return cache(new RefCB(rootHash, evalT));
-  }
-
-  private SelectCB newSelect(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(SELECT, evalT);
-    return newSelect(rootHash, evalT);
-  }
-
-  private SelectCB newSelect(Hash rootHash, TypeB evalT) {
-    return cache(new SelectCB(rootHash, evalT));
+  private <T extends OperCB> T newOper(BiFunction<Hash, TypeB, T> constructor, Hash rootHash,
+      TypeB evalT) {
+    return cache(constructor.apply(rootHash, evalT));
   }
 
   private <T extends CategoryB> T cache(T type) {
@@ -500,7 +439,7 @@ public class CategoryDb {
     return result;
   }
 
-  // Methods for writing Val type root
+  // Methods for writing category root
 
   private Hash writeArrayRoot(CategoryB elem) throws HashedDbExc {
     return writeNonBaseRoot(ARRAY, elem.hash());
@@ -533,13 +472,5 @@ public class CategoryDb {
 
   private Hash writeBaseRoot(CategoryKindB kind) throws HashedDbExc {
     return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()));
-  }
-
-  // Helper methods for reading
-
-  private ImmutableList<Hash> readSeqHashes(
-      Hash rootHash, Hash seqHash, CategoryKindB kind, String path) {
-    return wrapHashedDbExcAsDecodeCatNodeExc(
-        rootHash, kind, path, () -> hashedDb.readSeq(seqHash));
   }
 }

@@ -42,28 +42,53 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.BaseKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.CallKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.CombineKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.OrderKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.PickKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.RefKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.SelectKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
+import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.DefFuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.IfFuncCB;
 import org.smoothbuild.bytecode.type.inst.MapFuncCB;
 import org.smoothbuild.bytecode.type.inst.NatFuncCB;
+import org.smoothbuild.bytecode.type.inst.TupleTB;
+import org.smoothbuild.bytecode.type.inst.TypeB;
+import org.smoothbuild.bytecode.type.oper.CallCB;
+import org.smoothbuild.bytecode.type.oper.CombineCB;
+import org.smoothbuild.bytecode.type.oper.OperCB;
+import org.smoothbuild.bytecode.type.oper.OrderCB;
+import org.smoothbuild.bytecode.type.oper.PickCB;
+import org.smoothbuild.bytecode.type.oper.RefCB;
+import org.smoothbuild.bytecode.type.oper.SelectCB;
 
 public sealed abstract class CategoryKindB
-    permits AbstFuncKindB, ArrayKindB, BaseKindB, CallKindB, CombineKindB, FuncKindB, OrderKindB,
-    PickKindB, RefKindB, SelectKindB, TupleKindB {
-  public static sealed class BaseKindB extends CategoryKindB permits BlobKindB, BoolKindB, IntKindB,
-      StringKindB {
+    permits AbstFuncKindB, ArrayKindB, BaseKindB, FuncKindB, OperKindB, TupleKindB {
+  public static sealed class BaseKindB extends CategoryKindB
+      permits BlobKindB, BoolKindB, IntKindB, StringKindB {
     private BaseKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
       super(name, marker, typeJ);
+    }
+  }
+
+  public static sealed class OperKindB<T extends OperCB> extends CategoryKindB
+      permits PickKindB, RefKindB, SelectKindB, OrderKindB, CallKindB, CombineKindB {
+    private final BiFunction<Hash, TypeB, T> constructor;
+    private final Class<? extends TypeB> dataClass;
+
+    private OperKindB(String name, byte marker, BiFunction<Hash, TypeB, T> constructor,
+        Class<? extends TypeB> dataClass, Class<? extends ExprB> typeJ) {
+      super(name, marker, typeJ);
+      this.constructor = constructor;
+      this.dataClass = dataClass;
+    }
+
+    public BiFunction<Hash, TypeB, T> constructor() {
+      return constructor;
+    }
+
+    public Class<? extends TypeB> dataClass() {
+      return dataClass;
     }
   }
 
@@ -135,33 +160,33 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class OrderKindB extends CategoryKindB {
+  public static final class OrderKindB extends OperKindB<OrderCB> {
     OrderKindB() {
-      super("ORDER", (byte) 8, OrderB.class);
+      super("ORDER", (byte) 8, OrderCB::new, ArrayTB.class, OrderB.class);
     }
   }
 
-  public static final class CombineKindB extends CategoryKindB {
+  public static final class CombineKindB extends OperKindB<CombineCB> {
     CombineKindB() {
-      super("COMBINE", (byte) 9, CombineB.class);
+      super("COMBINE", (byte) 9, CombineCB::new, TupleTB.class, CombineB.class);
     }
   }
 
-  public static final class SelectKindB extends CategoryKindB {
+  public static final class SelectKindB extends OperKindB<SelectCB> {
     SelectKindB() {
-      super("SELECT", (byte) 10, SelectB.class);
+      super("SELECT", (byte) 10, SelectCB::new, TypeB.class, SelectB.class);
     }
   }
 
-  public static final class CallKindB extends CategoryKindB {
+  public static final class CallKindB extends OperKindB<CallCB> {
     CallKindB() {
-      super("CALL", (byte) 11, CallB.class);
+      super("CALL", (byte) 11, CallCB::new, TypeB.class, CallB.class);
     }
   }
 
-  public static final class PickKindB extends CategoryKindB {
+  public static final class PickKindB extends OperKindB<PickCB> {
     PickKindB() {
-      super("PICK", (byte) 12, PickB.class);
+      super("PICK", (byte) 12, PickCB::new, TypeB.class, PickB.class);
     }
   }
 
@@ -171,9 +196,9 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class RefKindB extends CategoryKindB {
+  public static final class RefKindB extends OperKindB<RefCB> {
     RefKindB() {
-      super("REF", (byte) 14, RefB.class);
+      super("REF", (byte) 14, RefCB::new, TypeB.class, RefB.class);
     }
   }
 
