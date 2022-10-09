@@ -19,6 +19,7 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.report.TaskMatchers.ALL;
+import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
@@ -131,6 +132,7 @@ import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.compute.ComputationCache;
@@ -920,6 +922,10 @@ public class TestContext {
       PolyEvaluableS evaluable) {
     var type = evaluable.schema().monoize(varMap::get);
     return new MonoizeS(type, varMap, evaluable, loc(loc));
+  }
+
+  public OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {
+    return new OrderS(arrayTS(firstElem.evalT()), concat(firstElem, list(restElems)), loc(line));
   }
 
   public OrderS orderS(TypeS elemT, ExprS... exprs) {

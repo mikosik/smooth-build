@@ -304,6 +304,20 @@ public class ExprSLoadingTest extends TestContext {
     }
 
     @Test
+    public void order_of_funcs() {
+      module("""
+          Int returnInt() = 7;
+          result =
+          [
+            returnInt,
+          ];
+          """)
+          .loadsWithSuccess()
+          .containsEvaluable(
+              polyDefValS(2, "result", orderS(3, defFuncS(1, "returnInt", nlist(), intS(1, 7)))));
+    }
+
+    @Test
     public void ref() {
       module("""
           Blob myFunc(Blob param1)
