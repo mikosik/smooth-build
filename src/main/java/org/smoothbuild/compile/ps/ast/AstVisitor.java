@@ -16,6 +16,7 @@ import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
+import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
@@ -39,6 +40,7 @@ public class AstVisitor {
 
   public void visitField(ItemP field) {
     visitType(field.type());
+    visitIdentifier(field);
   }
 
   public void visitEvaluable(List<PolyEvaluableP> evaluables) {
@@ -56,6 +58,7 @@ public class AstVisitor {
     valP.ann().ifPresent(this::visitAnn);
     valP.type().ifPresent(this::visitType);
     valP.body().ifPresent(this::visitExpr);
+    visitIdentifier(valP);
   }
 
   public void visitFunc(FuncP funcP) {
@@ -63,6 +66,7 @@ public class AstVisitor {
     funcP.resT().ifPresent(this::visitType);
     visitParams(funcP.params());
     funcP.body().ifPresent(this::visitExpr);
+    visitIdentifier(funcP);
   }
 
   public void visitAnn(AnnP annotation) {
@@ -76,6 +80,7 @@ public class AstVisitor {
   public void visitParam(int index, ItemP param) {
     visitType(param.type());
     param.defaultVal().ifPresent(this::visitExpr);
+    visitIdentifier(param);
   }
 
   public void visitType(TypeP type) {}
@@ -130,8 +135,9 @@ public class AstVisitor {
 
   public void visitRef(RefP ref) {}
 
-  public void visitString(StringP string) {
-  }
+  public void visitString(StringP string) {}
+
+  public void visitIdentifier(RefableP refable) {}
 
   public <E> void visitIndexedElements(List<E> elems, BiConsumer<Integer, ? super E> consumer) {
     for (int i = 0; i < elems.size(); i++) {

@@ -19,6 +19,10 @@ public class ValidNamesS {
     return !name.isEmpty() && name.chars().allMatch(ValidNamesS::isUpperCase);
   }
 
+  public static boolean isIdentifierName(String name) {
+    return !(name.isEmpty() || name.equals("_"));
+  }
+
   private static boolean isUpperCase(int character) {
     return 'A' <= character && character <= 'Z';
   }

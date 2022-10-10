@@ -257,6 +257,16 @@ public class DeclarationTest extends TestContext {
                 String A
                        ^""");
           }
+
+          @Test
+          public void that_is_single_underscore_fails() {
+            module("""
+             MyStruct {
+               String _
+             }
+             """)
+                .loadsWithError(2, "`_` is illegal identifier name.");
+          }
         }
       }
 
@@ -390,6 +400,14 @@ public class DeclarationTest extends TestContext {
             no viable alternative at input 'A='
             A = "abc";
               ^""");
+        }
+
+        @Test
+        public void that_is_single_underscore_fails() {
+          module("""
+             _ = "abc";
+             """)
+              .loadsWithError(1, "`_` is illegal identifier name.");
         }
       }
 
@@ -626,6 +644,14 @@ public class DeclarationTest extends TestContext {
               A() = "abc";
                   ^""");
         }
+
+        @Test
+        public void that_is_single_underscore_fails() {
+          module("""
+             _() = "abc";
+             """)
+              .loadsWithError(1, "`_` is illegal identifier name.");
+        }
       }
 
       @Nested
@@ -698,12 +724,20 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_is_single_large_letter_fails() {
             module("""
-             String myFunc(String A);
+             Int myFunc(Int A) = 7;
              """)
                 .loadsWithError(1, """
               mismatched input 'A' expecting {'(', NAME}
-              String myFunc(String A);
-                                   ^""");
+              Int myFunc(Int A) = 7;
+                             ^""");
+          }
+
+          @Test
+          public void that_is_single_underscore_fails() {
+            module("""
+             Int myFunc(Int _) = 7;
+             """)
+                .loadsWithError(1, "`_` is illegal identifier name.");
           }
         }
 

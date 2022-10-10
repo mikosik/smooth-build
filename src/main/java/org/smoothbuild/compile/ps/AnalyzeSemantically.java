@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.ps;
 
 import static java.util.Comparator.comparing;
+import static org.smoothbuild.compile.lang.base.ValidNamesS.isIdentifierName;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.isVarName;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.ANNOTATION_NAMES;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
@@ -25,6 +26,7 @@ import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
@@ -48,6 +50,7 @@ public class AnalyzeSemantically {
     detectDuplicateFieldNames(logBuffer, ast);
     detectDuplicateParamNames(logBuffer, ast);
     detectStructNameWithSingleCapitalLetter(logBuffer, ast);
+    detectIdentifierWithSingleUnderscore(logBuffer, ast);
     detectIllegalAnnotations(logBuffer, ast);
     return logBuffer.toImmutableLogs();
   }
@@ -189,6 +192,18 @@ public class AnalyzeSemantically {
         if (isVarName(name)) {
           logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name."
               + " Names with all capitals letters can be used only for type parameters."));
+        }
+      }
+    }.visitAst(ast);
+  }
+
+  private static void detectIdentifierWithSingleUnderscore(Logger logger, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitIdentifier(RefableP refable) {
+        var name = refable.name();
+        if (!isIdentifierName(name)) {
+          logger.log(compileError(refable.loc(), "`" + name + "` is illegal identifier name."));
         }
       }
     }.visitAst(ast);
