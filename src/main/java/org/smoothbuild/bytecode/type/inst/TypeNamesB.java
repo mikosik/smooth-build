@@ -15,11 +15,14 @@ public class TypeNamesB {
   }
 
   public static String funcTypeName(TypeB resT, List<? extends TypeB> paramTs) {
-    var params = toCommaSeparatedString(paramTs, TypeB::name);
-    return resT.name() + "(" + params + ")";
+    return resT.name() + "(" + commaSeparatedTypeNames(paramTs) + ")";
   }
 
   public static String tupleTypeName(Iterable<? extends TypeB> itemTs) {
-    return "{" + toCommaSeparatedString(itemTs, TypeB::name) + "}";
+    return "{" + commaSeparatedTypeNames(itemTs) + "}";
+  }
+
+  private static String commaSeparatedTypeNames(Iterable<? extends TypeB> itemTs) {
+    return toCommaSeparatedString(itemTs, TypeB::name);
   }
 }
