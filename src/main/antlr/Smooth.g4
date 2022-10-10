@@ -28,7 +28,7 @@ type         : TNAME                        # typeName
              ;
 typeList     : ( type (',' type)* ','? )? ;
 
-NAME         : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
+NAME         : (SMALL_LETTER | '_') ( IDENTIFIER_CHAR )* ;
 TNAME        : LARGE_LETTER ( IDENTIFIER_CHAR )* ;
 INT          : '-'? DIGIT+ ;
 BLOB         : '0x' HEX_DIGIT* ;
@@ -39,13 +39,11 @@ fragment ESC              : '\\"'
                           ;
 fragment IDENTIFIER_CHAR  : SMALL_LETTER
                           | LARGE_LETTER
-                          | NON_LETTER
+                          | DIGIT
+                          | '_'
                           ;
 fragment SMALL_LETTER     : 'a'..'z' ;
 fragment LARGE_LETTER     : 'A'..'Z' ;
-fragment NON_LETTER       : DIGIT
-                          | '_'
-                          ;
 fragment HEX_DIGIT        : DIGIT
                           | 'A'..'F'
                           | 'a'..'f'
