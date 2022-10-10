@@ -51,6 +51,7 @@ public class AnalyzeSemantically {
     detectDuplicateParamNames(logBuffer, ast);
     detectIllegalNames(logBuffer, ast);
     detectIllegalAnnotations(logBuffer, ast);
+    detectIllegalStructFieldDefaultValue(logBuffer, ast);
     return logBuffer.toImmutableLogs();
   }
 
@@ -277,6 +278,19 @@ public class AnalyzeSemantically {
           logger.log(compileError(valP, "Value cannot have empty body."));
         }
 
+      }
+    }.visitAst(ast);
+  }
+
+  private static void detectIllegalStructFieldDefaultValue(LogBuffer logger, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitField(ItemP field) {
+        super.visitField(field);
+        if (field.defaultVal().isPresent()) {
+          logger.log(compileError(field.loc(), "Struct field `" + field.name()
+              + "` has default value. Only function parameters can have default value."));
+        }
       }
     }.visitAst(ast);
   }

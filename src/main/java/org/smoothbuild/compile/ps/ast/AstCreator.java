@@ -25,14 +25,12 @@ import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
-import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
-import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncTContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FunctionContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ItemContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ItemListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
@@ -69,27 +67,9 @@ public class AstCreator {
       public Void visitStruct(StructContext struct) {
         var name = struct.NAME().getText();
         var loc = locOf(filePath, struct.NAME().getSymbol());
-        var fields = createFields(struct.fieldList());
+        var fields = createItems(struct.itemList());
         structs.add(new StructP(name, fields, loc));
         return null;
-      }
-
-      private List<ItemP> createFields(FieldListContext fieldList) {
-        if (fieldList != null) {
-          return sane(fieldList.field())
-              .stream()
-              .map(this::createField)
-              .collect(toImmutableList());
-        }
-        return new ArrayList<>();
-      }
-
-      private ItemP createField(FieldContext field) {
-        TypeP type = createT(field.type());
-        TerminalNode nameNode = field.NAME();
-        String name = nameNode.getText();
-        Loc loc = locOf(filePath, nameNode);
-        return new ItemP(type, name, Optional.empty(), loc);
       }
 
       @Override
@@ -101,10 +81,10 @@ public class AstCreator {
         Optional<ExprP> expr = createExprSane(top.expr());
         Optional<AnnP> annotation = createNativeSane(top.ann());
         Loc loc = locOf(filePath, nameNode);
-        if (top.paramList() == null) {
+        if (top.itemList() == null) {
           evaluables.add(new ValP(type, name, expr, annotation, loc));
         } else {
-          List<ItemP> params = createParams(top.paramList());
+          var params = createItems(top.itemList());
           evaluables.add(new FuncP(type, name, params, expr, annotation, loc));
         }
         return null;
@@ -135,34 +115,34 @@ public class AstCreator {
         }
       }
 
-      private List<ItemP> createParams(ParamListContext paramList) {
-        ArrayList<ItemP> result = new ArrayList<>();
-        if (paramList != null) {
-          return sane(paramList.param())
-              .stream().map(this::createParam)
+      private List<ItemP> createItems(ItemListContext itemList) {
+        if (itemList != null) {
+          return sane(itemList.item())
+              .stream()
+              .map(this::createItem)
               .collect(toImmutableList());
         }
-        return result;
+        return new ArrayList<>();
       }
 
-      private ItemP createParam(ParamContext param) {
-        var type = createT(param.type());
-        var name = param.NAME().getText();
-        var defaultVal = Optional.ofNullable(param.expr()).map(this::createExpr);
-        var loc = locOf(filePath, param);
-        return new ItemP(type, name, defaultVal, loc);
+      private ItemP createItem(ItemContext item) {
+        var type = createT(item.type());
+        var nameNode = item.NAME();
+        var name = nameNode.getText();
+        var defaultValue = createExprSane(item.expr());
+        var loc = locOf(filePath, nameNode);
+        return new ItemP(type, name, defaultValue, loc);
       }
 
       private Optional<ExprP> createExprSane(ExprContext expr) {
-        return expr == null ? Optional.empty() : Optional.of(createExpr(expr));
+        return Optional.ofNullable(expr).map(this::createExpr);
       }
 
       private ExprP createExpr(ExprContext expr) {
         ExprP result = createChainHead(expr.exprHead());
         List<ChainCallContext> chainCallsInPipe = expr.chainCall();
-        for (int i = 0; i < chainCallsInPipe.size(); i++) {
-          ChainCallContext chain = chainCallsInPipe.get(i);
-          result = createChainCallObj(result, chain);
+        for (ChainCallContext chainCall : chainCallsInPipe) {
+          result = createChainCallObj(result, chainCall);
         }
         return result;
       }

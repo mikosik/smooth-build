@@ -271,6 +271,20 @@ public class DeclarationTest extends TestContext {
                     "`_` is illegal identifier name. `_` is reserved for future use.");
           }
         }
+
+        @Nested
+        class _default_value {
+          @Test
+          public void is_illegal() {
+            module("""
+             MyStruct {
+               Int myField = 7
+             }
+             """)
+                .loadsWithError(2, "Struct field `myField` has default value. "
+                    + "Only function parameters can have default value.");
+          }
+        }
       }
 
       @Nested

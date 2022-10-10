@@ -1,14 +1,12 @@
 grammar Smooth;
 
 mod          : ( struct | function | value )* EOF ;
-struct       : NAME '{' fieldList? '}' ;
-fieldList    : field ( ',' field )* ','? ;
-field        : type NAME ;
-function     : ann? type? NAME paramList ('=' expr)? ';' ;
+struct       : NAME '{' itemList '}' ;
+function     : ann? type? NAME '(' itemList ')' ('=' expr)? ';' ;
 value        : ann? type? NAME ('=' expr)? ';' ;
+itemList     : ( item ( ',' item )* ','? )? ;
+item         : type NAME ( '=' expr )? ;
 ann          : '@' NAME '(' STRING ')' ;
-paramList    : '(' ( param ( ',' param )* ','? )? ')' ;
-param        : type NAME ( '=' expr )? ;
 expr         : exprHead ( p+='|' chainCall )* ;
 exprHead     : chain | literal ;
 literal      : array
