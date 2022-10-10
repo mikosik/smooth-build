@@ -1,10 +1,11 @@
 grammar Smooth;
 
-mod          : ( struct | top )* EOF ;
+mod          : ( struct | function | value )* EOF ;
 struct       : NAME '{' fieldList? '}' ;
 fieldList    : field ( ',' field )* ','? ;
 field        : type NAME ;
-top          : ann? type? NAME paramList? ('=' expr)? ';' ;
+function     : ann? type? NAME paramList ('=' expr)? ';' ;
+value        : ann? type? NAME ('=' expr)? ';' ;
 ann          : '@' NAME '(' STRING ')' ;
 paramList    : '(' ( param ( ',' param )* ','? )? ')' ;
 param        : type NAME ( '=' expr )? ;

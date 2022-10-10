@@ -28,16 +28,17 @@ import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncTContext;
+import org.smoothbuild.antlr.lang.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
-import org.smoothbuild.antlr.lang.SmoothParser.TopContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
@@ -92,7 +93,7 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitTop(TopContext top) {
+      public Void visitFunction(FunctionContext top) {
         TerminalNode nameNode = top.NAME();
         visitChildren(top);
         Optional<TypeP> type = createTypeSane(top.type());
@@ -106,6 +107,19 @@ public class AstCreator {
           List<ItemP> params = createParams(top.paramList());
           evaluables.add(new FuncP(type, name, params, expr, annotation, loc));
         }
+        return null;
+      }
+
+      @Override
+      public Void visitValue(ValueContext top) {
+        TerminalNode nameNode = top.NAME();
+        visitChildren(top);
+        Optional<TypeP> type = createTypeSane(top.type());
+        String name = nameNode.getText();
+        Optional<ExprP> expr = createExprSane(top.expr());
+        Optional<AnnP> annotation = createNativeSane(top.ann());
+        Loc loc = locOf(filePath, nameNode);
+        evaluables.add(new ValP(type, name, expr, annotation, loc));
         return null;
       }
 
