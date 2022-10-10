@@ -19,11 +19,19 @@ public class ValidNamesS {
     return !name.isEmpty() && name.chars().allMatch(ValidNamesS::isUpperCase);
   }
 
-  public static boolean isIdentifierName(String name) {
-    return !(name.isEmpty() || name.equals("_"));
+  public static boolean startsWithLowerCase(String name) {
+    return !name.isEmpty() && isLowerCase(name.charAt(0));
   }
 
-  private static boolean isUpperCase(int character) {
+  public static boolean startsWithUpperCase(String name) {
+    return !name.isEmpty() && isUpperCase(name.charAt(0));
+  }
+
+  public static boolean isLowerCase(int character) {
+    return 'a' <= character && character <= 'z';
+  }
+
+  public static boolean isUpperCase(int character) {
     return 'A' <= character && character <= 'Z';
   }
 

@@ -1,11 +1,11 @@
 grammar Smooth;
 
 mod          : ( struct | top )* EOF ;
-struct       : TNAME '{' fieldList? '}' ;
+struct       : NAME '{' fieldList? '}' ;
 fieldList    : field ( ',' field )* ','? ;
 field        : type NAME ;
 top          : ann? type? NAME paramList? ('=' expr)? ';' ;
-ann          : '@' TNAME '(' STRING ')' ;
+ann          : '@' NAME '(' STRING ')' ;
 paramList    : '(' ( param ( ',' param )* ','? )? ')' ;
 param        : type NAME ( '=' expr )? ;
 expr         : exprHead ( p+='|' chainCall )* ;
@@ -22,14 +22,13 @@ argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg          : ( NAME '=' )? expr ;
 array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
 select       : '.' NAME ;
-type         : TNAME                        # typeName
+type         : NAME                        # typeName
              | '[' type ']'                 # arrayT
              | type '(' typeList ')'        # funcT
              ;
 typeList     : ( type (',' type)* ','? )? ;
 
-NAME         : (SMALL_LETTER | '_') ( IDENTIFIER_CHAR )* ;
-TNAME        : LARGE_LETTER ( IDENTIFIER_CHAR )* ;
+NAME         : NON_DIGIT_CHAR NAME_CHAR* ;
 INT          : '-'? DIGIT+ ;
 BLOB         : '0x' HEX_DIGIT* ;
 STRING       : '"' (ESC | ~('\r' | '\n'))*? '"' ;
@@ -37,7 +36,11 @@ STRING       : '"' (ESC | ~('\r' | '\n'))*? '"' ;
 fragment ESC              : '\\"'
                           | '\\\\'
                           ;
-fragment IDENTIFIER_CHAR  : SMALL_LETTER
+fragment NON_DIGIT_CHAR   : SMALL_LETTER
+                          | LARGE_LETTER
+                          | '_'
+                          ;
+fragment NAME_CHAR        : SMALL_LETTER
                           | LARGE_LETTER
                           | DIGIT
                           | '_'

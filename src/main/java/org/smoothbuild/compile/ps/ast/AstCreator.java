@@ -66,9 +66,9 @@ public class AstCreator {
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
-        String name = struct.TNAME().getText();
-        Loc loc = locOf(filePath, struct.TNAME().getSymbol());
-        List<ItemP> fields = createFields(struct.fieldList());
+        var name = struct.NAME().getText();
+        var loc = locOf(filePath, struct.NAME().getSymbol());
+        var fields = createFields(struct.fieldList());
         structs.add(new StructP(name, fields, loc));
         return null;
       }
@@ -113,7 +113,7 @@ public class AstCreator {
         if (annotation == null) {
           return Optional.empty();
         } else {
-          String name = annotation.TNAME().getText();
+          var name = annotation.NAME().getText();
           return Optional.of(new AnnP(
               name,
               createStringNode(annotation, annotation.STRING()),
@@ -262,7 +262,7 @@ public class AstCreator {
       }
 
       private TypeP createT(TypeNameContext type) {
-        return new TypeP(type.getText(), locOf(filePath, type.TNAME()));
+        return new TypeP(type.getText(), locOf(filePath, type.NAME()));
       }
 
       private TypeP createArrayT(ArrayTContext arrayT) {

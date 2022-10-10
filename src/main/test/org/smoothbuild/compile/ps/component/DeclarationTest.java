@@ -80,10 +80,8 @@ public class DeclarationTest extends TestContext {
           module("""
              myStruct{}
              """)
-              .loadsWithError(1, """
-              mismatched input '{' expecting {'=', ';', '('}
-              myStruct{}
-                      ^""");
+              .loadsWithError(1, "`myStruct` is illegal struct name. "
+                  + "Struct name must start with uppercase letter.");
         }
 
         @Test
@@ -92,7 +90,15 @@ public class DeclarationTest extends TestContext {
              A{}
              """)
               .loadsWithError(1, "`A` is illegal struct name. "
-                  + "Names with all capitals letters can be used only for type parameters.");
+                  + "All-uppercase names are reserved for type variables in generic types.");
+        }
+
+        @Test
+        public void that_is_underscore_fails() {
+          module("""
+             _{}
+             """)
+              .loadsWithError(1, "`_` is illegal struct name. `_` is reserved for future use.");
         }
 
         @Test
@@ -101,7 +107,7 @@ public class DeclarationTest extends TestContext {
              ABC{}
              """)
               .loadsWithError(1, "`ABC` is illegal struct name. "
-                  + "Names with all capitals letters can be used only for type parameters.");
+                  + "All-uppercase names are reserved for type variables in generic types.");
         }
       }
 
@@ -239,10 +245,8 @@ public class DeclarationTest extends TestContext {
                String Field
              }
              """)
-                .loadsWithError(2, """
-              mismatched input 'Field' expecting {'(', NAME}
-                String Field
-                       ^^^^^""");
+                .loadsWithError(2,
+                    "`Field` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
           @Test
@@ -252,10 +256,8 @@ public class DeclarationTest extends TestContext {
                String A
              }
              """)
-                .loadsWithError(2, """
-              mismatched input 'A' expecting {'(', NAME}
-                String A
-                       ^""");
+                .loadsWithError(2,
+                    "`A` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
           @Test
@@ -265,7 +267,8 @@ public class DeclarationTest extends TestContext {
                String _
              }
              """)
-                .loadsWithError(2, "`_` is illegal identifier name.");
+                .loadsWithError(2,
+                    "`_` is illegal identifier name. `_` is reserved for future use.");
           }
         }
       }
@@ -385,10 +388,8 @@ public class DeclarationTest extends TestContext {
           module("""
              MyValue = "abc";
              """)
-              .loadsWithError(1, """
-            no viable alternative at input 'MyValue='
-            MyValue = "abc";
-                    ^""");
+              .loadsWithError(1,
+                  "`MyValue` is illegal identifier name. Identifiers should start with lowercase.");
         }
 
         @Test
@@ -396,10 +397,8 @@ public class DeclarationTest extends TestContext {
           module("""
              A = "abc";
              """)
-              .loadsWithError(1, """
-            no viable alternative at input 'A='
-            A = "abc";
-              ^""");
+              .loadsWithError(1,
+                  "`A` is illegal identifier name. Identifiers should start with lowercase.");
         }
 
         @Test
@@ -407,7 +406,7 @@ public class DeclarationTest extends TestContext {
           module("""
              _ = "abc";
              """)
-              .loadsWithError(1, "`_` is illegal identifier name.");
+              .loadsWithError(1, "`_` is illegal identifier name. `_` is reserved for future use.");
         }
       }
 
@@ -628,10 +627,8 @@ public class DeclarationTest extends TestContext {
           module("""
              MyFunc() = "abc";
              """)
-              .loadsWithError(1, """
-                missing NAME at '='
-                MyFunc() = "abc";
-                         ^""");
+              .loadsWithError(1,
+                  "`MyFunc` is illegal identifier name. Identifiers should start with lowercase.");
         }
 
         @Test
@@ -639,10 +636,8 @@ public class DeclarationTest extends TestContext {
           module("""
              A() = "abc";
              """)
-              .loadsWithError(1, """
-              missing NAME at '='
-              A() = "abc";
-                  ^""");
+              .loadsWithError(1,
+                  "`A` is illegal identifier name. Identifiers should start with lowercase.");
         }
 
         @Test
@@ -650,7 +645,7 @@ public class DeclarationTest extends TestContext {
           module("""
              _() = "abc";
              """)
-              .loadsWithError(1, "`_` is illegal identifier name.");
+              .loadsWithError(1, "`_` is illegal identifier name. `_` is reserved for future use.");
         }
       }
 
@@ -713,12 +708,10 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_starts_with_large_letter_fails() {
             module("""
-             String myFunc(String Name);
+             Int myFunc(Int Name) = 7;
              """)
-                .loadsWithError(1, """
-              mismatched input 'Name' expecting {'(', NAME}
-              String myFunc(String Name);
-                                   ^^^^""");
+                .loadsWithError(1,
+                    "`Name` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
           @Test
@@ -726,10 +719,8 @@ public class DeclarationTest extends TestContext {
             module("""
              Int myFunc(Int A) = 7;
              """)
-                .loadsWithError(1, """
-              mismatched input 'A' expecting {'(', NAME}
-              Int myFunc(Int A) = 7;
-                             ^""");
+                .loadsWithError(1,
+                    "`A` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
           @Test
@@ -737,7 +728,8 @@ public class DeclarationTest extends TestContext {
             module("""
              Int myFunc(Int _) = 7;
              """)
-                .loadsWithError(1, "`_` is illegal identifier name.");
+                .loadsWithError(
+                    1, "`_` is illegal identifier name. `_` is reserved for future use.");
           }
         }
 

@@ -746,10 +746,7 @@ public class ExprSUsageTest extends TestContext {
           String myFunc(String param) = "abc";
           result = myFunc(MyStruct);
           """)
-          .loadsWithError(3, """
-              extraneous input 'MyStruct' expecting {')', '[', NAME, INT, BLOB, STRING}
-              result = myFunc(MyStruct);
-                              ^^^^^^^^""");
+          .loadsWithError(3, "`MyStruct` is undefined.");
     }
 
     @Test
@@ -758,10 +755,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct {}
           result() = MyStruct;
           """)
-          .loadsWithError(2, """
-              mismatched input 'MyStruct' expecting {'[', NAME, INT, BLOB, STRING}
-              result() = MyStruct;
-                         ^^^^^^^^""");
+          .loadsWithError(2, "`MyStruct` is undefined.");
     }
 
     @Test
@@ -770,10 +764,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct {}
           result = MyStruct;
           """)
-          .loadsWithError(2, """
-              mismatched input 'MyStruct' expecting {'[', NAME, INT, BLOB, STRING}
-              result = MyStruct;
-                       ^^^^^^^^""");
+          .loadsWithError(2, "`MyStruct` is undefined.");
     }
 
     @Test
@@ -782,10 +773,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct {}
           result = [MyStruct];
           """)
-          .loadsWithError(2, """
-              extraneous input 'MyStruct' expecting {'[', ']', NAME, INT, BLOB, STRING}
-              result = [MyStruct];
-                        ^^^^^^^^""");
+          .loadsWithError(2, "`MyStruct` is undefined.");
     }
 
     @Test
@@ -794,10 +782,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct {}
           String myFunc(String value = MyStruct) = "abc";
           """)
-          .loadsWithError(2, """
-              mismatched input 'MyStruct' expecting {'[', NAME, INT, BLOB, STRING}
-              String myFunc(String value = MyStruct) = "abc";
-                                           ^^^^^^^^""");
+          .loadsWithError(2, "`MyStruct` is undefined.");
     }
 
     @Test
@@ -806,15 +791,7 @@ public class ExprSUsageTest extends TestContext {
             MyStruct {}
             result = MyStruct();
             """)
-          .loadsWith(
-              err(2, """
-                  mismatched input 'MyStruct' expecting {'[', NAME, INT, BLOB, STRING}
-                  result = MyStruct();
-                           ^^^^^^^^"""),
-              err(2, """
-                  missing NAME at ';'
-                  result = MyStruct();
-                                     ^"""));
+          .loadsWith(err(2, "`MyStruct` is undefined."));
     }
 
     @Test
@@ -826,10 +803,7 @@ public class ExprSUsageTest extends TestContext {
             result = MyStruct.myField;
             """;
       module(code)
-          .loadsWithError(4, """
-              mismatched input 'MyStruct' expecting {'[', NAME, INT, BLOB, STRING}
-              result = MyStruct.myField;
-                       ^^^^^^^^""");
+          .loadsWithError(4, "`MyStruct` is undefined.");
     }
 
     @Test
@@ -922,10 +896,7 @@ public class ExprSUsageTest extends TestContext {
           String myFunc(String param) = "abc";
           result = myFunc(A);
           """)
-          .loadsWithError(2, """
-              extraneous input 'A' expecting {')', '[', NAME, INT, BLOB, STRING}
-              result = myFunc(A);
-                              ^""");
+          .loadsWithError(2, "`A` is undefined.");
     }
 
     @Test
@@ -933,10 +904,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           result() = A;
           """)
-          .loadsWithError(1, """
-              mismatched input 'A' expecting {'[', NAME, INT, BLOB, STRING}
-              result() = A;
-                         ^""");
+          .loadsWithError(1, "`A` is undefined.");
     }
 
     @Test
@@ -944,10 +912,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           result = A;
           """)
-          .loadsWithError(1, """
-              mismatched input 'A' expecting {'[', NAME, INT, BLOB, STRING}
-              result = A;
-                       ^""");
+          .loadsWithError(1, "`A` is undefined.");
     }
 
     @Test
@@ -955,10 +920,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           result = [A];
           """)
-          .loadsWithError(1, """
-              extraneous input 'A' expecting {'[', ']', NAME, INT, BLOB, STRING}
-              result = [A];
-                        ^""");
+          .loadsWithError(1, "`A` is undefined.");
     }
 
     @Test
@@ -966,10 +928,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           String myFunc(String value = A) = "abc";
           """)
-          .loadsWithError(1, """
-              mismatched input 'A' expecting {'[', NAME, INT, BLOB, STRING}
-              String myFunc(String value = A) = "abc";
-                                           ^""");
+          .loadsWithError(1, "`A` is undefined.");
     }
 
     @Test
@@ -977,15 +936,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
             result = A();
             """)
-          .loadsWith(
-              err(1, """
-                  mismatched input 'A' expecting {'[', NAME, INT, BLOB, STRING}
-                  result = A();
-                           ^"""),
-              err(1, """
-                  missing NAME at ';'
-                  result = A();
-                              ^"""));
+          .loadsWith(err(1, "`A` is undefined."));
     }
 
     @Test
@@ -994,10 +945,7 @@ public class ExprSUsageTest extends TestContext {
             result = A.myField;
             """;
       module(code)
-          .loadsWithError(1, """
-              mismatched input 'A' expecting {'[', NAME, INT, BLOB, STRING}
-              result = A.myField;
-                       ^""");
+          .loadsWithError(1, "`A` is undefined.");
     }
   }
 }

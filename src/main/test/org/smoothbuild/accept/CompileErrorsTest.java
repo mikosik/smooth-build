@@ -20,15 +20,14 @@ public class CompileErrorsTest extends AcceptanceTestCase {
 
   @Test
   public void syntax_error_contains_code_with_problematic_part_marked() throws Exception {
-    createUserModule("""
-            result(String a, String BadName) = "abc";
-            """);
+    createUserModule("result =");
     evaluate("result");
     assertThat(logs())
-        .containsExactly(userError(1, """
-              mismatched input 'BadName' expecting {'(', NAME}
-              result(String a, String BadName) = "abc";
-                                      ^^^^^^^"""));
+        .containsExactly(
+            userError(1, """
+                mismatched input '<EOF>' expecting {'[', NAME, INT, BLOB, STRING}
+                result =
+                        ^"""));
   }
 
   @Test

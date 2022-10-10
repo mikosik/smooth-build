@@ -1,14 +1,14 @@
 package org.smoothbuild.compile.ps;
 
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.compile.lang.base.ValidNamesS.isIdentifierName;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.isVarName;
+import static org.smoothbuild.compile.lang.base.ValidNamesS.startsWithLowerCase;
+import static org.smoothbuild.compile.lang.base.ValidNamesS.startsWithUpperCase;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.ANNOTATION_NAMES;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +49,7 @@ public class AnalyzeSemantically {
     detectDuplicateGlobalNames(logBuffer, imported, ast);
     detectDuplicateFieldNames(logBuffer, ast);
     detectDuplicateParamNames(logBuffer, ast);
-    detectStructNameWithSingleCapitalLetter(logBuffer, ast);
-    detectIdentifierWithSingleUnderscore(logBuffer, ast);
+    detectIllegalNames(logBuffer, ast);
     detectIllegalAnnotations(logBuffer, ast);
     return logBuffer.toImmutableLogs();
   }
@@ -122,7 +121,7 @@ public class AnalyzeSemantically {
   private static void detectDuplicateGlobalNames(Logger logger, DefsS imported, Ast ast) {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
-    nals.addAll(map(ast.structs(), StructP::ctor));
+    nals.addAll(constructorNames(ast));
     nals.addAll(ast.evaluables());
     nals.sort(comparing(n -> n.loc().line()));
 
@@ -135,6 +134,18 @@ public class AnalyzeSemantically {
       logIfDuplicate(logger, checked, nal);
       checked.put(nal.name(), nal);
     }
+  }
+
+  private static List<FuncP> constructorNames(Ast ast) {
+    // Return only constructors of structs with legal names (that starts with uppercase).
+    // Adding constructors of structs with lowercase names would cause `already defined` error
+    // because constructor name would collide with struct name.
+    // Lowercase struct names will be detected as illegal by other check in this class.
+    return ast.structs()
+        .stream()
+        .filter(s -> startsWithUpperCase(s.name()))
+        .map(StructP::ctor)
+        .toList();
   }
 
   private static void logIfDuplicate(Logger logger, Bindings<? extends Nal> others, Nal nal) {
@@ -184,26 +195,33 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static void detectStructNameWithSingleCapitalLetter(Logger logger, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitStruct(StructP struct) {
-        String name = struct.name();
-        if (isVarName(name)) {
-          logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name."
-              + " Names with all capitals letters can be used only for type parameters."));
-        }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void detectIdentifierWithSingleUnderscore(Logger logger, Ast ast) {
+  private static void detectIllegalNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitIdentifier(RefableP refable) {
         var name = refable.name();
-        if (!isIdentifierName(name)) {
-          logger.log(compileError(refable.loc(), "`" + name + "` is illegal identifier name."));
+        if (name.equals("_")) {
+          logger.log(compileError(refable.loc(), "`" + name + "` is illegal identifier name. "
+              + "`_` is reserved for future use."));
+        } else if (!startsWithLowerCase(name)) {
+          logger.log(compileError(refable.loc(), "`" + name + "` is illegal identifier name. "
+          + "Identifiers should start with lowercase."));
+        }
+      }
+
+      @Override
+      public void visitStruct(StructP struct) {
+        super.visitStruct(struct);
+        var name = struct.name();
+        if (name.equals("_")) {
+          logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name. "
+              + "`_` is reserved for future use."));
+        } else if (isVarName(name)) {
+          logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name."
+              + " All-uppercase names are reserved for type variables in generic types."));
+        } else if (!startsWithUpperCase(name)) {
+          logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name."
+              + " Struct name must start with uppercase letter."));
         }
       }
     }.visitAst(ast);
