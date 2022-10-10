@@ -64,7 +64,7 @@ public class UnitTypeInferrer {
   private void inferRef(RefP ref) {
     if (bindings.get(ref.name()).get() instanceof PolyFuncS polyFuncS) {
       var resultVars = polyFuncS.mono().type().res().vars();
-      var paramOnlyVars = filterKeys(ref.monoizationMapping(), v -> !resultVars.contains(v));
+      var paramOnlyVars = filterKeys(ref.monoizeVarMap(), v -> !resultVars.contains(v));
       for (var type : paramOnlyVars.values()) {
         var resolved = unifier.resolve(type);
         resolved.vars().stream()

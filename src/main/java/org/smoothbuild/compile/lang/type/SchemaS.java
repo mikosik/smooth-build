@@ -3,8 +3,8 @@ package org.smoothbuild.compile.lang.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
+import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 
 import org.smoothbuild.util.collect.Named;
 
@@ -58,8 +58,8 @@ public sealed class SchemaS implements Named
     return type;
   }
 
-  public TypeS monoize(Function<VarS, TypeS> mapper) {
-    return type.mapVars(v -> quantifiedVars.contains(v) ? mapper.apply(v) : v);
+  public TypeS monoize(Map<VarS, TypeS> map) {
+    return type.mapVars(v -> quantifiedVars.contains(v) ? map.get(v) : v);
   }
 
   @Override

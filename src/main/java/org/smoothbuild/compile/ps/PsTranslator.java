@@ -37,7 +37,6 @@ import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
@@ -58,7 +57,6 @@ import org.smoothbuild.util.bindings.ScopedBindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class PsTranslator {
   private final Bindings<? extends Optional<? extends RefableS>> bindings;
@@ -177,16 +175,11 @@ public class PsTranslator {
     };
   }
 
-  private static ExprS translateMonoizable(
-      MonoizableP monoizableP, PolyEvaluableS polyEvaluableS) {
+  private static ExprS translateMonoizable(MonoizableP monoizableP, PolyEvaluableS polyEvaluableS) {
     if (polyEvaluableS.schema().quantifiedVars().isEmpty()) {
       return polyEvaluableS.mono();
     } else {
-      // cast is safe because varMap is immutable
-      @SuppressWarnings("unchecked")
-      var varMap = (ImmutableMap<VarS, TypeS>) monoizableP.monoizationMapping();
-      var type = polyEvaluableS.schema().monoize(monoizableP.monoizationMapper());
-      return new MonoizeS(type, varMap, polyEvaluableS, monoizableP.loc());
+      return new MonoizeS(monoizableP.monoizeVarMap(), polyEvaluableS, monoizableP.loc());
     }
   }
 

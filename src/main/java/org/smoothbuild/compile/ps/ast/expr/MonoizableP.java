@@ -1,9 +1,5 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import static java.util.Objects.requireNonNullElse;
-
-import java.util.function.Function;
-
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
@@ -15,21 +11,17 @@ import com.google.common.collect.ImmutableMap;
  */
 public abstract sealed class MonoizableP extends OperP
     permits DefaultArgP, RefP {
-  private ImmutableMap<VarS, ? extends TypeS> monoizationMapping;
+  private ImmutableMap<VarS, TypeS> monoizeVarMap;
 
   public MonoizableP(Loc loc) {
     super(loc);
   }
 
-  public void setMonoizationMapping(ImmutableMap<VarS, ? extends TypeS> monoizationMapping) {
-    this.monoizationMapping = monoizationMapping;
+  public void setMonoizeVarMap(ImmutableMap<VarS, TypeS> monoizeVarMap) {
+    this.monoizeVarMap = monoizeVarMap;
   }
 
-  public ImmutableMap<VarS, ? extends TypeS> monoizationMapping() {
-    return monoizationMapping;
-  }
-
-  public Function<VarS, TypeS> monoizationMapper() {
-    return key -> requireNonNullElse(monoizationMapping.get(key), key);
+  public ImmutableMap<VarS, TypeS> monoizeVarMap() {
+    return monoizeVarMap;
   }
 }

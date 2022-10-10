@@ -153,15 +153,14 @@ public class ExprTypeUnifier {
   }
 
   private static Optional<TypeS> unifyItemRef(RefP ref, ItemS item) {
-    ref.setMonoizationMapping(ImmutableMap.of());
+    ref.setMonoizeVarMap(ImmutableMap.of());
     return Optional.of(item.type());
   }
 
   private Optional<TypeS> unifyMonoizable(MonoizableP monoizableP, SchemaS schema) {
-    var monoizationMapping = toMap(
-        schema.quantifiedVars().asList(), v -> unifier.newTempVar());
-    monoizableP.setMonoizationMapping(monoizationMapping);
-    return Optional.of(schema.monoize(monoizationMapping::get));
+    monoizableP.setMonoizeVarMap(
+        toMap(schema.quantifiedVars().asList(), v -> unifier.newTempVar()));
+    return Optional.of(schema.monoize(monoizableP.monoizeVarMap()));
   }
 
   private Optional<TypeS> unifySelect(SelectP select) {

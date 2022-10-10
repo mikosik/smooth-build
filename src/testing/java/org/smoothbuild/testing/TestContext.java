@@ -919,8 +919,7 @@ public class TestContext {
 
   public static MonoizeS monoizeS(int loc, ImmutableMap<VarS, TypeS> varMap,
       PolyEvaluableS evaluable) {
-    var type = evaluable.schema().monoize(varMap::get);
-    return new MonoizeS(type, varMap, evaluable, loc(loc));
+    return new MonoizeS(varMap, evaluable, loc(loc));
   }
 
   public OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {
