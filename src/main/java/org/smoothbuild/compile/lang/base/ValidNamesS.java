@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.lang.type;
+package org.smoothbuild.compile.lang.base;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
@@ -6,14 +6,17 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
 
-public class TypeNamesS {
+import org.smoothbuild.compile.lang.type.TupleTS;
+import org.smoothbuild.compile.lang.type.TypeS;
+
+public class ValidNamesS {
   public static final String BLOB = "Blob";
   public static final String BOOL = "Bool";
   public static final String INT = "Int";
   public static final String STRING = "String";
 
   public static boolean isVarName(String name) {
-    return !name.isEmpty() && name.chars().allMatch(TypeNamesS::isUpperCase);
+    return !name.isEmpty() && name.chars().allMatch(ValidNamesS::isUpperCase);
   }
 
   private static boolean isUpperCase(int character) {

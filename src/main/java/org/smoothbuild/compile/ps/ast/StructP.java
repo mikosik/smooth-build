@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps.ast;
 
-import static org.smoothbuild.compile.lang.type.TypeNamesS.structNameToCtorName;
+import static org.smoothbuild.compile.lang.base.ValidNamesS.structNameToCtorName;
 import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
 
 import java.util.List;

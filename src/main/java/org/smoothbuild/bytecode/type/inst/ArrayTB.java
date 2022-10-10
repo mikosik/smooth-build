@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.type.inst;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
-import static org.smoothbuild.bytecode.type.inst.TypeNamesB.arrayTypeName;
+import static org.smoothbuild.bytecode.type.inst.ValidNamesB.arrayTypeName;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;

@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.inst;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.bytecode.type.CategoryKinds.TUPLE;
-import static org.smoothbuild.bytecode.type.inst.TypeNamesB.tupleTypeName;
+import static org.smoothbuild.bytecode.type.inst.ValidNamesB.tupleTypeName;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;

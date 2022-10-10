@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
  */
 public class IntTB extends TypeB {
   public IntTB(Hash hash) {
-    super(hash, TypeNamesB.INT, INT);
+    super(hash, ValidNamesB.INT, INT);
   }
 
   @Override

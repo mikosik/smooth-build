@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.function.Function;
 
+import org.smoothbuild.compile.lang.base.ValidNamesS;
+
 /**
  * This class is immutable.
  */
@@ -11,7 +13,7 @@ public final class ArrayTS extends TypeS {
   private final TypeS elem;
 
   public ArrayTS(TypeS elem) {
-    super(TypeNamesS.arrayTypeName(elem), elem.vars());
+    super(ValidNamesS.arrayTypeName(elem), elem.vars());
     this.elem = requireNonNull(elem);
   }
 
