@@ -8,12 +8,11 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -74,7 +73,7 @@ public class SbTranslator {
   private final TypeSbTranslator typeSbTranslator;
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
-  private final Deque<NList<ItemS>> callStack;
+  private final NList<ItemS> environment;
   private final Map<CacheKey, ExprB> cache;
   private final Map<ExprB, LabeledLoc> labels;
 
@@ -85,19 +84,19 @@ public class SbTranslator {
     this.typeSbTranslator = new TypeSbTranslator(bytecodeF, ImmutableMap.of());
     this.fileLoader = fileLoader;
     this.bytecodeLoader = bytecodeLoader;
-    this.callStack = new LinkedList<>();
+    this.environment = nlist();
     this.cache = new HashMap<>();
     this.labels = new HashMap<>();
   }
 
   public SbTranslator(BytecodeF bytecodeF, TypeSbTranslator typeSbTranslator, FileLoader fileLoader,
-      BytecodeLoader bytecodeLoader, Deque<NList<ItemS>> callStack, Map<CacheKey, ExprB> cache,
+      BytecodeLoader bytecodeLoader, NList<ItemS> environment, Map<CacheKey, ExprB> cache,
       Map<ExprB, LabeledLoc> labels) {
     this.bytecodeF = bytecodeF;
     this.typeSbTranslator = typeSbTranslator;
     this.fileLoader = fileLoader;
     this.bytecodeLoader = bytecodeLoader;
-    this.callStack = callStack;
+    this.environment = environment;
     this.cache = cache;
     this.labels = labels;
   }
@@ -153,28 +152,30 @@ public class SbTranslator {
     var varMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(
-        bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader, callStack, cache, labels);
+        bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader, environment, cache, labels);
     return sbTranslator.translateExpr(monoizeS.polyEvaluable().mono());
   }
 
   private ExprB translateFunc(FuncS funcS) {
     var key = new CacheKey(funcS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateFuncImpl(funcS));
+    return computeIfAbsent(cache, key, name -> setEnvironmentAndTranslateFunc(funcS));
+  }
+
+  private ExprB setEnvironmentAndTranslateFunc(FuncS funcS) {
+    var newEnvironment = funcS.params();
+    var sbTranslator = new SbTranslator(
+        bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader, newEnvironment, cache, labels);
+    return sbTranslator.translateFuncImpl(funcS);
   }
 
   private ExprB translateFuncImpl(FuncS funcS) {
-    try {
-      callStack.push(funcS.params());
-      var funcB = switch (funcS) {
-        case AnnFuncS n -> translateAnnFunc(n);
-        case DefFuncS d -> translateDefFunc(d);
-        case SyntCtorS c -> translateSyntCtor(c);
-      };
-      labels.put(funcB, funcS);
-      return funcB;
-    } finally {
-      callStack.pop();
-    }
+    var funcB = switch (funcS) {
+      case AnnFuncS n -> translateAnnFunc(n);
+      case DefFuncS d -> translateDefFunc(d);
+      case SyntCtorS c -> translateSyntCtor(c);
+    };
+    labels.put(funcB, funcS);
+    return funcB;
   }
 
   private ExprB translateAnnFunc(AnnFuncS annFuncS) {
@@ -227,7 +228,7 @@ public class SbTranslator {
   }
 
   private RefB translateRef(RefS refS) {
-    var index = callStack.peek().indexMap().get(refS.paramName());
+    var index = environment.indexMap().get(refS.paramName());
     return bytecodeF.ref(translateT(refS.evalT()), BigInteger.valueOf(index));
   }
 
