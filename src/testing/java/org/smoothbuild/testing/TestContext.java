@@ -76,6 +76,7 @@ import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.compile.lang.base.LabeledLoc;
 import org.smoothbuild.compile.lang.base.LabeledLocImpl;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValS;
@@ -1292,6 +1293,14 @@ public class TestContext {
 
   public static ModPath modPath(FilePath filePath) {
     return ModPath.of(filePath);
+  }
+
+  public static Trace trace(String code, int line) {
+    return new Trace(code, loc(line), null);
+  }
+
+  public static Trace trace(String code2, int line2, String code1, int line1) {
+    return new Trace(code2, loc(line2), new Trace(code1, loc(line1)));
   }
 
   public static Loc loc() {
