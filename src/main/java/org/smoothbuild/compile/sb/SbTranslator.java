@@ -260,7 +260,9 @@ public class SbTranslator {
   private ExprB translateAnnVal(AnnValS annValS) {
     var annName = annValS.ann().name();
     if (annName.equals(BYTECODE)) {
-      return fetchValBytecode(annValS);
+      var exprB = fetchValBytecode(annValS);
+      labels.put(exprB, annValS);
+      return exprB;
     } else {
       throw new TranslateSbExc("Illegal value annotation: " + q("@" + annName) + ".");
     }  }

@@ -1362,4 +1362,8 @@ public class TestContext {
   public static LabeledLoc labeledLoc(String label) {
     return new LabeledLocImpl(label, Loc.unknown());
   }
+
+  public static LabeledLoc labeledLoc(String label, int line) {
+    return new LabeledLocImpl(label, loc(line));
+  }
 }
