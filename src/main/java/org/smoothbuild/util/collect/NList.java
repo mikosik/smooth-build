@@ -34,9 +34,12 @@ public class NList<T extends Nameable> extends AbstractList<T> {
 
   public static <T extends Nameable> NList<T> nlist() {
     // cast is safe as EMPTY is empty
-    return (NList<T>) EMPTY;
+    @SuppressWarnings("unchecked")
+    NList<T> result = (NList<T>) EMPTY;
+    return result;
   }
 
+  @SafeVarargs
   public static <E extends Nameable> NList<E> nlist(E... elems) {
     return nlist(Lists.list(elems));
   }

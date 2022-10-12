@@ -88,32 +88,32 @@ public final class VarSetS implements Set<VarS> {
 
   @Override
   public boolean add(VarS var) {
-    return elements.add(var);
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean remove(Object object) {
-    return elements.remove(object);
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean addAll(Collection<? extends VarS> collection) {
-    return elements.addAll(collection);
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean retainAll(Collection<?> collection) {
-    return elements.retainAll(collection);
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean removeAll(Collection<?> collection) {
-    return elements.removeAll(collection);
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public void clear() {
-    elements.clear();
+    throw new UnsupportedOperationException();
   }
 
   @Override

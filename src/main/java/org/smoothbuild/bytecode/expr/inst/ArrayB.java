@@ -38,7 +38,9 @@ public final class ArrayB extends InstB {
 
   public <T extends InstB> ImmutableList<T> elems(Class<T> elemTJ) {
     assertIsIterableAs(elemTJ);
-    return (ImmutableList<T>) elemsSupplier.get();
+    @SuppressWarnings("unchecked")
+    ImmutableList<T> result = (ImmutableList<T>) elemsSupplier.get();
+    return result;
   }
 
   private <T extends InstB> void assertIsIterableAs(Class<T> clazz) {

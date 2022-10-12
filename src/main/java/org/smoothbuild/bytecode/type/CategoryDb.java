@@ -224,7 +224,7 @@ public class CategoryDb {
       case IfFuncKindB ifFunc -> readIfFuncCat(hash, rootSeq, ifFunc);
       case MapFuncKindB mapFunc -> readMapFuncCat(hash, rootSeq, mapFunc);
       case NatFuncKindB natFunc -> readFuncCat(hash, rootSeq, natFunc);
-      case OperKindB oper -> readOperCat(hash, rootSeq, oper);
+      case OperKindB<?> oper -> readOperCat(hash, rootSeq, oper);
       case TupleKindB tuple -> readTupleT(hash, rootSeq);
     };
   }
@@ -257,7 +257,7 @@ public class CategoryDb {
         "Internal error: Category with kind " + kind + " should be found in cache.");
   }
 
-  private OperCB readOperCat(Hash hash, List<Hash> rootSeq, OperKindB operKind) {
+  private OperCB readOperCat(Hash hash, List<Hash> rootSeq, OperKindB<?> operKind) {
     var evalT = readDataAsType(hash, rootSeq, operKind, operKind.dataClass());
     return newOper(operKind.constructor(), hash, evalT);
   }

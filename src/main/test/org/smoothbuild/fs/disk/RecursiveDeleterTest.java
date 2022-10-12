@@ -18,9 +18,9 @@ public class RecursiveDeleterTest {
   private File root;
 
   @BeforeEach
-  public void before() {
+  public void before() throws IOException {
     files = new ArrayList<>();
-    root = com.google.common.io.Files.createTempDir();
+    root = Files.createTempDirectory("temp").toFile();
     files.add(root);
   }
 

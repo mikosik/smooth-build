@@ -119,6 +119,7 @@ public class NListTest {
   }
 
   @Nested
+  @SuppressWarnings("deprecation")
   class _mutable_methods_throw_exception {
     @Test
     public void removeIf() {
