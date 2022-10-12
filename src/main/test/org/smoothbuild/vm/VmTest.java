@@ -145,202 +145,205 @@ public class VmTest extends TestContext {
   }
 
   @Nested
-  class _values {
-    @Test
-    public void array() {
-      assertThat(evaluate(arrayB(intB(7))))
-          .isEqualTo(arrayB(intB(7)));
-    }
-
-    @Test
-    public void blob() {
-      assertThat(evaluate(blobB(7)))
-          .isEqualTo(blobB(7));
-    }
-
-    @Test
-    public void bool() {
-      assertThat(evaluate(intB(8)))
-          .isEqualTo(intB(8));
-    }
-
-    @Test
-    public void string() {
-      assertThat(evaluate(stringB("abc")))
-          .isEqualTo(stringB("abc"));
-    }
-
-    @Test
-    public void tuple() {
-      assertThat(evaluate(tupleB(intB(7))))
-          .isEqualTo(tupleB(intB(7)));
-    }
-  }
-
-  @Nested
-  class _operators {
+  class _evaluation {
     @Nested
-    class _call {
+    class _values {
       @Test
-      public void def_func() {
-        var func = defFuncB(intB(7));
-        var call = callB(func);
-        assertThat(evaluate(call))
+      public void array() {
+        assertThat(evaluate(arrayB(intB(7))))
+            .isEqualTo(arrayB(intB(7)));
+      }
+
+      @Test
+      public void blob() {
+        assertThat(evaluate(blobB(7)))
+            .isEqualTo(blobB(7));
+      }
+
+      @Test
+      public void bool() {
+        assertThat(evaluate(intB(8)))
+            .isEqualTo(intB(8));
+      }
+
+      @Test
+      public void string() {
+        assertThat(evaluate(stringB("abc")))
+            .isEqualTo(stringB("abc"));
+      }
+
+      @Test
+      public void tuple() {
+        assertThat(evaluate(tupleB(intB(7))))
+            .isEqualTo(tupleB(intB(7)));
+      }
+    }
+
+    @Nested
+    class _operators {
+      @Nested
+      class _call {
+        @Test
+        public void def_func() {
+          var func = defFuncB(intB(7));
+          var call = callB(func);
+          assertThat(evaluate(call))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void def_func_passed_as_arg() {
+          var func = defFuncB(intB(7));
+          var paramT = func.evalT();
+          var outerFunc = defFuncB(list(paramT), callB(refB(paramT, 0)));
+          var call = callB(outerFunc, func);
+          assertThat(evaluate(call))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void def_func_returned_from_call() {
+          var func = defFuncB(intB(7));
+          var outerFunc = defFuncB(func);
+          var call = callB(callB(outerFunc));
+          assertThat(evaluate(call))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void if_func_with_true_condition() {
+          var ifFunc = ifFuncB(intTB());
+          var call = callB(ifFunc, boolB(true), intB(7), intB(0));
+          assertThat(evaluate(call))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void if_func_with_false_condition() {
+          var ifFunc = ifFuncB(intTB());
+          var call = callB(ifFunc, boolB(false), intB(7), intB(0));
+          assertThat(evaluate(call))
+              .isEqualTo(intB(0));
+        }
+
+        @Test
+        public void map_func() {
+          var s = intTB();
+          var r = tupleTB(s);
+          var func = defFuncB(funcTB(r, s), combineB(refB(s, 0)));
+          var mapFunc = mapFuncB(r, s);
+          var map = callB(mapFunc, arrayB(intB(1), intB(2)), func);
+          assertThat(evaluate(map))
+              .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
+        }
+
+        @Test
+        public void nat_func() throws Exception {
+          var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+          var call = callB(natFunc, intB(33));
+          var nativeMethodLoader = mock(NativeMethodLoader.class);
+          when(nativeMethodLoader.load(any(), eq(natFunc)))
+              .thenReturn(
+                  Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+          assertThat(evaluate(vm(nativeMethodLoader), call))
+              .isEqualTo(intB(33));
+        }
+
+        @Test
+        public void nat_func_passed_as_arg() throws NoSuchMethodException {
+          var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+          var nativeMethodLoader = mock(NativeMethodLoader.class);
+          when(nativeMethodLoader.load(any(), eq(natFunc)))
+              .thenReturn(
+                  Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+
+          var natFuncT = natFunc.evalT();
+          var outerFunc = defFuncB(list(natFuncT), callB(refB(natFuncT, 0), intB(7)));
+          var call = callB(outerFunc, natFunc);
+          assertThat(evaluate(vm(nativeMethodLoader), call))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void nat_func_returned_from_call() throws NoSuchMethodException {
+          var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+          var nativeMethodLoader = mock(NativeMethodLoader.class);
+          when(nativeMethodLoader.load(any(), eq(natFunc)))
+              .thenReturn(
+                  Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+
+          var outerFunc = defFuncB(natFunc);
+          var call = callB(callB(outerFunc), intB(7));
+          assertThat(evaluate(vm(nativeMethodLoader), call))
+              .isEqualTo(intB(7));
+        }
+      }
+
+      @Test
+      public void combine() {
+        var combine = combineB(intB(7));
+        assertThat(evaluate(combine))
+            .isEqualTo(tupleB(intB(7)));
+      }
+
+      @Test
+      public void order() {
+        var order = orderB(intB(7), intB(8));
+        assertThat(evaluate(order))
+            .isEqualTo(arrayB(intB(7), intB(8)));
+      }
+
+      @Test
+      public void pick() {
+        var tuple = arrayB(intB(10), intB(11), intB(12), intB(13));
+        var pick = pickB(tuple, intB(2));
+        assertThat(evaluate(pick))
+            .isEqualTo(intB(12));
+      }
+
+      @Test
+      public void pick_with_index_outside_of_bounds() {
+        var pick = pickB(
+            arrayB(intB(10), intB(11), intB(12), intB(13)),
+            intB(4));
+        var memoryReporter = new MemoryReporter();
+        evaluateWithFailure(vm(memoryReporter), pick, ImmutableMap.of());
+        assertThat(memoryReporter.logs())
+            .isEqualTo(logs(error("Index (4) out of bounds. Array size = 4.")));
+      }
+
+      @Test
+      public void pick_with_index_negative() {
+        var pick = pickB(
+            arrayB(intB(10), intB(11), intB(12), intB(13)),
+            intB(-1));
+        var memoryReporter = new MemoryReporter();
+        evaluateWithFailure(vm(memoryReporter), pick, ImmutableMap.of());
+        assertThat(memoryReporter.logs())
+            .isEqualTo(logs(error("Index (-1) out of bounds. Array size = 4.")));
+      }
+
+      @Test
+      public void ref() {
+        assertThat(evaluate(callB(idFuncB(), intB(7))))
             .isEqualTo(intB(7));
       }
 
       @Test
-      public void def_func_passed_as_arg() {
-        var func = defFuncB(intB(7));
-        var paramT = func.evalT();
-        var outerFunc = defFuncB(list(paramT), callB(refB(paramT, 0)));
-        var call = callB(outerFunc, func);
-        assertThat(evaluate(call))
+      public void ref_with_index_outside_of_func_param_bounds_causes_exception() {
+        var innerFuncB = defFuncB(list(), refB(intTB(), 0));
+        var outerFuncB = defFuncB(list(intTB()), callB(innerFuncB));
+        assertCall(() -> evaluate(callB(outerFuncB, intB(7))))
+            .throwsException(ArrayIndexOutOfBoundsException.class);
+      }
+
+      @Test
+      public void select() {
+        var tuple = tupleB(intB(7));
+        var select = selectB(tuple, intB(0));
+        assertThat(evaluate(select))
             .isEqualTo(intB(7));
       }
-
-      @Test
-      public void def_func_returned_from_call() {
-        var func = defFuncB(intB(7));
-        var outerFunc = defFuncB(func);
-        var call = callB(callB(outerFunc));
-        assertThat(evaluate(call))
-            .isEqualTo(intB(7));
-      }
-
-      @Test
-      public void if_func_with_true_condition() {
-        var ifFunc = ifFuncB(intTB());
-        var call = callB(ifFunc, boolB(true), intB(7), intB(0));
-        assertThat(evaluate(call))
-            .isEqualTo(intB(7));
-      }
-
-      @Test
-      public void if_func_with_false_condition() {
-        var ifFunc = ifFuncB(intTB());
-        var call = callB(ifFunc, boolB(false), intB(7), intB(0));
-        assertThat(evaluate(call))
-            .isEqualTo(intB(0));
-      }
-
-      @Test
-      public void map_func() {
-        var s = intTB();
-        var r = tupleTB(s);
-        var func = defFuncB(funcTB(r, s), combineB(refB(s, 0)));
-        var mapFunc = mapFuncB(r, s);
-        var map = callB(mapFunc, arrayB(intB(1), intB(2)), func);
-        assertThat(evaluate(map))
-            .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
-      }
-
-      @Test
-      public void nat_func() throws Exception {
-        var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-        var call = callB(natFunc, intB(33));
-        var nativeMethodLoader = mock(NativeMethodLoader.class);
-        when(nativeMethodLoader.load(any(), eq(natFunc)))
-            .thenReturn(
-                Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-        assertThat(evaluate(vm(nativeMethodLoader), call))
-            .isEqualTo(intB(33));
-      }
-
-      @Test
-      public void nat_func_passed_as_arg() throws NoSuchMethodException {
-        var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-        var nativeMethodLoader = mock(NativeMethodLoader.class);
-        when(nativeMethodLoader.load(any(), eq(natFunc)))
-            .thenReturn(
-                Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-
-        var natFuncT = natFunc.evalT();
-        var outerFunc = defFuncB(list(natFuncT), callB(refB(natFuncT, 0), intB(7)));
-        var call = callB(outerFunc, natFunc);
-        assertThat(evaluate(vm(nativeMethodLoader), call))
-            .isEqualTo(intB(7));
-      }
-
-      @Test
-      public void nat_func_returned_from_call() throws NoSuchMethodException {
-        var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-        var nativeMethodLoader = mock(NativeMethodLoader.class);
-        when(nativeMethodLoader.load(any(), eq(natFunc)))
-            .thenReturn(
-                Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-
-        var outerFunc = defFuncB(natFunc);
-        var call = callB(callB(outerFunc), intB(7));
-        assertThat(evaluate(vm(nativeMethodLoader), call))
-            .isEqualTo(intB(7));
-      }
-    }
-
-    @Test
-    public void combine() {
-      var combine = combineB(intB(7));
-      assertThat(evaluate(combine))
-          .isEqualTo(tupleB(intB(7)));
-    }
-
-    @Test
-    public void order() {
-      var order = orderB(intB(7), intB(8));
-      assertThat(evaluate(order))
-          .isEqualTo(arrayB(intB(7), intB(8)));
-    }
-
-    @Test
-    public void pick() {
-      var tuple = arrayB(intB(10), intB(11), intB(12), intB(13));
-      var pick = pickB(tuple, intB(2));
-      assertThat(evaluate(pick))
-          .isEqualTo(intB(12));
-    }
-
-    @Test
-    public void pick_with_index_outside_of_bounds() {
-      var pick = pickB(
-          arrayB(intB(10), intB(11), intB(12), intB(13)),
-          intB(4));
-      var memoryReporter = new MemoryReporter();
-      evaluateWithFailure(vm(memoryReporter), pick, ImmutableMap.of());
-      assertThat(memoryReporter.logs())
-          .isEqualTo(logs(error("Index (4) out of bounds. Array size = 4.")));
-    }
-
-    @Test
-    public void pick_with_index_negative() {
-      var pick = pickB(
-          arrayB(intB(10), intB(11), intB(12), intB(13)),
-          intB(-1));
-      var memoryReporter = new MemoryReporter();
-      evaluateWithFailure(vm(memoryReporter), pick, ImmutableMap.of());
-      assertThat(memoryReporter.logs())
-          .isEqualTo(logs(error("Index (-1) out of bounds. Array size = 4.")));
-    }
-
-    @Test
-    public void ref() {
-      assertThat(evaluate(callB(idFuncB(), intB(7))))
-          .isEqualTo(intB(7));
-    }
-
-    @Test
-    public void ref_with_index_outside_of_func_param_bounds_causes_exception() {
-      var innerFuncB = defFuncB(list(), refB(intTB(), 0));
-      var outerFuncB = defFuncB(list(intTB()), callB(innerFuncB));
-      assertCall(() -> evaluate(callB(outerFuncB, intB(7))))
-          .throwsException(ArrayIndexOutOfBoundsException.class);
-    }
-
-    @Test
-    public void select() {
-      var tuple = tupleB(intB(7));
-      var select = selectB(tuple, intB(0));
-      assertThat(evaluate(select))
-          .isEqualTo(intB(7));
     }
   }
 
