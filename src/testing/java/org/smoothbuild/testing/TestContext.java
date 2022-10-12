@@ -293,10 +293,10 @@ public class TestContext {
   }
 
   public ConsoleReporter reporter() {
-    if (this.consoleReporter == null) {
-      this.consoleReporter = new ConsoleReporter(console(), ALL, INFO);
+    if (consoleReporter == null) {
+      consoleReporter = new ConsoleReporter(console(), ALL, INFO);
     }
-    return this.consoleReporter;
+    return consoleReporter;
   }
 
   private Console console() {
