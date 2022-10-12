@@ -75,9 +75,9 @@ public class SbTranslatorTest extends TestContext {
 
           var jar = blobB(37);
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-          var converter = newTranslator(fileLoader);
+          var translator = newTranslator(fileLoader);
 
-          assertCall(() -> converter.translateExpr(natValS))
+          assertCall(() -> translator.translateExpr(natValS))
               .throwsException(new TranslateSbExc("Illegal value annotation: `@Native`."));
         }
 
@@ -91,8 +91,8 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var converter = newTranslator(fileLoader);
-          assertThat(converter.translateExpr(byteValS))
+          var translator = newTranslator(fileLoader);
+          assertThat(translator.translateExpr(byteValS))
               .isEqualTo(stringB("abc"));
         }
       }
@@ -117,8 +117,8 @@ public class SbTranslatorTest extends TestContext {
           var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          var converter = newTranslator(fileLoader);
-          assertThat(converter.translateExpr(natFuncS))
+          var translator = newTranslator(fileLoader);
+          assertThat(translator.translateExpr(natFuncS))
               .isEqualTo(natFuncB);
         }
 
@@ -134,8 +134,8 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var converter = newTranslator(fileLoader);
-          assertThat(converter.translateExpr(byteFuncS))
+          var translator = newTranslator(fileLoader);
+          assertThat(translator.translateExpr(byteFuncS))
               .isEqualTo(returnAbcFuncB());
         }
       }
@@ -213,9 +213,9 @@ public class SbTranslatorTest extends TestContext {
 
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-            var converter = newTranslator(fileLoader);
+            var translator = newTranslator(fileLoader);
             var monoizeS = monoizeS(aToIntVarMapS(), byteValS);
-            assertThat(converter.translateExpr(monoizeS))
+            assertThat(translator.translateExpr(monoizeS))
                 .isEqualTo(idFuncB());
           }
         }
@@ -261,9 +261,9 @@ public class SbTranslatorTest extends TestContext {
             var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
             var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-            var converter = newTranslator(fileLoader);
+            var translator = newTranslator(fileLoader);
             var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), natFuncS);
-            assertThat(converter.translateExpr(monoizeS))
+            assertThat(translator.translateExpr(monoizeS))
                 .isEqualTo(natFuncB);
           }
 
@@ -279,9 +279,9 @@ public class SbTranslatorTest extends TestContext {
 
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-            var converter = newTranslator(fileLoader);
+            var translator = newTranslator(fileLoader);
             var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), byteFuncS);
-            assertThat(converter.translateExpr(monoizeS))
+            assertThat(translator.translateExpr(monoizeS))
                 .isEqualTo(idFuncB());
           }
         }
@@ -497,8 +497,8 @@ public class SbTranslatorTest extends TestContext {
     }
 
     private void assertConversionIsCached(ExprS exprS) {
-      var converter = newTranslator();
-      assertConversionIsCached(exprS, converter);
+      var translator = newTranslator();
+      assertConversionIsCached(exprS, translator);
     }
 
     private void assertConversionIsCached(ExprS exprS, SbTranslator sbTranslator) {
