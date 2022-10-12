@@ -78,15 +78,9 @@ public class SbTranslator {
   private final Map<ExprB, LabeledLoc> labels;
 
   @Inject
-  public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader,
-      BytecodeLoader bytecodeLoader) {
-    this.bytecodeF = bytecodeF;
-    this.typeSbTranslator = new TypeSbTranslator(bytecodeF, ImmutableMap.of());
-    this.fileLoader = fileLoader;
-    this.bytecodeLoader = bytecodeLoader;
-    this.environment = nlist();
-    this.cache = new HashMap<>();
-    this.labels = new HashMap<>();
+  public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+    this(bytecodeF, new TypeSbTranslator(bytecodeF, ImmutableMap.of()), fileLoader, bytecodeLoader,
+        nlist(), new HashMap<>(), new HashMap<>());
   }
 
   public SbTranslator(BytecodeF bytecodeF, TypeSbTranslator typeSbTranslator, FileLoader fileLoader,
