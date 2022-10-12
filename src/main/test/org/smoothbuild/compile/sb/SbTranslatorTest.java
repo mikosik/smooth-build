@@ -31,7 +31,7 @@ public class SbTranslatorTest extends TestContext {
   @Nested
   class _translate {
     @Nested
-    class _val {
+    class _inst {
       @Test
       public void blob() {
         var blobS = blobS(37);

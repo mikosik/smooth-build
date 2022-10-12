@@ -165,7 +165,7 @@ public class SbTranslator {
     var newEnvironment = funcS.params();
     var sbTranslator = new SbTranslator(
         bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader, newEnvironment, cache, labels);
-    return sbTranslator.translateFuncImpl(funcS);
+    return translateAndCacheNal(funcS, sbTranslator::translateFuncImpl);
   }
 
   private ExprB translateFuncImpl(FuncS funcS) {
@@ -259,11 +259,11 @@ public class SbTranslator {
 
   private ExprB translateAnnVal(AnnValS annValS) {
     var annName = annValS.ann().name();
-    return switch (annName) {
-      case BYTECODE ->  fetchValBytecode(annValS);
-      default -> throw new TranslateSbExc("Illegal value annotation: " + q("@" + annName) + ".");
-    };
-  }
+    if (annName.equals(BYTECODE)) {
+      return fetchValBytecode(annValS);
+    } else {
+      throw new TranslateSbExc("Illegal value annotation: " + q("@" + annName) + ".");
+    }  }
 
   // helpers
 
