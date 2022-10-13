@@ -10,19 +10,19 @@ import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.task.Task;
 
 public class OperJob extends ExecutingJob {
-  private final BiFunction<TypeB, LabeledLoc, Task> taskCtor;
+  private final BiFunction<TypeB, LabeledLoc, Task> taskConstructor;
   private final OperB operB;
 
-  public OperJob(BiFunction<TypeB, LabeledLoc, Task> taskCtor, OperB operB,
+  public OperJob(BiFunction<TypeB, LabeledLoc, Task> taskConstructor, OperB operB,
       ExecutionContext context) {
     super(context);
-    this.taskCtor = taskCtor;
+    this.taskConstructor = taskConstructor;
     this.operB = operB;
   }
 
   @Override
   protected Promise<InstB> evaluateImpl() {
-    var task = taskCtor.apply(operB.evalT(), context().labeledLoc(operB));
+    var task = taskConstructor.apply(operB.evalT(), context().labeledLoc(operB));
     return evaluateTransitively(task, operB.dataSeq());
   }
 }
