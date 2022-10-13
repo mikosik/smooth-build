@@ -11,9 +11,9 @@ import org.smoothbuild.install.InstallationModule;
 import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;
-import org.smoothbuild.out.report.TaskMatcher;
-import org.smoothbuild.out.report.TaskMatchers;
 import org.smoothbuild.vm.VmModule;
+import org.smoothbuild.vm.report.TaskMatcher;
+import org.smoothbuild.vm.report.TaskMatchers;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -27,11 +27,11 @@ public class CreateInjector {
   public static Injector createInjector(Path projectDir, Path installationDir, PrintWriter out,
       Level logLevel, TaskMatcher taskMatcher) {
     return Guice.createInjector(PRODUCTION,
-        new VmModule(),
+        new VmModule(taskMatcher),
         new BytecodeModule(),
         new FileSystemModule(projectDir),
         new InstallationModule(installationDir),
-        new ReportModule(logLevel, taskMatcher),
+        new ReportModule(logLevel),
         new ConsoleModule(out));
   }
 

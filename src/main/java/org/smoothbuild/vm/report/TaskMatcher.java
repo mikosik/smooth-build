@@ -1,4 +1,4 @@
-package org.smoothbuild.out.report;
+package org.smoothbuild.vm.report;
 
 import java.util.List;
 

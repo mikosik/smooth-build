@@ -1,4 +1,4 @@
-package org.smoothbuild.out.report;
+package org.smoothbuild.vm.report;
 
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;

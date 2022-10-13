@@ -18,6 +18,7 @@ import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.writeAndClose;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
+import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -199,7 +200,11 @@ public class AcceptanceTestCase extends TestContext {
     protected void configure() {
       bind(MemoryReporter.class).toInstance(memoryReporter);
       bind(Reporter.class).to(MemoryReporter.class);
-      bind(TaskReporter.class).to(MemoryReporter.class);
+    }
+
+    @Provides
+    public TaskReporter provideTaskReporter(Reporter reporter) {
+      return new TaskReporter(ALL, reporter);
     }
 
     @Provides

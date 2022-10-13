@@ -1,6 +1,9 @@
-package org.smoothbuild.out.report;
+package org.smoothbuild.vm.report;
 
-import static org.smoothbuild.out.report.MatcherParser.parseMatcher;
+import static org.smoothbuild.vm.report.MatcherParser.parseMatcher;
+import static org.smoothbuild.vm.report.TaskMatchers.and;
+import static org.smoothbuild.vm.report.TaskMatchers.findMatcher;
+import static org.smoothbuild.vm.report.TaskMatchers.or;
 
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherBaseVisitor;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.AndContext;
@@ -25,12 +28,12 @@ public class MatcherCreator {
 
       @Override
       public TaskMatcher visitAnd(AndContext andContext) {
-        return TaskMatchers.and(andContext.expression(0).accept(this), andContext.expression(1).accept(this));
+        return and(andContext.expression(0).accept(this), andContext.expression(1).accept(this));
       }
 
       @Override
       public TaskMatcher visitOr(OrContext orContext) {
-        return TaskMatchers.or(orContext.expression(0).accept(this), orContext.expression(1).accept(this));
+        return or(orContext.expression(0).accept(this), orContext.expression(1).accept(this));
       }
 
       @Override
@@ -41,7 +44,7 @@ public class MatcherCreator {
       @Override
       public TaskMatcher visitMatcherName(MatcherNameContext nameContext) {
         String name = nameContext.MATCHER_NAME().getText();
-        return TaskMatchers.findMatcher(name)
+        return findMatcher(name)
             .orElseThrow(() -> new TypeConversionException("Unknown matcher '" + name + "'."));
       }
     }.visit(matcherContext);

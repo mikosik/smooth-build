@@ -9,7 +9,11 @@ public interface Reporter {
 
   public void report(Log log);
 
-  public void report(String header, List<Log> logs);
+  public default void report(String header, List<Log> logs) {
+    report(true, header, logs);
+  }
+
+  public void report(boolean visible, String header, List<Log> logs);
 
   public void printSummary();
 }

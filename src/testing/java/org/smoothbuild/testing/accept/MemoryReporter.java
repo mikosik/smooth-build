@@ -6,19 +6,12 @@ import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.vm.execute.TaskInfo;
-import org.smoothbuild.vm.execute.TaskReporter;
 
-public class MemoryReporter implements Reporter, TaskReporter {
+public class MemoryReporter implements Reporter {
   private final LogBuffer buffer = new LogBuffer();
 
   @Override
   public void startNewPhase(String name) {
-  }
-
-  @Override
-  public void report(TaskInfo taskInfo, String taskHeader, List<Log> logs) {
-    buffer.logAll(logs);
   }
 
   @Override
@@ -27,7 +20,7 @@ public class MemoryReporter implements Reporter, TaskReporter {
   }
 
   @Override
-  public void report(String taskHeader, List<Log> logs) {
+  public void report(boolean visible, String taskHeader, List<Log> logs) {
     buffer.logAll(logs);
   }
 

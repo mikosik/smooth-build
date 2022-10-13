@@ -16,8 +16,6 @@ import javax.inject.Singleton;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.vm.execute.TaskInfo;
-import org.smoothbuild.vm.execute.TaskReporter;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -25,21 +23,19 @@ import com.google.common.collect.ImmutableMap;
  * This class is thread-safe.
  */
 @Singleton
-public class ConsoleReporter implements Reporter, TaskReporter {
+public class ConsoleReporter implements Reporter {
   private static final String TASK_HEADER_PREFIX = "  ";
   private static final String MESSAGE_FIRST_LINE_PREFIX = "   + ";
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
 
   private final Console console;
-  private final TaskMatcher taskMatcher;
   private final Level logLevel;
   private final ImmutableMap<Level, AtomicInteger> counts =
       stream(Level.values()).collect(toImmutableEnumMap(v -> v, v -> new AtomicInteger()));
 
   @Inject
-  public ConsoleReporter(Console console, TaskMatcher taskMatcher, Level logLevel) {
+  public ConsoleReporter(Console console, Level logLevel) {
     this.console = console;
-    this.taskMatcher = taskMatcher;
     this.logLevel = logLevel;
   }
 
@@ -49,10 +45,10 @@ public class ConsoleReporter implements Reporter, TaskReporter {
   }
 
   @Override
-  public void report(TaskInfo taskInfo, String taskHeader, List<Log> logs) {
+  public void report(boolean visible, String header, List<Log> logs) {
     increaseCounts(logs);
-    if (taskMatcher.matches(taskInfo, logs)) {
-      reportFiltered(taskHeader, logs);
+    if (visible) {
+      reportFiltered(header, logs);
     }
   }
 
@@ -101,7 +97,7 @@ public class ConsoleReporter implements Reporter, TaskReporter {
   }
 
   // visible for testing
-  static String toText(String header, List<Log> logs) {
+  public static String toText(String header, List<Log> logs) {
     var builder = new StringBuilder(formattedHeader(header));
     for (Log log : logs) {
       builder.append(formatLog(log));

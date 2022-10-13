@@ -18,12 +18,12 @@ import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.out.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
+import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -132,6 +132,7 @@ import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.ConsoleReporter;
+import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
@@ -182,6 +183,10 @@ public class TestContext {
 
   public Vm vm(JobCreator jobCreator) {
     return new Vm(() -> executionContext(jobCreator));
+  }
+
+  public Vm vm(Reporter reporter) {
+    return vm(taskExecutor(executionReporter(new TaskReporter(ALL, reporter))));
   }
 
   public Vm vm(TaskReporter taskReporter) {
@@ -285,16 +290,20 @@ public class TestContext {
   }
 
   public ExecutionReporter executionReporter() {
-    return executionReporter(reporter());
+    return executionReporter(taskReporter());
   }
 
   public ExecutionReporter executionReporter(TaskReporter reporter) {
     return new ExecutionReporter(reporter);
   }
 
+  public TaskReporter taskReporter() {
+    return new TaskReporter(ALL, reporter());
+  }
+
   public ConsoleReporter reporter() {
     if (consoleReporter == null) {
-      consoleReporter = new ConsoleReporter(console(), ALL, INFO);
+      consoleReporter = new ConsoleReporter(console(), INFO);
     }
     return consoleReporter;
   }

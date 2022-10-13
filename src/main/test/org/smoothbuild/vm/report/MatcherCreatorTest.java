@@ -1,4 +1,4 @@
-package org.smoothbuild.out.report;
+package org.smoothbuild.vm.report;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -8,6 +8,22 @@ import static org.smoothbuild.fs.space.FilePath.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.report.TaskMatchers.ALL;
+import static org.smoothbuild.vm.report.TaskMatchers.AT_LEAST_ERROR;
+import static org.smoothbuild.vm.report.TaskMatchers.AT_LEAST_FATAL;
+import static org.smoothbuild.vm.report.TaskMatchers.AT_LEAST_INFO;
+import static org.smoothbuild.vm.report.TaskMatchers.AT_LEAST_WARNING;
+import static org.smoothbuild.vm.report.TaskMatchers.CALL;
+import static org.smoothbuild.vm.report.TaskMatchers.COMBINE;
+import static org.smoothbuild.vm.report.TaskMatchers.CONST;
+import static org.smoothbuild.vm.report.TaskMatchers.NONE;
+import static org.smoothbuild.vm.report.TaskMatchers.ORDER;
+import static org.smoothbuild.vm.report.TaskMatchers.PICK;
+import static org.smoothbuild.vm.report.TaskMatchers.PRJ;
+import static org.smoothbuild.vm.report.TaskMatchers.SELECT;
+import static org.smoothbuild.vm.report.TaskMatchers.SLIB;
+import static org.smoothbuild.vm.report.TaskMatchers.and;
+import static org.smoothbuild.vm.report.TaskMatchers.or;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,58 +93,52 @@ public class MatcherCreatorTest {
 
   public static Stream<? extends Arguments> provideArguments() {
     return Stream.of(
-        arguments("all", TaskMatchers.ALL),
-        arguments("a", TaskMatchers.ALL),
-        arguments("default", TaskMatchers.or(TaskMatchers.and(TaskMatchers.PRJ, TaskMatchers.CALL), TaskMatchers.AT_LEAST_INFO)),
-        arguments("d", TaskMatchers.or(TaskMatchers.and(TaskMatchers.PRJ, TaskMatchers.CALL), TaskMatchers.AT_LEAST_INFO)),
-        arguments("none", TaskMatchers.NONE),
-        arguments("n", TaskMatchers.NONE),
+        arguments("all", ALL),
+        arguments("a", ALL),
+        arguments("default", or(and(PRJ, CALL), AT_LEAST_INFO)),
+        arguments("d", or(and(PRJ, CALL), AT_LEAST_INFO)),
+        arguments("none", NONE),
+        arguments("n", NONE),
 
-        arguments("fatal", TaskMatchers.AT_LEAST_FATAL),
-        arguments("lf", TaskMatchers.AT_LEAST_FATAL),
-        arguments("error", TaskMatchers.AT_LEAST_ERROR),
-        arguments("le", TaskMatchers.AT_LEAST_ERROR),
-        arguments("warning", TaskMatchers.AT_LEAST_WARNING),
-        arguments("lw", TaskMatchers.AT_LEAST_WARNING),
-        arguments("info", TaskMatchers.AT_LEAST_INFO),
-        arguments("li", TaskMatchers.AT_LEAST_INFO),
+        arguments("fatal", AT_LEAST_FATAL),
+        arguments("lf", AT_LEAST_FATAL),
+        arguments("error", AT_LEAST_ERROR),
+        arguments("le", AT_LEAST_ERROR),
+        arguments("warning", AT_LEAST_WARNING),
+        arguments("lw", AT_LEAST_WARNING),
+        arguments("info", AT_LEAST_INFO),
+        arguments("li", AT_LEAST_INFO),
 
-        arguments("project", TaskMatchers.PRJ),
-        arguments("prj", TaskMatchers.PRJ),
-        arguments("slib", TaskMatchers.SLIB),
+        arguments("project", PRJ),
+        arguments("prj", PRJ),
+        arguments("slib", SLIB),
 
-        arguments("call", TaskMatchers.CALL),
-        arguments("c", TaskMatchers.CALL),
-        arguments("combine", TaskMatchers.COMBINE),
-        arguments("b", TaskMatchers.COMBINE),
-        arguments("const", TaskMatchers.CONST),
-        arguments("t", TaskMatchers.CONST),
-        arguments("order", TaskMatchers.ORDER),
-        arguments("o", TaskMatchers.ORDER),
-        arguments("pick", TaskMatchers.PICK),
-        arguments("p", TaskMatchers.PICK),
-        arguments("select", TaskMatchers.SELECT),
-        arguments("s", TaskMatchers.SELECT),
+        arguments("call", CALL),
+        arguments("c", CALL),
+        arguments("combine", COMBINE),
+        arguments("b", COMBINE),
+        arguments("const", CONST),
+        arguments("t", CONST),
+        arguments("order", ORDER),
+        arguments("o", ORDER),
+        arguments("pick", PICK),
+        arguments("p", PICK),
+        arguments("select", SELECT),
+        arguments("s", SELECT),
 
-        arguments("   project", TaskMatchers.PRJ),
-        arguments("project   ", TaskMatchers.PRJ),
-        arguments("   project   ", TaskMatchers.PRJ),
+        arguments("   project", PRJ),
+        arguments("project   ", PRJ),
+        arguments("   project   ", PRJ),
 
-        arguments("call & project", TaskMatchers.and(TaskMatchers.CALL, TaskMatchers.PRJ)),
-        arguments("call & project & warning", TaskMatchers.and(
-            TaskMatchers.CALL, TaskMatchers.and(TaskMatchers.PRJ, TaskMatchers.AT_LEAST_WARNING))),
-        arguments("call | project", TaskMatchers.or(TaskMatchers.CALL, TaskMatchers.PRJ)),
-        arguments("call | project | warning", TaskMatchers.or(
-            TaskMatchers.CALL, TaskMatchers.or(TaskMatchers.PRJ, TaskMatchers.AT_LEAST_WARNING))),
-        arguments("call & project | warning", TaskMatchers.or(
-            TaskMatchers.and(TaskMatchers.CALL, TaskMatchers.PRJ), TaskMatchers.AT_LEAST_WARNING)),
-        arguments("warning | call & project", TaskMatchers.or(
-            TaskMatchers.and(TaskMatchers.CALL, TaskMatchers.PRJ), TaskMatchers.AT_LEAST_WARNING)),
-        arguments("(call)", TaskMatchers.CALL),
-        arguments("call & (project | warning)", TaskMatchers.and(
-            TaskMatchers.CALL, TaskMatchers.or(TaskMatchers.PRJ, TaskMatchers.AT_LEAST_WARNING))),
-        arguments("(project | warning) & call", TaskMatchers.and(
-            TaskMatchers.CALL, TaskMatchers.or(TaskMatchers.PRJ, TaskMatchers.AT_LEAST_WARNING)))
+        arguments("call & project", and(CALL, PRJ)),
+        arguments("call & project & warning", and(CALL, and(PRJ, AT_LEAST_WARNING))),
+        arguments("call | project", or(CALL, PRJ)),
+        arguments("call | project | warning", or(CALL, or(PRJ, AT_LEAST_WARNING))),
+        arguments("call & project | warning", or(and(CALL, PRJ), AT_LEAST_WARNING)),
+        arguments("warning | call & project", or(and(CALL, PRJ), AT_LEAST_WARNING)),
+        arguments("(call)", CALL),
+        arguments("call & (project | warning)", and(CALL, or(PRJ, AT_LEAST_WARNING))),
+        arguments("(project | warning) & call", and(CALL, or(PRJ, AT_LEAST_WARNING)))
     );
   }
 
