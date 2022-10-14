@@ -28,8 +28,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class StringsTest {
   @Nested
-  @DisplayName("unline()")
-  class Unline {
+  class _unline {
     @Test
     public void zero_lines_gives_empty_string() {
       assertThat(unlines())
@@ -56,8 +55,7 @@ public class StringsTest {
   }
 
   @Nested
-  @DisplayName("escapedAndLimitedWithEllipsis()")
-  class EscapedAndLimitedWithEllipsis {
+  class _escaped_and_limited_with_ellipsis {
     @Test
     public void does_not_change_string_which_length_is_below_limit() {
       assertThat(escapedAndLimitedWithEllipsis("12345678", 10))
@@ -78,8 +76,7 @@ public class StringsTest {
   }
 
   @Nested
-  @DisplayName("escape()")
-  class Escape {
+  class _escape {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  ", "a", "ab", "abc", "abcd"})
     public void does_not_change(String string) {
@@ -88,7 +85,7 @@ public class StringsTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(EscapeArguments.class)
+    @ArgumentsSource(EscapeArgumentsProvider.class)
     public void escapes(String unescaped, String escaped) {
       assertThat(escaped(unescaped))
           .isEqualTo(escaped);
@@ -96,8 +93,7 @@ public class StringsTest {
   }
 
   @Nested
-  @DisplayName("unescape()")
-  class Unescape {
+  class _unescape {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  ", "a", "ab", "abc", "abcd"})
     public void does_not_change(String string) {
@@ -106,7 +102,7 @@ public class StringsTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(EscapeArguments.class)
+    @ArgumentsSource(EscapeArgumentsProvider.class)
     public void unescapes(String unescaped, String escaped) {
       assertThat(unescaped(escaped))
           .isEqualTo(unescaped);
@@ -133,7 +129,7 @@ public class StringsTest {
     }
   }
 
-  static class EscapeArguments implements ArgumentsProvider {
+  static class EscapeArgumentsProvider implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
       return createTestData(escapeMapping()).entrySet()
