@@ -299,7 +299,7 @@ public class BuildCommandTest {
             result = elem([1, 2, 3], 0);
             """;
       private static final String PICK_TASK_HEADER = """
-          @8e4e38061b0cd666b8c7adbf773a1f52cd64a6a0   unknown                        exec
+          #8e4e38061b0cd666b8c7adbf773a1f52cd64a6a0   unknown                        exec
           """;
 
       @Test

@@ -58,7 +58,7 @@ public class ExecutionContext {
 
   public LabeledLoc labeledLoc(ExprB expr) {
     return requireNonNullElseGet(labels.get(expr),
-        () -> new LabeledLocImpl("@" + expr.hash(), Loc.unknown()));
+        () -> new LabeledLocImpl("#" + expr.hash(), Loc.unknown()));
   }
 
   public ExecutionReporter reporter() {
