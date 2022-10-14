@@ -8,11 +8,11 @@ import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.execute.TaskInfo;
 
 public class ConstJob extends DummyJob {
-  private final InstB val;
+  private final InstB inst;
 
-  public ConstJob(InstB val, ExecutionContext context) {
-    super(createTaskInfo(val, context), context.reporter());
-    this.val = val;
+  public ConstJob(InstB inst, ExecutionContext context) {
+    super(createTaskInfo(inst, context), context.reporter());
+    this.inst = inst;
   }
 
   private static TaskInfo createTaskInfo(InstB val, ExecutionContext context) {
@@ -21,6 +21,6 @@ public class ConstJob extends DummyJob {
 
   @Override
   protected Promise<InstB> resultPromise() {
-    return new PromisedValue<>(val);
+    return new PromisedValue<>(inst);
   }
 }
