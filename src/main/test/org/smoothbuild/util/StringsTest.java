@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.escaped;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
+import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.Strings.unescaped;
 import static org.smoothbuild.util.Strings.unlines;
@@ -14,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -72,6 +72,21 @@ public class StringsTest {
     public void adds_ellipsis_when_quoted_string_with_specials_exceeds_limit() {
       assertThat(escapedAndLimitedWithEllipsis("12345678\n", 10))
           .isEqualTo("\"12345\"...");
+    }
+  }
+
+  @Nested
+  class _limited_with_ellipsis {
+    @Test
+    public void does_not_change_string_which_length_is_below_limit() {
+      assertThat(limitedWithEllipsis("1234567890", 10))
+          .isEqualTo("1234567890");
+    }
+
+    @Test
+    public void adds_ellipsis_when_quoted_string_exceeds_limit() {
+      assertThat(limitedWithEllipsis("12345678901", 10))
+          .isEqualTo("1234567...");
     }
   }
 

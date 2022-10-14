@@ -60,6 +60,14 @@ public class Strings {
     }
   }
 
+  public static String limitedWithEllipsis(String string, int limit) {
+    if (string.length() <= limit) {
+      return string;
+    } else {
+      return string.substring(0, limit - 3) + "...";
+    }
+  }
+
   /**
    * Escapes string so it can be used as String literal in smooth code.
    * Replaces all escaped characters according to following rules:
