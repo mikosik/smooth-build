@@ -58,7 +58,7 @@ public class InferPositionedArgs {
     for (int i = 0; i < args.size(); i++) {
       var arg = args.get(i);
       if (arg instanceof NamedArgP namedArgP) {
-        result.set(params.get().indexMap().get(namedArgP.name()), namedArgP);
+        result.set(params.get().indexOf(namedArgP.name()), namedArgP);
       } else {
         result.set(i, arg);
       }

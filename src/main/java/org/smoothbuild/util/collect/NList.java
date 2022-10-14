@@ -127,6 +127,10 @@ public class NList<T extends Nameable> extends AbstractList<T> {
     return nlist(Lists.map(list(), mapping));
   }
 
+  public int indexOf(String name) {
+    return indexMap.get().get(name);
+  }
+
   public T get(String name) {
     return map().get(name);
   }
@@ -221,9 +225,5 @@ public class NList<T extends Nameable> extends AbstractList<T> {
 
   public ImmutableMap<String, T> map() {
     return map.get();
-  }
-
-  public ImmutableMap<String, Integer> indexMap() {
-    return indexMap.get();
   }
 }

@@ -222,14 +222,14 @@ public class SbTranslator {
   }
 
   private RefB translateRef(RefS refS) {
-    var index = environment.indexMap().get(refS.paramName());
+    var index = environment.indexOf(refS.paramName());
     return bytecodeF.ref(translateT(refS.evalT()), BigInteger.valueOf(index));
   }
 
   private SelectB translateSelect(SelectS selectS) {
     var selectableB = translateExpr(selectS.selectable());
     var structTS = (StructTS) selectS.selectable().evalT();
-    var indexJ = structTS.fields().indexMap().get(selectS.field());
+    var indexJ = structTS.fields().indexOf(selectS.field());
     var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
     labels.put(indexB, selectS);
     return bytecodeF.select(selectableB, indexB);

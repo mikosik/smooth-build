@@ -8,8 +8,6 @@ import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
 
-import java.util.Map;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -105,12 +103,12 @@ public class NListTest {
     }
 
     @Test
-    public void index_map_method_doesnt_call_list_and_map_suppliers() {
+    public void index_of_method_doesnt_call_list_and_map_suppliers() {
       var nlist = new NList<>(
           this::throwException,
           this::throwException,
           () -> ImmutableMap.of("name", 1));
-      nlist.indexMap();
+      nlist.indexOf("name");
     }
 
     private <T> T throwException() {
@@ -234,19 +232,19 @@ public class NListTest {
 
 
   @Nested
-  class _index_map {
+  class _index_of {
     @Test
     public void unique_names() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.indexMap())
-          .isEqualTo(Map.of(n0.nameSane(), 0, n1.nameSane(), 1, n2.nameSane(), 2));
+      assertThat(nlist.indexOf(n0.nameSane()))
+          .isEqualTo(0);
     }
 
     @Test
     public void non_unique_names() {
       var nlist = nlistWithNonUniqueNames(list(n0, n1, n2, labeled(n0.nameSane(), "")));
-      assertThat(nlist.indexMap())
-          .isEqualTo(Map.of(n0.nameSane(), 0, n1.nameSane(), 1, n2.nameSane(), 2));
+      assertThat(nlist.indexOf(n0.nameSane()))
+          .isEqualTo(0);
     }
   }
 }
