@@ -3,7 +3,7 @@ package org.smoothbuild.vm.task;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.LabeledLoc;
+import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.vm.execute.TaskInfo;
 import org.smoothbuild.vm.execute.TaskKind;
@@ -13,13 +13,13 @@ public abstract class Task {
   private final TaskInfo info;
   private final boolean isPure;
 
-  protected Task(TypeB outputT, TaskKind kind, LabeledLoc labeledLoc) {
-    this(outputT, kind, labeledLoc, true);
+  protected Task(TypeB outputT, TaskKind kind, TagLoc tagLoc) {
+    this(outputT, kind, tagLoc, true);
   }
 
-  protected Task(TypeB outputT, TaskKind kind, LabeledLoc labeledLoc, boolean isPure) {
+  protected Task(TypeB outputT, TaskKind kind, TagLoc tagLoc, boolean isPure) {
     this.outputT = outputT;
-    this.info = new TaskInfo(kind, labeledLoc);
+    this.info = new TaskInfo(kind, tagLoc);
     this.isPure = isPure;
   }
 

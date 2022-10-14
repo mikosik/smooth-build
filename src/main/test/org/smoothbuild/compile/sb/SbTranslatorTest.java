@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.DefFuncB;
-import org.smoothbuild.compile.lang.base.LabeledLoc;
+import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
@@ -296,19 +296,19 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void blob() {
         var blobS = blobS(7, 0x37);
-        assertLabeled(blobS, labeledLoc("0x37", 7));
+        assertTagLoc(blobS, tagLoc("0x37", 7));
       }
 
       @Test
       public void int_() {
         var intS = intS(7, 37);
-        assertLabeled(intS, labeledLoc("37", 7));
+        assertTagLoc(intS, tagLoc("37", 7));
       }
 
       @Test
       public void string() {
         var stringS = stringS(7, "abc");
-        assertLabeled(stringS, labeledLoc("\"abc\"", 7));
+        assertTagLoc(stringS, tagLoc("\"abc\"", 7));
       }
 
       @Nested
@@ -316,13 +316,13 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_val() {
           var valS = defValS(3, "myValue", intS(7, 37));
-          assertLabeled(valS, labeledLoc("37", 7));
+          assertTagLoc(valS, tagLoc("37", 7));
         }
 
         @Test
         public void def_val_referencing_other_def_val() {
           var valS = defValS(5, "myValue", defValS(6, "otherValue", intS(7, 37)));
-          assertLabeled(valS, labeledLoc("37", 7));
+          assertTagLoc(valS, tagLoc("37", 7));
         }
 
         @Test
@@ -337,7 +337,7 @@ public class SbTranslatorTest extends TestContext {
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var sbTranslator = newTranslator(fileLoader);
           var exprB = sbTranslator.translateExpr(byteValS);
-          assertLabeled(sbTranslator, exprB, labeledLoc("myValue", 8));
+          assertTagLoc(sbTranslator, exprB, tagLoc("myValue", 8));
         }
       }
 
@@ -346,7 +346,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_func() {
           var funcS = defFuncS(7, "myFunc", nlist(), intS(37));
-          assertLabeled(funcS, labeledLoc("myFunc", 7));
+          assertTagLoc(funcS, tagLoc("myFunc", 7));
         }
 
         @Test
@@ -355,7 +355,7 @@ public class SbTranslatorTest extends TestContext {
           var sbTranslator = newTranslator();
           var funcB = (DefFuncB) sbTranslator.translateExpr(funcS);
           var body = funcB.body();
-          assertLabeled(sbTranslator, body, labeledLoc("37", 8));
+          assertTagLoc(sbTranslator, body, tagLoc("37", 8));
         }
 
         @Test
@@ -368,7 +368,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
           var sbTranslator = newTranslator(fileLoader);
-          assertLabeled(sbTranslator, natFuncS, labeledLoc("myFunc", 2));
+          assertTagLoc(sbTranslator, natFuncS, tagLoc("myFunc", 2));
         }
 
         @Test
@@ -384,7 +384,7 @@ public class SbTranslatorTest extends TestContext {
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var sbTranslator = newTranslator(fileLoader);
-          assertLabeled(sbTranslator, byteFuncS, labeledLoc("myFunc", 2));
+          assertTagLoc(sbTranslator, byteFuncS, tagLoc("myFunc", 2));
         }
       }
     }
@@ -395,13 +395,13 @@ public class SbTranslatorTest extends TestContext {
       public void call() {
         var defFunc = defFuncS(7, "myFunc", nlist(), stringS("abc"));
         var call = callS(8, defFunc);
-        assertLabeled(call, labeledLoc("()", 8));
+        assertTagLoc(call, tagLoc("()", 8));
       }
 
       @Test
       public void order() {
         var order = orderS(3, intTS(), intS(6), intS(7));
-        assertLabeled(order, labeledLoc("[]", 3));
+        assertTagLoc(order, tagLoc("[]", 3));
       }
 
       @Test
@@ -410,7 +410,7 @@ public class SbTranslatorTest extends TestContext {
         var sbTranslator = newTranslator();
         var funcB = (DefFuncB) sbTranslator.translateExpr(func);
         var refB = funcB.body();
-        assertLabeled(sbTranslator, refB, labeledLoc("(p)", 5));
+        assertTagLoc(sbTranslator, refB, tagLoc("(p)", 5));
       }
 
       @Test
@@ -419,7 +419,7 @@ public class SbTranslatorTest extends TestContext {
         var syntCtorS = syntCtorS(structTS);
         var callS = callS(syntCtorS, stringS("abc"));
         var selectS = selectS(4, callS, "field");
-        assertLabeled(selectS, labeledLoc(".field", 4));
+        assertTagLoc(selectS, tagLoc(".field", 4));
       }
 
       @Nested
@@ -428,14 +428,14 @@ public class SbTranslatorTest extends TestContext {
         public void def_val() {
           var emptyArrayVal = emptyArrayValS();
           var monoizeS = monoizeS(4, aToIntVarMapS(), emptyArrayVal);
-          assertLabeled(monoizeS, labeledLoc("[]", 1));
+          assertTagLoc(monoizeS, tagLoc("[]", 1));
         }
 
         @Test
         public void def_func() {
           var identity = idFuncS();
           var monoizeS = monoizeS(aToIntVarMapS(), identity);
-          assertLabeled(monoizeS, labeledLoc("myId", 1));
+          assertTagLoc(monoizeS, tagLoc("myId", 1));
         }
       }
     }
@@ -512,21 +512,19 @@ public class SbTranslatorTest extends TestContext {
         .isEqualTo(expected);
   }
 
-  private void assertLabeled(ExprS exprS, LabeledLoc expected) {
-    assertLabeled(newTranslator(), exprS, expected);
+  private void assertTagLoc(ExprS exprS, TagLoc expected) {
+    assertTagLoc(newTranslator(), exprS, expected);
   }
 
-  private static void assertLabeled(SbTranslator sbTranslator, ExprS exprS, LabeledLoc expected) {
+  private static void assertTagLoc(SbTranslator sbTranslator, ExprS exprS, TagLoc expected) {
     var exprB = sbTranslator.translateExpr(exprS);
-    assertLabeled(sbTranslator, exprB, expected);
+    assertTagLoc(sbTranslator, exprB, expected);
   }
 
-  private static void assertLabeled(SbTranslator sbTranslator, ExprB exprB, LabeledLoc expected) {
-    var actual = sbTranslator.labels().get(exprB);
-    assertThat(actual.label())
-        .isEqualTo(expected.label());
-    assertThat(actual.loc())
-        .isEqualTo(expected.loc());
+  private static void assertTagLoc(SbTranslator sbTranslator, ExprB exprB, TagLoc expected) {
+    var actual = sbTranslator.tagLocs().get(exprB);
+    assertThat(actual)
+        .isEqualTo(expected);
   }
 
   private SbTranslator newTranslator() {

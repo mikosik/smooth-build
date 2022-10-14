@@ -31,9 +31,4 @@ public record CallS(ExprS callee, ImmutableList<ExprS> args, Loc loc)
   public TypeS evalT() {
     return ((FuncTS) callee.evalT()).res();
   }
-
-  @Override
-  public String label() {
-    return "()";
-  }
 }

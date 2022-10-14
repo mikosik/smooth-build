@@ -25,7 +25,7 @@ import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.compile.lang.base.LabeledLoc;
+import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.accept.MemoryReporter;
@@ -356,9 +356,9 @@ public class VmTest extends TestContext {
     return evaluate(vm, expr, ImmutableMap.of());
   }
 
-  private InstB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, LabeledLoc> labels) {
+  private InstB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, TagLoc> tagLocs) {
     try {
-      var results = vm.evaluate(list(expr), labels).get();
+      var results = vm.evaluate(list(expr), tagLocs).get();
       assertThat(results.size())
           .isEqualTo(1);
       return results.get(0);
@@ -367,9 +367,9 @@ public class VmTest extends TestContext {
     }
   }
 
-  private void evaluateWithFailure(Vm vm, ExprB expr, ImmutableMap<ExprB, LabeledLoc> labels) {
+  private void evaluateWithFailure(Vm vm, ExprB expr, ImmutableMap<ExprB, TagLoc> tagLocs) {
     try {
-      var results = vm.evaluate(list(expr), labels);
+      var results = vm.evaluate(list(expr), tagLocs);
       assertThat(results)
           .isEqualTo(Optional.empty());
     } catch (InterruptedException e) {

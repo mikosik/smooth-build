@@ -8,12 +8,12 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.LabeledLoc;
+import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CombineTask extends Task {
-  public CombineTask(TypeB tupleT, LabeledLoc labeledLoc) {
-    super(tupleT, COMBINE, labeledLoc);
+  public CombineTask(TypeB tupleT, TagLoc tagLoc) {
+    super(tupleT, COMBINE, tagLoc);
     checkArgument(tupleT instanceof TupleTB);
   }
 

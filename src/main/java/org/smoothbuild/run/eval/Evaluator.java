@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
-import org.smoothbuild.compile.lang.base.LabeledLoc;
+import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.sb.SbTranslator;
 import org.smoothbuild.compile.sb.SbTranslatorProv;
@@ -42,13 +42,13 @@ public class Evaluator {
     }
 
     reporter.startNewPhase("Evaluating");
-    return evaluate(vm, exprsB.get(), sbTranslator.labels());
+    return evaluate(vm, exprsB.get(), sbTranslator.tagLocs());
   }
 
   private Optional<ImmutableList<InstB>> evaluate(Vm vm, ImmutableList<ExprB> exprs,
-      ImmutableMap<ExprB, LabeledLoc> labels) {
+      ImmutableMap<ExprB, TagLoc> tagLocs) {
     try {
-      return vm.evaluate(exprs, labels);
+      return vm.evaluate(exprs, tagLocs);
     } catch (InterruptedException e) {
       reporter.report(fatal("Evaluation process has been interrupted."));
       return Optional.empty();

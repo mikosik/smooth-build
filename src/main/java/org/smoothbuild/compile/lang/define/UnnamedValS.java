@@ -21,11 +21,6 @@ public final class UnnamedValS extends Tal implements EvaluableS {
   }
 
   @Override
-  public String label() {
-    return "<unnamed>";
-  }
-
-  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;

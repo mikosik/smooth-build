@@ -73,9 +73,8 @@ import org.smoothbuild.bytecode.type.oper.OrderCB;
 import org.smoothbuild.bytecode.type.oper.PickCB;
 import org.smoothbuild.bytecode.type.oper.RefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
-import org.smoothbuild.compile.lang.base.LabeledLoc;
-import org.smoothbuild.compile.lang.base.LabeledLocImpl;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
@@ -1364,15 +1363,15 @@ public class TestContext {
     return new SynchronizedFileSystem(new MemoryFileSystem());
   }
 
-  public static LabeledLoc labeledLoc() {
-    return labeledLoc("label");
+  public static TagLoc tagLoc() {
+    return tagLoc("tag");
   }
 
-  public static LabeledLoc labeledLoc(String label) {
-    return new LabeledLocImpl(label, Loc.unknown());
+  public static TagLoc tagLoc(String tag) {
+    return new TagLoc(tag, Loc.unknown());
   }
 
-  public static LabeledLoc labeledLoc(String label, int line) {
-    return new LabeledLocImpl(label, loc(line));
+  public static TagLoc tagLoc(String tag, int line) {
+    return new TagLoc(tag, loc(line));
   }
 }

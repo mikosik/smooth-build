@@ -16,7 +16,7 @@ public class ConstJob extends DummyJob {
   }
 
   private static TaskInfo createTaskInfo(InstB val, ExecutionContext context) {
-    return new TaskInfo(CONST, context.labeledLoc(val));
+    return new TaskInfo(CONST, context.tagLoc(val));
   }
 
   @Override

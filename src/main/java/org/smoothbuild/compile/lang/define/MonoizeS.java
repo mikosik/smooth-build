@@ -38,11 +38,6 @@ public final class MonoizeS extends WithLocImpl implements OperS {
   }
 
   @Override
-  public String label() {
-    return "<" + evalT + ">";
-  }
-
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

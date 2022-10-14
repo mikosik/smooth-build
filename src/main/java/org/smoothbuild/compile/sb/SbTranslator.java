@@ -3,12 +3,15 @@ package org.smoothbuild.compile.sb;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
+import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
+import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 import static org.smoothbuild.util.collect.NList.nlist;
+import static org.smoothbuild.vm.execute.TaskInfo.NAME_LENGTH_LIMIT;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -26,6 +29,7 @@ import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
@@ -33,9 +37,8 @@ import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.LabeledLoc;
-import org.smoothbuild.compile.lang.base.LabeledLocImpl;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValS;
@@ -48,6 +51,7 @@ import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
@@ -75,7 +79,7 @@ public class SbTranslator {
   private final BytecodeLoader bytecodeLoader;
   private final NList<ItemS> environment;
   private final Map<CacheKey, ExprB> cache;
-  private final Map<ExprB, LabeledLoc> labels;
+  private final Map<ExprB, TagLoc> tagLocs;
 
   @Inject
   public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
@@ -85,18 +89,18 @@ public class SbTranslator {
 
   public SbTranslator(BytecodeF bytecodeF, TypeSbTranslator typeSbTranslator, FileLoader fileLoader,
       BytecodeLoader bytecodeLoader, NList<ItemS> environment, Map<CacheKey, ExprB> cache,
-      Map<ExprB, LabeledLoc> labels) {
+      Map<ExprB, TagLoc> tagLocs) {
     this.bytecodeF = bytecodeF;
     this.typeSbTranslator = typeSbTranslator;
     this.fileLoader = fileLoader;
     this.bytecodeLoader = bytecodeLoader;
     this.environment = environment;
     this.cache = cache;
-    this.labels = labels;
+    this.tagLocs = tagLocs;
   }
 
-  public ImmutableMap<ExprB, LabeledLoc> labels() {
-    return ImmutableMap.copyOf(labels);
+  public ImmutableMap<ExprB, TagLoc> tagLocs() {
+    return ImmutableMap.copyOf(tagLocs);
   }
 
   private ImmutableList<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
@@ -121,7 +125,7 @@ public class SbTranslator {
 
   private <T extends ExprS> ExprB translateAndCacheNal(T exprS, Function<T, ExprB> translator) {
     var exprB = translator.apply(exprS);
-    labels.put(exprB, exprS);
+    saveTagLoc(exprB, exprS);
     return exprB;
   }
 
@@ -133,8 +137,7 @@ public class SbTranslator {
     var callableB = translateExpr(callS.callee());
     var argsB = translateExprs(callS.args());
     var combineB = bytecodeF.combine(argsB);
-
-    labels.put(combineB, new LabeledLocImpl("{}", callS.loc()));
+    saveTagLocForCombine(combineB, callS.loc());
     return bytecodeF.call(callableB, combineB);
   }
 
@@ -146,7 +149,7 @@ public class SbTranslator {
     var varMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(
-        bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader, environment, cache, labels);
+        bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader, environment, cache, tagLocs);
     return sbTranslator.translateExpr(monoizeS.polyEvaluable().mono());
   }
 
@@ -158,7 +161,7 @@ public class SbTranslator {
   private ExprB setEnvironmentAndTranslateFunc(FuncS funcS) {
     var newEnvironment = funcS.params();
     var sbTranslator = new SbTranslator(
-        bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader, newEnvironment, cache, labels);
+        bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader, newEnvironment, cache, tagLocs);
     return translateAndCacheNal(funcS, sbTranslator::translateFuncImpl);
   }
 
@@ -168,7 +171,7 @@ public class SbTranslator {
       case DefFuncS d -> translateDefFunc(d);
       case SyntCtorS c -> translateSyntCtor(c);
     };
-    labels.put(funcB, funcS);
+    saveTagLoc(funcB, funcS);
     return funcB;
   }
 
@@ -202,7 +205,7 @@ public class SbTranslator {
     var paramTBs = translateT(funcTS.params());
     var refsB = createRefsB(paramTBs);
     var bodyB = bytecodeF.combine(refsB);
-    labels.put(bodyB, new LabeledLocImpl("{}", syntCtorS.loc()));
+    saveTagLocForCombine(bodyB, syntCtorS.loc());
     return bytecodeF.defFunc(resTB, paramTBs, bodyB);
   }
 
@@ -231,7 +234,7 @@ public class SbTranslator {
     var structTS = (StructTS) selectS.selectable().evalT();
     var indexJ = structTS.fields().indexOf(selectS.field());
     var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
-    labels.put(indexB, selectS);
+    saveTagLoc(indexB, selectS);
     return bytecodeF.select(selectableB, indexB);
   }
 
@@ -255,7 +258,7 @@ public class SbTranslator {
     var annName = annValS.ann().name();
     if (annName.equals(BYTECODE)) {
       var exprB = fetchValBytecode(annValS);
-      labels.put(exprB, annValS);
+      saveTagLoc(exprB, annValS);
       return exprB;
     } else {
       throw new TranslateSbExc("Illegal value annotation: " + q("@" + annName) + ".");
@@ -313,6 +316,29 @@ public class SbTranslator {
 
   private ArrayTB translateT(ArrayTS arrayTS) {
     return typeSbTranslator.translate(arrayTS);
+  }
+
+  private void saveTagLocForCombine(CombineB combineB, Loc loc) {
+    tagLocs.put(combineB, new TagLoc("{}", loc));
+  }
+
+  private void saveTagLoc(ExprB exprB, ExprS exprS) {
+    tagLocs.put(exprB, new TagLoc(tagFor(exprS), exprS.loc()));
+  }
+
+  private static String tagFor(ExprS expr) {
+    return switch (expr) {
+      case BlobS blobS -> limitedWithEllipsis("0x" + blobS.byteString().hex(), NAME_LENGTH_LIMIT);
+      case CallS callS -> "()";
+      case IntS intS -> intS.bigInteger().toString();
+      case MonoizeS monoizeS -> "<" + monoizeS.evalT() + ">";
+      case NamedEvaluableS namedEvaluableS -> namedEvaluableS.name();
+      case OrderS orderS -> "[]";
+      case RefS refS -> "(" + refS.paramName() + ")";
+      case SelectS selectS -> "." + selectS.field();
+      case StringS stringS -> escapedAndLimitedWithEllipsis(stringS.string(), NAME_LENGTH_LIMIT);
+      case UnnamedValS unnamedValS -> "<unnamed>";
+    };
   }
 
   private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {
