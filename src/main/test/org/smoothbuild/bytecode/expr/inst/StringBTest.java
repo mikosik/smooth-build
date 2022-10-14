@@ -81,7 +81,7 @@ public class StringBTest extends TestContext {
     StringB str = stringB("123456789012345678901234567890");
     assertThat(str.toString())
         .isEqualTo("""
-            "1234567890123456789012345"...@""" + str.hash());
+            "12345678901234567890123456...@""" + str.hash());
   }
 
   @Test

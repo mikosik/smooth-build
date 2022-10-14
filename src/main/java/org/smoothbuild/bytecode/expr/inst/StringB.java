@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.expr.inst;
 
-import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
+import static org.smoothbuild.util.Strings.escaped;
+import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
@@ -19,6 +20,6 @@ public final class StringB extends InstB {
 
   @Override
   public String exprToString() {
-    return escapedAndLimitedWithEllipsis(toJ(), 30);
+    return limitedWithEllipsis("\"" + escaped(toJ()) + "\"", 30);
   }
 }

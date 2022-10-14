@@ -3,7 +3,6 @@ package org.smoothbuild.util;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.escaped;
-import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.Strings.unescaped;
@@ -51,27 +50,6 @@ public class StringsTest {
     public void does_not_change_new_lines() {
       assertThat(unlines("abc\n123"))
           .isEqualTo("abc\n123");
-    }
-  }
-
-  @Nested
-  class _escaped_and_limited_with_ellipsis {
-    @Test
-    public void does_not_change_string_which_length_is_below_limit() {
-      assertThat(escapedAndLimitedWithEllipsis("12345678", 10))
-          .isEqualTo("\"12345678\"");
-    }
-
-    @Test
-    public void adds_ellipsis_when_quoted_string_exceeds_limit() {
-      assertThat(escapedAndLimitedWithEllipsis("123456789", 10))
-          .isEqualTo("\"12345\"...");
-    }
-
-    @Test
-    public void adds_ellipsis_when_quoted_string_with_specials_exceeds_limit() {
-      assertThat(escapedAndLimitedWithEllipsis("12345678\n", 10))
-          .isEqualTo("\"12345\"...");
     }
   }
 

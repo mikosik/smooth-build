@@ -6,10 +6,10 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
+import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
-import static org.smoothbuild.vm.execute.TaskInfo.NAME_LENGTH_LIMIT;
 
 import java.util.List;
 
@@ -25,6 +25,7 @@ import org.smoothbuild.vm.compute.ResSource;
  * This class is thread-safe.
  */
 public class ExecutionReporter {
+  public static final int NAME_LENGTH_LIMIT = 43;
   private final TaskReporter taskReporter;
 
   @Inject
@@ -67,11 +68,11 @@ public class ExecutionReporter {
 
   // Visible for testing
   static String header(TaskInfo taskInfo, String resultSource) {
-    String tag = taskInfo.tag();
-    String loc = taskInfo.loc().toString();
-
-    String nameColumn = padEnd(tag, NAME_LENGTH_LIMIT + 1, ' ');
-    String locColumn = resultSource.isEmpty()
+    var tag = taskInfo.tag();
+    var loc = taskInfo.loc().toString();
+    var trimmedTag = limitedWithEllipsis(tag, NAME_LENGTH_LIMIT);
+    var nameColumn = padEnd(trimmedTag, NAME_LENGTH_LIMIT + 1, ' ');
+    var locColumn = resultSource.isEmpty()
         ? loc
         : padEnd(loc, 30, ' ') + " ";
     return nameColumn + locColumn + resultSource;

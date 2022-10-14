@@ -3,15 +3,13 @@ package org.smoothbuild.compile.sb;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
-import static org.smoothbuild.util.Strings.limitedWithEllipsis;
+import static org.smoothbuild.util.Strings.escaped;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 import static org.smoothbuild.util.collect.NList.nlist;
-import static org.smoothbuild.vm.execute.TaskInfo.NAME_LENGTH_LIMIT;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -326,9 +324,9 @@ public class SbTranslator {
     tagLocs.put(exprB, new TagLoc(tagFor(exprS), exprS.loc()));
   }
 
-  private static String tagFor(ExprS expr) {
+  public static String tagFor(ExprS expr) {
     return switch (expr) {
-      case BlobS blobS -> limitedWithEllipsis("0x" + blobS.byteString().hex(), NAME_LENGTH_LIMIT);
+      case BlobS blobS -> "0x" + blobS.byteString().hex();
       case CallS callS -> "()";
       case IntS intS -> intS.bigInteger().toString();
       case MonoizeS monoizeS -> "<" + monoizeS.evalT() + ">";
@@ -336,7 +334,7 @@ public class SbTranslator {
       case OrderS orderS -> "[]";
       case RefS refS -> "(" + refS.paramName() + ")";
       case SelectS selectS -> "." + selectS.field();
-      case StringS stringS -> escapedAndLimitedWithEllipsis(stringS.string(), NAME_LENGTH_LIMIT);
+      case StringS stringS -> "\"" + escaped(stringS.string()) + "\"";
       case UnnamedValS unnamedValS -> "<unnamed>";
     };
   }
