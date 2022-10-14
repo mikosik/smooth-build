@@ -1,4 +1,4 @@
-package org.smoothbuild.out.console;
+package org.smoothbuild.out.report;
 
 import static com.google.common.truth.Truth.assertThat;
 

@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import org.smoothbuild.install.BuildVersion;
 import org.smoothbuild.install.HashNode;
 import org.smoothbuild.install.InstallationHashes;
-import org.smoothbuild.out.console.Console;
+import org.smoothbuild.out.report.Console;
 
 public class VersionRunner {
   private final Console console;

@@ -1,6 +1,7 @@
 package org.smoothbuild.cli.base;
 
 import static com.google.inject.Stage.PRODUCTION;
+import static org.smoothbuild.out.log.Level.INFO;
 
 import java.io.PrintWriter;
 import java.nio.file.Path;
@@ -8,7 +9,6 @@ import java.nio.file.Path;
 import org.smoothbuild.bytecode.BytecodeModule;
 import org.smoothbuild.fs.FileSystemModule;
 import org.smoothbuild.install.InstallationModule;
-import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.vm.VmModule;
@@ -31,14 +31,13 @@ public class CreateInjector {
         new BytecodeModule(),
         new FileSystemModule(projectDir),
         new InstallationModule(installationDir),
-        new ReportModule(logLevel),
-        new ConsoleModule(out));
+        new ReportModule(out, logLevel));
   }
 
   public static Injector createInjector(Path installationDir, PrintWriter out) {
     return Guice.createInjector(PRODUCTION,
         new FileSystemModule(),
         new InstallationModule(installationDir),
-        new ConsoleModule(out));
+        new ReportModule(out, INFO));
   }
 }

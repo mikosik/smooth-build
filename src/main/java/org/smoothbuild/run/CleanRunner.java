@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
-import org.smoothbuild.out.console.Console;
+import org.smoothbuild.out.report.Console;
 
 public class CleanRunner {
   private final FileSystem fileSystem;

@@ -12,7 +12,7 @@ import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyValS;
-import org.smoothbuild.out.console.Console;
+import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 
 public class ListRunner {

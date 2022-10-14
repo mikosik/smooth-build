@@ -4,7 +4,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
-import static org.smoothbuild.out.console.Console.printErrorToWriter;
+import static org.smoothbuild.out.report.Console.printErrorToWriter;
 import static org.smoothbuild.util.io.LockFile.lockFile;
 
 import java.io.IOException;

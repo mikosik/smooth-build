@@ -1,4 +1,4 @@
-package org.smoothbuild.out.console;
+package org.smoothbuild.out.report;
 
 import java.io.PrintWriter;
 

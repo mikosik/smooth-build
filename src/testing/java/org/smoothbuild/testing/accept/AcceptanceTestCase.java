@@ -36,8 +36,8 @@ import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.fs.space.Space;
-import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.BuildRunner;
 import org.smoothbuild.testing.TestContext;
@@ -180,8 +180,7 @@ public class AcceptanceTestCase extends TestContext {
       MemoryReporter memoryReporter) {
     return Guice.createInjector(PRODUCTION,
         new TestModule(slibFileSystem, prjFileSystem, memoryReporter),
-        new BytecodeModule(),
-        new ConsoleModule(new PrintWriter(nullOutputStream(), true)));
+        new BytecodeModule());
   }
 
   public static class TestModule extends AbstractModule {
@@ -200,6 +199,7 @@ public class AcceptanceTestCase extends TestContext {
     protected void configure() {
       bind(MemoryReporter.class).toInstance(memoryReporter);
       bind(Reporter.class).to(MemoryReporter.class);
+      bind(Console.class).toInstance(new Console(new PrintWriter(nullOutputStream(), true)));
     }
 
     @Provides
