@@ -20,6 +20,7 @@ import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.execute.TaskInfo;
@@ -119,7 +120,7 @@ public class CallJob extends ExecutingJob {
     var tag = tagLoc.tag();
     var resT = natFuncB.evalT().res();
     var task = new NativeCallTask(
-        resT, tag, natFuncB, context().nativeMethodLoader(), callTaskInfo(natFuncB).tagLoc());
+        resT, tag, natFuncB, context().nativeMethodLoader(), callTagLoc(natFuncB));
     evaluateTransitively(task, args())
         .addConsumer(res);
   }
@@ -133,8 +134,12 @@ public class CallJob extends ExecutingJob {
   }
 
   private TaskInfo callTaskInfo(FuncB funcB) {
+    return new TaskInfo(CALL, callTagLoc(funcB));
+  }
+
+  private TagLoc callTagLoc(FuncB funcB) {
     var tag = context().tagLoc(funcB).tag();
-    return new TaskInfo(CALL, tag + "()", locFor(callB));
+    return new TagLoc(tag + "()", locFor(callB));
   }
 
   private Loc locFor(ExprB expr) {
