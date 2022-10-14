@@ -231,8 +231,9 @@ public class SbTranslator {
     var selectableB = translateExpr(selectS.selectable());
     var structTS = (StructTS) selectS.selectable().evalT();
     var indexJ = structTS.fields().indexOf(selectS.field());
-    var indexB = bytecodeF.int_(BigInteger.valueOf(indexJ));
-    saveTagLoc(indexB, selectS);
+    var bigInteger = BigInteger.valueOf(indexJ);
+    var indexB = bytecodeF.int_(bigInteger);
+    saveTagLocForInt(indexB, bigInteger, selectS.loc());
     return bytecodeF.select(selectableB, indexB);
   }
 
@@ -314,6 +315,10 @@ public class SbTranslator {
 
   private ArrayTB translateT(ArrayTS arrayTS) {
     return typeSbTranslator.translate(arrayTS);
+  }
+
+  private void saveTagLocForInt(IntB intB, BigInteger bigInteger, Loc loc) {
+    tagLocs.put(intB, new TagLoc(bigInteger.toString(), loc));
   }
 
   private void saveTagLocForCombine(CombineB combineB, Loc loc) {
