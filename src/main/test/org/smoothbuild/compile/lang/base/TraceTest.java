@@ -12,7 +12,7 @@ public class TraceTest {
         new Trace("otherFunction()", loc(27)));
     assertThat(trace.toString())
         .isEqualTo("""
-            myFunction() @myBuild.smooth:17
-            otherFunction() @myBuild.smooth:27""");
+            myFunction() myBuild.smooth:17
+            otherFunction() myBuild.smooth:27""");
   }
 }

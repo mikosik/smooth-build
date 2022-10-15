@@ -14,7 +14,7 @@ public record Trace(TagLoc tagLoc, Trace chain) {
 
   @Override
   public String toString() {
-    var line = tagLoc.tag() + " @" + tagLoc.loc();
+    var line = tagLoc.tag() + " " + tagLoc.loc();
     if (chain == null) {
       return line;
     } else {
