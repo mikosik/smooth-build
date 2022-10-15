@@ -118,8 +118,7 @@ public class ParallelJobExecutorTest extends TestContext {
   @Nested
   class _result_source_for_computation_of_ {
     @Test
-    public void impure_func_is_memory()
-        throws Exception {
+    public void impure_func_is_memory() throws Exception {
       context = executionContext(reporter, 2);
       var counter = new AtomicInteger();
       var job1 = job(sleepGetIncrementTask(counter, false));
@@ -141,8 +140,7 @@ public class ParallelJobExecutorTest extends TestContext {
     }
 
     @Test
-    public void pure_func_is_disk()
-        throws Exception {
+    public void pure_func_is_disk() throws Exception {
       context = executionContext(reporter, 2);
       AtomicInteger counter = new AtomicInteger();
       var job1 = job(sleepGetIncrementTask(counter));
