@@ -23,6 +23,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
+import static org.smoothbuild.vm.execute.TaskKind.CALL;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 
 import java.io.IOException;
@@ -140,6 +141,8 @@ import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
+import org.smoothbuild.vm.execute.TaskInfo;
+import org.smoothbuild.vm.execute.TaskKind;
 import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.JobCreator;
@@ -1363,15 +1366,27 @@ public class TestContext {
     return new SynchronizedFileSystem(new MemoryFileSystem());
   }
 
+  public static TaskInfo taskInfo() {
+    return taskInfo(CALL, "name", loc());
+  }
+
+  public static TaskInfo taskInfo(TaskKind kind, String tag, Loc loc) {
+    return new TaskInfo(kind, tagLoc(tag, loc));
+  }
+
   public static TagLoc tagLoc() {
     return tagLoc("tag");
   }
 
   public static TagLoc tagLoc(String tag) {
-    return new TagLoc(tag, Loc.unknown());
+    return tagLoc(tag, Loc.unknown());
   }
 
   public static TagLoc tagLoc(String tag, int line) {
-    return new TagLoc(tag, loc(line));
+    return tagLoc(tag, loc(line));
+  }
+
+  public static TagLoc tagLoc(String tag, Loc loc) {
+    return new TagLoc(tag, loc);
   }
 }

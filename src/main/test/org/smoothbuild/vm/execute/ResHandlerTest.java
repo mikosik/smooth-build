@@ -5,7 +5,6 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.vm.compute.ResSource.DISK;
-import static org.smoothbuild.vm.execute.TaskKind.CALL;
 
 import java.util.function.Consumer;
 
@@ -90,9 +89,5 @@ public class ResHandlerTest extends TestContext {
 
   private Output output(InstB val) {
     return new Output(val, arrayB(stringTB()));
-  }
-
-  private TaskInfo taskInfo() {
-    return new TaskInfo(CALL, "name", loc());
   }
 }

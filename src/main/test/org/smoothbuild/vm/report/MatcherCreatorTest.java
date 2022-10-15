@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.fs.base.PathS.path;
-import static org.smoothbuild.fs.space.FilePath.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -38,12 +37,13 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
+import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.execute.TaskInfo;
 import org.smoothbuild.vm.execute.TaskKind;
 
 import picocli.CommandLine.TypeConversionException;
 
-public class MatcherCreatorTest {
+public class MatcherCreatorTest extends TestContext {
   @ParameterizedTest
   @MethodSource("provideArguments")
   public void matcher(String expression, TaskMatcher expectedMatcher) {
@@ -88,7 +88,7 @@ public class MatcherCreatorTest {
 
   private static TaskInfo taskInfo(TaskKind kind, Space space) {
     Loc loc = new Loc(filePath(space, path("path")), 3);
-    return new TaskInfo(kind, "name", loc);
+    return taskInfo(kind, "name", loc);
   }
 
   public static Stream<? extends Arguments> provideArguments() {

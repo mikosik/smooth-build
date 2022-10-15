@@ -10,9 +10,7 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
-import static org.smoothbuild.testing.TestContext.loc;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.vm.execute.TaskKind.CALL;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 import static org.smoothbuild.vm.report.TaskMatchers.NONE;
 
@@ -27,8 +25,9 @@ import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
+import org.smoothbuild.testing.TestContext;
 
-public class TaskReporterTest {
+public class TaskReporterTest extends TestContext {
   private static final Log FATAL_LOG = fatal("fatal message");
   private static final Log ERROR_LOG = error("error message");
   private static final Log WARNING_LOG = warning("warning message");
@@ -73,9 +72,5 @@ public class TaskReporterTest {
 
   private static List<Log> logsWithAllLevels() {
     return list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG);
-  }
-
-  private static TaskInfo taskInfo() {
-    return new TaskInfo(CALL, "name", loc());
   }
 }
