@@ -8,6 +8,7 @@ import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.TagLoc;
+import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.task.NativeMethodLoader;
@@ -30,8 +31,7 @@ public class ExecutionContext {
   }
 
   public ExecutionContext(TaskExecutor taskExecutor, ExecutionReporter reporter,
-      BytecodeF bytecodeF,
-      NativeMethodLoader nativeMethodLoader, JobCreator jobCreator,
+      BytecodeF bytecodeF, NativeMethodLoader nativeMethodLoader, JobCreator jobCreator,
       ImmutableMap<ExprB, TagLoc> tagLocs) {
     this.taskExecutor = taskExecutor;
     this.reporter = reporter;
@@ -45,9 +45,9 @@ public class ExecutionContext {
     return jobCreator.jobFor(expr, this);
   }
 
-  public ExecutionContext withEnvironment(ImmutableList<Job> args) {
+  public ExecutionContext withEnvironment(ImmutableList<Job> args, Trace trace) {
     return new ExecutionContext(taskExecutor, reporter, bytecodeF, nativeMethodLoader,
-        jobCreator.withEnvironment(args), tagLocs);
+        jobCreator.withEnvironment(args, trace), tagLocs);
   }
 
   public ExecutionContext withTagLocs(ImmutableMap<ExprB, TagLoc> tagLocs) {
@@ -74,5 +74,9 @@ public class ExecutionContext {
 
   public NativeMethodLoader nativeMethodLoader() {
     return nativeMethodLoader;
+  }
+
+  public Trace trace() {
+    return jobCreator.trace();
   }
 }

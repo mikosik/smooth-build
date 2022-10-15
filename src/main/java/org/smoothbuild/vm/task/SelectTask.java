@@ -10,13 +10,14 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
+import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
 public class SelectTask extends Task {
-  public SelectTask(TypeB outputT, TagLoc tagLoc) {
-    super(outputT, SELECT, tagLoc);
+  public SelectTask(TypeB outputT, TagLoc tagLoc, Trace trace) {
+    super(outputT, SELECT, tagLoc, trace);
   }
 
   @Override

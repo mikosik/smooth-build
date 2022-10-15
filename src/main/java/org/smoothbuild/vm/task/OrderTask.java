@@ -10,11 +10,12 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
+import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.plugin.NativeApi;
 
 public class OrderTask extends Task {
-  public OrderTask(TypeB arrayT, TagLoc tagLoc) {
-    super(arrayT, ORDER, tagLoc);
+  public OrderTask(TypeB arrayT, TagLoc tagLoc, Trace trace) {
+    super(arrayT, ORDER, tagLoc, trace);
     checkArgument(arrayT instanceof ArrayTB);
   }
 

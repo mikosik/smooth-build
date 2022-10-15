@@ -53,7 +53,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_order_task_and_empty_input_is_stable() {
-    var task = new OrderTask(arrayTB(stringTB()), tagLoc());
+    var task = new OrderTask(arrayTB(stringTB()), tagLoc(), trace());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("30604c02da975812b604e4ef6c64a70ebb3f2558"));
@@ -61,7 +61,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_order_task_and_non_empty_input_is_stable() {
-    var task = new OrderTask(arrayTB(stringTB()), tagLoc());
+    var task = new OrderTask(arrayTB(stringTB()), tagLoc(), trace());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("033006f518778bb169b838591f713dec1b6569b3"));
@@ -70,7 +70,7 @@ public class ComputationHashTest extends TestContext {
   @Test
   public void hash_of_computation_with_nat_call_task_and_empty_input_is_stable() {
     var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
-    var task = new NativeCallTask(stringTB(), "name", natFuncB, null, tagLoc());
+    var task = new NativeCallTask(stringTB(), "name", natFuncB, null, tagLoc(), trace());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("768a18308c96099b14ecdead9ef4fc8cd0858d5a"));
@@ -79,7 +79,7 @@ public class ComputationHashTest extends TestContext {
   @Test
   public void hash_of_computation_with_nat_call_task_and_non_empty_input_is_stable() {
     var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
-    var task = new NativeCallTask(stringTB(), "name", natFuncB, null, tagLoc());
+    var task = new NativeCallTask(stringTB(), "name", natFuncB, null, tagLoc(), trace());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("49c8bb994eddedd9b642c9f03f3d32b5005c3fc4"));
@@ -87,7 +87,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_combine_task_and_empty_input_is_stable() {
-    var task = new CombineTask(personTB(), tagLoc());
+    var task = new CombineTask(personTB(), tagLoc(), trace());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("2113bf2108731cfc09ecb7aaee468bfb9df2dd94"));
@@ -95,7 +95,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_combine_task_and_one_elem_input_is_stable() {
-    var task = new CombineTask(personTB(), tagLoc());
+    var task = new CombineTask(personTB(), tagLoc(), trace());
     var input = tupleB(stringB("abc"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("3eed1bde59bea1a71d15bd5bd9a12fbfa8c62d36"));
@@ -103,7 +103,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_combine_task_and_two_elems_input_is_stable() {
-    var task = new CombineTask(personTB(), tagLoc());
+    var task = new CombineTask(personTB(), tagLoc(), trace());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("3c2e1f674f254bd1c1df971541ada79da8fcf3ce"));
@@ -111,14 +111,14 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_select_task_and_one_elem_input_is_stable() {
-    var task = new SelectTask(stringTB(), tagLoc());
+    var task = new SelectTask(stringTB(), tagLoc(), trace());
     var input = tupleB(stringB("abc"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("4ae0c582dfeccb5a7ed2ce0420a25197e1b070f1"));
   }
 
   private Task task(Hash hash) {
-    return new Task(intTB(), COMBINE, tagLoc()) {
+    return new Task(intTB(), COMBINE, tagLoc(), trace()) {
       @Override
       public Hash hash() {
         return hash;

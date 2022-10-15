@@ -12,6 +12,7 @@ import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
@@ -21,14 +22,16 @@ import com.google.common.collect.ImmutableList;
 
 public class JobCreator {
   private final ImmutableList<Job> environment;
+  private final Trace trace;
 
   @Inject
   public JobCreator() {
-    this(list());
+    this(list(), null);
   }
 
-  protected JobCreator(ImmutableList<Job> environment) {
+  protected JobCreator(ImmutableList<Job> environment, Trace trace) {
     this.environment = environment;
+    this.trace = trace;
   }
 
   public Job jobFor(ExprB expr, ExecutionContext context) {
@@ -46,7 +49,11 @@ public class JobCreator {
     };
   }
 
-  public JobCreator withEnvironment(ImmutableList<Job> environment) {
-    return new JobCreator(environment);
+  public JobCreator withEnvironment(ImmutableList<Job> environment, Trace trace) {
+    return new JobCreator(environment, trace);
+  }
+
+  public Trace trace() {
+    return trace;
   }
 }

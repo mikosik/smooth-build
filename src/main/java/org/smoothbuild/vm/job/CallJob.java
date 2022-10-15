@@ -21,6 +21,7 @@ import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.TagLoc;
+import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.execute.TaskInfo;
@@ -58,11 +59,18 @@ public class CallJob extends ExecutingJob {
 
   private void handleDefFunc(DefFuncB defFuncB, Consumer<InstB> resultConsumer) {
     var argsJ = map(args(), context()::jobFor);
+    var trace = trace(defFuncB);
     var bodyJob = context()
-        .withEnvironment(argsJ)
+        .withEnvironment(argsJ, trace)
         .jobFor(defFuncB.body());
     var taskInfo = callTaskInfo(defFuncB);
     evaluateInsideVirtualJob(bodyJob, taskInfo, resultConsumer);
+  }
+
+  private Trace trace(DefFuncB defFuncB) {
+    var tag = context().tagLoc(defFuncB).tag();
+    var loc = context().tagLoc(callB).loc();
+    return new Trace(tag, loc, context().trace());
   }
 
   // handling IfFunc
@@ -119,8 +127,8 @@ public class CallJob extends ExecutingJob {
     var tagLoc = context().tagLoc(natFuncB);
     var tag = tagLoc.tag();
     var resT = natFuncB.evalT().res();
-    var task = new NativeCallTask(
-        resT, tag, natFuncB, context().nativeMethodLoader(), callTagLoc(natFuncB));
+    var task = new NativeCallTask(resT, tag, natFuncB, context().nativeMethodLoader(),
+        callTagLoc(natFuncB), context().trace());
     evaluateTransitively(task, args())
         .addConsumer(res);
   }
@@ -134,7 +142,7 @@ public class CallJob extends ExecutingJob {
   }
 
   private TaskInfo callTaskInfo(FuncB funcB) {
-    return new TaskInfo(CALL, callTagLoc(funcB));
+    return new TaskInfo(CALL, callTagLoc(funcB), context().trace());
   }
 
   private TagLoc callTagLoc(FuncB funcB) {

@@ -1306,6 +1306,10 @@ public class TestContext {
     return ModPath.of(filePath);
   }
 
+  public static Trace trace() {
+    return new Trace("trace-tag", loc(17), null);
+  }
+
   public static Trace trace(String code, int line) {
     return new Trace(code, loc(line), null);
   }
@@ -1371,7 +1375,7 @@ public class TestContext {
   }
 
   public static TaskInfo taskInfo(TaskKind kind, String tag, Loc loc) {
-    return new TaskInfo(kind, tagLoc(tag, loc));
+    return new TaskInfo(kind, tagLoc(tag, loc), null);
   }
 
   public static TagLoc tagLoc() {

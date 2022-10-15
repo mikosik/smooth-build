@@ -14,6 +14,7 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
+import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NativeCallTask extends Task {
@@ -22,8 +23,8 @@ public class NativeCallTask extends Task {
   private final NativeMethodLoader nativeMethodLoader;
 
   public NativeCallTask(TypeB outputT, String name, NatFuncB natFunc,
-      NativeMethodLoader methodLoader, TagLoc tagLoc) {
-    super(outputT, CALL, tagLoc, natFunc.isPure().toJ());
+      NativeMethodLoader methodLoader, TagLoc tagLoc, Trace trace) {
+    super(outputT, CALL, tagLoc, trace, natFunc.isPure().toJ());
     this.name = name;
     this.nativeMethodLoader = methodLoader;
     this.natFuncB = natFunc;
