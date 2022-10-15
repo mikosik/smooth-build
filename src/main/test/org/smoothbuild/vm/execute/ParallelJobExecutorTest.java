@@ -295,7 +295,7 @@ public class ParallelJobExecutorTest extends TestContext {
 
   private static ImmutableList<Optional<InstB>> executeJobs(ExecutionContext context,
       ImmutableList<Job> jobs) throws InterruptedException {
-    return Vm.evaluate(context.taskExecutor(), jobs);
+    return Vm.evaluate(context, jobs);
   }
 
   private static Output toStr(NativeApi nativeApi, int i) {

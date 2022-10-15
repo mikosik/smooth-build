@@ -4,7 +4,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -13,7 +12,6 @@ import javax.inject.Provider;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 
@@ -32,14 +30,14 @@ public class Vm {
       ImmutableMap<ExprB, TagLoc> tagLocs)
       throws InterruptedException {
     var context = contextProv.get().withTagLocs(tagLocs);
-    var executor = context.taskExecutor();
     var jobs = map(exprs, context::jobFor);
-    return pullUp(evaluate(executor, jobs));
+    return pullUp(evaluate(context, jobs));
   }
 
   // Visible for testing
-  public static ImmutableList<Optional<InstB>> evaluate(TaskExecutor executor, List<Job> jobs)
-      throws InterruptedException {
+  public static ImmutableList<Optional<InstB>> evaluate(ExecutionContext context,
+      ImmutableList<Job> jobs) throws InterruptedException {
+    var executor = context.taskExecutor();
     var evaluationResults = map(jobs, Job::evaluate);
     runWhenAllAvailable(evaluationResults, executor::terminate);
     executor.awaitTermination();
