@@ -121,6 +121,7 @@ import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.compile.sb.BytecodeMethodLoader;
 import org.smoothbuild.compile.sb.SbTranslator;
+import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
@@ -253,13 +254,18 @@ public class TestContext {
     return new TaskExecutor(computer, reporter, threadCount);
   }
 
-  public SbTranslator sbTranslator(FileLoader fileLoader) {
-    return sbTranslator(fileLoader, bytecodeLoader());
+  public SbTranslatorFacade sbTranslatorFacade(
+      FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+    return new SbTranslatorFacade(sbTranslatorProv(fileLoader, bytecodeLoader));
   }
 
   public Provider<SbTranslator> sbTranslatorProv(
       FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
     return () -> sbTranslator(fileLoader, bytecodeLoader);
+  }
+
+  public SbTranslator sbTranslator(FileLoader fileLoader) {
+    return sbTranslator(fileLoader, bytecodeLoader());
   }
 
   private SbTranslator sbTranslator(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {

@@ -190,9 +190,9 @@ public class EvaluatorTest  extends TestContext {
   }
 
   private Evaluator newEvaluator() {
-    var sbConverterProv = sbTranslatorProv(fileLoader, bytecodeLoader);
+    var sbTranslatorFacade = sbTranslatorFacade(fileLoader, bytecodeLoader);
     var vm = vm(nativeMethodLoader);
-    return new Evaluator(sbConverterProv, vm, reporter());
+    return new Evaluator(sbTranslatorFacade, vm, reporter());
   }
 
   public static IntB returnInt(NativeApi nativeApi, TupleB args) {
