@@ -75,7 +75,7 @@ public class SbTranslatorTest extends TestContext {
 
           var jar = blobB(37);
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-          var translator = newTranslator(fileLoader);
+          var translator = sbTranslator(fileLoader);
 
           assertCall(() -> translator.translateExpr(natValS))
               .throwsException(new TranslateSbExc("Illegal value annotation: `@Native`."));
@@ -91,7 +91,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var translator = newTranslator(fileLoader);
+          var translator = sbTranslator(fileLoader);
           assertThat(translator.translateExpr(byteValS))
               .isEqualTo(stringB("abc"));
         }
@@ -117,7 +117,7 @@ public class SbTranslatorTest extends TestContext {
           var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          var translator = newTranslator(fileLoader);
+          var translator = sbTranslator(fileLoader);
           assertThat(translator.translateExpr(natFuncS))
               .isEqualTo(natFuncB);
         }
@@ -134,7 +134,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var translator = newTranslator(fileLoader);
+          var translator = sbTranslator(fileLoader);
           assertThat(translator.translateExpr(byteFuncS))
               .isEqualTo(returnAbcFuncB());
         }
@@ -213,7 +213,7 @@ public class SbTranslatorTest extends TestContext {
 
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-            var translator = newTranslator(fileLoader);
+            var translator = sbTranslator(fileLoader);
             var monoizeS = monoizeS(aToIntVarMapS(), byteValS);
             assertThat(translator.translateExpr(monoizeS))
                 .isEqualTo(idFuncB());
@@ -261,7 +261,7 @@ public class SbTranslatorTest extends TestContext {
             var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
             var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-            var translator = newTranslator(fileLoader);
+            var translator = sbTranslator(fileLoader);
             var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), natFuncS);
             assertThat(translator.translateExpr(monoizeS))
                 .isEqualTo(natFuncB);
@@ -279,7 +279,7 @@ public class SbTranslatorTest extends TestContext {
 
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-            var translator = newTranslator(fileLoader);
+            var translator = sbTranslator(fileLoader);
             var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), byteFuncS);
             assertThat(translator.translateExpr(monoizeS))
                 .isEqualTo(idFuncB());
@@ -335,7 +335,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var sbTranslator = newTranslator(fileLoader);
+          var sbTranslator = sbTranslator(fileLoader);
           var exprB = sbTranslator.translateExpr(byteValS);
           assertTagLoc(sbTranslator, exprB, tagLoc("myValue", 8));
         }
@@ -367,7 +367,7 @@ public class SbTranslatorTest extends TestContext {
           var natFuncS = natFuncS(2, funcTS, "myFunc", nlist(), ann);
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          var sbTranslator = newTranslator(fileLoader);
+          var sbTranslator = sbTranslator(fileLoader);
           assertTagLoc(sbTranslator, natFuncS, tagLoc("myFunc", 2));
         }
 
@@ -383,7 +383,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var sbTranslator = newTranslator(fileLoader);
+          var sbTranslator = sbTranslator(fileLoader);
           assertTagLoc(sbTranslator, byteFuncS, tagLoc("myFunc", 2));
         }
       }
@@ -458,7 +458,7 @@ public class SbTranslatorTest extends TestContext {
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertConversionIsCached(bytecodeValS, newTranslator(fileLoader));
+      assertConversionIsCached(bytecodeValS, sbTranslator(fileLoader));
     }
 
     @Test
@@ -482,7 +482,7 @@ public class SbTranslatorTest extends TestContext {
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertConversionIsCached(bytecodeFuncS, newTranslator(fileLoader));
+      assertConversionIsCached(bytecodeFuncS, sbTranslator(fileLoader));
     }
 
     @Test
@@ -531,14 +531,10 @@ public class SbTranslatorTest extends TestContext {
     try {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(any())).thenReturn(blobB(1));
-      return newTranslator(mock);
+      return sbTranslator(mock);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private SbTranslator newTranslator(FileLoader fileLoader) {
-    return sbTranslatorProv(fileLoader).get();
   }
 
   private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {

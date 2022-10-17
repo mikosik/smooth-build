@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.sb.SbTranslator;
-import org.smoothbuild.compile.sb.SbTranslatorProv;
 import org.smoothbuild.compile.sb.TranslateSbExc;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.Vm;
@@ -22,12 +22,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class Evaluator {
-  private final SbTranslatorProv sbTranslatorProv;
+  private final Provider<SbTranslator> sbTranslatorProv;
   private final Vm vm;
   private final Reporter reporter;
 
   @Inject
-  public Evaluator(SbTranslatorProv sbTranslatorProv, Vm vm, Reporter reporter) {
+  public Evaluator(Provider<SbTranslator> sbTranslatorProv, Vm vm, Reporter reporter) {
     this.sbTranslatorProv = sbTranslatorProv;
     this.vm = vm;
     this.reporter = reporter;

@@ -32,6 +32,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Provider;
+
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
@@ -118,7 +120,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.compile.sb.BytecodeMethodLoader;
-import org.smoothbuild.compile.sb.SbTranslatorProv;
+import org.smoothbuild.compile.sb.SbTranslator;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
@@ -251,12 +253,17 @@ public class TestContext {
     return new TaskExecutor(computer, reporter, threadCount);
   }
 
-  public SbTranslatorProv sbTranslatorProv(FileLoader fileLoader) {
-    return sbTranslatorProv(fileLoader, bytecodeLoader());
+  public SbTranslator sbTranslator(FileLoader fileLoader) {
+    return sbTranslator(fileLoader, bytecodeLoader());
   }
 
-  public SbTranslatorProv sbTranslatorProv(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new SbTranslatorProv(bytecodeF(), fileLoader, bytecodeLoader);
+  public Provider<SbTranslator> sbTranslatorProv(
+      FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+    return () -> sbTranslator(fileLoader, bytecodeLoader);
+  }
+
+  private SbTranslator sbTranslator(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+    return new SbTranslator(bytecodeF(), fileLoader, bytecodeLoader);
   }
 
   private BytecodeLoader bytecodeLoader() {
