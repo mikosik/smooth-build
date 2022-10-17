@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.run.FindTopEvaluables.findTopEvaluables;
+import static org.smoothbuild.run.FindTopValues.findTopValues;
 import static org.smoothbuild.util.collect.Maps.zip;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class BuildRunner {
     }
 
     var defs = defsOpt.get();
-    var evaluablesOpt = findTopEvaluables(reporter, defs, names);
+    var evaluablesOpt = findTopValues(reporter, defs, names);
     if (evaluablesOpt.isEmpty()) {
       return Optional.empty();
     }

@@ -12,8 +12,8 @@ import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
-public class FindTopEvaluables {
-  public static Optional<List<ValS>> findTopEvaluables(
+public class FindTopValues {
+  public static Optional<List<ValS>> findTopValues(
       Reporter reporter, DefsS defs, List<String> names) {
     var topEvaluables = defs.evaluables();
     var matchingTopEvaluables = new HashSet<ValS>();
