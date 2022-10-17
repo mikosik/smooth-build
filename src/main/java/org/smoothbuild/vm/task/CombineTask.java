@@ -20,7 +20,7 @@ public class CombineTask extends Task {
 
   @Override
   public Hash hash() {
-    return combineTaskHash(outputT());
+    return combineTaskHash();
   }
 
   @Override

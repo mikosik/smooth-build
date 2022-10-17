@@ -12,8 +12,8 @@ public class TaskHashes {
     return hash(0);
   }
 
-  public static Hash combineTaskHash(TypeB tupleT) {
-    return hash(1, tupleT.hash());
+  public static Hash combineTaskHash() {
+    return hash(1);
   }
 
   public static Hash nativeCallTaskHash(NatFuncB natFunc) {

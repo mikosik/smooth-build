@@ -24,10 +24,7 @@ public class TaskHashesCollisionTest extends TestContext {
   public void each_task_has_different_hash() {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
-    addHash(list, set, combineTaskHash(tupleTB()));
-    addHash(list, set, combineTaskHash(tupleTB(intTB())));
-    addHash(list, set, combineTaskHash(tupleTB(stringTB())));
-    addHash(list, set, combineTaskHash(tupleTB(intTB(), stringTB())));
+    addHash(list, set, combineTaskHash());
     addHash(list, set, nativeCallTaskHash(
         natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, nativeCallTaskHash(
