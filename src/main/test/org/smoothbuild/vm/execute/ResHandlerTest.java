@@ -15,7 +15,7 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResHandlerTest extends TestContext {
-  private ExecutionReporter reporter;
+  private TaskReporter reporter;
   private SoftTerminationExecutor executor;
   private Consumer<InstB> consumer;
   private InstB val;
@@ -23,7 +23,7 @@ public class ResHandlerTest extends TestContext {
   @BeforeEach
   @SuppressWarnings("unchecked")
   public void beforeEach() {
-    reporter = mock(ExecutionReporter.class);
+    reporter = mock(TaskReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
     val = stringB();

@@ -17,9 +17,7 @@ import static org.smoothbuild.vm.report.TaskMatchers.CONST;
 import static org.smoothbuild.vm.report.TaskMatchers.NONE;
 import static org.smoothbuild.vm.report.TaskMatchers.ORDER;
 import static org.smoothbuild.vm.report.TaskMatchers.PICK;
-import static org.smoothbuild.vm.report.TaskMatchers.PRJ;
 import static org.smoothbuild.vm.report.TaskMatchers.SELECT;
-import static org.smoothbuild.vm.report.TaskMatchers.SLIB;
 import static org.smoothbuild.vm.report.TaskMatchers.and;
 import static org.smoothbuild.vm.report.TaskMatchers.or;
 
@@ -50,7 +48,7 @@ public class MatcherCreatorTest extends TestContext {
     for (TaskKind kind : TaskKind.values()) {
       for (Space space : Space.values()) {
         for (Level level : levels()) {
-          var task = task(kind, loc(space));
+          var task = task(kind);
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
           boolean actual = matcher.matches(task, logs);
           boolean expected = expectedMatcher.matches(task, logs);
@@ -83,12 +81,12 @@ public class MatcherCreatorTest extends TestContext {
     return levels;
   }
 
-  public static Stream<? extends Arguments> provideArguments() {
+  public static Stream<Arguments> provideArguments() {
     return Stream.of(
         arguments("all", ALL),
         arguments("a", ALL),
-        arguments("default", or(and(PRJ, CALL), AT_LEAST_INFO)),
-        arguments("d", or(and(PRJ, CALL), AT_LEAST_INFO)),
+        arguments("default", or(CALL, AT_LEAST_INFO)),
+        arguments("d", or(CALL, AT_LEAST_INFO)),
         arguments("none", NONE),
         arguments("n", NONE),
 
@@ -100,10 +98,6 @@ public class MatcherCreatorTest extends TestContext {
         arguments("lw", AT_LEAST_WARNING),
         arguments("info", AT_LEAST_INFO),
         arguments("li", AT_LEAST_INFO),
-
-        arguments("project", PRJ),
-        arguments("prj", PRJ),
-        arguments("slib", SLIB),
 
         arguments("call", CALL),
         arguments("c", CALL),
@@ -118,19 +112,18 @@ public class MatcherCreatorTest extends TestContext {
         arguments("select", SELECT),
         arguments("s", SELECT),
 
-        arguments("   project", PRJ),
-        arguments("project   ", PRJ),
-        arguments("   project   ", PRJ),
+        arguments("   order", ORDER),
+        arguments("order   ", ORDER),
+        arguments("   order   ", ORDER),
 
-        arguments("call & project", and(CALL, PRJ)),
-        arguments("call & project & warning", and(CALL, and(PRJ, AT_LEAST_WARNING))),
-        arguments("call | project", or(CALL, PRJ)),
-        arguments("call | project | warning", or(CALL, or(PRJ, AT_LEAST_WARNING))),
-        arguments("call & project | warning", or(and(CALL, PRJ), AT_LEAST_WARNING)),
-        arguments("warning | call & project", or(and(CALL, PRJ), AT_LEAST_WARNING)),
+        arguments("call & error", and(CALL, AT_LEAST_ERROR)),
+        arguments("call | error", or(CALL, AT_LEAST_ERROR)),
+        arguments("call | select | warning", or(CALL, or(SELECT, AT_LEAST_WARNING))),
+        arguments("call & error | select", or(and(CALL, AT_LEAST_ERROR), SELECT)),
+        arguments("select | call & warning", or(and(CALL, AT_LEAST_WARNING), SELECT)),
         arguments("(call)", CALL),
-        arguments("call & (project | warning)", and(CALL, or(PRJ, AT_LEAST_WARNING))),
-        arguments("(project | warning) & call", and(CALL, or(PRJ, AT_LEAST_WARNING)))
+        arguments("call & (select | warning)", and(CALL, or(SELECT, AT_LEAST_WARNING))),
+        arguments("(select | warning) & call", and(CALL, or(SELECT, AT_LEAST_WARNING)))
     );
   }
 

@@ -9,11 +9,11 @@ import org.smoothbuild.vm.task.Task;
 
 public class ResHandler implements Consumer<ComputationResult> {
   private final SoftTerminationExecutor executor;
-  private final ExecutionReporter reporter;
+  private final TaskReporter reporter;
   private final Consumer<InstB> consumer;
   private final Task task;
 
-  public ResHandler(Task task, SoftTerminationExecutor executor, ExecutionReporter reporter,
+  public ResHandler(Task task, SoftTerminationExecutor executor, TaskReporter reporter,
       Consumer<InstB> consumer) {
     this.task = task;
     this.executor = executor;

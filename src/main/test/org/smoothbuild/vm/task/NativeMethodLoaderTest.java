@@ -62,8 +62,8 @@ public class NativeMethodLoaderTest extends TestContext {
 
   private void assertLoadingCausesError(Class<?> clazz, String message) throws IOException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
-    assertThat(nativeMethodLoader.load("name", natFuncB(clazz)))
-        .isEqualTo(loadingError("name", clazz, message));
+    assertThat(nativeMethodLoader.load(natFuncB(clazz)))
+        .isEqualTo(loadingError(clazz, message));
   }
 
   private String wrongReturnTypeErrorMessage() {
@@ -81,8 +81,8 @@ public class NativeMethodLoaderTest extends TestContext {
         new JarClassLoaderProv(bytecodeF(), getSystemClassLoader())));
   }
 
-  private Try<Object> loadingError(String name, Class<?> clazz, String message) {
-    return Try.error("Error loading native implementation for `" + name + "` specified as `"
+  private Try<Object> loadingError(Class<?> clazz, String message) {
+    return Try.error("Error loading native implementation specified as `"
         + clazz.getCanonicalName() + "`: " + message);
   }
 
@@ -100,7 +100,7 @@ public class NativeMethodLoaderTest extends TestContext {
       var method = NonPublicMethod.class.getDeclaredMethod(
           NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
       testCaching(method, Try.error("xx"), Try.error(
-          "Error loading native implementation for `smoothName` specified as `binary.name`: xx"));
+          "Error loading native implementation specified as `binary.name`: xx"));
     }
 
     private void testCaching(Method method, Try<Method> tryMethod, Try<Method> expected) {
@@ -114,8 +114,8 @@ public class NativeMethodLoaderTest extends TestContext {
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
       var natFuncB = natFuncB(funcTB(stringTB()), jar, stringB(classBinaryName));
-      var resultMethod1 = nativeMethodLoader.load("smoothName", natFuncB);
-      var resultMethod2 = nativeMethodLoader.load("smoothName", natFuncB);
+      var resultMethod1 = nativeMethodLoader.load(natFuncB);
+      var resultMethod2 = nativeMethodLoader.load(natFuncB);
       assertThat(resultMethod1)
           .isEqualTo(expected);
       assertThat(resultMethod1)

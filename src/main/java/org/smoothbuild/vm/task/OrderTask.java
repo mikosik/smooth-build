@@ -1,20 +1,17 @@
 package org.smoothbuild.vm.task;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.execute.TaskKind.ORDER;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.execute.TraceB;
 
 public final class OrderTask extends Task {
-  public OrderTask(TypeB arrayT, TagLoc tagLoc, TraceS trace) {
-    super(arrayT, ORDER, tagLoc, trace);
-    checkArgument(arrayT instanceof ArrayTB);
+  public OrderTask(OrderB orderB, TraceB trace) {
+    super(orderB, ORDER, trace);
   }
 
   @Override

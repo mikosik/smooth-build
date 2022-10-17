@@ -21,6 +21,7 @@ public class VmModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(TaskMatcher.class).toInstance(taskMatcher);
+    bind(VmFactory.class).to(VmFactoryImpl.class);
   }
 
   @Provides

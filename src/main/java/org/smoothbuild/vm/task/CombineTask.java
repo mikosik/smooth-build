@@ -1,19 +1,15 @@
 package org.smoothbuild.vm.task;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.execute.TaskKind.COMBINE;
 
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.type.inst.TupleTB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
+import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.execute.TraceB;
 
 public final class CombineTask extends Task {
-  public CombineTask(TypeB tupleT, TagLoc tagLoc, TraceS trace) {
-    super(tupleT, COMBINE, tagLoc, trace);
-    checkArgument(tupleT instanceof TupleTB);
+  public CombineTask(CombineB combineB, TraceB trace) {
+    super(combineB, COMBINE, trace);
   }
 
   @Override

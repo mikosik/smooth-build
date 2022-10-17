@@ -83,7 +83,7 @@ public class EvaluatorTest  extends TestContext {
         var jarB = blobB(137);
         when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
             .thenReturn(jarB);
-        when(nativeMethodLoader.load(any(), any()))
+        when(nativeMethodLoader.load(any()))
             .thenReturn(Try.result(
                 EvaluatorTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
         assertThat(evaluate(callS))
@@ -98,7 +98,7 @@ public class EvaluatorTest  extends TestContext {
         var jarB = blobB(137);
         when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
             .thenReturn(jarB);
-        when(nativeMethodLoader.load(any(), any()))
+        when(nativeMethodLoader.load(any()))
             .thenReturn(Try.result(
                 EvaluatorTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
         assertThat(evaluate(callS))
@@ -192,7 +192,7 @@ public class EvaluatorTest  extends TestContext {
   private Evaluator newEvaluator() {
     var sbTranslatorFacade = sbTranslatorFacade(fileLoader, bytecodeLoader);
     var vm = vm(nativeMethodLoader);
-    return new Evaluator(sbTranslatorFacade, vm, reporter());
+    return new Evaluator(sbTranslatorFacade, (bsMapping) -> vm, reporter());
   }
 
   public static IntB returnInt(NativeApi nativeApi, TupleB args) {

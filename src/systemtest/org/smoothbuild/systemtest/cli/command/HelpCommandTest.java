@@ -66,7 +66,7 @@ public class HelpCommandTest extends SystemTestCase {
                                     Filter is a boolean expression made up of matchers
                                       (listed below), boolean operators '&', '|',
                                       grouping brackets '(', ')'.
-                                    Default value is 'info|(user&call)'
+                                    Default value is 'info|call'
                    
                                     For each matched tasks its name and properties are
                                       printed together with logs that match filter
@@ -80,8 +80,7 @@ public class HelpCommandTest extends SystemTestCase {
                    
                                     Available task matchers:
                                       a, all             - all tasks
-                                      d, default         - shortcut for 'info|
-                                      (user&call)'
+                                      d, default         - shortcut for 'info|call'
                                       n, none            - no tasks
                    
                                       lf, fatal          - contains a log with fatal
@@ -91,11 +90,6 @@ public class HelpCommandTest extends SystemTestCase {
                                       lw, warning        - contains a log with at least
                                       warning level
                                       li, info           - contains any log
-                   
-                                      prj, project       - evaluates expression from
-                                      project module
-                                      slib               - evaluates expression from
-                                      smooth standard library
                    
                                       c, call            - evaluates function call
                                       b, combine         - evaluates tuple creation

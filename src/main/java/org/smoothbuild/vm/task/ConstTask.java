@@ -6,25 +6,21 @@ import static org.smoothbuild.vm.task.Purity.FAST;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.execute.TraceB;
 
 public final class ConstTask extends Task {
-  private final InstB instB;
-
-  public ConstTask(InstB instB, TagLoc tagLoc, TraceS trace) {
-    super(instB.type(), CONST, tagLoc, trace, FAST);
-    this.instB = instB;
+  public ConstTask(InstB instB, TraceB trace) {
+    super(instB, CONST, trace, FAST);
   }
 
   public InstB instB() {
-    return instB;
+    return (InstB) exprB();
   }
 
   @Override
   public Output run(TupleB input, Container container) {
     checkArgument(input.items().size() == 0);
-    return new Output(instB, container.messages());
+    return new Output(instB(), container.messages());
   }
 }

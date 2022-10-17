@@ -12,7 +12,6 @@ public class TaskHashes {
     return switch (task) {
       case CombineTask combineTask -> combineHash();
       case ConstTask constTask -> constHash(constTask.instB());
-      case IdentityTask identityTask -> identityHash();
       case NativeCallTask nativeCallTask -> nativeCallHash(nativeCallTask.natFunc());
       case OrderTask orderTask -> orderHash(orderTask.outputT());
       case PickTask pickTask -> pickHash();
@@ -42,10 +41,6 @@ public class TaskHashes {
 
   private static Hash constHash(InstB instB) {
     return hash(5, instB.hash());
-  }
-
-  private static Hash identityHash() {
-    return hash(6);
   }
 
   private static Hash hash(int id, Hash hash) {

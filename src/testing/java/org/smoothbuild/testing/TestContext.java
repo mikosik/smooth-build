@@ -119,6 +119,7 @@ import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
+import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.compile.sb.BytecodeMethodLoader;
 import org.smoothbuild.compile.sb.SbTranslator;
@@ -146,10 +147,10 @@ import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.compute.ResultSource;
-import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.execute.TaskKind;
 import org.smoothbuild.vm.execute.TaskReporter;
+import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.task.CombineTask;
@@ -193,11 +194,11 @@ public class TestContext {
   }
 
   public Vm vm(Reporter reporter) {
-    return vm(taskExecutor(executionReporter(new TaskReporter(ALL, reporter))));
+    return vm(taskExecutor(reporter));
   }
 
   public Vm vm(TaskReporter taskReporter) {
-    return vm(taskExecutor(executionReporter(taskReporter)));
+    return vm(taskExecutor(taskReporter((Reporter) taskReporter)));
   }
 
   public Vm vm(TaskExecutor taskExecutor) {
@@ -216,46 +217,56 @@ public class TestContext {
     return executionContext(taskExecutor, nativeMethodLoader());
   }
 
-  public NativeMethodLoader nativeMethodLoader() {
-    return new NativeMethodLoader(methodLoader());
-  }
-
   public ExecutionContext executionContext(TaskExecutor taskExecutor,
       NativeMethodLoader nativeMethodLoader) {
-    return new ExecutionContext(
-        taskExecutor, executionReporter(), bytecodeF(), nativeMethodLoader, new JobCreator());
+    return new ExecutionContext(taskExecutor, bytecodeF(), nativeMethodLoader, new JobCreator());
   }
 
-  public ExecutionContext executionContext(ExecutionReporter reporter, int threadCount) {
+  public ExecutionContext executionContext(int threadCount) {
+    return executionContext(computer(), reporter(), threadCount);
+  }
+
+  public ExecutionContext executionContext(TaskReporter reporter, int threadCount) {
     return executionContext(computer(), reporter, threadCount);
   }
 
   public ExecutionContext executionContext(
-      Computer computer, ExecutionReporter reporter, int threadCount) {
-    return executionContext(reporter, taskExecutor(computer, reporter, threadCount));
+      Computer computer, TaskReporter reporter, int threadCount) {
+    return executionContext(taskExecutor(computer, reporter, threadCount));
   }
 
-  public ExecutionContext executionContext(ExecutionReporter reporter, TaskExecutor taskExecutor) {
-    return new ExecutionContext(
-        taskExecutor, reporter, bytecodeF(), nativeMethodLoader(), new JobCreator());
+  public ExecutionContext executionContext(
+      Computer computer, Reporter reporter, int threadCount) {
+    return executionContext(taskExecutor(computer, reporter, threadCount));
   }
 
   public ExecutionContext executionContext(JobCreator jobCreator) {
-    return new ExecutionContext(
-        taskExecutor(), executionReporter(), bytecodeF(), nativeMethodLoader(), jobCreator);
+    return new ExecutionContext(taskExecutor(), bytecodeF(), nativeMethodLoader(), jobCreator);
+  }
+
+  public NativeMethodLoader nativeMethodLoader() {
+    return new NativeMethodLoader(methodLoader());
   }
 
   public TaskExecutor taskExecutor() {
-    return taskExecutor(executionReporter());
+    return taskExecutor(taskReporter());
   }
 
-  public TaskExecutor taskExecutor(ExecutionReporter reporter) {
-    return new TaskExecutor(computer(), reporter);
+  public TaskExecutor taskExecutor(TaskReporter taskReporter) {
+    return new TaskExecutor(computer(), reporter(), taskReporter);
   }
 
-  private TaskExecutor taskExecutor(
-      Computer computer, ExecutionReporter reporter, int threadCount) {
-    return new TaskExecutor(computer, reporter, threadCount);
+  public TaskExecutor taskExecutor(
+      Computer computer, TaskReporter taskReporter, int threadCount) {
+    return new TaskExecutor(computer, reporter(), taskReporter, threadCount);
+  }
+
+  public TaskExecutor taskExecutor(Reporter reporter) {
+    return new TaskExecutor(computer(), reporter, taskReporter(reporter));
+  }
+
+  public TaskExecutor taskExecutor(Computer computer, Reporter reporter, int threadCount) {
+    return new TaskExecutor(computer, reporter, taskReporter(reporter), threadCount);
   }
 
   public SbTranslatorFacade sbTranslatorFacade(
@@ -296,16 +307,12 @@ public class TestContext {
     return new TestingModLoader(code);
   }
 
-  public ExecutionReporter executionReporter() {
-    return executionReporter(taskReporter());
-  }
-
-  public ExecutionReporter executionReporter(TaskReporter reporter) {
-    return new ExecutionReporter(reporter);
-  }
-
   public TaskReporter taskReporter() {
-    return new TaskReporter(ALL, reporter());
+    return taskReporter(reporter());
+  }
+
+  public TaskReporter taskReporter(Reporter reporter) {
+    return new TaskReporter(ALL, reporter, new BsMapping());
   }
 
   public ConsoleReporter reporter() {
@@ -724,16 +731,32 @@ public class TestContext {
     return arrayB(bytecodeF().messageT());
   }
 
+  public TupleB fatalMessage() {
+    return fatalMessage("fatal message");
+  }
+
   public TupleB fatalMessage(String text) {
     return bytecodeF().fatalMessage(text);
+  }
+
+  public TupleB errorMessage() {
+    return errorMessage("error message");
   }
 
   public TupleB errorMessage(String text) {
     return bytecodeF().errorMessage(text);
   }
 
+  public TupleB warningMessage() {
+    return warningMessage("warning message");
+  }
+
   public TupleB warningMessage(String text) {
     return bytecodeF().warningMessage(text);
+  }
+
+  public TupleB infoMessage() {
+    return infoMessage("info message");
   }
 
   public TupleB infoMessage(String text) {
@@ -741,6 +764,10 @@ public class TestContext {
   }
 
   // OperB-s
+
+  public CallB callB() {
+    return callB(idFuncB(), intB());
+  }
 
   public CallB callB(ExprB func, ExprB... args) {
     return callBImpl(func, combineB(args));
@@ -762,6 +789,10 @@ public class TestContext {
     return bytecodeDb().mapFunc(r, s);
   }
 
+  public OrderB orderB() {
+    return orderB(intTB());
+  }
+
   public OrderB orderB(ExprB... elems) {
     return orderB(elems[0].evalT(), elems);
   }
@@ -769,6 +800,10 @@ public class TestContext {
   public OrderB orderB(TypeB elemT, ExprB... elems) {
     var elemList = list(elems);
     return bytecodeDb().order(arrayTB(elemT), elemList);
+  }
+
+  public PickB pickB() {
+    return pickB(arrayB(intB()), intB(0));
   }
 
   public PickB pickB(ExprB array, ExprB index) {
@@ -783,8 +818,16 @@ public class TestContext {
     return bytecodeDb().ref(evalT, BigInteger.valueOf(index));
   }
 
+  public SelectB selectB() {
+    return bytecodeDb().select(tupleB(intB()), intB(0));
+  }
+
   public SelectB selectB(ExprB tuple, IntB index) {
     return bytecodeDb().select(tuple, index);
+  }
+
+  public static TraceB traceB() {
+    return new TraceB(Hash.of(7), Hash.of(9));
   }
 
   // ValS types
@@ -1371,18 +1414,17 @@ public class TestContext {
   }
 
   public Task task() {
-    return task(ORDER, loc());
+    return task(ORDER);
   }
 
-  public Task task(TaskKind kind, Loc loc) {
-    TagLoc tagLoc = tagLoc("name", loc);
+  public Task task(TaskKind kind) {
     return switch (kind) {
-      case CALL -> new NativeCallTask(intTB(), "name", natFuncB(), null, tagLoc, traceS());
-      case COMBINE -> new CombineTask(tupleTB(), tagLoc, traceS());
-      case CONST -> new ConstTask(intB(7), tagLoc, traceS());
-      case ORDER -> new OrderTask(arrayTB(intTB()), tagLoc, traceS());
-      case PICK -> new PickTask(intTB(), tagLoc, traceS());
-      case SELECT -> new SelectTask(intTB(), tagLoc, traceS());
+      case CALL -> new NativeCallTask(callB(), natFuncB(), null, traceB());
+      case COMBINE -> new CombineTask(combineB(), traceB());
+      case CONST -> new ConstTask(intB(7), traceB());
+      case ORDER -> new OrderTask(orderB(), traceB());
+      case PICK -> new PickTask(pickB(), traceB());
+      case SELECT -> new SelectTask(selectB(), traceB());
     };
   }
 
@@ -1399,7 +1441,11 @@ public class TestContext {
   }
 
   public Output output(InstB instB) {
-    return new Output(instB, messageArrayEmpty());
+    return output(instB, messageArrayEmpty());
+  }
+
+  public Output output(InstB instB, ArrayB messages) {
+    return new Output(instB, messages);
   }
 
   public static TagLoc tagLoc() {

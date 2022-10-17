@@ -7,16 +7,15 @@ import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
+import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.execute.TraceB;
 
 import com.google.common.collect.ImmutableList;
 
 public final class PickTask extends Task {
-  public PickTask(TypeB outputT, TagLoc tagLoc, TraceS trace) {
-    super(outputT, PICK, tagLoc, trace);
+  public PickTask(PickB pickB, TraceB trace) {
+    super(pickB, PICK, trace);
   }
 
   @Override

@@ -12,19 +12,20 @@ import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.compile.sb.TranslateSbExc;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.vm.Vm;
+import org.smoothbuild.vm.VmFactory;
 
 import com.google.common.collect.ImmutableList;
 
 public class Evaluator {
   private final SbTranslatorFacade sbTranslatorFacade;
-  private final Vm vm;
+  private final VmFactory vmFactory;
   private final Reporter reporter;
 
   @Inject
-  public Evaluator(SbTranslatorFacade sbTranslatorFacade, Vm vm, Reporter reporter) {
+  public Evaluator(SbTranslatorFacade sbTranslatorFacade, VmFactory vmFactory,
+      Reporter reporter) {
     this.sbTranslatorFacade = sbTranslatorFacade;
-    this.vm = vm;
+    this.vmFactory = vmFactory;
     this.reporter = reporter;
   }
 
@@ -33,7 +34,8 @@ public class Evaluator {
       reporter.startNewPhase("Compiling");
       var sbTranslation = sbTranslatorFacade.translate(vals);
       reporter.startNewPhase("Evaluating");
-      return vm.evaluate(sbTranslation.exprBs(), sbTranslation.tagLocs());
+      var vm = vmFactory.newVm(sbTranslation.bsMapping());
+      return vm.evaluate(sbTranslation.exprBs());
     } catch (TranslateSbExc e) {
       reporter.report(fatal(e.getMessage()));
       return Optional.empty();

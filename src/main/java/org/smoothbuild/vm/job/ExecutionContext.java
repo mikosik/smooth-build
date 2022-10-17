@@ -1,67 +1,37 @@
 package org.smoothbuild.vm.job;
 
-import static java.util.Objects.requireNonNullElseGet;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
+import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class ExecutionContext {
   private final TaskExecutor taskExecutor;
-  private final ExecutionReporter reporter;
   private final BytecodeF bytecodeF;
   private final NativeMethodLoader nativeMethodLoader;
   private final JobCreator jobCreator;
-  private final ImmutableMap<ExprB, TagLoc> tagLocs;
 
   @Inject
-  public ExecutionContext(TaskExecutor taskExecutor, ExecutionReporter reporter,
-      BytecodeF bytecodeF, NativeMethodLoader nativeMethodLoader, JobCreator jobCreator) {
-    this(taskExecutor, reporter, bytecodeF, nativeMethodLoader, jobCreator, ImmutableMap.of());
-  }
-
-  public ExecutionContext(TaskExecutor taskExecutor, ExecutionReporter reporter,
-      BytecodeF bytecodeF, NativeMethodLoader nativeMethodLoader, JobCreator jobCreator,
-      ImmutableMap<ExprB, TagLoc> tagLocs) {
+  public ExecutionContext(TaskExecutor taskExecutor, BytecodeF bytecodeF,
+      NativeMethodLoader nativeMethodLoader, JobCreator jobCreator) {
     this.taskExecutor = taskExecutor;
-    this.reporter = reporter;
     this.bytecodeF = bytecodeF;
     this.nativeMethodLoader = nativeMethodLoader;
     this.jobCreator = jobCreator;
-    this.tagLocs = tagLocs;
   }
 
   public Job jobFor(ExprB expr) {
     return jobCreator.jobFor(expr, this);
   }
 
-  public ExecutionContext withEnvironment(ImmutableList<Job> args, TraceS trace) {
-    return new ExecutionContext(taskExecutor, reporter, bytecodeF, nativeMethodLoader,
-        jobCreator.withEnvironment(args, trace), tagLocs);
-  }
-
-  public ExecutionContext withTagLocs(ImmutableMap<ExprB, TagLoc> tagLocs) {
-    return new ExecutionContext(
-        taskExecutor, reporter, bytecodeF, nativeMethodLoader, jobCreator, tagLocs);
-  }
-
-  public TagLoc tagLoc(ExprB expr) {
-    return requireNonNullElseGet(tagLocs.get(expr),
-        () -> new TagLoc("#" + expr.hash(), Loc.unknown()));
-  }
-
-  public ExecutionReporter reporter() {
-    return reporter;
+  public ExecutionContext withEnvironment(ImmutableList<Job> args, TraceB trace) {
+    return new ExecutionContext(taskExecutor, bytecodeF, nativeMethodLoader,
+        jobCreator.withEnvironment(args, trace));
   }
 
   public TaskExecutor taskExecutor() {
@@ -76,7 +46,7 @@ public class ExecutionContext {
     return nativeMethodLoader;
   }
 
-  public TraceS trace() {
+  public TraceB trace() {
     return jobCreator.trace();
   }
 }

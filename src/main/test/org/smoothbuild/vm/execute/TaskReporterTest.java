@@ -11,6 +11,7 @@ import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 import static org.smoothbuild.vm.report.TaskMatchers.NONE;
 
@@ -21,11 +22,14 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.bytecode.expr.inst.ArrayB;
+import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.compute.ComputationResult;
 
 public class TaskReporterTest extends TestContext {
   private static final Log FATAL_LOG = fatal("fatal message");
@@ -41,10 +45,11 @@ public class TaskReporterTest extends TestContext {
   public void when_filter_matches_then_logs_which_passes_threshold_are_logged(
       Level level, List<Log> loggedLogs) {
     var reporter = new ConsoleReporter(console, level);
-    var taskReporter = new TaskReporter(ALL, reporter);
-    taskReporter.report(task(), "header", logsWithAllLevels());
+    var taskReporter = new TaskReporter(ALL, reporter, new BsMapping());
+    taskReporter.report(task(), computationWithAllLogLevels());
+    var header = "[]                                          unknown                        exec";
     assertThat(outputStream.toString())
-        .contains(ConsoleReporter.toText("header", loggedLogs));
+        .contains(ConsoleReporter.toText(header, loggedLogs));
   }
 
   public static List<Arguments> filtered_logs_cases() {
@@ -60,17 +65,21 @@ public class TaskReporterTest extends TestContext {
   @MethodSource("all_levels")
   public void when_filter_doesnt_match_then_no_log_is_logged(Level level) {
     var reporter = new ConsoleReporter(console, level);
-    var taskReporter = new TaskReporter(NONE, reporter);
-    taskReporter.report(task(), "header", logsWithAllLevels());
+    var taskReporter = new TaskReporter(NONE, reporter, new BsMapping());
+    taskReporter.report(task(), computationWithAllLogLevels());
     assertThat(outputStream.toString())
         .isEmpty();
+  }
+
+  private ComputationResult computationWithAllLogLevels() {
+    return computationResult(output(intB(), logsWithAllLevels()), EXECUTION);
   }
 
   private static List<Level> all_levels() {
     return List.of(Level.values());
   }
 
-  private static List<Log> logsWithAllLevels() {
-    return list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG);
+  private ArrayB logsWithAllLevels() {
+    return arrayB(fatalMessage(), errorMessage(), warningMessage(), infoMessage());
   }
 }

@@ -1,6 +1,5 @@
 package org.smoothbuild.vm.task;
 
-import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
 
@@ -32,16 +31,16 @@ public class NativeMethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Try<Method> load(String name, NatFuncB natFuncB) {
-    return cache.computeIfAbsent(natFuncB, m -> loadImpl(name, m));
+  public Try<Method> load(NatFuncB natFuncB) {
+    return cache.computeIfAbsent(natFuncB, this::loadImpl);
   }
 
-  private Try<Method> loadImpl(String name, NatFuncB natFuncB) {
+  private Try<Method> loadImpl(NatFuncB natFuncB) {
     var classBinaryName = natFuncB.classBinaryName().toJ();
     var methodSpec = new MethodSpec(natFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader.provide(methodSpec)
-        .validate(m -> validateMethodSignature(m))
-        .mapError(e -> loadingError(name, classBinaryName, e));
+        .validate(this::validateMethodSignature)
+        .mapError(e -> loadingError(classBinaryName, e));
   }
 
   private String validateMethodSignature(Method method) {
@@ -72,8 +71,7 @@ public class NativeMethodLoader {
     }
   }
 
-  private static String loadingError(String name, String classBinaryName, String message) {
-    return "Error loading native implementation for "
-        + q(name) + " specified as `" + classBinaryName + "`: " + message;
+  private static String loadingError(String classBinaryName, String message) {
+    return "Error loading native implementation specified as `" + classBinaryName + "`: " + message;
   }
 }

@@ -11,12 +11,10 @@ import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
-import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class Vm {
   private final Provider<ExecutionContext> contextProv;
@@ -26,10 +24,9 @@ public class Vm {
     this.contextProv = contextProv;
   }
 
-  public Optional<ImmutableList<InstB>> evaluate(ImmutableList<ExprB> exprs,
-      ImmutableMap<ExprB, TagLoc> tagLocs)
+  public Optional<ImmutableList<InstB>> evaluate(ImmutableList<ExprB> exprs)
       throws InterruptedException {
-    var context = contextProv.get().withTagLocs(tagLocs);
+    var context = contextProv.get();
     var jobs = map(exprs, context::jobFor);
     return pullUp(evaluate(context, jobs));
   }

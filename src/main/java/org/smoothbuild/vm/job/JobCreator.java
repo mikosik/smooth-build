@@ -12,7 +12,7 @@ import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
-import org.smoothbuild.compile.lang.define.TraceS;
+import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
@@ -22,14 +22,14 @@ import com.google.common.collect.ImmutableList;
 
 public class JobCreator {
   private final ImmutableList<Job> environment;
-  private final TraceS trace;
+  private final TraceB trace;
 
   @Inject
   public JobCreator() {
     this(list(), null);
   }
 
-  protected JobCreator(ImmutableList<Job> environment, TraceS trace) {
+  protected JobCreator(ImmutableList<Job> environment, TraceB trace) {
     this.environment = environment;
     this.trace = trace;
   }
@@ -37,23 +37,23 @@ public class JobCreator {
   public Job jobFor(ExprB expr, ExecutionContext context) {
     return switch (expr) {
       case CallB call -> new CallJob(call, context);
-      case CombineB combine -> new OperJob(CombineTask::new, combine, context);
+      case CombineB combine -> new OperJob<>(CombineTask::new, combine, context);
       case InstB inst -> new ConstJob(inst, context);
-      case OrderB order -> new OperJob(OrderTask::new, order, context);
-      case PickB pick -> new OperJob(PickTask::new, pick, context);
+      case OrderB order -> new OperJob<>(OrderTask::new, order, context);
+      case PickB pick -> new OperJob<>(PickTask::new, pick, context);
       case RefB ref -> environment.get(ref.value().intValue());
-      case SelectB select -> new OperJob(SelectTask::new, select, context);
+      case SelectB select -> new OperJob<>(SelectTask::new, select, context);
       // `default` is needed because ExprB is not sealed because it is in different package
       // than its subclasses and code is not modularized.
       default -> throw new RuntimeException("shouldn't happen");
     };
   }
 
-  public JobCreator withEnvironment(ImmutableList<Job> environment, TraceS trace) {
+  public JobCreator withEnvironment(ImmutableList<Job> environment, TraceB trace) {
     return new JobCreator(environment, trace);
   }
 
-  public TraceS trace() {
+  public TraceB trace() {
     return trace;
   }
 }

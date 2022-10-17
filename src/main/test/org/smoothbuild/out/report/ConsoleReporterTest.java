@@ -78,7 +78,7 @@ public class ConsoleReporterTest extends TestContext {
   public void report_non_build_task_logs_logs_which_passes_threshold(Level level,
       List<Log> loggedLogs) {
     reporter = new ConsoleReporter(console, level);
-    reporter.report("header", logsWithAllLevels());
+    reporter.report(true, "header", logsWithAllLevels());
     assertThat(outputStream.toString())
         .contains(ConsoleReporter.toText("header", loggedLogs));
   }

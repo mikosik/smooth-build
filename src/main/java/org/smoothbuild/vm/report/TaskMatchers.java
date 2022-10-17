@@ -8,7 +8,6 @@ import static org.smoothbuild.out.log.Level.WARNING;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.execute.TaskKind;
 
@@ -23,9 +22,6 @@ public class TaskMatchers {
   static final TaskMatcher AT_LEAST_WARNING = logLevelMatcher(WARNING);
   static final TaskMatcher AT_LEAST_INFO = logLevelMatcher(INFO);
 
-  static final TaskMatcher PRJ = spaceMatcher(Space.PRJ);
-  static final TaskMatcher SLIB = spaceMatcher(Space.SLIB);
-
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
   static final TaskMatcher COMBINE = kindMatcher(TaskKind.COMBINE);
   static final TaskMatcher CONST = kindMatcher(TaskKind.CONST);
@@ -33,7 +29,7 @@ public class TaskMatchers {
   static final TaskMatcher PICK = kindMatcher(TaskKind.PICK);
   static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
 
-  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, CALL));
+  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, CALL);
 
   private static final ImmutableMap<String, TaskMatcher> MATCHERS_MAP =
       ImmutableMap.<String, TaskMatcher>builder()
@@ -52,10 +48,6 @@ public class TaskMatchers {
           .put("lw", AT_LEAST_WARNING)
           .put("info", AT_LEAST_INFO)
           .put("li", AT_LEAST_INFO)
-
-          .put("project", PRJ)
-          .put("prj", PRJ)
-          .put("slib", SLIB)
 
           .put("call", CALL)
           .put("c", CALL)
@@ -88,10 +80,6 @@ public class TaskMatchers {
     return (task, logs) -> logs
         .stream()
         .anyMatch(l -> l.level().hasPriorityAtLeast(level));
-  }
-
-  private static TaskMatcher spaceMatcher(Space space) {
-    return (task, logs) -> Objects.equals(task.loc().file().space(), space);
   }
 
   private static TaskMatcher kindMatcher(TaskKind kind) {

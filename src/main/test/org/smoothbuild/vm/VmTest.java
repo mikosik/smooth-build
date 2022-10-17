@@ -7,10 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,26 +35,28 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Mockito;
 import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.run.eval.MessageStruct;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.accept.MemoryReporter;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.ResultSource;
-import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskReporter;
+import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.JobCreator;
@@ -66,7 +66,6 @@ import org.smoothbuild.vm.task.PickTask;
 import org.smoothbuild.vm.task.Task;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class VmTest extends TestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
@@ -274,7 +273,7 @@ public class VmTest extends TestContext {
           var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var call = callB(natFunc, intB(33));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(any(), eq(natFunc)))
+          when(nativeMethodLoader.load(eq(natFunc)))
               .thenReturn(
                   Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
           assertThat(evaluate(vm(nativeMethodLoader), call))
@@ -285,7 +284,7 @@ public class VmTest extends TestContext {
         public void nat_func_passed_as_arg() throws NoSuchMethodException {
           var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(any(), eq(natFunc)))
+          when(nativeMethodLoader.load(eq(natFunc)))
               .thenReturn(
                   Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
@@ -300,7 +299,7 @@ public class VmTest extends TestContext {
         public void nat_func_returned_from_call() throws NoSuchMethodException {
           var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(any(), eq(natFunc)))
+          when(nativeMethodLoader.load(eq(natFunc)))
               .thenReturn(
                   Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
@@ -339,7 +338,7 @@ public class VmTest extends TestContext {
             arrayB(intB(10), intB(11), intB(12), intB(13)),
             intB(4));
         var memoryReporter = new MemoryReporter();
-        evaluateWithFailure(vm(memoryReporter), pick, ImmutableMap.of());
+        evaluateWithFailure(vm(memoryReporter), pick);
         assertThat(memoryReporter.logs())
             .isEqualTo(logs(error("Index (4) out of bounds. Array size = 4.")));
       }
@@ -350,7 +349,7 @@ public class VmTest extends TestContext {
             arrayB(intB(10), intB(11), intB(12), intB(13)),
             intB(-1));
         var memoryReporter = new MemoryReporter();
-        evaluateWithFailure(vm(memoryReporter), pick, ImmutableMap.of());
+        evaluateWithFailure(vm(memoryReporter), pick);
         assertThat(memoryReporter.logs())
             .isEqualTo(logs(error("Index (-1) out of bounds. Array size = 4.")));
       }
@@ -366,17 +365,16 @@ public class VmTest extends TestContext {
           throws InterruptedException {
         var innerFuncB = defFuncB(list(), refB(intTB(), 0));
         var outerFuncB = defFuncB(list(intTB()), callB(innerFuncB));
-        var taskReporter = mock(TaskReporter.class);
-        var vm = vm(taskReporter);
-        vm.evaluate(list(callB(outerFuncB, intB(7))), ImmutableMap.of());
-        verify(taskReporter).report(any(), any(), argThat(isLogListWithFatalOutOfBounds()));
+        var reporter = mock(Reporter.class);
+        var vm = vm(reporter);
+        vm.evaluate(list(callB(outerFuncB, intB(7))));
+        verify(reporter, times(1))
+            .report(Mockito.eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
       }
 
       private ArgumentMatcher<List<Log>> isLogListWithFatalOutOfBounds() {
-        return argument -> argument.size() == 1
-            && argument.get(0).level() == Level.FATAL
-            && argument.get(0).message().startsWith("Internal smooth error, "
-            + "computation failed with:java.lang.ArrayIndexOutOfBoundsException");
+        return isLogListWithFatalMessageStartingWith(
+            "Computation failed with: java.lang.ArrayIndexOutOfBoundsException");
       }
 
       @Test
@@ -392,20 +390,20 @@ public class VmTest extends TestContext {
     class _errors {
       @Test
       public void task_throwing_runtime_exception_causes_fatal() throws Exception {
-        var reporter = mock(TaskReporter.class);
-        var context = executionContext(new ExecutionReporter(reporter), 4);
+        var taskReporter = mock(TaskReporter.class);
+        var context = executionContext(taskReporter, 4);
         var exprB = throwExceptionCall();
-        evaluateWithFailure(new Vm(() -> context), exprB, ImmutableMap.of());
-        verify(reporter).report(
+        evaluateWithFailure(new Vm(() -> context), exprB);
+        verify(taskReporter).report(
             any(),
-            any(),
-            argThat(this::containsFatalCausedByRuntimeException));
+            argThat(this::computationResultWithFatalCausedByRuntimeException));
       }
 
-      private boolean containsFatalCausedByRuntimeException(List<Log> logs) {
-        return logs.size() == 1
-            && logs.get(0).level() == FATAL
-            && logs.get(0).message().startsWith(
+      private boolean computationResultWithFatalCausedByRuntimeException(ComputationResult result) {
+        ArrayB messages = result.output().messages();
+        return messages.size() == 1
+            && MessageStruct.level(messages.elems(TupleB.class).get(0)) == FATAL
+            && MessageStruct.text(messages.elems(TupleB.class).get(0)).startsWith(
             "Native code thrown exception:\njava.lang.ArithmeticException");
 
       }
@@ -424,7 +422,7 @@ public class VmTest extends TestContext {
 
       @Test
       public void computer_that_throws_exception_is_detected() {
-        var reporter = mock(ExecutionReporter.class);
+        var reporter = mock(Reporter.class);
         var exprB = stringB("abc");
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
@@ -435,11 +433,23 @@ public class VmTest extends TestContext {
         };
         var context = executionContext(computer, reporter, 4);
 
-        evaluateWithFailure(new Vm(() -> context), exprB, ImmutableMap.of());
-        verify(reporter, only())
-            .reportComputerException(any(), same(runtimeException));
+        evaluateWithFailure(new Vm(() -> context), exprB);
+        verify(reporter, times(1))
+            .report(eq("Internal smooth error"), argThat(isLogListWithFatalM()));
+      }
+
+      private ArgumentMatcher<List<Log>> isLogListWithFatalM() {
+        return isLogListWithFatalMessageStartingWith(
+            "Computation failed with: java.lang.RuntimeException");
       }
     }
+  }
+
+  private static ArgumentMatcher<List<Log>> isLogListWithFatalMessageStartingWith(
+      String messageStart) {
+    return argument -> argument.size() == 1
+        && argument.get(0).level() == Level.FATAL
+        && argument.get(0).message().startsWith(messageStart);
   }
 
   @Nested
@@ -473,7 +483,7 @@ public class VmTest extends TestContext {
           commandCall(testName, "INC1")
       );
 
-      var reporter = mock(ExecutionReporter.class);
+      var reporter = mock(TaskReporter.class);
       var vm = new Vm(() -> executionContext(reporter, 4));
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("1"), stringB("1")));
@@ -499,8 +509,7 @@ public class VmTest extends TestContext {
           commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
           commandCall(testName, "WAIT2,COUNT1,GET2"));
 
-      var reporter = mock(ExecutionReporter.class);
-      var vm = new Vm(() -> executionContext(reporter, 2));
+      var vm = new Vm(() -> executionContext(2));
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
     }
@@ -555,16 +564,12 @@ public class VmTest extends TestContext {
   }
 
   private ExprB evaluate(ExprB expr) {
-    return evaluate(vm(), expr, ImmutableMap.of());
+    return evaluate(vm(), expr);
   }
 
   private InstB evaluate(Vm vm, ExprB expr) {
-    return evaluate(vm, expr, ImmutableMap.of());
-  }
-
-  private InstB evaluate(Vm vm, ExprB expr, ImmutableMap<ExprB, TagLoc> tagLocs) {
     try {
-      var results = vm.evaluate(list(expr), tagLocs).get();
+      var results = vm.evaluate(list(expr)).get();
       assertThat(results.size())
           .isEqualTo(1);
       return results.get(0);
@@ -573,9 +578,9 @@ public class VmTest extends TestContext {
     }
   }
 
-  private void evaluateWithFailure(Vm vm, ExprB expr, ImmutableMap<ExprB, TagLoc> tagLocs) {
+  private void evaluateWithFailure(Vm vm, ExprB expr) {
     try {
-      var results = vm.evaluate(list(expr), tagLocs);
+      var results = vm.evaluate(list(expr));
       assertThat(results)
           .isEqualTo(Optional.empty());
     } catch (InterruptedException e) {
@@ -588,7 +593,7 @@ public class VmTest extends TestContext {
   }
 
   private static void verifyConstTasksResSource(
-      int size, ResultSource expectedSource, ExecutionReporter reporter) {
+      int size, ResultSource expectedSource, TaskReporter reporter) {
     var argCaptor = ArgumentCaptor.forClass(ComputationResult.class);
     verify(reporter, times(size)).report(taskMatcher(), argCaptor.capture());
     var resSources = map(argCaptor.getAllValues(), ComputationResult::source);
@@ -630,7 +635,7 @@ public class VmTest extends TestContext {
     }
 
     @Override
-    public JobCreator withEnvironment(ImmutableList<Job> environment, TraceS trace) {
+    public JobCreator withEnvironment(ImmutableList<Job> environment, TraceB trace) {
       return new CountingJobCreator(environment, classToCount, counter);
     }
 

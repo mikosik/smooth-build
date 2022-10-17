@@ -16,7 +16,7 @@ public class ConstJob extends Job {
 
   @Override
   protected Promise<InstB> evaluateImpl() {
-    var task = new ConstTask(instB, context().tagLoc(instB), context().trace());
+    var task = new ConstTask(instB, context().trace());
     return evaluateTransitively(task, list());
   }
 }

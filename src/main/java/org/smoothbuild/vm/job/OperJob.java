@@ -1,20 +1,18 @@
 package org.smoothbuild.vm.job;
 
+import java.util.function.BiFunction;
+
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.oper.OperB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.util.function.TriFunction;
+import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.task.Task;
 
-public class OperJob extends Job {
-  private final TriFunction<TypeB, TagLoc, TraceS, Task> taskConstructor;
-  private final OperB operB;
+public class OperJob<T extends OperB> extends Job {
+  private final BiFunction<T, TraceB, Task> taskConstructor;
+  private final T operB;
 
-  public OperJob(TriFunction<TypeB, TagLoc, TraceS, Task> taskConstructor, OperB operB,
-      ExecutionContext context) {
+  public OperJob(BiFunction<T, TraceB, Task> taskConstructor, T operB, ExecutionContext context) {
     super(context);
     this.taskConstructor = taskConstructor;
     this.operB = operB;
@@ -22,7 +20,7 @@ public class OperJob extends Job {
 
   @Override
   protected Promise<InstB> evaluateImpl() {
-    var task = taskConstructor.apply(operB.evalT(), context().tagLoc(operB), context().trace());
+    var task = taskConstructor.apply(operB, context().trace());
     return evaluateTransitively(task, operB.dataSeq());
   }
 }

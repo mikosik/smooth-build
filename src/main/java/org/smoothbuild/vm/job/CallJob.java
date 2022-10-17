@@ -2,7 +2,6 @@ package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.vm.execute.TaskKind.CALL;
 
 import java.util.function.Consumer;
 
@@ -19,12 +18,9 @@ import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
-import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.task.IdentityTask;
+import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.task.NativeCallTask;
 
 import com.google.common.collect.ImmutableList;
@@ -39,19 +35,19 @@ public class CallJob extends Job {
 
   @Override
   public Promise<InstB> evaluateImpl() {
-    var funcJ = context().jobFor(callB.dataSeq().get(0));
     var result = new PromisedValue<InstB>();
-    funcJ.evaluate()
-        .addConsumer(instB -> onFuncJobEvaluated(instB, result));
+    evaluateImpl(
+        callB.dataSeq().get(0),
+        funcB -> onFuncEvaluated(callB, funcB, result));
     return result;
   }
 
-  private void onFuncJobEvaluated(InstB instB, Consumer<InstB> resConsumer) {
-    switch ((FuncB) instB) {
+  private void onFuncEvaluated(CallB callB, InstB funcB, Consumer<InstB> resConsumer) {
+    switch ((FuncB) funcB) {
       case DefFuncB defFuncB -> handleDefFunc(defFuncB, resConsumer);
-      case IfFuncB ifFuncB -> handleIfFunc(ifFuncB, resConsumer);
-      case MapFuncB mapFuncB -> handleMapFunc(mapFuncB, resConsumer);
-      case NatFuncB natFuncB -> handleNatFunc(natFuncB, resConsumer);
+      case IfFuncB ifFuncB -> handleIfFunc(resConsumer);
+      case MapFuncB mapFuncB -> handleMapFunc(resConsumer);
+      case NatFuncB natFuncB -> handleNatFunc(callB, natFuncB, resConsumer);
     }
   }
 
@@ -60,53 +56,46 @@ public class CallJob extends Job {
   private void handleDefFunc(DefFuncB defFuncB, Consumer<InstB> resultConsumer) {
     var argsJ = map(args(), context()::jobFor);
     var trace = trace(defFuncB);
-    var bodyJob = context()
-        .withEnvironment(argsJ, trace)
-        .jobFor(defFuncB.body());
-    var tagLoc = callTagLoc(defFuncB);
-    evaluateAndReportViaIdentityTask(bodyJob, tagLoc, resultConsumer);
+    evaluateImpl(
+        context().withEnvironment(argsJ, trace),
+        defFuncB.body(),
+        resultConsumer);
   }
 
-  private TraceS trace(DefFuncB defFuncB) {
-    var tag = context().tagLoc(defFuncB).tag();
-    var loc = context().tagLoc(callB).loc();
-    return new TraceS(tag, loc, context().trace());
+  private TraceB trace(DefFuncB defFuncB) {
+    return new TraceB(defFuncB.hash(), callB.hash(), context().trace());
   }
 
   // handling IfFunc
 
-  private void handleIfFunc(IfFuncB ifFuncB, Consumer<InstB> res) {
+  private void handleIfFunc(Consumer<InstB> resultConsumer) {
     var args = args();
-    context()
-        .jobFor(args.get(0))
-        .evaluate()
-        .addConsumer(v -> onConditionEvaluated(v, ifFuncB, args, res));
+    evaluateImpl(
+        args.get(0),
+        v -> onConditionEvaluated(v, args, resultConsumer));
   }
 
-  private void onConditionEvaluated(InstB conditionB, IfFuncB ifFuncB, ImmutableList<ExprB> args,
+  private void onConditionEvaluated(InstB conditionB, ImmutableList<ExprB> args,
       Consumer<InstB> resultConsumer) {
-    var condition = ((BoolB) conditionB).toJ();
-    var job = context().jobFor(args.get(condition ? 1 : 2));
-    var tagLoc = callTagLoc(ifFuncB);
-    evaluateAndReportViaIdentityTask(job, tagLoc, resultConsumer);
+    evaluateImpl(
+        args.get(((BoolB) conditionB).toJ() ? 1 : 2),
+        resultConsumer);
   }
 
   // handling MapFunc
 
-  private void handleMapFunc(MapFuncB mapFuncB, Consumer<InstB> result) {
-    Promise<InstB> arrayJob = context().jobFor(args().get(0)).evaluate();
-    arrayJob.addConsumer(a -> onMapDepsEvaluated((ArrayB) a, mapFuncB, result));
+  private void handleMapFunc(Consumer<InstB> result) {
+    evaluateImpl(
+        args().get(0),
+        a -> onMapArgsEvaluated((ArrayB) a, result));
   }
 
-  private void onMapDepsEvaluated(ArrayB arrayB,
-      MapFuncB mapFuncB, Consumer<InstB> resultConsumer) {
+  private void onMapArgsEvaluated(ArrayB arrayB, Consumer<InstB> resultConsumer) {
     var mappingFuncExprB = args().get(1);
     var callBs = map(arrayB.elems(InstB.class), e -> newCallB(mappingFuncExprB, e));
     var mappingFuncResT = ((FuncTB) mappingFuncExprB.evalT()).res();
     var orderB = bytecodeF().order(bytecodeF().arrayT(mappingFuncResT), callBs);
-    var orderJob = context().jobFor(orderB);
-    var tagLoc = callTagLoc(mapFuncB);
-    evaluateAndReportViaIdentityTask(orderJob, tagLoc, resultConsumer);
+    evaluateImpl(orderB, resultConsumer);
   }
 
   private ExprB newCallB(ExprB funcExprB, InstB val) {
@@ -123,41 +112,24 @@ public class CallJob extends Job {
 
   // handling NatFunc
 
-  private void handleNatFunc(NatFuncB natFuncB, Consumer<InstB> res) {
-    var tagLoc = context().tagLoc(natFuncB);
-    var tag = tagLoc.tag();
-    var resT = natFuncB.evalT().res();
-    var task = new NativeCallTask(resT, tag, natFuncB, context().nativeMethodLoader(),
-        callTagLoc(natFuncB), context().trace());
+  private void handleNatFunc(CallB callB, NatFuncB natFuncB, Consumer<InstB> res) {
+    var task = new NativeCallTask(
+        callB, natFuncB, context().nativeMethodLoader(), context().trace());
     evaluateTransitively(task, args())
         .addConsumer(res);
   }
 
   //helpers
 
-  private void evaluateAndReportViaIdentityTask(
-      Job job, TagLoc tagLoc, Consumer<InstB> resultConsumer) {
-    job.evaluate().addConsumer(v -> onDependencyEvaluated(v, tagLoc, resultConsumer));
+  private void evaluateImpl(ExprB expr, Consumer<InstB> resultConsumer) {
+    evaluateImpl(context(), expr, resultConsumer);
   }
 
-  private void onDependencyEvaluated(InstB instB, TagLoc tagLoc, Consumer<InstB> resultConsumer) {
-    var task = new IdentityTask(instB.type(), CALL, tagLoc, context().trace());
-    var input = context().bytecodeF().tuple(list(instB));
-    context().taskExecutor().enqueue(task, input, resultConsumer);
-  }
-
-  private TagLoc callTagLoc(FuncB funcB) {
-    var tag = context().tagLoc(funcB).tag();
-    return new TagLoc(tag + "()", locFor(callB));
-  }
-
-  private Loc locFor(ExprB expr) {
-    var tagLoc = context().tagLoc(expr);
-    if (tagLoc == null) {
-      return Loc.unknown();
-    } else {
-      return tagLoc.loc();
-    }
+  private void evaluateImpl(ExecutionContext context, ExprB expr, Consumer<InstB> resultConsumer) {
+    context
+        .jobFor(expr)
+        .evaluate()
+        .addConsumer(resultConsumer);
   }
 
   private ImmutableList<ExprB> args() {

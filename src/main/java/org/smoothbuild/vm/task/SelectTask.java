@@ -6,16 +6,15 @@ import static org.smoothbuild.vm.execute.TaskKind.SELECT;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
+import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.execute.TraceB;
 
 import com.google.common.collect.ImmutableList;
 
 public final class SelectTask extends Task {
-  public SelectTask(TypeB outputT, TagLoc tagLoc, TraceS trace) {
-    super(outputT, SELECT, tagLoc, trace);
+  public SelectTask(SelectB selectB, TraceB trace) {
+    super(selectB, SELECT, trace);
   }
 
   @Override

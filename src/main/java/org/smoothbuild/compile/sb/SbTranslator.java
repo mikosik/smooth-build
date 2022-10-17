@@ -3,7 +3,6 @@ package org.smoothbuild.compile.sb;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.util.Strings.escaped;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
@@ -27,7 +26,6 @@ import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
-import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
@@ -36,7 +34,6 @@ import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValS;
@@ -77,28 +74,30 @@ public class SbTranslator {
   private final BytecodeLoader bytecodeLoader;
   private final NList<ItemS> environment;
   private final Map<CacheKey, ExprB> cache;
-  private final Map<ExprB, TagLoc> tagLocs;
+  private final Map<ExprB, String> nameMapping;
+  private final Map<ExprB, Loc> locMapping;
 
   @Inject
   public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
     this(bytecodeF, new TypeSbTranslator(bytecodeF, ImmutableMap.of()), fileLoader, bytecodeLoader,
-        nlist(), new HashMap<>(), new HashMap<>());
+        nlist(), new HashMap<>(), new HashMap<>(), new HashMap<>());
   }
 
   public SbTranslator(BytecodeF bytecodeF, TypeSbTranslator typeSbTranslator, FileLoader fileLoader,
       BytecodeLoader bytecodeLoader, NList<ItemS> environment, Map<CacheKey, ExprB> cache,
-      Map<ExprB, TagLoc> tagLocs) {
+      Map<ExprB, String> nameMapping, Map<ExprB, Loc> locMapping) {
     this.bytecodeF = bytecodeF;
     this.typeSbTranslator = typeSbTranslator;
     this.fileLoader = fileLoader;
     this.bytecodeLoader = bytecodeLoader;
     this.environment = environment;
     this.cache = cache;
-    this.tagLocs = tagLocs;
+    this.nameMapping = nameMapping;
+    this.locMapping = locMapping;
   }
 
-  public ImmutableMap<ExprB, TagLoc> tagLocs() {
-    return ImmutableMap.copyOf(tagLocs);
+  public BsMapping bsMapping() {
+    return new BsMapping(nameMapping, locMapping);
   }
 
   private ImmutableList<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
@@ -107,23 +106,23 @@ public class SbTranslator {
 
   public ExprB translateExpr(ExprS exprS) {
     return switch (exprS) {
-      case BlobS blobS -> translateAndCacheNal(blobS, this::translateBlob);
-      case CallS callS -> translateAndCacheNal(callS, this::translateCall);
-      case FuncS funcS -> translateFunc(funcS);
-      case IntS intS -> translateAndCacheNal(intS, this::translateInt);
-      case MonoizeS monoizeS -> translateMonoize(monoizeS);
-      case ValS valS -> translateVal(valS);
-      case OrderS orderS -> translateAndCacheNal(orderS, this::translateOrder);
-      case RefS refS -> translateAndCacheNal(refS, this::translateRef);
-      case SelectS selectS -> translateAndCacheNal(selectS, this::translateSelect);
-      case StringS stringS -> translateAndCacheNal(stringS, this::translateString);
+      case BlobS       blobS       -> translateAndSaveLoc(blobS,   this::translateBlob);
+      case CallS       callS       -> translateAndSaveLoc(callS,   this::translateCall);
+      case IntS        intS        -> translateAndSaveLoc(intS,    this::translateInt);
+      case OrderS      orderS      -> translateAndSaveLoc(orderS,  this::translateOrder);
+      case RefS        refS        -> translateAndSaveLoc(refS,    this::translateRef);
+      case SelectS     selectS     -> translateAndSaveLoc(selectS, this::translateSelect);
+      case StringS     stringS     -> translateAndSaveLoc(stringS, this::translateString);
+      case FuncS       funcS       -> translateFunc(funcS);
+      case MonoizeS    monoizeS    -> translateMonoize(monoizeS);
+      case ValS        valS        -> translateVal(valS);
       case UnnamedValS unnamedValS -> translateExpr(unnamedValS.body());
     };
   }
 
-  private <T extends ExprS> ExprB translateAndCacheNal(T exprS, Function<T, ExprB> translator) {
+  private <T extends ExprS> ExprB translateAndSaveLoc(T exprS, Function<T, ExprB> translator) {
     var exprB = translator.apply(exprS);
-    saveTagLoc(exprB, exprS);
+    saveLoc(exprB, exprS);
     return exprB;
   }
 
@@ -135,7 +134,7 @@ public class SbTranslator {
     var callableB = translateExpr(callS.callee());
     var argsB = translateExprs(callS.args());
     var combineB = bytecodeF.combine(argsB);
-    saveTagLocForCombine(combineB, callS.loc());
+    saveLoc(combineB, callS);
     return bytecodeF.call(callableB, combineB);
   }
 
@@ -146,8 +145,8 @@ public class SbTranslator {
   private ExprB translateMonoize(MonoizeS monoizeS) {
     var varMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
-    var sbTranslator = new SbTranslator(
-        bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader, environment, cache, tagLocs);
+    var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
+        environment, cache, nameMapping, locMapping);
     return sbTranslator.translateExpr(monoizeS.polyEvaluable().mono());
   }
 
@@ -158,9 +157,9 @@ public class SbTranslator {
 
   private ExprB setEnvironmentAndTranslateFunc(FuncS funcS) {
     var newEnvironment = funcS.params();
-    var sbTranslator = new SbTranslator(
-        bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader, newEnvironment, cache, tagLocs);
-    return translateAndCacheNal(funcS, sbTranslator::translateFuncImpl);
+    var sbTranslator = new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
+        newEnvironment, cache, nameMapping, locMapping);
+    return translateAndSaveLoc(funcS, sbTranslator::translateFuncImpl);
   }
 
   private ExprB translateFuncImpl(FuncS funcS) {
@@ -169,7 +168,7 @@ public class SbTranslator {
       case DefFuncS d -> translateDefFunc(d);
       case SyntCtorS c -> translateSyntCtor(c);
     };
-    saveTagLoc(funcB, funcS);
+    saveNameAndLoc(funcB, funcS);
     return funcB;
   }
 
@@ -203,7 +202,7 @@ public class SbTranslator {
     var paramTBs = translateT(funcTS.params());
     var refsB = createRefsB(paramTBs);
     var bodyB = bytecodeF.combine(refsB);
-    saveTagLocForCombine(bodyB, syntCtorS.loc());
+    saveLoc(bodyB, syntCtorS);
     return bytecodeF.defFunc(resTB, paramTBs, bodyB);
   }
 
@@ -233,7 +232,7 @@ public class SbTranslator {
     var indexJ = structTS.fields().indexOf(selectS.field());
     var bigInteger = BigInteger.valueOf(indexJ);
     var indexB = bytecodeF.int_(bigInteger);
-    saveTagLocForInt(indexB, bigInteger, selectS.loc());
+    saveLoc(indexB, selectS);
     return bytecodeF.select(selectableB, indexB);
   }
 
@@ -257,7 +256,7 @@ public class SbTranslator {
     var annName = annValS.ann().name();
     if (annName.equals(BYTECODE)) {
       var exprB = fetchValBytecode(annValS);
-      saveTagLoc(exprB, annValS);
+      saveNameAndLoc(exprB, annValS);
       return exprB;
     } else {
       throw new TranslateSbExc("Illegal value annotation: " + q("@" + annName) + ".");
@@ -317,33 +316,14 @@ public class SbTranslator {
     return typeSbTranslator.translate(arrayTS);
   }
 
-  private void saveTagLocForInt(IntB intB, BigInteger bigInteger, Loc loc) {
-    tagLocs.put(intB, new TagLoc(bigInteger.toString(), loc));
+  private void saveNameAndLoc(ExprB funcB, NamedEvaluableS evaluableS) {
+    nameMapping.put(funcB, evaluableS.name());
+    saveLoc(funcB, evaluableS);
   }
 
-  private void saveTagLocForCombine(CombineB combineB, Loc loc) {
-    tagLocs.put(combineB, new TagLoc("{}", loc));
+  private void saveLoc(ExprB exprB, ExprS exprS) {
+    locMapping.put(exprB, exprS.loc());
   }
 
-  private void saveTagLoc(ExprB exprB, ExprS exprS) {
-    tagLocs.put(exprB, new TagLoc(tagFor(exprS), exprS.loc()));
-  }
-
-  public static String tagFor(ExprS expr) {
-    return switch (expr) {
-      case BlobS blobS -> "0x" + blobS.byteString().hex();
-      case CallS callS -> "()";
-      case IntS intS -> intS.bigInteger().toString();
-      case MonoizeS monoizeS -> "<" + monoizeS.evalT() + ">";
-      case NamedEvaluableS namedEvaluableS -> namedEvaluableS.name();
-      case OrderS orderS -> "[]";
-      case RefS refS -> "(" + refS.paramName() + ")";
-      case SelectS selectS -> "." + selectS.field();
-      case StringS stringS -> "\"" + escaped(stringS.string()) + "\"";
-      case UnnamedValS unnamedValS -> "<unnamed>";
-    };
-  }
-
-  private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {
-  }
+  private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {}
 }

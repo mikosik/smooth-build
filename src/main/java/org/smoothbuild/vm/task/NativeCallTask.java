@@ -1,6 +1,5 @@
 package org.smoothbuild.vm.task;
 
-import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.Throwables.stackTraceToString;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
 import static org.smoothbuild.vm.task.Purity.IMPURE;
@@ -12,27 +11,24 @@ import java.lang.reflect.Method;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
+import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.execute.TraceB;
 
 public final class NativeCallTask extends Task {
   private final NatFuncB natFunc;
-  private final String name;
   private final NativeMethodLoader nativeMethodLoader;
 
-  public NativeCallTask(TypeB outputT, String name, NatFuncB natFunc,
-      NativeMethodLoader methodLoader, TagLoc tagLoc, TraceS trace) {
-    super(outputT, CALL, tagLoc, trace, natFunc.isPure().toJ() ? PURE : IMPURE);
-    this.name = name;
+  public NativeCallTask(CallB callB, NatFuncB natFunc, NativeMethodLoader methodLoader,
+      TraceB trace) {
+    super(callB, CALL, trace, natFunc.isPure().toJ() ? PURE : IMPURE);
     this.nativeMethodLoader = methodLoader;
     this.natFunc = natFunc;
   }
 
   @Override
   public Output run(TupleB input, Container container) {
-    return nativeMethodLoader.load(name, natFunc)
+    return nativeMethodLoader.load(natFunc)
         .map(m -> invokeMethod(m, input, container))
         .orElse(e -> logFatalAndReturnNullOutput(container, e));
   }
@@ -77,7 +73,7 @@ public final class NativeCallTask extends Task {
   }
 
   private void logFaultyImplementation(Container container, String message) {
-    container.log().fatal(q(name) + " has faulty native implementation: " + message);
+    container.log().fatal("Faulty native implementation: " + message);
   }
 
   private static Output logFatalAndReturnNullOutput(Container container, String message) {

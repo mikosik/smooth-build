@@ -22,6 +22,7 @@ import org.smoothbuild.systemtest.cli.command.common.ValuesArgTestCase;
 import org.smoothbuild.testing.func.nativ.ReportError;
 import org.smoothbuild.testing.func.nativ.ReportInfo;
 import org.smoothbuild.testing.func.nativ.ReportWarning;
+import org.smoothbuild.testing.func.nativ.ReturnAbc;
 
 public class BuildCommandTest {
   @Nested
@@ -111,42 +112,12 @@ public class BuildCommandTest {
 
     @Nested
     class _call_matcher extends SystemTestCase {
-      private static final String DEFINED_FUNCTION_CALL = """
-          myFunc() = "myLiteral";
-          result = myFunc();
-          """;
-      private static final String DEFINED_CALL_TASK_HEADER = """
-          myFunc()                                    build.smooth:2
-          """;
       private static final String NATIVE_FUNCTION_CALL = """
           result = concat([["a"], ["b"]]);
           """;
       private static final String NATIVE_CALL_TASK_HEADER = """
           concat()                                    build.smooth:1                 exec
           """;
-      private static final String IF_FUNCTION_CALL = """
-          result = if(true, "true", "false");
-          """;
-      private static final String IF_CALL_TASK_HEADER = """
-          if()                                        build.smooth:1
-          """;
-      private static final String MAP_FUNCTION_CALL = """
-          result = map([false, true], not);
-          """;
-      private static final String MAP_CALL_TASK_HEADER = """
-          map()                                       build.smooth:1
-          """;
-
-      @Test
-      public void shows_call_when_enabled() throws IOException {
-        testThatTaskHeaderShownWhenCallIsEnabled(DEFINED_FUNCTION_CALL, DEFINED_CALL_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_calls_when_not_enabled() throws IOException {
-        testThatTaskHeaderIsNotShownWhenCallIsDisabled(
-            DEFINED_FUNCTION_CALL, DEFINED_CALL_TASK_HEADER);
-      }
 
       @Test
       public void shows_call_to_nat_func_when_enabled() throws IOException {
@@ -157,26 +128,6 @@ public class BuildCommandTest {
       public void hides_call_to_nat_func_when_not_enabled() throws IOException {
         testThatTaskHeaderIsNotShownWhenCallIsDisabled(
             NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
-      }
-
-      @Test
-      public void shows_call_to_internal_if_func_when_enabled() throws IOException {
-        testThatTaskHeaderShownWhenCallIsEnabled(IF_FUNCTION_CALL, IF_CALL_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_call_to_internal_if_func_when_not_enabled() throws IOException {
-        testThatTaskHeaderIsNotShownWhenCallIsDisabled(IF_FUNCTION_CALL, IF_CALL_TASK_HEADER);
-      }
-
-      @Test
-      public void shows_call_to_internal_map_func_when_enabled() throws IOException {
-        testThatTaskHeaderShownWhenCallIsEnabled(MAP_FUNCTION_CALL, MAP_CALL_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_call_to_internal_map_func_when_not_enabled() throws IOException {
-        testThatTaskHeaderIsNotShownWhenCallIsDisabled(MAP_FUNCTION_CALL, MAP_CALL_TASK_HEADER);
       }
 
       private void testThatTaskHeaderShownWhenCallIsEnabled(String callDeclaration,
@@ -231,19 +182,19 @@ public class BuildCommandTest {
           result = 0xABCD;
           """;
       private static final String BLOB_CONST_TASK_HEADER = """
-          0xabcd                                      build.smooth:1
+          Blob                                        build.smooth:1
           """;
       private static final String INT_CONST = """
           result = 123;
           """;
       private static final String INT_CONST_TASK_HEADER = """
-          123                                         build.smooth:1
+          Int                                         build.smooth:1
           """;
       private static final String STRING_CONST = """
           result = "myLiteral";
           """;
       private static final String STRING_CONST_TASK_HEADER = """
-          "myLiteral"                                 build.smooth:1
+          String                                      build.smooth:1
           """;
 
       @Test
@@ -299,7 +250,7 @@ public class BuildCommandTest {
             result = elem([1, 2, 3], 0);
             """;
       private static final String PICK_TASK_HEADER = """
-          #8e4e38061b0cd666b8c7adbf773a1f52cd64a6a0   unknown                        exec
+          [].                                         unknown                        exec
           """;
 
       @Test
@@ -358,7 +309,7 @@ public class BuildCommandTest {
             result = aStruct.myField;
             """;
       private static final String SELECT_TASK_HEADER = """
-          .myField                                    build.smooth:5                 exec
+          .                                           build.smooth:5                 exec
           """;
 
       @Test
@@ -552,15 +503,17 @@ public class BuildCommandTest {
   @Nested
   class _reported_task_header_for extends SystemTestCase {
     @Test
-    public void call() throws IOException {
-      createUserModule("""
-          myFunc() = "abc";
+    public void native_call() throws IOException {
+      createNativeJar(ReturnAbc.class);
+      createUserModule(format("""
+          @Native("%s")
+          String myFunc();
           result = myFunc();
-          """);
+          """, ReturnAbc.class.getCanonicalName()));
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myFunc()                                    build.smooth:2
+          myFunc()                                    build.smooth:3                 exec
           """);
     }
 
@@ -575,7 +528,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          .myField                                    build.smooth:4                 exec
+          .                                           build.smooth:4                 exec
           """);
     }
 
@@ -588,7 +541,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myFunc                                      build.smooth:1
+          Int()                                       build.smooth:1
           """);
     }
 
@@ -612,7 +565,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          0x0102                                      build.smooth:1
+          Blob                                        build.smooth:1
           """);
     }
 
@@ -624,7 +577,19 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          "abc"                                       build.smooth:1
+          String                                      build.smooth:1
+          """);
+    }
+
+    @Test
+    public void literal_int() throws IOException {
+      createUserModule("""
+          result = 17;
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          Int                                         build.smooth:1
           """);
     }
 
@@ -637,7 +602,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-            "abc"                                       build.smooth:1
+            String                                      build.smooth:1
           """);
     }
   }

@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.task;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.vm.execute.TaskKind.ORDER;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,29 +17,23 @@ public class TaskHashesCollisionTest extends TestContext {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
 
-    addHash(list, set, new CombineTask(tupleTB(), tagLoc(), traceS()));
-    addHash(list, set, new ConstTask(intB(7), tagLoc(), traceS()));
-    addHash(list, set, new ConstTask(intB(9), tagLoc(), traceS()));
-    addHash(list, set, new IdentityTask(intTB(), ORDER, tagLoc(), traceS()));
-    addHash(list, set, new NativeCallTask(intTB(), "name",
-        natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true)),
-        null, tagLoc(), traceS()));
-    addHash(list, set, new NativeCallTask(intTB(), "name",
-        natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false)),
-        null, tagLoc(), traceS()));
-    addHash(list, set, new NativeCallTask(intTB(), "name",
-        natFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true)),
-        null, tagLoc(), traceS()));
-    addHash(list, set, new NativeCallTask(intTB(), "name",
-        natFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true)),
-        null, tagLoc(), traceS()));
-    addHash(list, set, new NativeCallTask(intTB(), "name",
-        natFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true)),
-        null, tagLoc(), traceS()));
-    addHash(list, set, new OrderTask(arrayTB(intTB()), tagLoc(), traceS()));
-    addHash(list, set, new OrderTask(arrayTB(blobTB()), tagLoc(), traceS()));
-    addHash(list, set, new PickTask(intTB(), tagLoc(), traceS()));
-    addHash(list, set, new SelectTask(intTB(), tagLoc(), traceS()));
+    addHash(list, set, new CombineTask(combineB(), traceB()));
+    addHash(list, set, new ConstTask(intB(7), traceB()));
+    addHash(list, set, new ConstTask(intB(9), traceB()));
+    addHash(list, set, new NativeCallTask(callB(),
+        natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true)), null, traceB()));
+    addHash(list, set, new NativeCallTask(callB(),
+        natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false)), null, traceB()));
+    addHash(list, set, new NativeCallTask(callB(),
+        natFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true)), null, traceB()));
+    addHash(list, set, new NativeCallTask(callB(),
+        natFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true)), null, traceB()));
+    addHash(list, set, new NativeCallTask(callB(),
+        natFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true)), null, traceB()));
+    addHash(list, set, new OrderTask(orderB(intTB()), traceB()));
+    addHash(list, set, new OrderTask(orderB(blobTB()), traceB()));
+    addHash(list, set, new PickTask(pickB(), traceB()));
+    addHash(list, set, new SelectTask(selectB(), traceB()));
   }
 
   private void addHash(List<Hash> list, Set<Hash> set, Task task) {

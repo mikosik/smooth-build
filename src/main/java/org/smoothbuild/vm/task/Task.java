@@ -2,48 +2,41 @@ package org.smoothbuild.vm.task;
 
 import static org.smoothbuild.vm.task.Purity.PURE;
 
+import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
-import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TaskKind;
+import org.smoothbuild.vm.execute.TraceB;
 
-public sealed abstract class Task permits CombineTask, ConstTask, IdentityTask, NativeCallTask,
+public sealed abstract class Task permits CombineTask, ConstTask, NativeCallTask,
     OrderTask, PickTask, SelectTask{
-  private final TypeB outputT;
+  private final ExprB exprB;
   private final Purity purity;
   private final TaskKind kind;
-  private final TagLoc tagLoc;
-  private final TraceS trace;
+  private final TraceB trace;
 
-  public Task(TypeB outputT, TaskKind kind, TagLoc tagLoc, TraceS trace) {
-    this(outputT, kind, tagLoc, trace, PURE);
+  public Task(ExprB exprB, TaskKind kind, TraceB trace) {
+    this(exprB, kind, trace, PURE);
   }
 
-  public Task(TypeB outputT, TaskKind kind, TagLoc tagLoc, TraceS trace, Purity purity) {
-    this.outputT = outputT;
+  public Task(ExprB exprB, TaskKind kind, TraceB trace, Purity purity) {
+    this.exprB = exprB;
     this.kind = kind;
-    this.tagLoc = tagLoc;
     this.trace = trace;
     this.purity = purity;
+  }
+
+  public ExprB exprB() {
+    return exprB;
   }
 
   public TaskKind kind() {
     return kind;
   }
 
-  public String tag() {
-    return tagLoc.tag();
-  }
-
-  public Loc loc() {
-    return tagLoc.loc();
-  }
-
   public TypeB outputT() {
-    return outputT;
+    return exprB.evalT();
   }
 
   public Purity purity() {

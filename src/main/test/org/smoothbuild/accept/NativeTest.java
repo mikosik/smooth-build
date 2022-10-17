@@ -153,7 +153,7 @@ public class NativeTest extends AcceptanceTestCase {
               """, className));
         evaluate("result");
         assertThat(logs())
-            .containsExactly(methodLoadingFatal(className, "wrongMethodName",
+            .containsExactly(methodLoadingFatal(className,
                 "Class '" + className + "' does not have 'func' method."));
       }
 
@@ -170,7 +170,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, className));
           evaluate("result");
           assertThat(logs())
-              .containsExactly(faultyNullReturnedFatal("returnNull"));
+              .containsExactly(faultyNullReturnedFatal());
         }
 
         @Test
@@ -183,7 +183,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, ReportWarningAndReturnNull.class.getCanonicalName()));
           evaluate("result");
           assertThat(logs())
-              .contains(faultyNullReturnedFatal("reportWarning"));
+              .contains(faultyNullReturnedFatal());
         }
 
         @Test
@@ -196,7 +196,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, ReportErrorAndReturnNonNull.class.getCanonicalName()));
           evaluate("result");
           assertThat(logs())
-              .contains(nonNullValueAndError("reportErrorAndReturnValue"));
+              .contains(nonNullValueAndError());
         }
 
         @Test
@@ -209,7 +209,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, BrokenIdentity.class.getCanonicalName()));
           evaluate("result");
           assertThat(logs())
-              .containsExactly(faultyTypeOfReturnedObject("brokenIdentity", "Int", "String"));
+              .containsExactly(faultyTypeOfReturnedObject("Int", "String"));
         }
 
         @Test
@@ -227,7 +227,7 @@ public class NativeTest extends AcceptanceTestCase {
           evaluate("result");
           assertThat(logs())
               .containsExactly(
-                  faultyTypeOfReturnedObject("returnStringStruct", "{String,String}", "{String}"));
+                  faultyTypeOfReturnedObject("{String,String}", "{String}"));
         }
 
         @Test
@@ -241,7 +241,7 @@ public class NativeTest extends AcceptanceTestCase {
           evaluate("result");
           assertThat(logs())
               .containsExactly(
-                  faultyTypeOfReturnedObject("emptyStringArray", "[Blob]", "[String]"));
+                  faultyTypeOfReturnedObject("[Blob]", "[String]"));
         }
 
         @Test
@@ -332,26 +332,25 @@ public class NativeTest extends AcceptanceTestCase {
     return matcher.group(1);
   }
 
-  private static Log faultyTypeOfReturnedObject(
-      String name, String declared, String actual) {
-    return faultyNativeImplFatal(name, "Its declared result type == " + q(declared)
+  private static Log faultyTypeOfReturnedObject(String declared, String actual) {
+    return faultyNativeImplFatal("Its declared result type == " + q(declared)
         + " but it returned object with type == " + q(actual) + ".");
   }
 
-  private static Log nonNullValueAndError(String name) {
-    return faultyNativeImplFatal(name, "It returned non-null value but logged error.");
+  private static Log nonNullValueAndError() {
+    return faultyNativeImplFatal("It returned non-null value but logged error.");
   }
 
-  private static Log faultyNullReturnedFatal(String name) {
-    return faultyNativeImplFatal(name, "It returned `null` but logged no error.");
+  private static Log faultyNullReturnedFatal() {
+    return faultyNativeImplFatal("It returned `null` but logged no error.");
   }
 
-  private static Log faultyNativeImplFatal(String name, String message) {
-    return fatal(q(name) + " has faulty native implementation: " + message);
+  private static Log faultyNativeImplFatal(String message) {
+    return fatal("Faulty native implementation: " + message);
   }
 
-  private static Log methodLoadingFatal(String className, String methodName, String message) {
-    return fatal("Error loading native implementation for " + q(methodName) + " specified as "
-        + q(className) + ": " + message);
+  private static Log methodLoadingFatal(String className, String message) {
+    return fatal(
+        "Error loading native implementation specified as " + q(className) + ": " + message);
   }
 }
