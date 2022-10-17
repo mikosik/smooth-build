@@ -316,7 +316,7 @@ public class ParallelJobExecutorTest extends TestContext {
     }
 
     protected TestTask(String name, TypeB type, Hash hash, boolean isPure) {
-      super(type, COMBINE, tagLoc(name), trace(), isPure);
+      super(type, COMBINE, tagLoc(name), traceS(), isPure);
       this.hash = hash;
     }
 

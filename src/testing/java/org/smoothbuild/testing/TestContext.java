@@ -78,7 +78,6 @@ import org.smoothbuild.bytecode.type.oper.RefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.base.Trace;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValS;
@@ -102,6 +101,7 @@ import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
+import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
@@ -1319,16 +1319,16 @@ public class TestContext {
     return ModPath.of(filePath);
   }
 
-  public static Trace trace() {
-    return new Trace("trace-tag", loc(17), null);
+  public static TraceS traceS() {
+    return new TraceS("trace-tag", loc(17), null);
   }
 
-  public static Trace trace(String code, int line) {
-    return new Trace(code, loc(line), null);
+  public static TraceS traceS(String code, int line) {
+    return new TraceS(code, loc(line), null);
   }
 
-  public static Trace trace(String code2, int line2, String code1, int line1) {
-    return new Trace(code2, loc(line2), new Trace(code1, loc(line1)));
+  public static TraceS traceS(String code2, int line2, String code1, int line1) {
+    return new TraceS(code2, loc(line2), new TraceS(code1, loc(line1)));
   }
 
   public static Loc loc() {

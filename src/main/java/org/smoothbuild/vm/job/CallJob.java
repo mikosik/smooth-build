@@ -21,7 +21,7 @@ import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.base.Trace;
+import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.execute.TaskInfo;
@@ -67,10 +67,10 @@ public class CallJob extends ExecutingJob {
     evaluateInsideVirtualJob(bodyJob, taskInfo, resultConsumer);
   }
 
-  private Trace trace(DefFuncB defFuncB) {
+  private TraceS trace(DefFuncB defFuncB) {
     var tag = context().tagLoc(defFuncB).tag();
     var loc = context().tagLoc(callB).loc();
-    return new Trace(tag, loc, context().trace());
+    return new TraceS(tag, loc, context().trace());
   }
 
   // handling IfFunc

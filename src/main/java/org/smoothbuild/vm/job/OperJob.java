@@ -4,16 +4,16 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.oper.OperB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.base.Trace;
+import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.function.TriFunction;
 import org.smoothbuild.vm.task.Task;
 
 public class OperJob extends ExecutingJob {
-  private final TriFunction<TypeB, TagLoc, Trace, Task> taskConstructor;
+  private final TriFunction<TypeB, TagLoc, TraceS, Task> taskConstructor;
   private final OperB operB;
 
-  public OperJob(TriFunction<TypeB, TagLoc, Trace, Task> taskConstructor, OperB operB,
+  public OperJob(TriFunction<TypeB, TagLoc, TraceS, Task> taskConstructor, OperB operB,
       ExecutionContext context) {
     super(context);
     this.taskConstructor = taskConstructor;

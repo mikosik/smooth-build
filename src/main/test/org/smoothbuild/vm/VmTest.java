@@ -26,7 +26,7 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.base.Trace;
+import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.accept.MemoryReporter;
@@ -406,7 +406,7 @@ public class VmTest extends TestContext {
     }
 
     @Override
-    public JobCreator withEnvironment(ImmutableList<Job> environment, Trace trace) {
+    public JobCreator withEnvironment(ImmutableList<Job> environment, TraceS trace) {
       return new CountingJobCreator(environment, classToCount, counter);
     }
 

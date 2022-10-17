@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.base.Trace;
+import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.task.NativeMethodLoader;
@@ -45,7 +45,7 @@ public class ExecutionContext {
     return jobCreator.jobFor(expr, this);
   }
 
-  public ExecutionContext withEnvironment(ImmutableList<Job> args, Trace trace) {
+  public ExecutionContext withEnvironment(ImmutableList<Job> args, TraceS trace) {
     return new ExecutionContext(taskExecutor, reporter, bytecodeF, nativeMethodLoader,
         jobCreator.withEnvironment(args, trace), tagLocs);
   }
@@ -76,7 +76,7 @@ public class ExecutionContext {
     return nativeMethodLoader;
   }
 
-  public Trace trace() {
+  public TraceS trace() {
     return jobCreator.trace();
   }
 }
