@@ -2,6 +2,7 @@ package org.smoothbuild.vm.task;
 
 import static java.util.Arrays.asList;
 
+import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
@@ -25,6 +26,10 @@ public class TaskHashes {
 
   public static Hash selectTaskHash() {
     return hash(4);
+  }
+
+  public static Hash constTaskHash(InstB instB) {
+    return hash(5, instB.hash());
   }
 
   private static Hash hash(int id, Hash hash) {

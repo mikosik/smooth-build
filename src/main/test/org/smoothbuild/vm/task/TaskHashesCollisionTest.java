@@ -2,6 +2,7 @@ package org.smoothbuild.vm.task;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.vm.task.TaskHashes.combineTaskHash;
+import static org.smoothbuild.vm.task.TaskHashes.constTaskHash;
 import static org.smoothbuild.vm.task.TaskHashes.nativeCallTaskHash;
 import static org.smoothbuild.vm.task.TaskHashes.orderTaskHash;
 import static org.smoothbuild.vm.task.TaskHashes.pickTaskHash;
@@ -40,6 +41,8 @@ public class TaskHashesCollisionTest extends TestContext {
     addHash(list, set, orderTaskHash(arrayTB(boolTB())));
     addHash(list, set, pickTaskHash());
     addHash(list, set, selectTaskHash());
+    addHash(list, set, constTaskHash(stringB("1")));
+    addHash(list, set, constTaskHash(stringB("2")));
   }
 
   private void addHash(List<Hash> list, Set<Hash> set, Hash hash) {

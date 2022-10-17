@@ -1,26 +1,22 @@
 package org.smoothbuild.vm.job;
 
-import static org.smoothbuild.vm.execute.TaskKind.CONST;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.execute.TaskInfo;
+import org.smoothbuild.vm.task.ConstTask;
 
-public class ConstJob extends DummyJob {
-  private final InstB inst;
+public class ConstJob extends ExecutingJob {
+  private final InstB instB;
 
-  public ConstJob(InstB inst, ExecutionContext context) {
-    super(createTaskInfo(inst, context), context.reporter());
-    this.inst = inst;
-  }
-
-  private static TaskInfo createTaskInfo(InstB val, ExecutionContext context) {
-    return new TaskInfo(CONST, context.tagLoc(val), context.trace());
+  public ConstJob(InstB instB, ExecutionContext context) {
+    super(context);
+    this.instB = instB;
   }
 
   @Override
-  protected Promise<InstB> resultPromise() {
-    return new PromisedValue<>(inst);
+  protected Promise<InstB> evaluateImpl() {
+    var task = new ConstTask(instB, context().tagLoc(instB), context().trace());
+    return evaluateTransitively(task, list());
   }
 }

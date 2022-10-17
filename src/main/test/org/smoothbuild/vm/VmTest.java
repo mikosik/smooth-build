@@ -2,6 +2,7 @@ package org.smoothbuild.vm;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
@@ -12,14 +13,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatcher;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
@@ -27,10 +29,13 @@ import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
+import org.smoothbuild.out.log.Level;
+import org.smoothbuild.out.log.Log;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.accept.MemoryReporter;
 import org.smoothbuild.util.collect.Try;
+import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.JobCreator;
@@ -331,11 +336,21 @@ public class VmTest extends TestContext {
       }
 
       @Test
-      public void ref_with_index_outside_of_func_param_bounds_causes_exception() {
+      public void ref_with_index_outside_of_func_param_bounds_causes_fatal()
+          throws InterruptedException {
         var innerFuncB = defFuncB(list(), refB(intTB(), 0));
         var outerFuncB = defFuncB(list(intTB()), callB(innerFuncB));
-        assertCall(() -> evaluate(callB(outerFuncB, intB(7))))
-            .throwsException(ArrayIndexOutOfBoundsException.class);
+        var taskReporter = mock(TaskReporter.class);
+        var vm = vm(taskReporter);
+        vm.evaluate(list(callB(outerFuncB, intB(7))), ImmutableMap.of());
+        verify(taskReporter).report(any(), any(), argThat(isLogListWithFatalOutOfBounds()));
+      }
+
+      private ArgumentMatcher<List<Log>> isLogListWithFatalOutOfBounds() {
+        return argument -> argument.size() == 1
+            && argument.get(0).level() == Level.FATAL
+            && argument.get(0).message().startsWith("Internal smooth error, "
+            + "computation failed with:java.lang.ArrayIndexOutOfBoundsException");
       }
 
       @Test
@@ -349,8 +364,7 @@ public class VmTest extends TestContext {
   }
 
   private ExprB evaluate(ExprB expr) {
-    var vm = vm();
-    return evaluate(vm, expr, ImmutableMap.of());
+    return evaluate(vm(), expr, ImmutableMap.of());
   }
 
   private InstB evaluate(Vm vm, ExprB expr) {

@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.vm.compute.ResSource.DISK;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResSource.MEMORY;
+import static org.smoothbuild.vm.compute.ResSource.NOOP;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +17,7 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;
+import org.smoothbuild.vm.task.ConstTask;
 import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.Task;
 
@@ -44,13 +46,13 @@ public class Computer {
     PromisedValue<CompRes> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       prevPromised
-          .chain(c -> asCachedComputation(c, task.isPure()))
+          .chain(c -> asCachedComputation(c, task))
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
       if (computationCache.contains(hash)) {
         var output = computationCache.read(hash, task.outputT());
-        newPromised.accept(new CompRes(output, DISK));
+        newPromised.accept(new CompRes(output, task instanceof ConstTask ? NOOP : EXECUTION));
         promisedValues.remove(hash);
       } else {
         var computed = runComputation(task, input);
@@ -64,24 +66,34 @@ public class Computer {
     }
   }
 
-  private static CompRes asCachedComputation(CompRes compRes, boolean isPure) {
+  private static CompRes asCachedComputation(CompRes compRes, Task task) {
+    ResSource resSource = resSourceOfCached(compRes, task);
     return new CompRes(
         compRes.output(),
         compRes.exception(),
-        compRes.resSource() == EXECUTION && isPure ? DISK : MEMORY);
+        resSource);
+  }
+
+  private static ResSource resSourceOfCached(CompRes compRes, Task task) {
+    if (task instanceof ConstTask) {
+      return NOOP;
+    } else {
+      return compRes.resSource() == EXECUTION && task.isPure() ? DISK : MEMORY;
+    }
   }
 
   private CompRes runComputation(Task task, TupleB input) {
     var container = containerProvider.get();
     Output output;
+    var resSource = task instanceof ConstTask ? NOOP : EXECUTION;
     try {
       output = task.run(input, container);
     } catch (Exception e) {
-      return new CompRes(e, EXECUTION);
+      return new CompRes(e, resSource);
     }
     // This Computed instance creation is outside try-block
     // so eventual exception it could throw won't be caught by above catch.
-    return new CompRes(output, EXECUTION);
+    return new CompRes(output, resSource);
   }
 
   private Hash computationHash(Task task, TupleB args) {
