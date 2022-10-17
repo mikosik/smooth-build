@@ -2,7 +2,7 @@ package org.smoothbuild.testing;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
-import static com.google.common.io.ByteStreams.nullOutputStream;
+import static java.io.OutputStream.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
