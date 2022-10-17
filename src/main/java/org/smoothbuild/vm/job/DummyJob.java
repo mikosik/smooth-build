@@ -1,14 +1,12 @@
 package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.compute.ResSource.NOOP;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
-import org.smoothbuild.out.log.Log;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskInfo;
-
-import com.google.common.collect.ImmutableList;
 
 public abstract class DummyJob extends Job {
   private final ExecutionReporter reporter;
@@ -24,15 +22,11 @@ public abstract class DummyJob extends Job {
     return resultPromise()
         .chain(v -> {
           if (v != null) {
-            reporter.print(taskInfo, list());
+            reporter.print(taskInfo, list(), NOOP);
           }
           return v;
         });
   }
 
   protected abstract Promise<InstB> resultPromise();
-
-  protected void report(TaskInfo taskInfo, ImmutableList<Log> logs) {
-    reporter.print(taskInfo, logs);
-  }
 }

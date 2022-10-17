@@ -2,8 +2,10 @@ package org.smoothbuild.vm.compute;
 
 public enum ResSource {
   DISK("cache"),
+  EXECUTION("exec"),
   MEMORY("mem"),
-  EXECUTION("exec");
+  NOOP("")
+  ;
 
   private final String name;
 

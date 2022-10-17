@@ -46,7 +46,7 @@ public class ExecutionReporter {
   public void reportComputerException(TaskInfo taskInfo, Throwable throwable) {
     Log fatal = fatal(
         "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
-    print(taskInfo, list(fatal), EXECUTION.toString());
+    print(taskInfo, list(fatal), EXECUTION);
   }
 
   private void print(TaskInfo taskInfo, ResSource resSource, ArrayB messages) {
@@ -54,16 +54,8 @@ public class ExecutionReporter {
     print(taskInfo, logs, resSource);
   }
 
-  public void print(TaskInfo taskInfo, List<Log> logs) {
-    print(taskInfo, logs, "");
-  }
-
   public void print(TaskInfo taskInfo, List<Log> logs, ResSource resSource) {
-    print(taskInfo, logs, resSource.toString());
-  }
-
-  private void print(TaskInfo taskInfo, List<Log> logs, String resultSource) {
-    taskReporter.report(taskInfo, header(taskInfo, resultSource), logs);
+    taskReporter.report(taskInfo, header(taskInfo, resSource.toString()), logs);
   }
 
   // Visible for testing
