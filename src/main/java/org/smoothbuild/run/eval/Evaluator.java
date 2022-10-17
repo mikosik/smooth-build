@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.compile.lang.base.TagLoc;
-import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.sb.SbTranslator;
 import org.smoothbuild.compile.sb.SbTranslatorProv;
 import org.smoothbuild.compile.sb.TranslateSbExc;
@@ -33,10 +33,10 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<InstB>> evaluate(List<? extends ExprS> exprsS) {
+  public Optional<ImmutableList<InstB>> evaluate(List<ValS> vals) {
     reporter.startNewPhase("Compiling");
     var sbTranslator = sbTranslatorProv.get();
-    var exprsB = translate(exprsS, sbTranslator);
+    var exprsB = translate(vals, sbTranslator);
     if (exprsB.isEmpty()) {
       return Optional.empty();
     }
@@ -45,22 +45,21 @@ public class Evaluator {
     return evaluate(vm, exprsB.get(), sbTranslator.tagLocs());
   }
 
+  private Optional<ImmutableList<ExprB>> translate(List<ValS> vals, SbTranslator sbTranslator) {
+    try {
+      return Optional.of(map(vals, sbTranslator::translateExpr));
+    } catch (TranslateSbExc e) {
+      reporter.report(fatal(e.getMessage()));
+      return Optional.empty();
+    }
+  }
+
   private Optional<ImmutableList<InstB>> evaluate(Vm vm, ImmutableList<ExprB> exprs,
       ImmutableMap<ExprB, TagLoc> tagLocs) {
     try {
       return vm.evaluate(exprs, tagLocs);
     } catch (InterruptedException e) {
       reporter.report(fatal("Evaluation process has been interrupted."));
-      return Optional.empty();
-    }
-  }
-
-  private Optional<ImmutableList<ExprB>> translate(
-      List<? extends ExprS> exprsS, SbTranslator sbTranslator) {
-    try {
-      return Optional.of(map(exprsS, sbTranslator::translateExpr));
-    } catch (TranslateSbExc e) {
-      reporter.report(fatal(e.getMessage()));
       return Optional.empty();
     }
   }
