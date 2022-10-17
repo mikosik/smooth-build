@@ -32,6 +32,10 @@ public class TaskHashes {
     return hash(5, instB.hash());
   }
 
+  public static Hash identityTaskHash() {
+    return hash(6);
+  }
+
   private static Hash hash(int id, Hash hash) {
     return Hash.of(asList(Hash.of(id), hash));
   }

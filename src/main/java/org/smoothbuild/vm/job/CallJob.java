@@ -25,6 +25,7 @@ import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.execute.TaskInfo;
+import org.smoothbuild.vm.task.IdentityTask;
 import org.smoothbuild.vm.task.NativeCallTask;
 
 import com.google.common.collect.ImmutableList;
@@ -64,7 +65,7 @@ public class CallJob extends ExecutingJob {
         .withEnvironment(argsJ, trace)
         .jobFor(defFuncB.body());
     var taskInfo = callTaskInfo(defFuncB);
-    evaluateInsideVirtualJob(bodyJob, taskInfo, resultConsumer);
+    evaluateAndReportViaIdentityTask(bodyJob, taskInfo, resultConsumer);
   }
 
   private TraceS trace(DefFuncB defFuncB) {
@@ -88,7 +89,7 @@ public class CallJob extends ExecutingJob {
     var condition = ((BoolB) conditionB).toJ();
     var job = context().jobFor(args.get(condition ? 1 : 2));
     var taskInfo = callTaskInfo(ifFuncB);
-    evaluateInsideVirtualJob(job, taskInfo, resultConsumer);
+    evaluateAndReportViaIdentityTask(job, taskInfo, resultConsumer);
   }
 
   // handling MapFunc
@@ -106,7 +107,7 @@ public class CallJob extends ExecutingJob {
     var orderB = bytecodeF().order(bytecodeF().arrayT(mappingFuncResT), callBs);
     var orderJob = context().jobFor(orderB);
     var taskInfo = callTaskInfo(mapFuncB);
-    evaluateInsideVirtualJob(orderJob, taskInfo, resultConsumer);
+    evaluateAndReportViaIdentityTask(orderJob, taskInfo, resultConsumer);
   }
 
   private ExprB newCallB(ExprB funcExprB, InstB val) {
@@ -135,10 +136,16 @@ public class CallJob extends ExecutingJob {
 
   //helpers
 
-  private void evaluateInsideVirtualJob(Job job, TaskInfo taskInfo, Consumer<InstB> resultConsumer) {
-    new VirtualJob(job, taskInfo, context().reporter())
-        .evaluate()
-        .addConsumer(resultConsumer);
+  private void evaluateAndReportViaIdentityTask(
+      Job job, TaskInfo taskInfo, Consumer<InstB> resultConsumer) {
+    job.evaluate().addConsumer(v -> onDependencyEvaluated(v, taskInfo, resultConsumer));
+  }
+
+  private void onDependencyEvaluated(
+      InstB instB, TaskInfo taskInfo, Consumer<InstB> resultConsumer) {
+    var task = new IdentityTask(instB.type(), CALL, taskInfo.tagLoc(), context().trace());
+    var input = context().bytecodeF().tuple(list(instB));
+    context().taskExecutor().enqueue(task, input, resultConsumer);
   }
 
   private TaskInfo callTaskInfo(FuncB funcB) {

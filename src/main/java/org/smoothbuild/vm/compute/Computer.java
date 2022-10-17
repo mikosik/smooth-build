@@ -18,6 +18,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;
 import org.smoothbuild.vm.task.ConstTask;
+import org.smoothbuild.vm.task.IdentityTask;
 import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.Task;
 
@@ -52,7 +53,7 @@ public class Computer {
       newPromised.addConsumer(consumer);
       if (computationCache.contains(hash)) {
         var output = computationCache.read(hash, task.outputT());
-        newPromised.accept(new CompRes(output, task instanceof ConstTask ? NOOP : EXECUTION));
+        newPromised.accept(new CompRes(output, isNonExecutingTask(task) ? NOOP : EXECUTION));
         promisedValues.remove(hash);
       } else {
         var computed = runComputation(task, input);
@@ -75,7 +76,7 @@ public class Computer {
   }
 
   private static ResSource resSourceOfCached(CompRes compRes, Task task) {
-    if (task instanceof ConstTask) {
+    if (isNonExecutingTask(task)) {
       return NOOP;
     } else {
       return compRes.resSource() == EXECUTION && task.isPure() ? DISK : MEMORY;
@@ -85,7 +86,7 @@ public class Computer {
   private CompRes runComputation(Task task, TupleB input) {
     var container = containerProvider.get();
     Output output;
-    var resSource = task instanceof ConstTask ? NOOP : EXECUTION;
+    var resSource = isNonExecutingTask(task) ? NOOP : EXECUTION;
     try {
       output = task.run(input, container);
     } catch (Exception e) {
@@ -94,6 +95,10 @@ public class Computer {
     // This Computed instance creation is outside try-block
     // so eventual exception it could throw won't be caught by above catch.
     return new CompRes(output, resSource);
+  }
+
+  private static boolean isNonExecutingTask(Task task) {
+    return task instanceof ConstTask || task instanceof IdentityTask;
   }
 
   private Hash computationHash(Task task, TupleB args) {
