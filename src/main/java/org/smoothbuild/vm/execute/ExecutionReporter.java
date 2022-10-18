@@ -20,6 +20,7 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.compute.CompRes;
 import org.smoothbuild.vm.compute.ResSource;
+import org.smoothbuild.vm.task.Task;
 
 /**
  * This class is thread-safe.
@@ -33,35 +34,35 @@ public class ExecutionReporter {
     this.taskReporter = taskReporter;
   }
 
-  public void report(TaskInfo taskInfo, CompRes compRes) {
+  public void report(Task task, CompRes compRes) {
     ResSource resSource = compRes.resSource();
     if (compRes.hasOutput()) {
-      print(taskInfo, resSource, compRes.output().messages());
+      print(task, resSource, compRes.output().messages());
     } else {
       Log error = error("Execution failed with:\n" + getStackTraceAsString(compRes.exception()));
-      print(taskInfo, list(error), resSource);
+      print(task, list(error), resSource);
     }
   }
 
-  public void reportComputerException(TaskInfo taskInfo, Throwable throwable) {
+  public void reportComputerException(Task task, Throwable throwable) {
     Log fatal = fatal(
         "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
-    print(taskInfo, list(fatal), EXECUTION);
+    print(task, list(fatal), EXECUTION);
   }
 
-  private void print(TaskInfo taskInfo, ResSource resSource, ArrayB messages) {
+  private void print(Task task, ResSource resSource, ArrayB messages) {
     var logs = map(messages.elems(TupleB.class), m -> new Log(level(m), text(m)));
-    print(taskInfo, logs, resSource);
+    print(task, logs, resSource);
   }
 
-  public void print(TaskInfo taskInfo, List<Log> logs, ResSource resSource) {
-    taskReporter.report(taskInfo, header(taskInfo, resSource.toString()), logs);
+  public void print(Task task, List<Log> logs, ResSource resSource) {
+    taskReporter.report(task, header(task, resSource.toString()), logs);
   }
 
   // Visible for testing
-  static String header(TaskInfo taskInfo, String resultSource) {
-    var tag = taskInfo.tag();
-    var loc = taskInfo.loc().toString();
+  static String header(Task task, String resultSource) {
+    var tag = task.tag();
+    var loc = task.loc().toString();
     var trimmedTag = limitedWithEllipsis(tag, NAME_LENGTH_LIMIT);
     var nameColumn = padEnd(trimmedTag, NAME_LENGTH_LIMIT + 1, ' ');
     var locColumn = resultSource.isEmpty()

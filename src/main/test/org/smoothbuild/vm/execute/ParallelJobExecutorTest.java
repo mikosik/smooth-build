@@ -3,7 +3,7 @@ package org.smoothbuild.vm.execute;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static java.util.Collections.nCopies;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
@@ -21,7 +21,7 @@ import static org.smoothbuild.vm.compute.ResSource.MEMORY;
 import static org.smoothbuild.vm.execute.ExecutionReporter.header;
 import static org.smoothbuild.vm.execute.TaskKind.COMBINE;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -48,6 +48,7 @@ import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.job.ExecutingJob;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
+import org.smoothbuild.vm.task.ExecutableTask;
 import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.Task;
 
@@ -103,16 +104,7 @@ public class ParallelJobExecutorTest extends TestContext {
     assertThat(executeSingleJob(job))
         .isEqualTo(stringB("(0,0,0,0)"));
 
-    ArgumentCaptor<CompRes> captor = ArgumentCaptor.forClass(CompRes.class);
-    verify(reporter, times(4))
-        .report(eq(job1.info()), captor.capture());
-    List<ResSource> reportedSources = captor.getAllValues()
-        .stream()
-        .map(CompRes::resSource)
-        .collect(toList());
-
-    assertThat(reportedSources)
-        .containsExactly(DISK, DISK, DISK, EXECUTION);
+    verifyOtherTasksResSource(list(job1, job2, job3, job4), DISK);
   }
 
   @Nested
@@ -127,16 +119,7 @@ public class ParallelJobExecutorTest extends TestContext {
 
       assertThat(executeSingleJob(job))
           .isEqualTo(stringB("(0,0)"));
-
-      ArgumentCaptor<CompRes> captor = ArgumentCaptor.forClass(CompRes.class);
-      verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
-      List<ResSource> reportedSources = captor.getAllValues()
-          .stream()
-          .map(CompRes::resSource)
-          .collect(toList());
-
-      assertThat(reportedSources)
-          .containsExactly(MEMORY, EXECUTION);
+      verifyOtherTasksResSource(list(job1, job2), MEMORY);
     }
 
     @Test
@@ -149,16 +132,7 @@ public class ParallelJobExecutorTest extends TestContext {
 
       assertThat(executeSingleJob(job))
           .isEqualTo(stringB("(0,0)"));
-
-      ArgumentCaptor<CompRes> captor = ArgumentCaptor.forClass(CompRes.class);
-      verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
-      List<ResSource> reportedSources = captor.getAllValues()
-          .stream()
-          .map(CompRes::resSource)
-          .collect(toList());
-
-      assertThat(reportedSources)
-          .containsExactly(DISK, EXECUTION);
+      verifyOtherTasksResSource(list(job1, job2), DISK);
     }
   }
 
@@ -186,8 +160,8 @@ public class ParallelJobExecutorTest extends TestContext {
     assertThat(executeJobs(context, list(job)).get(0).isEmpty())
         .isTrue();
     verify(reporter).report(
-        eq(job.info()),
-        eq(header(job.info(), "exec")),
+        eq(job.task()),
+        eq(header(job.task(), "exec")),
         eq(list(error("Execution failed with:\n" + getStackTraceAsString(exception)))));
   }
 
@@ -196,7 +170,7 @@ public class ParallelJobExecutorTest extends TestContext {
     RuntimeException exception = new RuntimeException();
     Computer computer = new Computer(null, null, null) {
       @Override
-      public void compute(Task task, TupleB input, Consumer<CompRes> consumer) {
+      public void compute(ExecutableTask task, TupleB input, Consumer<CompRes> consumer) {
         throw exception;
       }
     };
@@ -205,16 +179,34 @@ public class ParallelJobExecutorTest extends TestContext {
 
     var val = executeJobs(context, list(job)).get(0);
 
-    verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
+    verify(reporter, only()).reportComputerException(same(job.task()), same(exception));
     assertThat(val.isEmpty())
         .isTrue();
+  }
+
+  private void verifyOtherTasksResSource(ImmutableList<MyJob> jobs, ResSource expectedResSource) {
+    var resSources = map(jobs, j -> {
+      var argCaptor = ArgumentCaptor.forClass(CompRes.class);
+      verify(reporter, times(1)).report(eq(j.task()), argCaptor.capture());
+      return argCaptor.getValue().resSource();
+    });
+
+    assertThat(resSources)
+        .containsExactlyElementsIn(resSourceList(jobs, expectedResSource));
+  }
+
+  private static ArrayList<ResSource> resSourceList(
+      ImmutableList<MyJob> jobs, ResSource expectedResSource) {
+    var expected = new ArrayList<>(nCopies(jobs.size(), expectedResSource));
+    expected.set(0, EXECUTION);
+    return expected;
   }
 
   private MyJob concat(Job... deps) {
     return job(concatTask(), deps);
   }
 
-  private Task concatTask() {
+  private ExecutableTask concatTask() {
     return new TestTask("concat", stringTB(), Hash.of(1)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
@@ -225,11 +217,11 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private MyJob job(Task task, Job... deps) {
+  private MyJob job(ExecutableTask task, Job... deps) {
     return new MyJob(task, list(deps), bytecodeF(), context);
   }
 
-  private Task valueTask(String value) {
+  private ExecutableTask valueTask(String value) {
     return new TestTask("value", stringTB(), Hash.of(asList(Hash.of(2), Hash.of(value)))) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
@@ -239,7 +231,7 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private Task throwingTask(ArithmeticException exception) {
+  private ExecutableTask throwingTask(ArithmeticException exception) {
     return new TestTask("throwing", stringTB(), Hash.of(3)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
@@ -248,11 +240,11 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private Task sleepGetIncrementTask(AtomicInteger counter) {
+  private ExecutableTask sleepGetIncrementTask(AtomicInteger counter) {
     return sleepGetIncrementTask(counter, true);
   }
 
-  private Task sleepGetIncrementTask(AtomicInteger counter, boolean isPure) {
+  private ExecutableTask sleepGetIncrementTask(AtomicInteger counter, boolean isPure) {
     return new TestTask("getIncrement", stringTB(), Hash.of(4), isPure) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
@@ -262,7 +254,7 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private Task incrementTask(AtomicInteger counter) {
+  private ExecutableTask incrementTask(AtomicInteger counter) {
     return new TestTask("increment", stringTB(), Hash.of(5)) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
@@ -271,7 +263,7 @@ public class ParallelJobExecutorTest extends TestContext {
     };
   }
 
-  private Task sleepyWriteReadTask(Hash hash, AtomicInteger write, AtomicInteger read) {
+  private ExecutableTask sleepyWriteReadTask(Hash hash, AtomicInteger write, AtomicInteger read) {
     return new TestTask("sleepyWriteRead", stringTB(), hash) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
@@ -308,30 +300,22 @@ public class ParallelJobExecutorTest extends TestContext {
     }
   }
 
-  private static abstract class TestTask extends Task {
-    private final Hash hash;
-
+  private static abstract class TestTask extends ExecutableTask {
     protected TestTask(String name, TypeB type, Hash hash) {
       this(name, type, hash, true);
     }
 
     protected TestTask(String name, TypeB type, Hash hash, boolean isPure) {
-      super(type, COMBINE, tagLoc(name), traceS(), isPure);
-      this.hash = hash;
-    }
-
-    @Override
-    public Hash hash() {
-      return hash;
+      super(type, COMBINE, tagLoc(name), traceS(), isPure, hash);
     }
   }
 
   private static class MyJob extends ExecutingJob {
-    private final Task task;
+    private final ExecutableTask task;
     private final ImmutableList<Job> depJs;
     private final BytecodeF bytecodeF;
 
-    public MyJob(Task task, ImmutableList<Job> depJs, BytecodeF bytecodeF,
+    public MyJob(ExecutableTask task, ImmutableList<Job> depJs, BytecodeF bytecodeF,
         ExecutionContext context) {
       super(context);
       this.task = task;
@@ -339,8 +323,8 @@ public class ParallelJobExecutorTest extends TestContext {
       this.bytecodeF = bytecodeF;
     }
 
-    public TaskInfo info() {
-      return task.info();
+    public Task task() {
+      return task;
     }
 
     @Override

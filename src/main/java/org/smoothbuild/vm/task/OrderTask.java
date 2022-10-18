@@ -6,22 +6,16 @@ import static org.smoothbuild.vm.task.TaskHashes.orderTaskHash;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public class OrderTask extends Task {
+public class OrderTask extends ExecutableTask {
   public OrderTask(TypeB arrayT, TagLoc tagLoc, TraceS trace) {
-    super(arrayT, ORDER, tagLoc, trace);
+    super(arrayT, ORDER, tagLoc, trace, orderTaskHash(arrayT));
     checkArgument(arrayT instanceof ArrayTB);
-  }
-
-  @Override
-  public Hash hash() {
-    return orderTaskHash(outputT());
   }
 
   @Override

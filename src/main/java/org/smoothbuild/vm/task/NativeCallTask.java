@@ -11,28 +11,22 @@ import java.lang.reflect.Method;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public class NativeCallTask extends Task {
+public class NativeCallTask extends ExecutableTask {
   private final NatFuncB natFuncB;
   private final String name;
   private final NativeMethodLoader nativeMethodLoader;
 
   public NativeCallTask(TypeB outputT, String name, NatFuncB natFunc,
       NativeMethodLoader methodLoader, TagLoc tagLoc, TraceS trace) {
-    super(outputT, CALL, tagLoc, trace, natFunc.isPure().toJ());
+    super(outputT, CALL, tagLoc, trace, natFunc.isPure().toJ(), nativeCallTaskHash(natFunc));
     this.name = name;
     this.nativeMethodLoader = methodLoader;
     this.natFuncB = natFunc;
-  }
-
-  @Override
-  public Hash hash() {
-    return nativeCallTaskHash(natFuncB);
   }
 
   @Override

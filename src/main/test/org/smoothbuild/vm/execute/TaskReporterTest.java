@@ -42,7 +42,7 @@ public class TaskReporterTest extends TestContext {
       Level level, List<Log> loggedLogs) {
     var reporter = new ConsoleReporter(console, level);
     var taskReporter = new TaskReporter(ALL, reporter);
-    taskReporter.report(taskInfo(), "header", logsWithAllLevels());
+    taskReporter.report(task(), "header", logsWithAllLevels());
     assertThat(outputStream.toString())
         .contains(ConsoleReporter.toText("header", loggedLogs));
   }
@@ -61,7 +61,7 @@ public class TaskReporterTest extends TestContext {
   public void when_filter_doesnt_match_then_no_log_is_logged(Level level) {
     var reporter = new ConsoleReporter(console, level);
     var taskReporter = new TaskReporter(NONE, reporter);
-    taskReporter.report(taskInfo(), "header", logsWithAllLevels());
+    taskReporter.report(task(), "header", logsWithAllLevels());
     assertThat(outputStream.toString())
         .isEmpty();
   }

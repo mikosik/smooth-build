@@ -23,7 +23,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
-import static org.smoothbuild.vm.execute.TaskKind.CALL;
+import static org.smoothbuild.vm.execute.TaskKind.ORDER;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 
 import java.io.IOException;
@@ -144,12 +144,12 @@ import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
-import org.smoothbuild.vm.execute.TaskInfo;
 import org.smoothbuild.vm.execute.TaskKind;
 import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.task.NativeMethodLoader;
+import org.smoothbuild.vm.task.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -1339,6 +1339,10 @@ public class TestContext {
     return loc(filePath(), line);
   }
 
+  public static Loc loc(Space space) {
+    return loc(filePath(space, path("path")), 17);
+  }
+
   public static Loc loc(FilePath filePath, int line) {
     return Loc.loc(filePath, line);
   }
@@ -1383,12 +1387,12 @@ public class TestContext {
     return new SynchronizedFileSystem(new MemoryFileSystem());
   }
 
-  public static TaskInfo taskInfo() {
-    return taskInfo(CALL, "name", loc());
+  public Task task() {
+    return task(ORDER, loc());
   }
 
-  public static TaskInfo taskInfo(TaskKind kind, String tag, Loc loc) {
-    return new TaskInfo(kind, tagLoc(tag, loc), null);
+  public Task task(TaskKind kind, Loc loc) {
+    return new Task(intTB(), kind, tagLoc("name", loc), traceS());
   }
 
   public static TagLoc tagLoc() {

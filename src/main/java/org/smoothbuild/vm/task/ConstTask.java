@@ -6,22 +6,16 @@ import static org.smoothbuild.vm.task.TaskHashes.constTaskHash;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public class ConstTask extends Task {
+public class ConstTask extends ExecutableTask {
   private final InstB instB;
 
   public ConstTask(InstB instB, TagLoc tagLoc, TraceS trace) {
-    super(instB.type(), CONST, tagLoc, trace);
+    super(instB.type(), CONST, tagLoc, trace, constTaskHash(instB));
     this.instB = instB;
-  }
-
-  @Override
-  public Hash hash() {
-    return constTaskHash(instB);
   }
 
   @Override

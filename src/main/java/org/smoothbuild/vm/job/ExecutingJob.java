@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.task.Task;
+import org.smoothbuild.vm.task.ExecutableTask;
 
 import com.google.common.collect.ImmutableList;
 
@@ -19,7 +19,8 @@ public abstract class ExecutingJob extends Job {
     this.context = context;
   }
 
-  protected PromisedValue<InstB> evaluateTransitively(Task task, ImmutableList<ExprB> deps) {
+  protected PromisedValue<InstB> evaluateTransitively(
+      ExecutableTask task, ImmutableList<ExprB> deps) {
     var result = new PromisedValue<InstB>();
     var depJs = map(deps, context::jobFor);
     var depResults = map(depJs, Job::evaluate);

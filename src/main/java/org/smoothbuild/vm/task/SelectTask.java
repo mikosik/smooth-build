@@ -7,7 +7,6 @@ import static org.smoothbuild.vm.task.TaskHashes.selectTaskHash;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
@@ -15,14 +14,9 @@ import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public class SelectTask extends Task {
+public class SelectTask extends ExecutableTask {
   public SelectTask(TypeB outputT, TagLoc tagLoc, TraceS trace) {
-    super(outputT, SELECT, tagLoc, trace);
-  }
-
-  @Override
-  public Hash hash() {
-    return selectTaskHash();
+    super(outputT, SELECT, tagLoc, trace, selectTaskHash());
   }
 
   @Override

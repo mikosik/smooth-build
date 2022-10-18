@@ -10,11 +10,11 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.task.CombineTask;
+import org.smoothbuild.vm.task.ExecutableTask;
 import org.smoothbuild.vm.task.NativeCallTask;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.SelectTask;
-import org.smoothbuild.vm.task.Task;
 
 public class ComputationHashTest extends TestContext {
   @Test
@@ -117,13 +117,8 @@ public class ComputationHashTest extends TestContext {
         .isEqualTo(Hash.decode("4ae0c582dfeccb5a7ed2ce0420a25197e1b070f1"));
   }
 
-  private Task task(Hash hash) {
-    return new Task(intTB(), COMBINE, tagLoc(), traceS()) {
-      @Override
-      public Hash hash() {
-        return hash;
-      }
-
+  private ExecutableTask task(Hash hash) {
+    return new ExecutableTask(intTB(), COMBINE, tagLoc(), traceS(), hash) {
       @Override
       public Output run(TupleB input, NativeApi nativeApi) {
         return null;

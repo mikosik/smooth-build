@@ -24,7 +24,6 @@ import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
-import org.smoothbuild.vm.execute.TaskInfo;
 import org.smoothbuild.vm.task.IdentityTask;
 import org.smoothbuild.vm.task.NativeCallTask;
 
@@ -64,8 +63,8 @@ public class CallJob extends ExecutingJob {
     var bodyJob = context()
         .withEnvironment(argsJ, trace)
         .jobFor(defFuncB.body());
-    var taskInfo = callTaskInfo(defFuncB);
-    evaluateAndReportViaIdentityTask(bodyJob, taskInfo, resultConsumer);
+    var tagLoc = callTagLoc(defFuncB);
+    evaluateAndReportViaIdentityTask(bodyJob, tagLoc, resultConsumer);
   }
 
   private TraceS trace(DefFuncB defFuncB) {
@@ -88,8 +87,8 @@ public class CallJob extends ExecutingJob {
       Consumer<InstB> resultConsumer) {
     var condition = ((BoolB) conditionB).toJ();
     var job = context().jobFor(args.get(condition ? 1 : 2));
-    var taskInfo = callTaskInfo(ifFuncB);
-    evaluateAndReportViaIdentityTask(job, taskInfo, resultConsumer);
+    var tagLoc = callTagLoc(ifFuncB);
+    evaluateAndReportViaIdentityTask(job, tagLoc, resultConsumer);
   }
 
   // handling MapFunc
@@ -106,8 +105,8 @@ public class CallJob extends ExecutingJob {
     var mappingFuncResT = ((FuncTB) mappingFuncExprB.evalT()).res();
     var orderB = bytecodeF().order(bytecodeF().arrayT(mappingFuncResT), callBs);
     var orderJob = context().jobFor(orderB);
-    var taskInfo = callTaskInfo(mapFuncB);
-    evaluateAndReportViaIdentityTask(orderJob, taskInfo, resultConsumer);
+    var tagLoc = callTagLoc(mapFuncB);
+    evaluateAndReportViaIdentityTask(orderJob, tagLoc, resultConsumer);
   }
 
   private ExprB newCallB(ExprB funcExprB, InstB val) {
@@ -137,19 +136,14 @@ public class CallJob extends ExecutingJob {
   //helpers
 
   private void evaluateAndReportViaIdentityTask(
-      Job job, TaskInfo taskInfo, Consumer<InstB> resultConsumer) {
-    job.evaluate().addConsumer(v -> onDependencyEvaluated(v, taskInfo, resultConsumer));
+      Job job, TagLoc tagLoc, Consumer<InstB> resultConsumer) {
+    job.evaluate().addConsumer(v -> onDependencyEvaluated(v, tagLoc, resultConsumer));
   }
 
-  private void onDependencyEvaluated(
-      InstB instB, TaskInfo taskInfo, Consumer<InstB> resultConsumer) {
-    var task = new IdentityTask(instB.type(), CALL, taskInfo.tagLoc(), context().trace());
+  private void onDependencyEvaluated(InstB instB, TagLoc tagLoc, Consumer<InstB> resultConsumer) {
+    var task = new IdentityTask(instB.type(), CALL, tagLoc, context().trace());
     var input = context().bytecodeF().tuple(list(instB));
     context().taskExecutor().enqueue(task, input, resultConsumer);
-  }
-
-  private TaskInfo callTaskInfo(FuncB funcB) {
-    return new TaskInfo(CALL, callTagLoc(funcB), context().trace());
   }
 
   private TagLoc callTagLoc(FuncB funcB) {

@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.Computer;
-import org.smoothbuild.vm.task.Task;
+import org.smoothbuild.vm.task.ExecutableTask;
 
 public class TaskExecutor {
   private final SoftTerminationExecutor executor;
@@ -26,13 +26,13 @@ public class TaskExecutor {
     this.reporter = reporter;
   }
 
-  public void enqueue(Task task, TupleB input, Consumer<InstB> consumer) {
+  public void enqueue(ExecutableTask task, TupleB input, Consumer<InstB> consumer) {
     executor.enqueue(() -> {
       try {
-        var resHandler = new ResHandler(task.info(), executor, reporter, consumer);
+        var resHandler = new ResHandler(task, executor, reporter, consumer);
         computer.compute(task, input, resHandler);
       } catch (Throwable e) {
-        reporter.reportComputerException(task.info(), e);
+        reporter.reportComputerException(task, e);
         executor.terminate();
       }
     });

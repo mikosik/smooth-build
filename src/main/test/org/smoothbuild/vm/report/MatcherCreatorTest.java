@@ -3,7 +3,6 @@ package org.smoothbuild.vm.report;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -33,12 +32,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.execute.TaskInfo;
 import org.smoothbuild.vm.execute.TaskKind;
 
 import picocli.CommandLine.TypeConversionException;
@@ -53,10 +50,10 @@ public class MatcherCreatorTest extends TestContext {
     for (TaskKind kind : TaskKind.values()) {
       for (Space space : Space.values()) {
         for (Level level : levels()) {
-          TaskInfo taskInfo = taskInfo(kind, space);
+          var task = task(kind, loc(space));
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
-          boolean actual = matcher.matches(taskInfo, logs);
-          boolean expected = expectedMatcher.matches(taskInfo, logs);
+          boolean actual = matcher.matches(task, logs);
+          boolean expected = expectedMatcher.matches(task, logs);
           if (actual != expected) {
             builder
                 .append(kind)
@@ -84,11 +81,6 @@ public class MatcherCreatorTest extends TestContext {
     ArrayList<Level> levels = new ArrayList<>(asList(Level.values()));
     levels.add(null);
     return levels;
-  }
-
-  private static TaskInfo taskInfo(TaskKind kind, Space space) {
-    Loc loc = new Loc(filePath(space, path("path")), 3);
-    return taskInfo(kind, "name", loc);
   }
 
   public static Stream<? extends Arguments> provideArguments() {

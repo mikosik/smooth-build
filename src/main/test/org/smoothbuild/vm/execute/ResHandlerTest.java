@@ -36,14 +36,14 @@ public class ResHandlerTest extends TestContext {
   class when_output_with_value_is_passed {
     @Test
     public void object_is_forwarded_to_consumer() {
-      ResHandler resHandler = new ResHandler(taskInfo(), executor, reporter, consumer);
+      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(maybeComputed(val));
       verify(consumer, only()).accept(val);
     }
 
     @Test
     public void executor_is_not_stopped() {
-      ResHandler resHandler = new ResHandler(taskInfo(), executor, reporter, consumer);
+      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(maybeComputed(val));
       verifyNoInteractions(executor);
     }
@@ -53,14 +53,14 @@ public class ResHandlerTest extends TestContext {
   class when_output_without_value_is_passed {
     @Test
     public void object_is_not_forwarded_to_consumer() {
-      ResHandler resHandler = new ResHandler(taskInfo(), executor, reporter, consumer);
+      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(maybeComputed(null));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
-      ResHandler resHandler = new ResHandler(taskInfo(), executor, reporter, consumer);
+      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(maybeComputed(null));
       verify(executor, only()).terminate();
     }
@@ -70,14 +70,14 @@ public class ResHandlerTest extends TestContext {
   class when_maybe_output_with_exception_is_passed {
     @Test
     public void object_is_not_forwarded_to_consumer() {
-      ResHandler resHandler = new ResHandler(taskInfo(), executor, reporter, consumer);
+      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(new CompRes(new ArithmeticException(), DISK));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
-      ResHandler resHandler = new ResHandler(taskInfo(), executor, reporter, consumer);
+      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
       resHandler.accept(new CompRes(new ArithmeticException(), DISK));
       verify(executor, only()).terminate();
     }
