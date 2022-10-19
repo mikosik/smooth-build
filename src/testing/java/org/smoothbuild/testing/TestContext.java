@@ -161,22 +161,13 @@ public class TestContext {
   public static final String BUILD_FILE_PATH = "myBuild.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
 
-  private Computer computer;
-  private Container container;
   private BytecodeF bytecodeF;
-  private ComputationCache computationCache;
-  private FileSystem computationCacheFileSystem;
   private BytecodeDb bytecodeDb;
   private CategoryDb categoryDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
   private TempManager tempManager;
-  private ConsoleReporter consoleReporter;
-  private BytecodeLoader bytecodeLoader;
-  private JarClassLoaderProv jarClassLoaderProv;
-  private MethodLoader methodLoader;
-  private BytecodeMethodLoader bytecodeMethodLoader;
 
   public Vm vm() {
     return new Vm(this::executionContext);
@@ -275,31 +266,19 @@ public class TestContext {
   }
 
   private BytecodeLoader bytecodeLoader() {
-    if (bytecodeLoader == null) {
-      bytecodeLoader = new BytecodeLoader(bytecodeMethodLoader(), bytecodeF());
-    }
-    return bytecodeLoader;
+    return new BytecodeLoader(bytecodeMethodLoader(), bytecodeF());
   }
 
   private BytecodeMethodLoader bytecodeMethodLoader() {
-    if (bytecodeMethodLoader == null) {
-      bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader());
-    }
-    return bytecodeMethodLoader;
+    return new BytecodeMethodLoader(methodLoader());
   }
 
   private MethodLoader methodLoader() {
-    if (methodLoader == null) {
-      methodLoader = new MethodLoader(jarClassLoaderProv());
-    }
-    return methodLoader;
+    return new MethodLoader(jarClassLoaderProv());
   }
 
   private JarClassLoaderProv jarClassLoaderProv() {
-    if (jarClassLoaderProv == null) {
-      jarClassLoaderProv = new JarClassLoaderProv(bytecodeF(), getSystemClassLoader());
-    }
-    return jarClassLoaderProv;
+    return new JarClassLoaderProv(bytecodeF(), getSystemClassLoader());
   }
 
   public TestingModLoader module(String code) {
@@ -319,10 +298,7 @@ public class TestContext {
   }
 
   public ConsoleReporter reporter() {
-    if (consoleReporter == null) {
-      consoleReporter = new ConsoleReporter(console(), INFO);
-    }
-    return consoleReporter;
+    return new ConsoleReporter(console(), INFO);
   }
 
   private Console console() {
@@ -333,28 +309,14 @@ public class TestContext {
   }
 
   public Computer computer() {
-    if (computer == null) {
-      computer = new Computer(computationCache(), Hash.of(123), this::newContainer);
-    }
-    return computer;
+    return new Computer(computationCache(), Hash.of(123), this::container);
   }
 
   public NativeApi nativeApi() {
     return container();
   }
 
-  public NativeApi newNativeApi() {
-    return newContainer();
-  }
-
   public Container container() {
-    if (container == null) {
-      container = newContainer();
-    }
-    return container;
-  }
-
-  private Container newContainer() {
     return new Container(fullFileSystem(), bytecodeF());
   }
 
@@ -380,18 +342,11 @@ public class TestContext {
   }
 
   public ComputationCache computationCache() {
-    if (computationCache == null) {
-      computationCache = new ComputationCache(
-          computationCacheFileSystem(), bytecodeDb(), bytecodeF());
-    }
-    return computationCache;
+    return new ComputationCache(computationCacheFileSystem(), bytecodeDb(), bytecodeF());
   }
 
   public FileSystem computationCacheFileSystem() {
-    if (computationCacheFileSystem == null) {
-      computationCacheFileSystem = synchronizedMemoryFileSystem();
-    }
-    return computationCacheFileSystem;
+    return synchronizedMemoryFileSystem();
   }
 
   public BytecodeDb bytecodeDbOther() {
@@ -404,8 +359,7 @@ public class TestContext {
 
   public HashedDb hashedDb() {
     if (hashedDb == null) {
-      hashedDb = new HashedDb(
-          hashedDbFileSystem(), PathS.root(), tempManager());
+      hashedDb = new HashedDb(hashedDbFileSystem(), PathS.root(), tempManager());
     }
     return hashedDb;
   }

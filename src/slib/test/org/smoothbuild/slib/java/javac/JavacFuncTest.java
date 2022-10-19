@@ -24,9 +24,10 @@ public class JavacFuncTest extends TestContext {
     String name = "my/package/MyKlass.class";
     TupleB file1 = fileB(path(name));
     TupleB jar = fileB("myFile.jar", blobB(jarByteString(file1)));
-    assertThat(classesFromJarFiles(nativeApi(), arrayB(jar, jar)))
+    var nativeApi = nativeApi();
+    assertThat(classesFromJarFiles(nativeApi, arrayB(jar, jar)))
         .isNull();
-    assertThat(nativeApi().messages())
+    assertThat(nativeApi.messages())
         .isEqualTo(arrayB(errorMessage(
             "File " + name + " is contained by two different library jar files.")));
   }

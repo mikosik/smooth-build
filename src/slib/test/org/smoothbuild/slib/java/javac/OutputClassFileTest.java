@@ -21,9 +21,10 @@ public class OutputClassFileTest extends TestContext {
 
   @Test
   public void open_output_stream() throws IOException {
-    var factory = nativeApi().factory();
+    var nativeApi = nativeApi();
+    var factory = nativeApi.factory();
     ArrayBBuilder fileArrayBuilder = bytecodeDb().arrayBuilder(factory.arrayT(factory.fileT()));
-    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi());
+    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi);
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
