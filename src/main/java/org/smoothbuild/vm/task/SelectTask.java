@@ -2,7 +2,6 @@ package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.execute.TaskKind.SELECT;
-import static org.smoothbuild.vm.task.TaskHashes.selectTaskHash;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
@@ -14,9 +13,9 @@ import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public class SelectTask extends ExecutableTask {
+public final class SelectTask extends ExecutableTask {
   public SelectTask(TypeB outputT, TagLoc tagLoc, TraceS trace) {
-    super(outputT, SELECT, tagLoc, trace, selectTaskHash());
+    super(outputT, SELECT, tagLoc, trace);
   }
 
   @Override

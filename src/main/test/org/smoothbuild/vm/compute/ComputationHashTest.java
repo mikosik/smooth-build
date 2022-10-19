@@ -2,24 +2,20 @@ package org.smoothbuild.vm.compute;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.vm.compute.Computer.computationHash;
-import static org.smoothbuild.vm.execute.TaskKind.COMBINE;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.task.CombineTask;
-import org.smoothbuild.vm.task.ExecutableTask;
+import org.smoothbuild.vm.task.ConstTask;
 import org.smoothbuild.vm.task.NativeCallTask;
 import org.smoothbuild.vm.task.OrderTask;
-import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.SelectTask;
 
 public class ComputationHashTest extends TestContext {
   @Test
   public void hashes_of_computations_with_same_task_runtime_and_input_are_equal() {
-    var task = task(Hash.of(1));
+    var task = new ConstTask(intB(7), tagLoc(), traceS());
     var input = tupleB(stringB("input"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(computationHash(Hash.of(13), task, input));
@@ -27,8 +23,8 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hashes_of_computations_with_different_task_but_same_runtime_and_input_are_not_equal() {
-    var task1 = task(Hash.of(1));
-    var task2 = task(Hash.of(2));
+    var task1 = new ConstTask(intB(7), tagLoc(), traceS());
+    var task2 = new ConstTask(intB(9), tagLoc(), traceS());
     var input = tupleB(stringB("input"));
     assertThat(computationHash(Hash.of(13), task1, input))
         .isNotEqualTo(computationHash(Hash.of(13), task2, input));
@@ -36,7 +32,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hashes_of_computations_with_same_task_and_input_but_different_runtime_are_not_equal() {
-    var task = task(Hash.of(1));
+    var task = new ConstTask(intB(7), tagLoc(), traceS());
     var input = tupleB(stringB("input"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isNotEqualTo(computationHash(Hash.of(14), task, input));
@@ -44,7 +40,7 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hashes_of_computations_with_same_task_runtime_but_different_input_are_not_equal() {
-    var task = task(Hash.of(1));
+    var task = new ConstTask(intB(7), tagLoc(), traceS());
     var input1 = tupleB(stringB("input"));
     var input2 = tupleB(stringB("input2"));
     assertThat(computationHash(Hash.of(13), task, input1))
@@ -115,14 +111,5 @@ public class ComputationHashTest extends TestContext {
     var input = tupleB(stringB("abc"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("4ae0c582dfeccb5a7ed2ce0420a25197e1b070f1"));
-  }
-
-  private ExecutableTask task(Hash hash) {
-    return new ExecutableTask(intTB(), COMBINE, tagLoc(), traceS(), hash) {
-      @Override
-      public Output run(TupleB input, NativeApi nativeApi) {
-        return null;
-      }
-    };
   }
 }

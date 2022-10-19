@@ -2,7 +2,6 @@ package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.execute.TaskKind.ORDER;
-import static org.smoothbuild.vm.task.TaskHashes.orderTaskHash;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
@@ -12,9 +11,9 @@ import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public class OrderTask extends ExecutableTask {
+public final class OrderTask extends ExecutableTask {
   public OrderTask(TypeB arrayT, TagLoc tagLoc, TraceS trace) {
-    super(arrayT, ORDER, tagLoc, trace, orderTaskHash(arrayT));
+    super(arrayT, ORDER, tagLoc, trace);
     checkArgument(arrayT instanceof ArrayTB);
   }
 

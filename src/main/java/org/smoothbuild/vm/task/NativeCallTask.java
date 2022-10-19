@@ -3,7 +3,6 @@ package org.smoothbuild.vm.task;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
-import static org.smoothbuild.vm.task.TaskHashes.nativeCallTaskHash;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,22 +15,22 @@ import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public class NativeCallTask extends ExecutableTask {
-  private final NatFuncB natFuncB;
+public final class NativeCallTask extends ExecutableTask {
+  private final NatFuncB natFunc;
   private final String name;
   private final NativeMethodLoader nativeMethodLoader;
 
   public NativeCallTask(TypeB outputT, String name, NatFuncB natFunc,
       NativeMethodLoader methodLoader, TagLoc tagLoc, TraceS trace) {
-    super(outputT, CALL, tagLoc, trace, natFunc.isPure().toJ(), nativeCallTaskHash(natFunc));
+    super(outputT, CALL, tagLoc, trace, natFunc.isPure().toJ());
     this.name = name;
     this.nativeMethodLoader = methodLoader;
-    this.natFuncB = natFunc;
+    this.natFunc = natFunc;
   }
 
   @Override
   public Output run(TupleB input, NativeApi nativeApi) {
-    return nativeMethodLoader.load(name, natFuncB)
+    return nativeMethodLoader.load(name, natFunc)
         .map(m -> invokeMethod(m, input, nativeApi))
         .orElse(e -> logErrorAndReturnNullOutput(nativeApi, e));
   }
@@ -75,5 +74,9 @@ public class NativeCallTask extends ExecutableTask {
   private static Output logErrorAndReturnNullOutput(NativeApi nativeApi, String message) {
     nativeApi.log().error(message);
     return new Output(null, nativeApi.messages());
+  }
+
+  public NatFuncB natFunc() {
+    return natFunc;
   }
 }

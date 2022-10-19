@@ -5,6 +5,7 @@ import static org.smoothbuild.vm.compute.ResSource.DISK;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResSource.MEMORY;
 import static org.smoothbuild.vm.compute.ResSource.NOOP;
+import static org.smoothbuild.vm.task.TaskHashes.taskHash;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -107,6 +108,6 @@ public class Computer {
   }
 
   public static Hash computationHash(Hash sandboxHash, ExecutableTask task, TupleB args) {
-    return Hash.of(asList(sandboxHash, task.hash(), args.hash()));
+    return Hash.of(asList(sandboxHash, taskHash(task), args.hash()));
   }
 }

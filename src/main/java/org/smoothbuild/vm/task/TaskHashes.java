@@ -8,31 +8,43 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 
 public class TaskHashes {
-  public static Hash pickTaskHash() {
+  public static Hash taskHash(ExecutableTask task) {
+    return switch (task) {
+      case CombineTask combineTask -> combineHash();
+      case ConstTask constTask -> constHash(constTask.instB());
+      case IdentityTask identityTask -> identityHash();
+      case NativeCallTask nativeCallTask -> nativeCallHash(nativeCallTask.natFunc());
+      case OrderTask orderTask -> orderHash(orderTask.outputT());
+      case PickTask pickTask -> pickHash();
+      case SelectTask selectTask -> selectHash();
+    };
+  }
+
+  private static Hash pickHash() {
     return hash(0);
   }
 
-  public static Hash combineTaskHash() {
+  private static Hash combineHash() {
     return hash(1);
   }
 
-  public static Hash nativeCallTaskHash(NatFuncB natFunc) {
+  private static Hash nativeCallHash(NatFuncB natFunc) {
     return hash(2, natFunc.hash());
   }
 
-  public static Hash orderTaskHash(TypeB typeB) {
+  private static Hash orderHash(TypeB typeB) {
     return hash(3, typeB.hash());
   }
 
-  public static Hash selectTaskHash() {
+  private static Hash selectHash() {
     return hash(4);
   }
 
-  public static Hash constTaskHash(InstB instB) {
+  private static Hash constHash(InstB instB) {
     return hash(5, instB.hash());
   }
 
-  public static Hash identityTaskHash() {
+  private static Hash identityHash() {
     return hash(6);
   }
 
