@@ -211,7 +211,11 @@ public class TestContext {
   }
 
   public ExecutionContext executionContext(TaskExecutor taskExecutor) {
-    return executionContext(taskExecutor, null);
+    return executionContext(taskExecutor, nativeMethodLoader());
+  }
+
+  public NativeMethodLoader nativeMethodLoader() {
+    return new NativeMethodLoader(methodLoader());
   }
 
   public ExecutionContext executionContext(TaskExecutor taskExecutor,
@@ -230,15 +234,13 @@ public class TestContext {
   }
 
   public ExecutionContext executionContext(ExecutionReporter reporter, TaskExecutor taskExecutor) {
-    NativeMethodLoader nativeMethodLoader = null;
     return new ExecutionContext(
-        taskExecutor, reporter, bytecodeF(), nativeMethodLoader, new JobCreator());
+        taskExecutor, reporter, bytecodeF(), nativeMethodLoader(), new JobCreator());
   }
 
   public ExecutionContext executionContext(JobCreator jobCreator) {
-    NativeMethodLoader nativeMethodLoader = null;
     return new ExecutionContext(
-        taskExecutor(), executionReporter(), bytecodeF(), nativeMethodLoader, jobCreator);
+        taskExecutor(), executionReporter(), bytecodeF(), nativeMethodLoader(), jobCreator);
   }
 
   public TaskExecutor taskExecutor() {
