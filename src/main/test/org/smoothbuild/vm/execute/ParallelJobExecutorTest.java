@@ -2,7 +2,6 @@ package org.smoothbuild.vm.execute;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
-import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
@@ -13,7 +12,6 @@ import static org.mockito.Mockito.verify;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.vm.compute.ResSource.DISK;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
@@ -33,7 +31,6 @@ import org.mockito.ArgumentCaptor;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
-import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
@@ -48,7 +45,9 @@ import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.job.ExecutingJob;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
+import org.smoothbuild.vm.task.ConstTask;
 import org.smoothbuild.vm.task.ExecutableTask;
+import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.Task;
 
@@ -67,15 +66,11 @@ public class ParallelJobExecutorTest extends TestContext {
   @Test
   public void tasks_are_executed() throws Exception {
     var job = concat(
-        concat(
-            job(valueTask("A")),
-            job(valueTask("B"))),
-        concat(
-            job(valueTask("C")),
-            job(valueTask("D"))));
+        job(constStringTask("A")),
+        job(constStringTask("B")));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(stringB("((A,B),(C,D))"));
+        .isEqualTo(arrayB(stringB("A"), stringB("B")));
   }
 
   @Test
@@ -87,7 +82,7 @@ public class ParallelJobExecutorTest extends TestContext {
         job(sleepyWriteReadTask(Hash.of(101), counterA, counterB)));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(stringB("(11,21)"));
+        .isEqualTo(arrayB(stringB("11"), stringB("21")));
   }
 
   @Test
@@ -102,7 +97,7 @@ public class ParallelJobExecutorTest extends TestContext {
     var job = concat(job1, job2, job3, job4);
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(stringB("(0,0,0,0)"));
+        .isEqualTo(arrayB(stringB("0"), stringB("0"), stringB("0"), stringB("0")));
 
     verifyOtherTasksResSource(list(job1, job2, job3, job4), DISK);
   }
@@ -118,7 +113,7 @@ public class ParallelJobExecutorTest extends TestContext {
       var job = concat(job1, job2);
 
       assertThat(executeSingleJob(job))
-          .isEqualTo(stringB("(0,0)"));
+          .isEqualTo(arrayB(stringB("0"), stringB("0")));
       verifyOtherTasksResSource(list(job1, job2), MEMORY);
     }
 
@@ -131,7 +126,7 @@ public class ParallelJobExecutorTest extends TestContext {
       var job = concat(job1, job2);
 
       assertThat(executeSingleJob(job))
-          .isEqualTo(stringB("(0,0)"));
+          .isEqualTo(arrayB(stringB("0"), stringB("0")));
       verifyOtherTasksResSource(list(job1, job2), DISK);
     }
   }
@@ -147,7 +142,7 @@ public class ParallelJobExecutorTest extends TestContext {
         job(incrementTask(counter)));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(stringB("(1,1,0)"));
+        .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
   }
 
   @Test
@@ -175,7 +170,7 @@ public class ParallelJobExecutorTest extends TestContext {
       }
     };
     context = executionContext(computer, reporter, 4);
-    var job = job(valueTask("A"));
+    var job = job(constStringTask("A"));
 
     var val = executeJobs(context, list(job)).get(0);
 
@@ -203,32 +198,19 @@ public class ParallelJobExecutorTest extends TestContext {
   }
 
   private MyJob concat(Job... deps) {
-    return job(concatTask(), deps);
+    return job(orderTask(), deps);
   }
 
-  private ExecutableTask concatTask() {
-    return new TestTask("concat", stringTB(), Hash.of(1)) {
-      @Override
-      public Output run(TupleB input, NativeApi nativeApi) {
-        String joinedArgs = toCommaSeparatedString(input.items(), v -> ((StringB) v).toJ());
-        StringB result = nativeApi.factory().string("(" + joinedArgs + ")");
-        return new Output(result, nativeApi.messages());
-      }
-    };
+  private ExecutableTask orderTask() {
+    return new OrderTask(arrayTB(stringTB()), tagLoc(), null);
   }
 
   private MyJob job(ExecutableTask task, Job... deps) {
     return new MyJob(task, list(deps), bytecodeF(), context);
   }
 
-  private ExecutableTask valueTask(String value) {
-    return new TestTask("value", stringTB(), Hash.of(asList(Hash.of(2), Hash.of(value)))) {
-      @Override
-      public Output run(TupleB input, NativeApi nativeApi) {
-        StringB result = nativeApi.factory().string(value);
-        return new Output(result, nativeApi.messages());
-      }
-    };
+  private ExecutableTask constStringTask(String value) {
+    return new ConstTask(stringB(value), tagLoc(), null);
   }
 
   private ExecutableTask throwingTask(ArithmeticException exception) {
