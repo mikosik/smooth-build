@@ -658,7 +658,11 @@ public class TestContext {
   }
 
   public NatFuncB natFuncB(FuncTB funcTB, Class<?> clazz) throws IOException {
-    return natFuncB(funcTB, blobBJarWithPluginApi(clazz), stringB(clazz.getName()));
+    return natFuncB(funcTB, clazz, true);
+  }
+
+  public NatFuncB natFuncB(FuncTB funcTB, Class<?> clazz, boolean isPure) throws IOException {
+    return natFuncB(funcTB, blobBJarWithPluginApi(clazz), stringB(clazz.getName()), boolB(isPure));
   }
 
   public NatFuncB natFuncB() {

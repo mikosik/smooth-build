@@ -1,32 +1,48 @@
 package org.smoothbuild.vm;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Collections.nCopies;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
+import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.vm.compute.ResSource.DISK;
+import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
+import static org.smoothbuild.vm.compute.ResSource.MEMORY;
+import static org.smoothbuild.vm.execute.TaskKind.CALL;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
+import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.out.log.Level;
@@ -35,13 +51,19 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.accept.MemoryReporter;
 import org.smoothbuild.util.collect.Try;
+import org.smoothbuild.vm.compute.CompRes;
+import org.smoothbuild.vm.compute.Computer;
+import org.smoothbuild.vm.compute.ResSource;
+import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.JobCreator;
+import org.smoothbuild.vm.task.ExecutableTask;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
+import org.smoothbuild.vm.task.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -361,7 +383,197 @@ public class VmTest extends TestContext {
             .isEqualTo(intB(7));
       }
     }
+
+    @Nested
+    class _errors {
+      @Test
+      public void task_throwing_runtime_exception_causes_error() throws Exception {
+        var reporter = mock(TaskReporter.class);
+        var context = executionContext(new ExecutionReporter(reporter), 4);
+        var exprB = throwExceptionCall();
+        evaluateWithFailure(new Vm(() -> context), exprB, ImmutableMap.of());
+        verify(reporter).report(
+            any(),
+            any(),
+            argThat(this::containsErrorCausedByRuntimeException));
+      }
+
+      private boolean containsErrorCausedByRuntimeException(List<Log> logs) {
+        return logs.size() == 1
+            && logs.get(0).level() == ERROR
+            && logs.get(0).message().startsWith(
+            "Execution failed with:\njava.lang.RuntimeException: ");
+      }
+
+      private CallB throwExceptionCall() throws IOException {
+        var funcTB = funcTB(stringTB());
+        var natFuncB = natFuncB(funcTB, ThrowException.class);
+        return callB(natFuncB);
+      }
+
+      public static class ThrowException {
+        public static InstB func(NativeApi nativeApi, TupleB args) {
+          throw new ArithmeticException();
+        }
+      }
+
+      @Test
+      public void computer_that_throws_exception_is_detected() {
+        var reporter = mock(ExecutionReporter.class);
+        var exprB = stringB("abc");
+        var runtimeException = new RuntimeException();
+        var computer = new Computer(null, null, null) {
+          @Override
+          public void compute(ExecutableTask task, TupleB input, Consumer<CompRes> consumer) {
+            throw runtimeException;
+          }
+        };
+        var context = executionContext(computer, reporter, 4);
+
+        evaluateWithFailure(new Vm(() -> context), exprB, ImmutableMap.of());
+        verify(reporter, only())
+            .reportComputerException(any(), same(runtimeException));
+      }
+    }
   }
+
+  @Nested
+  class _parallelism {
+    @Test
+    public void tasks_are_executed_in_parallel() throws Exception {
+      String counterA = "tasks_are_executed_in_parallel-A";
+      String counterB = "tasks_are_executed_in_parallel-B";
+      COUNTERS.put(counterA, new AtomicInteger(10));
+      COUNTERS.put(counterB, new AtomicInteger(20));
+      var expr = orderB(
+          WriteSleepReadCall(counterB, counterA),
+          WriteSleepReadCall(counterA, counterB));
+      assertThat(evaluate(expr))
+          .isEqualTo(arrayB(stringB("11"), stringB("21")));
+    }
+
+    @Test
+    public void execution_waits_and_reuses_computation_with_equal_hash_that_is_being_executed()
+        throws Exception {
+      var counterName = "execution_waits_and_reuses_computation_with_equal_hash";
+      COUNTERS.put(counterName, new AtomicInteger());
+      var exprB = orderB(
+          sleepGetIncrementCall(counterName),
+          sleepGetIncrementCall(counterName),
+          sleepGetIncrementCall(counterName),
+          sleepGetIncrementCall(counterName)
+      );
+
+      var reporter = mock(ExecutionReporter.class);
+      var vm = new Vm(() -> executionContext(reporter, 4));
+      assertThat(evaluate(vm, exprB))
+          .isEqualTo(arrayB(stringB("0"), stringB("0"), stringB("0"), stringB("0")));
+
+      verifyConstTasksResSource(4, DISK, reporter);
+    }
+
+    @Test
+    public void result_source_for_computation_of_impure_func_is_memory() throws Exception {
+      do_test_res_source_of_cached_computation(
+          "result_source_for_computation_of_impure_func_is_memory", false, MEMORY);
+    }
+
+    @Test
+    public void result_source_for_computation_of_pure_func_is_disk() throws Exception {
+      do_test_res_source_of_cached_computation(
+          "result_source_for_computation_of_pure_func_is_disk", true, DISK);
+    }
+
+    private void do_test_res_source_of_cached_computation(
+        String counterName, boolean isPure, ResSource resSource) throws IOException {
+      COUNTERS.put(counterName, new AtomicInteger());
+      var exprB = orderB(
+          sleepGetIncrementCall(counterName, isPure),
+          sleepGetIncrementCall(counterName, isPure)
+      );
+      var reporter = mock(ExecutionReporter.class);
+      var vm = new Vm(() -> executionContext(reporter, 2));
+
+      assertThat(evaluate(vm, exprB))
+          .isEqualTo(arrayB(stringB("0"), stringB("0")));
+      verifyConstTasksResSource(2, resSource, reporter);
+    }
+
+    @Test
+    public void waiting_for_result_of_other_task_with_equal_hash_doesnt_block_executor_thread()
+        throws Exception {
+      var counterName = "waiting_for_computation_with_same_hash_doesnt_block_executor_thread";
+      COUNTERS.put(counterName, new AtomicInteger());
+      var exprB = orderB(
+          sleepGetIncrementCall(counterName),
+          sleepGetIncrementCall(counterName),
+          getIncrementCall(counterName));
+
+      var reporter = mock(ExecutionReporter.class);
+      var vm = new Vm(() -> executionContext(reporter, 4));
+      assertThat(evaluate(vm, exprB))
+          .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
+    }
+
+    private CallB WriteSleepReadCall(String writeCounterName, String readCounterName)
+        throws IOException {
+      var funcTB = funcTB(stringTB(), stringTB(), stringTB());
+      var natFuncB = natFuncB(funcTB, WriteSleepRead.class);
+      return callB(natFuncB, stringB(writeCounterName), stringB(readCounterName));
+    }
+
+    public static class WriteSleepRead {
+      public static InstB func(NativeApi nativeApi, TupleB args) {
+        var write = COUNTERS.get(((StringB) args.get(0)).toJ());
+        var read = COUNTERS.get(((StringB) args.get(1)).toJ());
+        write.incrementAndGet();
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+        return nativeApi.factory().string(Integer.toString(read.getAndIncrement()));
+      }
+    }
+
+    private CallB sleepGetIncrementCall(String counterName) throws IOException {
+      return sleepGetIncrementCall(counterName, true);
+    }
+
+    private CallB sleepGetIncrementCall(String counterName, boolean isPure) throws IOException {
+      var funcTB = funcTB(stringTB(), stringTB());
+      var natFuncB = natFuncB(funcTB, SleepGetIncrement.class, isPure);
+      return callB(natFuncB, stringB(counterName));
+    }
+
+    public static class SleepGetIncrement {
+      public static InstB func(NativeApi nativeApi, TupleB args) {
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+        var counter = COUNTERS.get(((StringB) args.get(0)).toJ());
+        return nativeApi.factory().string(Integer.toString(counter.getAndIncrement()));
+      }
+    }
+
+    private CallB getIncrementCall(String counterName) throws IOException {
+      var funcTB = funcTB(stringTB(), stringTB());
+      var natFuncB = natFuncB(funcTB, GetIncrement.class);
+      return callB(natFuncB, stringB(counterName));
+    }
+
+    public static class GetIncrement {
+      public static InstB func(NativeApi nativeApi, TupleB args) {
+        var counter = COUNTERS.get(((StringB) args.get(0)).toJ());
+        return nativeApi.factory().string(Integer.toString(counter.getAndIncrement()));
+      }
+    }
+  }
+
+  public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS =
+      new ConcurrentHashMap<>();
 
   private ExprB evaluate(ExprB expr) {
     return evaluate(vm(), expr, ImmutableMap.of());
@@ -394,6 +606,25 @@ public class VmTest extends TestContext {
 
   public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {
     return (IntB) args.get(0);
+  }
+
+  private static void verifyConstTasksResSource(
+      int size, ResSource expectedResSource, ExecutionReporter reporter) {
+    var argCaptor = ArgumentCaptor.forClass(CompRes.class);
+    verify(reporter, times(size)).report(taskMatcher(), argCaptor.capture());
+    var resSources = map(argCaptor.getAllValues(), CompRes::resSource);
+    assertThat(resSources)
+        .containsExactlyElementsIn(resSourceList(size, expectedResSource));
+  }
+
+  private static Task taskMatcher() {
+    return argThat(a -> a.kind() == CALL);
+  }
+
+  private static ArrayList<ResSource> resSourceList(int size, ResSource expectedResSource) {
+    var expected = new ArrayList<>(nCopies(size, expectedResSource));
+    expected.set(0, EXECUTION);
+    return expected;
   }
 
   private static class CountingJobCreator extends JobCreator {
