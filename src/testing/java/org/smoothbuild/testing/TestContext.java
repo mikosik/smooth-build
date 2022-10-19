@@ -704,7 +704,7 @@ public class TestContext {
   }
 
   public NatFuncB natFuncB(FuncTB funcTB, Class<?> clazz) throws IOException {
-    return natFuncB(funcTB, blobBJarWithPluginApi(clazz), stringB(clazz.getCanonicalName()));
+    return natFuncB(funcTB, blobBJarWithPluginApi(clazz), stringB(clazz.getName()));
   }
 
   public NatFuncB natFuncB() {
@@ -713,10 +713,6 @@ public class TestContext {
 
   public NatFuncB natFuncB(FuncTB funcTB) {
     return natFuncB(funcTB, blobB(7), stringB("class binary name"), boolB(true));
-  }
-
-  public NatFuncB natFuncB(BlobB jar, StringB classBinaryName) {
-    return natFuncB(funcTB(), jar, classBinaryName);
   }
 
   public NatFuncB natFuncB(FuncTB type, BlobB jar, StringB classBinaryName) {
