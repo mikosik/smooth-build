@@ -7,13 +7,13 @@ import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.function.TriFunction;
-import org.smoothbuild.vm.task.ExecutableTask;
+import org.smoothbuild.vm.task.Task;
 
 public class OperJob extends ExecutingJob {
-  private final TriFunction<TypeB, TagLoc, TraceS, ExecutableTask> taskConstructor;
+  private final TriFunction<TypeB, TagLoc, TraceS, Task> taskConstructor;
   private final OperB operB;
 
-  public OperJob(TriFunction<TypeB, TagLoc, TraceS, ExecutableTask> taskConstructor, OperB operB,
+  public OperJob(TriFunction<TypeB, TagLoc, TraceS, Task> taskConstructor, OperB operB,
       ExecutionContext context) {
     super(context);
     this.taskConstructor = taskConstructor;

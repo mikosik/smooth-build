@@ -13,7 +13,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public final class SelectTask extends ExecutableTask {
+public final class SelectTask extends Task {
   public SelectTask(TypeB outputT, TagLoc tagLoc, TraceS trace) {
     super(outputT, SELECT, tagLoc, trace);
   }

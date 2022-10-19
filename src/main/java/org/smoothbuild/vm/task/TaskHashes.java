@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 
 public class TaskHashes {
-  public static Hash taskHash(ExecutableTask task) {
+  public static Hash taskHash(Task task) {
     return switch (task) {
       case CombineTask combineTask -> combineHash();
       case ConstTask constTask -> constHash(constTask.instB());

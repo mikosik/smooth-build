@@ -9,7 +9,7 @@ import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.vm.execute.TaskKind;
 
-public final class IdentityTask extends ExecutableTask {
+public final class IdentityTask extends Task {
   public IdentityTask(TypeB type, TaskKind kind, TagLoc tagLoc, TraceS trace) {
     super(type, kind, tagLoc, trace);
   }

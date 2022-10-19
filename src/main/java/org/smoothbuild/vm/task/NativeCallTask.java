@@ -15,7 +15,7 @@ import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public final class NativeCallTask extends ExecutableTask {
+public final class NativeCallTask extends Task {
   private final NatFuncB natFunc;
   private final String name;
   private final NativeMethodLoader nativeMethodLoader;

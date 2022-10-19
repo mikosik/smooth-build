@@ -43,7 +43,7 @@ public class TaskHashesCollisionTest extends TestContext {
     addHash(list, set, new SelectTask(intTB(), tagLoc(), traceS()));
   }
 
-  private void addHash(List<Hash> list, Set<Hash> set, ExecutableTask task) {
+  private void addHash(List<Hash> list, Set<Hash> set, Task task) {
     var hash = TaskHashes.taskHash(task);
     if (set.contains(hash)) {
       fail("Hash collision for hash " + hash + " index of previous occurrence "

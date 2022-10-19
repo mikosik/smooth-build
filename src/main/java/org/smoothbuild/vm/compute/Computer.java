@@ -19,7 +19,6 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;
 import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.ExecutableTask;
 import org.smoothbuild.vm.task.IdentityTask;
 import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.Task;
@@ -42,7 +41,7 @@ public class Computer {
     this.promisedValues = new ConcurrentHashMap<>();
   }
 
-  public void compute(ExecutableTask task, TupleB input, Consumer<CompRes> consumer)
+  public void compute(Task task, TupleB input, Consumer<CompRes> consumer)
       throws ComputationCacheExc, IOException {
     Hash hash = computationHash(task, input);
     PromisedValue<CompRes> newPromised = new PromisedValue<>();
@@ -85,7 +84,7 @@ public class Computer {
     }
   }
 
-  private CompRes runComputation(ExecutableTask task, TupleB input) {
+  private CompRes runComputation(Task task, TupleB input) {
     var container = containerProvider.get();
     Output output;
     var resSource = isNonExecutingTask(task) ? NOOP : EXECUTION;
@@ -103,11 +102,11 @@ public class Computer {
     return task instanceof ConstTask || task instanceof IdentityTask;
   }
 
-  private Hash computationHash(ExecutableTask task, TupleB args) {
+  private Hash computationHash(Task task, TupleB args) {
     return computationHash(sandboxHash, task, args);
   }
 
-  public static Hash computationHash(Hash sandboxHash, ExecutableTask task, TupleB args) {
+  public static Hash computationHash(Hash sandboxHash, Task task, TupleB args) {
     return Hash.of(asList(sandboxHash, taskHash(task), args.hash()));
   }
 }

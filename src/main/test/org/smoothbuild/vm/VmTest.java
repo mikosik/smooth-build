@@ -59,7 +59,6 @@ import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.JobCreator;
-import org.smoothbuild.vm.task.ExecutableTask;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
@@ -424,7 +423,7 @@ public class VmTest extends TestContext {
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
           @Override
-          public void compute(ExecutableTask task, TupleB input, Consumer<CompRes> consumer) {
+          public void compute(Task task, TupleB input, Consumer<CompRes> consumer) {
             throw runtimeException;
           }
         };

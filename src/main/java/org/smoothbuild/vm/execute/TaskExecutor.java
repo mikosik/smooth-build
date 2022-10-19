@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.Computer;
-import org.smoothbuild.vm.task.ExecutableTask;
+import org.smoothbuild.vm.task.Task;
 
 public class TaskExecutor {
   private final SoftTerminationExecutor executor;
@@ -26,7 +26,7 @@ public class TaskExecutor {
     this.reporter = reporter;
   }
 
-  public void enqueue(ExecutableTask task, TupleB input, Consumer<InstB> consumer) {
+  public void enqueue(Task task, TupleB input, Consumer<InstB> consumer) {
     executor.enqueue(() -> {
       try {
         var resHandler = new ResHandler(task, executor, reporter, consumer);

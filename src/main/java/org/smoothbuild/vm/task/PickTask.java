@@ -14,7 +14,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public final class PickTask extends ExecutableTask {
+public final class PickTask extends Task {
   public PickTask(TypeB outputT, TagLoc tagLoc, TraceS trace) {
     super(outputT, PICK, tagLoc, trace);
   }

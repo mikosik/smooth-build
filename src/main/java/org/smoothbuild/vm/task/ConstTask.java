@@ -9,7 +9,7 @@ import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public final class ConstTask extends ExecutableTask {
+public final class ConstTask extends Task {
   private final InstB instB;
 
   public ConstTask(InstB instB, TagLoc tagLoc, TraceS trace) {

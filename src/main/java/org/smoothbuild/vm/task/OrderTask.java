@@ -11,7 +11,7 @@ import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public final class OrderTask extends ExecutableTask {
+public final class OrderTask extends Task {
   public OrderTask(TypeB arrayT, TagLoc tagLoc, TraceS trace) {
     super(arrayT, ORDER, tagLoc, trace);
     checkArgument(arrayT instanceof ArrayTB);

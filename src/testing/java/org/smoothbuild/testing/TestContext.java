@@ -148,7 +148,13 @@ import org.smoothbuild.vm.execute.TaskKind;
 import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.JobCreator;
+import org.smoothbuild.vm.task.CombineTask;
+import org.smoothbuild.vm.task.ConstTask;
+import org.smoothbuild.vm.task.NativeCallTask;
 import org.smoothbuild.vm.task.NativeMethodLoader;
+import org.smoothbuild.vm.task.OrderTask;
+import org.smoothbuild.vm.task.PickTask;
+import org.smoothbuild.vm.task.SelectTask;
 import org.smoothbuild.vm.task.Task;
 
 import com.google.common.collect.ImmutableList;
@@ -1352,7 +1358,15 @@ public class TestContext {
   }
 
   public Task task(TaskKind kind, Loc loc) {
-    return new Task(intTB(), kind, tagLoc("name", loc), traceS());
+    TagLoc tagLoc = tagLoc("name", loc);
+    return switch (kind) {
+      case CALL -> new NativeCallTask(intTB(), "name", natFuncB(), null, tagLoc, traceS());
+      case COMBINE -> new CombineTask(tupleTB(), tagLoc, traceS());
+      case CONST -> new ConstTask(intB(7), tagLoc, traceS());
+      case ORDER -> new OrderTask(arrayTB(intTB()), tagLoc, traceS());
+      case PICK -> new PickTask(intTB(), tagLoc, traceS());
+      case SELECT -> new SelectTask(intTB(), tagLoc, traceS());
+    };
   }
 
   public static TagLoc tagLoc() {

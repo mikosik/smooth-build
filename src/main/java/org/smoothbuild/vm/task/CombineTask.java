@@ -10,7 +10,7 @@ import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
 
-public final class CombineTask extends ExecutableTask {
+public final class CombineTask extends Task {
   public CombineTask(TypeB tupleT, TagLoc tagLoc, TraceS trace) {
     super(tupleT, COMBINE, tagLoc, trace);
     checkArgument(tupleT instanceof TupleTB);
