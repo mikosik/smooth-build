@@ -2,6 +2,7 @@ package org.smoothbuild.vm;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Collections.nCopies;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -68,6 +70,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class VmTest extends TestContext {
+  public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
+  public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS
+      = new ConcurrentHashMap<>();
+
   @Nested
   class _laziness {
     @Nested
@@ -440,13 +446,16 @@ public class VmTest extends TestContext {
   class _parallelism {
     @Test
     public void tasks_are_executed_in_parallel() throws Exception {
-      String counterA = "tasks_are_executed_in_parallel-A";
-      String counterB = "tasks_are_executed_in_parallel-B";
+      String testName = "tasks_are_executed_in_parallel";
+      var counterA = testName + "1";
+      var counterB = testName + "2";
+      var countdown = testName + "1";
       COUNTERS.put(counterA, new AtomicInteger(10));
       COUNTERS.put(counterB, new AtomicInteger(20));
+      COUNTDOWNS.put(countdown, new CountDownLatch(2));
       var expr = orderB(
-          WriteSleepReadCall(counterB, counterA),
-          WriteSleepReadCall(counterA, counterB));
+          commandCall(testName, "INC2,COUNT1,WAIT1,GET1"),
+          commandCall(testName, "INC1,COUNT1,WAIT1,GET2"));
       assertThat(evaluate(expr))
           .isEqualTo(arrayB(stringB("11"), stringB("21")));
     }
@@ -454,19 +463,20 @@ public class VmTest extends TestContext {
     @Test
     public void execution_waits_and_reuses_computation_with_equal_hash_that_is_being_executed()
         throws Exception {
-      var counterName = "execution_waits_and_reuses_computation_with_equal_hash";
+      var testName = "execution_waits_and_reuses_computation_with_equal_hash";
+      var counterName = testName + "1";
       COUNTERS.put(counterName, new AtomicInteger());
       var exprB = orderB(
-          sleepGetIncrementCall(counterName),
-          sleepGetIncrementCall(counterName),
-          sleepGetIncrementCall(counterName),
-          sleepGetIncrementCall(counterName)
+          commandCall(testName, "INC1"),
+          commandCall(testName, "INC1"),
+          commandCall(testName, "INC1"),
+          commandCall(testName, "INC1")
       );
 
       var reporter = mock(ExecutionReporter.class);
       var vm = new Vm(() -> executionContext(reporter, 4));
       assertThat(evaluate(vm, exprB))
-          .isEqualTo(arrayB(stringB("0"), stringB("0"), stringB("0"), stringB("0")));
+          .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("1"), stringB("1")));
 
       verifyConstTasksResSource(4, DISK, reporter);
     }
@@ -484,14 +494,17 @@ public class VmTest extends TestContext {
     }
 
     private void do_test_res_source_of_cached_computation(
-        String counterName, boolean isPure, ResSource resSource) throws IOException {
-      COUNTERS.put(counterName, new AtomicInteger());
+        String taskName, boolean isPure, ResSource resSource) throws IOException {
+      COUNTERS.put(taskName + "1", new AtomicInteger());
+      var latch = new CountDownLatch(1);
+      COUNTDOWNS.put(taskName + "1", latch);
       var exprB = orderB(
-          sleepGetIncrementCall(counterName, isPure),
-          sleepGetIncrementCall(counterName, isPure)
+          commandCall(taskName, "WAIT1,GET1", isPure),
+          commandCall(taskName, "WAIT1,GET1", isPure)
       );
       var reporter = mock(ExecutionReporter.class);
       var vm = new Vm(() -> executionContext(reporter, 2));
+      latch.countDown();
 
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("0"), stringB("0")));
@@ -501,78 +514,75 @@ public class VmTest extends TestContext {
     @Test
     public void waiting_for_result_of_other_task_with_equal_hash_doesnt_block_executor_thread()
         throws Exception {
-      var counterName = "waiting_for_computation_with_same_hash_doesnt_block_executor_thread";
-      COUNTERS.put(counterName, new AtomicInteger());
+      var testName = "waiting_for_computation_with_same_hash_doesnt_block_executor_thread";
+      var counter1 = testName + "1";
+      var counter2 = testName + "2";
+      var countdown1 = testName + "1";
+      var countdown2 = testName + "2";
+
+      COUNTERS.put(counter1, new AtomicInteger());
+      COUNTERS.put(counter2, new AtomicInteger());
+      COUNTDOWNS.put(countdown1, new CountDownLatch(1));
+      COUNTDOWNS.put(countdown2, new CountDownLatch(1));
       var exprB = orderB(
-          sleepGetIncrementCall(counterName),
-          sleepGetIncrementCall(counterName),
-          getIncrementCall(counterName));
+          commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
+          commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
+          commandCall(testName, "WAIT2,COUNT1,GET2"));
 
       var reporter = mock(ExecutionReporter.class);
-      var vm = new Vm(() -> executionContext(reporter, 4));
+      var vm = new Vm(() -> executionContext(reporter, 2));
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
     }
 
-    private CallB WriteSleepReadCall(String writeCounterName, String readCounterName)
-        throws IOException {
-      var funcTB = funcTB(stringTB(), stringTB(), stringTB());
-      var natFuncB = natFuncB(funcTB, WriteSleepRead.class);
-      return callB(natFuncB, stringB(writeCounterName), stringB(readCounterName));
+    private CallB commandCall(String testName, String commands) throws IOException {
+      return commandCall(testName, commands, true);
     }
 
-    public static class WriteSleepRead {
+    private CallB commandCall(String testName, String commands, boolean isPure) throws IOException {
+      var natFuncB = natFuncB(
+          funcTB(stringTB(), stringTB(), stringTB()), ExecuteCommands.class, isPure);
+      return callB(natFuncB, stringB(testName), stringB(commands));
+    }
+
+    public static class ExecuteCommands {
       public static InstB func(NativeApi nativeApi, TupleB args) {
-        var write = COUNTERS.get(((StringB) args.get(0)).toJ());
-        var read = COUNTERS.get(((StringB) args.get(1)).toJ());
-        write.incrementAndGet();
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
+        String name = ((StringB) args.get(0)).toJ();
+        String commands = ((StringB) args.get(1)).toJ();
+        int result = 0;
+        for (String command : commands.split(",")) {
+          char index = command.charAt(command.length() - 1);
+          var opcode = command.substring(0, command.length() - 1);
+          switch (opcode) {
+            case "GET" :
+              result = COUNTERS.get(name + index).get();
+              break;
+            case "INC":
+              result = COUNTERS.get(name + index).incrementAndGet();
+              break;
+            case "COUNT":
+              COUNTDOWNS.get(name + index).countDown();
+              break;
+            case "WAIT":
+              try {
+                if (!COUNTDOWNS.get(name + index).await(20, SECONDS)) {
+                  throw new RuntimeException();
+                }
+              } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+              }
+              break;
+            default:
+              throw new RuntimeException("Unknown command opcode: " + opcode);
+          }
         }
-        return nativeApi.factory().string(Integer.toString(read.getAndIncrement()));
-      }
-    }
-
-    private CallB sleepGetIncrementCall(String counterName) throws IOException {
-      return sleepGetIncrementCall(counterName, true);
-    }
-
-    private CallB sleepGetIncrementCall(String counterName, boolean isPure) throws IOException {
-      var funcTB = funcTB(stringTB(), stringTB());
-      var natFuncB = natFuncB(funcTB, SleepGetIncrement.class, isPure);
-      return callB(natFuncB, stringB(counterName));
-    }
-
-    public static class SleepGetIncrement {
-      public static InstB func(NativeApi nativeApi, TupleB args) {
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
+        if (result == -1) {
+          throw new RuntimeException("result not set.");
         }
-        var counter = COUNTERS.get(((StringB) args.get(0)).toJ());
-        return nativeApi.factory().string(Integer.toString(counter.getAndIncrement()));
-      }
-    }
-
-    private CallB getIncrementCall(String counterName) throws IOException {
-      var funcTB = funcTB(stringTB(), stringTB());
-      var natFuncB = natFuncB(funcTB, GetIncrement.class);
-      return callB(natFuncB, stringB(counterName));
-    }
-
-    public static class GetIncrement {
-      public static InstB func(NativeApi nativeApi, TupleB args) {
-        var counter = COUNTERS.get(((StringB) args.get(0)).toJ());
-        return nativeApi.factory().string(Integer.toString(counter.getAndIncrement()));
+        return nativeApi.factory().string(Integer.toString(result));
       }
     }
   }
-
-  public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS =
-      new ConcurrentHashMap<>();
 
   private ExprB evaluate(ExprB expr) {
     return evaluate(vm(), expr, ImmutableMap.of());
