@@ -9,7 +9,7 @@ import static org.smoothbuild.run.eval.MessageStruct.text;
 import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
+import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.compute.ComputationResult;
-import org.smoothbuild.vm.compute.ResSource;
+import org.smoothbuild.vm.compute.ResultSource;
 import org.smoothbuild.vm.task.Task;
 
 /**
@@ -35,12 +35,12 @@ public class ExecutionReporter {
   }
 
   public void report(Task task, ComputationResult result) {
-    ResSource resSource = result.resSource();
+    var source = result.source();
     if (result.hasOutput()) {
-      print(task, resSource, result.output().messages());
+      print(task, source, result.output().messages());
     } else {
       Log error = error("Execution failed with:\n" + getStackTraceAsString(result.exception()));
-      print(task, list(error), resSource);
+      print(task, list(error), source);
     }
   }
 
@@ -50,13 +50,13 @@ public class ExecutionReporter {
     print(task, list(fatal), EXECUTION);
   }
 
-  private void print(Task task, ResSource resSource, ArrayB messages) {
+  private void print(Task task, ResultSource source, ArrayB messages) {
     var logs = map(messages.elems(TupleB.class), m -> new Log(level(m), text(m)));
-    print(task, logs, resSource);
+    print(task, logs, source);
   }
 
-  public void print(Task task, List<Log> logs, ResSource resSource) {
-    taskReporter.report(task, header(task, resSource.toString()), logs);
+  public void print(Task task, List<Log> logs, ResultSource source) {
+    taskReporter.report(task, header(task, source.toString()), logs);
   }
 
   // Visible for testing

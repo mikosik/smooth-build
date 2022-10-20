@@ -20,9 +20,9 @@ import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.vm.compute.ResSource.DISK;
-import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
-import static org.smoothbuild.vm.compute.ResSource.MEMORY;
+import static org.smoothbuild.vm.compute.ResultSource.DISK;
+import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
 
 import java.io.IOException;
@@ -55,7 +55,7 @@ import org.smoothbuild.testing.accept.MemoryReporter;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.Computer;
-import org.smoothbuild.vm.compute.ResSource;
+import org.smoothbuild.vm.compute.ResultSource;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.job.ExecutionContext;
@@ -494,7 +494,7 @@ public class VmTest extends TestContext {
     }
 
     private void do_test_res_source_of_cached_computation(
-        String taskName, boolean isPure, ResSource resSource) throws IOException {
+        String taskName, boolean isPure, ResultSource source) throws IOException {
       COUNTERS.put(taskName + "1", new AtomicInteger());
       var latch = new CountDownLatch(1);
       COUNTDOWNS.put(taskName + "1", latch);
@@ -508,7 +508,7 @@ public class VmTest extends TestContext {
 
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("0"), stringB("0")));
-      verifyConstTasksResSource(2, resSource, reporter);
+      verifyConstTasksResSource(2, source, reporter);
     }
 
     @Test
@@ -618,20 +618,20 @@ public class VmTest extends TestContext {
   }
 
   private static void verifyConstTasksResSource(
-      int size, ResSource expectedResSource, ExecutionReporter reporter) {
+      int size, ResultSource expectedSource, ExecutionReporter reporter) {
     var argCaptor = ArgumentCaptor.forClass(ComputationResult.class);
     verify(reporter, times(size)).report(taskMatcher(), argCaptor.capture());
-    var resSources = map(argCaptor.getAllValues(), ComputationResult::resSource);
+    var resSources = map(argCaptor.getAllValues(), ComputationResult::source);
     assertThat(resSources)
-        .containsExactlyElementsIn(resSourceList(size, expectedResSource));
+        .containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
 
   private static Task taskMatcher() {
     return argThat(a -> a.kind() == CALL);
   }
 
-  private static ArrayList<ResSource> resSourceList(int size, ResSource expectedResSource) {
-    var expected = new ArrayList<>(nCopies(size, expectedResSource));
+  private static ArrayList<ResultSource> resSourceList(int size, ResultSource expectedSource) {
+    var expected = new ArrayList<>(nCopies(size, expectedSource));
     expected.set(0, EXECUTION);
     return expected;
   }

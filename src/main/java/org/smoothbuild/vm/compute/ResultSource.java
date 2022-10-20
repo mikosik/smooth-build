@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.compute;
 
-public enum ResSource {
+public enum ResultSource {
   DISK("cache"),
   EXECUTION("exec"),
   MEMORY("mem"),
@@ -9,7 +9,7 @@ public enum ResSource {
 
   private final String name;
 
-  ResSource(String name) {
+  ResultSource(String name) {
     this.name = name;
   }
 

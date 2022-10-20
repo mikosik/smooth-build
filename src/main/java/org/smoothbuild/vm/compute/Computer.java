@@ -1,10 +1,10 @@
 package org.smoothbuild.vm.compute;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.vm.compute.ResSource.DISK;
-import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
-import static org.smoothbuild.vm.compute.ResSource.MEMORY;
-import static org.smoothbuild.vm.compute.ResSource.NOOP;
+import static org.smoothbuild.vm.compute.ResultSource.DISK;
+import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
+import static org.smoothbuild.vm.compute.ResultSource.NOOP;
 import static org.smoothbuild.vm.task.TaskHashes.taskHash;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,11 +69,8 @@ public class Computer {
 
   private static ComputationResult computationResultFromPromise(
       ComputationResult result, Task task) {
-    ResSource resSource = resSourceTakenFromPromise(result, task);
-    return new ComputationResult(
-        result.output(),
-        result.exception(),
-        resSource);
+    var source = resSourceTakenFromPromise(result, task);
+    return new ComputationResult(result.output(), result.exception(), source);
   }
 
   private ComputationResult runComputation(Task task, TupleB input) {
@@ -90,17 +87,17 @@ public class Computer {
     return new ComputationResult(output, resSource);
   }
 
-  private static ResSource resSourceTakenFromPromise(
+  private static ResultSource resSourceTakenFromPromise(
       ComputationResult result, Task task) {
-    if (result.resSource() == EXECUTION) {
+    if (result.source() == EXECUTION) {
       return task.isPure() ? DISK : MEMORY;
     } else {
-      return resSourceOrNoop(result.resSource(), task);
+      return resSourceOrNoop(result.source(), task);
     }
   }
 
-  private static ResSource resSourceOrNoop(ResSource resSource, Task task) {
-    return isNonExecutingTask(task) ? NOOP : resSource;
+  private static ResultSource resSourceOrNoop(ResultSource source, Task task) {
+    return isNonExecutingTask(task) ? NOOP : source;
   }
 
   private static boolean isNonExecutingTask(Task task) {

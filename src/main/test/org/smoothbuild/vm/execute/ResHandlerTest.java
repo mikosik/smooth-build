@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.smoothbuild.vm.compute.ResSource.DISK;
+import static org.smoothbuild.vm.compute.ResultSource.DISK;
 
 import java.util.function.Consumer;
 

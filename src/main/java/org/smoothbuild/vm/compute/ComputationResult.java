@@ -8,20 +8,20 @@ import org.smoothbuild.vm.task.Output;
 /**
  * Computation result.
  */
-public record ComputationResult(Output output, Exception exception, ResSource resSource) {
+public record ComputationResult(Output output, Exception exception, ResultSource source) {
 
-  public ComputationResult(Output output, ResSource resSource) {
-    this(output, null, resSource);
+  public ComputationResult(Output output, ResultSource source) {
+    this(output, null, source);
   }
 
-  public ComputationResult(Exception exception, ResSource resSource) {
-    this(null, exception, resSource);
+  public ComputationResult(Exception exception, ResultSource source) {
+    this(null, exception, source);
   }
 
-  public ComputationResult(Output output, Exception exception, ResSource resSource) {
+  public ComputationResult(Output output, Exception exception, ResultSource source) {
     this.output = output;
     this.exception = exception;
-    this.resSource = requireNonNull(resSource);
+    this.source = requireNonNull(source);
     checkArgument((output == null) != (exception == null));
   }
 
