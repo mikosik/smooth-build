@@ -9,7 +9,7 @@ import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.function.TriFunction;
 import org.smoothbuild.vm.task.Task;
 
-public class OperJob extends ExecutingJob {
+public class OperJob extends Job {
   private final TriFunction<TypeB, TagLoc, TraceS, Task> taskConstructor;
   private final OperB operB;
 

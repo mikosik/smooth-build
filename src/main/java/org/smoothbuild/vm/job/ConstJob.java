@@ -6,7 +6,7 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.task.ConstTask;
 
-public class ConstJob extends ExecutingJob {
+public class ConstJob extends Job {
   private final InstB instB;
 
   public ConstJob(InstB instB, ExecutionContext context) {

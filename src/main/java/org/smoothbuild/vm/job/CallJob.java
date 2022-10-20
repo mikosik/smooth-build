@@ -29,7 +29,7 @@ import org.smoothbuild.vm.task.NativeCallTask;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallJob extends ExecutingJob {
+public class CallJob extends Job {
   private final CallB callB;
 
   public CallJob(CallB callB, ExecutionContext context) {
