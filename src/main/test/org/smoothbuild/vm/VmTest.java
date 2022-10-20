@@ -53,7 +53,7 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.accept.MemoryReporter;
 import org.smoothbuild.util.collect.Try;
-import org.smoothbuild.vm.compute.CompRes;
+import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.execute.ExecutionReporter;
@@ -429,7 +429,7 @@ public class VmTest extends TestContext {
         var runtimeException = new RuntimeException();
         var computer = new Computer(null, null, null) {
           @Override
-          public void compute(Task task, TupleB input, Consumer<CompRes> consumer) {
+          public void compute(Task task, TupleB input, Consumer<ComputationResult> consumer) {
             throw runtimeException;
           }
         };
@@ -619,9 +619,9 @@ public class VmTest extends TestContext {
 
   private static void verifyConstTasksResSource(
       int size, ResSource expectedResSource, ExecutionReporter reporter) {
-    var argCaptor = ArgumentCaptor.forClass(CompRes.class);
+    var argCaptor = ArgumentCaptor.forClass(ComputationResult.class);
     verify(reporter, times(size)).report(taskMatcher(), argCaptor.capture());
-    var resSources = map(argCaptor.getAllValues(), CompRes::resSource);
+    var resSources = map(argCaptor.getAllValues(), ComputationResult::resSource);
     assertThat(resSources)
         .containsExactlyElementsIn(resSourceList(size, expectedResSource));
   }

@@ -29,7 +29,7 @@ public class Computer {
   private final ComputationCache computationCache;
   private final Hash sandboxHash;
   private final Provider<Container> containerProvider;
-  private final ConcurrentHashMap<Hash, PromisedValue<CompRes>> promisedValues;
+  private final ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> promisedValues;
 
   @Inject
   public Computer(ComputationCache computationCache, @SandboxHash Hash sandboxHash,
@@ -40,20 +40,20 @@ public class Computer {
     this.promisedValues = new ConcurrentHashMap<>();
   }
 
-  public void compute(Task task, TupleB input, Consumer<CompRes> consumer)
+  public void compute(Task task, TupleB input, Consumer<ComputationResult> consumer)
       throws ComputationCacheExc {
     Hash hash = computationHash(task, input);
-    PromisedValue<CompRes> newPromised = new PromisedValue<>();
-    PromisedValue<CompRes> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
+    PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
+    PromisedValue<ComputationResult> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       prevPromised
-          .chain(c -> computationFromPromise(c, task))
+          .chain(c -> computationResultFromPromise(c, task))
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
       if (computationCache.contains(hash)) {
         var output = computationCache.read(hash, task.outputT());
-        newPromised.accept(new CompRes(output, resSourceOrNoop(DISK, task)));
+        newPromised.accept(new ComputationResult(output, resSourceOrNoop(DISK, task)));
         promisedValues.remove(hash);
       } else {
         var computed = runComputation(task, input);
@@ -67,33 +67,35 @@ public class Computer {
     }
   }
 
-  private static CompRes computationFromPromise(CompRes compRes, Task task) {
-    ResSource resSource = resSourceTakenFromPromise(compRes, task);
-    return new CompRes(
-        compRes.output(),
-        compRes.exception(),
+  private static ComputationResult computationResultFromPromise(
+      ComputationResult result, Task task) {
+    ResSource resSource = resSourceTakenFromPromise(result, task);
+    return new ComputationResult(
+        result.output(),
+        result.exception(),
         resSource);
   }
 
-  private CompRes runComputation(Task task, TupleB input) {
+  private ComputationResult runComputation(Task task, TupleB input) {
     var container = containerProvider.get();
     Output output;
     var resSource = resSourceOrNoop(EXECUTION, task);
     try {
       output = task.run(input, container);
     } catch (Exception e) {
-      return new CompRes(e, resSource);
+      return new ComputationResult(e, resSource);
     }
     // This Computed instance creation is outside try-block
     // so eventual exception it could throw won't be caught by above catch.
-    return new CompRes(output, resSource);
+    return new ComputationResult(output, resSource);
   }
 
-  private static ResSource resSourceTakenFromPromise(CompRes compRes, Task task) {
-    if (compRes.resSource() == EXECUTION) {
+  private static ResSource resSourceTakenFromPromise(
+      ComputationResult result, Task task) {
+    if (result.resSource() == EXECUTION) {
       return task.isPure() ? DISK : MEMORY;
     } else {
-      return resSourceOrNoop(compRes.resSource(), task);
+      return resSourceOrNoop(result.resSource(), task);
     }
   }
 

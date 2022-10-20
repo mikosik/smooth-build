@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.vm.compute.CompRes;
+import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.task.Task;
 
@@ -34,12 +34,12 @@ public class ExecutionReporter {
     this.taskReporter = taskReporter;
   }
 
-  public void report(Task task, CompRes compRes) {
-    ResSource resSource = compRes.resSource();
-    if (compRes.hasOutput()) {
-      print(task, resSource, compRes.output().messages());
+  public void report(Task task, ComputationResult result) {
+    ResSource resSource = result.resSource();
+    if (result.hasOutput()) {
+      print(task, resSource, result.output().messages());
     } else {
-      Log error = error("Execution failed with:\n" + getStackTraceAsString(compRes.exception()));
+      Log error = error("Execution failed with:\n" + getStackTraceAsString(result.exception()));
       print(task, list(error), resSource);
     }
   }

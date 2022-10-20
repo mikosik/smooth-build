@@ -4,10 +4,10 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
-import org.smoothbuild.vm.compute.CompRes;
+import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.task.Task;
 
-public class ResHandler implements Consumer<CompRes> {
+public class ResHandler implements Consumer<ComputationResult> {
   private final SoftTerminationExecutor executor;
   private final ExecutionReporter reporter;
   private final Consumer<InstB> consumer;
@@ -22,10 +22,10 @@ public class ResHandler implements Consumer<CompRes> {
   }
 
   @Override
-  public void accept(CompRes compRes) {
-    reporter.report(task, compRes);
-    if (compRes.hasOutputWithValue()) {
-      consumer.accept(compRes.output().instB());
+  public void accept(ComputationResult result) {
+    reporter.report(task, result);
+    if (result.hasOutputWithValue()) {
+      consumer.accept(result.output().instB());
     } else {
       executor.terminate();
     }

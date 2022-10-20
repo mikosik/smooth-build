@@ -8,17 +8,17 @@ import org.smoothbuild.vm.task.Output;
 /**
  * Computation result.
  */
-public record CompRes(Output output, Exception exception, ResSource resSource) {
+public record ComputationResult(Output output, Exception exception, ResSource resSource) {
 
-  public CompRes(Output output, ResSource resSource) {
+  public ComputationResult(Output output, ResSource resSource) {
     this(output, null, resSource);
   }
 
-  public CompRes(Exception exception, ResSource resSource) {
+  public ComputationResult(Exception exception, ResSource resSource) {
     this(null, exception, resSource);
   }
 
-  public CompRes(Output output, Exception exception, ResSource resSource) {
+  public ComputationResult(Output output, Exception exception, ResSource resSource) {
     this.output = output;
     this.exception = exception;
     this.resSource = requireNonNull(resSource);
