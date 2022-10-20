@@ -7,7 +7,6 @@ import static org.smoothbuild.vm.compute.ResSource.MEMORY;
 import static org.smoothbuild.vm.compute.ResSource.NOOP;
 import static org.smoothbuild.vm.task.TaskHashes.taskHash;
 
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -42,7 +41,7 @@ public class Computer {
   }
 
   public void compute(Task task, TupleB input, Consumer<CompRes> consumer)
-      throws ComputationCacheExc, IOException {
+      throws ComputationCacheExc {
     Hash hash = computationHash(task, input);
     PromisedValue<CompRes> newPromised = new PromisedValue<>();
     PromisedValue<CompRes> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
