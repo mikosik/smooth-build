@@ -47,13 +47,13 @@ public class Computer {
     PromisedValue<CompRes> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       prevPromised
-          .chain(c -> asCachedComputation(c, task))
+          .chain(c -> computationFromPromise(c, task))
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
       if (computationCache.contains(hash)) {
         var output = computationCache.read(hash, task.outputT());
-        newPromised.accept(new CompRes(output, isNonExecutingTask(task) ? NOOP : EXECUTION));
+        newPromised.accept(new CompRes(output, resSourceOrNoop(DISK, task)));
         promisedValues.remove(hash);
       } else {
         var computed = runComputation(task, input);
@@ -67,26 +67,18 @@ public class Computer {
     }
   }
 
-  private static CompRes asCachedComputation(CompRes compRes, Task task) {
-    ResSource resSource = resSourceOfCached(compRes, task);
+  private static CompRes computationFromPromise(CompRes compRes, Task task) {
+    ResSource resSource = resSourceTakenFromPromise(compRes, task);
     return new CompRes(
         compRes.output(),
         compRes.exception(),
         resSource);
   }
 
-  private static ResSource resSourceOfCached(CompRes compRes, Task task) {
-    if (isNonExecutingTask(task)) {
-      return NOOP;
-    } else {
-      return compRes.resSource() == EXECUTION && task.isPure() ? DISK : MEMORY;
-    }
-  }
-
   private CompRes runComputation(Task task, TupleB input) {
     var container = containerProvider.get();
     Output output;
-    var resSource = isNonExecutingTask(task) ? NOOP : EXECUTION;
+    var resSource = resSourceOrNoop(EXECUTION, task);
     try {
       output = task.run(input, container);
     } catch (Exception e) {
@@ -95,6 +87,18 @@ public class Computer {
     // This Computed instance creation is outside try-block
     // so eventual exception it could throw won't be caught by above catch.
     return new CompRes(output, resSource);
+  }
+
+  private static ResSource resSourceTakenFromPromise(CompRes compRes, Task task) {
+    if (compRes.resSource() == EXECUTION) {
+      return task.isPure() ? DISK : MEMORY;
+    } else {
+      return resSourceOrNoop(compRes.resSource(), task);
+    }
+  }
+
+  private static ResSource resSourceOrNoop(ResSource resSource, Task task) {
+    return isNonExecutingTask(task) ? NOOP : resSource;
   }
 
   private static boolean isNonExecutingTask(Task task) {
