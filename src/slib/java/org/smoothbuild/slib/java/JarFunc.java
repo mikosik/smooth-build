@@ -6,16 +6,13 @@ import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.plugin.NativeApi;
@@ -24,40 +21,35 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class JarFunc {
+  private static final String MANIFEST_FILE_PATH = "META-INF/MANIFEST.MF";
+
   public static InstB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB files = (ArrayB) args.get(0);
     BlobB manifest = (BlobB) args.get(1);
 
     var duplicatesDetector = new HashSet<String>();
-    BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();
-    try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
-      for (TupleB file : files.elems(TupleB.class)) {
-        String path = filePath(file).toJ();
-        if (!duplicatesDetector.add(path)) {
-          nativeApi.log().error("Cannot jar two files with the same path = " + path);
-          return null;
+    try (var blobBuilder = nativeApi.factory().blobBuilder()) {
+      try (var jarOutputStream = new JarOutputStream(blobBuilder.sink().outputStream())) {
+        for (TupleB file : files.elems(TupleB.class)) {
+          var filePath = filePath(file).toJ();
+          if (!duplicatesDetector.add(filePath)) {
+            nativeApi.log().error("Cannot jar two files with the same path = " + filePath);
+            return null;
+          }
+          addJarEntry(jarOutputStream, filePath(file).toJ(), fileContent(file));
         }
-        jarFile(file, jarOutputStream);
+        addJarEntry(jarOutputStream, MANIFEST_FILE_PATH, manifest);
       }
-    }
-    return blobBuilder.build();
-  }
-
-  private static JarOutputStream createOutputStream(BlobBBuilder blobBuilder, BlobB manifest)
-      throws IOException {
-    OutputStream outputStream = blobBuilder.sink().outputStream();
-    if (manifest == null) {
-      return new JarOutputStream(outputStream);
-    } else {
-      try (InputStream manifestStream = manifest.source().inputStream()) {
-        return new JarOutputStream(outputStream, new Manifest(manifestStream));
-      }
+      return blobBuilder.build();
     }
   }
 
-  private static void jarFile(TupleB file, JarOutputStream jarOutputStream) throws IOException {
-    jarOutputStream.putNextEntry(new JarEntry(filePath(file).toJ()));
-    try (BufferedSource source = fileContent(file).source()) {
+  private static void addJarEntry(
+      JarOutputStream jarOutputStream, String filePath, BlobB fileContent) throws IOException {
+    var jarEntry = new JarEntry(filePath);
+    jarEntry.setLastModifiedTime(FileTime.fromMillis(0));
+    jarOutputStream.putNextEntry(jarEntry);
+    try (BufferedSource source = fileContent.source()) {
       BufferedSink sink = buffer(sink(jarOutputStream));
       source.readAll(sink);
       sink.flush();
