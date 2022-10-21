@@ -7,7 +7,6 @@ import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 
 public record Output(InstB instB, ArrayB messages) {
-
   public Output {
     requireNonNull(messages);
   }
@@ -16,6 +15,7 @@ public record Output(InstB instB, ArrayB messages) {
     return instB != null;
   }
 
+  @Override
   public InstB instB() {
     checkState(hasVal(), "Output does not contain value.");
     return instB;
