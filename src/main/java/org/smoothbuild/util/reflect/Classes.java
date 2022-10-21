@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
@@ -59,7 +60,9 @@ public class Classes {
       throws IOException {
     try (var jarOutputStream = new JarOutputStream(buffer(sink).outputStream())) {
       for (Class<?> clazz : classes) {
-        jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
+        var zipEntry = new ZipEntry(binaryPath(clazz));
+        zipEntry.setLastModifiedTime(FileTime.fromMillis(0));
+        jarOutputStream.putNextEntry(zipEntry);
         try (InputStream bytecodeInputStream = bytecodeAsInputStream(clazz)) {
           ByteStreams.copy(bytecodeInputStream, jarOutputStream);
         }
