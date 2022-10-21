@@ -30,9 +30,9 @@ public class OutputTest extends TestContext {
 
   @Test
   public void output_created_without_messages_has_no_messages() {
-    Output output = new Output(aString(), messageArrayEmtpy());
+    Output output = new Output(aString(), messageArrayEmpty());
     assertThat(output.messages())
-        .isEqualTo(messageArrayEmtpy());
+        .isEqualTo(messageArrayEmpty());
   }
 
   @Test
@@ -65,9 +65,9 @@ public class OutputTest extends TestContext {
 
   @Test
   public void outputs_with_same_value_and_no_messages_are_equal() {
-    Output output = new Output(aString(), messageArrayEmtpy());
+    Output output = new Output(aString(), messageArrayEmpty());
     assertThat(output)
-        .isEqualTo(new Output(aString(), messageArrayEmtpy()));
+        .isEqualTo(new Output(aString(), messageArrayEmpty()));
   }
 
   @Test
@@ -81,7 +81,7 @@ public class OutputTest extends TestContext {
   public void outputs_with_same_value_but_different_messages_are_not_equal() {
     Output output = new Output(aString(), messages());
     assertThat(output)
-        .isNotEqualTo(new Output(aString(), messageArrayEmtpy()));
+        .isNotEqualTo(new Output(aString(), messageArrayEmpty()));
   }
 
   @Test

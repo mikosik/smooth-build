@@ -707,7 +707,7 @@ public class TestContext {
     return arrayB(bytecodeF().errorMessage("error message"));
   }
 
-  public ArrayB messageArrayEmtpy() {
+  public ArrayB messageArrayEmpty() {
     return arrayB(bytecodeF().messageT());
   }
 
