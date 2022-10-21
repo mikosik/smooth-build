@@ -137,6 +137,7 @@ import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.compute.ComputationCache;
@@ -648,6 +649,14 @@ public class TestContext {
 
   public DefFuncB returnAbcFuncB() {
     return defFuncB(stringB("abc"));
+  }
+
+  public NatFuncB returnAbcNatFuncB() throws IOException {
+    return returnAbcNatFuncB(true);
+  }
+
+  public NatFuncB returnAbcNatFuncB(boolean isPure) throws IOException {
+    return natFuncB(funcTB(stringTB()), ReturnAbc.class, isPure);
   }
 
   public IntB intB() {
@@ -1373,7 +1382,11 @@ public class TestContext {
   }
 
   public ComputationResult computationResult(InstB instB, ResultSource source) {
-    return new ComputationResult(output(instB), source);
+    return computationResult(output(instB), source);
+  }
+
+  public static ComputationResult computationResult(Output output, ResultSource source) {
+    return new ComputationResult(output, source);
   }
 
   public Output output(InstB instB) {

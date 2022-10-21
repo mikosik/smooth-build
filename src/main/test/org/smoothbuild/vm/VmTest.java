@@ -22,7 +22,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
 
 import java.io.IOException;
@@ -479,36 +478,6 @@ public class VmTest extends TestContext {
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("1"), stringB("1")));
 
       verifyConstTasksResSource(4, DISK, reporter);
-    }
-
-    @Test
-    public void result_source_for_computation_of_impure_func_is_memory() throws Exception {
-      do_test_res_source_of_cached_computation(
-          "result_source_for_computation_of_impure_func_is_memory", false, MEMORY);
-    }
-
-    @Test
-    public void result_source_for_computation_of_pure_func_is_disk() throws Exception {
-      do_test_res_source_of_cached_computation(
-          "result_source_for_computation_of_pure_func_is_disk", true, DISK);
-    }
-
-    private void do_test_res_source_of_cached_computation(
-        String taskName, boolean isPure, ResultSource source) throws IOException {
-      COUNTERS.put(taskName + "1", new AtomicInteger());
-      var latch = new CountDownLatch(1);
-      COUNTDOWNS.put(taskName + "1", latch);
-      var exprB = orderB(
-          commandCall(taskName, "WAIT1,GET1", isPure),
-          commandCall(taskName, "WAIT1,GET1", isPure)
-      );
-      var reporter = mock(ExecutionReporter.class);
-      var vm = new Vm(() -> executionContext(reporter, 2));
-      latch.countDown();
-
-      assertThat(evaluate(vm, exprB))
-          .isEqualTo(arrayB(stringB("0"), stringB("0")));
-      verifyConstTasksResSource(2, source, reporter);
     }
 
     @Test

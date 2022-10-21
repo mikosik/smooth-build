@@ -51,13 +51,13 @@ public class Computer {
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
-      if (computationCache.contains(hash)) {
+      if (isCacheableTask(task) && computationCache.contains(hash)) {
         var output = computationCache.read(hash, task.outputT());
         newPromised.accept(new ComputationResult(output, resSourceOrNoop(DISK, task)));
         promisedValues.remove(hash);
       } else {
         var computed = runComputation(task, input);
-        boolean cacheOnDisk = task.isPure() && computed.hasOutput();
+        boolean cacheOnDisk = isCacheableTask(task) && computed.hasOutput();
         if (cacheOnDisk) {
           computationCache.write(hash, computed.output());
           promisedValues.remove(hash);
@@ -100,6 +100,14 @@ public class Computer {
     return isNonExecutingTask(task) ? NOOP : source;
   }
 
+  private static boolean isCacheableTask(Task task) {
+    return isExecutingTask(task) && task.isPure();
+  }
+
+  private static boolean isExecutingTask(Task task) {
+    return !isNonExecutingTask(task);
+  }
+
   private static boolean isNonExecutingTask(Task task) {
     return task instanceof ConstTask || task instanceof IdentityTask;
   }
@@ -108,7 +116,7 @@ public class Computer {
     return computationHash(sandboxHash, task, args);
   }
 
-  public static Hash computationHash(Hash sandboxHash, Task task, TupleB args) {
-    return Hash.of(asList(sandboxHash, taskHash(task), args.hash()));
+  public static Hash computationHash(Hash sandboxHash, Task task, TupleB input) {
+    return Hash.of(asList(sandboxHash, taskHash(task), input.hash()));
   }
 }
