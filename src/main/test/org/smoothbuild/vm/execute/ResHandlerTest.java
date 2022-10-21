@@ -15,7 +15,6 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.ComputationResult;
-import org.smoothbuild.vm.task.Output;
 
 public class ResHandlerTest extends TestContext {
   private ExecutionReporter reporter;
@@ -83,11 +82,7 @@ public class ResHandlerTest extends TestContext {
     }
   }
 
-  private ComputationResult result(InstB val) {
-    return new ComputationResult(output(val), DISK);
-  }
-
-  private Output output(InstB val) {
-    return new Output(val, arrayB(stringTB()));
+  private ComputationResult result(InstB instB) {
+    return computationResult(instB, DISK);
   }
 }

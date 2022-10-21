@@ -140,8 +140,10 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.compute.ComputationCache;
+import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.compute.ResultSource;
 import org.smoothbuild.vm.execute.ExecutionReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.execute.TaskKind;
@@ -153,6 +155,7 @@ import org.smoothbuild.vm.task.ConstTask;
 import org.smoothbuild.vm.task.NativeCallTask;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 import org.smoothbuild.vm.task.OrderTask;
+import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.PickTask;
 import org.smoothbuild.vm.task.SelectTask;
 import org.smoothbuild.vm.task.Task;
@@ -1367,6 +1370,14 @@ public class TestContext {
       case PICK -> new PickTask(intTB(), tagLoc, traceS());
       case SELECT -> new SelectTask(intTB(), tagLoc, traceS());
     };
+  }
+
+  public ComputationResult computationResult(InstB instB, ResultSource source) {
+    return new ComputationResult(output(instB), source);
+  }
+
+  public Output output(InstB instB) {
+    return new Output(instB, messageArrayEmpty());
   }
 
   public static TagLoc tagLoc() {
