@@ -5,6 +5,7 @@ import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 
 import java.io.IOException;
+import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -29,15 +30,16 @@ public class ZipFunc {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
           return null;
         }
-        zipFile(file, zipOutputStream);
+        addZipEntry(zipOutputStream, file);
       }
     }
     return blobBuilder.build();
   }
 
-  private static void zipFile(TupleB file, ZipOutputStream zipOutputStream) throws IOException {
-    ZipEntry entry = new ZipEntry(filePath(file).toJ());
-    zipOutputStream.putNextEntry(entry);
+  private static void addZipEntry(ZipOutputStream zipOutputStream, TupleB file) throws IOException {
+    var zipEntry = new ZipEntry(filePath(file).toJ());
+    zipEntry.setLastModifiedTime(FileTime.fromMillis(0));
+    zipOutputStream.putNextEntry(zipEntry);
     try (BufferedSource source = fileContent(file).source()) {
       source.readAll(sink(zipOutputStream));
     }
