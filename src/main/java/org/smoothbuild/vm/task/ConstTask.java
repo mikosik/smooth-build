@@ -2,6 +2,7 @@ package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.execute.TaskKind.CONST;
+import static org.smoothbuild.vm.task.Purity.FAST;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
@@ -13,7 +14,7 @@ public final class ConstTask extends Task {
   private final InstB instB;
 
   public ConstTask(InstB instB, TagLoc tagLoc, TraceS trace) {
-    super(instB.type(), CONST, tagLoc, trace);
+    super(instB.type(), CONST, tagLoc, trace, FAST);
     this.instB = instB;
   }
 

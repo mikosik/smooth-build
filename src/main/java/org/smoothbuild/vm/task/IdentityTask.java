@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.vm.task.Purity.FAST;
 
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
@@ -11,7 +12,7 @@ import org.smoothbuild.vm.execute.TaskKind;
 
 public final class IdentityTask extends Task {
   public IdentityTask(TypeB type, TaskKind kind, TagLoc tagLoc, TraceS trace) {
-    super(type, kind, tagLoc, trace);
+    super(type, kind, tagLoc, trace, FAST);
   }
 
   @Override

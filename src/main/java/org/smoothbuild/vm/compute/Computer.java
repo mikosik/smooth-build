@@ -5,6 +5,7 @@ import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
 import static org.smoothbuild.vm.compute.ResultSource.NOOP;
+import static org.smoothbuild.vm.task.Purity.PURE;
 import static org.smoothbuild.vm.task.TaskHashes.taskHash;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,8 +18,6 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.SandboxHash;
-import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.IdentityTask;
 import org.smoothbuild.vm.task.Output;
 import org.smoothbuild.vm.task.Task;
 
@@ -51,13 +50,13 @@ public class Computer {
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
-      if (isCacheableTask(task) && computationCache.contains(hash)) {
+      if (task.purity() == PURE && computationCache.contains(hash)) {
         var output = computationCache.read(hash, task.outputT());
-        newPromised.accept(new ComputationResult(output, resSourceOrNoop(DISK, task)));
+        newPromised.accept(new ComputationResult(output, DISK));
         promisedValues.remove(hash);
       } else {
         var computed = runComputation(task, input);
-        boolean cacheOnDisk = isCacheableTask(task) && computed.hasOutput();
+        boolean cacheOnDisk = task.purity() == PURE && computed.hasOutput();
         if (cacheOnDisk) {
           computationCache.write(hash, computed.output());
           promisedValues.remove(hash);
@@ -68,48 +67,35 @@ public class Computer {
   }
 
   private static ComputationResult computationResultFromPromise(
-      ComputationResult result, Task task) {
-    var source = resSourceTakenFromPromise(result, task);
-    return new ComputationResult(result.output(), result.exception(), source);
+      ComputationResult computationResult, Task task) {
+    var promiseResultSource = computationResult.source();
+    var resultSource = switch (promiseResultSource) {
+      case EXECUTION -> switch (task.purity()) {
+        case PURE -> DISK;
+        case IMPURE -> MEMORY;
+        case FAST -> throw new RuntimeException("shouldn't happen");
+      };
+      default -> promiseResultSource;
+    };
+    return new ComputationResult(
+        computationResult.output(), computationResult.exception(), resultSource);
   }
 
   private ComputationResult runComputation(Task task, TupleB input) {
     var container = containerProvider.get();
+    var resultSource = switch (task.purity()) {
+      case PURE, IMPURE -> EXECUTION;
+      case FAST -> NOOP;
+    };
     Output output;
-    var resSource = resSourceOrNoop(EXECUTION, task);
     try {
       output = task.run(input, container);
     } catch (Exception e) {
-      return new ComputationResult(e, resSource);
+      return new ComputationResult(e, resultSource);
     }
     // This Computed instance creation is outside try-block
     // so eventual exception it could throw won't be caught by above catch.
-    return new ComputationResult(output, resSource);
-  }
-
-  private static ResultSource resSourceTakenFromPromise(
-      ComputationResult result, Task task) {
-    if (result.source() == EXECUTION) {
-      return task.isPure() ? DISK : MEMORY;
-    } else {
-      return resSourceOrNoop(result.source(), task);
-    }
-  }
-
-  private static ResultSource resSourceOrNoop(ResultSource source, Task task) {
-    return isNonExecutingTask(task) ? NOOP : source;
-  }
-
-  private static boolean isCacheableTask(Task task) {
-    return isExecutingTask(task) && task.isPure();
-  }
-
-  private static boolean isExecutingTask(Task task) {
-    return !isNonExecutingTask(task);
-  }
-
-  private static boolean isNonExecutingTask(Task task) {
-    return task instanceof ConstTask || task instanceof IdentityTask;
+    return new ComputationResult(output, resultSource);
   }
 
   private Hash computationHash(Task task, TupleB args) {

@@ -3,6 +3,8 @@ package org.smoothbuild.vm.task;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
+import static org.smoothbuild.vm.task.Purity.IMPURE;
+import static org.smoothbuild.vm.task.Purity.PURE;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,7 +24,7 @@ public final class NativeCallTask extends Task {
 
   public NativeCallTask(TypeB outputT, String name, NatFuncB natFunc,
       NativeMethodLoader methodLoader, TagLoc tagLoc, TraceS trace) {
-    super(outputT, CALL, tagLoc, trace, natFunc.isPure().toJ());
+    super(outputT, CALL, tagLoc, trace, natFunc.isPure().toJ() ? PURE : IMPURE);
     this.name = name;
     this.nativeMethodLoader = methodLoader;
     this.natFunc = natFunc;
