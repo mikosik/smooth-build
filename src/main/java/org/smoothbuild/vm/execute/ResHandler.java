@@ -24,7 +24,7 @@ public class ResHandler implements Consumer<ComputationResult> {
   @Override
   public void accept(ComputationResult result) {
     reporter.report(task, result);
-    if (result.hasOutputWithValue()) {
+    if (result.output().instB() != null) {
       consumer.accept(result.output().instB());
     } else {
       executor.terminate();

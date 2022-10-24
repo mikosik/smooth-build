@@ -57,7 +57,8 @@ public class Computer {
   }
 
   private void computeFast(Task task, TupleB input, Consumer<ComputationResult> consumer) {
-    consumer.accept(runComputation(task, input));
+    var output = runComputation(task, input);
+    consumer.accept(new ComputationResult(output, NOOP));
   }
 
   private void computeWithCache(Task task, TupleB input, Consumer<ComputationResult> consumer)
@@ -77,14 +78,14 @@ public class Computer {
         newPromised.accept(new ComputationResult(output, DISK));
         memoryCache.remove(hash);
       } else {
-        var computed = runComputation(task, input);
+        var output = runComputation(task, input);
         if (isPure) {
-          if (computed.hasOutput() && !containsFatal(computed.output().messages())) {
-            diskCache.write(hash, computed.output());
+          if (!containsFatal(output.messages())) {
+            diskCache.write(hash, output);
           }
           memoryCache.remove(hash);
         }
-        newPromised.accept(computed);
+        newPromised.accept(new ComputationResult(output, EXECUTION));
       }
     }
   }
@@ -100,25 +101,12 @@ public class Computer {
       };
       default -> promiseResultSource;
     };
-    return new ComputationResult(
-        computationResult.output(), computationResult.exception(), resultSource);
+    return new ComputationResult(computationResult.output(), resultSource);
   }
 
-  private ComputationResult runComputation(Task task, TupleB input) {
+  private Output runComputation(Task task, TupleB input) {
     var container = containerProvider.get();
-    var resultSource = switch (task.purity()) {
-      case PURE, IMPURE -> EXECUTION;
-      case FAST -> NOOP;
-    };
-    Output output;
-    try {
-      output = task.run(input, container);
-    } catch (Exception e) {
-      return new ComputationResult(e, resultSource);
-    }
-    // This Computed instance creation is outside try-block
-    // so eventual exception it could throw won't be caught by above catch.
-    return new ComputationResult(output, resultSource);
+    return task.run(input, container);
   }
 
   private Hash computationHash(Task task, TupleB args) {

@@ -2,7 +2,6 @@ package org.smoothbuild.vm.execute;
 
 import static com.google.common.base.Strings.padEnd;
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
@@ -15,7 +14,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.compute.ComputationResult;
@@ -36,12 +34,8 @@ public class ExecutionReporter {
 
   public void report(Task task, ComputationResult result) {
     var source = result.source();
-    if (result.hasOutput()) {
-      print(task, source, result.output().messages());
-    } else {
-      Log error = error("Execution failed with:\n" + getStackTraceAsString(result.exception()));
-      print(task, list(error), source);
-    }
+    var logs = map(result.output().messages().elems(TupleB.class), m -> new Log(level(m), text(m)));
+    print(task, logs, source);
   }
 
   public void reportComputerException(Task task, Throwable throwable) {
@@ -50,12 +44,7 @@ public class ExecutionReporter {
     print(task, list(fatal), EXECUTION);
   }
 
-  private void print(Task task, ResultSource source, ArrayB messages) {
-    var logs = map(messages.elems(TupleB.class), m -> new Log(level(m), text(m)));
-    print(task, logs, source);
-  }
-
-  public void print(Task task, List<Log> logs, ResultSource source) {
+  private void print(Task task, List<Log> logs, ResultSource source) {
     taskReporter.report(task, header(task, source.toString()), logs);
   }
 

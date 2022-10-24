@@ -23,6 +23,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
+import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.execute.TaskKind.ORDER;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 
@@ -1383,6 +1384,10 @@ public class TestContext {
       case PICK -> new PickTask(intTB(), tagLoc, traceS());
       case SELECT -> new SelectTask(intTB(), tagLoc, traceS());
     };
+  }
+
+  public ComputationResult computationResult(InstB instB) {
+    return computationResult(output(instB), DISK);
   }
 
   public ComputationResult computationResult(InstB instB, ResultSource source) {

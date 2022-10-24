@@ -4,7 +4,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.smoothbuild.vm.compute.ResultSource.DISK;
 
 import java.util.function.Consumer;
 
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
-import org.smoothbuild.vm.compute.ComputationResult;
 
 public class ResHandlerTest extends TestContext {
   private ExecutionReporter reporter;
@@ -36,14 +34,14 @@ public class ResHandlerTest extends TestContext {
     @Test
     public void object_is_forwarded_to_consumer() {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(result(val));
+      resHandler.accept(computationResult(val));
       verify(consumer, only()).accept(val);
     }
 
     @Test
     public void executor_is_not_stopped() {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(result(val));
+      resHandler.accept(computationResult(val));
       verifyNoInteractions(executor);
     }
   }
@@ -53,36 +51,15 @@ public class ResHandlerTest extends TestContext {
     @Test
     public void object_is_not_forwarded_to_consumer() {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(result(null));
+      resHandler.accept(computationResult(null));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(result(null));
+      resHandler.accept(computationResult(null));
       verify(executor, only()).terminate();
     }
-  }
-
-  @Nested
-  class when_maybe_output_with_exception_is_passed {
-    @Test
-    public void object_is_not_forwarded_to_consumer() {
-      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(new ComputationResult(new ArithmeticException(), DISK));
-      verifyNoInteractions(consumer);
-    }
-
-    @Test
-    public void executor_is_stopped() {
-      ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(new ComputationResult(new ArithmeticException(), DISK));
-      verify(executor, only()).terminate();
-    }
-  }
-
-  private ComputationResult result(InstB instB) {
-    return computationResult(instB, DISK);
   }
 }
