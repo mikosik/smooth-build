@@ -92,14 +92,10 @@ public class Computer {
 
   private static ComputationResult computationResultFromPromise(
       ComputationResult computationResult, Task task) {
-    var promiseResultSource = computationResult.source();
-    var resultSource = switch (promiseResultSource) {
-      case EXECUTION -> switch (task.purity()) {
-        case PURE -> DISK;
-        case IMPURE -> MEMORY;
-        case FAST -> throw new RuntimeException("shouldn't happen");
-      };
-      default -> promiseResultSource;
+    var resultSource = switch (task.purity()) {
+      case PURE -> DISK;
+      case IMPURE -> MEMORY;
+      case FAST -> throw new RuntimeException("shouldn't happen");
     };
     return new ComputationResult(computationResult.output(), resultSource);
   }
