@@ -50,9 +50,14 @@ public class Container implements NativeApi {
         .build();
   }
 
+  public boolean containsErrorOrAbove() {
+    return messageLogger.containsErrorOrAbove;
+  }
+
   private static class ContainerMessageLoggerImpl implements ContainerMessageLogger {
     private final List<InstB> messages = new ArrayList<>();
     private final BytecodeF bytecodeF;
+    private boolean containsErrorOrAbove = false;
 
     public ContainerMessageLoggerImpl(BytecodeF bytecodeF) {
       this.bytecodeF = bytecodeF;
@@ -61,11 +66,13 @@ public class Container implements NativeApi {
     @Override
     public void fatal(String message) {
       messages.add(bytecodeF.fatalMessage(message));
+      containsErrorOrAbove = true;
     }
 
     @Override
     public void error(String message) {
       messages.add(bytecodeF.errorMessage(message));
+      containsErrorOrAbove = true;
     }
 
     @Override

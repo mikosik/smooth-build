@@ -1,6 +1,5 @@
 package org.smoothbuild.vm.task;
 
-import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
 import static org.smoothbuild.vm.task.Purity.IMPURE;
@@ -38,25 +37,25 @@ public final class NativeCallTask extends Task {
         .orElse(e -> logErrorAndReturnNullOutput(container, e));
   }
 
-  private Output invokeMethod(Method method, TupleB args, NativeApi nativeApi) {
-    var result = invoke(method, args, nativeApi);
-    var hasErrors = containsErrors(nativeApi.messages());
+  private Output invokeMethod(Method method, TupleB args, Container container) {
+    var result = invoke(method, args, container);
+    var hasErrors = container.containsErrorOrAbove();
     if (result == null) {
       if (!hasErrors) {
-        logFaultyImplementationError(nativeApi, "It returned `null` but logged no error.");
+        logFaultyImplementationError(container, "It returned `null` but logged no error.");
       }
-      return new Output(null, nativeApi.messages());
+      return new Output(null, container.messages());
     }
     if (!outputT().equals(result.evalT())) {
-      logFaultyImplementationError(nativeApi, "Its declared result type == "
+      logFaultyImplementationError(container, "Its declared result type == "
           + outputT().q() + " but it returned object with type == " + result.category().q() + ".");
-      return new Output(null, nativeApi.messages());
+      return new Output(null, container.messages());
     }
     if (hasErrors) {
-      logFaultyImplementationError(nativeApi, "It returned non-null value but logged error.");
-      return new Output(null, nativeApi.messages());
+      logFaultyImplementationError(container, "It returned non-null value but logged error.");
+      return new Output(null, container.messages());
     }
-    return new Output(result, nativeApi.messages());
+    return new Output(result, container.messages());
   }
 
   private InstB invoke(Method method, TupleB args, NativeApi nativeApi) {
