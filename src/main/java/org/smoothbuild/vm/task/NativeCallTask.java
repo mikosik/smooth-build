@@ -15,7 +15,6 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.vm.compute.Container;
 
 public final class NativeCallTask extends Task {
@@ -35,7 +34,7 @@ public final class NativeCallTask extends Task {
   public Output run(TupleB input, Container container) {
     return nativeMethodLoader.load(name, natFunc)
         .map(m -> invokeMethod(m, input, container))
-        .orElse(e -> logErrorAndReturnNullOutput(container, e));
+        .orElse(e -> logFatalAndReturnNullOutput(container, e));
   }
 
   private Output invokeMethod(Method method, TupleB args, Container container) {
@@ -61,29 +60,29 @@ public final class NativeCallTask extends Task {
     var hasErrors = container.containsErrorOrAbove();
     if (result == null) {
       if (!hasErrors) {
-        logFaultyImplementationError(container, "It returned `null` but logged no error.");
+        logFaultyImplementation(container, "It returned `null` but logged no error.");
       }
       return new Output(null, container.messages());
     }
     if (!outputT().equals(result.evalT())) {
-      logFaultyImplementationError(container, "Its declared result type == "
+      logFaultyImplementation(container, "Its declared result type == "
           + outputT().q() + " but it returned object with type == " + result.category().q() + ".");
       return new Output(null, container.messages());
     }
     if (hasErrors) {
-      logFaultyImplementationError(container, "It returned non-null value but logged error.");
+      logFaultyImplementation(container, "It returned non-null value but logged error.");
       return new Output(null, container.messages());
     }
     return new Output(result, container.messages());
   }
 
-  private void logFaultyImplementationError(NativeApi nativeApi, String message) {
-    nativeApi.log().error(q(name) + " has faulty native implementation: " + message);
+  private void logFaultyImplementation(Container container, String message) {
+    container.log().fatal(q(name) + " has faulty native implementation: " + message);
   }
 
-  private static Output logErrorAndReturnNullOutput(NativeApi nativeApi, String message) {
-    nativeApi.log().error(message);
-    return new Output(null, nativeApi.messages());
+  private static Output logFatalAndReturnNullOutput(Container container, String message) {
+    container.log().fatal(message);
+    return new Output(null, container.messages());
   }
 
   public NatFuncB natFunc() {

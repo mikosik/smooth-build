@@ -153,12 +153,12 @@ public class NativeTest extends AcceptanceTestCase {
               """, className));
         evaluate("result");
         assertThat(logs())
-            .containsExactly(methodLoadingError(className, "wrongMethodName",
+            .containsExactly(methodLoadingFatal(className, "wrongMethodName",
                 "Class '" + className + "' does not have 'func' method."));
       }
 
       @Nested
-      class _error_is_reported_when_java_method_returns {
+      class _fatal_is_reported_when_java_method_returns {
         @Test
         public void null_without_logging_error() throws Exception {
           createUserNativeJar(ReturnNull.class);
@@ -170,7 +170,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, className));
           evaluate("result");
           assertThat(logs())
-              .containsExactly(faultyNullReturnedError("returnNull"));
+              .containsExactly(faultyNullReturnedFatal("returnNull"));
         }
 
         @Test
@@ -183,7 +183,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, ReportWarningAndReturnNull.class.getCanonicalName()));
           evaluate("result");
           assertThat(logs())
-              .contains(faultyNullReturnedError("reportWarning"));
+              .contains(faultyNullReturnedFatal("reportWarning"));
         }
 
         @Test
@@ -281,7 +281,7 @@ public class NativeTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void func_with_illegal_impl_causes_err() throws Exception {
+    public void func_with_illegal_impl_causes_fatal() throws Exception {
       Class<?> clazz = org.smoothbuild.testing.func.bytecode.NonPublicMethod.class;
       createUserNativeJar(clazz);
       createUserModule(format("""
@@ -310,7 +310,7 @@ public class NativeTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void value_with_illegal_impl_causes_err() throws Exception {
+    public void value_with_illegal_impl_causes_fatal() throws Exception {
       Class<?> clazz = org.smoothbuild.testing.func.bytecode.NonPublicMethod.class;
       createUserNativeJar(clazz);
       createUserModule(format("""
@@ -334,24 +334,24 @@ public class NativeTest extends AcceptanceTestCase {
 
   private static Log faultyTypeOfReturnedObject(
       String name, String declared, String actual) {
-    return faultyNativeImplError(name, "Its declared result type == " + q(declared)
+    return faultyNativeImplFatal(name, "Its declared result type == " + q(declared)
         + " but it returned object with type == " + q(actual) + ".");
   }
 
   private static Log nonNullValueAndError(String name) {
-    return faultyNativeImplError(name, "It returned non-null value but logged error.");
+    return faultyNativeImplFatal(name, "It returned non-null value but logged error.");
   }
 
-  private static Log faultyNullReturnedError(String name) {
-    return faultyNativeImplError(name, "It returned `null` but logged no error.");
+  private static Log faultyNullReturnedFatal(String name) {
+    return faultyNativeImplFatal(name, "It returned `null` but logged no error.");
   }
 
-  private static Log faultyNativeImplError(String name, String message) {
-    return error(q(name) + " has faulty native implementation: " + message);
+  private static Log faultyNativeImplFatal(String name, String message) {
+    return fatal(q(name) + " has faulty native implementation: " + message);
   }
 
-  private static Log methodLoadingError(String className, String methodName, String message) {
-    return error("Error loading native implementation for " + q(methodName) + " specified as "
+  private static Log methodLoadingFatal(String className, String methodName, String message) {
+    return fatal("Error loading native implementation for " + q(methodName) + " specified as "
         + q(className) + ": " + message);
   }
 }
