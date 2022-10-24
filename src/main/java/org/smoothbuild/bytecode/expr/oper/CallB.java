@@ -40,8 +40,6 @@ public class CallB extends OperB {
     return list(func, args);
   }
 
-  public record Data(ExprB callable, CombineB args) {}
-
   private void validate(ExprB func, CombineB argsCombine) {
     if (func.evalT() instanceof FuncTB funcTB) {
       validate(funcTB, argsCombine);
