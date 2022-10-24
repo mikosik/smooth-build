@@ -75,7 +75,7 @@ public class NativeTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void without_native_jar_file_causes_error() throws Exception {
+      public void without_native_jar_file_causes_fatal() throws Exception {
         createUserModule("""
             @Native("MissingClass")
             String myFunc();
@@ -107,7 +107,7 @@ public class NativeTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void error_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
+      public void fatal_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
         createUserNativeJar(ThrowRandomException.class);
         createUserModule(format("""
             @Native("%s")
