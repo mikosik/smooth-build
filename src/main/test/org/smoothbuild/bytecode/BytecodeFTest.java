@@ -2,6 +2,7 @@ package org.smoothbuild.bytecode;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 
@@ -18,6 +19,12 @@ public class BytecodeFTest extends TestContext {
   public void blob_data_can_be_read_back() throws Exception {
     assertThat(bytecodeF().blob(sink -> sink.write(bytes)).source().readByteString())
         .isEqualTo(bytes);
+  }
+
+  @Test
+  public void fatal_severity_is_fatal() {
+    assertThat(MessageStruct.severity(bytecodeF().fatalMessage("text")))
+        .isEqualTo(FATAL.name());
   }
 
   @Test

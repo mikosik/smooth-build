@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode;
 
 import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -41,6 +42,7 @@ import org.smoothbuild.bytecode.type.inst.IntTB;
 import org.smoothbuild.bytecode.type.inst.StringTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
+import org.smoothbuild.out.log.Level;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -205,21 +207,25 @@ public class BytecodeF {
     return fileT;
   }
 
+  public TupleB fatalMessage(String text) {
+    return message(FATAL, text);
+  }
+
   public TupleB errorMessage(String text) {
-    return message(ERROR.name(), text);
+    return message(ERROR, text);
   }
 
   public TupleB warningMessage(String text) {
-    return message(WARNING.name(), text);
+    return message(WARNING, text);
   }
 
   public TupleB infoMessage(String text) {
-    return message(INFO.name(), text);
+    return message(INFO, text);
   }
 
-  private TupleB message(String severity, String text) {
+  private TupleB message(Level level, String text) {
     InstB textObject = bytecodeDb.string(text);
-    InstB severityObject = bytecodeDb.string(severity);
+    InstB severityObject = bytecodeDb.string(level.name());
     return bytecodeDb.tuple(list(textObject, severityObject));
   }
 
