@@ -12,7 +12,6 @@ import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
-import org.smoothbuild.plugin.MessageLogger;
 import org.smoothbuild.plugin.NativeApi;
 
 /**
@@ -21,13 +20,13 @@ import org.smoothbuild.plugin.NativeApi;
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
   private final BytecodeF bytecodeF;
-  private final MessageLoggerImpl messageLogger;
+  private final ContainerMessageLoggerImpl messageLogger;
 
   @Inject
   public Container(@ForSpace(PRJ) FileSystem fileSystem, BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;
     this.bytecodeF = bytecodeF;
-    this.messageLogger = new MessageLoggerImpl(bytecodeF);
+    this.messageLogger = new ContainerMessageLoggerImpl(bytecodeF);
   }
 
   @Override
@@ -40,7 +39,7 @@ public class Container implements NativeApi {
   }
 
   @Override
-  public MessageLogger log() {
+  public ContainerMessageLogger log() {
     return messageLogger;
   }
 
@@ -51,12 +50,17 @@ public class Container implements NativeApi {
         .build();
   }
 
-  private static class MessageLoggerImpl implements MessageLogger {
+  private static class ContainerMessageLoggerImpl implements ContainerMessageLogger {
     private final List<InstB> messages = new ArrayList<>();
     private final BytecodeF bytecodeF;
 
-    public MessageLoggerImpl(BytecodeF bytecodeF) {
+    public ContainerMessageLoggerImpl(BytecodeF bytecodeF) {
       this.bytecodeF = bytecodeF;
+    }
+
+    @Override
+    public void fatal(String message) {
+      messages.add(bytecodeF.fatalMessage(message));
     }
 
     @Override
