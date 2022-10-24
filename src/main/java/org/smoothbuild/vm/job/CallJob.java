@@ -42,11 +42,11 @@ public class CallJob extends Job {
     var funcJ = context().jobFor(callB.dataSeq().get(0));
     var result = new PromisedValue<InstB>();
     funcJ.evaluate()
-        .addConsumer(instB -> onFuncJobCompleted(instB, result));
+        .addConsumer(instB -> onFuncJobEvaluated(instB, result));
     return result;
   }
 
-  private void onFuncJobCompleted(InstB instB, Consumer<InstB> resConsumer) {
+  private void onFuncJobEvaluated(InstB instB, Consumer<InstB> resConsumer) {
     switch ((FuncB) instB) {
       case DefFuncB defFuncB -> handleDefFunc(defFuncB, resConsumer);
       case IfFuncB ifFuncB -> handleIfFunc(ifFuncB, resConsumer);
