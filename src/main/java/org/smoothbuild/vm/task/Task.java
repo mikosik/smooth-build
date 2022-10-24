@@ -7,7 +7,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TaskKind;
 
 public sealed abstract class Task permits CombineTask, ConstTask, IdentityTask, NativeCallTask,
@@ -50,5 +50,5 @@ public sealed abstract class Task permits CombineTask, ConstTask, IdentityTask, 
     return purity;
   }
 
-  public abstract Output run(TupleB input, NativeApi nativeApi);
+  public abstract Output run(TupleB input, Container container);
 }

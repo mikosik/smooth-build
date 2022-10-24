@@ -16,6 +16,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.compute.Container;
 
 public final class NativeCallTask extends Task {
   private final NatFuncB natFunc;
@@ -31,10 +32,10 @@ public final class NativeCallTask extends Task {
   }
 
   @Override
-  public Output run(TupleB input, NativeApi nativeApi) {
+  public Output run(TupleB input, Container container) {
     return nativeMethodLoader.load(name, natFunc)
-        .map(m -> invokeMethod(m, input, nativeApi))
-        .orElse(e -> logErrorAndReturnNullOutput(nativeApi, e));
+        .map(m -> invokeMethod(m, input, container))
+        .orElse(e -> logErrorAndReturnNullOutput(container, e));
   }
 
   private Output invokeMethod(Method method, TupleB args, NativeApi nativeApi) {

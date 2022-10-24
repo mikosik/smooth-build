@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.compute.Container;
 
 public final class ConstTask extends Task {
   private final InstB instB;
@@ -23,8 +23,8 @@ public final class ConstTask extends Task {
   }
 
   @Override
-  public Output run(TupleB input, NativeApi nativeApi) {
+  public Output run(TupleB input, Container container) {
     checkArgument(input.items().size() == 0);
-    return new Output(instB, nativeApi.messages());
+    return new Output(instB, container.messages());
   }
 }

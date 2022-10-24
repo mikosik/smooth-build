@@ -7,7 +7,7 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TaskKind;
 
 public final class IdentityTask extends Task {
@@ -16,9 +16,9 @@ public final class IdentityTask extends Task {
   }
 
   @Override
-  public Output run(TupleB input, NativeApi nativeApi) {
+  public Output run(TupleB input, Container container) {
     var items = input.items();
     checkArgument(items.size() == 1);
-    return new Output(items.get(0), nativeApi.messages());
+    return new Output(items.get(0), container.messages());
   }
 }

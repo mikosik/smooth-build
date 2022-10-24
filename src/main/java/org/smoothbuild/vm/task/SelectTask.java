@@ -9,7 +9,7 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.compute.Container;
 
 import com.google.common.collect.ImmutableList;
 
@@ -19,12 +19,12 @@ public final class SelectTask extends Task {
   }
 
   @Override
-  public Output run(TupleB input, NativeApi nativeApi) {
+  public Output run(TupleB input, Container container) {
     var components = input.items();
     checkArgument(components.size() == 2);
     var tuple = selectable(components);
     var index = index(components);
-    return new Output(tuple.get(index.toJ().intValue()), nativeApi.messages());
+    return new Output(tuple.get(index.toJ().intValue()), container.messages());
   }
 
   private TupleB selectable(ImmutableList<InstB> components) {

@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.compute.Container;
 
 public final class CombineTask extends Task {
   public CombineTask(TypeB tupleT, TagLoc tagLoc, TraceS trace) {
@@ -17,7 +17,7 @@ public final class CombineTask extends Task {
   }
 
   @Override
-  public Output run(TupleB input, NativeApi nativeApi) {
-    return new Output(input, nativeApi.messages());
+  public Output run(TupleB input, Container container) {
+    return new Output(input, container.messages());
   }
 }
