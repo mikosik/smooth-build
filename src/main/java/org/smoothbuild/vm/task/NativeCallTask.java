@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.task;
 
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.Throwables.stackTraceToString;
 import static org.smoothbuild.vm.execute.TaskKind.CALL;
 import static org.smoothbuild.vm.task.Purity.IMPURE;
 import static org.smoothbuild.vm.task.Purity.PURE;
@@ -38,7 +39,25 @@ public final class NativeCallTask extends Task {
   }
 
   private Output invokeMethod(Method method, TupleB args, Container container) {
-    var result = invoke(method, args, container);
+    InstB result = null;
+    try {
+      result = (InstB) method.invoke(null, new Object[] {container, args});
+    } catch (IllegalAccessException e) {
+      reportExceptionAsFatal(container, "Cannot invoke native method", e);
+    } catch (InvocationTargetException e) {
+      reportExceptionAsFatal(container, "Native code thrown exception", e.getCause());
+    } catch (Throwable t) {
+      reportExceptionAsFatal(container, "Exception when invoking native method", t);
+    }
+    return buildOutput(container, result);
+  }
+
+  private static void reportExceptionAsFatal(Container container, String message,
+      Throwable throwable) {
+    container.log().fatal(message + ":\n" + stackTraceToString(throwable));
+  }
+
+  private Output buildOutput(Container container, InstB result) {
     var hasErrors = container.containsErrorOrAbove();
     if (result == null) {
       if (!hasErrors) {
@@ -56,17 +75,6 @@ public final class NativeCallTask extends Task {
       return new Output(null, container.messages());
     }
     return new Output(result, container.messages());
-  }
-
-  private InstB invoke(Method method, TupleB args, NativeApi nativeApi) {
-    try {
-      return (InstB) method.invoke(null, new Object[] {nativeApi, args});
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    } catch (InvocationTargetException e) {
-      throw new RuntimeException(
-          q(name) + " threw java exception from its native code.", e.getCause());
-    }
   }
 
   private void logFaultyImplementationError(NativeApi nativeApi, String message) {

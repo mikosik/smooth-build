@@ -2,7 +2,7 @@ package org.smoothbuild.vm.compute;
 
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.run.eval.MessageStruct.containsErrors;
+import static org.smoothbuild.run.eval.MessageStruct.containsErrorOrAbove;
 import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;
 import static org.smoothbuild.run.eval.MessageStruct.severity;
 import static org.smoothbuild.vm.compute.ComputationCacheExc.computationCacheException;
@@ -51,8 +51,9 @@ public class ComputationCache {
     try (BufferedSink sink = fileSystem.sink(toPath(computationHash))) {
       ArrayB messages = output.messages();
       sink.write(messages.hash().toByteString());
-      if (!containsErrors(messages)) {
-        sink.write(output.instB().hash().toByteString());
+      var instB = output.instB();
+      if (instB != null) {
+        sink.write(instB.hash().toByteString());
       }
     } catch (IOException e) {
       throw computationCacheException(e);
@@ -87,7 +88,7 @@ public class ComputationCache {
               "One of messages has invalid severity = '" + severity + "'");
         }
       }
-      if (containsErrors(messages)) {
+      if (containsErrorOrAbove(messages)) {
         return new Output(null, messages);
       } else {
         Hash resultObjectHash = Hash.read(source);

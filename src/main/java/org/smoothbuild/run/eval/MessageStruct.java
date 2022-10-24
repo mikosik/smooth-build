@@ -1,6 +1,7 @@
 package org.smoothbuild.run.eval;
 
 import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 
@@ -13,14 +14,26 @@ import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.out.log.Level;
 
 public class MessageStruct {
-  private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
+  private static final Set<String> SEVERITIES = Set.of(
+      FATAL.name(), ERROR.name(), WARNING.name(), INFO.name());
   private static final int TEXT_IDX = 0;
   private static final int SEVERITY_IDX = 1;
 
-  public static boolean containsErrors(ArrayB messages) {
+  public static boolean containsErrorOrAbove(ArrayB messages) {
     return messages.elems(TupleB.class)
         .stream()
-        .anyMatch(m -> severity(m).equals(ERROR.name()));
+        .anyMatch(MessageStruct::isErrorOrAbove);
+  }
+
+  private static boolean isErrorOrAbove(TupleB message) {
+    String severity = severity(message);
+    return severity.equals(ERROR.name()) || severity.equals(FATAL.name());
+  }
+
+  public static boolean containsFatal(ArrayB messages) {
+    return messages.elems(TupleB.class)
+        .stream()
+        .anyMatch(m -> severity(m).equals(FATAL.name()));
   }
 
   public static boolean isValidSeverity(String severity) {

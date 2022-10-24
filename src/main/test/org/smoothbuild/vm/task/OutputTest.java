@@ -36,27 +36,6 @@ public class OutputTest extends TestContext {
   }
 
   @Test
-  public void value_throws_exception_when_no_value_is_present() {
-    Output output = new Output(null, messages());
-    assertCall(output::instB)
-        .throwsException(IllegalStateException.class);
-  }
-
-  @Test
-  public void has_value_returns_true_when_value_is_present() {
-    Output output = new Output(aString(), messages());
-    assertThat(output.hasVal())
-        .isTrue();
-  }
-
-  @Test
-  public void has_value_returns_false_when_no_value_is_present() {
-    Output output = new Output(null, messages());
-    assertThat(output.hasVal())
-        .isFalse();
-  }
-
-  @Test
   public void outputs_with_same_value_and_messages_are_equal() {
     Output output = new Output(aString(), messages());
     assertThat(output)

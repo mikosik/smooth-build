@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.compute;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.run.eval.MessageStruct.containsFatal;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
@@ -70,15 +71,17 @@ public class Computer {
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
-      if (task.purity() == PURE && diskCache.contains(hash)) {
+      var isPure = task.purity() == PURE;
+      if (isPure && diskCache.contains(hash)) {
         var output = diskCache.read(hash, task.outputT());
         newPromised.accept(new ComputationResult(output, DISK));
         memoryCache.remove(hash);
       } else {
         var computed = runComputation(task, input);
-        boolean cacheOnDisk = task.purity() == PURE && computed.hasOutput();
-        if (cacheOnDisk) {
-          diskCache.write(hash, computed.output());
+        if (isPure) {
+          if (computed.hasOutput() && !containsFatal(computed.output().messages())) {
+            diskCache.write(hash, computed.output());
+          }
           memoryCache.remove(hash);
         }
         newPromised.accept(computed);

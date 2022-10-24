@@ -3,7 +3,7 @@ package org.smoothbuild.accept;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.DOTALL;
-import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.util.Strings.q;
@@ -88,7 +88,7 @@ public class NativeTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void exception_from_native_is_reported_as_error() throws Exception {
+      public void exception_from_native_is_reported_as_fatal() throws Exception {
         createUserNativeJar(ThrowException.class);
         createUserModule(format("""
             @Native("%s")
@@ -100,11 +100,10 @@ public class NativeTest extends AcceptanceTestCase {
             .isEqualTo(1);
         var log = logs().get(0);
         assertThat(log.level())
-            .isEqualTo(ERROR);
+            .isEqualTo(FATAL);
         assertThat(log.message())
-            .startsWith("Execution failed with:\n"
-                + "java.lang.RuntimeException: `throwException` threw java exception from its "
-                + "native code.");
+            .startsWith("Native code thrown exception:\n"
+                + "java.lang.UnsupportedOperationException");
       }
 
       @Test
@@ -256,9 +255,9 @@ public class NativeTest extends AcceptanceTestCase {
           evaluate("result");
           String message = logs().get(0).message();
           assertThat(message)
-              .startsWith("Execution failed with:\n"
-                  + "java.lang.RuntimeException: `addElementOfWrongTypeToArray`"
-                  + " threw java exception from its native code.");
+              .startsWith("Native code thrown exception:\n"
+                  + "java.lang.IllegalArgumentException: Element type must be `Blob` but was "
+                  + "`String`.");
           assertThat(message)
               .contains("Element type must be `Blob` but was `String`.");
         }

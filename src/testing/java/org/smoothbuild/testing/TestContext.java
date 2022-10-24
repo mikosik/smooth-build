@@ -723,6 +723,10 @@ public class TestContext {
     return arrayB(bytecodeF().messageT());
   }
 
+  public TupleB fatalMessage(String text) {
+    return bytecodeF().fatalMessage(text);
+  }
+
   public TupleB errorMessage(String text) {
     return bytecodeF().errorMessage(text);
   }

@@ -16,7 +16,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
-import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -391,7 +391,7 @@ public class VmTest extends TestContext {
     @Nested
     class _errors {
       @Test
-      public void task_throwing_runtime_exception_causes_error() throws Exception {
+      public void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var reporter = mock(TaskReporter.class);
         var context = executionContext(new ExecutionReporter(reporter), 4);
         var exprB = throwExceptionCall();
@@ -399,14 +399,15 @@ public class VmTest extends TestContext {
         verify(reporter).report(
             any(),
             any(),
-            argThat(this::containsErrorCausedByRuntimeException));
+            argThat(this::containsFatalCausedByRuntimeException));
       }
 
-      private boolean containsErrorCausedByRuntimeException(List<Log> logs) {
+      private boolean containsFatalCausedByRuntimeException(List<Log> logs) {
         return logs.size() == 1
-            && logs.get(0).level() == ERROR
+            && logs.get(0).level() == FATAL
             && logs.get(0).message().startsWith(
-            "Execution failed with:\njava.lang.RuntimeException: ");
+            "Native code thrown exception:\njava.lang.ArithmeticException");
+
       }
 
       private CallB throwExceptionCall() throws IOException {

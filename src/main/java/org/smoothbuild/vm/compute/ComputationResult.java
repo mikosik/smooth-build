@@ -30,6 +30,6 @@ public record ComputationResult(Output output, Exception exception, ResultSource
   }
 
   public boolean hasOutputWithValue() {
-    return output != null && output.hasVal();
+    return output != null && output.instB() != null;
   }
 }
