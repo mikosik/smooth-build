@@ -319,7 +319,7 @@ public class TestContext {
   }
 
   public Computer computer() {
-    return new Computer(computationCache(), Hash.of(123), this::container);
+    return new Computer(Hash.of(123), this::container, computationCache());
   }
 
   public NativeApi nativeApi() {

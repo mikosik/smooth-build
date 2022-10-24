@@ -1,10 +1,7 @@
 package org.smoothbuild.vm.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.Computer.computationHash;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
@@ -15,6 +12,7 @@ import static org.smoothbuild.vm.execute.TaskKind.ORDER;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Nested;
@@ -23,7 +21,7 @@ import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.compute.ComputerTest._caching.MemoizingConsumer;
+import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.ConstTask;
 import org.smoothbuild.vm.task.IdentityTask;
@@ -35,307 +33,420 @@ import org.smoothbuild.vm.task.Task;
 
 public class ComputerTest extends TestContext {
   @Nested
-  class _computation_result_for {
+  class _combine_task {
     @Test
-    public void combine_task() throws ComputationCacheExc {
-      var task = new CombineTask(tupleTB(intTB(), intTB()), tagLoc(), traceS());
-      var input = tupleB(intB(17), intB(19));
-      var expectedValue = tupleB(intB(17), intB(19));
-      assertComputationResult(task, input, expectedValue, list(EXECUTION, DISK, DISK));
+    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new CombineTask(tupleTB(intTB()), tagLoc(), traceS());
+      var input = tupleB(value);
+      var memory = tupleB(intB(1));
+      var disk = tupleB(intB(2));
+
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
-    public void const_task() throws ComputationCacheExc {
-      var task = new ConstTask(intB(17), tagLoc(), traceS());
-      var input = tupleB();
-      var expectedValue = intB(17);
-      assertComputationResult(task, input, expectedValue, list(NOOP, NOOP, NOOP));
+    public void when_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new CombineTask(tupleTB(intTB()), tagLoc(), traceS());
+      var input = tupleB(value);
+      var disk = tupleB(intB(2));
+
+      var expected = computationResult(output(disk), DISK);
+      assertComputationResult(task, input, null, disk, expected);
     }
 
     @Test
-    public void identity_task() throws ComputationCacheExc {
-      var task = new IdentityTask(intTB(), ORDER, tagLoc(), traceS());
-      var input = tupleB(intB(17));
-      var expectedValue = intB(17);
-      assertComputationResult(task, input, expectedValue, list(NOOP, NOOP, NOOP));
+    public void when_not_cached() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new CombineTask(tupleTB(intTB()), tagLoc(), traceS());
+      var input = tupleB(value);
+
+      var expected = computationResult(output(tupleB(value)), EXECUTION);
+      assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
-    public void native_call_task_for_pure_func() throws ComputationCacheExc, IOException {
-      var task = new NativeCallTask(
-          stringTB(), "", returnAbcNatFuncB(true), nativeMethodLoader(), tagLoc(), traceS());
-      var input = tupleB();
-      var expectedValue = stringB("abc");
-      assertComputationResult(task, input, expectedValue, list(EXECUTION, DISK, DISK));
-    }
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new CombineTask(tupleTB(intTB()), tagLoc(), traceS());
+      var input = tupleB(value);
 
-    @Test
-    public void native_call_task_for_impure_func() throws ComputationCacheExc, IOException {
-      var task = new NativeCallTask(
-          stringTB(), "", returnAbcNatFuncB(false), nativeMethodLoader(), tagLoc(), traceS());
-      var input = tupleB();
-      var expectedValue = stringB("abc");
-      assertComputationResult(task, input, expectedValue, list(EXECUTION, MEMORY, MEMORY));
-    }
-
-    @Test
-    public void order_task() throws ComputationCacheExc {
-      var task = new OrderTask(arrayTB(intTB()), tagLoc(), traceS());
-      var input = tupleB(intB(17), intB(19));
-      var expectedValue = arrayB(intB(17), intB(19));
-      assertComputationResult(task, input, expectedValue, list(EXECUTION, DISK, DISK));
-    }
-
-    @Test
-    public void pick_task() throws ComputationCacheExc {
-      var task = new PickTask(intTB(), tagLoc(), traceS());
-      var input = tupleB(arrayB(intB(17), intB(19)), intB(0));
-      var expectedValue = intB(17);
-      assertComputationResult(task, input, expectedValue, list(EXECUTION, DISK, DISK));
-    }
-
-    @Test
-    public void select_task() throws ComputationCacheExc {
-      var task = new SelectTask(intTB(), tagLoc(), traceS());
-      var input = tupleB(tupleB(intB(17), stringB()), intB(0));
-      var expectedValue = intB(17);
-      assertComputationResult(task, input, expectedValue, list(EXECUTION, DISK, DISK));
-    }
-
-    private void assertComputationResult(
-        Task task, TupleB input, InstB expectedValue, List<ResultSource> expectedSources)
-        throws ComputationCacheExc {
-      var computer = computer();
-      var consumer = new MemoizingConsumer<ComputationResult>();
-      for (int i = 0; i < expectedSources.size(); i++) {
-        computer.compute(task, input, consumer);
-      }
-      var expected = map(expectedSources, s -> computationResult(expectedValue, s));
-      assertThat(consumer.values())
-          .isEqualTo(expected);
+      assertCachesState(task, input, null, tupleB(value));
     }
   }
 
   @Nested
-  class _caching {
+  class _const_task {
     @Test
-    public void combine_task_computation_is_read_from_cache() throws ComputationCacheExc {
-      var value = intB(17);
-      var task = new CombineTask(tupleTB(intTB()), tagLoc(), traceS());
-      var input = tupleB(value);
-      var cacheValue = tupleB(intB(19));
-
-      assertTaskIsReadFromCache(task, input, cacheValue);
-    }
-
-    @Test
-    public void combine_task_computation_is_stored_in_cache() throws ComputationCacheExc {
-      var value = intB(17);
-      var task = new CombineTask(tupleTB(intTB()), tagLoc(), traceS());
-      var input = tupleB(value);
-
-      assertTaskIsStoredInCache(task, input, tupleB(value));
-    }
-
-    @Test
-    public void const_task_computation_is_not_read_from_cache() throws ComputationCacheExc {
+    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
       var value = intB(17);
       var task = new ConstTask(value, tagLoc(), traceS());
       var input = tupleB();
-      var cacheValue = intB(19);
-      assertTaskComputationIsNotReadFromCache(
-          task, input, cacheValue, computationResult(value, NOOP));
+      var memory = intB(1);
+      var disk = intB(2);
+
+      assertComputationResult(task, input, memory, disk, computationResult(output(value), NOOP));
     }
 
     @Test
-    public void const_task_computation_is_not_written_to_cache() throws ComputationCacheExc {
-      var task = new ConstTask(intB(17), tagLoc(), traceS());
+    public void when_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new ConstTask(value, tagLoc(), traceS());
       var input = tupleB();
-      assertComputationIsNotWrittenToCache(task, input);
+      var disk = intB(2);
+
+      assertComputationResult(task, input, null, disk, computationResult(output(value), NOOP));
     }
 
     @Test
-    public void identity_task_computation_is_not_read_from_cache() throws ComputationCacheExc {
+    public void when_not_cached() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new ConstTask(value, tagLoc(), traceS());
+      var input = tupleB();
+
+      assertComputationResult(task, input, null, null, computationResult(output(value), NOOP));
+    }
+
+    @Test
+    public void executed_computation_is_not_cached() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new ConstTask(value, tagLoc(), traceS());
+      var input = tupleB();
+
+      assertCachesState(task, input, null, null);
+    }
+  }
+
+  @Nested
+  class _identity_task {
+    @Test
+    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
       var value = intB(17);
       var task = new IdentityTask(intTB(), ORDER, tagLoc(), traceS());
       var input = tupleB(value);
-      var cacheValue = intB(19);
-      assertTaskComputationIsNotReadFromCache(
-          task, input, cacheValue, computationResult(value, NOOP));
+      var memory = intB(1);
+      var disk = intB(2);
+
+      assertComputationResult(task, input, memory, disk, computationResult(output(value), NOOP));
     }
 
     @Test
-    public void identity_task_computation_is_not_written_to_cache() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
       var task = new IdentityTask(intTB(), ORDER, tagLoc(), traceS());
-      var input = tupleB(intB(17));
-      assertComputationIsNotWrittenToCache(task, input);
+      var input = tupleB(value);
+      var disk = intB(2);
+
+      assertComputationResult(task, input, null, disk, computationResult(output(value), NOOP));
     }
 
     @Test
-    public void native_call_to_pure_func_task_computation_is_read_from_cache()
-        throws ComputationCacheExc, IOException {
+    public void when_not_cached() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new IdentityTask(intTB(), ORDER, tagLoc(), traceS());
+      var input = tupleB(value);
+
+      assertComputationResult(task, input, null, null, computationResult(output(value), NOOP));
+    }
+
+    @Test
+    public void executed_computation_is_not_cached() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new IdentityTask(intTB(), ORDER, tagLoc(), traceS());
+      var input = tupleB(value);
+
+      assertCachesState(task, input, null, null);
+    }
+  }
+
+  @Nested
+  class _native_call_task_with_pure_func {
+    @Test
+    public void when_cached_in_memory_and_disk() throws ComputationCacheExc, IOException {
       var task = new NativeCallTask(
           stringTB(), "", returnAbcNatFuncB(true), nativeMethodLoader(), tagLoc(), traceS());
       var input = tupleB();
-      var cacheValue = stringB("def");
+      var memory = stringB("def");
+      var disk = stringB("ghi");
 
-      assertTaskIsReadFromCache(task, input, cacheValue);
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
-    public void native_call_to_pure_func_task_computation_is_stored_in_cache()
-        throws ComputationCacheExc, IOException {
-      var value = stringB("abc");
+    public void when_cached_on_disk() throws ComputationCacheExc, IOException {
+      var task = new NativeCallTask(
+          stringTB(), "", returnAbcNatFuncB(true), nativeMethodLoader(), tagLoc(), traceS());
+      var input = tupleB();
+      var disk = stringB("ghi");
+
+      assertComputationResult(task, input, null, disk, computationResult(output(disk), DISK));
+    }
+
+    @Test
+    public void when_not_cached() throws ComputationCacheExc, IOException {
       var task = new NativeCallTask(
           stringTB(), "", returnAbcNatFuncB(true), nativeMethodLoader(), tagLoc(), traceS());
       var input = tupleB();
 
-      assertTaskIsStoredInCache(task, input, value);
+      var expected = computationResult(output(stringB("abc")), EXECUTION);
+      assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
-    public void native_call_to_impure_func_task_computation_is_not_read_from_cache()
-        throws ComputationCacheExc, IOException {
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc, IOException {
+      var task = new NativeCallTask(
+          stringTB(), "", returnAbcNatFuncB(true), nativeMethodLoader(), tagLoc(), traceS());
+      var input = tupleB();
+
+      assertCachesState(task, input, null, stringB("abc"));
+    }
+  }
+
+  @Nested
+  class _native_call_task_with_impure_func {
+    @Test
+    public void when_cached_in_memory_and_disk() throws ComputationCacheExc, IOException {
       var task = new NativeCallTask(
           stringTB(), "", returnAbcNatFuncB(false), nativeMethodLoader(), tagLoc(), traceS());
       var input = tupleB();
-      var cacheValue = stringB("def");
+      var memory = stringB("def");
+      var disk = stringB("ghi");
 
-      assertTaskComputationIsNotReadFromCache(task, input, cacheValue,
-          computationResult(stringB("abc"), EXECUTION));
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), MEMORY));
     }
 
     @Test
-    public void native_call_to_impure_func_task_computation_is_not_stored_in_cache()
-        throws ComputationCacheExc, IOException {
+    public void when_cached_on_disk() throws ComputationCacheExc, IOException {
+      var task = new NativeCallTask(
+          stringTB(), "", returnAbcNatFuncB(false), nativeMethodLoader(), tagLoc(), traceS());
+      var input = tupleB();
+      var disk = stringB("ghi");
+
+      var computationResult = computationResult(output(stringB("abc")), EXECUTION);
+      assertComputationResult(task, input, null, disk, computationResult);
+    }
+
+    @Test
+    public void when_not_cached() throws ComputationCacheExc, IOException {
       var task = new NativeCallTask(
           stringTB(), "", returnAbcNatFuncB(false), nativeMethodLoader(), tagLoc(), traceS());
       var input = tupleB();
 
-      assertComputationIsNotWrittenToCache(task, input);
+      var expected = computationResult(output(stringB("abc")), EXECUTION);
+      assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
-    public void order_task_computation_is_read_from_cache() throws ComputationCacheExc {
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc, IOException {
+      var task = new NativeCallTask(
+          stringTB(), "", returnAbcNatFuncB(false), nativeMethodLoader(), tagLoc(), traceS());
+      var input = tupleB();
+
+      assertCachesState(task, input, computationResult(stringB("abc"), EXECUTION), null);
+    }
+  }
+
+  @Nested
+  class _order_task {
+    @Test
+    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
       var value = intB(17);
       var task = new OrderTask(arrayTB(intTB()), tagLoc(), traceS());
       var input = tupleB(value);
-      var cacheValue = arrayB(intB(19));
+      var memory = arrayB(intB(1));
+      var disk = arrayB(intB(2));
 
-      assertTaskIsReadFromCache(task, input, cacheValue);
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
-    public void order_task_computation_is_stored_in_cache() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new OrderTask(arrayTB(intTB()), tagLoc(), traceS());
+      var input = tupleB(value);
+      var disk = arrayB(intB(2));
+
+      var expected = computationResult(output(disk), DISK);
+      assertComputationResult(task, input, null, disk, expected);
+    }
+
+    @Test
+    public void when_not_cached() throws ComputationCacheExc {
       var value = intB(17);
       var task = new OrderTask(arrayTB(intTB()), tagLoc(), traceS());
       var input = tupleB(value);
 
-      assertTaskIsStoredInCache(task, input, arrayB(value));
+      var expected = computationResult(output(arrayB(value)), EXECUTION);
+      assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
-    public void pick_task_computation_is_read_from_cache() throws ComputationCacheExc {
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new OrderTask(arrayTB(intTB()), tagLoc(), traceS());
+      var input = tupleB(value);
+
+      assertCachesState(task, input, null, arrayB(value));
+    }
+  }
+
+  @Nested
+  class _pick_task {
+    @Test
+    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
       var value = intB(17);
       var task = new PickTask(intTB(), tagLoc(), traceS());
       var input = tupleB(arrayB(value), intB(0));
-      var cacheValue = intB(19);
+      var memory = intB(1);
+      var disk = intB(2);
 
-      assertTaskIsReadFromCache(task, input, cacheValue);
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
-    public void pick_task_computation_is_stored_in_cache() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new PickTask(intTB(), tagLoc(), traceS());
+      var input = tupleB(arrayB(value), intB(0));
+      var disk = intB(2);
+
+      var expected = computationResult(output(disk), DISK);
+      assertComputationResult(task, input, null, disk, expected);
+    }
+
+    @Test
+    public void when_not_cached() throws ComputationCacheExc {
       var value = intB(17);
       var task = new PickTask(intTB(), tagLoc(), traceS());
       var input = tupleB(arrayB(value), intB(0));
 
-      assertTaskIsStoredInCache(task, input, value);
+      var expected = computationResult(output(value), EXECUTION);
+      assertComputationResult(task, input, null, null, expected);
     }
 
     @Test
-    public void select_task_computation_is_read_from_cache() throws ComputationCacheExc {
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new PickTask(intTB(), tagLoc(), traceS());
+      var input = tupleB(arrayB(value), intB(0));
+
+      assertCachesState(task, input, null, value);
+    }
+  }
+
+  @Nested
+  class _select_task {
+    @Test
+    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
       var value = intB(17);
       var task = new SelectTask(intTB(), tagLoc(), traceS());
-      var input = tupleB(tupleB(value));
-      var cacheValue = intB(19);
+      var input = tupleB(tupleB(value), intB(0));
+      var memory = intB(1);
+      var disk = intB(2);
 
-      assertTaskIsReadFromCache(task, input, cacheValue);
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
-    public void select_task_computation_is_stored_in_cache() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new SelectTask(intTB(), tagLoc(), traceS());
+      var input = tupleB(tupleB(value), intB(0));
+      var disk = intB(2);
+
+      var expected = computationResult(output(disk), DISK);
+      assertComputationResult(task, input, null, disk, expected);
+    }
+
+    @Test
+    public void when_not_cached() throws ComputationCacheExc {
       var value = intB(17);
       var task = new SelectTask(intTB(), tagLoc(), traceS());
       var input = tupleB(tupleB(value), intB(0));
 
-      assertTaskIsStoredInCache(task, input, value);
+      var expected = computationResult(output(value), EXECUTION);
+      assertComputationResult(task, input, null, null, expected);
     }
 
-    private void assertTaskIsReadFromCache(Task task, TupleB input, InstB cacheValue)
-        throws ComputationCacheExc {
-      var computer = computerWithCachedComputation(task, input, cacheValue);
-      var expected = computationResult(output(cacheValue), DISK);
-      assertComputationResult(computer, task, input, expected);
+    @Test
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc {
+      var value = intB(17);
+      var task = new SelectTask(intTB(), tagLoc(), traceS());
+      var input = tupleB(tupleB(value), intB(0));
+
+      assertCachesState(task, input, null, value);
+    }
+  }
+
+  private void assertComputationResult(
+      Task task, TupleB input, InstB memoryValue, InstB diskValue, ComputationResult expected)
+      throws ComputationCacheExc {
+    var computer = computerWithCaches(task, input, memoryValue, diskValue);
+    assertComputationResult(computer, task, input, expected);
+  }
+
+  private Computer computerWithCaches(Task task, TupleB input, InstB memoryValue, InstB diskValue)
+      throws ComputationCacheExc {
+    var computationCache = computationCache();
+    var sandboxHash = Hash.of(123);
+    var computationHash = computationHash(sandboxHash, task, input);
+    if (diskValue != null) {
+      computationCache.write(computationHash, output(diskValue));
+    }
+    var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();
+    if (memoryValue != null) {
+      var computationResult = computationResult(memoryValue, EXECUTION);
+      memoryCache.put(computationHash, new PromisedValue<>(computationResult));
+    }
+    return new Computer(sandboxHash, () -> container(), computationCache, memoryCache);
+  }
+
+  private void assertComputationResult(Computer computer, Task task, TupleB input,
+      ComputationResult expected) throws ComputationCacheExc {
+    var consumer = new MemoizingConsumer<ComputationResult>();
+
+    computer.compute(task, input, consumer);
+
+    assertThat(consumer.values())
+        .isEqualTo(list(expected));
+  }
+
+  private void assertCachesState(
+      Task task, TupleB input, ComputationResult memoryValue, InstB diskValue)
+      throws ComputationCacheExc {
+    var sandboxHash = Hash.of(123);
+    var computationCache = computationCache();
+    var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();
+    var computer = new Computer(sandboxHash, () -> container(), computationCache, memoryCache);
+    computer.compute(task, input, new MemoizingConsumer<>());
+
+    var taskHash = computationHash(sandboxHash, task, input);
+
+    if (memoryValue == null) {
+      assertThat(memoryCache.containsKey(taskHash))
+          .isFalse();
+    } else {
+      assertThat(memoryCache.get(taskHash).get())
+          .isEqualTo(memoryValue);
+    }
+    if (diskValue == null) {
+      assertThat(computationCache.contains(taskHash))
+          .isFalse();
+    } else {
+      assertThat(computationCache.read(taskHash, diskValue.type()))
+          .isEqualTo(output(diskValue));
+    }
+  }
+
+  public static record MemoizingConsumer<T>(List<T> values) implements Consumer<T> {
+    public MemoizingConsumer() {
+      this(new ArrayList<>());
     }
 
-    private void assertTaskIsStoredInCache(Task task, TupleB input, InstB expectedValue)
-        throws ComputationCacheExc {
-      var computationCache = computationCache();
-      var sandboxHash = Hash.of(123);
-      var computer = new Computer(computationCache, sandboxHash, () -> container());
-      computer.compute(task, input, new MemoizingConsumer<>());
-
-      var taskHash = computationHash(sandboxHash, task, input);
-      assertThat(computationCache.read(taskHash, expectedValue.type()))
-          .isEqualTo(output(expectedValue));
-    }
-
-    private void assertTaskComputationIsNotReadFromCache(Task task, TupleB input,
-        InstB cacheValue, ComputationResult expected) throws ComputationCacheExc {
-      var computer = computerWithCachedComputation(task, input, cacheValue);
-      assertComputationResult(computer, task, input, expected);
-    }
-
-    private Computer computerWithCachedComputation(Task task, TupleB input, InstB cacheValue)
-        throws ComputationCacheExc {
-      var computationCache = computationCache();
-      var cachedOutput = output(cacheValue);
-      var sandboxHash = Hash.of(123);
-      computationCache.write(computationHash(sandboxHash, task, input), cachedOutput);
-      return new Computer(computationCache, sandboxHash, () -> container());
-    }
-
-    private void assertComputationIsNotWrittenToCache(Task task, TupleB input)
-        throws ComputationCacheExc {
-      var computationCache = mock(ComputationCache.class);
-      var sandboxHash = Hash.of(123);
-      var computer = new Computer(computationCache, sandboxHash, () -> container());
-
-      computer.compute(task, input, x -> {});
-
-      verifyNoInteractions(computationCache);
-    }
-
-    private void assertComputationResult(Computer computer, Task task, TupleB input,
-        ComputationResult expected) throws ComputationCacheExc {
-      var consumer = new MemoizingConsumer<ComputationResult>();
-
-      computer.compute(task, input, consumer);
-
-      assertThat(consumer.values())
-          .isEqualTo(list(expected));
-    }
-
-    public static record MemoizingConsumer<T>(List<T> values) implements Consumer<T> {
-      public MemoizingConsumer() {
-        this(new ArrayList<>());
-      }
-
-      @Override
-      public void accept(T value) {
-        values.add(value);
-      }
+    @Override
+    public void accept(T value) {
+      values.add(value);
     }
   }
 }

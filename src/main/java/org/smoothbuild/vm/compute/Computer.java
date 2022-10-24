@@ -5,6 +5,7 @@ import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
 import static org.smoothbuild.vm.compute.ResultSource.NOOP;
+import static org.smoothbuild.vm.task.Purity.FAST;
 import static org.smoothbuild.vm.task.Purity.PURE;
 import static org.smoothbuild.vm.task.TaskHashes.taskHash;
 
@@ -25,41 +26,60 @@ import org.smoothbuild.vm.task.Task;
  * This class is thread-safe.
  */
 public class Computer {
-  private final ComputationCache computationCache;
   private final Hash sandboxHash;
   private final Provider<Container> containerProvider;
-  private final ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> promisedValues;
+  private final ComputationCache diskCache;
+  private final ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> memoryCache;
 
   @Inject
-  public Computer(ComputationCache computationCache, @SandboxHash Hash sandboxHash,
-      Provider<Container> containerProvider) {
-    this.computationCache = computationCache;
+  public Computer(@SandboxHash Hash sandboxHash, Provider<Container> containerProvider,
+      ComputationCache diskCache) {
+    this(sandboxHash, containerProvider, diskCache, new ConcurrentHashMap<>());
+  }
+
+  public Computer(@SandboxHash Hash sandboxHash, Provider<Container> containerProvider,
+      ComputationCache diskCache,
+      ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> memoryCache) {
+    this.diskCache = diskCache;
     this.sandboxHash = sandboxHash;
     this.containerProvider = containerProvider;
-    this.promisedValues = new ConcurrentHashMap<>();
+    this.memoryCache = memoryCache;
   }
 
   public void compute(Task task, TupleB input, Consumer<ComputationResult> consumer)
       throws ComputationCacheExc {
-    Hash hash = computationHash(task, input);
+    if (task.purity() == FAST) {
+      computeFast(task, input, consumer);
+    } else {
+      computeWithCache(task, input, consumer);
+    }
+  }
+
+  private void computeFast(Task task, TupleB input, Consumer<ComputationResult> consumer) {
+    consumer.accept(runComputation(task, input));
+  }
+
+  private void computeWithCache(Task task, TupleB input, Consumer<ComputationResult> consumer)
+      throws ComputationCacheExc {
+    var hash = computationHash(task, input);
     PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
-    PromisedValue<ComputationResult> prevPromised = promisedValues.putIfAbsent(hash, newPromised);
+    PromisedValue<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
       prevPromised
           .chain(c -> computationResultFromPromise(c, task))
           .addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
-      if (task.purity() == PURE && computationCache.contains(hash)) {
-        var output = computationCache.read(hash, task.outputT());
+      if (task.purity() == PURE && diskCache.contains(hash)) {
+        var output = diskCache.read(hash, task.outputT());
         newPromised.accept(new ComputationResult(output, DISK));
-        promisedValues.remove(hash);
+        memoryCache.remove(hash);
       } else {
         var computed = runComputation(task, input);
         boolean cacheOnDisk = task.purity() == PURE && computed.hasOutput();
         if (cacheOnDisk) {
-          computationCache.write(hash, computed.output());
-          promisedValues.remove(hash);
+          diskCache.write(hash, computed.output());
+          memoryCache.remove(hash);
         }
         newPromised.accept(computed);
       }
