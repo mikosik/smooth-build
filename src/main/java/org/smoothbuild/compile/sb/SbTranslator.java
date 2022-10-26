@@ -177,7 +177,7 @@ public class SbTranslator {
     return switch (annName) {
       case BYTECODE -> fetchFuncBytecode(annFuncS);
       case NATIVE_PURE, NATIVE_IMPURE -> translateNatFunc(annFuncS);
-      default -> throw new TranslateSbExc("Illegal function annotation: " + annName + ".");
+      default -> throw new SbTranslatorExc("Illegal function annotation: " + annName + ".");
     };
   }
 
@@ -259,7 +259,7 @@ public class SbTranslator {
       saveNameAndLoc(exprB, annValS);
       return exprB;
     } else {
-      throw new TranslateSbExc("Illegal value annotation: " + q("@" + annName) + ".");
+      throw new SbTranslatorExc("Illegal value annotation: " + q("@" + annName) + ".");
     }  }
 
   // helpers
@@ -279,11 +279,11 @@ public class SbTranslator {
     var jar = loadNativeJar(ann.loc());
     var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string(), varNameToTypeMap);
     if (!bytecodeTry.isPresent()) {
-      throw new TranslateSbExc(ann.loc() + ": " + bytecodeTry.error());
+      throw new SbTranslatorExc(ann.loc() + ": " + bytecodeTry.error());
     }
     var bytecodeB = bytecodeTry.result();
     if (!bytecodeB.evalT().equals(typeB)) {
-      throw new TranslateSbExc(ann.loc() + ": Bytecode provider returned object of wrong type "
+      throw new SbTranslatorExc(ann.loc() + ": Bytecode provider returned object of wrong type "
           + bytecodeB.evalT().q() + " when " + q(name) + " is declared as " + typeB.q() + ".");
     }
     return bytecodeB;
@@ -296,7 +296,7 @@ public class SbTranslator {
     } catch (FileNotFoundException e) {
       String message = loc + ": Error loading native jar: File %s doesn't exist."
           .formatted(filePath.q());
-      throw new TranslateSbExc(message);
+      throw new SbTranslatorExc(message);
     }
   }
 

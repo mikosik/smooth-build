@@ -78,7 +78,7 @@ public class SbTranslatorTest extends TestContext {
           var translator = sbTranslator(fileLoader);
 
           assertCall(() -> translator.translateExpr(natValS))
-              .throwsException(new TranslateSbExc("Illegal value annotation: `@Native`."));
+              .throwsException(new SbTranslatorExc("Illegal value annotation: `@Native`."));
         }
 
         @Test

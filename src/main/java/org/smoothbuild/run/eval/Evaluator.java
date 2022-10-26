@@ -9,8 +9,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.compile.lang.define.ValS;
+import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
-import org.smoothbuild.compile.sb.TranslateSbExc;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.VmFactory;
 
@@ -36,7 +36,7 @@ public class Evaluator {
       reporter.startNewPhase("Evaluating");
       var vm = vmFactory.newVm(sbTranslation.bsMapping());
       return vm.evaluate(sbTranslation.exprBs());
-    } catch (TranslateSbExc e) {
+    } catch (SbTranslatorExc e) {
       reporter.report(fatal(e.getMessage()));
       return Optional.empty();
     } catch (InterruptedException e) {
