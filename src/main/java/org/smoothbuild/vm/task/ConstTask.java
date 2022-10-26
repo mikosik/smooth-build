@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.vm.execute.TaskKind.CONST;
 import static org.smoothbuild.vm.task.Purity.FAST;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
@@ -11,7 +10,7 @@ import org.smoothbuild.vm.execute.TraceB;
 
 public final class ConstTask extends Task {
   public ConstTask(InstB instB, TraceB trace) {
-    super(instB, CONST, trace, FAST);
+    super(instB, trace, FAST);
   }
 
   public InstB instB() {

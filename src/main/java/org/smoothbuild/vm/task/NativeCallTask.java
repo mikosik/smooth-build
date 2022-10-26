@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.task;
 
 import static org.smoothbuild.util.Throwables.stackTraceToString;
-import static org.smoothbuild.vm.execute.TaskKind.CALL;
 import static org.smoothbuild.vm.task.Purity.IMPURE;
 import static org.smoothbuild.vm.task.Purity.PURE;
 
@@ -21,7 +20,7 @@ public final class NativeCallTask extends Task {
 
   public NativeCallTask(CallB callB, NatFuncB natFunc, NativeMethodLoader methodLoader,
       TraceB trace) {
-    super(callB, CALL, trace, natFunc.isPure().toJ() ? PURE : IMPURE);
+    super(callB, trace, natFunc.isPure().toJ() ? PURE : IMPURE);
     this.nativeMethodLoader = methodLoader;
     this.natFunc = natFunc;
   }

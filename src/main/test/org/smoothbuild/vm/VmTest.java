@@ -20,7 +20,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.vm.execute.TaskKind.CALL;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +59,7 @@ import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.JobCreator;
+import org.smoothbuild.vm.task.NativeCallTask;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
@@ -602,7 +602,7 @@ public class VmTest extends TestContext {
   }
 
   private static Task taskMatcher() {
-    return argThat(a -> a.kind() == CALL);
+    return argThat(a -> a instanceof NativeCallTask);
   }
 
   private static ArrayList<ResultSource> resSourceList(int size, ResultSource expectedSource) {

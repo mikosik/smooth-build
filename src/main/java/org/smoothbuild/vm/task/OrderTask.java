@@ -1,7 +1,5 @@
 package org.smoothbuild.vm.task;
 
-import static org.smoothbuild.vm.execute.TaskKind.ORDER;
-
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
@@ -11,7 +9,7 @@ import org.smoothbuild.vm.execute.TraceB;
 
 public final class OrderTask extends Task {
   public OrderTask(OrderB orderB, TraceB trace) {
-    super(orderB, ORDER, trace);
+    super(orderB, trace);
   }
 
   @Override

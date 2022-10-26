@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.vm.execute.TaskKind.SELECT;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
@@ -14,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 
 public final class SelectTask extends Task {
   public SelectTask(SelectB selectB, TraceB trace) {
-    super(selectB, SELECT, trace);
+    super(selectB, trace);
   }
 
   @Override

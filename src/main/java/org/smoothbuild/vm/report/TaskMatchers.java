@@ -9,7 +9,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.out.log.Level;
-import org.smoothbuild.vm.execute.TaskKind;
+import org.smoothbuild.vm.task.CombineTask;
+import org.smoothbuild.vm.task.ConstTask;
+import org.smoothbuild.vm.task.NativeCallTask;
+import org.smoothbuild.vm.task.OrderTask;
+import org.smoothbuild.vm.task.PickTask;
+import org.smoothbuild.vm.task.SelectTask;
+import org.smoothbuild.vm.task.Task;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -22,12 +28,12 @@ public class TaskMatchers {
   static final TaskMatcher AT_LEAST_WARNING = logLevelMatcher(WARNING);
   static final TaskMatcher AT_LEAST_INFO = logLevelMatcher(INFO);
 
-  static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
-  static final TaskMatcher COMBINE = kindMatcher(TaskKind.COMBINE);
-  static final TaskMatcher CONST = kindMatcher(TaskKind.CONST);
-  static final TaskMatcher ORDER = kindMatcher(TaskKind.ORDER);
-  static final TaskMatcher PICK = kindMatcher(TaskKind.PICK);
-  static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
+  static final TaskMatcher CALL = kindMatcher(NativeCallTask.class);
+  static final TaskMatcher COMBINE = kindMatcher(CombineTask.class);
+  static final TaskMatcher CONST = kindMatcher(ConstTask.class);
+  static final TaskMatcher ORDER = kindMatcher(OrderTask.class);
+  static final TaskMatcher PICK = kindMatcher(PickTask.class);
+  static final TaskMatcher SELECT = kindMatcher(SelectTask.class);
 
   static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, CALL);
 
@@ -82,7 +88,7 @@ public class TaskMatchers {
         .anyMatch(l -> l.level().hasPriorityAtLeast(level));
   }
 
-  private static TaskMatcher kindMatcher(TaskKind kind) {
-    return (task, logs) -> Objects.equals(task.kind(), kind);
+  private static TaskMatcher kindMatcher(Class<? extends Task> taskClass) {
+    return (task, logs) -> Objects.equals(task.getClass(), taskClass);
   }
 }

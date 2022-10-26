@@ -34,7 +34,7 @@ import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.execute.TaskKind;
+import org.smoothbuild.vm.task.Task;
 
 import picocli.CommandLine.TypeConversionException;
 
@@ -45,16 +45,17 @@ public class MatcherCreatorTest extends TestContext {
     TaskMatcher matcher = MatcherCreator.createMatcher(expression);
 
     StringBuilder builder = new StringBuilder();
-    for (TaskKind kind : TaskKind.values()) {
+    var tasks = list(
+        combineTask(), constTask(), nativeCallTask(), orderTask(), pickTask(), selectTask());
+    for (Task task : tasks) {
       for (Space space : Space.values()) {
         for (Level level : levels()) {
-          var task = task(kind);
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
           boolean actual = matcher.matches(task, logs);
           boolean expected = expectedMatcher.matches(task, logs);
           if (actual != expected) {
             builder
-                .append(kind)
+                .append(task)
                 .append(" ")
                 .append(space)
                 .append(" ")

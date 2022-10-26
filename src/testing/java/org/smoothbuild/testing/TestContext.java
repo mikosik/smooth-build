@@ -24,7 +24,6 @@ import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
-import static org.smoothbuild.vm.execute.TaskKind.ORDER;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 
 import java.io.IOException;
@@ -148,7 +147,6 @@ import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.compute.ResultSource;
 import org.smoothbuild.vm.execute.TaskExecutor;
-import org.smoothbuild.vm.execute.TaskKind;
 import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.job.ExecutionContext;
@@ -1414,18 +1412,31 @@ public class TestContext {
   }
 
   public Task task() {
-    return task(ORDER);
+    return orderTask();
   }
 
-  public Task task(TaskKind kind) {
-    return switch (kind) {
-      case CALL -> new NativeCallTask(callB(), natFuncB(), null, traceB());
-      case COMBINE -> new CombineTask(combineB(), traceB());
-      case CONST -> new ConstTask(intB(7), traceB());
-      case ORDER -> new OrderTask(orderB(), traceB());
-      case PICK -> new PickTask(pickB(), traceB());
-      case SELECT -> new SelectTask(selectB(), traceB());
-    };
+  public NativeCallTask nativeCallTask() {
+    return new NativeCallTask(callB(), natFuncB(), null, traceB());
+  }
+
+  public CombineTask combineTask() {
+    return new CombineTask(combineB(), traceB());
+  }
+
+  public SelectTask selectTask() {
+    return new SelectTask(selectB(), traceB());
+  }
+
+  public PickTask pickTask() {
+    return new PickTask(pickB(), traceB());
+  }
+
+  public OrderTask orderTask() {
+    return new OrderTask(orderB(), traceB());
+  }
+
+  public ConstTask constTask() {
+    return new ConstTask(intB(7), traceB());
   }
 
   public ComputationResult computationResult(InstB instB) {
