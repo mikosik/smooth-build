@@ -1,85 +1,48 @@
 package org.smoothbuild.vm.execute;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.out.log.Level.FATAL;
-import static org.smoothbuild.out.log.Level.INFO;
-import static org.smoothbuild.out.log.Level.WARNING;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 import static org.smoothbuild.vm.report.TaskMatchers.NONE;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-import java.util.List;
-
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.sb.BsMapping;
-import org.smoothbuild.out.log.Level;
-import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.report.Console;
-import org.smoothbuild.out.report.ConsoleReporter;
+import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.compute.ComputationResult;
+import org.smoothbuild.vm.report.TaskMatcher;
 
 public class TaskReporterTest extends TestContext {
-  private static final Log FATAL_LOG = fatal("fatal message");
-  private static final Log ERROR_LOG = error("error message");
-  private static final Log WARNING_LOG = warning("warning message");
-  private static final Log INFO_LOG = info("info message");
+  @Test
+  public void when_filter_matches() {
+    testVisibility(ALL, true);
+  }
 
-  private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-  private final Console console = new Console(new PrintWriter(outputStream, true));
+  @Test
+  public void when_filter_doesnt_match() {
+    testVisibility(NONE, false);
+  }
 
-  @ParameterizedTest
-  @MethodSource("filtered_logs_cases")
-  public void when_filter_matches_then_logs_which_passes_threshold_are_logged(
-      Level level, List<Log> loggedLogs) {
-    var reporter = new ConsoleReporter(console, level);
-    var taskReporter = new TaskReporter(ALL, reporter, new BsMapping());
-    taskReporter.report(task(), computationWithAllLogLevels());
+  private void testVisibility(TaskMatcher taskMatcher, boolean visible) {
+    var reporter = mock(Reporter.class);
+    var taskReporter = new TaskReporter(taskMatcher, reporter, new BsMapping());
+    var messages = arrayB(
+        fatalMessage(),
+        errorMessage(),
+        warningMessage(),
+        infoMessage());
+    taskReporter.report(task(), computationResultWithMessages(messages));
     var header = "[]                                          unknown                        exec";
-    assertThat(outputStream.toString())
-        .contains(ConsoleReporter.toText(header, loggedLogs));
-  }
-
-  public static List<Arguments> filtered_logs_cases() {
-    return List.of(
-        arguments(FATAL, list(FATAL_LOG)),
-        arguments(ERROR, list(FATAL_LOG, ERROR_LOG)),
-        arguments(WARNING, list(FATAL_LOG, ERROR_LOG, WARNING_LOG)),
-        arguments(INFO, list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG))
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("all_levels")
-  public void when_filter_doesnt_match_then_no_log_is_logged(Level level) {
-    var reporter = new ConsoleReporter(console, level);
-    var taskReporter = new TaskReporter(NONE, reporter, new BsMapping());
-    taskReporter.report(task(), computationWithAllLogLevels());
-    assertThat(outputStream.toString())
-        .isEmpty();
-  }
-
-  private ComputationResult computationWithAllLogLevels() {
-    return computationResult(output(intB(), logsWithAllLevels()), EXECUTION);
-  }
-
-  private static List<Level> all_levels() {
-    return List.of(Level.values());
-  }
-
-  private ArrayB logsWithAllLevels() {
-    return arrayB(fatalMessage(), errorMessage(), warningMessage(), infoMessage());
+    var logs = list(
+        fatal("fatal message"),
+        error("error message"),
+        warning("warning message"),
+        info("info message"));
+    verify(reporter)
+        .report(visible, header, logs);
   }
 }

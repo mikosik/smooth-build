@@ -24,6 +24,7 @@ import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
+import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 
 import java.io.IOException;
@@ -1448,6 +1449,10 @@ public class TestContext {
 
   public static ComputationResult computationResult(Output output, ResultSource source) {
     return new ComputationResult(output, source);
+  }
+
+  public  ComputationResult computationResultWithMessages(ArrayB messages) {
+    return computationResult(output(intB(), messages), EXECUTION);
   }
 
   public Output output(InstB instB) {
