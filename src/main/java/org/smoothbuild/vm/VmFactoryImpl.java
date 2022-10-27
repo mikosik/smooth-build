@@ -3,6 +3,8 @@ package org.smoothbuild.vm;
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.sb.BsMapping;
+import org.smoothbuild.vm.execute.ConsoleTaskReporter;
+import org.smoothbuild.vm.execute.TaskReporter;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -20,6 +22,7 @@ public class VmFactoryImpl implements VmFactory {
     var childInjector = injector.createChildInjector(new AbstractModule() {
       @Override
       protected void configure() {
+        bind(TaskReporter.class).to(ConsoleTaskReporter.class);
         bind(BsMapping.class).toInstance(bsMapping);
       }
     });

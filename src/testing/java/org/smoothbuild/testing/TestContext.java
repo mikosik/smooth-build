@@ -148,6 +148,7 @@ import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.compute.ResultSource;
+import org.smoothbuild.vm.execute.ConsoleTaskReporter;
 import org.smoothbuild.vm.execute.TaskExecutor;
 import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.execute.TraceB;
@@ -306,12 +307,12 @@ public class TestContext {
     return new TestingModLoader(code);
   }
 
-  public TaskReporter taskReporter() {
+  public ConsoleTaskReporter taskReporter() {
     return taskReporter(reporter());
   }
 
-  public TaskReporter taskReporter(Reporter reporter) {
-    return new TaskReporter(ALL, reporter, new BsMapping());
+  public ConsoleTaskReporter taskReporter(Reporter reporter) {
+    return new ConsoleTaskReporter(ALL, reporter, bsMapping());
   }
 
   public ConsoleReporter reporter() {

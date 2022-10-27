@@ -12,7 +12,7 @@ import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
 import static org.smoothbuild.vm.compute.ResultSource.NOOP;
-import static org.smoothbuild.vm.execute.TaskReporter.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.vm.execute.ConsoleTaskReporter.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 import static org.smoothbuild.vm.report.TaskMatchers.NONE;
 
@@ -24,7 +24,7 @@ import org.smoothbuild.vm.compute.ResultSource;
 import org.smoothbuild.vm.report.TaskMatcher;
 import org.smoothbuild.vm.task.Task;
 
-public class TaskReporterTest extends TestContext {
+public class ConsoleTaskReporterTest extends TestContext {
   @Test
   public void combineTaskHeader() {
     testHeader(combineTask(), header("{}"));
@@ -106,7 +106,7 @@ public class TaskReporterTest extends TestContext {
   }
 
   private void testHeader(Task task, String header) {
-    testHeader(new BsMapping(), task, header);
+    testHeader(bsMapping(), task, header);
   }
 
   private void testHeader(BsMapping bsMapping, Task task, String header) {
@@ -119,7 +119,7 @@ public class TaskReporterTest extends TestContext {
 
   private void testHeader(BsMapping bsMapping, Task task, ResultSource source, String header) {
     var reporter = mock(Reporter.class);
-    var taskReporter = new TaskReporter(ALL, reporter, bsMapping);
+    var taskReporter = new ConsoleTaskReporter(ALL, reporter, bsMapping);
     taskReporter.report(task, computationResult(intB(), source));
     verify(reporter)
         .report(true, header, list());
@@ -137,7 +137,7 @@ public class TaskReporterTest extends TestContext {
 
   private void testVisibility(TaskMatcher taskMatcher, boolean visible) {
     var reporter = mock(Reporter.class);
-    var taskReporter = new TaskReporter(taskMatcher, reporter, new BsMapping());
+    var taskReporter = new ConsoleTaskReporter(taskMatcher, reporter, bsMapping());
     var messages = arrayB(
         fatalMessage(),
         errorMessage(),

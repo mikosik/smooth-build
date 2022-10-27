@@ -31,7 +31,6 @@ import org.smoothbuild.bytecode.BytecodeModule;
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.define.ValS;
-import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;
@@ -45,7 +44,7 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.SandboxHash;
 import org.smoothbuild.vm.VmFactory;
 import org.smoothbuild.vm.VmFactoryImpl;
-import org.smoothbuild.vm.execute.TaskReporter;
+import org.smoothbuild.vm.report.TaskMatcher;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -204,11 +203,7 @@ public class AcceptanceTestCase extends TestContext {
       bind(Reporter.class).to(MemoryReporter.class);
       bind(Console.class).toInstance(new Console(new PrintWriter(nullOutputStream(), true)));
       bind(VmFactory.class).to(VmFactoryImpl.class);
-    }
-
-    @Provides
-    public TaskReporter provideTaskReporter(Reporter reporter) {
-      return new TaskReporter(ALL, reporter, new BsMapping());
+      bind(TaskMatcher.class).toInstance(ALL);
     }
 
     @Provides
