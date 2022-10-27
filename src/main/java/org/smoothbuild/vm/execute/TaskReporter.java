@@ -61,7 +61,7 @@ public class TaskReporter {
   }
 
   private Loc locationOf(ExprB exprB) {
-    return bsMapping.locMapping().get(exprB);
+    return bsMapping.locMapping().get(exprB.hash());
   }
 
   private String label(Task task) {
@@ -76,7 +76,7 @@ public class TaskReporter {
   }
 
   private String nameOf(FuncB funcB) {
-    return bsMapping.nameMapping().get(funcB);
+    return bsMapping.nameMapping().get(funcB.hash());
   }
 
   private void report(Task task, String taskHeader, List<Log> logs) {

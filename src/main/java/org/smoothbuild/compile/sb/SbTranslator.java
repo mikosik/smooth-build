@@ -29,6 +29,7 @@ import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
@@ -74,8 +75,8 @@ public class SbTranslator {
   private final BytecodeLoader bytecodeLoader;
   private final NList<ItemS> environment;
   private final Map<CacheKey, ExprB> cache;
-  private final Map<ExprB, String> nameMapping;
-  private final Map<ExprB, Loc> locMapping;
+  private final Map<Hash, String> nameMapping;
+  private final Map<Hash, Loc> locMapping;
 
   @Inject
   public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
@@ -85,7 +86,7 @@ public class SbTranslator {
 
   public SbTranslator(BytecodeF bytecodeF, TypeSbTranslator typeSbTranslator, FileLoader fileLoader,
       BytecodeLoader bytecodeLoader, NList<ItemS> environment, Map<CacheKey, ExprB> cache,
-      Map<ExprB, String> nameMapping, Map<ExprB, Loc> locMapping) {
+      Map<Hash, String> nameMapping, Map<Hash, Loc> locMapping) {
     this.bytecodeF = bytecodeF;
     this.typeSbTranslator = typeSbTranslator;
     this.fileLoader = fileLoader;
@@ -317,12 +318,12 @@ public class SbTranslator {
   }
 
   private void saveNameAndLoc(ExprB funcB, NamedEvaluableS evaluableS) {
-    nameMapping.put(funcB, evaluableS.name());
+    nameMapping.put(funcB.hash(), evaluableS.name());
     saveLoc(funcB, evaluableS);
   }
 
   private void saveLoc(ExprB exprB, ExprS exprS) {
-    locMapping.put(exprB, exprS.loc());
+    locMapping.put(exprB.hash(), exprS.loc());
   }
 
   private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {}

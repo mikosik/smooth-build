@@ -525,9 +525,9 @@ public class SbTranslatorTest extends TestContext {
   private static void assertNameAndLocMapping(SbTranslator sbTranslator, ExprB exprB,
       String expectedName, Loc expectedLoc) {
     var bsMapping = sbTranslator.bsMapping();
-    assertThat(bsMapping.nameMapping().get(exprB))
+    assertThat(bsMapping.nameMapping().get(exprB.hash()))
         .isEqualTo(expectedName);
-    assertThat(bsMapping.locMapping().get(exprB))
+    assertThat(bsMapping.locMapping().get(exprB.hash()))
         .isEqualTo(expectedLoc);
 
   }
