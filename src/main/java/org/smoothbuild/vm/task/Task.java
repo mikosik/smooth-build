@@ -9,7 +9,7 @@ import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
 
 public sealed abstract class Task
-    permits CombineTask, ConstTask, NativeCallTask, OrderTask, PickTask, SelectTask{
+    permits CombineTask, ConstTask, NativeCallTask, OrderTask, PickTask, SelectTask {
   private final ExprB exprB;
   private final Purity purity;
   private final TraceB trace;
