@@ -1,9 +1,10 @@
-package org.smoothbuild.vm;
+package org.smoothbuild.run.eval;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.sb.BsMapping;
-import org.smoothbuild.vm.execute.ConsoleTaskReporter;
+import org.smoothbuild.run.eval.report.ConsoleTaskReporter;
+import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.execute.TaskReporter;
 
 import com.google.inject.AbstractModule;

@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.report;
+package org.smoothbuild.run.eval.report;
 
 import static java.lang.String.join;
 import static org.antlr.v4.runtime.CharStreams.fromString;

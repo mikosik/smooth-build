@@ -15,10 +15,10 @@ import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.writeAndClose;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
-import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,11 +40,11 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.BuildRunner;
+import org.smoothbuild.run.eval.VmFactory;
+import org.smoothbuild.run.eval.VmFactoryImpl;
+import org.smoothbuild.run.eval.report.TaskMatcher;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.SandboxHash;
-import org.smoothbuild.vm.VmFactory;
-import org.smoothbuild.vm.VmFactoryImpl;
-import org.smoothbuild.vm.report.TaskMatcher;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

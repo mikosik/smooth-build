@@ -12,7 +12,6 @@ import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.vm.VmFactory;
 
 import com.google.common.collect.ImmutableList;
 

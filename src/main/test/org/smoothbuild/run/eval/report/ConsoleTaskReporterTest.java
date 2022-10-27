@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.execute;
+package org.smoothbuild.run.eval.report;
 
 import static com.google.common.base.Strings.padEnd;
 import static org.mockito.Mockito.mock;
@@ -7,21 +7,20 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
+import static org.smoothbuild.run.eval.report.ConsoleTaskReporter.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
+import static org.smoothbuild.run.eval.report.TaskMatchers.NONE;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
 import static org.smoothbuild.vm.compute.ResultSource.NOOP;
-import static org.smoothbuild.vm.execute.ConsoleTaskReporter.NAME_LENGTH_LIMIT;
-import static org.smoothbuild.vm.report.TaskMatchers.ALL;
-import static org.smoothbuild.vm.report.TaskMatchers.NONE;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.compute.ResultSource;
-import org.smoothbuild.vm.report.TaskMatcher;
 import org.smoothbuild.vm.task.Task;
 
 public class ConsoleTaskReporterTest extends TestContext {

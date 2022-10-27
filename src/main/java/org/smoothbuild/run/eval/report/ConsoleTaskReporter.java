@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.execute;
+package org.smoothbuild.run.eval.report;
 
 import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNullElse;
@@ -20,7 +20,7 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.ResultSource;
-import org.smoothbuild.vm.report.TaskMatcher;
+import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.ConstTask;
 import org.smoothbuild.vm.task.NativeCallTask;
