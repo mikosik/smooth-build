@@ -29,8 +29,7 @@ public class ConsoleReporter implements Reporter {
 
   private final Console console;
   private final Level logLevel;
-  private final ImmutableMap<Level, AtomicInteger> counts =
-      stream(Level.values()).collect(toImmutableEnumMap(v -> v, v -> new AtomicInteger()));
+  private final ImmutableMap<Level, AtomicInteger> counters = createCounters();
 
   @Inject
   public ConsoleReporter(Console console, Level logLevel) {
@@ -84,7 +83,7 @@ public class ConsoleReporter implements Reporter {
   }
 
   private void increaseCount(Level level) {
-    counts.get(level).incrementAndGet();
+    counters.get(level).incrementAndGet();
   }
 
   private void print(Log log) {
@@ -128,9 +127,9 @@ public class ConsoleReporter implements Reporter {
     console.println("Summary");
     int total = 0;
     for (Level level : Level.values()) {
-      int count = counts.get(level).get();
+      int count = counters.get(level).get();
       if (count != 0) {
-        int value = counts.get(level).get();
+        int value = counters.get(level).get();
         console.println(formattedHeader(statText(level, value)));
       }
       total += count;
@@ -141,10 +140,15 @@ public class ConsoleReporter implements Reporter {
   }
 
   private String statText(Level level, int value) {
-    String name = level.name().toLowerCase(Locale.ROOT);
+    var name = level.name().toLowerCase(Locale.ROOT);
     if (1 < value) {
       name = name + "s";
     }
     return value + " " + name;
+  }
+
+  private static ImmutableMap<Level, AtomicInteger> createCounters() {
+    return stream(Level.values())
+        .collect(toImmutableEnumMap(v -> v, v -> new AtomicInteger()));
   }
 }
