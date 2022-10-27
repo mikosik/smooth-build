@@ -179,6 +179,14 @@ public class TestContext {
   private FileSystem fullFileSystem;
   private TempManager tempManager;
 
+  public Vm vm(Reporter reporter) {
+    return vm(taskExecutor(reporter));
+  }
+
+  public Vm vm(TaskReporter taskReporter) {
+    return vm(taskExecutor(taskReporter));
+  }
+
   public Vm vm() {
     return new Vm(this::executionContext);
   }
@@ -189,14 +197,6 @@ public class TestContext {
 
   public Vm vm(JobCreator jobCreator) {
     return new Vm(() -> executionContext(jobCreator));
-  }
-
-  public Vm vm(Reporter reporter) {
-    return vm(taskExecutor(reporter));
-  }
-
-  public Vm vm(TaskReporter taskReporter) {
-    return vm(taskExecutor(taskReporter((Reporter) taskReporter)));
   }
 
   public Vm vm(TaskExecutor taskExecutor) {
@@ -254,8 +254,7 @@ public class TestContext {
     return new TaskExecutor(computer(), reporter(), taskReporter);
   }
 
-  public TaskExecutor taskExecutor(
-      Computer computer, TaskReporter taskReporter, int threadCount) {
+  public TaskExecutor taskExecutor(Computer computer, TaskReporter taskReporter, int threadCount) {
     return new TaskExecutor(computer, reporter(), taskReporter, threadCount);
   }
 
