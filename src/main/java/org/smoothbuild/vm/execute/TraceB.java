@@ -1,15 +1,19 @@
 package org.smoothbuild.vm.execute;
 
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.compile.lang.base.Trace;
-import org.smoothbuild.util.collect.Duo;
 
-public class TraceB extends Trace<Duo<Hash, Hash>> {
-  public TraceB(Hash enclosingEvaluable, Hash calledEvaluable) {
-    this(enclosingEvaluable, calledEvaluable, null);
+public record TraceB (Hash enclosing, Hash called, TraceB tail){
+  public TraceB(Hash enclosing, Hash called) {
+    this(enclosing, called, null);
   }
 
-  public TraceB(Hash enclosingEvaluable, Hash calledEvaluable, TraceB chain) {
-    super(new Duo<>(enclosingEvaluable, calledEvaluable), chain);
+  @Override
+  public String toString() {
+    var line = enclosing.toString() + " " + called.toString();
+    if (tail == null) {
+      return line;
+    } else {
+      return line + "\n" + tail;
+    }
   }
 }
