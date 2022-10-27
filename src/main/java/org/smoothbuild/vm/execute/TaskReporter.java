@@ -64,7 +64,7 @@ public class TaskReporter {
     return bsMapping.locMapping().get(exprB);
   }
 
-  public String label(Task task) {
+  private String label(Task task) {
     return switch (task) {
       case CombineTask combineTask -> "{}";
       case ConstTask constTask -> constTask.instB().type().name();
