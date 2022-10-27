@@ -1,8 +1,5 @@
 package org.smoothbuild.util;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 public class Throwables {
   public static RuntimeException unexpectedCaseExc(Object object) {
     return new RuntimeException(messageFor(object));
@@ -13,11 +10,5 @@ public class Throwables {
       case null -> "Unexpected case. object=null.";
       case Object o -> "Unexpected case.\nobject=" + o + "\nclass=" + o.getClass().getCanonicalName();
     };
-  }
-
-  public static String stackTraceToString(Throwable throwable) {
-    StringWriter stringWriter = new StringWriter();
-    throwable.printStackTrace(new PrintWriter(stringWriter));
-    return stringWriter.toString();
   }
 }

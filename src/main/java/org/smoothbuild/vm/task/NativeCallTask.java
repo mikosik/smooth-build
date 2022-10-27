@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.task;
 
-import static org.smoothbuild.util.Throwables.stackTraceToString;
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.vm.task.Purity.IMPURE;
 import static org.smoothbuild.vm.task.Purity.PURE;
 
@@ -48,7 +48,7 @@ public final class NativeCallTask extends Task {
 
   private static void reportExceptionAsFatal(Container container, String message,
       Throwable throwable) {
-    container.log().fatal(message + ":\n" + stackTraceToString(throwable));
+    container.log().fatal(message + ":\n" + getStackTraceAsString(throwable));
   }
 
   private Output buildOutput(Container container, InstB result) {
