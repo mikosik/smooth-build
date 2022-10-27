@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.execute;
 
+import static com.google.common.base.Strings.padEnd;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.out.log.Log.error;
@@ -7,6 +8,11 @@ import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.compute.ResultSource.DISK;
+import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
+import static org.smoothbuild.vm.compute.ResultSource.NOOP;
+import static org.smoothbuild.vm.execute.TaskReporter.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.vm.report.TaskMatchers.ALL;
 import static org.smoothbuild.vm.report.TaskMatchers.NONE;
 
@@ -14,9 +20,111 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.compute.ResultSource;
 import org.smoothbuild.vm.report.TaskMatcher;
+import org.smoothbuild.vm.task.Task;
 
 public class TaskReporterTest extends TestContext {
+  @Test
+  public void combineTaskHeader() {
+    testHeader(combineTask(), header("{}"));
+  }
+
+  @Test
+  public void constIntTaskHeader() {
+    testHeader(constTask(intB()), header("Int"));
+  }
+
+  @Test
+  public void constStringTaskHeader() {
+    testHeader(constTask(stringB()), header("String"));
+  }
+
+  @Test
+  public void nativeCallTaskHeaderForFuncWithoutMappedName() {
+    testHeader(nativeCallTask(), header("()"));
+  }
+
+  @Test
+  public void nativeCallTaskHeaderForFuncWithMappedName() {
+    var task = nativeCallTask();
+    var funcHash = task.natFunc().hash();
+    testHeader(bsMapping(funcHash, "myFunc"), task, header("myFunc()"));
+  }
+
+  @Test
+  public void orderTaskHeader() {
+    testHeader(orderTask(), header("[]"));
+  }
+
+  @Test
+  public void pickTaskHeader() {
+    testHeader(pickTask(), header("[]."));
+  }
+
+  @Test
+  public void selectTaskHeader() {
+    testHeader(selectTask(), header("."));
+  }
+
+  @Test
+  public void header_with_location() {
+    var task = selectTask();
+    var exprHash = task.exprB().hash();
+    testHeader(bsMapping(exprHash, loc(7)), task,
+        padEnd(".", NAME_LENGTH_LIMIT + 1, ' ') + "myBuild.smooth:7               exec"
+    );
+  }
+
+  @Test
+  public void header_with_execution_source() {
+    testHeader(selectTask(), EXECUTION, header(".", "exec"));
+  }
+
+  @Test
+  public void header_with_noop_source() {
+    var header = padEnd(".", NAME_LENGTH_LIMIT + 1, ' ') + "unknown";
+    testHeader(selectTask(), NOOP, header);
+  }
+
+  @Test
+  public void header_with_disk_source() {
+    testHeader(selectTask(), DISK, header(".", "cache"));
+  }
+
+  @Test
+  public void header_with_memory_source() {
+    testHeader(selectTask(), MEMORY, header(".", "mem"));
+  }
+
+  private static String header(String string) {
+    return header(string, "exec");
+  }
+
+  private static String header(String string, String result) {
+    return padEnd(string, NAME_LENGTH_LIMIT + 1, ' ') + "unknown                        " + result;
+  }
+
+  private void testHeader(Task task, String header) {
+    testHeader(new BsMapping(), task, header);
+  }
+
+  private void testHeader(BsMapping bsMapping, Task task, String header) {
+    testHeader(bsMapping, task, EXECUTION, header);
+  }
+
+  private void testHeader(Task task, ResultSource source, String header) {
+    testHeader(bsMapping(), task, source, header);
+  }
+
+  private void testHeader(BsMapping bsMapping, Task task, ResultSource source, String header) {
+    var reporter = mock(Reporter.class);
+    var taskReporter = new TaskReporter(ALL, reporter, bsMapping);
+    taskReporter.report(task, computationResult(intB(), source));
+    verify(reporter)
+        .report(true, header, list());
+  }
+
   @Test
   public void when_filter_matches() {
     testVisibility(ALL, true);

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.inject.Provider;
@@ -1436,7 +1437,11 @@ public class TestContext {
   }
 
   public ConstTask constTask() {
-    return new ConstTask(intB(7), traceB());
+    return constTask(intB(7));
+  }
+
+  public static ConstTask constTask(InstB instB) {
+    return new ConstTask(instB, traceB());
   }
 
   public ComputationResult computationResult(InstB instB) {
@@ -1477,5 +1482,17 @@ public class TestContext {
 
   public static TagLoc tagLoc(String tag, Loc loc) {
     return new TagLoc(tag, loc);
+  }
+
+  public static BsMapping bsMapping() {
+    return new BsMapping(Map.of(), Map.of());
+  }
+
+  public static BsMapping bsMapping(Hash hash, String name) {
+    return new BsMapping(Map.of(hash, name), Map.of());
+  }
+
+  public static BsMapping bsMapping(Hash hash, Loc loc) {
+    return new BsMapping(Map.of(), Map.of(hash, loc));
   }
 }

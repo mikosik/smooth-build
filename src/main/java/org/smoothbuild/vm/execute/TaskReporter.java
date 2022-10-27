@@ -1,12 +1,14 @@
 package org.smoothbuild.vm.execute;
 
 import static com.google.common.base.Strings.padEnd;
+import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
 import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -29,7 +31,8 @@ import org.smoothbuild.vm.task.SelectTask;
 import org.smoothbuild.vm.task.Task;
 
 public class TaskReporter {
-  private static final int NAME_LENGTH_LIMIT = 43;
+  // visible for testing
+  static final int NAME_LENGTH_LIMIT = 43;
   private final TaskMatcher taskMatcher;
   private final Reporter reporter;
   private final BsMapping bsMapping;
@@ -76,7 +79,7 @@ public class TaskReporter {
   }
 
   private String nameOf(FuncB funcB) {
-    return bsMapping.nameMapping().get(funcB.hash());
+    return requireNonNullElse(bsMapping.nameMapping().get(funcB.hash()), "");
   }
 
   private void report(Task task, String taskHeader, List<Log> logs) {
