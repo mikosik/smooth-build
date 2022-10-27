@@ -63,21 +63,6 @@ public abstract class ExprB {
 
   public abstract String exprToString();
 
-  @Override
-  public boolean equals(Object object) {
-    return (object instanceof ExprB that) && Objects.equals(hash(), that.hash());
-  }
-
-  @Override
-  public int hashCode() {
-    return hash().hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return valToStringSafe() + "@" + hash();
-  }
-
   protected <T> T readData(HashedDbCallable<T> reader) {
     return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
   }
@@ -176,6 +161,21 @@ public abstract class ExprB {
     @SuppressWarnings("unchecked")
     ImmutableList<T> result = (ImmutableList<T>) elems;
     return result;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    return (object instanceof ExprB that) && Objects.equals(hash(), that.hash());
+  }
+
+  @Override
+  public int hashCode() {
+    return hash().hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return valToStringSafe() + "@" + hash();
   }
 
   private String valToStringSafe() {
