@@ -182,7 +182,7 @@ public abstract class ExprB {
     try {
       return exprToString();
     } catch (DecodeExprNodeExc e) {
-      return "?Exception?@" + hash();
+      return "!Exception!@" + hash();
     }
   }
 }
