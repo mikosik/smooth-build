@@ -53,9 +53,9 @@ public class BuildCommand extends ProjectCommand {
             li, info           - contains any log
           
             c, call            - evaluates function call
-            b, combine         - evaluates tuple creation (combined elements)
-            t, const           - evaluates compile time constant
-            o, order           - evaluates array creation (ordered elements)
+            t, tuple           - evaluates tuple creation
+            o, const           - evaluates compile time constant
+            r, array           - evaluates array creation
             p, pick            - evaluates array element picking
             s, select          - evaluates field selection
           """
