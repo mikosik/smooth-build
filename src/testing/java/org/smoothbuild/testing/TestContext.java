@@ -141,7 +141,6 @@ import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.run.eval.report.ConsoleTaskReporter;
-import org.smoothbuild.testing.func.nativ.ReturnAbc;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.compute.ComputationCache;
@@ -664,7 +663,7 @@ public class TestContext {
   }
 
   public NatFuncB returnAbcNatFuncB(boolean isPure) throws IOException {
-    return natFuncB(funcTB(stringTB()), ReturnAbc.class, isPure);
+    return natFuncB(funcTB(stringTB()), ReturnAbcFunc.class, isPure);
   }
 
   public IntB intB() {
@@ -677,6 +676,17 @@ public class TestContext {
 
   public IntB intB(BigInteger value) {
     return bytecodeDb().int_(value);
+  }
+
+  public NatFuncB returnAbcNatFunc() throws IOException {
+    var funcTB = funcTB(stringTB());
+    return natFuncB(funcTB, ReturnAbcFunc.class);
+  }
+
+  public static class ReturnAbcFunc {
+    public static InstB func(NativeApi nativeApi, TupleB args) {
+      return nativeApi.factory().string("abc");
+    }
   }
 
   public NatFuncB natFuncB(Class<?> clazz) throws IOException {
@@ -827,7 +837,19 @@ public class TestContext {
   }
 
   public static TraceB traceB() {
-    return new TraceB(Hash.of(7), Hash.of(9));
+    return traceB(Hash.of(7), Hash.of(9));
+  }
+
+  public static TraceB traceB(ExprB enclosing, ExprB called) {
+    return traceB(enclosing, called, null);
+  }
+
+  public static TraceB traceB(ExprB enclosing, ExprB called, TraceB tail) {
+    return new TraceB(enclosing.hash(), called.hash(), tail);
+  }
+
+  public static TraceB traceB(Hash enclosing, Hash called) {
+    return new TraceB(enclosing, called);
   }
 
   // ValS types
@@ -1418,23 +1440,47 @@ public class TestContext {
   }
 
   public NativeCallTask nativeCallTask() {
-    return new NativeCallTask(callB(), natFuncB(), null, traceB());
+    return nativeCallTask(callB(), natFuncB(), traceB());
+  }
+
+  public NativeCallTask nativeCallTask(CallB callB, NatFuncB natFunc) {
+    return nativeCallTask(callB, natFunc, null);
+  }
+
+  public NativeCallTask nativeCallTask(CallB callB, NatFuncB natFunc, TraceB trace) {
+    return new NativeCallTask(callB, natFunc, null, trace);
   }
 
   public CombineTask combineTask() {
-    return new CombineTask(combineB(), traceB());
+    return combineTask(combineB(), traceB());
+  }
+
+  public CombineTask combineTask(CombineB combineB, TraceB trace) {
+    return new CombineTask(combineB, trace);
   }
 
   public SelectTask selectTask() {
-    return new SelectTask(selectB(), traceB());
+    return selectTask(selectB(), traceB());
+  }
+
+  public SelectTask selectTask(SelectB selectB, TraceB trace) {
+    return new SelectTask(selectB, trace);
   }
 
   public PickTask pickTask() {
-    return new PickTask(pickB(), traceB());
+    return pickTask(pickB(), traceB());
+  }
+
+  public PickTask pickTask(PickB pickB, TraceB trace) {
+    return new PickTask(pickB, trace);
   }
 
   public OrderTask orderTask() {
-    return new OrderTask(orderB(), traceB());
+    return orderTask(orderB(), traceB());
+  }
+
+  public OrderTask orderTask(OrderB orderB, TraceB trace) {
+    return new OrderTask(orderB, trace);
   }
 
   public ConstTask constTask() {
@@ -1442,7 +1488,11 @@ public class TestContext {
   }
 
   public static ConstTask constTask(InstB instB) {
-    return new ConstTask(instB, traceB());
+    return constTask(instB, traceB());
+  }
+
+  public static ConstTask constTask(InstB instB, TraceB trace) {
+    return new ConstTask(instB, trace);
   }
 
   public ComputationResult computationResult(InstB instB) {

@@ -63,7 +63,7 @@ public class CallJob extends Job {
   }
 
   private TraceB trace(DefFuncB defFuncB) {
-    return new TraceB(defFuncB.hash(), callB.hash(), context().trace());
+    return new TraceB(callB.hash(), defFuncB.hash(), context().trace());
   }
 
   // handling IfFunc

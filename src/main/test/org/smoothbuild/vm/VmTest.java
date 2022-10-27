@@ -20,6 +20,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.vm.compute.ResultSource.NOOP;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,9 +33,10 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
-import org.mockito.Mockito;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
@@ -193,6 +195,12 @@ public class VmTest extends TestContext {
 
       @Test
       public void bool() {
+        assertThat(evaluate(boolB(true)))
+            .isEqualTo(boolB(true));
+      }
+
+      @Test
+      public void int_() {
         assertThat(evaluate(intB(8)))
             .isEqualTo(intB(8));
       }
@@ -369,7 +377,7 @@ public class VmTest extends TestContext {
         var vm = vm(reporter);
         vm.evaluate(list(callB(outerFuncB, intB(7))));
         verify(reporter, times(1))
-            .report(Mockito.eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
+            .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
       }
 
       private ArgumentMatcher<List<Log>> isLogListWithFatalOutOfBounds() {
@@ -450,6 +458,118 @@ public class VmTest extends TestContext {
     return argument -> argument.size() == 1
         && argument.get(0).level() == Level.FATAL
         && argument.get(0).message().startsWith(messageStart);
+  }
+
+  @Nested
+  class _reporting {
+    @Nested
+    class _empty_trace {
+      @ParameterizedTest
+      @MethodSource("report_const_task_cases")
+      public void report_inst_as_const_task(InstB instB) {
+        var taskReporter = mock(TaskReporter.class);
+        evaluate(vm(taskReporter), instB);
+        verify(taskReporter)
+            .report(constTask(instB, null), computationResult(instB, NOOP));
+      }
+
+      public static List<InstB> report_const_task_cases() {
+        var t = new TestContext();
+        return List.of(
+            t.arrayB(t.intB(17)),
+            t.blobB(17),
+            t.boolB(true),
+            t.idFuncB(),
+            t.ifFuncB(t.intTB()),
+            t.mapFuncB(t.intTB(), t.blobTB()),
+            t.natFuncB(),
+            t.intB(17),
+            t.stringB("abc"),
+            t.tupleB(t.intB(17))
+        );
+      }
+
+      @Test
+      public void report_call_as_call_task() throws IOException {
+        var funcB = returnAbcNatFunc();
+        var callB = callB(funcB);
+        assertReport(
+            callB,
+            nativeCallTask(callB, funcB),
+            computationResult(stringB("abc"), EXECUTION));
+      }
+
+      @Test
+      public void report_combine_as_combine_task() {
+        var combineB = combineB(intB(17));
+        assertReport(
+            combineB,
+            combineTask(combineB, null),
+            computationResult(tupleB(intB(17)), EXECUTION));
+      }
+
+      @Test
+      public void report_order_as_order_task() {
+        var orderB = orderB(intB(17));
+        assertReport(
+            orderB,
+            orderTask(orderB, null),
+            computationResult(arrayB(intB(17)), EXECUTION));
+      }
+
+      @Test
+      public void report_pick_as_pick_task() {
+        var pickB = pickB(arrayB(intB(17)), intB(0));
+        assertReport(
+            pickB,
+            pickTask(pickB, null),
+            computationResult(intB(17), EXECUTION));
+      }
+
+      @Test
+      public void report_select_as_select_task() {
+        var selectB = selectB(tupleB(intB(17)), intB(0));
+        assertReport(
+            selectB,
+            selectTask(selectB, null),
+            computationResult(intB(17), EXECUTION));
+      }
+    }
+
+    @Nested
+    class _with_traces {
+      @Test
+      public void order_inside_func_body() {
+        var orderB = orderB(intB(17));
+        var funcB = defFuncB(orderB);
+        var funcAsExpr = callB(defFuncB(funcB));
+        var callB = callB(funcAsExpr);
+        assertReport(
+            callB,
+            orderTask(orderB, traceB(callB, funcB)),
+            computationResult(arrayB(intB(17)), EXECUTION));
+      }
+
+      @Test
+      public void order_inside_func_body_that_is_called_from_other_func_body() {
+        var orderB = orderB(intB(17));
+        var func2 = defFuncB(orderB);
+        var call2 = callB(func2);
+        var func1 = defFuncB(call2);
+        var call1 = callB(func1);
+        assertReport(
+            call1,
+            orderTask(orderB, traceB(call2, func2, traceB(call1, func1))),
+            computationResult(arrayB(intB(17)), EXECUTION));
+      }
+    }
+
+    private void assertReport(ExprB exprB, Task task, ComputationResult result) {
+      var taskReporter = mock(TaskReporter.class);
+      evaluate(vm(taskReporter), exprB);
+      verify(taskReporter)
+          .report(task, result);
+    }
   }
 
   @Nested

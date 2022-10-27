@@ -2,6 +2,8 @@ package org.smoothbuild.vm.task;
 
 import static org.smoothbuild.vm.task.Purity.PURE;
 
+import java.util.Objects;
+
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
@@ -28,6 +30,10 @@ public sealed abstract class Task
     return exprB;
   }
 
+  public TraceB trace() {
+    return trace;
+  }
+
   public TypeB outputT() {
     return exprB.evalT();
   }
@@ -37,4 +43,17 @@ public sealed abstract class Task
   }
 
   public abstract Output run(TupleB input, Container container);
+
+  @Override
+  public int hashCode() {
+    return exprB.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    return object instanceof Task that
+        && Objects.equals(this.getClass(), that.getClass())
+        && Objects.equals(this.exprB, that.exprB())
+        && Objects.equals(this.trace, that.trace);
+  }
 }
