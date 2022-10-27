@@ -1,16 +1,17 @@
 package org.smoothbuild.out.report;
 
-import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
-import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.out.report.ConsoleReporter.formatLog;
 import static org.smoothbuild.util.collect.Lists.list;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,22 +31,19 @@ public class ConsoleReporterTest extends TestContext {
   private static final Log WARNING_LOG = Log.warning("warning message");
   private static final Log INFO_LOG = Log.info("info message");
 
-  private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-  private final Console console = new Console(new PrintWriter(outputStream, true));
-  private ConsoleReporter reporter = new ConsoleReporter(console, INFO);
-
   @ParameterizedTest
   @MethodSource(value = "single_log_cases")
-  public void report_single_log_logs_log_when_it_passes_threshold(Log log, Level level,
+  public void report_single_log_logs_log_when_it_exceeds_threshold(Log log, Level level,
       boolean logged) {
-    reporter = new ConsoleReporter(console, level);
+    var console = mock(Console.class);
+    var reporter = new ConsoleReporter(console, level);
     reporter.report(log);
     if (logged) {
-      assertThat(outputStream.toString())
-          .contains(ConsoleReporter.formatLog(log));
+      verify(console, times(1))
+          .println(formatLog(log));
     } else {
-      assertThat(outputStream.toString())
-          .doesNotContain(ConsoleReporter.formatLog(log));
+      verify(console, times(0))
+          .println(formatLog(log));
     }
   }
 
@@ -75,12 +73,12 @@ public class ConsoleReporterTest extends TestContext {
 
   @ParameterizedTest
   @MethodSource("filtered_logs_cases")
-  public void report_non_build_task_logs_logs_which_passes_threshold(Level level,
-      List<Log> loggedLogs) {
-    reporter = new ConsoleReporter(console, level);
+  public void prints_logs_which_exceeds_threshold(Level level, List<Log> loggedLogs) {
+    var console = mock(Console.class);
+    var reporter = new ConsoleReporter(console, level);
     reporter.report(true, "header", logsWithAllLevels());
-    assertThat(outputStream.toString())
-        .contains(ConsoleReporter.toText("header", loggedLogs));
+    verify(console, times(1))
+        .println(ConsoleReporter.toText("header", loggedLogs));
   }
 
   public static List<Arguments> filtered_logs_cases() {
@@ -105,6 +103,7 @@ public class ConsoleReporterTest extends TestContext {
     }
 
     private void doTestSummary(Level logLevel) {
+      var console = mock(Console.class);
       var reporter = new ConsoleReporter(console, logLevel);
 
       List<Log> logs = new ArrayList<>();
@@ -122,18 +121,17 @@ public class ConsoleReporterTest extends TestContext {
       reporter.report(true, HEADER, logs);
       reporter.printSummary();
 
-      assertThat(outputStream.toString())
-          .contains(unlines(
-              "Summary",
-              "  1 fatal",
-              "  2 errors",
-              "  3 warnings",
-              "  4 infos",
-              ""));
+      var inOrder = inOrder(console);
+      inOrder.verify(console).println("Summary");
+      inOrder.verify(console).println("  1 fatal");
+      inOrder.verify(console).println("  2 errors");
+      inOrder.verify(console).println("  3 warnings");
+      inOrder.verify(console).println("  4 infos");
     }
 
     @Test
     public void skips_levels_with_zero_logs() {
+      var console = mock(Console.class);
       var reporter = new ConsoleReporter(console, INFO);
 
       List<Log> logs = new ArrayList<>();
@@ -145,11 +143,10 @@ public class ConsoleReporterTest extends TestContext {
       reporter.report(true, HEADER, logs);
       reporter.printSummary();
 
-      assertThat(outputStream.toString())
-          .contains(unlines(
-              "Summary",
-              "  1 fatal",
-              "  4 infos\n"));
+      var inOrder = inOrder(console);
+      inOrder.verify(console).println("Summary");
+      inOrder.verify(console).println("  1 fatal");
+      inOrder.verify(console).println("  4 infos");
     }
   }
 
