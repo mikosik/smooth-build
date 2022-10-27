@@ -96,7 +96,7 @@ public class HelpCommandTest extends SystemTestCase {
                                       (combined elements)
                                       t, const           - evaluates compile time
                                       constant
-                                      o, order           - evaluates array literal
+                                      o, order           - evaluates array creation
                                       (ordered elements)
                                       p, pick            - evaluates array element
                                       picking
