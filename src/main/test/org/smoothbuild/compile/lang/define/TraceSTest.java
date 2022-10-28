@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 public class TraceSTest {
   @Test
   public void to_string() {
-    var trace = new TraceS("first", loc(17), new TraceS("second", loc(19)));
+    var trace = new TraceS("first-short", loc(17), new TraceS("second-very-long", loc(19)));
     assertThat(trace.toString())
         .isEqualTo("""
-            first myBuild.smooth:17
-            second myBuild.smooth:19""");
+            first-short      myBuild.smooth:17
+            second-very-long myBuild.smooth:19""");
   }
 }
