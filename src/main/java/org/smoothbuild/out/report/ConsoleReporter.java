@@ -64,8 +64,8 @@ public class ConsoleReporter implements Reporter {
     reportFiltered(header, logs);
   }
 
-  private void reportFiltered(String taskHeader, List<Log> logs) {
-    print(taskHeader, logsPassingLevelThreshold(logs));
+  private void reportFiltered(String header, List<Log> logs) {
+    print(header, logsPassingLevelThreshold(logs));
   }
 
   private List<Log> logsPassingLevelThreshold(List<Log> logs) {
