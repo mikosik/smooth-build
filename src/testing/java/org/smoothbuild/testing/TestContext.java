@@ -840,16 +840,20 @@ public class TestContext {
     return traceB(Hash.of(7), Hash.of(9));
   }
 
-  public static TraceB traceB(ExprB enclosing, ExprB called) {
-    return traceB(enclosing, called, null);
+  public static TraceB traceB(ExprB call, ExprB called) {
+    return traceB(call, called, null);
   }
 
-  public static TraceB traceB(ExprB enclosing, ExprB called, TraceB tail) {
-    return new TraceB(enclosing.hash(), called.hash(), tail);
+  public static TraceB traceB(ExprB call, ExprB called, TraceB tail) {
+    return traceB(call.hash(), called.hash(), tail);
   }
 
-  public static TraceB traceB(Hash enclosing, Hash called) {
-    return new TraceB(enclosing, called);
+  public static TraceB traceB(Hash call, Hash called, TraceB tail) {
+    return new TraceB(call, called, tail);
+  }
+
+  public static TraceB traceB(Hash call, Hash called) {
+    return new TraceB(call, called);
   }
 
   // ValS types
@@ -1368,15 +1372,23 @@ public class TestContext {
   }
 
   public static TraceS traceS() {
-    return new TraceS("trace-tag", loc(17), null);
+    return traceS("trace-tag", loc(17));
   }
 
   public static TraceS traceS(String code, int line) {
-    return new TraceS(code, loc(line), null);
+    return traceS(code, loc(line));
+  }
+
+  public static TraceS traceS(String code, Loc loc) {
+    return traceS(code, loc, null);
   }
 
   public static TraceS traceS(String code2, int line2, String code1, int line1) {
-    return new TraceS(code2, loc(line2), new TraceS(code1, loc(line1)));
+    return traceS(code2, loc(line2), new TraceS(code1, loc(line1)));
+  }
+
+  public static TraceS traceS(String code, Loc loc, TraceS tail) {
+    return new TraceS(code, loc, tail);
   }
 
   public static Loc loc() {

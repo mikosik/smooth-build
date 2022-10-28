@@ -490,12 +490,12 @@ public class VmTest extends TestContext {
       }
 
       @Test
-      public void report_call_as_call_task() throws IOException {
+      public void report_native_call_as_native_call_task() throws IOException {
         var funcB = returnAbcNatFunc();
         var callB = callB(funcB);
         assertReport(
             callB,
-            nativeCallTask(callB, funcB),
+            nativeCallTask(callB, funcB, traceB(callB, funcB)),
             computationResult(stringB("abc"), EXECUTION));
       }
 

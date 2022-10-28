@@ -62,10 +62,6 @@ public class CallJob extends Job {
         resultConsumer);
   }
 
-  private TraceB trace(DefFuncB defFuncB) {
-    return new TraceB(callB.hash(), defFuncB.hash(), context().trace());
-  }
-
   // handling IfFunc
 
   private void handleIfFunc(Consumer<InstB> resultConsumer) {
@@ -113,8 +109,8 @@ public class CallJob extends Job {
   // handling NatFunc
 
   private void handleNatFunc(CallB callB, NatFuncB natFuncB, Consumer<InstB> res) {
-    var task = new NativeCallTask(
-        callB, natFuncB, context().nativeMethodLoader(), context().trace());
+    var trace = trace(natFuncB);
+    var task = new NativeCallTask(callB, natFuncB, context().nativeMethodLoader(), trace);
     evaluateTransitively(task, args())
         .addConsumer(res);
   }
@@ -134,5 +130,9 @@ public class CallJob extends Job {
 
   private ImmutableList<ExprB> args() {
     return ((CombineB) callB.dataSeq().get(1)).dataSeq();
+  }
+
+  private TraceB trace(FuncB funcB) {
+    return new TraceB(callB.hash(), funcB.hash(), context().trace());
   }
 }

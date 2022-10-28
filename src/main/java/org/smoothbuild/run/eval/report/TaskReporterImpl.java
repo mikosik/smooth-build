@@ -35,12 +35,14 @@ public class TaskReporterImpl implements TaskReporter {
   private final TaskMatcher taskMatcher;
   private final Reporter reporter;
   private final BsMapping bsMapping;
+  private final BsTraceTranslator bsTraceTranslator;
 
   @Inject
   public TaskReporterImpl(TaskMatcher taskMatcher, Reporter reporter, BsMapping bsMapping) {
     this.taskMatcher = taskMatcher;
     this.reporter = reporter;
     this.bsMapping = bsMapping;
+    this.bsTraceTranslator = new BsTraceTranslator(bsMapping);
   }
 
   @Override
@@ -63,10 +65,6 @@ public class TaskReporterImpl implements TaskReporter {
     return labelColumn + locColumn + sourceString;
   }
 
-  private Loc locationOf(ExprB exprB) {
-    return bsMapping.locMapping().get(exprB.hash());
-  }
-
   private String label(Task task) {
     return switch (task) {
       case CombineTask combineTask -> "{}";
@@ -78,12 +76,17 @@ public class TaskReporterImpl implements TaskReporter {
     };
   }
 
+  private Loc locationOf(ExprB exprB) {
+    return bsMapping.locMapping().get(exprB.hash());
+  }
+
   private String nameOf(FuncB funcB) {
     return requireNonNullElse(bsMapping.nameMapping().get(funcB.hash()), "");
   }
 
   private void report(Task task, String taskHeader, List<Log> logs) {
     boolean visible = taskMatcher.matches(task, logs);
+    var traceS = bsTraceTranslator.translate(task.trace());
     reporter.report(visible, taskHeader, logs);
   }
 }
