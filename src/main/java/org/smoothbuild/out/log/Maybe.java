@@ -2,6 +2,7 @@ package org.smoothbuild.out.log;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
@@ -28,7 +29,7 @@ public class Maybe<V> {
   }
 
   private Maybe(V value, Logs logs) {
-    checkArgument((value == null) == logs.containsProblem());
+    checkArgument((value == null) == logs.containsAtLeast(ERROR));
     this.value = value;
     this.logs = logs.toImmutableLogs();
   }
@@ -47,7 +48,7 @@ public class Maybe<V> {
   }
 
   public boolean containsProblem() {
-    return logs.containsProblem();
+    return logs.containsAtLeast(ERROR);
   }
 
   @Override

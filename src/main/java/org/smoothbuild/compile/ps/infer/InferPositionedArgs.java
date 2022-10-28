@@ -6,6 +6,7 @@ import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
+import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class InferPositionedArgs {
     logBuffer.logAll(findUnknownParamNameErrors(call, params));
     logBuffer.logAll(findDuplicateAssignmentErrors(call, positionalArgs, params));
     logger.logAll(logBuffer);
-    if (logBuffer.containsProblem()) {
+    if (logBuffer.containsAtLeast(ERROR)) {
       return Optional.empty();
     }
     return positionedArgs(call, params, positionalArgs.size(), logger);

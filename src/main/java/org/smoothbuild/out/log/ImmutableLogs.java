@@ -5,6 +5,7 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 
@@ -24,8 +25,8 @@ public class ImmutableLogs implements Logs {
   }
 
   @Override
-  public boolean containsProblem() {
-    return this.logs.stream().anyMatch(l -> l.level().isAProblem());
+  public Stream<Log> stream() {
+    return logs.stream();
   }
 
   @Override

@@ -1,6 +1,11 @@
 package org.smoothbuild.out.log;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Log.fatal;
+import static org.smoothbuild.out.log.Log.info;
+import static org.smoothbuild.out.log.Log.warning;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -15,80 +20,80 @@ public class LogBufferTest {
   }
 
   @Nested
-  class _containsProblem {
+  class _contains_at_least_error {
     @Test
     public void when_nothing_has_been_logged_returns_false() {
-      assertThat(value.containsProblem())
+      assertThat(value.containsAtLeast(ERROR))
           .isFalse();
     }
 
     @Test
     public void after_logging_fatal_returns_true() {
-      value.log(Log.fatal("message"));
-      assertThat(value.containsProblem())
+      value.log(fatal("message"));
+      assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
 
     @Test
-    public void after_warning_error_returns_true() {
-      value.log(Log.error("message"));
-      assertThat(value.containsProblem())
+    public void after_logging_error_returns_true() {
+      value.log(error("message"));
+      assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
 
     @Test
     public void after_logging_warning_returns_false() {
-      value.log(Log.warning("message"));
-      assertThat(value.containsProblem())
+      value.log(warning("message"));
+      assertThat(value.containsAtLeast(ERROR))
           .isFalse();
     }
 
     @Test
     public void after_logging_info_returns_false() {
-      value.log(Log.info("message"));
-      assertThat(value.containsProblem())
+      value.log(info("message"));
+      assertThat(value.containsAtLeast(ERROR))
           .isFalse();
     }
 
     @Test
-    public void after_adding_logs_from_other_logger_with_logs_containing_problems_returns_true() {
-      value.logAll(loggerWith(Log.error("message")));
-      assertThat(value.containsProblem())
+    public void after_adding_logs_from_other_logger_with_logs_contains_at_least_error_returns_true() {
+      value.logAll(loggerWith(error("message")));
+      assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
 
     @Test
-    public void after_logging_fatal_and_adding_logs_from_other_logger_without_problems_returns_true() {
-      value.log(Log.fatal("message"));
-      value.logAll(loggerWith(Log.info("message")));
-      assertThat(value.containsProblem())
+    public void after_logging_fatal_and_adding_logs_from_other_logger_contains_at_least_error_returns_true() {
+      value.log(fatal("message"));
+      value.logAll(loggerWith(info("message")));
+      assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
 
     @Test
     public void after_logging_error_and_adding_logs_from_other_logger_without_problems_returns_true() {
-      value.log(Log.error("message"));
-      value.logAll(loggerWith(Log.info("message")));
-      assertThat(value.containsProblem())
+      value.log(error("message"));
+      value.logAll(loggerWith(info("message")));
+      assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
 
     @Test
     public void after_logging_warning_and_adding_logs_from_other_logger_with_error_returns_true() {
-      value.log(Log.warning("message"));
-      value.logAll(loggerWith(Log.error("message")));
-      assertThat(value.containsProblem())
+      value.log(warning("message"));
+      value.logAll(loggerWith(error("message")));
+      assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
   }
 
   @Test
   public void logs_contains_all_logs() {
-    Log fatal = Log.fatal("fatal");
-    Log error = Log.error("error");
-    Log warning = Log.warning("warning");
-    Log info = Log.info("info");
-    Log other = Log.info("info");
+    Log fatal = fatal("fatal");
+    Log error = error("error");
+    Log warning = warning("warning");
+    Log info = info("info");
+    Log other = info("info");
 
     value.log(fatal);
     value.log(error);

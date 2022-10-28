@@ -15,6 +15,7 @@ import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.writeAndClose;
@@ -141,7 +142,7 @@ public class AcceptanceTestCase extends TestContext {
     if (artifacts == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }
-    if (memoryReporter.containsProblems()) {
+    if (memoryReporter.containsAtLeast(ERROR)) {
       fail("Expected artifact but problems have been reported:\n" + memoryReporter.logs());
     }
     if (artifacts.isEmpty()) {
@@ -155,7 +156,7 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   protected void assertLogsContainProblem() {
-    assertThat(memoryReporter.logs().containsProblem())
+    assertThat(memoryReporter.logs().containsAtLeast(ERROR))
         .isTrue();
   }
 

@@ -1,5 +1,7 @@
 package org.smoothbuild.run;
 
+import static org.smoothbuild.out.log.Level.ERROR;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +38,7 @@ public class FindTopValues {
       }
     }
     reporter.report("command line arguments", logs.toList());
-    if (logs.containsProblem()) {
+    if (logs.containsAtLeast(ERROR)) {
       return Optional.empty();
     } else {
       return Optional.of(ImmutableList.copyOf(matchingTopEvaluables));

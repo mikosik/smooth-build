@@ -6,6 +6,7 @@ import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.ps.ParseModule.parseModule;
 import static org.smoothbuild.compile.ps.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.compile.ps.ast.AstSorter.sortParsedByDeps;
+import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
@@ -27,32 +28,32 @@ public class LoadModule {
     var filePath = modFiles.smoothFile();
     Maybe<ModContext> moduleContext = parseModule(filePath, sourceCode);
     logBuffer.logAll(moduleContext.logs());
-    if (logBuffer.containsProblem()) {
+    if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
 
     Ast ast = fromParseTree(filePath, moduleContext.value());
     logBuffer.logAll(analyzeSemantically(imported, ast));
-    if (logBuffer.containsProblem()) {
+    if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
 
     Maybe<Ast> maybeSortedAst = sortParsedByDeps(ast);
     logBuffer.logAll(maybeSortedAst.logs());
-    if (logBuffer.containsProblem()) {
+    if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
     Ast sortedAst = maybeSortedAst.value();
 
     Logs undefinedRefsProblems = detectUndefinedRefs(sortedAst, imported);
     logBuffer.logAll(undefinedRefsProblems);
-    if (logBuffer.containsProblem()) {
+    if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
 
     var mod = createModuleS(path, modFiles, sortedAst, imported);
     logBuffer.logAll(mod.logs());
-    if (logBuffer.containsProblem()) {
+    if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
 

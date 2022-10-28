@@ -9,14 +9,13 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class LogBuffer implements Logger, Logs {
   private final List<Log> logs;
-  private boolean containsProblem;
 
   public LogBuffer() {
     this.logs = new ArrayList<>();
-    this.containsProblem = false;
   }
 
   @Override
@@ -42,18 +41,16 @@ public class LogBuffer implements Logger, Logs {
   @Override
   public void logAll(Logs logs) {
     this.logs.addAll(logs.toList());
-    this.containsProblem = this.containsProblem || logs.containsProblem();
   }
 
   @Override
   public void log(Log log) {
-    containsProblem = containsProblem || log.level().isAProblem();
     logs.add(log);
   }
 
   @Override
-  public boolean containsProblem() {
-    return containsProblem;
+  public Stream<Log> stream() {
+    return logs.stream();
   }
 
   @Override

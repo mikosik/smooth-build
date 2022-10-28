@@ -3,6 +3,7 @@ package org.smoothbuild.testing.accept;
 import java.util.List;
 
 import org.smoothbuild.out.log.ImmutableLogs;
+import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
@@ -28,8 +29,8 @@ public class MemoryReporter implements Reporter {
   public void printSummary() {
   }
 
-  public boolean containsProblems() {
-    return buffer.containsProblem();
+  public boolean containsAtLeast(Level level) {
+    return buffer.containsAtLeast(level);
   }
 
   public ImmutableLogs logs() {

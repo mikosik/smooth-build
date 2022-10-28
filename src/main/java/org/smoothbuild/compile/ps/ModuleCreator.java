@@ -6,6 +6,7 @@ import static org.smoothbuild.compile.lang.define.PolyFuncS.polyFuncS;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferFuncSchema;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferStructType;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferValSchema;
+import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
@@ -51,7 +52,7 @@ public class ModuleCreator {
     ast.structs().forEach(moduleCreator::visitStruct);
     ast.evaluables().forEach(moduleCreator::visitRefable);
 
-    if (logBuffer.containsProblem()) {
+    if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     } else {
       var modS = new ModuleS(

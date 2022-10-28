@@ -3,6 +3,7 @@ package org.smoothbuild.compile.ps;
 import static java.lang.String.join;
 import static org.smoothbuild.compile.lang.base.Loc.loc;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
+import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.util.Antlr.errorLine;
 import static org.smoothbuild.util.Antlr.markingLine;
@@ -40,7 +41,7 @@ public class ParseModule {
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
     var mod = parser.mod();
-    var result = logBuffer.containsProblem() ? null : mod;
+    var result = logBuffer.containsAtLeast(ERROR) ? null : mod;
     return maybe(result, logBuffer);
   }
 
