@@ -46,7 +46,7 @@ public class MatcherCreatorTest extends TestContext {
 
     StringBuilder builder = new StringBuilder();
     var tasks = list(
-        combineTask(), constTask(), nativeCallTask(), orderTask(), pickTask(), selectTask());
+        combineTask(), constTask(), invokeTask(), orderTask(), pickTask(), selectTask());
     for (Task task : tasks) {
       for (Space space : Space.values()) {
         for (Level level : levels()) {

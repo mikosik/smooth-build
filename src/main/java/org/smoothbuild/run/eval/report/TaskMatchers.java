@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.NativeCallTask;
+import org.smoothbuild.vm.task.InvokeTask;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
 import org.smoothbuild.vm.task.SelectTask;
@@ -28,7 +28,7 @@ public class TaskMatchers {
   static final TaskMatcher AT_LEAST_WARNING = logLevelMatcher(WARNING);
   static final TaskMatcher AT_LEAST_INFO = logLevelMatcher(INFO);
 
-  static final TaskMatcher CALL = kindMatcher(NativeCallTask.class);
+  static final TaskMatcher CALL = kindMatcher(InvokeTask.class);
   static final TaskMatcher COMBINE = kindMatcher(CombineTask.class);
   static final TaskMatcher CONST = kindMatcher(ConstTask.class);
   static final TaskMatcher ORDER = kindMatcher(OrderTask.class);

@@ -12,7 +12,7 @@ public class TaskHashes {
     return switch (task) {
       case CombineTask combineTask -> combineHash();
       case ConstTask constTask -> constHash(constTask.instB());
-      case NativeCallTask nativeCallTask -> nativeCallHash(nativeCallTask.natFunc());
+      case InvokeTask invokeTask -> invokeHash(invokeTask.natFunc());
       case OrderTask orderTask -> orderHash(orderTask.outputT());
       case PickTask pickTask -> pickHash();
       case SelectTask selectTask -> selectHash();
@@ -27,7 +27,7 @@ public class TaskHashes {
     return hash(1);
   }
 
-  private static Hash nativeCallHash(NatFuncB natFunc) {
+  private static Hash invokeHash(NatFuncB natFunc) {
     return hash(2, natFunc.hash());
   }
 

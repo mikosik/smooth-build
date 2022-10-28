@@ -23,7 +23,7 @@ import org.smoothbuild.vm.compute.ResultSource;
 import org.smoothbuild.vm.execute.TaskReporter;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.NativeCallTask;
+import org.smoothbuild.vm.task.InvokeTask;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
 import org.smoothbuild.vm.task.SelectTask;
@@ -69,7 +69,7 @@ public class TaskReporterImpl implements TaskReporter {
     return switch (task) {
       case CombineTask combineTask -> "{}";
       case ConstTask constTask -> constTask.instB().type().name();
-      case NativeCallTask nativeCallTask -> nameOf(nativeCallTask.natFunc()) + "()";
+      case InvokeTask invokeTask -> nameOf(invokeTask.natFunc()) + "()";
       case OrderTask orderTask -> "[]";
       case PickTask pickTask -> "[].";
       case SelectTask selectTask -> ".";

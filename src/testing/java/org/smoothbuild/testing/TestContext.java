@@ -155,7 +155,7 @@ import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.NativeCallTask;
+import org.smoothbuild.vm.task.InvokeTask;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.Output;
@@ -1451,16 +1451,16 @@ public class TestContext {
     return orderTask();
   }
 
-  public NativeCallTask nativeCallTask() {
-    return nativeCallTask(callB(), natFuncB(), traceB());
+  public InvokeTask invokeTask() {
+    return invokeTask(callB(), natFuncB(), traceB());
   }
 
-  public NativeCallTask nativeCallTask(CallB callB, NatFuncB natFunc) {
-    return nativeCallTask(callB, natFunc, null);
+  public InvokeTask invokeTask(CallB callB, NatFuncB natFunc) {
+    return invokeTask(callB, natFunc, null);
   }
 
-  public NativeCallTask nativeCallTask(CallB callB, NatFuncB natFunc, TraceB trace) {
-    return new NativeCallTask(callB, natFunc, null, trace);
+  public InvokeTask invokeTask(CallB callB, NatFuncB natFunc, TraceB trace) {
+    return new InvokeTask(callB, natFunc, null, trace);
   }
 
   public CombineTask combineTask() {

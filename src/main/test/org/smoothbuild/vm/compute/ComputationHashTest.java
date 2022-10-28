@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.NativeCallTask;
+import org.smoothbuild.vm.task.InvokeTask;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.SelectTask;
 
@@ -66,7 +66,7 @@ public class ComputationHashTest extends TestContext {
   @Test
   public void hash_of_computation_with_nat_call_task_and_empty_input_is_stable() {
     var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
-    var task = new NativeCallTask(callB(natFuncB), natFuncB, null, traceB());
+    var task = new InvokeTask(callB(natFuncB), natFuncB, null, traceB());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("768a18308c96099b14ecdead9ef4fc8cd0858d5a"));
@@ -75,7 +75,7 @@ public class ComputationHashTest extends TestContext {
   @Test
   public void hash_of_computation_with_nat_call_task_and_non_empty_input_is_stable() {
     var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
-    var task = new NativeCallTask(callB(natFuncB), natFuncB, null, traceB());
+    var task = new InvokeTask(callB(natFuncB), natFuncB, null, traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("49c8bb994eddedd9b642c9f03f3d32b5005c3fc4"));

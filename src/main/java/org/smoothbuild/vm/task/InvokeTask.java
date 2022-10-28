@@ -14,11 +14,11 @@ import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
 
-public final class NativeCallTask extends Task {
+public final class InvokeTask extends Task {
   private final NatFuncB natFunc;
   private final NativeMethodLoader nativeMethodLoader;
 
-  public NativeCallTask(CallB callB, NatFuncB natFunc, NativeMethodLoader methodLoader,
+  public InvokeTask(CallB callB, NatFuncB natFunc, NativeMethodLoader methodLoader,
       TraceB trace) {
     super(callB, trace, natFunc.isPure().toJ() ? PURE : IMPURE);
     this.nativeMethodLoader = methodLoader;

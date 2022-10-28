@@ -21,7 +21,7 @@ import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.execute.TraceB;
-import org.smoothbuild.vm.task.NativeCallTask;
+import org.smoothbuild.vm.task.InvokeTask;
 
 import com.google.common.collect.ImmutableList;
 
@@ -110,7 +110,7 @@ public class CallJob extends Job {
 
   private void handleNatFunc(CallB callB, NatFuncB natFuncB, Consumer<InstB> res) {
     var trace = trace(natFuncB);
-    var task = new NativeCallTask(callB, natFuncB, context().nativeMethodLoader(), trace);
+    var task = new InvokeTask(callB, natFuncB, context().nativeMethodLoader(), trace);
     evaluateTransitively(task, args())
         .addConsumer(res);
   }

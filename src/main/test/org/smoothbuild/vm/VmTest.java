@@ -61,7 +61,7 @@ import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 import org.smoothbuild.vm.job.JobCreator;
-import org.smoothbuild.vm.task.NativeCallTask;
+import org.smoothbuild.vm.task.InvokeTask;
 import org.smoothbuild.vm.task.NativeMethodLoader;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
@@ -490,12 +490,12 @@ public class VmTest extends TestContext {
       }
 
       @Test
-      public void report_native_call_as_native_call_task() throws IOException {
+      public void report_native_call_as_invoke_task() throws IOException {
         var funcB = returnAbcNatFunc();
         var callB = callB(funcB);
         assertReport(
             callB,
-            nativeCallTask(callB, funcB, traceB(callB, funcB)),
+            invokeTask(callB, funcB, traceB(callB, funcB)),
             computationResult(stringB("abc"), EXECUTION));
       }
 
@@ -722,7 +722,7 @@ public class VmTest extends TestContext {
   }
 
   private static Task taskMatcher() {
-    return argThat(a -> a instanceof NativeCallTask);
+    return argThat(a -> a instanceof InvokeTask);
   }
 
   private static ArrayList<ResultSource> resSourceList(int size, ResultSource expectedSource) {

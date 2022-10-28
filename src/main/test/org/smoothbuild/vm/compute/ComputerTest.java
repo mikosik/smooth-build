@@ -23,7 +23,7 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.NativeCallTask;
+import org.smoothbuild.vm.task.InvokeTask;
 import org.smoothbuild.vm.task.OrderTask;
 import org.smoothbuild.vm.task.PickTask;
 import org.smoothbuild.vm.task.SelectTask;
@@ -117,12 +117,12 @@ public class ComputerTest extends TestContext {
   }
 
   @Nested
-  class _native_call_task_with_pure_func {
+  class _invoke_task_with_pure_func {
     @Test
     public void when_cached_in_memory_and_disk() throws ComputationCacheExc, IOException {
       var natFuncB = returnAbcNatFuncB(true);
       var callB = callB(natFuncB);
-      var task = new NativeCallTask(callB, natFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, natFuncB, nativeMethodLoader(), traceB());
       var input = tupleB();
       var memory = stringB("def");
       var disk = stringB("ghi");
@@ -134,7 +134,7 @@ public class ComputerTest extends TestContext {
     public void when_cached_on_disk() throws ComputationCacheExc, IOException {
       var natFuncB = returnAbcNatFuncB(true);
       var callB = callB(natFuncB);
-      var task = new NativeCallTask(callB, natFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, natFuncB, nativeMethodLoader(), traceB());
       var input = tupleB();
       var disk = stringB("ghi");
 
@@ -145,7 +145,7 @@ public class ComputerTest extends TestContext {
     public void when_not_cached() throws ComputationCacheExc, IOException {
       var natFuncB = returnAbcNatFuncB(true);
       var callB = callB(natFuncB);
-      var task = new NativeCallTask(callB, natFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, natFuncB, nativeMethodLoader(), traceB());
       var input = tupleB();
 
       var expected = computationResult(output(stringB("abc")), EXECUTION);
@@ -156,7 +156,7 @@ public class ComputerTest extends TestContext {
     public void executed_computation_is_cached_on_disk() throws ComputationCacheExc, IOException {
       var natFuncB = returnAbcNatFuncB(true);
       var callB = callB(natFuncB);
-      var task = new NativeCallTask(callB, natFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, natFuncB, nativeMethodLoader(), traceB());
       var input = tupleB();
 
       assertCachesState(task, input, null, stringB("abc"));
@@ -164,12 +164,12 @@ public class ComputerTest extends TestContext {
   }
 
   @Nested
-  class _native_call_task_with_impure_func {
+  class _invoke_task_with_impure_func {
     @Test
     public void when_cached_in_memory_and_disk() throws ComputationCacheExc, IOException {
       var natFuncB = returnAbcNatFuncB(false);
       var callB = callB(natFuncB);
-      var task = new NativeCallTask(callB, natFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, natFuncB, nativeMethodLoader(), traceB());
       var input = tupleB();
       var memory = stringB("def");
       var disk = stringB("ghi");
@@ -181,7 +181,7 @@ public class ComputerTest extends TestContext {
     public void when_cached_on_disk() throws ComputationCacheExc, IOException {
       var natFuncB = returnAbcNatFuncB(false);
       var callB = callB(natFuncB);
-      var task = new NativeCallTask(callB, natFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, natFuncB, nativeMethodLoader(), traceB());
       var input = tupleB();
       var disk = stringB("ghi");
 
@@ -193,7 +193,7 @@ public class ComputerTest extends TestContext {
     public void when_not_cached() throws ComputationCacheExc, IOException {
       var natFuncB = returnAbcNatFuncB(false);
       var callB = callB(natFuncB);
-      var task = new NativeCallTask(callB, natFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, natFuncB, nativeMethodLoader(), traceB());
       var input = tupleB();
 
       var expected = computationResult(output(stringB("abc")), EXECUTION);
@@ -204,7 +204,7 @@ public class ComputerTest extends TestContext {
     public void executed_computation_is_cached_on_disk() throws ComputationCacheExc, IOException {
       var natFuncB = returnAbcNatFuncB(false);
       var callB = callB(natFuncB);
-      var task = new NativeCallTask(callB, natFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, natFuncB, nativeMethodLoader(), traceB());
       var input = tupleB();
 
       assertCachesState(task, input, computationResult(stringB("abc"), EXECUTION), null);

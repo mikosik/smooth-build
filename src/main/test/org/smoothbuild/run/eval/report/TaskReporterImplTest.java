@@ -40,13 +40,13 @@ public class TaskReporterImplTest extends TestContext {
   }
 
   @Test
-  public void nativeCallTaskHeaderForFuncWithoutMappedName() {
-    testHeader(nativeCallTask(), header("()"));
+  public void invokeTaskHeaderForFuncWithoutMappedName() {
+    testHeader(invokeTask(), header("()"));
   }
 
   @Test
-  public void nativeCallTaskHeaderForFuncWithMappedName() {
-    var task = nativeCallTask();
+  public void invokeTaskHeaderForFuncWithMappedName() {
+    var task = invokeTask();
     var funcHash = task.natFunc().hash();
     testHeader(bsMapping(funcHash, "myFunc"), task, header("myFunc()"));
   }
