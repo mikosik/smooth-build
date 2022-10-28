@@ -29,7 +29,7 @@ import org.smoothbuild.vm.task.PickTask;
 import org.smoothbuild.vm.task.SelectTask;
 import org.smoothbuild.vm.task.Task;
 
-public class ConsoleTaskReporter implements TaskReporter {
+public class TaskReporterImpl implements TaskReporter {
   // visible for testing
   static final int NAME_LENGTH_LIMIT = 43;
   private final TaskMatcher taskMatcher;
@@ -37,7 +37,7 @@ public class ConsoleTaskReporter implements TaskReporter {
   private final BsMapping bsMapping;
 
   @Inject
-  public ConsoleTaskReporter(TaskMatcher taskMatcher, Reporter reporter, BsMapping bsMapping) {
+  public TaskReporterImpl(TaskMatcher taskMatcher, Reporter reporter, BsMapping bsMapping) {
     this.taskMatcher = taskMatcher;
     this.reporter = reporter;
     this.bsMapping = bsMapping;

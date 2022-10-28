@@ -7,9 +7,9 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
-import static org.smoothbuild.run.eval.report.ConsoleTaskReporter.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.run.eval.report.TaskMatchers.NONE;
+import static org.smoothbuild.run.eval.report.TaskReporterImpl.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
@@ -23,7 +23,7 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.compute.ResultSource;
 import org.smoothbuild.vm.task.Task;
 
-public class ConsoleTaskReporterTest extends TestContext {
+public class TaskReporterImplTest extends TestContext {
   @Test
   public void combineTaskHeader() {
     testHeader(combineTask(), header("{}"));
@@ -118,7 +118,7 @@ public class ConsoleTaskReporterTest extends TestContext {
 
   private void testHeader(BsMapping bsMapping, Task task, ResultSource source, String header) {
     var reporter = mock(Reporter.class);
-    var taskReporter = new ConsoleTaskReporter(ALL, reporter, bsMapping);
+    var taskReporter = new TaskReporterImpl(ALL, reporter, bsMapping);
     taskReporter.report(task, computationResult(intB(), source));
     verify(reporter)
         .report(true, header, list());
@@ -136,7 +136,7 @@ public class ConsoleTaskReporterTest extends TestContext {
 
   private void testVisibility(TaskMatcher taskMatcher, boolean visible) {
     var reporter = mock(Reporter.class);
-    var taskReporter = new ConsoleTaskReporter(taskMatcher, reporter, bsMapping());
+    var taskReporter = new TaskReporterImpl(taskMatcher, reporter, bsMapping());
     var messages = arrayB(
         fatalMessage(),
         errorMessage(),

@@ -140,7 +140,7 @@ import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.run.eval.report.ConsoleTaskReporter;
+import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.compute.ComputationCache;
@@ -306,12 +306,12 @@ public class TestContext {
     return new TestingModLoader(code);
   }
 
-  public ConsoleTaskReporter taskReporter() {
+  public TaskReporterImpl taskReporter() {
     return taskReporter(reporter());
   }
 
-  public ConsoleTaskReporter taskReporter(Reporter reporter) {
-    return new ConsoleTaskReporter(ALL, reporter, bsMapping());
+  public TaskReporterImpl taskReporter(Reporter reporter) {
+    return new TaskReporterImpl(ALL, reporter, bsMapping());
   }
 
   public ConsoleReporter reporter() {
