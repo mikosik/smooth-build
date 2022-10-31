@@ -2,6 +2,7 @@ package org.smoothbuild.out.report;
 
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
+import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -23,7 +24,6 @@ import com.google.common.collect.ImmutableMap;
  */
 @Singleton
 public class ConsoleReporter implements Reporter {
-  private static final String TASK_HEADER_PREFIX = "  ";
   private static final String MESSAGE_FIRST_LINE_PREFIX = "   + ";
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
 
@@ -96,7 +96,7 @@ public class ConsoleReporter implements Reporter {
 
   // visible for testing
   public static String toText(String header, List<Log> logs) {
-    var builder = new StringBuilder(formattedHeader(header));
+    var builder = new StringBuilder(indentHeader(header));
     for (Log log : logs) {
       builder.append(formatLog(log));
     }
@@ -109,8 +109,8 @@ public class ConsoleReporter implements Reporter {
     return "\n" + prefixMultiline(lines);
   }
 
-  private static String formattedHeader(String header) {
-    return TASK_HEADER_PREFIX + header;
+  private static String indentHeader(String header) {
+    return indent(header);
   }
 
   // visible for testing
@@ -130,7 +130,7 @@ public class ConsoleReporter implements Reporter {
       int count = counters.get(level).get();
       if (count != 0) {
         int value = counters.get(level).get();
-        console.println(formattedHeader(statText(level, value)));
+        console.println(indentHeader(statText(level, value)));
       }
       total += count;
     }
