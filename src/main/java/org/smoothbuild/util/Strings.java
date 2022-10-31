@@ -21,6 +21,27 @@ public class Strings {
     return "`" + string + "`";
   }
 
+  public static String indent(String string) {
+    // JDK's String.indent() adds new-line at the end of string and it uses internally
+    // String.lines() which doesn't handle correctly multiple new-lines at the end of string.
+    var stringBuilder = new StringBuilder();
+    var empty = true;
+    for (int i = 0; i < string.length(); i++) {
+      char c = string.charAt(i);
+      if (c == '\n') {
+        stringBuilder.append(c);
+        empty = true;
+      } else if (empty) {
+        stringBuilder.append("  ");
+        stringBuilder.append(c);
+        empty = false;
+      } else {
+        stringBuilder.append(c);
+      }
+    }
+    return stringBuilder.toString();
+  }
+
   public static String unlines(String... lines) {
     return String.join("\n", lines);
   }

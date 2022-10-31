@@ -3,6 +3,7 @@ package org.smoothbuild.util;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.escaped;
+import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.Strings.unescaped;
@@ -26,6 +27,75 @@ import org.junit.jupiter.params.provider.ValueSource;
 import com.google.common.collect.ImmutableMap;
 
 public class StringsTest {
+  @Nested
+  class _indent {
+        @Test
+        public void empty_string() {
+          assertThat(indent(""))
+              .isEqualTo("");
+        }
+
+        @Test
+        public void string_with_one_separator() {
+          assertThat(indent("\n"))
+              .isEqualTo("\n");
+        }
+
+        @Test
+        public void string_with_separators_only() {
+          assertThat(indent("\n\n"))
+              .isEqualTo("\n\n");
+        }
+
+        @Test
+        public void string_with_one_line() {
+          assertThat(indent("abc"))
+              .isEqualTo("  abc");
+        }
+
+        @Test
+        public void many_orphaned_separators_at_the_beginning() {
+          assertThat(indent("\n\n\nabc"))
+              .isEqualTo("\n\n\n  abc");
+        }
+
+        @Test
+        public void many_orphaned_separators_at_the_end() {
+          assertThat(indent("abc\n\n\n"))
+              .isEqualTo("  abc\n\n\n");
+        }
+
+        @Test
+        public void many_orphaned_separators_in_the_middle() {
+          assertThat(indent("abc\n\n\ndef"))
+              .isEqualTo("  abc\n\n\n  def");
+        }
+
+        @Test
+        public void blank_string() {
+          assertThat(indent(" "))
+              .isEqualTo("   ");
+        }
+
+        @Test
+        public void blank_strings_separated() {
+          assertThat(indent(" \n "))
+              .isEqualTo("   \n   ");
+        }
+
+        @Test
+        public void string_with_two_lines() {
+          assertThat(indent("abc\ndef"))
+              .isEqualTo("  abc\n  def");
+        }
+
+        @Test
+        public void string_with_three_lines() {
+          assertThat(indent("abc\ndef\nghi"))
+              .isEqualTo("  abc\n  def\n  ghi");
+        }
+  }
+
   @Nested
   class _unline {
     @Test
