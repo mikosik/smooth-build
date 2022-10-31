@@ -5,8 +5,6 @@ public interface Logger {
     logs.forEach(this::log);
   }
 
-  public void logAll(Logs logs);
-
   public void log(Log log);
 
   public void fatal(String message);

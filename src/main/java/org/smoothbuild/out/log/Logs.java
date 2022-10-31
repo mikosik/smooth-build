@@ -3,7 +3,7 @@ package org.smoothbuild.out.log;
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface Logs {
+public interface Logs extends Iterable<Log> {
   public Stream<Log> stream();
 
   public default boolean containsAtLeast(Level level) {

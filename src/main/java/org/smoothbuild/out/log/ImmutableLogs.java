@@ -3,8 +3,11 @@ package org.smoothbuild.out.log;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
@@ -37,6 +40,21 @@ public class ImmutableLogs implements Logs {
   @Override
   public ImmutableLogs toImmutableLogs() {
     return this;
+  }
+
+  @Override
+  public Iterator<Log> iterator() {
+    return logs.iterator();
+  }
+
+  @Override
+  public void forEach(Consumer<? super Log> action) {
+    logs.forEach(action);
+  }
+
+  @Override
+  public Spliterator<Log> spliterator() {
+    return logs.spliterator();
   }
 
   @Override

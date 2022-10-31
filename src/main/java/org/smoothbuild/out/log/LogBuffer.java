@@ -1,6 +1,5 @@
 package org.smoothbuild.out.log;
 
-import static java.util.Collections.unmodifiableList;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
@@ -11,13 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class LogBuffer implements Logger, Logs {
-  private final List<Log> logs;
-
-  public LogBuffer() {
-    this.logs = new ArrayList<>();
-  }
-
+public class LogBuffer extends ArrayList<Log> implements Logger, Logs {
   @Override
   public void fatal(String message) {
     log(new Log(FATAL, message));
@@ -39,32 +32,27 @@ public class LogBuffer implements Logger, Logs {
   }
 
   @Override
-  public void logAll(Logs logs) {
-    this.logs.addAll(logs.toList());
-  }
-
-  @Override
   public void log(Log log) {
-    logs.add(log);
-  }
-
-  @Override
-  public Stream<Log> stream() {
-    return logs.stream();
+    add(log);
   }
 
   @Override
   public List<Log> toList() {
-    return unmodifiableList(logs);
+    return this;
   }
 
   @Override
   public ImmutableLogs toImmutableLogs() {
-    return ImmutableLogs.logs(logs);
+    return ImmutableLogs.logs(this);
+  }
+
+  @Override
+  public Stream<Log> stream() {
+    return super.stream();
   }
 
   @Override
   public String toString() {
-    return toCommaSeparatedString(logs, Log::toString);
+    return toCommaSeparatedString(this, Log::toString);
   }
 }

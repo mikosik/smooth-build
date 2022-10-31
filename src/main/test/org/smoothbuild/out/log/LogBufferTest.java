@@ -20,7 +20,7 @@ public class LogBufferTest {
   }
 
   @Nested
-  class _contains_at_least_error {
+  class _contains_at_least {
     @Test
     public void when_nothing_has_been_logged_returns_false() {
       assertThat(value.containsAtLeast(ERROR))
