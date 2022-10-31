@@ -79,7 +79,6 @@ import org.smoothbuild.bytecode.type.oper.PickCB;
 import org.smoothbuild.bytecode.type.oper.RefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.TagLoc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValS;
@@ -1529,22 +1528,6 @@ public class TestContext {
 
   public Output output(InstB instB, ArrayB messages) {
     return new Output(instB, messages);
-  }
-
-  public static TagLoc tagLoc() {
-    return tagLoc("tag");
-  }
-
-  public static TagLoc tagLoc(String tag) {
-    return tagLoc(tag, Loc.unknown());
-  }
-
-  public static TagLoc tagLoc(String tag, int line) {
-    return tagLoc(tag, loc(line));
-  }
-
-  public static TagLoc tagLoc(String tag, Loc loc) {
-    return new TagLoc(tag, loc);
   }
 
   public static BsMapping bsMapping() {
