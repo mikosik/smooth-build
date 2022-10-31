@@ -46,7 +46,7 @@ public record Loc(FilePath file, int line) {
     if (space == INTERNAL) {
       return "internal";
     } else if (space == UNKNOWN) {
-      return "unknown";
+      return "???";
     } else if (file.path() == null) {
       return "command line";
     } else {

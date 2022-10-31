@@ -76,7 +76,7 @@ public class LocTest {
     public void unknown_loc() {
       Loc loc = unknown();
       assertThat(loc.toString())
-          .isEqualTo("unknown");
+          .isEqualTo("???");
     }
   }
 
