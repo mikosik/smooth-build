@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
+import static java.util.Objects.requireNonNullElse;
+
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
@@ -29,7 +31,7 @@ public record TraceS(String name, Loc loc, TraceS tail) {
   }
 
   private int nameMaxWidth() {
-    int length = name.length();
+    int length = requireNonNullElse(name, "").length();
     return tail == null ? length : Math.max(length, tail.nameMaxWidth());
   }
 }

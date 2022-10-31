@@ -14,4 +14,13 @@ public class TraceSTest {
             first-short      myBuild.smooth:17
             second-very-long myBuild.smooth:19""");
   }
+
+  @Test
+  public void to_string_with_null_name() {
+    var trace = new TraceS(null, loc(17), new TraceS("second-name", loc(19)));
+    assertThat(trace.toString())
+        .isEqualTo("""
+                        myBuild.smooth:17
+            second-name myBuild.smooth:19""");
+  }
 }
