@@ -106,6 +106,7 @@ public class SbTranslator {
   }
 
   public ExprB translateExpr(ExprS exprS) {
+    // @formatter:off
     return switch (exprS) {
       case BlobS       blobS       -> translateAndSaveLoc(blobS,   this::translateBlob);
       case CallS       callS       -> translateAndSaveLoc(callS,   this::translateCall);
@@ -119,6 +120,7 @@ public class SbTranslator {
       case ValS        valS        -> translateVal(valS);
       case UnnamedValS unnamedValS -> translateExpr(unnamedValS.body());
     };
+    // @formatter:on
   }
 
   private <T extends ExprS> ExprB translateAndSaveLoc(T exprS, Function<T, ExprB> translator) {
