@@ -11,8 +11,8 @@ public class TraceSTest {
     var trace = new TraceS("first-short", loc(17), new TraceS("second-very-long", loc(19)));
     assertThat(trace.toString())
         .isEqualTo("""
-            first-short      myBuild.smooth:17
-            second-very-long myBuild.smooth:19""");
+            @ first-short      myBuild.smooth:17
+            @ second-very-long myBuild.smooth:19""");
   }
 
   @Test
@@ -20,7 +20,7 @@ public class TraceSTest {
     var trace = new TraceS(null, loc(17), new TraceS("second-name", loc(19)));
     assertThat(trace.toString())
         .isEqualTo("""
-                        myBuild.smooth:17
-            second-name myBuild.smooth:19""");
+            @             myBuild.smooth:17
+            @ second-name myBuild.smooth:19""");
   }
 }

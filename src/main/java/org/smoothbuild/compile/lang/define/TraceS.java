@@ -22,7 +22,7 @@ public record TraceS(String name, Loc loc, TraceS tail) {
   }
 
   private String toString(int padding) {
-    var line =  Strings.padEnd(Objects.toString(name, ""), padding, ' ') + loc.toString();
+    var line =  "@ " + Strings.padEnd(Objects.toString(name, ""), padding, ' ') + loc.toString();
     if (tail == null) {
       return line;
     } else {
