@@ -1,10 +1,5 @@
 package org.smoothbuild.run.eval.report;
 
-import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.out.log.Level.FATAL;
-import static org.smoothbuild.out.log.Level.INFO;
-import static org.smoothbuild.out.log.Level.WARNING;
-
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,10 +18,10 @@ public class TaskMatchers {
   public static final TaskMatcher ALL = (task, logs) -> true;
   public static final TaskMatcher NONE = (task, logs) -> false;
 
-  static final TaskMatcher AT_LEAST_FATAL = logLevelMatcher(FATAL);
-  static final TaskMatcher AT_LEAST_ERROR = logLevelMatcher(ERROR);
-  static final TaskMatcher AT_LEAST_WARNING = logLevelMatcher(WARNING);
-  static final TaskMatcher AT_LEAST_INFO = logLevelMatcher(INFO);
+  static final TaskMatcher FATAL = logLevelMatcher(Level.FATAL);
+  static final TaskMatcher ERROR = logLevelMatcher(Level.ERROR);
+  static final TaskMatcher WARNING = logLevelMatcher(Level.WARNING);
+  static final TaskMatcher INFO = logLevelMatcher(Level.INFO);
 
   static final TaskMatcher CALL = kindMatcher(InvokeTask.class);
   static final TaskMatcher COMBINE = kindMatcher(CombineTask.class);
@@ -35,7 +30,7 @@ public class TaskMatchers {
   static final TaskMatcher PICK = kindMatcher(PickTask.class);
   static final TaskMatcher SELECT = kindMatcher(SelectTask.class);
 
-  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, CALL);
+  static final TaskMatcher DEFAULT = or(INFO, CALL);
 
   private static final ImmutableMap<String, TaskMatcher> MATCHERS_MAP =
       ImmutableMap.<String, TaskMatcher>builder()
@@ -46,14 +41,14 @@ public class TaskMatchers {
           .put("none", NONE)
           .put("n", NONE)
 
-          .put("fatal", AT_LEAST_FATAL)
-          .put("lf", AT_LEAST_FATAL)
-          .put("error", AT_LEAST_ERROR)
-          .put("le", AT_LEAST_ERROR)
-          .put("warning", AT_LEAST_WARNING)
-          .put("lw", AT_LEAST_WARNING)
-          .put("info", AT_LEAST_INFO)
-          .put("li", AT_LEAST_INFO)
+          .put("fatal", FATAL)
+          .put("lf", FATAL)
+          .put("error", ERROR)
+          .put("le", ERROR)
+          .put("warning", WARNING)
+          .put("lw", WARNING)
+          .put("info", INFO)
+          .put("li", INFO)
 
           .put("call", CALL)
           .put("c", CALL)

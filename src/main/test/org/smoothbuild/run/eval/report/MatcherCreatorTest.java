@@ -4,17 +4,17 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
-import static org.smoothbuild.run.eval.report.TaskMatchers.AT_LEAST_ERROR;
-import static org.smoothbuild.run.eval.report.TaskMatchers.AT_LEAST_FATAL;
-import static org.smoothbuild.run.eval.report.TaskMatchers.AT_LEAST_INFO;
-import static org.smoothbuild.run.eval.report.TaskMatchers.AT_LEAST_WARNING;
 import static org.smoothbuild.run.eval.report.TaskMatchers.CALL;
 import static org.smoothbuild.run.eval.report.TaskMatchers.COMBINE;
 import static org.smoothbuild.run.eval.report.TaskMatchers.CONST;
+import static org.smoothbuild.run.eval.report.TaskMatchers.ERROR;
+import static org.smoothbuild.run.eval.report.TaskMatchers.FATAL;
+import static org.smoothbuild.run.eval.report.TaskMatchers.INFO;
 import static org.smoothbuild.run.eval.report.TaskMatchers.NONE;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ORDER;
 import static org.smoothbuild.run.eval.report.TaskMatchers.PICK;
 import static org.smoothbuild.run.eval.report.TaskMatchers.SELECT;
+import static org.smoothbuild.run.eval.report.TaskMatchers.WARNING;
 import static org.smoothbuild.run.eval.report.TaskMatchers.and;
 import static org.smoothbuild.run.eval.report.TaskMatchers.or;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -86,19 +86,19 @@ public class MatcherCreatorTest extends TestContext {
     return Stream.of(
         arguments("all", ALL),
         arguments("a", ALL),
-        arguments("default", or(CALL, AT_LEAST_INFO)),
-        arguments("d", or(CALL, AT_LEAST_INFO)),
+        arguments("default", or(CALL, INFO)),
+        arguments("d", or(CALL, INFO)),
         arguments("none", NONE),
         arguments("n", NONE),
 
-        arguments("fatal", AT_LEAST_FATAL),
-        arguments("lf", AT_LEAST_FATAL),
-        arguments("error", AT_LEAST_ERROR),
-        arguments("le", AT_LEAST_ERROR),
-        arguments("warning", AT_LEAST_WARNING),
-        arguments("lw", AT_LEAST_WARNING),
-        arguments("info", AT_LEAST_INFO),
-        arguments("li", AT_LEAST_INFO),
+        arguments("fatal", FATAL),
+        arguments("lf", FATAL),
+        arguments("error", ERROR),
+        arguments("le", ERROR),
+        arguments("warning", WARNING),
+        arguments("lw", WARNING),
+        arguments("info", INFO),
+        arguments("li", INFO),
 
         arguments("call", CALL),
         arguments("c", CALL),
@@ -117,14 +117,14 @@ public class MatcherCreatorTest extends TestContext {
         arguments("array   ", ORDER),
         arguments("   array   ", ORDER),
 
-        arguments("call & error", and(CALL, AT_LEAST_ERROR)),
-        arguments("call | error", or(CALL, AT_LEAST_ERROR)),
-        arguments("call | select | warning", or(CALL, or(SELECT, AT_LEAST_WARNING))),
-        arguments("call & error | select", or(and(CALL, AT_LEAST_ERROR), SELECT)),
-        arguments("select | call & warning", or(and(CALL, AT_LEAST_WARNING), SELECT)),
+        arguments("call & error", and(CALL, ERROR)),
+        arguments("call | error", or(CALL, ERROR)),
+        arguments("call | select | warning", or(CALL, or(SELECT, WARNING))),
+        arguments("call & error | select", or(and(CALL, ERROR), SELECT)),
+        arguments("select | call & warning", or(and(CALL, WARNING), SELECT)),
         arguments("(call)", CALL),
-        arguments("call & (select | warning)", and(CALL, or(SELECT, AT_LEAST_WARNING))),
-        arguments("(select | warning) & call", and(CALL, or(SELECT, AT_LEAST_WARNING)))
+        arguments("call & (select | warning)", and(CALL, or(SELECT, WARNING))),
+        arguments("(select | warning) & call", and(CALL, or(SELECT, WARNING)))
     );
   }
 
