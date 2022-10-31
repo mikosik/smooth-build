@@ -16,6 +16,7 @@ public class BsTraceTranslatorTest extends TestContext {
   private static final Hash HASH3 = Hash.of(3);
   private static final Hash HASH4 = Hash.of(4);
   private static final BsMapping BS_MAPPING = createBsMapping();
+  private static final Hash UNKNOWN_HASH = Hash.of(17);
 
   @Test
   public void null_trace() {
@@ -31,7 +32,7 @@ public class BsTraceTranslatorTest extends TestContext {
     var trace = traceB(HASH1, HASH2);
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(traceS("name2", loc(2),
-            traceS(null, loc(1))));
+            traceS("", loc(1))));
   }
 
   @Test
@@ -42,7 +43,30 @@ public class BsTraceTranslatorTest extends TestContext {
         .isEqualTo(
             traceS("name4", loc(4),
             traceS("name2", loc(3),
-            traceS(null, loc(1)))));
+            traceS("", loc(1)))));
+  }
+
+  @Test
+  public void trace_with_unknown_name() {
+    var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
+    var trace = traceB(HASH3, HASH4, traceB(HASH1, UNKNOWN_HASH));
+    assertThat(bsTraceTranslator.translate(trace))
+        .isEqualTo(
+            traceS("name4", loc(4),
+            traceS("???", loc(3),
+            traceS("", loc(1)))));
+  }
+
+  @Test
+  public void trace_with_unknown_loc() {
+        var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
+    var trace = traceB(HASH3, HASH4, traceB(UNKNOWN_HASH, HASH2));
+    assertThat(bsTraceTranslator.translate(trace))
+        .isEqualTo(
+            traceS("name4", loc(4),
+            traceS("name2", loc(3),
+            traceS("", Loc.unknown()))));
+
   }
 
   private static BsMapping createBsMapping() {

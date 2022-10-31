@@ -13,12 +13,12 @@ public class BsTraceTranslator {
     this.bsMapping = bsMapping;
   }
 
-  public TraceS translate(TraceB trace) {
-    if (trace == null) {
+  public TraceS translate(TraceB traceB) {
+    if (traceB == null) {
       return null;
     } else {
-      var raw = translateRaw(trace);
-      var called = trace.called();
+      var raw = translateRaw(traceB);
+      var called = traceB.called();
       return new TraceS(nameFor(called), locFor(called), raw);
     }
   }
@@ -29,17 +29,17 @@ public class BsTraceTranslator {
     } else {
       var tailB = trace.tail();
       var tailS = translateRaw(tailB);
-      var tag = tailB == null ? null : nameFor(tailB.called());
+      var tag = tailB == null ? "" : nameFor(tailB.called());
       var loc = locFor(trace.call());
       return new TraceS(tag, loc, tailS);
     }
   }
 
   private String nameFor(Hash funcHash) {
-    return bsMapping.nameMapping().get(funcHash);
+    return bsMapping.nameMapping().getOrDefault(funcHash, "???");
   }
 
   private Loc locFor(Hash hash) {
-    return bsMapping.locMapping().get(hash);
+    return bsMapping.locMapping().getOrDefault(hash, Loc.unknown());
   }
 }
