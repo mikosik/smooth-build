@@ -1219,7 +1219,11 @@ public class TestContext {
   }
 
   public PolyValS emptyArrayValS() {
-    return polyS(defValS("emptyArray", orderS(varA())));
+    return emptyArrayValS(varA());
+  }
+
+  public PolyValS emptyArrayValS(VarS elemT) {
+    return polyS(defValS("emptyArray", orderS(elemT)));
   }
 
   public SchemaS schemaS(TypeS typeS) {

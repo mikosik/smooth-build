@@ -21,6 +21,7 @@ import org.smoothbuild.bytecode.expr.inst.DefFuncB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
@@ -58,13 +59,13 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_val() {
           var valS = defValS("myValue", intS(7));
-          assertConversion(valS, intB(7));
+          assertConversion(valS, callB(defFuncB(intB(7))));
         }
 
         @Test
         public void def_val_referencing_other_def_val() {
           var valS = defValS("myValue", monoizeS(defValS("otherValue", intS(7))));
-          assertConversion(valS, intB(7));
+          assertConversion(valS, callB(defFuncB(callB(defFuncB(intB(7))))));
         }
 
         @Test
@@ -183,8 +184,8 @@ public class SbTranslatorTest extends TestContext {
           public void defined() {
             var emptyArrayVal = emptyArrayValS();
             var monoizeS = monoizeS(aToIntVarMapS(), emptyArrayVal);
-            var arrayB = orderB(intTB());
-            assertConversion(monoizeS, arrayB);
+            var orderB = orderB(intTB());
+            assertConversion(monoizeS, callB(defFuncB(orderB)));
           }
 
           @Test
@@ -192,14 +193,14 @@ public class SbTranslatorTest extends TestContext {
             var a = varA();
             var b = varB();
 
-            var emptyArrayValS = emptyArrayValS();
+            var emptyArrayValS = emptyArrayValS(a);
             var bEmptyArrayMonoValS = monoizeS(ImmutableMap.of(a, b), emptyArrayValS);
 
             var referencingValS = polyDefValS("referencing", bEmptyArrayMonoValS);
             var referencingMonoValS = monoizeS(ImmutableMap.of(b, intTS()), referencingValS);
 
-            var referencingInstB = orderB(intTB());
-            assertConversion(referencingMonoValS, referencingInstB);
+            var orderB = orderB(intTB());
+            assertConversion(referencingMonoValS, callB(defFuncB(callB(defFuncB(orderB)))));
           }
 
           @Test
@@ -317,13 +318,13 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_val() {
           var valS = defValS(3, "myValue", intS(7, 37));
-          assertNameAndLocMapping(valS,  null, loc(7));
+          assertNameAndLocMapping(valS,  "myValue", loc(3));
         }
 
         @Test
         public void def_val_referencing_other_def_val() {
           var valS = defValS(5, "myValue", monoizeS(defValS(6, "otherValue", intS(7, 37))));
-          assertNameAndLocMapping(valS, null, loc(7));
+          assertNameAndLocMapping(valS, "myValue", loc(5));
         }
 
         @Test
@@ -427,9 +428,9 @@ public class SbTranslatorTest extends TestContext {
       class _monoize {
         @Test
         public void def_val() {
-          var emptyArrayVal = emptyArrayValS();
+          var emptyArrayVal = polyDefValS(7, "emptyArray", orderS(varA()));
           var monoizeS = monoizeS(4, aToIntVarMapS(), emptyArrayVal);
-          assertNameAndLocMapping(monoizeS, null, loc(1));
+          assertNameAndLocMapping(monoizeS, "emptyArray", loc(7));
         }
 
         @Test

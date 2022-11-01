@@ -4,6 +4,7 @@ import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
@@ -35,6 +36,7 @@ import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.WithLoc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
@@ -49,7 +51,6 @@ import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
@@ -130,12 +131,6 @@ public class SbTranslator {
     };
   }
 
-  private <T extends WithLoc> ExprB translateAndSaveLoc(T exprS, Function<T, ExprB> translator) {
-    var exprB = translator.apply(exprS);
-    saveLoc(exprB, exprS);
-    return exprB;
-  }
-
   private BlobB translateBlob(BlobS blobS) {
     return bytecodeF.blob(sink -> sink.write(blobS.byteString()));
   }
@@ -169,17 +164,15 @@ public class SbTranslator {
     var newEnvironment = funcS.params();
     var sbTranslator = new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
         newEnvironment, cache, nameMapping, locMapping);
-    return translateAndSaveLoc(funcS, sbTranslator::translateFuncImpl);
+    return translateAndSaveNal(funcS, sbTranslator::translateFuncImpl);
   }
 
   private ExprB translateFuncImpl(FuncS funcS) {
-    var funcB = switch (funcS) {
+    return switch (funcS) {
       case AnnFuncS n -> translateAnnFunc(n);
       case DefFuncS d -> translateDefFunc(d);
       case SyntCtorS c -> translateSyntCtor(c);
     };
-    saveNameAndLoc(funcB, funcS);
-    return funcB;
   }
 
   private ExprB translateAnnFunc(AnnFuncS annFuncS) {
@@ -252,25 +245,31 @@ public class SbTranslator {
 
   private ExprB translateVal(ValS valS) {
     var key = new CacheKey(valS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateValImpl(valS));
+    return computeIfAbsent(cache, key, name -> translateAndSaveNal(valS, this::translateValImpl));
   }
 
   private ExprB translateValImpl(ValS valS) {
     return switch (valS) {
       case AnnValS annValS -> translateAnnVal(annValS);
-      case DefValS defValS -> translateExpr(defValS.body());
+      case DefValS defValS -> translateDefVal(defValS);
     };
   }
 
   private ExprB translateAnnVal(AnnValS annValS) {
     var annName = annValS.ann().name();
     if (annName.equals(BYTECODE)) {
-      var exprB = fetchValBytecode(annValS);
-      saveNameAndLoc(exprB, annValS);
-      return exprB;
+      return fetchValBytecode(annValS);
     } else {
       throw new SbTranslatorExc("Illegal value annotation: " + q("@" + annName) + ".");
     }
+  }
+
+  private ExprB translateDefVal(DefValS defValS) {
+    var funcB = bytecodeF.defFunc(
+        translateT(defValS.type()),
+        list(),
+        translateExpr(defValS.body()));
+    return bytecodeF.call(funcB, bytecodeF.combine(list()));
   }
 
   // helpers
@@ -327,9 +326,21 @@ public class SbTranslator {
     return typeSbTranslator.translate(arrayTS);
   }
 
-  private void saveNameAndLoc(ExprB funcB, NamedEvaluableS evaluableS) {
-    nameMapping.put(funcB.hash(), evaluableS.name());
-    saveLoc(funcB, evaluableS);
+  private <T extends Nal> ExprB translateAndSaveNal(T nal, Function<T, ExprB> translator) {
+    var result = translator.apply(nal);
+    saveNal(result, nal);
+    return result;
+  }
+
+  private <T extends WithLoc> ExprB translateAndSaveLoc(T withLoc, Function<T, ExprB> translator) {
+    var exprB = translator.apply(withLoc);
+    saveLoc(exprB, withLoc);
+    return exprB;
+  }
+
+  private void saveNal(ExprB exprB, Nal nal) {
+    nameMapping.put(exprB.hash(), nal.name());
+    saveLoc(exprB, nal);
   }
 
   private void saveLoc(ExprB exprB, WithLoc withLoc) {
