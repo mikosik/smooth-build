@@ -290,7 +290,7 @@ public class SbTranslatorTest extends TestContext {
   }
 
   @Nested
-  class _mapping {
+  class _bs_mapping {
     @Nested
     class _inst {
       @Test
