@@ -57,8 +57,7 @@ public class ExprSLoadingTest extends TestContext {
         @Test
         public void with_reference_to_poly_val() {
           var paramDefaultVal = polyByteValS(4, varA(), "polyVal");
-          var polyRef = polyRefS(2, paramDefaultVal, "polyVal");
-          var monoizedParamBody = monoizeS(2, varMap(varA(), intTS()), polyRef);
+          var monoizedParamBody = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
           test_default_arg("polyVal", monoizedParamBody);
         }
 

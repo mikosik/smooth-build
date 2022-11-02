@@ -150,7 +150,7 @@ public class SbTranslator {
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
         environment, cache, nameMapping, locMapping);
-    return sbTranslator.translateEvaluable(monoizeS.polyRef().polyEvaluable().mono());
+    return sbTranslator.translateEvaluable(monoizeS.polyEvaluable().mono());
   }
 
   private ExprB translateFunc(FuncS funcS) {

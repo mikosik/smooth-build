@@ -97,7 +97,6 @@ import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
-import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -1002,22 +1001,7 @@ public class TestContext {
 
   public static MonoizeS monoizeS(
       int line, ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS polyEvaluableS) {
-    return monoizeS(line, varMap, polyRefS(line, polyEvaluableS));
-  }
-
-  public static MonoizeS monoizeS(int line, ImmutableMap<VarS, TypeS> varMap, PolyRefS polyRefS) {
-    return new MonoizeS(varMap, polyRefS, loc(line));
-  }
-
-  private static PolyRefS polyRefS(int line, PolyEvaluableS evaluable) {
-    String name = switch (evaluable) {
-      case PolyEvaluableS namedPolyEvaluableS -> namedPolyEvaluableS.name();
-    };
-    return polyRefS(line, evaluable, name);
-  }
-
-  public static PolyRefS polyRefS(int line, PolyEvaluableS evaluable, String name) {
-    return new PolyRefS(evaluable, name, loc(line));
+    return new MonoizeS(varMap, polyEvaluableS, loc(line));
   }
 
   public OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {
