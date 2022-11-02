@@ -75,7 +75,7 @@ public class ExprSLoadingTest extends TestContext {
         @Test
         public void with_reference_to_int() {
           var paramDefaultVal = new UnnamedValS(intS(1, 7));
-          test_default_arg("7", paramDefaultVal);
+          test_default_arg("7", monoizeS(2, paramDefaultVal));
         }
 
         private void test_default_arg(String bodyCode, ExprS expected) {
@@ -100,35 +100,42 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void with_mono_func_reference() {
-        module("""
-          Int myReturnInt() = 3;
-          result = myReturnInt();
-          """)
+        var code = """
+            Int myReturnInt() = 3;
+            result = myReturnInt();
+            """;
+        var myReturnInt = returnIntFuncS();
+        var result = polyDefValS(2, intTS(), "result", callS(2, monoizeS(2, myReturnInt)));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(2, intTS(), "result", callS(2, returnIntFuncS())));
+            .containsEvaluable(result);
       }
 
       @Test
       public void with_mono_func_reference_and_arg() {
-        module("""
-          Int myIntId(Int i) = i;
-          result = myIntId(3);
-          """)
+        var code = """
+            Int myIntId(Int i) = i;
+            result = myIntId(3);
+            """;
+        var myIntId = intIdFuncS();
+        var result = polyDefValS(2, intTS(), "result", callS(2, monoizeS(2, myIntId), intS(2, 3)));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(2, intTS(), "result",
-                callS(2, intIdFuncS(), intS(2, 3))));
+            .containsEvaluable(result);
       }
 
       @Test
       public void with_mono_func_reference_and_named_arg() {
-        module("""
-          Int myIntId(Int i) = i;
-          result = myIntId(i=
-            7);
-          """)
+        var code = """
+            Int myIntId(Int i) = i;
+            result = myIntId(i=
+              7);
+            """;
+        var myIntId = intIdFuncS();
+        var result = polyDefValS(2, intTS(), "result", callS(2, monoizeS(2, myIntId), intS(3, 7)));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(2, intTS(), "result",
-                callS(2, intIdFuncS(), intS(3, 7))));
+            .containsEvaluable(result);
       }
 
       @Test
@@ -146,32 +153,31 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void with_value_reference() {
-        module("""
-          Int myReturnInt() = 3;
-          Int() myValue = myReturnInt;
-          result = myValue();
-          """)
+        var code = """
+            Int myReturnInt() = 3;
+            Int() myValue = myReturnInt;
+            result = myValue();
+            """;
+        var myValue = defValS(2, funcTS(intTS()), "myValue", monoizeS(2, returnIntFuncS()));
+        var result = polyDefValS(3, intTS(), "result", callS(3, monoizeS(3, myValue)));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(
-                polyDefValS(3, intTS(), "result",
-                    callS(3,
-                        defValS(2, funcTS(intTS()), "myValue", returnIntFuncS()))));
+            .containsEvaluable(result);
       }
 
       @Test
       public void with_value_reference_and_arg() {
-        module("""
-          Int myIntId(Int i) = i;
-          Int(Int) myValue = myIntId;
-          result = myValue(
-            7);
-          """)
+        var code = """
+            Int myIntId(Int i) = i;
+            Int(Int) myValue = myIntId;
+            result = myValue(
+              7);
+            """;
+        var myValue = defValS(2, funcTS(intTS(), intTS()), "myValue", monoizeS(2, intIdFuncS()));
+        var result = polyDefValS(3, intTS(), "result", callS(3, monoizeS(3, myValue), intS(4, 7)));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(
-                polyDefValS(3, intTS(), "result",
-                    callS(3,
-                        defValS(2, funcTS(intTS(), intTS()), "myValue", intIdFuncS()),
-                        intS(4, 7))));
+            .containsEvaluable(result);
       }
 
       @Test
@@ -189,17 +195,20 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void with_ctor_reference_and_arg() {
+        var code = """
+            MyStruct {
+              String field
+            }
+            result = myStruct(
+              "aaa");
+            """;
         var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-        module("""
-          MyStruct {
-            String field
-          }
-          result = myStruct(
-            "aaa");
-          """)
+        var ctor = syntCtorS(1, struct);
+        var resultBody = callS(4, monoizeS(4, ctor), stringS(5, "aaa"));
+        var result = polyDefValS(4, struct, "result", resultBody);
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(4, struct, "result",
-                callS(4, syntCtorS(1, struct), stringS(5, "aaa"))));
+            .containsEvaluable(result);
       }
 
       @Test
@@ -228,14 +237,16 @@ public class ExprSLoadingTest extends TestContext {
     class _reference {
       @Test
       public void to_mono_value() {
-        module("""
-          String myValue = "abc";
-          String result =
-            myValue;
-          """)
+        var code = """
+            String myValue = "abc";
+            String result =
+              myValue;
+            """;
+        var myValue = defValS(1, stringTS(), "myValue", stringS("abc"));
+        var result = polyDefValS(2, stringTS(), "result", monoizeS(3, myValue));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(2, stringTS(), "result",
-                defValS(1, stringTS(), "myValue", stringS("abc"))));
+            .containsEvaluable(result);
       }
 
       @Test
@@ -253,14 +264,16 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void to_mono_func() {
-        module("""
-          String myFunc() = "abc";
-          String() result =
-            myFunc;
-          """)
+        var code = """
+            String myFunc() = "abc";
+            String() result =
+              myFunc;
+            """;
+        var myFunc = defFuncS(1, "myFunc", nlist(), stringS("abc"));
+        var result = polyDefValS(2, funcTS(stringTS()), "result", monoizeS(3, myFunc));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(2, funcTS(stringTS()), "result",
-                defFuncS(1, "myFunc", nlist(), stringS("abc"))));
+            .containsEvaluable(result);
       }
 
       @Test
@@ -278,14 +291,16 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void to_ctor() {
+        var code = """
+            MyStruct {}
+            MyStruct() result =
+              myStruct;
+            """;
         var structT = structTS("MyStruct", nlist());
-        module("""
-          MyStruct {}
-          MyStruct() result =
-            myStruct;
-          """)
+        var result = polyDefValS(2, funcTS(structT), "result", monoizeS(3, syntCtorS(1, structT)));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(2, funcTS(structT), "result", syntCtorS(1, structT)));
+            .containsEvaluable(result);
       }
     }
 
@@ -305,16 +320,18 @@ public class ExprSLoadingTest extends TestContext {
 
     @Test
     public void order_of_funcs() {
-      module("""
+      var code = """
           Int returnInt() = 7;
           result =
           [
             returnInt,
           ];
-          """)
+          """;
+      var orderS = orderS(3, monoizeS(4, defFuncS(1, "returnInt", nlist(), intS(1, 7))));
+      var expected = polyDefValS(2, "result", orderS);
+      module(code)
           .loadsWithSuccess()
-          .containsEvaluable(
-              polyDefValS(2, "result", orderS(3, defFuncS(1, "returnInt", nlist(), intS(1, 7)))));
+          .containsEvaluable(expected);
     }
 
     @Test
@@ -343,7 +360,7 @@ public class ExprSLoadingTest extends TestContext {
           .loadsWithSuccess()
           .containsEvaluable(polyDefValS(6, stringTS(), "result",
               selectS(7,
-                  callS(6, natFuncS(2, myStruct, "getStruct", nlist(), natAnnS())),
+                  callS(6, monoizeS(6, natFuncS(2, myStruct, "getStruct", nlist(), natAnnS()))),
                   "field")));
     }
   }

@@ -38,6 +38,6 @@ public final class UnnamedValS extends Tal implements EvaluableS {
 
   @Override
   public String toString() {
-    return "DefVal(`" + type().name() + " = " + body + "`)";
+    return "UnnamedVal(`" + type().name() + " = " + body + "`)";
   }
 }

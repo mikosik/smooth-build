@@ -177,11 +177,7 @@ public class PsTranslator {
   }
 
   private static ExprS translateMonoizable(MonoizableP monoizableP, PolyEvaluableS polyEvaluableS) {
-    if (polyEvaluableS.schema().quantifiedVars().isEmpty()) {
-      return polyEvaluableS.mono();
-    } else {
-      return new MonoizeS(monoizableP.monoizeVarMap(), polyEvaluableS, monoizableP.loc());
-    }
+    return new MonoizeS(monoizableP.monoizeVarMap(), polyEvaluableS, monoizableP.loc());
   }
 
   private BlobS translateBlob(BlobP blob) {

@@ -85,6 +85,7 @@ import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValS;
+import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
@@ -103,6 +104,7 @@ import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
+import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.BlobTS;
@@ -988,6 +990,10 @@ public class TestContext {
     return ImmutableMap.of(var, type);
   }
 
+  public MonoizeS monoizeS(int loc, EvaluableS evaluableS) {
+    return monoizeS(loc, varMap(), polyS(evaluableS));
+  }
+
   public MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS evaluable) {
     return monoizeS(1, varMap, evaluable);
   }
@@ -1194,10 +1200,6 @@ public class TestContext {
     return polyS(defValS("emptyArray", orderS(varA())));
   }
 
-  private PolyValS polyS(ValS valS) {
-    return new PolyValS(schemaS(valS.type()), valS);
-  }
-
   public SchemaS schemaS(TypeS typeS) {
     return new SchemaS(typeS);
   }
@@ -1337,8 +1339,24 @@ public class TestContext {
     return defFuncS(intTS(), "myReturnInt", nlist(), intS(1, 3));
   }
 
+  public PolyEvaluableS polyS(EvaluableS evaluableS) {
+    return switch (evaluableS) {
+      case FuncS funcS -> polyS(funcS);
+      case ValS valS -> polyS(valS);
+      case UnnamedValS unnamedValS -> polyS(unnamedValS);
+    };
+  }
+
   private PolyFuncS polyS(FuncS funcS) {
     return new PolyFuncS(newFuncSchema(funcS.type()), funcS);
+  }
+
+  private PolyValS polyS(ValS valS) {
+    return new PolyValS(schemaS(valS.type()), valS);
+  }
+
+  private UnnamedPolyValS polyS(UnnamedValS valS) {
+    return new UnnamedPolyValS(valS);
   }
 
   public static ItemSigS sigS(TypeS type, String name) {
