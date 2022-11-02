@@ -62,7 +62,7 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void call() {
         var defFuncS = defFuncS("n", nlist(), intS(7));
-        var callS = callS(defFuncS);
+        var callS = callS(monoizeS(defFuncS));
         assertThat(evaluate(callS))
             .isEqualTo(intB(7));
       }
@@ -80,7 +80,7 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void native_call_argless() throws Exception {
         var funcS = natFuncS(intTS(), "f", nlist(), natAnnS(1, stringS("class binary name")));
-        var callS = callS(funcS);
+        var callS = callS(monoizeS(funcS));
         var jarB = blobB(137);
         when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
             .thenReturn(jarB);
@@ -95,7 +95,7 @@ public class EvaluatorTest  extends TestContext {
       public void native_call_with_param() throws Exception {
         var funcS = natFuncS(intTS(), "f", nlist(itemS(intTS(), "p")),
             natAnnS(1, stringS("class binary name")));
-        var callS = callS(funcS, intS(77));
+        var callS = callS(monoizeS(funcS), intS(77));
         var jarB = blobB(137);
         when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
             .thenReturn(jarB);
@@ -111,7 +111,7 @@ public class EvaluatorTest  extends TestContext {
     class _func {
       @Test
       public void def_func() {
-        assertThat(evaluate(intIdFuncS()))
+        assertThat(evaluate(monoizeS(intIdFuncS())))
             .isEqualTo(idFuncB());
       }
 
@@ -135,7 +135,7 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void synt_ctor() {
         var syntCtorS = syntCtorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-        assertThat(evaluate(syntCtorS))
+        assertThat(evaluate(monoizeS(syntCtorS)))
             .isEqualTo(defFuncB(list(intTB()), combineB(refB(intTB(), 0))));
       }
     }
@@ -176,7 +176,7 @@ public class EvaluatorTest  extends TestContext {
       public void select() {
         var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
         var syntCtorS = syntCtorS(structTS);
-        var callS = callS(syntCtorS, intS(7));
+        var callS = callS(monoizeS(syntCtorS), intS(7));
         assertThat(evaluate(selectS(callS, "f")))
             .isEqualTo(intB(7));
       }

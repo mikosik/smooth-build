@@ -8,6 +8,6 @@ public final class UnnamedPolyValS extends PolyEvaluableS  {
   }
 
   public UnnamedPolyValS(UnnamedValS unnamedValS) {
-    super(new SchemaS(unnamedValS.evalT()), unnamedValS);
+    super(new SchemaS(unnamedValS.type()), unnamedValS);
   }
 }

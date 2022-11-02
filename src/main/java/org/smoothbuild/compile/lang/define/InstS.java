@@ -5,7 +5,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 /**
  * Instance of a value.
  */
-public sealed interface InstS extends ExprS permits BlobS, EvaluableS, IntS, StringS {
+public sealed interface InstS extends ExprS permits BlobS, IntS, StringS {
   @Override
   public default TypeS evalT() {
     return type();

@@ -992,6 +992,10 @@ public class TestContext {
     return ImmutableMap.of(var, type);
   }
 
+  public MonoizeS monoizeS(EvaluableS evaluableS) {
+    return monoizeS(17, evaluableS);
+  }
+
   public MonoizeS monoizeS(int loc, EvaluableS evaluableS) {
     return monoizeS(loc, varMap(), polyS(evaluableS));
   }

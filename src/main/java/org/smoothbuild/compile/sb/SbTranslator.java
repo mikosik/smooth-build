@@ -35,6 +35,7 @@ import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.WithLoc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValS;
@@ -42,6 +43,7 @@ import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValS;
+import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
@@ -115,15 +117,20 @@ public class SbTranslator {
       case ParamRefS   paramRefS   -> translateAndSaveLoc(paramRefS, this::translateParamRef);
       case SelectS     selectS     -> translateAndSaveLoc(selectS,   this::translateSelect);
       case StringS     stringS     -> translateAndSaveLoc(stringS,   this::translateString);
-      case FuncS       funcS       -> translateFunc(funcS);
       case MonoizeS    monoizeS    -> translateMonoize(monoizeS);
-      case ValS        valS        -> translateVal(valS);
-      case UnnamedValS unnamedValS -> translateExpr(unnamedValS.body());
     };
     // @formatter:on
   }
 
-  private <T extends ExprS> ExprB translateAndSaveLoc(T exprS, Function<T, ExprB> translator) {
+  public ExprB translateEvaluable(EvaluableS evaluableS) {
+    return switch (evaluableS) {
+      case FuncS funcS -> translateFunc(funcS);
+      case ValS valS -> translateVal(valS);
+      case UnnamedValS unnamedValS -> translateExpr(unnamedValS.body());
+    };
+  }
+
+  private <T extends WithLoc> ExprB translateAndSaveLoc(T exprS, Function<T, ExprB> translator) {
     var exprB = translator.apply(exprS);
     saveLoc(exprB, exprS);
     return exprB;
@@ -150,7 +157,7 @@ public class SbTranslator {
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
         environment, cache, nameMapping, locMapping);
-    return sbTranslator.translateExpr(monoizeS.polyRef().polyEvaluable().mono());
+    return sbTranslator.translateEvaluable(monoizeS.polyRef().polyEvaluable().mono());
   }
 
   private ExprB translateFunc(FuncS funcS) {
@@ -324,8 +331,8 @@ public class SbTranslator {
     saveLoc(funcB, evaluableS);
   }
 
-  private void saveLoc(ExprB exprB, ExprS exprS) {
-    locMapping.put(exprB.hash(), exprS.loc());
+  private void saveLoc(ExprB exprB, WithLoc withLoc) {
+    locMapping.put(exprB.hash(), withLoc.loc());
   }
 
   private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {}
