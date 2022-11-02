@@ -9,13 +9,13 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Monomorphization of polymorphic referencable.
  */
-public record MonoizeS(
+public record PolyRefS(
     ImmutableMap<VarS, TypeS> varMap,
     PolyEvaluableS polyEvaluable,
     TypeS evalT,
     Loc loc) implements OperS {
 
-  public MonoizeS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS polyEvaluable, Loc loc) {
+  public PolyRefS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS polyEvaluable, Loc loc) {
     this(varMap, polyEvaluable, polyEvaluable.schema().monoize(varMap), loc);
   }
 }

@@ -50,9 +50,9 @@ import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
-import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
+import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -117,7 +117,7 @@ public class SbTranslator {
       case ParamRefS   paramRefS   -> translateAndSaveLoc(paramRefS, this::translateParamRef);
       case SelectS     selectS     -> translateAndSaveLoc(selectS,   this::translateSelect);
       case StringS     stringS     -> translateAndSaveLoc(stringS,   this::translateString);
-      case MonoizeS    monoizeS    -> translateMonoize(monoizeS);
+      case PolyRefS    polyRefS    -> translatePolyRef(polyRefS);
     };
     // @formatter:on
   }
@@ -145,12 +145,12 @@ public class SbTranslator {
     return bytecodeF.int_(intS.bigInteger());
   }
 
-  private ExprB translateMonoize(MonoizeS monoizeS) {
-    var varMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
+  private ExprB translatePolyRef(PolyRefS polyRefS) {
+    var varMap = mapValues(polyRefS.varMap(), typeSbTranslator::translate);
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
         environment, cache, nameMapping, locMapping);
-    return sbTranslator.translateEvaluable(monoizeS.polyEvaluable().mono());
+    return sbTranslator.translateEvaluable(polyRefS.polyEvaluable().mono());
   }
 
   private ExprB translateFunc(FuncS funcS) {

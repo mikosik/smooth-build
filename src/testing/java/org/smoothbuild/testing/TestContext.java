@@ -92,11 +92,11 @@ import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
-import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
+import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -987,21 +987,21 @@ public class TestContext {
     return ImmutableMap.of(var, type);
   }
 
-  public MonoizeS monoizeS(EvaluableS evaluableS) {
-    return monoizeS(17, evaluableS);
+  public PolyRefS polyRefS(EvaluableS evaluableS) {
+    return polyRefS(17, evaluableS);
   }
 
-  public MonoizeS monoizeS(int loc, EvaluableS evaluableS) {
-    return monoizeS(loc, varMap(), polyS(evaluableS));
+  public PolyRefS polyRefS(int loc, EvaluableS evaluableS) {
+    return polyRefS(loc, varMap(), polyS(evaluableS));
   }
 
-  public MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS evaluable) {
-    return monoizeS(1, varMap, evaluable);
+  public PolyRefS polyRefS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS evaluable) {
+    return polyRefS(1, varMap, evaluable);
   }
 
-  public static MonoizeS monoizeS(
+  public static PolyRefS polyRefS(
       int line, ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS polyEvaluableS) {
-    return new MonoizeS(varMap, polyEvaluableS, loc(line));
+    return new PolyRefS(varMap, polyEvaluableS, loc(line));
   }
 
   public OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {

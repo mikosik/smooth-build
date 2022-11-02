@@ -62,7 +62,7 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void call() {
         var defFuncS = defFuncS("n", nlist(), intS(7));
-        var callS = callS(monoizeS(defFuncS));
+        var callS = callS(polyRefS(defFuncS));
         assertThat(evaluate(callS))
             .isEqualTo(intB(7));
       }
@@ -72,7 +72,7 @@ public class EvaluatorTest  extends TestContext {
         var a = varA();
         var orderS = orderS(a, paramRefS(a, "e"));
         var funcS = polyDefFuncS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
-        var callS = callS(monoizeS(varMap(a, intTS()), funcS), intS(7));
+        var callS = callS(polyRefS(varMap(a, intTS()), funcS), intS(7));
         assertThat(evaluate(callS))
             .isEqualTo(arrayB(intTB(), intB(7)));
       }
@@ -80,7 +80,7 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void native_call_argless() throws Exception {
         var funcS = natFuncS(intTS(), "f", nlist(), natAnnS(1, stringS("class binary name")));
-        var callS = callS(monoizeS(funcS));
+        var callS = callS(polyRefS(funcS));
         var jarB = blobB(137);
         when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
             .thenReturn(jarB);
@@ -95,7 +95,7 @@ public class EvaluatorTest  extends TestContext {
       public void native_call_with_param() throws Exception {
         var funcS = natFuncS(intTS(), "f", nlist(itemS(intTS(), "p")),
             natAnnS(1, stringS("class binary name")));
-        var callS = callS(monoizeS(funcS), intS(77));
+        var callS = callS(polyRefS(funcS), intS(77));
         var jarB = blobB(137);
         when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
             .thenReturn(jarB);
@@ -111,7 +111,7 @@ public class EvaluatorTest  extends TestContext {
     class _func {
       @Test
       public void def_func() {
-        assertThat(evaluate(monoizeS(intIdFuncS())))
+        assertThat(evaluate(polyRefS(intIdFuncS())))
             .isEqualTo(idFuncB());
       }
 
@@ -128,35 +128,35 @@ public class EvaluatorTest  extends TestContext {
 
         var a = varA();
         var byteFuncS = polyByteFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
-        assertThat(evaluate(monoizeS(varMap(a, intTS()), byteFuncS)))
+        assertThat(evaluate(polyRefS(varMap(a, intTS()), byteFuncS)))
             .isEqualTo(funcB);
       }
 
       @Test
       public void synt_ctor() {
         var syntCtorS = syntCtorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-        assertThat(evaluate(monoizeS(syntCtorS)))
+        assertThat(evaluate(polyRefS(syntCtorS)))
             .isEqualTo(defFuncB(list(intTB()), combineB(refB(intTB(), 0))));
       }
     }
 
     @Nested
-    class _monoize {
+    class _poly_ref {
       @Test
-      public void monoize_poly_func() {
+      public void poly_func() {
         var a = varA();
         var funcS = polyDefFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
-        var monoizeS = monoizeS(varMap(a, intTS()), funcS);
-        assertThat(evaluate(monoizeS))
+        var polyRefS = polyRefS(varMap(a, intTS()), funcS);
+        assertThat(evaluate(polyRefS))
             .isEqualTo(idFuncB());
       }
 
       @Test
-      public void monoize_poly_val() {
+      public void poly_val() {
         var a = varA();
         var val = polyDefValS(1, arrayTS(a), "name", orderS(a));
-        var monoizeS = monoizeS(varMap(a, intTS()), val);
-        assertThat(evaluate(monoizeS))
+        var polyRefS = polyRefS(varMap(a, intTS()), val);
+        assertThat(evaluate(polyRefS))
             .isEqualTo(arrayB(intTB()));
       }
     }
@@ -176,7 +176,7 @@ public class EvaluatorTest  extends TestContext {
       public void select() {
         var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
         var syntCtorS = syntCtorS(structTS);
-        var callS = callS(monoizeS(syntCtorS), intS(7));
+        var callS = callS(polyRefS(syntCtorS), intS(7));
         assertThat(evaluate(selectS(callS, "f")))
             .isEqualTo(intB(7));
       }

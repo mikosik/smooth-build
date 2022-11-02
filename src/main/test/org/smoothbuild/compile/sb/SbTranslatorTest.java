@@ -63,7 +63,7 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void def_val_referencing_other_def_val() {
-          var valS = defValS("myValue", monoizeS(defValS("otherValue", intS(7))));
+          var valS = defValS("myValue", polyRefS(defValS("otherValue", intS(7))));
           assertConversion(valS, callB(defFuncB(callB(defFuncB(intB(7))))));
         }
 
@@ -147,7 +147,7 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void call() {
         var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
-        var call = callS(monoizeS(defFunc));
+        var call = callS(polyRefS(defFunc));
         assertConversion(call, callB(defFuncB(stringB("abc"))));
       }
 
@@ -158,7 +158,7 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void ref() {
+      public void param_ref() {
         var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
         assertConversion(func, idFuncB());
       }
@@ -167,7 +167,7 @@ public class SbTranslatorTest extends TestContext {
       public void select() {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var syntCtorS = syntCtorS(structTS);
-        var callS = callS(monoizeS(syntCtorS), stringS("abc"));
+        var callS = callS(polyRefS(syntCtorS), stringS("abc"));
         var selectS = selectS(callS, "field");
 
         var ctorB = defFuncB(list(stringTB()), combineB(refB(stringTB(), 0)));
@@ -176,15 +176,15 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Nested
-      class _monoize {
+      class _poly_ref {
         @Nested
         class _val {
           @Test
           public void defined() {
             var emptyArrayVal = emptyArrayValS();
-            var monoizeS = monoizeS(aToIntVarMapS(), emptyArrayVal);
+            var polyRefS = polyRefS(aToIntVarMapS(), emptyArrayVal);
             var orderB = orderB(intTB());
-            assertConversion(monoizeS, callB(defFuncB(orderB)));
+            assertConversion(polyRefS, callB(defFuncB(orderB)));
           }
 
           @Test
@@ -193,10 +193,10 @@ public class SbTranslatorTest extends TestContext {
             var b = varB();
 
             var emptyArrayValS = emptyArrayValS(a);
-            var bEmptyArrayMonoValS = monoizeS(ImmutableMap.of(a, b), emptyArrayValS);
+            var bEmptyArrayMonoValS = polyRefS(ImmutableMap.of(a, b), emptyArrayValS);
 
             var referencingValS = polyDefValS("referencing", bEmptyArrayMonoValS);
-            var referencingMonoValS = monoizeS(ImmutableMap.of(b, intTS()), referencingValS);
+            var referencingMonoValS = polyRefS(ImmutableMap.of(b, intTS()), referencingValS);
 
             var orderB = orderB(intTB());
             assertConversion(referencingMonoValS, callB(defFuncB(callB(defFuncB(orderB)))));
@@ -215,8 +215,8 @@ public class SbTranslatorTest extends TestContext {
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
             var translator = sbTranslator(fileLoader);
-            var monoizeS = monoizeS(aToIntVarMapS(), byteValS);
-            assertThat(translator.translateExpr(monoizeS))
+            var polyRefS = polyRefS(aToIntVarMapS(), byteValS);
+            assertThat(translator.translateExpr(polyRefS))
                 .isEqualTo(idFuncB());
           }
         }
@@ -226,9 +226,9 @@ public class SbTranslatorTest extends TestContext {
           @Test
           public void defined() {
             var identity = idFuncS();
-            var monoizeS = monoizeS(aToIntVarMapS(), identity);
+            var polyRefS = polyRefS(aToIntVarMapS(), identity);
             var funcB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
-            assertConversion(monoizeS, funcB);
+            assertConversion(polyRefS, funcB);
           }
 
           @Test
@@ -237,11 +237,11 @@ public class SbTranslatorTest extends TestContext {
             var b = varB();
 
             var idFuncS = idFuncS();
-            var bIdMonoFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
+            var bIdMonoFuncS = polyRefS(ImmutableMap.of(a, b), idFuncS);
 
             var bodyS = callS(bIdMonoFuncS, paramRefS(b, "p"));
             var wrapFuncS = polyDefFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
-            var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
+            var wrapMonoFuncS = polyRefS(ImmutableMap.of(b, intTS()), wrapFuncS);
 
             var idFuncB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
             var wrapFuncB = defFuncB(funcTB(intTB(), intTB()),
@@ -263,8 +263,8 @@ public class SbTranslatorTest extends TestContext {
 
             var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
             var translator = sbTranslator(fileLoader);
-            var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), natFuncS);
-            assertThat(translator.translateExpr(monoizeS))
+            var polyRefS = polyRefS(ImmutableMap.of(a, intTS()), natFuncS);
+            assertThat(translator.translateExpr(polyRefS))
                 .isEqualTo(natFuncB);
           }
 
@@ -281,8 +281,8 @@ public class SbTranslatorTest extends TestContext {
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
             var translator = sbTranslator(fileLoader);
-            var monoizeS = monoizeS(ImmutableMap.of(a, intTS()), byteFuncS);
-            assertThat(translator.translateExpr(monoizeS))
+            var polyRefS = polyRefS(ImmutableMap.of(a, intTS()), byteFuncS);
+            assertThat(translator.translateExpr(polyRefS))
                 .isEqualTo(idFuncB());
           }
         }
@@ -322,7 +322,7 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void def_val_referencing_other_def_val() {
-          var valS = defValS(5, "myValue", monoizeS(defValS(6, "otherValue", intS(7, 37))));
+          var valS = defValS(5, "myValue", polyRefS(defValS(6, "otherValue", intS(7, 37))));
           assertNameAndLocMapping(valS, "myValue", loc(5));
         }
 
@@ -395,7 +395,7 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void call() {
         var defFunc = defFuncS(7, "myFunc", nlist(), stringS("abc"));
-        var call = callS(8, monoizeS(defFunc));
+        var call = callS(8, polyRefS(defFunc));
         assertNameAndLocMapping(call, null, loc(8));
       }
 
@@ -406,10 +406,10 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void ref() {
+      public void param_ref() {
         var func = defFuncS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
         var sbTranslator = newTranslator();
-        var funcB = (DefFuncB) sbTranslator.translateExpr(monoizeS(func));
+        var funcB = (DefFuncB) sbTranslator.translateExpr(polyRefS(func));
         var refB = funcB.body();
         assertNameAndLocMapping(sbTranslator, refB, null, loc(5));
       }
@@ -418,25 +418,25 @@ public class SbTranslatorTest extends TestContext {
       public void select() {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var syntCtorS = syntCtorS(structTS);
-        var callS = callS(monoizeS(syntCtorS), stringS("abc"));
+        var callS = callS(polyRefS(syntCtorS), stringS("abc"));
         var selectS = selectS(4, callS, "field");
         assertNameAndLocMapping(selectS, null, loc(4));
       }
 
       @Nested
-      class _monoize {
+      class _poly_ref {
         @Test
         public void def_val() {
           var emptyArrayVal = polyDefValS(7, "emptyArray", orderS(varA()));
-          var monoizeS = monoizeS(4, aToIntVarMapS(), emptyArrayVal);
-          assertNameAndLocMapping(monoizeS, "emptyArray", loc(7));
+          var polyRefS = polyRefS(4, aToIntVarMapS(), emptyArrayVal);
+          assertNameAndLocMapping(polyRefS, "emptyArray", loc(7));
         }
 
         @Test
         public void def_func() {
           var identity = idFuncS();
-          var monoizeS = monoizeS(aToIntVarMapS(), identity);
-          assertNameAndLocMapping(monoizeS, "myId", loc(1));
+          var polyRefS = polyRefS(aToIntVarMapS(), identity);
+          assertNameAndLocMapping(polyRefS, "myId", loc(1));
         }
       }
     }
@@ -493,8 +493,8 @@ public class SbTranslatorTest extends TestContext {
 
     @Test
     public void monoized_poly_func_conversion_result() {
-      var monoizeS = monoizeS(aToIntVarMapS(), idFuncS());
-      assertConversionIsCached(monoizeS);
+      var polyRefS = polyRefS(aToIntVarMapS(), idFuncS());
+      assertConversionIsCached(polyRefS);
     }
 
     private void assertConversionIsCached(ExprS exprS) {

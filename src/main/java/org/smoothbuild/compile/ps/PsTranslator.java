@@ -20,11 +20,11 @@ import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
-import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
+import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
@@ -92,8 +92,8 @@ public class PsTranslator {
 
   private Optional<PolyEvaluableS> translateParamBody(FuncP funcP, ItemP paramP, ExprP expr) {
     return translateExpr(expr).map(exprS -> {
-      if (exprS instanceof MonoizeS monoizeS) {
-        return monoizeS.polyEvaluable();
+      if (exprS instanceof PolyRefS polyRefS) {
+        return polyRefS.polyEvaluable();
       } else {
         var name = funcP.name() + ":" + paramP.name();
         var val = new DefValS(exprS.evalT(), name, exprS, paramP.loc());
@@ -175,7 +175,7 @@ public class PsTranslator {
   }
 
   private static ExprS translateMonoizable(MonoizableP monoizableP, PolyEvaluableS polyEvaluableS) {
-    return new MonoizeS(monoizableP.monoizeVarMap(), polyEvaluableS, monoizableP.loc());
+    return new PolyRefS(monoizableP.monoizeVarMap(), polyEvaluableS, monoizableP.loc());
   }
 
   private BlobS translateBlob(BlobP blob) {
