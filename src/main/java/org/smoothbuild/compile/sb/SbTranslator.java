@@ -56,7 +56,6 @@ import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
-import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
@@ -127,7 +126,6 @@ public class SbTranslator {
     return switch (evaluableS) {
       case FuncS funcS -> translateFunc(funcS);
       case ValS valS -> translateVal(valS);
-      case UnnamedValS unnamedValS -> translateExpr(unnamedValS.body());
     };
   }
 

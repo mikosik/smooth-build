@@ -104,8 +104,6 @@ import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
-import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.BlobTS;
@@ -1014,7 +1012,6 @@ public class TestContext {
 
   private static PolyRefS polyRefS(int line, PolyEvaluableS evaluable) {
     String name = switch (evaluable) {
-      case UnnamedPolyValS unnamedPolyValS -> "<default-arg>";
       case NamedPolyEvaluableS namedPolyEvaluableS -> namedPolyEvaluableS.name();
     };
     return polyRefS(line, evaluable, name);
@@ -1128,7 +1125,7 @@ public class TestContext {
   }
 
   public ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
-    return itemSPoly(line, type, name, body.map(UnnamedPolyValS::new));
+    return itemSPoly(line, type, name, body.map(b -> polyDefValS(line, name, b)));
   }
 
   public static ItemS itemSPoly(int line, TypeS type, String name, Optional<PolyEvaluableS> body) {
@@ -1361,7 +1358,6 @@ public class TestContext {
     return switch (evaluableS) {
       case FuncS funcS -> polyS(funcS);
       case ValS valS -> polyS(valS);
-      case UnnamedValS unnamedValS -> polyS(unnamedValS);
     };
   }
 
@@ -1371,10 +1367,6 @@ public class TestContext {
 
   private PolyValS polyS(ValS valS) {
     return new PolyValS(schemaS(valS.type()), valS);
-  }
-
-  private UnnamedPolyValS polyS(UnnamedValS valS) {
-    return new UnnamedPolyValS(valS);
   }
 
   public static ItemSigS sigS(TypeS type, String name) {

@@ -749,16 +749,20 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void default_param_before_non_default_is_allowed() {
-          module("""
-            @Native("Impl.met")
-            String myFunc(
-              String default = "value",
-              String nonDefault);
-            """)
+          var code = """
+              @Native("Impl.met")
+              String myFunc(
+                String default = "value",
+                String nonDefault);
+              """;
+          var myFuncParams = nlist(
+              itemS(3, stringTS(), "default", stringS(3, "value")),
+              itemS(4, stringTS(), "nonDefault"));
+          var ann = natAnnS(1, stringS(1, "Impl.met"));
+          var myFunc = polyNatFuncS(2, stringTS(), "myFunc", myFuncParams, ann);
+          module(code)
               .loadsWithSuccess()
-              .containsEvaluable(polyNatFuncS(2, stringTS(), "myFunc", nlist(
-                  itemS(3, stringTS(), "default", stringS(3, "value")),
-                  itemS(4, stringTS(), "nonDefault")), natAnnS(1, stringS(1, "Impl.met"))));
+              .containsEvaluable(myFunc);
         }
 
         @Test

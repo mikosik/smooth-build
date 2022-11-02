@@ -7,5 +7,5 @@ import org.smoothbuild.compile.lang.base.WithLoc;
  * @see PolyEvaluableS
  */
 public abstract sealed interface EvaluableS extends WithLoc
-    permits NamedEvaluableS, UnnamedValS {
+    permits NamedEvaluableS {
 }

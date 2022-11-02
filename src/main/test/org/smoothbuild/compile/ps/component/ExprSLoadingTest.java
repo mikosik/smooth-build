@@ -12,8 +12,6 @@ import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
-import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
-import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.testing.TestContext;
 
 public class ExprSLoadingTest extends TestContext {
@@ -59,7 +57,7 @@ public class ExprSLoadingTest extends TestContext {
         @Test
         public void with_reference_to_poly_val() {
           var paramDefaultVal = polyByteValS(4, varA(), "polyVal");
-          var polyRef = polyRefS(2, paramDefaultVal, "<default-arg>");
+          var polyRef = polyRefS(2, paramDefaultVal, "polyVal");
           var monoizedParamBody = monoizeS(2, varMap(varA(), intTS()), polyRef);
           test_default_arg("polyVal", monoizedParamBody);
         }
@@ -68,14 +66,14 @@ public class ExprSLoadingTest extends TestContext {
         public void with_reference_to_poly_func() {
           var polyFunc = polyByteFuncS(6, varA(), "polyFunc", nlist());
           var monoizedFunc = monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramDefaultVal = new UnnamedPolyValS(callS(1, monoizedFunc));
+          var paramDefaultVal = polyDefValS("b", callS(1, monoizedFunc));
           var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
           test_default_arg("polyFunc()", expected);
         }
 
         @Test
         public void with_reference_to_int() {
-          var paramDefaultVal = new UnnamedValS(intS(1, 7));
+          var paramDefaultVal = defValS("b", intS(1, 7));
           test_default_arg("7", monoizeS(2, paramDefaultVal));
         }
 

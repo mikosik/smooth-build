@@ -32,7 +32,6 @@ import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
-import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
@@ -90,16 +89,17 @@ public class PsTranslator {
   public ItemS translateParam(ItemP param) {
     var type = param.typeS();
     var name = param.name();
-    var body = param.defaultVal().flatMap(this::translateParamBody);
+    var body = param.defaultVal().flatMap(expr -> translateParamBody(param, expr));
     return new ItemS(type, name, body, param.loc());
   }
 
-  private Optional<PolyEvaluableS> translateParamBody(ExprP expr) {
+  private Optional<PolyEvaluableS> translateParamBody(ItemP param, ExprP expr) {
     return translateExpr(expr).map(exprS -> {
       if (exprS instanceof MonoizeS monoizeS) {
         return monoizeS.polyRef().polyEvaluable();
       } else {
-        return new UnnamedPolyValS(exprS);
+        var val = new DefValS(exprS.evalT(), param.name(), exprS, param.loc());
+        return new PolyValS(new SchemaS(exprS.evalT()), val);
       }
     });
   }
@@ -145,8 +145,9 @@ public class PsTranslator {
   }
 
   private static Optional<ExprS> translateDefaultArg(DefaultArgP defaultArg) {
+    var name = ((NamedPolyEvaluableS) defaultArg.polyEvaluableS()).name();
     return Optional.of(translateMonoizable(
-        defaultArg, defaultArg.polyEvaluableS(), "<default-arg>", defaultArg.loc()));
+        defaultArg, defaultArg.polyEvaluableS(), name, defaultArg.loc()));
   }
 
   private Optional<ExprS> translateOrder(OrderP order) {

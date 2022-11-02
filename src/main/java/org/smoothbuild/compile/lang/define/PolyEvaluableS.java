@@ -8,7 +8,7 @@ import org.smoothbuild.compile.lang.base.WithLocImpl;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 public sealed abstract class PolyEvaluableS extends WithLocImpl
-    permits NamedPolyEvaluableS, UnnamedPolyValS {
+    permits NamedPolyEvaluableS {
   private final SchemaS schema;
   private final EvaluableS mono;
 
