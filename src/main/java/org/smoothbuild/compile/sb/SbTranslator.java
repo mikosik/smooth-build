@@ -270,7 +270,8 @@ public class SbTranslator {
       return exprB;
     } else {
       throw new SbTranslatorExc("Illegal value annotation: " + q("@" + annName) + ".");
-    }  }
+    }
+  }
 
   // helpers
 
