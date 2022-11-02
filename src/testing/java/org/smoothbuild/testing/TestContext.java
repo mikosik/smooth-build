@@ -1127,6 +1127,10 @@ public class TestContext {
     return itemSPoly(line, type, name, body.map(b -> polyDefValS(line, name, b)));
   }
 
+  public static ItemS itemS(int line, TypeS type, String name, PolyEvaluableS body) {
+    return itemSPoly(line, type, name, Optional.of(body));
+  }
+
   public static ItemS itemSPoly(int line, TypeS type, String name, Optional<PolyEvaluableS> body) {
     return new ItemS(type, name, body, loc(line));
   }

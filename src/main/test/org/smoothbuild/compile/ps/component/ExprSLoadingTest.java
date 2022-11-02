@@ -66,14 +66,14 @@ public class ExprSLoadingTest extends TestContext {
         public void with_reference_to_poly_func() {
           var polyFunc = polyByteFuncS(6, varA(), "polyFunc", nlist());
           var monoizedFunc = monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramDefaultVal = polyDefValS("b", callS(1, monoizedFunc));
+          var paramDefaultVal = polyDefValS("myFunc:b", callS(1, monoizedFunc));
           var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
           test_default_arg("polyFunc()", expected);
         }
 
         @Test
         public void with_reference_to_int() {
-          var paramDefaultVal = defValS("b", intS(1, 7));
+          var paramDefaultVal = defValS("myFunc:b", intS(1, 7));
           test_default_arg("7", monoizeS(2, paramDefaultVal));
         }
 
@@ -468,29 +468,32 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void def_mono_func_with_param_with_default_val() {
-        module("""
-          String myFunc(
-            Blob param1 =
-              0x07)
-              = "abc";
-          """)
+        var code = """
+            String myFunc(
+              Blob param1 =
+                0x07)
+                = "abc";
+            """;
+        var params = nlist(itemS(2, blobTS(), "param1", polyDefValS(2, "myFunc:param1", blobS(3, 7))));
+        var myFunc = polyDefFuncS(1, stringTS(), "myFunc", params, stringS(4, "abc"));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefFuncS(1, stringTS(), "myFunc",
-                nlist(itemS(2, blobTS(), "param1", blobS(3, 7))), stringS(4, "abc")));
+            .containsEvaluable(myFunc);
       }
 
       @Test
       public void def_poly_func_with_param_with_default_val() {
-        module("""
-          A myFunc(
-            A a =
-              7)
-              = a;
-          """)
+        var code = """
+            A myFunc(
+              A a =
+                7)
+                = a;
+            """;
+        var params = nlist(itemS(2, varA(), "a", polyDefValS(2, "myFunc:a", intS(3, 7))));
+        var myFunc = polyDefFuncS(1, varA(), "myFunc", params, paramRefS(4, varA(), "a"));
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(
-                polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a", intS(3, 7))),
-                    paramRefS(4, varA(), "a")));
+            .containsEvaluable(myFunc);
       }
 
       @Test
@@ -539,30 +542,34 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void native_pure_mono_func_with_param_with_default_val() {
-        module("""
-          @Native("Impl.met")
-          String myFunc(
-            Blob p1 =
-              0x07);
-          """)
+        var code = """
+            @Native("Impl.met")
+            String myFunc(
+              Blob p1 =
+                0x07);
+            """;
+        var params = nlist(itemS(3, blobTS(), "p1", polyDefValS(3, "myFunc:p1", blobS(4, 7))));
+        var ann = natAnnS(1, stringS(1, "Impl.met"), true);
+        var myFunc = polyNatFuncS(2, stringTS(), "myFunc", params, ann);
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(
-                polyNatFuncS(2, stringTS(), "myFunc", nlist(itemS(3, blobTS(), "p1", blobS(4, 7))),
-                    natAnnS(1, stringS(1, "Impl.met"), true)));
+            .containsEvaluable(myFunc);
       }
 
       @Test
       public void native_pure_poly_func_with_param_with_default_val() {
-        module("""
-          @Native("Impl.met")
-          A myFunc(
-            Blob p1 =
-              0x07);
-          """)
+        var code = """
+            @Native("Impl.met")
+            A myFunc(
+              Blob p1 =
+                0x07);
+            """;
+        var params = nlist(itemS(3, blobTS(), "p1", polyDefValS(3, "myFunc:p1", blobS(4, 7))));
+        var ann = natAnnS(1, stringS(1, "Impl.met"), true);
+        var myFunc = polyNatFuncS(2, varA(), "myFunc", params, ann);
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(
-                polyNatFuncS(2, varA(), "myFunc", nlist(itemS(3, blobTS(), "p1", blobS(4, 7))),
-                    natAnnS(1, stringS(1, "Impl.met"), true)));
+            .containsEvaluable(myFunc);
       }
 
       @Test
@@ -587,30 +594,32 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void bytecode_mono_func_with_param_with_default_val() {
-        module("""
-          @Bytecode("Impl.met")
-          String myFunc(
-            Blob param1 =
-              0x07);
-          """)
+        var code = """
+            @Bytecode("Impl.met")
+            String myFunc(
+              Blob param1 =
+                0x07);
+            """;
+        var params = nlist(itemS(3, blobTS(), "param1", polyDefValS(3, "myFunc:param1", blobS(4, 7))));
+        var myFunc = polyByteFuncS(2, "Impl.met", stringTS(), "myFunc", params);
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(
-                polyByteFuncS(2, "Impl.met", stringTS(), "myFunc",
-                    nlist(itemS(3, blobTS(), "param1", blobS(4, 7)))));
+            .containsEvaluable(myFunc);
       }
 
       @Test
       public void bytecode_poly_func_with_param_with_default_val() {
-        module("""
-          @Bytecode("Impl.met")
-          A myFunc(
-            Blob param1 =
-              0x07);
-          """)
+        var code = """
+            @Bytecode("Impl.met")
+            A myFunc(
+              Blob param1 =
+                0x07);
+            """;
+        var params = nlist(itemS(3, blobTS(), "param1", polyDefValS(3, "myFunc:param1", blobS(4, 7))));
+        var myFunc = polyByteFuncS(2, "Impl.met", varA(), "myFunc", params);
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(
-                polyByteFuncS(2, "Impl.met", varA(), "myFunc",
-                    nlist(itemS(3, blobTS(), "param1", blobS(4, 7)))));
+            .containsEvaluable(myFunc);
       }
     }
 
@@ -682,7 +691,7 @@ public class ExprSLoadingTest extends TestContext {
                 11)
                 = 7;
             """;
-        var defaultVal = intS(3, 11);
+        var defaultVal = polyDefValS(2, "myFunc:param1", intS(3, 11));
         var params = nlist(itemS(2, intTS(), "param1", defaultVal));
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)

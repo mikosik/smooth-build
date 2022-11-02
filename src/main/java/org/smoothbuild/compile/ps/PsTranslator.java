@@ -82,22 +82,23 @@ public class PsTranslator {
   }
 
   private NList<ItemS> translateParams(FuncP funcP) {
-    return NList.nlist(map(funcP.params().list(), this::translateParam));
+    return NList.nlist(map(funcP.params().list(), param -> translateParam(funcP, param)));
   }
 
-  public ItemS translateParam(ItemP param) {
-    var type = param.typeS();
-    var name = param.name();
-    var body = param.defaultVal().flatMap(expr -> translateParamBody(param, expr));
-    return new ItemS(type, name, body, param.loc());
+  public ItemS translateParam(FuncP funcP, ItemP paramP) {
+    var type = paramP.typeS();
+    var name = paramP.name();
+    var body = paramP.defaultVal().flatMap(expr -> translateParamBody(funcP, paramP, expr));
+    return new ItemS(type, name, body, paramP.loc());
   }
 
-  private Optional<PolyEvaluableS> translateParamBody(ItemP param, ExprP expr) {
+  private Optional<PolyEvaluableS> translateParamBody(FuncP funcP, ItemP paramP, ExprP expr) {
     return translateExpr(expr).map(exprS -> {
       if (exprS instanceof MonoizeS monoizeS) {
         return monoizeS.polyRef().polyEvaluable();
       } else {
-        var val = new DefValS(exprS.evalT(), param.name(), exprS, param.loc());
+        var name = funcP.name() + ":" + paramP.name();
+        var val = new DefValS(exprS.evalT(), name, exprS, paramP.loc());
         return new PolyValS(new SchemaS(exprS.evalT()), val);
       }
     });

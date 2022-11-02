@@ -756,7 +756,7 @@ public class DeclarationTest extends TestContext {
                 String nonDefault);
               """;
           var myFuncParams = nlist(
-              itemS(3, stringTS(), "default", stringS(3, "value")),
+              itemS(3, stringTS(), "default", polyDefValS(3, "myFunc:default", stringS(3, "value"))),
               itemS(4, stringTS(), "nonDefault"));
           var ann = natAnnS(1, stringS(1, "Impl.met"));
           var myFunc = polyNatFuncS(2, stringTS(), "myFunc", myFuncParams, ann);
