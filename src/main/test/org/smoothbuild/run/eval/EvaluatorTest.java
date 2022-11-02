@@ -19,6 +19,7 @@ import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;
@@ -70,7 +71,8 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void call_polymorphic() {
         var a = varA();
-        var funcS = polyDefFuncS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS(a, refS(a, "e")));
+        var orderS = orderS(a, paramRefS(a, "e"));
+        var funcS = polyDefFuncS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
         var callS = callS(monoizeS(varMap(a, intTS()), funcS), intS(7));
         assertThat(evaluate(callS))
             .isEqualTo(arrayB(intTB(), intB(7)));
@@ -144,7 +146,7 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void monoize_poly_func() {
         var a = varA();
-        var funcS = polyDefFuncS("n", nlist(itemS(a, "e")), refS(a, "e"));
+        var funcS = polyDefFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
         var monoizeS = monoizeS(varMap(a, intTS()), funcS);
         assertThat(evaluate(monoizeS))
             .isEqualTo(idFuncB());

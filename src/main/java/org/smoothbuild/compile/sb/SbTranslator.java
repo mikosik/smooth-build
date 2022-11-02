@@ -49,7 +49,7 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
-import org.smoothbuild.compile.lang.define.RefS;
+import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -108,13 +108,13 @@ public class SbTranslator {
   public ExprB translateExpr(ExprS exprS) {
     // @formatter:off
     return switch (exprS) {
-      case BlobS       blobS       -> translateAndSaveLoc(blobS,   this::translateBlob);
-      case CallS       callS       -> translateAndSaveLoc(callS,   this::translateCall);
-      case IntS        intS        -> translateAndSaveLoc(intS,    this::translateInt);
-      case OrderS      orderS      -> translateAndSaveLoc(orderS,  this::translateOrder);
-      case RefS        refS        -> translateAndSaveLoc(refS,    this::translateRef);
-      case SelectS     selectS     -> translateAndSaveLoc(selectS, this::translateSelect);
-      case StringS     stringS     -> translateAndSaveLoc(stringS, this::translateString);
+      case BlobS       blobS       -> translateAndSaveLoc(blobS,     this::translateBlob);
+      case CallS       callS       -> translateAndSaveLoc(callS,     this::translateCall);
+      case IntS        intS        -> translateAndSaveLoc(intS,      this::translateInt);
+      case OrderS      orderS      -> translateAndSaveLoc(orderS,    this::translateOrder);
+      case ParamRefS   paramRefS   -> translateAndSaveLoc(paramRefS, this::translateParamRef);
+      case SelectS     selectS     -> translateAndSaveLoc(selectS,   this::translateSelect);
+      case StringS     stringS     -> translateAndSaveLoc(stringS,   this::translateString);
       case FuncS       funcS       -> translateFunc(funcS);
       case MonoizeS    monoizeS    -> translateMonoize(monoizeS);
       case ValS        valS        -> translateVal(valS);
@@ -224,9 +224,9 @@ public class SbTranslator {
     return bytecodeF.order(arrayTB, elemsB);
   }
 
-  private RefB translateRef(RefS refS) {
-    var index = environment.indexOf(refS.paramName());
-    return bytecodeF.ref(translateT(refS.evalT()), BigInteger.valueOf(index));
+  private RefB translateParamRef(ParamRefS paramRefS) {
+    var index = environment.indexOf(paramRefS.paramName());
+    return bytecodeF.ref(translateT(paramRefS.evalT()), BigInteger.valueOf(index));
   }
 
   private SelectB translateSelect(SelectS selectS) {

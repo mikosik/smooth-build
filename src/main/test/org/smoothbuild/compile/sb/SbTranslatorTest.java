@@ -158,7 +158,7 @@ public class SbTranslatorTest extends TestContext {
 
       @Test
       public void ref() {
-        var func = defFuncS("f", nlist(itemS(intTS(), "p")), refS(intTS(), "p"));
+        var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
         assertConversion(func, idFuncB());
       }
 
@@ -238,7 +238,7 @@ public class SbTranslatorTest extends TestContext {
             var idFuncS = idFuncS();
             var bIdMonoFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
 
-            var bodyS = callS(bIdMonoFuncS, refS(b, "p"));
+            var bodyS = callS(bIdMonoFuncS, paramRefS(b, "p"));
             var wrapFuncS = polyDefFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
             var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
 
@@ -406,7 +406,7 @@ public class SbTranslatorTest extends TestContext {
 
       @Test
       public void ref() {
-        var func = defFuncS(4, "myFunc", nlist(itemS(intTS(), "p")), refS(5, intTS(), "p"));
+        var func = defFuncS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
         var sbTranslator = newTranslator();
         var funcB = (DefFuncB) sbTranslator.translateExpr(func);
         var refB = funcB.body();

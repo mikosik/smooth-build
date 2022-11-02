@@ -95,10 +95,10 @@ import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.OrderS;
+import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyValS;
-import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -1015,16 +1015,16 @@ public class TestContext {
     return new OrderS(arrayTS(elemT), list(exprs), loc(line));
   }
 
-  public RefS refS(TypeS type) {
-    return refS(type, "refName");
+  public ParamRefS paramRefS(TypeS type) {
+    return paramRefS(type, "refName");
   }
 
-  public RefS refS(TypeS type, String name) {
-    return refS(1, type, name);
+  public ParamRefS paramRefS(TypeS type, String name) {
+    return paramRefS(1, type, name);
   }
 
-  public RefS refS(int line, TypeS type, String name) {
-    return new RefS(type, name, loc(line));
+  public ParamRefS paramRefS(int line, TypeS type, String name) {
+    return new ParamRefS(type, name, loc(line));
   }
 
   public SelectS selectS(ExprS selectable, String field) {
@@ -1328,11 +1328,11 @@ public class TestContext {
 
   public PolyFuncS idFuncS() {
     var a = varA();
-    return polyS(defFuncS(a, "myId", nlist(itemS(a, "a")), refS(a, "a")));
+    return polyS(defFuncS(a, "myId", nlist(itemS(a, "a")), paramRefS(a, "a")));
   }
 
   public DefFuncS intIdFuncS() {
-    return defFuncS(intTS(), "myIntId", nlist(itemS(intTS(), "i")), refS(intTS(), "i"));
+    return defFuncS(intTS(), "myIntId", nlist(itemS(intTS(), "i")), paramRefS(intTS(), "i"));
   }
 
   public DefFuncS returnIntFuncS() {

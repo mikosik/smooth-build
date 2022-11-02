@@ -11,7 +11,11 @@ import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
+import org.smoothbuild.compile.lang.define.PolyFuncS;
+import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
 import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.testing.TestContext;
@@ -219,7 +223,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(polyDefFuncS(
                 1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS()), "f")),
-                callS(1, refS(funcTS(stringTS()), "f"))));
+                callS(1, paramRefS(funcTS(stringTS()), "f"))));
       }
 
       @Test
@@ -230,7 +234,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(polyDefFuncS(
                 1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS(), blobTS()), "f")),
-                callS(1, refS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
+                callS(1, paramRefS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
       }
     }
     @Nested
@@ -278,15 +282,17 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void to_poly_func() {
-        module("""
-          A myId(A a) = a;
-          Int(Int) result =
-            myId;
-          """)
+        var code = """
+            A myId(A a) = a;
+            Int(Int) result =
+              myId;
+            """;
+        var myId = polyDefFuncS(1, "myId", nlist(itemS(varA(), "a")), paramRefS(1, varA(), "a"));
+        var resultBody = monoizeS(3, varMap(varA(), intTS()), myId);
+        var result = polyDefValS(2, funcTS(intTS(), intTS()), "result", resultBody);
+        module(code)
             .loadsWithSuccess()
-            .containsEvaluable(polyDefValS(2, funcTS(intTS(), intTS()), "result",
-                monoizeS(3, varMap(varA(), intTS()),
-                    polyDefFuncS(1, "myId", nlist(itemS(varA(), "a")), refS(1, varA(), "a")))));
+            .containsEvaluable(result);
       }
 
       @Test
@@ -336,13 +342,15 @@ public class ExprSLoadingTest extends TestContext {
 
     @Test
     public void ref() {
-      module("""
+      var code = """
           Blob myFunc(Blob param1)
             = param1;
-          """)
+          """;
+      var body = paramRefS(2, blobTS(), "param1");
+      var myFunc = polyDefFuncS(1, blobTS(), "myFunc", nlist(itemS(1, blobTS(), "param1")), body);
+      module(code)
           .loadsWithSuccess()
-          .containsEvaluable(polyDefFuncS(1, blobTS(), "myFunc", nlist(itemS(1, blobTS(), "param1")),
-              refS(2, blobTS(), "param1")));
+          .containsEvaluable(myFunc);
     }
 
     @Test
@@ -460,7 +468,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(
                 polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a")),
-                    refS(3, varA(), "a")));
+                    paramRefS(3, varA(), "a")));
       }
 
       @Test
@@ -487,7 +495,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(
                 polyDefFuncS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a", intS(3, 7))),
-                    refS(4, varA(), "a")));
+                    paramRefS(4, varA(), "a")));
       }
 
       @Test
