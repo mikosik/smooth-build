@@ -184,7 +184,7 @@ public class EvaluatorTest  extends TestContext {
   }
 
   private ExprB evaluate(ExprS exprS) {
-    var resultMap = newEvaluator().evaluate(list(defValS("name", exprS))).get();
+    var resultMap = newEvaluator().evaluate(list(polyDefValS("name", exprS))).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
     return resultMap.get(0);

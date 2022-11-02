@@ -15,6 +15,10 @@ public record PolyRefS(
     TypeS evalT,
     Loc loc) implements OperS {
 
+  public PolyRefS(PolyEvaluableS polyEvaluable, Loc loc) {
+    this(ImmutableMap.of(), polyEvaluable, loc);
+  }
+
   public PolyRefS(ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS polyEvaluable, Loc loc) {
     this(varMap, polyEvaluable, polyEvaluable.schema().monoize(varMap), loc);
   }

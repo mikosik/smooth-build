@@ -8,24 +8,23 @@ import java.util.Optional;
 
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.PolyValS;
-import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
 public class FindTopValues {
-  public static Optional<List<ValS>> findTopValues(
+  public static Optional<ImmutableList<PolyValS>> findTopValues(
       Reporter reporter, DefsS defs, List<String> names) {
     var topEvaluables = defs.evaluables();
-    var matchingTopEvaluables = new HashSet<ValS>();
+    var matchingTopEvaluables = new HashSet<PolyValS>();
     var logs = new LogBuffer();
     for (String name : names) {
       var topEvaluable = topEvaluables.getOrNull(name);
       if (topEvaluable != null) {
         if (topEvaluable instanceof PolyValS polyValS) {
           if (polyValS.schema().quantifiedVars().isEmpty()) {
-            matchingTopEvaluables.add(polyValS.mono());
+            matchingTopEvaluables.add(polyValS);
           } else {
             logs.error("`" + name + "` cannot be calculated as it is a polymorphic value.");
           }

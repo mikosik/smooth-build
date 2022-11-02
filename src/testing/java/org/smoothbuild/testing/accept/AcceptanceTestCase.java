@@ -62,7 +62,7 @@ public class AcceptanceTestCase extends TestContext {
   private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
-  private Optional<Map<ValS, InstB>> artifacts;
+  private Optional<ImmutableMap<ValS, InstB>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {

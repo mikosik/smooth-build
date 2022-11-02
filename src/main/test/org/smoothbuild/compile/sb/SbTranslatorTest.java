@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
@@ -38,19 +38,19 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void blob() {
         var blobS = blobS(37);
-        assertConversion(blobS, blobB(37));
+        assertTranslation(blobS, blobB(37));
       }
 
       @Test
       public void int_() {
         var intS = intS(1);
-        assertConversion(intS, intB(1));
+        assertTranslation(intS, intB(1));
       }
 
       @Test
       public void string() {
         var stringS = stringS("abc");
-        assertConversion(stringS, stringB("abc"));
+        assertTranslation(stringS, stringB("abc"));
       }
 
       @Nested
@@ -58,13 +58,13 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_val() {
           var valS = defValS("myValue", intS(7));
-          assertConversion(valS, callB(defFuncB(intB(7))));
+          assertTranslation(polyRefS(valS), callB(defFuncB(intB(7))));
         }
 
         @Test
         public void def_val_referencing_other_def_val() {
           var valS = defValS("myValue", polyRefS(defValS("otherValue", intS(7))));
-          assertConversion(valS, callB(defFuncB(callB(defFuncB(intB(7))))));
+          assertTranslation(polyRefS(valS), callB(defFuncB(callB(defFuncB(intB(7))))));
         }
 
         @Test
@@ -78,7 +78,7 @@ public class SbTranslatorTest extends TestContext {
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
           var translator = sbTranslator(fileLoader);
 
-          assertCall(() -> translator.translateEvaluable(natValS))
+          assertCall(() -> translator.translateExpr(polyRefS(natValS)))
               .throwsException(new SbTranslatorExc("Illegal value annotation: `@Native`."));
         }
 
@@ -93,8 +93,7 @@ public class SbTranslatorTest extends TestContext {
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var translator = sbTranslator(fileLoader);
-          assertThat(translator.translateEvaluable(byteValS))
-              .isEqualTo(stringB("abc"));
+          assertTranslation(translator, polyRefS(byteValS), stringB("abc"));
         }
       }
 
@@ -103,7 +102,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_func() {
           var funcS = defFuncS("myFunc", nlist(), intS(7));
-          assertConversion(funcS, defFuncB(intB(7)));
+          assertTranslation(polyRefS(funcS), defFuncB(intB(7)));
         }
 
         @Test
@@ -118,9 +117,7 @@ public class SbTranslatorTest extends TestContext {
           var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          var translator = sbTranslator(fileLoader);
-          assertThat(translator.translateEvaluable(natFuncS))
-              .isEqualTo(natFuncB);
+          assertTranslation(sbTranslator(fileLoader), polyRefS(natFuncS), natFuncB);
         }
 
         @Test
@@ -135,9 +132,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var translator = sbTranslator(fileLoader);
-          assertThat(translator.translateEvaluable(byteFuncS))
-              .isEqualTo(returnAbcFuncB());
+          assertTranslation(sbTranslator(fileLoader), polyRefS(byteFuncS), returnAbcFuncB());
         }
       }
     }
@@ -148,19 +143,19 @@ public class SbTranslatorTest extends TestContext {
       public void call() {
         var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
         var call = callS(polyRefS(defFunc));
-        assertConversion(call, callB(defFuncB(stringB("abc"))));
+        assertTranslation(call, callB(defFuncB(stringB("abc"))));
       }
 
       @Test
       public void order() {
         var order = orderS(intTS(), intS(3), intS(7));
-        assertConversion(order, orderB(intB(3), intB(7)));
+        assertTranslation(order, orderB(intB(3), intB(7)));
       }
 
       @Test
       public void param_ref() {
         var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-        assertConversion(func, idFuncB());
+        assertTranslation(polyRefS(func), idFuncB());
       }
 
       @Test
@@ -172,7 +167,7 @@ public class SbTranslatorTest extends TestContext {
 
         var ctorB = defFuncB(list(stringTB()), combineB(refB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
-        assertConversion(selectS, selectB(callB, intB(0)));
+        assertTranslation(selectS, selectB(callB, intB(0)));
       }
 
       @Nested
@@ -184,7 +179,7 @@ public class SbTranslatorTest extends TestContext {
             var emptyArrayVal = emptyArrayValS();
             var polyRefS = polyRefS(aToIntVarMapS(), emptyArrayVal);
             var orderB = orderB(intTB());
-            assertConversion(polyRefS, callB(defFuncB(orderB)));
+            assertTranslation(polyRefS, callB(defFuncB(orderB)));
           }
 
           @Test
@@ -199,7 +194,7 @@ public class SbTranslatorTest extends TestContext {
             var referencingMonoValS = polyRefS(ImmutableMap.of(b, intTS()), referencingValS);
 
             var orderB = orderB(intTB());
-            assertConversion(referencingMonoValS, callB(defFuncB(callB(defFuncB(orderB)))));
+            assertTranslation(referencingMonoValS, callB(defFuncB(callB(defFuncB(orderB)))));
           }
 
           @Test
@@ -216,8 +211,7 @@ public class SbTranslatorTest extends TestContext {
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
             var translator = sbTranslator(fileLoader);
             var polyRefS = polyRefS(aToIntVarMapS(), byteValS);
-            assertThat(translator.translateExpr(polyRefS))
-                .isEqualTo(idFuncB());
+            assertTranslation(translator, polyRefS, idFuncB());
           }
         }
 
@@ -228,7 +222,7 @@ public class SbTranslatorTest extends TestContext {
             var identity = idFuncS();
             var polyRefS = polyRefS(aToIntVarMapS(), identity);
             var funcB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
-            assertConversion(polyRefS, funcB);
+            assertTranslation(polyRefS, funcB);
           }
 
           @Test
@@ -246,7 +240,7 @@ public class SbTranslatorTest extends TestContext {
             var idFuncB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
             var wrapFuncB = defFuncB(funcTB(intTB(), intTB()),
                 callB(idFuncB, refB(intTB(), 0)));
-            assertConversion(wrapMonoFuncS, wrapFuncB);
+            assertTranslation(wrapMonoFuncS, wrapFuncB);
           }
 
           @Test
@@ -264,8 +258,7 @@ public class SbTranslatorTest extends TestContext {
             var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
             var translator = sbTranslator(fileLoader);
             var polyRefS = polyRefS(ImmutableMap.of(a, intTS()), natFuncS);
-            assertThat(translator.translateExpr(polyRefS))
-                .isEqualTo(natFuncB);
+            assertTranslation(translator, polyRefS, natFuncB);
           }
 
           @Test
@@ -282,8 +275,7 @@ public class SbTranslatorTest extends TestContext {
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
             var translator = sbTranslator(fileLoader);
             var polyRefS = polyRefS(ImmutableMap.of(a, intTS()), byteFuncS);
-            assertThat(translator.translateExpr(polyRefS))
-                .isEqualTo(idFuncB());
+            assertTranslation(translator, polyRefS, idFuncB());
           }
         }
       }
@@ -297,19 +289,19 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void blob() {
         var blobS = blobS(7, 0x37);
-        assertNameAndLocMapping(blobS, null, loc(7));
+        assertNalMapping(blobS, null, loc(7));
       }
 
       @Test
       public void int_() {
         var intS = intS(7, 37);
-        assertNameAndLocMapping(intS, null, loc(7));
+        assertNalMapping(intS, null, loc(7));
       }
 
       @Test
       public void string() {
         var stringS = stringS(7, "abc");
-        assertNameAndLocMapping(stringS, null, loc(7));
+        assertNalMapping(stringS, null, loc(7));
       }
 
       @Nested
@@ -317,13 +309,13 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_val() {
           var valS = defValS(3, "myValue", intS(7, 37));
-          assertNameAndLocMapping(valS,  "myValue", loc(3));
+          assertValNalMapping(polyRefS(9, valS), loc(9), "myValue", loc(3));
         }
 
         @Test
         public void def_val_referencing_other_def_val() {
           var valS = defValS(5, "myValue", polyRefS(defValS(6, "otherValue", intS(7, 37))));
-          assertNameAndLocMapping(valS, "myValue", loc(5));
+          assertValNalMapping(polyRefS(9, valS), loc(9), "myValue", loc(5));
         }
 
         @Test
@@ -337,8 +329,8 @@ public class SbTranslatorTest extends TestContext {
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var sbTranslator = sbTranslator(fileLoader);
-          var exprB = sbTranslator.translateEvaluable(byteValS);
-          assertNameAndLocMapping(sbTranslator, exprB, "myValue", loc(8));
+          var exprB = sbTranslator.translateExpr(polyRefS(byteValS));
+          assertNalMapping(sbTranslator, exprB, "myValue", loc(8));
         }
       }
 
@@ -347,16 +339,16 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_func() {
           var funcS = defFuncS(7, "myFunc", nlist(), intS(37));
-          assertNameAndLocMapping(funcS, "myFunc", loc(7));
+          assertNalMapping(polyRefS(funcS), "myFunc", loc(7));
         }
 
         @Test
         public void expr_inside_def_func_body() {
           var funcS = defFuncS(7, "myFunc", nlist(), intS(8, 37));
           var sbTranslator = newTranslator();
-          var funcB = (DefFuncB) sbTranslator.translateEvaluable(funcS);
+          var funcB = (DefFuncB) sbTranslator.translateExpr(polyRefS(funcS));
           var body = funcB.body();
-          assertNameAndLocMapping(sbTranslator, body, null, loc(8));
+          assertNalMapping(sbTranslator, body, null, loc(8));
         }
 
         @Test
@@ -369,7 +361,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
           var sbTranslator = sbTranslator(fileLoader);
-          assertNameAndLocMapping(sbTranslator, natFuncS, "myFunc", loc(2));
+          assertNalMapping(sbTranslator, polyRefS(natFuncS), "myFunc", loc(2));
         }
 
         @Test
@@ -385,7 +377,7 @@ public class SbTranslatorTest extends TestContext {
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var sbTranslator = sbTranslator(fileLoader);
-          assertNameAndLocMapping(sbTranslator, byteFuncS, "myFunc", loc(2));
+          assertNalMapping(sbTranslator, polyRefS(byteFuncS), "myFunc", loc(2));
         }
       }
     }
@@ -396,13 +388,13 @@ public class SbTranslatorTest extends TestContext {
       public void call() {
         var defFunc = defFuncS(7, "myFunc", nlist(), stringS("abc"));
         var call = callS(8, polyRefS(defFunc));
-        assertNameAndLocMapping(call, null, loc(8));
+        assertNalMapping(call, null, loc(8));
       }
 
       @Test
       public void order() {
         var order = orderS(3, intTS(), intS(6), intS(7));
-        assertNameAndLocMapping(order, null, loc(3));
+        assertNalMapping(order, null, loc(3));
       }
 
       @Test
@@ -411,7 +403,7 @@ public class SbTranslatorTest extends TestContext {
         var sbTranslator = newTranslator();
         var funcB = (DefFuncB) sbTranslator.translateExpr(polyRefS(func));
         var refB = funcB.body();
-        assertNameAndLocMapping(sbTranslator, refB, null, loc(5));
+        assertNalMapping(sbTranslator, refB, null, loc(5));
       }
 
       @Test
@@ -420,7 +412,7 @@ public class SbTranslatorTest extends TestContext {
         var syntCtorS = syntCtorS(structTS);
         var callS = callS(polyRefS(syntCtorS), stringS("abc"));
         var selectS = selectS(4, callS, "field");
-        assertNameAndLocMapping(selectS, null, loc(4));
+        assertNalMapping(selectS, null, loc(4));
       }
 
       @Nested
@@ -429,14 +421,14 @@ public class SbTranslatorTest extends TestContext {
         public void def_val() {
           var emptyArrayVal = polyDefValS(7, "emptyArray", orderS(varA()));
           var polyRefS = polyRefS(4, aToIntVarMapS(), emptyArrayVal);
-          assertNameAndLocMapping(polyRefS, "emptyArray", loc(7));
+          assertNalMapping(polyRefS, null, loc(4));
         }
 
         @Test
         public void def_func() {
           var identity = idFuncS();
           var polyRefS = polyRefS(aToIntVarMapS(), identity);
-          assertNameAndLocMapping(polyRefS, "myId", loc(1));
+          assertNalMapping(polyRefS, "myId", loc(1));
         }
       }
     }
@@ -445,12 +437,12 @@ public class SbTranslatorTest extends TestContext {
   @Nested
   class _caching {
     @Test
-    public void def_val_conversion_result() {
-      assertConversionIsCached(defValS("myVal", stringS("abcdefghi")));
+    public void def_val_translation_result() {
+      assertTranslationIsCached(polyRefS(defValS("myVal", stringS("abcdefghi"))));
     }
 
     @Test
-    public void bytecode_val_conversion_result() throws IOException {
+    public void bytecode_val_translation_result() throws IOException {
       var clazz = ReturnAbc.class;
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
@@ -459,21 +451,21 @@ public class SbTranslatorTest extends TestContext {
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertConversionIsCached(bytecodeValS, sbTranslator(fileLoader));
+      assertTranslationIsCached(sbTranslator(fileLoader), polyRefS(bytecodeValS));
     }
 
     @Test
-    public void def_func_conversion_result() {
-      assertConversionIsCached(defFuncS("myFunc", nlist(), stringS("abcdefghi")));
+    public void def_func_translation_result() {
+      assertTranslationIsCached(polyRefS(defFuncS("myFunc", nlist(), stringS("abcdefghi"))));
     }
 
     @Test
-    public void nat_func_conversion_result() {
-      assertConversionIsCached(natFuncS(funcTS(stringTS()), "myFunc", nlist()));
+    public void nat_func_translation_result() {
+      assertTranslationIsCached(polyRefS(natFuncS(funcTS(stringTS()), "myFunc", nlist())));
     }
 
     @Test
-    public void bytecode_func_conversion_result() throws IOException {
+    public void bytecode_func_translation_result() throws IOException {
       var clazz = ReturnReturnAbcFunc.class;
       var funcTS = funcTS(stringTS());
       var filePath = filePath(PRJ, path("my/path"));
@@ -483,80 +475,66 @@ public class SbTranslatorTest extends TestContext {
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertConversionIsCached(bytecodeFuncS, sbTranslator(fileLoader));
+      assertTranslationIsCached(sbTranslator(fileLoader), polyRefS(bytecodeFuncS));
     }
 
     @Test
-    public void synt_ctor_conversion_result() {
-      assertConversionIsCached(syntCtorS(structTS("MyStruct", nlist(sigS(stringTS(), "name")))));
+    public void synt_ctor_translation_result() {
+      assertTranslationIsCached(
+          polyRefS(syntCtorS(structTS("MyStruct", nlist(sigS(stringTS(), "name"))))));
     }
 
     @Test
-    public void monoized_poly_func_conversion_result() {
+    public void monoized_poly_func_translation_result() {
       var polyRefS = polyRefS(aToIntVarMapS(), idFuncS());
-      assertConversionIsCached(polyRefS);
+      assertTranslationIsCached(polyRefS);
     }
 
-    private void assertConversionIsCached(ExprS exprS) {
-      var translator = newTranslator();
-      assertConversionIsCached(exprS, translator);
+    private void assertTranslationIsCached(ExprS exprS) {
+      assertTranslationIsCached(newTranslator(), exprS);
     }
 
-    private void assertConversionIsCached(ExprS exprS, SbTranslator sbTranslator) {
+    private void assertTranslationIsCached(SbTranslator sbTranslator, ExprS exprS) {
       assertThat(sbTranslator.translateExpr(exprS))
           .isSameInstanceAs(sbTranslator.translateExpr(exprS));
     }
-
-    private void assertConversionIsCached(EvaluableS evaluableS) {
-      var translator = newTranslator();
-      assertConversionIsCached(evaluableS, translator);
-    }
-
-    private void assertConversionIsCached(EvaluableS evaluableS, SbTranslator sbTranslator) {
-      assertThat(sbTranslator.translateEvaluable(evaluableS))
-          .isSameInstanceAs(sbTranslator.translateEvaluable(evaluableS));
-    }
   }
 
-  private void assertConversion(ExprS exprS, ExprB expected) {
-    assertThat(newTranslator().translateExpr(exprS))
+  private void assertTranslation(ExprS exprS, ExprB expected) {
+    assertTranslation(newTranslator(), exprS, expected);
+  }
+
+  private void assertTranslation(SbTranslator sbTranslator, ExprS exprS, ExprB expected) {
+    assertThat(sbTranslator.translateExpr(exprS))
         .isEqualTo(expected);
   }
 
-  private void assertConversion(EvaluableS evaluableS, ExprB expected) {
-    assertThat(newTranslator().translateEvaluable(evaluableS))
-        .isEqualTo(expected);
+  private void assertValNalMapping(ExprS exprS, Loc expectedCallLoc, String expectedName,
+      Loc expectedLoc) {
+    var sbTranslator = newTranslator();
+    var call = ((CallB) sbTranslator.translateExpr(exprS));
+    assertNalMapping(sbTranslator, call, null, expectedCallLoc);
+    var called = call.dataSeq().get(0);
+    assertNalMapping(sbTranslator, called, expectedName, expectedLoc);
   }
 
-  private void assertNameAndLocMapping(
-      EvaluableS evaluableS, String expectedName, Loc expectedLoc) {
-    assertNameAndLocMapping(newTranslator(), evaluableS, expectedName, expectedLoc);
+  private void assertNalMapping(ExprS exprS, String expectedName, Loc expectedLoc) {
+    assertNalMapping(newTranslator(), exprS, expectedName, expectedLoc);
   }
 
-  private static void assertNameAndLocMapping(SbTranslator sbTranslator, EvaluableS evaluableS,
-      String expectedName, Loc expectedLoc) {
-    var exprB = sbTranslator.translateEvaluable(evaluableS);
-    assertNameAndLocMapping(sbTranslator, exprB, expectedName, expectedLoc);
-  }
-
-  private void assertNameAndLocMapping(ExprS exprS, String expectedName, Loc expectedLoc) {
-    assertNameAndLocMapping(newTranslator(), exprS, expectedName, expectedLoc);
-  }
-
-  private static void assertNameAndLocMapping(SbTranslator sbTranslator, ExprS exprS,
-      String expectedName, Loc expectedLoc) {
+  private void assertNalMapping(SbTranslator sbTranslator, ExprS exprS, String expectedName,
+      Loc expectedLoc) {
     var exprB = sbTranslator.translateExpr(exprS);
-    assertNameAndLocMapping(sbTranslator, exprB, expectedName, expectedLoc);
+    assertNalMapping(sbTranslator, exprB, expectedName, expectedLoc);
   }
 
-  private static void assertNameAndLocMapping(SbTranslator sbTranslator, ExprB exprB,
+  private static void assertNalMapping(SbTranslator sbTranslator, ExprB exprB,
       String expectedName, Loc expectedLoc) {
     var bsMapping = sbTranslator.bsMapping();
     assertThat(bsMapping.nameMapping().get(exprB.hash()))
         .isEqualTo(expectedName);
     assertThat(bsMapping.locMapping().get(exprB.hash()))
         .isEqualTo(expectedLoc);
-
   }
 
   private SbTranslator newTranslator() {

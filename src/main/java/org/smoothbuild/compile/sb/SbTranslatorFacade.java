@@ -7,7 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.smoothbuild.compile.lang.define.ValS;
+import org.smoothbuild.compile.lang.define.ExprS;
 
 public class SbTranslatorFacade {
   private final Provider<SbTranslator> sbTranslatorProv;
@@ -17,9 +17,9 @@ public class SbTranslatorFacade {
     this.sbTranslatorProv = sbTranslatorProv;
   }
 
-  public SbTranslation translate(List<ValS> vals) {
+  public SbTranslation translate(List<? extends ExprS> vals) {
     var sbTranslator = sbTranslatorProv.get();
-    var exprBs = map(vals, sbTranslator::translateEvaluable);
+    var exprBs = map(vals, sbTranslator::translateExpr);
     var bsMapping = sbTranslator.bsMapping();
     return new SbTranslation(exprBs, bsMapping);
   }

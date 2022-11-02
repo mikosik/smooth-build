@@ -45,14 +45,15 @@ import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValS;
-import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
+import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyRefS;
+import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -122,13 +123,6 @@ public class SbTranslator {
     // @formatter:on
   }
 
-  public ExprB translateEvaluable(EvaluableS evaluableS) {
-    return switch (evaluableS) {
-      case FuncS funcS -> translateFunc(funcS);
-      case ValS valS -> translateVal(valS);
-    };
-  }
-
   private BlobB translateBlob(BlobS blobS) {
     return bytecodeF.blob(sink -> sink.write(blobS.byteString()));
   }
@@ -150,7 +144,14 @@ public class SbTranslator {
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
         environment, cache, nameMapping, locMapping);
-    return sbTranslator.translateEvaluable(polyRefS.polyEvaluable().mono());
+    return sbTranslator.translatePolyRefImpl(polyRefS);
+  }
+
+  public ExprB translatePolyRefImpl(PolyRefS polyRefS) {
+    return switch (polyRefS.polyEvaluable()) {
+      case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono());
+      case PolyValS polyValS -> translateVal(polyRefS.loc(), polyValS.mono());
+    };
   }
 
   private ExprB translateFunc(FuncS funcS) {
@@ -241,15 +242,15 @@ public class SbTranslator {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateVal(ValS valS) {
+  private ExprB translateVal(Loc refLoc, ValS valS) {
     var key = new CacheKey(valS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateAndSaveNal(valS, this::translateValImpl));
+    return computeIfAbsent(cache, key, name -> translateValImpl(refLoc, valS));
   }
 
-  private ExprB translateValImpl(ValS valS) {
+  private ExprB translateValImpl(Loc refLoc, ValS valS) {
     return switch (valS) {
-      case AnnValS annValS -> translateAnnVal(annValS);
-      case DefValS defValS -> translateDefVal(defValS);
+      case AnnValS annValS -> translateAndSaveNal(annValS, this::translateAnnVal);
+      case DefValS defValS -> translateDefVal(refLoc, defValS);
     };
   }
 
@@ -262,12 +263,15 @@ public class SbTranslator {
     }
   }
 
-  private ExprB translateDefVal(DefValS defValS) {
+  private ExprB translateDefVal(Loc refLoc, DefValS defValS) {
     var funcB = bytecodeF.defFunc(
         translateT(defValS.type()),
         list(),
         translateExpr(defValS.body()));
-    return bytecodeF.call(funcB, bytecodeF.combine(list()));
+    saveNal(funcB, defValS);
+    var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
+    saveLoc(call, refLoc);
+    return call;
   }
 
   // helpers
@@ -342,7 +346,11 @@ public class SbTranslator {
   }
 
   private void saveLoc(ExprB exprB, WithLoc withLoc) {
-    locMapping.put(exprB.hash(), withLoc.loc());
+    saveLoc(exprB, withLoc.loc());
+  }
+
+  private void saveLoc(ExprB exprB, Loc loc) {
+    locMapping.put(exprB.hash(), loc);
   }
 
   private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {}
