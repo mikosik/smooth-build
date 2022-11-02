@@ -45,8 +45,7 @@ public class FuncSTest extends TestContext {
   }
 
   private FuncS myFunc(TypeS resT, ImmutableList<ItemS> params) {
-    return new DefFuncS(new FuncTS(resT, toTypes(params)),
-        modPath(), "name", nlist(params), stringS(), loc(1)
-    );
+    return new DefFuncS(
+        new FuncTS(resT, toTypes(params)), "name", nlist(params), stringS(), loc(1));
   }
 }

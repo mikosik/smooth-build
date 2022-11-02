@@ -21,7 +21,6 @@ import org.smoothbuild.bytecode.expr.inst.DefFuncB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
@@ -73,7 +72,7 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = "class.binary.name";
           var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var natValS = annValS(ann, stringTS(), modPath(filePath), "myValue", loc(filePath, 2));
+          var natValS = annValS(ann, stringTS(), "myValue", loc(filePath, 2));
 
           var jar = blobB(37);
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
@@ -89,7 +88,7 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-          var byteValS = annValS(ann, stringTS(), modPath(filePath), "myValue", loc(filePath, 2));
+          var byteValS = annValS(ann, stringTS(), "myValue", loc(filePath, 2));
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
@@ -131,7 +130,7 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-          var byteFuncS = annFuncS(ann, funcTS, modPath(filePath), "myFunc",
+          var byteFuncS = annFuncS(ann, funcTS, "myFunc",
               nlist(itemS(blobTS(), "p")), loc(filePath, 2));
 
           var fileLoader = createFileLoaderMock(
@@ -333,7 +332,7 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 7));
-          var byteValS = annValS(ann, stringTS(), modPath(filePath), "myValue", loc(filePath, 8));
+          var byteValS = annValS(ann, stringTS(), "myValue", loc(filePath, 8));
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
@@ -380,7 +379,7 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-          var byteFuncS = annFuncS(ann, funcTS, modPath(filePath), "myFunc",
+          var byteFuncS = annFuncS(ann, funcTS, "myFunc",
               nlist(itemS(blobTS(), "p")), loc(filePath, 2));
 
           var fileLoader = createFileLoaderMock(
@@ -456,7 +455,7 @@ public class SbTranslatorTest extends TestContext {
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var bytecodeValS = annValS(ann, stringTS(), modPath(filePath), "myFunc", loc(filePath, 2));
+      var bytecodeValS = annValS(ann, stringTS(), "myFunc", loc(filePath, 2));
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
@@ -480,7 +479,7 @@ public class SbTranslatorTest extends TestContext {
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var bytecodeFuncS = annFuncS(ann, funcTS, modPath(filePath), "myFunc", nlist(), loc(filePath, 2));
+      var bytecodeFuncS = annFuncS(ann, funcTS, "myFunc", nlist(), loc(filePath, 2));
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 

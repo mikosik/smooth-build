@@ -11,8 +11,8 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class SyntCtorS extends FuncS {
-  public SyntCtorS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
-    super(type, modPath, name, params, loc);
+  public SyntCtorS(FuncTS type, String name, NList<ItemS> params, Loc loc) {
+    super(type, name, params, loc);
   }
 
   @Override
@@ -22,7 +22,6 @@ public final class SyntCtorS extends FuncS {
     }
     return object instanceof SyntCtorS that
         && this.resT().equals(that.resT())
-        && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.loc().equals(that.loc());
@@ -30,7 +29,7 @@ public final class SyntCtorS extends FuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resT(), modPath(), name(), params(), loc());
+    return Objects.hash(resT(), name(), params(), loc());
   }
 
   @Override

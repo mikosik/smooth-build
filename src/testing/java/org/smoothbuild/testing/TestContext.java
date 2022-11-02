@@ -92,7 +92,6 @@ import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
-import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
@@ -1166,12 +1165,12 @@ public class TestContext {
   }
 
   public AnnFuncS annFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
-    return annFuncS(ann, funcTS(resT, toTypes(params.list())), modPath(), name, params, loc(line));
+    return annFuncS(ann, funcTS(resT, toTypes(params.list())), name, params, loc(line));
   }
 
-  public AnnFuncS annFuncS(AnnS ann, FuncTS type, ModPath modPath, String name,
+  public AnnFuncS annFuncS(AnnS ann, FuncTS type, String name,
       NList<ItemS> params, Loc loc) {
-    return new AnnFuncS(ann, type, modPath, name, params, loc);
+    return new AnnFuncS(ann, type, name, params, loc);
   }
 
   public PolyValS polyByteValS(int line, TypeS type, String name) {
@@ -1187,11 +1186,11 @@ public class TestContext {
   }
 
   public AnnValS annValS(int line, AnnS ann, TypeS type, String name) {
-    return new AnnValS(ann, type, modPath(), name, loc(line));
+    return new AnnValS(ann, type, name, loc(line));
   }
 
-  public AnnValS annValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
-    return new AnnValS(ann, type, modPath, name, loc);
+  public AnnValS annValS(AnnS ann, TypeS type, String name, Loc loc) {
+    return new AnnValS(ann, type, name, loc);
   }
 
   public PolyValS polyDefValS(String name, ExprS body) {
@@ -1215,7 +1214,7 @@ public class TestContext {
   }
 
   public DefValS defValS(int line, TypeS type, String name, ExprS body) {
-    return new DefValS(type, modPath(), name, body, loc(line));
+    return new DefValS(type, name, body, loc(line));
   }
 
   public PolyValS emptyArrayValS() {
@@ -1242,9 +1241,8 @@ public class TestContext {
     return polyS(syntCtorS(line, structT, name));
   }
 
-  public PolyFuncS polySyntCtorS(int line, FuncTS type, ModPath modPath, String name,
-      NList<ItemS> params) {
-    return polyS(syntCtorS(line, type, modPath, name, params));
+  public PolyFuncS polySyntCtorS(int line, FuncTS type, String name, NList<ItemS> params) {
+    return polyS(syntCtorS(line, type, name, params));
   }
 
   public SyntCtorS syntCtorS(StructTS structT) {
@@ -1258,12 +1256,11 @@ public class TestContext {
   public SyntCtorS syntCtorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
     var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(2)));
-    return syntCtorS(line, funcTS(structT, toTypes(params.list())), modPath(), name, params);
+    return syntCtorS(line, funcTS(structT, toTypes(params.list())), name, params);
   }
 
-  public SyntCtorS syntCtorS(int line, FuncTS type, ModPath modPath, String name,
-      NList<ItemS> params) {
-    return new SyntCtorS(type, modPath, name, params, loc(line));
+  public SyntCtorS syntCtorS(int line, FuncTS type, String name, NList<ItemS> params) {
+    return new SyntCtorS(type, name, params, loc(line));
   }
 
   public PolyFuncS polyNatFuncS(TypeS resT, String name, NList<ItemS> params) {
@@ -1299,7 +1296,7 @@ public class TestContext {
   }
 
   public AnnFuncS natFuncS(int line, TypeS resT, String name, NList<ItemS> params, AnnS ann) {
-    return natFuncS(line, funcTS(resT, toTypes(params.list())), modPath(), name, params, ann);
+    return natFuncS(line, funcTS(resT, toTypes(params.list())), name, params, ann);
   }
 
   public AnnFuncS natFuncS(FuncTS type, String name, NList<ItemS> params) {
@@ -1311,12 +1308,7 @@ public class TestContext {
   }
 
   public AnnFuncS natFuncS(int line, FuncTS type, String name, NList<ItemS> params, AnnS ann) {
-    return natFuncS(line, type, modPath(), name, params, ann);
-  }
-
-  public AnnFuncS natFuncS(int line, FuncTS type, ModPath modPath, String name,
-      NList<ItemS> params, AnnS ann) {
-    return new AnnFuncS(ann, type, modPath, name, params, loc(line));
+    return new AnnFuncS(ann, type, name, params, loc(line));
   }
 
   public PolyFuncS polyDefFuncS(int line, String name, NList<ItemS> params, ExprS body) {
@@ -1349,7 +1341,7 @@ public class TestContext {
   }
 
   public DefFuncS defFuncS(int loc, TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    return new DefFuncS(funcTS(resT, toTypes(params)), modPath(), name, params, body, loc(loc));
+    return new DefFuncS(funcTS(resT, toTypes(params)), name, params, body, loc(loc));
   }
 
   public PolyFuncS idFuncS() {
@@ -1399,18 +1391,6 @@ public class TestContext {
 
   private static ModFiles modFiles(FilePath filePath) {
     return new ModFiles(filePath, empty());
-  }
-
-  public static ModPath modPath() {
-    return modPath(smoothFilePath());
-  }
-
-  public static ModPath importedModPath() {
-    return modPath(importedFilePath());
-  }
-
-  public static ModPath modPath(FilePath filePath) {
-    return ModPath.of(filePath);
   }
 
   public static TraceS traceS() {

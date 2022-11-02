@@ -4,9 +4,9 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.io.Paths.removeExtension;
 
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
@@ -15,7 +15,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.define.ModFiles;
-import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 
@@ -69,19 +68,21 @@ public class InstallationHashes {
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
     var files = modFilesDetector.detect(SLIB_MODS);
-    for (Entry<ModPath, ModFiles> entry : files.entrySet()) {
-      builder.add(modNode(entry.getKey(), entry.getValue()));
+    for (ModFiles modFiles : files) {
+      builder.add(modNode(modFiles));
     }
     return new HashNode("standard libraries", builder.build());
   }
 
-  private HashNode modNode(ModPath path, ModFiles modFiles) throws IOException {
-    Optional<HashNode> smoothNode = nodeFor(Optional.of(modFiles.smoothFile()));
+  private HashNode modNode(ModFiles modFiles) throws IOException {
+    FilePath smoothFile = modFiles.smoothFile();
+    Optional<HashNode> smoothNode = nodeFor(Optional.of(smoothFile));
     Optional<HashNode> nativeNode = nodeFor(modFiles.nativeFile());
     var nodes = Stream.of(smoothNode, nativeNode)
         .flatMap(Optional::stream)
         .collect(toImmutableList());
-    return new HashNode(path + " module", nodes);
+    var moduleName = removeExtension(smoothFile.toString());
+    return new HashNode(moduleName + " module", nodes);
   }
 
   private Optional<HashNode> nodeFor(Optional<FilePath> file) throws IOException {

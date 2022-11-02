@@ -9,12 +9,11 @@ import org.smoothbuild.compile.lang.type.TypeS;
 
 public class LoadInternalMod {
   public static ModuleS loadInternalModule() {
-    var modPath = new ModPath("internal-module");
-    var types = immutableBindings(toMap(TypeFS.baseTs(), TypeS::name, t -> baseTDef(modPath, t)));
-    return new ModuleS(modPath, null, types, immutableBindings());
+    var types = immutableBindings(toMap(TypeFS.baseTs(), TypeS::name, t -> baseTDef(t)));
+    return new ModuleS(null, types, immutableBindings());
   }
 
-  private static TDefS baseTDef(ModPath modPath, TypeS baseTS) {
-    return new TDefS(baseTS, modPath, baseTS.name(), Loc.internal());
+  private static TDefS baseTDef(TypeS baseTS) {
+    return new TDefS(baseTS, baseTS.name(), Loc.internal());
   }
 }

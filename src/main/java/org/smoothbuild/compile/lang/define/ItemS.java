@@ -24,11 +24,6 @@ public final class ItemS extends Tanal implements RefableS {
     this.defaultVal = defaultVal;
   }
 
-  @Override
-  public ModPath modPath() {
-    throw new UnsupportedOperationException();
-  }
-
   public Optional<PolyEvaluableS> defaultVal() {
     return defaultVal;
   }

@@ -21,7 +21,6 @@ import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
-import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
@@ -67,21 +66,21 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<NamedPolyEvaluableS> translateVal(ModPath path, ValP valP, TypeS type) {
+  public Optional<NamedPolyEvaluableS> translateVal(ValP valP, TypeS type) {
     var schema = new SchemaS(type);
     var name = valP.name();
     var loc = valP.loc();
     if (valP.ann().isPresent()) {
       var ann = translateAnn(valP.ann().get());
-      return Optional.of(new PolyValS(schema, new AnnValS(ann, schema.type(), path, name, loc)));
+      return Optional.of(new PolyValS(schema, new AnnValS(ann, schema.type(), name, loc)));
     } else {
       var body = translateExpr(valP.body().get());
-      return body.map(b -> new PolyValS(schema, new DefValS(schema.type(), path, name, b, loc)));
+      return body.map(b -> new PolyValS(schema, new DefValS(schema.type(), name, b, loc)));
     }
   }
 
-  public Optional<NamedPolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP, FuncTS funcT) {
-    return translateFunc(modPath, funcP, translateParams(funcP), funcT);
+  public Optional<NamedPolyEvaluableS> translateFunc(FuncP funcP, FuncTS funcT) {
+    return translateFunc(funcP, translateParams(funcP), funcT);
   }
 
   private NList<ItemS> translateParams(FuncP funcP) {
@@ -105,21 +104,20 @@ public class PsTranslator {
     });
   }
 
-  private Optional<NamedPolyEvaluableS> translateFunc(ModPath modPath, FuncP funcP,
+  private Optional<NamedPolyEvaluableS> translateFunc(FuncP funcP,
       NList<ItemS> params, FuncTS funcT) {
     var schema = new FuncSchemaS(funcT);
     var name = funcP.name();
     var loc = funcP.loc();
     if (funcP.ann().isPresent()) {
       var ann = translateAnn(funcP.ann().get());
-      var annFuncS = new AnnFuncS(ann, funcT, modPath, name, params, loc);
+      var annFuncS = new AnnFuncS(ann, funcT, name, params, loc);
       return Optional.of(new PolyFuncS(schema, annFuncS));
     } else {
       var bindingsInBody = new ScopedBindings<Optional<? extends RefableS>>(bindings);
       params.forEach(p -> bindingsInBody.add(p.name(), Optional.of(p)));
       var body = new PsTranslator(bindingsInBody).translateExpr(funcP.body().get());
-      return body.map(
-          b -> new PolyFuncS(schema, new DefFuncS(funcT, modPath, name, params, b, loc)));
+      return body.map(b -> new PolyFuncS(schema, new DefFuncS(funcT, name, params, b, loc)));
     }
   }
 

@@ -10,14 +10,12 @@ import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
-import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
@@ -52,9 +50,8 @@ public class DefsLoader {
     var internalMod = loadInternalModule();
     var allDefs = DefsS.empty().withModule(internalMod);
     var files = modFilesDetector.detect(MODULES);
-    for (Entry<ModPath, ModFiles> entry : files.entrySet()) {
-      ModFiles modFiles = entry.getValue();
-      Maybe<ModuleS> module = load(allDefs, entry.getKey(), modFiles);
+    for (ModFiles modFiles : files) {
+      Maybe<ModuleS> module = load(allDefs, modFiles);
       reporter.report(modFiles.smoothFile().toString(), module.logs().toList());
       if (module.containsProblem()) {
         return Optional.empty();
@@ -65,12 +62,12 @@ public class DefsLoader {
     return Optional.of(allDefs);
   }
 
-  private Maybe<ModuleS> load(DefsS imported, ModPath path, ModFiles modFiles) {
+  private Maybe<ModuleS> load(DefsS imported, ModFiles modFiles) {
     var sourceCode = readFileContent(modFiles.smoothFile());
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());
     } else {
-      return loadModule(path, modFiles, sourceCode.value(), imported);
+      return loadModule(modFiles, sourceCode.value(), imported);
     }
   }
 

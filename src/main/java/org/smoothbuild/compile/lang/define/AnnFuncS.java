@@ -13,9 +13,9 @@ import org.smoothbuild.util.collect.NList;
 public final class AnnFuncS extends FuncS {
   private final AnnS ann;
 
-  public AnnFuncS(AnnS ann, FuncTS type, ModPath modPath, String name, NList<ItemS> params,
+  public AnnFuncS(AnnS ann, FuncTS type, String name, NList<ItemS> params,
       Loc loc) {
-    super(type, modPath, name, params, loc);
+    super(type, name, params, loc);
     this.ann = ann;
   }
 
@@ -31,7 +31,6 @@ public final class AnnFuncS extends FuncS {
     return object instanceof AnnFuncS that
         && this.ann.equals(that.ann)
         && this.resT().equals(that.resT())
-        && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.loc().equals(that.loc());
@@ -39,7 +38,7 @@ public final class AnnFuncS extends FuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(ann, resT(), modPath(), name(), params(), loc());
+    return Objects.hash(ann, resT(), name(), params(), loc());
   }
 
   @Override

@@ -11,7 +11,6 @@ import static org.smoothbuild.testing.TestContext.modFiles;
 
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
-import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.type.SchemaS;
@@ -119,8 +118,7 @@ public class TestingModLoader {
   private Maybe<ModuleS> load() {
     DefsS importedSane = imported != null ? imported : DefsS.empty().withModule(loadInternalModule());
     ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();
-    return loadModule(
-        ModPath.of(modFilesSane.smoothFile()), modFilesSane, sourceCode, importedSane);
+    return loadModule(modFilesSane, sourceCode, importedSane);
   }
 
   public static Log err(int line, String message) {

@@ -12,8 +12,8 @@ import org.smoothbuild.compile.lang.type.TypeS;
 public final class AnnValS extends ValS {
   private final AnnS ann;
 
-  public AnnValS(AnnS ann, TypeS type, ModPath modPath, String name, Loc loc) {
-    super(type, modPath, name, loc);
+  public AnnValS(AnnS ann, TypeS type, String name, Loc loc) {
+    super(type, name, loc);
     this.ann = ann;
   }
 
@@ -29,14 +29,13 @@ public final class AnnValS extends ValS {
     return object instanceof AnnValS that
         && this.ann().equals(that.ann())
         && this.type().equals(that.type())
-        && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.loc().equals(that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ann(), type(), modPath(), name(), loc());
+    return Objects.hash(ann(), type(), name(), loc());
   }
 
   @Override

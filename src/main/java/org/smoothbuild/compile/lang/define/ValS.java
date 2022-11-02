@@ -1,17 +1,17 @@
 package org.smoothbuild.compile.lang.define;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.Tapanal;
+import org.smoothbuild.compile.lang.base.Tanal;
 import org.smoothbuild.compile.lang.type.TypeS;
 
 /**
  * Named value.
  * This class is immutable.
  */
-public sealed abstract class ValS extends Tapanal implements NamedEvaluableS
+public sealed abstract class ValS extends Tanal implements NamedEvaluableS
     permits AnnValS, DefValS {
-  public ValS(TypeS type, ModPath modPath, String name, Loc loc) {
-    super(type, modPath, name, loc);
+  public ValS(TypeS type, String name, Loc loc) {
+    super(type, name, loc);
   }
 }
 

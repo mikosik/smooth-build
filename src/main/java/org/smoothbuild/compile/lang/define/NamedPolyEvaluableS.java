@@ -14,11 +14,6 @@ public sealed abstract class NamedPolyEvaluableS extends PolyEvaluableS implemen
   }
 
   @Override
-  public ModPath modPath() {
-    return mono().modPath();
-  }
-
-  @Override
   public String name() {
     return mono().name();
   }

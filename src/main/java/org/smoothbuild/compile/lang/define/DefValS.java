@@ -12,8 +12,8 @@ import org.smoothbuild.compile.lang.type.TypeS;
 public final class DefValS extends ValS {
   private final ExprS body;
 
-  public DefValS(TypeS type, ModPath modPath, String name, ExprS body, Loc loc) {
-    super(type, modPath, name, loc);
+  public DefValS(TypeS type, String name, ExprS body, Loc loc) {
+    super(type, name, loc);
     this.body = body;
   }
 

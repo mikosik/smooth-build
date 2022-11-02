@@ -14,7 +14,6 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModFiles;
-import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
@@ -37,26 +36,23 @@ import org.smoothbuild.util.bindings.OptionalScopedBindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
 
 public class ModuleCreator {
-  private final ModPath path;
   private final ScopedBindings<Optional<TDefS>> types;
   private final ScopedBindings<Optional<NamedPolyEvaluableS>> bindings;
   private final LogBuffer logBuffer;
   private final PsTranslator psTranslator;
 
-  public static Maybe<ModuleS> createModuleS(
-      ModPath path, ModFiles modFiles, Ast ast, DefsS imported) {
+  public static Maybe<ModuleS> createModuleS(ModFiles modFiles, Ast ast, DefsS imported) {
     var logBuffer = new LogBuffer();
     var types = newOptionalMutableBindings(imported.tDefs());
     var evaluables = newOptionalMutableBindings(imported.evaluables());
-    var moduleCreator = new ModuleCreator(path, types, evaluables, logBuffer);
+    var moduleCreator = new ModuleCreator(types, evaluables, logBuffer);
     ast.structs().forEach(moduleCreator::visitStruct);
     ast.evaluables().forEach(moduleCreator::visitRefable);
 
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     } else {
-      var modS = new ModuleS(
-          path, modFiles, types.innerScopeBindings(), evaluables.innerScopeBindings());
+      var modS = new ModuleS(modFiles, types.innerScopeBindings(), evaluables.innerScopeBindings());
       return maybe(modS, logBuffer);
     }
   }
@@ -66,9 +62,8 @@ public class ModuleCreator {
     return new OptionalScopedBindings<>(tDefSImmutableBindings.map(Optional::of));
   }
 
-  private ModuleCreator(ModPath path, ScopedBindings<Optional<TDefS>> types,
+  private ModuleCreator(ScopedBindings<Optional<TDefS>> types,
       ScopedBindings<Optional<NamedPolyEvaluableS>> bindings, LogBuffer logBuffer) {
-    this.path = path;
     this.types = types;
     this.bindings = bindings;
     this.logBuffer = logBuffer;
@@ -77,13 +72,13 @@ public class ModuleCreator {
 
   public void visitStruct(StructP struct) {
     Optional<StructTS> structTS = inferStructType(types, bindings, logBuffer, struct);
-    Optional<TDefS> structDefS = structTS.map(s -> new StructDefS(s, path, struct.loc()));
+    Optional<TDefS> structDefS = structTS.map(s -> new StructDefS(s, struct.loc()));
     types.add(struct.name(), structDefS);
-    var ctorS = structTS.map(st -> loadSyntCtor(path, struct, st));
+    var ctorS = structTS.map(st -> loadSyntCtor(struct, st));
     bindings.add(struct.ctor().name(), ctorS);
   }
 
-  private static NamedPolyEvaluableS loadSyntCtor(ModPath path, StructP structP, StructTS structT) {
+  private static NamedPolyEvaluableS loadSyntCtor(StructP structP, StructTS structT) {
     var ctorP = structP.ctor();
     var name = ctorP.name();
     var fieldSigs = structT.fields();
@@ -92,7 +87,7 @@ public class ModuleCreator {
     var funcTS = new FuncTS(structT, toTypes(params));
     var schema = new FuncSchemaS(funcTS);
     var loc = structP.loc();
-    return new PolyFuncS(schema, new SyntCtorS(funcTS, path, name, params, loc));
+    return new PolyFuncS(schema, new SyntCtorS(funcTS, name, params, loc));
   }
 
   public void visitRefable(RefableP refableP) {
@@ -105,13 +100,13 @@ public class ModuleCreator {
 
   public void visitValue(ValP valP) {
     var schema = inferValSchema(types, bindings, logBuffer, valP);
-    var valS = schema.flatMap(s -> psTranslator.translateVal(path, valP, s.type()));
+    var valS = schema.flatMap(s -> psTranslator.translateVal(valP, s.type()));
     bindings.add(valP.name(), valS);
   }
 
   public void visitFunc(FuncP funcP) {
     var schema = inferFuncSchema(types, bindings, logBuffer, funcP);
-    var funcS = schema.flatMap(s -> psTranslator.translateFunc(path, funcP, s.type()));
+    var funcS = schema.flatMap(s -> psTranslator.translateFunc(funcP, s.type()));
     bindings.add(funcP.name(), funcS);
   }
 }

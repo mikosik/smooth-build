@@ -7,7 +7,7 @@ import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Tapanal;
+import org.smoothbuild.compile.lang.base.Tanal;
 import org.smoothbuild.compile.lang.define.TDefS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
@@ -36,7 +36,7 @@ public class TypePsTranslator {
         var paramsOpt = pullUp(map(func.paramTs(), this::translate));
         yield mapPair(resultOpt, paramsOpt, (r, p) -> new FuncTS(r, p));
       }
-      default -> types.get(type.name()).map(Tapanal::type);
+      default -> types.get(type.name()).map(Tanal::type);
     };
   }
 }

@@ -1,16 +1,17 @@
 package org.smoothbuild.install;
 
+import static org.smoothbuild.util.collect.Lists.map;
+
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.lang.define.ModFiles;
-import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 public class ModFilesDetector {
   private final FileResolver fileResolver;
@@ -20,12 +21,8 @@ public class ModFilesDetector {
     this.fileResolver = fileResolver;
   }
 
-  public ImmutableMap<ModPath, ModFiles> detect(List<FilePath> smoothFiles) {
-    var builder = ImmutableMap.<ModPath, ModFiles>builder();
-    for (FilePath file : smoothFiles) {
-      builder.put(ModPath.of(file), new ModFiles(file, nativeFileFor(file)));
-    }
-    return builder.build();
+  public ImmutableList<ModFiles> detect(List<FilePath> smoothFiles) {
+    return map(smoothFiles, file -> new ModFiles(file, nativeFileFor(file)));
   }
 
   private Optional<FilePath> nativeFileFor(FilePath file) {

@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.Tapanal;
+import org.smoothbuild.compile.lang.base.Tanal;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
@@ -12,12 +12,12 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends Tapanal implements NamedEvaluableS
+public sealed abstract class FuncS extends Tanal implements NamedEvaluableS
     permits AnnFuncS, DefFuncS, SyntCtorS {
   private final NList<ItemS> params;
 
-  public FuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
-    super(type, modPath, name, loc);
+  public FuncS(FuncTS type, String name, NList<ItemS> params, Loc loc) {
+    super(type, name, loc);
     this.params = requireNonNull(params);
   }
 
