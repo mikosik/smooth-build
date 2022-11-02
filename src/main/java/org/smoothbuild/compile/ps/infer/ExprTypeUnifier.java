@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.ItemS;
-import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
+import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
@@ -148,7 +148,7 @@ public class ExprTypeUnifier {
   private Optional<? extends TypeS> unifyRef(RefP ref, RefableS r) {
     return switch (r) {
       case ItemS item -> unifyItemRef(ref, item);
-      case NamedPolyEvaluableS polyEvaluable -> unifyMonoizable(ref, polyEvaluable.schema());
+      case PolyEvaluableS polyEvaluable -> unifyMonoizable(ref, polyEvaluable.schema());
     };
   }
 

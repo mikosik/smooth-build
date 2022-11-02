@@ -4,16 +4,16 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.WithLocImpl;
+import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
-public sealed abstract class PolyEvaluableS extends WithLocImpl
-    permits NamedPolyEvaluableS {
+public sealed abstract class PolyEvaluableS extends NalImpl implements RefableS
+    permits PolyFuncS, PolyValS {
   private final SchemaS schema;
   private final EvaluableS mono;
 
   public PolyEvaluableS(SchemaS schema, EvaluableS mono) {
-    super(mono.loc());
+    super(mono.name(), mono.loc());
     this.schema = requireNonNull(schema);
     this.mono = requireNonNull(mono);
   }

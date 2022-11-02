@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.define.DefsS;
-import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
+import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
@@ -46,7 +46,7 @@ public class ListRunner {
     }
   }
 
-  private static boolean isEvaluableValue(NamedPolyEvaluableS evaluable) {
+  private static boolean isEvaluableValue(PolyEvaluableS evaluable) {
     return evaluable.loc().file().space().equals(PRJ)
         && evaluable instanceof PolyValS
         && evaluable.schema().quantifiedVars().isEmpty();

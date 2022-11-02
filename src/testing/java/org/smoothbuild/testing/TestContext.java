@@ -93,7 +93,6 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
@@ -1012,7 +1011,7 @@ public class TestContext {
 
   private static PolyRefS polyRefS(int line, PolyEvaluableS evaluable) {
     String name = switch (evaluable) {
-      case NamedPolyEvaluableS namedPolyEvaluableS -> namedPolyEvaluableS.name();
+      case PolyEvaluableS namedPolyEvaluableS -> namedPolyEvaluableS.name();
     };
     return polyRefS(line, evaluable, name);
   }

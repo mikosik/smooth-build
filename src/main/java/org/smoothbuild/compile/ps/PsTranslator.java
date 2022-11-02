@@ -22,7 +22,6 @@ import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
@@ -65,7 +64,7 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<NamedPolyEvaluableS> translateVal(ValP valP, TypeS type) {
+  public Optional<PolyEvaluableS> translateVal(ValP valP, TypeS type) {
     var schema = new SchemaS(type);
     var name = valP.name();
     var loc = valP.loc();
@@ -78,7 +77,7 @@ public class PsTranslator {
     }
   }
 
-  public Optional<NamedPolyEvaluableS> translateFunc(FuncP funcP, FuncTS funcT) {
+  public Optional<PolyEvaluableS> translateFunc(FuncP funcP, FuncTS funcT) {
     return translateFunc(funcP, translateParams(funcP), funcT);
   }
 
@@ -104,7 +103,7 @@ public class PsTranslator {
     });
   }
 
-  private Optional<NamedPolyEvaluableS> translateFunc(FuncP funcP,
+  private Optional<PolyEvaluableS> translateFunc(FuncP funcP,
       NList<ItemS> params, FuncTS funcT) {
     var schema = new FuncSchemaS(funcT);
     var name = funcP.name();
@@ -145,7 +144,7 @@ public class PsTranslator {
   }
 
   private static Optional<ExprS> translateDefaultArg(DefaultArgP defaultArg) {
-    var name = ((NamedPolyEvaluableS) defaultArg.polyEvaluableS()).name();
+    var name = defaultArg.polyEvaluableS().name();
     return Optional.of(translateMonoizable(
         defaultArg, defaultArg.polyEvaluableS(), name, defaultArg.loc()));
   }
@@ -174,11 +173,11 @@ public class PsTranslator {
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.loc());
-      case NamedPolyEvaluableS evaluableS -> translateMonoizable(ref, evaluableS);
+      case PolyEvaluableS evaluableS -> translateMonoizable(ref, evaluableS);
     };
   }
 
-  private static ExprS translateMonoizable(RefP ref, NamedPolyEvaluableS evaluableS) {
+  private static ExprS translateMonoizable(RefP ref, PolyEvaluableS evaluableS) {
     return translateMonoizable(ref, evaluableS, ref.name(), ref.loc());
   }
 

@@ -5,5 +5,5 @@ import org.smoothbuild.util.bindings.ImmutableBindings;
 public record ModuleS(
     ModFiles files,
     ImmutableBindings<TDefS> tDefs,
-    ImmutableBindings<NamedPolyEvaluableS> evaluables) {
+    ImmutableBindings<PolyEvaluableS> evaluables) {
 }

@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableMap;
 
 public record DefsS(
     ImmutableBindings<TDefS> tDefs,
-    ImmutableBindings<NamedPolyEvaluableS> evaluables) {
+    ImmutableBindings<PolyEvaluableS> evaluables) {
 
   public static DefsS empty() {
     return new DefsS(immutableBindings(), immutableBindings());
