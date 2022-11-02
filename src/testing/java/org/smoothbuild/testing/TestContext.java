@@ -8,7 +8,6 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.structNameToCtorName;
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
-import static org.smoothbuild.compile.lang.define.PolyValS.polyValS;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
@@ -1196,7 +1195,7 @@ public class TestContext {
   }
 
   private PolyValS polyS(ValS valS) {
-    return polyValS(schemaS(valS.type()), valS);
+    return new PolyValS(schemaS(valS.type()), valS);
   }
 
   public SchemaS schemaS(TypeS typeS) {
@@ -1339,7 +1338,7 @@ public class TestContext {
   }
 
   private PolyFuncS polyS(FuncS funcS) {
-    return PolyFuncS.polyFuncS(newFuncSchema(funcS.type()), funcS);
+    return new PolyFuncS(newFuncSchema(funcS.type()), funcS);
   }
 
   public static ItemSigS sigS(TypeS type, String name) {

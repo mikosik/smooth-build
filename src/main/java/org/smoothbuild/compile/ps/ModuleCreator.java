@@ -2,7 +2,6 @@ package org.smoothbuild.compile.ps;
 
 import static java.util.Optional.empty;
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
-import static org.smoothbuild.compile.lang.define.PolyFuncS.polyFuncS;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferFuncSchema;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferStructType;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferValSchema;
@@ -18,6 +17,7 @@ import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
+import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.StructDefS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TDefS;
@@ -92,7 +92,7 @@ public class ModuleCreator {
     var funcTS = new FuncTS(structT, toTypes(params));
     var schema = new FuncSchemaS(funcTS);
     var loc = structP.loc();
-    return polyFuncS(schema, new SyntCtorS(funcTS, path, name, params, loc));
+    return new PolyFuncS(schema, new SyntCtorS(funcTS, path, name, params, loc));
   }
 
   public void visitRefable(RefableP refableP) {

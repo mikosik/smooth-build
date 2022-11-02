@@ -1,7 +1,5 @@
 package org.smoothbuild.compile.ps;
 
-import static org.smoothbuild.compile.lang.define.PolyFuncS.polyFuncS;
-import static org.smoothbuild.compile.lang.define.PolyValS.polyValS;
 import static org.smoothbuild.compile.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.lang.type.TypeFS.STRING;
@@ -27,6 +25,8 @@ import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
+import org.smoothbuild.compile.lang.define.PolyFuncS;
+import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
@@ -71,10 +71,10 @@ public class PsTranslator {
     var loc = valP.loc();
     if (valP.ann().isPresent()) {
       var ann = translateAnn(valP.ann().get());
-      return Optional.of(polyValS(schema, new AnnValS(ann, schema.type(), path, name, loc)));
+      return Optional.of(new PolyValS(schema, new AnnValS(ann, schema.type(), path, name, loc)));
     } else {
       var body = translateExpr(valP.body().get());
-      return body.map(b -> polyValS(schema, new DefValS(schema.type(), path, name, b, loc)));
+      return body.map(b -> new PolyValS(schema, new DefValS(schema.type(), path, name, b, loc)));
     }
   }
 
@@ -110,13 +110,14 @@ public class PsTranslator {
     var loc = funcP.loc();
     if (funcP.ann().isPresent()) {
       var ann = translateAnn(funcP.ann().get());
-      return Optional.of(polyFuncS(schema, new AnnFuncS(ann, funcT, modPath, name, params, loc)));
+      var annFuncS = new AnnFuncS(ann, funcT, modPath, name, params, loc);
+      return Optional.of(new PolyFuncS(schema, annFuncS));
     } else {
       var bindingsInBody = new ScopedBindings<Optional<? extends RefableS>>(bindings);
       params.forEach(p -> bindingsInBody.add(p.name(), Optional.of(p)));
       var body = new PsTranslator(bindingsInBody).translateExpr(funcP.body().get());
       return body.map(
-          b -> polyFuncS(schema, new DefFuncS(funcT, modPath, name, params, b, loc)));
+          b -> new PolyFuncS(schema, new DefFuncS(funcT, modPath, name, params, b, loc)));
     }
   }
 
