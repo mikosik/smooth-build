@@ -19,7 +19,6 @@ import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.plugin.NativeApi;

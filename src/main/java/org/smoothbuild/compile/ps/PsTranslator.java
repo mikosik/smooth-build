@@ -10,6 +10,7 @@ import static org.smoothbuild.util.collect.Optionals.pullUp;
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValS;
@@ -27,6 +28,7 @@ import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
+import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
@@ -96,7 +98,7 @@ public class PsTranslator {
   private Optional<PolyEvaluableS> translateParamBody(ExprP expr) {
     return translateExpr(expr).map(exprS -> {
       if (exprS instanceof MonoizeS monoizeS) {
-        return monoizeS.polyEvaluable();
+        return monoizeS.polyRef().polyEvaluable();
       } else {
         return new UnnamedPolyValS(exprS);
       }
@@ -145,7 +147,8 @@ public class PsTranslator {
   }
 
   private static Optional<ExprS> translateDefaultArg(DefaultArgP defaultArg) {
-    return Optional.of(translateMonoizable(defaultArg, defaultArg.polyEvaluableS()));
+    return Optional.of(translateMonoizable(
+        defaultArg, defaultArg.polyEvaluableS(), "<default-arg>", defaultArg.loc()));
   }
 
   private Optional<ExprS> translateOrder(OrderP order) {
@@ -176,8 +179,14 @@ public class PsTranslator {
     };
   }
 
-  private static ExprS translateMonoizable(MonoizableP monoizableP, PolyEvaluableS polyEvaluableS) {
-    return new MonoizeS(monoizableP.monoizeVarMap(), polyEvaluableS, monoizableP.loc());
+  private static ExprS translateMonoizable(RefP ref, NamedPolyEvaluableS evaluableS) {
+    return translateMonoizable(ref, evaluableS, ref.name(), ref.loc());
+  }
+
+  private static ExprS translateMonoizable(MonoizableP monoizableP, PolyEvaluableS polyEvaluableS,
+      String name, Loc loc) {
+    PolyRefS polyRefS = new PolyRefS(polyEvaluableS, name, loc);
+    return new MonoizeS(monoizableP.monoizeVarMap(), polyRefS, monoizableP.loc());
   }
 
   private BlobS translateBlob(BlobP blob) {

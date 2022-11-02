@@ -94,10 +94,12 @@ import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModPath;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
+import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -998,9 +1000,25 @@ public class TestContext {
     return monoizeS(1, varMap, evaluable);
   }
 
-  public static MonoizeS monoizeS(int loc, ImmutableMap<VarS, TypeS> varMap,
-      PolyEvaluableS evaluable) {
-    return new MonoizeS(varMap, evaluable, loc(loc));
+  public static MonoizeS monoizeS(
+      int line, ImmutableMap<VarS, TypeS> varMap, PolyEvaluableS polyEvaluableS) {
+    return monoizeS(line, varMap, polyRefS(line, polyEvaluableS));
+  }
+
+  public static MonoizeS monoizeS(int line, ImmutableMap<VarS, TypeS> varMap, PolyRefS polyRefS) {
+    return new MonoizeS(varMap, polyRefS, loc(line));
+  }
+
+  private static PolyRefS polyRefS(int line, PolyEvaluableS evaluable) {
+    String name = switch (evaluable) {
+      case UnnamedPolyValS unnamedPolyValS -> "<default-arg>";
+      case NamedPolyEvaluableS namedPolyEvaluableS -> namedPolyEvaluableS.name();
+    };
+    return polyRefS(line, evaluable, name);
+  }
+
+  public static PolyRefS polyRefS(int line, PolyEvaluableS evaluable, String name) {
+    return new PolyRefS(evaluable, name, loc(line));
   }
 
   public OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {

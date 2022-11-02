@@ -11,11 +11,7 @@ import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
-import org.smoothbuild.compile.lang.define.PolyFuncS;
-import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.UnnamedPolyValS;
 import org.smoothbuild.compile.lang.define.UnnamedValS;
 import org.smoothbuild.testing.TestContext;
@@ -63,7 +59,8 @@ public class ExprSLoadingTest extends TestContext {
         @Test
         public void with_reference_to_poly_val() {
           var paramDefaultVal = polyByteValS(4, varA(), "polyVal");
-          var monoizedParamBody = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
+          var polyRef = polyRefS(2, paramDefaultVal, "<default-arg>");
+          var monoizedParamBody = monoizeS(2, varMap(varA(), intTS()), polyRef);
           test_default_arg("polyVal", monoizedParamBody);
         }
 
