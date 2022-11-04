@@ -92,13 +92,9 @@ public class PsTranslator {
 
   private Optional<PolyEvaluableS> translateParamBody(FuncP funcP, ItemP paramP, ExprP expr) {
     return translateExpr(expr).map(exprS -> {
-      if (exprS instanceof PolyRefS polyRefS) {
-        return polyRefS.polyEvaluable();
-      } else {
-        var name = funcP.name() + ":" + paramP.name();
-        var val = new DefValS(exprS.evalT(), name, exprS, paramP.loc());
-        return new PolyValS(new SchemaS(exprS.evalT()), val);
-      }
+      var name = funcP.name() + ":" + paramP.name();
+      var val = new DefValS(exprS.evalT(), name, exprS, paramP.loc());
+      return new PolyValS(new SchemaS(exprS.evalT()), val);
     });
   }
 

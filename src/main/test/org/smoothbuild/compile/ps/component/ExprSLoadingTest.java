@@ -11,7 +11,6 @@ import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.testing.TestContext;
 
 public class ExprSLoadingTest extends TestContext {
@@ -56,9 +55,10 @@ public class ExprSLoadingTest extends TestContext {
       class _with_default_arg {
         @Test
         public void with_reference_to_poly_val() {
-          var paramDefaultVal = polyByteValS(4, varA(), "polyVal");
-          var polyRef = polyRefS(2, varMap(varA(), intTS()), paramDefaultVal);
-          test_default_arg("polyVal", polyRef);
+          var polyVal = polyByteValS(4, varA(), "polyVal");
+          var polyRef = polyRefS(1, varMap(varA(), varA()), polyVal);
+          var arg = polyRefS(2, varMap(varA(), intTS()), polyDefValS(1, "myFunc:b", polyRef));
+          test_default_arg("polyVal", arg);
         }
 
         @Test
@@ -657,8 +657,9 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             [A] empty = [];
             """;
-        var defaultVal = Optional.<PolyEvaluableS>of(polyDefValS(5, "empty", orderS(5, varA())));
-        var params = nlist(itemSPoly(2, arrayTS(intTS()), "param1", defaultVal));
+        var empty = polyDefValS(5, "empty", orderS(5, varA()));
+        var defaultVal = polyDefValS(2, "myFunc:param1", polyRefS(3, varMap(varA(), varA()), empty));
+        var params = nlist(itemS(2, arrayTS(intTS()), "param1", defaultVal));
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
@@ -674,8 +675,9 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             [A] empty = [];
             """;
-        var defaultVal = Optional.<PolyEvaluableS>of(polyDefValS(5, "empty", orderS(5, varA())));
-        var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", defaultVal));
+        var empty = polyDefValS(5, "empty", orderS(5, varA()));
+        var defaultValue = polyDefValS(2, "myFunc:param1", polyRefS(3, varMap(varA(), varA()), empty));
+        var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", Optional.of(defaultValue)));
         var func = polyDefFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
