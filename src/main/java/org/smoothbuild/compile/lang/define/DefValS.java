@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
+import static org.smoothbuild.util.Strings.indent;
+
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
@@ -40,7 +42,8 @@ public final class DefValS extends ValS {
 
   @Override
   public String toString() {
-    return "DefVal(`" + type().name() + " " + name() + " = " + body + "`)";
+    var fieldsString = valFieldsToString() + "\nbody = " + body;
+    return "DefVal(\n" + indent(fieldsString) + "\n)";
   }
 }
 

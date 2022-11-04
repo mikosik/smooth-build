@@ -1,7 +1,8 @@
 package org.smoothbuild.compile.lang.define;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Tanal;
@@ -25,14 +26,6 @@ public sealed abstract class FuncS extends Tanal implements EvaluableS
     return params;
   }
 
-  protected String paramsToString() {
-    return toCommaSeparatedString(params, FuncS::paramToString);
-  }
-
-  private static String paramToString(ItemS itemS) {
-    return itemS.type().name() + " " + itemS.name() + itemS.defaultVal().map(b -> " = " + b).orElse("");
-  }
-
   @Override
   public FuncTS type() {
     return (FuncTS) super.type();
@@ -47,12 +40,20 @@ public sealed abstract class FuncS extends Tanal implements EvaluableS
         .allMatch(p -> p.defaultVal().isPresent());
   }
 
-  protected String signature() {
-    return resT().name() + " " + name() + "(" + paramsToString() + ")";
+  protected String funcFieldsToString() {
+    return joinToString("\n",
+        "type = " + type(),
+        "params = [\n" + indent(paramsToString()) + "\n]",
+        "loc = " + loc()
+    );
   }
 
-  @Override
-  public String toString() {
-    return this.getClass().getSimpleName() + "(`" + signature() + "`)";
+  protected String paramsToString() {
+    return joinToString(params, FuncS::paramToString, "\n");
+  }
+
+  private static String paramToString(ItemS itemS) {
+    return itemS.type().name() + " " + itemS.name()
+        + itemS.defaultVal().map(b -> " = " + b).orElse("");
   }
 }

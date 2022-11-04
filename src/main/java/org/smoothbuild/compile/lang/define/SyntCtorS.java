@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
+import static org.smoothbuild.util.Strings.indent;
+
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
@@ -34,6 +36,6 @@ public final class SyntCtorS extends FuncS {
 
   @Override
   public String toString() {
-    return "SyntCtor(`" + signature() + "`)";
+    return "SyntCtorS(\n" + indent(funcFieldsToString()) + "\n)";
   }
 }

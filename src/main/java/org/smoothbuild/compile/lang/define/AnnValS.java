@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
+import static org.smoothbuild.util.Strings.indent;
+
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
@@ -38,9 +40,11 @@ public final class AnnValS extends ValS {
     return Objects.hash(ann(), type(), name(), loc());
   }
 
+
   @Override
   public String toString() {
-    return "AnnVal(`" + ann() + " " + type().name() + " " + name() + "`)";
+    var fieldsString = ann().toString() + "\n" + valFieldsToString();
+    return "AnnVal(\n" + indent(fieldsString) + "\n)";
   }
 }
 

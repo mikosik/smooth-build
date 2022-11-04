@@ -6,19 +6,19 @@ import static org.smoothbuild.util.collect.NList.nlist;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class DefFuncSTest extends TestContext {
+public class SyntCtorSTest extends TestContext {
   @Test
   public void to_string() {
-    var func = defFuncS(stringTS(), "myFunc", nlist(itemS(intTS(), "myParam")), intS(17));
-    assertThat(func.toString())
+    var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));
+    var syntCtorS = syntCtorS(17, structTS, "syntCtorName");
+    assertThat(syntCtorS.toString())
         .isEqualTo("""
-            DefFuncS(
-              type = String(Int)
+            SyntCtorS(
+              type = MyStruct(Int)
               params = [
-                Int myParam
+                Int field
               ]
-              loc = myBuild.smooth:1
-              body = IntS(Int, 17, myBuild.smooth:1)
+              loc = myBuild.smooth:17
             )""");
   }
 }

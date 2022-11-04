@@ -11,7 +11,18 @@ public class AnnFuncSTest extends TestContext {
   public void to_string() {
     var func = natFuncS(stringTS(), "myFunc", NList.nlist(itemS(intTS(), "myParam")));
     assertThat(func.toString())
-        .isEqualTo("@Native(\"StringS[type=String, string=impl, loc=myBuild.smooth:1]\") "
-            + "loc=myBuild.smooth:1 String myFunc(Int myParam)");
+        .isEqualTo("""
+            AnnFuncS(
+              AnnS(
+                name = Native
+                path = StringS(String, "impl", myBuild.smooth:1)
+                loc = myBuild.smooth:1
+              )
+              type = String(Int)
+              params = [
+                Int myParam
+              ]
+              loc = myBuild.smooth:1
+            )""");
   }
 }

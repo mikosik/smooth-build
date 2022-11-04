@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
+import static org.smoothbuild.util.Strings.indent;
+
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
@@ -43,6 +45,7 @@ public final class AnnFuncS extends FuncS {
 
   @Override
   public String toString() {
-    return ann + " " + signature();
+    var fields = ann.toString() + "\n" + funcFieldsToString();
+    return "AnnFuncS(\n" + indent(fields) + "\n)";
   }
 }

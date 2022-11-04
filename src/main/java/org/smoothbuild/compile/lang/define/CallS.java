@@ -1,5 +1,8 @@
 package org.smoothbuild.compile.lang.define;
 
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
+
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -30,5 +33,15 @@ public record CallS(ExprS callee, ImmutableList<ExprS> args, Loc loc)
   @Override
   public TypeS evalT() {
     return ((FuncTS) callee.evalT()).res();
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "callee = " + callee,
+        "args = [\n" + indent(joinToString(args, "\n")) + "\n]",
+        "loc = " + loc
+    );
+    return "CallS(\n" + indent(fields) + "\n)";
   }
 }

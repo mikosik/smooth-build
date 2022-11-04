@@ -6,7 +6,6 @@ import static org.smoothbuild.util.UnescapingFailedExc.missingEscapeCodeExceptio
 import java.util.Optional;
 
 public class Strings {
-
   private static final char TAB = '\t';
   private static final char BACKSPACE = '\b';
   private static final char NEW_LINE = '\n';
@@ -19,6 +18,10 @@ public class Strings {
 
   public static String q(String string) {
     return "`" + string + "`";
+  }
+
+  public static String qq(String string) {
+    return "\"" + string + "\"";
   }
 
   public static String indent(String string) {

@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.util.collect.Lists.joinToString;
 
 import java.util.Objects;
 
@@ -41,8 +42,10 @@ public sealed abstract class PolyEvaluableS extends NalImpl implements RefableS
     return Objects.hash(schema, mono);
   }
 
-  @Override
-  public String toString() {
-    return schema.quantifiedVars() + mono.toString();
+  protected String polyEvaluableFieldsToString() {
+    return joinToString("\n",
+        "schema = " + schema,
+        "mono = " + mono
+    );
   }
 }
