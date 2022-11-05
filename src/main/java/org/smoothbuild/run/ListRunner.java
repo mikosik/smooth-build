@@ -39,7 +39,7 @@ public class ListRunner {
           .filter(ListRunner::isEvaluableValue)
           .map(Nal::name)
           .sorted()
-          .forEach(console::println);
+          .forEach(line -> console.println("  " + line));
       return EXIT_CODE_SUCCESS;
     } else {
       return EXIT_CODE_ERROR;

@@ -20,15 +20,15 @@ public class ListCommandTest {
             aValue = "abc";
             dValue = "abc";
             cValue = "abc";
-              """);
+            """);
       runSmoothList();
       assertFinishedWithSuccess();
-      assertSysOutContains(
-          "aValue",
-          "bValue",
-          "cValue",
-          "dValue",
-          "");
+      assertSysOutContains("""
+        Values that can be evaluated:
+          aValue
+          bValue
+          cValue
+          dValue""");
     }
   }
 
