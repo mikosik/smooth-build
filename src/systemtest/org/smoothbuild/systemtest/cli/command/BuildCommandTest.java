@@ -156,7 +156,7 @@ public class BuildCommandTest {
           result = myStruct("abc");
           """;
       private static final String COMBINE_TASK_HEADER = """
-          {}                                          build.smooth:1                 exec
+          {...}                                       build.smooth:1                 exec
           """;
 
       @Test
@@ -279,7 +279,7 @@ public class BuildCommandTest {
           ];
           """;
       private static final String ORDER_TASK_HEADER = """
-          []                                          build.smooth:1                 exec
+          [...]                                       build.smooth:1                 exec
           """;
 
       @Test
@@ -309,7 +309,7 @@ public class BuildCommandTest {
             result = aStruct.myField;
             """;
       private static final String SELECT_TASK_HEADER = """
-          .                                           build.smooth:5                 exec
+          {}.                                         build.smooth:5                 exec
           """;
 
       @Test
@@ -528,7 +528,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          .                                           build.smooth:4                 exec
+          {}.                                         build.smooth:4                 exec
           """);
     }
 
@@ -541,7 +541,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          Int()                                       build.smooth:1
+          myFunc                                      build.smooth:1
           """);
     }
 
@@ -553,7 +553,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          []                                          build.smooth:1                 exec
+          [...]                                       build.smooth:1                 exec
           """);
     }
 

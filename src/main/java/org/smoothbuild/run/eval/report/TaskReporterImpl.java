@@ -74,12 +74,20 @@ public class TaskReporterImpl implements TaskReporter {
 
   private String label(Task task) {
     return switch (task) {
-      case CombineTask combineTask -> "{}";
-      case ConstTask constTask -> constTask.instB().type().name();
+      case CombineTask combineTask -> "{...}";
+      case ConstTask constTask -> label(constTask);
       case InvokeTask invokeTask -> nameOf(invokeTask.natFunc()) + "()";
-      case OrderTask orderTask -> "[]";
+      case OrderTask orderTask -> "[...]";
       case PickTask pickTask -> "[].";
-      case SelectTask selectTask -> ".";
+      case SelectTask selectTask -> "{}.";
+    };
+  }
+
+  private String label(ConstTask constTask) {
+    var instB = constTask.instB();
+    return switch (instB) {
+      case FuncB funcB -> nameOf(funcB);
+      default -> instB.type().name();
     };
   }
 
@@ -88,7 +96,7 @@ public class TaskReporterImpl implements TaskReporter {
   }
 
   private String nameOf(FuncB funcB) {
-    return requireNonNullElse(bsMapping.nameMapping().get(funcB.hash()), "");
+    return requireNonNullElse(bsMapping.nameMapping().get(funcB.hash()), "???");
   }
 
   private void report(Task task, String taskHeader, LogBuffer logs) {

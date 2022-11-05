@@ -26,7 +26,7 @@ import org.smoothbuild.vm.task.Task;
 public class TaskReporterImplTest extends TestContext {
   @Test
   public void combineTaskHeader() {
-    testHeader(combineTask(), header("{}"));
+    testHeader(combineTask(), header("{...}"));
   }
 
   @Test
@@ -41,7 +41,7 @@ public class TaskReporterImplTest extends TestContext {
 
   @Test
   public void invokeTaskHeaderForFuncWithoutMappedName() {
-    testHeader(invokeTask(), header("()"));
+    testHeader(invokeTask(), header("???()"));
   }
 
   @Test
@@ -53,7 +53,7 @@ public class TaskReporterImplTest extends TestContext {
 
   @Test
   public void orderTaskHeader() {
-    testHeader(orderTask(), header("[]"));
+    testHeader(orderTask(), header("[...]"));
   }
 
   @Test
@@ -63,7 +63,7 @@ public class TaskReporterImplTest extends TestContext {
 
   @Test
   public void selectTaskHeader() {
-    testHeader(selectTask(), header("."));
+    testHeader(selectTask(), header("{}."));
   }
 
   @Test
@@ -71,29 +71,29 @@ public class TaskReporterImplTest extends TestContext {
     var task = selectTask();
     var exprHash = task.exprB().hash();
     testHeader(bsMapping(exprHash, loc(7)), task,
-        padEnd(".", NAME_LENGTH_LIMIT + 1, ' ') + "myBuild.smooth:7               exec"
+        padEnd("{}.", NAME_LENGTH_LIMIT + 1, ' ') + "myBuild.smooth:7               exec"
     );
   }
 
   @Test
   public void header_with_execution_source() {
-    testHeader(selectTask(), EXECUTION, header(".", "exec"));
+    testHeader(selectTask(), EXECUTION, header("{}.", "exec"));
   }
 
   @Test
   public void header_with_noop_source() {
-    var header = padEnd(".", NAME_LENGTH_LIMIT + 1, ' ') + "unknown";
+    var header = padEnd("{}.", NAME_LENGTH_LIMIT + 1, ' ') + "unknown";
     testHeader(selectTask(), NOOP, header);
   }
 
   @Test
   public void header_with_disk_source() {
-    testHeader(selectTask(), DISK, header(".", "cache"));
+    testHeader(selectTask(), DISK, header("{}.", "cache"));
   }
 
   @Test
   public void header_with_memory_source() {
-    testHeader(selectTask(), MEMORY, header(".", "mem"));
+    testHeader(selectTask(), MEMORY, header("{}.", "mem"));
   }
 
   private static String header(String string) {
@@ -144,7 +144,7 @@ public class TaskReporterImplTest extends TestContext {
         infoMessage());
     taskReporter.report(task(), computationResultWithMessages(messages));
     var header = """
-        []                                          unknown                        exec
+        [...]                                       unknown                        exec
           @ ??? ???
           @     ???""";
     var logs = list(
