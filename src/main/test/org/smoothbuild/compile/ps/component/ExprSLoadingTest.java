@@ -137,6 +137,20 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
+      public void with_mono_func_reference_and_piped_arg() {
+        var code = """
+            Int myIntId(Int i) = i;
+            result = 7
+              | myIntId();
+            """;
+        var myIntId = intIdFuncS();
+        var result = polyDefValS(2, intTS(), "result", callS(3, polyRefS(3, myIntId), intS(2, 7)));
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluable(result);
+      }
+
+      @Test
       public void with_poly_func_reference_and_arg() {
         module("""
           A myId(A a) = a;
