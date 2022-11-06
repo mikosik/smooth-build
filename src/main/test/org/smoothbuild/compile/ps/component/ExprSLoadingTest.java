@@ -246,7 +246,7 @@ public class ExprSLoadingTest extends TestContext {
       }
     }
     @Nested
-    class _reference {
+    class _poly_ref {
       @Test
       public void to_mono_value() {
         var code = """
@@ -349,7 +349,7 @@ public class ExprSLoadingTest extends TestContext {
     }
 
     @Test
-    public void ref() {
+    public void param_ref() {
       var code = """
           Blob myFunc(Blob param1)
             = param1;
