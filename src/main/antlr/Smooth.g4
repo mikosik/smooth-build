@@ -7,20 +7,19 @@ value        : ann? type? NAME ('=' expr)? ';' ;
 itemList     : ( item ( ',' item )* ','? )? ;
 item         : type NAME ( '=' expr )? ;
 ann          : '@' NAME '(' STRING ')' ;
-expr         : exprHead ( p+='|' chainCall )* ;
-exprHead     : chain | literal ;
-literal      : array
-             | INT
+expr         : chain ( p+='|' chain )* ;
+chain        : chainHead ( chainPart )*;
+chainHead    : NAME
+             | array
              | BLOB
+             | INT
              | STRING
              ;
-chain        : NAME ( chainPart )* ;
-chainCall    : NAME ( select )* argList ( chainPart )* ;
 chainPart    : argList | select ;
 argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg          : ( NAME '=' )? expr ;
-array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
 select       : '.' NAME ;
+array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
 type         : NAME                                     # typeName
              | '[' type ']'                             # arrayT
              | type '(' ( type (',' type)* ','? )? ')'  # funcT

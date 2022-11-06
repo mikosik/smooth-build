@@ -55,10 +55,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           result = 0x01("abc");
           """)
-          .loadsWithError(1, """
-              mismatched input '(' expecting {';', '|'}
-              result = 0x01("abc");
-                           ^""");
+          .loadsWithError(1, "Illegal call.");
     }
 
     @Test
@@ -67,10 +64,7 @@ public class ExprSUsageTest extends TestContext {
           """
           result = 0x01.accessedField;
           """)
-          .loadsWithError(1, """
-              mismatched input '.' expecting {';', '|'}
-              result = 0x01.accessedField;
-                           ^""");
+          .loadsWithError(1, "Illegal field access.");
     }
   }
 
@@ -122,10 +116,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           result = 123("abc");
           """)
-          .loadsWithError(1, """
-              mismatched input '(' expecting {';', '|'}
-              result = 123("abc");
-                          ^""");
+          .loadsWithError(1, "Illegal call.");
     }
 
     @Test
@@ -134,10 +125,7 @@ public class ExprSUsageTest extends TestContext {
           """
           result = 123.accessedField;
           """)
-          .loadsWithError(1, """
-              mismatched input '.' expecting {';', '|'}
-              result = 123.accessedField;
-                          ^""");
+          .loadsWithError(1, "Illegal field access.");
     }
   }
 
@@ -189,10 +177,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           result = "text"("abc");
           """)
-          .loadsWithError(1, """
-              mismatched input '(' expecting {';', '|'}
-              result = "text"("abc");
-                             ^""");
+          .loadsWithError(1, "Illegal call.");
     }
 
     @Test
@@ -201,10 +186,7 @@ public class ExprSUsageTest extends TestContext {
           """
           result = "abc".accessedField;
           """)
-          .loadsWithError(1, """
-              mismatched input '.' expecting {';', '|'}
-              result = "abc".accessedField;
-                            ^""");
+          .loadsWithError(1, "Illegal field access.");
     }
   }
 
@@ -256,10 +238,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           result = ["text"]("abc");
           """)
-          .loadsWithError(1, """
-              mismatched input '(' expecting {';', '|'}
-              result = ["text"]("abc");
-                               ^""");
+          .loadsWithError(1, "Illegal call.");
     }
 
     @Test
@@ -268,10 +247,7 @@ public class ExprSUsageTest extends TestContext {
           """
           result = ["abc"].accessedField;
           """)
-          .loadsWithError(1, """
-              mismatched input '.' expecting {';', '|'}
-              result = ["abc"].accessedField;
-                              ^""");
+          .loadsWithError(1, "Illegal field access.");
     }
   }
 

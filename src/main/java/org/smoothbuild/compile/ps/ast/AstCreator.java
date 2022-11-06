@@ -2,6 +2,8 @@ package org.smoothbuild.compile.ps.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.compile.lang.base.Loc.loc;
+import static org.smoothbuild.compile.ps.CompileError.compileError;
+import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -20,16 +22,14 @@ import org.smoothbuild.antlr.lang.SmoothParser.AnnContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ChainCallContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ChainHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncTContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ItemListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
@@ -54,9 +54,13 @@ import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.out.log.Level;
+import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Maybe;
 
 public class AstCreator {
-  public static Ast fromParseTree(FilePath filePath, ModContext module) {
+  public static Maybe<Ast> fromParseTree(FilePath filePath, ModContext module) {
+    var logs = new LogBuffer();
     List<StructP> structs = new ArrayList<>();
     List<PolyEvaluableP> evaluables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
@@ -136,62 +140,67 @@ public class AstCreator {
       }
 
       private ExprP createExpr(ExprContext expr) {
-        ExprP result = createChainHead(expr.exprHead());
-        List<ChainCallContext> chainCallsInPipe = expr.chainCall();
-        for (ChainCallContext chainCall : chainCallsInPipe) {
-          result = createChainCallObj(result, chainCall);
+        ExprP result = null;
+        for (var chainContext : expr.chain()) {
+          result = createChain(result, chainContext);
         }
         return result;
       }
 
-      private ExprP createChainHead(ExprHeadContext expr) {
-        if (expr.chain() != null) {
-          return createChainObj(expr.chain());
-        }
-        if (expr.literal() != null) {
-          return createLiteral(expr.literal());
-        }
-        throw newRuntimeException(ExprHeadContext.class);
+      private ExprP createChain(ExprP pipedArg, ChainContext chain) {
+        var chainHead = createChainHead(chain.chainHead());
+        return createChain(pipedArg, chainHead, chain.chainPart(), chain);
       }
 
-      private ExprP createChainObj(ChainContext chain) {
-        ExprP result = newRefNode(chain.NAME());
-        return createChainParts(result, chain.chainPart());
+      private ExprP createChainHead(ChainHeadContext chainHead) {
+        if (chainHead.NAME() != null) {
+          return newRefNode(chainHead.NAME());
+        }
+        if (chainHead.array() != null) {
+          List<ExprP> elems = map(chainHead.array().expr(), this::createExpr);
+          return new OrderP(elems, locOf(filePath, chainHead));
+        }
+        if (chainHead.BLOB() != null) {
+          return new BlobP(chainHead.BLOB().getText().substring(2), locOf(filePath, chainHead));
+        }
+        if (chainHead.INT() != null) {
+          return new IntP(chainHead.INT().getText(), locOf(filePath, chainHead));
+        }
+        if (chainHead.STRING() != null) {
+          return createStringNode(chainHead, chainHead.STRING());
+        }
+        throw newRuntimeException(ChainHeadContext.class);
       }
 
-      private ExprP createLiteral(LiteralContext expr) {
-        if (expr.array() != null) {
-          List<ExprP> elems = map(expr.array().expr(), this::createExpr);
-          return new OrderP(elems, locOf(filePath, expr));
+      private ExprP createChain(ExprP pipedArg, ExprP chainHead, List<ChainPartContext> chainParts,
+          ChainContext chain) {
+        var result = chainHead;
+        for (var chainPart : chainParts) {
+          var argList = chainPart.argList();
+          if (argList != null) {
+            var args = createArgList(argList);
+            if (pipedArg != null) {
+              args = concat(pipedArg, args);
+              pipedArg = null;
+            }
+            result = createCall(result, args, argList);
+          } else if (chainPart.select() != null) {
+            result = createSelect(result, chainPart.select());
+          } else {
+            throw newRuntimeException(ChainPartContext.class);
+          }
         }
-        if (expr.BLOB() != null) {
-          return new BlobP(expr.BLOB().getText().substring(2), locOf(filePath, expr));
+        if (pipedArg != null) {
+          var loc = locOf(filePath, chain);
+          logs.log(compileError(loc, "Piped value is not consumed."));
         }
-        if (expr.INT() != null) {
-          return new IntP(expr.INT().getText(), locOf(filePath, expr));
-        }
-        if (expr.STRING() != null) {
-          return createStringNode(expr, expr.STRING());
-        }
-        throw newRuntimeException(LiteralContext.class);
+        return result;
       }
 
       private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
         String unquoted = unquote(quotedString.getText());
         Loc loc = locOf(filePath, expr);
         return new StringP(unquoted, loc);
-      }
-
-      private ExprP createChainCallObj(ExprP expr, ChainCallContext chainCall) {
-        ExprP result = newRefNode(chainCall.NAME());
-        for (SelectContext fieldRead : chainCall.select()) {
-          result = createSelect(result, fieldRead);
-        }
-
-        var args = createArgList(chainCall.argList());
-        result = createCall(result, concat(expr, args), chainCall.argList());
-
-        return createChainParts(result, chainCall.chainPart());
       }
 
       private RefP newRefNode(TerminalNode name) {
@@ -202,21 +211,6 @@ public class AstCreator {
         String name = fieldRead.NAME().getText();
         Loc loc = locOf(filePath, fieldRead);
         return new SelectP(selectable, name, loc);
-      }
-
-      private ExprP createChainParts(ExprP expr, List<ChainPartContext> chainParts) {
-        ExprP result = expr;
-        for (ChainPartContext chainPart : chainParts) {
-          if (chainPart.argList() != null) {
-            var args = createArgList(chainPart.argList());
-            result = createCall(result, args, chainPart.argList());
-          } else if (chainPart.select() != null) {
-            result = createSelect(result, chainPart.select());
-          } else {
-            throw newRuntimeException(ChainContext.class);
-          }
-        }
-        return result;
       }
 
       private List<ExprP> createArgList(ArgListContext argList) {
@@ -273,7 +267,8 @@ public class AstCreator {
             + " without children.");
       }
     }.visit(module);
-    return new Ast(structs, evaluables);
+    var ast = new Ast(structs, evaluables);
+    return maybe(logs.containsAtLeast(Level.ERROR) ? null : ast, logs);
   }
 
   private static String unquote(String quotedString) {

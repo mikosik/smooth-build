@@ -29,7 +29,12 @@ public class LoadModule {
       return maybeLogs(logBuffer);
     }
 
-    Ast ast = fromParseTree(filePath, moduleContext.value());
+    var maybeAst = fromParseTree(filePath, moduleContext.value());
+    logBuffer.logAll(maybeAst.logs());
+    if (maybeAst.logs().containsAtLeast(ERROR)) {
+      return maybeLogs(logBuffer);
+    }
+    var ast = maybeAst.value();
     logBuffer.logAll(analyzeSemantically(imported, ast));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);

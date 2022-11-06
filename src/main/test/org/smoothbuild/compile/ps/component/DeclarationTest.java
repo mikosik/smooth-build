@@ -1400,9 +1400,9 @@ public class DeclarationTest extends TestContext {
     }
 
     @Nested
-    class _pipe {
+    class _pipe_with_not_consumed_piped_value {
       @Test
-      public void non_first_chain_in_a_pipe_must_have_func_call() {
+      public void when_not_consumed_by_select() {
         module("""
             MyStruct {
               String myField
@@ -1410,10 +1410,40 @@ public class DeclarationTest extends TestContext {
             myValue = myStruct("def");
             result = "abc" | myValue.myField;
             """)
-            .loadsWithError(5, """
-                extraneous input ';' expecting {'(', '.'}
-                result = "abc" | myValue.myField;
-                                                ^""");
+            .loadsWithError(5, "Piped value is not consumed.");
+      }
+
+      @Test
+      public void when_not_consumed_by_int_literal() {
+        module("""
+            result = "abc" | 7;
+            """)
+            .loadsWithError(1, "Piped value is not consumed.");
+      }
+
+      @Test
+      public void when_not_consumed_by_string_literal() {
+        module("""
+            result = "abc" | "def";
+            """)
+            .loadsWithError(1, "Piped value is not consumed.");
+      }
+
+      @Test
+      public void when_not_consumed_by_blob_literal() {
+        module("""
+            result = "abc" | 0xAA;
+            """)
+            .loadsWithError(1, "Piped value is not consumed.");
+      }
+
+      @Test
+      public void when_not_consumed_by_value_ref() {
+        module("""
+            myValue = 7;
+            result = "abc" | myValue;
+            """)
+            .loadsWithError(2, "Piped value is not consumed.");
       }
     }
   }

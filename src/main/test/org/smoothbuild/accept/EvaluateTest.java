@@ -93,6 +93,26 @@ public class EvaluateTest extends AcceptanceTestCase {
     }
 
     @Test
+    public void bug() throws Exception {
+      createUserModule("""
+            MyStruct {
+              Int()(String) field,
+            }
+            Int return7() = 7;
+            Int() returnReturn7(String s) = return7;
+            aStruct = myStruct(returnReturn7);
+            # TODO
+            # smooth-lang design problems:
+            # - "abc" is passed to first call but this is not intuitive
+            # - "abc" skips selection: `aStruct.field`
+            Int result = "abc" | aStruct.field()();
+            """);
+      evaluate("result");
+      assertThat(artifact())
+          .isEqualTo(intB(7));
+    }
+
+    @Test
     public void order() throws Exception {
       createUserModule("""
             [Int] result = [1, 2, 3];
