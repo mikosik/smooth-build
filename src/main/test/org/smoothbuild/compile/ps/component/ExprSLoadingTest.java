@@ -318,34 +318,50 @@ public class ExprSLoadingTest extends TestContext {
       }
     }
 
-    @Test
-    public void order() {
-      module("""
+    @Nested
+    class _order {
+      @Test
+      public void order() {
+        module("""
           result =
           [
             0x07,
             0x08
           ];
           """)
-          .loadsWithSuccess()
-          .containsEvaluable(polyDefValS(
-              1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
-    }
+            .loadsWithSuccess()
+            .containsEvaluable(polyDefValS(
+                1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
+      }
 
-    @Test
-    public void order_of_funcs() {
-      var code = """
+      @Test
+      public void order_with_piped_value() {
+        module("""
+          result = 0x07 |
+          [
+            0x08
+          ];
+          """)
+            .loadsWithSuccess()
+            .containsEvaluable(polyDefValS(
+                1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(1, 7), blobS(3, 8))));
+      }
+
+      @Test
+      public void order_of_funcs() {
+        var code = """
           Int returnInt() = 7;
           result =
           [
             returnInt,
           ];
           """;
-      var orderS = orderS(3, polyRefS(4, defFuncS(1, "returnInt", nlist(), intS(1, 7))));
-      var expected = polyDefValS(2, "result", orderS);
-      module(code)
-          .loadsWithSuccess()
-          .containsEvaluable(expected);
+        var orderS = orderS(3, polyRefS(4, defFuncS(1, "returnInt", nlist(), intS(1, 7))));
+        var expected = polyDefValS(2, "result", orderS);
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluable(expected);
+      }
     }
 
     @Test

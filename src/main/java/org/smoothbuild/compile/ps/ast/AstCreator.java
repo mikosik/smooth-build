@@ -13,6 +13,7 @@ import static org.smoothbuild.util.collect.Lists.skip;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -147,17 +148,27 @@ public class AstCreator {
         return result;
       }
 
-      private ExprP createChain(ExprP pipedArg, ChainContext chain) {
-        var chainHead = createChainHead(chain.chainHead());
-        return createChain(pipedArg, chainHead, chain.chainPart(), chain);
+      private ExprP createChain(ExprP pipedValue, ChainContext chain) {
+        var piped = new AtomicReference<>(pipedValue);
+        var chainHead = createChainHead(piped, chain.chainHead());
+        var result = createChain(piped, chainHead, chain.chainPart());
+        if (piped.get() != null) {
+          var loc = locOf(filePath, chain);
+          logs.log(compileError(loc, "Piped value is not consumed."));
+        }
+        return result;
       }
 
-      private ExprP createChainHead(ChainHeadContext chainHead) {
+      private ExprP createChainHead(AtomicReference<ExprP> pipedArg, ChainHeadContext chainHead) {
         if (chainHead.NAME() != null) {
           return newRefNode(chainHead.NAME());
         }
         if (chainHead.array() != null) {
-          List<ExprP> elems = map(chainHead.array().expr(), this::createExpr);
+          var elems = map(chainHead.array().expr(), this::createExpr);
+          if (pipedArg.get() != null) {
+            elems = concat(pipedArg.get(), elems);
+            pipedArg.set(null);
+          }
           return new OrderP(elems, locOf(filePath, chainHead));
         }
         if (chainHead.BLOB() != null) {
@@ -172,16 +183,16 @@ public class AstCreator {
         throw newRuntimeException(ChainHeadContext.class);
       }
 
-      private ExprP createChain(ExprP pipedArg, ExprP chainHead, List<ChainPartContext> chainParts,
-          ChainContext chain) {
+      private ExprP createChain(AtomicReference<ExprP> pipedArg, ExprP chainHead,
+          List<ChainPartContext> chainParts) {
         var result = chainHead;
         for (var chainPart : chainParts) {
           var argList = chainPart.argList();
           if (argList != null) {
             var args = createArgList(argList);
-            if (pipedArg != null) {
-              args = concat(pipedArg, args);
-              pipedArg = null;
+            if (pipedArg.get() != null) {
+              args = concat(pipedArg.get(), args);
+              pipedArg.set(null);
             }
             result = createCall(result, args, argList);
           } else if (chainPart.select() != null) {
@@ -189,10 +200,6 @@ public class AstCreator {
           } else {
             throw newRuntimeException(ChainPartContext.class);
           }
-        }
-        if (pipedArg != null) {
-          var loc = locOf(filePath, chain);
-          logs.log(compileError(loc, "Piped value is not consumed."));
         }
         return result;
       }
