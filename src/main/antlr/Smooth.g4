@@ -21,11 +21,10 @@ argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg          : ( NAME '=' )? expr ;
 array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
 select       : '.' NAME ;
-type         : NAME                        # typeName
-             | '[' type ']'                 # arrayT
-             | type '(' typeList ')'        # funcT
+type         : NAME                                     # typeName
+             | '[' type ']'                             # arrayT
+             | type '(' ( type (',' type)* ','? )? ')'  # funcT
              ;
-typeList     : ( type (',' type)* ','? )? ;
 
 NAME         : NON_DIGIT_CHAR NAME_CHAR* ;
 INT          : '-'? DIGIT+ ;

@@ -4,9 +4,9 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.compile.lang.base.Loc.loc;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.sane;
+import static org.smoothbuild.util.collect.Lists.skip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
-import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.compile.lang.base.Loc;
@@ -55,8 +54,6 @@ import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.fs.space.FilePath;
-
-import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
   public static Ast fromParseTree(FilePath filePath, ModContext module) {
@@ -265,17 +262,10 @@ public class AstCreator {
       }
 
       private TypeP createFuncT(FuncTContext funcT) {
-        TypeP resultType = createT(funcT.type());
-        return new FuncTP(resultType, createTs(funcT.typeList()),
-            locOf(filePath, funcT));
-      }
-
-      private ImmutableList<TypeP> createTs(TypeListContext typeList) {
-        if (typeList != null) {
-          return map(typeList.type(), this::createT);
-        } else {
-          return list();
-        }
+        var types = map(funcT.type(), this::createT);
+        var resT = types.get(0);
+        var paramTs = skip(1, types);
+        return new FuncTP(resT, paramTs, locOf(filePath, funcT));
       }
 
       private RuntimeException newRuntimeException(Class<?> clazz) {
