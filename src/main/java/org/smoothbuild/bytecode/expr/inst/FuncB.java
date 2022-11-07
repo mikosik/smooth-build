@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.type.inst.FuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 
 public abstract sealed class FuncB extends InstB
-    permits IfFuncB, MapFuncB, DefFuncB, NatFuncB {
+    permits DefFuncB, IfFuncB, MapFuncB, NatFuncB {
   public FuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
     checkArgument(merkleRoot.category() instanceof FuncCB);

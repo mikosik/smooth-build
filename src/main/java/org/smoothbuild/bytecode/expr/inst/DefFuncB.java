@@ -9,7 +9,7 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.inst.DefFuncCB;
 
 /**
- * Function.
+ * Defined Function.
  * This class is thread-safe.
  */
 public final class DefFuncB extends FuncB {
