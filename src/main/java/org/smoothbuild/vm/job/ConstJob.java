@@ -7,16 +7,18 @@ import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.task.ConstTask;
 
 public class ConstJob extends Job {
-  private final InstB instB;
-
   public ConstJob(InstB instB, ExecutionContext context) {
-    super(context);
-    this.instB = instB;
+    super(instB, context);
+  }
+
+  @Override
+  public InstB exprB() {
+    return ((InstB) super.exprB());
   }
 
   @Override
   protected Promise<InstB> evaluateImpl() {
-    var task = new ConstTask(instB, context().trace());
+    var task = new ConstTask(exprB(), context().trace());
     return evaluateTransitively(task, list());
   }
 }

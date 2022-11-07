@@ -14,10 +14,16 @@ import com.google.common.collect.ImmutableList;
 
 public abstract class Job {
   private volatile Promise<InstB> promise;
+  private final ExprB exprB;
   private final ExecutionContext context;
 
-  public Job(ExecutionContext context) {
+  public Job(ExprB exprB, ExecutionContext context) {
+    this.exprB = exprB;
     this.context = context;
+  }
+
+  public ExprB exprB() {
+    return exprB;
   }
 
   protected ExecutionContext context() {

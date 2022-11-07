@@ -10,17 +10,21 @@ import org.smoothbuild.vm.task.Task;
 
 public class OperJob<T extends OperB> extends Job {
   private final BiFunction<T, TraceB, Task> taskConstructor;
-  private final T operB;
 
   public OperJob(BiFunction<T, TraceB, Task> taskConstructor, T operB, ExecutionContext context) {
-    super(context);
+    super(operB, context);
     this.taskConstructor = taskConstructor;
-    this.operB = operB;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public T exprB() {
+    return (T) super.exprB();
   }
 
   @Override
   protected Promise<InstB> evaluateImpl() {
-    var task = taskConstructor.apply(operB, context().trace());
-    return evaluateTransitively(task, operB.dataSeq());
+    var task = taskConstructor.apply(exprB(), context().trace());
+    return evaluateTransitively(task, exprB().dataSeq());
   }
 }

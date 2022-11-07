@@ -26,19 +26,21 @@ import org.smoothbuild.vm.task.InvokeTask;
 import com.google.common.collect.ImmutableList;
 
 public class CallJob extends Job {
-  private final CallB callB;
-
   public CallJob(CallB callB, ExecutionContext context) {
-    super(context);
-    this.callB = callB;
+    super(callB, context);
+  }
+
+  @Override
+  public CallB exprB() {
+    return (CallB) super.exprB();
   }
 
   @Override
   public Promise<InstB> evaluateImpl() {
     var result = new PromisedValue<InstB>();
     evaluateImpl(
-        callB.dataSeq().get(0),
-        funcB -> onFuncEvaluated(callB, funcB, result));
+        exprB().dataSeq().get(0),
+        funcB -> onFuncEvaluated(exprB(), funcB, result));
     return result;
   }
 
@@ -129,10 +131,10 @@ public class CallJob extends Job {
   }
 
   private ImmutableList<ExprB> args() {
-    return ((CombineB) callB.dataSeq().get(1)).dataSeq();
+    return ((CombineB) exprB().dataSeq().get(1)).dataSeq();
   }
 
   private TraceB trace(FuncB funcB) {
-    return new TraceB(callB.hash(), funcB.hash(), context().trace());
+    return new TraceB(exprB().hash(), funcB.hash(), context().trace());
   }
 }
