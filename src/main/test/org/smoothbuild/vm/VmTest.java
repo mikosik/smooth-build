@@ -386,6 +386,22 @@ public class VmTest extends TestContext {
       }
 
       @Test
+      public void ref_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
+          throws InterruptedException {
+        var funcB = defFuncB(list(blobTB()), refB(intTB(), 0));
+        var reporter = mock(Reporter.class);
+        var vm = vm(reporter);
+        vm.evaluate(list(callB(funcB, blobB())));
+        verify(reporter, times(1))
+            .report(eq("Internal smooth error"), argThat(isLogListWithFatalWrongEnvironmentType()));
+      }
+
+      private ArgumentMatcher<List<Log>> isLogListWithFatalWrongEnvironmentType() {
+        return isLogListWithFatalMessageStartingWith("Computation failed with: "
+            + "java.lang.RuntimeException: environment(0) evalT is `Blob` but expected `Int`");
+      }
+
+      @Test
       public void select() {
         var tuple = tupleB(intB(7));
         var select = selectB(tuple, intB(0));
