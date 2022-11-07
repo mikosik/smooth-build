@@ -1,6 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.run.FindTopValues.findTopValues;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.zip;
@@ -16,7 +17,9 @@ import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.Evaluator;
+import org.smoothbuild.run.eval.EvaluatorExc;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class BuildRunner {
@@ -65,12 +68,21 @@ public class BuildRunner {
     }
 
     var evaluables = evaluablesOpt.get();
-    var evaluationsOpt = evaluator.evaluate(evaluables);
+    var evaluationsOpt = evaluate(evaluables);
     if (evaluationsOpt.isEmpty()) {
       return Optional.empty();
     }
     var values = evaluationsOpt.get();
     var monoEvaluables = map(evaluables, PolyValS::mono);
     return Optional.of(zip(monoEvaluables, values));
+  }
+
+  private Optional<ImmutableList<InstB>> evaluate(ImmutableList<PolyValS> evaluables) {
+    try {
+      return evaluator.evaluate(evaluables);
+    } catch (EvaluatorExc e) {
+      reporter.report(fatal(e.getMessage()));
+      return Optional.empty();
+    }
   }
 }

@@ -30,7 +30,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<InstB>> evaluate(ImmutableList<PolyValS> vals) {
+  public Optional<ImmutableList<InstB>> evaluate(ImmutableList<PolyValS> vals) throws EvaluatorExc {
     try {
       var refs = map(vals, v -> new PolyRefS(v, commandLineLoc()));
       reporter.startNewPhase("Compiling");
@@ -39,11 +39,9 @@ public class Evaluator {
       var vm = vmFactory.newVm(sbTranslation.bsMapping());
       return vm.evaluate(sbTranslation.exprBs());
     } catch (SbTranslatorExc e) {
-      reporter.report(fatal(e.getMessage()));
-      return Optional.empty();
+      throw new EvaluatorExc(e.getMessage());
     } catch (InterruptedException e) {
-      reporter.report(fatal("Evaluation process has been interrupted."));
-      return Optional.empty();
+      throw new EvaluatorExc("Evaluation process has been interrupted.");
     }
   }
 }

@@ -39,19 +39,19 @@ public class EvaluatorTest  extends TestContext {
     @Nested
     class _instances {
       @Test
-      public void blob() {
+      public void blob() throws EvaluatorExc {
         assertThat(evaluate(blobS(7)))
             .isEqualTo(blobB(7));
       }
 
       @Test
-      public void int_() {
+      public void int_() throws EvaluatorExc {
         assertThat(evaluate(intS(8)))
             .isEqualTo(intB(8));
       }
 
       @Test
-      public void string() {
+      public void string() throws EvaluatorExc {
         assertThat(evaluate(stringS("abc")))
             .isEqualTo(stringB("abc"));
       }
@@ -60,7 +60,7 @@ public class EvaluatorTest  extends TestContext {
     @Nested
     class _call {
       @Test
-      public void call() {
+      public void call() throws EvaluatorExc {
         var defFuncS = defFuncS("n", nlist(), intS(7));
         var callS = callS(polyRefS(defFuncS));
         assertThat(evaluate(callS))
@@ -68,7 +68,7 @@ public class EvaluatorTest  extends TestContext {
       }
 
       @Test
-      public void call_polymorphic() {
+      public void call_polymorphic() throws EvaluatorExc {
         var a = varA();
         var orderS = orderS(a, paramRefS(a, "e"));
         var funcS = polyDefFuncS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
@@ -110,7 +110,7 @@ public class EvaluatorTest  extends TestContext {
     @Nested
     class _func {
       @Test
-      public void def_func() {
+      public void def_func() throws EvaluatorExc {
         assertThat(evaluate(polyRefS(intIdFuncS())))
             .isEqualTo(idFuncB());
       }
@@ -133,7 +133,7 @@ public class EvaluatorTest  extends TestContext {
       }
 
       @Test
-      public void synt_ctor() {
+      public void synt_ctor() throws EvaluatorExc {
         var syntCtorS = syntCtorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
         assertThat(evaluate(polyRefS(syntCtorS)))
             .isEqualTo(defFuncB(list(intTB()), combineB(refB(intTB(), 0))));
@@ -143,7 +143,7 @@ public class EvaluatorTest  extends TestContext {
     @Nested
     class _poly_ref {
       @Test
-      public void poly_func() {
+      public void poly_func() throws EvaluatorExc {
         var a = varA();
         var funcS = polyDefFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
         var polyRefS = polyRefS(varMap(a, intTS()), funcS);
@@ -152,7 +152,7 @@ public class EvaluatorTest  extends TestContext {
       }
 
       @Test
-      public void poly_val() {
+      public void poly_val() throws EvaluatorExc {
         var a = varA();
         var val = polyDefValS(1, arrayTS(a), "name", orderS(a));
         var polyRefS = polyRefS(varMap(a, intTS()), val);
@@ -164,7 +164,7 @@ public class EvaluatorTest  extends TestContext {
     @Nested
     class _order {
       @Test
-      public void order() {
+      public void order() throws EvaluatorExc {
         assertThat(evaluate(orderS(intTS(), intS(7), intS(8))))
             .isEqualTo(arrayB(intTB(), intB(7), intB(8)));
       }
@@ -173,7 +173,7 @@ public class EvaluatorTest  extends TestContext {
     @Nested
     class _select {
       @Test
-      public void select() {
+      public void select() throws EvaluatorExc {
         var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
         var syntCtorS = syntCtorS(structTS);
         var callS = callS(polyRefS(syntCtorS), intS(7));
@@ -183,7 +183,7 @@ public class EvaluatorTest  extends TestContext {
     }
   }
 
-  private ExprB evaluate(ExprS exprS) {
+  private ExprB evaluate(ExprS exprS) throws EvaluatorExc {
     var resultMap = newEvaluator().evaluate(list(polyDefValS("name", exprS))).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
