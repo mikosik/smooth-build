@@ -4,7 +4,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.run.FindTopValues.findTopValues;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.zip;
+import static org.smoothbuild.util.collect.Optionals.mapPair;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +18,7 @@ import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.Evaluator;
 import org.smoothbuild.run.eval.EvaluatorExc;
+import org.smoothbuild.util.collect.Maps;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -40,6 +41,11 @@ public class BuildRunner {
   }
 
   public int run(List<String> names) {
+    if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
+      reporter.printSummary();
+      return EXIT_CODE_ERROR;
+    }
+
     var artifactsOpt = evaluate(names);
     if (artifactsOpt.isEmpty()) {
       reporter.printSummary();
@@ -52,29 +58,11 @@ public class BuildRunner {
   }
 
   public Optional<ImmutableMap<ValS, InstB>> evaluate(List<String> names) {
-    if (artifactsRemover.removeArtifacts() == EXIT_CODE_ERROR) {
-      return Optional.empty();
-    }
-
     var defsOpt = defsLoader.loadDefs();
-    if (defsOpt.isEmpty()) {
-      return Optional.empty();
-    }
-
-    var defs = defsOpt.get();
-    var evaluablesOpt = findTopValues(reporter, defs, names);
-    if (evaluablesOpt.isEmpty()) {
-      return Optional.empty();
-    }
-
-    var evaluables = evaluablesOpt.get();
-    var evaluationsOpt = evaluate(evaluables);
-    if (evaluationsOpt.isEmpty()) {
-      return Optional.empty();
-    }
-    var values = evaluationsOpt.get();
-    var monoEvaluables = map(evaluables, PolyValS::mono);
-    return Optional.of(zip(monoEvaluables, values));
+    var evaluablesOpt = defsOpt.flatMap(d -> findTopValues(reporter, d, names));
+    var evaluationsOpt = evaluablesOpt.flatMap(this::evaluate);
+    var monoEvaluablesOpt = evaluablesOpt.map(e -> map(e, PolyValS::mono));
+    return mapPair(monoEvaluablesOpt, evaluationsOpt, Maps::zip);
   }
 
   private Optional<ImmutableList<InstB>> evaluate(ImmutableList<PolyValS> evaluables) {
