@@ -26,8 +26,7 @@ public final class NatFuncB extends FuncB {
   }
 
   public StringB classBinaryName() {
-    return readDataSeqElem(
-        CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, StringB.class);
+    return readDataSeqElem(CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, StringB.class);
   }
 
   public BoolB isPure() {
