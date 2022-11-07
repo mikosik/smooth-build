@@ -20,9 +20,16 @@ public class DefFuncBTest extends TestContext {
   }
 
   @Test
+  public void setting_environment_to_null_throws_exception() {
+    var funcT = funcTB(intTB(), boolTB());
+    assertCall(() -> defFuncB(funcT, null, intB()))
+        .throwsException(NullPointerException.class);
+  }
+
+  @Test
   public void setting_body_to_null_throws_exception() {
     var funcT = funcTB(intTB(), boolTB());
-    assertCall(() -> defFuncB(funcT, null))
+    assertCall(() -> defFuncB(funcT, combineB(), null))
         .throwsException(NullPointerException.class);
   }
 
@@ -34,13 +41,23 @@ public class DefFuncBTest extends TestContext {
   }
 
   @Test
-  public void body_contains_object_passed_during_combineion() {
+  public void environment_contains_object_passed_during_construction() {
     var funcT = funcTB(intTB(), boolTB());
     var body = intB(33);
-    assertThat(defFuncB(funcT, body).body())
-        .isEqualTo(body);
+    var environment = combineB(intB());
+    var defFuncB = defFuncB(funcT, environment, body);
+    assertThat(defFuncB.environment())
+        .isEqualTo(environment);
   }
 
+  @Test
+  public void body_contains_object_passed_during_construction() {
+    var funcT = funcTB(intTB(), boolTB());
+    var body = intB(33);
+    var defFuncB = defFuncB(funcT, combineB(intB()), body);
+    assertThat(defFuncB.body())
+        .isEqualTo(body);
+  }
 
   @Nested
   class _equals_hash_hashcode extends ExprBTestCase<DefFuncB> {

@@ -70,7 +70,7 @@ import okio.ByteString;
 
 public class ExprBCorruptedTest extends TestContext {
   @Nested
-  class expr {
+  class _expr {
     @Test
     public void learning_test() throws Exception {
       /*
@@ -666,15 +666,21 @@ public class ExprBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save DefFunc
        * in HashedDb.
        */
-      var bodyExpr = boolB(true);
+      var environment = combineB(blobB());
+      var body = boolB(true);
       var cat = defFuncCB(boolTB(), intTB(), stringTB());
-      Hash exprHash =
+      var hash =
           hash(
               hash(cat),
-              hash(bodyExpr)
+              hash(
+                  hash(environment),
+                  hash(body)
+              )
           );
-      assertThat(((DefFuncB) bytecodeDb().get(exprHash)).body())
-          .isEqualTo(bodyExpr);
+      assertThat(((DefFuncB) bytecodeDb().get(hash)).environment())
+          .isEqualTo(environment);
+      assertThat(((DefFuncB) bytecodeDb().get(hash)).body())
+          .isEqualTo(body);
     }
 
     @Test
@@ -695,22 +701,62 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(defFuncCB(),
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          defFuncCB(),
           (Hash exprHash) -> ((DefFuncB) bytecodeDb().get(exprHash)).body());
     }
 
     @Test
+    public void data_is_seq_with_one_elem() throws Exception {
+      var environment = combineB(blobB());
+      var defFuncCB = defFuncCB(boolTB(), intTB(), stringTB());
+      var dataHash = hash(
+          hash(environment)
+      );
+      var hash =
+          hash(
+              hash(defFuncCB),
+              dataHash
+          );
+      assertCall(() -> ((DefFuncB) bytecodeDb().get(hash)).environment())
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, defFuncCB, DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_seq_with_three_elems() throws Exception {
+      var environment = combineB(blobB());
+      var body = boolB(true);
+      var defFuncCB = defFuncCB(boolTB(), intTB(), stringTB());
+      var dataHash = hash(
+          hash(environment),
+          hash(body),
+          hash(body)
+      );
+      var hash =
+          hash(
+              hash(defFuncCB),
+              dataHash
+          );
+      assertCall(() -> ((DefFuncB) bytecodeDb().get(hash)).environment())
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, defFuncCB, DATA_PATH, 2, 3));
+    }
+
+    @Test
     public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
-      var bodyExpr = intB(3);
+      var environment = combineB(blobB());
+      var body = intB(17);
       var cat = defFuncCB(boolTB(), intTB(), stringTB());
-      Hash exprHash =
+      var hash =
           hash(
               hash(cat),
-              hash(bodyExpr)
+              hash(
+                  hash(environment),
+                  hash(body)
+              )
           );
-      assertCall(() -> ((DefFuncB) bytecodeDb().get(exprHash)).body())
+      assertCall(() -> ((DefFuncB) bytecodeDb().get(hash)).body())
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              exprHash, cat, DATA_PATH, boolTB(), intTB()));
+              hash, cat, DATA_PATH, boolTB(), intTB()));
     }
   }
 
@@ -1292,14 +1338,14 @@ public class ExprBCorruptedTest extends TestContext {
       var dataHash = hash(
           hash(expr)
       );
-      Hash exprHash =
+      var hash =
           hash(
               hash(selectCB()),
               dataHash
           );
-      assertCall(() -> ((SelectB) bytecodeDb().get(exprHash)).dataSeq())
+      assertCall(() -> ((SelectB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongSeqSizeExc(
-              exprHash, selectCB(), DATA_PATH, 2, 1));
+              hash, selectCB(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1364,7 +1410,7 @@ public class ExprBCorruptedTest extends TestContext {
       var tuple = tupleB(stringB("abc"));
       var index = intB(0);
       var type = selectCB(intTB());
-      Hash exprHash =
+      var hash =
           hash(
               hash(type),
               hash(
@@ -1373,8 +1419,8 @@ public class ExprBCorruptedTest extends TestContext {
               )
           );
 
-      assertCall(() -> ((SelectB) bytecodeDb().get(exprHash)).dataSeq())
-          .throwsException(new DecodeSelectWrongEvalTypeExc(exprHash, type, stringTB()));
+      assertCall(() -> ((SelectB) bytecodeDb().get(hash)).dataSeq())
+          .throwsException(new DecodeSelectWrongEvalTypeExc(hash, type, stringTB()));
     }
 
     @Test
@@ -1382,7 +1428,7 @@ public class ExprBCorruptedTest extends TestContext {
       var type = selectCB(stringTB());
       var tuple = tupleB(stringB("abc"));
       var strVal = stringB("abc");
-      Hash exprHash =
+      var hash =
           hash(
               hash(type),
               hash(
@@ -1390,9 +1436,9 @@ public class ExprBCorruptedTest extends TestContext {
                   hash(strVal)
               )
           );
-      assertCall(() -> ((SelectB) bytecodeDb().get(exprHash)).dataSeq())
+      assertCall(() -> ((SelectB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              exprHash, type, DATA_PATH + "[1]", IntB.class, StringB.class));
+              hash, type, DATA_PATH + "[1]", IntB.class, StringB.class));
     }
   }
 
@@ -1601,18 +1647,6 @@ public class ExprBCorruptedTest extends TestContext {
             dataHash);
     assertCall(() -> readClosure.apply(exprHash))
         .throwsException(wrongSizeOfRootSeqException(exprHash, 3));
-  }
-
-  private void obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-      CategoryB type, Function<Hash, ?> readClosure) throws HashedDbExc {
-    Hash dataHash = Hash.of(33);
-    Hash exprHash =
-        hash(
-            hash(type),
-            dataHash);
-    assertCall(() -> readClosure.apply(exprHash))
-        .throwsException(new DecodeExprNodeExc(exprHash, type, DATA_PATH))
-        .withCause(new DecodeExprNoSuchExprExc(dataHash));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(

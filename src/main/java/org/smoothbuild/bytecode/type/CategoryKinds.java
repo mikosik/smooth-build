@@ -4,6 +4,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.BlobKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.BoolKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.CallKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.ClosurizeKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.CombineKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.DefFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
@@ -44,4 +45,5 @@ public class CategoryKinds {
   public static final OperKindB<PickCB> PICK = new PickKindB();
   public static final OperKindB<RefCB> REF = new RefKindB();
   public static final OperKindB<SelectCB> SELECT = new SelectKindB();
+  public static final ClosurizeKindB CLOSURIZE = new ClosurizeKindB();
 }

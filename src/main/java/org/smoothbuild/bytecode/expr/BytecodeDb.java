@@ -27,6 +27,7 @@ import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.PickB;
@@ -81,17 +82,10 @@ public class BytecodeDb {
         () -> newNatFunc(cat, jar, classBinaryName, isPure));
   }
 
-  public DefFuncB defFunc(FuncTB type, ExprB body) {
-    checkBodyTypeAssignableToFuncResT(type, body);
+  public DefFuncB defFunc(FuncTB type, CombineB environment, ExprB body) {
+    validateBodyEvalT(type, body);
     var cat = categoryDb.defFunc(type);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newDefFunc(cat, body));
-  }
-
-  private void checkBodyTypeAssignableToFuncResT(FuncTB type, ExprB body) {
-    if (!type.res().equals(body.evalT())) {
-      throw new IllegalArgumentException("`type` specifies result as " + type.res().q()
-          + " but body.evalT() is " + body.evalT().q() + ".");
-    }
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newDefFunc(cat, environment, body));
   }
 
   public IntB int_(BigInteger value) {
@@ -109,7 +103,14 @@ public class BytecodeDb {
   // methods for creating OperB subclasses
 
   public CallB call(ExprB func, CombineB args) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(func, args));
+    var funcTB = castEvalTypeToFuncTB(func);
+    validateArgsInCall(funcTB, args);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(funcTB, func, args));
+  }
+
+  public ClosurizeB closurize(FuncTB funcTB, ExprB body) {
+    validateBodyEvalT(funcTB, body);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(funcTB, body));
   }
 
   public CombineB combine(ImmutableList<ExprB> items) {
@@ -125,6 +126,7 @@ public class BytecodeDb {
   }
 
   public OrderB order(ArrayTB evalT, ImmutableList<ExprB> elems) {
+    validateOrderElems(evalT.elem(), elems);
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT, elems));
   }
 
@@ -138,6 +140,50 @@ public class BytecodeDb {
 
   public SelectB select(ExprB selectable, IntB index) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newSelect(selectable, index));
+  }
+
+  // validators
+
+  private static void validateBodyEvalT(FuncTB funcTB, ExprB body) {
+    if (!body.evalT().equals(funcTB.res())) {
+      var message = "body.evalT() = %s should be equal to funcTB.res() = %s."
+          .formatted(body.evalT().q(), funcTB.res().q());
+      throw new IllegalArgumentException(message);
+    }
+  }
+
+  private void validateOrderElems(TypeB elemT, ImmutableList<ExprB> elems) {
+    for (int i = 0; i < elems.size(); i++) {
+      var iElemT = elems.get(i).evalT();
+      if (!elemT.equals(iElemT)) {
+        throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
+            + " but element at index " + i + " has type " + iElemT.q() + ".");
+      }
+    }
+  }
+
+  private FuncTB castEvalTypeToFuncTB(ExprB func) {
+    if (func.evalT() instanceof FuncTB funcT) {
+      return funcT;
+    } else {
+      throw new IllegalArgumentException("`func` component doesn't evaluate to FuncB.");
+    }
+  }
+
+  private void validateArgsInCall(FuncTB funcTB, CombineB args) {
+    validateArgs(funcTB, args.evalT().items(), () -> {
+      throw illegalArgs(funcTB, args.evalT());
+    });
+  }
+
+  private IllegalArgumentException illegalArgs(FuncTB funcTB, TupleTB argsT) {
+    return new IllegalArgumentException(
+        "Argument evaluation types %s should be equal to function parameter types %s."
+            .formatted(itemTsToString(argsT), itemTsToString(funcTB.params())));
+  }
+
+  private static String itemTsToString(TupleTB argsT) {
+    return "(" + toCommaSeparatedString(argsT.items()) + ")";
   }
 
   // generic getter
@@ -200,8 +246,8 @@ public class BytecodeDb {
     return categoryDb.bool().newExpr(root, this);
   }
 
-  private DefFuncB newDefFunc(DefFuncCB type, ExprB body) throws HashedDbExc {
-    var data = writeDefFuncData(body);
+  private DefFuncB newDefFunc(DefFuncCB type, ExprB environment, ExprB body) throws HashedDbExc {
+    var data = writeDefFuncData(environment, body);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
@@ -234,62 +280,33 @@ public class BytecodeDb {
 
   // methods for creating Expr-s
 
-  private CallB newCall(ExprB func, CombineB args) throws HashedDbExc {
-    var funcTB = castTypeToFuncTB(func);
-    validateArgsInCall(funcTB, args);
-    var type = categoryDb.call(funcTB.res());
+  private CallB newCall(FuncTB funcTB, ExprB func, CombineB args) throws HashedDbExc {
+    var callCB = categoryDb.call(funcTB.res());
     var data = writeCallData(func, args);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
+    var root = newRoot(callCB, data);
+    return callCB.newExpr(root, this);
   }
 
-  private FuncTB castTypeToFuncTB(ExprB func) {
-    if (func.evalT() instanceof FuncTB funcT) {
-      return funcT;
-    } else {
-      throw new IllegalArgumentException("`func` component doesn't evaluate to FuncB.");
-    }
-  }
-
-  private void validateArgsInCall(FuncTB funcTB, CombineB args) {
-    validateArgs(funcTB, args.evalT().items(), () -> {
-      throw illegalArgs(funcTB, args.evalT());
-    });
-  }
-
-  private IllegalArgumentException illegalArgs(FuncTB funcTB, TupleTB argsT) {
-    return new IllegalArgumentException(
-        "Argument evaluation types %s should be equal to function parameter types %s."
-            .formatted(itemTsToString(argsT), itemTsToString(funcTB.params())));
-  }
-
-  private static String itemTsToString(TupleTB argsT) {
-    return "(" + toCommaSeparatedString(argsT.items()) + ")";
+  private ClosurizeB newClosurize(FuncTB funcTB, ExprB body) throws HashedDbExc {
+    var closurizeCB = categoryDb.closurize(funcTB);
+    var dataHash = body.hash();
+    var root = newRoot(closurizeCB, dataHash);
+    return closurizeCB.newExpr(root, this);
   }
 
   private OrderB newOrder(ArrayTB evalT, ImmutableList<ExprB> elems) throws HashedDbExc {
-    validateOrderElems(evalT.elem(), elems);
-    var type = categoryDb.order(evalT);
+    var orderCB = categoryDb.order(evalT);
     var data = writeOrderData(elems);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
-  }
-
-  private void validateOrderElems(TypeB elemT, ImmutableList<ExprB> elems) {
-    for (int i = 0; i < elems.size(); i++) {
-      var iElemT = elems.get(i).evalT();
-      if (!elemT.equals(iElemT)) {
-        throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
-            + " but element at index " + i + " has type " + iElemT.q() + ".");
-      }
-    }
+    var root = newRoot(orderCB, data);
+    return orderCB.newExpr(root, this);
   }
 
   private CombineB newCombine(ImmutableList<ExprB> items) throws HashedDbExc {
-    var type = categoryDb.combine(categoryDb.tuple(map(items, ExprB::evalT)));
+    var evalT = categoryDb.tuple(map(items, ExprB::evalT));
+    var combineCB = categoryDb.combine(evalT);
     var data = writeCombineData(items);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
+    var root = newRoot(combineCB, data);
+    return combineCB.newExpr(root, this);
   }
 
   private IfFuncB newIfFunc(TypeB t) throws HashedDbExc {
@@ -400,8 +417,8 @@ public class BytecodeDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeDefFuncData(ExprB body) {
-    return body.hash();
+  private Hash writeDefFuncData(ExprB environment, ExprB body) throws HashedDbExc {
+    return hashedDb.writeSeq(environment.hash(), body.hash());
   }
 
   private Hash writeIntData(BigInteger value) throws HashedDbExc {

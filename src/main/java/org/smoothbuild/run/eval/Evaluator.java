@@ -1,7 +1,6 @@
 package org.smoothbuild.run.eval;
 
 import static org.smoothbuild.compile.lang.base.Loc.commandLineLoc;
-import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Optional;

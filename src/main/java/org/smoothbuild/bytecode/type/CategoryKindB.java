@@ -4,6 +4,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.DEF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
@@ -33,6 +34,7 @@ import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.PickB;
@@ -42,6 +44,7 @@ import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.BaseKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.ClosurizeKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
@@ -63,7 +66,7 @@ import org.smoothbuild.bytecode.type.oper.RefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 
 public sealed abstract class CategoryKindB
-    permits AbstFuncKindB, ArrayKindB, BaseKindB, FuncKindB, OperKindB, TupleKindB {
+    permits AbstFuncKindB, ArrayKindB, BaseKindB, ClosurizeKindB, FuncKindB, OperKindB, TupleKindB {
   public static sealed class BaseKindB extends CategoryKindB
       permits BlobKindB, BoolKindB, IntKindB, StringKindB {
     private BaseKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
@@ -72,7 +75,7 @@ public sealed abstract class CategoryKindB
   }
 
   public static sealed class OperKindB<T extends OperCB> extends CategoryKindB
-      permits PickKindB, RefKindB, SelectKindB, OrderKindB, CallKindB, CombineKindB {
+      permits CallKindB, CombineKindB, OrderKindB, PickKindB, RefKindB, SelectKindB {
     private final BiFunction<Hash, TypeB, T> constructor;
     private final Class<? extends TypeB> dataClass;
 
@@ -208,6 +211,12 @@ public sealed abstract class CategoryKindB
     }
   }
 
+  public static final class ClosurizeKindB extends CategoryKindB {
+    ClosurizeKindB() {
+      super("CLOSURIZE", (byte) 17, ClosurizeB.class);
+    }
+  }
+
   private final String name;
   private final byte marker;
   private final Class<? extends ExprB> typeJ;
@@ -249,6 +258,7 @@ public sealed abstract class CategoryKindB
       case 14 -> REF;
       case 15 -> MAP_FUNC;
       case 16 -> FUNC;
+      case 17 -> CLOSURIZE;
       default -> null;
     };
   }

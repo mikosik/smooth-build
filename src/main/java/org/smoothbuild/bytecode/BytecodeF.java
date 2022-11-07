@@ -28,6 +28,7 @@ import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.PickB;
@@ -97,6 +98,10 @@ public class BytecodeF {
     return bytecodeDb.call(func, args);
   }
 
+  public ClosurizeB closurize(FuncTB funcTB, ExprB body) {
+    return bytecodeDb.closurize(funcTB, body);
+  }
+
   public CombineB combine(ImmutableList<ExprB> items) {
     return bytecodeDb.combine(items);
   }
@@ -116,7 +121,12 @@ public class BytecodeF {
   }
 
   public DefFuncB defFunc(FuncTB type, ExprB body) {
-    return bytecodeDb.defFunc(type, body);
+    var environment = bytecodeDb.combine(list());
+    return closure(type, environment, body);
+  }
+
+  public DefFuncB closure(FuncTB type, CombineB environment, ExprB body) {
+    return bytecodeDb.defFunc(type, environment, body);
   }
 
   public IfFuncB ifFunc(TypeB t) {

@@ -95,24 +95,31 @@ public class ExprBStableHashTest extends TestContext {
   @Nested
   class _def_func {
     @Test
-    public void with_no_params() {
-      var defFunc = defFuncB(funcTB(intTB()), intB(1));
+    public void with_zero_envs_zero_params() {
+      var defFunc = defFuncB(funcTB(intTB()), combineB(), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("182ca4fe8a2d0587c06fbeb94b89fa0b87ad9a15"));
+          .isEqualTo(Hash.decode("608d8569e03180b3d47e763aa8a0a4aa41cba88d"));
     }
 
     @Test
-    public void with_one_param() {
-      var defFunc = defFuncB(funcTB(intTB(), intTB()), intB(1));
+    public void with_zero_envs_one_param() {
+      var defFunc = defFuncB(funcTB(intTB(), blobTB()), combineB(), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("4a50a1090ba76d28d6fbd598ddd808453b7b53d6"));
+          .isEqualTo(Hash.decode("6d183c1d5df711652425f5a25e9481f0278e7b4e"));
     }
 
     @Test
-    public void with_two_params() {
-      var defFunc = defFuncB(funcTB(intTB(), intTB(), stringTB()), intB(1));
+    public void with_one_env_zero_params() {
+      var defFunc = defFuncB(funcTB(intTB()), combineB(stringB("abc")), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("550f72372ec4ce104d1abb20a6c38c206c7f3572"));
+          .isEqualTo(Hash.decode("09e01279c26aafb84495c16b696036898c468133"));
+    }
+
+    @Test
+    public void with_one_env_one_params() {
+      var defFunc = defFuncB(funcTB(intTB(), blobTB()), combineB(stringB("abc")), intB(1));
+      assertThat(defFunc.hash())
+          .isEqualTo(Hash.decode("71ee4726ea6c2f90a2993bf60c3cee23c8ff1ec3"));
     }
   }
 
@@ -182,17 +189,18 @@ public class ExprBStableHashTest extends TestContext {
   @Nested
   class _call {
     @Test
-    public void call_with_one_arg() {
-      assertThat(callB(defFuncB(list(stringTB()), intB()), stringB("abc")).hash())
-          .isEqualTo(Hash.decode("9e74f80c19a4526e1df19da0fba5a118ff1cf447"));
+    public void call_without_args() {
+      var type = funcTB(intTB());
+      var defFunc = defFuncB(type, intB());
+      assertThat(callB(defFunc).hash())
+          .isEqualTo(Hash.decode("76c9083998f0619052d2f099575c89a5c49bb2e1"));
     }
 
     @Test
-    public void call_without_args() {
-      var type = funcTB(intTB(), stringTB());
-      var defFunc = defFuncB(type, intB());
-      assertThat(callB(defFunc, stringB("abc")).hash())
-          .isEqualTo(Hash.decode("9e74f80c19a4526e1df19da0fba5a118ff1cf447"));
+    public void call_with_one_arg() {
+      var defFuncB = defFuncB(list(stringTB()), intB());
+      assertThat(callB(defFuncB, stringB("abc")).hash())
+          .isEqualTo(Hash.decode("9d01d1484fd8853f3a194132295684553d32e82b"));
     }
   }
 

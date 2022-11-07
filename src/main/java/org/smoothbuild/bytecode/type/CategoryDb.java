@@ -8,6 +8,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.DEF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
@@ -39,6 +40,7 @@ import org.smoothbuild.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.BaseKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.ClosurizeKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.DefFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IfFuncKindB;
@@ -65,6 +67,7 @@ import org.smoothbuild.bytecode.type.inst.StringTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.bytecode.type.oper.CallCB;
+import org.smoothbuild.bytecode.type.oper.ClosurizeCB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
 import org.smoothbuild.bytecode.type.oper.OperCB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
@@ -187,6 +190,10 @@ public class CategoryDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(CALL, evalT));
   }
 
+  public ClosurizeCB closurize(FuncTB evalT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(evalT));
+  }
+
   public CombineCB combine(TupleTB evalT) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(COMBINE, evalT));
   }
@@ -216,17 +223,20 @@ public class CategoryDb {
   private CategoryB read(Hash hash) {
     List<Hash> rootSeq = readCatRootSeq(hash);
     CategoryKindB kind = decodeCatMarker(hash, rootSeq.get(0));
+    // format: off
     return switch (kind) {
-      case ArrayKindB array -> readArrayT(hash, rootSeq, kind);
-      case BaseKindB base -> handleBaseT(hash, rootSeq, kind);
-      case DefFuncKindB defFunc -> readFuncCat(hash, rootSeq, defFunc);
-      case FuncKindB func -> readFuncT(hash, rootSeq);
-      case IfFuncKindB ifFunc -> readIfFuncCat(hash, rootSeq, ifFunc);
-      case MapFuncKindB mapFunc -> readMapFuncCat(hash, rootSeq, mapFunc);
-      case NatFuncKindB natFunc -> readFuncCat(hash, rootSeq, natFunc);
-      case OperKindB<?> oper -> readOperCat(hash, rootSeq, oper);
-      case TupleKindB tuple -> readTupleT(hash, rootSeq);
+      case ArrayKindB     array      -> readArrayT(hash, rootSeq, kind);
+      case BaseKindB      base       -> handleBaseT(hash, rootSeq, kind);
+      case ClosurizeKindB closurizeB -> readClosurizeCat(hash, rootSeq, closurizeB);
+      case DefFuncKindB   defFunc    -> readFuncCat(hash, rootSeq, defFunc);
+      case FuncKindB      func       -> readFuncT(hash, rootSeq);
+      case IfFuncKindB    ifFunc     -> readIfFuncCat(hash, rootSeq, ifFunc);
+      case MapFuncKindB   mapFunc    -> readMapFuncCat(hash, rootSeq, mapFunc);
+      case NatFuncKindB   natFunc    -> readFuncCat(hash, rootSeq, natFunc);
+      case OperKindB<?>   oper       -> readOperCat(hash, rootSeq, oper);
+      case TupleKindB     tuple      -> readTupleT(hash, rootSeq);
     };
+    // formatter: on
   }
 
   private List<Hash> readCatRootSeq(Hash hash) {
@@ -255,6 +265,11 @@ public class CategoryDb {
     assertCatRootSeqSize(hash, kind, rootSeq, 1);
     throw new RuntimeException(
         "Internal error: Category with kind " + kind + " should be found in cache.");
+  }
+
+  private OperCB readClosurizeCat(Hash hash, List<Hash> rootSeq, ClosurizeKindB closurizeKindB) {
+    var evalT = readDataAsType(hash, rootSeq, closurizeKindB, FuncTB.class);
+    return newClosurize(hash, evalT);
   }
 
   private OperCB readOperCat(Hash hash, List<Hash> rootSeq, OperKindB<?> operKind) {
@@ -349,13 +364,15 @@ public class CategoryDb {
 
   // helper methods for reading
 
-  private TypeB readDataAsType(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind,
-      Class<? extends TypeB> typeClass) {
+  private <T extends TypeB> T readDataAsType(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind,
+      Class<T> typeClass) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var hash = rootSeq.get(DATA_IDX);
     var categoryB = wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, DATA_PATH, () -> get(hash));
     if (typeClass.isAssignableFrom(categoryB.getClass())) {
-      return (TypeB) categoryB;
+      @SuppressWarnings("unchecked")
+      T result = (T) categoryB;
+      return result;
     } else {
       throw new DecodeCatWrongNodeCatExc(
           rootHash, kind, DATA_PATH, typeClass, categoryB.getClass());
@@ -423,8 +440,17 @@ public class CategoryDb {
     return cache(new TupleTB(rootHash, items));
   }
 
+  private ClosurizeCB newClosurize(FuncTB funcTB) throws HashedDbExc {
+    var rootHash = writeRootWithData(CLOSURIZE, funcTB);
+    return newClosurize(rootHash, funcTB);
+  }
+
+  private ClosurizeCB newClosurize(Hash rootHash, FuncTB funcTB) {
+    return cache(new ClosurizeCB(rootHash, funcTB));
+  }
+
   private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evalT) throws HashedDbExc {
-    var rootHash = writeOperRoot(kind, evalT);
+    var rootHash = writeRootWithData(kind, evalT);
     return newOper(kind.constructor(), rootHash, evalT);
   }
 
@@ -442,31 +468,30 @@ public class CategoryDb {
   // Methods for writing category root
 
   private Hash writeArrayRoot(CategoryB elem) throws HashedDbExc {
-    return writeNonBaseRoot(ARRAY, elem.hash());
+    return writeRootWithData(ARRAY, elem);
   }
 
   private Hash writeFuncTypeRoot(TypeB res, TupleTB params) throws HashedDbExc {
     var dataHash = hashedDb.writeSeq(res.hash(), params.hash());
-    return writeNonBaseRoot(FUNC, dataHash);
+    return writeRootWithData(FUNC, dataHash);
   }
 
   private Hash writeFuncCategoryRoot(CategoryKindB kind, FuncTB funcTB) throws HashedDbExc {
-    var dataHash = funcTB.hash();
-    return writeNonBaseRoot(kind, dataHash);
+    return writeRootWithData(kind, funcTB);
   }
 
   private Hash writeTupleRoot(ImmutableList<TypeB> items) throws HashedDbExc {
     var dataHash = hashedDb.writeSeq(Lists.map(items, CategoryB::hash));
-    return writeNonBaseRoot(TUPLE, dataHash);
+    return writeRootWithData(TUPLE, dataHash);
   }
 
   // Helper methods for writing roots
 
-  private Hash writeOperRoot(CategoryKindB kind, CategoryB evalT) throws HashedDbExc {
-    return writeNonBaseRoot(kind, evalT.hash());
+  private Hash writeRootWithData(CategoryKindB kind, CategoryB categoryB) throws HashedDbExc {
+    return writeRootWithData(kind, categoryB.hash());
   }
 
-  private Hash writeNonBaseRoot(CategoryKindB kind, Hash dataHash) throws HashedDbExc {
+  private Hash writeRootWithData(CategoryKindB kind, Hash dataHash) throws HashedDbExc {
     return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()), dataHash);
   }
 

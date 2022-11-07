@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.job;
 
+import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -56,12 +57,12 @@ public class CallJob extends Job {
   // handling DefFunc
 
   private void handleDefFunc(DefFuncB defFuncB, Consumer<InstB> resultConsumer) {
-    var argsJ = map(args(), context()::jobFor);
+    var args = args();
+    var closureEnvironment = defFuncB.environment().items();
+    var closureBodyEnvironment = map(concat(args, closureEnvironment), context()::jobFor);
     var trace = trace(defFuncB);
-    evaluateImpl(
-        context().withEnvironment(argsJ, trace),
-        defFuncB.body(),
-        resultConsumer);
+    var newContext = context().withEnvironment(closureBodyEnvironment, trace);
+    evaluateImpl(newContext, defFuncB.body(), resultConsumer);
   }
 
   // handling IfFunc

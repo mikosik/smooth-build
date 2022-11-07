@@ -32,6 +32,10 @@ public class CombineB extends OperB {
     return category().evalT();
   }
 
+  public ImmutableList<ExprB> items() {
+    return dataSeq();
+  }
+
   @Override
   public ImmutableList<ExprB> dataSeq() {
     var expectedItemTs = category().evalT().items();

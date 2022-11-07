@@ -67,9 +67,9 @@ public abstract class ExprB {
     return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
   }
 
-  protected ExprB readDataAsExpr(Hash hash) {
+  protected ExprB readDataAsExpr() {
     return wrapBytecodeDbExcAsDecodeExprNodeException(
-        hash(), category(), DATA_PATH, () -> bytecodeDb.get(hash));
+        hash(), category(), DATA_PATH, () -> bytecodeDb.get(dataHash()));
   }
 
   protected long readDataSeqSize() {

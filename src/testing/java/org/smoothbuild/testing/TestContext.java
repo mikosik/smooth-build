@@ -51,6 +51,7 @@ import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.PickB;
@@ -634,17 +635,29 @@ public class TestContext {
     return defFuncB(intB());
   }
 
+  public DefFuncB defFuncB(CombineB environment, ExprB body) {
+    return defFuncB(list(), environment, body);
+  }
+
   public DefFuncB defFuncB(ExprB body) {
     return defFuncB(list(), body);
   }
 
   public DefFuncB defFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
+    return defFuncB(paramTs, combineB(), body);
+  }
+
+  public DefFuncB defFuncB(ImmutableList<TypeB> paramTs, CombineB environment, ExprB body) {
     var funcTB = funcTB(body.evalT(), paramTs);
-    return defFuncB(funcTB, body);
+    return defFuncB(funcTB, environment, body);
   }
 
   public DefFuncB defFuncB(FuncTB type, ExprB body) {
-    return bytecodeDb().defFunc(type, body);
+    return defFuncB(type, combineB(), body);
+  }
+
+  public DefFuncB defFuncB(FuncTB type, CombineB environment, ExprB body) {
+    return bytecodeDb().defFunc(type, environment, body);
   }
 
   public DefFuncB idFuncB() {
@@ -782,6 +795,14 @@ public class TestContext {
 
   public CallB callBImpl(ExprB func, CombineB args) {
     return bytecodeDb().call(func, args);
+  }
+
+  public ClosurizeB closurizeB(ExprB body) {
+    return closurizeB(funcTB(body.evalT()), body);
+  }
+
+  public ClosurizeB closurizeB(FuncTB funcTB, ExprB body) {
+    return bytecodeDb().closurize(funcTB, body);
   }
 
   public CombineB combineB(ExprB... items) {

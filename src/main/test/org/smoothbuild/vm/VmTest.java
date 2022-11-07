@@ -325,6 +325,51 @@ public class VmTest extends TestContext {
             .isEqualTo(tupleB(intB(7)));
       }
 
+      @Nested
+      class _closurize {
+        @Test
+        public void const_func() {
+          var closure = closurizeB(intB(17));
+          var call = callB(closure);
+          assertThat(evaluate(call))
+              .isEqualTo(intB(17));
+        }
+
+        @Test
+        public void closure_returning_its_arg() {
+          var closurize = closurizeB(funcTB(intTB(), intTB()), refB(intTB(), 0));
+          var outerFunc = defFuncB(list(intTB()), closurize);
+          var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
+          var callB = callB(closureReturnedByOuterFunc, intB(18));
+          assertThat(evaluate(callB))
+              .isEqualTo(intB(18));
+        }
+
+        @Test
+        public void closure_returning_value_from_environment() {
+          var closurize = closurizeB(funcTB(intTB()), refB(intTB(), 0));
+          var outerFunc = defFuncB(list(intTB()), closurize);
+          var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
+          assertThat(evaluate(callB(closureReturnedByOuterFunc)))
+              .isEqualTo(intB(17));
+        }
+
+        @Test
+        public void closure_passed_as_argument_and_then_returned_by_another_closure() {
+          var returnIntTB = funcTB(intTB());
+
+          var returnReturnIntClosure = closurizeB(funcTB(returnIntTB), refB(returnIntTB, 0));
+          var innerFunc = defFuncB(list(returnIntTB), returnReturnIntClosure);
+
+          var returnIntClosure = closurizeB(returnIntTB, refB(intTB(), 0));
+          var outerFunc = defFuncB(list(intTB()), callB(callB(callB(innerFunc, returnIntClosure))));
+
+          var callB = callB(outerFunc, intB(17));
+          assertThat(evaluate(callB))
+              .isEqualTo(intB(17));
+        }
+      }
+
       @Test
       public void order() {
         var order = orderB(intB(7), intB(8));
@@ -332,73 +377,101 @@ public class VmTest extends TestContext {
             .isEqualTo(arrayB(intB(7), intB(8)));
       }
 
-      @Test
-      public void pick() {
-        var tuple = arrayB(intB(10), intB(11), intB(12), intB(13));
-        var pick = pickB(tuple, intB(2));
-        assertThat(evaluate(pick))
-            .isEqualTo(intB(12));
+      @Nested
+      class _pick {
+        @Test
+        public void pick() {
+          var tuple = arrayB(intB(10), intB(11), intB(12), intB(13));
+          var pick = pickB(tuple, intB(2));
+          assertThat(evaluate(pick))
+              .isEqualTo(intB(12));
+        }
+
+        @Test
+        public void pick_with_index_outside_of_bounds() {
+          var pick = pickB(
+              arrayB(intB(10), intB(11), intB(12), intB(13)),
+              intB(4));
+          var memoryReporter = new MemoryReporter();
+          evaluateWithFailure(vm(memoryReporter), pick);
+          assertThat(memoryReporter.logs())
+              .isEqualTo(logs(error("Index (4) out of bounds. Array size = 4.")));
+        }
+
+        @Test
+        public void pick_with_index_negative() {
+          var pick = pickB(
+              arrayB(intB(10), intB(11), intB(12), intB(13)),
+              intB(-1));
+          var memoryReporter = new MemoryReporter();
+          evaluateWithFailure(vm(memoryReporter), pick);
+          assertThat(memoryReporter.logs())
+              .isEqualTo(logs(error("Index (-1) out of bounds. Array size = 4.")));
+        }
       }
 
-      @Test
-      public void pick_with_index_outside_of_bounds() {
-        var pick = pickB(
-            arrayB(intB(10), intB(11), intB(12), intB(13)),
-            intB(4));
-        var memoryReporter = new MemoryReporter();
-        evaluateWithFailure(vm(memoryReporter), pick);
-        assertThat(memoryReporter.logs())
-            .isEqualTo(logs(error("Index (4) out of bounds. Array size = 4.")));
-      }
+      @Nested
+      class _ref {
+        @Test
+        public void ref_referencing_func_param() {
+          var defFuncB = defFuncB(list(intTB()), refB(intTB(), 0));
+          assertThat(evaluate(callB(defFuncB, intB(7))))
+              .isEqualTo(intB(7));
+        }
 
-      @Test
-      public void pick_with_index_negative() {
-        var pick = pickB(
-            arrayB(intB(10), intB(11), intB(12), intB(13)),
-            intB(-1));
-        var memoryReporter = new MemoryReporter();
-        evaluateWithFailure(vm(memoryReporter), pick);
-        assertThat(memoryReporter.logs())
-            .isEqualTo(logs(error("Index (-1) out of bounds. Array size = 4.")));
-      }
+        @Test
+        public void ref_referencing_environment() {
+          var body = refB(intTB(), 1);
+          var defFuncB = defFuncB(list(intTB()), combineB(intB(17)), body);
+          assertThat(evaluate(callB(defFuncB, intB(7))))
+              .isEqualTo(intB(17));
+        }
 
-      @Test
-      public void ref() {
-        assertThat(evaluate(callB(idFuncB(), intB(7))))
-            .isEqualTo(intB(7));
-      }
+        @Test
+        public void ref_with_index_outside_of_environment_size_causes_fatal()
+            throws InterruptedException {
+          var defFuncB = defFuncB(list(intTB()), combineB(intB()), refB(intTB(), 2));
+          var reporter = mock(Reporter.class);
+          var vm = vm(reporter);
+          vm.evaluate(list(callB(defFuncB, intB(7))));
+          verify(reporter, times(1))
+              .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
+        }
 
-      @Test
-      public void ref_with_index_outside_of_func_param_bounds_causes_fatal()
-          throws InterruptedException {
-        var innerFuncB = defFuncB(list(), refB(intTB(), 0));
-        var outerFuncB = defFuncB(list(intTB()), callB(innerFuncB));
-        var reporter = mock(Reporter.class);
-        var vm = vm(reporter);
-        vm.evaluate(list(callB(outerFuncB, intB(7))));
-        verify(reporter, times(1))
-            .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
-      }
+        @Test
+        public void ref_inside_inner_func_cannot_access_params_of_func_that_called_inner_func()
+            throws InterruptedException {
+          var innerFuncB = defFuncB(list(), refB(intTB(), 0));
+          var outerFuncB = defFuncB(list(intTB()), callB(innerFuncB));
+          var reporter = mock(Reporter.class);
+          var vm = vm(reporter);
+          vm.evaluate(list(callB(outerFuncB, intB(7))));
+          verify(reporter, times(1))
+              .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
+        }
 
-      private ArgumentMatcher<List<Log>> isLogListWithFatalOutOfBounds() {
-        return isLogListWithFatalMessageStartingWith(
-            "Computation failed with: java.lang.ArrayIndexOutOfBoundsException");
-      }
+        private ArgumentMatcher<List<Log>> isLogListWithFatalOutOfBounds() {
+          return isLogListWithFatalMessageStartingWith(
+              "Computation failed with: java.lang.ArrayIndexOutOfBoundsException");
+        }
 
-      @Test
-      public void ref_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
-          throws InterruptedException {
-        var funcB = defFuncB(list(blobTB()), refB(intTB(), 0));
-        var reporter = mock(Reporter.class);
-        var vm = vm(reporter);
-        vm.evaluate(list(callB(funcB, blobB())));
-        verify(reporter, times(1))
-            .report(eq("Internal smooth error"), argThat(isLogListWithFatalWrongEnvironmentType()));
-      }
+        @Test
+        public void ref_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
+            throws InterruptedException {
+          var funcB = defFuncB(list(blobTB()), refB(intTB(), 0));
+          var reporter = mock(Reporter.class);
+          var vm = vm(reporter);
+          vm.evaluate(list(callB(funcB, blobB())));
+          verify(reporter, times(1))
+              .report(
+                  eq("Internal smooth error"),
+                  argThat(isLogListWithFatalWrongEnvironmentType()));
+        }
 
-      private ArgumentMatcher<List<Log>> isLogListWithFatalWrongEnvironmentType() {
-        return isLogListWithFatalMessageStartingWith("Computation failed with: "
-            + "java.lang.RuntimeException: environment(0) evalT is `Blob` but expected `Int`");
+        private ArgumentMatcher<List<Log>> isLogListWithFatalWrongEnvironmentType() {
+          return isLogListWithFatalMessageStartingWith("Computation failed with: "
+              + "java.lang.RuntimeException: environment(0) evalT is `Blob` but expected `Int`");
+        }
       }
 
       @Test
