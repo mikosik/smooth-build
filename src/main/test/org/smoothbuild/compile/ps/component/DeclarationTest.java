@@ -1075,35 +1075,35 @@ public class DeclarationTest extends TestContext {
     @Nested
     class _order {
       @ParameterizedTest
-      @ArgumentsSource(ArrayElements.class)
+      @ArgumentsSource(Literals.class)
       public void with_one_elem(String literal) {
         module("result = [" + literal + "];")
             .loadsWithSuccess();
       }
 
       @ParameterizedTest
-      @ArgumentsSource(ArrayElements.class)
+      @ArgumentsSource(Literals.class)
       public void with_two_elems(String literal) {
         module("result = [" + literal + ", " + literal + "];")
             .loadsWithSuccess();
       }
 
       @ParameterizedTest
-      @ArgumentsSource(ArrayElements.class)
+      @ArgumentsSource(Literals.class)
       public void with_array_containing_one_elem(String literal) {
         module("result = [[" + literal + "]];")
             .loadsWithSuccess();
       }
 
       @ParameterizedTest
-      @ArgumentsSource(ArrayElements.class)
+      @ArgumentsSource(Literals.class)
       public void with_array_and_empty_array_elems(String literal) {
         module("result = [[" + literal + "], []];")
             .loadsWithSuccess();
       }
 
       @ParameterizedTest
-      @ArgumentsSource(ArrayElements.class)
+      @ArgumentsSource(Literals.class)
       public void with_array_containing_two_elems(String literal) {
         module("result = [[" + literal + ", " + literal + "]];")
             .loadsWithSuccess();
@@ -1144,16 +1144,6 @@ public class DeclarationTest extends TestContext {
         }
       }
 
-      private static class ArrayElements implements ArgumentsProvider {
-        @Override
-        public Stream<Arguments> provideArguments(ExtensionContext context) {
-          return Stream.of(
-              arguments("[]"),
-              arguments("0x01"),
-              arguments("\"abc\"")
-          );
-        }
-      }
 
       @Test
       public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
@@ -1362,9 +1352,10 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void has_escape_seq_without_code() {
-            module("""
-             result = "\\";
-             """)
+            var code = """
+                result = "\\";
+                """;
+            module(code)
                 .loadsWithError(1, "Missing escape code after backslash \\ at char index = 0.");
           }
         }
@@ -1396,6 +1387,25 @@ public class DeclarationTest extends TestContext {
             module(module).loadsWith(error);
           }
         }
+      }
+    }
+
+    @Nested
+    class _parens {
+      @ParameterizedTest
+      @ArgumentsSource(Literals.class)
+      public void with_literal(String literal) {
+        module("result = (" + literal + ");")
+            .loadsWithSuccess();
+      }
+
+      @Test
+      public void with_additional_comma() {
+        module("result = (7, );")
+            .loadsWithError(1, """
+                extraneous input ',' expecting ')'
+                result = (7, );
+                           ^""");
       }
     }
 
@@ -1473,6 +1483,17 @@ public class DeclarationTest extends TestContext {
     public Stream<Arguments> provideArguments(ExtensionContext context) {
       return TESTED_TYPES.stream()
           .map(Arguments::of);
+    }
+  }
+  private static class Literals implements ArgumentsProvider {
+    @Override
+    public Stream<Arguments> provideArguments(ExtensionContext context) {
+      return Stream.of(
+          arguments("[]"),
+          arguments("0x01"),
+          arguments("\"abc\""),
+          arguments("7")
+      );
     }
   }
 }

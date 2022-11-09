@@ -5,6 +5,7 @@ Change Log
 Version 0.21.0 (??????????)
 ---------------------------
 
+ * added parenthesis for enclosing expressions
  * switched code to jdk 19
  * changed smooth language: `_` identifier is reserved for future use
  * added PickB bytecode to SVM language

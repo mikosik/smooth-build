@@ -13,7 +13,7 @@ public class CompileErrorsTest extends AcceptanceTestCase {
     assertThat(logs())
         .containsExactly(
             userError(1, """
-                mismatched input '<EOF>' expecting {'[', NAME, INT, BLOB, STRING}
+                mismatched input '<EOF>' expecting {'(', '[', NAME, INT, BLOB, STRING}
                 result =
                         ^"""));
   }
@@ -25,7 +25,7 @@ public class CompileErrorsTest extends AcceptanceTestCase {
     assertThat(logs())
         .containsExactly(
             userError(1, """
-                mismatched input '<EOF>' expecting {'[', NAME, INT, BLOB, STRING}
+                mismatched input '<EOF>' expecting {'(', '[', NAME, INT, BLOB, STRING}
                 result =
                         ^"""));
   }

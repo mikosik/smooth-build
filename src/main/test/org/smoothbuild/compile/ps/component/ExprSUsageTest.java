@@ -66,6 +66,14 @@ public class ExprSUsageTest extends TestContext {
           """)
           .loadsWithError(1, "Illegal field access.");
     }
+
+    @Test
+    public void parens_content() {
+      module("""
+          result = (0x01);
+          """)
+          .loadsWithSuccess();
+    }
   }
 
   @Nested
@@ -126,6 +134,14 @@ public class ExprSUsageTest extends TestContext {
           result = 123.accessedField;
           """)
           .loadsWithError(1, "Illegal field access.");
+    }
+
+    @Test
+    public void parens_content() {
+      module("""
+          result = (17);
+          """)
+          .loadsWithSuccess();
     }
   }
 
@@ -188,6 +204,14 @@ public class ExprSUsageTest extends TestContext {
           """)
           .loadsWithError(1, "Illegal field access.");
     }
+
+    @Test
+    public void parens_content() {
+      module("""
+          result = ("abc");
+          """)
+          .loadsWithSuccess();
+    }
   }
 
   @Nested
@@ -248,6 +272,14 @@ public class ExprSUsageTest extends TestContext {
           result = ["abc"].accessedField;
           """)
           .loadsWithError(1, "Illegal field access.");
+    }
+
+    @Test
+    public void parens_content() {
+      module("""
+          result = ([1, 2, 3]);
+          """)
+          .loadsWithSuccess();
     }
   }
 
@@ -363,6 +395,18 @@ public class ExprSUsageTest extends TestContext {
       module(code)
           .loadsWithError(4, "Illegal field access.");
     }
+
+    @Test
+    public void parens_content() {
+      module("""
+          MyStruct {
+            String field,
+          }
+          myValue = myStruct("abc");
+          result = (myValue.field);
+          """)
+          .loadsWithSuccess();
+    }
   }
 
   @Nested
@@ -374,7 +418,16 @@ public class ExprSUsageTest extends TestContext {
           String myFunc(String param) = "abc";
           result = myFunc("abc" | myIdentity());
           """)
-          .loadsWithSuccess();
+          .loadsWith(
+              err(3, """
+                  mismatched input '|' expecting {')', ','}
+                  result = myFunc("abc" | myIdentity());
+                                        ^"""),
+              err(3, """
+                  extraneous input ')' expecting ';'
+                  result = myFunc("abc" | myIdentity());
+                                                      ^""")
+          );
     }
 
     @Test
@@ -391,7 +444,6 @@ public class ExprSUsageTest extends TestContext {
     public void value_body() {
       module("""
           A myIdentity(A a) = a;
-          String myFunc(String param) = "abc";
           result = "abc" | myIdentity();
           """)
           .loadsWithSuccess();
@@ -403,7 +455,16 @@ public class ExprSUsageTest extends TestContext {
              String myIdentity(String string) = string;
              result = ["abc" | myIdentity()];
              """)
-          .loadsWithSuccess();
+          .loadsWith(
+              err(2, """
+                  mismatched input '|' expecting {',', ']'}
+                  result = ["abc" | myIdentity()];
+                                  ^"""),
+              err(2, """
+                  extraneous input ']' expecting ';'
+                  result = ["abc" | myIdentity()];
+                                                ^""")
+          );
     }
 
     @Test
@@ -411,6 +472,22 @@ public class ExprSUsageTest extends TestContext {
       module("""
           A myIdentity(A a) = a;
           String myFunc(String param = "abc" | myIdentity()) = "abc";
+          """)
+          .loadsWithError(2,"""
+                  mismatched input '|' expecting {'(', ')', ',', '.'}
+                  String myFunc(String param = "abc" | myIdentity()) = "abc";
+                                                     ^"""
+          );
+    }
+
+    @Test
+    public void parens_content() {
+      module("""
+          MyStruct {
+            String field,
+          }
+          myValue = myStruct("abc");
+          result = (myValue.field);
           """)
           .loadsWithSuccess();
     }
@@ -486,6 +563,15 @@ public class ExprSUsageTest extends TestContext {
       module(code)
           .loadsWithSuccess();
     }
+
+    @Test
+    public void parens_content() {
+      module("""
+          myFunc() = 7;
+          result = (myFunc());
+          """)
+          .loadsWithSuccess();
+    }
   }
 
   @Nested
@@ -555,6 +641,15 @@ public class ExprSUsageTest extends TestContext {
           .loadsWithError(
               2, "Illegal field access.");
     }
+
+    @Test
+    public void parens_content() {
+      module("""
+          myFunc() = 7;
+          result = (myFunc);
+          """)
+          .loadsWithSuccess();
+    }
   }
 
   @Nested
@@ -619,6 +714,14 @@ public class ExprSUsageTest extends TestContext {
             """;
       module(code)
           .loadsWithError(1, "Illegal field access.");
+    }
+
+    @Test
+    public void parens_content() {
+      module("""
+          myFunc(String string) = (string);
+          """)
+          .loadsWithSuccess();
     }
   }
 
@@ -710,6 +813,15 @@ public class ExprSUsageTest extends TestContext {
           """)
           .loadsWithError(
               2, "Illegal field access.");
+    }
+
+    @Test
+    public void parens_content() {
+      module("""
+          myValue = 7;
+          result = (myValue);
+          """)
+          .loadsWithSuccess();
     }
   }
 
@@ -862,6 +974,15 @@ public class ExprSUsageTest extends TestContext {
           """)
           .loadsWithSuccess();
     }
+
+    @Test
+    public void parens_content_failes() {
+      module("""
+          MyStruct {}
+          result = (MyStruct);
+          """)
+          .loadsWithError(2, "`MyStruct` is undefined.");
+    }
   }
 
   @Nested
@@ -921,6 +1042,14 @@ public class ExprSUsageTest extends TestContext {
             result = A.myField;
             """;
       module(code)
+          .loadsWithError(1, "`A` is undefined.");
+    }
+
+    @Test
+    public void parens_content() {
+      module("""
+          result = (A);
+          """)
           .loadsWithError(1, "`A` is undefined.");
     }
   }

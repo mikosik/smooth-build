@@ -2,13 +2,15 @@ grammar Smooth;
 
 mod          : ( struct | function | value )* EOF ;
 struct       : NAME '{' itemList '}' ;
-function     : ann? type? NAME '(' itemList ')' ('=' expr)? ';' ;
-value        : ann? type? NAME ('=' expr)? ';' ;
+function     : ann? type? NAME '(' itemList ')' ('=' pipe)? ';' ;
+value        : ann? type? NAME ('=' pipe)? ';' ;
 itemList     : ( item ( ',' item )* ','? )? ;
 item         : type NAME ( '=' expr )? ;
 ann          : '@' NAME '(' STRING ')' ;
-expr         : chain ( p+='|' chain )* ;
-chain        : chainHead ( chainPart )*;
+pipe         : expr ( p+='|' expr )* ;
+expr         : chainHead ( chainPart )*   # chain
+             | '(' pipe ')'               # parens
+             ;
 chainHead    : NAME
              | array
              | BLOB

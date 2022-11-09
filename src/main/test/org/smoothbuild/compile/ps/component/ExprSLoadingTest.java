@@ -731,4 +731,31 @@ public class ExprSLoadingTest extends TestContext {
       }
     }
   }
+
+  @Nested
+  class _parens {
+    @Test
+    public void with_literal() {
+      module("""
+          result =
+            (0x07);
+          """)
+          .loadsWithSuccess()
+          .containsEvaluable(polyDefValS(1, blobTS(), "result", blobS(2, 7)));
+    }
+
+    @Test
+    public void with_operator() {
+      module("""
+          result =
+          ([
+            0x07,
+            0x08
+          ]);
+          """)
+          .loadsWithSuccess()
+          .containsEvaluable(polyDefValS(
+              1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
+    }
+  }
 }

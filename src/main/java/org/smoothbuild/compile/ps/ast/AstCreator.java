@@ -33,6 +33,8 @@ import org.smoothbuild.antlr.lang.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ItemListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ParensContext;
+import org.smoothbuild.antlr.lang.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
@@ -84,7 +86,7 @@ public class AstCreator {
         visitChildren(function);
         Optional<TypeP> type = createTypeSane(function.type());
         String name = nameNode.getText();
-        Optional<ExprP> expr = createExprSane(function.expr());
+        Optional<ExprP> expr = createPipeSane(function.pipe());
         Optional<AnnP> annotation = createNativeSane(function.ann());
         var loc = locOf(filePath, nameNode);
         var params = createItems(function.itemList());
@@ -98,7 +100,7 @@ public class AstCreator {
         visitChildren(value);
         Optional<TypeP> type = createTypeSane(value.type());
         String name = nameNode.getText();
-        Optional<ExprP> expr = createExprSane(value.expr());
+        Optional<ExprP> expr = createPipeSane(value.pipe());
         Optional<AnnP> annotation = createNativeSane(value.ann());
         Loc loc = locOf(filePath, nameNode);
         evaluables.add(new ValP(type, name, expr, annotation, loc));
@@ -140,16 +142,35 @@ public class AstCreator {
         return new ItemP(type, name, defaultValue, loc);
       }
 
+      private Optional<ExprP> createPipeSane(PipeContext pipe) {
+        return Optional.ofNullable(pipe).map(this::createPipe);
+      }
+
+      private ExprP createPipe(PipeContext pipe) {
+        return createPipe(null, pipe);
+      }
+
+      private ExprP createPipe(ExprP piped, PipeContext pipe) {
+        for (var chainContext : pipe.expr()) {
+          piped = createExpr(piped, chainContext);
+        }
+        return piped;
+      }
+
       private Optional<ExprP> createExprSane(ExprContext expr) {
         return Optional.ofNullable(expr).map(this::createExpr);
       }
 
       private ExprP createExpr(ExprContext expr) {
-        ExprP result = null;
-        for (var chainContext : expr.chain()) {
-          result = createChain(result, chainContext);
-        }
-        return result;
+        return createExpr(null, expr);
+      }
+
+      private ExprP createExpr(ExprP piped, ExprContext expr) {
+        return switch (expr) {
+          case ChainContext chain -> createChain(piped, chain);
+          case ParensContext parens -> createPipe(piped, parens.pipe());
+          default -> throw new RuntimeException("shouldn't happen");
+        };
       }
 
       private ExprP createChain(ExprP pipedValue, ChainContext chain) {
