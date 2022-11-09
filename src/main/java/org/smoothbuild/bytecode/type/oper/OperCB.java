@@ -8,8 +8,8 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
 public abstract class OperCB extends CategoryB {
   private final TypeB evalT;
 
-  protected OperCB(Hash hash, String name, CategoryKindB kind, TypeB evalT) {
-    super(hash, name + ":" + evalT.name(), kind);
+  protected OperCB(Hash hash, CategoryKindB kind, TypeB evalT) {
+    super(hash, kind.name() + ":" + evalT.name(), kind);
     this.evalT = evalT;
   }
 

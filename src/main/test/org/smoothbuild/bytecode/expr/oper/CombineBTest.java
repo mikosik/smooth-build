@@ -63,6 +63,6 @@ public class CombineBTest extends TestContext {
   public void to_string() {
     CombineB combine = combineB(intB(1));
     assertThat(combine.toString())
-        .isEqualTo("Combine:{Int}(???)@" + combine.hash());
+        .isEqualTo("COMBINE:{Int}(???)@" + combine.hash());
   }
 }

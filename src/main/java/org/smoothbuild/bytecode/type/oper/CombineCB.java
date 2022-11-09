@@ -15,7 +15,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
  */
 public class CombineCB extends OperCB {
   public CombineCB(Hash hash, TypeB evalT) {
-    super(hash, "Combine", COMBINE, evalT);
+    super(hash, COMBINE, evalT);
     checkArgument(evalT instanceof TupleTB);
   }
 

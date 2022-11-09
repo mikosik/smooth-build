@@ -14,7 +14,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
  */
 public class CallCB extends OperCB {
   public CallCB(Hash hash, TypeB evalT) {
-    super(hash, "Call", CALL, evalT);
+    super(hash, CALL, evalT);
   }
 
   @Override

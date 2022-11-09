@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.type.inst.FuncTB;
 
 public final class ClosurizeCB extends OperCB {
   public ClosurizeCB(Hash hash, FuncTB funcTB) {
-    super(hash, "Closurize", CLOSURIZE, funcTB);
+    super(hash, CLOSURIZE, funcTB);
   }
 
   @Override

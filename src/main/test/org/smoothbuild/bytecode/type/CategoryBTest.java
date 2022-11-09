@@ -97,12 +97,13 @@ public class CategoryBTest extends TestContext {
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
         args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
 
-        args(f -> f.call(f.int_()), "Call:Int"),
-        args(f -> f.combine(f.tuple(f.string(), f.int_())), "Combine:{String,Int}"),
-        args(f -> f.order(f.array(f.string())), "Order:[String]"),
-        args(f -> f.pick(f.int_()), "Pick:Int"),
-        args(f -> f.ref(f.int_()), "Ref:Int"),
-        args(f -> f.select(f.int_()), "Select:Int")
+        args(f -> f.call(f.int_()), "CALL:Int"),
+        args(f -> f.closurize(f.funcT(f.int_(), list(f.string()))), "CLOSURIZE:Int(String)"),
+        args(f -> f.combine(f.tuple(f.string(), f.int_())), "COMBINE:{String,Int}"),
+        args(f -> f.order(f.array(f.string())), "ORDER:[String]"),
+        args(f -> f.pick(f.int_()), "PICK:Int"),
+        args(f -> f.ref(f.int_()), "REF:Int"),
+        args(f -> f.select(f.int_()), "SELECT:Int")
     );
   }
 

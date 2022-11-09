@@ -15,7 +15,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
  */
 public class OrderCB extends OperCB {
   public OrderCB(Hash hash, TypeB evalT) {
-    super(hash, "Order", ORDER, evalT);
+    super(hash, ORDER, evalT);
     checkArgument(evalT instanceof ArrayTB);
   }
 

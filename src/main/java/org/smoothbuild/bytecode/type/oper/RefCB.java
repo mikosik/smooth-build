@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
 
 public class RefCB extends OperCB {
   public RefCB(Hash hash, TypeB evalT) {
-    super(hash, "Ref", REF, evalT);
+    super(hash, REF, evalT);
   }
 
   @Override

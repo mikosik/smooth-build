@@ -91,6 +91,6 @@ public class CallBTest extends TestContext {
     var func = defFuncB(list(stringTB()), intB());
     var call = callB(func, stringB());
     assertThat(call.toString())
-        .isEqualTo("Call:Int(???)@" + call.hash());
+        .isEqualTo("CALL:Int(???)@" + call.hash());
   }
 }

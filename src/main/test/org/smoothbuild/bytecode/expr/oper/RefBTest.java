@@ -62,6 +62,6 @@ public class RefBTest extends TestContext {
   public void to_string() {
     var ref = refB(intTB(), 123);
     assertThat(ref.toString())
-        .isEqualTo("Ref:Int(123)@" + ref.hash());
+        .isEqualTo("REF:Int(123)@" + ref.hash());
   }
 }

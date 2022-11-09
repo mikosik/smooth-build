@@ -14,7 +14,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
  */
 public class SelectCB extends OperCB {
   public SelectCB(Hash hash, TypeB evalT) {
-    super(hash, "Select", SELECT, evalT);
+    super(hash, SELECT, evalT);
   }
 
   @Override

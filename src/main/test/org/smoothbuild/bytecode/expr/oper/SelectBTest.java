@@ -86,6 +86,6 @@ public class SelectBTest extends TestContext {
   public void to_string() {
     SelectB select = selectB(animalB(), intB(0));
     assertThat(select.toString())
-        .isEqualTo("Select:String(???)@" + select.hash());
+        .isEqualTo("SELECT:String(???)@" + select.hash());
   }
 }

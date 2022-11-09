@@ -13,7 +13,7 @@ public class DecodeSelectWrongEvalTypeExcTest extends TestContext {
     var exception = new DecodeSelectWrongEvalTypeExc(
         Hash.of(13), selectCB(intTB()), stringTB());
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode `Select:Int` object"
+        .isEqualTo("Cannot decode `SELECT:Int` object"
             + " at b1197c208248d0f7ffb3e322d5ec187441dc1b26."
             + " Its index points to item with `String` type while this expression defines"
             + " its evaluation type as `Int`.");

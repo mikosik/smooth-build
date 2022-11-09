@@ -77,6 +77,6 @@ public class PickBTest extends TestContext {
   public void to_string() {
     var pick = pickB(arrayB(intB(17)), intB(0));
     assertThat(pick.toString())
-        .isEqualTo("Pick:Int(???)@" + pick.hash());
+        .isEqualTo("PICK:Int(???)@" + pick.hash());
   }
 }

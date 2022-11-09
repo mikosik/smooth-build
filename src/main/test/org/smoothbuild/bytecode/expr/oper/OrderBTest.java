@@ -78,6 +78,6 @@ public class OrderBTest extends TestContext {
   public void to_string() {
     OrderB array = orderB(intB(1));
     assertThat(array.toString())
-        .isEqualTo("Order:[Int](???)@" + array.hash());
+        .isEqualTo("ORDER:[Int](???)@" + array.hash());
   }
 }
