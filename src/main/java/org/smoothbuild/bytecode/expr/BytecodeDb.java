@@ -294,13 +294,6 @@ public class BytecodeDb {
     return closurizeCB.newExpr(root, this);
   }
 
-  private OrderB newOrder(ArrayTB evalT, ImmutableList<ExprB> elems) throws HashedDbExc {
-    var orderCB = categoryDb.order(evalT);
-    var data = writeOrderData(elems);
-    var root = newRoot(orderCB, data);
-    return orderCB.newExpr(root, this);
-  }
-
   private CombineB newCombine(ImmutableList<ExprB> items) throws HashedDbExc {
     var evalT = categoryDb.tuple(map(items, ExprB::evalT));
     var combineCB = categoryDb.combine(evalT);
@@ -319,6 +312,13 @@ public class BytecodeDb {
     var mapFuncCB = categoryDb.mapFunc(r, s);
     var root = newRoot(mapFuncCB);
     return mapFuncCB.newExpr(root, this);
+  }
+
+  private OrderB newOrder(ArrayTB evalT, ImmutableList<ExprB> elems) throws HashedDbExc {
+    var orderCB = categoryDb.order(evalT);
+    var data = writeOrderData(elems);
+    var root = newRoot(orderCB, data);
+    return orderCB.newExpr(root, this);
   }
 
   private PickB newPick(ExprB pickable, ExprB index) throws HashedDbExc {
@@ -343,6 +343,13 @@ public class BytecodeDb {
     }
   }
 
+  private RefB newRef(TypeB evalT, BigInteger index) throws HashedDbExc {
+    var data = writeRefData(index);
+    var type = categoryDb.ref(evalT);
+    var root = newRoot(type, data);
+    return type.newExpr(root, this);
+  }
+
   private SelectB newSelect(ExprB selectable, IntB index) throws HashedDbExc {
     var evalT = selectEvalT(selectable, index);
     var data = writeSelectData(selectable, index);
@@ -362,13 +369,6 @@ public class BytecodeDb {
       throw new IllegalArgumentException(
           "selectable.evalT() should be TupleTB but is " + evalT.q() + ".");
     }
-  }
-
-  private RefB newRef(TypeB evalT, BigInteger index) throws HashedDbExc {
-    var data = writeRefData(index);
-    var type = categoryDb.ref(evalT);
-    var root = newRoot(type, data);
-    return type.newExpr(root, this);
   }
 
   private MerkleRoot newRoot(CategoryB cat, Hash dataHash) throws HashedDbExc {
