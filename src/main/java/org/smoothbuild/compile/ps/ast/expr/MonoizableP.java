@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Operation that can be monomorphized.
  */
-public abstract sealed class MonoizableP extends OperP
+public abstract sealed class MonoizableP extends ExprP
     permits DefaultArgP, RefP {
   private ImmutableMap<VarS, TypeS> monoizeVarMap;
 

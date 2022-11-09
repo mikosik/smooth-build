@@ -1,17 +1,15 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import static org.smoothbuild.compile.lang.type.TypeFS.STRING;
-
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.util.Strings;
 import org.smoothbuild.util.UnescapingFailedExc;
 
-public final class StringP extends ValP {
+public final class StringP extends ExprP {
   private final String value;
   private String unescaped;
 
   public StringP(String value, Loc loc) {
-    super(STRING, loc);
+    super(loc);
     this.value = value;
   }
 

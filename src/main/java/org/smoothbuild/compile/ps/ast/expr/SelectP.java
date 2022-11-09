@@ -2,7 +2,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 
 import org.smoothbuild.compile.lang.base.Loc;
 
-public final class SelectP extends OperP {
+public final class SelectP extends ExprP {
   private final ExprP selectable;
   private final String field;
 

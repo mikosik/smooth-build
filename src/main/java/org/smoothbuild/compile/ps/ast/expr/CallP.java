@@ -7,7 +7,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 
 import com.google.common.collect.ImmutableList;
 
-public final class CallP extends OperP {
+public final class CallP extends ExprP {
   private final ExprP callee;
   private final List<ExprP> args;
   private Optional<ImmutableList<ExprP>> positionedArgs;

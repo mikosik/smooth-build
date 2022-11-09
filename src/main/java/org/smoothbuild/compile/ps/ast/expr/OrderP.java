@@ -6,7 +6,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 
 import com.google.common.collect.ImmutableList;
 
-public final class OrderP extends OperP {
+public final class OrderP extends ExprP {
   private final List<ExprP> elems;
 
   public OrderP(List<ExprP> elems, Loc loc) {

@@ -1,6 +1,9 @@
 package org.smoothbuild.compile.ps.infer;
 
 import static com.google.common.collect.Maps.toMap;
+import static org.smoothbuild.compile.lang.type.TypeFS.BLOB;
+import static org.smoothbuild.compile.lang.type.TypeFS.INT;
+import static org.smoothbuild.compile.lang.type.TypeFS.STRING;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.compile.ps.infer.InferPositionedArgs.inferPositionedArgs;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -22,16 +25,17 @@ import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
+import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
-import org.smoothbuild.compile.ps.ast.expr.OperP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
-import org.smoothbuild.compile.ps.ast.expr.ValP;
+import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.collect.NList;
@@ -52,18 +56,27 @@ public class ExprTypeUnifier {
   }
 
   public Optional<TypeS> unifyExpr(ExprP expr) {
+    // @formatter:off
     return switch (expr) {
-      case CallP callP -> unifyAndMemoize(this::unifyCall, callP);
+      case CallP       callP       -> unifyAndMemoize(this::unifyCall, callP);
       case DefaultArgP defaultArgP -> unifyAndMemoize(this::unifyDefaultArg, defaultArgP);
-      case NamedArgP namedArgP -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
-      case OrderP orderP -> unifyAndMemoize(this::unifyOrder, orderP);
-      case RefP refP -> unifyAndMemoize(this::unifyRef, refP);
-      case SelectP selectP -> unifyAndMemoize(this::unifySelect, selectP);
-      case ValP valP -> Optional.of(valP.typeS());
+      case NamedArgP   namedArgP   -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
+      case OrderP      orderP      -> unifyAndMemoize(this::unifyOrder, orderP);
+      case RefP        refP        -> unifyAndMemoize(this::unifyRef, refP);
+      case SelectP     selectP     -> unifyAndMemoize(this::unifySelect, selectP);
+      case StringP     stringP     -> setAndMemoize(STRING, stringP);
+      case IntP        intP        -> setAndMemoize(INT, intP);
+      case BlobP       blobP       -> setAndMemoize(BLOB, blobP);
     };
+    // @formatter:on
   }
 
-  private <T extends OperP> Optional<TypeS> unifyAndMemoize(
+  private Optional<TypeS> setAndMemoize(TypeS typeS, ExprP exprP) {
+    exprP.setTypeS(typeS);
+    return Optional.of(typeS);
+  }
+
+  private <T extends ExprP> Optional<TypeS> unifyAndMemoize(
       Function<T, Optional<TypeS>> inferrer, T operP) {
     var type = inferrer.apply(operP);
     type.ifPresent(operP::setTypeS);

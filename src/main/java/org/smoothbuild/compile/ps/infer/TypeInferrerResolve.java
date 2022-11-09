@@ -13,15 +13,17 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
+import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
-import org.smoothbuild.compile.ps.ast.expr.OperP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
+import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.out.log.Logger;
@@ -55,13 +57,10 @@ public class TypeInferrerResolve {
     return Optional.of(new SchemaS(resolvedEvalT));
   }
 
-  public boolean resolveParamDefaultValue(ExprP body) {
-    if (body instanceof OperP operP) {
-      var resolvedType = unifier.resolve(operP.typeS());
-      operP.setTypeS(renameVarsAndUnify(resolvedType, v -> true));
-      return resolveBody(operP);
-    }
-    return true;
+  public boolean resolveParamDefaultValue(ExprP exprP) {
+    var resolvedType = unifier.resolve(exprP.typeS());
+    exprP.setTypeS(renameVarsAndUnify(resolvedType, v -> true));
+    return resolveBody(exprP);
   }
 
   public Optional<FuncSchemaS> resolve(FuncP func, FuncTS funcT) {
@@ -101,40 +100,44 @@ public class TypeInferrerResolve {
   }
 
   public boolean resolve(ExprP expr) {
+    // @formatter:off
     return switch (expr) {
-      case CallP callP -> resolve(callP);
-      case org.smoothbuild.compile.ps.ast.expr.ValP valP -> true;
-      case NamedArgP namedArgP -> resolve(namedArgP);
-      case OrderP orderP -> resolve(orderP);
-      case SelectP selectP -> resolve(selectP);
-      case RefP refP -> resolve(refP);
+      case CallP       callP       -> resolve(callP);
+      case NamedArgP   namedArgP   -> resolve(namedArgP);
+      case OrderP      orderP      -> resolve(orderP);
+      case SelectP     selectP     -> resolve(selectP);
+      case RefP        refP        -> resolve(refP);
       case DefaultArgP defaultArgP -> resolve(defaultArgP);
+      case StringP     stringP     -> resolveExprType(stringP);
+      case IntP        intP        -> resolveExprType(intP);
+      case BlobP       blobP       -> resolveExprType(blobP);
     };
+    // @formatter:on
   }
 
   private boolean resolve(CallP callP) {
     return resolve(callP.callee())
         && callP.positionedArgs().get().stream().allMatch(this::resolve)
-        && resolveOperator(callP);
+        && resolveExprType(callP);
   }
 
   private boolean resolve(NamedArgP namedArgP) {
     return resolve(namedArgP.expr())
-        && resolveOperator(namedArgP);
+        && resolveExprType(namedArgP);
   }
 
   private boolean resolve(OrderP orderP) {
     return orderP.elems().stream().allMatch(this::resolve)
-        && resolveOperator(orderP);
+        && resolveExprType(orderP);
   }
 
   private boolean resolve(SelectP selectP) {
     return resolve(selectP.selectable())
-        && resolveOperator(selectP);
+        && resolveExprType(selectP);
   }
 
-  private boolean resolveOperator(OperP operP) {
-    operP.setTypeS(unifier.resolve(operP.typeS()));
+  private boolean resolveExprType(ExprP exprP) {
+    exprP.setTypeS(unifier.resolve(exprP.typeS()));
     return true;
   }
 

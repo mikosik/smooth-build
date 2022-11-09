@@ -1,18 +1,17 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
 import static java.lang.Character.isDigit;
-import static org.smoothbuild.compile.lang.type.TypeFS.INT;
 
 import java.math.BigInteger;
 
 import org.smoothbuild.compile.lang.base.Loc;
 
-public final class IntP extends ValP {
+public final class IntP extends ExprP {
   private final String literal;
   private BigInteger bigInteger;
 
   public IntP(String literal, Loc loc) {
-    super(INT, loc);
+    super(loc);
     this.literal = literal;
   }
 
