@@ -38,7 +38,7 @@ public class JobCreator {
   }
 
   public Job jobFor(ExprB expr, ExecutionContext context) {
-    // formatter:off
+    // @formatter:off
     return switch (expr) {
       case CallB      call      -> new CallJob(call, context);
       case ClosurizeB closurize -> new ConstJob(newClosure(closurize), context);
@@ -52,7 +52,7 @@ public class JobCreator {
       // than its subclasses and code is not modularized.
       default -> throw new RuntimeException("shouldn't happen");
     };
-    // formatter:on
+    // @formatter:on
   }
 
   private DefFuncB newClosure(ClosurizeB closurize) {

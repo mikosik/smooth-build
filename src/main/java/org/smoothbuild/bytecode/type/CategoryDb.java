@@ -223,7 +223,7 @@ public class CategoryDb {
   private CategoryB read(Hash hash) {
     List<Hash> rootSeq = readCatRootSeq(hash);
     CategoryKindB kind = decodeCatMarker(hash, rootSeq.get(0));
-    // format: off
+    // @formatter:off
     return switch (kind) {
       case ArrayKindB     array      -> readArrayT(hash, rootSeq, kind);
       case BaseKindB      base       -> handleBaseT(hash, rootSeq, kind);
@@ -236,7 +236,7 @@ public class CategoryDb {
       case OperKindB<?>   oper       -> readOperCat(hash, rootSeq, oper);
       case TupleKindB     tuple      -> readTupleT(hash, rootSeq);
     };
-    // formatter: on
+    // @formatter:on
   }
 
   private List<Hash> readCatRootSeq(Hash hash) {
