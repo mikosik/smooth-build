@@ -75,31 +75,27 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitFunction(FunctionContext top) {
-        TerminalNode nameNode = top.NAME();
-        visitChildren(top);
-        Optional<TypeP> type = createTypeSane(top.type());
+      public Void visitFunction(FunctionContext function) {
+        TerminalNode nameNode = function.NAME();
+        visitChildren(function);
+        Optional<TypeP> type = createTypeSane(function.type());
         String name = nameNode.getText();
-        Optional<ExprP> expr = createExprSane(top.expr());
-        Optional<AnnP> annotation = createNativeSane(top.ann());
-        Loc loc = locOf(filePath, nameNode);
-        if (top.itemList() == null) {
-          evaluables.add(new ValP(type, name, expr, annotation, loc));
-        } else {
-          var params = createItems(top.itemList());
-          evaluables.add(new FuncP(type, name, params, expr, annotation, loc));
-        }
+        Optional<ExprP> expr = createExprSane(function.expr());
+        Optional<AnnP> annotation = createNativeSane(function.ann());
+        var loc = locOf(filePath, nameNode);
+        var params = createItems(function.itemList());
+        evaluables.add(new FuncP(type, name, params, expr, annotation, loc));
         return null;
       }
 
       @Override
-      public Void visitValue(ValueContext top) {
-        TerminalNode nameNode = top.NAME();
-        visitChildren(top);
-        Optional<TypeP> type = createTypeSane(top.type());
+      public Void visitValue(ValueContext value) {
+        TerminalNode nameNode = value.NAME();
+        visitChildren(value);
+        Optional<TypeP> type = createTypeSane(value.type());
         String name = nameNode.getText();
-        Optional<ExprP> expr = createExprSane(top.expr());
-        Optional<AnnP> annotation = createNativeSane(top.ann());
+        Optional<ExprP> expr = createExprSane(value.expr());
+        Optional<AnnP> annotation = createNativeSane(value.ann());
         Loc loc = locOf(filePath, nameNode);
         evaluables.add(new ValP(type, name, expr, annotation, loc));
         return null;
