@@ -91,13 +91,28 @@ public class ParseModule {
     public void reportAttemptingFullContext(Parser recognizer, DFA dfa,
         int startIndex, int stopIndex,  BitSet conflictingAlts,
         ATNConfigSet configs) {
-      reportError(recognizer, startIndex, "Attempting full context");
+      var message = join("\n",
+          "Attempting full context.",
+          "Report this as a bug together with file: " + filePath.path() + ", details:",
+          "startIndex=" + startIndex,
+          "stopiIndex=" + stopIndex,
+          "conflictingAlts=" + conflictingAlts,
+          "configs=" + configs,
+          "dfa=" + dfa);
+      reportError(recognizer, startIndex, message);
     }
 
     @Override
     public void reportContextSensitivity(Parser recognizer, DFA dfa,
         int startIndex, int stopIndex, int prediction, ATNConfigSet configs) {
-      reportError(recognizer, startIndex, "Context sensitivity");
+      var message = join("\n",
+          "Context sensitivity.",
+          "Report this as a bug together with file: " + filePath.path() + ", details:",
+          "startIndex=" + startIndex,
+          "stopiIndex=" + stopIndex,
+          "configs=" + configs,
+          "dfa=" + dfa);
+      reportError(recognizer, startIndex, message);
     }
 
     private void reportError(Parser recognizer, int startIndex, String message) {
