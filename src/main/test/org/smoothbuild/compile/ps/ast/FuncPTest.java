@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.ps.ast;
 
 import static org.smoothbuild.testing.TestContext.loc;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
@@ -24,6 +24,6 @@ public class FuncPTest {
   }
 
   private static FuncP node(String name, int line) {
-    return new FuncP(null, name, list(), null, null, loc(line));
+    return new FuncP(null, name, nlist(), null, null, loc(line));
   }
 }

@@ -9,6 +9,7 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.sane;
 import static org.smoothbuild.util.collect.Lists.skip;
+import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,9 @@ import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.util.collect.NList;
+
+import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
   public static Maybe<Ast> fromParseTree(FilePath filePath, ModContext module) {
@@ -113,14 +117,18 @@ public class AstCreator {
         }
       }
 
-      private List<ItemP> createItems(ItemListContext itemList) {
+      private NList<ItemP> createItems(ItemListContext itemList) {
+        return nlistWithNonUniqueNames(createItemsList(itemList));
+      }
+
+      private ImmutableList<ItemP> createItemsList(ItemListContext itemList) {
         if (itemList != null) {
           return sane(itemList.item())
               .stream()
               .map(this::createItem)
               .collect(toImmutableList());
         }
-        return new ArrayList<>();
+        return ImmutableList.of();
       }
 
       private ItemP createItem(ItemContext item) {
