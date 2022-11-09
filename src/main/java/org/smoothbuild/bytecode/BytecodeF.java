@@ -110,16 +110,6 @@ public class BytecodeF {
     return bytecodeDb.tuple(list(content, path));
   }
 
-  public DefFuncB defFunc(TypeB resT, ImmutableList<TypeB> paramTs, ExprB body) {
-    var type = categoryDb.funcT(resT, paramTs);
-    return defFunc(type, body);
-  }
-
-  public DefFuncB defFunc(TypeB resT, TupleTB paramTs, ExprB body) {
-    var type = categoryDb.funcT(resT, paramTs);
-    return defFunc(type, body);
-  }
-
   public DefFuncB defFunc(FuncTB type, ExprB body) {
     var environment = bytecodeDb.combine(list());
     return closure(type, environment, body);

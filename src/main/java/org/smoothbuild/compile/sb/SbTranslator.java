@@ -199,13 +199,10 @@ public class SbTranslator {
   }
 
   private DefFuncB translateSyntCtor(SyntCtorS syntCtorS) {
-    var funcTS = syntCtorS.type();
-    var resTB = translateT(funcTS.res());
-    var paramTBs = translateT(funcTS.params());
-    var refsB = createRefsB(paramTBs);
-    var bodyB = bytecodeF.combine(refsB);
+    var funcTB = translateT(syntCtorS.type());
+    var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
     saveLoc(bodyB, syntCtorS);
-    return bytecodeF.defFunc(resTB, paramTBs, bodyB);
+    return bytecodeF.defFunc(funcTB, bodyB);
   }
 
   private ImmutableList<ExprB> createRefsB(TupleTB paramTs) {
@@ -264,10 +261,8 @@ public class SbTranslator {
   }
 
   private ExprB translateDefVal(Loc refLoc, DefValS defValS) {
-    var funcB = bytecodeF.defFunc(
-        translateT(defValS.type()),
-        list(),
-        translateExpr(defValS.body()));
+    var funcTB = bytecodeF.funcT(translateT(defValS.type()), list());
+    var funcB = bytecodeF.defFunc(funcTB, translateExpr(defValS.body()));
     saveNal(funcB, defValS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
     saveLoc(call, refLoc);

@@ -12,6 +12,7 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
 public class ReturnIdFunc {
   public static InstB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
     var a = varMap.get("A");
-    return f.defFunc(a, list(a), f.ref(a, ZERO));
+    var funcT = f.funcT(a, list(a));
+    return f.defFunc(funcT, f.ref(a, ZERO));
   }
 }
