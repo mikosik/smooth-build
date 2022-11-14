@@ -42,6 +42,6 @@ public class MapFuncBTest extends TestContext {
   public void to_string() {
     var mapB = mapFuncB(intTB(), stringTB());
     assertThat(mapB.toString())
-        .isEqualTo("MapFunc([Int]([String],Int(String)))@" + mapB.hash());
+        .isEqualTo("MapFunc(([String],(String)->Int)->[Int])@" + mapB.hash());
   }
 }

@@ -14,9 +14,9 @@ public class PolyRefSTest extends TestContext {
             PolyRefS(
               varMap = {A=Int}
               polyEvaluable = PolyFuncS(
-                schema = <A>A(A)
+                schema = <A>(A)->A
                 mono = DefFuncS(
-                  type = A(A)
+                  type = (A)->A
                   params = [
                     A a
                   ]
@@ -24,7 +24,7 @@ public class PolyRefSTest extends TestContext {
                   body = ParamRefS(A, a, myBuild.smooth:1)
                 )
               )
-              evalT = Int(Int)
+              evalT = (Int)->Int
               loc = myBuild.smooth:7
             )""");
   }

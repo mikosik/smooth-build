@@ -167,7 +167,7 @@ public class ExprSLoadingTest extends TestContext {
       public void with_value_reference() {
         var code = """
             Int myReturnInt() = 3;
-            Int() myValue = myReturnInt;
+            ()->Int myValue = myReturnInt;
             result = myValue();
             """;
         var myValue = defValS(2, funcTS(intTS()), "myValue", polyRefS(2, returnIntFuncS()));
@@ -181,7 +181,7 @@ public class ExprSLoadingTest extends TestContext {
       public void with_value_reference_and_arg() {
         var code = """
             Int myIntId(Int i) = i;
-            Int(Int) myValue = myIntId;
+            (Int)->Int myValue = myIntId;
             result = myValue(
               7);
             """;
@@ -226,7 +226,7 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void with_ref() {
         module("""
-          result(String() f) = f();
+          result(()->String f) = f();
           """)
             .loadsWithSuccess()
             .containsEvaluable(polyDefFuncS(
@@ -237,7 +237,7 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void with_ref_and_arg() {
         module("""
-          result(String(Blob) f) = f(0x09);
+          result((Blob)->String f) = f(0x09);
           """)
             .loadsWithSuccess()
             .containsEvaluable(polyDefFuncS(
@@ -278,7 +278,7 @@ public class ExprSLoadingTest extends TestContext {
       public void to_mono_func() {
         var code = """
             String myFunc() = "abc";
-            String() result =
+            ()->String result =
               myFunc;
             """;
         var myFunc = defFuncS(1, "myFunc", nlist(), stringS("abc"));
@@ -292,7 +292,7 @@ public class ExprSLoadingTest extends TestContext {
       public void to_poly_func() {
         var code = """
             A myId(A a) = a;
-            Int(Int) result =
+            (Int)->Int result =
               myId;
             """;
         var myId = polyDefFuncS(1, "myId", nlist(itemS(varA(), "a")), paramRefS(1, varA(), "a"));
@@ -307,7 +307,7 @@ public class ExprSLoadingTest extends TestContext {
       public void to_ctor() {
         var code = """
             MyStruct {}
-            MyStruct() result =
+            ()->MyStruct result =
               myStruct;
             """;
         var structT = structTS("MyStruct", nlist());

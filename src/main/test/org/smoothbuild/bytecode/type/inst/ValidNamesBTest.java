@@ -24,7 +24,7 @@ public class ValidNamesBTest extends TestContext {
     @Test
     public void func_type_name() {
       assertThat(funcTypeName(stringTB(), list(blobTB(), boolTB())))
-          .isEqualTo("String(Blob,Bool)");
+          .isEqualTo("(Blob,Bool)->String");
     }
   }
 

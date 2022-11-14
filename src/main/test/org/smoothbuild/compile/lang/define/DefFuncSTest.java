@@ -13,7 +13,7 @@ public class DefFuncSTest extends TestContext {
     assertThat(func.toString())
         .isEqualTo("""
             DefFuncS(
-              type = String(Int)
+              type = (Int)->String
               params = [
                 Int myParam
               ]

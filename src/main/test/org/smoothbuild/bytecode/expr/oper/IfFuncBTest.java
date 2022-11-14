@@ -43,6 +43,6 @@ public class IfFuncBTest extends TestContext {
   public void to_string() {
     var ifB = ifFuncB(intTB());
     assertThat(ifB.toString())
-        .isEqualTo("IfFunc(Int(Bool,Int,Int))@" + ifB.hash());
+        .isEqualTo("IfFunc((Bool,Int,Int)->Int)@" + ifB.hash());
   }
 }

@@ -130,11 +130,11 @@ public class DeclarationTest extends TestContext {
           public void cannot_be_polytype() {
             module("""
                 MyStruct {
-                 A(B) field
+                 (B)->A field
                 }
                 """)
                 .loadsWithError(
-                    2, "Field type cannot be polymorphic. Found field `field` with type `A(B)`.");
+                    2, "Field type cannot be polymorphic. Found field `field` with type `(B)->A`.");
           }
 
           @Test
@@ -143,13 +143,13 @@ public class DeclarationTest extends TestContext {
             // references field's struct.
             module("""
                 MyStruct {
-                 A(B) field
+                 (B)->A field
                 }
                 @Native("impl")
                 MyStruct myFunction();
                 """)
                 .loadsWithError(
-                    2, "Field type cannot be polymorphic. Found field `field` with type `A(B)`.");
+                    2, "Field type cannot be polymorphic. Found field `field` with type `(B)->A`.");
           }
 
           @Test
@@ -192,7 +192,7 @@ public class DeclarationTest extends TestContext {
           public void cannot_declare_func_which_result_type_encloses_it() {
             module("""
               MyStruct {
-                MyStruct() field
+                ()->MyStruct field
               }
               """)
                 .loadsWithError("""
@@ -204,7 +204,7 @@ public class DeclarationTest extends TestContext {
           public void cannot_declare_func_which_param_type_encloses_it() {
             module("""
               MyStruct {
-                Blob(MyStruct) field
+                (MyStruct)->Blob field
               }
               """)
                 .loadsWithError("""
@@ -358,7 +358,7 @@ public class DeclarationTest extends TestContext {
         public void can_be_polytype_assigned_from_func() {
           var code = """
               A myId(A a) = a;
-              A(A) myValue = myId;
+              (A)->A myValue = myId;
           """;
           module(code)
               .loadsWithSuccess();
@@ -369,7 +369,7 @@ public class DeclarationTest extends TestContext {
           var code = """
               @Native("Impl.met")
               A myId(A param);
-              Int(Int) myValue = myId;
+              (Int)->Int myValue = myId;
           """;
           module(code)
               .loadsWithSuccess();
@@ -681,7 +681,7 @@ public class DeclarationTest extends TestContext {
           public void can_be_polytype() {
             var code = """
                 @Native("Impl.met")
-                String myFunc(A(A) f);
+                String myFunc((A)->A f);
                 """;
             module(code)
                 .loadsWithSuccess();
@@ -691,7 +691,7 @@ public class DeclarationTest extends TestContext {
           public void can_be_single_var_polytype() {
             var code = """
                 @Native("Impl.met")
-                String myFunc(Int(A) f);
+                String myFunc((A)->Int f);
                 """;
             module(code)
                 .loadsWithSuccess();
@@ -850,7 +850,7 @@ public class DeclarationTest extends TestContext {
         private String funcTDeclaration(String string) {
           return """
               @Native("Impl.met")
-              Blob(PLACEHOLDER) myFunc();
+              (PLACEHOLDER)->Blob myFunc();
               """.replace("PLACEHOLDER", string);
         }
       }

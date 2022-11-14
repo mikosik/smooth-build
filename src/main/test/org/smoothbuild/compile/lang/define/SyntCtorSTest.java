@@ -14,7 +14,7 @@ public class SyntCtorSTest extends TestContext {
     assertThat(syntCtorS.toString())
         .isEqualTo("""
             SyntCtorS(
-              type = MyStruct(Int)
+              type = (Int)->MyStruct
               params = [
                 Int field
               ]

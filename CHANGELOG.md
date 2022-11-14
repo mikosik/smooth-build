@@ -5,6 +5,7 @@ Change Log
 Version 0.21.0 (??????????)
 ---------------------------
 
+ * redesigned function type literal from A(B,C) to (B,C)->A
  * added parenthesis for enclosing expressions
  * switched code to jdk 19
  * changed smooth language: `_` identifier is reserved for future use

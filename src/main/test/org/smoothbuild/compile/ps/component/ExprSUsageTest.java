@@ -350,7 +350,7 @@ public class ExprSUsageTest extends TestContext {
     public void func_in_call_expression() {
       module("""
         MyStruct {
-          String() myFunc
+          ()->String myFunc
         }
         String justAbc() = "abc";
         result = myStruct(justAbc).myFunc();
@@ -473,10 +473,17 @@ public class ExprSUsageTest extends TestContext {
           A myIdentity(A a) = a;
           String myFunc(String param = "abc" | myIdentity()) = "abc";
           """)
-          .loadsWithError(2,"""
+          .loadsWith(
+              err(2, """
                   mismatched input '|' expecting {'(', ')', ',', '.'}
                   String myFunc(String param = "abc" | myIdentity()) = "abc";
                                                      ^"""
+              ),
+              err(2, """
+                  extraneous input ')' expecting {'=', ';'}
+                  String myFunc(String param = "abc" | myIdentity()) = "abc";
+                                                                   ^"""
+              )
           );
     }
 
@@ -545,7 +552,7 @@ public class ExprSUsageTest extends TestContext {
     public void func_in_call_expression() {
       module("""
         String justAbc() = "abc";
-        String() highOrderFunc() = justAbc;
+        ()->String highOrderFunc() = justAbc;
         result = highOrderFunc()();
         """)
           .loadsWithSuccess();
@@ -580,7 +587,7 @@ public class ExprSUsageTest extends TestContext {
     public void func_arg() {
       module("""
           String otherFunc() = "abc";
-          String myFunc(String() param) = "abc";
+          String myFunc(()->String param) = "abc";
           result = myFunc(otherFunc);
           """)
           .loadsWithSuccess();
@@ -617,7 +624,7 @@ public class ExprSUsageTest extends TestContext {
     public void param_default_val() {
       module("""
           String myFunc() = "abc";
-          String otherFunc(String() value = myFunc) = "abc";
+          String otherFunc(()->String value = myFunc) = "abc";
           """)
           .loadsWithSuccess();
     }
@@ -682,7 +689,7 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_in_call_expression() {
       module("""
-          myFunc(String() param) = param();
+          myFunc(()->String param) = param();
           """)
           .loadsWithSuccess();
     }

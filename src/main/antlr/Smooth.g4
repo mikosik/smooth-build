@@ -22,9 +22,9 @@ argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg          : ( NAME '=' )? expr ;
 select       : '.' NAME ;
 array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
-type         : NAME                                     # typeName
-             | '[' type ']'                             # arrayT
-             | type '(' ( type (',' type)* ','? )? ')'  # funcT
+type         : NAME                                          # typeName
+             | '[' type ']'                                  # arrayT
+             | '(' ( type (',' type)* ','? )? ')' '->' type  # funcT
              ;
 
 NAME         : NON_DIGIT_CHAR NAME_CHAR* ;

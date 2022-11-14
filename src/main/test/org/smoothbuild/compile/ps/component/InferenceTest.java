@@ -206,7 +206,7 @@ public class InferenceTest extends TestContext {
       @Test
       public void param_func_call() {
         var code = """
-          myFunc(Int() f) = f();
+          myFunc(()->Int f) = f();
           """;
         module(code)
             .loadsWithSuccess()
@@ -407,7 +407,7 @@ public class InferenceTest extends TestContext {
         @Test
         public void ref_with_mono_func_type() {
           var code = """
-          myFunc(Int(Bool) func) = func;
+          myFunc((Bool)->Int func) = func;
           """;
           var funcT = funcTS(intTS(), boolTS());
           module(code)
@@ -418,7 +418,7 @@ public class InferenceTest extends TestContext {
         @Test
         public void ref_with_poly_func_type() {
           var code = """
-          myFunc(A(A) param) = param;
+          myFunc((A)->A param) = param;
           """;
           module(code)
               .loadsWithSuccess()
@@ -432,7 +432,7 @@ public class InferenceTest extends TestContext {
         @Test
         public void call_to_mono_param() {
           var code = """
-          myFunc(Int() f) = f();
+          myFunc(()->Int f) = f();
           """;
           module(code)
               .loadsWithSuccess()
@@ -442,7 +442,7 @@ public class InferenceTest extends TestContext {
         @Test
         public void call_to_poly_param() {
           var code = """
-          myFunc(A() f) = f();
+          myFunc(()->A f) = f();
           """;
           module(code)
               .loadsWithSuccess()
@@ -522,7 +522,7 @@ public class InferenceTest extends TestContext {
         public void poly_func_ref_when_func_type_param_forces_referenced_func_type_param() {
           var code = """
           A myId(A a) = a;
-          B(B) myFunc() = myId;
+          (B)->B myFunc() = myId;
           """;
           module(code)
               .loadsWithSuccess()
@@ -703,7 +703,7 @@ public class InferenceTest extends TestContext {
         public void generic_param_with_default_val_with_polymorphic_type() {
           var code = """
               A myId(A a) = a;
-              A(B) myFunc(A a, A(B) f = myId) = f;
+              (B)->A myFunc(A a, (B)->A f = myId) = f;
               myValue = myFunc(7);
               """;
           module(code)
@@ -744,7 +744,7 @@ public class InferenceTest extends TestContext {
       @Test
       public void converter_applier() {
         var code = """
-          B converterApplier(A item, B(A) convert) = convert(item);
+          B converterApplier(A item, (A)->B convert) = convert(item);
           [C] single(C elem) = [elem];
           result = converterApplier("abc", single);
           """;
@@ -771,7 +771,7 @@ public class InferenceTest extends TestContext {
       public void two_param_default_vals_with_different_vars_referencing_same_poly_func() {
         var code = """
           A myId(A a) = a;
-          myFunc(A a, B b, A(A) f1 = myId, B(B) f2 = myId) = 0x33;
+          myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
           myValue = myFunc(7, "abc");
           """;
         module(code)

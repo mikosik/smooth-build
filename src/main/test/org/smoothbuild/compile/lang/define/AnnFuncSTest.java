@@ -18,7 +18,7 @@ public class AnnFuncSTest extends TestContext {
                 path = StringS(String, "impl", myBuild.smooth:1)
                 loc = myBuild.smooth:1
               )
-              type = String(Int)
+              type = (Int)->String
               params = [
                 Int myParam
               ]

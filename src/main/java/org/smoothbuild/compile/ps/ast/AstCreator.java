@@ -8,7 +8,6 @@ import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.sane;
-import static org.smoothbuild.util.collect.Lists.skip;
 import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
 
 import java.util.ArrayList;
@@ -289,8 +288,8 @@ public class AstCreator {
 
       private TypeP createFuncT(FuncTContext funcT) {
         var types = map(funcT.type(), this::createT);
-        var resT = types.get(0);
-        var paramTs = skip(1, types);
+        var resT = types.get(types.size() - 1);
+        var paramTs = types.subList(0, types.size() - 1);
         return new FuncTP(resT, paramTs, locOf(filePath, funcT));
       }
 

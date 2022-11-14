@@ -95,6 +95,6 @@ public class NatFuncBTest extends TestContext {
     var funcT = funcTB(stringTB(), intTB());
     var natFunc = natFuncB(funcT, jar, classBinaryName, isPure);
     assertThat(natFunc.toString())
-        .isEqualTo("NatFunc(String(Int))@" + natFunc.hash());
+        .isEqualTo("NatFunc((Int)->String)@" + natFunc.hash());
   }
 }

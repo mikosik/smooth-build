@@ -96,10 +96,10 @@ public class EvaluateTest extends AcceptanceTestCase {
     public void bug() throws Exception {
       createUserModule("""
             MyStruct {
-              Int()(String) field,
+              (String)->()->Int field,
             }
             Int return7() = 7;
-            Int() returnReturn7(String s) = return7;
+            ()->Int returnReturn7(String s) = return7;
             aStruct = myStruct(returnReturn7);
             # TODO
             # smooth-lang design problems:
@@ -166,7 +166,7 @@ public class EvaluateTest extends AcceptanceTestCase {
         createUserNativeJar(ThrowException.class);
         createUserModule("""
             String returnAbc() = "abc";
-            A invokeProducer(A() producer) = producer();
+            A invokeProducer(()->A producer) = producer();
             result = invokeProducer(returnAbc);
             """);
         evaluate("result");
@@ -179,7 +179,7 @@ public class EvaluateTest extends AcceptanceTestCase {
         createUserNativeJar(ThrowException.class);
         createUserModule("""
             String returnAbc() = "abc";
-            String() createProducer() = returnAbc;
+            ()->String createProducer() = returnAbc;
             result = createProducer()();
             """);
         evaluate("result");

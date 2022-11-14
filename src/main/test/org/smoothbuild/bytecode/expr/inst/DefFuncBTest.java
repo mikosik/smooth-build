@@ -102,6 +102,6 @@ public class DefFuncBTest extends TestContext {
     var funcT = funcTB(intTB(), stringTB());
     var func = defFuncB(funcT, intB());
     assertThat(func.toString())
-        .isEqualTo("DefFunc(Int(String))@" + func.hash());
+        .isEqualTo("DefFunc((String)->Int)@" + func.hash());
   }
 }

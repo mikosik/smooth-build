@@ -212,7 +212,7 @@ public class TypeCheckingTest extends TestContext {
     @Test
     public void poly_to_poly_error() {
       var sourceCode = """
-          String myFunc(A(A) param) = "abc";
+          String myFunc((A)->A param) = "abc";
           result = myFunc([]);
           """;
       module(sourceCode)
@@ -295,7 +295,7 @@ public class TypeCheckingTest extends TestContext {
     @Test
     public void poly_to_poly_error() {
       var sourceCode = """
-          String myFunc(A(A) param) = "abc";
+          String myFunc((A)->A param) = "abc";
           result = myFunc(param=[]);
           """;
       module(sourceCode)
@@ -337,18 +337,18 @@ public class TypeCheckingTest extends TestContext {
     public void mono_to_poly_error() {
       var sourceCode = """
             Int twoParamFunc(String s, Blob b) = 7;
-            A(B) myFunc(A(B) funcParam = twoParamFunc) = funcParam;
+            (B)->A myFunc((B)->A funcParam = twoParamFunc) = funcParam;
             """;
       module(sourceCode)
-          .loadsWithError(2, "Parameter `funcParam` has type `A(B)` so it cannot have default "
-              + "value with type `Int(String,Blob)`.");
+          .loadsWithError(2, "Parameter `funcParam` has type `(B)->A` so it cannot have default "
+              + "value with type `(String,Blob)->Int`.");
     }
 
     @Test
     public void poly_to_mono_success1() {
       var sourceCode = """
             A myIdentity (A a) = a;
-            Int(Int) myFunc(Int(Int) funcParam = myIdentity) = funcParam;
+            (Int)->Int myFunc((Int)->Int funcParam = myIdentity) = funcParam;
             """;
       module(sourceCode)
           .loadsWithSuccess();
@@ -367,18 +367,18 @@ public class TypeCheckingTest extends TestContext {
     public void poly_to_mono_error() {
       var sourceCode = """
             A myIdentity (A a) = a;
-            Int(Int, Int) myFunc(Int(Int, Int) funcParam = myIdentity) = funcParam;
+            (Int,Int)->Int myFunc((Int,Int)->Int funcParam = myIdentity) = funcParam;
             """;
       module(sourceCode)
-          .loadsWithError(2, "Parameter `funcParam` has type `Int(Int,Int)` so it cannot have"
-              + " default value with type `A(A)`.");
+          .loadsWithError(2, "Parameter `funcParam` has type `(Int,Int)->Int` so it cannot have"
+              + " default value with type `(A)->A`.");
     }
 
     @Test
     public void poly_to_poly_success() {
       var sourceCode = """
             A myIdentity (A a) = a;
-            B(B) myFunc(B(B) funcParam = myIdentity) = funcParam;
+            (B)->B myFunc((B)->B funcParam = myIdentity) = funcParam;
             """;
       module(sourceCode)
           .loadsWithSuccess();
@@ -388,11 +388,11 @@ public class TypeCheckingTest extends TestContext {
     public void poly_to_poly_error() {
       var sourceCode = """
             A myIdentity (A a) = a;
-            A(A, A) myFunc(A(A, A) funcParam = myIdentity) = funcParam;
+            (A, A)->A myFunc((A, A)->A funcParam = myIdentity) = funcParam;
             """;
       module(sourceCode)
-          .loadsWithError(2, "Parameter `funcParam` has type `A(A,A)` so it cannot have "
-              + "default value with type `A(A)`.");
+          .loadsWithError(2, "Parameter `funcParam` has type `(A,A)->A` so it cannot have "
+              + "default value with type `(A)->A`.");
     }
   }
 
@@ -422,7 +422,7 @@ public class TypeCheckingTest extends TestContext {
     @Test
     public void of_higher_order_is_not_possible() {
       var code = """
-            f(String s, A(A) id) = id(s);
+            f(String s, (A)->A id) = id(s);
             """;
       module(code)
           .loadsWithError(1, "Illegal call.");

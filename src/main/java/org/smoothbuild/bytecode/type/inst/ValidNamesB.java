@@ -15,7 +15,7 @@ public class ValidNamesB {
   }
 
   public static String funcTypeName(TypeB resT, List<? extends TypeB> paramTs) {
-    return resT.name() + "(" + commaSeparatedTypeNames(paramTs) + ")";
+    return "(" + commaSeparatedTypeNames(paramTs) + ")->" + resT.name();
   }
 
   public static String tupleTypeName(Iterable<? extends TypeB> itemTs) {

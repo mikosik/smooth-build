@@ -342,7 +342,7 @@ public class VisibilityTest extends TestContext {
       public void struct_through_func_result() {
         module("""
              MyStruct {
-               MyStruct() myField
+               ()->MyStruct myField
              }
              """)
             .loadsWithError("""
@@ -354,7 +354,7 @@ public class VisibilityTest extends TestContext {
       public void struct_through_func_param() {
         module("""
              MyStruct {
-               Blob(MyStruct) myField
+               (MyStruct)->Blob myField
              }
              """)
             .loadsWithError("""
@@ -450,7 +450,7 @@ public class VisibilityTest extends TestContext {
                MyStruct2 myField
              }
              MyStruct2 {
-               MyStruct1() myField
+               ()->MyStruct1 myField
              }
              """)
             .loadsWithError("""
@@ -466,7 +466,7 @@ public class VisibilityTest extends TestContext {
                MyStruct2 myField
              }
              MyStruct2 {
-               Blob(MyStruct1) myField
+               (MyStruct1)->Blob myField
              }
              """)
             .loadsWithError("""
@@ -564,7 +564,7 @@ public class VisibilityTest extends TestContext {
                [MyStruct3] myField
              }
              MyStruct3 {
-               MyStruct1() myField
+               ()->MyStruct1 myField
              }
              """)
             .loadsWithError("""
@@ -584,7 +584,7 @@ public class VisibilityTest extends TestContext {
                [MyStruct3] myField
              }
              MyStruct3 {
-               Blob(MyStruct1) myField
+               (MyStruct1)->Blob myField
              }
              """)
             .loadsWithError("""

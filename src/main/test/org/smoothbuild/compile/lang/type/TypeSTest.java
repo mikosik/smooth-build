@@ -110,12 +110,12 @@ public class TypeSTest {
         arguments(arrayTS(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS()))))), "[[MyStruct]]"),
         arguments(arrayTS(arrayTS(stringTS())), "[[String]]"),
 
-        arguments(funcTS(varA(), arrayTS(varA())), "A([A])"),
-        arguments(funcTS(stringTS(), arrayTS(varA())), "String([A])"),
-        arguments(funcTS(varA(), varA()), "A(A)"),
-        arguments(funcTS(stringTS()), "String()"),
-        arguments(funcTS(stringTS(), stringTS()), "String(String)"),
-        arguments(funcTS(stringTS(), tupleTS(intTS())), "String({Int})")
+        arguments(funcTS(varA(), arrayTS(varA())), "([A])->A"),
+        arguments(funcTS(stringTS(), arrayTS(varA())), "([A])->String"),
+        arguments(funcTS(varA(), varA()), "(A)->A"),
+        arguments(funcTS(stringTS()), "()->String"),
+        arguments(funcTS(stringTS(), stringTS()), "(String)->String"),
+        arguments(funcTS(stringTS(), tupleTS(intTS())), "({Int})->String")
     );
   }
 

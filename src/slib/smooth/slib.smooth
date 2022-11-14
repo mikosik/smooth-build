@@ -77,7 +77,7 @@ A id(A a) = a;
 A if(Bool condition, A then, A else);
 
 @Bytecode("org.smoothbuild.slib.core.MapFunc")
-[R] map([S] array, R(S) mapper);
+[R] map([S] array, (S)->R mapper);
 
 @Bytecode("org.smoothbuild.slib.bool.False")
 Bool false;

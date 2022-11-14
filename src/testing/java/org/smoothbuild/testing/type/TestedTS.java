@@ -93,7 +93,7 @@ public class TestedTS {
 
     @Override
     public String name() {
-      return resT.name() + "(" + toCommaSeparatedString(paramTs, TestedTS::name) + ")";
+      return "(" + toCommaSeparatedString(paramTs, TestedTS::name) + ")->" + resT.name();
     }
   }
 
