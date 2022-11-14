@@ -7,7 +7,7 @@ import org.smoothbuild.compile.lang.type.VarS;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Operation that can be monomorphized.
+ * Expression that can be monomorphized.
  */
 public abstract sealed class MonoizableP extends ExprP
     permits DefaultArgP, RefP {
