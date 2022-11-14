@@ -117,7 +117,7 @@ public class AstSorter {
     var lines = new ArrayList<String>();
     for (var current : cycle) {
       String dependency = current.targetKey();
-      lines.add(current.value() + ": " + previous + " -> " + dependency);
+      lines.add(current.value() + ": " + previous + " ~> " + dependency);
       previous = dependency;
     }
     return error(name + " contains cycle:\n" + join("\n", lines));
