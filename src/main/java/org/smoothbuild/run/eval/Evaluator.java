@@ -9,8 +9,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedPolyValS;
 import org.smoothbuild.compile.lang.define.PolyRefS;
-import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.out.report.Reporter;
@@ -30,7 +30,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<InstB>> evaluate(ImmutableList<PolyValS> vals) throws EvaluatorExc {
+  public Optional<ImmutableList<InstB>> evaluate(ImmutableList<NamedPolyValS> vals) throws EvaluatorExc {
     try {
       var loc = commandLineLoc();
       var refs = map(vals, v -> new MonoizeS(new PolyRefS(v, loc), loc));

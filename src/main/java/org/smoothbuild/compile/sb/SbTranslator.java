@@ -46,16 +46,16 @@ import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedFuncS;
+import org.smoothbuild.compile.lang.define.NamedPolyFuncS;
+import org.smoothbuild.compile.lang.define.NamedPolyValS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyExprS;
-import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyRefS;
-import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -156,26 +156,26 @@ public class SbTranslator {
   }
 
   private ExprB translatePolyRef(PolyRefS polyRefS) {
-    return switch (polyRefS.polyEvaluable()) {
-      case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono());
-      case PolyValS polyValS -> translateVal(polyRefS.loc(), polyValS.mono());
+    return switch (polyRefS.namedPolyEvaluable()) {
+      case NamedPolyFuncS namedPolyFuncS -> translateNamedFunc(namedPolyFuncS.mono());
+      case NamedPolyValS namedPolyValS -> translateVal(polyRefS.loc(), namedPolyValS.mono());
     };
   }
 
-  private ExprB translateFunc(FuncS funcS) {
-    var key = new CacheKey(funcS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> setEnvironmentAndTranslateFunc(funcS));
+  private ExprB translateNamedFunc(NamedFuncS namedFuncS) {
+    var key = new CacheKey(namedFuncS.name(), typeSbTranslator.varMap());
+    return computeIfAbsent(cache, key, name -> setEnvironmentAndTranslateFunc(namedFuncS));
   }
 
-  private ExprB setEnvironmentAndTranslateFunc(FuncS funcS) {
-    var newEnvironment = funcS.params();
+  private ExprB setEnvironmentAndTranslateFunc(NamedFuncS namedFuncS) {
+    var newEnvironment = namedFuncS.params();
     var sbTranslator = new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
         newEnvironment, cache, nameMapping, locMapping);
-    return translateAndSaveNal(funcS, sbTranslator::translateFuncImpl);
+    return translateAndSaveNal(namedFuncS, sbTranslator::translateFuncImpl);
   }
 
-  private ExprB translateFuncImpl(FuncS funcS) {
-    return switch (funcS) {
+  private ExprB translateFuncImpl(NamedFuncS namedFuncS) {
+    return switch (namedFuncS) {
       case AnnFuncS n -> translateAnnFunc(n);
       case DefFuncS d -> translateDefFunc(d);
       case SyntCtorS c -> translateSyntCtor(c);

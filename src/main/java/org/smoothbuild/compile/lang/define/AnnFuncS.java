@@ -12,11 +12,10 @@ import org.smoothbuild.util.collect.NList;
  * Annotated function that has no defined body.
  * This class is immutable.
  */
-public final class AnnFuncS extends FuncS {
+public final class AnnFuncS extends NamedFuncS {
   private final AnnS ann;
 
-  public AnnFuncS(AnnS ann, FuncTS type, String name, NList<ItemS> params,
-      Loc loc) {
+  public AnnFuncS(AnnS ann, FuncTS type, String name, NList<ItemS> params, Loc loc) {
     super(type, name, params, loc);
     this.ann = ann;
   }

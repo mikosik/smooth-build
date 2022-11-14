@@ -4,9 +4,14 @@ import static org.smoothbuild.util.Strings.indent;
 
 import org.smoothbuild.compile.lang.type.SchemaS;
 
-public final class PolyValS extends PolyEvaluableS {
-  public PolyValS(SchemaS schema, ValS val) {
+public final class NamedPolyValS extends PolyEvaluableImplS implements NamedPolyEvaluableS {
+  public NamedPolyValS(SchemaS schema, ValS val) {
     super(schema, val);
+  }
+
+  @Override
+  public String name() {
+    return mono().name();
   }
 
   @Override
@@ -16,6 +21,6 @@ public final class PolyValS extends PolyEvaluableS {
 
   @Override
   public String toString() {
-    return "PolyValS(\n" + indent(polyEvaluableFieldsToString()) + "\n)";
+    return "NamedPolyValS(\n" + indent(fieldsToString()) + "\n)";
   }
 }

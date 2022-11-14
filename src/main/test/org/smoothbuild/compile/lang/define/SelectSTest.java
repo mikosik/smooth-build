@@ -19,7 +19,7 @@ public class SelectSTest extends TestContext {
               selectable = PolyRefS(
                 varMap = {}
                 polyExprS = PolyRefS(
-                  polyEvaluable = PolyValS(
+                  namedPolyEvaluable = NamedPolyValS(
                     schema = <>MyStruct
                     mono = AnnVal(
                       AnnS(

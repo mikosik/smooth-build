@@ -1,17 +1,17 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.define.PolyEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 
 public final class DefaultArgP extends MonoizableP {
-  private final PolyEvaluableS polyEvaluable;
+  private final NamedPolyEvaluableS polyEvaluable;
 
-  public DefaultArgP(PolyEvaluableS polyEvaluable, Loc loc) {
+  public DefaultArgP(NamedPolyEvaluableS polyEvaluable, Loc loc) {
     super(loc);
     this.polyEvaluable = polyEvaluable;
   }
 
-  public PolyEvaluableS polyEvaluableS() {
+  public NamedPolyEvaluableS polyEvaluableS() {
     return polyEvaluable;
   }
 }

@@ -21,12 +21,12 @@ import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedPolyFuncS;
+import org.smoothbuild.compile.lang.define.NamedPolyValS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
-import org.smoothbuild.compile.lang.define.PolyEvaluableS;
-import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyRefS;
-import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -63,20 +63,20 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<PolyEvaluableS> translateVal(ValP valP, TypeS type) {
+  public Optional<NamedPolyEvaluableS> translateVal(ValP valP, TypeS type) {
     var schema = new SchemaS(type);
     var name = valP.name();
     var loc = valP.loc();
     if (valP.ann().isPresent()) {
       var ann = translateAnn(valP.ann().get());
-      return Optional.of(new PolyValS(schema, new AnnValS(ann, schema.type(), name, loc)));
+      return Optional.of(new NamedPolyValS(schema, new AnnValS(ann, schema.type(), name, loc)));
     } else {
       var body = translateExpr(valP.body().get());
-      return body.map(b -> new PolyValS(schema, new DefValS(schema.type(), name, b, loc)));
+      return body.map(b -> new NamedPolyValS(schema, new DefValS(schema.type(), name, b, loc)));
     }
   }
 
-  public Optional<PolyEvaluableS> translateFunc(FuncP funcP, FuncTS funcT) {
+  public Optional<NamedPolyEvaluableS> translateFunc(FuncP funcP, FuncTS funcT) {
     return translateFunc(funcP, translateParams(funcP), funcT);
   }
 
@@ -91,15 +91,15 @@ public class PsTranslator {
     return new ItemS(type, name, body, paramP.loc());
   }
 
-  private Optional<PolyEvaluableS> translateParamBody(FuncP funcP, ItemP paramP, ExprP expr) {
+  private Optional<NamedPolyEvaluableS> translateParamBody(FuncP funcP, ItemP paramP, ExprP expr) {
     return translateExpr(expr).map(exprS -> {
       var name = funcP.name() + ":" + paramP.name();
       var val = new DefValS(exprS.evalT(), name, exprS, paramP.loc());
-      return new PolyValS(new SchemaS(exprS.evalT()), val);
+      return new NamedPolyValS(new SchemaS(exprS.evalT()), val);
     });
   }
 
-  private Optional<PolyEvaluableS> translateFunc(FuncP funcP,
+  private Optional<NamedPolyEvaluableS> translateFunc(FuncP funcP,
       NList<ItemS> params, FuncTS funcT) {
     var schema = new FuncSchemaS(funcT);
     var name = funcP.name();
@@ -107,12 +107,12 @@ public class PsTranslator {
     if (funcP.ann().isPresent()) {
       var ann = translateAnn(funcP.ann().get());
       var annFuncS = new AnnFuncS(ann, funcT, name, params, loc);
-      return Optional.of(new PolyFuncS(schema, annFuncS));
+      return Optional.of(new NamedPolyFuncS(schema, annFuncS));
     } else {
       var bindingsInBody = new ScopedBindings<Optional<? extends RefableS>>(bindings);
       params.forEach(p -> bindingsInBody.add(p.name(), Optional.of(p)));
       var body = new PsTranslator(bindingsInBody).translateExpr(funcP.body().get());
-      return body.map(b -> new PolyFuncS(schema, new DefFuncS(funcT, name, params, b, loc)));
+      return body.map(b -> new NamedPolyFuncS(schema, new DefFuncS(funcT, name, params, b, loc)));
     }
   }
 
@@ -167,12 +167,13 @@ public class PsTranslator {
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.loc());
-      case PolyEvaluableS evaluableS -> translateMonoizable(ref, evaluableS);
+      case NamedPolyEvaluableS evaluableS -> translateMonoizable(ref, evaluableS);
     };
   }
 
-  private static ExprS translateMonoizable(MonoizableP monoizableP, PolyEvaluableS polyEvaluableS) {
-    var polyRefS = new PolyRefS(polyEvaluableS, monoizableP.loc());
+  private static ExprS translateMonoizable(
+      MonoizableP monoizableP, NamedPolyEvaluableS namedPolyEvaluableS) {
+    var polyRefS = new PolyRefS(namedPolyEvaluableS, monoizableP.loc());
     return new MonoizeS(monoizableP.monoizeVarMap(), polyRefS, monoizableP.loc());
   }
 

@@ -14,7 +14,7 @@ public class PolyRefSTest extends TestContext {
             PolyRefS(
               varMap = {A=Int}
               polyExprS = PolyRefS(
-                polyEvaluable = PolyFuncS(
+                namedPolyEvaluable = NamedPolyFuncS(
                   schema = <A>(A)->A
                   mono = DefFuncS(
                     type = (A)->A

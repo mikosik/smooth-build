@@ -12,7 +12,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
-import org.smoothbuild.compile.lang.define.PolyValS;
+import org.smoothbuild.compile.lang.define.NamedPolyValS;
 import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
@@ -61,11 +61,11 @@ public class BuildRunner {
     var defsOpt = defsLoader.loadDefs();
     var evaluablesOpt = defsOpt.flatMap(d -> findTopValues(reporter, d, names));
     var evaluationsOpt = evaluablesOpt.flatMap(this::evaluate);
-    var monoEvaluablesOpt = evaluablesOpt.map(e -> map(e, PolyValS::mono));
+    var monoEvaluablesOpt = evaluablesOpt.map(e -> map(e, NamedPolyValS::mono));
     return mapPair(monoEvaluablesOpt, evaluationsOpt, Maps::zip);
   }
 
-  private Optional<ImmutableList<InstB>> evaluate(ImmutableList<PolyValS> evaluables) {
+  private Optional<ImmutableList<InstB>> evaluate(ImmutableList<NamedPolyValS> evaluables) {
     try {
       return evaluator.evaluate(evaluables);
     } catch (EvaluatorExc e) {

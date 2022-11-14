@@ -1,11 +1,8 @@
 package org.smoothbuild.compile.lang.define;
 
-import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Lists.joinToString;
 
-import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.Tanal;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
@@ -13,34 +10,23 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed abstract class FuncS extends Tanal implements EvaluableS
-    permits AnnFuncS, DefFuncS, SyntCtorS {
-  private final NList<ItemS> params;
-
-  public FuncS(FuncTS type, String name, NList<ItemS> params, Loc loc) {
-    super(type, name, loc);
-    this.params = requireNonNull(params);
-  }
-
-  public NList<ItemS> params() {
-    return params;
-  }
+public sealed interface FuncS extends EvaluableS
+    permits NamedFuncS {
+  public NList<ItemS> params();
 
   @Override
-  public FuncTS type() {
-    return (FuncTS) super.type();
-  }
+  public FuncTS type();
 
-  public TypeS resT() {
+  public default TypeS resT() {
     return type().res();
   }
 
-  public boolean canBeCalledArgless() {
+  public default boolean canBeCalledArgless() {
     return params().stream()
         .allMatch(p -> p.defaultVal().isPresent());
   }
 
-  protected String funcFieldsToString() {
+  public default String funcFieldsToString() {
     return joinToString("\n",
         "type = " + type(),
         "params = [\n" + indent(paramsToString()) + "\n]",
@@ -48,8 +34,8 @@ public sealed abstract class FuncS extends Tanal implements EvaluableS
     );
   }
 
-  protected String paramsToString() {
-    return joinToString(params, FuncS::paramToString, "\n");
+  public default String paramsToString() {
+    return joinToString(params(), FuncS::paramToString, "\n");
   }
 
   private static String paramToString(ItemS itemS) {

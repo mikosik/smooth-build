@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
  * Synthetic constructor.
  * This class is immutable.
  */
-public final class SyntCtorS extends FuncS {
+public final class SyntCtorS extends NamedFuncS {
   public SyntCtorS(FuncTS type, String name, NList<ItemS> params, Loc loc) {
     super(type, name, params, loc);
   }

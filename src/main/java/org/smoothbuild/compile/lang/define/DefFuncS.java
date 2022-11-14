@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
  * Defined function (function that has body).
  * This class is immutable.
  */
-public final class DefFuncS extends FuncS {
+public final class DefFuncS extends NamedFuncS {
   private final ExprS body;
 
   public DefFuncS(FuncTS type, String name, NList<ItemS> params, ExprS body, Loc loc) {

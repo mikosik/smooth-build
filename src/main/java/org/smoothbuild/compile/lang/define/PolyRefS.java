@@ -9,19 +9,17 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 /**
  * Monomorphization of polymorphic referencable.
  */
-public record PolyRefS(
-    PolyEvaluableS polyEvaluable,
-    Loc loc) implements PolyExprS {
+public record PolyRefS(NamedPolyEvaluableS namedPolyEvaluable, Loc loc) implements PolyExprS {
 
   @Override
   public SchemaS schema() {
-    return polyEvaluable.schema();
+    return namedPolyEvaluable.schema();
   }
 
   @Override
   public String toString() {
     var fields = joinToString("\n",
-        "polyEvaluable = " + polyEvaluable,
+        "namedPolyEvaluable = " + namedPolyEvaluable,
         "loc = " + loc
     );
     return "PolyRefS(\n" + indent(fields) + "\n)";
