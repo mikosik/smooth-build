@@ -49,8 +49,10 @@ import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
+import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
+import org.smoothbuild.compile.lang.define.PolyExprS;
 import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.PolyValS;
@@ -118,7 +120,7 @@ public class SbTranslator {
       case ParamRefS   paramRefS   -> translateAndSaveLoc(paramRefS, this::translateParamRef);
       case SelectS     selectS     -> translateAndSaveLoc(selectS,   this::translateSelect);
       case StringS     stringS     -> translateAndSaveLoc(stringS,   this::translateString);
-      case PolyRefS    polyRefS    -> translatePolyRef(polyRefS);
+      case MonoizeS    monoizeS    -> translateMonoize(monoizeS);
     };
     // @formatter:on
   }
@@ -139,15 +141,21 @@ public class SbTranslator {
     return bytecodeF.int_(intS.bigInteger());
   }
 
-  private ExprB translatePolyRef(PolyRefS polyRefS) {
-    var varMap = mapValues(polyRefS.varMap(), typeSbTranslator::translate);
+  private ExprB translateMonoize(MonoizeS monoizeS) {
+    var varMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
         environment, cache, nameMapping, locMapping);
-    return sbTranslator.translatePolyRefImpl(polyRefS);
+    return sbTranslator.translatePolyExpr(monoizeS.polyExprS());
   }
 
-  public ExprB translatePolyRefImpl(PolyRefS polyRefS) {
+  public ExprB translatePolyExpr(PolyExprS polyExprS) {
+    return switch (polyExprS) {
+      case PolyRefS polyRefS -> translatePolyRef(polyRefS);
+    };
+  }
+
+  private ExprB translatePolyRef(PolyRefS polyRefS) {
     return switch (polyRefS.polyEvaluable()) {
       case PolyFuncS polyFuncS -> translateFunc(polyFuncS.mono());
       case PolyValS polyValS -> translateVal(polyRefS.loc(), polyValS.mono());

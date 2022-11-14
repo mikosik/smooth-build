@@ -6,6 +6,6 @@ import org.smoothbuild.compile.lang.type.TypeS;
 /**
  * Expression.
  */
-public sealed interface ExprS extends WithLoc permits InstS, OperS {
+public sealed interface ExprS extends WithLoc permits InstS, MonoizeS, OperS {
   public TypeS evalT();
 }

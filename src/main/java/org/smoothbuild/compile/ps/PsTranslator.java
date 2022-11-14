@@ -20,6 +20,7 @@ import org.smoothbuild.compile.lang.define.DefValS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
+import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
@@ -171,7 +172,8 @@ public class PsTranslator {
   }
 
   private static ExprS translateMonoizable(MonoizableP monoizableP, PolyEvaluableS polyEvaluableS) {
-    return new PolyRefS(monoizableP.monoizeVarMap(), polyEvaluableS, monoizableP.loc());
+    var polyRefS = new PolyRefS(polyEvaluableS, monoizableP.loc());
+    return new MonoizeS(monoizableP.monoizeVarMap(), polyRefS, monoizableP.loc());
   }
 
   private BlobS translateBlob(BlobP blob) {

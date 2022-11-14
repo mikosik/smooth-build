@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.PolyValS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
@@ -31,7 +32,8 @@ public class Evaluator {
 
   public Optional<ImmutableList<InstB>> evaluate(ImmutableList<PolyValS> vals) throws EvaluatorExc {
     try {
-      var refs = map(vals, v -> new PolyRefS(v, commandLineLoc()));
+      var loc = commandLineLoc();
+      var refs = map(vals, v -> new MonoizeS(new PolyRefS(v, loc), loc));
       reporter.startNewPhase("Compiling");
       var sbTranslation = sbTranslatorFacade.translate(refs);
       reporter.startNewPhase("Evaluating");
