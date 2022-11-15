@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public record CallS(ExprS callee, ImmutableList<ExprS> args, Loc loc)
-    implements OperS {
+    implements ExprS {
   public CallS {
     if (callee.evalT() instanceof FuncTS funcTS) {
       validateArgsSize(funcTS, args);

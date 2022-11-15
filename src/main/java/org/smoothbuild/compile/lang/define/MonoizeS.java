@@ -10,11 +10,8 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 import com.google.common.collect.ImmutableMap;
 
-public record MonoizeS(
-    ImmutableMap<VarS, TypeS> varMap,
-    PolyExprS polyExprS,
-    TypeS evalT,
-    Loc loc) implements ExprS, OperS {
+public record MonoizeS(ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS, TypeS evalT, Loc loc)
+    implements ExprS {
 
   public MonoizeS(PolyExprS polyExprS, Loc loc) {
     this(ImmutableMap.of(), polyExprS, loc);

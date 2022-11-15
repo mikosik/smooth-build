@@ -8,7 +8,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 
-public record SelectS(ExprS selectable, String field, Loc loc) implements OperS {
+public record SelectS(ExprS selectable, String field, Loc loc) implements ExprS {
   public SelectS {
     checkArgument(selectable.evalT() instanceof StructTS);
   }
