@@ -81,11 +81,11 @@ import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
-import org.smoothbuild.compile.lang.define.AnnValS;
+import org.smoothbuild.compile.lang.define.AnnValueS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
-import org.smoothbuild.compile.lang.define.DefValS;
+import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.FuncS;
@@ -99,6 +99,7 @@ import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedPolyFuncS;
 import org.smoothbuild.compile.lang.define.NamedPolyValS;
+import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyEvaluableS;
@@ -108,7 +109,6 @@ import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TraceS;
-import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.BlobTS;
 import org.smoothbuild.compile.lang.type.BoolTS;
@@ -1197,16 +1197,16 @@ public class TestContext {
     return polyS(annValS(line, ann, type, name));
   }
 
-  public AnnValS byteValS(int line, TypeS type, String name) {
+  public AnnValueS byteValS(int line, TypeS type, String name) {
     return annValS(line, bytecodeS(line - 1, "impl"), type, name);
   }
 
-  public AnnValS annValS(int line, AnnS ann, TypeS type, String name) {
-    return new AnnValS(ann, type, name, loc(line));
+  public AnnValueS annValS(int line, AnnS ann, TypeS type, String name) {
+    return new AnnValueS(ann, type, name, loc(line));
   }
 
-  public AnnValS annValS(AnnS ann, TypeS type, String name, Loc loc) {
-    return new AnnValS(ann, type, name, loc);
+  public AnnValueS annValS(AnnS ann, TypeS type, String name, Loc loc) {
+    return new AnnValueS(ann, type, name, loc);
   }
 
   public NamedPolyValS polyDefValS(String name, ExprS body) {
@@ -1221,16 +1221,16 @@ public class TestContext {
     return polyS(defValS(line, type, name, body));
   }
 
-  public DefValS defValS(String name, ExprS body) {
+  public DefValueS defValS(String name, ExprS body) {
     return defValS(1, name, body);
   }
 
-  public DefValS defValS(int loc, String name, ExprS body) {
+  public DefValueS defValS(int loc, String name, ExprS body) {
     return defValS(loc, body.evalT(), name, body);
   }
 
-  public DefValS defValS(int line, TypeS type, String name, ExprS body) {
-    return new DefValS(type, name, body, loc(line));
+  public DefValueS defValS(int line, TypeS type, String name, ExprS body) {
+    return new DefValueS(type, name, body, loc(line));
   }
 
   public NamedPolyValS emptyArrayValS() {
@@ -1383,7 +1383,7 @@ public class TestContext {
   public NamedPolyEvaluableS polyS(NamedEvaluableS evaluableS) {
     return switch (evaluableS) {
       case NamedFuncS namedFuncS -> polyS(namedFuncS);
-      case ValS valS -> polyS(valS);
+      case NamedValueS namedValueS -> polyS(namedValueS);
     };
   }
 
@@ -1398,8 +1398,8 @@ public class TestContext {
     return new NamedPolyFuncS(funcSchemaS(namedFuncS), namedFuncS);
   }
 
-  private NamedPolyValS polyS(ValS valS) {
-    return new NamedPolyValS(schemaS(valS.type()), valS);
+  private NamedPolyValS polyS(NamedValueS namedValueS) {
+    return new NamedPolyValS(schemaS(namedValueS.type()), namedValueS);
   }
 
   public static ItemSigS sigS(TypeS type, String name) {

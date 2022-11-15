@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class AnnValSTest extends TestContext {
+public class AnnValueSTest extends TestContext {
   @Test
   public void to_string() {
     var annS = new AnnS("myAnnotation", stringS(7, "myPath"), loc(17));

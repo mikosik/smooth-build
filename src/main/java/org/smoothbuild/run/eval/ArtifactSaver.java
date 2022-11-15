@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.inst.ValueB;
-import org.smoothbuild.compile.lang.define.ValS;
+import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.fs.base.FileSystem;
@@ -44,7 +44,7 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<ValS, ValueB> artifacts) {
+  public int saveArtifacts(Map<NamedValueS, ValueB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
     var sortedPairs = sort(artifacts, comparing(e -> e.getKey().name()));
     for (var pair : sortedPairs.entrySet()) {
@@ -55,10 +55,10 @@ public class ArtifactSaver {
     return EXIT_CODE_SUCCESS;
   }
 
-  private boolean save(ValS val, ValueB valueB) {
-    String name = val.name();
+  private boolean save(NamedValueS valueS, ValueB valueB) {
+    String name = valueS.name();
     try {
-      var path = write(val, valueB);
+      var path = write(valueS, valueB);
       reportSuccess(name, path);
       return true;
     } catch (IOException e) {
@@ -72,12 +72,12 @@ public class ArtifactSaver {
     }
   }
 
-  private PathS write(ValS val, ValueB valueB)
+  private PathS write(NamedValueS valueS, ValueB valueB)
       throws IOException, DuplicatedPathsExc {
-    PathS artifactPath = artifactPath(val.name());
-    if (val.type() instanceof ArrayTS arrayTS) {
+    PathS artifactPath = artifactPath(valueS.name());
+    if (valueS.type() instanceof ArrayTS arrayTS) {
       return saveArray(arrayTS, artifactPath, (ArrayB) valueB);
-    } else if (val.type().name().equals(FileStruct.NAME)) {
+    } else if (valueS.type().name().equals(FileStruct.NAME)) {
       return saveFile(artifactPath, (TupleB) valueB);
     } else {
       return saveBaseVal(artifactPath, valueB);

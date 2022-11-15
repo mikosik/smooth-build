@@ -12,11 +12,11 @@ import java.util.Optional;
 
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
-import org.smoothbuild.compile.lang.define.AnnValS;
+import org.smoothbuild.compile.lang.define.AnnValueS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
-import org.smoothbuild.compile.lang.define.DefValS;
+import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
@@ -49,7 +49,7 @@ import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
 import org.smoothbuild.util.collect.NList;
@@ -63,16 +63,16 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<NamedPolyEvaluableS> translateVal(ValP valP, TypeS type) {
+  public Optional<NamedPolyEvaluableS> translateValue(NamedValueP namedValueP, TypeS type) {
     var schema = new SchemaS(type);
-    var name = valP.name();
-    var loc = valP.loc();
-    if (valP.ann().isPresent()) {
-      var ann = translateAnn(valP.ann().get());
-      return Optional.of(new NamedPolyValS(schema, new AnnValS(ann, schema.type(), name, loc)));
+    var name = namedValueP.name();
+    var loc = namedValueP.loc();
+    if (namedValueP.ann().isPresent()) {
+      var ann = translateAnn(namedValueP.ann().get());
+      return Optional.of(new NamedPolyValS(schema, new AnnValueS(ann, schema.type(), name, loc)));
     } else {
-      var body = translateExpr(valP.body().get());
-      return body.map(b -> new NamedPolyValS(schema, new DefValS(schema.type(), name, b, loc)));
+      var body = translateExpr(namedValueP.body().get());
+      return body.map(b -> new NamedPolyValS(schema, new DefValueS(schema.type(), name, b, loc)));
     }
   }
 
@@ -94,7 +94,7 @@ public class PsTranslator {
   private Optional<NamedPolyEvaluableS> translateParamBody(FuncP funcP, ItemP paramP, ExprP expr) {
     return translateExpr(expr).map(exprS -> {
       var name = funcP.name() + ":" + paramP.name();
-      var val = new DefValS(exprS.evalT(), name, exprS, paramP.loc());
+      var val = new DefValueS(exprS.evalT(), name, exprS, paramP.loc());
       return new NamedPolyValS(new SchemaS(exprS.evalT()), val);
     });
   }

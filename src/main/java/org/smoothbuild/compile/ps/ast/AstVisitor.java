@@ -15,9 +15,9 @@ import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
 public class AstVisitor {
@@ -50,15 +50,15 @@ public class AstVisitor {
   public void visitEvaluable(PolyEvaluableP evaluable) {
     switch (evaluable) {
       case FuncP func -> visitFunc(func);
-      case ValP value -> visitValue(value);
+      case NamedValueP value -> visitValue(value);
     }
   }
 
-  public void visitValue(ValP valP) {
-    valP.ann().ifPresent(this::visitAnn);
-    valP.type().ifPresent(this::visitType);
-    valP.body().ifPresent(this::visitExpr);
-    visitIdentifier(valP);
+  public void visitValue(NamedValueP namedValueP) {
+    namedValueP.ann().ifPresent(this::visitAnn);
+    namedValueP.type().ifPresent(this::visitType);
+    namedValueP.body().ifPresent(this::visitExpr);
+    visitIdentifier(namedValueP);
   }
 
   public void visitFunc(FuncP funcP) {

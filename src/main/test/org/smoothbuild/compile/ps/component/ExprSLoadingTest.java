@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.lang.define.CallS;
-import org.smoothbuild.compile.lang.define.DefValS;
+import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.testing.TestContext;
@@ -90,7 +90,7 @@ public class ExprSLoadingTest extends TestContext {
           EvaluableS result = module(code)
               .loadsWithSuccess()
               .getModuleAsDefinitions().evaluables().get("result").mono();
-          ExprS actualDefArg = ((CallS) ((DefValS) result).body()).args().get(0);
+          ExprS actualDefArg = ((CallS) ((DefValueS) result).body()).args().get(0);
           assertThat(actualDefArg)
               .isEqualTo(expected);
         }

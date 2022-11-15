@@ -51,8 +51,8 @@ import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -102,7 +102,7 @@ public class AstCreator {
         Optional<ExprP> expr = createPipeSane(value.pipe());
         Optional<AnnP> annotation = createNativeSane(value.ann());
         Loc loc = locOf(filePath, nameNode);
-        evaluables.add(new ValP(type, name, expr, annotation, loc));
+        evaluables.add(new NamedValueP(type, name, expr, annotation, loc));
         return null;
       }
 

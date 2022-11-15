@@ -8,7 +8,7 @@ import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 
 public sealed abstract class PolyEvaluableP extends NalImpl implements RefableP
-    permits FuncP, ValP {
+    permits FuncP, NamedValueP {
   private final Optional<ExprP> body;
   private final Optional<AnnP> ann;
 

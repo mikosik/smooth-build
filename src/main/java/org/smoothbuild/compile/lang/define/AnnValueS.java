@@ -11,10 +11,10 @@ import org.smoothbuild.compile.lang.type.TypeS;
  * Annotated value (one that has not a body).
  * This class is immutable.
  */
-public final class AnnValS extends ValS {
+public final class AnnValueS extends NamedValueS {
   private final AnnS ann;
 
-  public AnnValS(AnnS ann, TypeS type, String name, Loc loc) {
+  public AnnValueS(AnnS ann, TypeS type, String name, Loc loc) {
     super(type, name, loc);
     this.ann = ann;
   }
@@ -28,7 +28,7 @@ public final class AnnValS extends ValS {
     if (this == object) {
       return true;
     }
-    return object instanceof AnnValS that
+    return object instanceof AnnValueS that
         && this.ann().equals(that.ann())
         && this.type().equals(that.type())
         && this.name().equals(that.name())

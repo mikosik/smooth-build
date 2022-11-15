@@ -10,9 +10,9 @@ import org.smoothbuild.compile.lang.type.TypeS;
  * Named value.
  * This class is immutable.
  */
-public sealed abstract class ValS extends Tanal implements NamedEvaluableS
-    permits AnnValS, DefValS {
-  public ValS(TypeS type, String name, Loc loc) {
+public sealed abstract class NamedValueS extends Tanal implements NamedEvaluableS
+    permits AnnValueS, DefValueS {
+  public NamedValueS(TypeS type, String name, Loc loc) {
     super(type, name, loc);
   }
 

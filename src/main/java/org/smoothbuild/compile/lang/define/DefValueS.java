@@ -11,10 +11,10 @@ import org.smoothbuild.compile.lang.type.TypeS;
  * Defined value (one that has a body).
  * This class is immutable.
  */
-public final class DefValS extends ValS {
+public final class DefValueS extends NamedValueS {
   private final ExprS body;
 
-  public DefValS(TypeS type, String name, ExprS body, Loc loc) {
+  public DefValueS(TypeS type, String name, ExprS body, Loc loc) {
     super(type, name, loc);
     this.body = body;
   }
@@ -28,7 +28,7 @@ public final class DefValS extends ValS {
     if (this == object) {
       return true;
     }
-    return object instanceof DefValS that
+    return object instanceof DefValueS that
         && this.type().equals(that.type())
         && this.name().equals(that.name())
         && this.body().equals(that.body())

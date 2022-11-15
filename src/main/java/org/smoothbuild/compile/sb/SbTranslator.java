@@ -40,11 +40,11 @@ import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.WithLoc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
-import org.smoothbuild.compile.lang.define.AnnValS;
+import org.smoothbuild.compile.lang.define.AnnValueS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
-import org.smoothbuild.compile.lang.define.DefValS;
+import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
@@ -52,6 +52,7 @@ import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.NamedPolyFuncS;
 import org.smoothbuild.compile.lang.define.NamedPolyValS;
+import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyExprS;
@@ -59,7 +60,6 @@ import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
-import org.smoothbuild.compile.lang.define.ValS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
@@ -158,7 +158,7 @@ public class SbTranslator {
   private ExprB translatePolyRef(PolyRefS polyRefS) {
     return switch (polyRefS.namedPolyEvaluable()) {
       case NamedPolyFuncS namedPolyFuncS -> translateNamedFunc(namedPolyFuncS.mono());
-      case NamedPolyValS namedPolyValS -> translateVal(polyRefS.loc(), namedPolyValS.mono());
+      case NamedPolyValS namedPolyValS -> translateValue(polyRefS.loc(), namedPolyValS.mono());
     };
   }
 
@@ -247,31 +247,31 @@ public class SbTranslator {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateVal(Loc refLoc, ValS valS) {
-    var key = new CacheKey(valS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateValImpl(refLoc, valS));
+  private ExprB translateValue(Loc refLoc, NamedValueS namedValueS) {
+    var key = new CacheKey(namedValueS.name(), typeSbTranslator.varMap());
+    return computeIfAbsent(cache, key, name -> translateValueImpl(refLoc, namedValueS));
   }
 
-  private ExprB translateValImpl(Loc refLoc, ValS valS) {
-    return switch (valS) {
-      case AnnValS annValS -> translateAndSaveNal(annValS, this::translateAnnVal);
-      case DefValS defValS -> translateDefVal(refLoc, defValS);
+  private ExprB translateValueImpl(Loc refLoc, NamedValueS namedValueS) {
+    return switch (namedValueS) {
+      case AnnValueS annValueS -> translateAndSaveNal(annValueS, this::translateAnnValue);
+      case DefValueS defValueS -> translateDefValue(refLoc, defValueS);
     };
   }
 
-  private ExprB translateAnnVal(AnnValS annValS) {
-    var annName = annValS.ann().name();
+  private ExprB translateAnnValue(AnnValueS annValueS) {
+    var annName = annValueS.ann().name();
     if (annName.equals(BYTECODE)) {
-      return fetchValBytecode(annValS);
+      return fetchValBytecode(annValueS);
     } else {
       throw new SbTranslatorExc("Illegal value annotation: " + q("@" + annName) + ".");
     }
   }
 
-  private ExprB translateDefVal(Loc refLoc, DefValS defValS) {
-    var funcTB = bytecodeF.funcT(translateT(defValS.type()), list());
-    var funcB = bytecodeF.defFunc(funcTB, translateExpr(defValS.body()));
-    saveNal(funcB, defValS);
+  private ExprB translateDefValue(Loc refLoc, DefValueS defValueS) {
+    var funcTB = bytecodeF.funcT(translateT(defValueS.type()), list());
+    var funcB = bytecodeF.defFunc(funcTB, translateExpr(defValueS.body()));
+    saveNal(funcB, defValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
     saveLoc(call, refLoc);
     return call;
@@ -279,9 +279,9 @@ public class SbTranslator {
 
   // helpers
 
-  private ExprB fetchValBytecode(AnnValS annValS) {
-    var typeB = translateT(annValS.type());
-    return fetchBytecode(annValS.ann(), typeB, annValS.name());
+  private ExprB fetchValBytecode(AnnValueS annValueS) {
+    var typeB = translateT(annValueS.type());
+    return fetchBytecode(annValueS.ann(), typeB, annValueS.name());
   }
 
   private ExprB fetchFuncBytecode(AnnFuncS annFuncS) {

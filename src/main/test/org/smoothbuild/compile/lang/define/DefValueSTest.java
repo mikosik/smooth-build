@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class DefValSTest extends TestContext {
+public class DefValueSTest extends TestContext {
   @Test
   public void to_string() {
     var annValS = defValS(7, stringTS(), "myVal", intS(9));

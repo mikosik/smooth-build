@@ -22,9 +22,9 @@ import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.util.bindings.Bindings;
@@ -89,19 +89,19 @@ public class TypeInferrer {
   // val
 
   public static Optional<SchemaS> inferValSchema(Bindings<Optional<TDefS>> types,
-      Bindings<? extends Optional<? extends RefableS>> outerBindings, Logger logger, ValP val) {
+      Bindings<? extends Optional<? extends RefableS>> outerBindings, Logger logger, NamedValueP val) {
     return new TypeInferrer(types, outerBindings, logger)
         .inferValSchema(val);
   }
 
-  private Optional<SchemaS> inferValSchema(ValP val) {
+  private Optional<SchemaS> inferValSchema(NamedValueP val) {
     return translateOrGenerateTempVar(val.type())
         .flatMap(r -> unifyBodyAndResolve(val, r, this::resolveValSchema));
   }
 
-  private Optional<SchemaS> resolveValSchema(ValP valP, TypeS evalT,
+  private Optional<SchemaS> resolveValSchema(NamedValueP namedValueP, TypeS evalT,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
-    return new TypeInferrerResolve(unifier, logger, bindings).resolve(valP, evalT);
+    return new TypeInferrerResolve(unifier, logger, bindings).resolve(namedValueP, evalT);
   }
 
   // func

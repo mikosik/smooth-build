@@ -26,8 +26,8 @@ import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
-import org.smoothbuild.compile.ps.ast.refable.ValP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -254,28 +254,28 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitValue(ValP valP) {
-        super.visitValue(valP);
-        if (valP.ann().isPresent()) {
-          var ann = valP.ann().get();
+      public void visitValue(NamedValueP namedValueP) {
+        super.visitValue(namedValueP);
+        if (namedValueP.ann().isPresent()) {
+          var ann = namedValueP.ann().get();
           var annName = ann.name();
           switch (annName) {
             case BYTECODE -> {
-              if (valP.body().isPresent()) {
+              if (namedValueP.body().isPresent()) {
                 logger.log(
-                    compileError(valP, "Value with @" + annName + " annotation cannot have body."));
+                    compileError(namedValueP, "Value with @" + annName + " annotation cannot have body."));
               }
-              if (valP.type().isEmpty()) {
-                logger.log(compileError(valP, "Value " + valP.q() + " with @" + annName
+              if (namedValueP.type().isEmpty()) {
+                logger.log(compileError(namedValueP, "Value " + namedValueP.q() + " with @" + annName
                     + " annotation must declare type."));
               }
             }
             case NATIVE_PURE, NATIVE_IMPURE -> logger.log(
-                compileError(valP.ann().get(), "Value cannot have @" + annName + " annotation."));
+                compileError(namedValueP.ann().get(), "Value cannot have @" + annName + " annotation."));
             default -> logger.log(compileError(ann, "Unknown annotation " + ann.q() + "."));
           }
-        } else if (valP.body().isEmpty()) {
-          logger.log(compileError(valP, "Value cannot have empty body."));
+        } else if (namedValueP.body().isEmpty()) {
+          logger.log(compileError(namedValueP, "Value cannot have empty body."));
         }
 
       }
