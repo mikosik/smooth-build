@@ -44,7 +44,7 @@ public final class AnnFuncS extends NamedFuncS {
 
   @Override
   public String toString() {
-    var fields = ann.toString() + "\n" + funcFieldsToString();
+    var fields = ann.toString() + "\n" + fieldsToString();
     return "AnnFuncS(\n" + indent(fields) + "\n)";
   }
 }

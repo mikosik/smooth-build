@@ -26,7 +26,7 @@ public sealed interface FuncS extends EvaluableS
         .allMatch(p -> p.defaultVal().isPresent());
   }
 
-  public default String funcFieldsToString() {
+  public default String fieldsToString() {
     return joinToString("\n",
         "type = " + type(),
         "params = [\n" + indent(paramsToString()) + "\n]",

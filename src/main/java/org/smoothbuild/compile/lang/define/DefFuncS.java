@@ -44,7 +44,7 @@ public final class DefFuncS extends NamedFuncS {
 
   @Override
   public String toString() {
-    var fields = funcFieldsToString() + "\nbody = " + body;
+    var fields = fieldsToString() + "\nbody = " + body;
     return "DefFuncS(\n" + indent(fields) + "\n)";
   }
 }

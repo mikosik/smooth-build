@@ -16,7 +16,7 @@ public sealed abstract class ValS extends Tanal implements NamedEvaluableS
     super(type, name, loc);
   }
 
-  protected String valFieldsToString() {
+  protected String fieldsToString() {
     return joinToString("\n",
         "type = " + type(),
         "name = " + name(),

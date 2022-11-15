@@ -43,7 +43,7 @@ public final class AnnValS extends ValS {
 
   @Override
   public String toString() {
-    var fieldsString = ann().toString() + "\n" + valFieldsToString();
+    var fieldsString = ann().toString() + "\n" + fieldsToString();
     return "AnnVal(\n" + indent(fieldsString) + "\n)";
   }
 }

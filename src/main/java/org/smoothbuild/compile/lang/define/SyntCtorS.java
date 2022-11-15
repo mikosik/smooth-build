@@ -36,6 +36,6 @@ public final class SyntCtorS extends NamedFuncS {
 
   @Override
   public String toString() {
-    return "SyntCtorS(\n" + indent(funcFieldsToString()) + "\n)";
+    return "SyntCtorS(\n" + indent(fieldsToString()) + "\n)";
   }
 }

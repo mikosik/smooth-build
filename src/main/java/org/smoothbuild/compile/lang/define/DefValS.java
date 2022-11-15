@@ -42,7 +42,7 @@ public final class DefValS extends ValS {
 
   @Override
   public String toString() {
-    var fieldsString = valFieldsToString() + "\nbody = " + body;
+    var fieldsString = fieldsToString() + "\nbody = " + body;
     return "DefVal(\n" + indent(fieldsString) + "\n)";
   }
 }
