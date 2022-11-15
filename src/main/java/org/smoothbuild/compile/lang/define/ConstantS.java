@@ -3,9 +3,9 @@ package org.smoothbuild.compile.lang.define;
 import org.smoothbuild.compile.lang.type.TypeS;
 
 /**
- * Instance of a value.
+ * Smooth constant.
  */
-public sealed interface InstS extends ExprS permits BlobS, IntS, StringS {
+public sealed interface ConstantS extends ExprS permits BlobS, IntS, StringS {
   @Override
   public default TypeS evalT() {
     return type();

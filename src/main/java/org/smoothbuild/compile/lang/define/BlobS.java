@@ -7,7 +7,7 @@ import org.smoothbuild.compile.lang.type.BlobTS;
 
 import okio.ByteString;
 
-public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements InstS {
+public record BlobS(BlobTS type, ByteString byteString, Loc loc) implements ConstantS {
   @Override
   public String toString() {
     return "BlobS(" + joinToString(", ", type, "0x" + byteString.hex(), loc) + ")";
