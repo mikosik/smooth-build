@@ -79,22 +79,24 @@ public class EvaluateTest extends AcceptanceTestCase {
 
   @Nested
   class _expr {
-    @Test
-    public void select() throws Exception {
-      createUserModule("""
+    @Nested
+    class _select {
+      @Test
+      public void select() throws Exception {
+        createUserModule("""
             MyStruct {
               String field,
             }
             String result = myStruct("abc").field;
             """);
-      evaluate("result");
-      assertThat(artifact())
-          .isEqualTo(stringB("abc"));
-    }
+        evaluate("result");
+        assertThat(artifact())
+            .isEqualTo(stringB("abc"));
+      }
 
-    @Test
-    public void bug() throws Exception {
-      createUserModule("""
+      @Test
+      public void select_doesnt_consume_piped_value() throws Exception {
+        createUserModule("""
             MyStruct {
               (String)->()->Int field,
             }
@@ -107,23 +109,37 @@ public class EvaluateTest extends AcceptanceTestCase {
             # - "abc" skips selection: `aStruct.field`
             Int result = "abc" | aStruct.field()();
             """);
-      evaluate("result");
-      assertThat(artifact())
-          .isEqualTo(intB(7));
-    }
-
-    @Test
-    public void order() throws Exception {
-      createUserModule("""
-            [Int] result = [1, 2, 3];
-            """);
-      evaluate("result");
-      assertThat(artifact())
-          .isEqualTo(arrayB(intB(1), intB(2), intB(3)));
+        evaluate("result");
+        assertThat(artifact())
+            .isEqualTo(intB(7));
+      }
     }
 
     @Nested
-    class _call_to {
+    class _order {
+      @Test
+      public void order() throws Exception {
+        createUserModule("""
+            [Int] result = [1, 2, 3];
+            """);
+        evaluate("result");
+        assertThat(artifact())
+            .isEqualTo(arrayB(intB(1), intB(2), intB(3)));
+      }
+
+      @Test
+      public void order_consumes_piped_value() throws Exception {
+        createUserModule("""
+            [Int] result = 1 | [2, 3];
+            """);
+        evaluate("result");
+        assertThat(artifact())
+            .isEqualTo(arrayB(intB(1), intB(2), intB(3)));
+      }
+    }
+
+    @Nested
+    class _call {
       @Test
       public void const_func() throws Exception {
         createUserModule("""
@@ -185,6 +201,17 @@ public class EvaluateTest extends AcceptanceTestCase {
         evaluate("result");
         assertThat(artifact())
             .isEqualTo(stringB("abc"));
+      }
+
+      @Test
+      public void call_consumes_piped_value() throws Exception {
+        createUserModule("""
+            myFunc(Int int) = int;
+            result = 7 | myFunc();
+            """);
+        evaluate("result");
+        assertThat(artifact())
+            .isEqualTo(intB(7));
       }
     }
 
