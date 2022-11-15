@@ -2,7 +2,7 @@ package org.smoothbuild.vm.job;
 
 import java.util.function.BiFunction;
 
-import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.OperB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.execute.TraceB;
@@ -23,7 +23,7 @@ public class OperJob<T extends OperB> extends Job {
   }
 
   @Override
-  protected Promise<InstB> evaluateImpl() {
+  protected Promise<ValueB> evaluateImpl() {
     var task = taskConstructor.apply(exprB(), context().trace());
     return evaluateTransitively(task, exprB().dataSeq());
   }

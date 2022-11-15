@@ -12,14 +12,14 @@ import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSource;
 
 public class ZipFunc {
-  public static InstB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB files = (ArrayB) args.get(0);
     var duplicatesDetector = new HashSet<String>();
     BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();

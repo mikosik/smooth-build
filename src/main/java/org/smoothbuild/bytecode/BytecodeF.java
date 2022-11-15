@@ -21,12 +21,12 @@ import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.DefFuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
@@ -151,7 +151,7 @@ public class BytecodeF {
     return bytecodeDb.string(string);
   }
 
-  public TupleB tuple(ImmutableList<InstB> items) {
+  public TupleB tuple(ImmutableList<ValueB> items) {
     return bytecodeDb.tuple(items);
   }
 
@@ -224,9 +224,9 @@ public class BytecodeF {
   }
 
   private TupleB message(Level level, String text) {
-    InstB textObject = bytecodeDb.string(text);
-    InstB severityObject = bytecodeDb.string(level.name());
-    return bytecodeDb.tuple(list(textObject, severityObject));
+    ValueB textValue = bytecodeDb.string(text);
+    ValueB severityValue = bytecodeDb.string(level.name());
+    return bytecodeDb.tuple(list(textValue, severityValue));
   }
 
   private static TupleTB createMessageT(CategoryDb categoryDb) {

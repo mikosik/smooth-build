@@ -16,8 +16,8 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -344,13 +344,13 @@ public class ComputerTest extends TestContext {
   }
 
   private void assertComputationResult(
-      Task task, TupleB input, InstB memoryValue, InstB diskValue, ComputationResult expected)
+      Task task, TupleB input, ValueB memoryValue, ValueB diskValue, ComputationResult expected)
       throws ComputationCacheExc {
     var computer = computerWithCaches(task, input, memoryValue, diskValue);
     assertComputationResult(computer, task, input, expected);
   }
 
-  private Computer computerWithCaches(Task task, TupleB input, InstB memoryValue, InstB diskValue)
+  private Computer computerWithCaches(Task task, TupleB input, ValueB memoryValue, ValueB diskValue)
       throws ComputationCacheExc {
     var computationCache = computationCache();
     var sandboxHash = Hash.of(123);
@@ -377,7 +377,7 @@ public class ComputerTest extends TestContext {
   }
 
   private void assertCachesState(
-      Task task, TupleB input, ComputationResult memoryValue, InstB diskValue)
+      Task task, TupleB input, ComputationResult memoryValue, ValueB diskValue)
       throws ComputationCacheExc {
     var sandboxHash = Hash.of(123);
     var computationCache = computationCache();

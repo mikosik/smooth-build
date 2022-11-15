@@ -13,9 +13,9 @@ import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.DefFuncB;
 import org.smoothbuild.bytecode.expr.inst.FuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
@@ -37,15 +37,15 @@ public class CallJob extends Job {
   }
 
   @Override
-  public Promise<InstB> evaluateImpl() {
-    var result = new PromisedValue<InstB>();
+  public Promise<ValueB> evaluateImpl() {
+    var result = new PromisedValue<ValueB>();
     evaluateImpl(
         exprB().dataSeq().get(0),
         funcB -> onFuncEvaluated(exprB(), funcB, result));
     return result;
   }
 
-  private void onFuncEvaluated(CallB callB, InstB funcB, Consumer<InstB> resConsumer) {
+  private void onFuncEvaluated(CallB callB, ValueB funcB, Consumer<ValueB> resConsumer) {
     switch ((FuncB) funcB) {
       case DefFuncB defFuncB -> handleDefFunc(defFuncB, resConsumer);
       case IfFuncB ifFuncB -> handleIfFunc(resConsumer);
@@ -56,7 +56,7 @@ public class CallJob extends Job {
 
   // handling DefFunc
 
-  private void handleDefFunc(DefFuncB defFuncB, Consumer<InstB> resultConsumer) {
+  private void handleDefFunc(DefFuncB defFuncB, Consumer<ValueB> resultConsumer) {
     var args = args();
     var closureEnvironment = defFuncB.environment().items();
     var closureBodyEnvironment = map(concat(args, closureEnvironment), context()::jobFor);
@@ -67,15 +67,15 @@ public class CallJob extends Job {
 
   // handling IfFunc
 
-  private void handleIfFunc(Consumer<InstB> resultConsumer) {
+  private void handleIfFunc(Consumer<ValueB> resultConsumer) {
     var args = args();
     evaluateImpl(
         args.get(0),
         v -> onConditionEvaluated(v, args, resultConsumer));
   }
 
-  private void onConditionEvaluated(InstB conditionB, ImmutableList<ExprB> args,
-      Consumer<InstB> resultConsumer) {
+  private void onConditionEvaluated(ValueB conditionB, ImmutableList<ExprB> args,
+      Consumer<ValueB> resultConsumer) {
     evaluateImpl(
         args.get(((BoolB) conditionB).toJ() ? 1 : 2),
         resultConsumer);
@@ -83,25 +83,25 @@ public class CallJob extends Job {
 
   // handling MapFunc
 
-  private void handleMapFunc(Consumer<InstB> result) {
+  private void handleMapFunc(Consumer<ValueB> result) {
     evaluateImpl(
         args().get(0),
         a -> onMapArgsEvaluated((ArrayB) a, result));
   }
 
-  private void onMapArgsEvaluated(ArrayB arrayB, Consumer<InstB> resultConsumer) {
+  private void onMapArgsEvaluated(ArrayB arrayB, Consumer<ValueB> resultConsumer) {
     var mappingFuncExprB = args().get(1);
-    var callBs = map(arrayB.elems(InstB.class), e -> newCallB(mappingFuncExprB, e));
+    var callBs = map(arrayB.elems(ValueB.class), e -> newCallB(mappingFuncExprB, e));
     var mappingFuncResT = ((FuncTB) mappingFuncExprB.evalT()).res();
     var orderB = bytecodeF().order(bytecodeF().arrayT(mappingFuncResT), callBs);
     evaluateImpl(orderB, resultConsumer);
   }
 
-  private ExprB newCallB(ExprB funcExprB, InstB val) {
+  private ExprB newCallB(ExprB funcExprB, ValueB val) {
     return bytecodeF().call(funcExprB, singleArg(val));
   }
 
-  private CombineB singleArg(InstB val) {
+  private CombineB singleArg(ValueB val) {
     return bytecodeF().combine(list(val));
   }
 
@@ -111,7 +111,7 @@ public class CallJob extends Job {
 
   // handling NatFunc
 
-  private void handleNatFunc(CallB callB, NatFuncB natFuncB, Consumer<InstB> res) {
+  private void handleNatFunc(CallB callB, NatFuncB natFuncB, Consumer<ValueB> res) {
     var trace = trace(natFuncB);
     var task = new InvokeTask(callB, natFuncB, context().nativeMethodLoader(), trace);
     evaluateTransitively(task, args())
@@ -120,11 +120,11 @@ public class CallJob extends Job {
 
   //helpers
 
-  private void evaluateImpl(ExprB expr, Consumer<InstB> resultConsumer) {
+  private void evaluateImpl(ExprB expr, Consumer<ValueB> resultConsumer) {
     evaluateImpl(context(), expr, resultConsumer);
   }
 
-  private void evaluateImpl(ExecutionContext context, ExprB expr, Consumer<InstB> resultConsumer) {
+  private void evaluateImpl(ExecutionContext context, ExprB expr, Consumer<ValueB> resultConsumer) {
     context
         .jobFor(expr)
         .evaluate()

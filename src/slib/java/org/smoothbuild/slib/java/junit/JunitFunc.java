@@ -18,9 +18,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
@@ -28,7 +28,7 @@ import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 import com.google.common.collect.ImmutableMap;
 
 public class JunitFunc {
-  public static InstB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
     TupleB tests = (TupleB) args.get(0);
     ArrayB deps = (ArrayB) args.get(1);
     StringB include = (StringB) args.get(2);

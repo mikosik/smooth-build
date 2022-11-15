@@ -14,8 +14,8 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public final class ArrayB extends InstB {
-  private final Supplier<ImmutableList<InstB>> elemsSupplier;
+public final class ArrayB extends ValueB {
+  private final Supplier<ImmutableList<ValueB>> elemsSupplier;
 
   public ArrayB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
@@ -36,14 +36,14 @@ public final class ArrayB extends InstB {
     return readDataSeqSize();
   }
 
-  public <T extends InstB> ImmutableList<T> elems(Class<T> elemTJ) {
+  public <T extends ValueB> ImmutableList<T> elems(Class<T> elemTJ) {
     assertIsIterableAs(elemTJ);
     @SuppressWarnings("unchecked")
     ImmutableList<T> result = (ImmutableList<T>) elemsSupplier.get();
     return result;
   }
 
-  private <T extends InstB> void assertIsIterableAs(Class<T> clazz) {
+  private <T extends ValueB> void assertIsIterableAs(Class<T> clazz) {
     var elemT = type().elem();
     if (!clazz.isAssignableFrom(elemT.typeJ())) {
       throw new IllegalArgumentException(category().name() + " cannot be viewed as Iterable of "
@@ -51,7 +51,7 @@ public final class ArrayB extends InstB {
     }
   }
 
-  private ImmutableList<InstB> instantiateElems() {
+  private ImmutableList<ValueB> instantiateElems() {
     var elems = readElems();
     var expectedElemT = type().elem();
     for (int i = 0; i < elems.size(); i++) {
@@ -64,8 +64,8 @@ public final class ArrayB extends InstB {
     return elems;
   }
 
-  private ImmutableList<InstB> readElems() {
-    return readDataSeqElems(InstB.class);
+  private ImmutableList<ValueB> readElems() {
+    return readDataSeqElems(ValueB.class);
   }
 
   @Override

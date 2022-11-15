@@ -15,13 +15,13 @@ import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class JavacFunc {
-  public static InstB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB srcs = (ArrayB) args.get(0);
     ArrayB libs = (ArrayB) args.get(1);
     ArrayB options = (ArrayB) args.get(2);

@@ -7,9 +7,9 @@ import static org.smoothbuild.vm.task.Purity.PURE;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
@@ -33,9 +33,9 @@ public final class InvokeTask extends Task {
   }
 
   private Output invokeMethod(Method method, TupleB args, Container container) {
-    InstB result = null;
+    ValueB result = null;
     try {
-      result = (InstB) method.invoke(null, new Object[] {container, args});
+      result = (ValueB) method.invoke(null, new Object[] {container, args});
     } catch (IllegalAccessException e) {
       reportExceptionAsFatal(container, "Cannot invoke native method", e);
     } catch (InvocationTargetException e) {
@@ -51,7 +51,7 @@ public final class InvokeTask extends Task {
     container.log().fatal(message + ":\n" + getStackTraceAsString(throwable));
   }
 
-  private Output buildOutput(Container container, InstB result) {
+  private Output buildOutput(Container container, ValueB result) {
     var hasErrors = container.containsErrorOrAbove();
     if (result == null) {
       if (!hasErrors) {

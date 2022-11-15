@@ -10,15 +10,15 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResHandlerTest extends TestContext {
   private TaskReporter reporter;
   private SoftTerminationExecutor executor;
-  private Consumer<InstB> consumer;
-  private InstB val;
+  private Consumer<ValueB> consumer;
+  private ValueB value;
 
   @BeforeEach
   @SuppressWarnings("unchecked")
@@ -26,7 +26,7 @@ public class ResHandlerTest extends TestContext {
     reporter = mock(TaskReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
-    val = stringB();
+    value = stringB();
   }
 
   @Nested
@@ -34,14 +34,14 @@ public class ResHandlerTest extends TestContext {
     @Test
     public void object_is_forwarded_to_consumer() {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(computationResult(val));
-      verify(consumer, only()).accept(val);
+      resHandler.accept(computationResult(value));
+      verify(consumer, only()).accept(value);
     }
 
     @Test
     public void executor_is_not_stopped() {
       ResHandler resHandler = new ResHandler(task(), executor, reporter, consumer);
-      resHandler.accept(computationResult(val));
+      resHandler.accept(computationResult(value));
       verifyNoInteractions(executor);
     }
   }

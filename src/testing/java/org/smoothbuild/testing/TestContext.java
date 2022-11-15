@@ -44,12 +44,12 @@ import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.DefFuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
@@ -551,11 +551,11 @@ public class TestContext {
     return tupleB(species, speed);
   }
 
-  public ArrayB arrayB(InstB... elems) {
+  public ArrayB arrayB(ValueB... elems) {
     return arrayB(elems[0].evalT(), elems);
   }
 
-  public ArrayB arrayB(TypeB elemT, InstB... elems) {
+  public ArrayB arrayB(TypeB elemT, ValueB... elems) {
     return bytecodeDb()
         .arrayBuilder(arrayTB(elemT))
         .addAll(list(elems))
@@ -571,7 +571,7 @@ public class TestContext {
             .add(ExprB.class)
             .add(StringB.class)
             .add(TupleB.class)
-            .add(InstB.class)
+            .add(ValueB.class)
             .build());
   }
 
@@ -699,7 +699,7 @@ public class TestContext {
   }
 
   public static class ReturnAbcFunc {
-    public static InstB func(NativeApi nativeApi, TupleB args) {
+    public static ValueB func(NativeApi nativeApi, TupleB args) {
       return nativeApi.factory().string("abc");
     }
   }
@@ -744,7 +744,7 @@ public class TestContext {
     return bytecodeDb().string(string);
   }
 
-  public TupleB tupleB(InstB... items) {
+  public TupleB tupleB(ValueB... items) {
     return bytecodeDb().tuple(list(items));
   }
 
@@ -1546,20 +1546,20 @@ public class TestContext {
     return constTask(intB(7));
   }
 
-  public static ConstTask constTask(InstB instB) {
-    return constTask(instB, traceB());
+  public static ConstTask constTask(ValueB valueB) {
+    return constTask(valueB, traceB());
   }
 
-  public static ConstTask constTask(InstB instB, TraceB trace) {
-    return new ConstTask(instB, trace);
+  public static ConstTask constTask(ValueB valueB, TraceB trace) {
+    return new ConstTask(valueB, trace);
   }
 
-  public ComputationResult computationResult(InstB instB) {
-    return computationResult(output(instB), DISK);
+  public ComputationResult computationResult(ValueB valueB) {
+    return computationResult(output(valueB), DISK);
   }
 
-  public ComputationResult computationResult(InstB instB, ResultSource source) {
-    return computationResult(output(instB), source);
+  public ComputationResult computationResult(ValueB valueB, ResultSource source) {
+    return computationResult(output(valueB), source);
   }
 
   public static ComputationResult computationResult(Output output, ResultSource source) {
@@ -1570,12 +1570,12 @@ public class TestContext {
     return computationResult(output(intB(), messages), EXECUTION);
   }
 
-  public Output output(InstB instB) {
-    return output(instB, messageArrayEmpty());
+  public Output output(ValueB valueB) {
+    return output(valueB, messageArrayEmpty());
   }
 
-  public Output output(InstB instB, ArrayB messages) {
-    return new Output(instB, messages);
+  public Output output(ValueB valueB, ArrayB messages) {
+    return new Output(valueB, messages);
   }
 
   public static BsMapping bsMapping() {

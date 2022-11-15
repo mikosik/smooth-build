@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 
@@ -24,7 +24,7 @@ public class Vm {
     this.contextProv = contextProv;
   }
 
-  public Optional<ImmutableList<InstB>> evaluate(ImmutableList<ExprB> exprs)
+  public Optional<ImmutableList<ValueB>> evaluate(ImmutableList<ExprB> exprs)
       throws InterruptedException {
     var context = contextProv.get();
     var jobs = map(exprs, context::jobFor);
@@ -32,7 +32,7 @@ public class Vm {
   }
 
   // Visible for testing
-  public static ImmutableList<Optional<InstB>> evaluate(ExecutionContext context,
+  public static ImmutableList<Optional<ValueB>> evaluate(ExecutionContext context,
       ImmutableList<Job> jobs) throws InterruptedException {
     var executor = context.taskExecutor();
     var evaluationResults = map(jobs, Job::evaluate);

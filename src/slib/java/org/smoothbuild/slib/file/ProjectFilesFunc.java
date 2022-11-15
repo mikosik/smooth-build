@@ -8,9 +8,9 @@ import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import java.io.IOException;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathIterator;
 import org.smoothbuild.fs.base.PathS;
@@ -18,7 +18,7 @@ import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.vm.compute.Container;
 
 public class ProjectFilesFunc {
-  public static InstB func(Container container, TupleB args) throws IOException {
+  public static ValueB func(Container container, TupleB args) throws IOException {
     StringB dir = (StringB) args.get(0);
     PathS path = validatedProjectPath(container, "dir", dir);
     if (path == null) {

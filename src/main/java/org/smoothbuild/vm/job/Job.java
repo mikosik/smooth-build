@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.task.Task;
@@ -13,7 +13,7 @@ import org.smoothbuild.vm.task.Task;
 import com.google.common.collect.ImmutableList;
 
 public abstract class Job {
-  private volatile Promise<InstB> promise;
+  private volatile Promise<ValueB> promise;
   private final ExprB exprB;
   private final ExecutionContext context;
 
@@ -30,9 +30,9 @@ public abstract class Job {
     return context;
   }
 
-  public final Promise<InstB> evaluate() {
+  public final Promise<ValueB> evaluate() {
     // Double-checked locking.
-    Promise<InstB> result = promise;
+    Promise<ValueB> result = promise;
     if (result != null) {
       return result;
     }
@@ -45,10 +45,10 @@ public abstract class Job {
     }
   }
 
-  protected abstract Promise<InstB> evaluateImpl();
+  protected abstract Promise<ValueB> evaluateImpl();
 
-  protected PromisedValue<InstB> evaluateTransitively(Task task, ImmutableList<ExprB> deps) {
-    var result = new PromisedValue<InstB>();
+  protected PromisedValue<ValueB> evaluateTransitively(Task task, ImmutableList<ExprB> deps) {
+    var result = new PromisedValue<ValueB>();
     var depJs = map(deps, context::jobFor);
     var depResults = map(depJs, Job::evaluate);
     runWhenAllAvailable(depResults,
@@ -56,7 +56,7 @@ public abstract class Job {
     return result;
   }
 
-  private TupleB toInput(ImmutableList<Promise<InstB>> depResults) {
+  private TupleB toInput(ImmutableList<Promise<ValueB>> depResults) {
     return context.bytecodeF().tuple(map(depResults, Promise::get));
   }
 }

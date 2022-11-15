@@ -3,18 +3,18 @@ package org.smoothbuild.vm.task;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.task.Purity.FAST;
 
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
 
 public final class ConstTask extends Task {
-  public ConstTask(InstB instB, TraceB trace) {
-    super(instB, trace, FAST);
+  public ConstTask(ValueB valueB, TraceB trace) {
+    super(valueB, trace, FAST);
   }
 
-  public InstB instB() {
-    return (InstB) exprB();
+  public ValueB instB() {
+    return (ValueB) exprB();
   }
 
   @Override

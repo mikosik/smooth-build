@@ -9,7 +9,7 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 /**
  * This class is thread-safe.
  */
-public final class StringB extends InstB {
+public final class StringB extends ValueB {
   public StringB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
   }

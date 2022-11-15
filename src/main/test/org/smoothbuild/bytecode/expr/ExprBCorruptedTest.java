@@ -39,11 +39,11 @@ import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.DefFuncB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.oper.OrderB;
@@ -179,7 +179,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(type),
               notHashOfSeq
           );
-      assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(InstB.class))
+      assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(ValueB.class))
           .throwsException(new DecodeExprNodeExc(hash, type, DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -237,7 +237,7 @@ public class ExprBCorruptedTest extends TestContext {
               ));
       assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(StringB.class))
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, arrayTB, DATA_PATH, 1, InstB.class, RefB.class));
+              hash, arrayTB, DATA_PATH, 1, ValueB.class, RefB.class));
     }
   }
 
@@ -1291,7 +1291,7 @@ public class ExprBCorruptedTest extends TestContext {
        * select in HashedDb.
        */
       var tuple = tupleB(stringB("abc"));
-      var selectable = (InstB) tuple;
+      var selectable = (ValueB) tuple;
       var index = intB(0);
       var hash =
           hash(
@@ -1616,7 +1616,7 @@ public class ExprBCorruptedTest extends TestContext {
       var tuple = (TupleB) bytecodeDb().get(hash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, personTB(), DATA_PATH + "[1]", InstB.class, RefB.class));
+              hash, personTB(), DATA_PATH + "[1]", ValueB.class, RefB.class));
     }
   }
 

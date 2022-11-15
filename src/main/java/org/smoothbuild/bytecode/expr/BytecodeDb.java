@@ -20,12 +20,12 @@ import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.DefFuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
@@ -96,7 +96,7 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newString(value));
   }
 
-  public TupleB tuple(ImmutableList<InstB> items) {
+  public TupleB tuple(ImmutableList<ValueB> items) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(items));
   }
 
@@ -229,7 +229,7 @@ public class BytecodeDb {
 
   // methods for creating InstBs
 
-  public ArrayB newArray(ArrayTB type, List<InstB> elems) throws HashedDbExc {
+  public ArrayB newArray(ArrayTB type, List<ValueB> elems) throws HashedDbExc {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -271,8 +271,8 @@ public class BytecodeDb {
     return categoryDb.string().newExpr(root, this);
   }
 
-  private TupleB newTuple(ImmutableList<InstB> items) throws HashedDbExc {
-    var type = categoryDb.tuple(map(items, InstB::type));
+  private TupleB newTuple(ImmutableList<ValueB> items) throws HashedDbExc {
+    var type = categoryDb.tuple(map(items, ValueB::type));
     var data = writeTupleData(items);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -409,7 +409,7 @@ public class BytecodeDb {
 
   // methods for writing data of InstB-s
 
-  private Hash writeArrayData(List<InstB> elems) throws HashedDbExc {
+  private Hash writeArrayData(List<ValueB> elems) throws HashedDbExc {
     return writeSeq(elems);
   }
 
@@ -434,7 +434,7 @@ public class BytecodeDb {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeTupleData(ImmutableList<InstB> items) throws HashedDbExc {
+  private Hash writeTupleData(ImmutableList<ValueB> items) throws HashedDbExc {
     return writeSeq(items);
   }
 

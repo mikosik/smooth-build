@@ -40,10 +40,10 @@ import org.mockito.ArgumentMatcher;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
@@ -512,7 +512,7 @@ public class VmTest extends TestContext {
       }
 
       public static class ThrowException {
-        public static InstB func(NativeApi nativeApi, TupleB args) {
+        public static ValueB func(NativeApi nativeApi, TupleB args) {
           throw new ArithmeticException();
         }
       }
@@ -555,14 +555,14 @@ public class VmTest extends TestContext {
     class _empty_trace {
       @ParameterizedTest
       @MethodSource("report_const_task_cases")
-      public void report_inst_as_const_task(InstB instB) {
+      public void report_value_as_const_task(ValueB valueB) {
         var taskReporter = mock(TaskReporter.class);
-        evaluate(vm(taskReporter), instB);
+        evaluate(vm(taskReporter), valueB);
         verify(taskReporter)
-            .report(constTask(instB, null), computationResult(instB, NOOP));
+            .report(constTask(valueB, null), computationResult(valueB, NOOP));
       }
 
-      public static List<InstB> report_const_task_cases() {
+      public static List<ValueB> report_const_task_cases() {
         var t = new TestContext();
         return List.of(
             t.arrayB(t.intB(17)),
@@ -734,7 +734,7 @@ public class VmTest extends TestContext {
     }
 
     public static class ExecuteCommands {
-      public static InstB func(NativeApi nativeApi, TupleB args) {
+      public static ValueB func(NativeApi nativeApi, TupleB args) {
         String name = ((StringB) args.get(0)).toJ();
         String commands = ((StringB) args.get(1)).toJ();
         int result = 0;
@@ -776,7 +776,7 @@ public class VmTest extends TestContext {
     return evaluate(vm(), expr);
   }
 
-  private InstB evaluate(Vm vm, ExprB expr) {
+  private ValueB evaluate(Vm vm, ExprB expr) {
     try {
       var results = vm.evaluate(list(expr)).get();
       assertThat(results.size())

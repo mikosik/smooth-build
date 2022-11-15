@@ -2,9 +2,9 @@ package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
@@ -25,11 +25,11 @@ public final class SelectTask extends Task {
     return new Output(tuple.get(index.toJ().intValue()), container.messages());
   }
 
-  private TupleB selectable(ImmutableList<InstB> components) {
+  private TupleB selectable(ImmutableList<ValueB> components) {
     return (TupleB) components.get(0);
   }
 
-  private IntB index(ImmutableList<InstB> components) {
+  private IntB index(ImmutableList<ValueB> components) {
     return (IntB) components.get(1);
   }
 }

@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.plugin.NativeApi;
@@ -55,7 +55,7 @@ public class Container implements NativeApi {
   }
 
   private static class ContainerMessageLoggerImpl implements ContainerMessageLogger {
-    private final List<InstB> messages = new ArrayList<>();
+    private final List<ValueB> messages = new ArrayList<>();
     private final BytecodeF bytecodeF;
     private boolean containsErrorOrAbove = false;
 

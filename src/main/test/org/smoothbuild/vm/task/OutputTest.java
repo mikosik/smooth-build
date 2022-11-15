@@ -17,7 +17,7 @@ public class OutputTest extends TestContext {
 
   @Test
   public void value_returns_value() {
-    assertThat(new Output(aString(), messages()).instB())
+    assertThat(new Output(aString(), messages()).valueB())
         .isEqualTo(aString());
   }
 

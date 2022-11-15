@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.DefFuncB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
@@ -43,7 +43,7 @@ public class JobCreator {
       case CallB      call      -> new CallJob(call, context);
       case ClosurizeB closurize -> new ConstJob(newClosure(closurize), context);
       case CombineB   combine   -> new OperJob<>(CombineTask::new, combine, context);
-      case InstB      inst      -> new ConstJob(inst, context);
+      case ValueB     value     -> new ConstJob(value, context);
       case OrderB     order     -> new OperJob<>(OrderTask::new, order, context);
       case PickB      pick      -> new OperJob<>(PickTask::new, pick, context);
       case RefB       ref       -> jobForEnv(ref);

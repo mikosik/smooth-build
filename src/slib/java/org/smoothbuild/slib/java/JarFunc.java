@@ -13,8 +13,8 @@ import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.InstB;
 import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSink;
@@ -23,7 +23,7 @@ import okio.BufferedSource;
 public class JarFunc {
   private static final String MANIFEST_FILE_PATH = "META-INF/MANIFEST.MF";
 
-  public static InstB func(NativeApi nativeApi, TupleB args) throws IOException {
+  public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB files = (ArrayB) args.get(0);
     BlobB manifest = (BlobB) args.get(1);
 

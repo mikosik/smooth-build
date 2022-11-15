@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.expr.Helpers.HashedDbCallable;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprNodeExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongSeqSizeExc;
-import org.smoothbuild.bytecode.expr.inst.InstB;
+import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.hashed.HashedDb;
 import org.smoothbuild.bytecode.type.CategoryB;
@@ -77,10 +77,10 @@ public abstract class ExprB {
         () -> bytecodeDb.hashedDb().readSeqSize(dataHash()));
   }
 
-  protected ImmutableList<InstB> readDataSeqElems(int expectedSize) {
+  protected ImmutableList<ValueB> readDataSeqElems(int expectedSize) {
     var seqHashes = readDataSeqHashes(expectedSize);
     var exprs = readDataSeqElems(seqHashes);
-    return castDataSeqElem(exprs, InstB.class);
+    return castDataSeqElem(exprs, ValueB.class);
   }
 
   protected <T extends ExprB> ImmutableList<T> readDataSeqElems(Class<T> clazz) {
