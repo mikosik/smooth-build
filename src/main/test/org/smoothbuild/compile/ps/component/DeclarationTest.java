@@ -1410,9 +1410,9 @@ public class DeclarationTest extends TestContext {
     }
 
     @Nested
-    class _pipe_with_not_consumed_piped_value {
+    class _piped_value_consumption {
       @Test
-      public void when_not_consumed_by_select() {
+      public void not_consumed_by_select() {
         module("""
             MyStruct {
               String myField
@@ -1424,7 +1424,7 @@ public class DeclarationTest extends TestContext {
       }
 
       @Test
-      public void when_not_consumed_by_int_literal() {
+      public void not_consumed_by_int_literal() {
         module("""
             result = "abc" | 7;
             """)
@@ -1432,7 +1432,7 @@ public class DeclarationTest extends TestContext {
       }
 
       @Test
-      public void when_not_consumed_by_string_literal() {
+      public void not_consumed_by_string_literal() {
         module("""
             result = "abc" | "def";
             """)
@@ -1440,7 +1440,7 @@ public class DeclarationTest extends TestContext {
       }
 
       @Test
-      public void when_not_consumed_by_blob_literal() {
+      public void not_consumed_by_blob_literal() {
         module("""
             result = "abc" | 0xAA;
             """)
@@ -1448,12 +1448,28 @@ public class DeclarationTest extends TestContext {
       }
 
       @Test
-      public void when_not_consumed_by_value_ref() {
+      public void not_consumed_by_value_ref() {
         module("""
             myValue = 7;
             result = "abc" | myValue;
             """)
             .loadsWithError(2, "Piped value is not consumed.");
+      }
+
+      @Test
+      public void not_consumed_by_expression_inside_parens() {
+        module("""
+            result = "abc" | (7);
+            """)
+            .loadsWithError(1, "Piped value is not consumed.");
+      }
+
+      @Test
+      public void not_consumed_by_first_expr_of_inner_pipe_inside_parens() {
+        module("""
+            result = "abc" | (7 | []);
+            """)
+            .loadsWithError(1, "Piped value is not consumed.");
       }
     }
   }
