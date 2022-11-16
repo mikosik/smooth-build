@@ -9,15 +9,16 @@ item         : type NAME ( '=' expr )? ;
 ann          : '@' NAME '(' STRING ')' ;
 pipe         : expr ( p+='|' expr )* ;
 expr         : chainHead ( chainPart )*   # chain
-             | '(' pipe ')'               # parens
              ;
 chainHead    : NAME
              | array
+             | parens
              | BLOB
              | INT
              | STRING
              ;
 chainPart    : argList | select ;
+parens       : '(' pipe ')' ;
 argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg          : ( NAME '=' )? expr ;
 select       : '.' NAME ;

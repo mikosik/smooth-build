@@ -32,7 +32,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ItemListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ParensContext;
 import org.smoothbuild.antlr.lang.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
@@ -146,14 +145,27 @@ public class AstCreator {
       }
 
       private ExprP createPipe(PipeContext pipe) {
-        return createPipe(null, pipe);
+        return createPipe(new AtomicReference<>(), pipe);
       }
 
-      private ExprP createPipe(ExprP piped, PipeContext pipe) {
-        for (var expr : pipe.expr()) {
-          piped = createExpr(piped, expr);
+      private ExprP createPipe(AtomicReference<ExprP> outerPiped, PipeContext pipe) {
+        var exprs = pipe.expr();
+        var firstExpr = createExpr(outerPiped, exprs.get(0));
+        var innerPiped = new AtomicReference<>(firstExpr);
+        for (int i = 1; i < exprs.size(); i++) {
+          var exprContext = exprs.get(i);
+          var expr = createExpr(innerPiped, exprContext);
+          if (innerPiped.get() != null) {
+            logPipedValueNotConsumedError(exprContext);
+          }
+          innerPiped.set(expr);
         }
-        return piped;
+        return innerPiped.get();
+      }
+
+      private void logPipedValueNotConsumedError(ExprContext parserRuleContext) {
+        var loc = locOf(filePath, parserRuleContext);
+        logs.log(compileError(loc, "Piped value is not consumed."));
       }
 
       private Optional<ExprP> createExprSane(ExprContext expr) {
@@ -161,26 +173,19 @@ public class AstCreator {
       }
 
       private ExprP createExpr(ExprContext expr) {
-        return createExpr(null, expr);
+        return createExpr(new AtomicReference<>(), expr);
       }
 
-      private ExprP createExpr(ExprP piped, ExprContext expr) {
+      private ExprP createExpr(AtomicReference<ExprP> piped, ExprContext expr) {
         return switch (expr) {
           case ChainContext chain -> createChain(piped, chain);
-          case ParensContext parens -> createPipe(piped, parens.pipe());
           default -> throw new RuntimeException("shouldn't happen");
         };
       }
 
-      private ExprP createChain(ExprP pipedValue, ChainContext chain) {
-        var piped = new AtomicReference<>(pipedValue);
+      private ExprP createChain(AtomicReference<ExprP> piped, ChainContext chain) {
         var chainHead = createChainHead(piped, chain.chainHead());
-        var result = createChain(piped, chainHead, chain.chainPart());
-        if (piped.get() != null) {
-          var loc = locOf(filePath, chain);
-          logs.log(compileError(loc, "Piped value is not consumed."));
-        }
-        return result;
+        return createChain(piped, chainHead, chain.chainPart());
       }
 
       private ExprP createChainHead(AtomicReference<ExprP> pipedArg, ChainHeadContext chainHead) {
@@ -194,6 +199,9 @@ public class AstCreator {
             pipedArg.set(null);
           }
           return new OrderP(elems, locOf(filePath, chainHead));
+        }
+        if (chainHead.parens() != null) {
+           return createPipe(pipedArg, chainHead.parens().pipe());
         }
         if (chainHead.BLOB() != null) {
           return new BlobP(chainHead.BLOB().getText().substring(2), locOf(filePath, chainHead));

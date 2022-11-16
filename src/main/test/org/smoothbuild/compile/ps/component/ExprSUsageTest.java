@@ -1060,4 +1060,84 @@ public class ExprSUsageTest extends TestContext {
           .loadsWithError(1, "`A` is undefined.");
     }
   }
+
+  @Nested
+  class _parens_used_as {
+    @Test
+    public void func_arg() {
+      var code = """
+          Int myFunc(Int int) = int;
+          result = myFunc((7));
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void func_body() {
+      var code = """
+          result() = (7);
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void value_body() {
+      var code = """
+          result = (7);
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void array_elem() {
+      var code = """
+          result = [(7)];
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void param_default_value() {
+      var code = """
+          Int myFunc(Int int = (7)) = int;
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void func_in_call_expression() {
+      var code = """
+          Int myFunc() = 7;
+          result = (myFunc)();
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void struct_in_select_expression() {
+      var code = """
+          MyStruct {
+            Int myField
+          }
+          result = (myStruct(7)).myField;
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void parens_content() {
+      var code = """
+          result = ((7));
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+  }
 }

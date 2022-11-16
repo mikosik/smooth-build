@@ -1413,63 +1413,95 @@ public class DeclarationTest extends TestContext {
     class _piped_value_consumption {
       @Test
       public void not_consumed_by_select() {
-        module("""
+        var code = """
             MyStruct {
               String myField
             }
             myValue = myStruct("def");
             result = "abc" | myValue.myField;
-            """)
+            """;
+        module(code)
             .loadsWithError(5, "Piped value is not consumed.");
       }
 
       @Test
       public void not_consumed_by_int_literal() {
-        module("""
+        var code = """
             result = "abc" | 7;
-            """)
+            """;
+        module(code)
             .loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
       public void not_consumed_by_string_literal() {
-        module("""
+        var code = """
             result = "abc" | "def";
-            """)
+            """;
+        module(code)
             .loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
       public void not_consumed_by_blob_literal() {
-        module("""
+        var code = """
             result = "abc" | 0xAA;
-            """)
+            """;
+        module(code)
             .loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
       public void not_consumed_by_value_ref() {
-        module("""
+        var code = """
             myValue = 7;
             result = "abc" | myValue;
-            """)
+            """;
+        module(code)
             .loadsWithError(2, "Piped value is not consumed.");
       }
 
       @Test
       public void not_consumed_by_expression_inside_parens() {
-        module("""
+        var code = """
             result = "abc" | (7);
-            """)
+            """;
+        module(code)
             .loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
       public void not_consumed_by_first_expr_of_inner_pipe_inside_parens() {
-        module("""
+        var code = """
             result = "abc" | (7 | []);
-            """)
+            """;
+        module(code)
             .loadsWithError(1, "Piped value is not consumed.");
+      }
+
+      @Test
+      public void consumed_by_expression_after_parens_containing_inner_pipe() {
+        var code = """
+            String stringId(String string) = string;
+            A id(A a) = a;
+            result = "abc" | (stringId | id())();
+            """;
+        module(code)
+            .loadsWithSuccess();
+      }
+
+      @Test
+      public void not_consumed_by_expression_after_parens_containing_inner_pipe() {
+        var code = """
+            MyStruct {
+              Int myField
+            }
+            v = myStruct(7);
+            A id(A a) = a;
+            result = "abc" | (v | id()).myField;
+            """;
+        module(code)
+            .loadsWithError(6, "Piped value is not consumed.");
       }
     }
   }
