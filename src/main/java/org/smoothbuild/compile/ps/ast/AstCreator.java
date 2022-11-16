@@ -150,8 +150,8 @@ public class AstCreator {
       }
 
       private ExprP createPipe(ExprP piped, PipeContext pipe) {
-        for (var chainContext : pipe.expr()) {
-          piped = createExpr(piped, chainContext);
+        for (var expr : pipe.expr()) {
+          piped = createExpr(piped, expr);
         }
         return piped;
       }
