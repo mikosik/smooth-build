@@ -16,7 +16,7 @@ public class SelectSTest extends TestContext {
     assertThat(selectS.toString())
         .isEqualTo("""
             SelectS(
-              selectable = PolyRefS(
+              selectable = MonoizeS(
                 varMap = {}
                 polyExprS = PolyRefS(
                   namedPolyEvaluable = NamedPolyValS(

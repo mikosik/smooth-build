@@ -13,7 +13,7 @@ public class CallSTest extends TestContext {
     assertThat(callS.toString())
         .isEqualTo("""
             CallS(
-              callee = PolyRefS(
+              callee = MonoizeS(
                 varMap = {A=Int}
                 polyExprS = PolyRefS(
                   namedPolyEvaluable = NamedPolyFuncS(

@@ -30,6 +30,6 @@ public record MonoizeS(ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS, Ty
         "evalT = " + evalT,
         "loc = " + loc
     );
-    return "PolyRefS(\n" + indent(fields) + "\n)";
+    return "MonoizeS(\n" + indent(fields) + "\n)";
   }
 }
