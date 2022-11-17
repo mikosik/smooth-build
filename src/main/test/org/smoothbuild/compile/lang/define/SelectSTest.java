@@ -19,18 +19,15 @@ public class SelectSTest extends TestContext {
               selectable = MonoizeS(
                 varMap = {}
                 polyExprS = PolyRefS(
-                  namedPolyEvaluable = NamedPolyValS(
-                    schema = <>MyStruct
-                    mono = AnnVal(
-                      AnnS(
-                        name = myAnnotation
-                        path = StringS(String, "myPath", myBuild.smooth:7)
-                        loc = myBuild.smooth:17
-                      )
-                      type = MyStruct
-                      name = structValue
-                      loc = myBuild.smooth:11
+                  namedEvaluable = AnnVal(
+                    AnnS(
+                      name = myAnnotation
+                      path = StringS(String, "myPath", myBuild.smooth:7)
+                      loc = myBuild.smooth:17
                     )
+                    schema = <>MyStruct
+                    name = structValue
+                    loc = myBuild.smooth:11
                   )
                   loc = myBuild.smooth:12
                 )

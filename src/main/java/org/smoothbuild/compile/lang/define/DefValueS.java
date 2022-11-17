@@ -5,7 +5,7 @@ import static org.smoothbuild.util.Strings.indent;
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
  * Defined value (one that has a body).
@@ -14,8 +14,8 @@ import org.smoothbuild.compile.lang.type.TypeS;
 public final class DefValueS extends NamedValueS {
   private final ExprS body;
 
-  public DefValueS(TypeS type, String name, ExprS body, Loc loc) {
-    super(type, name, loc);
+  public DefValueS(SchemaS schema, String name, ExprS body, Loc loc) {
+    super(schema, name, loc);
     this.body = body;
   }
 
@@ -29,7 +29,7 @@ public final class DefValueS extends NamedValueS {
       return true;
     }
     return object instanceof DefValueS that
-        && this.type().equals(that.type())
+        && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.body().equals(that.body())
         && this.loc().equals(that.loc());
@@ -37,7 +37,7 @@ public final class DefValueS extends NamedValueS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), name(), body(), loc());
+    return Objects.hash(schema(), name(), body(), loc());
   }
 
   @Override

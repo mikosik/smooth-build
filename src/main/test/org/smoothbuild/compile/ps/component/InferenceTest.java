@@ -922,7 +922,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(idFuncS().mono().type())));
+            .containsEvaluableWithSchema("result", schemaS(arrayTS(idFuncS().schema().type())));
       }
 
       @Test

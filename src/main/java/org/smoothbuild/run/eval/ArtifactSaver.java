@@ -75,9 +75,9 @@ public class ArtifactSaver {
   private PathS write(NamedValueS valueS, ValueB valueB)
       throws IOException, DuplicatedPathsExc {
     PathS artifactPath = artifactPath(valueS.name());
-    if (valueS.type() instanceof ArrayTS arrayTS) {
+    if (valueS.schema().type() instanceof ArrayTS arrayTS) {
       return saveArray(arrayTS, artifactPath, (ArrayB) valueB);
-    } else if (valueS.type().name().equals(FileStruct.NAME)) {
+    } else if (valueS.schema().type().name().equals(FileStruct.NAME)) {
       return saveFile(artifactPath, (TupleB) valueB);
     } else {
       return saveBaseVal(artifactPath, valueB);

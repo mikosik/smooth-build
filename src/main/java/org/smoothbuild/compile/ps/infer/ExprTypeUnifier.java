@@ -15,8 +15,8 @@ import java.util.function.Function;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.ItemS;
-import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
-import org.smoothbuild.compile.lang.define.NamedPolyFuncS;
+import org.smoothbuild.compile.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
@@ -106,8 +106,8 @@ public class ExprTypeUnifier {
   }
 
   private static Optional<NList<ItemS>> refableParams(RefableS refableS) {
-    if (refableS instanceof NamedPolyFuncS namedPolyFuncS) {
-      return Optional.of(namedPolyFuncS.mono().params());
+    if (refableS instanceof NamedFuncS namedFuncS) {
+      return Optional.of(namedFuncS.params());
     } else {
       return Optional.empty();
     }
@@ -126,7 +126,7 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> unifyDefaultArg(DefaultArgP defaultArgP) {
-    return unifyMonoizable(defaultArgP, defaultArgP.polyEvaluableS().schema());
+    return unifyMonoizable(defaultArgP, defaultArgP.evaluableS().schema());
   }
 
   private Optional<TypeS> unifyNamedArg(NamedArgP namedArgP) {
@@ -158,10 +158,10 @@ public class ExprTypeUnifier {
     return refable.flatMap(r -> unifyRef(ref, r));
   }
 
-  private Optional<? extends TypeS> unifyRef(RefP ref, RefableS r) {
-    return switch (r) {
+  private Optional<? extends TypeS> unifyRef(RefP ref, RefableS refable) {
+    return switch (refable) {
       case ItemS item -> unifyItemRef(ref, item);
-      case NamedPolyEvaluableS evaluable -> unifyMonoizable(ref, evaluable.schema());
+      case NamedEvaluableS evaluable -> unifyMonoizable(ref, evaluable.schema());
     };
   }
 

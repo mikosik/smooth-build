@@ -86,25 +86,17 @@ import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValueS;
-import org.smoothbuild.compile.lang.define.EvaluableS;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
-import org.smoothbuild.compile.lang.define.NamedFuncS;
-import org.smoothbuild.compile.lang.define.NamedPolyEvaluableS;
-import org.smoothbuild.compile.lang.define.NamedPolyFuncS;
-import org.smoothbuild.compile.lang.define.NamedPolyValS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
-import org.smoothbuild.compile.lang.define.PolyEvaluableS;
 import org.smoothbuild.compile.lang.define.PolyExprS;
-import org.smoothbuild.compile.lang.define.PolyFuncS;
 import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -915,16 +907,17 @@ public class TestContext {
   }
 
   public static FuncSchemaS funcSchemaS(TypeS resT, TypeS... paramTs) {
-    return newFuncSchema(funcTS(resT, paramTs));
+    return new FuncSchemaS(funcTS(resT, paramTs));
   }
 
-  public static FuncSchemaS funcSchemaS(FuncS funcS) {
-    return newFuncSchema(funcS.type());
+  public FuncSchemaS funcSchemaS(TypeS resT, ImmutableList<TypeS> paramTs) {
+    return new FuncSchemaS(funcTS(resT, paramTs));
   }
 
-  private static FuncSchemaS newFuncSchema(FuncTS funcTS) {
-    return new FuncSchemaS(funcTS);
+  public static SchemaS schemaS(TypeS typeS) {
+    return new SchemaS(typeS);
   }
+
 
   public static StructTS personTS() {
     return structTS("Person",
@@ -1018,23 +1011,23 @@ public class TestContext {
     return ImmutableMap.of(var, type);
   }
 
-  public static MonoizeS monoizeS(NamedPolyEvaluableS namedPolyEvaluableS) {
-    return monoizeS(17, namedPolyEvaluableS);
+  public static MonoizeS monoizeS(NamedEvaluableS namedEvaluableS) {
+    return monoizeS(17, namedEvaluableS);
   }
 
-  public static MonoizeS monoizeS(int line, NamedPolyEvaluableS namedPolyEvaluableS) {
-    return monoizeS(line, polyRefS(line, namedPolyEvaluableS));
-  }
-
-  public static MonoizeS monoizeS(
-      ImmutableMap<VarS, TypeS> varMap, NamedPolyEvaluableS namedPolyEvaluableS) {
-    return monoizeS(1, varMap, namedPolyEvaluableS);
+  public static MonoizeS monoizeS(int line, NamedEvaluableS namedEvaluableS) {
+    return monoizeS(line, polyRefS(line, namedEvaluableS));
   }
 
   public static MonoizeS monoizeS(
-      int line, ImmutableMap<VarS, TypeS> varMap, NamedPolyEvaluableS namedPolyEvaluableS) {
+      ImmutableMap<VarS, TypeS> varMap, NamedEvaluableS namedEvaluableS) {
+    return monoizeS(1, varMap, namedEvaluableS);
+  }
+
+  public static MonoizeS monoizeS(
+      int line, ImmutableMap<VarS, TypeS> varMap, NamedEvaluableS namedEvaluableS) {
     var loc = loc(line);
-    var polyRefS = new PolyRefS(namedPolyEvaluableS, loc);
+    var polyRefS = new PolyRefS(namedEvaluableS, loc);
     return monoizeS(varMap, polyRefS, loc);
   }
 
@@ -1074,8 +1067,8 @@ public class TestContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public static PolyRefS polyRefS(int line, NamedPolyEvaluableS namedPolyEvaluableS) {
-    return new PolyRefS(namedPolyEvaluableS, loc(line));
+  public static PolyRefS polyRefS(int line, NamedEvaluableS namedEvaluableS) {
+    return new PolyRefS(namedEvaluableS, loc(line));
   }
 
   public static SelectS selectS(ExprS selectable, String field) {
@@ -1165,233 +1158,120 @@ public class TestContext {
     return itemSPoly(line, type, name, body.map(b -> defValS(line, name, b)));
   }
 
-  public static ItemS itemS(int line, TypeS type, String name, NamedPolyEvaluableS body) {
+  public static ItemS itemS(int line, TypeS type, String name, NamedEvaluableS body) {
     return itemSPoly(line, type, name, Optional.of(body));
   }
 
-  public static ItemS itemSPoly(
-      int line, TypeS type, String name, Optional<NamedPolyEvaluableS> body) {
+  public static ItemS itemSPoly(int line, TypeS type, String name, Optional<NamedEvaluableS> body) {
     return new ItemS(type, name, body, loc(line));
   }
 
-  public static NamedPolyValS byteValS(int line, TypeS type, String name) {
-    return polyS(monoByteValS(line, type, name));
+  public static AnnValueS byteValS(int line, TypeS type, String name) {
+    return annValS(line, bytecodeS(line - 1, "impl"), type, name);
   }
 
-  public static AnnValueS monoByteValS(int line, TypeS type, String name) {
-    return monoAnnValS(line, bytecodeS(line - 1, "impl"), type, name);
+  public static AnnValueS annValS(int line, AnnS ann, TypeS type, String name) {
+    return annValS(ann, type, name, loc(line));
   }
 
-  public static NamedPolyValS annValS(AnnS ann, TypeS type, String name, Loc loc) {
-    return polyS(monoAnnValS(ann, type, name, loc));
+  public static AnnValueS annValS(AnnS ann, TypeS type, String name, Loc loc) {
+    return new AnnValueS(ann, schemaS(type), name, loc);
   }
 
-  public static NamedPolyValS annValS(int line, AnnS ann, TypeS type, String name) {
-    return polyS(monoAnnValS(line, ann, type, name));
+  public static DefValueS defValS(String name, ExprS body) {
+    return defValS(1, name, body);
   }
 
-  public static AnnValueS monoAnnValS(int line, AnnS ann, TypeS type, String name) {
-    return new AnnValueS(ann, type, name, loc(line));
+  public static DefValueS defValS(int line, String name, ExprS body) {
+    return defValS(line, body.evalT(), name, body);
   }
 
-  public static AnnValueS monoAnnValS(AnnS ann, TypeS type, String name, Loc loc) {
-    return new AnnValueS(ann, type, name, loc);
+  public static DefValueS defValS(int line, TypeS type, String name, ExprS body) {
+    return new DefValueS(schemaS(type), name, body, loc(line));
   }
 
-  public static NamedPolyValS defValS(String name, ExprS body) {
-    return polyS(monoDefValS(name, body));
-  }
-
-  public static NamedPolyValS defValS(int line, String name, ExprS body) {
-    return polyS(monoDefValS(line, name, body));
-  }
-
-  public static NamedPolyValS defValS(int line, TypeS type, String name, ExprS body) {
-    return polyS(monoDefValS(line, type, name, body));
-  }
-
-  public static DefValueS monoDefValS(String name, ExprS body) {
-    return monoDefValS(1, name, body);
-  }
-
-  public static DefValueS monoDefValS(int loc, String name, ExprS body) {
-    return monoDefValS(loc, body.evalT(), name, body);
-  }
-
-  public static DefValueS monoDefValS(int line, TypeS type, String name, ExprS body) {
-    return new DefValueS(type, name, body, loc(line));
-  }
-
-  public static NamedPolyValS emptyArrayValS() {
+  public static NamedValueS emptyArrayValS() {
     return emptyArrayValS(varA());
   }
 
-  public static NamedPolyValS emptyArrayValS(VarS elemT) {
-    return polyS(monoDefValS("emptyArray", orderS(elemT)));
+  public static NamedValueS emptyArrayValS(VarS elemT) {
+    return defValS("emptyArray", orderS(elemT));
   }
 
-  public static SchemaS schemaS(TypeS typeS) {
-    return new SchemaS(typeS);
+  public static SyntCtorS syntCtorS(StructTS structT) {
+    return syntCtorS(1, structT, UPPER_CAMEL.to(LOWER_CAMEL, structT.name()));
   }
 
-  public static NamedPolyFuncS syntCtorS(StructTS structT) {
-    return polyS(monoSyntCtorS(structT));
+  public static SyntCtorS syntCtorS(int line, StructTS structT) {
+    return syntCtorS(line, structT, structNameToCtorName(structT.name()));
   }
 
-  public static NamedPolyFuncS syntCtorS(int line, StructTS structT) {
-    return polyS(monoSyntCtorS(line, structT));
-  }
-
-  public static NamedPolyFuncS syntCtorS(int line, StructTS structT, String name) {
-    return polyS(monoSyntCtorS(line, structT, name));
-  }
-
-  public static SyntCtorS monoSyntCtorS(StructTS structT) {
-    return monoSyntCtorS(1, structT, UPPER_CAMEL.to(LOWER_CAMEL, structT.name()));
-  }
-
-  public static SyntCtorS monoSyntCtorS(int line, StructTS structT) {
-    return monoSyntCtorS(line, structT, structNameToCtorName(structT.name()));
-  }
-
-  public static SyntCtorS monoSyntCtorS(int line, StructTS structT, String name) {
+  public static SyntCtorS syntCtorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
     var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(2)));
     var funcTS = funcTS(structT, toTypes(params.list()));
-    return new SyntCtorS(funcTS, name, params, loc(line));
+    return new SyntCtorS(new FuncSchemaS(funcTS), name, params, loc(line));
   }
 
-  public static NamedPolyFuncS byteFuncS(int line, TypeS resT, String name, NList<ItemS> params) {
-    return polyS(monoByteFuncS(line, resT, name, params));
+  public static AnnFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
+    return byteFuncS(1, path, resT, name, params);
   }
 
-  public static NamedPolyFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
-    return polyS(monoByteFuncS(path, resT, name, params));
+  public static AnnFuncS byteFuncS(int line, TypeS resT, String name, NList<ItemS> params) {
+    return annFuncS(line, bytecodeS(line - 1, "impl"), resT, name, params);
   }
 
-  public static NamedPolyFuncS byteFuncS(int line, String path, TypeS resT, String name,
-      NList<ItemS> params) {
-    return polyS(monoByteFuncS(line, path, resT, name, params));
+  public static AnnFuncS byteFuncS(
+      int line, String path, TypeS resT, String name, NList<ItemS> params) {
+    return annFuncS(line, bytecodeS(path), resT, name, params);
   }
 
-  public static AnnFuncS monoByteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
-    return monoByteFuncS(1, path, resT, name, params);
+  public static AnnFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {
+    return annFuncS(natAnnS(), resT, name, params);
   }
 
-  public static AnnFuncS monoByteFuncS(int line, TypeS resT, String name, NList<ItemS> params) {
-    return monoAnnFuncS(line, bytecodeS(line - 1, "impl"), resT, name, params);
+  public static AnnFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params) {
+    return annFuncS(1, ann, resT, name, params);
   }
 
-  public static AnnFuncS monoByteFuncS(int line, String path, TypeS resT, String name, NList<ItemS> params) {
-    return monoAnnFuncS(line, bytecodeS(path), resT, name, params);
+  public static AnnFuncS annFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
+    return annFuncS(ann, resT, name, params, loc(line));
   }
 
-  public static NamedPolyFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {
-    return polyS(monoNatFuncS(resT, name, params));
-  }
-
-  public static AnnFuncS monoNatFuncS(TypeS resT, String name, NList<ItemS> params) {
-    return monoAnnFuncS(natAnnS(), resT, name, params);
-  }
-
-  public static NamedPolyFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params) {
-    return polyS(monoAnnFuncS(ann, resT, name, params));
-  }
-
-  public static NamedPolyFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
-    return polyS(monoAnnFuncS(ann, resT, name, params, loc));
-  }
-
-  public static NamedPolyFuncS annFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
-    return polyS(monoAnnFuncS(line, ann, resT, name, params));
-  }
-
-  public static AnnFuncS monoAnnFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params) {
-    return monoAnnFuncS(1, ann, resT, name, params);
-  }
-
-  public static AnnFuncS monoAnnFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
-    return monoAnnFuncS(ann, resT, name, params, loc(line));
-  }
-
-  public static AnnFuncS monoAnnFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
+  public static AnnFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
     var funcTS = funcTS(resT, toTypes(params.list()));
-    return new AnnFuncS(ann, funcTS, name, params, loc);
+    return new AnnFuncS(ann, new FuncSchemaS(funcTS), name, params, loc);
   }
 
-  public static NamedPolyFuncS defFuncS(int line, String name, NList<ItemS> params, ExprS body) {
-    return polyS(monoDefFuncS(line, name, params, body));
+  public static DefFuncS defFuncS(int line, String name, NList<ItemS> params, ExprS body) {
+    return defFuncS(line, body.evalT(), name, params, body);
   }
 
-  public static NamedPolyFuncS defFuncS(String name, NList<ItemS> params, ExprS body) {
-    return polyS(monoDefFuncS(name, params, body));
+  public static DefFuncS defFuncS(String name, NList<ItemS> params, ExprS body) {
+    return defFuncS(body.evalT(), name, params, body);
   }
 
-  public static NamedPolyFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    return polyS(monoDefFuncS(resT, name, params, body));
+  public static DefFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ExprS body) {
+    return defFuncS(1, resT, name, params, body);
   }
 
-  public static NamedPolyFuncS defFuncS(
+  public static DefFuncS defFuncS(
       int line, TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    return polyS(monoDefFuncS(line, resT, name, params, body));
+    var schema = new FuncSchemaS(funcTS(resT, toTypes(params)));
+    return new DefFuncS(schema, name, params, body, loc(line));
   }
 
-  public static DefFuncS monoDefFuncS(int line, String name, NList<ItemS> params, ExprS body) {
-    return monoDefFuncS(line, body.evalT(), name, params, body);
-  }
-
-  public static DefFuncS monoDefFuncS(String name, NList<ItemS> params, ExprS body) {
-    return monoDefFuncS(body.evalT(), name, params, body);
-  }
-
-  public static DefFuncS monoDefFuncS(TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    return monoDefFuncS(1, resT, name, params, body);
-  }
-
-  public static DefFuncS monoDefFuncS(int loc, TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    return new DefFuncS(funcTS(resT, toTypes(params)), name, params, body, loc(loc));
-  }
-
-  public static NamedPolyFuncS idFuncS() {
+  public static DefFuncS idFuncS() {
     var a = varA();
-    return polyS(monoDefFuncS(a, "myId", nlist(itemS(a, "a")), paramRefS(a, "a")));
+    return defFuncS(a, "myId", nlist(itemS(a, "a")), paramRefS(a, "a"));
   }
 
-  public static NamedPolyFuncS intIdFuncS() {
+  public static DefFuncS intIdFuncS() {
     return defFuncS(intTS(), "myIntId", nlist(itemS(intTS(), "i")), paramRefS(intTS(), "i"));
   }
 
-  public static NamedPolyFuncS returnIntFuncS() {
+  public static DefFuncS returnIntFuncS() {
     return defFuncS(intTS(), "myReturnInt", nlist(), intS(1, 3));
-  }
-
-  public static PolyEvaluableS polyS(EvaluableS evaluableS) {
-    return switch (evaluableS) {
-      case NamedEvaluableS namedEvaluableS -> polyS(namedEvaluableS);
-      case FuncS funcS -> polyS(funcS);
-    };
-  }
-
-  public static NamedPolyEvaluableS polyS(NamedEvaluableS evaluableS) {
-    return switch (evaluableS) {
-      case NamedFuncS namedFuncS -> polyS(namedFuncS);
-      case NamedValueS namedValueS -> polyS(namedValueS);
-    };
-  }
-
-  public static PolyEvaluableS polyS(FuncS funcS) {
-    return switch (funcS) {
-      case NamedFuncS namedFuncS -> polyS(namedFuncS);
-      default -> new PolyFuncS(funcSchemaS(funcS), funcS);
-    };
-  }
-
-  public static NamedPolyFuncS polyS(NamedFuncS namedFuncS) {
-    return new NamedPolyFuncS(funcSchemaS(namedFuncS), namedFuncS);
-  }
-
-  public static NamedPolyValS polyS(NamedValueS namedValueS) {
-    return new NamedPolyValS(schemaS(namedValueS.type()), namedValueS);
   }
 
   public static ItemSigS sigS(TypeS type, String name) {

@@ -1,13 +1,12 @@
 package org.smoothbuild.compile.lang.define;
 
 import org.smoothbuild.compile.lang.base.WithLoc;
-import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
- * Mono Evaluable.
- * @see PolyEvaluableS
+ * Evaluable (function or value).
  */
 public abstract sealed interface EvaluableS extends WithLoc
     permits FuncS, NamedEvaluableS {
-  public TypeS type();
+  public SchemaS schema();
 }

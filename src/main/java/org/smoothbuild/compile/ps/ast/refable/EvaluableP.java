@@ -7,12 +7,12 @@ import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 
-public sealed abstract class PolyEvaluableP extends NalImpl implements RefableP
+public sealed abstract class EvaluableP extends NalImpl implements RefableP
     permits FuncP, NamedValueP {
   private final Optional<ExprP> body;
   private final Optional<AnnP> ann;
 
-  public PolyEvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
+  public EvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
     super(name, loc);
     this.body = body;
     this.ann = ann;
@@ -28,7 +28,7 @@ public sealed abstract class PolyEvaluableP extends NalImpl implements RefableP
 
   @Override
   public final boolean equals(Object object) {
-    return object instanceof PolyEvaluableP that
+    return object instanceof EvaluableP that
         && this.name().equals(that.name());
   }
 

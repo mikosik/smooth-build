@@ -9,7 +9,7 @@ public class AnnValueSTest extends TestContext {
   @Test
   public void to_string() {
     var annS = new AnnS("myAnnotation", stringS(7, "myPath"), loc(17));
-    var annValS = new AnnValueS(annS, stringTS(), "myVal", loc(7));
+    var annValS = new AnnValueS(annS, schemaS(stringTS()), "myVal", loc(7));
     assertThat(annValS.toString())
         .isEqualTo("""
             AnnVal(
@@ -18,7 +18,7 @@ public class AnnValueSTest extends TestContext {
                 path = StringS(String, "myPath", myBuild.smooth:7)
                 loc = myBuild.smooth:17
               )
-              type = String
+              schema = <>String
               name = myVal
               loc = myBuild.smooth:7
             )""");

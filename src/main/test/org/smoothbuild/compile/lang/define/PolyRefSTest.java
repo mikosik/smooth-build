@@ -12,16 +12,13 @@ public class PolyRefSTest extends TestContext {
     assertThat(polyRefS.toString())
         .isEqualTo("""
             PolyRefS(
-              namedPolyEvaluable = NamedPolyFuncS(
+              namedEvaluable = DefFuncS(
                 schema = <A>(A)->A
-                mono = DefFuncS(
-                  type = (A)->A
-                  params = [
-                    A a
-                  ]
-                  loc = myBuild.smooth:1
-                  body = ParamRefS(A, a, myBuild.smooth:1)
-                )
+                params = [
+                  A a
+                ]
+                loc = myBuild.smooth:1
+                body = ParamRefS(A, a, myBuild.smooth:1)
               )
               loc = myBuild.smooth:7
             )""");

@@ -50,8 +50,6 @@ import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
-import org.smoothbuild.compile.lang.define.NamedPolyFuncS;
-import org.smoothbuild.compile.lang.define.NamedPolyValS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
@@ -156,9 +154,9 @@ public class SbTranslator {
   }
 
   private ExprB translatePolyRef(PolyRefS polyRefS) {
-    return switch (polyRefS.namedPolyEvaluable()) {
-      case NamedPolyFuncS namedPolyFuncS -> translateNamedFunc(namedPolyFuncS.mono());
-      case NamedPolyValS namedPolyValS -> translateValue(polyRefS.loc(), namedPolyValS.mono());
+    return switch (polyRefS.namedEvaluable()) {
+      case NamedFuncS namedFuncS -> translateNamedFunc(namedFuncS);
+      case NamedValueS namedValS -> translateValue(polyRefS.loc(), namedValS);
     };
   }
 
@@ -193,12 +191,12 @@ public class SbTranslator {
 
   private DefFuncB translateDefFunc(DefFuncS defFuncS) {
     return bytecodeF.defFunc(
-        translateT(defFuncS.type()),
+        translateT(defFuncS.schema().type()),
         translateExpr(defFuncS.body()));
   }
 
   private NatFuncB translateNatFunc(AnnFuncS natFuncS) {
-    var funcTB = translateT(natFuncS.type());
+    var funcTB = translateT(natFuncS.schema().type());
     var annS = natFuncS.ann();
     var jarB = loadNativeJar(annS.loc());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
@@ -207,7 +205,7 @@ public class SbTranslator {
   }
 
   private DefFuncB translateSyntCtor(SyntCtorS syntCtorS) {
-    var funcTB = translateT(syntCtorS.type());
+    var funcTB = translateT(syntCtorS.schema().type());
     var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
     saveLoc(bodyB, syntCtorS);
     return bytecodeF.defFunc(funcTB, bodyB);
@@ -269,7 +267,7 @@ public class SbTranslator {
   }
 
   private ExprB translateDefValue(Loc refLoc, DefValueS defValueS) {
-    var funcTB = bytecodeF.funcT(translateT(defValueS.type()), list());
+    var funcTB = bytecodeF.funcT(translateT(defValueS.schema().type()), list());
     var funcB = bytecodeF.defFunc(funcTB, translateExpr(defValueS.body()));
     saveNal(funcB, defValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
@@ -280,12 +278,12 @@ public class SbTranslator {
   // helpers
 
   private ExprB fetchValBytecode(AnnValueS annValueS) {
-    var typeB = translateT(annValueS.type());
+    var typeB = translateT(annValueS.schema().type());
     return fetchBytecode(annValueS.ann(), typeB, annValueS.name());
   }
 
   private ExprB fetchFuncBytecode(AnnFuncS annFuncS) {
-    var typeB = translateT(annFuncS.type());
+    var typeB = translateT(annFuncS.schema().type());
     return fetchBytecode(annFuncS.ann(), typeB, annFuncS.name());
   }
 

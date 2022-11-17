@@ -20,10 +20,10 @@ import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
-import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.out.log.Logger;
@@ -209,7 +209,7 @@ public class TypeInferrer {
 
   // body
 
-  private <R extends PolyEvaluableP, T> Optional<T> unifyBodyAndResolve(R evaluable, TypeS evalT,
+  private <R extends EvaluableP, T> Optional<T> unifyBodyAndResolve(R evaluable, TypeS evalT,
       TriFunction<R, TypeS, Bindings<? extends Optional<? extends RefableS>>, Optional<T>> resolver) {
     if (evaluable.body().isPresent()) {
       return new ExprTypeUnifier(unifier, bindings, logger)

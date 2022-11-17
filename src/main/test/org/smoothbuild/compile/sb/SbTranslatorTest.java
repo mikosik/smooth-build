@@ -229,9 +229,9 @@ public class SbTranslatorTest extends TestContext {
             var b = varB();
 
             var idFuncS = idFuncS();
-            var bIdMonoFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
+            var monoIdFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
 
-            var bodyS = callS(bIdMonoFuncS, paramRefS(b, "p"));
+            var bodyS = callS(monoIdFuncS, paramRefS(b, "p"));
             var wrapFuncS = defFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
             var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
 

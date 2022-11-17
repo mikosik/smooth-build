@@ -17,14 +17,14 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class ItemS extends Tanal implements RefableS {
-  private final Optional<NamedPolyEvaluableS> defaultVal;
+  private final Optional<NamedEvaluableS> defaultVal;
 
-  public ItemS(TypeS type, String name, Optional<NamedPolyEvaluableS> defaultVal, Loc loc) {
+  public ItemS(TypeS type, String name, Optional<NamedEvaluableS> defaultVal, Loc loc) {
     super(type, name, loc);
     this.defaultVal = defaultVal;
   }
 
-  public Optional<NamedPolyEvaluableS> defaultVal() {
+  public Optional<NamedEvaluableS> defaultVal() {
     return defaultVal;
   }
 

@@ -11,7 +11,7 @@ public class AnnFuncSTest extends TestContext {
   @Test
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));
-    var funcTS = funcTS(stringTS(), toTypes(params.list()));
+    var funcTS = funcSchemaS(stringTS(), toTypes(params.list()));
     var func = new AnnFuncS(natAnnS(), funcTS, "myFunc", params, loc(1));
     assertThat(func.toString())
         .isEqualTo("""
@@ -21,7 +21,7 @@ public class AnnFuncSTest extends TestContext {
                 path = StringS(String, "impl", myBuild.smooth:1)
                 loc = myBuild.smooth:1
               )
-              type = (Int)->String
+              schema = <>(Int)->String
               params = [
                 Int myParam
               ]

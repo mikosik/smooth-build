@@ -11,12 +11,12 @@ public class DefFuncSTest extends TestContext {
   @Test
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));
-    var funcTS = funcTS(stringTS(), toTypes(params));
-    var func = new DefFuncS(funcTS, "myFunc", params, intS(17), loc(1));
+    var schema = funcSchemaS(stringTS(), toTypes(params));
+    var func = new DefFuncS(schema, "myFunc", params, intS(17), loc(1));
     assertThat(func.toString())
         .isEqualTo("""
             DefFuncS(
-              type = (Int)->String
+              schema = <>(Int)->String
               params = [
                 Int myParam
               ]

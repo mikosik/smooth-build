@@ -8,7 +8,6 @@ import static org.smoothbuild.util.collect.NList.nlist;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.testing.TestContext;
 
@@ -45,7 +44,7 @@ public class FuncSTest extends TestContext {
   }
 
   private FuncS myFunc(TypeS resT, ImmutableList<ItemS> params) {
-    return new DefFuncS(
-        new FuncTS(resT, toTypes(params)), "name", nlist(params), stringS(), loc(1));
+    var schema = funcSchemaS(resT, toTypes(params));
+    return new DefFuncS(schema, "name", nlist(params), stringS(), loc(1));
   }
 }

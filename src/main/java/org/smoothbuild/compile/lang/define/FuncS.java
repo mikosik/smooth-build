@@ -3,7 +3,7 @@ package org.smoothbuild.compile.lang.define;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Lists.joinToString;
 
-import org.smoothbuild.compile.lang.type.FuncTS;
+import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
 
@@ -15,10 +15,10 @@ public sealed interface FuncS extends EvaluableS
   public NList<ItemS> params();
 
   @Override
-  public FuncTS type();
+  public FuncSchemaS schema();
 
   public default TypeS resT() {
-    return type().res();
+    return schema().type().res();
   }
 
   public default boolean canBeCalledArgless() {
@@ -28,7 +28,7 @@ public sealed interface FuncS extends EvaluableS
 
   public default String fieldsToString() {
     return joinToString("\n",
-        "type = " + type(),
+        "schema = " + schema(),
         "params = [\n" + indent(paramsToString()) + "\n]",
         "loc = " + loc()
     );

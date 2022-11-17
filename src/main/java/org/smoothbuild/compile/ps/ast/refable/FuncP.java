@@ -13,7 +13,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncP extends PolyEvaluableP {
+public final class FuncP extends EvaluableP {
   private final Optional<TypeP> resT;
   private final NList<ItemP> params;
 

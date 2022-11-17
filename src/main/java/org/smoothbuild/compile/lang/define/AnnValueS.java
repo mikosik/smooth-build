@@ -5,7 +5,7 @@ import static org.smoothbuild.util.Strings.indent;
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
  * Annotated value (one that has not a body).
@@ -14,8 +14,8 @@ import org.smoothbuild.compile.lang.type.TypeS;
 public final class AnnValueS extends NamedValueS {
   private final AnnS ann;
 
-  public AnnValueS(AnnS ann, TypeS type, String name, Loc loc) {
-    super(type, name, loc);
+  public AnnValueS(AnnS ann, SchemaS schema, String name, Loc loc) {
+    super(schema, name, loc);
     this.ann = ann;
   }
 
@@ -30,14 +30,14 @@ public final class AnnValueS extends NamedValueS {
     }
     return object instanceof AnnValueS that
         && this.ann().equals(that.ann())
-        && this.type().equals(that.type())
+        && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.loc().equals(that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ann(), type(), name(), loc());
+    return Objects.hash(ann(), schema(), name(), loc());
   }
 
 

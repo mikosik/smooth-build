@@ -3,8 +3,8 @@ package org.smoothbuild.compile.lang.define;
 import org.smoothbuild.compile.lang.base.Nal;
 
 /**
- * Named Mono Evaluable.
+ * Named Evaluable.
  */
-public sealed interface NamedEvaluableS extends EvaluableS, Nal
+public sealed interface NamedEvaluableS extends EvaluableS, RefableS, Nal
     permits NamedFuncS, NamedValueS {
 }

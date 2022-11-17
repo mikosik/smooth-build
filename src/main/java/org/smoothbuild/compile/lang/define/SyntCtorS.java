@@ -5,7 +5,7 @@ import static org.smoothbuild.util.Strings.indent;
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.type.FuncTS;
+import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
 /**
@@ -13,8 +13,8 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class SyntCtorS extends NamedFuncS {
-  public SyntCtorS(FuncTS type, String name, NList<ItemS> params, Loc loc) {
-    super(type, name, params, loc);
+  public SyntCtorS(FuncSchemaS schema, String name, NList<ItemS> params, Loc loc) {
+    super(schema, name, params, loc);
   }
 
   @Override
@@ -23,7 +23,7 @@ public final class SyntCtorS extends NamedFuncS {
       return true;
     }
     return object instanceof SyntCtorS that
-        && this.resT().equals(that.resT())
+        && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.loc().equals(that.loc());
@@ -31,7 +31,7 @@ public final class SyntCtorS extends NamedFuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resT(), name(), params(), loc());
+    return Objects.hash(schema(), name(), params(), loc());
   }
 
   @Override

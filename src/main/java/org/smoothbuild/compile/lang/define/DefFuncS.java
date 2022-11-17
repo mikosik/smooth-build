@@ -5,7 +5,7 @@ import static org.smoothbuild.util.Strings.indent;
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.type.FuncTS;
+import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
 /**
@@ -15,8 +15,8 @@ import org.smoothbuild.util.collect.NList;
 public final class DefFuncS extends NamedFuncS {
   private final ExprS body;
 
-  public DefFuncS(FuncTS type, String name, NList<ItemS> params, ExprS body, Loc loc) {
-    super(type, name, params, loc);
+  public DefFuncS(FuncSchemaS schema, String name, NList<ItemS> params, ExprS body, Loc loc) {
+    super(schema, name, params, loc);
     this.body = body;
   }
 
@@ -30,7 +30,7 @@ public final class DefFuncS extends NamedFuncS {
       return true;
     }
     return object instanceof DefFuncS that
-        && this.resT().equals(that.resT())
+        && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.body.equals(that.body)
@@ -39,7 +39,7 @@ public final class DefFuncS extends NamedFuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resT(), name(), params(), body, loc());
+    return Objects.hash(schema(), name(), params(), body, loc());
   }
 
   @Override

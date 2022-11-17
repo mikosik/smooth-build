@@ -7,7 +7,7 @@ import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
-public final class NamedValueP extends PolyEvaluableP {
+public final class NamedValueP extends EvaluableP {
   private final Optional<TypeP> type;
 
   public NamedValueP(Optional<TypeP> type, String name, Optional<ExprP> body,

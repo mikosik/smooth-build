@@ -16,8 +16,8 @@ import java.util.Set;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
+import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
-import org.smoothbuild.compile.ps.ast.refable.PolyEvaluableP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -47,17 +47,17 @@ public class AstSorter {
     return maybe(sorted);
   }
 
-  private static TopologicalSortingRes<String, PolyEvaluableP, Loc> sortEvaluablesByDeps(
-      ImmutableList<PolyEvaluableP> evaluables) {
+  private static TopologicalSortingRes<String, EvaluableP, Loc> sortEvaluablesByDeps(
+      ImmutableList<EvaluableP> evaluables) {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(r -> names.add(r.name()));
 
-    HashSet<GraphNode<String, PolyEvaluableP, Loc>> nodes = new HashSet<>();
+    HashSet<GraphNode<String, EvaluableP, Loc>> nodes = new HashSet<>();
     nodes.addAll(map(evaluables, r -> evaluable(r, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, PolyEvaluableP, Loc> evaluable(PolyEvaluableP evaluable,
+  private static GraphNode<String, EvaluableP, Loc> evaluable(EvaluableP evaluable,
       Set<String> names) {
     Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {

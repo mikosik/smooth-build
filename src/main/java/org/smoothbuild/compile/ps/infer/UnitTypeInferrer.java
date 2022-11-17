@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.define.NamedPolyFuncS;
+import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.VarS;
@@ -68,8 +68,8 @@ public class UnitTypeInferrer {
   }
 
   private void inferRef(RefP ref) {
-    if (bindings.get(ref.name()).get() instanceof NamedPolyFuncS namedPolyFuncS) {
-      var resultVars = namedPolyFuncS.mono().type().res().vars();
+    if (bindings.get(ref.name()).get() instanceof NamedFuncS namedFuncS) {
+      var resultVars = namedFuncS.schema().type().res().vars();
       var paramOnlyVars = filterKeys(ref.monoizeVarMap(), v -> !resultVars.contains(v));
       for (var type : paramOnlyVars.values()) {
         var resolved = unifier.resolve(type);
