@@ -8,7 +8,7 @@ import org.smoothbuild.testing.TestContext;
 public class DefValueSTest extends TestContext {
   @Test
   public void to_string() {
-    var annValS = defValS(7, stringTS(), "myVal", intS(9));
+    var annValS = new DefValueS(stringTS(), "myVal", intS(9), loc(7));
     assertThat(annValS.toString())
         .isEqualTo("""
             DefVal(

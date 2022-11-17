@@ -71,7 +71,7 @@ public class EvaluatorTest  extends TestContext {
       public void call_polymorphic() throws EvaluatorExc {
         var a = varA();
         var orderS = orderS(a, paramRefS(a, "e"));
-        var funcS = polyDefFuncS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
+        var funcS = defFuncS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
         var callS = callS(monoizeS(varMap(a, intTS()), funcS), intS(7));
         assertThat(evaluate(callS))
             .isEqualTo(arrayB(intTB(), intB(7)));
@@ -79,7 +79,7 @@ public class EvaluatorTest  extends TestContext {
 
       @Test
       public void native_call_argless() throws Exception {
-        var funcS = natFuncS(intTS(), "f", nlist(), natAnnS(1, stringS("class binary name")));
+        var funcS = annFuncS(natAnnS(1, stringS("class binary name")), intTS(), "f", nlist());
         var callS = callS(monoizeS(funcS));
         var jarB = blobB(137);
         when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
@@ -93,8 +93,9 @@ public class EvaluatorTest  extends TestContext {
 
       @Test
       public void native_call_with_param() throws Exception {
-        var funcS = natFuncS(intTS(), "f", nlist(itemS(intTS(), "p")),
-            natAnnS(1, stringS("class binary name")));
+        var funcS = annFuncS(natAnnS(1, stringS("class binary name")),
+            intTS(), "f", nlist(itemS(intTS(), "p"))
+        );
         var callS = callS(monoizeS(funcS), intS(77));
         var jarB = blobB(137);
         when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
@@ -127,7 +128,7 @@ public class EvaluatorTest  extends TestContext {
             .thenReturn(Try.result(funcB));
 
         var a = varA();
-        var byteFuncS = polyByteFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
+        var byteFuncS = byteFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
         assertThat(evaluate(monoizeS(varMap(a, intTS()), byteFuncS)))
             .isEqualTo(funcB);
       }
@@ -145,7 +146,7 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void poly_func() throws EvaluatorExc {
         var a = varA();
-        var funcS = polyDefFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
+        var funcS = defFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
         var polyRefS = monoizeS(varMap(a, intTS()), funcS);
         assertThat(evaluate(polyRefS))
             .isEqualTo(idFuncB());
@@ -154,7 +155,7 @@ public class EvaluatorTest  extends TestContext {
       @Test
       public void poly_val() throws EvaluatorExc {
         var a = varA();
-        var val = polyDefValS(1, arrayTS(a), "name", orderS(a));
+        var val = defValS(1, arrayTS(a), "name", orderS(a));
         var polyRefS = monoizeS(varMap(a, intTS()), val);
         assertThat(evaluate(polyRefS))
             .isEqualTo(arrayB(intTB()));
@@ -184,7 +185,7 @@ public class EvaluatorTest  extends TestContext {
   }
 
   private ExprB evaluate(ExprS exprS) throws EvaluatorExc {
-    var resultMap = newEvaluator().evaluate(list(polyDefValS("name", exprS))).get();
+    var resultMap = newEvaluator().evaluate(list(defValS("name", exprS))).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
     return resultMap.get(0);

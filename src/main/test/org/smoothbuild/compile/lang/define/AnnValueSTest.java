@@ -9,7 +9,7 @@ public class AnnValueSTest extends TestContext {
   @Test
   public void to_string() {
     var annS = new AnnS("myAnnotation", stringS(7, "myPath"), loc(17));
-    var annValS = annValS(7, annS,  stringTS(), "myVal");
+    var annValS = new AnnValueS(annS, stringTS(), "myVal", loc(7));
     assertThat(annValS.toString())
         .isEqualTo("""
             AnnVal(

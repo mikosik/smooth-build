@@ -730,14 +730,14 @@ public class InferenceTest extends TestContext {
               Int myFunc(A a1, A a2) = 7;
               result = myFunc([], []);
               """;
-          var myFunc = polyDefFuncS(1, "myFunc",
+          var myFunc = defFuncS(1, "myFunc",
               nlist(itemS(1, varA(), "a1"), itemS(1, varA(), "a2")), intS(1, 7));
           var emptyArray = orderS(2, tupleTS());
           var call = callS(2, monoizeS(2, varMap(varA(), arrayTS(tupleTS())), myFunc),
               emptyArray, emptyArray);
           module(code)
               .loadsWithSuccess()
-              .containsEvaluable(polyDefValS(2, "result", call));
+              .containsEvaluable(defValS(2, "result", call));
         }
       }
 

@@ -63,8 +63,9 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void def_val_referencing_other_def_val() {
-          var valS = defValS("myValue", monoizeS(defValS("otherValue", intS(7))));
-          assertTranslation(monoizeS(valS), callB(defFuncB(callB(defFuncB(intB(7))))));
+          var otherValue = defValS("otherValue", intS(7));
+          var myValue = defValS("myValue", monoizeS(otherValue));
+          assertTranslation(monoizeS(myValue), callB(defFuncB(callB(defFuncB(intB(7))))));
         }
 
         @Test
@@ -107,11 +108,10 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void native_func() {
-          var funcTS = funcTS(intTS(), blobTS());
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = "class.binary.name";
           var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var natFuncS = natFuncS(funcTS, "myFunc", nlist(), ann);
+          var natFuncS = annFuncS(ann, intTS(), "myFunc", nlist(itemS(blobTS())));
 
           var funcTB = funcTB(intTB(), blobTB());
           var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
@@ -123,12 +123,10 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void bytecode_func() throws IOException {
           var clazz = ReturnReturnAbcFunc.class;
-          var funcTS = funcTS(stringTS());
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-          var byteFuncS = annFuncS(ann, funcTS, "myFunc",
-              nlist(itemS(blobTS(), "p")), loc(filePath, 2));
+          var byteFuncS = annFuncS(ann, stringTS(), "myFunc", nlist(), loc(filePath, 2));
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
@@ -190,7 +188,7 @@ public class SbTranslatorTest extends TestContext {
             var emptyArrayValS = emptyArrayValS(a);
             var bEmptyArrayMonoValS = monoizeS(ImmutableMap.of(a, b), emptyArrayValS);
 
-            var referencingValS = polyDefValS("referencing", bEmptyArrayMonoValS);
+            var referencingValS = defValS("referencing", bEmptyArrayMonoValS);
             var referencingMonoValS = monoizeS(ImmutableMap.of(b, intTS()), referencingValS);
 
             var orderB = orderB(intTB());
@@ -205,7 +203,7 @@ public class SbTranslatorTest extends TestContext {
             var filePath = smoothFilePath();
             var classBinaryName = clazz.getCanonicalName();
             var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-            var byteValS = polyByteValS(2, ann, funcTS, "myFunc");
+            var byteValS = annValS(2, ann, funcTS, "myFunc");
 
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
@@ -234,7 +232,7 @@ public class SbTranslatorTest extends TestContext {
             var bIdMonoFuncS = monoizeS(ImmutableMap.of(a, b), idFuncS);
 
             var bodyS = callS(bIdMonoFuncS, paramRefS(b, "p"));
-            var wrapFuncS = polyDefFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
+            var wrapFuncS = defFuncS(b, "wrap", nlist(itemS(b, "p")), bodyS);
             var wrapMonoFuncS = monoizeS(ImmutableMap.of(b, intTS()), wrapFuncS);
 
             var idFuncB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
@@ -246,11 +244,10 @@ public class SbTranslatorTest extends TestContext {
           @Test
           public void native_() {
             var a = varA();
-            var funcTS = funcTS(a, a);
             var filePath = filePath(PRJ, path("my/path"));
             var classBinaryName = "class.binary.name";
             var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-            var natFuncS = polyNatFuncS(funcTS, "myIdentity", nlist(itemS(a, "param")), ann);
+            var natFuncS = annFuncS(ann, a, "myIdentity", nlist(itemS(a, "param")));
 
             var funcTB = funcTB(intTB(), intTB());
             var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
@@ -269,7 +266,7 @@ public class SbTranslatorTest extends TestContext {
             var filePath = smoothFilePath();
             var classBinaryName = clazz.getCanonicalName();
             var ann = bytecodeS(classBinaryName, loc(filePath, 1));
-            var byteFuncS = polyByteFuncS(ann, 1, funcTS.res(), "myFunc", nlist(itemS(a, "p")));
+            var byteFuncS = annFuncS(1, ann, funcTS.res(), "myFunc", nlist(itemS(a, "p")));
 
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
@@ -314,7 +311,8 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void def_val_referencing_other_def_val() {
-          var valS = defValS(5, "myValue", monoizeS(defValS(6, "otherValue", intS(7, 37))));
+          var otherValue = defValS(6, "otherValue", intS(7, 37));
+          var valS = defValS(5, "myValue", monoizeS(otherValue));
           assertValNalMapping(monoizeS(9, valS), loc(9), "myValue", loc(5));
         }
 
@@ -353,11 +351,10 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void native_func() {
-          var funcTS = funcTS(intTS(), blobTS());
           var filePath = filePath();
           var classBinaryName = "class.binary.name";
           var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var natFuncS = natFuncS(2, funcTS, "myFunc", nlist(), ann);
+          var natFuncS = annFuncS(2, ann, intTS(), "myFunc", nlist(itemS(blobTS())));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
           var sbTranslator = sbTranslator(fileLoader);
@@ -367,12 +364,10 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void bytecode_func() throws IOException {
           var clazz = ReturnReturnAbcFunc.class;
-          var funcTS = funcTS(stringTS());
           var filePath = filePath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-          var byteFuncS = annFuncS(ann, funcTS, "myFunc",
-              nlist(itemS(blobTS(), "p")), loc(filePath, 2));
+          var byteFuncS = annFuncS(ann, stringTS(), "myFunc", nlist(), loc(filePath, 2));
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
@@ -419,7 +414,7 @@ public class SbTranslatorTest extends TestContext {
       class _poly_ref {
         @Test
         public void def_val() {
-          var emptyArrayVal = polyDefValS(7, "emptyArray", orderS(varA()));
+          var emptyArrayVal = defValS(7, "emptyArray", orderS(varA()));
           var polyRefS = monoizeS(4, aToIntVarMapS(), emptyArrayVal);
           assertNalMapping(polyRefS, null, loc(4));
         }
@@ -438,7 +433,8 @@ public class SbTranslatorTest extends TestContext {
   class _caching {
     @Test
     public void def_val_translation_result() {
-      assertTranslationIsCached(monoizeS(defValS("myVal", stringS("abcdefghi"))));
+      var myValue = defValS("myVal", stringS("abcdefghi"));
+      assertTranslationIsCached(monoizeS(myValue));
     }
 
     @Test
@@ -456,22 +452,23 @@ public class SbTranslatorTest extends TestContext {
 
     @Test
     public void def_func_translation_result() {
-      assertTranslationIsCached(monoizeS(defFuncS("myFunc", nlist(), stringS("abcdefghi"))));
+      var myFunc = defFuncS("myFunc", nlist(), stringS("abcdefghi"));
+      assertTranslationIsCached(monoizeS(myFunc));
     }
 
     @Test
     public void nat_func_translation_result() {
-      assertTranslationIsCached(monoizeS(natFuncS(funcTS(stringTS()), "myFunc", nlist())));
+      var myFunc = natFuncS(stringTS(), "myFunc", nlist());
+      assertTranslationIsCached(monoizeS(myFunc));
     }
 
     @Test
     public void bytecode_func_translation_result() throws IOException {
       var clazz = ReturnReturnAbcFunc.class;
-      var funcTS = funcTS(stringTS());
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var bytecodeFuncS = annFuncS(ann, funcTS, "myFunc", nlist(), loc(filePath, 2));
+      var bytecodeFuncS = annFuncS(ann, stringTS(), "myFunc", nlist(), loc(filePath, 2));
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
@@ -480,8 +477,9 @@ public class SbTranslatorTest extends TestContext {
 
     @Test
     public void synt_ctor_translation_result() {
+      var myStruct = structTS("MyStruct", nlist(sigS(stringTS(), "name")));
       assertTranslationIsCached(
-          monoizeS(syntCtorS(structTS("MyStruct", nlist(sigS(stringTS(), "name"))))));
+          monoizeS(syntCtorS(myStruct)));
     }
 
     @Test

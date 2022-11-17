@@ -1,15 +1,18 @@
 package org.smoothbuild.compile.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.collect.NList;
 
 public class AnnFuncSTest extends TestContext {
   @Test
   public void to_string() {
-    var func = natFuncS(stringTS(), "myFunc", NList.nlist(itemS(intTS(), "myParam")));
+    var params = nlist(itemS(intTS(), "myParam"));
+    var funcTS = funcTS(stringTS(), toTypes(params.list()));
+    var func = new AnnFuncS(natAnnS(), funcTS, "myFunc", params, loc(1));
     assertThat(func.toString())
         .isEqualTo("""
             AnnFuncS(

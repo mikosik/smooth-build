@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,9 @@ import org.smoothbuild.testing.TestContext;
 public class DefFuncSTest extends TestContext {
   @Test
   public void to_string() {
-    var func = defFuncS(stringTS(), "myFunc", nlist(itemS(intTS(), "myParam")), intS(17));
+    var params = nlist(itemS(intTS(), "myParam"));
+    var funcTS = funcTS(stringTS(), toTypes(params));
+    var func = new DefFuncS(funcTS, "myFunc", params, intS(17), loc(1));
     assertThat(func.toString())
         .isEqualTo("""
             DefFuncS(
