@@ -25,7 +25,7 @@ select       : '.' NAME ;
 array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
 type         : NAME                                          # typeName
              | '[' type ']'                                  # arrayT
-             | '(' ( type (',' type)* ','? )? ')' '->' type  # funcT
+             | '(' ( type (',' type)*)? ')' '->' type  # funcT
              ;
 
 NAME         : NON_DIGIT_CHAR NAME_CHAR* ;

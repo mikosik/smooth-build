@@ -822,11 +822,9 @@ public class DeclarationTest extends TestContext {
       @Nested
       class _type_param_list {
         @Test
-        public void can_have_trailing_comma() {
+        public void cannot_have_trailing_comma() {
           module(funcTDeclaration("String,"))
-              .loadsWithSuccess()
-              .containsEvaluable(annFuncS(2, natAnnS(1, stringS(1, "Impl.met")),
-                  funcTS(blobTS(), stringTS()), "myFunc", nlist()));
+              .loadsWithProblems();
         }
 
         @Test
