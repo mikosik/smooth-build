@@ -16,7 +16,7 @@ public class NatFuncBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var funcT = funcTB(stringTB(), intTB());
+    var funcT = funcTB(intTB(), stringTB());
     var natFunc = natFuncB(funcT, jar, classBinaryName, isPure);
     assertThat(natFunc.evalT())
         .isEqualTo(funcT);
@@ -27,7 +27,7 @@ public class NatFuncBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var type = funcTB(stringTB(), intTB());
+    var type = funcTB(intTB(), stringTB());
     var natFunc = natFuncB(type, jar, classBinaryName, isPure);
 
     assertThat(natFunc.jar())
@@ -43,18 +43,18 @@ public class NatFuncBTest extends TestContext {
     @Override
     protected List<NatFuncB> equalExprs() {
       return list(
-          natFuncB(funcTB(stringTB(), intTB()), blobB(7), stringB("a"), boolB(true)),
-          natFuncB(funcTB(stringTB(), intTB()), blobB(7), stringB("a"), boolB(true))
+          natFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true)),
+          natFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true))
       );
     }
 
     @Override
     protected List<NatFuncB> nonEqualExprs() {
       return list(
-          natFuncB(funcTB(stringTB(), intTB()), blobB(7), stringB("a"), boolB(true)),
-          natFuncB(funcTB(stringTB(), intTB()), blobB(7), stringB("a"), boolB(false)),
-          natFuncB(funcTB(stringTB(), intTB()), blobB(7), stringB("b"), boolB(true)),
-          natFuncB(funcTB(stringTB(), intTB()), blobB(9), stringB("a"), boolB(true)),
+          natFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true)),
+          natFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(false)),
+          natFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("b"), boolB(true)),
+          natFuncB(funcTB(intTB(), stringTB()), blobB(9), stringB("a"), boolB(true)),
           natFuncB(funcTB(stringTB(), stringTB()), blobB(7), stringB("a"), boolB(true))
       );
     }
@@ -65,7 +65,7 @@ public class NatFuncBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var funcT = funcTB(stringTB(), intTB());
+    var funcT = funcTB(intTB(), stringTB());
     var natFunc = natFuncB(funcT, jar, classBinaryName, isPure);
     assertThat(bytecodeDbOther().get(natFunc.hash()))
         .isEqualTo(natFunc);
@@ -76,7 +76,7 @@ public class NatFuncBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var funcT = funcTB(stringTB(), intTB());
+    var funcT = funcTB(intTB(), stringTB());
     var natFuncB = natFuncB(funcT, jar, classBinaryName, isPure);
     var readNatFuncB = (NatFuncB) bytecodeDbOther().get(natFuncB.hash());
     assertThat(readNatFuncB.classBinaryName())
@@ -92,7 +92,7 @@ public class NatFuncBTest extends TestContext {
     var jar = blobB();
     var classBinaryName = stringB();
     var isPure = boolB(true);
-    var funcT = funcTB(stringTB(), intTB());
+    var funcT = funcTB(intTB(), stringTB());
     var natFunc = natFuncB(funcT, jar, classBinaryName, isPure);
     assertThat(natFunc.toString())
         .isEqualTo("NatFunc((Int)->String)@" + natFunc.hash());

@@ -103,7 +103,7 @@ public class ExprBStableHashTest extends TestContext {
 
     @Test
     public void with_zero_envs_one_param() {
-      var defFunc = closureB(funcTB(intTB(), blobTB()), combineB(), intB(1));
+      var defFunc = closureB(funcTB(blobTB(), intTB()), combineB(), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("1a240c4c0476c1d13bdd2572d64b96876b233207"));
     }
@@ -117,7 +117,7 @@ public class ExprBStableHashTest extends TestContext {
 
     @Test
     public void with_one_env_one_params() {
-      var defFunc = closureB(funcTB(intTB(), blobTB()), combineB(stringB("abc")), intB(1));
+      var defFunc = closureB(funcTB(blobTB(), intTB()), combineB(stringB("abc")), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("e5c46c4df2c0377468effa5f82c025ed573c1c92"));
     }
@@ -149,7 +149,7 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void nat_func() {
       assertThat(
-          natFuncB(funcTB(intTB(), boolTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
+          natFuncB(funcTB(boolTB(), intTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
           .isEqualTo(Hash.decode("a2df7b97fd90e4bd311dfebd10d7a9dd12641e23"));
     }
   }

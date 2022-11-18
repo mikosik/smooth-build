@@ -110,12 +110,12 @@ public class TypeSTest {
         arguments(arrayTS(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS()))))), "[[MyStruct]]"),
         arguments(arrayTS(arrayTS(stringTS())), "[[String]]"),
 
-        arguments(funcTS(varA(), arrayTS(varA())), "([A])->A"),
-        arguments(funcTS(stringTS(), arrayTS(varA())), "([A])->String"),
+        arguments(funcTS(arrayTS(varA()), varA()), "([A])->A"),
+        arguments(funcTS(arrayTS(varA()), stringTS()), "([A])->String"),
         arguments(funcTS(varA(), varA()), "(A)->A"),
         arguments(funcTS(stringTS()), "()->String"),
         arguments(funcTS(stringTS(), stringTS()), "(String)->String"),
-        arguments(funcTS(stringTS(), tupleTS(intTS())), "({Int})->String")
+        arguments(funcTS(tupleTS(intTS()), stringTS()), "({Int})->String")
     );
   }
 
@@ -138,10 +138,10 @@ public class TypeSTest {
         arguments(arrayTS(intTS()), varSetS()),
         arguments(arrayTS(varA()), varSetS(varA())),
 
-        arguments(funcTS(blobTS(), boolTS()), varSetS()),
-        arguments(funcTS(varA(), boolTS()), varSetS(varA())),
-        arguments(funcTS(blobTS(), varA()), varSetS(varA())),
-        arguments(funcTS(varA(), varB()), varSetS(varA(), varB()))
+        arguments(funcTS(boolTS(), blobTS()), varSetS()),
+        arguments(funcTS(boolTS(), varA()), varSetS(varA())),
+        arguments(funcTS(varA(), blobTS()), varSetS(varA())),
+        arguments(funcTS(varB(), varA()), varSetS(varA(), varB()))
     );
   }
 
@@ -179,11 +179,11 @@ public class TypeSTest {
         arguments(arrayTS(varB()), alwaysTrue(), arrayTS(varA())),
         arguments(arrayTS(varB()), alwaysFalse(), arrayTS(varB())),
 
-        arguments(funcTS(blobTS(), boolTS()), alwaysTrue(), funcTS(blobTS(), boolTS())),
-        arguments(funcTS(blobTS(), boolTS()), alwaysFalse(), funcTS(blobTS(), boolTS())),
-        arguments(funcTS(varB(), varC()), alwaysTrue(), funcTS(varA(), varB())),
-        arguments(funcTS(varB(), varC()), alwaysFalse(), funcTS(varB(), varC())),
-        arguments(funcTS(varB(), varC()), matchC, funcTS(varB(), varA()))
+        arguments(funcTS(boolTS(), blobTS()), alwaysTrue(), funcTS(boolTS(), blobTS())),
+        arguments(funcTS(boolTS(), blobTS()), alwaysFalse(), funcTS(boolTS(), blobTS())),
+        arguments(funcTS(varC(), varB()), alwaysTrue(), funcTS(varB(), varA())),
+        arguments(funcTS(varC(), varB()), alwaysFalse(), funcTS(varC(), varB())),
+        arguments(funcTS(varC(), varB()), matchC, funcTS(varA(), varB()))
     );
   }
 
@@ -212,11 +212,11 @@ public class TypeSTest {
         arguments(arrayTS(varS("A")), addPrefix, arrayTS(varS("prefix.A"))),
         arguments(arrayTS(varS("p.A")), addPrefix, arrayTS(varS("prefix.p.A"))),
 
-        arguments(funcTS(blobTS(), boolTS()), addPrefix, funcTS(blobTS(), boolTS())),
-        arguments(funcTS(varS("A"), boolTS()), addPrefix, funcTS(varS("prefix.A"), boolTS())),
-        arguments(funcTS(blobTS(), varS("A")), addPrefix, funcTS(blobTS(), varS("prefix.A"))),
-        arguments(funcTS(varS("p.A"), boolTS()), addPrefix, funcTS(varS("prefix.p.A"), boolTS())),
-        arguments(funcTS(blobTS(), varS("p.A")), addPrefix, funcTS(blobTS(), varS("prefix.p.A")))
+        arguments(funcTS(boolTS(), blobTS()), addPrefix, funcTS(boolTS(), blobTS())),
+        arguments(funcTS(boolTS(), varS("A")), addPrefix, funcTS(boolTS(), varS("prefix.A"))),
+        arguments(funcTS(varS("A"), blobTS()), addPrefix, funcTS(varS("prefix.A"), blobTS())),
+        arguments(funcTS(boolTS(), varS("p.A")), addPrefix, funcTS(boolTS(), varS("prefix.p.A"))),
+        arguments(funcTS(varS("p.A"), blobTS()), addPrefix, funcTS(varS("prefix.p.A"), blobTS()))
     );
   }
 
@@ -262,8 +262,8 @@ public class TypeSTest {
     public static List<Arguments> func_result_cases() {
       return asList(
           arguments(funcTS(intTS()), intTS()),
-          arguments(funcTS(blobTS(), boolTS()), blobTS()),
-          arguments(funcTS(blobTS(), boolTS(), intTS()), blobTS())
+          arguments(funcTS(boolTS(), blobTS()), blobTS()),
+          arguments(funcTS(boolTS(), intTS(), blobTS()), blobTS())
       );
     }
 
@@ -277,8 +277,8 @@ public class TypeSTest {
     public static List<Arguments> func_params_cases() {
       return asList(
           arguments(funcTS(intTS()), tupleTS()),
-          arguments(funcTS(blobTS(), boolTS()), tupleTS(boolTS())),
-          arguments(funcTS(blobTS(), boolTS(), intTS()), tupleTS(boolTS(), intTS()))
+          arguments(funcTS(boolTS(), blobTS()), tupleTS(boolTS())),
+          arguments(funcTS(boolTS(), intTS(), blobTS()), tupleTS(boolTS(), intTS()))
       );
     }
   }
@@ -341,7 +341,7 @@ public class TypeSTest {
 
         funcTS(blobTS()),
         funcTS(stringTS()),
-        funcTS(blobTS(), stringTS()),
+        funcTS(stringTS(), blobTS()),
         funcTS(blobTS(), blobTS())
     );
 

@@ -25,7 +25,7 @@ public class SchemaSTest extends TestContext {
 
   @Test
   public void to_string() {
-    var schemaS = new SchemaS(varSetS(varA()), funcTS(varA(), intTS()));
+    var schemaS = new SchemaS(varSetS(varA()), funcTS(intTS(), varA()));
     assertThat(schemaS.toString())
         .isEqualTo("<A>(Int)->A");
   }

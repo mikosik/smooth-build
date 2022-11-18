@@ -113,7 +113,7 @@ public class SbTranslatorTest extends TestContext {
           var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
           var natFuncS = annFuncS(ann, intTS(), "myFunc", nlist(itemS(blobTS())));
 
-          var funcTB = funcTB(intTB(), blobTB());
+          var funcTB = funcTB(blobTB(), intTB());
           var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));

@@ -182,7 +182,7 @@ public class CategoryBCorruptedTest extends TestContext {
          */
         var specHash = hash(
             hash(CLOSURE.marker()),
-            hash(funcTB(intTB(), stringTB(), boolTB()))
+            hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
             .isEqualTo(closureCB(intTB(), stringTB(), boolTB()).hash());
@@ -204,7 +204,7 @@ public class CategoryBCorruptedTest extends TestContext {
          */
         var specHash = hash(
             hash(IF_FUNC.marker()),
-            hash(funcTB(intTB(), boolTB(), intTB(), intTB()))
+            hash(funcTB(boolTB(), intTB(), intTB(), intTB()))
         );
         assertThat(specHash)
             .isEqualTo(ifFuncCB(intTB()).hash());
@@ -212,7 +212,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
-        var illegalIfType = funcTB(blobTB(), boolTB(), intTB(), intTB());
+        var illegalIfType = funcTB(boolTB(), intTB(), intTB(), blobTB());
         var categoryHash = hash(
             hash(IF_FUNC.marker()),
             hash(illegalIfType)
@@ -238,7 +238,7 @@ public class CategoryBCorruptedTest extends TestContext {
          */
         var specHash = hash(
             hash(MAP_FUNC.marker()),
-            hash(funcTB(arrayTB(intTB()), arrayTB(blobTB()), funcTB(intTB(), blobTB())))
+            hash(funcTB(arrayTB(blobTB()), funcTB(blobTB(), intTB()), arrayTB(intTB())))
         );
         assertThat(specHash)
             .isEqualTo(mapFuncCB(intTB(), blobTB()).hash());
@@ -246,7 +246,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
-        var illegalType = funcTB(arrayTB(intTB()), arrayTB(blobTB()), funcTB(intTB(), stringTB()));
+        var illegalType = funcTB(arrayTB(blobTB()), funcTB(stringTB(), intTB()), arrayTB(intTB()));
         var categoryHash = hash(
             hash(MAP_FUNC.marker()),
             hash(illegalType)
@@ -271,7 +271,7 @@ public class CategoryBCorruptedTest extends TestContext {
          */
         var specHash = hash(
             hash(NAT_FUNC.marker()),
-            hash(funcTB(intTB(), stringTB(), boolTB()))
+            hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
             .isEqualTo(natFuncCB(intTB(), stringTB(), boolTB()).hash());
@@ -336,7 +336,7 @@ public class CategoryBCorruptedTest extends TestContext {
                 hash(intTB()))
         );
         assertThat(specHash)
-            .isEqualTo(funcTB(intTB(), stringTB(), boolTB()).hash());
+            .isEqualTo(funcTB(stringTB(), boolTB(), intTB()).hash());
       }
 
       @Test

@@ -52,7 +52,7 @@ public class TypeSbTranslatorTest extends TestContext {
 
     @Test
     public void func_type() {
-      assertTranslation(funcTS(intTS(), blobTS(), stringTS()), funcTB(intTB(), blobTB(), stringTB()));
+      assertTranslation(funcTS(blobTS(), stringTS(), intTS()), funcTB(blobTB(), stringTB(), intTB()));
     }
   }
 
@@ -79,7 +79,7 @@ public class TypeSbTranslatorTest extends TestContext {
     @Test
     public void func_type() {
       assertTranslation(ImmutableMap.of(varA(), intTB(), varB(), blobTB(), varC(), stringTB()),
-          funcTS(varA(), varB(), varC()), funcTB(intTB(), blobTB(), stringTB()));
+          funcTS(varB(), varC(), varA()), funcTB(blobTB(), stringTB(), intTB()));
     }
 
     @Test

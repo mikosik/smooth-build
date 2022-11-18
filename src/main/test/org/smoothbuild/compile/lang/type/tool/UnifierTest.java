@@ -90,9 +90,9 @@ public class UnifierTest extends TestContext {
         assertUnifyInfers(
             unifier,
             a,
-            funcTS(intTS(), b),
+            funcTS(b, intTS()),
             a,
-            funcTS(intTS(), b));
+            funcTS(b, intTS()));
       }
 
       @Test
@@ -142,8 +142,8 @@ public class UnifierTest extends TestContext {
         var b = unifier.newTempVar();
         assertUnifyInfersEquality(
             unifier,
-            funcTS(intTS(), a),
-            funcTS(intTS(), b),
+            funcTS(a, intTS()),
+            funcTS(b, intTS()),
             a,
             b);
       }
@@ -213,9 +213,9 @@ public class UnifierTest extends TestContext {
           assertUnifyInfers(
               unifier,
               a,
-              funcTS(intTS(), type),
+              funcTS(type, intTS()),
               a,
-              funcTS(intTS(), type));
+              funcTS(type, intTS()));
         }
 
         public static ImmutableList<TypeS> typesToTest() {
@@ -272,8 +272,8 @@ public class UnifierTest extends TestContext {
           var var = unifier.newTempVar();
           assertUnifyInfers(
               unifier,
-              funcTS(intTS(), var),
-              funcTS(intTS(), type),
+              funcTS(var, intTS()),
+              funcTS(type, intTS()),
               var,
               type);
         }
@@ -348,8 +348,8 @@ public class UnifierTest extends TestContext {
       @Test
       public void unify_equal_func_types() throws UnifierExc {
         unifier.unify(
-            funcTS(intTS(), blobTS()),
-            funcTS(intTS(), blobTS()));
+            funcTS(blobTS(), intTS()),
+            funcTS(blobTS(), intTS()));
       }
 
       @Test
@@ -362,8 +362,8 @@ public class UnifierTest extends TestContext {
       @Test
       public void unify_equal_func_types_with_param_being_func() throws UnifierExc {
         unifier.unify(
-            funcTS(blobTS(), funcTS(intTS())),
-            funcTS(blobTS(), funcTS(intTS())));
+            funcTS(funcTS(intTS()), blobTS()),
+            funcTS(funcTS(intTS()), blobTS()));
       }
 
       @Test
@@ -373,12 +373,12 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void unify_non_equal_func_types_that_differs_with_param_fails() {
-        assertUnifyFails(funcTS(intTS(), blobTS()), funcTS(intTS(), stringTS()));
+        assertUnifyFails(funcTS(blobTS(), intTS()), funcTS(stringTS(), intTS()));
       }
 
       @Test
       public void unify_non_equal_func_types_that_differs_with_param_count_fails() {
-        assertUnifyFails(funcTS(intTS(), blobTS()), funcTS(intTS()));
+        assertUnifyFails(funcTS(blobTS(), intTS()), funcTS(intTS()));
       }
 
       @ParameterizedTest
@@ -464,15 +464,15 @@ public class UnifierTest extends TestContext {
 
     @Test
     public void one_elem_cycle_through_func_param() {
-      assertUnifyFails(varA(), funcTS(intTS(), varA()));
+      assertUnifyFails(varA(), funcTS(varA(), intTS()));
     }
 
     @Test
     public void two_elem_cycle_through_func_param() throws UnifierExc {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
-      unifier.unify(a, funcTS(intTS(), b));
-      assertUnifyFails(b, funcTS(intTS(), a));
+      unifier.unify(a, funcTS(b, intTS()));
+      assertUnifyFails(b, funcTS(a, intTS()));
     }
 
     @Test
@@ -482,7 +482,7 @@ public class UnifierTest extends TestContext {
       var b = unifier.newTempVar();
       var c = unifier.newTempVar();
       unifier.unify(a, arrayTS(b));
-      unifier.unify(c, funcTS(a, b));
+      unifier.unify(c, funcTS(b, a));
     }
   }
 
@@ -636,8 +636,8 @@ public class UnifierTest extends TestContext {
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
         var y = unifier.newTempVar();
-        unifier.unify(a, funcTS(intTS(), x));
-        unifier.unify(b, funcTS(intTS(), y));
+        unifier.unify(a, funcTS(x, intTS()));
+        unifier.unify(b, funcTS(y, intTS()));
         unifier.unify(a, b);
         assertThat(unifier.resolve(x))
             .isEqualTo(unifier.resolve(y));
@@ -648,7 +648,7 @@ public class UnifierTest extends TestContext {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
-        unifier.unify(a, funcTS(intTS(), x));
+        unifier.unify(a, funcTS(x, intTS()));
         unifier.unify(b, funcTS(intTS(), intTS()));
         unifier.unify(a, b);
         assertThat(unifier.resolve(x))
@@ -660,7 +660,7 @@ public class UnifierTest extends TestContext {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, funcTS(intTS(), intTS()));
-        unifier.unify(b, funcTS(intTS(), blobTS()));
+        unifier.unify(b, funcTS(blobTS(), intTS()));
         assertCall(() -> unifier.unify(a, b))
             .throwsException(UnifierExc.class);
       }
@@ -771,8 +771,8 @@ public class UnifierTest extends TestContext {
       var b = unifier.newTempVar();
       unifier.unify(a, intTS());
       unifier.unify(b, boolTS());
-      assertThat(unifier.resolve(funcTS(a, b)))
-          .isEqualTo(funcTS(intTS(), boolTS()));
+      assertThat(unifier.resolve(funcTS(b, a)))
+          .isEqualTo(funcTS(boolTS(), intTS()));
     }
   }
 

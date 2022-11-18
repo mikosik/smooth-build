@@ -269,7 +269,7 @@ public class VmTest extends TestContext {
         public void map_func() {
           var s = intTB();
           var r = tupleTB(s);
-          var func = defFuncB(funcTB(r, s), combineB(refB(s, 0)));
+          var func = defFuncB(funcTB(s, r), combineB(refB(s, 0)));
           var mapFunc = mapFuncB(r, s);
           var map = callB(mapFunc, arrayB(intB(1), intB(2)), func);
           assertThat(evaluate(map))

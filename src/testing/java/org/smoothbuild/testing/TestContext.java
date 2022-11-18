@@ -429,18 +429,30 @@ public class TestContext {
   }
 
   public ClosureCB closureCB(TypeB resT, TypeB... paramTs) {
-    return categoryDb().closure(funcTB(resT, paramTs));
+    return categoryDb().closure(funcTB(resT, list(paramTs)));
   }
 
   public FuncTB funcTB() {
-    return funcTB(intTB(), blobTB(), stringTB());
+    return funcTB(blobTB(), stringTB(), intTB());
   }
 
-  public FuncTB funcTB(TypeB resT, TypeB... paramTs) {
-    return funcTB(resT, list(paramTs));
+  public FuncTB funcTB(TypeB resT) {
+    return funcTB(resT, list());
   }
 
-  private FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+  public FuncTB funcTB(TypeB param1, TypeB resT) {
+    return funcTB(resT, list(param1));
+  }
+
+  public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resT) {
+    return funcTB(resT, list(param1, param2));
+  }
+
+  public FuncTB funcTB(TypeB param1, TypeB param2, TypeB param3, TypeB resT) {
+    return funcTB(resT, list(param1, param2, param3));
+  }
+
+  public FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
     return categoryDb().funcT(paramTs, resT);
   }
 
@@ -453,7 +465,7 @@ public class TestContext {
   }
 
   public NatFuncCB natFuncCB(TypeB resT, TypeB... paramTs) {
-    return categoryDb().natFunc(funcTB(resT, paramTs));
+    return categoryDb().natFunc(funcTB(resT, list(paramTs)));
   }
 
   public TupleTB personTB() {
@@ -886,11 +898,19 @@ public class TestContext {
     return TypeFS.BOOL;
   }
 
-  public static FuncTS funcTS(TypeS resT, TypeS... paramTs) {
-    return funcTS(resT, list(paramTs));
+  public static FuncTS funcTS(TypeS resT) {
+    return funcTS(list(), resT);
   }
 
-  public static FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public static FuncTS funcTS(TypeS param1, TypeS resT) {
+    return funcTS(list(param1), resT);
+  }
+
+  public static FuncTS funcTS(TypeS param1, TypeS param2, TypeS resT) {
+    return funcTS(list(param1, param2), resT);
+  }
+
+  public static FuncTS funcTS(ImmutableList<TypeS> paramTs, TypeS resT) {
     return new FuncTS(tupleTS(paramTs), resT);
   }
 
@@ -907,11 +927,11 @@ public class TestContext {
   }
 
   public static FuncSchemaS funcSchemaS(TypeS resT, TypeS... paramTs) {
-    return new FuncSchemaS(funcTS(resT, paramTs));
+    return new FuncSchemaS(funcTS(list(paramTs), resT));
   }
 
   public FuncSchemaS funcSchemaS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return new FuncSchemaS(funcTS(resT, paramTs));
+    return new FuncSchemaS(funcTS(paramTs, resT));
   }
 
   public static SchemaS schemaS(TypeS typeS) {
@@ -1209,7 +1229,7 @@ public class TestContext {
   public static SyntCtorS syntCtorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
     var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(2)));
-    var funcTS = funcTS(structT, toTypes(params.list()));
+    var funcTS = funcTS(toTypes(params.list()), structT);
     return new SyntCtorS(new FuncSchemaS(funcTS), name, params, loc(line));
   }
 
@@ -1239,7 +1259,7 @@ public class TestContext {
   }
 
   public static AnnFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
-    var funcTS = funcTS(resT, toTypes(params.list()));
+    var funcTS = funcTS(toTypes(params.list()), resT);
     return new AnnFuncS(ann, new FuncSchemaS(funcTS), name, params, loc);
   }
 
@@ -1257,7 +1277,7 @@ public class TestContext {
 
   public static DefFuncS defFuncS(
       int line, TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    var schema = new FuncSchemaS(funcTS(resT, toTypes(params)));
+    var schema = new FuncSchemaS(funcTS(toTypes(params), resT));
     return new DefFuncS(schema, name, params, body, loc(line));
   }
 

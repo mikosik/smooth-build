@@ -278,7 +278,7 @@ public class CategoryBTest extends TestContext {
     return list(
         arguments(CONTEXT.blobTB(), BlobB.class),
         arguments(CONTEXT.boolTB(), BoolB.class),
-        arguments(CONTEXT.funcTB(CONTEXT.blobTB(), CONTEXT.boolTB()), FuncB.class),
+        arguments(CONTEXT.funcTB(CONTEXT.boolTB(), CONTEXT.blobTB()), FuncB.class),
         arguments(CONTEXT.ifFuncCB(), IfFuncB.class),
         arguments(CONTEXT.mapFuncCB(), MapFuncB.class),
         arguments(CONTEXT.intTB(), IntB.class),
@@ -290,7 +290,7 @@ public class CategoryBTest extends TestContext {
         arguments(CONTEXT.arrayTB(CONTEXT.blobTB()), ArrayB.class),
         arguments(CONTEXT.arrayTB(CONTEXT.boolTB()), ArrayB.class),
         arguments(
-            CONTEXT.arrayTB(CONTEXT.funcTB(CONTEXT.blobTB(), CONTEXT.boolTB())), ArrayB.class),
+            CONTEXT.arrayTB(CONTEXT.funcTB(CONTEXT.boolTB(), CONTEXT.blobTB())), ArrayB.class),
         arguments(CONTEXT.arrayTB(CONTEXT.intTB()), ArrayB.class),
         arguments(CONTEXT.arrayTB(CONTEXT.personTB()), ArrayB.class),
         arguments(CONTEXT.arrayTB(CONTEXT.stringTB()), ArrayB.class),
@@ -372,8 +372,8 @@ public class CategoryBTest extends TestContext {
     tester.addEqualityGroup(blobTB(), blobTB());
     tester.addEqualityGroup(boolTB(), boolTB());
     tester.addEqualityGroup(
-        funcTB(blobTB(), boolTB()),
-        funcTB(blobTB(), boolTB()));
+        funcTB(boolTB(), blobTB()),
+        funcTB(boolTB(), blobTB()));
     tester.addEqualityGroup(intTB(), intTB());
     tester.addEqualityGroup(stringTB(), stringTB());
     tester.addEqualityGroup(personTB(), personTB());
@@ -381,8 +381,8 @@ public class CategoryBTest extends TestContext {
     tester.addEqualityGroup(arrayTB(blobTB()), arrayTB(blobTB()));
     tester.addEqualityGroup(arrayTB(boolTB()), arrayTB(boolTB()));
     tester.addEqualityGroup(
-        arrayTB(funcTB(blobTB(), boolTB())),
-        arrayTB(funcTB(blobTB(), boolTB())));
+        arrayTB(funcTB(boolTB(), blobTB())),
+        arrayTB(funcTB(boolTB(), blobTB())));
     tester.addEqualityGroup(arrayTB(intTB()), arrayTB(intTB()));
     tester.addEqualityGroup(arrayTB(stringTB()), arrayTB(stringTB()));
     tester.addEqualityGroup(arrayTB(personTB()), arrayTB(personTB()));

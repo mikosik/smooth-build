@@ -243,8 +243,8 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(defFuncS(
-                1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS(), blobTS()), "f")),
-                callS(1, paramRefS(funcTS(stringTS(), blobTS()), "f"), blobS(1, 9))));
+                1, stringTS(), "result", nlist(itemS(1, funcTS(blobTS(), stringTS()), "f")),
+                callS(1, paramRefS(funcTS(blobTS(), stringTS()), "f"), blobS(1, 9))));
       }
     }
     @Nested

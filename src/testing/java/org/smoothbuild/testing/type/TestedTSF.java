@@ -129,7 +129,7 @@ public class TestedTSF {
     return new TestedFuncTS(
         resT,
         paramTestedTs,
-        funcTS(resT.type(), map(paramSigs, ItemSigS::type)),
+        funcTS(map(paramSigs, ItemSigS::type), resT.type()),
         typeDeclarations,
         declarations
     );

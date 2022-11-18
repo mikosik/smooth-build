@@ -364,7 +364,7 @@ public class ExprBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var funcT = funcTB(intTB(), stringTB(), intTB());
+      var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = defFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
       var hash =
@@ -387,7 +387,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var funcT = funcTB(intTB(), stringTB(), intTB());
+      var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = defFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(
@@ -409,7 +409,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
-      var funcT = funcTB(intTB(), stringTB(), intTB());
+      var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = defFuncB(funcT, intB());
       var dataHash = hash(
           hash(func)
@@ -426,7 +426,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void data_is_seq_with_three_elems() throws Exception {
-      var funcT = funcTB(intTB(), stringTB(), intTB());
+      var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = defFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(
@@ -464,7 +464,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void args_is_val_instead_of_combine() throws Exception {
-      var funcT = funcTB(intTB(), stringTB(), intTB());
+      var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = defFuncB(funcT, intB());
       var type = callCB(intTB());
       var hash =
@@ -482,7 +482,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void args_component_evalT_is_not_combine_but_different_oper() throws Exception {
-      var funcT = funcTB(intTB(), stringTB(), intTB());
+      var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = defFuncB(funcT, intB());
       var type = callCB(intTB());
       var hash =
@@ -500,7 +500,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void evalT_is_different_than_func_evalT_result() throws Exception {
-      var funcT = funcTB(intTB(), stringTB());
+      var funcT = funcTB(stringTB(), intTB());
       var func = defFuncB(funcT, intB());
       var args = combineB(stringB());
       var type = callCB(stringTB());
@@ -519,7 +519,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void func_evalT_params_does_not_match_args_evalTs() throws Exception {
-      var funcT = funcTB(intTB(), stringTB(), boolTB());
+      var funcT = funcTB(stringTB(), boolTB(), intTB());
       var func = defFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
       var spec = callCB(intTB());
@@ -872,7 +872,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(funcTB(stringTB(), intTB()));
+      obj_root_without_data_hash(funcTB(intTB(), stringTB()));
     }
 
     @Test
