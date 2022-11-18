@@ -28,16 +28,16 @@ import org.smoothbuild.antlr.lang.SmoothParser.ChainHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncTContext;
-import org.smoothbuild.antlr.lang.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ItemListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
+import org.smoothbuild.antlr.lang.SmoothParser.NamedFuncContext;
+import org.smoothbuild.antlr.lang.SmoothParser.NamedValueContext;
 import org.smoothbuild.antlr.lang.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
@@ -79,27 +79,27 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitFunction(FunctionContext function) {
-        TerminalNode nameNode = function.NAME();
-        visitChildren(function);
-        Optional<TypeP> type = createTypeSane(function.type());
+      public Void visitNamedFunc(NamedFuncContext namedFunc) {
+        TerminalNode nameNode = namedFunc.NAME();
+        visitChildren(namedFunc);
+        Optional<TypeP> type = createTypeSane(namedFunc.type());
         String name = nameNode.getText();
-        Optional<ExprP> expr = createPipeSane(function.pipe());
-        Optional<AnnP> annotation = createNativeSane(function.ann());
+        Optional<ExprP> expr = createPipeSane(namedFunc.pipe());
+        Optional<AnnP> annotation = createNativeSane(namedFunc.ann());
         var loc = locOf(filePath, nameNode);
-        var params = createItems(function.itemList());
+        var params = createItems(namedFunc.itemList());
         evaluables.add(new NamedFuncP(type, name, params, expr, annotation, loc));
         return null;
       }
 
       @Override
-      public Void visitValue(ValueContext value) {
-        TerminalNode nameNode = value.NAME();
-        visitChildren(value);
-        Optional<TypeP> type = createTypeSane(value.type());
+      public Void visitNamedValue(NamedValueContext namedValue) {
+        TerminalNode nameNode = namedValue.NAME();
+        visitChildren(namedValue);
+        Optional<TypeP> type = createTypeSane(namedValue.type());
         String name = nameNode.getText();
-        Optional<ExprP> expr = createPipeSane(value.pipe());
-        Optional<AnnP> annotation = createNativeSane(value.ann());
+        Optional<ExprP> expr = createPipeSane(namedValue.pipe());
+        Optional<AnnP> annotation = createNativeSane(namedValue.ann());
         Loc loc = locOf(filePath, nameNode);
         evaluables.add(new NamedValueP(type, name, expr, annotation, loc));
         return null;

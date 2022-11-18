@@ -1,9 +1,9 @@
 grammar Smooth;
 
-mod          : ( struct | function | value )* EOF ;
+mod          : ( struct | namedFunc | namedValue )* EOF ;
 struct       : NAME '{' itemList '}' ;
-function     : ann? type? NAME '(' itemList ')' ('=' pipe)? ';' ;
-value        : ann? type? NAME ('=' pipe)? ';' ;
+namedFunc    : ann? type? NAME '(' itemList ')' ('=' pipe)? ';' ;
+namedValue   : ann? type? NAME ('=' pipe)? ';' ;
 itemList     : ( item ( ',' item )* ','? )? ;
 item         : type NAME ( '=' expr )? ;
 ann          : '@' NAME '(' STRING ')' ;
