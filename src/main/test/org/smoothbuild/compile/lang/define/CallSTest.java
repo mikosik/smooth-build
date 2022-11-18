@@ -15,7 +15,7 @@ public class CallSTest extends TestContext {
             CallS(
               callee = MonoizeS(
                 varMap = {A=Int}
-                polyExprS = PolyRefS(
+                polyExprS = EvaluableRefS(
                   namedEvaluable = DefFuncS(
                     schema = <A>(A)->A
                     params = [

@@ -86,6 +86,7 @@ import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValueS;
+import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
@@ -97,7 +98,6 @@ import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyExprS;
-import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -1016,7 +1016,7 @@ public class TestContext {
   }
 
   public static MonoizeS monoizeS(int line, NamedEvaluableS namedEvaluableS) {
-    return monoizeS(line, polyRefS(line, namedEvaluableS));
+    return monoizeS(line, evaluableRefS(line, namedEvaluableS));
   }
 
   public static MonoizeS monoizeS(
@@ -1027,8 +1027,8 @@ public class TestContext {
   public static MonoizeS monoizeS(
       int line, ImmutableMap<VarS, TypeS> varMap, NamedEvaluableS namedEvaluableS) {
     var loc = loc(line);
-    var polyRefS = new PolyRefS(namedEvaluableS, loc);
-    return monoizeS(varMap, polyRefS, loc);
+    var evaluableRefS = new EvaluableRefS(namedEvaluableS, loc);
+    return monoizeS(varMap, evaluableRefS, loc);
   }
 
   public static MonoizeS monoizeS(int line, PolyExprS polyExprS) {
@@ -1067,8 +1067,8 @@ public class TestContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public static PolyRefS polyRefS(int line, NamedEvaluableS namedEvaluableS) {
-    return new PolyRefS(namedEvaluableS, loc(line));
+  public static EvaluableRefS evaluableRefS(int line, NamedEvaluableS namedEvaluableS) {
+    return new EvaluableRefS(namedEvaluableS, loc(line));
   }
 
   public static SelectS selectS(ExprS selectable, String field) {

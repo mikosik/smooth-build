@@ -8,9 +8,9 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
-import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.out.report.Reporter;
@@ -34,7 +34,7 @@ public class Evaluator {
       throws EvaluatorExc {
     try {
       var loc = commandLineLoc();
-      var refs = map(values, v -> new MonoizeS(new PolyRefS(v, loc), loc));
+      var refs = map(values, v -> new MonoizeS(new EvaluableRefS(v, loc), loc));
       reporter.startNewPhase("Compiling");
       var sbTranslation = sbTranslatorFacade.translate(refs);
       reporter.startNewPhase("Evaluating");

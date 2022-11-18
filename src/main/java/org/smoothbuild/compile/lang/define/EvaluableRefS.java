@@ -7,9 +7,9 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
- * Monomorphization of polymorphic referencable.
+ * Reference to named evaluable.
  */
-public record PolyRefS(NamedEvaluableS namedEvaluable, Loc loc) implements PolyExprS {
+public record EvaluableRefS(NamedEvaluableS namedEvaluable, Loc loc) implements PolyExprS {
 
   @Override
   public SchemaS schema() {
@@ -22,6 +22,6 @@ public record PolyRefS(NamedEvaluableS namedEvaluable, Loc loc) implements PolyE
         "namedEvaluable = " + namedEvaluable,
         "loc = " + loc
     );
-    return "PolyRefS(\n" + indent(fields) + "\n)";
+    return "EvaluableRefS(\n" + indent(fields) + "\n)";
   }
 }

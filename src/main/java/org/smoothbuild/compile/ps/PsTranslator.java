@@ -17,6 +17,7 @@ import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValueS;
+import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
@@ -24,7 +25,6 @@ import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
-import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -170,8 +170,8 @@ public class PsTranslator {
 
   private static ExprS translateMonoizable(
       MonoizableP monoizableP, NamedEvaluableS namedEvaluableS) {
-    var polyRefS = new PolyRefS(namedEvaluableS, monoizableP.loc());
-    return new MonoizeS(monoizableP.monoizeVarMap(), polyRefS, monoizableP.loc());
+    var evaluableRefS = new EvaluableRefS(namedEvaluableS, monoizableP.loc());
+    return new MonoizeS(monoizableP.monoizeVarMap(), evaluableRefS, monoizableP.loc());
   }
 
   private BlobS translateBlob(BlobP blob) {

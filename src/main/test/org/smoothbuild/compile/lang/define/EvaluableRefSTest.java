@@ -5,13 +5,13 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class PolyRefSTest extends TestContext {
+public class EvaluableRefSTest extends TestContext {
   @Test
   public void to_string() {
-    var polyRefS = new PolyRefS(idFuncS(), loc(7));
+    var polyRefS = new EvaluableRefS(idFuncS(), loc(7));
     assertThat(polyRefS.toString())
         .isEqualTo("""
-            PolyRefS(
+            EvaluableRefS(
               namedEvaluable = DefFuncS(
                 schema = <A>(A)->A
                 params = [

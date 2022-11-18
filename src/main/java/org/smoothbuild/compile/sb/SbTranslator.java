@@ -45,6 +45,7 @@ import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValueS;
+import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
@@ -54,7 +55,6 @@ import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.PolyExprS;
-import org.smoothbuild.compile.lang.define.PolyRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -149,14 +149,14 @@ public class SbTranslator {
 
   public ExprB translatePolyExpr(PolyExprS polyExprS) {
     return switch (polyExprS) {
-      case PolyRefS polyRefS -> translatePolyRef(polyRefS);
+      case EvaluableRefS evaluableRefS -> translatePolyRef(evaluableRefS);
     };
   }
 
-  private ExprB translatePolyRef(PolyRefS polyRefS) {
-    return switch (polyRefS.namedEvaluable()) {
+  private ExprB translatePolyRef(EvaluableRefS evaluableRefS) {
+    return switch (evaluableRefS.namedEvaluable()) {
       case NamedFuncS namedFuncS -> translateNamedFunc(namedFuncS);
-      case NamedValueS namedValS -> translateValue(polyRefS.loc(), namedValS);
+      case NamedValueS namedValS -> translateValue(evaluableRefS.loc(), namedValS);
     };
   }
 

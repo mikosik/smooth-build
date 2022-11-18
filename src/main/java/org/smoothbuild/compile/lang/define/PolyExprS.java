@@ -4,7 +4,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 public sealed interface PolyExprS
-    permits PolyRefS {
+    permits EvaluableRefS {
   public SchemaS schema();
   public Loc loc();
 }
