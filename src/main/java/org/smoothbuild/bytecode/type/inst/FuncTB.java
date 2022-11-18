@@ -10,21 +10,21 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprFuncIsIllegalCatExc;
 import org.smoothbuild.bytecode.hashed.Hash;
 
 public final class FuncTB extends TypeB {
-  private final TypeB res;
   private final TupleTB params;
+  private final TypeB res;
 
-  public FuncTB(Hash hash, TypeB res, TupleTB params) {
-    super(hash, funcTypeName(res, params.items()), FUNC);
-    this.res = res;
+  public FuncTB(Hash hash, TupleTB params, TypeB res) {
+    super(hash, funcTypeName(params.items(), res), FUNC);
     this.params = params;
-  }
-
-  public TypeB res() {
-    return res;
+    this.res = res;
   }
 
   public TupleTB params() {
     return params;
+  }
+
+  public TypeB res() {
+    return res;
   }
 
   @Override

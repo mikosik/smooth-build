@@ -98,28 +98,28 @@ public class ExprBStableHashTest extends TestContext {
     public void with_zero_envs_zero_params() {
       var defFunc = closureB(funcTB(intTB()), combineB(), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("608d8569e03180b3d47e763aa8a0a4aa41cba88d"));
+          .isEqualTo(Hash.decode("729d66650da258c84b71d4475887d8dfc3fab7ef"));
     }
 
     @Test
     public void with_zero_envs_one_param() {
       var defFunc = closureB(funcTB(intTB(), blobTB()), combineB(), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("6d183c1d5df711652425f5a25e9481f0278e7b4e"));
+          .isEqualTo(Hash.decode("1a240c4c0476c1d13bdd2572d64b96876b233207"));
     }
 
     @Test
     public void with_one_env_zero_params() {
       var defFunc = closureB(funcTB(intTB()), combineB(stringB("abc")), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("09e01279c26aafb84495c16b696036898c468133"));
+          .isEqualTo(Hash.decode("c37e0c82dbb7ff3097afd98ce0f664151f4e7db3"));
     }
 
     @Test
     public void with_one_env_one_params() {
       var defFunc = closureB(funcTB(intTB(), blobTB()), combineB(stringB("abc")), intB(1));
       assertThat(defFunc.hash())
-          .isEqualTo(Hash.decode("71ee4726ea6c2f90a2993bf60c3cee23c8ff1ec3"));
+          .isEqualTo(Hash.decode("e5c46c4df2c0377468effa5f82c025ed573c1c92"));
     }
   }
 
@@ -150,7 +150,7 @@ public class ExprBStableHashTest extends TestContext {
     public void nat_func() {
       assertThat(
           natFuncB(funcTB(intTB(), boolTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
-          .isEqualTo(Hash.decode("bb4fab02e531f5ed1cf67856ab50aeff12b437cc"));
+          .isEqualTo(Hash.decode("a2df7b97fd90e4bd311dfebd10d7a9dd12641e23"));
     }
   }
 
@@ -193,14 +193,14 @@ public class ExprBStableHashTest extends TestContext {
       var type = funcTB(intTB());
       var defFunc = defFuncB(type, intB());
       assertThat(callB(defFunc).hash())
-          .isEqualTo(Hash.decode("76c9083998f0619052d2f099575c89a5c49bb2e1"));
+          .isEqualTo(Hash.decode("b99bad80c73087756eb6050bc46377edb73e0213"));
     }
 
     @Test
     public void call_with_one_arg() {
       var defFuncB = defFuncB(list(stringTB()), intB());
       assertThat(callB(defFuncB, stringB("abc")).hash())
-          .isEqualTo(Hash.decode("9d01d1484fd8853f3a194132295684553d32e82b"));
+          .isEqualTo(Hash.decode("d697f9b9e4e075c20216be6aafc698254e6f009a"));
     }
   }
 
@@ -224,7 +224,7 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void if_func() {
       assertThat(ifFuncB(intTB()).hash())
-          .isEqualTo(Hash.decode("9b525dac777f1f1b4e1a73a9b11f228309d57d17"));
+          .isEqualTo(Hash.decode("731dd950f3e0329c6e5e5bd19744dc6f3d14a1c5"));
     }
   }
 
@@ -233,7 +233,7 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void map_func() {
       assertThat(mapFuncB(intTB(), stringTB()).hash())
-          .isEqualTo(Hash.decode("870fb7677d8f5eb447ecfc4bc9183b5eee25eb9e"));
+          .isEqualTo(Hash.decode("ffcac2ba02a53cb51cfb78b784f2d7e55d235949"));
     }
   }
 

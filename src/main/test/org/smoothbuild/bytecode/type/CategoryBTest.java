@@ -90,15 +90,15 @@ public class CategoryBTest extends TestContext {
         args(f -> f.mapFunc(f.int_(), f.string()), "MAP_FUNC:([String],(String)->Int)->[Int]"),
         args(f -> f.natFunc(f.string(), list()), "NAT_FUNC:()->String"),
         args(f -> f.natFunc(f.string(), list(f.string())), "NAT_FUNC:(String)->String"),
-        args(f -> f.funcT(f.string(), list()), "()->String"),
-        args(f -> f.funcT(f.string(), list(f.string())), "(String)->String"),
+        args(f -> f.funcT(list(), f.string()), "()->String"),
+        args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
 
         args(f -> f.tuple(), "{}"),
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
         args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
 
         args(f -> f.call(f.int_()), "CALL:Int"),
-        args(f -> f.closurize(f.funcT(f.int_(), list(f.string()))), "CLOSURIZE:(String)->Int"),
+        args(f -> f.closurize(f.funcT(list(f.string()), f.int_())), "CLOSURIZE:(String)->Int"),
         args(f -> f.combine(f.tuple(f.string(), f.int_())), "COMBINE:{String,Int}"),
         args(f -> f.order(f.array(f.string())), "ORDER:[String]"),
         args(f -> f.pick(f.int_()), "PICK:Int"),
@@ -119,9 +119,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.funcT(f.int_(), list()), f -> f.int_()),
-          args(f -> f.funcT(f.blob(), list(f.bool())), f -> f.blob()),
-          args(f -> f.funcT(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+          args(f -> f.funcT(list(), f.int_()), f -> f.int_()),
+          args(f -> f.funcT(list(f.bool()), f.blob()), f -> f.blob()),
+          args(f -> f.funcT(list(f.bool(), f.int_()), f.blob()), f -> f.blob())
       );
     }
 
@@ -135,9 +135,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.funcT(f.int_(), list()), f -> f.tuple()),
-          args(f -> f.funcT(f.blob(), list(f.bool())), f -> f.tuple(f.bool())),
-          args(f -> f.funcT(f.blob(), list(f.bool(), f.int_())), f -> f.tuple(f.bool(), f.int_()))
+          args(f -> f.funcT(list(), f.int_()), f -> f.tuple()),
+          args(f -> f.funcT(list(f.bool()), f.blob()), f -> f.tuple(f.bool())),
+          args(f -> f.funcT(list(f.bool(), f.int_()), f.blob()), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
@@ -154,9 +154,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.closure(f.funcT(f.int_(), list())), f -> f.int_()),
-          args(f -> f.closure(f.funcT(f.blob(), list(f.bool()))), f -> f.blob()),
-          args(f -> f.closure(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.blob())
+          args(f -> f.closure(f.funcT(list(), f.int_())), f -> f.int_()),
+          args(f -> f.closure(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
+          args(f -> f.closure(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob())
       );
     }
 
@@ -170,9 +170,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.closure(f.funcT(f.int_(), list())), f -> f.tuple()),
-          args(f -> f.closure(f.funcT(f.blob(), list(f.bool()))), f -> f.tuple(f.bool())),
-          args(f -> f.closure(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.tuple(f.bool(), f.int_()))
+          args(f -> f.closure(f.funcT(list(), f.int_())), f -> f.tuple()),
+          args(f -> f.closure(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
+          args(f -> f.closure(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
@@ -189,9 +189,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.natFunc(f.funcT(f.int_(), list())), f -> f.int_()),
-          args(f -> f.natFunc(f.funcT(f.blob(), list(f.bool()))), f -> f.blob()),
-          args(f -> f.natFunc(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.blob())
+          args(f -> f.natFunc(f.funcT(list(), f.int_())), f -> f.int_()),
+          args(f -> f.natFunc(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
+          args(f -> f.natFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob())
       );
     }
 
@@ -205,9 +205,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.natFunc(f.funcT(f.int_(), list())), f -> f.tuple()),
-          args(f -> f.natFunc(f.funcT(f.blob(), list(f.bool()))), f -> f.tuple(f.bool())),
-          args(f -> f.natFunc(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.tuple(f.bool(), f.int_()))
+          args(f -> f.natFunc(f.funcT(list(), f.int_())), f -> f.tuple()),
+          args(f -> f.natFunc(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
+          args(f -> f.natFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
@@ -227,14 +227,14 @@ public class CategoryBTest extends TestContext {
       return asList(
           args(f -> f.blob()),
           args(f -> f.bool()),
-          args(f -> f.funcT(f.string(), list())),
+          args(f -> f.funcT(list(), f.string())),
           args(f -> f.int_()),
           args(f -> f.string()),
           args(f -> f.tuple(f.int_())),
 
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
-          args(f -> f.array(f.funcT(f.string(), list()))),
+          args(f -> f.array(f.funcT(list(), f.string()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.string()))
       );

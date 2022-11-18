@@ -267,7 +267,7 @@ public class SbTranslator {
   }
 
   private ExprB translateDefValue(Loc refLoc, DefValueS defValueS) {
-    var funcTB = bytecodeF.funcT(translateT(defValueS.schema().type()), list());
+    var funcTB = bytecodeF.funcT(list(), translateT(defValueS.schema().type()));
     var funcB = bytecodeF.defFunc(funcTB, translateExpr(defValueS.body()));
     saveNal(funcB, defValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));

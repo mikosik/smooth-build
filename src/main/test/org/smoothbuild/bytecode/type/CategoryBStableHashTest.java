@@ -11,17 +11,17 @@ public class CategoryBStableHashTest extends TestContext {
   public void hashes_of_types_are_stable() {
     assertHash(blobTB(), "7ab8dc8456c25f132551f157c77a1888ef918fac");
     assertHash(boolTB(), "0a2b2a825165ae9742c63b0c6ddafc22f0bd3b1e");
-    assertHash(closureCB(), "98974a12d884e4d69ea57ea27ac3e7cba43ccce5");
-    assertHash(ifFuncCB(), "7665ae39e1bc549c1a67f8912dc3afc4ae6800fa");
+    assertHash(closureCB(), "14c06a1154a5de3035f018de523ec56a8e265989");
+    assertHash(ifFuncCB(), "0619a0edb031c6d43023768c948944922f2fe9a3");
     assertHash(intTB(), "47f9cc533a5f0c6f650ff0528c0d54d6d2d9d9ab");
-    assertHash(mapFuncCB(), "518c920d53245d17d91740bf754a3795a01d73b7");
-    assertHash(natFuncCB(), "b59ff771db774d44190856a15efaa2fde25138e8");
+    assertHash(mapFuncCB(), "c7b955e1f490950d22cf2f3aae1c2ad5dddd9b8a");
+    assertHash(natFuncCB(), "c4e2d1aa6b39521adb3edd17e94df9d299f5e730");
     assertHash(stringTB(), "7f6f2772815fcab6f5257c71e712f59aafda6757");
     assertHash(tupleTB(blobTB()), "b35e2f19ee80bd23b60555ca35c0b4818bf02381");
 
     assertHash(arrayTB(blobTB()), "cf55fc8109ca1c153f43d92fc59b5d29f40c836e");
     assertHash(arrayTB(boolTB()), "91412a917a3ee1ede971cc59acd56d864895ff3f");
-    assertHash(arrayTB(funcTB()), "7f7d9f08b5ec8200a98f7a360e33d4707a0d791d");
+    assertHash(arrayTB(funcTB()), "b02a3cde8b64bc20c39708aa6d3fc3d3d460de03");
     assertHash(arrayTB(intTB()), "d59245a673844f95bef458e0c0237882f2e7c3ad");
     assertHash(arrayTB(stringTB()), "1ffe3fba8fa6fd7141505ec994a97261cf516369");
     assertHash(arrayTB(tupleTB(blobTB())), "1d73ae3fd6da8970c2059cdf7316d9e1d0cc533d");

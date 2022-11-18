@@ -69,7 +69,7 @@ public class ComputationHashTest extends TestContext {
     var task = new InvokeTask(callB(natFuncB), natFuncB, null, traceB());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("768a18308c96099b14ecdead9ef4fc8cd0858d5a"));
+        .isEqualTo(Hash.decode("750ee778096a96419b3b8b300669f337f3e60d67"));
   }
 
   @Test
@@ -78,7 +78,7 @@ public class ComputationHashTest extends TestContext {
     var task = new InvokeTask(callB(natFuncB), natFuncB, null, traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("49c8bb994eddedd9b642c9f03f3d32b5005c3fc4"));
+        .isEqualTo(Hash.decode("bc6ad5c125aadf19a301dd8b6af4300eee643ce5"));
   }
 
   @Test

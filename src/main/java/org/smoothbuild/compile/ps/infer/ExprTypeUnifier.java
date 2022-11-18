@@ -115,7 +115,7 @@ public class ExprTypeUnifier {
 
   private Optional<TypeS> unifyCall(TypeS calleeT, ImmutableList<TypeS> argTs, Loc loc) {
     var resT = unifier.newTempVar();
-    var funcT = new FuncTS(resT, argTs);
+    var funcT = new FuncTS(argTs, resT);
     try {
       unifier.unify(funcT, calleeT);
       return Optional.of(resT);

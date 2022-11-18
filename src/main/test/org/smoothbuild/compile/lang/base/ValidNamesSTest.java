@@ -197,7 +197,7 @@ public class ValidNamesSTest extends TestContext {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(ValidNamesS.funcTypeName(stringTS(), tupleTS(blobTS(), boolTS())))
+      assertThat(ValidNamesS.funcTypeName(tupleTS(blobTS(), boolTS()), stringTS()))
           .isEqualTo("(Blob,Bool)->String");
     }
   }

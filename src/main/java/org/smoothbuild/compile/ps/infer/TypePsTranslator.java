@@ -34,7 +34,7 @@ public class TypePsTranslator {
       case FuncTP func -> {
         var resultOpt = translate(func.resT());
         var paramsOpt = pullUp(map(func.paramTs(), this::translate));
-        yield mapPair(resultOpt, paramsOpt, (r, p) -> new FuncTS(r, p));
+        yield mapPair(resultOpt, paramsOpt, (r, p) -> new FuncTS(p, r));
       }
       default -> types.get(type.name()).map(Tanal::type);
     };

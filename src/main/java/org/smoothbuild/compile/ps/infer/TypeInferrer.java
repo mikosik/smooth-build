@@ -179,7 +179,7 @@ public class TypeInferrer {
   private Optional<FuncSchemaS> resolveFuncSchema(NamedFuncP namedFuncP, TypeS resT,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
     return new TypeInferrerResolve(unifier, logger, bindings)
-        .resolve(namedFuncP, new FuncTS(resT, namedFuncP.paramTs()));
+        .resolve(namedFuncP, new FuncTS(namedFuncP.paramTs(), resT));
   }
 
   // param default value

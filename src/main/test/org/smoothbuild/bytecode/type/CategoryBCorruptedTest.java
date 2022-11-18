@@ -332,8 +332,8 @@ public class CategoryBCorruptedTest extends TestContext {
         var specHash = hash(
             hash(FUNC.marker()),
             hash(
-                hash(intTB()),
-                hash(tupleTB(stringTB(), boolTB())))
+                hash(tupleTB(stringTB(), boolTB())),
+                hash(intTB()))
         );
         assertThat(specHash)
             .isEqualTo(funcTB(intTB(), stringTB(), boolTB()).hash());
@@ -369,12 +369,13 @@ public class CategoryBCorruptedTest extends TestContext {
       @Test
       public void with_data_having_three_elems() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
+        var resT = intTB();
         var hash = hash(
             hash(FUNC.marker()),
             hash(
-                hash(intTB()),
                 hash(paramTs),
-                hash(paramTs)
+                hash(resT),
+                hash(resT)
             )
         );
         assertThatGet(hash)
@@ -383,11 +384,11 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_data_having_one_elems() throws Exception {
-        var res = intTB();
+        var paramTs = tupleTB(stringTB(), boolTB());
         var hash = hash(
             hash(FUNC.marker()),
             hash(
-                hash(res)
+                hash(paramTs)
             )
         );
         assertThatGet(hash)
@@ -416,8 +417,8 @@ public class CategoryBCorruptedTest extends TestContext {
         var typeHash = hash(
             hash(FUNC.marker()),
             hash(
-                nowhere,
-                hash(paramTs)
+                hash(paramTs),
+                nowhere
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
@@ -431,8 +432,8 @@ public class CategoryBCorruptedTest extends TestContext {
         var typeHash = hash(
             hash(FUNC.marker()),
             hash(
-                hash(refCB()),
-                hash(paramT)
+                hash(paramT),
+                hash(refCB())
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
@@ -446,8 +447,8 @@ public class CategoryBCorruptedTest extends TestContext {
         var typeHash = hash(
             hash(FUNC.marker()),
             hash(
-                corruptedArrayTHash(),
-                hash(paramTs)
+                hash(paramTs),
+                corruptedArrayTHash()
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
@@ -461,8 +462,8 @@ public class CategoryBCorruptedTest extends TestContext {
         var typeHash = hash(
             hash(FUNC.marker()),
             hash(
-                hash(intTB()),
-                nowhere
+                nowhere,
+                hash(intTB())
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
@@ -475,13 +476,13 @@ public class CategoryBCorruptedTest extends TestContext {
         var typeHash = hash(
             hash(FUNC.marker()),
             hash(
-                hash(intTB()),
-                hash(stringTB())
+                hash(stringTB()),
+                hash(intTB())
             )
         );
         assertThatGet(typeHash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, FUNC, DATA_PATH, 1, TupleTB.class, StringTB.class));
+                typeHash, FUNC, FUNC_PARAMS_PATH, TupleTB.class, StringTB.class));
       }
 
       @Test
@@ -489,8 +490,8 @@ public class CategoryBCorruptedTest extends TestContext {
         var typeHash = hash(
             hash(FUNC.marker()),
             hash(
-                hash(intTB()),
-                hash(refCB())
+                hash(refCB()),
+                hash(intTB())
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
@@ -503,8 +504,8 @@ public class CategoryBCorruptedTest extends TestContext {
         var typeHash = hash(
             hash(FUNC.marker()),
             hash(
-                hash(intTB()),
-                corruptedArrayTHash()
+                corruptedArrayTHash(),
+                hash(intTB())
             )
         );
         assertCall(() -> categoryDb().get(typeHash))

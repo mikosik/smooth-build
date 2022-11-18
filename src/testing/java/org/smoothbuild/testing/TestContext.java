@@ -441,7 +441,7 @@ public class TestContext {
   }
 
   private FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
-    return categoryDb().funcT(resT, paramTs);
+    return categoryDb().funcT(paramTs, resT);
   }
 
   public IntTB intTB() {
@@ -891,7 +891,7 @@ public class TestContext {
   }
 
   public static FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return new FuncTS(resT, tupleTS(paramTs));
+    return new FuncTS(tupleTS(paramTs), resT);
   }
 
   public static TupleTS tupleTS(TypeS... itemTs) {

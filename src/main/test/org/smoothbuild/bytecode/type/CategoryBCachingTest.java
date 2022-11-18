@@ -69,6 +69,6 @@ public class CategoryBCachingTest extends TestContext {
   }
 
   private static FuncTB funcT(CategoryDb categoryDb) {
-    return categoryDb.funcT(categoryDb.string(), list(categoryDb.bool(), categoryDb.blob()));
+    return categoryDb.funcT(list(categoryDb.bool(), categoryDb.blob()), categoryDb.string());
   }
 }

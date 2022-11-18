@@ -39,7 +39,7 @@ public class ValidNamesS {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(TypeS resT, TupleTS paramTs) {
+  public static String funcTypeName(TupleTS paramTs, TypeS resT) {
     return "(" + commaSeparatedTypeNames(paramTs.items()) + ")->" + resT.name();
   }
 

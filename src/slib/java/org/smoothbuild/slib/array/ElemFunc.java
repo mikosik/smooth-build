@@ -16,7 +16,7 @@ public class ElemFunc {
     var arrayParamRef = f.ref(arrayParamT, BigInteger.ZERO);
     var indexParamRef = f.ref(indexParamT, BigInteger.ONE);
     var body = f.pick(arrayParamRef, indexParamRef);
-    var funcT = f.funcT(varA, paramTs);
+    var funcT = f.funcT(paramTs, varA);
     return f.defFunc(funcT, body);
   }
 }

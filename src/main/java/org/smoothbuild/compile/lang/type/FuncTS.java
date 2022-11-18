@@ -17,23 +17,23 @@ public final class FuncTS extends TypeS {
   private final TypeS res;
   private final TupleTS params;
 
-  public FuncTS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    this(resT, new TupleTS(paramTs));
+  public FuncTS(ImmutableList<TypeS> paramTs, TypeS resT) {
+    this(new TupleTS(paramTs), resT);
   }
 
-  public FuncTS(TypeS res, TupleTS params) {
-    super(funcTypeName(res, params), calculateFuncVars(res, params));
+  public FuncTS(TupleTS params, TypeS res) {
+    super(funcTypeName(params, res), calculateFuncVars(params, res));
     this.res = requireNonNull(res);
     this.params = requireNonNull(params);
   }
 
-  public static VarSetS calculateFuncVars(TypeS resT, TupleTS paramTs) {
+  public static VarSetS calculateFuncVars(TupleTS paramTs, TypeS resT) {
     return varSetS(concat(resT, paramTs.items()));
   }
 
   @Override
   public TypeS mapComponents(Function<TypeS, TypeS> mapper) {
-    return new FuncTS(mapper.apply(res), params.mapComponents(mapper));
+    return new FuncTS(params.mapComponents(mapper), mapper.apply(res));
   }
 
   @Override
@@ -41,16 +41,16 @@ public final class FuncTS extends TypeS {
     if (vars().isEmpty()) {
       return this;
     } else {
-      return new FuncTS(res.mapVars(varMapper), params.mapVars(varMapper));
+      return new FuncTS(params.mapVars(varMapper), res.mapVars(varMapper));
     }
-  }
-
-  public TypeS res() {
-    return res;
   }
 
   public TupleTS params() {
     return params;
+  }
+
+  public TypeS res() {
+    return res;
   }
 
   @Override
@@ -59,12 +59,12 @@ public final class FuncTS extends TypeS {
       return true;
     }
     return object instanceof FuncTS that
-        && res.equals(that.res)
-        && params.equals(that.params);
+        && params.equals(that.params)
+        && res.equals(that.res);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(res, params);
+    return Objects.hash(params, res);
   }
 }

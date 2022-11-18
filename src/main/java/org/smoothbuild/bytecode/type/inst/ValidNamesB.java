@@ -14,7 +14,7 @@ public class ValidNamesB {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(TypeB resT, List<? extends TypeB> paramTs) {
+  public static String funcTypeName(List<? extends TypeB> paramTs, TypeB resT) {
     return "(" + commaSeparatedTypeNames(paramTs) + ")->" + resT.name();
   }
 

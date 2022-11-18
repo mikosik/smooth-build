@@ -83,7 +83,7 @@ public class ModuleCreator {
     var fieldSigs = structT.fields();
     var params = structP.fields().map(
         f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), empty(), f.loc()));
-    var funcTS = new FuncTS(structT, toTypes(params));
+    var funcTS = new FuncTS(toTypes(params), structT);
     var schema = new FuncSchemaS(funcTS);
     var loc = structP.loc();
     return new SyntCtorS(schema, name, params, loc);
