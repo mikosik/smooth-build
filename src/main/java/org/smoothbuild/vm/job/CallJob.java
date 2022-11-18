@@ -10,7 +10,7 @@ import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
-import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.inst.FuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
@@ -47,22 +47,22 @@ public class CallJob extends Job {
 
   private void onFuncEvaluated(CallB callB, ValueB funcB, Consumer<ValueB> resConsumer) {
     switch ((FuncB) funcB) {
-      case DefFuncB defFuncB -> handleDefFunc(defFuncB, resConsumer);
+      case ClosureB closureB -> handleClosure(closureB, resConsumer);
       case IfFuncB ifFuncB -> handleIfFunc(resConsumer);
       case MapFuncB mapFuncB -> handleMapFunc(resConsumer);
       case NatFuncB natFuncB -> handleNatFunc(callB, natFuncB, resConsumer);
     }
   }
 
-  // handling DefFunc
+  // handling Closure
 
-  private void handleDefFunc(DefFuncB defFuncB, Consumer<ValueB> resultConsumer) {
+  private void handleClosure(ClosureB closureB, Consumer<ValueB> resultConsumer) {
     var args = args();
-    var closureEnvironment = defFuncB.environment().items();
+    var closureEnvironment = closureB.environment().items();
     var closureBodyEnvironment = map(concat(args, closureEnvironment), context()::jobFor);
-    var trace = trace(defFuncB);
+    var trace = trace(closureB);
     var newContext = context().withEnvironment(closureBodyEnvironment, trace);
-    evaluateImpl(newContext, defFuncB.body(), resultConsumer);
+    evaluateImpl(newContext, closureB.body(), resultConsumer);
   }
 
   // handling IfFunc

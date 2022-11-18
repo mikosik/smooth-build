@@ -8,8 +8,8 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
-import static org.smoothbuild.bytecode.type.CategoryKinds.DEF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -173,24 +173,24 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _def_func extends _func_category_test_case {
+    class _closure extends _func_category_test_case {
       @Test
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save func type in HashedDb.
+         * to save closure type in HashedDb.
          */
         var specHash = hash(
-            hash(DEF_FUNC.marker()),
+            hash(CLOSURE.marker()),
             hash(funcTB(intTB(), stringTB(), boolTB()))
         );
         assertThat(specHash)
-            .isEqualTo(defFuncCB(intTB(), stringTB(), boolTB()).hash());
+            .isEqualTo(closureCB(intTB(), stringTB(), boolTB()).hash());
       }
 
       @Override
       protected CategoryKindB categoryKind() {
-        return DEF_FUNC;
+        return CLOSURE;
       }
     }
 

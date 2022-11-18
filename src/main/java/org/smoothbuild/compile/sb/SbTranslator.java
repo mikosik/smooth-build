@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
@@ -189,7 +189,7 @@ public class SbTranslator {
     };
   }
 
-  private DefFuncB translateDefFunc(DefFuncS defFuncS) {
+  private ClosureB translateDefFunc(DefFuncS defFuncS) {
     return bytecodeF.defFunc(
         translateT(defFuncS.schema().type()),
         translateExpr(defFuncS.body()));
@@ -204,7 +204,7 @@ public class SbTranslator {
     return bytecodeF.natFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private DefFuncB translateSyntCtor(SyntCtorS syntCtorS) {
+  private ClosureB translateSyntCtor(SyntCtorS syntCtorS) {
     var funcTB = translateT(syntCtorS.schema().type());
     var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
     saveLoc(bodyB, syntCtorS);

@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
@@ -55,7 +55,7 @@ public class JobCreator {
     // @formatter:on
   }
 
-  private DefFuncB newClosure(ClosurizeB closurize) {
+  private ClosureB newClosure(ClosurizeB closurize) {
     return closurize.buildClosure(map(environment, Job::exprB));
   }
 

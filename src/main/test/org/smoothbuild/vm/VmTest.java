@@ -422,7 +422,7 @@ public class VmTest extends TestContext {
         @Test
         public void ref_referencing_environment() {
           var body = refB(intTB(), 1);
-          var defFuncB = defFuncB(list(intTB()), combineB(intB(17)), body);
+          var defFuncB = closureB(list(intTB()), combineB(intB(17)), body);
           assertThat(evaluate(callB(defFuncB, intB(7))))
               .isEqualTo(intB(17));
         }
@@ -430,7 +430,7 @@ public class VmTest extends TestContext {
         @Test
         public void ref_with_index_outside_of_environment_size_causes_fatal()
             throws InterruptedException {
-          var defFuncB = defFuncB(list(intTB()), combineB(intB()), refB(intTB(), 2));
+          var defFuncB = closureB(list(intTB()), combineB(intB()), refB(intTB(), 2));
           var reporter = mock(Reporter.class);
           var vm = vm(reporter);
           vm.evaluate(list(callB(defFuncB, intB(7))));

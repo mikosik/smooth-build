@@ -42,7 +42,7 @@ import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
-import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
@@ -63,7 +63,7 @@ import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.BlobTB;
 import org.smoothbuild.bytecode.type.inst.BoolTB;
-import org.smoothbuild.bytecode.type.inst.DefFuncCB;
+import org.smoothbuild.bytecode.type.inst.ClosureCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.IfFuncCB;
 import org.smoothbuild.bytecode.type.inst.IntTB;
@@ -424,12 +424,12 @@ public class TestContext {
     return tupleTB(stringTB(), blobTB());
   }
 
-  public DefFuncCB defFuncCB() {
-    return defFuncCB(intTB(), blobTB(), stringTB());
+  public ClosureCB closureCB() {
+    return closureCB(intTB(), blobTB(), stringTB());
   }
 
-  public DefFuncCB defFuncCB(TypeB resT, TypeB... paramTs) {
-    return categoryDb().defFunc(funcTB(resT, paramTs));
+  public ClosureCB closureCB(TypeB resT, TypeB... paramTs) {
+    return categoryDb().closure(funcTB(resT, paramTs));
   }
 
   public FuncTB funcTB() {
@@ -629,40 +629,40 @@ public class TestContext {
     return bytecodeF().file(blob, string);
   }
 
-  public DefFuncB defFuncB() {
+  public ClosureB defFuncB() {
     return defFuncB(intB());
   }
 
-  public DefFuncB defFuncB(CombineB environment, ExprB body) {
-    return defFuncB(list(), environment, body);
-  }
-
-  public DefFuncB defFuncB(ExprB body) {
+  public ClosureB defFuncB(ExprB body) {
     return defFuncB(list(), body);
   }
 
-  public DefFuncB defFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
-    return defFuncB(paramTs, combineB(), body);
+  public ClosureB defFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
+    return closureB(paramTs, combineB(), body);
   }
 
-  public DefFuncB defFuncB(ImmutableList<TypeB> paramTs, CombineB environment, ExprB body) {
+  public ClosureB defFuncB(FuncTB type, ExprB body) {
+    return closureB(type, combineB(), body);
+  }
+
+  public ClosureB closureB(CombineB environment, ExprB body) {
+    return closureB(list(), environment, body);
+  }
+
+  public ClosureB closureB(ImmutableList<TypeB> paramTs, CombineB environment, ExprB body) {
     var funcTB = funcTB(body.evalT(), paramTs);
-    return defFuncB(funcTB, environment, body);
+    return closureB(funcTB, environment, body);
   }
 
-  public DefFuncB defFuncB(FuncTB type, ExprB body) {
-    return defFuncB(type, combineB(), body);
+  public ClosureB closureB(FuncTB type, CombineB environment, ExprB body) {
+    return bytecodeDb().closure(type, environment, body);
   }
 
-  public DefFuncB defFuncB(FuncTB type, CombineB environment, ExprB body) {
-    return bytecodeDb().defFunc(type, environment, body);
-  }
-
-  public DefFuncB idFuncB() {
+  public ClosureB idFuncB() {
     return defFuncB(list(intTB()), refB(intTB(), 0));
   }
 
-  public DefFuncB returnAbcFuncB() {
+  public ClosureB returnAbcFuncB() {
     return defFuncB(stringB("abc"));
   }
 

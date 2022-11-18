@@ -93,31 +93,31 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
-  class _def_func {
+  class _closure {
     @Test
     public void with_zero_envs_zero_params() {
-      var defFunc = defFuncB(funcTB(intTB()), combineB(), intB(1));
+      var defFunc = closureB(funcTB(intTB()), combineB(), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("608d8569e03180b3d47e763aa8a0a4aa41cba88d"));
     }
 
     @Test
     public void with_zero_envs_one_param() {
-      var defFunc = defFuncB(funcTB(intTB(), blobTB()), combineB(), intB(1));
+      var defFunc = closureB(funcTB(intTB(), blobTB()), combineB(), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("6d183c1d5df711652425f5a25e9481f0278e7b4e"));
     }
 
     @Test
     public void with_one_env_zero_params() {
-      var defFunc = defFuncB(funcTB(intTB()), combineB(stringB("abc")), intB(1));
+      var defFunc = closureB(funcTB(intTB()), combineB(stringB("abc")), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("09e01279c26aafb84495c16b696036898c468133"));
     }
 
     @Test
     public void with_one_env_one_params() {
-      var defFunc = defFuncB(funcTB(intTB(), blobTB()), combineB(stringB("abc")), intB(1));
+      var defFunc = closureB(funcTB(intTB(), blobTB()), combineB(stringB("abc")), intB(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("71ee4726ea6c2f90a2993bf60c3cee23c8ff1ec3"));
     }

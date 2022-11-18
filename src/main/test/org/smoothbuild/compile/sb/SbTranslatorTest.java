@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.ExprS;
@@ -344,7 +344,7 @@ public class SbTranslatorTest extends TestContext {
         public void expr_inside_def_func_body() {
           var funcS = defFuncS(7, "myFunc", nlist(), intS(8, 37));
           var sbTranslator = newTranslator();
-          var funcB = (DefFuncB) sbTranslator.translateExpr(monoizeS(funcS));
+          var funcB = (ClosureB) sbTranslator.translateExpr(monoizeS(funcS));
           var body = funcB.body();
           assertNalMapping(sbTranslator, body, null, loc(8));
         }
@@ -396,7 +396,7 @@ public class SbTranslatorTest extends TestContext {
       public void param_ref() {
         var func = defFuncS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
         var sbTranslator = newTranslator();
-        var funcB = (DefFuncB) sbTranslator.translateExpr(monoizeS(func));
+        var funcB = (ClosureB) sbTranslator.translateExpr(monoizeS(func));
         var refB = funcB.body();
         assertNalMapping(sbTranslator, refB, null, loc(5));
       }

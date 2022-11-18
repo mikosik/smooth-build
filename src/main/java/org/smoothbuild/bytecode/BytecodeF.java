@@ -19,7 +19,7 @@ import org.smoothbuild.bytecode.expr.inst.ArrayBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
-import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
@@ -110,13 +110,13 @@ public class BytecodeF {
     return bytecodeDb.tuple(list(content, path));
   }
 
-  public DefFuncB defFunc(FuncTB type, ExprB body) {
+  public ClosureB defFunc(FuncTB type, ExprB body) {
     var environment = bytecodeDb.combine(list());
     return closure(type, environment, body);
   }
 
-  public DefFuncB closure(FuncTB type, CombineB environment, ExprB body) {
-    return bytecodeDb.defFunc(type, environment, body);
+  public ClosureB closure(FuncTB type, CombineB environment, ExprB body) {
+    return bytecodeDb.closure(type, environment, body);
   }
 
   public IfFuncB ifFunc(TypeB t) {

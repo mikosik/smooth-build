@@ -7,20 +7,20 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
-import org.smoothbuild.bytecode.type.inst.DefFuncCB;
+import org.smoothbuild.bytecode.type.inst.ClosureCB;
 
 /**
  * Defined Function.
  * This class is thread-safe.
  */
-public final class DefFuncB extends FuncB {
+public final class ClosureB extends FuncB {
   private static final int DATA_SEQ_SIZE = 2;
   private static final int ENVIRONMENT_IDX = 0;
   private static final int BODY_IDX = 1;
 
-  public DefFuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+  public ClosureB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.category() instanceof DefFuncCB);
+    checkArgument(merkleRoot.category() instanceof ClosureCB);
   }
 
   public CombineB environment() {

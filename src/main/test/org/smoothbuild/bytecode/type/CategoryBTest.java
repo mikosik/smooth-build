@@ -30,7 +30,7 @@ import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
-import org.smoothbuild.bytecode.type.inst.DefFuncCB;
+import org.smoothbuild.bytecode.type.inst.ClosureCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.NatFuncCB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
@@ -84,8 +84,8 @@ public class CategoryBTest extends TestContext {
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.defFunc(f.string(), list()), "DEF_FUNC:()->String"),
-        args(f -> f.defFunc(f.string(), list(f.string())), "DEF_FUNC:(String)->String"),
+        args(f -> f.closure(f.string(), list()), "CLOSURE:()->String"),
+        args(f -> f.closure(f.string(), list(f.string())), "CLOSURE:(String)->String"),
         args(f -> f.ifFunc(f.int_()), "IF_FUNC:(Bool,Int,Int)->Int"),
         args(f -> f.mapFunc(f.int_(), f.string()), "MAP_FUNC:([String],(String)->Int)->[Int]"),
         args(f -> f.natFunc(f.string(), list()), "NAT_FUNC:()->String"),
@@ -143,10 +143,10 @@ public class CategoryBTest extends TestContext {
   }
 
   @Nested
-  class _def_func {
+  class _closure {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CategoryDb, DefFuncCB> factoryCall,
+    public void result(Function<CategoryDb, ClosureCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().res())
           .isEqualTo(execute(expected));
@@ -154,15 +154,15 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.defFunc(f.funcT(f.int_(), list())), f -> f.int_()),
-          args(f -> f.defFunc(f.funcT(f.blob(), list(f.bool()))), f -> f.blob()),
-          args(f -> f.defFunc(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.blob())
+          args(f -> f.closure(f.funcT(f.int_(), list())), f -> f.int_()),
+          args(f -> f.closure(f.funcT(f.blob(), list(f.bool()))), f -> f.blob()),
+          args(f -> f.closure(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.blob())
       );
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CategoryDb, DefFuncCB> factoryCall,
+    public void params(Function<CategoryDb, ClosureCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().params())
           .isEqualTo(execute(expected));
@@ -170,9 +170,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.defFunc(f.funcT(f.int_(), list())), f -> f.tuple()),
-          args(f -> f.defFunc(f.funcT(f.blob(), list(f.bool()))), f -> f.tuple(f.bool())),
-          args(f -> f.defFunc(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.tuple(f.bool(), f.int_()))
+          args(f -> f.closure(f.funcT(f.int_(), list())), f -> f.tuple()),
+          args(f -> f.closure(f.funcT(f.blob(), list(f.bool()))), f -> f.tuple(f.bool())),
+          args(f -> f.closure(f.funcT(f.blob(), list(f.bool(), f.int_()))), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }

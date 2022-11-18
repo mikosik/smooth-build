@@ -4,9 +4,9 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
+import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
-import static org.smoothbuild.bytecode.type.CategoryKinds.DEF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -25,7 +25,7 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
-import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.inst.FuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
@@ -49,7 +49,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
-import org.smoothbuild.bytecode.type.inst.DefFuncCB;
+import org.smoothbuild.bytecode.type.inst.ClosureCB;
 import org.smoothbuild.bytecode.type.inst.FuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.IfFuncCB;
@@ -151,9 +151,9 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class DefFuncKindB extends AbstFuncKindB<DefFuncCB> {
-    DefFuncKindB() {
-      super("DEF_FUNC", (byte) 6, DefFuncB.class, DefFuncCB::new);
+  public static final class ClosureKindB extends AbstFuncKindB<ClosureCB> {
+    ClosureKindB() {
+      super("CLOSURE", (byte) 6, ClosureB.class, ClosureCB::new);
     }
   }
 
@@ -247,7 +247,7 @@ public sealed abstract class CategoryKindB
       case 3 -> STRING;
       case 4 -> ARRAY;
       case 5 -> TUPLE;
-      case 6 -> DEF_FUNC;
+      case 6 -> CLOSURE;
       case 7 -> NAT_FUNC;
       case 8 -> ORDER;
       case 9 -> COMBINE;

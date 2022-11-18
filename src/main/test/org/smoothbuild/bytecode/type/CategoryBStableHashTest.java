@@ -11,7 +11,7 @@ public class CategoryBStableHashTest extends TestContext {
   public void hashes_of_types_are_stable() {
     assertHash(blobTB(), "7ab8dc8456c25f132551f157c77a1888ef918fac");
     assertHash(boolTB(), "0a2b2a825165ae9742c63b0c6ddafc22f0bd3b1e");
-    assertHash(defFuncCB(), "98974a12d884e4d69ea57ea27ac3e7cba43ccce5");
+    assertHash(closureCB(), "98974a12d884e4d69ea57ea27ac3e7cba43ccce5");
     assertHash(ifFuncCB(), "7665ae39e1bc549c1a67f8912dc3afc4ae6800fa");
     assertHash(intTB(), "47f9cc533a5f0c6f650ff0528c0d54d6d2d9d9ab");
     assertHash(mapFuncCB(), "518c920d53245d17d91740bf754a3795a01d73b7");

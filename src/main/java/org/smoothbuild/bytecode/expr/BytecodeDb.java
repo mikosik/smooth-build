@@ -18,7 +18,7 @@ import org.smoothbuild.bytecode.expr.inst.ArrayBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
-import org.smoothbuild.bytecode.expr.inst.DefFuncB;
+import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
@@ -41,7 +41,7 @@ import org.smoothbuild.bytecode.type.CategoryB;
 import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.exc.CategoryDbExc;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
-import org.smoothbuild.bytecode.type.inst.DefFuncCB;
+import org.smoothbuild.bytecode.type.inst.ClosureCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.IntTB;
 import org.smoothbuild.bytecode.type.inst.NatFuncCB;
@@ -82,10 +82,10 @@ public class BytecodeDb {
         () -> newNatFunc(cat, jar, classBinaryName, isPure));
   }
 
-  public DefFuncB defFunc(FuncTB type, CombineB environment, ExprB body) {
+  public ClosureB closure(FuncTB type, CombineB environment, ExprB body) {
     validateBodyEvalT(type, body);
-    var cat = categoryDb.defFunc(type);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newDefFunc(cat, environment, body));
+    var cat = categoryDb.closure(type);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosure(cat, environment, body));
   }
 
   public IntB int_(BigInteger value) {
@@ -246,8 +246,8 @@ public class BytecodeDb {
     return categoryDb.bool().newExpr(root, this);
   }
 
-  private DefFuncB newDefFunc(DefFuncCB type, ExprB environment, ExprB body) throws HashedDbExc {
-    var data = writeDefFuncData(environment, body);
+  private ClosureB newClosure(ClosureCB type, ExprB environment, ExprB body) throws HashedDbExc {
+    var data = writeClosureData(environment, body);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
@@ -417,7 +417,7 @@ public class BytecodeDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeDefFuncData(ExprB environment, ExprB body) throws HashedDbExc {
+  private Hash writeClosureData(ExprB environment, ExprB body) throws HashedDbExc {
     return hashedDb.writeSeq(environment.hash(), body.hash());
   }
 
