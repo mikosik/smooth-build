@@ -24,8 +24,8 @@ import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
@@ -137,7 +137,7 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static List<FuncP> constructorNames(Ast ast) {
+  private static List<NamedFuncP> constructorNames(Ast ast) {
     // Return only constructors of structs with legal names (that starts with uppercase).
     // Adding constructors of structs with lowercase names would cause `already defined` error
     // because constructor name would collide with struct name.
@@ -231,31 +231,31 @@ public class AnalyzeSemantically {
   private static void detectIllegalAnnotations(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitFunc(FuncP funcP) {
-        super.visitFunc(funcP);
-        if (funcP.ann().isPresent()) {
-          var ann = funcP.ann().get();
+      public void visitNamedFunc(NamedFuncP namedFuncP) {
+        super.visitNamedFunc(namedFuncP);
+        if (namedFuncP.ann().isPresent()) {
+          var ann = namedFuncP.ann().get();
           var annName = ann.name();
           if (ANNOTATION_NAMES.contains(annName)) {
-            if (funcP.body().isPresent()) {
-              logger.log(compileError(funcP,
-                  "Function " + funcP.q() + " with @" + annName + " annotation cannot have body."));
+            if (namedFuncP.body().isPresent()) {
+              logger.log(compileError(namedFuncP,
+                  "Function " + namedFuncP.q() + " with @" + annName + " annotation cannot have body."));
             }
-            if (funcP.resT().isEmpty()) {
-              logger.log(compileError(funcP, "Function " + funcP.q() + " with @" + annName
+            if (namedFuncP.resT().isEmpty()) {
+              logger.log(compileError(namedFuncP, "Function " + namedFuncP.q() + " with @" + annName
                   + " annotation must declare result type."));
             }
           } else {
             logger.log(compileError(ann.loc(), "Unknown annotation " + ann.q() + "."));
           }
-        } else if (funcP.body().isEmpty()) {
-          logger.log(compileError(funcP, "Function body is missing."));
+        } else if (namedFuncP.body().isEmpty()) {
+          logger.log(compileError(namedFuncP, "Function body is missing."));
         }
       }
 
       @Override
-      public void visitValue(NamedValueP namedValueP) {
-        super.visitValue(namedValueP);
+      public void visitNamedValue(NamedValueP namedValueP) {
+        super.visitNamedValue(namedValueP);
         if (namedValueP.ann().isPresent()) {
           var ann = namedValueP.ann().get();
           var annName = ann.name();

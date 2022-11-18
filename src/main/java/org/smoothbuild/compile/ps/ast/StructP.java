@@ -8,8 +8,8 @@ import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 
@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 
 public final class StructP extends NalImpl {
   private final NList<ItemP> fields;
-  private final FuncP ctor;
+  private final NamedFuncP ctor;
 
   public StructP(String name, List<ItemP> fields, Loc loc) {
     this(name, nlistWithNonUniqueNames(ImmutableList.copyOf(fields)), loc);
@@ -26,11 +26,11 @@ public final class StructP extends NalImpl {
   private StructP(String name, NList<ItemP> fields, Loc loc) {
     super(name, loc);
     this.fields = fields;
-    this.ctor = new FuncP(Optional.of(new TypeP(name, loc)), structNameToCtorName(name), fields,
+    this.ctor = new NamedFuncP(Optional.of(new TypeP(name, loc)), structNameToCtorName(name), fields,
         Optional.empty(), Optional.empty(), loc);
   }
 
-  public FuncP ctor() {
+  public NamedFuncP ctor() {
     return ctor;
   }
 

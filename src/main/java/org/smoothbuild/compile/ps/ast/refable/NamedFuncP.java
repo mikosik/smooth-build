@@ -13,11 +13,11 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncP extends EvaluableP {
+public final class NamedFuncP extends EvaluableP {
   private final Optional<TypeP> resT;
   private final NList<ItemP> params;
 
-  public FuncP(Optional<TypeP> resT, String name, NList<ItemP> params, Optional<ExprP> body,
+  public NamedFuncP(Optional<TypeP> resT, String name, NList<ItemP> params, Optional<ExprP> body,
       Optional<AnnP> ann, Loc loc) {
     super(name, body, ann, loc);
     this.resT = resT;

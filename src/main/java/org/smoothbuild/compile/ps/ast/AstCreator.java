@@ -49,8 +49,8 @@ import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
@@ -88,7 +88,7 @@ public class AstCreator {
         Optional<AnnP> annotation = createNativeSane(function.ann());
         var loc = locOf(filePath, nameNode);
         var params = createItems(function.itemList());
-        evaluables.add(new FuncP(type, name, params, expr, annotation, loc));
+        evaluables.add(new NamedFuncP(type, name, params, expr, annotation, loc));
         return null;
       }
 

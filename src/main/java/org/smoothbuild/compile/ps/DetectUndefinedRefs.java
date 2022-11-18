@@ -11,7 +11,7 @@ import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.Strings;
@@ -49,11 +49,11 @@ public class DetectUndefinedRefs extends AstVisitor {
   }
 
   @Override
-  public void visitFunc(FuncP funcP) {
-    funcP.params().forEach(p -> p.defaultVal().ifPresent(this::visitExpr));
-    funcP.body().ifPresent(body -> {
+  public void visitNamedFunc(NamedFuncP namedFuncP) {
+    namedFuncP.params().forEach(p -> p.defaultVal().ifPresent(this::visitExpr));
+    namedFuncP.body().ifPresent(body -> {
       var definedNamesWithParams = new HashSet<>(definedNames);
-      funcP.params().forEach(p -> definedNamesWithParams.add(p.name()));
+      namedFuncP.params().forEach(p -> definedNamesWithParams.add(p.name()));
       new DetectUndefinedRefs(ast, definedNamesWithParams, logs).visitExpr(body);
     });
   }

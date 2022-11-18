@@ -21,8 +21,8 @@ import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -107,12 +107,12 @@ public class TypeInferrer {
   // func
 
   public static Optional<FuncSchemaS> inferFuncSchema(Bindings<Optional<TDefS>> types,
-      Bindings<? extends Optional<? extends RefableS>> outerBindings, Logger logger, FuncP func) {
+      Bindings<? extends Optional<? extends RefableS>> outerBindings, Logger logger, NamedFuncP func) {
     return new TypeInferrer(types, outerBindings, logger)
         .inferFuncSchema(func);
   }
 
-  private Optional<FuncSchemaS> inferFuncSchema(FuncP func) {
+  private Optional<FuncSchemaS> inferFuncSchema(NamedFuncP func) {
     var params = func.params();
     if (!inferParamDefaultValues(params)) {
       return Optional.empty();
@@ -176,10 +176,10 @@ public class TypeInferrer {
     return new ItemS(p.typeS(), p.name(), Optional.empty(), p.loc());
   }
 
-  private Optional<FuncSchemaS> resolveFuncSchema(FuncP funcP, TypeS resT,
+  private Optional<FuncSchemaS> resolveFuncSchema(NamedFuncP namedFuncP, TypeS resT,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
     return new TypeInferrerResolve(unifier, logger, bindings)
-        .resolve(funcP, new FuncTS(resT, funcP.paramTs()));
+        .resolve(namedFuncP, new FuncTS(resT, namedFuncP.paramTs()));
   }
 
   // param default value

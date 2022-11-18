@@ -45,8 +45,8 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
@@ -74,41 +74,41 @@ public class PsTranslator {
     }
   }
 
-  public Optional<NamedEvaluableS> translateFunc(FuncP funcP, FuncTS funcT) {
-    return translateFunc(funcP, translateParams(funcP), funcT);
+  public Optional<NamedEvaluableS> translateFunc(NamedFuncP namedFuncP, FuncTS funcT) {
+    return translateFunc(namedFuncP, translateParams(namedFuncP), funcT);
   }
 
-  private NList<ItemS> translateParams(FuncP funcP) {
-    return NList.nlist(map(funcP.params().list(), param -> translateParam(funcP, param)));
+  private NList<ItemS> translateParams(NamedFuncP namedFuncP) {
+    return NList.nlist(map(namedFuncP.params().list(), param -> translateParam(namedFuncP, param)));
   }
 
-  public ItemS translateParam(FuncP funcP, ItemP paramP) {
+  public ItemS translateParam(NamedFuncP namedFuncP, ItemP paramP) {
     var type = paramP.typeS();
     var name = paramP.name();
-    var body = paramP.defaultVal().flatMap(expr -> translateParamBody(funcP, paramP, expr));
+    var body = paramP.defaultVal().flatMap(expr -> translateParamBody(namedFuncP, paramP, expr));
     return new ItemS(type, name, body, paramP.loc());
   }
 
-  private Optional<NamedEvaluableS> translateParamBody(FuncP funcP, ItemP paramP, ExprP expr) {
+  private Optional<NamedEvaluableS> translateParamBody(NamedFuncP namedFuncP, ItemP paramP, ExprP expr) {
     return translateExpr(expr).map(exprS -> {
-      var name = funcP.name() + ":" + paramP.name();
+      var name = namedFuncP.name() + ":" + paramP.name();
       return new DefValueS(new SchemaS(exprS.evalT()), name, exprS, paramP.loc());
     });
   }
 
-  private Optional<NamedEvaluableS> translateFunc(FuncP funcP,
+  private Optional<NamedEvaluableS> translateFunc(NamedFuncP namedFuncP,
       NList<ItemS> params, FuncTS funcT) {
     var schema = new FuncSchemaS(funcT);
-    var name = funcP.name();
-    var loc = funcP.loc();
-    if (funcP.ann().isPresent()) {
-      var ann = translateAnn(funcP.ann().get());
+    var name = namedFuncP.name();
+    var loc = namedFuncP.loc();
+    if (namedFuncP.ann().isPresent()) {
+      var ann = translateAnn(namedFuncP.ann().get());
       var annFuncS = new AnnFuncS(ann, schema, name, params, loc);
       return Optional.of(annFuncS);
     } else {
       var bindingsInBody = new ScopedBindings<Optional<? extends RefableS>>(bindings);
       params.forEach(p -> bindingsInBody.add(p.name(), Optional.of(p)));
-      var body = new PsTranslator(bindingsInBody).translateExpr(funcP.body().get());
+      var body = new PsTranslator(bindingsInBody).translateExpr(namedFuncP.body().get());
       return body.map(b -> new DefFuncS(schema, name, params, b, loc));
     }
   }

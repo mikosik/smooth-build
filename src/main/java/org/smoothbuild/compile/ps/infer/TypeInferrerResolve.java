@@ -24,7 +24,7 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.util.bindings.Bindings;
@@ -63,7 +63,7 @@ public class TypeInferrerResolve {
     return resolveBody(exprP);
   }
 
-  public Optional<FuncSchemaS> resolve(FuncP func, FuncTS funcT) {
+  public Optional<FuncSchemaS> resolve(NamedFuncP func, FuncTS funcT) {
     var resolvedFuncT = (FuncTS) unifier.resolve(funcT);
     if (func.resT().isPresent()) {
       if (!funcT.res().equals(resolvedFuncT.res())) {

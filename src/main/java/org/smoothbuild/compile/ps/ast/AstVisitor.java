@@ -14,8 +14,8 @@ import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -49,24 +49,24 @@ public class AstVisitor {
 
   public void visitEvaluable(EvaluableP evaluable) {
     switch (evaluable) {
-      case FuncP func -> visitFunc(func);
-      case NamedValueP value -> visitValue(value);
+      case NamedFuncP func -> visitNamedFunc(func);
+      case NamedValueP value -> visitNamedValue(value);
     }
   }
 
-  public void visitValue(NamedValueP namedValueP) {
+  public void visitNamedValue(NamedValueP namedValueP) {
     namedValueP.ann().ifPresent(this::visitAnn);
     namedValueP.type().ifPresent(this::visitType);
     namedValueP.body().ifPresent(this::visitExpr);
     visitIdentifier(namedValueP);
   }
 
-  public void visitFunc(FuncP funcP) {
-    funcP.ann().ifPresent(this::visitAnn);
-    funcP.resT().ifPresent(this::visitType);
-    visitParams(funcP.params());
-    funcP.body().ifPresent(this::visitExpr);
-    visitIdentifier(funcP);
+  public void visitNamedFunc(NamedFuncP namedFuncP) {
+    namedFuncP.ann().ifPresent(this::visitAnn);
+    namedFuncP.resT().ifPresent(this::visitType);
+    visitParams(namedFuncP.params());
+    namedFuncP.body().ifPresent(this::visitExpr);
+    visitIdentifier(namedFuncP);
   }
 
   public void visitAnn(AnnP annotation) {

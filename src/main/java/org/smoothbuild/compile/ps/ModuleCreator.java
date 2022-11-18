@@ -24,8 +24,8 @@ import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.StructP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.out.log.LogBuffer;
@@ -91,7 +91,7 @@ public class ModuleCreator {
 
   public void visitRefable(RefableP refableP) {
     switch (refableP) {
-      case FuncP funcP -> visitFunc(funcP);
+      case NamedFuncP namedFuncP -> visitFunc(namedFuncP);
       case NamedValueP namedValueP -> visitValue(namedValueP);
       case ItemP itemP -> throw new RuntimeException("shouldn't happen");
     }
@@ -103,9 +103,9 @@ public class ModuleCreator {
     bindings.add(namedValueP.name(), valS);
   }
 
-  public void visitFunc(FuncP funcP) {
-    var schema = inferFuncSchema(types, bindings, logBuffer, funcP);
-    var funcS = schema.flatMap(s -> psTranslator.translateFunc(funcP, s.type()));
-    bindings.add(funcP.name(), funcS);
+  public void visitFunc(NamedFuncP namedFuncP) {
+    var schema = inferFuncSchema(types, bindings, logBuffer, namedFuncP);
+    var funcS = schema.flatMap(s -> psTranslator.translateFunc(namedFuncP, s.type()));
+    bindings.add(namedFuncP.name(), funcS);
   }
 }
