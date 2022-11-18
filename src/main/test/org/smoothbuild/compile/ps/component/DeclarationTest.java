@@ -818,40 +818,6 @@ public class DeclarationTest extends TestContext {
               """.replace("PLACEHOLDER", string);
         }
       }
-
-      @Nested
-      class _type_param_list {
-        @Test
-        public void cannot_have_trailing_comma() {
-          module(funcTDeclaration("String,"))
-              .loadsWithProblems();
-        }
-
-        @Test
-        public void cannot_have_only_comma() {
-          module(funcTDeclaration(","))
-              .loadsWithProblems();
-        }
-
-        @Test
-        public void cannot_have_leading_comma() {
-          module(funcTDeclaration(",String"))
-              .loadsWithProblems();
-        }
-
-        @Test
-        public void cannot_have_two_trailing_commas() {
-          module(funcTDeclaration("String,,"))
-              .loadsWithProblems();
-        }
-
-        private String funcTDeclaration(String string) {
-          return """
-              @Native("Impl.met")
-              (PLACEHOLDER)->Blob myFunc();
-              """.replace("PLACEHOLDER", string);
-        }
-      }
     }
   }
 
@@ -1540,6 +1506,39 @@ public class DeclarationTest extends TestContext {
           arguments("\"abc\""),
           arguments("7")
       );
+    }
+  }
+  @Nested
+  class _func_type_literal {
+    @Test
+    public void cannot_have_trailing_comma() {
+      module(funcTDeclaration("String,"))
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void cannot_have_only_comma() {
+      module(funcTDeclaration(","))
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void cannot_have_leading_comma() {
+      module(funcTDeclaration(",String"))
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void cannot_have_two_trailing_commas() {
+      module(funcTDeclaration("String,,"))
+          .loadsWithProblems();
+    }
+
+    private String funcTDeclaration(String string) {
+      return """
+              @Native("Impl.met")
+              (PLACEHOLDER)->Blob myFunc();
+              """.replace("PLACEHOLDER", string);
     }
   }
 }
