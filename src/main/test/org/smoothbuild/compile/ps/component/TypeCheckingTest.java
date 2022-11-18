@@ -304,7 +304,7 @@ public class TypeCheckingTest extends TestContext {
   }
 
   @Nested
-  class _func_param_type_and_param_default_val_type {
+  class _func_param_type_and_param_default_value_type {
     @Test
     public void mono_to_mono_success() {
       var sourceCode = """
@@ -430,7 +430,7 @@ public class TypeCheckingTest extends TestContext {
   }
 
   @Test
-  public void regression_test_type_error_in_param_default_val_should_fail_gracefully_with_error() {
+  public void regression_test_type_error_in_param_default_value_should_fail_gracefully_with_error() {
     var code = """
             f([String] param = [7, "abc"]) = 3;
             """;

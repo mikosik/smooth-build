@@ -43,7 +43,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
         String myFunc(Blob b = 0x01) = "abc";
         """)
@@ -112,7 +112,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
         String myFunc(Int i = 123) = "abc";
         """)
@@ -181,7 +181,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
         String myFunc(String s = "abc") = "abc";
         """)
@@ -250,7 +250,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
         String myFunc([String] s = ["abc"]) = "abc";
         """)
@@ -335,7 +335,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
         MyStruct {
           String field,
@@ -468,7 +468,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
           A myIdentity(A a) = a;
           String myFunc(String param = "abc" | myIdentity()) = "abc";
@@ -540,7 +540,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
         String myFunc() = "abc";
         String otherFunc(String value = myFunc()) = "abc";
@@ -621,7 +621,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
           String myFunc() = "abc";
           String otherFunc(()->String value = myFunc) = "abc";
@@ -772,7 +772,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val() {
+    public void param_default_value() {
       module("""
           String myValue = "abc";
           String myFunc(String value = myValue) = "abc";
@@ -872,7 +872,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val_fails() {
+    public void param_default_value_fails() {
       module("""
           MyStruct {}
           String myFunc(String value = MyStruct) = "abc";
@@ -1028,7 +1028,7 @@ public class ExprSUsageTest extends TestContext {
     }
 
     @Test
-    public void param_default_val_fails() {
+    public void param_default_value_fails() {
       module("""
           String myFunc(String value = A) = "abc";
           """)

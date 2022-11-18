@@ -287,7 +287,7 @@ public class AnalyzeSemantically {
       @Override
       public void visitField(ItemP field) {
         super.visitField(field);
-        if (field.defaultVal().isPresent()) {
+        if (field.defaultValue().isPresent()) {
           logger.log(compileError(field.loc(), "Struct field `" + field.name()
               + "` has default value. Only function parameters can have default value."));
         }

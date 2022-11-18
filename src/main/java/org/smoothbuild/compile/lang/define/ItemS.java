@@ -17,19 +17,19 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class ItemS extends Tanal implements RefableS {
-  private final Optional<NamedEvaluableS> defaultVal;
+  private final Optional<NamedEvaluableS> defaultValue;
 
-  public ItemS(TypeS type, String name, Optional<NamedEvaluableS> defaultVal, Loc loc) {
+  public ItemS(TypeS type, String name, Optional<NamedEvaluableS> defaultValue, Loc loc) {
     super(type, name, loc);
-    this.defaultVal = defaultVal;
+    this.defaultValue = defaultValue;
   }
 
-  public Optional<NamedEvaluableS> defaultVal() {
-    return defaultVal;
+  public Optional<NamedEvaluableS> defaultValue() {
+    return defaultValue;
   }
 
-  private String defaultValToString() {
-    return defaultVal.map(v -> " = " + v).orElse("");
+  private String defaultValueToString() {
+    return defaultValue.map(v -> " = " + v).orElse("");
   }
 
   public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
@@ -38,7 +38,7 @@ public final class ItemS extends Tanal implements RefableS {
 
   @Override
   public String toString() {
-    return "Item(`" + type().name() + " " + name() + defaultValToString() + "`)";
+    return "Item(`" + type().name() + " " + name() + defaultValueToString() + "`)";
   }
 
   @Override
@@ -49,12 +49,12 @@ public final class ItemS extends Tanal implements RefableS {
     return (o instanceof ItemS that)
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.name(), that.name())
-        && Objects.equals(this.defaultVal, that.defaultVal)
+        && Objects.equals(this.defaultValue, that.defaultValue)
         && Objects.equals(this.loc(), that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), name(), defaultVal, loc());
+    return Objects.hash(type(), name(), defaultValue, loc());
   }
 }

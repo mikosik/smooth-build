@@ -23,7 +23,7 @@ public sealed interface FuncS extends EvaluableS
 
   public default boolean canBeCalledArgless() {
     return params().stream()
-        .allMatch(p -> p.defaultVal().isPresent());
+        .allMatch(p -> p.defaultValue().isPresent());
   }
 
   public default String fieldsToString() {
@@ -40,6 +40,6 @@ public sealed interface FuncS extends EvaluableS
 
   private static String paramToString(ItemS itemS) {
     return itemS.type().name() + " " + itemS.name()
-        + itemS.defaultVal().map(b -> " = " + b).orElse("");
+        + itemS.defaultValue().map(b -> " = " + b).orElse("");
   }
 }

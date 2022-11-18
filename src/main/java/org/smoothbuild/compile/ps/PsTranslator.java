@@ -85,7 +85,7 @@ public class PsTranslator {
   public ItemS translateParam(NamedFuncP namedFuncP, ItemP paramP) {
     var type = paramP.typeS();
     var name = paramP.name();
-    var body = paramP.defaultVal().flatMap(expr -> translateParamBody(namedFuncP, paramP, expr));
+    var body = paramP.defaultValue().flatMap(expr -> translateParamBody(namedFuncP, paramP, expr));
     return new ItemS(type, name, body, paramP.loc());
   }
 

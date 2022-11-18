@@ -10,21 +10,21 @@ import org.smoothbuild.compile.ps.ast.type.TypeP;
 
 public final class ItemP extends NalImpl implements RefableP {
   private final TypeP type;
-  private final Optional<ExprP> defaultVal;
+  private final Optional<ExprP> defaultValue;
   private TypeS typeS;
 
-  public ItemP(TypeP type, String name, Optional<ExprP> defaultVal, Loc loc) {
+  public ItemP(TypeP type, String name, Optional<ExprP> defaultValue, Loc loc) {
     super(name, loc);
     this.type = type;
-    this.defaultVal = defaultVal;
+    this.defaultValue = defaultValue;
   }
 
   public TypeP type() {
     return type;
   }
 
-  public Optional<ExprP> defaultVal() {
-    return defaultVal;
+  public Optional<ExprP> defaultValue() {
+    return defaultValue;
   }
 
   public TypeS typeS(){

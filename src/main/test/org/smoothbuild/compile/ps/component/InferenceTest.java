@@ -689,7 +689,7 @@ public class InferenceTest extends TestContext {
       @Nested
       class _from_default_arg {
         @Test
-        public void generic_param_with_default_val_with_concrete_type() {
+        public void generic_param_with_default_value_with_concrete_type() {
           var code = """
               A myFunc(A a = 7) = a;
               myValue = myFunc();
@@ -700,7 +700,7 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void generic_param_with_default_val_with_polymorphic_type() {
+        public void generic_param_with_default_value_with_polymorphic_type() {
           var code = """
               A myId(A a) = a;
               (B)->A myFunc(A a, (B)->A f = myId) = f;
@@ -712,7 +712,7 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void generic_param_with_default_val_with_concrete_type_error_case() {
+        public void generic_param_with_default_value_with_concrete_type_error_case() {
           var code = """
               A myFunc(A a, A other = 7) = a;
               myValue = myFunc("abc");
@@ -757,7 +757,7 @@ public class InferenceTest extends TestContext {
     @Nested
     class _default_arg {
       @Test
-      public void two_differently_monoized_calls_to_poly_func_with_poly_default_val_within_one_expr() {
+      public void two_differently_monoized_calls_to_poly_func_with_poly_default_value_within_one_expr() {
         var code = """
           [A] empty([A] array = []) = array;
           myFunc([String] s, [Int] i) = 7;
@@ -768,7 +768,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void two_param_default_vals_with_different_vars_referencing_same_poly_func() {
+      public void two_param_default_values_with_different_vars_referencing_same_poly_func() {
         var code = """
           A myId(A a) = a;
           myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;

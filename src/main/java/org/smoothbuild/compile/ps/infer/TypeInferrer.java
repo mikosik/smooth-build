@@ -151,7 +151,7 @@ public class TypeInferrer {
     for (int i = 0; i < params.size(); i++) {
       var resolvedParamT = resolvedParamTs.get(i);
       var param = params.get(i);
-      param.defaultVal().ifPresent(body -> {
+      param.defaultValue().ifPresent(body -> {
         var paramT = resolvedParamT.mapVars(paramMapping);
         var initializerMapping = toMap(body.typeS().vars(), v -> paramUnifier.newTempVar());
         var bodyT = body.typeS().mapVars(initializerMapping);
@@ -186,7 +186,7 @@ public class TypeInferrer {
 
   private boolean inferParamDefaultValues(NList<ItemP> params) {
     return params.stream()
-        .flatMap(p -> p.defaultVal().stream())
+        .flatMap(p -> p.defaultValue().stream())
         .allMatch(this::inferParamDefaultValue);
   }
 

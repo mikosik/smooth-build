@@ -65,15 +65,15 @@ public class ExprSLoadingTest extends TestContext {
         public void with_reference_to_poly_func() {
           var polyFunc = byteFuncS(6, varA(), "polyFunc", nlist());
           var polyRef = monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramDefaultVal = defValS("myFunc:b", callS(1, polyRef));
-          var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultVal);
+          var paramDefaultValue = defValS("myFunc:b", callS(1, polyRef));
+          var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultValue);
           test_default_arg("polyFunc()", expected);
         }
 
         @Test
         public void with_reference_to_int() {
-          var paramDefaultVal = defValS("myFunc:b", intS(1, 7));
-          test_default_arg("7", monoizeS(2, paramDefaultVal));
+          var paramDefaultValue = defValS("myFunc:b", intS(1, 7));
+          test_default_arg("7", monoizeS(2, paramDefaultValue));
         }
 
         private void test_default_arg(String bodyCode, ExprS expected) {
@@ -501,7 +501,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void def_mono_func_with_param_with_default_val() {
+      public void def_mono_func_with_param_with_default_value() {
         var code = """
             String myFunc(
               Blob param1 =
@@ -516,7 +516,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void def_poly_func_with_param_with_default_val() {
+      public void def_poly_func_with_param_with_default_value() {
         var code = """
             A myFunc(
               A a =
@@ -575,7 +575,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void native_pure_mono_func_with_param_with_default_val() {
+      public void native_pure_mono_func_with_param_with_default_value() {
         var code = """
             @Native("Impl.met")
             String myFunc(
@@ -591,7 +591,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void native_pure_poly_func_with_param_with_default_val() {
+      public void native_pure_poly_func_with_param_with_default_value() {
         var code = """
             @Native("Impl.met")
             A myFunc(
@@ -627,7 +627,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void bytecode_mono_func_with_param_with_default_val() {
+      public void bytecode_mono_func_with_param_with_default_value() {
         var code = """
             @Bytecode("Impl.met")
             String myFunc(
@@ -642,7 +642,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void bytecode_poly_func_with_param_with_default_val() {
+      public void bytecode_poly_func_with_param_with_default_value() {
         var code = """
             @Bytecode("Impl.met")
             A myFunc(
@@ -682,9 +682,9 @@ public class ExprSLoadingTest extends TestContext {
     }
 
     @Nested
-    class _param_default_val {
+    class _param_default_value {
       @Test
-      public void default_val_referencing_poly_val() {
+      public void default_val_referencing_poly_value() {
         var code = """
             Int myFunc(
               [Int] param1 =
@@ -693,8 +693,8 @@ public class ExprSLoadingTest extends TestContext {
             [A] empty = [];
             """;
         var empty = defValS(5, "empty", orderS(5, varA()));
-        var defaultVal = defValS(2, "myFunc:param1", monoizeS(3, varMap(varA(), varA()), empty));
-        var params = nlist(itemS(2, arrayTS(intTS()), "param1", defaultVal));
+        var defaultValue = defValS(2, "myFunc:param1", monoizeS(3, varMap(varA(), varA()), empty));
+        var params = nlist(itemS(2, arrayTS(intTS()), "param1", defaultValue));
         var func = defFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
@@ -702,7 +702,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void default_val_for_generic_param_referencing_poly_val() {
+      public void default_val_for_generic_param_referencing_poly_value() {
         var code = """
             Int myFunc(
               [B] param1 =
@@ -720,15 +720,15 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void default_val_using_literal() {
+      public void default_value_using_literal() {
         var code = """
             Int myFunc(
               Int param1 =
                 11)
                 = 7;
             """;
-        var defaultVal = defValS(2, "myFunc:param1", intS(3, 11));
-        var params = nlist(itemS(2, intTS(), "param1", defaultVal));
+        var defaultValue = defValS(2, "myFunc:param1", intS(3, 11));
+        var params = nlist(itemS(2, intTS(), "param1", defaultValue));
         var func = defFuncS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()

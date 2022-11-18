@@ -67,9 +67,9 @@ public class InferPositionedArgs {
     var error = false;
     for (int i = 0; i < result.size(); i++) {
       if (result.get(i) == null) {
-        var defaultVal = params.get().get(i).defaultVal();
-        if (defaultVal.isPresent()) {
-          var exprS = defaultVal.get();
+        var defaultValue = params.get().get(i).defaultValue();
+        if (defaultValue.isPresent()) {
+          var exprS = defaultValue.get();
           result.set(i, new DefaultArgP(exprS, call.loc()));
         } else {
           error = true;
