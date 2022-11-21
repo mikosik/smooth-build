@@ -31,7 +31,8 @@ public final class ItemP extends NalImpl implements RefableP {
     return typeS;
   }
 
-  public void setTypeS(TypeS type) {
+  public TypeS setTypeS(TypeS type) {
     this.typeS = type;
+    return type;
   }
 }

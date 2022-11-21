@@ -2,9 +2,7 @@ package org.smoothbuild.compile.ps;
 
 import static java.util.Optional.empty;
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
-import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferFuncSchema;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferStructType;
-import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferValSchema;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
@@ -28,6 +26,7 @@ import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
+import org.smoothbuild.compile.ps.infer.TypeInferrer;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.bindings.ImmutableBindings;
@@ -98,14 +97,16 @@ public class ModuleCreator {
   }
 
   public void visitValue(NamedValueP namedValueP) {
-    var schema = inferValSchema(types, bindings, logBuffer, namedValueP);
-    var valS = schema.flatMap(s -> psTranslator.translateValue(namedValueP, s.type()));
+    var valS = new TypeInferrer(types, bindings, logBuffer)
+        .inferValueSchema(namedValueP)
+        .flatMap(s -> psTranslator.translateValue(namedValueP, s.type()));
     bindings.add(namedValueP.name(), valS);
   }
 
   public void visitFunc(NamedFuncP namedFuncP) {
-    var schema = inferFuncSchema(types, bindings, logBuffer, namedFuncP);
-    var funcS = schema.flatMap(s -> psTranslator.translateFunc(namedFuncP, s.type()));
+    var funcS = new TypeInferrer(types, bindings, logBuffer)
+        .inferFuncSchema(namedFuncP)
+        .flatMap(s -> psTranslator.translateFunc(namedFuncP, s.type()));
     bindings.add(namedFuncP.name(), funcS);
   }
 }

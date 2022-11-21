@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
+import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 
@@ -11,6 +12,7 @@ public sealed abstract class EvaluableP extends NalImpl implements RefableP
     permits NamedFuncP, NamedValueP {
   private final Optional<ExprP> body;
   private final Optional<AnnP> ann;
+  private TypeS type;
 
   public EvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
     super(name, loc);
@@ -24,6 +26,14 @@ public sealed abstract class EvaluableP extends NalImpl implements RefableP
 
   public Optional<AnnP> ann() {
     return ann;
+  }
+
+  public TypeS typeS() {
+    return type;
+  }
+
+  public void setTypeS(TypeS type) {
+    this.type = type;
   }
 
   @Override

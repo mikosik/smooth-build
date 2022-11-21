@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.ps.infer;
 
 import static org.smoothbuild.compile.ps.CompileError.compileError;
+import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Optional;
@@ -41,8 +42,8 @@ public class TypeInferrerResolve {
     this.bindings = bindings;
   }
 
-  public Optional<SchemaS> resolveNamedValue(NamedValueP value, TypeS evalT) {
-    var resolvedEvalT = unifier.resolve(evalT);
+  public Optional<SchemaS> resolveNamedValue(NamedValueP value) {
+    var resolvedEvalT = unifier.resolve(value.typeS());
     resolvedEvalT = renameVarsAndUnify(resolvedEvalT, VarS::isTemporary);
     if (!resolveBody(value.body())) {
       return Optional.empty();
@@ -56,13 +57,20 @@ public class TypeInferrerResolve {
     return resolveBody(exprP);
   }
 
-  public Optional<FuncSchemaS> resolveNamedFunc(NamedFuncP func, FuncTS funcT) {
-    var resolvedFuncT = (FuncTS) unifier.resolve(funcT);
+  public Optional<FuncSchemaS> resolveNamedFunc(NamedFuncP namedFunc) {
+    var bodyBindings = funcBodyScopeBindings(bindings, namedFunc.params());
+    return new TypeInferrerResolve(unifier, logger, bodyBindings)
+        .resolveNamedFuncImpl(namedFunc);
+  }
+
+  private Optional<FuncSchemaS> resolveNamedFuncImpl(NamedFuncP namedFunc) {
+    var resolvedFuncT = (FuncTS) unifier.resolve(namedFunc.typeS());
     resolvedFuncT = (FuncTS) renameVarsAndUnify(resolvedFuncT, VarS::isTemporary);
-    if (!resolveBody(func.body())) {
+    if (resolveBody(namedFunc.body())) {
+      return Optional.of(new FuncSchemaS(resolvedFuncT));
+    } else {
       return Optional.empty();
     }
-    return Optional.of(new FuncSchemaS(resolvedFuncT));
   }
 
   private boolean resolveBody(Optional<ExprP> body) {
