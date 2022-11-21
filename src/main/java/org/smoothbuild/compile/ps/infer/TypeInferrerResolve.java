@@ -42,16 +42,8 @@ public class TypeInferrerResolve {
   }
 
   public Optional<SchemaS> resolveNamedValue(NamedValueP value, TypeS evalT) {
-    TypeS resolvedEvalT = unifier.resolve(evalT);
-    if (value.type().isPresent()) {
-      if (!evalT.equals(resolvedEvalT)) {
-        logger.log(
-            compileError(value.loc(), value.q() + " body type is not equal to declared type."));
-        return Optional.empty();
-      }
-    } else {
-      resolvedEvalT = renameVarsAndUnify(resolvedEvalT, VarS::isTemporary);
-    }
+    var resolvedEvalT = unifier.resolve(evalT);
+    resolvedEvalT = renameVarsAndUnify(resolvedEvalT, VarS::isTemporary);
     if (!resolveBody(value.body())) {
       return Optional.empty();
     }
@@ -66,15 +58,7 @@ public class TypeInferrerResolve {
 
   public Optional<FuncSchemaS> resolveNamedFunc(NamedFuncP func, FuncTS funcT) {
     var resolvedFuncT = (FuncTS) unifier.resolve(funcT);
-    if (func.resT().isPresent()) {
-      if (!funcT.res().equals(resolvedFuncT.res())) {
-        logger.log(compileError(func.resT().get().loc(),
-            func.q() + " body type is not equal to declared type."));
-        return Optional.empty();
-      }
-    } else {
-      resolvedFuncT = (FuncTS) renameVarsAndUnify(resolvedFuncT, VarS::isTemporary);
-    }
+    resolvedFuncT = (FuncTS) renameVarsAndUnify(resolvedFuncT, VarS::isTemporary);
     if (!resolveBody(func.body())) {
       return Optional.empty();
     }
