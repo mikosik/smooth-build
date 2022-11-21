@@ -128,11 +128,11 @@ public class TypeInferrerResolve {
 
   private boolean resolveMonoizable(MonoizableP monoizableP) {
     var resolvedMonoizeVarMap = mapValues(monoizableP.monoizeVarMap(), unifier::resolve);
-    monoizableP.setMonoizeVarMap(resolvedMonoizeVarMap);
     if (resolvedMonoizeVarMap.values().stream().anyMatch(this::hasTempVar)) {
       logger.log(compileError(monoizableP.loc(), "Cannot infer actual type parameters."));
       return false;
     }
+    monoizableP.setMonoizeVarMap(resolvedMonoizeVarMap);
     return true;
   }
 
