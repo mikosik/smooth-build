@@ -101,7 +101,7 @@ public class TypeInferrer {
 
   private Optional<SchemaS> resolveValSchema(NamedValueP namedValueP, TypeS evalT,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
-    return new TypeInferrerResolve(unifier, logger, bindings).resolve(namedValueP, evalT);
+    return new TypeInferrerResolve(unifier, logger, bindings).resolveNamedValue(namedValueP, evalT);
   }
 
   // func
@@ -179,7 +179,7 @@ public class TypeInferrer {
   private Optional<FuncSchemaS> resolveFuncSchema(NamedFuncP namedFuncP, TypeS resT,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
     return new TypeInferrerResolve(unifier, logger, bindings)
-        .resolve(namedFuncP, new FuncTS(namedFuncP.paramTs(), resT));
+        .resolveNamedFunc(namedFuncP, new FuncTS(namedFuncP.paramTs(), resT));
   }
 
   // param default value

@@ -41,17 +41,18 @@ public class TypeInferrerResolve {
     this.bindings = bindings;
   }
 
-  public Optional<SchemaS> resolve(NamedValueP val, TypeS evalT) {
+  public Optional<SchemaS> resolveNamedValue(NamedValueP value, TypeS evalT) {
     TypeS resolvedEvalT = unifier.resolve(evalT);
-    if (val.type().isPresent()) {
+    if (value.type().isPresent()) {
       if (!evalT.equals(resolvedEvalT)) {
-        logger.log(compileError(val.loc(), val.q() + " body type is not equal to declared type."));
+        logger.log(
+            compileError(value.loc(), value.q() + " body type is not equal to declared type."));
         return Optional.empty();
       }
     } else {
       resolvedEvalT = renameVarsAndUnify(resolvedEvalT, VarS::isTemporary);
     }
-    if (!resolveBody(val.body())) {
+    if (!resolveBody(value.body())) {
       return Optional.empty();
     }
     return Optional.of(new SchemaS(resolvedEvalT));
@@ -63,7 +64,7 @@ public class TypeInferrerResolve {
     return resolveBody(exprP);
   }
 
-  public Optional<FuncSchemaS> resolve(NamedFuncP func, FuncTS funcT) {
+  public Optional<FuncSchemaS> resolveNamedFunc(NamedFuncP func, FuncTS funcT) {
     var resolvedFuncT = (FuncTS) unifier.resolve(funcT);
     if (func.resT().isPresent()) {
       if (!funcT.res().equals(resolvedFuncT.res())) {
@@ -86,7 +87,7 @@ public class TypeInferrerResolve {
 
   private boolean resolveBody(ExprP body) {
     inferUnitTypes(body);
-    return resolve(body);
+    return resolveExpr(body);
   }
 
   private void inferUnitTypes(ExprP expr) {
@@ -99,15 +100,15 @@ public class TypeInferrerResolve {
     return resolvedAndRenamedEvalT;
   }
 
-  public boolean resolve(ExprP expr) {
+  private boolean resolveExpr(ExprP expr) {
     // @formatter:off
     return switch (expr) {
-      case CallP       callP       -> resolve(callP);
-      case NamedArgP   namedArgP   -> resolve(namedArgP);
-      case OrderP      orderP      -> resolve(orderP);
-      case SelectP     selectP     -> resolve(selectP);
-      case RefP        refP        -> resolve(refP);
-      case DefaultArgP defaultArgP -> resolve(defaultArgP);
+      case CallP       callP       -> resolveCall(callP);
+      case NamedArgP   namedArgP   -> resolveNamedArg(namedArgP);
+      case OrderP      orderP      -> resolveOrder(orderP);
+      case SelectP     selectP     -> resolveSelect(selectP);
+      case RefP        refP        -> resolveMonoizable(refP);
+      case DefaultArgP defaultArgP -> resolveMonoizable(defaultArgP);
       case StringP     stringP     -> resolveExprType(stringP);
       case IntP        intP        -> resolveExprType(intP);
       case BlobP       blobP       -> resolveExprType(blobP);
@@ -115,24 +116,24 @@ public class TypeInferrerResolve {
     // @formatter:on
   }
 
-  private boolean resolve(CallP callP) {
-    return resolve(callP.callee())
-        && callP.positionedArgs().get().stream().allMatch(this::resolve)
+  private boolean resolveCall(CallP callP) {
+    return resolveExpr(callP.callee())
+        && callP.positionedArgs().get().stream().allMatch(this::resolveExpr)
         && resolveExprType(callP);
   }
 
-  private boolean resolve(NamedArgP namedArgP) {
-    return resolve(namedArgP.expr())
+  private boolean resolveNamedArg(NamedArgP namedArgP) {
+    return resolveExpr(namedArgP.expr())
         && resolveExprType(namedArgP);
   }
 
-  private boolean resolve(OrderP orderP) {
-    return orderP.elems().stream().allMatch(this::resolve)
+  private boolean resolveOrder(OrderP orderP) {
+    return orderP.elems().stream().allMatch(this::resolveExpr)
         && resolveExprType(orderP);
   }
 
-  private boolean resolve(SelectP selectP) {
-    return resolve(selectP.selectable())
+  private boolean resolveSelect(SelectP selectP) {
+    return resolveExpr(selectP.selectable())
         && resolveExprType(selectP);
   }
 
@@ -141,7 +142,7 @@ public class TypeInferrerResolve {
     return true;
   }
 
-  private boolean resolve(MonoizableP monoizableP) {
+  private boolean resolveMonoizable(MonoizableP monoizableP) {
     var resolvedMonoizeVarMap = mapValues(monoizableP.monoizeVarMap(), unifier::resolve);
     monoizableP.setMonoizeVarMap(resolvedMonoizeVarMap);
     if (resolvedMonoizeVarMap.values().stream().anyMatch(this::hasTempVar)) {
