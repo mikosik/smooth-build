@@ -128,7 +128,11 @@ public class ExprTypeUnifier {
     }
   }
 
-  public Optional<TypeS> unifyExpr(ExprP expr) {
+  public boolean unifyParamDefaultValue(ExprP defaultValue) {
+    return unifyExpr(defaultValue).isPresent();
+  }
+
+  private Optional<TypeS> unifyExpr(ExprP expr) {
     // @formatter:off
     return switch (expr) {
       case CallP       callP       -> unifyAndMemoize(this::unifyCall, callP);

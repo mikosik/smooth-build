@@ -13,7 +13,6 @@ import org.smoothbuild.compile.lang.define.TDefS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StructTS;
-import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.StructP;
@@ -21,7 +20,6 @@ import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
-import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.collect.NList;
@@ -84,6 +82,7 @@ public class TypeInferrer {
 
   public Optional<SchemaS> inferValueSchema(NamedValueP namedValue) {
     if (unifyNamedValue(namedValue)) {
+      nameImplicitVars(namedValue);
       return resolveValueSchema(namedValue);
     } else {
       return Optional.empty();
@@ -93,6 +92,11 @@ public class TypeInferrer {
   private boolean unifyNamedValue(NamedValueP namedValue) {
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, logger)
         .unifyNamedValue(namedValue);
+  }
+
+  private void nameImplicitVars(NamedValueP namedValue) {
+    new ImplicitVarsNamer(unifier)
+        .nameVarsInNamedValue(namedValue);
   }
 
   private Optional<SchemaS> resolveValueSchema(NamedValueP namedValueP) {
@@ -105,6 +109,7 @@ public class TypeInferrer {
   public Optional<FuncSchemaS> inferFuncSchema(NamedFuncP namedFunc) {
     var params = namedFunc.params();
     if (inferParamDefaultValues(params) && unifyNamedFunc(namedFunc)) {
+      nameImplicitVars(namedFunc);
       var funcSchemaS = resolveNamedFunc(namedFunc);
       funcSchemaS.ifPresent(s -> detectTypeErrorsBetweenParamAndItsDefaultValue(s, params));
       return funcSchemaS;
@@ -115,6 +120,11 @@ public class TypeInferrer {
   private boolean unifyNamedFunc(NamedFuncP namedFunc) {
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, logger)
         .unifyNamedFunc(namedFunc);
+  }
+
+  private void nameImplicitVars(NamedFuncP namedFunc) {
+    new ImplicitVarsNamer(unifier)
+        .nameVarsInNamedFunc(namedFunc);
   }
 
   private Optional<FuncSchemaS> resolveNamedFunc(NamedFuncP namedFunc) {
@@ -159,23 +169,25 @@ public class TypeInferrer {
   }
 
   private boolean inferParamDefaultValueImpl(ExprP body) {
+    if (unifyParamDefaultValue(body)) {
+      nameImplicitVars(body);
+      return resolveParamDefaultValue(body);
+    }
+    return false;
+  }
+
+  private boolean unifyParamDefaultValue(ExprP body) {
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, logger)
-        .unifyExpr(body)
-        .map(t -> resolveParamDefaultValue(body))
-        .orElse(false);
+        .unifyParamDefaultValue(body);
+  }
+
+  private void nameImplicitVars(ExprP paramDefaultValue) {
+    new ImplicitVarsNamer(unifier)
+        .nameVarsInParamDefaultValue(paramDefaultValue);
   }
 
   private boolean resolveParamDefaultValue(ExprP body) {
     return new TypeInferrerResolve(unifier, logger, bindings)
         .resolveParamDefaultValue(body);
-  }
-
-  // body
-
-  // helpers
-
-  private Optional<TypeS> translateOrGenerateTempVar(Optional<TypeP> typeP) {
-    return typeP.map(typePsTranslator::translate)
-        .orElseGet(() -> Optional.of(unifier.newTempVar()));
   }
 }

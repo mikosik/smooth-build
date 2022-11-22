@@ -5,7 +5,6 @@ import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindi
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
@@ -44,7 +43,6 @@ public class TypeInferrerResolve {
 
   public Optional<SchemaS> resolveNamedValue(NamedValueP value) {
     var resolvedEvalT = unifier.resolve(value.typeS());
-    resolvedEvalT = renameVarsAndUnify(resolvedEvalT, VarS::isTemporary);
     if (!resolveBody(value.body())) {
       return Optional.empty();
     }
@@ -52,8 +50,7 @@ public class TypeInferrerResolve {
   }
 
   public boolean resolveParamDefaultValue(ExprP exprP) {
-    var resolvedType = unifier.resolve(exprP.typeS());
-    exprP.setTypeS(renameVarsAndUnify(resolvedType, v -> true));
+    exprP.setTypeS(unifier.resolve(exprP.typeS()));
     return resolveBody(exprP);
   }
 
@@ -65,7 +62,6 @@ public class TypeInferrerResolve {
 
   private Optional<FuncSchemaS> resolveNamedFuncImpl(NamedFuncP namedFunc) {
     var resolvedFuncT = (FuncTS) unifier.resolve(namedFunc.typeS());
-    resolvedFuncT = (FuncTS) renameVarsAndUnify(resolvedFuncT, VarS::isTemporary);
     if (resolveBody(namedFunc.body())) {
       return Optional.of(new FuncSchemaS(resolvedFuncT));
     } else {
@@ -84,12 +80,6 @@ public class TypeInferrerResolve {
 
   private void inferUnitTypes(ExprP expr) {
     new UnitTypeInferrer(unifier, bindings).infer(expr);
-  }
-
-  private TypeS renameVarsAndUnify(TypeS resolvedT, Predicate<VarS> shouldRename) {
-    var resolvedAndRenamedEvalT = resolvedT.renameVars(shouldRename);
-    unifier.unifySafe(resolvedAndRenamedEvalT, resolvedT);
-    return resolvedAndRenamedEvalT;
   }
 
   private boolean resolveExpr(ExprP expr) {
