@@ -189,8 +189,9 @@ public class AstCreator {
       }
 
       private ExprP createChainHead(AtomicReference<ExprP> pipedArg, ChainHeadContext chainHead) {
+        var loc = locOf(filePath, chainHead);
         if (chainHead.NAME() != null) {
-          return newRefNode(chainHead.NAME());
+          return new RefP(chainHead.NAME().getText(), loc);
         }
         if (chainHead.array() != null) {
           var elems = map(chainHead.array().expr(), this::createExpr);
@@ -198,16 +199,16 @@ public class AstCreator {
             elems = concat(pipedArg.get(), elems);
             pipedArg.set(null);
           }
-          return new OrderP(elems, locOf(filePath, chainHead));
+          return new OrderP(elems, loc);
         }
         if (chainHead.parens() != null) {
            return createPipe(pipedArg, chainHead.parens().pipe());
         }
         if (chainHead.BLOB() != null) {
-          return new BlobP(chainHead.BLOB().getText().substring(2), locOf(filePath, chainHead));
+          return new BlobP(chainHead.BLOB().getText().substring(2), loc);
         }
         if (chainHead.INT() != null) {
-          return new IntP(chainHead.INT().getText(), locOf(filePath, chainHead));
+          return new IntP(chainHead.INT().getText(), loc);
         }
         if (chainHead.STRING() != null) {
           return createStringNode(chainHead, chainHead.STRING());
@@ -240,10 +241,6 @@ public class AstCreator {
         String unquoted = unquote(quotedString.getText());
         Loc loc = locOf(filePath, expr);
         return new StringP(unquoted, loc);
-      }
-
-      private RefP newRefNode(TerminalNode name) {
-        return new RefP(name.getText(), locOf(filePath, name));
       }
 
       private SelectP createSelect(ExprP selectable, SelectContext fieldRead) {
