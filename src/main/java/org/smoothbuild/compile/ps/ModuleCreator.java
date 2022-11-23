@@ -29,6 +29,7 @@ import org.smoothbuild.compile.ps.ast.refable.RefableP;
 import org.smoothbuild.compile.ps.infer.TypeInferrer;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.bindings.OptionalScopedBindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
@@ -55,9 +56,8 @@ public class ModuleCreator {
     }
   }
 
-  private static <T> OptionalScopedBindings<T> newOptionalMutableBindings(
-      ImmutableBindings<T> tDefSImmutableBindings) {
-    return new OptionalScopedBindings<>(tDefSImmutableBindings.map(Optional::of));
+  private static <T> OptionalScopedBindings<T> newOptionalMutableBindings(Bindings<T> bindings) {
+    return new OptionalScopedBindings<>(bindings.map(Optional::of));
   }
 
   private ModuleCreator(ScopedBindings<Optional<TDefS>> types,
