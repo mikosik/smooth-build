@@ -29,7 +29,6 @@ import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
-import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
@@ -136,7 +135,6 @@ public class ExprTypeUnifier {
     // @formatter:off
     return switch (expr) {
       case CallP       callP       -> unifyAndMemoize(this::unifyCall, callP);
-      case DefaultArgP defaultArgP -> unifyAndMemoize(this::unifyDefaultArg, defaultArgP);
       case NamedArgP   namedArgP   -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP      orderP      -> unifyAndMemoize(this::unifyOrder, orderP);
       case RefP        refP        -> unifyAndMemoize(this::unifyRef, refP);
@@ -200,10 +198,6 @@ public class ExprTypeUnifier {
       logger.log(compileError(loc, "Illegal call."));
       return Optional.empty();
     }
-  }
-
-  private Optional<TypeS> unifyDefaultArg(DefaultArgP defaultArgP) {
-    return unifyMonoizable(defaultArgP, defaultArgP.evaluableS().schema());
   }
 
   private Optional<TypeS> unifyNamedArg(NamedArgP namedArgP) {

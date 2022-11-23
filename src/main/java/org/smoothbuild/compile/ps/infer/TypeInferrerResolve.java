@@ -15,7 +15,6 @@ import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
-import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
@@ -90,7 +89,6 @@ public class TypeInferrerResolve {
       case OrderP      orderP      -> resolveOrder(orderP);
       case SelectP     selectP     -> resolveSelect(selectP);
       case RefP        refP        -> resolveMonoizable(refP);
-      case DefaultArgP defaultArgP -> resolveMonoizable(defaultArgP);
       case StringP     stringP     -> resolveExprType(stringP);
       case IntP        intP        -> resolveExprType(intP);
       case BlobP       blobP       -> resolveExprType(blobP);

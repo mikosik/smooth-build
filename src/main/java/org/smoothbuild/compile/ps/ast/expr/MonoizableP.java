@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableMap;
  * Expression that can be monomorphized.
  */
 public abstract sealed class MonoizableP extends ExprP
-    permits DefaultArgP, RefP {
+    permits RefP {
   private ImmutableMap<VarS, TypeS> monoizeVarMap;
 
   public MonoizableP(Loc loc) {

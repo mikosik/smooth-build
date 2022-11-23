@@ -16,9 +16,9 @@ import java.util.Set;
 
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
-import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
+import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
@@ -67,10 +67,11 @@ public class InferPositionedArgs {
     var error = false;
     for (int i = 0; i < result.size(); i++) {
       if (result.get(i) == null) {
-        var defaultValue = params.get().get(i).defaultValue();
-        if (defaultValue.isPresent()) {
-          var exprS = defaultValue.get();
-          result.set(i, new DefaultArgP(exprS, call.loc()));
+        var param = params.get().get(i);
+        if (param.defaultValue().isPresent()) {
+          var name = ((RefP) call.callee()).name() + ":" + param.name();
+          var element = new RefP(name, call.loc());
+          result.set(i, element);
         } else {
           error = true;
           logBuffer.log(paramsMustBeSpecifiedError(call, i, params.get()));

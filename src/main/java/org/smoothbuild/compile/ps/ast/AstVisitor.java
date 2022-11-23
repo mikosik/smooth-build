@@ -5,7 +5,6 @@ import java.util.function.BiConsumer;
 
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
-import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
@@ -90,7 +89,6 @@ public class AstVisitor {
       case OrderP orderP -> visitOrder(orderP);
       case BlobP blobP -> visitBlob(blobP);
       case CallP callP -> visitCall(callP);
-      case DefaultArgP defaultArgP -> visitDefaultArg(defaultArgP);
       case IntP intP -> visitInt(intP);
       case NamedArgP namedArgP -> visitNamedArg(namedArgP);
       case RefP refP -> visitRef(refP);
@@ -113,9 +111,6 @@ public class AstVisitor {
   public void visitCall(CallP call) {
     visitExpr(call.callee());
     visitArgs(call.args());
-  }
-
-  public void visitDefaultArg(DefaultArgP defaultArg) {
   }
 
   public void visitInt(IntP int_) {

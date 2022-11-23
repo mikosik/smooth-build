@@ -30,7 +30,6 @@ import org.smoothbuild.compile.ps.infer.TypeInferrer;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.bindings.Bindings;
-import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.bindings.OptionalScopedBindings;
 import org.smoothbuild.util.bindings.ScopedBindings;
 
@@ -107,6 +106,13 @@ public class ModuleCreator {
     var funcS = new TypeInferrer(types, bindings, logBuffer)
         .inferFuncSchema(namedFuncP)
         .flatMap(s -> psTranslator.translateFunc(namedFuncP, s.type()));
-    bindings.add(namedFuncP.name(), funcS);
+    @SuppressWarnings("unchecked") // safe as NamedFuncS is immutable
+    var namedEvaluableS = (Optional<NamedEvaluableS>) (Object) funcS;
+    bindings.add(namedFuncP.name(), namedEvaluableS);
+    funcS.ifPresent(f -> f.params().forEach(this::addDefaultValueToBindings));
+  }
+
+  private void addDefaultValueToBindings(ItemS param) {
+    param.defaultValue().ifPresent(v -> bindings.add(v.name(), Optional.of(v)));
   }
 }

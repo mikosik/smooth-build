@@ -23,6 +23,7 @@ import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.RefableS;
@@ -36,7 +37,6 @@ import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
-import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
@@ -74,7 +74,7 @@ public class PsTranslator {
     }
   }
 
-  public Optional<NamedEvaluableS> translateFunc(NamedFuncP namedFuncP, FuncTS funcT) {
+  public Optional<NamedFuncS> translateFunc(NamedFuncP namedFuncP, FuncTS funcT) {
     return translateFunc(namedFuncP, translateParams(namedFuncP), funcT);
   }
 
@@ -96,7 +96,7 @@ public class PsTranslator {
     });
   }
 
-  private Optional<NamedEvaluableS> translateFunc(NamedFuncP namedFuncP,
+  private Optional<NamedFuncS> translateFunc(NamedFuncP namedFuncP,
       NList<ItemS> params, FuncTS funcT) {
     var schema = new FuncSchemaS(funcT);
     var name = namedFuncP.name();
@@ -126,7 +126,6 @@ public class PsTranslator {
     return switch (expr) {
       case BlobP blobP -> Optional.of(translateBlob(blobP));
       case CallP callP -> translateCall(callP);
-      case DefaultArgP defaultArgP -> translateDefaultArg(defaultArgP);
       case IntP intP -> Optional.of(translateInt(intP));
       case NamedArgP namedArgP -> translateExpr(namedArgP.expr());
       case OrderP orderP -> translateOrder(orderP);
@@ -134,10 +133,6 @@ public class PsTranslator {
       case SelectP selectP -> translateSelect(selectP);
       case StringP stringP -> Optional.of(translateString(stringP));
     };
-  }
-
-  private static Optional<ExprS> translateDefaultArg(DefaultArgP defaultArg) {
-    return Optional.of(translateMonoizable(defaultArg, defaultArg.evaluableS()));
   }
 
   private Optional<ExprS> translateOrder(OrderP order) {

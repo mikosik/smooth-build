@@ -12,7 +12,6 @@ import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
-import org.smoothbuild.compile.ps.ast.expr.DefaultArgP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
@@ -46,7 +45,6 @@ public class UnitTypeInferrer {
       case OrderP      order      -> inferOrder(order);
       case RefP        ref        -> inferRef(ref);
       case SelectP     select     -> inferSelect(select);
-      case DefaultArgP defaultArg -> {}
       case StringP     string     -> {}
       case IntP        int_       -> {}
       case BlobP       blob       -> {}

@@ -33,7 +33,7 @@ public final class CallP extends ExprP {
   /**
    * @return List of args where position of arg in the list matches position of parameter to which
    * that arg is assigned. NamedArgP are assigned to parameters at proper positions.
-   * Missing args are replaced with DefaultArgP.
+   * Missing args are replaced with RefP pointing to that parameter default value.
    * Size of list is equal to callee parameter list size.
    */
   public Optional<ImmutableList<ExprP>> positionedArgs() {
