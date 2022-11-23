@@ -42,7 +42,8 @@ public class Unifier {
       unifyNormalized(normalize(type1), normalize(type2));
     } catch (UnifierExc e) {
       throw new RuntimeException(
-          "unifyOrFailWithRuntimeException() caused exception. This means we have bug in code.", e);
+          "unifyOrFailWithRuntimeException() caused exception. This means we have bug in code. "
+          + "type1 = " + type1 + ", type2 = " + type2, e);
     }
   }
 
