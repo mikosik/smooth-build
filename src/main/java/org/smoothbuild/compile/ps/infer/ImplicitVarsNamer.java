@@ -33,6 +33,6 @@ public class ImplicitVarsNamer {
 
   private void renameVarsAndUnify(TypeS resolvedT, Predicate<VarS> shouldRename) {
     var resolvedAndRenamedEvalT = resolvedT.renameVars(shouldRename);
-    unifier.unifySafe(resolvedAndRenamedEvalT, resolvedT);
+    unifier.unifyOrFailWithRuntimeException(resolvedAndRenamedEvalT, resolvedT);
   }
 }

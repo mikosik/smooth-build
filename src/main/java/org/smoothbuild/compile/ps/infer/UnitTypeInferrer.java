@@ -75,7 +75,7 @@ public class UnitTypeInferrer {
         var resolved = unifier.resolve(type);
         resolved.vars().stream()
             .filter(VarS::isTemporary)
-            .forEach(v -> unifier.unifySafe(v, new TupleTS(list())));
+            .forEach(v -> unifier.unifyOrFailWithRuntimeException(v, new TupleTS(list())));
       }
     }
   }

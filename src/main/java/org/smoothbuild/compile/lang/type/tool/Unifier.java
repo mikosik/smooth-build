@@ -37,12 +37,12 @@ public class Unifier {
     this.tempVarCounter = 0;
   }
 
-  public void unifySafe(TypeS type1, TypeS type2) {
+  public void unifyOrFailWithRuntimeException(TypeS type1, TypeS type2) {
     try {
       unifyNormalized(normalize(type1), normalize(type2));
     } catch (UnifierExc e) {
       throw new RuntimeException(
-          "unifySafe() caused exception. This means we have bug in code.", e);
+          "unifyOrFailWithRuntimeException() caused exception. This means we have bug in code.", e);
     }
   }
 
