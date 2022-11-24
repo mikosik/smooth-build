@@ -83,7 +83,7 @@ public class ExprTypeUnifier {
   private boolean unifyNamedFunc(NamedFuncP namedFunc, ImmutableList<TypeS> paramTs, TypeS resT) {
     var bodyBindings = funcBodyScopeBindings(bindings, namedFunc.params());
     var funcTS = new FuncTS(paramTs, resT);
-    return unifyEvaluableBody(namedFunc, resT, funcTS, bodyBindings);
+    return unifyNamedEvaluableBody(namedFunc, resT, funcTS, bodyBindings);
   }
 
   private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
@@ -94,18 +94,18 @@ public class ExprTypeUnifier {
 
   public boolean unifyNamedValue(NamedValueP namedValue) {
     return translateOrGenerateTempVar((namedValue).evalT())
-        .map(evalT -> unifyEvaluableBody(namedValue, evalT, evalT, bindings))
+        .map(evalT -> unifyNamedEvaluableBody(namedValue, evalT, evalT, bindings))
         .orElse(false);
   }
 
-  private Boolean unifyEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type,
+  private Boolean unifyNamedEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
     var vars = outerScopeVars.unionWith(type.vars().filter(v -> !v.isTemporary()));
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
-        .unifyEvaluableBody(evaluable, evalT, type);
+        .unifyNamedEvaluableBody(evaluable, evalT, type);
   }
 
-  private Boolean unifyEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type) {
+  private Boolean unifyNamedEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type) {
     boolean success = evaluable.body()
         .map(body -> unifyBodyExprAndEvaluationType(evaluable, evalT, body))
         .orElse(true);
