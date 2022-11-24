@@ -7,6 +7,7 @@ import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.ps.ast.type.TypeP;
 
 public sealed abstract class EvaluableP extends NalImpl implements RefableP
     permits NamedFuncP, NamedValueP {
@@ -31,6 +32,8 @@ public sealed abstract class EvaluableP extends NalImpl implements RefableP
   public TypeS typeS() {
     return type;
   }
+
+  public abstract Optional<TypeP> evalT();
 
   public void setTypeS(TypeS type) {
     this.type = type;

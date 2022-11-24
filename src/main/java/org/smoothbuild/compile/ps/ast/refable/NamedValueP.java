@@ -19,4 +19,9 @@ public final class NamedValueP extends EvaluableP {
   public Optional<TypeP> type() {
     return type;
   }
+
+  @Override
+  public Optional<TypeP> evalT() {
+    return type();
+  }
 }

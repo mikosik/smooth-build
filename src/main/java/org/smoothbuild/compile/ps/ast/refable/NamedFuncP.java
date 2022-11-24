@@ -32,6 +32,11 @@ public final class NamedFuncP extends EvaluableP {
     return params;
   }
 
+  @Override
+  public Optional<TypeP> evalT() {
+    return resT();
+  }
+
   public ImmutableList<TypeS> paramTs() {
     return map(params(), ItemP::typeS);
   }

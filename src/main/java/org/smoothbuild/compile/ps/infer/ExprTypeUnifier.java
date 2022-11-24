@@ -4,12 +4,14 @@ import static com.google.common.collect.Maps.toMap;
 import static org.smoothbuild.compile.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.lang.type.TypeFS.STRING;
+import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings;
 import static org.smoothbuild.compile.ps.infer.InferPositionedArgs.inferPositionedArgs;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.util.collect.Optionals.flatMapPair;
+import static org.smoothbuild.util.collect.Optionals.mapPair;
 import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
@@ -24,6 +26,7 @@ import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
@@ -52,32 +55,35 @@ public class ExprTypeUnifier {
   private final Unifier unifier;
   private final TypePsTranslator typePsTranslator;
   private final Bindings<? extends Optional<? extends RefableS>> bindings;
+  private final VarSetS outerScopeVars;
   private final Logger logger;
 
   public ExprTypeUnifier(Unifier unifier, TypePsTranslator typePsTranslator,
       Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger) {
+    this(unifier, typePsTranslator, bindings, varSetS(), logger);
+  }
+
+  public ExprTypeUnifier(Unifier unifier, TypePsTranslator typePsTranslator,
+      Bindings<? extends Optional<? extends RefableS>> bindings, VarSetS outerScopeVars,
+      Logger logger) {
     this.unifier = unifier;
     this.typePsTranslator = typePsTranslator;
     this.bindings = bindings;
+    this.outerScopeVars = outerScopeVars;
     this.logger = logger;
   }
 
   public boolean unifyNamedFunc(NamedFuncP namedFunc) {
-    var funcTS = inferParamTs(namedFunc.params())
-        .flatMap(paramTs -> unifyNamedFunc(namedFunc, paramTs));
-    return memoizeAndReturnTrueWhenTypeIsPresent(namedFunc, funcTS);
+    var paramTs = inferParamTs(namedFunc.params());
+    var resT = translateOrGenerateTempVar(namedFunc.resT());
+    return mapPair(paramTs, resT, (p, r) ->  unifyNamedFunc(namedFunc, p, r))
+        .orElse(false);
   }
 
-  private Optional<TypeS> unifyNamedFunc(NamedFuncP namedFunc, ImmutableList<TypeS> paramTs) {
+  private boolean unifyNamedFunc(NamedFuncP namedFunc, ImmutableList<TypeS> paramTs, TypeS resT) {
     var bodyBindings = funcBodyScopeBindings(bindings, namedFunc.params());
-    return new ExprTypeUnifier(unifier, typePsTranslator, bodyBindings, logger)
-        .unifyNamedFuncImpl(namedFunc, paramTs);
-  }
-
-  private Optional<TypeS> unifyNamedFuncImpl(NamedFuncP namedFunc, ImmutableList<TypeS> paramTs) {
-    return translateOrGenerateTempVar(namedFunc.resT())
-        .flatMap(resT -> handleBodyIfPresent(namedFunc, resT))
-        .map(resT -> new FuncTS(paramTs, resT));
+    var funcTS = new FuncTS(paramTs, resT);
+    return unifyEvaluableBody(namedFunc, resT, funcTS, bodyBindings);
   }
 
   private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
@@ -87,41 +93,41 @@ public class ExprTypeUnifier {
   }
 
   public boolean unifyNamedValue(NamedValueP namedValue) {
-    var typeS = translateOrGenerateTempVar(namedValue.type())
-        .flatMap(t -> handleBodyIfPresent(namedValue, t));
-    return memoizeAndReturnTrueWhenTypeIsPresent(namedValue, typeS);
+    return translateOrGenerateTempVar(((EvaluableP) namedValue).evalT())
+        .map(evalT -> unifyEvaluableBody(namedValue, evalT, evalT, bindings))
+        .orElse(false);
   }
 
-  private Optional<TypeS> handleBodyIfPresent(EvaluableP evaluable, TypeS typeS) {
-    return evaluable.body()
-        .map(body -> unifyBodyExprAndEvaluationType(evaluable, typeS, body))
-        .orElseGet(() -> Optional.of(typeS));
+  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type,
+      Bindings<? extends Optional<? extends RefableS>> bindings) {
+    var vars = outerScopeVars.unionWith(type.vars().filter(v -> !v.isTemporary()));
+    return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
+        .unifyEvaluableBody(evaluable, evalT, type);
   }
 
-  private Optional<TypeS> unifyBodyExprAndEvaluationType(
-      EvaluableP evaluable, TypeS typeS, ExprP body) {
+  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type) {
+    boolean success = evaluable.body()
+        .map(body -> unifyBodyExprAndEvaluationType(evaluable, evalT, body))
+        .orElse(true);
+    if (success) {
+      evaluable.setTypeS(type);
+    }
+    return success;
+  }
+
+  private boolean unifyBodyExprAndEvaluationType(EvaluableP evaluable, TypeS typeS, ExprP body) {
     return unifyExpr(body)
-        .flatMap(bodyT -> unifyEvaluationTypeWithBodyType(evaluable, typeS, bodyT));
+        .map(bodyT -> unifyEvaluationTypeWithBodyType(evaluable, typeS, bodyT))
+        .orElse(false);
   }
 
-  private Optional<TypeS> unifyEvaluationTypeWithBodyType(
-      EvaluableP evaluable, TypeS typeS, TypeS bodyT) {
+  private boolean unifyEvaluationTypeWithBodyType(EvaluableP evaluable, TypeS typeS, TypeS bodyT) {
     try {
       unifier.unify(typeS, bodyT);
-      return Optional.of(typeS);
+      return true;
     } catch (UnifierExc e) {
       logger.log(compileError(
           evaluable.loc(), evaluable.q() + " body type is not equal to declared type."));
-      return Optional.empty();
-    }
-  }
-
-  private static boolean memoizeAndReturnTrueWhenTypeIsPresent(
-      EvaluableP evaluable, Optional<? extends TypeS> typeS) {
-    if (typeS.isPresent()) {
-      evaluable.setTypeS(typeS.get());
-      return true;
-    } else {
       return false;
     }
   }
