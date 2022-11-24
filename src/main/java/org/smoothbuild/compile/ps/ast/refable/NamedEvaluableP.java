@@ -9,13 +9,13 @@ import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
-public sealed abstract class EvaluableP extends NalImpl implements RefableP
+public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
     permits NamedFuncP, NamedValueP {
   private final Optional<ExprP> body;
   private final Optional<AnnP> ann;
   private TypeS type;
 
-  public EvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
+  public NamedEvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
     super(name, loc);
     this.body = body;
     this.ann = ann;
@@ -41,7 +41,7 @@ public sealed abstract class EvaluableP extends NalImpl implements RefableP
 
   @Override
   public final boolean equals(Object object) {
-    return object instanceof EvaluableP that
+    return object instanceof NamedEvaluableP that
         && this.name().equals(that.name());
   }
 

@@ -10,7 +10,7 @@ import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
-import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
+import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
@@ -43,9 +43,9 @@ public class DetectUndefinedRefs extends AstVisitor {
   }
 
   @Override
-  public void visitEvaluable(EvaluableP evaluable) {
-    super.visitEvaluable(evaluable);
-    definedNames.add(evaluable.name());
+  public void visitNamedEvaluable(NamedEvaluableP namedEvaluable) {
+    super.visitNamedEvaluable(namedEvaluable);
+    definedNames.add(namedEvaluable.name());
   }
 
   @Override

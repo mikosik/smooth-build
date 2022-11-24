@@ -6,5 +6,5 @@ import org.smoothbuild.compile.lang.base.Nal;
  * Referencable.
  */
 public sealed interface RefableP extends Nal
-    permits EvaluableP, ItemP {
+    permits ItemP, NamedEvaluableP {
 }

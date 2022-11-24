@@ -13,7 +13,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class NamedFuncP extends EvaluableP {
+public final class NamedFuncP extends NamedEvaluableP {
   private final Optional<TypeP> resT;
   private final NList<ItemP> params;
 

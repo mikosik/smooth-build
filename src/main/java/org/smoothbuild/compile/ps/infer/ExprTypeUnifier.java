@@ -39,8 +39,8 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -93,19 +93,19 @@ public class ExprTypeUnifier {
   }
 
   public boolean unifyNamedValue(NamedValueP namedValue) {
-    return translateOrGenerateTempVar(((EvaluableP) namedValue).evalT())
+    return translateOrGenerateTempVar((namedValue).evalT())
         .map(evalT -> unifyEvaluableBody(namedValue, evalT, evalT, bindings))
         .orElse(false);
   }
 
-  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type,
+  private Boolean unifyEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
     var vars = outerScopeVars.unionWith(type.vars().filter(v -> !v.isTemporary()));
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
         .unifyEvaluableBody(evaluable, evalT, type);
   }
 
-  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type) {
+  private Boolean unifyEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type) {
     boolean success = evaluable.body()
         .map(body -> unifyBodyExprAndEvaluationType(evaluable, evalT, body))
         .orElse(true);
@@ -115,13 +115,15 @@ public class ExprTypeUnifier {
     return success;
   }
 
-  private boolean unifyBodyExprAndEvaluationType(EvaluableP evaluable, TypeS typeS, ExprP body) {
+  private boolean unifyBodyExprAndEvaluationType(
+      NamedEvaluableP evaluable, TypeS typeS, ExprP body) {
     return unifyExpr(body)
         .map(bodyT -> unifyEvaluationTypeWithBodyType(evaluable, typeS, bodyT))
         .orElse(false);
   }
 
-  private boolean unifyEvaluationTypeWithBodyType(EvaluableP evaluable, TypeS typeS, TypeS bodyT) {
+  private boolean unifyEvaluationTypeWithBodyType(
+      NamedEvaluableP evaluable, TypeS typeS, TypeS bodyT) {
     try {
       unifier.unify(typeS, bodyT);
       return true;

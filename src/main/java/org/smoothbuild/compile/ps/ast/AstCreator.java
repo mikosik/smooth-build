@@ -48,8 +48,8 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
@@ -67,7 +67,7 @@ public class AstCreator {
   public static Maybe<Ast> fromParseTree(FilePath filePath, ModContext module) {
     var logs = new LogBuffer();
     List<StructP> structs = new ArrayList<>();
-    List<EvaluableP> evaluables = new ArrayList<>();
+    List<NamedEvaluableP> evaluables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {

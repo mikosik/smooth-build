@@ -12,8 +12,8 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
+import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.refable.RefableP;
@@ -22,7 +22,7 @@ import org.smoothbuild.compile.ps.ast.type.TypeP;
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitEvaluable(ast.evaluables());
+    visitNamedEvaluable(ast.evaluables());
   }
 
   public void visitStructs(List<StructP> structs) {
@@ -42,12 +42,12 @@ public class AstVisitor {
     visitIdentifier(field);
   }
 
-  public void visitEvaluable(List<EvaluableP> evaluables) {
-    evaluables.forEach(this::visitEvaluable);
+  public void visitNamedEvaluable(List<NamedEvaluableP> namedEvaluable) {
+    namedEvaluable.forEach(this::visitNamedEvaluable);
   }
 
-  public void visitEvaluable(EvaluableP evaluable) {
-    switch (evaluable) {
+  public void visitNamedEvaluable(NamedEvaluableP namedEvaluable) {
+    switch (namedEvaluable) {
       case NamedFuncP func -> visitNamedFunc(func);
       case NamedValueP value -> visitNamedValue(value);
     }
