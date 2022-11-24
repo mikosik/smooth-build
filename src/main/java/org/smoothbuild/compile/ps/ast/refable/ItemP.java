@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.ps.ast.refable;
 
+import static org.smoothbuild.util.collect.Lists.map;
+
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.Loc;
@@ -7,6 +9,9 @@ import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
+import org.smoothbuild.util.collect.NList;
+
+import com.google.common.collect.ImmutableList;
 
 public final class ItemP extends NalImpl implements RefableP {
   private final TypeP type;
@@ -34,5 +39,9 @@ public final class ItemP extends NalImpl implements RefableP {
   public TypeS setTypeS(TypeS type) {
     this.typeS = type;
     return type;
+  }
+
+  public static ImmutableList<TypeS> toTypeS(NList<ItemP> params) {
+    return map(params, ItemP::typeS);
   }
 }

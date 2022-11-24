@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps.ast.refable;
 
-import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.compile.ps.ast.refable.ItemP.toTypeS;
 
 import java.util.Optional;
 
@@ -38,6 +38,6 @@ public final class NamedFuncP extends NamedEvaluableP {
   }
 
   public ImmutableList<TypeS> paramTs() {
-    return map(params(), ItemP::typeS);
+    return toTypeS(params());
   }
 }
