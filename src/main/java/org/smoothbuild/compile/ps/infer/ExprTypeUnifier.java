@@ -22,7 +22,6 @@ import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
-import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
@@ -232,7 +231,7 @@ public class ExprTypeUnifier {
   private Optional<? extends TypeS> unifyRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS item -> unifyItemRef(ref, item);
-      case NamedEvaluableS evaluable -> unifyMonoizable(ref, evaluable.schema());
+      case NamedEvaluableS evaluable -> unifyEvaluableRef(ref, evaluable);
     };
   }
 
@@ -241,9 +240,15 @@ public class ExprTypeUnifier {
     return Optional.of(item.type());
   }
 
-  private Optional<TypeS> unifyMonoizable(MonoizableP monoizableP, SchemaS schema) {
-    monoizableP.setMonoizeVarMap(
-        toMap(schema.quantifiedVars().asList(), v -> unifier.newTempVar()));
+  private Optional<TypeS> unifyEvaluableRef(RefP ref, NamedEvaluableS evaluable) {
+    ref.setSchemaS(evaluable.schema());
+    return unifyMonoizable(ref);
+  }
+
+  private Optional<TypeS> unifyMonoizable(MonoizableP monoizableP) {
+    var schema = monoizableP.schemaS();
+    var varMap = toMap(schema.quantifiedVars().asList(), v -> (TypeS) unifier.newTempVar());
+    monoizableP.setMonoizeVarMap(varMap);
     return Optional.of(schema.monoize(monoizableP.monoizeVarMap()));
   }
 

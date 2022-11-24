@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 
@@ -11,10 +12,19 @@ import com.google.common.collect.ImmutableMap;
  */
 public abstract sealed class MonoizableP extends ExprP
     permits RefP {
+  private SchemaS schemaS;
   private ImmutableMap<VarS, TypeS> monoizeVarMap;
 
   public MonoizableP(Loc loc) {
     super(loc);
+  }
+
+  public SchemaS schemaS() {
+    return schemaS;
+  }
+
+  public void setSchemaS(SchemaS schemaS) {
+    this.schemaS = schemaS;
   }
 
   public void setMonoizeVarMap(ImmutableMap<VarS, TypeS> monoizeVarMap) {
