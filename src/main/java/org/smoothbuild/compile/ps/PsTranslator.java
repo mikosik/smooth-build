@@ -26,6 +26,7 @@ import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
+import org.smoothbuild.compile.lang.define.PolyExprS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -123,16 +124,18 @@ public class PsTranslator {
   }
 
   private Optional<ExprS> translateExpr(ExprP expr) {
+    // @formatter:off
     return switch (expr) {
-      case BlobP blobP -> Optional.of(translateBlob(blobP));
-      case CallP callP -> translateCall(callP);
-      case IntP intP -> Optional.of(translateInt(intP));
-      case NamedArgP namedArgP -> translateExpr(namedArgP.expr());
-      case OrderP orderP -> translateOrder(orderP);
-      case RefP refP -> translateRef(refP);
-      case SelectP selectP -> translateSelect(selectP);
-      case StringP stringP -> Optional.of(translateString(stringP));
+      case BlobP       blobP       -> Optional.of(translateBlob(blobP));
+      case CallP       callP       -> translateCall(callP);
+      case IntP        intP        -> Optional.of(translateInt(intP));
+      case NamedArgP   namedArgP   -> translateExpr(namedArgP.expr());
+      case OrderP      orderP      -> translateOrder(orderP);
+      case RefP        refP        -> translateRef(refP);
+      case SelectP     selectP     -> translateSelect(selectP);
+      case StringP     stringP     -> Optional.of(translateString(stringP));
     };
+    // @formatter:on
   }
 
   private Optional<ExprS> translateOrder(OrderP order) {
@@ -159,14 +162,18 @@ public class PsTranslator {
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.loc());
-      case NamedEvaluableS evaluableS -> translateMonoizable(ref, evaluableS);
+      case NamedEvaluableS evaluableS -> monoizeNamedEvaluable(ref, evaluableS);
     };
   }
 
-  private static ExprS translateMonoizable(
+  private static ExprS monoizeNamedEvaluable(
       MonoizableP monoizableP, NamedEvaluableS namedEvaluableS) {
     var evaluableRefS = new EvaluableRefS(namedEvaluableS, monoizableP.loc());
-    return new MonoizeS(monoizableP.monoizeVarMap(), evaluableRefS, monoizableP.loc());
+    return newMonoize(monoizableP, evaluableRefS);
+  }
+
+  private static MonoizeS newMonoize(MonoizableP monoizableP, PolyExprS polyExprS) {
+    return new MonoizeS(monoizableP.monoizeVarMap(), polyExprS, monoizableP.loc());
   }
 
   private BlobS translateBlob(BlobP blob) {
