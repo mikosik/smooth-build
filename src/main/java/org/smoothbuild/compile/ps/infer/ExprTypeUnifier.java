@@ -100,7 +100,7 @@ public class ExprTypeUnifier {
 
   private Boolean unifyNamedEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
-    var vars = outerScopeVars.unionWith(type.vars().filter(v -> !v.isTemporary()));
+    var vars = outerScopeVars.withAdded(type.vars().filter(v -> !v.isTemporary()));
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
         .unifyNamedEvaluableBody(evaluable, evalT, type);
   }

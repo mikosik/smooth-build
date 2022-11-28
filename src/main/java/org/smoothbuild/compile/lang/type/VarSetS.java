@@ -50,7 +50,7 @@ public final class VarSetS implements Set<VarS> {
     return elements.asList();
   }
 
-  public VarSetS unionWith(VarSetS other) {
+  public VarSetS withAdded(VarSetS other) {
     return new VarSetS(union(elements, other.elements));
   }
 
