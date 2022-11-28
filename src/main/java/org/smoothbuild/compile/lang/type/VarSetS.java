@@ -7,6 +7,7 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.Sets.union;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -52,6 +53,12 @@ public final class VarSetS implements Set<VarS> {
 
   public VarSetS withAdded(VarSetS other) {
     return new VarSetS(union(elements, other.elements));
+  }
+
+  public VarSetS withRemoved(VarSetS other) {
+    var result = new HashSet<>(elements);
+    result.removeAll(other.elements);
+    return new VarSetS(result);
   }
 
   // overrides from Set<VarS>
