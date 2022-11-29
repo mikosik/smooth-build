@@ -10,8 +10,6 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.TDefS;
-import org.smoothbuild.compile.lang.type.FuncSchemaS;
-import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
@@ -80,12 +78,12 @@ public class TypeInferrer {
 
   // value
 
-  public Optional<SchemaS> inferValueSchema(NamedValueP namedValue) {
+  public boolean inferValueSchema(NamedValueP namedValue) {
     if (unifyNamedValue(namedValue)) {
       nameImplicitVars(namedValue);
       return resolveValueSchema(namedValue);
     } else {
-      return Optional.empty();
+      return false;
     }
   }
 
@@ -99,22 +97,23 @@ public class TypeInferrer {
         .nameVarsInNamedValue(namedValue);
   }
 
-  private Optional<SchemaS> resolveValueSchema(NamedValueP namedValueP) {
+  private boolean resolveValueSchema(NamedValueP namedValueP) {
     return new TypeInferrerResolve(unifier, logger, bindings)
         .resolveNamedValue(namedValueP);
   }
 
   // func
 
-  public Optional<FuncSchemaS> inferFuncSchema(NamedFuncP namedFunc) {
+  public boolean inferFuncSchema(NamedFuncP namedFunc) {
     var params = namedFunc.params();
     if (inferParamDefaultValues(params) && unifyNamedFunc(namedFunc)) {
       nameImplicitVars(namedFunc);
-      var funcSchemaS = resolveNamedFunc(namedFunc);
-      funcSchemaS.ifPresent(s -> detectTypeErrorsBetweenParamAndItsDefaultValue(s, params));
-      return funcSchemaS;
+      if (resolveNamedFunc(namedFunc)) {
+        detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
+        return true;
+      }
     }
-    return Optional.empty();
+    return false;
   }
 
   private boolean unifyNamedFunc(NamedFuncP namedFunc) {
@@ -127,16 +126,17 @@ public class TypeInferrer {
         .nameVarsInNamedFunc(namedFunc);
   }
 
-  private Optional<FuncSchemaS> resolveNamedFunc(NamedFuncP namedFunc) {
+  private boolean resolveNamedFunc(NamedFuncP namedFunc) {
     return new TypeInferrerResolve(unifier, logger, bindings)
         .resolveNamedFunc(namedFunc);
   }
 
-  private void detectTypeErrorsBetweenParamAndItsDefaultValue(
-      FuncSchemaS resolvedFuncSchema, NList<ItemP> params) {
-    var resolvedParamTs = resolvedFuncSchema.type().params().items();
+  private void detectTypeErrorsBetweenParamAndItsDefaultValue(NamedFuncP namedFunc) {
+    var schema = namedFunc.schemaS();
+    var params = namedFunc.params();
+    var resolvedParamTs = schema.type().params().items();
     var paramUnifier = new Unifier();
-    var paramMapping = toMap(resolvedFuncSchema.quantifiedVars(), v -> paramUnifier.newTempVar());
+    var paramMapping = toMap(schema.quantifiedVars(), v -> paramUnifier.newTempVar());
     for (int i = 0; i < params.size(); i++) {
       var resolvedParamT = resolvedParamTs.get(i);
       var param = params.get(i);

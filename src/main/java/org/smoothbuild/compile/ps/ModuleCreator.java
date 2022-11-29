@@ -1,6 +1,5 @@
 package org.smoothbuild.compile.ps;
 
-import static java.util.Optional.empty;
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferStructType;
 import static org.smoothbuild.out.log.Level.ERROR;
@@ -14,6 +13,7 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.StructDefS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TDefS;
@@ -80,7 +80,7 @@ public class ModuleCreator {
     var name = ctorP.name();
     var fieldSigs = structT.fields();
     var params = structP.fields().map(
-        f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), empty(), f.loc()));
+        f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.loc()));
     var funcTS = new FuncTS(toTypes(params), structT);
     var schema = new FuncSchemaS(funcTS);
     var loc = structP.loc();
@@ -96,20 +96,26 @@ public class ModuleCreator {
   }
 
   public void visitValue(NamedValueP namedValueP) {
-    var valS = new TypeInferrer(types, bindings, logBuffer)
-        .inferValueSchema(namedValueP)
-        .flatMap(s -> psTranslator.translateValue(namedValueP, s.type()));
-    bindings.add(namedValueP.name(), valS);
+    var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
+    if (typeInferrer.inferValueSchema(namedValueP)) {
+      var valueS = psTranslator.translateValue(namedValueP);
+      bindings.add(namedValueP.name(), valueS);
+    } else {
+      bindings.add(namedValueP.name(), Optional.empty());
+    }
   }
 
   public void visitFunc(NamedFuncP namedFuncP) {
-    var funcS = new TypeInferrer(types, bindings, logBuffer)
-        .inferFuncSchema(namedFuncP)
-        .flatMap(s -> psTranslator.translateFunc(namedFuncP, s.type()));
-    @SuppressWarnings("unchecked") // safe as NamedFuncS is immutable
-    var namedEvaluableS = (Optional<NamedEvaluableS>) (Object) funcS;
-    bindings.add(namedFuncP.name(), namedEvaluableS);
-    funcS.ifPresent(f -> f.params().forEach(this::addDefaultValueToBindings));
+    var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
+    if (typeInferrer.inferFuncSchema(namedFuncP)) {
+      Optional<NamedFuncS> funcS = psTranslator.translateFunc(namedFuncP);
+      @SuppressWarnings("unchecked") // safe as NamedFuncS is immutable
+      var namedEvaluableS = (Optional<NamedEvaluableS>) (Object) funcS;
+      bindings.add(namedFuncP.name(), namedEvaluableS);
+      funcS.ifPresent(f -> f.params().forEach(this::addDefaultValueToBindings));
+    } else {
+      bindings.add(namedFuncP.name(), Optional.empty());
+    }
   }
 
   private void addDefaultValueToBindings(ItemS param) {

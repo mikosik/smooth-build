@@ -31,10 +31,7 @@ import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
-import org.smoothbuild.compile.lang.type.FuncSchemaS;
-import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
-import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
@@ -62,8 +59,8 @@ public class PsTranslator {
     this.bindings = bindings;
   }
 
-  public Optional<NamedEvaluableS> translateValue(NamedValueP namedValueP, TypeS type) {
-    var schema = new SchemaS(type);
+  public Optional<NamedEvaluableS> translateValue(NamedValueP namedValueP) {
+    var schema = namedValueP.schemaS();
     var name = namedValueP.name();
     var loc = namedValueP.loc();
     if (namedValueP.ann().isPresent()) {
@@ -75,8 +72,8 @@ public class PsTranslator {
     }
   }
 
-  public Optional<NamedFuncS> translateFunc(NamedFuncP namedFuncP, FuncTS funcT) {
-    return translateFunc(namedFuncP, translateParams(namedFuncP), funcT);
+  public Optional<NamedFuncS> translateFunc(NamedFuncP namedFuncP) {
+    return translateFunc(namedFuncP, translateParams(namedFuncP));
   }
 
   private NList<ItemS> translateParams(NamedFuncP namedFuncP) {
@@ -97,9 +94,8 @@ public class PsTranslator {
     });
   }
 
-  private Optional<NamedFuncS> translateFunc(NamedFuncP namedFuncP,
-      NList<ItemS> params, FuncTS funcT) {
-    var schema = new FuncSchemaS(funcT);
+  private Optional<NamedFuncS> translateFunc(NamedFuncP namedFuncP, NList<ItemS> params) {
+    var schema = namedFuncP.schemaS();
     var name = namedFuncP.name();
     var loc = namedFuncP.loc();
     if (namedFuncP.ann().isPresent()) {

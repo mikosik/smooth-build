@@ -40,12 +40,14 @@ public class TypeInferrerResolve {
     this.bindings = bindings;
   }
 
-  public Optional<SchemaS> resolveNamedValue(NamedValueP value) {
+  public boolean resolveNamedValue(NamedValueP value) {
     var resolvedEvalT = unifier.resolve(value.typeS());
-    if (!resolveBody(value.body())) {
-      return Optional.empty();
+    if (resolveBody(value.body())) {
+      value.setSchemaS(new SchemaS(resolvedEvalT));
+      return true;
+    } else {
+      return false;
     }
-    return Optional.of(new SchemaS(resolvedEvalT));
   }
 
   public boolean resolveParamDefaultValue(ExprP exprP) {
@@ -53,18 +55,19 @@ public class TypeInferrerResolve {
     return resolveBody(exprP);
   }
 
-  public Optional<FuncSchemaS> resolveNamedFunc(NamedFuncP namedFunc) {
+  public boolean resolveNamedFunc(NamedFuncP namedFunc) {
     var bodyBindings = funcBodyScopeBindings(bindings, namedFunc.params());
     return new TypeInferrerResolve(unifier, logger, bodyBindings)
         .resolveNamedFuncImpl(namedFunc);
   }
 
-  private Optional<FuncSchemaS> resolveNamedFuncImpl(NamedFuncP namedFunc) {
+  private boolean resolveNamedFuncImpl(NamedFuncP namedFunc) {
     var resolvedFuncT = (FuncTS) unifier.resolve(namedFunc.typeS());
     if (resolveBody(namedFunc.body())) {
-      return Optional.of(new FuncSchemaS(resolvedFuncT));
+      namedFunc.setSchemaS(new FuncSchemaS(resolvedFuncT));
+      return true;
     } else {
-      return Optional.empty();
+      return false;
     }
   }
 

@@ -5,6 +5,7 @@ import static org.smoothbuild.compile.ps.ast.refable.ItemP.toTypeS;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -16,6 +17,7 @@ import com.google.common.collect.ImmutableList;
 public final class NamedFuncP extends NamedEvaluableP {
   private final Optional<TypeP> resT;
   private final NList<ItemP> params;
+  private FuncSchemaS funcSchemaS;
 
   public NamedFuncP(Optional<TypeP> resT, String name, NList<ItemP> params, Optional<ExprP> body,
       Optional<AnnP> ann, Loc loc) {
@@ -39,5 +41,14 @@ public final class NamedFuncP extends NamedEvaluableP {
 
   public ImmutableList<TypeS> paramTs() {
     return toTypeS(params());
+  }
+
+  public void setSchemaS(FuncSchemaS funcSchemaS) {
+    this.funcSchemaS = funcSchemaS;
+  }
+
+  @Override
+  public FuncSchemaS schemaS() {
+    return funcSchemaS;
   }
 }
