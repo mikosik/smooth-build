@@ -29,17 +29,8 @@ public sealed interface FuncS extends EvaluableS
   public default String fieldsToString() {
     return joinToString("\n",
         "schema = " + schema(),
-        "params = [\n" + indent(paramsToString()) + "\n]",
+        "params = [\n" + indent(joinToString(params(), "\n")) + "\n]",
         "loc = " + loc()
     );
-  }
-
-  public default String paramsToString() {
-    return joinToString(params(), FuncS::paramToString, "\n");
-  }
-
-  private static String paramToString(ItemS itemS) {
-    return itemS.type().name() + " " + itemS.name()
-        + itemS.defaultValue().map(b -> " = " + b).orElse("");
   }
 }
