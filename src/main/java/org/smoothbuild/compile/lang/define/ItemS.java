@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
@@ -28,17 +30,19 @@ public final class ItemS extends Tanal implements RefableS {
     return defaultValue;
   }
 
-  private String defaultValueToString() {
-    return defaultValue.map(v -> " = " + v).orElse("");
-  }
-
   public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
     return map(items, ItemS::type);
   }
 
   @Override
   public String toString() {
-    return "Item(`" + type().name() + " " + name() + defaultValueToString() + "`)";
+    var fields = joinToString("\n",
+        "type = " + type().name(),
+        "name = " + name(),
+        "defaultValue = " + defaultValue,
+        "loc = " + loc()
+    );
+    return "ItemS(\n" + indent(fields) + "\n)";
   }
 
   @Override

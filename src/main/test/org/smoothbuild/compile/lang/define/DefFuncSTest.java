@@ -18,7 +18,12 @@ public class DefFuncSTest extends TestContext {
             DefFuncS(
               schema = <>(Int)->String
               params = [
-                Int myParam
+                ItemS(
+                  type = Int
+                  name = myParam
+                  defaultValue = Optional.empty
+                  loc = myBuild.smooth:1
+                )
               ]
               loc = myBuild.smooth:1
               body = IntS(Int, 17, myBuild.smooth:1)

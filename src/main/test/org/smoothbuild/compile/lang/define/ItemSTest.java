@@ -45,6 +45,12 @@ public class ItemSTest {
   public void to_string() {
     param = new ItemS(stringTS(), name, Optional.empty(), loc());
     assertThat(param.toString())
-        .isEqualTo("Item(`String name`)");
+        .isEqualTo("""
+            ItemS(
+              type = String
+              name = name
+              defaultValue = Optional.empty
+              loc = myBuild.smooth:11
+            )""");
   }
 }

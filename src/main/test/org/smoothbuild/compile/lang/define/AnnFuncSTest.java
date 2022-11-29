@@ -23,7 +23,12 @@ public class AnnFuncSTest extends TestContext {
               )
               schema = <>(Int)->String
               params = [
-                Int myParam
+                ItemS(
+                  type = Int
+                  name = myParam
+                  defaultValue = Optional.empty
+                  loc = myBuild.smooth:1
+                )
               ]
               loc = myBuild.smooth:1
             )""");

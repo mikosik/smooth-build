@@ -19,7 +19,12 @@ public class CallSTest extends TestContext {
                   namedEvaluable = DefFuncS(
                     schema = <A>(A)->A
                     params = [
-                      A a
+                      ItemS(
+                        type = A
+                        name = a
+                        defaultValue = Optional.empty
+                        loc = myBuild.smooth:1
+                      )
                     ]
                     loc = myBuild.smooth:1
                     body = ParamRefS(A, a, myBuild.smooth:1)

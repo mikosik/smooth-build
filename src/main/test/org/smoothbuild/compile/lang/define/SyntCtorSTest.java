@@ -16,7 +16,12 @@ public class SyntCtorSTest extends TestContext {
             SyntCtorS(
               schema = <>(Int)->MyStruct
               params = [
-                Int field
+                ItemS(
+                  type = Int
+                  name = field
+                  defaultValue = Optional.empty
+                  loc = myBuild.smooth:2
+                )
               ]
               loc = myBuild.smooth:17
             )""");
