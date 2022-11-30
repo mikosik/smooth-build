@@ -140,78 +140,154 @@ public class EvaluateTest extends AcceptanceTestCase {
 
     @Nested
     class _call {
-      @Test
-      public void const_func() throws Exception {
-        createUserModule("""
+      @Nested
+      class _anon_func {
+        @Test
+        public void const_func() throws Exception {
+          createUserModule("""
+            myFunc() = 7;
+            result = (() -> 7)();
+            """);
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void func_returning_its_param() throws Exception {
+          createUserModule("""
+            result = ((Int int) -> int)(7);
+            """);
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void func_that_does_not_use_its_param_will_not_evaluate_matching_arg()
+            throws Exception {
+          createUserNativeJar(ThrowException.class);
+          createUserModule("""
+            @Native("impl")
+            A throwException();
+            result = ((String notUsedParameter) -> "abc")(throwException());
+            """);
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(stringB("abc"));
+        }
+
+        @Test
+        public void func_passed_as_argument() throws Exception {
+          createUserNativeJar(ThrowException.class);
+          createUserModule("""
+            A invokeProducer(()->A producer) = producer();
+            result = invokeProducer(() -> "abc");
+            """);
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(stringB("abc"));
+        }
+
+        @Test
+        public void func_returned_by_other_func() throws Exception {
+          createUserNativeJar(ThrowException.class);
+          createUserModule("""
+            ()->String createProducer() = () -> "abc";
+            result = createProducer()();
+            """);
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(stringB("abc"));
+        }
+
+        @Test
+        public void call_consumes_piped_value() throws Exception {
+          createUserModule("""
+            myFunc(Int int) = int;
+            result = 7 | ((Int int) -> int)();
+            """);
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(intB(7));
+        }
+      }
+
+      @Nested
+      class _def_func {
+        @Test
+        public void const_func() throws Exception {
+          createUserModule("""
             myFunc() = 7;
             result = myFunc();
             """);
-        evaluate("result");
-        assertThat(artifact())
-            .isEqualTo(intB(7));
-      }
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(intB(7));
+        }
 
-      @Test
-      public void func_returning_its_param() throws Exception {
-        createUserModule("""
+        @Test
+        public void func_returning_its_param() throws Exception {
+          createUserModule("""
             myFunc(Int int) = int;
             result = myFunc(7);
             """);
-        evaluate("result");
-        assertThat(artifact())
-            .isEqualTo(intB(7));
-      }
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(intB(7));
+        }
 
-      @Test
-      public void func_that_does_not_use_its_param_will_not_evaluate_matching_arg()
-          throws Exception {
-        createUserNativeJar(ThrowException.class);
-        createUserModule("""
+        @Test
+        public void func_that_does_not_use_its_param_will_not_evaluate_matching_arg()
+            throws Exception {
+          createUserNativeJar(ThrowException.class);
+          createUserModule("""
             @Native("impl")
             A throwException();
             func(String notUsedParameter) = "abc";
             result = func(throwException());
             """);
-        evaluate("result");
-        assertThat(artifact())
-            .isEqualTo(stringB("abc"));
-      }
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(stringB("abc"));
+        }
 
-      @Test
-      public void func_passed_as_argument() throws Exception {
-        createUserNativeJar(ThrowException.class);
-        createUserModule("""
+        @Test
+        public void func_passed_as_argument() throws Exception {
+          createUserNativeJar(ThrowException.class);
+          createUserModule("""
             String returnAbc() = "abc";
             A invokeProducer(()->A producer) = producer();
             result = invokeProducer(returnAbc);
             """);
-        evaluate("result");
-        assertThat(artifact())
-            .isEqualTo(stringB("abc"));
-      }
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(stringB("abc"));
+        }
 
-      @Test
-      public void func_returned_by_other_func() throws Exception {
-        createUserNativeJar(ThrowException.class);
-        createUserModule("""
+        @Test
+        public void func_returned_by_other_func() throws Exception {
+          createUserNativeJar(ThrowException.class);
+          createUserModule("""
             String returnAbc() = "abc";
             ()->String createProducer() = returnAbc;
             result = createProducer()();
             """);
-        evaluate("result");
-        assertThat(artifact())
-            .isEqualTo(stringB("abc"));
-      }
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(stringB("abc"));
+        }
 
-      @Test
-      public void call_consumes_piped_value() throws Exception {
-        createUserModule("""
+        @Test
+        public void call_consumes_piped_value() throws Exception {
+          createUserModule("""
             myFunc(Int int) = int;
             result = 7 | myFunc();
             """);
-        evaluate("result");
-        assertThat(artifact())
-            .isEqualTo(intB(7));
+          evaluate("result");
+          assertThat(artifact())
+              .isEqualTo(intB(7));
+        }
       }
     }
 

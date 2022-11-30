@@ -1,9 +1,12 @@
 package org.smoothbuild.compile.ps.component;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compile.lang.define.DefValueS;
+import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.testing.TestContext;
 
@@ -143,6 +146,25 @@ public class InferenceTest extends TestContext {
       module(code)
           .loadsWithSuccess()
           .containsEvaluableWithSchema("myFunc", expected);
+    }
+  }
+
+  @Nested
+  class _infer_anon_func_result_type extends _infer_func_result_type_suite {
+    @Override
+    public void assertInferredFunctionType(
+        String declarations, String params, String body, SchemaS expected) {
+      var code = declarations + "\n"
+          + "myValue = (" + params + ") -> " + body + ";";
+      var myValue = module(code)
+          .loadsWithSuccess()
+          .getModuleAsDefinitions()
+          .evaluables()
+          .get("myValue");
+      var myValueBody = ((DefValueS) myValue).body();
+      var anonFunc = ((MonoizeS) myValueBody).polyExprS();
+      assertThat(anonFunc.schema())
+          .isEqualTo(expected);
     }
   }
 
@@ -558,7 +580,7 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _infer_monoization_arguments {
+  class _infer_monoization_type_arguments {
     @Nested
     class _fails_when_var_unifies_two_incompatible_types {
       @Test
@@ -786,7 +808,7 @@ public class InferenceTest extends TestContext {
   @Nested
   class _infer_unit_type {
     @Test
-    public void in_call_to_poly_func_when_generic_param_is_not_used_by_res_and_arg_needs_monoization() {
+    public void named_func() {
       var code = """
               Int myFunc(A a) = 7;
               result = myFunc([]);
@@ -797,6 +819,19 @@ public class InferenceTest extends TestContext {
       module(code)
           .loadsWithSuccess()
           .containsEvaluable(defValS(2, "result", call));
+    }
+
+    @Test
+    public void anon_func() {
+      var code = """
+              result = ((A a) -> 7)([]);
+              """;
+      var anonFunc = anonFuncS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
+      var emptyArray = orderS(1, tupleTS());
+      var call = callS(1, monoizeS(1, varMap(varA(), arrayTS(tupleTS())), anonFunc), emptyArray);
+      module(code)
+          .loadsWithSuccess()
+          .containsEvaluable(defValS(1, "result", call));
     }
   }
 

@@ -940,7 +940,18 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void func_param_name_is_stripped_during_assignment() {
+        public void anonymous_function_parameter_names_are_always_stripped() {
+          String code = """
+            myFunc(String param) = param;
+            valueReferencingFunc = myFunc;
+            result = ((Int int) -> int)(param=7);
+            """;
+          module(code)
+              .loadsWithError(3, "Unknown parameter `param`.");
+        }
+
+        @Test
+        public void named_function_parameter_names_are_stripped_during_assignment() {
           String code = """
             myFunc(String param) = param;
             valueReferencingFunc = myFunc;
@@ -951,7 +962,7 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void func_param_default_value_is_stripped_during_assignment() {
+        public void named_function_parameter_default_values_are_stripped_during_assignment() {
           String code = """
             myFunc(String param = "abc") = param;
             valueReferencingFunc = myFunc;
@@ -1032,6 +1043,127 @@ public class DeclarationTest extends TestContext {
               Int myIntId(Int i) = i;
               result = myIntId(PLACEHOLDER);
               """.replace("PLACEHOLDER", string);
+        }
+      }
+    }
+
+    @Nested
+    class _anon_func {
+      @Test
+      public void with_no_params() {
+        var code = """
+            result = () -> 7;
+            """;
+        module(code)
+            .loadsWithSuccess();
+      }
+
+      @Test
+      public void with_one_params() {
+        var code = """
+            result = (Int int) -> 7;
+            """;
+        module(code)
+            .loadsWithSuccess();
+      }
+
+      @Test
+      public void with_two_params() {
+        var code = """
+            result = (Int int, String string) -> 7;
+            """;
+        module(code)
+            .loadsWithSuccess();
+      }
+
+      @Test
+      public void with_default_value_fails() {
+        var code = """
+            result = (Int int = 8) -> 7;
+            """;
+        module(code)
+            .loadsWithError(1, "Parameter `int` of anonymous function cannot have default value.");
+      }
+
+      @Test
+      public void pipe_inside_body() {
+        var code = """
+            result = () -> (7 | []);
+            """;
+        module(code)
+            .loadsWithSuccess();
+      }
+
+      @Test
+      public void without_body_fails() {
+        var code = """
+            result = () -> ;
+            """;
+        module(code)
+            .loadsWithError(1, """
+                mismatched input ';' expecting {'(', '[', NAME, INT, BLOB, STRING}
+                result = () -> ;
+                               ^""");
+      }
+
+      @Nested
+      class _param {
+        @Test
+        public void with_poly_type() {
+          var code = """
+              result = (A a) -> 7;
+              """;
+          module(code)
+              .loadsWithSuccess();
+        }
+
+        @Test
+        public void with_default_value_fails() {
+          var code = """
+              result = (Int int = 7) -> 7;
+              """;
+          module(code)
+              .loadsWithError(
+                  1, "Parameter `int` of anonymous function cannot have default value.");
+        }
+      }
+
+      @Nested
+      class _param_list {
+        @Test
+        public void can_have_trailing_comma() {
+          var code = """
+            result = (Int x,) -> 7;
+            """;
+          module(code)
+              .loadsWithSuccess();
+        }
+
+        @Test
+        public void cannot_have_only_comma() {
+          var code = """
+              result = (,) -> 7;
+              """;
+          module(code)
+              .loadsWithProblems();
+        }
+
+        @Test
+        public void cannot_have_leading_comma() {
+          var code = """
+              result = (,Int x) -> 7;
+              """;
+          module(code)
+              .loadsWithProblems();
+        }
+
+        @Test
+        public void cannot_have_two_trailing_commas() {
+          var code = """
+              result = (Int x,,) -> 7;
+              """;
+          module(code)
+              .loadsWithProblems();
         }
       }
     }
@@ -1423,6 +1555,15 @@ public class DeclarationTest extends TestContext {
             """;
         module(code)
             .loadsWithError(2, "Piped value is not consumed.");
+      }
+
+      @Test
+      public void not_consumed_by_consuming_expr_inside_anon_func_body() {
+        var code = """
+            result = 7 | () -> [];
+            """;
+        module(code)
+            .loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test

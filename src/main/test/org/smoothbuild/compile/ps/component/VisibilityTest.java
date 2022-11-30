@@ -151,7 +151,24 @@ public class VisibilityTest extends TestContext {
     @Nested
     class _param {
       @Test
-      public void in_func_body_is_visible() {
+      public void in_anonymous_func_body_is_visible() {
+        module("""
+             myValue = (String param) -> param;
+             """)
+            .loadsWithSuccess();
+      }
+
+      @Test
+      public void outside_its_anonymous_function_body_is_not_visible() {
+        module("""
+             myValue = (String param) -> "abc";
+             result = param;
+             """)
+            .loadsWithError(2, "`param` is undefined.");
+      }
+
+      @Test
+      public void in_defined_func_body_is_visible() {
         module("""
              myFunc(String param) = param;
              """)
@@ -159,7 +176,7 @@ public class VisibilityTest extends TestContext {
       }
 
       @Test
-      public void outside_its_func_body_is_not_visible() {
+      public void outside_its_defined_function_body_is_not_visible() {
         module("""
              myFunc(String param) = "abc";
              result = param;
@@ -189,7 +206,25 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _eval_cannot_be_used_as {
         @Test
-        public void func_arg() {
+        public void anonymous_function_argument() {
+          var code = """
+              myValue = ((Int int) -> int)(undefined);
+              """;
+          module(code)
+              .loadsWithError(1, "`undefined` is undefined.");
+        }
+
+        @Test
+        public void anonymous_function_body() {
+          var code = """
+              myValue = () -> undefined;
+              """;
+          module(code)
+              .loadsWithError(1, "`undefined` is undefined.");
+        }
+
+        @Test
+        public void defined_function_argument() {
           var code = """
               String myFunc(Blob b) = "abc";
               result = myFunc(undefined);
@@ -199,7 +234,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void func_body() {
+        public void defined_function_body() {
           var code = """
               result() = undefined;
               """;
@@ -208,7 +243,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void func_in_call_expression() {
+        public void defined_function_in_call_expression() {
           var code = """
               result = undefined();
               """;
@@ -247,7 +282,7 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _type_cannot_be_used_as_type_of {
         @Test
-        public void value() {
+        public void named_value() {
           var code = """
               @Bytecode("Impl.met")
               Undefined myValue;
@@ -257,7 +292,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void func_result() {
+        public void native_function_result() {
           var code = """
               @Native("Impl.met")
               Undefined myFunc();
@@ -267,7 +302,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void param() {
+        public void defined_function_parameter() {
           var code = """
               String myFunc(Undefined param) = "abc";
               """;
@@ -276,7 +311,16 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void field() {
+        public void anonymous_function_parameter() {
+          var code = """
+              myValue = (Undefined param) -> 7;
+              """;
+          module(code)
+              .loadsWithError(1, "`Undefined` type is undefined.");
+        }
+
+        @Test
+        public void struct_field() {
           var code = """
               MyStruct {
                 Undefined field
@@ -680,7 +724,7 @@ public class VisibilityTest extends TestContext {
     }
 
     @Nested
-    class _func_shadowing {
+    class _defined_function_shadowing {
       @Nested
       class _imported {
         @Test
@@ -732,7 +776,7 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _local {
         @Test
-        public void value_fails() {
+        public void named_value_fails() {
           module("""
                myValue = "abc";
                myValue() = "def";
@@ -741,7 +785,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void func_fails() {
+        public void named_function_fails() {
           module("""
                myFunc() = "abc";
                myFunc() = "def";
@@ -761,7 +805,7 @@ public class VisibilityTest extends TestContext {
     }
 
     @Nested
-    class _param_shadowing {
+    class _defined_function_param_shadowing {
       @Test
       public void other_param_fails() {
         module("""
@@ -775,7 +819,7 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _imported {
         @Test
-        public void value_succeeds() {
+        public void named_value_succeeds() {
           DefsS imported = module("""
               otherModuleValue = "abc";
               """)
@@ -790,7 +834,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void func_succeeds() {
+        public void named_function_succeeds() {
           DefsS imported = module("""
               otherModuleFunc() = "abc";
               """)
@@ -805,7 +849,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void ctor_succeeds() {
+        public void constructor_succeeds() {
           DefsS imported = module("""
               OtherModuleStruct {}
               """)
@@ -823,7 +867,7 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _local {
         @Test
-        public void value_succeeds() {
+        public void named_value_succeeds() {
           module("""
               myValue = "abc";
               String myFunc(String myValue) = "abc";
@@ -832,7 +876,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void func_succeeds() {
+        public void named_function_succeeds() {
           module("""
               myFunc() = "abc";
               String myOtherFunc(String myFunc) = "abc";
@@ -841,10 +885,101 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void ctor_succeeds() {
+        public void constructor_succeeds() {
           module("""
              MyStruct {}
              String myFunc(String myStruct) = "abc";
+             """)
+              .loadsWithSuccess();
+        }
+      }
+    }
+
+    @Nested
+    class _anonymous_function_param_shadowing {
+      @Test
+      public void other_param_fails() {
+        module("""
+             myValue = (
+               String param,
+               String param) -> 7;
+               """)
+            .loadsWithError(3, alreadyDefinedIn(filePath(), 2, "param"));
+      }
+
+      @Nested
+      class _imported {
+        @Test
+        public void named_value_succeeds() {
+          var imported = module("""
+              otherModuleValue = "abc";
+              """)
+              .withImportedModFiles()
+              .loadsWithSuccess()
+              .getModuleAsDefinitions();
+          module("""
+              myValue = (String otherModuleValue) -> 7;
+              """)
+              .withImported(imported)
+              .loadsWithSuccess();
+        }
+
+        @Test
+        public void named_function_succeeds() {
+          var imported = module("""
+              otherModuleFunc() = "abc";
+              """)
+              .withImportedModFiles()
+              .loadsWithSuccess()
+              .getModuleAsDefinitions();
+          module("""
+              myValue = (String otherModuleFunc) -> 7;
+              """)
+              .withImported(imported)
+              .loadsWithSuccess();
+        }
+
+        @Test
+        public void constructor_succeeds() {
+          var imported = module("""
+              OtherModuleStruct {}
+              """)
+              .withImportedModFiles()
+              .loadsWithSuccess()
+              .getModuleAsDefinitions();
+          module("""
+              myValue = (String otherModuleStruct) -> 7;
+              """)
+              .withImported(imported)
+              .loadsWithSuccess();
+        }
+      }
+
+      @Nested
+      class _local {
+        @Test
+        public void named_value_succeeds() {
+          module("""
+              myValue = "abc";
+              otherValue = (String myValue) -> 7;
+              """)
+              .loadsWithSuccess();
+        }
+
+        @Test
+        public void named_function_succeeds() {
+          module("""
+              myFunc() = "abc";
+              myValue = (String myFunc) -> 7;
+              """)
+              .loadsWithSuccess();
+        }
+
+        @Test
+        public void constructor_succeeds() {
+          module("""
+             MyStruct {}
+             myValue = (String myStruct) -> 7;
              """)
               .loadsWithSuccess();
         }

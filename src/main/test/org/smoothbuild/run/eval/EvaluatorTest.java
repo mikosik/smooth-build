@@ -62,7 +62,24 @@ public class EvaluatorTest  extends TestContext {
       @Nested
       class _call {
         @Test
-        public void call_def() throws EvaluatorExc {
+        public void call_anon_func() throws EvaluatorExc {
+          var anonFuncS = anonFuncS(nlist(), intS(7));
+          var callS = callS(monoizeS(anonFuncS));
+          assertThat(evaluate(callS))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void call_anon_func_returning_value_from_its_closure() throws EvaluatorExc {
+          var anonFuncS = monoizeS(anonFuncS(nlist(), paramRefS(intTS(), "p")));
+          var defFuncS = monoizeS(defFuncS("myFunc", nlist(itemS(intTS(), "p")), callS(anonFuncS)));
+          var callS = callS(defFuncS, intS(7));
+          assertThat(evaluate(callS))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void call_def_func() throws EvaluatorExc {
           var defFuncS = defFuncS("n", nlist(), intS(7));
           var callS = callS(monoizeS(defFuncS));
           assertThat(evaluate(callS))
@@ -153,6 +170,24 @@ public class EvaluatorTest  extends TestContext {
 
     @Nested
     class _monoizable {
+      @Nested
+      class _anon_func {
+        @Test
+        public void mono_anon_func() throws EvaluatorExc {
+          assertThat(evaluate(monoizeS(anonFuncS(intS(7)))))
+              .isEqualTo(closureB(intB(7)));
+        }
+
+        @Test
+        public void poly_anon_func() throws EvaluatorExc {
+          var a = varA();
+          var polyAnonFuncS = anonFuncS(nlist(itemS(a, "a")), paramRefS(a, "a"));
+          var monoAnonFuncS = monoizeS(varMap(a, intTS()), polyAnonFuncS);
+          assertThat(evaluate(monoAnonFuncS))
+              .isEqualTo(closureB(list(intTB()), refB(intTB(), 0)));
+        }
+      }
+
       @Nested
       class _named_func {
         @Test

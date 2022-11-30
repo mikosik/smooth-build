@@ -5,17 +5,17 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.type.SchemaS;
-import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
-public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
+/**
+ * Evaluable that has fully qualified name.
+ */
+public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP, EvaluableP
     permits NamedFuncP, NamedValueP {
   private final Optional<ExprP> body;
   private final Optional<AnnP> ann;
-  private TypeS type;
-  private SchemaS schemaS;
 
   public NamedEvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
     super(name, loc);
@@ -23,6 +23,7 @@ public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
     this.ann = ann;
   }
 
+  @Override
   public Optional<ExprP> body() {
     return body;
   }
@@ -31,17 +32,14 @@ public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
     return ann;
   }
 
-  public TypeS typeS() {
-    return type;
-  }
-
   public abstract Optional<TypeP> evalT();
 
-  public void setTypeS(TypeS type) {
-    this.type = type;
-  }
-
   public abstract SchemaS schemaS();
+
+  @Override
+  public String q() {
+    return super.q();
+  }
 
   @Override
   public final boolean equals(Object object) {

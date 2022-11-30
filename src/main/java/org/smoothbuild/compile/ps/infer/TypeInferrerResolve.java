@@ -1,7 +1,9 @@
 package org.smoothbuild.compile.ps.infer;
 
+import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings;
+import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Optional;
@@ -13,6 +15,7 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
+import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -23,6 +26,7 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
+import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.out.log.Logger;
@@ -43,7 +47,9 @@ public class TypeInferrerResolve {
   public boolean resolveNamedValue(NamedValueP value) {
     var resolvedEvalT = unifier.resolve(value.typeS());
     if (resolveBody(value.body())) {
-      value.setSchemaS(new SchemaS(resolvedEvalT));
+      // Smooth language does not allow nesting named value yet so all vars are quantified.
+      var quantifiedVars = resolvedEvalT.vars();
+      value.setSchemaS(new SchemaS(quantifiedVars, resolvedEvalT));
       return true;
     } else {
       return false;
@@ -55,16 +61,12 @@ public class TypeInferrerResolve {
     return resolveBody(exprP);
   }
 
-  public boolean resolveNamedFunc(NamedFuncP namedFunc) {
-    var bodyBindings = funcBodyScopeBindings(bindings, namedFunc.params());
-    return new TypeInferrerResolve(unifier, logger, bodyBindings)
-        .resolveNamedFuncImpl(namedFunc);
-  }
-
-  private boolean resolveNamedFuncImpl(NamedFuncP namedFunc) {
-    var resolvedFuncT = (FuncTS) unifier.resolve(namedFunc.typeS());
-    if (resolveBody(namedFunc.body())) {
-      namedFunc.setSchemaS(new FuncSchemaS(resolvedFuncT));
+  public boolean resolveNamedFunc(NamedFuncP namedFuncP) {
+    if (resolveFuncBody(namedFuncP)) {
+      var resolvedFuncT = (FuncTS) unifier.resolve(namedFuncP.typeS());
+      // Smooth language does not allow nesting functions yet so all vars are quantified.
+      var quantifiedVars = resolvedFuncT.vars();
+      namedFuncP.setSchemaS(new FuncSchemaS(quantifiedVars, resolvedFuncT));
       return true;
     } else {
       return false;
@@ -88,6 +90,7 @@ public class TypeInferrerResolve {
     // @formatter:off
     return switch (expr) {
       case CallP       callP       -> resolveCall(callP);
+      case AnonFuncP   anonFuncP   -> resolveAnonFunc(anonFuncP);
       case NamedArgP   namedArgP   -> resolveNamedArg(namedArgP);
       case OrderP      orderP      -> resolveOrder(orderP);
       case SelectP     selectP     -> resolveSelect(selectP);
@@ -103,6 +106,31 @@ public class TypeInferrerResolve {
     return resolveExpr(callP.callee())
         && callP.positionedArgs().get().stream().allMatch(this::resolveExpr)
         && resolveExprType(callP);
+  }
+
+  private boolean resolveAnonFunc(AnonFuncP anonFuncP) {
+    if (resolveFuncBody(anonFuncP)) {
+      // `(VarS)` cast is safe because anonFuncP.monoizeVarMap().keys() has only
+      // TempVarS/VarS.
+      var varMapWithResolvedKeys =
+          mapKeys(anonFuncP.monoizeVarMap(), type -> (VarS) unifier.resolve(type));
+      anonFuncP.setMonoizeVarMap(varMapWithResolvedKeys);
+      if (resolveMonoizable(anonFuncP)) {
+        var schemaS = anonFuncP.schemaS();
+        var resolvedT = (FuncTS) unifier.resolve(schemaS.type());
+        var quantifiedVars = varSetS(
+            schemaS.quantifiedVars().stream().map(v -> (VarS) unifier.resolve(v)).toList());
+        anonFuncP.setSchemaS(new FuncSchemaS(quantifiedVars, resolvedT));
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean resolveFuncBody(FuncP funcP) {
+    var bodyBindings = funcBodyScopeBindings(bindings, funcP.params());
+    return new TypeInferrerResolve(unifier, logger, bodyBindings)
+        .resolveBody(funcP.body());
   }
 
   private boolean resolveNamedArg(NamedArgP namedArgP) {
@@ -126,12 +154,12 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveMonoizable(MonoizableP monoizableP) {
-    var resolvedMonoizeVarMap = mapValues(monoizableP.monoizeVarMap(), unifier::resolve);
-    if (resolvedMonoizeVarMap.values().stream().anyMatch(this::hasTempVar)) {
+    var varMapWithResolvedValues = mapValues(monoizableP.monoizeVarMap(), unifier::resolve);
+    if (varMapWithResolvedValues.values().stream().anyMatch(this::hasTempVar)) {
       logger.log(compileError(monoizableP.loc(), "Cannot infer actual type parameters."));
       return false;
     }
-    monoizableP.setMonoizeVarMap(resolvedMonoizeVarMap);
+    monoizableP.setMonoizeVarMap(varMapWithResolvedValues);
     return true;
   }
 

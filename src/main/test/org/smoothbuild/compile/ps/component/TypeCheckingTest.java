@@ -72,7 +72,20 @@ public class TypeCheckingTest extends TestContext {
   }
 
   @Nested
-  class _def_func {
+  class _anonymous_function {
+    @Nested
+    class _param_type_and_arg_type extends _abstract_param_type_and_arg_type {
+      @Override
+      public String buildSourceCode(String params, String argument) {
+        return """
+          result = ((%s) -> "abc")(%s);
+          """.formatted(params, argument);
+      }
+    }
+  }
+
+  @Nested
+  class _defined_function {
     @Nested
     class _res_type_and_its_body_type {
       @Test

@@ -4,12 +4,14 @@ import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 import static org.smoothbuild.util.collect.NList.nlist;
+import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -40,12 +42,14 @@ import org.smoothbuild.compile.lang.base.WithLoc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValueS;
+import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
@@ -64,6 +68,7 @@ import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.load.FileLoader;
+import org.smoothbuild.util.collect.Maps;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -139,7 +144,8 @@ public class SbTranslator {
   }
 
   private ExprB translateMonoize(MonoizeS monoizeS) {
-    var varMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
+    var monoizedVarMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
+    var varMap = Maps.concat(monoizedVarMap, typeSbTranslator.varMap());
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
         environment, cache, nameMapping, locMapping);
@@ -148,27 +154,44 @@ public class SbTranslator {
 
   public ExprB translatePolyExpr(PolyExprS polyExprS) {
     return switch (polyExprS) {
+      case AnonFuncS anonFuncS -> translateAnonFunc(anonFuncS);
       case EvaluableRefS evaluableRefS -> translatePolyRef(evaluableRefS);
     };
   }
 
+  private ExprB translateAnonFunc(AnonFuncS anonFuncS) {
+    var funcB = funcBodySbTranslator(anonFuncS)
+        .translateAnonFuncImpl(anonFuncS);
+    return saveLocAndReturn(anonFuncS, funcB);
+  }
+
+  private ExprB translateAnonFuncImpl(AnonFuncS anonFuncS) {
+    return bytecodeF.closurize(
+        translateT(anonFuncS.schema().type()),
+        translateExpr(anonFuncS.body()));
+  }
+
   private ExprB translatePolyRef(EvaluableRefS evaluableRefS) {
     return switch (evaluableRefS.namedEvaluable()) {
-      case NamedFuncS namedFuncS -> translateNamedFunc(namedFuncS);
-      case NamedValueS namedValS -> translateValue(evaluableRefS.loc(), namedValS);
+      case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
+      case NamedValueS namedValS -> translateNamedValueWithCache(evaluableRefS.loc(), namedValS);
     };
   }
 
-  private ExprB translateNamedFunc(NamedFuncS namedFuncS) {
+  private ExprB translateNamedFuncWithCache(NamedFuncS namedFuncS) {
     var key = new CacheKey(namedFuncS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> setEnvironmentAndTranslateFunc(namedFuncS));
+    return computeIfAbsent(cache, key, name -> translateNamedFunc(namedFuncS));
   }
 
-  private ExprB setEnvironmentAndTranslateFunc(NamedFuncS namedFuncS) {
-    var newEnvironment = namedFuncS.params();
-    var sbTranslator = new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
+  private ExprB translateNamedFunc(NamedFuncS namedFuncS) {
+    var funcB = funcBodySbTranslator(namedFuncS).translateNamedFuncImpl(namedFuncS);
+    return saveNalAndReturn(namedFuncS, funcB);
+  }
+
+  private SbTranslator funcBodySbTranslator(FuncS funcS) {
+    var newEnvironment = nlistWithNonUniqueNames(concat(funcS.params(), environment));
+    return new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
         newEnvironment, cache, nameMapping, locMapping);
-    return saveNalAndReturn(namedFuncS, sbTranslator.translateNamedFuncImpl(namedFuncS));
   }
 
   private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) {
@@ -244,12 +267,12 @@ public class SbTranslator {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateValue(Loc refLoc, NamedValueS namedValueS) {
+  private ExprB translateNamedValueWithCache(Loc refLoc, NamedValueS namedValueS) {
     var key = new CacheKey(namedValueS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateValueImpl(refLoc, namedValueS));
+    return computeIfAbsent(cache, key, name -> translateNamedValue(refLoc, namedValueS));
   }
 
-  private ExprB translateValueImpl(Loc refLoc, NamedValueS namedValueS) {
+  private ExprB translateNamedValue(Loc refLoc, NamedValueS namedValueS) {
     return switch (namedValueS) {
       case AnnValueS annValueS -> saveNalAndReturn(annValueS, translateAnnValue(annValueS));
       case DefValueS defValueS -> translateDefValue(refLoc, defValueS);

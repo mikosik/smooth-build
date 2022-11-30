@@ -39,6 +39,6 @@ public final class ClosureB extends FuncB {
 
   @Override
   public String exprToString() {
-    return "DefFunc(" + type().name() + ")";
+    return "Closure(" + type().name() + ")";
   }
 }

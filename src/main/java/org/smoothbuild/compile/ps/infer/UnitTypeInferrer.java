@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.ps.infer;
 
+import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
+import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -39,6 +41,7 @@ public class UnitTypeInferrer {
     // @formatter:off
     switch (expr) {
       case CallP       call       -> inferCall(call);
+      case AnonFuncP   anonFunc   -> inferAnonFunc(anonFunc);
       case NamedArgP   namedArg   -> inferNamedArg(namedArg);
       case OrderP      order      -> inferOrder(order);
       case RefP        ref        -> inferMonoizable(ref);
@@ -53,6 +56,13 @@ public class UnitTypeInferrer {
   private void inferCall(CallP call) {
     infer(call.callee());
     call.args().forEach(this::infer);
+  }
+
+  private void inferAnonFunc(AnonFuncP anonFunc) {
+    var bodyBindings = funcBodyScopeBindings(bindings, anonFunc.params());
+    new UnitTypeInferrer(unifier, bodyBindings)
+        .infer(anonFunc.bodyGet());
+    inferMonoizable(anonFunc);
   }
 
   private void inferNamedArg(NamedArgP namedArg) {

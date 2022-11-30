@@ -582,6 +582,82 @@ public class ExprSUsageTest extends TestContext {
   }
 
   @Nested
+  class _anon_func_used_as {
+    @Test
+    public void func_arg() {
+      var code = """
+          Int myFunc(()->Int param) = param();
+          result = myFunc(() -> 7);
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void func_body() {
+      var code = """
+          ()->Int myFunc() = () -> 7;
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void value_body() {
+      var code = """
+          ()->Int myValue = () -> 7;
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void array_elem() {
+      var code = """
+          result = [() -> 7];
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void param_default_val() {
+      var code = """
+          Int myFunc(()->Int value = () -> 7) = 17;
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void func_in_call_expression() {
+      var code = """
+          result = ((Int int) -> int)(7);
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void struct_in_select_expression_fails() {
+      var code = """
+          result = (() -> 7).myField;
+          """;
+      module(code)
+          .loadsWithError(1, "Illegal field access.");
+    }
+
+    @Test
+    public void parens_content() {
+      var code = """
+          result = (() -> 7);
+          """;
+      module(code)
+          .loadsWithSuccess();
+    }
+  }
+
+  @Nested
   class _func_reference_used_as {
     @Test
     public void func_arg() {

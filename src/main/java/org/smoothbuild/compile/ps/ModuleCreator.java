@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.ps;
 
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
+import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.ps.infer.TypeInferrer.inferStructType;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
@@ -13,7 +14,6 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
-import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.StructDefS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TDefS;
@@ -82,7 +82,7 @@ public class ModuleCreator {
     var params = structP.fields().map(
         f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.loc()));
     var funcTS = new FuncTS(toTypes(params), structT);
-    var schema = new FuncSchemaS(funcTS);
+    var schema = new FuncSchemaS(varSetS(), funcTS);
     var loc = structP.loc();
     return new SyntCtorS(schema, name, params, loc);
   }
@@ -98,7 +98,7 @@ public class ModuleCreator {
   public void visitValue(NamedValueP namedValueP) {
     var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
     if (typeInferrer.inferValueSchema(namedValueP)) {
-      var valueS = psTranslator.translateValue(namedValueP);
+      var valueS = psTranslator.translateNamedValue(namedValueP);
       bindings.add(namedValueP.name(), valueS);
     } else {
       bindings.add(namedValueP.name(), Optional.empty());
@@ -108,7 +108,7 @@ public class ModuleCreator {
   public void visitFunc(NamedFuncP namedFuncP) {
     var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
     if (typeInferrer.inferFuncSchema(namedFuncP)) {
-      Optional<NamedFuncS> funcS = psTranslator.translateFunc(namedFuncP);
+      var funcS = psTranslator.translateNamedFunc(namedFuncP);
       @SuppressWarnings("unchecked") // safe as NamedFuncS is immutable
       var namedEvaluableS = (Optional<NamedEvaluableS>) (Object) funcS;
       bindings.add(namedFuncP.name(), namedEvaluableS);

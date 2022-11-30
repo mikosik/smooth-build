@@ -102,6 +102,6 @@ public class ClosureBTest extends TestContext {
     var funcT = funcTB(stringTB(), intTB());
     var func = defFuncB(funcT, intB());
     assertThat(func.toString())
-        .isEqualTo("DefFunc((String)->Int)@" + func.hash());
+        .isEqualTo("Closure((String)->Int)@" + func.hash());
   }
 }

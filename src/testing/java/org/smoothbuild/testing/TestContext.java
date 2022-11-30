@@ -82,6 +82,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValueS;
+import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
@@ -116,6 +117,7 @@ import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
+import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.compile.sb.BytecodeMethodLoader;
@@ -646,11 +648,15 @@ public class TestContext {
   }
 
   public ClosureB defFuncB(ExprB body) {
+    return closureB(body);
+  }
+
+  public ClosureB closureB(ExprB body) {
     return defFuncB(list(), body);
   }
 
   public ClosureB defFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
-    return closureB(paramTs, combineB(), body);
+    return closureB(paramTs, body);
   }
 
   public ClosureB defFuncB(FuncTB type, ExprB body) {
@@ -659,6 +665,10 @@ public class TestContext {
 
   public ClosureB closureB(CombineB environment, ExprB body) {
     return closureB(list(), environment, body);
+  }
+
+  public ClosureB closureB(ImmutableList<TypeB> paramTs, ExprB body) {
+    return closureB(paramTs, combineB(), body);
   }
 
   public ClosureB closureB(ImmutableList<TypeB> paramTs, CombineB environment, ExprB body) {
@@ -926,18 +936,29 @@ public class TestContext {
     return TypeFS.INT;
   }
 
-  public static FuncSchemaS funcSchemaS(TypeS resT, TypeS... paramTs) {
-    return new FuncSchemaS(funcTS(list(paramTs), resT));
+  private static FuncSchemaS funcSchemaS(TypeS resT, NList<ItemS> params) {
+    return funcSchemaS(resT, toTypes(params));
   }
 
-  public FuncSchemaS funcSchemaS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return new FuncSchemaS(funcTS(paramTs, resT));
+  public static FuncSchemaS funcSchemaS(TypeS resT, TypeS... paramTs) {
+    return funcSchemaS(funcTS(list(paramTs), resT));
+  }
+
+  public static FuncSchemaS funcSchemaS(TypeS resT, ImmutableList<TypeS> paramTs) {
+    return funcSchemaS(funcTS(paramTs, resT));
+  }
+
+  private static FuncSchemaS funcSchemaS(FuncTS funcTS) {
+    return funcSchemaS(funcTS.vars(), funcTS);
+  }
+
+  private static FuncSchemaS funcSchemaS(VarSetS quantifiedVars, FuncTS funcTS) {
+    return new FuncSchemaS(quantifiedVars, funcTS);
   }
 
   public static SchemaS schemaS(TypeS typeS) {
-    return new SchemaS(typeS);
+    return new SchemaS(typeS.vars(), typeS);
   }
-
 
   public static StructTS personTS() {
     return structTS("Person",
@@ -1051,8 +1072,16 @@ public class TestContext {
     return monoizeS(varMap, evaluableRefS, loc);
   }
 
+  public static MonoizeS monoizeS(PolyExprS polyExprS) {
+    return monoizeS(1, polyExprS);
+  }
+
   public static MonoizeS monoizeS(int line, PolyExprS polyExprS) {
     return monoizeS(ImmutableMap.of(), polyExprS, loc(line));
+  }
+
+  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS) {
+    return monoizeS(1, varMap, polyExprS);
   }
 
   public static MonoizeS monoizeS(int line, ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS) {
@@ -1229,8 +1258,7 @@ public class TestContext {
   public static SyntCtorS syntCtorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
     var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(2)));
-    var funcTS = funcTS(toTypes(params.list()), structT);
-    return new SyntCtorS(new FuncSchemaS(funcTS), name, params, loc(line));
+    return new SyntCtorS(funcSchemaS(structT, params), name, params, loc(line));
   }
 
   public static AnnFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
@@ -1259,8 +1287,7 @@ public class TestContext {
   }
 
   public static AnnFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
-    var funcTS = funcTS(toTypes(params.list()), resT);
-    return new AnnFuncS(ann, new FuncSchemaS(funcTS), name, params, loc);
+    return new AnnFuncS(ann, funcSchemaS(resT, params), name, params, loc);
   }
 
   public static DefFuncS defFuncS(int line, String name, NList<ItemS> params, ExprS body) {
@@ -1277,8 +1304,36 @@ public class TestContext {
 
   public static DefFuncS defFuncS(
       int line, TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    var schema = new FuncSchemaS(funcTS(toTypes(params), resT));
+    var schema = funcSchemaS(resT, params);
     return new DefFuncS(schema, name, params, body, loc(line));
+  }
+
+  public static AnonFuncS anonFuncS(VarSetS quantifiedVars, ExprS body) {
+    return anonFuncS(quantifiedVars, nlist(), body);
+  }
+
+  public static AnonFuncS anonFuncS(VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
+    return anonFuncS(1, quantifiedVars, params, body);
+  }
+
+  public static AnonFuncS anonFuncS(
+      int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
+    var funcTS = funcTS(toTypes(params), body.evalT());
+    var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
+    return new AnonFuncS(funcSchemaS, params, body, loc(line));
+  }
+
+  public static AnonFuncS anonFuncS(ExprS body) {
+    return anonFuncS(1, nlist(), body);
+  }
+
+  public static AnonFuncS anonFuncS(NList<ItemS> params, ExprS body) {
+    return anonFuncS(1, params, body);
+  }
+
+  public static AnonFuncS anonFuncS(int line, NList<ItemS> params, ExprS body) {
+    var funcSchemaS = funcSchemaS(body.evalT(), toTypes(params));
+    return new AnonFuncS(funcSchemaS, params, body, loc(line));
   }
 
   public static DefFuncS idFuncS() {

@@ -21,6 +21,7 @@ import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.StructP;
+import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
@@ -52,6 +53,7 @@ public class AnalyzeSemantically {
     detectIllegalNames(logBuffer, ast);
     detectIllegalAnnotations(logBuffer, ast);
     detectStructFieldWithDefaultValue(logBuffer, ast);
+    detectAnonymousFuncParamWithDefaultValue(logBuffer, ast);
     return logBuffer.toImmutableLogs();
   }
 
@@ -290,6 +292,23 @@ public class AnalyzeSemantically {
         if (field.defaultValue().isPresent()) {
           logger.log(compileError(field.loc(), "Struct field `" + field.name()
               + "` has default value. Only function parameters can have default value."));
+        }
+      }
+    }.visitAst(ast);
+  }
+
+  private static void detectAnonymousFuncParamWithDefaultValue(LogBuffer logger, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitAnonFunc(AnonFuncP anonFuncP) {
+        super.visitAnonFunc(anonFuncP);
+        anonFuncP.params().forEach(this::logErrorIfDefaultValuePresent);
+      }
+
+      private void logErrorIfDefaultValuePresent(ItemP param) {
+        if (param.defaultValue().isPresent()) {
+          logger.log(compileError(param.loc(),
+              "Parameter " + param.q() + " of anonymous function cannot have default value."));
         }
       }
     }.visitAst(ast);

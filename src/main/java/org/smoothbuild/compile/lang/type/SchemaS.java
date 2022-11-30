@@ -17,13 +17,6 @@ public sealed class SchemaS implements Named
   private final VarSetS quantifiedVars;
   private final TypeS type;
 
-  public SchemaS(TypeS type) {
-    // This constructor assumes that all variables in `type` are quantified.
-    // This is currently always true because smooth language doesn't allow
-    // enclosing function or value within other function or value.
-    this(type.vars(), type);
-  }
-
   public SchemaS(VarSetS quantifiedVars, TypeS type) {
     assertQuantifiedVarsArePresentInType(quantifiedVars, type);
     this.name = calculateName(quantifiedVars, type);

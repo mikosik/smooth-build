@@ -1,31 +1,30 @@
-package org.smoothbuild.compile.ps.ast.refable;
+package org.smoothbuild.compile.ps.ast.expr;
 
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
-import org.smoothbuild.compile.ps.ast.AnnP;
-import org.smoothbuild.compile.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.ps.ast.refable.FuncP;
+import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 
-public final class NamedFuncP extends NamedEvaluableP implements FuncP {
-  private final Optional<TypeP> resT;
+public final class AnonFuncP extends MonoizableP implements FuncP {
   private final NList<ItemP> params;
+  private final ExprP body;
   private FuncTS type;
-  private FuncSchemaS funcSchemaS;
+  private FuncSchemaS schemaS;
 
-  public NamedFuncP(Optional<TypeP> resT, String name, NList<ItemP> params, Optional<ExprP> body,
-      Optional<AnnP> ann, Loc loc) {
-    super(name, body, ann, loc);
-    this.resT = resT;
+  public AnonFuncP(NList<ItemP> params, ExprP body, Loc loc) {
+    super(loc);
     this.params = params;
+    this.body = body;
   }
 
   @Override
   public Optional<TypeP> resT() {
-    return resT;
+    return Optional.empty();
   }
 
   @Override
@@ -34,8 +33,12 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
   }
 
   @Override
-  public Optional<TypeP> evalT() {
-    return resT();
+  public Optional<ExprP> body() {
+    return Optional.of(body);
+  }
+
+  public ExprP bodyGet() {
+    return body;
   }
 
   @Override
@@ -50,10 +53,15 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
 
   @Override
   public FuncSchemaS schemaS() {
-    return funcSchemaS;
+    return schemaS;
   }
 
-  public void setSchemaS(FuncSchemaS funcSchemaS) {
-    this.funcSchemaS = funcSchemaS;
+  public void setSchemaS(FuncSchemaS schemaS) {
+    this.schemaS = schemaS;
+  }
+
+  @Override
+  public String q() {
+    return "anonymous function";
   }
 }

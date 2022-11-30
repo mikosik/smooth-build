@@ -5,6 +5,7 @@ Change Log
 Version 0.21.0 (??????????)
 ---------------------------
 
+ * changed smooth language: added anonymous functions
  * redesigned function type literal from A(B,C) to (B,C)->A
  * added parenthesis for enclosing expressions
  * switched code to jdk 19

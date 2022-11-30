@@ -20,6 +20,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothParser.AnnContext;
+import org.smoothbuild.antlr.lang.SmoothParser.AnonymousFuncContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTContext;
@@ -39,6 +40,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -84,11 +86,11 @@ public class AstCreator {
         visitChildren(namedFunc);
         Optional<TypeP> type = createTypeSane(namedFunc.type());
         String name = nameNode.getText();
-        Optional<ExprP> expr = createPipeSane(namedFunc.pipe());
+        Optional<ExprP> body = createPipeSane(namedFunc.pipe());
         Optional<AnnP> annotation = createNativeSane(namedFunc.ann());
         var loc = locOf(filePath, nameNode);
         var params = createItems(namedFunc.itemList());
-        evaluables.add(new NamedFuncP(type, name, params, expr, annotation, loc));
+        evaluables.add(new NamedFuncP(type, name, params, body, annotation, loc));
         return null;
       }
 
@@ -179,6 +181,7 @@ public class AstCreator {
       private ExprP createExpr(AtomicReference<ExprP> piped, ExprContext expr) {
         return switch (expr) {
           case ChainContext chain -> createChain(piped, chain);
+          case AnonymousFuncContext anonFunc -> createAnonFunc(anonFunc);
           default -> throw new RuntimeException("shouldn't happen");
         };
       }
@@ -235,6 +238,13 @@ public class AstCreator {
           }
         }
         return result;
+      }
+
+      private AnonFuncP createAnonFunc(AnonymousFuncContext anonymousFunc) {
+        var anonFunc = anonymousFunc.anonFunc();
+        var params = createItems(anonFunc.itemList());
+        var body = createExpr(anonFunc.expr());
+        return new AnonFuncP(params, body, locOf(filePath, anonFunc));
       }
 
       private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {

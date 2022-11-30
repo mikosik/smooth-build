@@ -23,12 +23,14 @@ import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
+import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
+import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -39,8 +41,9 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
+import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
+import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
-import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -74,16 +77,21 @@ public class ExprTypeUnifier {
   }
 
   public boolean unifyNamedFunc(NamedFuncP namedFunc) {
-    var paramTs = inferParamTs(namedFunc.params());
-    var resT = translateOrGenerateTempVar(namedFunc.resT());
-    return mapPair(paramTs, resT, (p, r) ->  unifyNamedFunc(namedFunc, p, r))
+    return unifyFunc(namedFunc);
+  }
+
+  private boolean unifyFunc(FuncP func) {
+    var paramTs = inferParamTs(func.params());
+    var resT = translateOrGenerateTempVar(func.resT());
+    return mapPair(paramTs, resT, (p, r) -> unifyFunc(func, p, r))
         .orElse(false);
   }
 
-  private boolean unifyNamedFunc(NamedFuncP namedFunc, ImmutableList<TypeS> paramTs, TypeS resT) {
-    var bodyBindings = funcBodyScopeBindings(bindings, namedFunc.params());
+  private boolean unifyFunc(FuncP func, ImmutableList<TypeS> paramTs, TypeS resT) {
+    var bodyBindings = funcBodyScopeBindings(bindings, func.params());
     var funcTS = new FuncTS(paramTs, resT);
-    return unifyNamedEvaluableBody(namedFunc, resT, funcTS, bodyBindings);
+    func.setTypeS(funcTS);
+    return unifyEvaluableBody(func, resT, funcTS, bodyBindings);
   }
 
   private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
@@ -94,36 +102,33 @@ public class ExprTypeUnifier {
 
   public boolean unifyNamedValue(NamedValueP namedValue) {
     return translateOrGenerateTempVar((namedValue).evalT())
-        .map(evalT -> unifyNamedEvaluableBody(namedValue, evalT, evalT, bindings))
+        .map(evalT -> {
+          namedValue.setTypeS(evalT);
+          return unifyEvaluableBody(namedValue, evalT, evalT, bindings);
+        })
         .orElse(false);
   }
 
-  private Boolean unifyNamedEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type,
+  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type,
       Bindings<? extends Optional<? extends RefableS>> bindings) {
-    var vars = outerScopeVars.withAdded(type.vars().filter(v -> !v.isTemporary()));
+    var vars = outerScopeVars.withAdded(type.vars());
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
-        .unifyNamedEvaluableBody(evaluable, evalT, type);
+        .unifyEvaluableBody(evaluable, evalT, type);
   }
 
-  private Boolean unifyNamedEvaluableBody(NamedEvaluableP evaluable, TypeS evalT, TypeS type) {
-    boolean success = evaluable.body()
+  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type) {
+    return evaluable.body()
         .map(body -> unifyBodyExprAndEvaluationType(evaluable, evalT, body))
         .orElse(true);
-    if (success) {
-      evaluable.setTypeS(type);
-    }
-    return success;
   }
 
-  private boolean unifyBodyExprAndEvaluationType(
-      NamedEvaluableP evaluable, TypeS typeS, ExprP body) {
+  private boolean unifyBodyExprAndEvaluationType(EvaluableP evaluable, TypeS typeS, ExprP body) {
     return unifyExpr(body)
         .map(bodyT -> unifyEvaluationTypeWithBodyType(evaluable, typeS, bodyT))
         .orElse(false);
   }
 
-  private boolean unifyEvaluationTypeWithBodyType(
-      NamedEvaluableP evaluable, TypeS typeS, TypeS bodyT) {
+  private boolean unifyEvaluationTypeWithBodyType(EvaluableP evaluable, TypeS typeS, TypeS bodyT) {
     try {
       unifier.unify(typeS, bodyT);
       return true;
@@ -142,6 +147,7 @@ public class ExprTypeUnifier {
     // @formatter:off
     return switch (expr) {
       case CallP       callP       -> unifyAndMemoize(this::unifyCall, callP);
+      case AnonFuncP   anonFuncP   -> unifyAndMemoize(this::unifyAnonFunc, anonFuncP);
       case NamedArgP   namedArgP   -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP      orderP      -> unifyAndMemoize(this::unifyOrder, orderP);
       case RefP        refP        -> unifyAndMemoize(this::unifyRef, refP);
@@ -203,6 +209,21 @@ public class ExprTypeUnifier {
       return Optional.of(resT);
     } catch (UnifierExc e) {
       logger.log(compileError(loc, "Illegal call."));
+      return Optional.empty();
+    }
+  }
+
+  private Optional<TypeS> unifyAnonFunc(AnonFuncP anonFuncP) {
+    if (unifyFunc(anonFuncP)) {
+      // `type` needs to be resolved in case its resolved version contains variables
+      // that are quantified in outer scope, so we won't include them in quantifiedVars below.
+      var resolvedFuncT = (FuncTS) unifier.resolve(anonFuncP.typeS());
+      var resolvedQuantifiedVars = resolvedFuncT.vars()
+          .withRemoved(outerScopeVars.map(unifier::resolve));
+      var funcSchemaS = new FuncSchemaS(resolvedQuantifiedVars, resolvedFuncT);
+      anonFuncP.setSchemaS(funcSchemaS);
+      return unifyMonoizable(anonFuncP);
+    } else {
       return Optional.empty();
     }
   }

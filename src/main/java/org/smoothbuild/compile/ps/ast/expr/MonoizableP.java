@@ -11,21 +11,14 @@ import com.google.common.collect.ImmutableMap;
  * Expression that can be monomorphized.
  */
 public abstract sealed class MonoizableP extends ExprP
-    permits RefP {
-  private SchemaS schemaS;
+    permits AnonFuncP, RefP {
   private ImmutableMap<VarS, TypeS> monoizeVarMap;
 
   public MonoizableP(Loc loc) {
     super(loc);
   }
 
-  public SchemaS schemaS() {
-    return schemaS;
-  }
-
-  public void setSchemaS(SchemaS schemaS) {
-    this.schemaS = schemaS;
-  }
+  public abstract SchemaS schemaS();
 
   public void setMonoizeVarMap(ImmutableMap<VarS, TypeS> monoizeVarMap) {
     this.monoizeVarMap = monoizeVarMap;

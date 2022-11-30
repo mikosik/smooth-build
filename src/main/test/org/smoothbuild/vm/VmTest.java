@@ -223,7 +223,23 @@ public class VmTest extends TestContext {
       @Nested
       class _call {
         @Test
-        public void def_func() {
+        public void closure() {
+          var closure = closureB(intB(7));
+          var call = callB(closure);
+          assertThat(evaluate(call))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void closure_with_environment() {
+          var closure = closureB(combineB(intB(7)), refB(intTB(), 0));
+          var call = callB(closure);
+          assertThat(evaluate(call))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void defined_function() {
           var func = defFuncB(intB(7));
           var call = callB(func);
           assertThat(evaluate(call))
@@ -231,7 +247,7 @@ public class VmTest extends TestContext {
         }
 
         @Test
-        public void def_func_passed_as_arg() {
+        public void defined_function_passed_as_argument() {
           var func = defFuncB(intB(7));
           var paramT = func.evalT();
           var outerFunc = defFuncB(list(paramT), callB(refB(paramT, 0)));
@@ -241,7 +257,7 @@ public class VmTest extends TestContext {
         }
 
         @Test
-        public void def_func_returned_from_call() {
+        public void defined_function_returned_from_call() {
           var func = defFuncB(intB(7));
           var outerFunc = defFuncB(func);
           var call = callB(callB(outerFunc));
@@ -250,7 +266,7 @@ public class VmTest extends TestContext {
         }
 
         @Test
-        public void if_func_with_true_condition() {
+        public void if_function_with_true_condition() {
           var ifFunc = ifFuncB(intTB());
           var call = callB(ifFunc, boolB(true), intB(7), intB(0));
           assertThat(evaluate(call))

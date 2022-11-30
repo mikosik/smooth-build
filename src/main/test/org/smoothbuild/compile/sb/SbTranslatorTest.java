@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -21,7 +22,6 @@ import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
@@ -139,6 +139,37 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
+      public void anon_func() {
+        var anonFuncS = anonFuncS(
+            varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
+        var monoAnonFuncS = monoizeS(varMap(varA(), intTS()), anonFuncS);
+        assertTranslation(monoAnonFuncS, closurizeB(funcTB(intTB(), intTB()), refB(intTB(), 0)));
+      }
+
+      @Test
+      public void anon_func_referencing_param_of_enclosing_func() {
+        var monoAnonFuncS = monoizeS(anonFuncS(paramRefS(intTS(), "p")));
+        var monoFuncS = monoizeS(defFuncS("myFunc", nlist(itemS(intTS(), "p")), monoAnonFuncS));
+
+        var bodyB = closurizeB(funcTB(intTB()), refB(intTB(), 0));
+        var funcB = defFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
+
+        assertTranslation(monoFuncS, funcB);
+      }
+
+      @Test
+      public void anon_func_with_param_referencing_param_of_enclosing_func() {
+        var monoAnonFuncS = monoizeS(anonFuncS(
+            nlist(itemS(blobTS(), "a")), paramRefS(intTS(), "p")));
+        var monoFuncS = monoizeS(defFuncS("myFunc", nlist(itemS(intTS(), "p")), monoAnonFuncS));
+
+        var bodyB = closurizeB(funcTB(blobTB(), intTB()), refB(intTB(), 1));
+        var funcB = defFuncB(funcTB(intTB(), funcTB(blobTB(), intTB())), bodyB);
+
+        assertTranslation(monoFuncS, funcB);
+      }
+
+      @Test
       public void call() {
         var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
         var call = callS(monoizeS(defFunc));
@@ -171,6 +202,21 @@ public class SbTranslatorTest extends TestContext {
 
       @Nested
       class _monoize {
+        // regression test
+        @Test
+        public void generic_expr_monoized_twice_with_outer_monoize_actually_setting_its_var() {
+          var monoAnonFuncS = monoizeS(anonFuncS(varSetS(), paramRefS(varA(), "a")));
+          var monoFuncS = monoizeS(
+              varMap(varA(), intTS()),
+              defFuncS("myFunc", nlist(itemS(varA(), "a")), monoAnonFuncS));
+
+          var bodyB = closurizeB(funcTB(intTB()), refB(intTB(), 0));
+          var funcB = defFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
+
+          assertTranslation(monoFuncS, funcB);
+        }
+
+
         @Nested
         class _named_value {
           @Test
@@ -381,6 +427,12 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
+      public void anonFunc() {
+        var monoAnonFuncS = monoizeS(anonFuncS(7, nlist(), stringS("abc")));
+        assertNalMapping(monoAnonFuncS, null, loc(7));
+      }
+
+      @Test
       public void call() {
         var defFunc = defFuncS(7, "myFunc", nlist(), stringS("abc"));
         var call = callS(8, monoizeS(defFunc));
@@ -521,14 +573,14 @@ public class SbTranslatorTest extends TestContext {
     assertNalMapping(newTranslator(), exprS, expectedName, expectedLoc);
   }
 
-  private void assertNalMapping(SbTranslator sbTranslator, ExprS exprS, String expectedName,
-      Loc expectedLoc) {
+  private void assertNalMapping(
+      SbTranslator sbTranslator, ExprS exprS, String expectedName, Loc expectedLoc) {
     var exprB = sbTranslator.translateExpr(exprS);
     assertNalMapping(sbTranslator, exprB, expectedName, expectedLoc);
   }
 
-  private static void assertNalMapping(SbTranslator sbTranslator, ExprB exprB,
-      String expectedName, Loc expectedLoc) {
+  private static void assertNalMapping(
+      SbTranslator sbTranslator, ExprB exprB, String expectedName, Loc expectedLoc) {
     var bsMapping = sbTranslator.bsMapping();
     assertThat(bsMapping.nameMapping().get(exprB.hash()))
         .isEqualTo(expectedName);

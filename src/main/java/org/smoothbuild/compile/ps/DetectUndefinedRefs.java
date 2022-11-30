@@ -1,15 +1,19 @@
 package org.smoothbuild.compile.ps;
 
 import static org.smoothbuild.compile.ps.CompileError.compileError;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.StructP;
+import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
+import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.out.log.LogBuffer;
@@ -50,11 +54,21 @@ public class DetectUndefinedRefs extends AstVisitor {
 
   @Override
   public void visitNamedFunc(NamedFuncP namedFuncP) {
-    namedFuncP.params().forEach(p -> p.defaultValue().ifPresent(this::visitExpr));
-    namedFuncP.body().ifPresent(body -> {
-      var definedNamesWithParams = new HashSet<>(definedNames);
-      namedFuncP.params().forEach(p -> definedNamesWithParams.add(p.name()));
-      new DetectUndefinedRefs(ast, definedNamesWithParams, logs).visitExpr(body);
+    visitFunc(namedFuncP);
+  }
+
+  @Override
+  public void visitAnonFunc(AnonFuncP anonFuncP) {
+    visitFunc(anonFuncP);
+  }
+
+  private void visitFunc(FuncP funcP) {
+    funcP.params().forEach(p -> p.defaultValue().ifPresent(this::visitExpr));
+    funcP.body().ifPresent(body -> {
+      var definedNamesInBodyScope = new HashSet<>(definedNames);
+      definedNamesInBodyScope.addAll(map(funcP.params(), NalImpl::name));
+      new DetectUndefinedRefs(ast, definedNamesInBodyScope, logs)
+          .visitExpr(body);
     });
   }
 

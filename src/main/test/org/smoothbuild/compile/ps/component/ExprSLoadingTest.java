@@ -1,6 +1,8 @@
 package org.smoothbuild.compile.ps.component;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compile.lang.type.TypeFS.INT;
+import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.Optional;
@@ -48,7 +50,75 @@ public class ExprSLoadingTest extends TestContext {
   }
 
   @Nested
-  class _operator {
+  class _expr {
+    @Nested
+    class _anon_func {
+      @Test
+      public void mono_anon_func() {
+        var code = """
+            result =
+              (Int int)
+                -> int;
+            """;
+        var anonFunc = anonFuncS(2, nlist(itemS(2, INT, "int")), paramRefS(3, INT, "int"));
+        var monoized = monoizeS(2, varMap(), anonFunc);
+        var result = defValS(1, "result", monoized);
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluable(result);
+      }
+
+      @Test
+      public void mono_anon_func_using_generic_type_of_enclosing_func() {
+        var code = """
+            (A)->A myFunc(A outerA) =
+              (A a)
+                -> a;
+            """;
+        var body = paramRefS(3, varA(), "a");
+        var anonFunc = anonFuncS(2, varSetS(), nlist(itemS(2, varA(), "a")), body);
+        var monoized = monoizeS(2, varMap(), anonFunc);
+        var myFunc = defFuncS(1, "myFunc", nlist(itemS(1, varA(), "outerA")), monoized);
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluable(myFunc);
+      }
+
+      @Test
+      public void mono_anon_func_using_generic_type_of_enclosing_func_two_level_deep() {
+        var code = """
+            () -> (A)->A myFunc(A outerA) =
+              ()
+                -> (A a)
+                  -> a;
+            """;
+        var deeperBody = paramRefS(4, varA(), "a");
+        var deeperAnonFunc = anonFuncS(3, varSetS(), nlist(itemS(3, varA(), "a")), deeperBody);
+        var monoDeeperAnonFunc = monoizeS(3, varMap(), deeperAnonFunc);
+        var anonFunc = anonFuncS(2, varSetS(), nlist(), monoDeeperAnonFunc);
+        var monoAnonFunc = monoizeS(2, varMap(), anonFunc);
+        var myFunc = defFuncS(1, "myFunc", nlist(itemS(1, varA(), "outerA")), monoAnonFunc);
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluable(myFunc);
+      }
+
+      @Test
+      public void poly_anon_func() {
+        var code = """
+            result =
+              (A a)
+                -> a;
+            """;
+        var anonFunc = anonFuncS(2, nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
+        var monoized = monoizeS(2, varMap(varA(), varB()), anonFunc);
+        var result = defValS(1, "result", monoized);
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluable(result);
+      }
+    }
+
     @Nested
     class _call {
       @Nested
