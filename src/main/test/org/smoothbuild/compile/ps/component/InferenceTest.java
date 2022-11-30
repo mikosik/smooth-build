@@ -8,9 +8,9 @@ import org.smoothbuild.testing.TestContext;
 
 public class InferenceTest extends TestContext {
   @Nested
-  class _value {
+  class _infer_named_value_type {
     @Nested
-    class _infer_mono_type_from {
+    class _mono_type {
       @Test
       public void string_literal() {
         var code = """
@@ -97,7 +97,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Nested
-    class _infer_poly_type_from {
+    class _poly_type {
       @Test
       public void poly_literal() {
         var code = """
@@ -133,9 +133,9 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _func {
+  class _infer_named_func_result_type {
     @Nested
-    class _infer_mono_func_result_type_from {
+    class _of_mono_func_from {
       @Nested
       class _literal {
         @Test
@@ -258,7 +258,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Nested
-    class _infer_poly_func_result_type_from {
+    class _of_poly_func_from {
       @Nested
       class _literal {
         @Test
@@ -530,260 +530,25 @@ public class InferenceTest extends TestContext {
         }
       }
     }
-
-    @Nested
-    class _infer_poly_func_call_type {
-      @Nested
-      class _fails_when_var_unifies_two_incompatible_types {
-        @Test
-        public void base_types() {
-          var code = """
-            String myEqual(A p1, A p2) = "true";
-            result = myEqual("def", 0x01);
-            """;
-          module(code)
-              .loadsWithError(2, "Illegal call.");
-        }
-
-        @Test
-        public void base_type_and_array_of_that_base_type() {
-          var code = """
-            String myEqual(A p1, A p2) = "true";
-            result = myEqual(7, [7]);
-            """;
-          module(code)
-              .loadsWithError(2, "Illegal call.");
-        }
-
-        @Test
-        public void arrays() {
-          var code = """
-            String myEqual(A p1, A p2) = "true";
-            result = myEqual(["def"], [0x01]);
-            """;
-          module(code)
-              .loadsWithError(2, "Illegal call.");
-        }
-
-        @Test
-        public void structs_with_the_same_object_db_representation() {
-          var code = """
-            MyStruct1 {
-              String x,
-              String y,
-            }
-            MyStruct2 {
-              String a,
-              String b,
-            }
-            A myEqual(A a1, A a2) = a1;
-            result = myEqual(myStruct1("aaa", "bbb"), myStruct2("aaa", "bbb"));
-            """;
-          module(code)
-              .loadsWithError(10, "Illegal call.");
-        }
-      }
-
-      @Nested
-      class _identity_func_applied_to {
-        @Test
-        public void arg_of_base_type() {
-          var code = """
-            A myIdentity(A a) = a;
-            myValue = myIdentity("abc");
-            """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
-        }
-
-        @Test
-        public void array() {
-          var code = """
-            A myIdentity(A a) = a;
-            myValue = myIdentity(["abc"]);
-            """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
-        }
-
-        @Test
-        public void func() {
-          var code = """
-            A myIdentity(A a) = a;
-            String myFunc(Blob param) = "abc";
-            myValue = myIdentity(myFunc);
-            """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", schemaS(funcTS(blobTS(), stringTS())));
-        }
-      }
-
-      @Nested
-      class _first_elem_func_applied_to {
-        @Test
-        public void array() {
-          var code = """
-            @Native("impl.met")
-            A firstElement([A] array);
-            myValue = firstElement(["abc"]);
-            """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
-        }
-
-        @Test
-        public void array2() {
-          var code = """
-            @Native("impl.met")
-            A firstElement([A] array);
-            myValue = firstElement([["abc"]]);
-            """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
-        }
-      }
-
-      @Nested
-      class _single_elem_array_func_applied_to {
-        @Test
-        public void arg_of_base_type() {
-          var code = """
-            [A] singleElement(A a) = [a];
-            myValue = singleElement("abc");
-            """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
-        }
-
-        @Test
-        public void array() {
-          var code = """
-            [A] singleElement(A a) = [a];
-            myValue = singleElement(["abc"]);
-            """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", schemaS(arrayTS(arrayTS(stringTS()))));
-        }
-
-        @Test
-        public void func() {
-          var code = """
-            [A] singleElement(A a) = [a];
-            String myFunc(Blob param) = "abc";
-            myValue = singleElement(myFunc);
-            """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue",
-                  schemaS(arrayTS(funcTS(blobTS(), stringTS()))));
-        }
-      }
-
-      @Nested
-      class _from_default_arg {
-        @Test
-        public void generic_param_with_default_value_with_concrete_type() {
-          var code = """
-              A myFunc(A a = 7) = a;
-              myValue = myFunc();
-              """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", schemaS(intTS()));
-        }
-
-        @Test
-        public void generic_param_with_default_value_with_polymorphic_type() {
-          var code = """
-              A myId(A a) = a;
-              (B)->A myFunc(A a, (B)->A f = myId) = f;
-              myValue = myFunc(7);
-              """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myValue", funcSchemaS(intTS(), intTS()));
-        }
-
-        @Test
-        public void generic_param_with_default_value_with_concrete_type_error_case() {
-          var code = """
-              A myFunc(A a, A other = 7) = a;
-              myValue = myFunc("abc");
-              """;
-          module(code)
-              .loadsWithError(2, "Illegal call.");
-        }
-      }
-
-      @Nested
-      class _with_default_type {
-        @Test
-        public void test() {
-          var code = """
-              Int myFunc(A a1, A a2) = 7;
-              result = myFunc([], []);
-              """;
-          var myFunc = defFuncS(1, "myFunc",
-              nlist(itemS(1, varA(), "a1"), itemS(1, varA(), "a2")), intS(1, 7));
-          var emptyArray = orderS(2, tupleTS());
-          var call = callS(2, monoizeS(2, varMap(varA(), arrayTS(tupleTS())), myFunc),
-              emptyArray, emptyArray);
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluable(defValS(2, "result", call));
-        }
-      }
-
-      @Test
-      public void converter_applier() {
-        var code = """
-          B converterApplier(A item, (A)->B convert) = convert(item);
-          [C] single(C elem) = [elem];
-          result = converterApplier("abc", single);
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(stringTS())));
-      }
-    }
-
-    @Nested
-    class _default_arg {
-      @Test
-      public void two_differently_monoized_calls_to_poly_func_with_poly_default_value_within_one_expr() {
-        var code = """
-          [A] empty([A] array = []) = array;
-          myFunc([String] s, [Int] i) = 7;
-          myValue = myFunc(empty(), empty());
-          """;
-        module(code)
-            .loadsWithSuccess();
-      }
-
-      @Test
-      public void two_param_default_values_with_different_vars_referencing_same_poly_func() {
-        var code = """
-          A myId(A a) = a;
-          myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
-          myValue = myFunc(7, "abc");
-          """;
-        module(code)
-            .loadsWithSuccess();
-      }
-    }
   }
 
   @Nested
-  class _array {
+  class _infer_order_type {
     @Nested
-    class _infer_single_elem_array {
+    class _when_order_has_zero_elems {
+      @Test
+      public void zero_elems_order() {
+        var code = """
+          result = [];
+          """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("result", schemaS(arrayTS(varA())));
+      }
+    }
+
+    @Nested
+    class _when_order_has_one_elem {
       @Test
       public void with_string_type() {
         var code = """
@@ -859,7 +624,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Nested
-    class _infer_two_elems_array {
+    class _when_order_has_two_elems {
       @Test
       public void with_same_base_type() {
         var code = """
@@ -871,7 +636,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_different_base_types() {
+      public void with_different_base_types_fails() {
         var code = """
           result = [
             "abc",
@@ -899,7 +664,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_different_mono_func_types() {
+      public void with_different_mono_func_types_fails() {
         var code = """
           String firstFunc() = "abc";
           Blob secondFunc() = 0x01;
@@ -926,7 +691,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_different_poly_funcs_types() {
+      public void with_different_poly_funcs_types_fails() {
         var code = """
           A myId(A a) = a;
           B otherFunc(B b, C c) = b;
@@ -950,7 +715,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void one_with_mono_type_one_with_poly_type_not_convertible_to_mono_one() {
+      public void one_with_mono_type_one_with_poly_type_not_convertible_to_mono_one_fails() {
         var code = """
           Int myIntId(Int i) = i;
           A myId(A a, A b) = a;
@@ -960,6 +725,249 @@ public class InferenceTest extends TestContext {
             .loadsWithError(3,
                 "Cannot infer type for array literal. Its element types are not compatible.");
       }
+    }
+  }
+
+  @Nested
+  class _infer_monoization_arguments {
+    @Nested
+    class _fails_when_var_unifies_two_incompatible_types {
+      @Test
+      public void base_types() {
+        var code = """
+            String myEqual(A p1, A p2) = "true";
+            result = myEqual("def", 0x01);
+            """;
+        module(code)
+            .loadsWithError(2, "Illegal call.");
+      }
+
+      @Test
+      public void base_type_and_array_of_that_base_type() {
+        var code = """
+            String myEqual(A p1, A p2) = "true";
+            result = myEqual(7, [7]);
+            """;
+        module(code)
+            .loadsWithError(2, "Illegal call.");
+      }
+
+      @Test
+      public void arrays() {
+        var code = """
+            String myEqual(A p1, A p2) = "true";
+            result = myEqual(["def"], [0x01]);
+            """;
+        module(code)
+            .loadsWithError(2, "Illegal call.");
+      }
+
+      @Test
+      public void structs_with_the_same_object_db_representation() {
+        var code = """
+            MyStruct1 {
+              String x,
+              String y,
+            }
+            MyStruct2 {
+              String a,
+              String b,
+            }
+            A myEqual(A a1, A a2) = a1;
+            result = myEqual(myStruct1("aaa", "bbb"), myStruct2("aaa", "bbb"));
+            """;
+        module(code)
+            .loadsWithError(10, "Illegal call.");
+      }
+    }
+
+    @Nested
+    class _identity_func_applied_to {
+      @Test
+      public void arg_of_base_type() {
+        var code = """
+            A myIdentity(A a) = a;
+            myValue = myIdentity("abc");
+            """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+      }
+
+      @Test
+      public void array() {
+        var code = """
+            A myIdentity(A a) = a;
+            myValue = myIdentity(["abc"]);
+            """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
+      }
+
+      @Test
+      public void func() {
+        var code = """
+            A myIdentity(A a) = a;
+            String myFunc(Blob param) = "abc";
+            myValue = myIdentity(myFunc);
+            """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", schemaS(funcTS(blobTS(), stringTS())));
+      }
+    }
+
+    @Nested
+    class _first_elem_func_applied_to {
+      @Test
+      public void array() {
+        var code = """
+            @Native("impl.met")
+            A firstElement([A] array);
+            myValue = firstElement(["abc"]);
+            """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+      }
+
+      @Test
+      public void array2() {
+        var code = """
+            @Native("impl.met")
+            A firstElement([A] array);
+            myValue = firstElement([["abc"]]);
+            """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
+      }
+    }
+
+    @Nested
+    class _single_elem_array_func_applied_to {
+      @Test
+      public void arg_of_base_type() {
+        var code = """
+            [A] singleElement(A a) = [a];
+            myValue = singleElement("abc");
+            """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(stringTS())));
+      }
+
+      @Test
+      public void array() {
+        var code = """
+            [A] singleElement(A a) = [a];
+            myValue = singleElement(["abc"]);
+            """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(arrayTS(stringTS()))));
+      }
+
+      @Test
+      public void func() {
+        var code = """
+            [A] singleElement(A a) = [a];
+            String myFunc(Blob param) = "abc";
+            myValue = singleElement(myFunc);
+            """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue",
+                schemaS(arrayTS(funcTS(blobTS(), stringTS()))));
+      }
+    }
+
+    @Nested
+    class _from_default_arg {
+      @Test
+      public void generic_param_with_default_value_with_concrete_type() {
+        var code = """
+              A myFunc(A a = 7) = a;
+              myValue = myFunc();
+              """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", schemaS(intTS()));
+      }
+
+      @Test
+      public void generic_param_with_default_value_with_polymorphic_type() {
+        var code = """
+              A myId(A a) = a;
+              (B)->A myFunc(A a, (B)->A f = myId) = f;
+              myValue = myFunc(7);
+              """;
+        module(code)
+            .loadsWithSuccess()
+            .containsEvaluableWithSchema("myValue", funcSchemaS(intTS(), intTS()));
+      }
+
+      @Test
+      public void generic_param_with_default_value_with_concrete_type_error_case() {
+        var code = """
+              A myFunc(A a, A other = 7) = a;
+              myValue = myFunc("abc");
+              """;
+        module(code)
+            .loadsWithError(2, "Illegal call.");
+      }
+
+      @Test
+      public void two_differently_monoized_calls_to_poly_func_with_poly_default_value_within_one_expr() {
+        var code = """
+          [A] empty([A] array = []) = array;
+          myFunc([String] s, [Int] i) = 7;
+          myValue = myFunc(empty(), empty());
+          """;
+        module(code)
+            .loadsWithSuccess();
+      }
+
+      @Test
+      public void two_param_default_values_with_different_vars_referencing_same_poly_func() {
+        var code = """
+          A myId(A a) = a;
+          myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
+          myValue = myFunc(7, "abc");
+          """;
+        module(code)
+            .loadsWithSuccess();
+      }
+    }
+
+    @Test
+    public void converter_applier() {
+      var code = """
+          B converterApplier(A item, (A)->B convert) = convert(item);
+          [C] single(C elem) = [elem];
+          result = converterApplier("abc", single);
+          """;
+      module(code)
+          .loadsWithSuccess()
+          .containsEvaluableWithSchema("result", schemaS(arrayTS(stringTS())));
+    }
+  }
+
+  @Nested
+  class _infer_unit_type {
+    @Test
+    public void in_call_to_poly_func_when_generic_param_is_not_used_by_res_and_arg_needs_monoization() {
+      var code = """
+              Int myFunc(A a) = 7;
+              result = myFunc([]);
+              """;
+      var myFunc = defFuncS(1, "myFunc", nlist(itemS(1, varA(), "a")), intS(1, 7));
+      var emptyArray = orderS(2, tupleTS());
+      var call = callS(2, monoizeS(2, varMap(varA(), arrayTS(tupleTS())), myFunc), emptyArray);
+      module(code)
+          .loadsWithSuccess()
+          .containsEvaluable(defValS(2, "result", call));
     }
   }
 
@@ -986,8 +994,8 @@ public class InferenceTest extends TestContext {
       var code = """
           @Native("impl")
           A firstElem([A] array);
-          valueWithNoninferableType = firstElem(7);
-          [Int] myValue = [valueWithNoninferableType];
+          valueWithNonInferableType = firstElem(7);
+          [Int] myValue = [valueWithNonInferableType];
           """;
       module(code)
           .loadsWithProblems();
@@ -1006,7 +1014,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Test
-    public void monofunc_call_with_illegal_params() {
+    public void mono_func_call_with_illegal_params() {
       var code = """
           @Native("impl")
           Int myFunc(String string);
@@ -1017,7 +1025,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Test
-    public void polyfunc_call_with_illegal_params() {
+    public void poly_func_call_with_illegal_params() {
       var code = """
           @Native("impl")
           A myId(A a, String string);
