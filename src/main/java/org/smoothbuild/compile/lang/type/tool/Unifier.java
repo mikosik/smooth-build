@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.lang.type.tool;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 import static org.smoothbuild.util.Strings.q;
 
@@ -231,6 +233,15 @@ public class Unifier {
       throw new IllegalStateException("Unknown temp var " + q(tempVar.name()) + ".");
     }
     return unified;
+  }
+
+  @Override
+  public String toString() {
+    return new HashSet<>(varToUnified.values())
+        .stream()
+        .sorted(comparing(u -> u.mainVar.name()))
+        .map(Object::toString)
+        .collect(joining("\n"));
   }
 
   private static class Unified {
