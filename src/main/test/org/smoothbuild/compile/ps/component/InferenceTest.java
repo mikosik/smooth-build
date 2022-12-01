@@ -4,6 +4,7 @@ import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.testing.TestContext;
 
 public class InferenceTest extends TestContext {
@@ -133,39 +134,43 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _infer_named_func_result_type {
+  class _infer_named_func_result_type extends _infer_func_result_type_suite {
+    @Override
+    public void assertInferredFunctionType(
+        String declarations, String params, String body, SchemaS expected) {
+      var code = declarations + "\n"
+          + "myFunc(" + params + ") = " + body + ";";
+      module(code)
+          .loadsWithSuccess()
+          .containsEvaluableWithSchema("myFunc", expected);
+    }
+  }
+
+  abstract class _infer_func_result_type_suite {
+    public void assertInferredFunctionType(String params, String body, SchemaS expected) {
+      assertInferredFunctionType("", params, body, expected);
+    }
+
+    public abstract void assertInferredFunctionType(
+        String declarations, String params, String body, SchemaS expected);
+
     @Nested
     class _of_mono_func_from {
       @Nested
       class _literal {
         @Test
         public void string_literal() {
-          var code = """
-          myFunc() = "abc";
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", schemaS(funcTS(stringTS())));
+          assertInferredFunctionType("", "\"abc\"", funcSchemaS(stringTS()));
         }
 
         @Test
         public void blob_literal() {
-          var code = """
-          myFunc() = 0x07;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", schemaS(funcTS(blobTS())));
+          assertInferredFunctionType("", "0x07", funcSchemaS(blobTS()));
         }
 
         @Test
         public void int_literal() {
-          var code = """
-          myFunc() = 123;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", schemaS(funcTS(intTS())));
+          assertInferredFunctionType("", "123", funcSchemaS(intTS()));
         }
       }
 
@@ -173,87 +178,46 @@ public class InferenceTest extends TestContext {
       class _array {
         @Test
         public void mono_array() {
-          var code = """
-          myFunc() = ["abc"];
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", schemaS(funcTS(arrayTS(stringTS()))));
+          assertInferredFunctionType("", "[17]", funcSchemaS(arrayTS(intTS())));
         }
       }
 
       @Test
       public void value_ref() {
-        var code = """
-          String stringValue = "abc";
-          myFunc() = stringValue;
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myFunc", schemaS(funcTS(stringTS())));
+        assertInferredFunctionType("Int intValue = 7;", "", "intValue", funcSchemaS(intTS()));
       }
 
       @Test
       public void ref() {
-        var code = """
-          myFunc(Int int) = int;
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myFunc", schemaS(funcTS(intTS(), intTS())));
+        assertInferredFunctionType("Int int", "int", funcSchemaS(intTS(), intTS()));
       }
 
       @Test
       public void param_func_call() {
-        var code = """
-          myFunc(()->Int f) = f();
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myFunc", schemaS(funcTS(funcTS(intTS()), intTS())));
+        assertInferredFunctionType("()->Int f", "f()", funcSchemaS(intTS(), funcTS(intTS())));
       }
 
       @Test
       public void mono_func_ref() {
-        var code = """
-          String otherFunc(Blob param) = "abc";
-          myFunc() = otherFunc;
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myFunc", schemaS(funcTS(funcTS(blobTS(), stringTS()))));
+        assertInferredFunctionType("Int otherFunc(Blob param) = 7;",
+            "", "otherFunc", funcSchemaS(funcTS(blobTS(), intTS())));
       }
 
       @Test
       public void mono_func_call() {
-        var code = """
-          String otherFunc() = "abc";
-          myFunc() = otherFunc();
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myFunc", schemaS(funcTS(stringTS())));
+        assertInferredFunctionType("Int otherFunc() = 7;",
+            "", "otherFunc()", funcSchemaS(intTS()));
       }
 
       @Test
       public void poly_func_call() {
-        var code = """
-          A myId(A a) = a;
-          myFunc() = myId(7);
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myFunc", schemaS(funcTS(intTS())));
+        assertInferredFunctionType("A myId(A a) = a;",
+            "", "myId(7)", funcSchemaS(intTS()));
       }
 
       @Test
       public void func_mono_param() {
-        var code = """
-          myFunc(String param) = param;
-          """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myFunc", schemaS(funcTS(stringTS(), stringTS())));
+        assertInferredFunctionType("Int param", "param", funcSchemaS(intTS(), intTS()));
       }
     }
 
@@ -263,32 +227,17 @@ public class InferenceTest extends TestContext {
       class _literal {
         @Test
         public void string_literal() {
-          var code = """
-          myFunc(A a) = "abc";
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(stringTS(), varA()));
+          assertInferredFunctionType("A a", "\"abc\"", funcSchemaS(stringTS(), varA()));
         }
 
         @Test
         public void blob_literal() {
-          var code = """
-          myFunc(A a) = 0x07;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(blobTS(), varA()));
+          assertInferredFunctionType("A a", "0x07", funcSchemaS(blobTS(), varA()));
         }
 
         @Test
         public void int_literal() {
-          var code = """
-          myFunc(A a) = 123;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(intTS(), varA()));
+          assertInferredFunctionType("A a", "7", funcSchemaS(intTS(), varA()));
         }
       }
 
@@ -296,42 +245,17 @@ public class InferenceTest extends TestContext {
       class _array {
         @Test
         public void mono_array() {
-          var code = """
-          myFunc(A a) = ["abc"];
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(arrayTS(stringTS()), varA()));
+          assertInferredFunctionType("A a", "[7]", funcSchemaS(arrayTS(intTS()), varA()));
         }
 
         @Test
         public void poly_array() {
-          var code = """
-          myFunc() = [];
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(arrayTS(varA())));
+          assertInferredFunctionType("", "[]", funcSchemaS(arrayTS(varA())));
         }
 
         @Test
-        public void poly_array_when_func_type_param_shadows_array_generic_param() {
-          var code = """
-          myFunc(A a) = [];
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(arrayTS(varB()), varA()));
-        }
-
-        @Test
-        public void poly_array_with_when_func_type_param_forces_array_type() {
-          var code = """
-          [B] myFunc() = [];
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(arrayTS(varB())));
+        public void poly_array_when_param_list_already_uses_A_as_var_name() {
+          assertInferredFunctionType("A a", "[]", funcSchemaS(arrayTS(varB()), varA()));
         }
       }
 
@@ -339,91 +263,45 @@ public class InferenceTest extends TestContext {
       class _value {
         @Test
         public void mono_value_ref() {
-          var code = """
-          String stringValue = "abc";
-          myFunc() = stringValue;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(stringTS()));
+          assertInferredFunctionType("Int intValue = 7;",
+              "", "intValue", funcSchemaS(intTS()));
         }
 
         @Test
         public void poly_value_ref() {
-          var code = """
-          [A] stringValue = [];
-          myFunc() = stringValue;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(arrayTS(varA())));
+          assertInferredFunctionType("[A] emptyArray = [];",
+              "", "emptyArray", funcSchemaS(arrayTS(varA())));
         }
 
         @Test
-        public void poly_value_ref_when_func_type_param_shadows_value_type() {
-          var code = """
-          [A] stringValue = [];
-          myFunc(A a) = stringValue;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(arrayTS(varB()), varA()));
-        }
-
-        @Test
-        public void poly_value_ref_when_func_type_param_forces_value_type() {
-          var code = """
-          [A] stringValue = [];
-          [B] myFunc() = stringValue;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(arrayTS(varB())));
+        public void poly_value_ref_when_param_list_already_uses_A_as_var_name() {
+          assertInferredFunctionType("[A] emptyArray = [];",
+              "A a", "emptyArray", funcSchemaS(arrayTS(varB()), varA()));
         }
       }
 
       @Nested
-      class _ref {
+      class _param_ref {
         @Test
         public void ref_with_base_type() {
-          var code = """
-          myFunc(Int int) = int;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(intTS(), intTS()));
+          assertInferredFunctionType("Int int", "int", funcSchemaS(intTS(), intTS()));
         }
 
         @Test
         public void ref_with_poly_type() {
-          var code = """
-          myFunc(A param) = param;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(varA(), varA()));
+          assertInferredFunctionType("A param", "param", funcSchemaS(varA(), varA()));
         }
 
         @Test
         public void ref_with_mono_func_type() {
-          var code = """
-          myFunc((Bool)->Int func) = func;
-          """;
           var funcT = funcTS(boolTS(), intTS());
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(funcT, funcT));
+          assertInferredFunctionType("(Bool)->Int func", "func", funcSchemaS(funcT, funcT));
         }
 
         @Test
         public void ref_with_poly_func_type() {
-          var code = """
-          myFunc((A)->A param) = param;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc",
-                  funcSchemaS(funcTS(varA(), varA()), funcTS(varA(), varA())));
+          assertInferredFunctionType(
+              "(A)->A param", "param", funcSchemaS(funcTS(varA(), varA()), funcTS(varA(), varA())));
         }
       }
 
@@ -431,55 +309,30 @@ public class InferenceTest extends TestContext {
       class _call {
         @Test
         public void call_to_mono_param() {
-          var code = """
-          myFunc(()->Int f) = f();
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(intTS(), funcTS(intTS())));
+          assertInferredFunctionType("()->Int f", "f()", funcSchemaS(intTS(), funcTS(intTS())));
         }
 
         @Test
         public void call_to_poly_param() {
-          var code = """
-          myFunc(()->A f) = f();
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(varA(), funcTS(varA())));
+          assertInferredFunctionType("()->A f", "f()", funcSchemaS(varA(), funcTS(varA())));
         }
 
         @Test
         public void call_to_mono_func() {
-          var code = """
-          Int otherFunc() = 7;
-          myFunc() = otherFunc();
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(intTS()));
+          assertInferredFunctionType(
+              "Int otherFunc() = 7;", "", "otherFunc()", funcSchemaS(intTS()));
         }
 
         @Test
         public void call_to_poly_func() {
-          var code = """
-          A myIdentity(A a) = a;
-          myFunc() = myIdentity(7);
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(intTS()));
+          assertInferredFunctionType(
+              "A myIdentity(A a) = a;", "", "myIdentity(7)", funcSchemaS(intTS()));
         }
 
         @Test
         public void call_to_poly_func_when_argument_type_is_our_type_param() {
-          var code = """
-          A myIdentity(A a) = a;
-          myFunc(B b) = myIdentity(b);
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(varB(), varB()));
+          assertInferredFunctionType(
+              "A myIdentity(A a) = a;", "B b", "myIdentity(b)", funcSchemaS(varB(), varB()));
         }
       }
 
@@ -487,46 +340,22 @@ public class InferenceTest extends TestContext {
       class _func_ref {
         @Test
         public void mono_func_ref() {
-          var code = """
-          String otherFunc(Blob param) = "abc";
-          myFunc() = otherFunc;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(funcTS(blobTS(), stringTS())));
+          assertInferredFunctionType(
+              "Int otherFunc(Blob param) = 7;",
+              "", "otherFunc",
+              funcSchemaS(funcTS(blobTS(), intTS())));
         }
 
         @Test
         public void poly_func_ref() {
-          var code = """
-          A myId(A a) = a;
-          myFunc() = myId;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(funcTS(varA(), varA())));
+          assertInferredFunctionType(
+              "A myId(A a) = a;", "", "myId", funcSchemaS(funcTS(varA(), varA())));
         }
 
         @Test
-        public void poly_func_ref_when_func_type_param_shadows_referenced_func_type_param() {
-          var code = """
-          A myId(A a) = a;
-          myFunc(A a) = myId;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(funcTS(varB(), varB()), varA()));
-        }
-
-        @Test
-        public void poly_func_ref_when_func_type_param_forces_referenced_func_type_param() {
-          var code = """
-          A myId(A a) = a;
-          (B)->B myFunc() = myId;
-          """;
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluableWithSchema("myFunc", funcSchemaS(funcTS(varB(), varB())));
+        public void poly_func_ref_when_func_type_param_shadows_referenced_func_res_type() {
+          assertInferredFunctionType(
+              "A myId(A a) = a;", "A a", "myId", funcSchemaS(funcTS(varB(), varB()), varA()));
         }
       }
     }
