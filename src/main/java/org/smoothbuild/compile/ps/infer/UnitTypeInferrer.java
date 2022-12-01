@@ -1,19 +1,17 @@
 package org.smoothbuild.compile.ps.infer;
 
-import static com.google.common.collect.Maps.filterKeys;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.TupleTS;
-import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
+import org.smoothbuild.compile.ps.ast.expr.MonoizableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
@@ -43,7 +41,7 @@ public class UnitTypeInferrer {
       case CallP       call       -> inferCall(call);
       case NamedArgP   namedArg   -> inferNamedArg(namedArg);
       case OrderP      order      -> inferOrder(order);
-      case RefP        ref        -> inferRef(ref);
+      case RefP        ref        -> inferMonoizable(ref);
       case SelectP     select     -> inferSelect(select);
       case StringP     string     -> {}
       case IntP        int_       -> {}
@@ -65,15 +63,13 @@ public class UnitTypeInferrer {
     order.elems().forEach(this::infer);
   }
 
-  private void inferRef(RefP ref) {
-    if (bindings.get(ref.name()).get() instanceof NamedFuncS namedFuncS) {
-      var resultVars = namedFuncS.schema().type().res().vars();
-      var paramOnlyVars = filterKeys(ref.monoizeVarMap(), v -> !resultVars.contains(v));
-      for (var type : paramOnlyVars.values()) {
-        var resolved = unifier.resolve(type);
-        resolved.vars().stream()
-            .filter(VarS::isTemporary)
-            .forEach(v -> unifier.unifyOrFailWithRuntimeException(v, new TupleTS(list())));
+  private void inferMonoizable(MonoizableP monoizableP) {
+    for (var monoizedVar : monoizableP.monoizeVarMap().values()) {
+      var resolvedMonoizedVar = unifier.resolve(monoizedVar);
+      for (var var : resolvedMonoizedVar.vars()) {
+        if (var.isTemporary()) {
+          unifier.unifyOrFailWithRuntimeException(var, new TupleTS(list()));
+        }
       }
     }
   }
