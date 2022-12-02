@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.lang.type;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
@@ -11,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -39,6 +41,12 @@ public final class VarSetS implements Set<VarS> {
 
   public static Collector<VarS, Object, VarSetS> toVarSetS() {
     return collectingAndThen(toSet(), VarSetS::new);
+  }
+
+  public <T> Set<T> map(Function<? super VarS, T> filter) {
+    return stream()
+        .map(filter)
+        .collect(toImmutableSet());
   }
 
   public VarSetS filter(Predicate<? super VarS> predicate) {
