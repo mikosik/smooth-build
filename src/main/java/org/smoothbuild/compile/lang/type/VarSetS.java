@@ -51,13 +51,13 @@ public final class VarSetS implements Set<VarS> {
     return elements.asList();
   }
 
-  public VarSetS withAdded(VarSetS other) {
-    return new VarSetS(union(elements, other.elements));
+  public VarSetS withAdded(Set<VarS> toAdd) {
+    return new VarSetS(union(elements, toAdd));
   }
 
-  public VarSetS withRemoved(VarSetS other) {
+  public VarSetS withRemoved(Set<?> toRemove) {
     var result = new HashSet<>(elements);
-    result.removeAll(other.elements);
+    result.removeAll(toRemove);
     return new VarSetS(result);
   }
 
