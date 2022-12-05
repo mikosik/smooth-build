@@ -34,27 +34,9 @@ public class SbTranslatorTest extends TestContext {
   @Nested
   class _translate {
     @Nested
-    class _inst {
-      @Test
-      public void blob() {
-        var blobS = blobS(37);
-        assertTranslation(blobS, blobB(37));
-      }
-
-      @Test
-      public void int_() {
-        var intS = intS(1);
-        assertTranslation(intS, intB(1));
-      }
-
-      @Test
-      public void string() {
-        var stringS = stringS("abc");
-        assertTranslation(stringS, stringB("abc"));
-      }
-
+    class _named {
       @Nested
-      class _named_val {
+      class _named_value {
         @Test
         public void def_val() {
           var valS = defValS("myValue", intS(7));
@@ -99,7 +81,7 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Nested
-      class _func {
+      class _named_func {
         @Test
         public void def_func() {
           var funcS = defFuncS("myFunc", nlist(), intS(7));
@@ -136,7 +118,25 @@ public class SbTranslatorTest extends TestContext {
     }
 
     @Nested
-    class _operator {
+    class _expr {
+      @Test
+      public void blob() {
+        var blobS = blobS(37);
+        assertTranslation(blobS, blobB(37));
+      }
+
+      @Test
+      public void int_() {
+        var intS = intS(1);
+        assertTranslation(intS, intB(1));
+      }
+
+      @Test
+      public void string() {
+        var stringS = stringS("abc");
+        assertTranslation(stringS, stringB("abc"));
+      }
+
       @Test
       public void call() {
         var defFunc = defFuncS("myFunc", nlist(), stringS("abc"));
@@ -282,27 +282,9 @@ public class SbTranslatorTest extends TestContext {
   @Nested
   class _bs_mapping {
     @Nested
-    class _inst {
-      @Test
-      public void blob() {
-        var blobS = blobS(7, 0x37);
-        assertNalMapping(blobS, null, loc(7));
-      }
-
-      @Test
-      public void int_() {
-        var intS = intS(7, 37);
-        assertNalMapping(intS, null, loc(7));
-      }
-
-      @Test
-      public void string() {
-        var stringS = stringS(7, "abc");
-        assertNalMapping(stringS, null, loc(7));
-      }
-
+    class _named {
       @Nested
-      class _named_val {
+      class _named_value {
         @Test
         public void def_val() {
           var valS = defValS(3, "myValue", intS(7, 37));
@@ -333,7 +315,7 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Nested
-      class _func {
+      class _named_func {
         @Test
         public void def_func() {
           var funcS = defFuncS(7, "myFunc", nlist(), intS(37));
@@ -378,7 +360,25 @@ public class SbTranslatorTest extends TestContext {
     }
 
     @Nested
-    class _operator {
+    class _expr {
+      @Test
+      public void blob() {
+        var blobS = blobS(7, 0x37);
+        assertNalMapping(blobS, null, loc(7));
+      }
+
+      @Test
+      public void int_() {
+        var intS = intS(7, 37);
+        assertNalMapping(intS, null, loc(7));
+      }
+
+      @Test
+      public void string() {
+        var stringS = stringS(7, "abc");
+        assertNalMapping(stringS, null, loc(7));
+      }
+
       @Test
       public void call() {
         var defFunc = defFuncS(7, "myFunc", nlist(), stringS("abc"));
