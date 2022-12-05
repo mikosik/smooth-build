@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import javax.inject.Inject;
 
@@ -111,13 +110,13 @@ public class SbTranslator {
   public ExprB translateExpr(ExprS exprS) {
     // @formatter:off
     return switch (exprS) {
-      case BlobS       blobS       -> translateAndSaveLoc(blobS,     this::translateBlob);
-      case CallS       callS       -> translateAndSaveLoc(callS,     this::translateCall);
-      case IntS        intS        -> translateAndSaveLoc(intS,      this::translateInt);
-      case OrderS      orderS      -> translateAndSaveLoc(orderS,    this::translateOrder);
-      case ParamRefS   paramRefS   -> translateAndSaveLoc(paramRefS, this::translateParamRef);
-      case SelectS     selectS     -> translateAndSaveLoc(selectS,   this::translateSelect);
-      case StringS     stringS     -> translateAndSaveLoc(stringS,   this::translateString);
+      case BlobS       blobS       -> saveLocAndReturn(blobS,     translateBlob(blobS));
+      case CallS       callS       -> saveLocAndReturn(callS,     translateCall(callS));
+      case IntS        intS        -> saveLocAndReturn(intS,      translateInt(intS));
+      case OrderS      orderS      -> saveLocAndReturn(orderS,    translateOrder(orderS));
+      case ParamRefS   paramRefS   -> saveLocAndReturn(paramRefS, translateParamRef(paramRefS));
+      case SelectS     selectS     -> saveLocAndReturn(selectS,   translateSelect(selectS));
+      case StringS     stringS     -> saveLocAndReturn(stringS,   translateString(stringS));
       case MonoizeS    monoizeS    -> translateMonoize(monoizeS);
     };
     // @formatter:on
@@ -169,10 +168,10 @@ public class SbTranslator {
     var newEnvironment = namedFuncS.params();
     var sbTranslator = new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
         newEnvironment, cache, nameMapping, locMapping);
-    return translateAndSaveNal(namedFuncS, sbTranslator::translateFuncImpl);
+    return saveNalAndReturn(namedFuncS, sbTranslator.translateNamedFuncImpl(namedFuncS));
   }
 
-  private ExprB translateFuncImpl(NamedFuncS namedFuncS) {
+  private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) {
     return switch (namedFuncS) {
       case AnnFuncS n -> translateAnnFunc(n);
       case DefFuncS d -> translateDefFunc(d);
@@ -252,7 +251,7 @@ public class SbTranslator {
 
   private ExprB translateValueImpl(Loc refLoc, NamedValueS namedValueS) {
     return switch (namedValueS) {
-      case AnnValueS annValueS -> translateAndSaveNal(annValueS, this::translateAnnValue);
+      case AnnValueS annValueS -> saveNalAndReturn(annValueS, translateAnnValue(annValueS));
       case DefValueS defValueS -> translateDefValue(refLoc, defValueS);
     };
   }
@@ -329,14 +328,12 @@ public class SbTranslator {
     return typeSbTranslator.translate(arrayTS);
   }
 
-  private <T extends Nal> ExprB translateAndSaveNal(T nal, Function<T, ExprB> translator) {
-    var result = translator.apply(nal);
-    saveNal(result, nal);
-    return result;
+  private <T extends Nal> ExprB saveNalAndReturn(T nal, ExprB exprB) {
+    saveNal(exprB, nal);
+    return exprB;
   }
 
-  private <T extends WithLoc> ExprB translateAndSaveLoc(T withLoc, Function<T, ExprB> translator) {
-    var exprB = translator.apply(withLoc);
+  private <T extends WithLoc> ExprB saveLocAndReturn(T withLoc, ExprB exprB) {
     saveLoc(exprB, withLoc);
     return exprB;
   }
