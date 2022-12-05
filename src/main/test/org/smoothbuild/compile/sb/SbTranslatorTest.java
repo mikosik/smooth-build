@@ -21,6 +21,7 @@ import org.smoothbuild.bytecode.expr.inst.ClosureB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
@@ -169,11 +170,11 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Nested
-      class _poly_ref {
+      class _monoize {
         @Nested
-        class _val {
+        class _named_value {
           @Test
-          public void defined() {
+          public void defined_value() {
             var emptyArrayVal = emptyArrayValS();
             var polyRefS = monoizeS(aToIntVarMapS(), emptyArrayVal);
             var orderB = orderB(intTB());
@@ -181,7 +182,7 @@ public class SbTranslatorTest extends TestContext {
           }
 
           @Test
-          public void defined_monoized_with_type_parameter_of_enclosing_val_type_param() {
+          public void defined_value_monoized_with_type_parameter_of_enclosing_value_type_param() {
             var a = varA();
             var b = varB();
 
@@ -196,7 +197,7 @@ public class SbTranslatorTest extends TestContext {
           }
 
           @Test
-          public void bytecode() throws IOException {
+          public void bytecode_value() throws IOException {
             var clazz = ReturnIdFunc.class;
             var a = varA();
             var funcTS = funcTS(a, a);
@@ -214,9 +215,9 @@ public class SbTranslatorTest extends TestContext {
         }
 
         @Nested
-        class _func {
+        class _named_func {
           @Test
-          public void defined() {
+          public void defined_func() {
             var identity = idFuncS();
             var polyRefS = monoizeS(aToIntVarMapS(), identity);
             var funcB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
@@ -224,7 +225,7 @@ public class SbTranslatorTest extends TestContext {
           }
 
           @Test
-          public void defined_monoized_with_type_parameter_of_enclosing_func_type_param() {
+          public void defined_func_monoized_with_type_parameter_of_enclosing_func_type_param() {
             var a = varA();
             var b = varB();
 
@@ -242,7 +243,7 @@ public class SbTranslatorTest extends TestContext {
           }
 
           @Test
-          public void native_() {
+          public void native_func() {
             var a = varA();
             var filePath = filePath(PRJ, path("my/path"));
             var classBinaryName = "class.binary.name";
@@ -259,7 +260,7 @@ public class SbTranslatorTest extends TestContext {
           }
 
           @Test
-          public void bytecode() throws IOException {
+          public void bytecode_func() throws IOException {
             var clazz = ReturnIdFunc.class;
             var a = varA();
             var funcTS = funcTS(a, a);
@@ -411,9 +412,9 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Nested
-      class _poly_ref {
+      class _monoize {
         @Test
-        public void def_val() {
+        public void def_value() {
           var emptyArrayVal = defValS(7, "emptyArray", orderS(varA()));
           var polyRefS = monoizeS(4, aToIntVarMapS(), emptyArrayVal);
           assertNalMapping(polyRefS, null, loc(4));
