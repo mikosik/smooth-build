@@ -27,6 +27,15 @@ public class Maps {
         .collect(toImmutableMap(keyFunction, valueFunction));
   }
 
+  public static <T, U> ImmutableMap<T, U> concat(
+      ImmutableMap<? extends T, ? extends U> map1,
+      ImmutableMap<? extends T, ? extends U> map2) {
+    return ImmutableMap.<T, U>builder()
+        .putAll(map1)
+        .putAll(com.google.common.collect.Maps.filterKeys(map2, key -> !map1.containsKey(key)))
+        .build();
+  }
+
   public static <K, V, K2> ImmutableMap<K2, V> mapKeys(Map<K, V> map,
       Function<? super K, K2> keysFunction) {
     return mapEntries(map, keysFunction, v -> v);
