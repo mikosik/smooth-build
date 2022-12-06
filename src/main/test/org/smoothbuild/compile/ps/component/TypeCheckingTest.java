@@ -140,85 +140,13 @@ public class TypeCheckingTest extends TestContext {
     }
 
     @Nested
-    class _param_type_and_arg_type {
-      @Test
-      public void mono_to_mono_success() {
-        var sourceCode = """
-          String myFunc(Int int) = "abc";
-          result = myFunc(7);
-          """;
-        module(sourceCode)
-            .loadsWithSuccess();
-      }
-
-      @Test
-      public void mono_to_mono_error() {
-        var sourceCode = """
-          String myFunc(Blob blob) = "abc";
-          result = myFunc(7);
-          """;
-        module(sourceCode)
-            .loadsWithError(2, "Illegal call.");
-      }
-
-      @Test
-      public void mono_to_poly_success() {
-        var sourceCode = """
-          String myFunc(A a) = "abc";
-          result = myFunc(7);
-          """;
-        module(sourceCode)
-            .loadsWithSuccess();
-      }
-
-      @Test
-      public void mono_to_poly_error() {
-        var sourceCode = """
-          String myFunc([A] a) = "abc";
-          result = myFunc(7);
-          """;
-        module(sourceCode)
-            .loadsWithError(2, "Illegal call.");
-      }
-
-      @Test
-      public void poly_to_mono_success() {
-        var sourceCode = """
-          String myFunc([Int] param) = "abc";
-          result = myFunc([]);
-          """;
-        module(sourceCode)
-            .loadsWithSuccess();
-      }
-
-      @Test
-      public void poly_to_mono_error() {
-        var sourceCode = """
-          String myFunc([Int] param) = "abc";
-          result = myFunc([[]]);
-          """;
-        module(sourceCode)
-            .loadsWithError(2, "Illegal call.");
-      }
-
-      @Test
-      public void poly_to_poly_success() {
-        var sourceCode = """
-          String myFunc([A] param) = "abc";
-          result = myFunc([]);
-          """;
-        module(sourceCode)
-            .loadsWithSuccess();
-      }
-
-      @Test
-      public void poly_to_poly_error() {
-        var sourceCode = """
-          String myFunc((A)->A param) = "abc";
-          result = myFunc([]);
-          """;
-        module(sourceCode)
-            .loadsWithError(2, "Illegal call.");
+    class _param_type_and_arg_type extends _abstract_param_type_and_arg_type {
+      @Override
+      public String buildSourceCode(String params, String argument) {
+        return """
+          result = myFunc(%s);
+          String myFunc(%s) = "abc";
+          """.formatted(argument, params);
       }
     }
 
@@ -396,6 +324,58 @@ public class TypeCheckingTest extends TestContext {
             .loadsWithError(2, "Parameter `funcParam` has type `(A,A)->A` so it cannot have "
                 + "default value with type `(A)->A`.");
       }
+    }
+  }
+
+  abstract class _abstract_param_type_and_arg_type {
+    public abstract String buildSourceCode(String params, String argument);
+
+    @Test
+    public void mono_to_mono_success() {
+      module(buildSourceCode("Int int", "7"))
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void mono_to_mono_error() {
+      module(buildSourceCode("Blob blob", "7"))
+          .loadsWithError(1, "Illegal call.");
+    }
+
+    @Test
+    public void mono_to_poly_success() {
+      module(buildSourceCode("A a", "7"))
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void mono_to_poly_error() {
+      module(buildSourceCode("[A] a", "7"))
+          .loadsWithError(1, "Illegal call.");
+    }
+
+    @Test
+    public void poly_to_mono_success() {
+      module(buildSourceCode("[Int] param", "[]"))
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void poly_to_mono_error() {
+      module(buildSourceCode("[Int] param", "[[]]"))
+          .loadsWithError(1, "Illegal call.");
+    }
+
+    @Test
+    public void poly_to_poly_success() {
+      module(buildSourceCode("[A] param", "[]"))
+          .loadsWithSuccess();
+    }
+
+    @Test
+    public void poly_to_poly_error() {
+      module(buildSourceCode("(A)->A param", "[]"))
+          .loadsWithError(1, "Illegal call.");
     }
   }
 
