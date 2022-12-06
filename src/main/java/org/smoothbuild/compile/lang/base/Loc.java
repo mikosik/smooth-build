@@ -17,9 +17,10 @@ import org.smoothbuild.fs.space.Space;
 public record Loc(FilePath file, int line) {
   private static final Loc INTERNAL_LOC = new Loc(filePath(INTERNAL, null), -1);
   private static final Loc UNKNOWN_LOC = new Loc(filePath(UNKNOWN, null), -1);
+  private static final Loc COMMAND_LINE_LOC = new Loc(filePath(PRJ, null), 1);
 
   public static Loc commandLineLoc() {
-    return new Loc(filePath(PRJ, null), 1);
+    return COMMAND_LINE_LOC;
   }
 
   public static Loc internal() {

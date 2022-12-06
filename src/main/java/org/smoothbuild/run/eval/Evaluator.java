@@ -1,16 +1,11 @@
 package org.smoothbuild.run.eval;
 
-import static org.smoothbuild.compile.lang.base.Loc.commandLineLoc;
-import static org.smoothbuild.util.collect.Lists.map;
-
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.inst.ValueB;
-import org.smoothbuild.compile.lang.define.EvaluableRefS;
-import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedValueS;
+import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.out.report.Reporter;
@@ -30,13 +25,11 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<ValueB>> evaluate(ImmutableList<NamedValueS> values)
+  public Optional<ImmutableList<ValueB>> evaluate(ImmutableList<? extends ExprS> exprs)
       throws EvaluatorExc {
     try {
-      var loc = commandLineLoc();
-      var refs = map(values, v -> new MonoizeS(new EvaluableRefS(v, loc), loc));
       reporter.startNewPhase("Compiling");
-      var sbTranslation = sbTranslatorFacade.translate(refs);
+      var sbTranslation = sbTranslatorFacade.translate(exprs);
       reporter.startNewPhase("Evaluating");
       var vm = vmFactory.newVm(sbTranslation.bsMapping());
       return vm.evaluate(sbTranslation.exprBs());

@@ -1,8 +1,10 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.compile.lang.base.Loc.commandLineLoc;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.run.FindTopValues.findTopValues;
+import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Optionals.mapPair;
 
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.compile.lang.define.EvaluableRefS;
+import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
@@ -62,9 +66,11 @@ public class BuildRunner {
     return mapPair(evaluablesOpt, evaluationsOpt, Maps::zip);
   }
 
-  private Optional<ImmutableList<ValueB>> evaluate(ImmutableList<NamedValueS> values) {
+  private Optional<ImmutableList<ValueB>> evaluate(ImmutableList<NamedValueS> namedValues) {
+    var exprs = map(namedValues,
+        v -> new MonoizeS(new EvaluableRefS(v, commandLineLoc()), commandLineLoc()));
     try {
-      return evaluator.evaluate(values);
+      return evaluator.evaluate(exprs);
     } catch (EvaluatorExc e) {
       reporter.report(fatal(e.getMessage()));
       return Optional.empty();

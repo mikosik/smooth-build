@@ -227,7 +227,7 @@ public class EvaluatorTest  extends TestContext {
   }
 
   private ExprB evaluate(ExprS exprS) throws EvaluatorExc {
-    var resultMap = newEvaluator().evaluate(list(defValS("name", exprS))).get();
+    var resultMap = newEvaluator().evaluate(list(exprS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
     return resultMap.get(0);
