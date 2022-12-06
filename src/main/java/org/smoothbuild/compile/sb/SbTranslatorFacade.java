@@ -17,9 +17,9 @@ public class SbTranslatorFacade {
     this.sbTranslatorProv = sbTranslatorProv;
   }
 
-  public SbTranslation translate(List<? extends ExprS> vals) {
+  public SbTranslation translate(List<? extends ExprS> exprs) {
     var sbTranslator = sbTranslatorProv.get();
-    var exprBs = map(vals, sbTranslator::translateExpr);
+    var exprBs = map(exprs, sbTranslator::translateExpr);
     var bsMapping = sbTranslator.bsMapping();
     return new SbTranslation(exprBs, bsMapping);
   }
