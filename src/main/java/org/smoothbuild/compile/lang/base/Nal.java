@@ -5,5 +5,5 @@ import org.smoothbuild.util.collect.Named;
 /**
  * NaL = Name and loc.
  */
-public interface Nal extends Named, WithLoc {
+public interface Nal extends Named, Located {
 }

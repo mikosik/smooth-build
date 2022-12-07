@@ -1,5 +1,5 @@
 package org.smoothbuild.compile.lang.base;
 
-public interface WithLoc {
+public interface Located {
   public Loc loc();
 }

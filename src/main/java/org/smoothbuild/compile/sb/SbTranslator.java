@@ -37,8 +37,8 @@ import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
 import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.Located;
 import org.smoothbuild.compile.lang.base.Nal;
-import org.smoothbuild.compile.lang.base.WithLoc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
 import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValueS;
@@ -356,7 +356,7 @@ public class SbTranslator {
     return exprB;
   }
 
-  private <T extends WithLoc> ExprB saveLocAndReturn(T withLoc, ExprB exprB) {
+  private <T extends Located> ExprB saveLocAndReturn(T withLoc, ExprB exprB) {
     saveLoc(exprB, withLoc);
     return exprB;
   }
@@ -366,8 +366,8 @@ public class SbTranslator {
     saveLoc(exprB, nal);
   }
 
-  private void saveLoc(ExprB exprB, WithLoc withLoc) {
-    saveLoc(exprB, withLoc.loc());
+  private void saveLoc(ExprB exprB, Located located) {
+    saveLoc(exprB, located.loc());
   }
 
   private void saveLoc(ExprB exprB, Loc loc) {
