@@ -13,6 +13,7 @@ public class EvaluableRefSTest extends TestContext {
         .isEqualTo("""
             EvaluableRefS(
               namedEvaluable = DefFuncS(
+                name = myId
                 schema = <A>(A)->A
                 params = [
                   ItemS(

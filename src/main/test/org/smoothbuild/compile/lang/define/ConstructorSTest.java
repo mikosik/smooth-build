@@ -14,6 +14,7 @@ public class ConstructorSTest extends TestContext {
     assertThat(constructorS.toString())
         .isEqualTo("""
             ConstructorS(
+              name = constructorName
               schema = <>(Int)->MyStruct
               params = [
                 ItemS(

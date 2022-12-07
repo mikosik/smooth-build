@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
 import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
 
 import java.util.Objects;
 
@@ -44,7 +45,10 @@ public final class DefFuncS extends NamedFuncS {
 
   @Override
   public String toString() {
-    var fields = fieldsToString() + "\nbody = " + body;
+    var fields = joinToString("\n",
+        "name = " + name(),
+        fieldsToString(),
+        "body = " + body);
     return "DefFuncS(\n" + indent(fields) + "\n)";
   }
 }

@@ -17,6 +17,7 @@ public class CallSTest extends TestContext {
                 varMap = {A=Int}
                 monoizableS = EvaluableRefS(
                   namedEvaluable = DefFuncS(
+                    name = myId
                     schema = <A>(A)->A
                     params = [
                       ItemS(

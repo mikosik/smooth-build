@@ -16,6 +16,7 @@ public class DefFuncSTest extends TestContext {
     assertThat(func.toString())
         .isEqualTo("""
             DefFuncS(
+              name = myFunc
               schema = <>(Int)->String
               params = [
                 ItemS(

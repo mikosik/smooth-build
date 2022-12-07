@@ -29,7 +29,9 @@ public sealed interface FuncS extends EvaluableS
   public default String fieldsToString() {
     return joinToString("\n",
         "schema = " + schema(),
-        "params = [\n" + indent(joinToString(params(), "\n")) + "\n]",
+        "params = [",
+        indent(joinToString(params(), "\n")),
+        "]",
         "loc = " + loc()
     );
   }
