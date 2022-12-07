@@ -2,13 +2,11 @@ package org.smoothbuild.compile.ps.infer;
 
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
-import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
@@ -26,22 +24,17 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.bindings.Bindings;
 
 public class TypeInferrerResolve {
   private final Unifier unifier;
   private final Logger logger;
-  private final Bindings<? extends Optional<? extends RefableS>> bindings;
 
-  public TypeInferrerResolve(Unifier unifier, Logger logger,
-      Bindings<? extends Optional<? extends RefableS>> bindings) {
+  public TypeInferrerResolve(Unifier unifier, Logger logger) {
     this.unifier = unifier;
     this.logger = logger;
-    this.bindings = bindings;
   }
 
   public boolean resolveNamedValue(NamedValueP value) {
@@ -62,7 +55,7 @@ public class TypeInferrerResolve {
   }
 
   public boolean resolveNamedFunc(NamedFuncP namedFuncP) {
-    if (resolveFuncBody(namedFuncP)) {
+    if (resolveBody(namedFuncP.body())) {
       var resolvedFuncT = (FuncTS) unifier.resolve(namedFuncP.typeS());
       // Smooth language does not allow nesting functions yet so all vars are quantified.
       var quantifiedVars = resolvedFuncT.vars();
@@ -83,7 +76,7 @@ public class TypeInferrerResolve {
   }
 
   private void inferUnitTypes(ExprP expr) {
-    new UnitTypeInferrer(unifier, bindings).infer(expr);
+    new UnitTypeInferrer(unifier).infer(expr);
   }
 
   private boolean resolveExpr(ExprP expr) {
@@ -109,7 +102,7 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveAnonFunc(AnonFuncP anonFuncP) {
-    if (resolveFuncBody(anonFuncP)) {
+    if (resolveBody(anonFuncP.body())) {
       // `(VarS)` cast is safe because anonFuncP.monoizeVarMap().keys() has only
       // TempVarS/VarS.
       var varMapWithResolvedKeys =
@@ -125,12 +118,6 @@ public class TypeInferrerResolve {
       }
     }
     return false;
-  }
-
-  private boolean resolveFuncBody(FuncP funcP) {
-    var bodyBindings = funcBodyScopeBindings(bindings, funcP.params());
-    return new TypeInferrerResolve(unifier, logger, bodyBindings)
-        .resolveBody(funcP.body());
   }
 
   private boolean resolveNamedArg(NamedArgP namedArgP) {

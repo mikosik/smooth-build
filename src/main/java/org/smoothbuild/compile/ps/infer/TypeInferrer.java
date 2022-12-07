@@ -98,7 +98,7 @@ public class TypeInferrer {
   }
 
   private boolean resolveValueSchema(NamedValueP namedValueP) {
-    return new TypeInferrerResolve(unifier, logger, bindings)
+    return new TypeInferrerResolve(unifier, logger)
         .resolveNamedValue(namedValueP);
   }
 
@@ -127,7 +127,7 @@ public class TypeInferrer {
   }
 
   private boolean resolveNamedFunc(NamedFuncP namedFunc) {
-    return new TypeInferrerResolve(unifier, logger, bindings)
+    return new TypeInferrerResolve(unifier, logger)
         .resolveNamedFunc(namedFunc);
   }
 
@@ -187,7 +187,7 @@ public class TypeInferrer {
   }
 
   private boolean resolveParamDefaultValue(ExprP body) {
-    return new TypeInferrerResolve(unifier, logger, bindings)
+    return new TypeInferrerResolve(unifier, logger)
         .resolveParamDefaultValue(body);
   }
 }

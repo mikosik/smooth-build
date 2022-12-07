@@ -1,11 +1,7 @@
 package org.smoothbuild.compile.ps.infer;
 
-import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 
-import java.util.Optional;
-
-import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
@@ -19,7 +15,6 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.util.bindings.Bindings;
 
 /**
  * Infers unit type (which is empty tuple) for each quantified var
@@ -29,12 +24,9 @@ import org.smoothbuild.util.bindings.Bindings;
  */
 public class UnitTypeInferrer {
   private final Unifier unifier;
-  private final Bindings<? extends Optional<? extends RefableS>> bindings;
 
-  public UnitTypeInferrer(Unifier unifier,
-      Bindings<? extends Optional<? extends RefableS>> bindings) {
+  public UnitTypeInferrer(Unifier unifier) {
     this.unifier = unifier;
-    this.bindings = bindings;
   }
 
   public void infer(ExprP expr) {
@@ -59,9 +51,7 @@ public class UnitTypeInferrer {
   }
 
   private void inferAnonFunc(AnonFuncP anonFunc) {
-    var bodyBindings = funcBodyScopeBindings(bindings, anonFunc.params());
-    new UnitTypeInferrer(unifier, bodyBindings)
-        .infer(anonFunc.bodyGet());
+    infer(anonFunc.bodyGet());
     inferMonoizable(anonFunc);
   }
 
