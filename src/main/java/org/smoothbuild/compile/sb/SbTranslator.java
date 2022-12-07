@@ -11,7 +11,7 @@ import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 import static org.smoothbuild.util.collect.NList.nlist;
-import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
+import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -189,7 +189,7 @@ public class SbTranslator {
   }
 
   private SbTranslator funcBodySbTranslator(FuncS funcS) {
-    var newEnvironment = nlistWithNonUniqueNames(concat(funcS.params(), environment));
+    var newEnvironment = nlistWithShadowing(concat(funcS.params(), environment));
     return new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
         newEnvironment, cache, nameMapping, locMapping);
   }

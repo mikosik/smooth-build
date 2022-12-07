@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps.ast;
 
-import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
+import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class Ast {
   private final ImmutableList<NamedEvaluableP> evaluables;
 
   public Ast(List<StructP> structs, List<NamedEvaluableP> evaluables) {
-    this.structs = nlistWithNonUniqueNames(ImmutableList.copyOf(structs));
+    this.structs = nlistWithShadowing(ImmutableList.copyOf(structs));
     this.evaluables = ImmutableList.copyOf(evaluables);
   }
 

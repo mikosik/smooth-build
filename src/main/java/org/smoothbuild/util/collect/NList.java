@@ -74,7 +74,11 @@ public class NList<T extends Nameable> extends AbstractList<T> {
         () -> calculateIndexMap(map.values()));
   }
 
-  public static <E extends Nameable> NList<E> nlistWithNonUniqueNames(ImmutableList<E> list) {
+  /**
+   * Creates nlist which allows elements with duplicated names. When {@link #get(String)}
+   * is called and more than one element has given name then the first one is returned.
+   */
+  public static <E extends Nameable> NList<E> nlistWithShadowing(ImmutableList<E> list) {
     return new NList<>(
         () -> list,
         () -> calculateMap(list),

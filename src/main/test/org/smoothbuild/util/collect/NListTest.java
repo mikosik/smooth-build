@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.Labeled.labeled;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.NList.nlist;
-import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
+import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,10 +48,10 @@ public class NListTest {
     }
 
     @Nested
-    class _from_list_with_non_unique_names {
+    class _from_list_with_shadowing {
       @Test
       public void using_non_unique_names_factory_method() {
-        assertThat(nlistWithNonUniqueNames(list(n0, n1, n2, labeled(n0.nameSane(), ""))))
+        assertThat(nlistWithShadowing(list(n0, n1, n2, labeled(n0.nameSane(), ""))))
             .containsExactly(n0, n1, n2, labeled(n0.nameSane(), ""))
             .inOrder();
       }
@@ -170,7 +170,7 @@ public class NListTest {
 
     @Test
     public void returns_first_occurrence_when_more_than_one_element_has_given_name() {
-      var nlist = nlistWithNonUniqueNames(list(n0, n1, n2, labeled(n0.nameSane(), "")));
+      var nlist = nlistWithShadowing(list(n0, n1, n2, labeled(n0.nameSane(), "")));
       assertThat(nlist.get(n0.nameSane()))
           .isSameInstanceAs(n0);
     }
@@ -242,7 +242,7 @@ public class NListTest {
 
     @Test
     public void non_unique_names() {
-      var nlist = nlistWithNonUniqueNames(list(n0, n1, n2, labeled(n0.nameSane(), "")));
+      var nlist = nlistWithShadowing(list(n0, n1, n2, labeled(n0.nameSane(), "")));
       assertThat(nlist.indexOf(n0.nameSane()))
           .isEqualTo(0);
     }

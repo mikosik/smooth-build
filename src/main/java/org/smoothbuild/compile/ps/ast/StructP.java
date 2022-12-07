@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.ps.ast;
 
 import static org.smoothbuild.compile.lang.base.ValidNamesS.structNameToCtorName;
-import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
+import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public final class StructP extends NalImpl {
   private final NamedFuncP ctor;
 
   public StructP(String name, List<ItemP> fields, Loc loc) {
-    this(name, nlistWithNonUniqueNames(ImmutableList.copyOf(fields)), loc);
+    this(name, nlistWithShadowing(ImmutableList.copyOf(fields)), loc);
   }
 
   private StructP(String name, NList<ItemP> fields, Loc loc) {

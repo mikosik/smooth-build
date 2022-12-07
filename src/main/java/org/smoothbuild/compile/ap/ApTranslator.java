@@ -8,7 +8,7 @@ import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.sane;
-import static org.smoothbuild.util.collect.NList.nlistWithNonUniqueNames;
+import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +123,7 @@ public class ApTranslator {
       }
 
       private NList<ItemP> createItems(ItemListContext itemList) {
-        return nlistWithNonUniqueNames(createItemsList(itemList));
+        return nlistWithShadowing(createItemsList(itemList));
       }
 
       private ImmutableList<ItemP> createItemsList(ItemListContext itemList) {
