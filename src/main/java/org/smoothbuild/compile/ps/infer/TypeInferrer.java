@@ -93,7 +93,7 @@ public class TypeInferrer {
   }
 
   private void nameImplicitVars(NamedValueP namedValue) {
-    new ImplicitVarsNamer(unifier)
+    new TempVarsNamer(unifier)
         .nameVarsInNamedValue(namedValue);
   }
 
@@ -122,7 +122,7 @@ public class TypeInferrer {
   }
 
   private void nameImplicitVars(NamedFuncP namedFunc) {
-    new ImplicitVarsNamer(unifier)
+    new TempVarsNamer(unifier)
         .nameVarsInNamedFunc(namedFunc);
   }
 
@@ -182,7 +182,7 @@ public class TypeInferrer {
   }
 
   private void nameImplicitVars(ExprP paramDefaultValue) {
-    new ImplicitVarsNamer(unifier)
+    new TempVarsNamer(unifier)
         .nameVarsInParamDefaultValue(paramDefaultValue);
   }
 

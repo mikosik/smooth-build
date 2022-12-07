@@ -27,15 +27,15 @@ import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 
-public class ImplicitVarsNamer {
+public class TempVarsNamer {
   private final Unifier unifier;
   private final VarSetS outerScopeVars;
 
-  public ImplicitVarsNamer(Unifier unifier) {
+  public TempVarsNamer(Unifier unifier) {
     this(unifier, varSetS());
   }
 
-  private ImplicitVarsNamer(Unifier unifier, VarSetS outerScopeVars) {
+  private TempVarsNamer(Unifier unifier, VarSetS outerScopeVars) {
     this.unifier = unifier;
     this.outerScopeVars = outerScopeVars;
   }
@@ -50,16 +50,16 @@ public class ImplicitVarsNamer {
 
   private VarSetS nameVarsInEvaluable(EvaluableP evaluable) {
     var resolvedT = unifier.resolve(evaluable.typeS());
-    return nameImplicitVars(resolvedT, evaluable.body());
+    return nameVars(resolvedT, evaluable.body());
   }
 
   public void nameVarsInParamDefaultValue(ExprP expr) {
     var resolvedT = unifier.resolve(expr.typeS());
-    nameImplicitVars(resolvedT, Optional.of(expr));
+    nameVars(resolvedT, Optional.of(expr));
   }
 
   private VarSetS handleExpr(VarSetS varsInScope, ExprP expr) {
-    return new ImplicitVarsNamer(unifier, varsInScope)
+    return new TempVarsNamer(unifier, varsInScope)
         .handleExpr(expr);
   }
 
@@ -99,17 +99,17 @@ public class ImplicitVarsNamer {
     return varSetS(vars);
   }
 
-  private VarSetS nameImplicitVars(TypeS resolvedT, Optional<ExprP> body) {
+  private VarSetS nameVars(TypeS resolvedT, Optional<ExprP> body) {
     var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
     var varsInScope = outerScopeVars.withAdded(thisScopeVars);
     var innerScopeVars = body.map(b -> handleExpr(varsInScope, b)).orElse(varSetS());
     var reservedVars = varsInScope.withAdded(innerScopeVars);
-    var resolvedAndRenamedT = nameImplicitVars(resolvedT, reservedVars);
+    var resolvedAndRenamedT = nameVars(resolvedT, reservedVars);
     unifier.unifyOrFailWithRuntimeException(resolvedAndRenamedT, resolvedT);
     return resolvedAndRenamedT.vars().withAdded(innerScopeVars);
   }
 
-  private static TypeS nameImplicitVars(TypeS resolvedT, VarSetS reservedVars) {
+  private static TypeS nameVars(TypeS resolvedT, VarSetS reservedVars) {
     var vars = resolvedT.vars();
     var varsToRename = vars.filter(VarS::isTemporary);
     var varGenerator = new UnusedVarsGenerator(reservedVars);
