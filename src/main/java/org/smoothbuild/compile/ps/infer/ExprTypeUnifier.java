@@ -234,8 +234,8 @@ public class ExprTypeUnifier {
 
   private Optional<TypeS> unifyOrder(OrderP order) {
     var elems = order.elems();
-    var elemVars = pullUp(map(elems, this::unifyExpr));
-    return elemVars.flatMap(elemTs -> unifyElemsWithArray(elemTs, order.loc()));
+    var elemTs = pullUp(map(elems, this::unifyExpr));
+    return elemTs.flatMap(types -> unifyElemsWithArray(types, order.loc()));
   }
 
   private Optional<TypeS> unifyElemsWithArray(ImmutableList<TypeS> elemTs, Loc loc) {
