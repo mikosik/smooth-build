@@ -936,15 +936,19 @@ public class TestContext {
     return TypeFS.INT;
   }
 
-  private static FuncSchemaS funcSchemaS(TypeS resT, NList<ItemS> params) {
-    return funcSchemaS(resT, toTypes(params));
+  public static FuncSchemaS funcSchemaS(NList<ItemS> params, TypeS resT) {
+    return funcSchemaS(toTypes(params), resT);
   }
 
-  public static FuncSchemaS funcSchemaS(TypeS resT, TypeS... paramTs) {
-    return funcSchemaS(funcTS(list(paramTs), resT));
+  public static FuncSchemaS funcSchemaS(TypeS resT) {
+    return funcSchemaS(funcTS(list(), resT));
   }
 
-  public static FuncSchemaS funcSchemaS(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public static FuncSchemaS funcSchemaS(TypeS param1, TypeS resT) {
+    return funcSchemaS(funcTS(list(param1), resT));
+  }
+
+  public static FuncSchemaS funcSchemaS(ImmutableList<TypeS> paramTs, TypeS resT) {
     return funcSchemaS(funcTS(paramTs, resT));
   }
 
@@ -1258,7 +1262,7 @@ public class TestContext {
   public static ConstructorS constructorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
     var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(2)));
-    return new ConstructorS(funcSchemaS(structT, params), name, params, loc(line));
+    return new ConstructorS(funcSchemaS(params, structT), name, params, loc(line));
   }
 
   public static AnnFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
@@ -1287,7 +1291,7 @@ public class TestContext {
   }
 
   public static AnnFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
-    return new AnnFuncS(ann, funcSchemaS(resT, params), name, params, loc);
+    return new AnnFuncS(ann, funcSchemaS(params, resT), name, params, loc);
   }
 
   public static DefFuncS defFuncS(int line, String name, NList<ItemS> params, ExprS body) {
@@ -1304,7 +1308,7 @@ public class TestContext {
 
   public static DefFuncS defFuncS(
       int line, TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    var schema = funcSchemaS(resT, params);
+    var schema = funcSchemaS(params, resT);
     return new DefFuncS(schema, name, params, body, loc(line));
   }
 
@@ -1332,7 +1336,7 @@ public class TestContext {
   }
 
   public static AnonFuncS anonFuncS(int line, NList<ItemS> params, ExprS body) {
-    var funcSchemaS = funcSchemaS(body.evalT(), toTypes(params));
+    var funcSchemaS = funcSchemaS(toTypes(params), body.evalT());
     return new AnonFuncS(funcSchemaS, params, body, loc(line));
   }
 

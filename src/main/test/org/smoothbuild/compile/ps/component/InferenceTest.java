@@ -74,7 +74,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", funcSchemaS(stringTS(), blobTS()));
+            .containsEvaluableWithSchema("myValue", funcSchemaS(blobTS(), stringTS()));
       }
 
       @Test
@@ -216,7 +216,7 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void param_func_call() {
-        assertInferredFunctionType("()->Int f", "f()", funcSchemaS(intTS(), funcTS(intTS())));
+        assertInferredFunctionType("()->Int f", "f()", funcSchemaS(funcTS(intTS()), intTS()));
       }
 
       @Test
@@ -249,17 +249,17 @@ public class InferenceTest extends TestContext {
       class _literal {
         @Test
         public void string_literal() {
-          assertInferredFunctionType("A a", "\"abc\"", funcSchemaS(stringTS(), varA()));
+          assertInferredFunctionType("A a", "\"abc\"", funcSchemaS(varA(), stringTS()));
         }
 
         @Test
         public void blob_literal() {
-          assertInferredFunctionType("A a", "0x07", funcSchemaS(blobTS(), varA()));
+          assertInferredFunctionType("A a", "0x07", funcSchemaS(varA(), blobTS()));
         }
 
         @Test
         public void int_literal() {
-          assertInferredFunctionType("A a", "7", funcSchemaS(intTS(), varA()));
+          assertInferredFunctionType("A a", "7", funcSchemaS(varA(), intTS()));
         }
       }
 
@@ -267,7 +267,7 @@ public class InferenceTest extends TestContext {
       class _array {
         @Test
         public void mono_array() {
-          assertInferredFunctionType("A a", "[7]", funcSchemaS(arrayTS(intTS()), varA()));
+          assertInferredFunctionType("A a", "[7]", funcSchemaS(varA(), arrayTS(intTS())));
         }
 
         @Test
@@ -277,7 +277,7 @@ public class InferenceTest extends TestContext {
 
         @Test
         public void poly_array_when_param_list_already_uses_A_as_var_name() {
-          assertInferredFunctionType("A a", "[]", funcSchemaS(arrayTS(varB()), varA()));
+          assertInferredFunctionType("A a", "[]", funcSchemaS(varA(), arrayTS(varB())));
         }
       }
 
@@ -298,7 +298,7 @@ public class InferenceTest extends TestContext {
         @Test
         public void poly_value_ref_when_param_list_already_uses_A_as_var_name() {
           assertInferredFunctionType("[A] emptyArray = [];",
-              "A a", "emptyArray", funcSchemaS(arrayTS(varB()), varA()));
+              "A a", "emptyArray", funcSchemaS(varA(), arrayTS(varB())));
         }
       }
 
@@ -331,12 +331,12 @@ public class InferenceTest extends TestContext {
       class _call {
         @Test
         public void call_to_mono_param() {
-          assertInferredFunctionType("()->Int f", "f()", funcSchemaS(intTS(), funcTS(intTS())));
+          assertInferredFunctionType("()->Int f", "f()", funcSchemaS(funcTS(intTS()), intTS()));
         }
 
         @Test
         public void call_to_poly_param() {
-          assertInferredFunctionType("()->A f", "f()", funcSchemaS(varA(), funcTS(varA())));
+          assertInferredFunctionType("()->A f", "f()", funcSchemaS(funcTS(varA()), varA()));
         }
 
         @Test
@@ -377,7 +377,7 @@ public class InferenceTest extends TestContext {
         @Test
         public void poly_func_ref_when_func_type_param_shadows_referenced_func_res_type() {
           assertInferredFunctionType(
-              "A myId(A a) = a;", "A a", "myId", funcSchemaS(funcTS(varB(), varB()), varA()));
+              "A myId(A a) = a;", "A a", "myId", funcSchemaS(varA(), funcTS(varB(), varB())));
         }
       }
     }
@@ -665,7 +665,7 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", funcSchemaS(stringTS(), blobTS()));
+            .containsEvaluableWithSchema("myValue", funcSchemaS(blobTS(), stringTS()));
       }
     }
 
