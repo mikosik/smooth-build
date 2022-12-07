@@ -51,7 +51,7 @@ public class AnalyzeSemantically {
     detectDuplicateParamNames(logBuffer, ast);
     detectIllegalNames(logBuffer, ast);
     detectIllegalAnnotations(logBuffer, ast);
-    detectIllegalStructFieldDefaultValue(logBuffer, ast);
+    detectStructFieldWithDefaultValue(logBuffer, ast);
     return logBuffer.toImmutableLogs();
   }
 
@@ -282,7 +282,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void detectIllegalStructFieldDefaultValue(LogBuffer logger, Ast ast) {
+  private static void detectStructFieldWithDefaultValue(LogBuffer logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitField(ItemP field) {
