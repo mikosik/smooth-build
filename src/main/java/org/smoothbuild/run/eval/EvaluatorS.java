@@ -12,31 +12,31 @@ import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
-public class Evaluator {
+public class EvaluatorS {
   private final SbTranslatorFacade sbTranslatorFacade;
-  private final VmFactory vmFactory;
+  private final EvaluatorBFactory evaluatorBFactory;
   private final Reporter reporter;
 
   @Inject
-  public Evaluator(SbTranslatorFacade sbTranslatorFacade, VmFactory vmFactory,
+  public EvaluatorS(SbTranslatorFacade sbTranslatorFacade, EvaluatorBFactory evaluatorBFactory,
       Reporter reporter) {
     this.sbTranslatorFacade = sbTranslatorFacade;
-    this.vmFactory = vmFactory;
+    this.evaluatorBFactory = evaluatorBFactory;
     this.reporter = reporter;
   }
 
   public Optional<ImmutableList<ValueB>> evaluate(ImmutableList<? extends ExprS> exprs)
-      throws EvaluatorExc {
+      throws EvaluatorExcS {
     try {
       reporter.startNewPhase("Compiling");
       var sbTranslation = sbTranslatorFacade.translate(exprs);
       reporter.startNewPhase("Evaluating");
-      var vm = vmFactory.newVm(sbTranslation.bsMapping());
+      var vm = evaluatorBFactory.newEvaluatorB(sbTranslation.bsMapping());
       return vm.evaluate(sbTranslation.exprBs());
     } catch (SbTranslatorExc e) {
-      throw new EvaluatorExc(e.getMessage());
+      throw new EvaluatorExcS(e.getMessage());
     } catch (InterruptedException e) {
-      throw new EvaluatorExc("Evaluation process has been interrupted.");
+      throw new EvaluatorExcS("Evaluation process has been interrupted.");
     }
   }
 }

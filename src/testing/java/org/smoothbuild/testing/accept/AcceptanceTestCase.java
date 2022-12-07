@@ -41,8 +41,8 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.BuildRunner;
-import org.smoothbuild.run.eval.VmFactory;
-import org.smoothbuild.run.eval.VmFactoryImpl;
+import org.smoothbuild.run.eval.EvaluatorBFactory;
+import org.smoothbuild.run.eval.EvaluatorBFactoryImpl;
 import org.smoothbuild.run.eval.report.TaskMatcher;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.SandboxHash;
@@ -203,7 +203,7 @@ public class AcceptanceTestCase extends TestContext {
       bind(MemoryReporter.class).toInstance(memoryReporter);
       bind(Reporter.class).to(MemoryReporter.class);
       bind(Console.class).toInstance(new Console(new PrintWriter(nullOutputStream(), true)));
-      bind(VmFactory.class).to(VmFactoryImpl.class);
+      bind(EvaluatorBFactory.class).to(EvaluatorBFactoryImpl.class);
       bind(TaskMatcher.class).toInstance(ALL);
     }
 

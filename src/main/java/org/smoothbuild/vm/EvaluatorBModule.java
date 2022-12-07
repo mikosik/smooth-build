@@ -10,7 +10,7 @@ import org.smoothbuild.install.InstallationHashes;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class VmModule extends AbstractModule {
+public class EvaluatorBModule extends AbstractModule {
   @Provides
   @Singleton
   @SandboxHash

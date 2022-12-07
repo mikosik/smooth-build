@@ -140,7 +140,7 @@ import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.vm.Vm;
+import org.smoothbuild.vm.EvaluatorB;
 import org.smoothbuild.vm.compute.ComputationCache;
 import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.compute.Computer;
@@ -179,28 +179,28 @@ public class TestContext {
   private FileSystem fullFileSystem;
   private TempManager tempManager;
 
-  public Vm vm(Reporter reporter) {
-    return vm(taskExecutor(reporter));
+  public EvaluatorB evaluatorB(Reporter reporter) {
+    return evaluatorB(taskExecutor(reporter));
   }
 
-  public Vm vm(TaskReporter taskReporter) {
-    return vm(taskExecutor(taskReporter));
+  public EvaluatorB evaluatorB(TaskReporter taskReporter) {
+    return evaluatorB(taskExecutor(taskReporter));
   }
 
-  public Vm vm() {
-    return new Vm(this::executionContext);
+  public EvaluatorB evaluatorB() {
+    return new EvaluatorB(this::executionContext);
   }
 
-  public Vm vm(NativeMethodLoader nativeMethodLoader) {
-    return new Vm(() -> executionContext(nativeMethodLoader));
+  public EvaluatorB evaluatorB(NativeMethodLoader nativeMethodLoader) {
+    return new EvaluatorB(() -> executionContext(nativeMethodLoader));
   }
 
-  public Vm vm(JobCreator jobCreator) {
-    return new Vm(() -> executionContext(jobCreator));
+  public EvaluatorB evaluatorB(JobCreator jobCreator) {
+    return new EvaluatorB(() -> executionContext(jobCreator));
   }
 
-  public Vm vm(TaskExecutor taskExecutor) {
-    return new Vm(() -> executionContext(taskExecutor));
+  public EvaluatorB evaluatorB(TaskExecutor taskExecutor) {
+    return new EvaluatorB(() -> executionContext(taskExecutor));
   }
 
   public ExecutionContext executionContext() {

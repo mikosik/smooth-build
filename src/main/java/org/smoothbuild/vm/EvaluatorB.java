@@ -16,11 +16,11 @@ import org.smoothbuild.vm.job.Job;
 
 import com.google.common.collect.ImmutableList;
 
-public class Vm {
+public class EvaluatorB {
   private final Provider<ExecutionContext> contextProv;
 
   @Inject
-  public Vm(Provider<ExecutionContext> contextProv) {
+  public EvaluatorB(Provider<ExecutionContext> contextProv) {
     this.contextProv = contextProv;
   }
 

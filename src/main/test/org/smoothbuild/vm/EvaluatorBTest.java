@@ -69,7 +69,7 @@ import org.smoothbuild.vm.task.Task;
 
 import com.google.common.collect.ImmutableList;
 
-public class VmTest extends TestContext {
+public class EvaluatorBTest extends TestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
   public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS
       = new ConcurrentHashMap<>();
@@ -84,7 +84,7 @@ public class VmTest extends TestContext {
         var order = orderB(intB(7));
 
         var spyingExecutor = spy(taskExecutor());
-        assertThat(evaluate(vm(spyingExecutor), order))
+        assertThat(evaluate(evaluatorB(spyingExecutor), order))
             .isEqualTo(arrayB(intB(7)));
 
         verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
@@ -96,7 +96,7 @@ public class VmTest extends TestContext {
         var call = callB(func, orderB(boolTB()));
 
         var spyingExecutor = spy(taskExecutor());
-        assertThat(evaluate(vm(spyingExecutor), call))
+        assertThat(evaluate(evaluatorB(spyingExecutor), call))
             .isEqualTo(intB(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
@@ -110,7 +110,7 @@ public class VmTest extends TestContext {
         var callB = callB(mapFuncB, emptyIntArray, mappingFunc);
 
         var spyingExecutor = spy(taskExecutor());
-        assertThat(evaluate(vm(spyingExecutor), callB))
+        assertThat(evaluate(evaluatorB(spyingExecutor), callB))
             .isEqualTo(arrayB(intTB()));
 
         verify(spyingExecutor, never()).enqueue(isA(PickTask.class), any(), any());
@@ -124,7 +124,7 @@ public class VmTest extends TestContext {
         var call = callB(outerFunc, orderB(boolTB()));
 
         var spyingExecutor = spy(taskExecutor());
-        assertThat(evaluate(vm(spyingExecutor), call))
+        assertThat(evaluate(evaluatorB(spyingExecutor), call))
             .isEqualTo(intB(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
@@ -137,7 +137,7 @@ public class VmTest extends TestContext {
         var call = callB(func, orderB(intB(7)));
 
         var spyingExecutor = spy(taskExecutor());
-        assertThat(evaluate(vm(spyingExecutor), call))
+        assertThat(evaluate(evaluatorB(spyingExecutor), call))
             .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
 
         verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
@@ -154,7 +154,7 @@ public class VmTest extends TestContext {
 
         var countingJobCreator = new CountingJobCreator(IntB.class);
         var spyingJobCreator = spy(countingJobCreator);
-        assertThat(evaluate(vm(spyingJobCreator), call))
+        assertThat(evaluate(evaluatorB(spyingJobCreator), call))
             .isEqualTo(arrayB(intB(7)));
 
         assertThat(countingJobCreator.counter().get())
@@ -168,7 +168,7 @@ public class VmTest extends TestContext {
 
         var countingJobCreator = new CountingJobCreator(BoolB.class);
         var spyingJobCreator = spy(countingJobCreator);
-        assertThat(evaluate(vm(spyingJobCreator), call))
+        assertThat(evaluate(evaluatorB(spyingJobCreator), call))
             .isEqualTo(intB(7));
 
         assertThat(countingJobCreator.counter().get())
@@ -298,9 +298,9 @@ public class VmTest extends TestContext {
           var call = callB(natFunc, intB(33));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(natFunc)))
-              .thenReturn(
-                  Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-          assertThat(evaluate(vm(nativeMethodLoader), call))
+              .thenReturn(Try.result(
+                  EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+          assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(33));
         }
 
@@ -309,13 +309,13 @@ public class VmTest extends TestContext {
           var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(natFunc)))
-              .thenReturn(
-                  Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+              .thenReturn(Try.result(
+                  EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var natFuncT = natFunc.evalT();
           var outerFunc = defFuncB(list(natFuncT), callB(refB(natFuncT, 0), intB(7)));
           var call = callB(outerFunc, natFunc);
-          assertThat(evaluate(vm(nativeMethodLoader), call))
+          assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(7));
         }
 
@@ -324,12 +324,12 @@ public class VmTest extends TestContext {
           var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(natFunc)))
-              .thenReturn(
-                  Try.result(VmTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
+              .thenReturn(Try.result(
+                  EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var outerFunc = defFuncB(natFunc);
           var call = callB(callB(outerFunc), intB(7));
-          assertThat(evaluate(vm(nativeMethodLoader), call))
+          assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(7));
         }
       }
@@ -409,7 +409,7 @@ public class VmTest extends TestContext {
               arrayB(intB(10), intB(11), intB(12), intB(13)),
               intB(4));
           var memoryReporter = new MemoryReporter();
-          evaluateWithFailure(vm(memoryReporter), pick);
+          evaluateWithFailure(evaluatorB(memoryReporter), pick);
           assertThat(memoryReporter.logs())
               .isEqualTo(logs(error("Index (4) out of bounds. Array size = 4.")));
         }
@@ -420,7 +420,7 @@ public class VmTest extends TestContext {
               arrayB(intB(10), intB(11), intB(12), intB(13)),
               intB(-1));
           var memoryReporter = new MemoryReporter();
-          evaluateWithFailure(vm(memoryReporter), pick);
+          evaluateWithFailure(evaluatorB(memoryReporter), pick);
           assertThat(memoryReporter.logs())
               .isEqualTo(logs(error("Index (-1) out of bounds. Array size = 4.")));
         }
@@ -448,7 +448,7 @@ public class VmTest extends TestContext {
             throws InterruptedException {
           var defFuncB = closureB(list(intTB()), combineB(intB()), refB(intTB(), 2));
           var reporter = mock(Reporter.class);
-          var vm = vm(reporter);
+          var vm = evaluatorB(reporter);
           vm.evaluate(list(callB(defFuncB, intB(7))));
           verify(reporter, times(1))
               .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
@@ -460,7 +460,7 @@ public class VmTest extends TestContext {
           var innerFuncB = defFuncB(list(), refB(intTB(), 0));
           var outerFuncB = defFuncB(list(intTB()), callB(innerFuncB));
           var reporter = mock(Reporter.class);
-          var vm = vm(reporter);
+          var vm = evaluatorB(reporter);
           vm.evaluate(list(callB(outerFuncB, intB(7))));
           verify(reporter, times(1))
               .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
@@ -476,7 +476,7 @@ public class VmTest extends TestContext {
             throws InterruptedException {
           var funcB = defFuncB(list(blobTB()), refB(intTB(), 0));
           var reporter = mock(Reporter.class);
-          var vm = vm(reporter);
+          var vm = evaluatorB(reporter);
           vm.evaluate(list(callB(funcB, blobB())));
           verify(reporter, times(1))
               .report(
@@ -506,7 +506,7 @@ public class VmTest extends TestContext {
         var taskReporter = mock(TaskReporter.class);
         var context = executionContext(taskReporter, 4);
         var exprB = throwExceptionCall();
-        evaluateWithFailure(new Vm(() -> context), exprB);
+        evaluateWithFailure(new EvaluatorB(() -> context), exprB);
         verify(taskReporter).report(
             any(),
             argThat(this::computationResultWithFatalCausedByRuntimeException));
@@ -546,7 +546,7 @@ public class VmTest extends TestContext {
         };
         var context = executionContext(computer, reporter, 4);
 
-        evaluateWithFailure(new Vm(() -> context), exprB);
+        evaluateWithFailure(new EvaluatorB(() -> context), exprB);
         verify(reporter, times(1))
             .report(eq("Internal smooth error"), argThat(isLogListWithFatalM()));
       }
@@ -573,7 +573,7 @@ public class VmTest extends TestContext {
       @MethodSource("report_const_task_cases")
       public void report_value_as_const_task(ValueB valueB) {
         var taskReporter = mock(TaskReporter.class);
-        evaluate(vm(taskReporter), valueB);
+        evaluate(evaluatorB(taskReporter), valueB);
         verify(taskReporter)
             .report(constTask(valueB, null), computationResult(valueB, NOOP));
       }
@@ -671,7 +671,7 @@ public class VmTest extends TestContext {
 
     private void assertReport(ExprB exprB, Task task, ComputationResult result) {
       var taskReporter = mock(TaskReporter.class);
-      evaluate(vm(taskReporter), exprB);
+      evaluate(evaluatorB(taskReporter), exprB);
       verify(taskReporter)
           .report(task, result);
     }
@@ -709,7 +709,7 @@ public class VmTest extends TestContext {
       );
 
       var reporter = mock(TaskReporter.class);
-      var vm = new Vm(() -> executionContext(reporter, 4));
+      var vm = new EvaluatorB(() -> executionContext(reporter, 4));
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("1"), stringB("1")));
 
@@ -734,7 +734,7 @@ public class VmTest extends TestContext {
           commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
           commandCall(testName, "WAIT2,COUNT1,GET2"));
 
-      var vm = new Vm(() -> executionContext(2));
+      var vm = new EvaluatorB(() -> executionContext(2));
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
     }
@@ -789,12 +789,12 @@ public class VmTest extends TestContext {
   }
 
   private ExprB evaluate(ExprB expr) {
-    return evaluate(vm(), expr);
+    return evaluate(evaluatorB(), expr);
   }
 
-  private ValueB evaluate(Vm vm, ExprB expr) {
+  private ValueB evaluate(EvaluatorB evaluatorB, ExprB expr) {
     try {
-      var results = vm.evaluate(list(expr)).get();
+      var results = evaluatorB.evaluate(list(expr)).get();
       assertThat(results.size())
           .isEqualTo(1);
       return results.get(0);
@@ -803,9 +803,9 @@ public class VmTest extends TestContext {
     }
   }
 
-  private void evaluateWithFailure(Vm vm, ExprB expr) {
+  private void evaluateWithFailure(EvaluatorB evaluatorB, ExprB expr) {
     try {
-      var results = vm.evaluate(list(expr));
+      var results = evaluatorB.evaluate(list(expr));
       assertThat(results)
           .isEqualTo(Optional.empty());
     } catch (InterruptedException e) {

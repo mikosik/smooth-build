@@ -4,22 +4,22 @@ import javax.inject.Inject;
 
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
-import org.smoothbuild.vm.Vm;
+import org.smoothbuild.vm.EvaluatorB;
 import org.smoothbuild.vm.execute.TaskReporter;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 
-public class VmFactoryImpl implements VmFactory {
+public class EvaluatorBFactoryImpl implements EvaluatorBFactory {
   private final Injector injector;
 
   @Inject
-  public VmFactoryImpl(Injector injector) {
+  public EvaluatorBFactoryImpl(Injector injector) {
     this.injector = injector;
   }
 
   @Override
-  public Vm newVm(BsMapping bsMapping) {
+  public EvaluatorB newEvaluatorB(BsMapping bsMapping) {
     var childInjector = injector.createChildInjector(new AbstractModule() {
       @Override
       protected void configure() {
@@ -27,6 +27,6 @@ public class VmFactoryImpl implements VmFactory {
         bind(BsMapping.class).toInstance(bsMapping);
       }
     });
-    return childInjector.getInstance(Vm.class);
+    return childInjector.getInstance(EvaluatorB.class);
   }
 }
