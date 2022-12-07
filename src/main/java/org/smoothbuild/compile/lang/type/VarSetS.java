@@ -35,7 +35,7 @@ public final class VarSetS implements Set<VarS> {
         .collect(toVarSetS());
   }
 
-  public VarSetS(Set<VarS> elements) {
+  private VarSetS(Set<VarS> elements) {
     this.elements = Sets.sort(elements, comparing(VarS::name));
   }
 
