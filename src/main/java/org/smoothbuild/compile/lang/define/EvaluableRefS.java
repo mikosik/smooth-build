@@ -9,7 +9,7 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 /**
  * Reference to named evaluable.
  */
-public record EvaluableRefS(NamedEvaluableS namedEvaluable, Loc loc) implements PolyExprS {
+public record EvaluableRefS(NamedEvaluableS namedEvaluable, Loc loc) implements MonoizableS {
 
   @Override
   public SchemaS schema() {

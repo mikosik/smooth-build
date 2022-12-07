@@ -126,16 +126,16 @@ public class ExprSLoadingTest extends TestContext {
         @Test
         public void with_reference_to_poly_val() {
           var polyVal = byteValS(4, varA(), "polyVal");
-          var polyRef = monoizeS(1, varMap(varA(), varA()), polyVal);
-          var arg = monoizeS(2, varMap(varA(), intTS()), defValS(1, "myFunc:b", polyRef));
+          var monoized = monoizeS(1, varMap(varA(), varA()), polyVal);
+          var arg = monoizeS(2, varMap(varA(), intTS()), defValS(1, "myFunc:b", monoized));
           test_default_arg("polyVal", arg);
         }
 
         @Test
         public void with_reference_to_poly_func() {
           var polyFunc = byteFuncS(6, varA(), "polyFunc", nlist());
-          var polyRef = monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramDefaultValue = defValS("myFunc:b", callS(1, polyRef));
+          var monoized = monoizeS(1, varMap(varA(), varA()), polyFunc);
+          var paramDefaultValue = defValS("myFunc:b", callS(1, monoized));
           var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultValue);
           test_default_arg("polyFunc()", expected);
         }

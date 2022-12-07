@@ -52,12 +52,12 @@ import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
+import org.smoothbuild.compile.lang.define.MonoizableS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
-import org.smoothbuild.compile.lang.define.PolyExprS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -149,13 +149,13 @@ public class SbTranslator {
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
         environment, cache, nameMapping, locMapping);
-    return sbTranslator.translatePolyExpr(monoizeS.polyExprS());
+    return sbTranslator.translateMonoizable(monoizeS.monoizableS());
   }
 
-  public ExprB translatePolyExpr(PolyExprS polyExprS) {
-    return switch (polyExprS) {
+  public ExprB translateMonoizable(MonoizableS monoizableS) {
+    return switch (monoizableS) {
       case AnonFuncS anonFuncS -> translateAnonFunc(anonFuncS);
-      case EvaluableRefS evaluableRefS -> translatePolyRef(evaluableRefS);
+      case EvaluableRefS evaluableRefS -> translateEvaluableRef(evaluableRefS);
     };
   }
 
@@ -171,7 +171,7 @@ public class SbTranslator {
         translateExpr(anonFuncS.body()));
   }
 
-  private ExprB translatePolyRef(EvaluableRefS evaluableRefS) {
+  private ExprB translateEvaluableRef(EvaluableRefS evaluableRefS) {
     return switch (evaluableRefS.namedEvaluable()) {
       case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
       case NamedValueS namedValS -> translateNamedValueWithCache(evaluableRefS.loc(), namedValS);

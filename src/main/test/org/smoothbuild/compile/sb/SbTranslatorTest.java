@@ -222,9 +222,9 @@ public class SbTranslatorTest extends TestContext {
           @Test
           public void defined_value() {
             var emptyArrayVal = emptyArrayValS();
-            var polyRefS = monoizeS(aToIntVarMapS(), emptyArrayVal);
+            var monoized = monoizeS(aToIntVarMapS(), emptyArrayVal);
             var orderB = orderB(intTB());
-            assertTranslation(polyRefS, callB(defFuncB(orderB)));
+            assertTranslation(monoized, callB(defFuncB(orderB)));
           }
 
           @Test
@@ -255,8 +255,8 @@ public class SbTranslatorTest extends TestContext {
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
             var translator = sbTranslator(fileLoader);
-            var polyRefS = monoizeS(aToIntVarMapS(), byteValS);
-            assertTranslation(translator, polyRefS, idFuncB());
+            var monoized = monoizeS(aToIntVarMapS(), byteValS);
+            assertTranslation(translator, monoized, idFuncB());
           }
         }
 
@@ -265,9 +265,9 @@ public class SbTranslatorTest extends TestContext {
           @Test
           public void defined_func() {
             var identity = idFuncS();
-            var polyRefS = monoizeS(aToIntVarMapS(), identity);
+            var monoized = monoizeS(aToIntVarMapS(), identity);
             var funcB = defFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
-            assertTranslation(polyRefS, funcB);
+            assertTranslation(monoized, funcB);
           }
 
           @Test
@@ -301,8 +301,8 @@ public class SbTranslatorTest extends TestContext {
 
             var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
             var translator = sbTranslator(fileLoader);
-            var polyRefS = monoizeS(ImmutableMap.of(a, intTS()), natFuncS);
-            assertTranslation(translator, polyRefS, natFuncB);
+            var monoized = monoizeS(ImmutableMap.of(a, intTS()), natFuncS);
+            assertTranslation(translator, monoized, natFuncB);
           }
 
           @Test
@@ -318,8 +318,8 @@ public class SbTranslatorTest extends TestContext {
             var fileLoader = createFileLoaderMock(
                 filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
             var translator = sbTranslator(fileLoader);
-            var polyRefS = monoizeS(ImmutableMap.of(a, intTS()), byteFuncS);
-            assertTranslation(translator, polyRefS, idFuncB());
+            var monoized = monoizeS(ImmutableMap.of(a, intTS()), byteFuncS);
+            assertTranslation(translator, monoized, idFuncB());
           }
         }
       }
@@ -468,15 +468,15 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void def_value() {
           var emptyArrayVal = defValS(7, "emptyArray", orderS(varA()));
-          var polyRefS = monoizeS(4, aToIntVarMapS(), emptyArrayVal);
-          assertNalMapping(polyRefS, null, loc(4));
+          var monoized = monoizeS(4, aToIntVarMapS(), emptyArrayVal);
+          assertNalMapping(monoized, null, loc(4));
         }
 
         @Test
         public void def_func() {
           var identity = idFuncS();
-          var polyRefS = monoizeS(aToIntVarMapS(), identity);
-          assertNalMapping(polyRefS, "myId", loc(1));
+          var monoized = monoizeS(aToIntVarMapS(), identity);
+          assertNalMapping(monoized, "myId", loc(1));
         }
       }
     }
@@ -537,8 +537,8 @@ public class SbTranslatorTest extends TestContext {
 
     @Test
     public void monoized_poly_func_translation_result() {
-      var polyRefS = monoizeS(aToIntVarMapS(), idFuncS());
-      assertTranslationIsCached(polyRefS);
+      var monoized = monoizeS(aToIntVarMapS(), idFuncS());
+      assertTranslationIsCached(monoized);
     }
 
     private void assertTranslationIsCached(ExprS exprS) {

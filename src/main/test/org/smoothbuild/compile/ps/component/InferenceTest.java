@@ -162,7 +162,7 @@ public class InferenceTest extends TestContext {
           .evaluables()
           .get("myValue");
       var myValueBody = ((DefValueS) myValue).body();
-      var anonFunc = ((MonoizeS) myValueBody).polyExprS();
+      var anonFunc = ((MonoizeS) myValueBody).monoizableS();
       assertThat(anonFunc.schema())
           .isEqualTo(expected);
     }

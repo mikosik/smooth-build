@@ -18,7 +18,7 @@ public class SelectSTest extends TestContext {
             SelectS(
               selectable = MonoizeS(
                 varMap = {}
-                polyExprS = EvaluableRefS(
+                monoizableS = EvaluableRefS(
                   namedEvaluable = AnnVal(
                     AnnS(
                       name = myAnnotation

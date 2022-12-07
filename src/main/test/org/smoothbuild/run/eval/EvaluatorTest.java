@@ -200,8 +200,8 @@ public class EvaluatorTest  extends TestContext {
         public void poly_def_func() throws EvaluatorExc {
           var a = varA();
           var funcS = defFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
-          var polyRefS = monoizeS(varMap(a, intTS()), funcS);
-          assertThat(evaluate(polyRefS))
+          var monoizedS = monoizeS(varMap(a, intTS()), funcS);
+          assertThat(evaluate(monoizedS))
               .isEqualTo(idFuncB());
         }
 

@@ -24,12 +24,12 @@ import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
+import org.smoothbuild.compile.lang.define.MonoizableS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
-import org.smoothbuild.compile.lang.define.PolyExprS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
@@ -193,8 +193,8 @@ public class PsTranslator {
     return newMonoize(monoizableP, evaluableRefS);
   }
 
-  private static MonoizeS newMonoize(MonoizableP monoizableP, PolyExprS polyExprS) {
-    return new MonoizeS(monoizableP.monoizeVarMap(), polyExprS, monoizableP.loc());
+  private static MonoizeS newMonoize(MonoizableP monoizableP, MonoizableS monoizableS) {
+    return new MonoizeS(monoizableP.monoizeVarMap(), monoizableS, monoizableP.loc());
   }
 
   private BlobS translateBlob(BlobP blob) {

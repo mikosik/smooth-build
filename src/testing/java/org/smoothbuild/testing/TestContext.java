@@ -93,12 +93,12 @@ import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.ModFiles;
+import org.smoothbuild.compile.lang.define.MonoizableS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
-import org.smoothbuild.compile.lang.define.PolyExprS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.define.SyntCtorS;
@@ -1072,24 +1072,24 @@ public class TestContext {
     return monoizeS(varMap, evaluableRefS, loc);
   }
 
-  public static MonoizeS monoizeS(PolyExprS polyExprS) {
-    return monoizeS(1, polyExprS);
+  public static MonoizeS monoizeS(MonoizableS monoizableS) {
+    return monoizeS(1, monoizableS);
   }
 
-  public static MonoizeS monoizeS(int line, PolyExprS polyExprS) {
-    return monoizeS(ImmutableMap.of(), polyExprS, loc(line));
+  public static MonoizeS monoizeS(int line, MonoizableS monoizableS) {
+    return monoizeS(ImmutableMap.of(), monoizableS, loc(line));
   }
 
-  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS) {
-    return monoizeS(1, varMap, polyExprS);
+  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS) {
+    return monoizeS(1, varMap, monoizableS);
   }
 
-  public static MonoizeS monoizeS(int line, ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS) {
-    return monoizeS(varMap, polyExprS, loc(line));
+  public static MonoizeS monoizeS(int line, ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS) {
+    return monoizeS(varMap, monoizableS, loc(line));
   }
 
-  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS, Loc loc) {
-    return new MonoizeS(varMap, polyExprS, loc);
+  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS, Loc loc) {
+    return new MonoizeS(varMap, monoizableS, loc);
   }
 
   public static OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {

@@ -11,25 +11,25 @@ import org.smoothbuild.compile.lang.type.VarS;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Monomorphization of expression.
+ * Monomorphization of monomorphizable expression.
  */
-public record MonoizeS(ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS, TypeS evalT, Loc loc)
+public record MonoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS, TypeS evalT, Loc loc)
     implements ExprS {
 
-  public MonoizeS(PolyExprS polyExprS, Loc loc) {
-    this(ImmutableMap.of(), polyExprS, loc);
-    checkArgument(polyExprS.schema().quantifiedVars().isEmpty());
+  public MonoizeS(MonoizableS monoizableS, Loc loc) {
+    this(ImmutableMap.of(), monoizableS, loc);
+    checkArgument(monoizableS.schema().quantifiedVars().isEmpty());
   }
 
-  public MonoizeS(ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS, Loc loc) {
-    this(varMap, polyExprS, polyExprS.schema().monoize(varMap), loc);
+  public MonoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS, Loc loc) {
+    this(varMap, monoizableS, monoizableS.schema().monoize(varMap), loc);
   }
 
   @Override
   public String toString() {
     var fields = joinToString("\n",
         "varMap = " + varMap,
-        "polyExprS = " + polyExprS,
+        "monoizableS = " + monoizableS,
         "evalT = " + evalT,
         "loc = " + loc
     );
