@@ -1,7 +1,5 @@
 package org.smoothbuild.compile.lang.type;
 
-import static com.google.common.base.Predicates.alwaysFalse;
-import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -25,7 +23,6 @@ import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -142,48 +139,6 @@ public class TypeSTest {
         arguments(funcTS(boolTS(), varA()), varSetS(varA())),
         arguments(funcTS(varA(), blobTS()), varSetS(varA())),
         arguments(funcTS(varB(), varA()), varSetS(varA(), varB()))
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("rename_vars")
-  public void rename_vars(TypeS type, Predicate<VarS> predicate, TypeS expected) {
-    assertThat(type.renameVars(predicate))
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> rename_vars() {
-    Predicate<VarS> matchC = (VarS v) -> v.name().equals("C");
-    return List.of(
-        arguments(blobTS(), alwaysTrue(), blobTS()),
-        arguments(blobTS(), alwaysFalse(), blobTS()),
-        arguments(boolTS(), alwaysTrue(), boolTS()),
-        arguments(boolTS(), alwaysFalse(), boolTS()),
-        arguments(intTS(), alwaysTrue(), intTS()),
-        arguments(intTS(), alwaysFalse(), intTS()),
-        arguments(stringTS(), alwaysTrue(), stringTS()),
-        arguments(stringTS(), alwaysFalse(), stringTS()),
-
-        arguments(varB(), alwaysTrue(), varA()),
-        arguments(varB(), alwaysFalse(), varB()),
-
-
-        arguments(tupleTS(intTS()), alwaysTrue(), tupleTS(intTS())),
-        arguments(tupleTS(intTS()), alwaysFalse(), tupleTS(intTS())),
-        arguments(tupleTS(varB(), varC()), alwaysTrue(), tupleTS(varA(), varB())),
-        arguments(tupleTS(varB(), varC()), alwaysFalse(), tupleTS(varB(), varC())),
-        arguments(tupleTS(varB(), varC()), matchC, tupleTS(varB(), varA())),
-
-        arguments(arrayTS(intTS()), alwaysTrue(), arrayTS(intTS())),
-        arguments(arrayTS(intTS()), alwaysFalse(), arrayTS(intTS())),
-        arguments(arrayTS(varB()), alwaysTrue(), arrayTS(varA())),
-        arguments(arrayTS(varB()), alwaysFalse(), arrayTS(varB())),
-
-        arguments(funcTS(boolTS(), blobTS()), alwaysTrue(), funcTS(boolTS(), blobTS())),
-        arguments(funcTS(boolTS(), blobTS()), alwaysFalse(), funcTS(boolTS(), blobTS())),
-        arguments(funcTS(varC(), varB()), alwaysTrue(), funcTS(varB(), varA())),
-        arguments(funcTS(varC(), varB()), alwaysFalse(), funcTS(varC(), varB())),
-        arguments(funcTS(varC(), varB()), matchC, funcTS(varA(), varB()))
     );
   }
 
