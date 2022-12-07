@@ -5,7 +5,6 @@ import static org.smoothbuild.util.Strings.indent;
 import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.WithLocImpl;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
@@ -13,16 +12,17 @@ import org.smoothbuild.util.collect.NList;
  * Anonymous function.
  * This class is immutable.
  */
-public final class AnonFuncS extends WithLocImpl implements FuncS, MonoizableS {
+public final class AnonFuncS implements FuncS, MonoizableS {
   private final FuncSchemaS schema;
   private final NList<ItemS> params;
   private final ExprS body;
+  private final Loc loc;
 
   public AnonFuncS(FuncSchemaS schema, NList<ItemS> params, ExprS body, Loc loc) {
-    super(loc);
     this.schema = schema;
     this.params = params;
     this.body = body;
+    this.loc = loc;
   }
 
 
@@ -38,6 +38,11 @@ public final class AnonFuncS extends WithLocImpl implements FuncS, MonoizableS {
 
   public ExprS body() {
     return body;
+  }
+
+  @Override
+  public Loc loc() {
+    return loc;
   }
 
   @Override
