@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.ps.ast;
+package org.smoothbuild.compile.ap;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.compile.lang.base.Loc.loc;
@@ -40,6 +40,9 @@ import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.ps.ast.AnnP;
+import org.smoothbuild.compile.ps.ast.Ast;
+import org.smoothbuild.compile.ps.ast.StructP;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
@@ -65,7 +68,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class AstCreator {
+public class ApTranslator {
   public static Maybe<Ast> fromParseTree(FilePath filePath, ModContext module) {
     var logs = new LogBuffer();
     List<StructP> structs = new ArrayList<>();

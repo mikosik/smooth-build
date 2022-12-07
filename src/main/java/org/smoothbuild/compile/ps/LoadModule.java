@@ -1,10 +1,10 @@
 package org.smoothbuild.compile.ps;
 
+import static org.smoothbuild.compile.ap.ApTranslator.fromParseTree;
 import static org.smoothbuild.compile.ps.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefs.detectUndefinedRefs;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.ps.ParseModule.parseModule;
-import static org.smoothbuild.compile.ps.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.compile.ps.ast.AstSorter.sortParsedByDeps;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
