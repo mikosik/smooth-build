@@ -221,7 +221,7 @@ public class SbTranslatorTest extends TestContext {
         class _named_value {
           @Test
           public void defined_value() {
-            var emptyArrayVal = emptyArrayValS();
+            var emptyArrayVal = emptyArrayValueS();
             var monoized = monoizeS(aToIntVarMapS(), emptyArrayVal);
             var orderB = orderB(intTB());
             assertTranslation(monoized, callB(defFuncB(orderB)));
@@ -232,7 +232,7 @@ public class SbTranslatorTest extends TestContext {
             var a = varA();
             var b = varB();
 
-            var emptyArrayValS = emptyArrayValS(a);
+            var emptyArrayValS = emptyArrayValueS(a);
             var bEmptyArrayMonoValS = monoizeS(ImmutableMap.of(a, b), emptyArrayValS);
 
             var referencingValS = defValS("referencing", bEmptyArrayMonoValS);

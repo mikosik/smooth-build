@@ -1239,11 +1239,11 @@ public class TestContext {
     return new DefValueS(schemaS(type), name, body, loc(line));
   }
 
-  public static NamedValueS emptyArrayValS() {
-    return emptyArrayValS(varA());
+  public static NamedValueS emptyArrayValueS() {
+    return emptyArrayValueS(varA());
   }
 
-  public static NamedValueS emptyArrayValS(VarS elemT) {
+  public static NamedValueS emptyArrayValueS(VarS elemT) {
     return defValS("emptyArray", orderS(elemT));
   }
 
