@@ -3,7 +3,7 @@ package org.smoothbuild.compile.ps;
 import static org.smoothbuild.compile.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.lang.type.TypeFS.STRING;
-import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings2;
+import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.collect.Optionals.mapPair;
@@ -160,7 +160,7 @@ public class PsTranslator {
   }
 
   private Optional<ExprS> translateFuncBody(NList<ItemS> params, ExprP expr) {
-    var bindingsInBody = funcBodyScopeBindings2(bindings, params);
+    var bindingsInBody = funcBodyScopeBindings(bindings, params);
     return new PsTranslator(bindingsInBody)
         .translateExpr(expr);
   }

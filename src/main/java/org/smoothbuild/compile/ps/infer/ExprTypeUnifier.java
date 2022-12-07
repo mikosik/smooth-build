@@ -88,10 +88,15 @@ public class ExprTypeUnifier {
   }
 
   private boolean unifyFunc(FuncP func, ImmutableList<TypeS> paramTs, TypeS resT) {
-    var bodyBindings = funcBodyScopeBindings(bindings, func.params());
+    var paramsS = func.params().map(ExprTypeUnifier::itemS);
+    var bodyBindings = funcBodyScopeBindings(bindings, paramsS);
     var funcTS = new FuncTS(paramTs, resT);
     func.setTypeS(funcTS);
     return unifyEvaluableBody(func, resT, funcTS, bodyBindings);
+  }
+
+  private static ItemS itemS(ItemP p) {
+    return new ItemS(p.typeS(), p.name(), Optional.empty(), p.loc());
   }
 
   private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
