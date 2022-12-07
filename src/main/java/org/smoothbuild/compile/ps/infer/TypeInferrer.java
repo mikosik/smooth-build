@@ -31,22 +31,27 @@ import org.smoothbuild.util.collect.NList;
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
 public class TypeInferrer {
+  private final Unifier unifier;
   private final TypePsTranslator typePsTranslator;
   private final Bindings<? extends Optional<? extends RefableS>> bindings;
   private final Logger logger;
-  private final Unifier unifier;
 
-  public TypeInferrer(Bindings<Optional<TDefS>> types,
-      Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger) {
-    this(new TypePsTranslator(types), bindings, logger, new Unifier());
+  public TypeInferrer(
+      Bindings<Optional<TDefS>> types,
+      Bindings<? extends Optional<? extends RefableS>> bindings,
+      Logger logger) {
+    this(new Unifier(), new TypePsTranslator(types), bindings, logger);
   }
 
-  public TypeInferrer(TypePsTranslator typePsTranslator,
-      Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger, Unifier unifier) {
+  public TypeInferrer(
+      Unifier unifier,
+      TypePsTranslator typePsTranslator,
+      Bindings<? extends Optional<? extends RefableS>> bindings,
+      Logger logger) {
+    this.unifier = unifier;
     this.typePsTranslator = typePsTranslator;
     this.bindings = bindings;
     this.logger = logger;
-    this.unifier = unifier;
   }
 
   public static Optional<StructTS> inferStructType(Bindings<Optional<TDefS>> types,
@@ -164,7 +169,7 @@ public class TypeInferrer {
   }
 
   private boolean inferParamDefaultValue(ExprP body) {
-    return new TypeInferrer(typePsTranslator, bindings, logger, new Unifier())
+    return new TypeInferrer(new Unifier(), typePsTranslator, bindings, logger)
         .inferParamDefaultValueImpl(body);
   }
 
