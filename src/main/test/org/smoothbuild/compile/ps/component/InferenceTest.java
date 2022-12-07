@@ -74,7 +74,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(funcTS(blobTS(), stringTS())));
+            .containsEvaluableWithSchema("myValue", funcSchemaS(stringTS(), blobTS()));
       }
 
       @Test
@@ -131,7 +131,7 @@ public class InferenceTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(funcTS(varA(), varA())));
+            .containsEvaluableWithSchema("myValue", funcSchemaS(varA(), varA()));
       }
     }
   }
@@ -665,7 +665,7 @@ public class InferenceTest extends TestContext {
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(funcTS(blobTS(), stringTS())));
+            .containsEvaluableWithSchema("myValue", funcSchemaS(stringTS(), blobTS()));
       }
     }
 
