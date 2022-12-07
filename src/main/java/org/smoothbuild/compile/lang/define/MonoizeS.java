@@ -10,6 +10,9 @@ import org.smoothbuild.compile.lang.type.VarS;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Monomorphization of expression.
+ */
 public record MonoizeS(ImmutableMap<VarS, TypeS> varMap, PolyExprS polyExprS, TypeS evalT, Loc loc)
     implements ExprS {
 
