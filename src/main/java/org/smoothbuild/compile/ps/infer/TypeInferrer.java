@@ -78,7 +78,7 @@ public class TypeInferrer {
 
   // value
 
-  public boolean inferValueSchema(NamedValueP namedValue) {
+  public boolean inferNamedValueSchema(NamedValueP namedValue) {
     if (unifyNamedValue(namedValue)) {
       nameImplicitVars(namedValue);
       return resolveValueSchema(namedValue);
@@ -104,7 +104,7 @@ public class TypeInferrer {
 
   // func
 
-  public boolean inferFuncSchema(NamedFuncP namedFunc) {
+  public boolean inferNamedFuncSchema(NamedFuncP namedFunc) {
     var params = namedFunc.params();
     if (inferParamDefaultValues(params) && unifyNamedFunc(namedFunc)) {
       nameImplicitVars(namedFunc);

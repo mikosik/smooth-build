@@ -97,7 +97,7 @@ public class ModuleCreator {
 
   public void visitValue(NamedValueP namedValueP) {
     var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
-    if (typeInferrer.inferValueSchema(namedValueP)) {
+    if (typeInferrer.inferNamedValueSchema(namedValueP)) {
       var valueS = psTranslator.translateNamedValue(namedValueP);
       bindings.add(namedValueP.name(), valueS);
     } else {
@@ -107,7 +107,7 @@ public class ModuleCreator {
 
   public void visitFunc(NamedFuncP namedFuncP) {
     var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
-    if (typeInferrer.inferFuncSchema(namedFuncP)) {
+    if (typeInferrer.inferNamedFuncSchema(namedFuncP)) {
       var funcS = psTranslator.translateNamedFunc(namedFuncP);
       @SuppressWarnings("unchecked") // safe as NamedFuncS is immutable
       var namedEvaluableS = (Optional<NamedEvaluableS>) (Object) funcS;
