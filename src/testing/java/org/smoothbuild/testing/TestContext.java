@@ -85,6 +85,7 @@ import org.smoothbuild.compile.lang.define.AnnValueS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
+import org.smoothbuild.compile.lang.define.ConstructorS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
@@ -101,7 +102,6 @@ import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
-import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.BlobTS;
@@ -1247,18 +1247,18 @@ public class TestContext {
     return defValS("emptyArray", orderS(elemT));
   }
 
-  public static SyntCtorS syntCtorS(StructTS structT) {
-    return syntCtorS(1, structT, UPPER_CAMEL.to(LOWER_CAMEL, structT.name()));
+  public static ConstructorS constructorS(StructTS structT) {
+    return constructorS(1, structT, UPPER_CAMEL.to(LOWER_CAMEL, structT.name()));
   }
 
-  public static SyntCtorS syntCtorS(int line, StructTS structT) {
-    return syntCtorS(line, structT, structNameToCtorName(structT.name()));
+  public static ConstructorS constructorS(int line, StructTS structT) {
+    return constructorS(line, structT, structNameToCtorName(structT.name()));
   }
 
-  public static SyntCtorS syntCtorS(int line, StructTS structT, String name) {
+  public static ConstructorS constructorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
     var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(2)));
-    return new SyntCtorS(funcSchemaS(structT, params), name, params, loc(line));
+    return new ConstructorS(funcSchemaS(structT, params), name, params, loc(line));
   }
 
   public static AnnFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {

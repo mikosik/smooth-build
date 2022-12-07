@@ -9,7 +9,7 @@ import org.smoothbuild.util.collect.NList;
  * Named function.
  */
 public sealed abstract class NamedFuncS extends Sanal implements FuncS, NamedEvaluableS
-    permits AnnFuncS, DefFuncS, SyntCtorS {
+    permits AnnFuncS, DefFuncS, ConstructorS {
   private final NList<ItemS> params;
 
   public NamedFuncS(FuncSchemaS schemaS, String name, NList<ItemS> params, Loc loc) {

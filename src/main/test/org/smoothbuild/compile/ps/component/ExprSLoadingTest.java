@@ -267,14 +267,14 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void with_ctor_reference() {
         var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-        var ctor = syntCtorS(1, struct, "myStruct");
+        var constructor = constructorS(1, struct, "myStruct");
         module("""
           MyStruct {
             String field
           }
           """)
             .loadsWithSuccess()
-            .containsEvaluable(ctor);
+            .containsEvaluable(constructor);
       }
 
       @Test
@@ -287,8 +287,8 @@ public class ExprSLoadingTest extends TestContext {
               "aaa");
             """;
         var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-        var ctor = syntCtorS(1, struct);
-        var resultBody = callS(4, monoizeS(4, ctor), stringS(5, "aaa"));
+        var constructor = constructorS(1, struct);
+        var resultBody = callS(4, monoizeS(4, constructor), stringS(5, "aaa"));
         var result = defValS(4, struct, "result", resultBody);
         module(code)
             .loadsWithSuccess()
@@ -383,8 +383,8 @@ public class ExprSLoadingTest extends TestContext {
               myStruct;
             """;
         var structT = structTS("MyStruct", nlist());
-        var myStruct = syntCtorS(1, structT);
-        var result = defValS(2, funcTS(structT), "result", monoizeS(3, myStruct));
+        var constructor = constructorS(1, structT);
+        var result = defValS(2, funcTS(structT), "result", monoizeS(3, constructor));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);

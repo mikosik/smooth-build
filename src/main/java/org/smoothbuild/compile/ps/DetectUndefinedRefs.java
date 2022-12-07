@@ -43,7 +43,7 @@ public class DetectUndefinedRefs extends AstVisitor {
   @Override
   public void visitStruct(StructP struct) {
     super.visitStruct(struct);
-    definedNames.add(struct.ctor().name());
+    definedNames.add(struct.constructor().name());
   }
 
   @Override

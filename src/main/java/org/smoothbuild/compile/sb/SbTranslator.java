@@ -45,6 +45,7 @@ import org.smoothbuild.compile.lang.define.AnnValueS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
+import org.smoothbuild.compile.lang.define.ConstructorS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
@@ -60,7 +61,6 @@ import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
-import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
@@ -198,7 +198,7 @@ public class SbTranslator {
     return switch (namedFuncS) {
       case AnnFuncS n -> translateAnnFunc(n);
       case DefFuncS d -> translateDefFunc(d);
-      case SyntCtorS c -> translateSyntCtor(c);
+      case ConstructorS c -> translateConstructor(c);
     };
   }
 
@@ -226,10 +226,10 @@ public class SbTranslator {
     return bytecodeF.natFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private ClosureB translateSyntCtor(SyntCtorS syntCtorS) {
-    var funcTB = translateT(syntCtorS.schema().type());
+  private ClosureB translateConstructor(ConstructorS constructorS) {
+    var funcTB = translateT(constructorS.schema().type());
     var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
-    saveLoc(bodyB, syntCtorS);
+    saveLoc(bodyB, constructorS);
     return bytecodeF.defFunc(funcTB, bodyB);
   }
 

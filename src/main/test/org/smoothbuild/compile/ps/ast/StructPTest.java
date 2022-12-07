@@ -14,14 +14,14 @@ public class StructPTest {
     @Test
     public void ctor_name_is_lower_camelcase_of_type_name() {
       StructP struct = new StructP("MyType", list(), internal());
-      Truth.assertThat(struct.ctor().name())
+      Truth.assertThat(struct.constructor().name())
           .isEqualTo("myType");
     }
 
     @Test
     public void ctor_name_is_lower_camelcase_of_type_name_preserving_underscores() {
       StructP struct = new StructP("My_Pretty_Type", list(), internal());
-      Truth.assertThat(struct.ctor().name())
+      Truth.assertThat(struct.constructor().name())
           .isEqualTo("my_Pretty_Type");
     }
   }

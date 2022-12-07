@@ -147,7 +147,7 @@ public class AnalyzeSemantically {
     return ast.structs()
         .stream()
         .filter(s -> startsWithUpperCase(s.name()))
-        .map(StructP::ctor)
+        .map(StructP::constructor)
         .toList();
   }
 

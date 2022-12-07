@@ -9,11 +9,11 @@ import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
 /**
- * Synthetic constructor.
+ * Structure constructor.
  * This class is immutable.
  */
-public final class SyntCtorS extends NamedFuncS {
-  public SyntCtorS(FuncSchemaS schema, String name, NList<ItemS> params, Loc loc) {
+public final class ConstructorS extends NamedFuncS {
+  public ConstructorS(FuncSchemaS schema, String name, NList<ItemS> params, Loc loc) {
     super(schema, name, params, loc);
   }
 
@@ -22,7 +22,7 @@ public final class SyntCtorS extends NamedFuncS {
     if (this == object) {
       return true;
     }
-    return object instanceof SyntCtorS that
+    return object instanceof ConstructorS that
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
@@ -36,6 +36,6 @@ public final class SyntCtorS extends NamedFuncS {
 
   @Override
   public String toString() {
-    return "SyntCtorS(\n" + indent(fieldsToString()) + "\n)";
+    return "ConstructorS(\n" + indent(fieldsToString()) + "\n)";
   }
 }

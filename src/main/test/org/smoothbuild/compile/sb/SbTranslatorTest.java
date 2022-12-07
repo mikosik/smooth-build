@@ -191,8 +191,8 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void select() {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-        var syntCtorS = syntCtorS(structTS);
-        var callS = callS(monoizeS(syntCtorS), stringS("abc"));
+        var constructorS = constructorS(structTS);
+        var callS = callS(monoizeS(constructorS), stringS("abc"));
         var selectS = selectS(callS, "field");
 
         var ctorB = defFuncB(list(stringTB()), combineB(refB(stringTB(), 0)));
@@ -457,8 +457,8 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void select() {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-        var syntCtorS = syntCtorS(structTS);
-        var callS = callS(monoizeS(syntCtorS), stringS("abc"));
+        var constructorS = constructorS(structTS);
+        var callS = callS(monoizeS(constructorS), stringS("abc"));
         var selectS = selectS(4, callS, "field");
         assertNalMapping(selectS, null, loc(4));
       }
@@ -529,10 +529,10 @@ public class SbTranslatorTest extends TestContext {
     }
 
     @Test
-    public void synt_ctor_translation_result() {
+    public void constructor_translation_result() {
       var myStruct = structTS("MyStruct", nlist(sigS(stringTS(), "name")));
       assertTranslationIsCached(
-          monoizeS(syntCtorS(myStruct)));
+          monoizeS(constructorS(myStruct)));
     }
 
     @Test

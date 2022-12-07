@@ -30,7 +30,7 @@ public final class StructP extends NalImpl {
         Optional.empty(), Optional.empty(), loc);
   }
 
-  public NamedFuncP ctor() {
+  public NamedFuncP constructor() {
     return ctor;
   }
 

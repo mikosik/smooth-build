@@ -98,8 +98,8 @@ public class EvaluatorSTest extends TestContext {
 
         @Test
         public void call_constructor() throws EvaluatorExcS {
-          var syntCtorS = syntCtorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
-          var callS = callS(monoizeS(syntCtorS), intS(7));
+          var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
+          var callS = callS(monoizeS(constructorS), intS(7));
           assertThat(evaluate(callS))
               .isEqualTo(tupleB(intB(7)));
         }
@@ -160,8 +160,8 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void select() throws EvaluatorExcS {
           var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
-          var syntCtorS = syntCtorS(structTS);
-          var callS = callS(monoizeS(syntCtorS), intS(7));
+          var constructorS = constructorS(structTS);
+          var callS = callS(monoizeS(constructorS), intS(7));
           assertThat(evaluate(selectS(callS, "f")))
               .isEqualTo(intB(7));
         }
@@ -223,9 +223,9 @@ public class EvaluatorSTest extends TestContext {
         }
 
         @Test
-        public void synt_ctor() throws EvaluatorExcS {
-          var syntCtorS = syntCtorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-          assertThat(evaluate(monoizeS(syntCtorS)))
+        public void constructor() throws EvaluatorExcS {
+          var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
+          assertThat(evaluate(monoizeS(constructorS)))
               .isEqualTo(defFuncB(list(intTB()), combineB(refB(intTB(), 0))));
         }
       }
@@ -252,9 +252,9 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _constructor {
         @Test
-        public void synthetic_constructor() throws EvaluatorExcS {
-          var syntCtorS = syntCtorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
-          assertThat(evaluate(monoizeS(syntCtorS)))
+        public void constructor() throws EvaluatorExcS {
+          var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
+          assertThat(evaluate(monoizeS(constructorS)))
               .isEqualTo(defFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(refB(intTB(), 0))));
         }
       }

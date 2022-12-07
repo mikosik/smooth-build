@@ -9,13 +9,13 @@ import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
 import java.util.Optional;
 
+import org.smoothbuild.compile.lang.define.ConstructorS;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.StructDefS;
-import org.smoothbuild.compile.lang.define.SyntCtorS;
 import org.smoothbuild.compile.lang.define.TDefS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
@@ -71,20 +71,20 @@ public class ModuleCreator {
     Optional<StructTS> structTS = inferStructType(types, bindings, logBuffer, struct);
     Optional<TDefS> structDefS = structTS.map(s -> new StructDefS(s, struct.loc()));
     types.add(struct.name(), structDefS);
-    var ctorS = structTS.map(st -> loadSyntCtor(struct, st));
-    bindings.add(struct.ctor().name(), ctorS);
+    var ctorS = structTS.map(st -> loadConstructor(struct, st));
+    bindings.add(struct.constructor().name(), ctorS);
   }
 
-  private static NamedEvaluableS loadSyntCtor(StructP structP, StructTS structT) {
-    var ctorP = structP.ctor();
-    var name = ctorP.name();
+  private static NamedEvaluableS loadConstructor(StructP structP, StructTS structT) {
+    var constructorP = structP.constructor();
+    var name = constructorP.name();
     var fieldSigs = structT.fields();
     var params = structP.fields().map(
         f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.loc()));
     var funcTS = new FuncTS(toTypes(params), structT);
     var schema = new FuncSchemaS(varSetS(), funcTS);
     var loc = structP.loc();
-    return new SyntCtorS(schema, name, params, loc);
+    return new ConstructorS(schema, name, params, loc);
   }
 
   public void visitRefable(RefableP refableP) {
