@@ -5,17 +5,17 @@ import org.smoothbuild.compile.lang.type.VarSetS;
 
 public class UnusedVarsGenerator {
   private final AlphabeticalVarsGenerator iterator = new AlphabeticalVarsGenerator();
-  private final VarSetS usedVars;
+  private final VarSetS reservedVars;
 
-  public UnusedVarsGenerator(VarSetS usedVars) {
-    this.usedVars = usedVars;
+  public UnusedVarsGenerator(VarSetS reservedVars) {
+    this.reservedVars = reservedVars;
   }
 
   public VarS next() {
     VarS var;
     do {
       var = iterator.next();
-    } while (usedVars.contains(var));
+    } while (reservedVars.contains(var));
     return var;
   }
 }
