@@ -124,10 +124,10 @@ public class ExprTypeUnifier {
       OptionalBindings<? extends RefableS> bindings) {
     var vars = outerScopeVars.withAdded(type.vars());
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
-        .unifyEvaluableBody(evaluable, evalT, type);
+        .unifyEvaluableBody(evaluable, evalT);
   }
 
-  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type) {
+  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT) {
     return evaluable.body()
         .map(body -> unifyBodyExprAndEvaluationType(evaluable, evalT, body))
         .orElse(true);
@@ -148,10 +148,6 @@ public class ExprTypeUnifier {
           evaluable.loc(), evaluable.q() + " body type is not equal to declared type."));
       return false;
     }
-  }
-
-  public boolean unifyParamDefaultValue(ExprP defaultValue) {
-    return unifyExpr(defaultValue).isPresent();
   }
 
   private Optional<TypeS> unifyExpr(ExprP expr) {

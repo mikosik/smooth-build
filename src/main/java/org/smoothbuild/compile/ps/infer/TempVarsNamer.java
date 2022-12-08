@@ -53,11 +53,6 @@ public class TempVarsNamer {
     return nameVars(resolvedT, evaluable.body());
   }
 
-  public void nameVarsInParamDefaultValue(ExprP expr) {
-    var resolvedT = unifier.resolve(expr.typeS());
-    nameVars(resolvedT, Optional.of(expr));
-  }
-
   private VarSetS handleExpr(VarSetS varsInScope, ExprP expr) {
     return new TempVarsNamer(unifier, varsInScope)
         .handleExpr(expr);

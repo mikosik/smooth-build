@@ -49,11 +49,6 @@ public class TypeInferrerResolve {
     }
   }
 
-  public boolean resolveParamDefaultValue(ExprP exprP) {
-    exprP.setTypeS(unifier.resolve(exprP.typeS()));
-    return resolveBody(exprP);
-  }
-
   public boolean resolveNamedFunc(NamedFuncP namedFuncP) {
     if (resolveBody(namedFuncP.body())) {
       var resolvedFuncT = (FuncTS) unifier.resolve(namedFuncP.typeS());
