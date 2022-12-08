@@ -4,6 +4,7 @@ import static org.smoothbuild.compile.ps.ast.refable.ItemP.toTypeS;
 
 import java.util.Optional;
 
+import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -24,4 +25,9 @@ public interface FuncP extends EvaluableP {
   public FuncTS typeS();
 
   public void setTypeS(FuncTS funcTS);
+
+  @Override
+  public FuncSchemaS schemaS();
+
+  public void setSchemaS(FuncSchemaS funcSchemaS);
 }

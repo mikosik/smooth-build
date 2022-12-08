@@ -12,6 +12,7 @@ import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
+import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
@@ -24,6 +25,8 @@ import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
+import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
+import org.smoothbuild.compile.ps.ast.refable.FuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.out.log.Logger;
@@ -37,28 +40,43 @@ public class TypeInferrerResolve {
     this.logger = logger;
   }
 
-  public boolean resolveNamedValue(NamedValueP value) {
-    var resolvedEvalT = unifier.resolve(value.typeS());
-    if (resolveBody(value.body())) {
-      // Smooth language does not allow nesting named value yet so all vars are quantified.
-      var quantifiedVars = resolvedEvalT.vars();
-      value.setSchemaS(new SchemaS(quantifiedVars, resolvedEvalT));
-      return true;
-    } else {
-      return false;
-    }
+  public boolean resolveNamedValue(NamedValueP namedValueP) {
+    return resolveEvaluable(namedValueP);
   }
 
   public boolean resolveNamedFunc(NamedFuncP namedFuncP) {
-    if (resolveBody(namedFuncP.body())) {
-      var resolvedFuncT = (FuncTS) unifier.resolve(namedFuncP.typeS());
-      // Smooth language does not allow nesting functions yet so all vars are quantified.
-      var quantifiedVars = resolvedFuncT.vars();
-      namedFuncP.setSchemaS(new FuncSchemaS(quantifiedVars, resolvedFuncT));
-      return true;
-    } else {
-      return false;
+    return resolveEvaluable(namedFuncP);
+  }
+
+  private boolean resolveEvaluable(EvaluableP evaluableP) {
+    return resolveBody(evaluableP.body()) && resolveSchema(evaluableP);
+  }
+
+  private boolean resolveSchema(EvaluableP evaluableP) {
+    // @formatter:off
+    switch (evaluableP) {
+      case NamedValueP valueP -> valueP.setSchemaS(resolveSchema(valueP.schemaS()));
+      case FuncP       funcP  -> funcP.setSchemaS(resolveSchema(funcP.schemaS()));
+      default -> throw new IllegalStateException("Unexpected value: " + evaluableP);
     }
+    // @formatter:off
+    return true;
+  }
+
+  private FuncSchemaS resolveSchema(FuncSchemaS funcSchemaS) {
+    return new FuncSchemaS(resolveQuantifiedVars(funcSchemaS), (FuncTS) resolveType(funcSchemaS));
+  }
+
+  private SchemaS resolveSchema(SchemaS schemaS) {
+    return new SchemaS(resolveQuantifiedVars(schemaS), resolveType(schemaS));
+  }
+
+  private VarSetS resolveQuantifiedVars(SchemaS schemaS) {
+    return varSetS(schemaS.quantifiedVars().stream().map(v -> (VarS) unifier.resolve(v)).toList());
+  }
+
+  private TypeS resolveType(SchemaS schemaS) {
+    return unifier.resolve(schemaS.type());
   }
 
   private boolean resolveBody(Optional<ExprP> body) {
@@ -97,22 +115,15 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveAnonFunc(AnonFuncP anonFuncP) {
-    if (resolveBody(anonFuncP.body())) {
-      // `(VarS)` cast is safe because anonFuncP.monoizeVarMap().keys() has only
-      // TempVarS/VarS.
-      var varMapWithResolvedKeys =
-          mapKeys(anonFuncP.monoizeVarMap(), type -> (VarS) unifier.resolve(type));
-      anonFuncP.setMonoizeVarMap(varMapWithResolvedKeys);
-      if (resolveMonoizable(anonFuncP)) {
-        var schemaS = anonFuncP.schemaS();
-        var resolvedT = (FuncTS) unifier.resolve(schemaS.type());
-        var quantifiedVars = varSetS(
-            schemaS.quantifiedVars().stream().map(v -> (VarS) unifier.resolve(v)).toList());
-        anonFuncP.setSchemaS(new FuncSchemaS(quantifiedVars, resolvedT));
-        return true;
-      }
-    }
-    return false;
+    return resolveEvaluable(anonFuncP) && resolveMonoizableAnonFunc(anonFuncP);
+  }
+
+  private boolean resolveMonoizableAnonFunc(AnonFuncP anonFuncP) {
+    // `(VarS)` cast is safe because anonFuncP.monoizeVarMap().keys() has only
+    // TempVarS/VarS.
+    var varMapWithResolvedKeys = mapKeys(anonFuncP.monoizeVarMap(), v -> (VarS) unifier.resolve(v));
+    anonFuncP.setMonoizeVarMap(varMapWithResolvedKeys);
+    return resolveMonoizable(anonFuncP);
   }
 
   private boolean resolveNamedArg(NamedArgP namedArgP) {

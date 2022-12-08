@@ -25,6 +25,7 @@ import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
+import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarSetS;
@@ -82,27 +83,73 @@ public class ExprTypeUnifier {
     this.logger = logger;
   }
 
-  public boolean unifyNamedFunc(NamedFuncP namedFunc) {
-    return unifyFunc(namedFunc);
+  public boolean unifyNamedValue(NamedValueP namedValue) {
+    return unifyEvaluableAndSetSchema(namedValue);
   }
 
-  private boolean unifyFunc(FuncP func) {
-    var paramTs = inferParamTs(func.params());
-    var resT = translateOrGenerateTempVar(func.resT());
-    return mapPair(paramTs, resT, (p, r) -> unifyFunc(func, p, r))
+  public boolean unifyNamedFunc(NamedFuncP namedFunc) {
+    return unifyEvaluableAndSetSchema(namedFunc);
+  }
+
+  private boolean unifyEvaluableAndSetSchema(EvaluableP evaluableP) {
+    return unifyEvaluable(evaluableP) && setEvaluableSchema(evaluableP);
+  }
+
+  private boolean unifyEvaluable(EvaluableP evaluableP) {
+    return switch (evaluableP) {
+      case FuncP funcP -> unifyFunc(funcP);
+      case NamedValueP namedValueP -> unifyValue(namedValueP);
+      default -> throw new IllegalStateException("Unexpected value: " + evaluableP);
+    };
+  }
+
+  private boolean setEvaluableSchema(EvaluableP evaluableP) {
+    var resolvedT = resolveType(evaluableP);
+    var vars = resolveQuantifiedVars(resolvedT);
+    // @formatter:off
+    switch (evaluableP) {
+      case NamedValueP valueP -> valueP.setSchemaS(new SchemaS(vars, resolvedT));
+      case FuncP       funcP  -> funcP.setSchemaS(new FuncSchemaS(vars, (FuncTS) resolvedT));
+      default -> throw new IllegalStateException("Unexpected value: " + evaluableP);
+    }
+    // @formatter:on
+    return true;
+  }
+
+  private VarSetS resolveQuantifiedVars(TypeS typeS) {
+    return typeS.vars().withRemoved(outerScopeVars.map(unifier::resolve));
+  }
+
+  private TypeS resolveType(EvaluableP evaluableP) {
+    return unifier.resolve(evaluableP.typeS());
+  }
+
+  private boolean unifyValue(NamedValueP namedValueP) {
+    return translateOrGenerateTempVar(namedValueP.evalT())
+        .map(evalT -> {
+          namedValueP.setTypeS(evalT);
+          return unifyEvaluableBody(namedValueP, evalT, evalT, bindings);
+        })
         .orElse(false);
   }
 
-  private boolean unifyFunc(FuncP func, ImmutableList<TypeS> paramTs, TypeS resT) {
-    var paramsS = func.params().map(ExprTypeUnifier::itemS);
-    var bodyBindings = funcBodyScopeBindings(bindings, paramsS);
-    var funcTS = new FuncTS(paramTs, resT);
-    func.setTypeS(funcTS);
-    return unifyEvaluableBody(func, resT, funcTS, bodyBindings);
+  private boolean unifyFunc(FuncP funcP) {
+    var paramTs = inferParamTs(funcP.params());
+    var resT = translateOrGenerateTempVar(funcP.resT());
+    return mapPair(paramTs, resT, (p, r) -> unifyFunc(funcP, p, r))
+        .orElse(false);
   }
 
-  private static ItemS itemS(ItemP p) {
-    return new ItemS(p.typeS(), p.name(), Optional.empty(), p.loc());
+  private boolean unifyFunc(FuncP funcP, ImmutableList<TypeS> paramTs, TypeS resT) {
+    var paramsS = funcP.params().map(ExprTypeUnifier::itemS);
+    var bodyBindings = funcBodyScopeBindings(bindings, paramsS);
+    var funcTS = new FuncTS(paramTs, resT);
+    funcP.setTypeS(funcTS);
+    return unifyEvaluableBody(funcP, resT, funcTS, bodyBindings);
+  }
+
+  private static ItemS itemS(ItemP itemP) {
+    return new ItemS(itemP.typeS(), itemP.name(), Optional.empty(), itemP.loc());
   }
 
   private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
@@ -111,48 +158,39 @@ public class ExprTypeUnifier {
     return paramTs;
   }
 
-  public boolean unifyNamedValue(NamedValueP namedValue) {
-    return translateOrGenerateTempVar((namedValue).evalT())
-        .map(evalT -> {
-          namedValue.setTypeS(evalT);
-          return unifyEvaluableBody(namedValue, evalT, evalT, bindings);
-        })
-        .orElse(false);
-  }
-
-  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type,
+  private Boolean unifyEvaluableBody(EvaluableP evaluableP, TypeS evalT, TypeS type,
       OptionalBindings<? extends RefableS> bindings) {
     var vars = outerScopeVars.withAdded(type.vars());
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
-        .unifyEvaluableBody(evaluable, evalT);
+        .unifyEvaluableBody(evaluableP, evalT);
   }
 
-  private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT) {
-    return evaluable.body()
-        .map(body -> unifyBodyExprAndEvaluationType(evaluable, evalT, body))
+  private Boolean unifyEvaluableBody(EvaluableP evaluableP, TypeS evalT) {
+    return evaluableP.body()
+        .map(body -> unifyBodyExprAndEvaluationType(evaluableP, evalT, body))
         .orElse(true);
   }
 
-  private boolean unifyBodyExprAndEvaluationType(EvaluableP evaluable, TypeS typeS, ExprP body) {
-    return unifyExpr(body)
-        .map(bodyT -> unifyEvaluationTypeWithBodyType(evaluable, typeS, bodyT))
+  private boolean unifyBodyExprAndEvaluationType(EvaluableP evaluableP, TypeS typeS, ExprP bodyP) {
+    return unifyExpr(bodyP)
+        .map(bodyT -> unifyEvaluationTypeWithBodyType(evaluableP, typeS, bodyT))
         .orElse(false);
   }
 
-  private boolean unifyEvaluationTypeWithBodyType(EvaluableP evaluable, TypeS typeS, TypeS bodyT) {
+  private boolean unifyEvaluationTypeWithBodyType(EvaluableP evaluableP, TypeS typeS, TypeS bodyT) {
     try {
       unifier.unify(typeS, bodyT);
       return true;
     } catch (UnifierExc e) {
       logger.log(compileError(
-          evaluable.loc(), evaluable.q() + " body type is not equal to declared type."));
+          evaluableP.loc(), evaluableP.q() + " body type is not equal to declared type."));
       return false;
     }
   }
 
-  private Optional<TypeS> unifyExpr(ExprP expr) {
+  private Optional<TypeS> unifyExpr(ExprP exprP) {
     // @formatter:off
-    return switch (expr) {
+    return switch (exprP) {
       case CallP       callP       -> unifyAndMemoize(this::unifyCall, callP);
       case AnonFuncP   anonFuncP   -> unifyAndMemoize(this::unifyAnonFunc, anonFuncP);
       case NamedArgP   namedArgP   -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
@@ -178,15 +216,15 @@ public class ExprTypeUnifier {
     return type;
   }
 
-  private Optional<TypeS> unifyCall(CallP call) {
-    var calleeT = unifyExpr(call.callee());
-    var positionedArgs = positionedArgs(call);
-    call.setPositionedArgs(positionedArgs);
+  private Optional<TypeS> unifyCall(CallP callP) {
+    var calleeT = unifyExpr(callP.callee());
+    var positionedArgs = positionedArgs(callP);
+    callP.setPositionedArgs(positionedArgs);
     if (positionedArgs.isPresent()) {
       var argTs = pullUp(map(positionedArgs.get(), this::unifyExpr));
-      return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, a, call.loc()));
+      return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, a, callP.loc()));
     } else {
-      map(call.args(), this::unifyExpr);
+      map(callP.args(), this::unifyExpr);
       return Optional.empty();
     }
   }
@@ -221,14 +259,7 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> unifyAnonFunc(AnonFuncP anonFuncP) {
-    if (unifyFunc(anonFuncP)) {
-      // `type` needs to be resolved in case its resolved version contains variables
-      // that are quantified in outer scope, so we won't include them in quantifiedVars below.
-      var resolvedFuncT = (FuncTS) unifier.resolve(anonFuncP.typeS());
-      var resolvedQuantifiedVars = resolvedFuncT.vars()
-          .withRemoved(outerScopeVars.map(unifier::resolve));
-      var funcSchemaS = new FuncSchemaS(resolvedQuantifiedVars, resolvedFuncT);
-      anonFuncP.setSchemaS(funcSchemaS);
+    if (unifyEvaluableAndSetSchema(anonFuncP)) {
       return unifyMonoizable(anonFuncP);
     } else {
       return Optional.empty();
@@ -239,10 +270,10 @@ public class ExprTypeUnifier {
     return unifyExpr(namedArgP.expr());
   }
 
-  private Optional<TypeS> unifyOrder(OrderP order) {
-    var elems = order.elems();
+  private Optional<TypeS> unifyOrder(OrderP orderP) {
+    var elems = orderP.elems();
     var elemTs = pullUp(map(elems, this::unifyExpr));
-    return elemTs.flatMap(types -> unifyElemsWithArray(types, order.loc()));
+    return elemTs.flatMap(types -> unifyElemsWithArray(types, orderP.loc()));
   }
 
   private Optional<TypeS> unifyElemsWithArray(ImmutableList<TypeS> elemTs, Loc loc) {
@@ -259,9 +290,9 @@ public class ExprTypeUnifier {
     return Optional.of(new ArrayTS(elemVar));
   }
 
-  private Optional<TypeS> unifyRef(RefP ref) {
-    var refable = bindings.get(ref.name());
-    return refable.flatMap(r -> unifyRef(ref, r));
+  private Optional<TypeS> unifyRef(RefP refP) {
+    var refable = bindings.get(refP.name());
+    return refable.flatMap(r -> unifyRef(refP, r));
   }
 
   private Optional<? extends TypeS> unifyRef(RefP ref, RefableS refable) {
@@ -271,14 +302,14 @@ public class ExprTypeUnifier {
     };
   }
 
-  private static Optional<TypeS> unifyItemRef(RefP ref, ItemS item) {
-    ref.setMonoizeVarMap(ImmutableMap.of());
+  private static Optional<TypeS> unifyItemRef(RefP refP, ItemS item) {
+    refP.setMonoizeVarMap(ImmutableMap.of());
     return Optional.of(item.type());
   }
 
-  private Optional<TypeS> unifyEvaluableRef(RefP ref, NamedEvaluableS evaluable) {
-    ref.setSchemaS(evaluable.schema());
-    return unifyMonoizable(ref);
+  private Optional<TypeS> unifyEvaluableRef(RefP refP, NamedEvaluableS namedEvaluableS) {
+    refP.setSchemaS(namedEvaluableS.schema());
+    return unifyMonoizable(refP);
   }
 
   private Optional<TypeS> unifyMonoizable(MonoizableP monoizableP) {
@@ -288,19 +319,19 @@ public class ExprTypeUnifier {
     return Optional.of(schema.monoize(monoizableP.monoizeVarMap()));
   }
 
-  private Optional<TypeS> unifySelect(SelectP select) {
-    var selectableT = unifyExpr(select.selectable());
+  private Optional<TypeS> unifySelect(SelectP selectP) {
+    var selectableT = unifyExpr(selectP.selectable());
     return selectableT.flatMap(t -> {
       if (unifier.resolve(t) instanceof StructTS structTS) {
-        var itemSigS = structTS.fields().get(select.field());
+        var itemSigS = structTS.fields().get(selectP.field());
         if (itemSigS == null) {
-          logger.log(compileError(select.loc(), "Unknown field `" + select.field() + "`."));
+          logger.log(compileError(selectP.loc(), "Unknown field `" + selectP.field() + "`."));
           return Optional.empty();
         } else {
           return Optional.of(itemSigS.type());
         }
       } else {
-        logger.log(compileError(select.loc(), "Illegal field access."));
+        logger.log(compileError(selectP.loc(), "Illegal field access."));
         return Optional.empty();
       }
     });

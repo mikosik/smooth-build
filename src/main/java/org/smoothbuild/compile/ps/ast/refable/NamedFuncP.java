@@ -53,6 +53,7 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
     return funcSchemaS;
   }
 
+  @Override
   public void setSchemaS(FuncSchemaS funcSchemaS) {
     this.funcSchemaS = funcSchemaS;
   }

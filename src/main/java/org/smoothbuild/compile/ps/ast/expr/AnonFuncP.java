@@ -56,6 +56,7 @@ public final class AnonFuncP extends MonoizableP implements FuncP {
     return schemaS;
   }
 
+  @Override
   public void setSchemaS(FuncSchemaS schemaS) {
     this.schemaS = schemaS;
   }
