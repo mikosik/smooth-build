@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
@@ -15,10 +16,15 @@ import com.google.common.collect.ImmutableList;
  * Closurize - create closure.
  * This class is thread-safe.
  */
-public final class ClosurizeB extends ExprB {
+public final class ClosurizeB extends OperB {
   public ClosurizeB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
     checkArgument(merkleRoot.category() instanceof ClosurizeCB);
+  }
+
+  @Override
+  public ImmutableList<ExprB> dataSeq() {
+    return list(body());
   }
 
   @Override
