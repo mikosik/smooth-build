@@ -277,6 +277,15 @@ public class TypeCheckingTest extends TestContext {
       }
 
       @Test
+      public void mono_to_poly_with_different_monoization_of_same_var_in_different_param_success() {
+        var sourceCode = """
+            A myFunc(A a = 7, A b = "abc") = a;
+            """;
+        module(sourceCode)
+            .loadsWithSuccess();
+      }
+
+      @Test
       public void mono_to_poly_error() {
         var sourceCode = """
             Int twoParamFunc(String s, Blob b) = 7;

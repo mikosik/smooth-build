@@ -78,7 +78,7 @@ public class ApTranslator {
       public Void visitStruct(StructContext struct) {
         var name = struct.NAME().getText();
         var loc = locOf(filePath, struct.NAME().getSymbol());
-        var fields = createItems(struct.itemList());
+        var fields = createItems(name, struct.itemList());
         structs.add(new StructP(name, fields, loc));
         return null;
       }
@@ -92,7 +92,7 @@ public class ApTranslator {
         Optional<ExprP> body = createPipeSane(namedFunc.pipe());
         Optional<AnnP> annotation = createNativeSane(namedFunc.ann());
         var loc = locOf(filePath, nameNode);
-        var params = createItems(namedFunc.itemList());
+        var params = createItems(name, namedFunc.itemList());
         evaluables.add(new NamedFuncP(type, name, params, body, annotation, loc));
         return null;
       }
@@ -122,27 +122,36 @@ public class ApTranslator {
         }
       }
 
-      private NList<ItemP> createItems(ItemListContext itemList) {
-        return nlistWithShadowing(createItemsList(itemList));
+      private NList<ItemP> createItems(String ownerName, ItemListContext itemList) {
+        return nlistWithShadowing(createItemsList(ownerName, itemList));
       }
 
-      private ImmutableList<ItemP> createItemsList(ItemListContext itemList) {
+      private ImmutableList<ItemP> createItemsList(String ownerName, ItemListContext itemList) {
         if (itemList != null) {
           return sane(itemList.item())
               .stream()
-              .map(this::createItem)
+              .map(item -> createItem(ownerName, item))
               .collect(toImmutableList());
         }
         return ImmutableList.of();
       }
 
-      private ItemP createItem(ItemContext item) {
+      private ItemP createItem(String ownerName, ItemContext item) {
         var type = createT(item.type());
         var nameNode = item.NAME();
         var name = nameNode.getText();
-        var defaultValue = createExprSane(item.expr());
         var loc = locOf(filePath, nameNode);
+        var defaultValue = createDefaultValue(ownerName + ":" + name, item, loc);
         return new ItemP(type, name, defaultValue, loc);
+      }
+
+      private Optional<NamedValueP> createDefaultValue(String name, ItemContext item, Loc loc) {
+        return createExprSane(item.expr())
+            .map(e -> namedValueForDefaultArgument(name, e, loc));
+      }
+
+      private NamedValueP namedValueForDefaultArgument(String name, ExprP body, Loc loc) {
+        return new NamedValueP(Optional.empty(), name, Optional.of(body), Optional.empty(), loc);
       }
 
       private Optional<ExprP> createPipeSane(PipeContext pipe) {
@@ -245,7 +254,7 @@ public class ApTranslator {
 
       private AnonFuncP createAnonFunc(AnonymousFuncContext anonymousFunc) {
         var anonFunc = anonymousFunc.anonFunc();
-        var params = createItems(anonFunc.itemList());
+        var params = createItems("anonymousFunc", anonFunc.itemList());
         var body = createExpr(anonFunc.expr());
         return new AnonFuncP(params, body, locOf(filePath, anonFunc));
       }

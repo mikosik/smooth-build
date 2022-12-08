@@ -34,7 +34,6 @@ import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
-import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
@@ -80,27 +79,18 @@ public class PsTranslator {
   }
 
   private NList<ItemS> translateParams(NamedFuncP namedFuncP) {
-    return NList.nlist(map(namedFuncP.params().list(), param -> translateParam(namedFuncP, param)));
+    return NList.nlist(map(namedFuncP.params().list(), this::translateParam));
   }
 
-  private NList<ItemS> translateParams(NamedFuncP namedFuncP, NList<ItemP> params) {
-    return nlist(map(params.list(), param -> translateParam(namedFuncP, param)));
+  private NList<ItemS> translateParams(NList<ItemP> params) {
+    return nlist(map(params.list(), this::translateParam));
   }
 
-  public ItemS translateParam(NamedFuncP namedFuncP, ItemP paramP) {
+  public ItemS translateParam(ItemP paramP) {
     var type = paramP.typeS();
     var name = paramP.name();
-    var body = paramP.defaultValue().flatMap(expr -> translateParamBody(namedFuncP, paramP, expr));
+    var body = paramP.defaultValue().flatMap(this::translateNamedValue);
     return new ItemS(type, name, body, paramP.loc());
-  }
-
-  private Optional<NamedEvaluableS> translateParamBody(
-      NamedFuncP namedFuncP, ItemP paramP, ExprP exprP) {
-    return translateExpr(exprP).map(exprS -> {
-      var name = namedFuncP.name() + ":" + paramP.name();
-      var type = exprS.evalT();
-      return new DefValueS(new SchemaS(type.vars(), type), name, exprS, paramP.loc());
-    });
   }
 
   private Optional<NamedFuncS> translateNamedFunc(NamedFuncP namedFuncP, NList<ItemS> params) {
@@ -154,7 +144,7 @@ public class PsTranslator {
   }
 
   private Optional<ExprS> translateAnonFunc(AnonFuncP anonFuncP) {
-    var params = translateParams(null, anonFuncP.params());
+    var params = translateParams(anonFuncP.params());
     return translateFuncBody(params, anonFuncP.bodyGet())
         .map(b -> monoizeAnonFunc(anonFuncP, params, b));
   }

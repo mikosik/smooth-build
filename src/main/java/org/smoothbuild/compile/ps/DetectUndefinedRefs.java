@@ -63,7 +63,7 @@ public class DetectUndefinedRefs extends AstVisitor {
   }
 
   private void visitFunc(FuncP funcP) {
-    funcP.params().forEach(p -> p.defaultValue().ifPresent(this::visitExpr));
+    funcP.params().forEach(p -> p.defaultValue().ifPresent(this::visitNamedValue));
     funcP.body().ifPresent(body -> {
       var definedNamesInBodyScope = new HashSet<>(definedNames);
       definedNamesInBodyScope.addAll(map(funcP.params(), NalImpl::name));

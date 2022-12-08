@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
-import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.ps.ast.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -33,8 +32,6 @@ public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
   }
 
   public abstract Optional<TypeP> evalT();
-
-  public abstract SchemaS schemaS();
 
   @Override
   public String q() {

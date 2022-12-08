@@ -79,7 +79,7 @@ public class AstVisitor {
 
   public void visitParam(int index, ItemP param) {
     visitType(param.type());
-    param.defaultValue().ifPresent(this::visitExpr);
+    param.defaultValue().ifPresent(this::visitNamedValue);
     visitIdentifier(param);
   }
 

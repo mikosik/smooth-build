@@ -10,11 +10,13 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.TDefS;
+import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StructTS;
+import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.ps.ast.StructP;
-import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
@@ -137,27 +139,35 @@ public class TypeInferrer {
   }
 
   private void detectTypeErrorsBetweenParamAndItsDefaultValue(NamedFuncP namedFunc) {
-    var schema = namedFunc.schemaS();
     var params = namedFunc.params();
-    var resolvedParamTs = schema.type().params().items();
-    var paramUnifier = new Unifier();
-    var paramMapping = toMap(schema.quantifiedVars(), v -> paramUnifier.newTempVar());
     for (int i = 0; i < params.size(); i++) {
-      var resolvedParamT = resolvedParamTs.get(i);
       var param = params.get(i);
-      param.defaultValue().ifPresent(body -> {
-        var paramT = resolvedParamT.mapVars(paramMapping);
-        var initializerMapping = toMap(body.typeS().vars(), v -> paramUnifier.newTempVar());
-        var bodyT = body.typeS().mapVars(initializerMapping);
+      var index = i;
+      param.defaultValue().ifPresent(defaultvalue -> {
+        var schema = namedFunc.schemaS();
+        var paramUnifier = new Unifier();
+        var resolvedParamT = schema.type().params().items().get(index);
+        var paramT = replaceVarsWithTempVars(schema.quantifiedVars(), resolvedParamT, paramUnifier);
+        var defaultValueType = replaceQuantifiedVarsWithTempVars(
+            defaultvalue.schemaS(), paramUnifier);
         try {
-          paramUnifier.unify(paramT, bodyT);
+          paramUnifier.unify(paramT, defaultValueType);
         } catch (UnifierExc e) {
           var message = "Parameter %s has type %s so it cannot have default value with type %s."
-                  .formatted(param.q(), resolvedParamT.q(), body.typeS().q());
-          this.logger.log(compileError(body.loc(), message));
+                  .formatted(param.q(), resolvedParamT.q(), defaultvalue.schemaS().type().q());
+          this.logger.log(compileError(defaultvalue.loc(), message));
         }
       });
     }
+  }
+
+  private static TypeS replaceQuantifiedVarsWithTempVars(SchemaS schemaS, Unifier unifier) {
+    return replaceVarsWithTempVars(schemaS.quantifiedVars(), schemaS.type(), unifier);
+  }
+
+  private static TypeS replaceVarsWithTempVars(VarSetS vars, TypeS type, Unifier unifier) {
+    var mapping = toMap(vars, v -> unifier.newTempVar());
+    return type.mapVars(mapping);
   }
 
   // param default value
@@ -168,31 +178,8 @@ public class TypeInferrer {
         .allMatch(this::inferParamDefaultValue);
   }
 
-  private boolean inferParamDefaultValue(ExprP body) {
+  private boolean inferParamDefaultValue(NamedValueP defaultValue) {
     return new TypeInferrer(new Unifier(), typePsTranslator, bindings, logger)
-        .inferParamDefaultValueImpl(body);
-  }
-
-  private boolean inferParamDefaultValueImpl(ExprP body) {
-    if (unifyParamDefaultValue(body)) {
-      nameImplicitVars(body);
-      return resolveParamDefaultValue(body);
-    }
-    return false;
-  }
-
-  private boolean unifyParamDefaultValue(ExprP body) {
-    return new ExprTypeUnifier(unifier, typePsTranslator, bindings, logger)
-        .unifyParamDefaultValue(body);
-  }
-
-  private void nameImplicitVars(ExprP paramDefaultValue) {
-    new TempVarsNamer(unifier)
-        .nameVarsInParamDefaultValue(paramDefaultValue);
-  }
-
-  private boolean resolveParamDefaultValue(ExprP body) {
-    return new TypeInferrerResolve(unifier, logger)
-        .resolveParamDefaultValue(body);
+        .inferNamedValueSchema(defaultValue);
   }
 }
