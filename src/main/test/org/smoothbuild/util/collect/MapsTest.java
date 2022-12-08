@@ -3,6 +3,7 @@ package org.smoothbuild.util.collect;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static java.util.Map.Entry.comparingByKey;
+import static java.util.Map.entry;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
@@ -146,7 +147,7 @@ public class MapsTest {
   }
 
   @Nested
-  class _map_entries {
+  class _map_entries_separate_functions {
     @Test
     public void empty_map() {
       assertThat(mapEntries(Map.of(), Object::toString, Object::toString))
@@ -174,6 +175,42 @@ public class MapsTest {
     @Test
     public void null_value() {
       assertCall(() -> mapEntries(Map.of(2, "2"), Object::toString, e -> null))
+          .throwsException(NullPointerException.class);
+    }
+  }
+
+  @Nested
+  class _map_entries_single_function {
+    @Test
+    public void empty_map() {
+      assertThat(mapEntries(Map.of(), e -> entry(e.getKey().toString(), e.getValue().toString())))
+          .isEqualTo(Map.of());
+    }
+
+    @Test
+    public void many_elems() {
+      var mapped = mapEntries(
+          Map.of(2, "2", 3, "3"),
+          e -> entry(e.getKey() * e.getKey(), e.getValue() + "^2"));
+      assertThat(mapped)
+          .isEqualTo(Map.of(4, "2^2", 9, "3^2"));
+    }
+
+    @Test
+    public void duplicate_keys() {
+      assertCall(() -> mapEntries(Map.of(2, "2", 3, "3"), e -> entry("key", e.getValue())))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void null_key() {
+      assertCall(() -> mapEntries(Map.of(2, "2"), e -> entry(null, e.getValue())))
+          .throwsException(NullPointerException.class);
+    }
+
+    @Test
+    public void null_value() {
+      assertCall(() -> mapEntries(Map.of(2, "2"), e -> entry(e.getKey(), null)))
           .throwsException(NullPointerException.class);
     }
   }

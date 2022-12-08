@@ -2,6 +2,7 @@ package org.smoothbuild.util.collect;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
 import java.util.List;
@@ -52,6 +53,15 @@ public class Maps {
         .collect(toImmutableMap(
             e -> keyFunction.apply(e.getKey()),
             e -> valueFunction.apply(e.getValue())));
+  }
+
+  public static <K, V, K2, V2> ImmutableMap<K2, V2> mapEntries(Map<K, V> map,
+      Function<? super Map.Entry<K, V>, Map.Entry<K2, V2>> entryFunction) {
+    var mappedEntrySet = map.entrySet()
+        .stream()
+        .map(entryFunction)
+        .collect(toList());
+    return ImmutableMap.copyOf(mappedEntrySet);
   }
 
   /**
