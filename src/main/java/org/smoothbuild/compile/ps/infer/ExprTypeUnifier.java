@@ -61,13 +61,19 @@ public class ExprTypeUnifier {
   private final VarSetS outerScopeVars;
   private final Logger logger;
 
-  public ExprTypeUnifier(Unifier unifier, TypePsTranslator typePsTranslator,
-      Bindings<? extends Optional<? extends RefableS>> bindings, Logger logger) {
+  public ExprTypeUnifier(
+      Unifier unifier,
+      TypePsTranslator typePsTranslator,
+      Bindings<? extends Optional<? extends RefableS>> bindings,
+      Logger logger) {
     this(unifier, typePsTranslator, bindings, varSetS(), logger);
   }
 
-  public ExprTypeUnifier(Unifier unifier, TypePsTranslator typePsTranslator,
-      Bindings<? extends Optional<? extends RefableS>> bindings, VarSetS outerScopeVars,
+  public ExprTypeUnifier(
+      Unifier unifier,
+      TypePsTranslator typePsTranslator,
+      Bindings<? extends Optional<? extends RefableS>> bindings,
+      VarSetS outerScopeVars,
       Logger logger) {
     this.unifier = unifier;
     this.typePsTranslator = typePsTranslator;
