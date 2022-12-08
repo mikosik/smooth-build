@@ -1,8 +1,11 @@
 package org.smoothbuild.util.bindings;
 
 import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
-import static org.smoothbuild.util.collect.Maps.mapValues;
+import static org.smoothbuild.util.collect.Maps.mapEntries;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class OptionalScopedBindings<E>
@@ -22,6 +25,17 @@ public class OptionalScopedBindings<E>
   }
 
   public ImmutableBindings<E> innerScopeBindings() {
-    return immutableBindings(mapValues(innerScopeBindings, Optional::get));
+    return immutableBindings(
+        mapEntries(innerScopeBindings, OptionalScopedBindings::reduceOptionals));
+  }
+
+  private static <T> Entry<String, T> reduceOptionals(Entry<String, Optional<T>> e) {
+    return Map.entry(
+        e.getKey(),
+        (e.getValue()).orElseThrow(() -> newNoSuchElementException(e.getKey())));
+  }
+
+  private static NoSuchElementException newNoSuchElementException(String name) {
+    return new NoSuchElementException("Nothing bound for name `" + name + "`.");
   }
 }
