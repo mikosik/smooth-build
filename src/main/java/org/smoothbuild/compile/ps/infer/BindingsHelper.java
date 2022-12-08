@@ -5,13 +5,14 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.util.bindings.Bindings;
-import org.smoothbuild.util.bindings.ScopedBindings;
+import org.smoothbuild.util.bindings.OptionalBindings;
+import org.smoothbuild.util.bindings.OptionalScopedBindings;
 import org.smoothbuild.util.collect.NList;
 
 public class BindingsHelper {
-  public static ScopedBindings<Optional<? extends RefableS>> funcBodyScopeBindings(
+  public static OptionalBindings<? extends RefableS> funcBodyScopeBindings(
       Bindings<? extends Optional<? extends RefableS>> bindings, NList<ItemS> params) {
-    var bindingsInBody = new ScopedBindings<Optional<? extends RefableS>>(bindings);
+    OptionalScopedBindings<RefableS> bindingsInBody = new OptionalScopedBindings<>(bindings);
     for (var param : params) {
       bindingsInBody.add(param.name(), Optional.of(param));
     }

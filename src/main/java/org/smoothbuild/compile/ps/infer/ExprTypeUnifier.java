@@ -48,7 +48,7 @@ import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.bindings.Bindings;
+import org.smoothbuild.util.bindings.OptionalBindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -57,14 +57,14 @@ import com.google.common.collect.ImmutableMap;
 public class ExprTypeUnifier {
   private final Unifier unifier;
   private final TypePsTranslator typePsTranslator;
-  private final Bindings<? extends Optional<? extends RefableS>> bindings;
+  private final OptionalBindings<? extends RefableS> bindings;
   private final VarSetS outerScopeVars;
   private final Logger logger;
 
   public ExprTypeUnifier(
       Unifier unifier,
       TypePsTranslator typePsTranslator,
-      Bindings<? extends Optional<? extends RefableS>> bindings,
+      OptionalBindings<? extends RefableS> bindings,
       Logger logger) {
     this(unifier, typePsTranslator, bindings, varSetS(), logger);
   }
@@ -72,7 +72,7 @@ public class ExprTypeUnifier {
   public ExprTypeUnifier(
       Unifier unifier,
       TypePsTranslator typePsTranslator,
-      Bindings<? extends Optional<? extends RefableS>> bindings,
+      OptionalBindings<? extends RefableS> bindings,
       VarSetS outerScopeVars,
       Logger logger) {
     this.unifier = unifier;
@@ -121,7 +121,7 @@ public class ExprTypeUnifier {
   }
 
   private Boolean unifyEvaluableBody(EvaluableP evaluable, TypeS evalT, TypeS type,
-      Bindings<? extends Optional<? extends RefableS>> bindings) {
+      OptionalBindings<? extends RefableS> bindings) {
     var vars = outerScopeVars.withAdded(type.vars());
     return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
         .unifyEvaluableBody(evaluable, evalT, type);

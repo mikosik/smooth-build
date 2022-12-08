@@ -16,12 +16,12 @@ import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
-import org.smoothbuild.util.bindings.Bindings;
+import org.smoothbuild.util.bindings.OptionalBindings;
 
 public class TypePsTranslator {
-  private final Bindings<Optional<TDefS>> types;
+  private final OptionalBindings<TDefS> types;
 
-  public TypePsTranslator(Bindings<Optional<TDefS>> types) {
+  public TypePsTranslator(OptionalBindings<TDefS> types) {
     this.types = types;
   }
 

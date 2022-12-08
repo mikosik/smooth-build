@@ -21,7 +21,7 @@ import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.bindings.Bindings;
+import org.smoothbuild.util.bindings.OptionalBindings;
 import org.smoothbuild.util.collect.NList;
 
 /**
@@ -35,12 +35,12 @@ import org.smoothbuild.util.collect.NList;
 public class TypeInferrer {
   private final Unifier unifier;
   private final TypePsTranslator typePsTranslator;
-  private final Bindings<? extends Optional<? extends RefableS>> bindings;
+  private final OptionalBindings<? extends RefableS> bindings;
   private final Logger logger;
 
   public TypeInferrer(
-      Bindings<Optional<TDefS>> types,
-      Bindings<? extends Optional<? extends RefableS>> bindings,
+      OptionalBindings<TDefS> types,
+      OptionalBindings<? extends RefableS> bindings,
       Logger logger) {
     this(new Unifier(), new TypePsTranslator(types), bindings, logger);
   }
@@ -48,7 +48,7 @@ public class TypeInferrer {
   public TypeInferrer(
       Unifier unifier,
       TypePsTranslator typePsTranslator,
-      Bindings<? extends Optional<? extends RefableS>> bindings,
+      OptionalBindings<? extends RefableS> bindings,
       Logger logger) {
     this.unifier = unifier;
     this.typePsTranslator = typePsTranslator;
@@ -56,8 +56,10 @@ public class TypeInferrer {
     this.logger = logger;
   }
 
-  public static Optional<StructTS> inferStructType(Bindings<Optional<TDefS>> types,
-      Bindings<? extends Optional<? extends RefableS>> outerBindings, Logger logger,
+  public static Optional<StructTS> inferStructType(
+      OptionalBindings<TDefS> types,
+      OptionalBindings<? extends RefableS> outerBindings,
+      Logger logger,
       StructP struct) {
     return new TypeInferrer(types, outerBindings, logger)
         .inferStructT(struct);

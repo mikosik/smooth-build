@@ -31,18 +31,17 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.OptionalScopedBindings;
-import org.smoothbuild.util.bindings.ScopedBindings;
 
 public class ModuleCreator {
-  private final ScopedBindings<Optional<TDefS>> types;
-  private final ScopedBindings<Optional<NamedEvaluableS>> bindings;
+  private final OptionalScopedBindings<TDefS> types;
+  private final OptionalScopedBindings<NamedEvaluableS> bindings;
   private final LogBuffer logBuffer;
   private final PsTranslator psTranslator;
 
   public static Maybe<ModuleS> createModuleS(ModFiles modFiles, Ast ast, DefsS imported) {
     var logBuffer = new LogBuffer();
-    var types = newOptionalMutableBindings(imported.tDefs());
-    var evaluables = newOptionalMutableBindings(imported.evaluables());
+    var types = newOptionalScopedBindings(imported.tDefs());
+    var evaluables = newOptionalScopedBindings(imported.evaluables());
     var moduleCreator = new ModuleCreator(types, evaluables, logBuffer);
     ast.structs().forEach(moduleCreator::visitStruct);
     ast.evaluables().forEach(moduleCreator::visitRefable);
@@ -55,12 +54,15 @@ public class ModuleCreator {
     }
   }
 
-  private static <T> OptionalScopedBindings<T> newOptionalMutableBindings(Bindings<T> bindings) {
-    return new OptionalScopedBindings<>(bindings.map(Optional::of));
+  public static <T> OptionalScopedBindings<T> newOptionalScopedBindings(
+      Bindings<? extends T> outerScopeBindings) {
+    return new OptionalScopedBindings<>(outerScopeBindings.map(Optional::of));
   }
 
-  private ModuleCreator(ScopedBindings<Optional<TDefS>> types,
-      ScopedBindings<Optional<NamedEvaluableS>> bindings, LogBuffer logBuffer) {
+  private ModuleCreator(
+      OptionalScopedBindings<TDefS> types,
+      OptionalScopedBindings<NamedEvaluableS> bindings,
+      LogBuffer logBuffer) {
     this.types = types;
     this.bindings = bindings;
     this.logBuffer = logBuffer;

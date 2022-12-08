@@ -49,15 +49,15 @@ import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
-import org.smoothbuild.util.bindings.Bindings;
+import org.smoothbuild.util.bindings.OptionalBindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 public class PsTranslator {
-  private final Bindings<? extends Optional<? extends RefableS>> bindings;
+  private final OptionalBindings<? extends RefableS> bindings;
 
-  public PsTranslator(Bindings<? extends Optional<? extends RefableS>> bindings) {
+  public PsTranslator(OptionalBindings<? extends RefableS> bindings) {
     this.bindings = bindings;
   }
 

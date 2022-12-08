@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import com.google.common.collect.ImmutableMap;
 
-public final class ImmutableBindings<E> extends Bindings<E> {
+public final class ImmutableBindings<E> extends AbstractBindings<E> {
   private final ImmutableMap<String, E> bindings;
 
   public static <E> ImmutableBindings<E> immutableBindings() {

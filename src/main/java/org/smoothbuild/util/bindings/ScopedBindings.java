@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.google.common.base.Splitter;
 
-public class ScopedBindings<E> extends Bindings<E> {
+public class ScopedBindings<E> extends AbstractBindings<E> {
   private final Bindings<? extends E> outerScopeBindings;
   protected final Map<String, E> innerScopeBindings;
 
