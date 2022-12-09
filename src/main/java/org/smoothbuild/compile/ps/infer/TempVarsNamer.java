@@ -16,16 +16,16 @@ import org.smoothbuild.compile.lang.type.tool.UnusedVarsGenerator;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
+import org.smoothbuild.compile.ps.ast.expr.EvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
+import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
+import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.EvaluableP;
-import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
-import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
 
 public class TempVarsNamer {
   private final Unifier unifier;

@@ -1,6 +1,6 @@
-package org.smoothbuild.compile.ps.ast.refable;
+package org.smoothbuild.compile.ps.ast.expr;
 
-import static org.smoothbuild.compile.ps.ast.refable.ItemP.toTypeS;
+import static org.smoothbuild.compile.ps.ast.expr.ItemP.toTypeS;
 
 import java.util.Optional;
 

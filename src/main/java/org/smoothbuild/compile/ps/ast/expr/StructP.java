@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.ps.ast;
+package org.smoothbuild.compile.ps.ast.expr;
 
 import static org.smoothbuild.compile.lang.base.ValidNamesS.structNameToCtorName;
 import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
@@ -8,8 +8,6 @@ import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
-import org.smoothbuild.compile.ps.ast.refable.ItemP;
-import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 

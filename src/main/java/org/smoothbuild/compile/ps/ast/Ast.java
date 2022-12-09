@@ -4,7 +4,8 @@ import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.List;
 
-import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
+import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
+import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;

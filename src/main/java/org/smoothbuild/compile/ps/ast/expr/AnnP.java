@@ -1,8 +1,7 @@
-package org.smoothbuild.compile.ps.ast;
+package org.smoothbuild.compile.ps.ast.expr;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
-import org.smoothbuild.compile.ps.ast.expr.StringP;
 
 import com.google.common.base.Objects;
 

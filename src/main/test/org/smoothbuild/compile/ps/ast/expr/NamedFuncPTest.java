@@ -1,10 +1,9 @@
-package org.smoothbuild.compile.ps.ast;
+package org.smoothbuild.compile.ps.ast.expr;
 
 import static org.smoothbuild.testing.TestContext.loc;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
 
 import com.google.common.testing.EqualsTester;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.ps.ast;
+package org.smoothbuild.compile.ps.ast.expr;
 
 import static org.smoothbuild.compile.lang.base.Loc.internal;
 import static org.smoothbuild.util.collect.Lists.list;

@@ -15,9 +15,10 @@ import java.util.Set;
 
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Nal;
+import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
-import org.smoothbuild.compile.ps.ast.refable.ItemP;
-import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
+import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;

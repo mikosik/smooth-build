@@ -3,21 +3,23 @@ package org.smoothbuild.compile.ps.ast;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import org.smoothbuild.compile.ps.ast.expr.AnnP;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
+import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
+import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
+import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
+import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
+import org.smoothbuild.compile.ps.ast.expr.RefableP;
 import org.smoothbuild.compile.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
-import org.smoothbuild.compile.ps.ast.refable.ItemP;
-import org.smoothbuild.compile.ps.ast.refable.NamedEvaluableP;
-import org.smoothbuild.compile.ps.ast.refable.NamedFuncP;
-import org.smoothbuild.compile.ps.ast.refable.NamedValueP;
-import org.smoothbuild.compile.ps.ast.refable.RefableP;
+import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
 public class AstVisitor {

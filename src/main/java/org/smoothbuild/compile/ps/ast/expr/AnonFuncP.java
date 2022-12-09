@@ -5,8 +5,6 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
-import org.smoothbuild.compile.ps.ast.refable.FuncP;
-import org.smoothbuild.compile.ps.ast.refable.ItemP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 
