@@ -250,6 +250,10 @@ public class SbTranslator {
 
   private RefB translateParamRef(ParamRefS paramRefS) {
     var index = environment.indexOf(paramRefS.paramName());
+    if (index == null) {
+      throw new SbTranslatorExc("Reference to unknown parameter `" + paramRefS.paramName()
+          + "` at " + paramRefS.loc() + ".");
+    }
     return bytecodeF.ref(translateT(paramRefS.evalT()), BigInteger.valueOf(index));
   }
 

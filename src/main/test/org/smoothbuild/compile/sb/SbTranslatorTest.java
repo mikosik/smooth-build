@@ -290,6 +290,15 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
+      public void param_ref_to_unknown_param_causes_exception() {
+        var func = defFuncS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p2"));
+        var monoFunc = monoizeS(func);
+        assertCall(() -> newTranslator().translateExpr(monoFunc))
+            .throwsException(
+                new SbTranslatorExc("Reference to unknown parameter `p2` at myBuild.smooth:1."));
+      }
+
+      @Test
       public void select() {
         var structTS = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var constructorS = constructorS(structTS);
