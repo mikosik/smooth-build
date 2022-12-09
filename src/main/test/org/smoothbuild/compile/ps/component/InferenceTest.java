@@ -137,7 +137,7 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _infer_named_func_result_type extends _infer_func_result_type_suite {
+  class _infer_named_function_result_type extends _infer_function_result_type_suite {
     @Override
     public void assertInferredFunctionType(
         String declarations, String params, String body, SchemaS expected) {
@@ -150,7 +150,7 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _infer_anon_func_result_type extends _infer_func_result_type_suite {
+  class _infer_anonymous_function_result_type extends _infer_function_result_type_suite {
     @Override
     public void assertInferredFunctionType(
         String declarations, String params, String body, SchemaS expected) {
@@ -168,7 +168,7 @@ public class InferenceTest extends TestContext {
     }
   }
 
-  abstract class _infer_func_result_type_suite {
+  abstract class _infer_function_result_type_suite {
     public void assertInferredFunctionType(String params, String body, SchemaS expected) {
       assertInferredFunctionType("", params, body, expected);
     }
@@ -177,7 +177,7 @@ public class InferenceTest extends TestContext {
         String declarations, String params, String body, SchemaS expected);
 
     @Nested
-    class _of_mono_func_from {
+    class _of_mono_function_from {
       @Nested
       class _literal {
         @Test
@@ -215,30 +215,30 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void param_func_call() {
+      public void param_function_call() {
         assertInferredFunctionType("()->Int f", "f()", funcSchemaS(funcTS(intTS()), intTS()));
       }
 
       @Test
-      public void mono_func_ref() {
+      public void mono_function_ref() {
         assertInferredFunctionType("Int otherFunc(Blob param) = 7;",
             "", "otherFunc", funcSchemaS(funcTS(blobTS(), intTS())));
       }
 
       @Test
-      public void mono_func_call() {
+      public void mono_function_call() {
         assertInferredFunctionType("Int otherFunc() = 7;",
             "", "otherFunc()", funcSchemaS(intTS()));
       }
 
       @Test
-      public void poly_func_call() {
+      public void poly_function_call() {
         assertInferredFunctionType("A myId(A a) = a;",
             "", "myId(7)", funcSchemaS(intTS()));
       }
 
       @Test
-      public void func_mono_param() {
+      public void function_mono_param() {
         assertInferredFunctionType("Int param", "param", funcSchemaS(intTS(), intTS()));
       }
     }
@@ -315,13 +315,13 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void ref_with_mono_func_type() {
+        public void ref_with_mono_function_type() {
           var funcT = funcTS(boolTS(), intTS());
           assertInferredFunctionType("(Bool)->Int func", "func", funcSchemaS(funcT, funcT));
         }
 
         @Test
-        public void ref_with_poly_func_type() {
+        public void ref_with_poly_function_type() {
           assertInferredFunctionType(
               "(A)->A param", "param", funcSchemaS(funcTS(varA(), varA()), funcTS(varA(), varA())));
         }
@@ -340,19 +340,19 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void call_to_mono_func() {
+        public void call_to_mono_function() {
           assertInferredFunctionType(
               "Int otherFunc() = 7;", "", "otherFunc()", funcSchemaS(intTS()));
         }
 
         @Test
-        public void call_to_poly_func() {
+        public void call_to_poly_function() {
           assertInferredFunctionType(
               "A myIdentity(A a) = a;", "", "myIdentity(7)", funcSchemaS(intTS()));
         }
 
         @Test
-        public void call_to_poly_func_when_argument_type_is_our_type_param() {
+        public void call_to_poly_function_when_argument_type_is_our_type_param() {
           assertInferredFunctionType(
               "A myIdentity(A a) = a;", "B b", "myIdentity(b)", funcSchemaS(varB(), varB()));
         }
@@ -361,7 +361,7 @@ public class InferenceTest extends TestContext {
       @Nested
       class _func_ref {
         @Test
-        public void mono_func_ref() {
+        public void mono_function_ref() {
           assertInferredFunctionType(
               "Int otherFunc(Blob param) = 7;",
               "", "otherFunc",
@@ -369,13 +369,13 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void poly_func_ref() {
+        public void poly_function_ref() {
           assertInferredFunctionType(
               "A myId(A a) = a;", "", "myId", funcSchemaS(funcTS(varA(), varA())));
         }
 
         @Test
-        public void poly_func_ref_when_func_type_param_shadows_referenced_func_res_type() {
+        public void poly_function_ref_when_function_type_param_shadows_referenced_function_res_type() {
           assertInferredFunctionType(
               "A myId(A a) = a;", "A a", "myId", funcSchemaS(varA(), funcTS(varB(), varB())));
         }
@@ -452,7 +452,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_mono_func_ref() {
+      public void with_mono_function_ref() {
         var code = """
           Int myIntId(Int i) = i;
           result = [myIntId];
@@ -463,7 +463,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_poly_func_ref() {
+      public void with_poly_function_ref() {
         var code = """
           A myId(A a) = a;
           result = [myId];
@@ -500,7 +500,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_same_mono_func_types() {
+      public void with_same_mono_function_types() {
         var code = """
           Int firstFunc() = 7;
           Int secondFunc() = 3;
@@ -515,7 +515,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_different_mono_func_types_fails() {
+      public void with_different_mono_function_types_fails() {
         var code = """
           String firstFunc() = "abc";
           Blob secondFunc() = 0x01;
@@ -530,7 +530,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_same_poly_funcs_types() {
+      public void with_same_poly_function_types() {
         var code = """
           A myId(A a) = a;
           B myOtherId(B b) = b;
@@ -542,7 +542,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void with_different_poly_funcs_types_fails() {
+      public void with_different_poly_function_types_fails() {
         var code = """
           A myId(A a) = a;
           B otherFunc(B b, C c) = b;
@@ -633,7 +633,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Nested
-    class _identity_func_applied_to {
+    class _identity_function_applied_to {
       @Test
       public void arg_of_base_type() {
         var code = """
@@ -670,7 +670,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Nested
-    class _first_elem_func_applied_to {
+    class _first_elem_function_applied_to {
       @Test
       public void array() {
         var code = """
@@ -697,7 +697,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Nested
-    class _single_elem_array_func_applied_to {
+    class _single_elem_array_function_applied_to {
       @Test
       public void arg_of_base_type() {
         var code = """
@@ -721,7 +721,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void func() {
+      public void function() {
         var code = """
             [A] singleElement(A a) = [a];
             String myFunc(Blob param) = "abc";
@@ -770,7 +770,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void two_differently_monoized_calls_to_poly_func_with_poly_default_value_within_one_expr() {
+      public void two_differently_monoized_calls_to_poly_function_with_poly_default_value_within_one_expr() {
         var code = """
           [A] empty([A] array = []) = array;
           myFunc([String] s, [Int] i) = 7;
@@ -781,7 +781,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void two_param_default_values_with_different_vars_referencing_same_poly_func() {
+      public void two_param_default_values_with_different_vars_referencing_same_poly_function() {
         var code = """
           A myId(A a) = a;
           myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
@@ -808,7 +808,7 @@ public class InferenceTest extends TestContext {
   @Nested
   class _infer_unit_type {
     @Test
-    public void named_func() {
+    public void defined_function() {
       var code = """
               Int myFunc(A a) = 7;
               result = myFunc([]);
@@ -822,7 +822,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Test
-    public void anon_func() {
+    public void anonymous_function() {
       var code = """
               result = ((A a) -> 7)([]);
               """;
@@ -889,7 +889,7 @@ public class InferenceTest extends TestContext {
     }
 
     @Test
-    public void poly_func_call_with_illegal_params() {
+    public void poly_function_call_with_illegal_params() {
       var code = """
           @Native("impl")
           A myId(A a, String string);
