@@ -429,7 +429,7 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void anonFunc() {
         var monoAnonFuncS = monoizeS(anonFuncS(7, nlist(), stringS("abc")));
-        assertNalMapping(monoAnonFuncS, null, loc(7));
+        assertNalMapping(monoAnonFuncS, "<anonymous>", loc(7));
       }
 
       @Test

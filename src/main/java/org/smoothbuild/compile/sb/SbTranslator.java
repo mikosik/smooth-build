@@ -162,7 +162,7 @@ public class SbTranslator {
   private ExprB translateAnonFunc(AnonFuncS anonFuncS) {
     var funcB = funcBodySbTranslator(anonFuncS)
         .translateAnonFuncImpl(anonFuncS);
-    return saveLocAndReturn(anonFuncS, funcB);
+    return saveNalAndReturn("<anonymous>", anonFuncS, funcB);
   }
 
   private ExprB translateAnonFuncImpl(AnonFuncS anonFuncS) {
@@ -355,19 +355,28 @@ public class SbTranslator {
     return typeSbTranslator.translate(arrayTS);
   }
 
-  private <T extends Nal> ExprB saveNalAndReturn(T nal, ExprB exprB) {
+  private ExprB saveNalAndReturn(Nal nal, ExprB exprB) {
     saveNal(exprB, nal);
     return exprB;
   }
 
-  private <T extends Located> ExprB saveLocAndReturn(T withLoc, ExprB exprB) {
-    saveLoc(exprB, withLoc);
+  private ExprB saveNalAndReturn(String name, Located located, ExprB exprB) {
+    saveNal(exprB, name, located);
+    return exprB;
+  }
+
+  private ExprB saveLocAndReturn(Located located, ExprB exprB) {
+    saveLoc(exprB, located);
     return exprB;
   }
 
   private void saveNal(ExprB exprB, Nal nal) {
-    nameMapping.put(exprB.hash(), nal.name());
-    saveLoc(exprB, nal);
+    saveNal(exprB, nal.name(), nal);
+  }
+
+  private void saveNal(ExprB exprB, String name, Located located) {
+    nameMapping.put(exprB.hash(), name);
+    saveLoc(exprB, located);
   }
 
   private void saveLoc(ExprB exprB, Located located) {
