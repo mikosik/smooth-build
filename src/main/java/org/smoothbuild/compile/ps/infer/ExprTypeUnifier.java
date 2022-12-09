@@ -99,6 +99,7 @@ public class ExprTypeUnifier {
     return switch (evaluableP) {
       case FuncP funcP -> unifyFunc(funcP);
       case NamedValueP namedValueP -> unifyValue(namedValueP);
+      // TODO remove once bug in intellij is fixed
       default -> throw new IllegalStateException("Unexpected value: " + evaluableP);
     };
   }
@@ -110,6 +111,7 @@ public class ExprTypeUnifier {
     switch (evaluableP) {
       case NamedValueP valueP -> valueP.setSchemaS(new SchemaS(vars, resolvedT));
       case FuncP       funcP  -> funcP.setSchemaS(new FuncSchemaS(vars, (FuncTS) resolvedT));
+      // TODO remove once bug in intellij is fixed
       default -> throw new IllegalStateException("Unexpected value: " + evaluableP);
     }
     // @formatter:on

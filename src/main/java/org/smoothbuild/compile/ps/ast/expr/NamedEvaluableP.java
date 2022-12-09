@@ -14,7 +14,7 @@ public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
   private final Optional<ExprP> body;
   private final Optional<AnnP> ann;
 
-  public NamedEvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
+  protected NamedEvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
     super(name, loc);
     this.body = body;
     this.ann = ann;

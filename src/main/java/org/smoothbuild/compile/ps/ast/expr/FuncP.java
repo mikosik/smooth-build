@@ -12,7 +12,9 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public interface FuncP extends EvaluableP {
+public sealed interface FuncP
+    extends EvaluableP
+    permits AnonFuncP, NamedFuncP {
   public Optional<TypeP> resT();
 
   public NList<ItemP> params();
