@@ -74,7 +74,7 @@ public class TypeCheckingTest extends TestContext {
   @Nested
   class _anonymous_function {
     @Nested
-    class _param_type_and_arg_type extends _abstract_param_type_and_arg_type {
+    class _param_type_and_arg_type extends _abstract_param_type_and_arg_type_suite {
       @Override
       public String buildSourceCode(String params, String argument) {
         return """
@@ -153,7 +153,7 @@ public class TypeCheckingTest extends TestContext {
     }
 
     @Nested
-    class _param_type_and_arg_type extends _abstract_param_type_and_arg_type {
+    class _param_type_and_arg_type extends _abstract_param_type_and_arg_type_suite {
       @Override
       public String buildSourceCode(String params, String argument) {
         return """
@@ -349,7 +349,7 @@ public class TypeCheckingTest extends TestContext {
     }
   }
 
-  abstract class _abstract_param_type_and_arg_type {
+  abstract class _abstract_param_type_and_arg_type_suite {
     public abstract String buildSourceCode(String params, String argument);
 
     @Test
