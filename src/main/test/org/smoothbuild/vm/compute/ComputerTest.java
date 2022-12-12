@@ -16,8 +16,8 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.concurrent.PromisedValue;

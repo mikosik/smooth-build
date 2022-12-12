@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.task.Task;

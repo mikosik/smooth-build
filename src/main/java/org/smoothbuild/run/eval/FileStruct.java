@@ -1,8 +1,8 @@
 package org.smoothbuild.run.eval;
 
-import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.StringB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.value.BlobB;
+import org.smoothbuild.bytecode.expr.value.StringB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
 
 public class FileStruct {
   public static final String NAME = "File";

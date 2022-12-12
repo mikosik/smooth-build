@@ -5,10 +5,10 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import org.smoothbuild.bytecode.type.CategoryB;
-import org.smoothbuild.bytecode.type.inst.ArrayTB;
-import org.smoothbuild.bytecode.type.inst.FuncTB;
-import org.smoothbuild.bytecode.type.inst.TupleTB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
+import org.smoothbuild.bytecode.type.value.ArrayTB;
+import org.smoothbuild.bytecode.type.value.FuncTB;
+import org.smoothbuild.bytecode.type.value.TupleTB;
+import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.testing.TestContext;
 
 import com.google.common.collect.ImmutableList;

@@ -11,8 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
-import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
+import org.smoothbuild.bytecode.expr.value.BlobB;
+import org.smoothbuild.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 

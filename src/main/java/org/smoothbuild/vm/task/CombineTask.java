@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.task;
 
-import org.smoothbuild.bytecode.expr.inst.TupleB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
 

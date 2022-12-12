@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;

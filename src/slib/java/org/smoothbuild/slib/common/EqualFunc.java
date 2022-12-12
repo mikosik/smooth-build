@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.common;
 
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class EqualFunc {

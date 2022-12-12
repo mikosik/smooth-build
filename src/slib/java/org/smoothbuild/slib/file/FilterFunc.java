@@ -6,11 +6,11 @@ import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
 import java.util.function.Predicate;
 
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.ArrayBBuilder;
-import org.smoothbuild.bytecode.expr.inst.StringB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.ArrayB;
+import org.smoothbuild.bytecode.expr.value.ArrayBBuilder;
+import org.smoothbuild.bytecode.expr.value.StringB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;

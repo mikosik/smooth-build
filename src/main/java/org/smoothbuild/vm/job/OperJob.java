@@ -2,8 +2,8 @@ package org.smoothbuild.vm.job;
 
 import java.util.function.BiFunction;
 
-import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.OperB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.task.Task;

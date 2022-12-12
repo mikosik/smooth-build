@@ -6,8 +6,8 @@ import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
-import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.oper.OrderCB;
+import org.smoothbuild.bytecode.type.value.ArrayTB;
 
 import com.google.common.collect.ImmutableList;
 

@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.StringB;
+import org.smoothbuild.bytecode.expr.value.ArrayB;
+import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.testing.TestContext;
 
 public class OutputTest extends TestContext {

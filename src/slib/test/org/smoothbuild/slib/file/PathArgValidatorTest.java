@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.testing.TestContext;
 

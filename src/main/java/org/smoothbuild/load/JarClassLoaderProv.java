@@ -17,8 +17,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.value.BlobB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.util.io.DuplicateFileNameExc;
 import org.smoothbuild.util.io.IllegalZipEntryFileNameExc;

@@ -7,7 +7,7 @@ import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.inst.FuncTB;
+import org.smoothbuild.bytecode.type.value.FuncTB;
 
 public final class ClosurizeCB extends OperCB {
   public ClosurizeCB(Hash hash, FuncTB funcTB) {

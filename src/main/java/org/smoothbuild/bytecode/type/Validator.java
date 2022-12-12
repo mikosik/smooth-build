@@ -4,9 +4,9 @@ import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.function.Supplier;
 
-import org.smoothbuild.bytecode.type.inst.FuncTB;
-import org.smoothbuild.bytecode.type.inst.TupleTB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
+import org.smoothbuild.bytecode.type.value.FuncTB;
+import org.smoothbuild.bytecode.type.value.TupleTB;
+import org.smoothbuild.bytecode.type.value.TypeB;
 
 import com.google.common.collect.ImmutableList;
 

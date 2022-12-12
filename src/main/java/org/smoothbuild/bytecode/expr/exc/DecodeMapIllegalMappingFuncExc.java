@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.expr.exc;
 
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CategoryB;
-import org.smoothbuild.bytecode.type.inst.FuncTB;
+import org.smoothbuild.bytecode.type.value.FuncTB;
 
 public class DecodeMapIllegalMappingFuncExc extends DecodeExprExc {
   public DecodeMapIllegalMappingFuncExc(Hash hash, CategoryB cat, FuncTB funcT) {

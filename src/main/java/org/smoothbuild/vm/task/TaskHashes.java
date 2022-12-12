@@ -2,10 +2,10 @@ package org.smoothbuild.vm.task;
 
 import static java.util.Arrays.asList;
 
-import org.smoothbuild.bytecode.expr.inst.NatFuncB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.inst.TypeB;
+import org.smoothbuild.bytecode.type.value.TypeB;
 
 public class TaskHashes {
   public static Hash taskHash(Task task) {

@@ -5,8 +5,8 @@ import static org.smoothbuild.vm.task.Purity.PURE;
 import java.util.Objects;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
 

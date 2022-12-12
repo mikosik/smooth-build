@@ -2,7 +2,7 @@ package org.smoothbuild.vm.execute;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.ComputationResult;
 import org.smoothbuild.vm.task.Task;

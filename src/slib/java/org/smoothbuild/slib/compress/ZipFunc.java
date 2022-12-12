@@ -10,10 +10,10 @@ import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.ArrayB;
+import org.smoothbuild.bytecode.expr.value.BlobBBuilder;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSource;

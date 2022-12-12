@@ -11,8 +11,8 @@ import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.FuncB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.value.FuncB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.log.Log;

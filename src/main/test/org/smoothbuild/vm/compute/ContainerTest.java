@@ -5,7 +5,7 @@ import static org.smoothbuild.run.eval.MessageStruct.severity;
 import static org.smoothbuild.run.eval.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.testing.TestContext;
 
 public class ContainerTest extends TestContext {

@@ -3,8 +3,8 @@ package org.smoothbuild.vm.task;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.task.Purity.FAST;
 
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
 

@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.job.ExecutionContext;
 import org.smoothbuild.vm.job.Job;
 

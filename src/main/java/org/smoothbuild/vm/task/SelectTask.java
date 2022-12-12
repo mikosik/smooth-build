@@ -2,10 +2,10 @@ package org.smoothbuild.vm.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.bytecode.expr.inst.IntB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.expr.value.IntB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
 

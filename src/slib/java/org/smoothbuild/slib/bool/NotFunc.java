@@ -1,8 +1,8 @@
 package org.smoothbuild.slib.bool;
 
-import org.smoothbuild.bytecode.expr.inst.BoolB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.BoolB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NotFunc {

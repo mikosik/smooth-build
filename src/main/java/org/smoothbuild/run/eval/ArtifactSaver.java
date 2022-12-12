@@ -21,9 +21,9 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.ArrayB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.TypeS;

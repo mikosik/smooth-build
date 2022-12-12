@@ -6,8 +6,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.ClosureB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
@@ -15,6 +13,8 @@ import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.PickB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
+import org.smoothbuild.bytecode.expr.value.ClosureB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.task.CombineTask;
 import org.smoothbuild.vm.task.OrderTask;

@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrorOrAbove;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
+import org.smoothbuild.bytecode.expr.value.ArrayB;
 import org.smoothbuild.testing.TestContext;
 
 public class MessageStructTest extends TestContext {

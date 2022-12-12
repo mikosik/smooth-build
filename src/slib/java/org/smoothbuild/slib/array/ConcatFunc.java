@@ -1,9 +1,9 @@
 package org.smoothbuild.slib.array;
 
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
-import org.smoothbuild.bytecode.type.inst.ArrayTB;
+import org.smoothbuild.bytecode.expr.value.ArrayB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
+import org.smoothbuild.bytecode.type.value.ArrayTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConcatFunc {

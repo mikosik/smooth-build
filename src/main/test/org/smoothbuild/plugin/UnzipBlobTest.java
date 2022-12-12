@@ -5,7 +5,7 @@ import static org.smoothbuild.plugin.UnzipBlob.unzipBlob;
 import static org.smoothbuild.testing.common.JarTester.jar;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.testing.TestContext;
 
 public class UnzipBlobTest extends TestContext {

@@ -29,7 +29,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.bytecode.BytecodeModule;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.fs.base.FileSystem;

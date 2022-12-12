@@ -7,10 +7,10 @@ import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 
 import java.io.IOException;
 
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.StringB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
-import org.smoothbuild.bytecode.expr.inst.ValueB;
+import org.smoothbuild.bytecode.expr.value.ArrayB;
+import org.smoothbuild.bytecode.expr.value.StringB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
+import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathIterator;
 import org.smoothbuild.fs.base.PathS;

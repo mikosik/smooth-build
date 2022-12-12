@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.type.oper;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CategoryB;
 import org.smoothbuild.bytecode.type.CategoryKindB;
-import org.smoothbuild.bytecode.type.inst.TypeB;
+import org.smoothbuild.bytecode.type.value.TypeB;
 
 public abstract class OperCB extends CategoryB {
   private final TypeB evalT;

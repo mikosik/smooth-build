@@ -8,9 +8,9 @@ import static org.smoothbuild.out.log.Level.WARNING;
 import java.util.Set;
 
 import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.inst.ArrayB;
-import org.smoothbuild.bytecode.expr.inst.StringB;
-import org.smoothbuild.bytecode.expr.inst.TupleB;
+import org.smoothbuild.bytecode.expr.value.ArrayB;
+import org.smoothbuild.bytecode.expr.value.StringB;
+import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.out.log.Level;
 
 public class MessageStruct {

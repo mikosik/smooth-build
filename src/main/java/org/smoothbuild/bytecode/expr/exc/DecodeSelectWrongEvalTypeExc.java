@@ -1,8 +1,8 @@
 package org.smoothbuild.bytecode.expr.exc;
 
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.bytecode.type.inst.TypeB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
+import org.smoothbuild.bytecode.type.value.TypeB;
 
 public class DecodeSelectWrongEvalTypeExc extends DecodeExprExc {
   public DecodeSelectWrongEvalTypeExc(Hash hash, SelectCB cat, TypeB actual) {

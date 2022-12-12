@@ -6,7 +6,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
 
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.CategoryKindB;
-import org.smoothbuild.bytecode.type.inst.FuncTB;
+import org.smoothbuild.bytecode.type.value.FuncTB;
 
 public class DecodeFuncCatWrongFuncTypeExc extends DecodeCatNodeExc {
   public static DecodeFuncCatWrongFuncTypeExc illegalIfFuncTypeExc(Hash hash, FuncTB funcTB) {

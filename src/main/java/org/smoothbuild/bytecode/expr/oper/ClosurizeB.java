@@ -6,11 +6,10 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
-import org.smoothbuild.bytecode.expr.inst.ClosureB;
-import org.smoothbuild.bytecode.expr.inst.DefinedFuncB;
-import org.smoothbuild.bytecode.expr.inst.FuncB;
-import org.smoothbuild.bytecode.type.inst.FuncTB;
+import org.smoothbuild.bytecode.expr.value.ClosureB;
+import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
 import org.smoothbuild.bytecode.type.oper.ClosurizeCB;
+import org.smoothbuild.bytecode.type.value.FuncTB;
 
 import com.google.common.collect.ImmutableList;
 

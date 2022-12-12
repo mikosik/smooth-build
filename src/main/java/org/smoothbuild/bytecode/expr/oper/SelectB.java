@@ -9,9 +9,9 @@ import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.bytecode.expr.exc.DecodeSelectWrongEvalTypeExc;
-import org.smoothbuild.bytecode.expr.inst.IntB;
-import org.smoothbuild.bytecode.type.inst.TupleTB;
+import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
+import org.smoothbuild.bytecode.type.value.TupleTB;
 
 import com.google.common.collect.ImmutableList;
 
