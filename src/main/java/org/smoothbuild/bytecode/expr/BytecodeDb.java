@@ -151,9 +151,9 @@ public class BytecodeDb {
   // validators
 
   private static void validateBodyEvalT(FuncTB funcTB, ExprB body) {
-    if (!body.evalT().equals(funcTB.res())) {
+    if (!body.evalT().equals(funcTB.result())) {
       var message = "body.evalT() = %s should be equal to funcTB.res() = %s."
-          .formatted(body.evalT().q(), funcTB.res().q());
+          .formatted(body.evalT().q(), funcTB.result().q());
       throw new IllegalArgumentException(message);
     }
   }
@@ -295,7 +295,7 @@ public class BytecodeDb {
   // methods for creating Expr-s
 
   private CallB newCall(FuncTB funcTB, ExprB func, CombineB args) throws HashedDbExc {
-    var callCB = categoryDb.call(funcTB.res());
+    var callCB = categoryDb.call(funcTB.result());
     var data = writeCallData(func, args);
     var root = newRoot(callCB, data);
     return callCB.newExpr(root, this);

@@ -428,7 +428,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(FUNC.marker()),
             notHashOfSeq
         );
-        assertCall(() -> ((FuncTB) categoryDb().get(typeHash)).res())
+        assertCall(() -> ((FuncTB) categoryDb().get(typeHash)).result())
             .throwsException(new DecodeCatNodeExc(typeHash, FUNC, DATA_PATH))
             .withCause(new DecodeHashSeqExc(
                 notHashOfSeq, byteCount % Hash.lengthInBytes()));

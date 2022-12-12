@@ -11,20 +11,20 @@ import org.smoothbuild.bytecode.hashed.Hash;
 
 public final class FuncTB extends TypeB {
   private final TupleTB params;
-  private final TypeB res;
+  private final TypeB result;
 
-  public FuncTB(Hash hash, TupleTB params, TypeB res) {
-    super(hash, funcTypeName(params.items(), res), FUNC);
+  public FuncTB(Hash hash, TupleTB params, TypeB result) {
+    super(hash, funcTypeName(params.items(), result), FUNC);
     this.params = params;
-    this.res = res;
+    this.result = result;
   }
 
   public TupleTB params() {
     return params;
   }
 
-  public TypeB res() {
-    return res;
+  public TypeB result() {
+    return result;
   }
 
   @Override

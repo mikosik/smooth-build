@@ -85,16 +85,16 @@ public class CategoryBTest extends TestContext {
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.closure(f.string(), list()), "CLOSURE:()->String"),
-        args(f -> f.closure(f.string(), list(f.string())), "CLOSURE:(String)->String"),
-        args(f -> f.definedFunc(f.string(), list()), "DEFINED_FUNC:()->String"),
-        args(f -> f.definedFunc(f.string(), list(f.string())), "DEFINED_FUNC:(String)->String"),
+        args(f -> f.closure(list(), f.string()), "CLOSURE:()->String"),
+        args(f -> f.closure(list(f.string()), f.string()), "CLOSURE:(String)->String"),
+        args(f -> f.definedFunc(list(), f.string()), "DEFINED_FUNC:()->String"),
+        args(f -> f.definedFunc(list(f.string()), f.string()), "DEFINED_FUNC:(String)->String"),
         args(f -> f.funcT(list(), f.string()), "()->String"),
         args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
         args(f -> f.ifFunc(f.int_()), "IF_FUNC:(Bool,Int,Int)->Int"),
         args(f -> f.mapFunc(f.int_(), f.string()), "MAP_FUNC:([String],(String)->Int)->[Int]"),
-        args(f -> f.nativeFunc(f.string(), list()), "NATIVE_FUNC:()->String"),
-        args(f -> f.nativeFunc(f.string(), list(f.string())), "NATIVE_FUNC:(String)->String"),
+        args(f -> f.nativeFunc(list(), f.string()), "NATIVE_FUNC:()->String"),
+        args(f -> f.nativeFunc(list(f.string()), f.string()), "NATIVE_FUNC:(String)->String"),
 
         args(f -> f.tuple(), "{}"),
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
@@ -116,7 +116,7 @@ public class CategoryBTest extends TestContext {
     @MethodSource("result_cases")
     public void result(Function<CategoryDb, FuncTB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).res())
+      assertThat(execute(factoryCall).result())
           .isEqualTo(execute(expected));
     }
 
@@ -152,7 +152,7 @@ public class CategoryBTest extends TestContext {
     public void result(
         Function<CategoryDb, ClosureCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().res())
+      assertThat(execute(factoryCall).type().result())
           .isEqualTo(execute(expected));
     }
 
@@ -188,7 +188,7 @@ public class CategoryBTest extends TestContext {
     public void result(
         Function<CategoryDb, DefinedFuncCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().res())
+      assertThat(execute(factoryCall).type().result())
           .isEqualTo(execute(expected));
     }
 
@@ -225,7 +225,7 @@ public class CategoryBTest extends TestContext {
     public void result(
         Function<CategoryDb, NativeFuncCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().res())
+      assertThat(execute(factoryCall).type().result())
           .isEqualTo(execute(expected));
     }
 

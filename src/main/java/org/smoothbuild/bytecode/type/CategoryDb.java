@@ -89,8 +89,8 @@ public class CategoryDb {
   private static final int DATA_IDX = 1;
   private static final int FUNC_PARAMS_IDX = 0;
   public static final String FUNC_PARAMS_PATH = DATA_PATH + "[" + FUNC_PARAMS_IDX + "]";
-  private static final int FUNC_RES_IDX = 1;
-  public static final String FUNC_RES_PATH = DATA_PATH + "[" + FUNC_RES_IDX + "]";
+  private static final int FUNC_RESULT_IDX = 1;
+  public static final String FUNC_RES_PATH = DATA_PATH + "[" + FUNC_RESULT_IDX + "]";
 
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, CategoryB> cache;
@@ -128,37 +128,37 @@ public class CategoryDb {
     return bool;
   }
 
-  public ClosureCB closure(TypeB res, ImmutableList<TypeB> params) {
-    return funcC(CLOSURE, res, params);
+  public ClosureCB closure(ImmutableList<TypeB> params, TypeB result) {
+    return funcC(CLOSURE, params, result);
   }
 
   public ClosureCB closure(FuncTB funcTB) {
     return funcC(CLOSURE, funcTB);
   }
 
-  public DefinedFuncCB definedFunc(TypeB res, ImmutableList<TypeB> params) {
-    return funcC(DEFINED_FUNC, res, params);
+  public DefinedFuncCB definedFunc(ImmutableList<TypeB> params, TypeB result) {
+    return funcC(DEFINED_FUNC, params, result);
   }
 
   public DefinedFuncCB definedFunc(FuncTB funcTB) {
     return funcC(DEFINED_FUNC, funcTB);
   }
 
-  private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, TypeB res,
-      ImmutableList<TypeB> params) {
-    return funcC(funcKind, funcT(params, res));
+  private <T extends FuncCB> T funcC(
+      AbstFuncKindB<T> funcKind, ImmutableList<TypeB> params, TypeB result) {
+    return funcC(funcKind, funcT(params, result));
   }
 
   private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, FuncTB funcTB) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newFuncC(funcKind, funcTB));
   }
 
-  public FuncTB funcT(ImmutableList<TypeB> params, TypeB res) {
-    return funcT(tuple(params), res);
+  public FuncTB funcT(ImmutableList<TypeB> params, TypeB result) {
+    return funcT(tuple(params), result);
   }
 
-  public FuncTB funcT(TupleTB params, TypeB res) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newFuncT(params, res));
+  public FuncTB funcT(TupleTB params, TypeB result) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newFuncT(params, result));
   }
 
   public IfFuncCB ifFunc(TypeB t) {
@@ -175,8 +175,8 @@ public class CategoryDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> funcC(MAP_FUNC, funcT));
   }
 
-  public NativeFuncCB nativeFunc(TypeB res, ImmutableList<TypeB> params) {
-    return funcC(NATIVE_FUNC, res, params);
+  public NativeFuncCB nativeFunc(ImmutableList<TypeB> params, TypeB result) {
+    return funcC(NATIVE_FUNC, params, result);
   }
 
   public NativeFuncCB nativeFunc(FuncTB funcTB) {
@@ -295,10 +295,10 @@ public class CategoryDb {
     if (nodes.size() != 2) {
       throw new DecodeCatWrongSeqSizeExc(rootHash, FUNC, DATA_PATH, 2, nodes.size());
     }
-    var res = nodes.get(FUNC_RES_IDX);
+    var result = nodes.get(FUNC_RESULT_IDX);
     var params = nodes.get(FUNC_PARAMS_IDX);
     if (params instanceof TupleTB paramsTuple) {
-      return cache(new FuncTB(rootHash, paramsTuple, res));
+      return cache(new FuncTB(rootHash, paramsTuple, result));
     } else {
       throw new DecodeCatWrongNodeCatExc(
           rootHash, FUNC, FUNC_PARAMS_PATH, TupleTB.class, params.getClass());
@@ -311,10 +311,10 @@ public class CategoryDb {
       if (params.size() != 3) {
         throw illegalIfFuncTypeExc(hash, funcTB);
       }
-      var res = funcTB.res();
+      var result = funcTB.result();
       boolean first = params.get(0).equals(bool);
-      boolean second = params.get(1).equals(res);
-      boolean third = params.get(2).equals(res);
+      boolean second = params.get(1).equals(result);
+      boolean third = params.get(2).equals(result);
       if (!(first && second && third)) {
         throw illegalIfFuncTypeExc(hash, funcTB);
       }
@@ -324,7 +324,7 @@ public class CategoryDb {
   private CategoryB readMapFuncCat(Hash hash, List<Hash> rootSeq, MapFuncKindB mapFuncKind) {
     return readFuncCat(hash, rootSeq, mapFuncKind, (FuncTB funcTB) -> {
       var params = funcTB.params();
-      if (!(funcTB.res() instanceof ArrayTB outputArrayT)) {
+      if (!(funcTB.result() instanceof ArrayTB outputArrayT)) {
         throw illegalMapFuncTypeExc(hash, funcTB);
       }
       if (params.size() != 2) {
@@ -342,7 +342,7 @@ public class CategoryDb {
       if (!inputArrayT.elem().equals(mappingFuncT.params().get(0))) {
         throw illegalMapFuncTypeExc(hash, funcTB);
       }
-      if (!outputArrayT.elem().equals(mappingFuncT.res())) {
+      if (!outputArrayT.elem().equals(mappingFuncT.result())) {
         throw illegalMapFuncTypeExc(hash, funcTB);
       }
     });
@@ -431,9 +431,9 @@ public class CategoryDb {
     return cache(new ArrayTB(rootHash, elem));
   }
 
-  private FuncTB newFuncT(TupleTB params, TypeB res) throws HashedDbExc {
-    var rootHash = writeFuncTypeRoot(params, res);
-    return cache(new FuncTB(rootHash, params, res));
+  private FuncTB newFuncT(TupleTB params, TypeB result) throws HashedDbExc {
+    var rootHash = writeFuncTypeRoot(params, result);
+    return cache(new FuncTB(rootHash, params, result));
   }
 
   private <T extends FuncCB> T newFuncC(AbstFuncKindB<T> funcKind, FuncTB funcTB)
@@ -483,8 +483,8 @@ public class CategoryDb {
     return writeRootWithData(ARRAY, elem);
   }
 
-  private Hash writeFuncTypeRoot(TupleTB params, TypeB res) throws HashedDbExc {
-    var dataHash = hashedDb.writeSeq(params.hash(), res.hash());
+  private Hash writeFuncTypeRoot(TupleTB params, TypeB result) throws HashedDbExc {
+    var dataHash = hashedDb.writeSeq(params.hash(), result.hash());
     return writeRootWithData(FUNC, dataHash);
   }
 
