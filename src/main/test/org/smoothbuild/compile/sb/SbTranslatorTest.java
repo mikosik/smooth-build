@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.ClosureB;
+import org.smoothbuild.bytecode.expr.inst.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.ExprS;
@@ -244,7 +244,7 @@ public class SbTranslatorTest extends TestContext {
         var anonFuncS = anonFuncS(
             varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoAnonFuncS = monoizeS(varMap(varA(), intTS()), anonFuncS);
-        assertTranslation(monoAnonFuncS, closurizeB(funcTB(intTB(), intTB()), refB(intTB(), 0)));
+        assertTranslation(monoAnonFuncS, closurizeB(list(intTB()), refB(intTB(), 0)));
       }
 
       @Test
@@ -252,7 +252,7 @@ public class SbTranslatorTest extends TestContext {
         var monoAnonFuncS = monoizeS(anonFuncS(paramRefS(intTS(), "p")));
         var monoFuncS = monoizeS(defFuncS("myFunc", nlist(itemS(intTS(), "p")), monoAnonFuncS));
 
-        var bodyB = closurizeB(funcTB(intTB()), refB(intTB(), 0));
+        var bodyB = closurizeB(refB(intTB(), 0));
         var funcB = defFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
         assertTranslation(monoFuncS, funcB);
@@ -260,12 +260,13 @@ public class SbTranslatorTest extends TestContext {
 
       @Test
       public void anon_func_with_param_referencing_param_of_enclosing_func() {
+        // myFunc(Int p) = (Blob a) -> p;
         var monoAnonFuncS = monoizeS(anonFuncS(
             nlist(itemS(blobTS(), "a")), paramRefS(intTS(), "p")));
         var monoFuncS = monoizeS(defFuncS("myFunc", nlist(itemS(intTS(), "p")), monoAnonFuncS));
 
-        var bodyB = closurizeB(funcTB(blobTB(), intTB()), refB(intTB(), 1));
-        var funcB = defFuncB(funcTB(intTB(), funcTB(blobTB(), intTB())), bodyB);
+        var bodyB = closurizeB(list(blobTB()), refB(intTB(), 1));
+        var funcB = defFuncB(list(intTB()), bodyB);
 
         assertTranslation(monoFuncS, funcB);
       }
@@ -318,7 +319,7 @@ public class SbTranslatorTest extends TestContext {
             varMap(varA(), intTS()),
             defFuncS("myFunc", nlist(itemS(varA(), "a")), monoAnonFuncS));
 
-        var bodyB = closurizeB(funcTB(intTB()), refB(intTB(), 0));
+        var bodyB = closurizeB(refB(intTB(), 0));
         var funcB = defFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
         assertTranslation(monoFuncS, funcB);
@@ -373,7 +374,7 @@ public class SbTranslatorTest extends TestContext {
         public void expr_inside_def_func_body() {
           var funcS = defFuncS(7, "myFunc", nlist(), intS(8, 37));
           var sbTranslator = newTranslator();
-          var funcB = (ClosureB) sbTranslator.translateExpr(monoizeS(funcS));
+          var funcB = (DefinedFuncB) sbTranslator.translateExpr(monoizeS(funcS));
           var body = funcB.body();
           assertNalMapping(sbTranslator, body, null, loc(8));
         }
@@ -449,7 +450,7 @@ public class SbTranslatorTest extends TestContext {
       public void param_ref() {
         var func = defFuncS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
         var sbTranslator = newTranslator();
-        var funcB = (ClosureB) sbTranslator.translateExpr(monoizeS(func));
+        var funcB = (DefinedFuncB) sbTranslator.translateExpr(monoizeS(func));
         var refB = funcB.body();
         assertNalMapping(sbTranslator, refB, null, loc(5));
       }

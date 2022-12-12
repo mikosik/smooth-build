@@ -8,6 +8,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.DEFINED_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -47,8 +48,8 @@ public class CategoryKindBTest {
     var illegalMarkers = list(
         arguments(-2, null),
         arguments(-1, null),
-        arguments(18, null),
-        arguments(19, null)
+        arguments(19, null),
+        arguments(20, null)
     );
     return concat(marker_to_kind_map(), illegalMarkers);
   }
@@ -71,7 +72,8 @@ public class CategoryKindBTest {
         arguments(14, REF),
         arguments(15, MAP_FUNC),
         arguments(16, FUNC),
-        arguments(17, CLOSURIZE)
+        arguments(17, CLOSURIZE),
+        arguments(18, DEFINED_FUNC)
     );
   }
 }

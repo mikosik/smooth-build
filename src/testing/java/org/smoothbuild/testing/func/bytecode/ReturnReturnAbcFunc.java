@@ -11,6 +11,6 @@ import org.smoothbuild.bytecode.type.inst.TypeB;
 public class ReturnReturnAbcFunc {
   public static ValueB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
     var funcT = f.funcT(list(), f.stringT());
-    return f.defFunc(funcT, f.string("abc"));
+    return f.definedFunc(funcT, f.string("abc"));
   }
 }

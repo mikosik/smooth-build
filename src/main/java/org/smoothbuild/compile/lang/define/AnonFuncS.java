@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
  * Anonymous function.
  * This class is immutable.
  */
-public final class AnonFuncS implements FuncS, MonoizableS {
+public final class AnonFuncS implements ExprFuncS, MonoizableS {
   private final FuncSchemaS schema;
   private final NList<ItemS> params;
   private final ExprS body;
@@ -36,6 +36,7 @@ public final class AnonFuncS implements FuncS, MonoizableS {
     return params;
   }
 
+  @Override
   public ExprS body() {
     return body;
   }

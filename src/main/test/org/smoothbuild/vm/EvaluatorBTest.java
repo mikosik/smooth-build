@@ -353,7 +353,7 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void closure_returning_its_arg() {
-          var closurize = closurizeB(funcTB(intTB(), intTB()), refB(intTB(), 0));
+          var closurize = closurizeB(list(intTB()), refB(intTB(), 0));
           var outerFunc = defFuncB(list(intTB()), closurize);
           var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
           var callB = callB(closureReturnedByOuterFunc, intB(18));
@@ -363,7 +363,7 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void closure_returning_value_from_environment() {
-          var closurize = closurizeB(funcTB(intTB()), refB(intTB(), 0));
+          var closurize = closurizeB(refB(intTB(), 0));
           var outerFunc = defFuncB(list(intTB()), closurize);
           var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
           assertThat(evaluate(callB(closureReturnedByOuterFunc)))
@@ -373,12 +373,11 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void closure_passed_as_argument_and_then_returned_by_another_closure() {
           var returnIntTB = funcTB(intTB());
-
-          var returnReturnIntClosure = closurizeB(funcTB(returnIntTB), refB(returnIntTB, 0));
+          var returnReturnIntClosure = closurizeB(refB(returnIntTB, 0));
           var innerFunc = defFuncB(list(returnIntTB), returnReturnIntClosure);
 
-          var returnIntClosure = closurizeB(returnIntTB, refB(intTB(), 0));
-          var outerFunc = defFuncB(list(intTB()), callB(callB(callB(innerFunc, returnIntClosure))));
+          var returnIntAnonymousFunc = closurizeB(refB(intTB(), 0));
+          var outerFunc = defFuncB(list(intTB()), callB(callB(callB(innerFunc, returnIntAnonymousFunc))));
 
           var callB = callB(outerFunc, intB(17));
           assertThat(evaluate(callB))

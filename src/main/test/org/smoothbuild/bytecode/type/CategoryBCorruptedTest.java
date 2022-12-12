@@ -10,6 +10,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.DEFINED_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -191,6 +192,28 @@ public class CategoryBCorruptedTest extends TestContext {
       @Override
       protected CategoryKindB categoryKind() {
         return CLOSURE;
+      }
+    }
+
+    @Nested
+    class _defined_func extends _func_category_test_case {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save defined func type in HashedDb.
+         */
+        var specHash = hash(
+            hash(DEFINED_FUNC.marker()),
+            hash(funcTB(stringTB(), boolTB(), intTB()))
+        );
+        assertThat(specHash)
+            .isEqualTo(definedFuncCB(intTB(), stringTB(), boolTB()).hash());
+      }
+
+      @Override
+      protected CategoryKindB categoryKind() {
+        return DEFINED_FUNC;
       }
     }
 

@@ -7,6 +7,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.DEFINED_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -26,6 +27,7 @@ import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.ClosureB;
+import org.smoothbuild.bytecode.expr.inst.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.inst.FuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
@@ -50,6 +52,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.ClosureCB;
+import org.smoothbuild.bytecode.type.inst.DefinedFuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.IfFuncCB;
@@ -157,6 +160,12 @@ public sealed abstract class CategoryKindB
     }
   }
 
+  public static final class DefinedFuncKindB extends AbstFuncKindB<DefinedFuncCB> {
+    DefinedFuncKindB() {
+      super("DEFINED_FUNC", (byte) 18, DefinedFuncB.class, DefinedFuncCB::new);
+    }
+  }
+
   public static final class NatFuncKindB extends AbstFuncKindB<NatFuncCB> {
     NatFuncKindB() {
       super("NAT_FUNC", (byte) 7, NatFuncB.class, NatFuncCB::new);
@@ -259,6 +268,7 @@ public sealed abstract class CategoryKindB
       case 15 -> MAP_FUNC;
       case 16 -> FUNC;
       case 17 -> CLOSURIZE;
+      case 18 -> DEFINED_FUNC;
       default -> null;
     };
   }

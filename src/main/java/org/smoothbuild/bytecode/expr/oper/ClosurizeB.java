@@ -7,6 +7,8 @@ import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.inst.ClosureB;
+import org.smoothbuild.bytecode.expr.inst.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.inst.FuncB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.oper.ClosurizeCB;
 
@@ -24,7 +26,7 @@ public final class ClosurizeB extends OperB {
 
   @Override
   public ImmutableList<ExprB> dataSeq() {
-    return list(body());
+    return list(func());
   }
 
   @Override
@@ -40,11 +42,11 @@ public final class ClosurizeB extends OperB {
   public ClosureB buildClosure(ImmutableList<ExprB> environment) {
     var bytecodeDb = bytecodeDb();
     var environmentB = bytecodeDb.combine(environment);
-    return bytecodeDb.closure(evalT(), environmentB, body());
+    return bytecodeDb.closure(environmentB, func());
   }
 
-  private ExprB body() {
-    return readDataAsExpr();
+  private DefinedFuncB func() {
+    return readDataAsExpr(DefinedFuncB.class);
   }
 
   @Override

@@ -27,8 +27,8 @@ public class TestingCatsB {
 
   public static final ImmutableList<CategoryB> ARRAY_CATS_TO_TEST = list(
       array(CONTEXT.blobTB()),
-      array(CONTEXT.boolTB()),
       array(func(CONTEXT.blobTB(), CONTEXT.boolTB())),
+      array(CONTEXT.boolTB()),
       array(CONTEXT.intTB()),
       array(CONTEXT.stringTB()),
       array(CONTEXT.personTB()),
@@ -68,6 +68,8 @@ public class TestingCatsB {
         CONTEXT.callCB(CONTEXT.stringTB()),
         CONTEXT.combineCB(CONTEXT.tupleTB(CONTEXT.blobTB())),
         CONTEXT.combineCB(CONTEXT.tupleTB(CONTEXT.stringTB())),
+        CONTEXT.closurizeCB(CONTEXT.funcTB(CONTEXT.blobTB(), CONTEXT.blobTB())),
+        CONTEXT.closurizeCB(CONTEXT.funcTB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB())),
         CONTEXT.orderCB(array(CONTEXT.blobTB())),
         CONTEXT.orderCB(array(CONTEXT.stringTB())),
         CONTEXT.pickCB(CONTEXT.blobTB()),
@@ -87,8 +89,12 @@ public class TestingCatsB {
         CONTEXT.closureCB(CONTEXT.blobTB()),
         CONTEXT.closureCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
         CONTEXT.closureCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.closureCB(CONTEXT.stringTB())
-        );
+        CONTEXT.closureCB(CONTEXT.stringTB()),
+        CONTEXT.definedFuncCB(CONTEXT.blobTB()),
+        CONTEXT.definedFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
+        CONTEXT.definedFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
+        CONTEXT.definedFuncCB(CONTEXT.stringTB())
+    );
 
     return concat(valueCs, exprCs);
   }

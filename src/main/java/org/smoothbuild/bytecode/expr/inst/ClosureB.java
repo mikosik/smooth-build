@@ -3,14 +3,13 @@ package org.smoothbuild.bytecode.expr.inst;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.bytecode.expr.BytecodeDb;
-import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.type.inst.ClosureCB;
 
 /**
- * Defined Function.
+ * Closure.
  * This class is thread-safe.
  */
 public final class ClosureB extends FuncB {
@@ -27,14 +26,14 @@ public final class ClosureB extends FuncB {
     return readDataSeqElem(ENVIRONMENT_IDX, DATA_SEQ_SIZE, CombineB.class);
   }
 
-  public ExprB body() {
-    var body = readDataSeqElem(BODY_IDX, DATA_SEQ_SIZE, ExprB.class);
-    var resT = type().res();
-    var bodyT = body.evalT();
-    if (!resT.equals(bodyT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, resT, bodyT);
+  public DefinedFuncB func() {
+    var func = readDataSeqElem(BODY_IDX, DATA_SEQ_SIZE, DefinedFuncB.class);
+    var evalT = type();
+    var funcT = func.type();
+    if (!evalT.equals(funcT)) {
+      throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, evalT, funcT);
     }
-    return body;
+    return func;
   }
 
   @Override

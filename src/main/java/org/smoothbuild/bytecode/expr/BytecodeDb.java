@@ -19,6 +19,8 @@ import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.ClosureB;
+import org.smoothbuild.bytecode.expr.inst.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.inst.FuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
@@ -42,6 +44,7 @@ import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.exc.CategoryDbExc;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.ClosureCB;
+import org.smoothbuild.bytecode.type.inst.DefinedFuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.IntTB;
 import org.smoothbuild.bytecode.type.inst.NatFuncCB;
@@ -76,13 +79,18 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newBool(value));
   }
 
-  public ClosureB closure(FuncTB type, CombineB environment, ExprB body) {
-    validateBodyEvalT(type, body);
-    var cat = categoryDb.closure(type);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosure(cat, environment, body));
+  public ClosureB closure(CombineB environment, DefinedFuncB func) {
+    var cat = categoryDb.closure(func.type());
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosure(cat, environment, func));
   }
 
-  public NatFuncB natFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+  public DefinedFuncB definedFunc(FuncTB type, ExprB body) {
+    validateBodyEvalT(type, body);
+    var cat = categoryDb.definedFunc(type);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newDefinedFunc(cat, body));
+  }
+
+  public NatFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
     var cat = categoryDb.natFunc(type);
     return wrapHashedDbExcAsBytecodeDbExc(
         () -> newNatFunc(cat, jar, classBinaryName, isPure));
@@ -108,9 +116,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(funcTB, func, args));
   }
 
-  public ClosurizeB closurize(FuncTB funcTB, ExprB body) {
-    validateBodyEvalT(funcTB, body);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(funcTB, body));
+  public ClosurizeB closurize(DefinedFuncB definedFunc) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(definedFunc));
   }
 
   public CombineB combine(ImmutableList<ExprB> items) {
@@ -246,9 +253,16 @@ public class BytecodeDb {
     return categoryDb.bool().newExpr(root, this);
   }
 
-  private ClosureB newClosure(ClosureCB type, ExprB environment, ExprB body) throws HashedDbExc {
-    var data = writeClosureData(environment, body);
+  private ClosureB newClosure(ClosureCB type, ExprB environment, DefinedFuncB funcB)
+      throws HashedDbExc {
+    var data = writeClosureData(environment, funcB);
     var root = newRoot(type, data);
+    return type.newExpr(root, this);
+  }
+
+  private DefinedFuncB newDefinedFunc(DefinedFuncCB type, ExprB body) throws HashedDbExc {
+    var dataHash = body.hash();
+    var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
   }
 
@@ -287,9 +301,9 @@ public class BytecodeDb {
     return callCB.newExpr(root, this);
   }
 
-  private ClosurizeB newClosurize(FuncTB funcTB, ExprB body) throws HashedDbExc {
-    var closurizeCB = categoryDb.closurize(funcTB);
-    var dataHash = body.hash();
+  private ClosurizeB newClosurize(DefinedFuncB definedFunc) throws HashedDbExc {
+    var closurizeCB = categoryDb.closurize(definedFunc.type());
+    var dataHash = definedFunc.hash();
     var root = newRoot(closurizeCB, dataHash);
     return closurizeCB.newExpr(root, this);
   }
@@ -417,8 +431,8 @@ public class BytecodeDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeClosureData(ExprB environment, ExprB body) throws HashedDbExc {
-    return hashedDb.writeSeq(environment.hash(), body.hash());
+  private Hash writeClosureData(ExprB environment, DefinedFuncB funcB) throws HashedDbExc {
+    return hashedDb.writeSeq(environment.hash(), funcB.hash());
   }
 
   private Hash writeIntData(BigInteger value) throws HashedDbExc {

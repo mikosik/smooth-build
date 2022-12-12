@@ -11,6 +11,7 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.ArrayB;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.ClosureB;
+import org.smoothbuild.bytecode.expr.inst.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.inst.FuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
@@ -47,22 +48,37 @@ public class CallJob extends Job {
 
   private void onFuncEvaluated(CallB callB, ValueB funcB, Consumer<ValueB> resConsumer) {
     switch ((FuncB) funcB) {
-      case ClosureB closureB -> handleClosure(closureB, resConsumer);
-      case IfFuncB ifFuncB -> handleIfFunc(resConsumer);
-      case MapFuncB mapFuncB -> handleMapFunc(resConsumer);
-      case NatFuncB natFuncB -> handleNatFunc(callB, natFuncB, resConsumer);
+      // @formatter:off
+      case ClosureB     closureB     -> handleClosure(closureB, resConsumer);
+      case DefinedFuncB definedFuncB -> handleDefinedFunc(definedFuncB, resConsumer);
+      case IfFuncB      ifFuncB      -> handleIfFunc(resConsumer);
+      case MapFuncB     mapFuncB     -> handleMapFunc(resConsumer);
+      case NatFuncB     nativeFuncB  -> handleNatFunc(callB, nativeFuncB, resConsumer);
+      // @formatter:on
     }
   }
 
-  // handling Closure
+  // handling functions with body
 
   private void handleClosure(ClosureB closureB, Consumer<ValueB> resultConsumer) {
-    var args = args();
     var closureEnvironment = closureB.environment().items();
-    var closureBodyEnvironment = map(concat(args, closureEnvironment), context()::jobFor);
-    var trace = trace(closureB);
-    var newContext = context().withEnvironment(closureBodyEnvironment, trace);
-    evaluateImpl(newContext, closureB.body(), resultConsumer);
+    var closureBodyEnvironment = map(concat(args(), closureEnvironment), context()::jobFor);
+    handleFunc(closureBodyEnvironment, closureB, closureB.func().body(), resultConsumer);
+  }
+
+  private void handleDefinedFunc(DefinedFuncB definedFuncB, Consumer<ValueB> resultConsumer) {
+    var funcBodyEnvironment = map(args(), context()::jobFor);
+    handleFunc(funcBodyEnvironment, definedFuncB, definedFuncB.body(), resultConsumer);
+  }
+
+  private void handleFunc(
+      ImmutableList<Job> funcBodyEnvironment,
+      FuncB funcB,
+      ExprB body,
+      Consumer<ValueB> resultConsumer) {
+    var trace = trace(funcB);
+    var newContext = context().withEnvironment(funcBodyEnvironment, trace);
+    evaluateImpl(newContext, body, resultConsumer);
   }
 
   // handling IfFunc

@@ -9,54 +9,42 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprBTestCase;
+import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.testing.TestContext;
 
 public class ClosureBTest extends TestContext {
   @Test
-  public void creating_func_with_body_evaluation_type_not_equal_result_type_causes_exception() {
-    var funcT = funcTB(stringTB(), intTB());
-    assertCall(() -> defFuncB(funcT, boolB(true)))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
   public void setting_environment_to_null_throws_exception() {
-    var funcT = funcTB(boolTB(), intTB());
-    assertCall(() -> closureB(funcT, null, intB()))
+    assertCall(() -> closureB((CombineB) null, intB()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void setting_body_to_null_throws_exception() {
-    var funcT = funcTB(boolTB(), intTB());
-    assertCall(() -> closureB(funcT, combineB(), null))
+  public void setting_func_to_null_throws_exception() {
+    assertCall(() -> closureB(combineB(), null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void type_of_func_is_func_type() {
-    var funcT = funcTB(stringTB(), intTB());
-    assertThat(defFuncB(funcT, intB()).evalT())
-        .isEqualTo(funcT);
+  public void type_of_closure_is_func_type() {
+    assertThat(closureB(idFuncB()).evalT())
+        .isEqualTo(idFuncB().type());
   }
 
   @Test
   public void environment_contains_object_passed_during_construction() {
-    var funcT = funcTB(boolTB(), intTB());
-    var body = intB(33);
     var environment = combineB(intB());
-    var defFuncB = closureB(funcT, environment, body);
-    assertThat(defFuncB.environment())
+    var closureB = closureB(environment, intB(33));
+    assertThat(closureB.environment())
         .isEqualTo(environment);
   }
 
   @Test
-  public void body_contains_object_passed_during_construction() {
-    var funcT = funcTB(boolTB(), intTB());
-    var body = intB(33);
-    var defFuncB = closureB(funcT, combineB(intB()), body);
-    assertThat(defFuncB.body())
-        .isEqualTo(body);
+  public void closure_contains_object_passed_during_construction() {
+    var func = defFuncB(intB(33));
+    var closureB = closureB(combineB(intB()), func);
+    assertThat(closureB.func())
+        .isEqualTo(func);
   }
 
   @Nested
@@ -64,44 +52,41 @@ public class ClosureBTest extends TestContext {
     @Override
     protected List<ClosureB> equalExprs() {
       return list(
-          defFuncB(funcTB(stringTB(), intTB()), intB(7)),
-          defFuncB(funcTB(stringTB(), intTB()), intB(7))
+          closureB(combineB(stringB("a")), defFuncB(list(intTB()), intB(7))),
+          closureB(combineB(stringB("a")), defFuncB(list(intTB()), intB(7)))
       );
     }
 
     @Override
     protected List<ClosureB> nonEqualExprs() {
       return list(
-          defFuncB(funcTB(stringTB(), intTB()), intB(7)),
-          defFuncB(funcTB(stringTB(), intTB()), intB(0)),
-          defFuncB(funcTB(blobTB(), intTB()), intB(7)),
-          defFuncB(funcTB(stringTB(), boolTB()), boolB(true))
+          closureB(combineB(), defFuncB(list(), intB(7))),
+          closureB(combineB(), defFuncB(list(), intB(17))),
+          closureB(combineB(), defFuncB(list(intTB()), intB(7))),
+          closureB(combineB(intB(7)), defFuncB(list(), intB(7)))
       );
     }
   }
 
   @Test
-  public void func_can_be_read_by_hash() {
-    var funcT = funcTB(stringTB(), intTB());
-    var func = defFuncB(funcT, intB());
-    assertThat(bytecodeDbOther().get(func.hash()))
-        .isEqualTo(func);
+  public void closure_can_be_read_by_hash() {
+    var closure = closureB(intB());
+    assertThat(bytecodeDbOther().get(closure.hash()))
+        .isEqualTo(closure);
   }
 
   @Test
-  public void funcs_read_by_hash_have_equal_bodies() {
-    var funcT = funcTB(stringTB(), intTB());
-    var func = defFuncB(funcT, intB());
-    var funcRead = (ClosureB) bytecodeDbOther().get(func.hash());
-    assertThat(func.body())
-        .isEqualTo(funcRead.body());
+  public void closure_read_by_hash_have_equal_functions() {
+    var closure = closureB(intB());
+    var closureRead = (ClosureB) bytecodeDbOther().get(closure.hash());
+    assertThat(closure.func())
+        .isEqualTo(closureRead.func());
   }
 
   @Test
   public void to_string() {
-    var funcT = funcTB(stringTB(), intTB());
-    var func = defFuncB(funcT, intB());
-    assertThat(func.toString())
-        .isEqualTo("Closure((String)->Int)@" + func.hash());
+    var closure = closureB(list(stringTB()), intB());
+    assertThat(closure.toString())
+        .isEqualTo("Closure((String)->Int)@" + closure.hash());
   }
 }

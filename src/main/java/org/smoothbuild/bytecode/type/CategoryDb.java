@@ -11,6 +11,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
+import static org.smoothbuild.bytecode.type.CategoryKinds.DEFINED_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -42,6 +43,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.BaseKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ClosureKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ClosurizeKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.DefinedFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IfFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.MapFuncKindB;
@@ -57,6 +59,7 @@ import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.BlobTB;
 import org.smoothbuild.bytecode.type.inst.BoolTB;
 import org.smoothbuild.bytecode.type.inst.ClosureCB;
+import org.smoothbuild.bytecode.type.inst.DefinedFuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.IfFuncCB;
@@ -131,6 +134,14 @@ public class CategoryDb {
 
   public ClosureCB closure(FuncTB funcTB) {
     return funcC(CLOSURE, funcTB);
+  }
+
+  public DefinedFuncCB definedFunc(TypeB res, ImmutableList<TypeB> params) {
+    return funcC(DEFINED_FUNC, res, params);
+  }
+
+  public DefinedFuncCB definedFunc(FuncTB funcTB) {
+    return funcC(DEFINED_FUNC, funcTB);
   }
 
   private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, TypeB res,
@@ -225,16 +236,17 @@ public class CategoryDb {
     CategoryKindB kind = decodeCatMarker(hash, rootSeq.get(0));
     // @formatter:off
     return switch (kind) {
-      case ArrayKindB     array      -> readArrayT(hash, rootSeq, kind);
-      case BaseKindB      base       -> handleBaseT(hash, rootSeq, kind);
-      case ClosurizeKindB closurizeB -> readClosurizeCat(hash, rootSeq, closurizeB);
-      case ClosureKindB   defFunc    -> readFuncCat(hash, rootSeq, defFunc);
-      case FuncKindB      func       -> readFuncT(hash, rootSeq);
-      case IfFuncKindB    ifFunc     -> readIfFuncCat(hash, rootSeq, ifFunc);
-      case MapFuncKindB   mapFunc    -> readMapFuncCat(hash, rootSeq, mapFunc);
-      case NatFuncKindB   natFunc    -> readFuncCat(hash, rootSeq, natFunc);
-      case OperKindB<?>   oper       -> readOperCat(hash, rootSeq, oper);
-      case TupleKindB     tuple      -> readTupleT(hash, rootSeq);
+      case ArrayKindB       array       -> readArrayT(hash, rootSeq, kind);
+      case BaseKindB        base        -> handleBaseT(hash, rootSeq, kind);
+      case ClosurizeKindB   closurizeB  -> readClosurizeCat(hash, rootSeq, closurizeB);
+      case ClosureKindB     closure     -> readFuncCat(hash, rootSeq, closure);
+      case DefinedFuncKindB definedFunc -> readFuncCat(hash, rootSeq, definedFunc);
+      case FuncKindB        func        -> readFuncT(hash, rootSeq);
+      case IfFuncKindB      ifFunc      -> readIfFuncCat(hash, rootSeq, ifFunc);
+      case MapFuncKindB     mapFunc     -> readMapFuncCat(hash, rootSeq, mapFunc);
+      case NatFuncKindB     natFunc     -> readFuncCat(hash, rootSeq, natFunc);
+      case OperKindB<?>     oper        -> readOperCat(hash, rootSeq, oper);
+      case TupleKindB       tuple       -> readTupleT(hash, rootSeq);
     };
     // @formatter:on
   }

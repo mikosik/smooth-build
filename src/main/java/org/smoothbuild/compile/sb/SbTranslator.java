@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.inst.BlobB;
-import org.smoothbuild.bytecode.expr.inst.ClosureB;
+import org.smoothbuild.bytecode.expr.inst.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.NatFuncB;
 import org.smoothbuild.bytecode.expr.inst.StringB;
@@ -49,6 +49,7 @@ import org.smoothbuild.compile.lang.define.ConstructorS;
 import org.smoothbuild.compile.lang.define.DefFuncS;
 import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
+import org.smoothbuild.compile.lang.define.ExprFuncS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.FuncS;
 import org.smoothbuild.compile.lang.define.IntS;
@@ -166,9 +167,7 @@ public class SbTranslator {
   }
 
   private ExprB translateAnonFuncImpl(AnonFuncS anonFuncS) {
-    return bytecodeF.closurize(
-        translateT(anonFuncS.schema().type()),
-        translateExpr(anonFuncS.body()));
+    return bytecodeF.closurize(translateExprFunc(anonFuncS));
   }
 
   private ExprB translateEvaluableRef(EvaluableRefS evaluableRefS) {
@@ -197,7 +196,7 @@ public class SbTranslator {
   private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) {
     return switch (namedFuncS) {
       case AnnFuncS n -> translateAnnFunc(n);
-      case DefFuncS d -> translateDefFunc(d);
+      case DefFuncS d -> translateExprFunc(d);
       case ConstructorS c -> translateConstructor(c);
     };
   }
@@ -211,10 +210,10 @@ public class SbTranslator {
     };
   }
 
-  private ClosureB translateDefFunc(DefFuncS defFuncS) {
-    return bytecodeF.defFunc(
-        translateT(defFuncS.schema().type()),
-        translateExpr(defFuncS.body()));
+  private DefinedFuncB translateExprFunc(ExprFuncS exprFuncS) {
+    return bytecodeF.definedFunc(
+        translateT(exprFuncS.schema().type()),
+        translateExpr(exprFuncS.body()));
   }
 
   private NatFuncB translateNatFunc(AnnFuncS natFuncS) {
@@ -226,11 +225,11 @@ public class SbTranslator {
     return bytecodeF.natFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private ClosureB translateConstructor(ConstructorS constructorS) {
+  private DefinedFuncB translateConstructor(ConstructorS constructorS) {
     var funcTB = translateT(constructorS.schema().type());
     var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
     saveLoc(bodyB, constructorS);
-    return bytecodeF.defFunc(funcTB, bodyB);
+    return bytecodeF.definedFunc(funcTB, bodyB);
   }
 
   private ImmutableList<ExprB> createRefsB(TupleTB paramTs) {
@@ -294,7 +293,7 @@ public class SbTranslator {
 
   private ExprB translateDefValue(Loc refLoc, DefValueS defValueS) {
     var funcTB = bytecodeF.funcT(list(), translateT(defValueS.schema().type()));
-    var funcB = bytecodeF.defFunc(funcTB, translateExpr(defValueS.body()));
+    var funcB = bytecodeF.definedFunc(funcTB, translateExpr(defValueS.body()));
     saveNal(funcB, defValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
     saveLoc(call, refLoc);

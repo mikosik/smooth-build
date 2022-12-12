@@ -31,6 +31,7 @@ import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.type.inst.ArrayTB;
 import org.smoothbuild.bytecode.type.inst.ClosureCB;
+import org.smoothbuild.bytecode.type.inst.DefinedFuncCB;
 import org.smoothbuild.bytecode.type.inst.FuncTB;
 import org.smoothbuild.bytecode.type.inst.NatFuncCB;
 import org.smoothbuild.bytecode.type.inst.TupleTB;
@@ -86,12 +87,14 @@ public class CategoryBTest extends TestContext {
 
         args(f -> f.closure(f.string(), list()), "CLOSURE:()->String"),
         args(f -> f.closure(f.string(), list(f.string())), "CLOSURE:(String)->String"),
+        args(f -> f.definedFunc(f.string(), list()), "DEFINED_FUNC:()->String"),
+        args(f -> f.definedFunc(f.string(), list(f.string())), "DEFINED_FUNC:(String)->String"),
+        args(f -> f.funcT(list(), f.string()), "()->String"),
+        args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
         args(f -> f.ifFunc(f.int_()), "IF_FUNC:(Bool,Int,Int)->Int"),
         args(f -> f.mapFunc(f.int_(), f.string()), "MAP_FUNC:([String],(String)->Int)->[Int]"),
         args(f -> f.natFunc(f.string(), list()), "NAT_FUNC:()->String"),
         args(f -> f.natFunc(f.string(), list(f.string())), "NAT_FUNC:(String)->String"),
-        args(f -> f.funcT(list(), f.string()), "()->String"),
-        args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
 
         args(f -> f.tuple(), "{}"),
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
@@ -146,7 +149,8 @@ public class CategoryBTest extends TestContext {
   class _closure {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CategoryDb, ClosureCB> factoryCall,
+    public void result(
+        Function<CategoryDb, ClosureCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().res())
           .isEqualTo(execute(expected));
@@ -178,10 +182,48 @@ public class CategoryBTest extends TestContext {
   }
 
   @Nested
-  class _nat_func {
+  class _defined_func {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CategoryDb, NatFuncCB> factoryCall,
+    public void result(
+        Function<CategoryDb, DefinedFuncCB> factoryCall,
+        Function<CategoryDb, List<TypeB>> expected) {
+      assertThat(execute(factoryCall).type().res())
+          .isEqualTo(execute(expected));
+    }
+
+    public static List<Arguments> result_cases() {
+      return asList(
+          args(f -> f.definedFunc(f.funcT(list(), f.int_())), f -> f.int_()),
+          args(f -> f.definedFunc(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
+          args(f -> f.definedFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob())
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("params_cases")
+    public void params(
+        Function<CategoryDb, DefinedFuncCB> factoryCall,
+        Function<CategoryDb, List<TypeB>> expected) {
+      assertThat(execute(factoryCall).type().params())
+          .isEqualTo(execute(expected));
+    }
+
+    public static List<Arguments> params_cases() {
+      return asList(
+          args(f -> f.definedFunc(f.funcT(list(), f.int_())), f -> f.tuple()),
+          args(f -> f.definedFunc(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
+          args(f -> f.definedFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
+      );
+    }
+  }
+
+  @Nested
+  class _native_func {
+    @ParameterizedTest
+    @MethodSource("result_cases")
+    public void result(
+        Function<CategoryDb, NatFuncCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().res())
           .isEqualTo(execute(expected));
@@ -333,6 +375,13 @@ public class CategoryBTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("types")
+    public void closurize(TypeB typeB) {
+      assertThat(closurizeCB(funcTB(typeB)).evalT())
+          .isEqualTo(funcTB(typeB));
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
     public void order(TypeB type) {
       var array = arrayTB(type);
       assertThat(orderCB(type).evalT())
@@ -367,8 +416,7 @@ public class CategoryBTest extends TestContext {
 
   @Test
   public void equals_and_hashcode() {
-    TestContext CONTEXT = new TestContext();
-    EqualsTester tester = new EqualsTester();
+    var tester = new EqualsTester();
     tester.addEqualityGroup(blobTB(), blobTB());
     tester.addEqualityGroup(boolTB(), boolTB());
     tester.addEqualityGroup(

@@ -20,6 +20,8 @@ import org.smoothbuild.bytecode.expr.inst.BlobB;
 import org.smoothbuild.bytecode.expr.inst.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.inst.BoolB;
 import org.smoothbuild.bytecode.expr.inst.ClosureB;
+import org.smoothbuild.bytecode.expr.inst.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.inst.FuncB;
 import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.bytecode.expr.inst.IntB;
 import org.smoothbuild.bytecode.expr.inst.MapFuncB;
@@ -98,8 +100,8 @@ public class BytecodeF {
     return bytecodeDb.call(func, args);
   }
 
-  public ClosurizeB closurize(FuncTB funcTB, ExprB body) {
-    return bytecodeDb.closurize(funcTB, body);
+  public ClosurizeB closurize(DefinedFuncB definedFuncB) {
+    return bytecodeDb.closurize(definedFuncB);
   }
 
   public CombineB combine(ImmutableList<ExprB> items) {
@@ -110,13 +112,12 @@ public class BytecodeF {
     return bytecodeDb.tuple(list(content, path));
   }
 
-  public ClosureB defFunc(FuncTB type, ExprB body) {
-    var environment = bytecodeDb.combine(list());
-    return closure(type, environment, body);
+  public DefinedFuncB definedFunc(FuncTB type, ExprB body) {
+    return bytecodeDb.definedFunc(type, body);
   }
 
-  public ClosureB closure(FuncTB type, CombineB environment, ExprB body) {
-    return bytecodeDb.closure(type, environment, body);
+  public ClosureB closure(CombineB environment, DefinedFuncB func) {
+    return bytecodeDb.closure(environment, func);
   }
 
   public IfFuncB ifFunc(TypeB t) {
@@ -132,7 +133,7 @@ public class BytecodeF {
   }
 
   public NatFuncB natFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return bytecodeDb.natFunc(funcTB, jar, classBinaryName, isPure);
+    return bytecodeDb.nativeFunc(funcTB, jar, classBinaryName, isPure);
   }
 
   public PickB pick(ExprB array, ExprB index) {

@@ -10,8 +10,9 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public sealed interface FuncS extends EvaluableS
-    permits AnonFuncS, NamedFuncS {
+public sealed interface FuncS
+    extends EvaluableS
+    permits ExprFuncS, NamedFuncS {
   public NList<ItemS> params();
 
   @Override
