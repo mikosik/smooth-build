@@ -1,4 +1,4 @@
-package org.smoothbuild.bytecode.expr.oper;
+package org.smoothbuild.bytecode.expr.inst;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprBTestCase;
-import org.smoothbuild.bytecode.expr.inst.IfFuncB;
 import org.smoothbuild.testing.TestContext;
 
 public class IfFuncBTest extends TestContext {
