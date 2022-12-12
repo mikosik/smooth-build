@@ -317,6 +317,7 @@ public class ExprSLoadingTest extends TestContext {
                 callS(1, paramRefS(funcTS(blobTS(), stringTS()), "f"), blobS(1, 9))));
       }
     }
+
     @Nested
     class _poly_ref {
       @Test

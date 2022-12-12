@@ -7,7 +7,7 @@ import org.smoothbuild.bytecode.expr.BytecodeDb;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.MerkleRoot;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
-import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.bytecode.type.oper.ClosurizeCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 
@@ -44,8 +44,8 @@ public final class ClosurizeB extends OperB {
     return bytecodeDb.closure(environmentB, func());
   }
 
-  private DefinedFuncB func() {
-    return readDataAsExpr(DefinedFuncB.class);
+  private ExprFuncB func() {
+    return readDataAsExpr(ExprFuncB.class);
   }
 
   @Override

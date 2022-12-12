@@ -11,25 +11,25 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprBTestCase;
 import org.smoothbuild.testing.TestContext;
 
-public class DefinedFuncBTest extends TestContext {
+public class ExprFuncBTest extends TestContext {
   @Test
   public void creating_func_with_body_evaluation_type_not_equal_result_type_causes_exception() {
     var funcT = funcTB(stringTB(), intTB());
-    assertCall(() -> defFuncB(funcT, boolB(true)))
+    assertCall(() -> exprFuncB(funcT, boolB(true)))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_body_to_null_throws_exception() {
     var funcT = funcTB(boolTB(), intTB());
-    assertCall(() -> defFuncB(funcT, null))
+    assertCall(() -> exprFuncB(funcT, null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void type_of_func_is_func_type() {
     var funcT = funcTB(stringTB(), intTB());
-    assertThat(defFuncB(funcT, intB()).evalT())
+    assertThat(exprFuncB(funcT, intB()).evalT())
         .isEqualTo(funcT);
   }
 
@@ -37,28 +37,28 @@ public class DefinedFuncBTest extends TestContext {
   public void body_contains_object_passed_during_construction() {
     var funcT = funcTB(boolTB(), intTB());
     var body = intB(33);
-    var defFuncB = defFuncB(funcT, body);
-    assertThat(defFuncB.body())
+    var exprFuncB = exprFuncB(funcT, body);
+    assertThat(exprFuncB.body())
         .isEqualTo(body);
   }
 
   @Nested
-  class _equals_hash_hashcode extends ExprBTestCase<DefinedFuncB> {
+  class _equals_hash_hashcode extends ExprBTestCase<ExprFuncB> {
     @Override
-    protected List<DefinedFuncB> equalExprs() {
+    protected List<ExprFuncB> equalExprs() {
       return list(
-          defFuncB(funcTB(stringTB(), intTB()), intB(7)),
-          defFuncB(funcTB(stringTB(), intTB()), intB(7))
+          exprFuncB(funcTB(stringTB(), intTB()), intB(7)),
+          exprFuncB(funcTB(stringTB(), intTB()), intB(7))
       );
     }
 
     @Override
-    protected List<DefinedFuncB> nonEqualExprs() {
+    protected List<ExprFuncB> nonEqualExprs() {
       return list(
-          defFuncB(funcTB(stringTB(), intTB()), intB(7)),
-          defFuncB(funcTB(stringTB(), intTB()), intB(0)),
-          defFuncB(funcTB(blobTB(), intTB()), intB(7)),
-          defFuncB(funcTB(stringTB(), boolTB()), boolB(true))
+          exprFuncB(funcTB(stringTB(), intTB()), intB(7)),
+          exprFuncB(funcTB(stringTB(), intTB()), intB(0)),
+          exprFuncB(funcTB(blobTB(), intTB()), intB(7)),
+          exprFuncB(funcTB(stringTB(), boolTB()), boolB(true))
       );
     }
   }
@@ -66,7 +66,7 @@ public class DefinedFuncBTest extends TestContext {
   @Test
   public void func_can_be_read_by_hash() {
     var funcT = funcTB(stringTB(), intTB());
-    var func = defFuncB(funcT, intB());
+    var func = exprFuncB(funcT, intB());
     assertThat(bytecodeDbOther().get(func.hash()))
         .isEqualTo(func);
   }
@@ -74,8 +74,8 @@ public class DefinedFuncBTest extends TestContext {
   @Test
   public void funcs_read_by_hash_have_equal_bodies() {
     var funcT = funcTB(stringTB(), intTB());
-    var func = defFuncB(funcT, intB());
-    var funcRead = (DefinedFuncB) bytecodeDbOther().get(func.hash());
+    var func = exprFuncB(funcT, intB());
+    var funcRead = (ExprFuncB) bytecodeDbOther().get(func.hash());
     assertThat(func.body())
         .isEqualTo(funcRead.body());
   }
@@ -83,8 +83,8 @@ public class DefinedFuncBTest extends TestContext {
   @Test
   public void to_string() {
     var funcT = funcTB(stringTB(), intTB());
-    var func = defFuncB(funcT, intB());
+    var func = exprFuncB(funcT, intB());
     assertThat(func.toString())
-        .isEqualTo("DefinedFunc((String)->Int)@" + func.hash());
+        .isEqualTo("ExprFunc((String)->Int)@" + func.hash());
   }
 }

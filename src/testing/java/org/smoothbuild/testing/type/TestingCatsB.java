@@ -90,10 +90,10 @@ public class TestingCatsB {
         CONTEXT.closureCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
         CONTEXT.closureCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
         CONTEXT.closureCB(CONTEXT.stringTB()),
-        CONTEXT.definedFuncCB(CONTEXT.blobTB()),
-        CONTEXT.definedFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.definedFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.definedFuncCB(CONTEXT.stringTB())
+        CONTEXT.exprFuncCB(CONTEXT.blobTB()),
+        CONTEXT.exprFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
+        CONTEXT.exprFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
+        CONTEXT.exprFuncCB(CONTEXT.stringTB())
     );
 
     return concat(valueCs, exprCs);

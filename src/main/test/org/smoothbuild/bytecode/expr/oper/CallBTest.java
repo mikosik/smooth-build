@@ -21,19 +21,19 @@ public class CallBTest extends TestContext {
 
   @Test
   public void creating_call_with_too_few_args_causes_exception() {
-    assertCall(() -> callB(defFuncB(list(stringTB()), intB())))
+    assertCall(() -> callB(exprFuncB(list(stringTB()), intB())))
         .throwsException(argsNotMatchingParamsException("", "String"));
   }
 
   @Test
   public void creating_call_with_too_many_args_causes_exception() {
-    assertCall(() -> callB(defFuncB(list(stringTB()), intB()), intB(), intB()))
+    assertCall(() -> callB(exprFuncB(list(stringTB()), intB()), intB(), intB()))
         .throwsException(argsNotMatchingParamsException("Int,Int", "String"));
   }
 
   @Test
   public void creating_call_with_arg_not_matching_param_type_causes_exception() {
-    assertCall(() -> callB(defFuncB(list(stringTB()), intB()), intB(3)))
+    assertCall(() -> callB(exprFuncB(list(stringTB()), intB()), intB(3)))
         .throwsException(argsNotMatchingParamsException("Int", "String"));
   }
 
@@ -45,7 +45,7 @@ public class CallBTest extends TestContext {
 
   @Test
   public void dataSeq_returns_data() {
-    var func = defFuncB(list(stringTB()), intB());
+    var func = exprFuncB(list(stringTB()), intB());
     var args = stringB();
     assertThat(callB(func, args).dataSeq())
         .isEqualTo(list(func, combineB(args)));
@@ -56,31 +56,31 @@ public class CallBTest extends TestContext {
     @Override
     protected List<CallB> equalExprs() {
       return list(
-          callB(defFuncB(list(blobTB()), intB()), blobB()),
-          callB(defFuncB(list(blobTB()), intB()), blobB())
+          callB(exprFuncB(list(blobTB()), intB()), blobB()),
+          callB(exprFuncB(list(blobTB()), intB()), blobB())
       );
     }
 
     @Override
     protected List<CallB> nonEqualExprs() {
       return list(
-          callB(defFuncB(list(blobTB()), intB()), blobB()),
-          callB(defFuncB(list(stringTB()), intB()), stringB()),
-          callB(defFuncB(list(blobTB()), stringB()), blobB())
+          callB(exprFuncB(list(blobTB()), intB()), blobB()),
+          callB(exprFuncB(list(stringTB()), intB()), stringB()),
+          callB(exprFuncB(list(blobTB()), stringB()), blobB())
       );
     }
   }
 
   @Test
   public void call_can_be_read_back_by_hash() {
-    var call = callB(defFuncB(list(stringTB()), intB()), stringB());
+    var call = callB(exprFuncB(list(stringTB()), intB()), stringB());
     assertThat(bytecodeDbOther().get(call.hash()))
         .isEqualTo(call);
   }
 
   @Test
   public void call_read_back_by_hash_has_same_data() {
-    var func = defFuncB(list(stringTB()), intB());
+    var func = exprFuncB(list(stringTB()), intB());
     var call = callB(func, stringB());
     assertThat(((CallB) bytecodeDbOther().get(call.hash())).dataSeq())
         .isEqualTo(list(func, combineB(stringB())));
@@ -88,7 +88,7 @@ public class CallBTest extends TestContext {
 
   @Test
   public void to_string() {
-    var func = defFuncB(list(stringTB()), intB());
+    var func = exprFuncB(list(stringTB()), intB());
     var call = callB(func, stringB());
     assertThat(call.toString())
         .isEqualTo("CALL:Int(???)@" + call.hash());

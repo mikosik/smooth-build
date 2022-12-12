@@ -7,7 +7,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.CallKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ClosureKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ClosurizeKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.CombineKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.DefinedFuncKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.ExprFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IfFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IntKindB;
@@ -36,7 +36,7 @@ public class CategoryKinds {
   public static final CategoryKindB ARRAY = new ArrayKindB();
   public static final CategoryKindB TUPLE = new TupleKindB();
   public static final ClosureKindB CLOSURE = new ClosureKindB();
-  public static final DefinedFuncKindB DEFINED_FUNC = new DefinedFuncKindB();
+  public static final ExprFuncKindB EXPR_FUNC = new ExprFuncKindB();
   public static final IfFuncKindB IF_FUNC = new IfFuncKindB();
   public static final MapFuncKindB MAP_FUNC = new MapFuncKindB();
   public static final NativeFuncKindB NATIVE_FUNC = new NativeFuncKindB();

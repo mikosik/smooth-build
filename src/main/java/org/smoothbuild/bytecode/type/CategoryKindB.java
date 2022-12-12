@@ -7,7 +7,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
-import static org.smoothbuild.bytecode.type.CategoryKinds.DEFINED_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.EXPR_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -34,7 +34,7 @@ import org.smoothbuild.bytecode.expr.value.ArrayB;
 import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.bytecode.expr.value.BoolB;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
-import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.bytecode.expr.value.FuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
@@ -59,7 +59,7 @@ import org.smoothbuild.bytecode.type.oper.RefCB;
 import org.smoothbuild.bytecode.type.oper.SelectCB;
 import org.smoothbuild.bytecode.type.value.ArrayTB;
 import org.smoothbuild.bytecode.type.value.ClosureCB;
-import org.smoothbuild.bytecode.type.value.DefinedFuncCB;
+import org.smoothbuild.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.bytecode.type.value.FuncCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.IfFuncCB;
@@ -160,9 +160,9 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class DefinedFuncKindB extends AbstFuncKindB<DefinedFuncCB> {
-    DefinedFuncKindB() {
-      super("DEFINED_FUNC", (byte) 18, DefinedFuncB.class, DefinedFuncCB::new);
+  public static final class ExprFuncKindB extends AbstFuncKindB<ExprFuncCB> {
+    ExprFuncKindB() {
+      super("EXPR_FUNC", (byte) 18, ExprFuncB.class, ExprFuncCB::new);
     }
   }
 
@@ -268,7 +268,7 @@ public sealed abstract class CategoryKindB
       case 15 -> MAP_FUNC;
       case 16 -> FUNC;
       case 17 -> CLOSURIZE;
-      case 18 -> DEFINED_FUNC;
+      case 18 -> EXPR_FUNC;
       default -> null;
     };
   }

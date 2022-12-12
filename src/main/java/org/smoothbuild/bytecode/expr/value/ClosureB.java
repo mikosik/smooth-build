@@ -26,8 +26,8 @@ public final class ClosureB extends FuncB {
     return readDataSeqElem(ENVIRONMENT_IDX, DATA_SEQ_SIZE, CombineB.class);
   }
 
-  public DefinedFuncB func() {
-    var func = readDataSeqElem(BODY_IDX, DATA_SEQ_SIZE, DefinedFuncB.class);
+  public ExprFuncB func() {
+    var func = readDataSeqElem(BODY_IDX, DATA_SEQ_SIZE, ExprFuncB.class);
     var evalT = type();
     var funcT = func.type();
     if (!evalT.equals(funcT)) {

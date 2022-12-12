@@ -27,7 +27,7 @@ import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.value.BoolB;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
-import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
@@ -99,8 +99,8 @@ public class BytecodeF {
     return bytecodeDb.call(func, args);
   }
 
-  public ClosurizeB closurize(DefinedFuncB definedFuncB) {
-    return bytecodeDb.closurize(definedFuncB);
+  public ClosurizeB closurize(ExprFuncB exprFuncB) {
+    return bytecodeDb.closurize(exprFuncB);
   }
 
   public CombineB combine(ImmutableList<ExprB> items) {
@@ -111,11 +111,11 @@ public class BytecodeF {
     return bytecodeDb.tuple(list(content, path));
   }
 
-  public DefinedFuncB definedFunc(FuncTB type, ExprB body) {
-    return bytecodeDb.definedFunc(type, body);
+  public ExprFuncB exprFunc(FuncTB type, ExprB body) {
+    return bytecodeDb.exprFunc(type, body);
   }
 
-  public ClosureB closure(CombineB environment, DefinedFuncB func) {
+  public ClosureB closure(CombineB environment, ExprFuncB func) {
     return bytecodeDb.closure(environment, func);
   }
 

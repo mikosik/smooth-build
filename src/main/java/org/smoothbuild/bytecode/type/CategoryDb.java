@@ -11,7 +11,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
-import static org.smoothbuild.bytecode.type.CategoryKinds.DEFINED_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.EXPR_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -43,7 +43,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.BaseKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ClosureKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.ClosurizeKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.DefinedFuncKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.ExprFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IfFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.MapFuncKindB;
@@ -67,7 +67,7 @@ import org.smoothbuild.bytecode.type.value.ArrayTB;
 import org.smoothbuild.bytecode.type.value.BlobTB;
 import org.smoothbuild.bytecode.type.value.BoolTB;
 import org.smoothbuild.bytecode.type.value.ClosureCB;
-import org.smoothbuild.bytecode.type.value.DefinedFuncCB;
+import org.smoothbuild.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.bytecode.type.value.FuncCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.IfFuncCB;
@@ -136,12 +136,12 @@ public class CategoryDb {
     return funcC(CLOSURE, funcTB);
   }
 
-  public DefinedFuncCB definedFunc(ImmutableList<TypeB> params, TypeB result) {
-    return funcC(DEFINED_FUNC, params, result);
+  public ExprFuncCB exprFunc(ImmutableList<TypeB> params, TypeB result) {
+    return funcC(EXPR_FUNC, params, result);
   }
 
-  public DefinedFuncCB definedFunc(FuncTB funcTB) {
-    return funcC(DEFINED_FUNC, funcTB);
+  public ExprFuncCB exprFunc(FuncTB funcTB) {
+    return funcC(EXPR_FUNC, funcTB);
   }
 
   private <T extends FuncCB> T funcC(
@@ -240,7 +240,7 @@ public class CategoryDb {
       case BaseKindB        base        -> handleBaseT(hash, rootSeq, kind);
       case ClosurizeKindB   closurizeB  -> readClosurizeCat(hash, rootSeq, closurizeB);
       case ClosureKindB     closure     -> readFuncCat(hash, rootSeq, closure);
-      case DefinedFuncKindB definedFunc -> readFuncCat(hash, rootSeq, definedFunc);
+      case ExprFuncKindB    exprFunc    -> readFuncCat(hash, rootSeq, exprFunc);
       case FuncKindB        func        -> readFuncT(hash, rootSeq);
       case IfFuncKindB      ifFunc      -> readIfFuncCat(hash, rootSeq, ifFunc);
       case MapFuncKindB     mapFunc     -> readMapFuncCat(hash, rootSeq, mapFunc);

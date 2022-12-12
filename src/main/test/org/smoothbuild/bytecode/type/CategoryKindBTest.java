@@ -8,7 +8,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.bytecode.type.CategoryKinds.COMBINE;
-import static org.smoothbuild.bytecode.type.CategoryKinds.DEFINED_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.EXPR_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
@@ -73,7 +73,7 @@ public class CategoryKindBTest {
         arguments(15, MAP_FUNC),
         arguments(16, FUNC),
         arguments(17, CLOSURIZE),
-        arguments(18, DEFINED_FUNC)
+        arguments(18, EXPR_FUNC)
     );
   }
 }

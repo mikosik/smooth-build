@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.type.value.FuncCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 
 public abstract sealed class FuncB extends ValueB
-    permits ClosureB, DefinedFuncB, IfFuncB, MapFuncB, NativeFuncB {
+    permits ClosureB, ExprFuncB, IfFuncB, MapFuncB, NativeFuncB {
   public FuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
     checkArgument(merkleRoot.category() instanceof FuncCB);

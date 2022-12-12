@@ -26,7 +26,7 @@ import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.value.BoolB;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
-import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
@@ -43,7 +43,7 @@ import org.smoothbuild.bytecode.type.CategoryDb;
 import org.smoothbuild.bytecode.type.exc.CategoryDbExc;
 import org.smoothbuild.bytecode.type.value.ArrayTB;
 import org.smoothbuild.bytecode.type.value.ClosureCB;
-import org.smoothbuild.bytecode.type.value.DefinedFuncCB;
+import org.smoothbuild.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.IntTB;
 import org.smoothbuild.bytecode.type.value.NativeFuncCB;
@@ -78,15 +78,15 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newBool(value));
   }
 
-  public ClosureB closure(CombineB environment, DefinedFuncB func) {
+  public ClosureB closure(CombineB environment, ExprFuncB func) {
     var cat = categoryDb.closure(func.type());
     return wrapHashedDbExcAsBytecodeDbExc(() -> newClosure(cat, environment, func));
   }
 
-  public DefinedFuncB definedFunc(FuncTB type, ExprB body) {
+  public ExprFuncB exprFunc(FuncTB type, ExprB body) {
     validateBodyEvalT(type, body);
-    var cat = categoryDb.definedFunc(type);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newDefinedFunc(cat, body));
+    var cat = categoryDb.exprFunc(type);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newExprFunc(cat, body));
   }
 
   public NativeFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
@@ -115,8 +115,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(funcTB, func, args));
   }
 
-  public ClosurizeB closurize(DefinedFuncB definedFunc) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(definedFunc));
+  public ClosurizeB closurize(ExprFuncB exprFuncB) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(exprFuncB));
   }
 
   public CombineB combine(ImmutableList<ExprB> items) {
@@ -252,14 +252,14 @@ public class BytecodeDb {
     return categoryDb.bool().newExpr(root, this);
   }
 
-  private ClosureB newClosure(ClosureCB type, ExprB environment, DefinedFuncB funcB)
+  private ClosureB newClosure(ClosureCB type, ExprB environment, ExprFuncB funcB)
       throws HashedDbExc {
     var data = writeClosureData(environment, funcB);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
-  private DefinedFuncB newDefinedFunc(DefinedFuncCB type, ExprB body) throws HashedDbExc {
+  private ExprFuncB newExprFunc(ExprFuncCB type, ExprB body) throws HashedDbExc {
     var dataHash = body.hash();
     var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
@@ -301,9 +301,9 @@ public class BytecodeDb {
     return callCB.newExpr(root, this);
   }
 
-  private ClosurizeB newClosurize(DefinedFuncB definedFunc) throws HashedDbExc {
-    var closurizeCB = categoryDb.closurize(definedFunc.type());
-    var dataHash = definedFunc.hash();
+  private ClosurizeB newClosurize(ExprFuncB exprFuncB) throws HashedDbExc {
+    var closurizeCB = categoryDb.closurize(exprFuncB.type());
+    var dataHash = exprFuncB.hash();
     var root = newRoot(closurizeCB, dataHash);
     return closurizeCB.newExpr(root, this);
   }
@@ -431,7 +431,7 @@ public class BytecodeDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeClosureData(ExprB environment, DefinedFuncB funcB) throws HashedDbExc {
+  private Hash writeClosureData(ExprB environment, ExprFuncB funcB) throws HashedDbExc {
     return hashedDb.writeSeq(environment.hash(), funcB.hash());
   }
 

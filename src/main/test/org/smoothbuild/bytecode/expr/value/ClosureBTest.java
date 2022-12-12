@@ -41,7 +41,7 @@ public class ClosureBTest extends TestContext {
 
   @Test
   public void closure_contains_object_passed_during_construction() {
-    var func = defFuncB(intB(33));
+    var func = exprFuncB(intB(33));
     var closureB = closureB(combineB(intB()), func);
     assertThat(closureB.func())
         .isEqualTo(func);
@@ -52,18 +52,18 @@ public class ClosureBTest extends TestContext {
     @Override
     protected List<ClosureB> equalExprs() {
       return list(
-          closureB(combineB(stringB("a")), defFuncB(list(intTB()), intB(7))),
-          closureB(combineB(stringB("a")), defFuncB(list(intTB()), intB(7)))
+          closureB(combineB(stringB("a")), exprFuncB(list(intTB()), intB(7))),
+          closureB(combineB(stringB("a")), exprFuncB(list(intTB()), intB(7)))
       );
     }
 
     @Override
     protected List<ClosureB> nonEqualExprs() {
       return list(
-          closureB(combineB(), defFuncB(list(), intB(7))),
-          closureB(combineB(), defFuncB(list(), intB(17))),
-          closureB(combineB(), defFuncB(list(intTB()), intB(7))),
-          closureB(combineB(intB(7)), defFuncB(list(), intB(7)))
+          closureB(combineB(), exprFuncB(list(), intB(7))),
+          closureB(combineB(), exprFuncB(list(), intB(17))),
+          closureB(combineB(), exprFuncB(list(intTB()), intB(7))),
+          closureB(combineB(intB(7)), exprFuncB(list(), intB(7)))
       );
     }
   }

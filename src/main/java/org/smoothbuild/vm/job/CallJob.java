@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.expr.oper.CombineB;
 import org.smoothbuild.bytecode.expr.value.ArrayB;
 import org.smoothbuild.bytecode.expr.value.BoolB;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
-import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.bytecode.expr.value.FuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
@@ -50,7 +50,7 @@ public class CallJob extends Job {
     switch ((FuncB) funcB) {
       // @formatter:off
       case ClosureB     closureB     -> handleClosure(closureB, resConsumer);
-      case DefinedFuncB definedFuncB -> handleDefinedFunc(definedFuncB, resConsumer);
+      case ExprFuncB    exprFuncB    -> handleExprFunc(exprFuncB, resConsumer);
       case IfFuncB      ifFuncB      -> handleIfFunc(resConsumer);
       case MapFuncB     mapFuncB     -> handleMapFunc(resConsumer);
       case NativeFuncB  nativeFuncB  -> handleNativeFunc(callB, nativeFuncB, resConsumer);
@@ -66,9 +66,9 @@ public class CallJob extends Job {
     handleFunc(closureBodyEnvironment, closureB, closureB.func().body(), resultConsumer);
   }
 
-  private void handleDefinedFunc(DefinedFuncB definedFuncB, Consumer<ValueB> resultConsumer) {
+  private void handleExprFunc(ExprFuncB exprFuncB, Consumer<ValueB> resultConsumer) {
     var funcBodyEnvironment = map(args(), context()::jobFor);
-    handleFunc(funcBodyEnvironment, definedFuncB, definedFuncB.body(), resultConsumer);
+    handleFunc(funcBodyEnvironment, exprFuncB, exprFuncB.body(), resultConsumer);
   }
 
   private void handleFunc(

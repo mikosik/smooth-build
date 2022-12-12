@@ -27,7 +27,7 @@ import org.smoothbuild.bytecode.expr.oper.OrderB;
 import org.smoothbuild.bytecode.expr.oper.RefB;
 import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.value.BlobB;
-import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
@@ -210,8 +210,8 @@ public class SbTranslator {
     };
   }
 
-  private DefinedFuncB translateExprFunc(ExprFuncS exprFuncS) {
-    return bytecodeF.definedFunc(
+  private ExprFuncB translateExprFunc(ExprFuncS exprFuncS) {
+    return bytecodeF.exprFunc(
         translateT(exprFuncS.schema().type()),
         translateExpr(exprFuncS.body()));
   }
@@ -225,11 +225,11 @@ public class SbTranslator {
     return bytecodeF.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private DefinedFuncB translateConstructor(ConstructorS constructorS) {
+  private ExprFuncB translateConstructor(ConstructorS constructorS) {
     var funcTB = translateT(constructorS.schema().type());
     var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
     saveLoc(bodyB, constructorS);
-    return bytecodeF.definedFunc(funcTB, bodyB);
+    return bytecodeF.exprFunc(funcTB, bodyB);
   }
 
   private ImmutableList<ExprB> createRefsB(TupleTB paramTs) {
@@ -293,7 +293,7 @@ public class SbTranslator {
 
   private ExprB translateDefValue(Loc refLoc, DefValueS defValueS) {
     var funcTB = bytecodeF.funcT(list(), translateT(defValueS.schema().type()));
-    var funcB = bytecodeF.definedFunc(funcTB, translateExpr(defValueS.body()));
+    var funcB = bytecodeF.exprFunc(funcTB, translateExpr(defValueS.body()));
     saveNal(funcB, defValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
     saveLoc(call, refLoc);

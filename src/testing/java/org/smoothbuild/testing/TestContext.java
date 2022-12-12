@@ -50,7 +50,7 @@ import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.bytecode.expr.value.BoolB;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
-import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
@@ -72,7 +72,7 @@ import org.smoothbuild.bytecode.type.value.ArrayTB;
 import org.smoothbuild.bytecode.type.value.BlobTB;
 import org.smoothbuild.bytecode.type.value.BoolTB;
 import org.smoothbuild.bytecode.type.value.ClosureCB;
-import org.smoothbuild.bytecode.type.value.DefinedFuncCB;
+import org.smoothbuild.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.IfFuncCB;
 import org.smoothbuild.bytecode.type.value.IntTB;
@@ -453,20 +453,20 @@ public class TestContext {
     return categoryDb().closurize(evalT);
   }
 
-  public DefinedFuncCB definedFuncCB() {
-    return definedFuncCB(blobTB(), stringTB(), intTB());
+  public ExprFuncCB exprFuncCB() {
+    return exprFuncCB(blobTB(), stringTB(), intTB());
   }
 
-  public DefinedFuncCB definedFuncCB(TypeB resT) {
-    return categoryDb().definedFunc(funcTB(resT));
+  public ExprFuncCB exprFuncCB(TypeB resT) {
+    return categoryDb().exprFunc(funcTB(resT));
   }
 
-  public DefinedFuncCB definedFuncCB(TypeB param, TypeB resT) {
-    return categoryDb().definedFunc(funcTB(param, resT));
+  public ExprFuncCB exprFuncCB(TypeB param, TypeB resT) {
+    return categoryDb().exprFunc(funcTB(param, resT));
   }
 
-  public DefinedFuncCB definedFuncCB(TypeB param1, TypeB param2, TypeB resT) {
-    return categoryDb().definedFunc(funcTB(param1, param2, resT));
+  public ExprFuncCB exprFuncCB(TypeB param1, TypeB param2, TypeB resT) {
+    return categoryDb().exprFunc(funcTB(param1, param2, resT));
   }
 
   public FuncTB funcTB() {
@@ -682,21 +682,21 @@ public class TestContext {
     return bytecodeF().file(blob, string);
   }
 
-  public DefinedFuncB defFuncB() {
-    return defFuncB(intB());
+  public ExprFuncB exprFuncB() {
+    return exprFuncB(intB());
   }
 
-  public DefinedFuncB defFuncB(ExprB body) {
-    return defFuncB(list(), body);
+  public ExprFuncB exprFuncB(ExprB body) {
+    return exprFuncB(list(), body);
   }
 
-  public DefinedFuncB defFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
+  public ExprFuncB exprFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
     var funcTB = funcTB(paramTs, body.evalT());
-    return defFuncB(funcTB, body);
+    return exprFuncB(funcTB, body);
   }
 
-  public DefinedFuncB defFuncB(FuncTB type, ExprB body) {
-    return bytecodeDb().definedFunc(type, body);
+  public ExprFuncB exprFuncB(FuncTB type, ExprB body) {
+    return bytecodeDb().exprFunc(type, body);
   }
 
   public ClosureB closureB(ImmutableList<TypeB> paramTs, ExprB body) {
@@ -704,31 +704,31 @@ public class TestContext {
   }
 
   public ClosureB closureB(CombineB environment, ImmutableList<TypeB> paramTs, ExprB body) {
-    return closureB(environment, defFuncB(paramTs, body));
+    return closureB(environment, exprFuncB(paramTs, body));
   }
 
   public ClosureB closureB(ExprB body) {
     return closureB(combineB(), body);
   }
 
-  public ClosureB closureB(DefinedFuncB func) {
+  public ClosureB closureB(ExprFuncB func) {
     return closureB(combineB(), func);
   }
 
   public ClosureB closureB(CombineB environment, ExprB body) {
-    return closureB(environment, defFuncB(body));
+    return closureB(environment, exprFuncB(body));
   }
 
-  public ClosureB closureB(CombineB environment, DefinedFuncB func) {
+  public ClosureB closureB(CombineB environment, ExprFuncB func) {
     return bytecodeDb().closure(environment, func);
   }
 
-  public DefinedFuncB idFuncB() {
-    return defFuncB(list(intTB()), refB(intTB(), 0));
+  public ExprFuncB idFuncB() {
+    return exprFuncB(list(intTB()), refB(intTB(), 0));
   }
 
-  public DefinedFuncB returnAbcFuncB() {
-    return defFuncB(stringB("abc"));
+  public ExprFuncB returnAbcFuncB() {
+    return exprFuncB(stringB("abc"));
   }
 
   public NativeFuncB returnAbcNativeFuncB() throws IOException {
@@ -866,7 +866,7 @@ public class TestContext {
   }
 
   public ClosurizeB closurizeB(ImmutableList<TypeB> paramTs, ExprB body) {
-    return bytecodeDb().closurize(defFuncB(paramTs, body));
+    return bytecodeDb().closurize(exprFuncB(paramTs, body));
   }
 
   public CombineB combineB(ExprB... items) {

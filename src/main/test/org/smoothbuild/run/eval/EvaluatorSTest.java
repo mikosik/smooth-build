@@ -226,7 +226,7 @@ public class EvaluatorSTest extends TestContext {
         public void constructor() throws EvaluatorExcS {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
           assertThat(evaluate(monoizeS(constructorS)))
-              .isEqualTo(defFuncB(list(intTB()), combineB(refB(intTB(), 0))));
+              .isEqualTo(exprFuncB(list(intTB()), combineB(refB(intTB(), 0))));
         }
       }
 
@@ -255,7 +255,7 @@ public class EvaluatorSTest extends TestContext {
         public void constructor() throws EvaluatorExcS {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
           assertThat(evaluate(monoizeS(constructorS)))
-              .isEqualTo(defFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(refB(intTB(), 0))));
+              .isEqualTo(exprFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(refB(intTB(), 0))));
         }
       }
     }

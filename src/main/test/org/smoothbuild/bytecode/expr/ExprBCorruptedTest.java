@@ -45,7 +45,7 @@ import org.smoothbuild.bytecode.expr.value.ArrayB;
 import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.bytecode.expr.value.BoolB;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
-import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
+import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
@@ -366,7 +366,7 @@ public class ExprBCorruptedTest extends TestContext {
        * in HashedDb.
        */
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = defFuncB(funcT, intB());
+      var func = exprFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
       var hash =
           hash(
@@ -389,7 +389,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = defFuncB(funcT, intB());
+      var func = exprFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(
           hash(func),
@@ -411,7 +411,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = defFuncB(funcT, intB());
+      var func = exprFuncB(funcT, intB());
       var dataHash = hash(
           hash(func)
       );
@@ -428,7 +428,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void data_is_seq_with_three_elems() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = defFuncB(funcT, intB());
+      var func = exprFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(
           hash(func),
@@ -466,7 +466,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void args_is_val_instead_of_combine() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = defFuncB(funcT, intB());
+      var func = exprFuncB(funcT, intB());
       var type = callCB(intTB());
       var hash =
           hash(
@@ -484,7 +484,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void args_component_evalT_is_not_combine_but_different_oper() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = defFuncB(funcT, intB());
+      var func = exprFuncB(funcT, intB());
       var type = callCB(intTB());
       var hash =
           hash(
@@ -502,7 +502,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void evalT_is_different_than_func_evalT_result() throws Exception {
       var funcT = funcTB(stringTB(), intTB());
-      var func = defFuncB(funcT, intB());
+      var func = exprFuncB(funcT, intB());
       var args = combineB(stringB());
       var type = callCB(stringTB());
       var hash =
@@ -521,7 +521,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void func_evalT_params_does_not_match_args_evalTs() throws Exception {
       var funcT = funcTB(stringTB(), boolTB(), intTB());
-      var func = defFuncB(funcT, intB());
+      var func = exprFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
       var spec = callCB(intTB());
       var hash =
@@ -709,24 +709,24 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
       var environment = combineB(blobB());
-      var defFuncCB = closureCB(intTB(), stringTB(), boolTB());
+      var closureCB = closureCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(
           hash(environment)
       );
       var hash =
           hash(
-              hash(defFuncCB),
+              hash(closureCB),
               dataHash
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).environment())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, defFuncCB, DATA_PATH, 2, 1));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, closureCB, DATA_PATH, 2, 1));
     }
 
     @Test
     public void data_is_seq_with_three_elems() throws Exception {
       var environment = combineB(blobB());
       var body = boolB(true);
-      var defFuncCB = closureCB(intTB(), stringTB(), boolTB());
+      var closureCB = closureCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(
           hash(environment),
           hash(body),
@@ -734,17 +734,17 @@ public class ExprBCorruptedTest extends TestContext {
       );
       var hash =
           hash(
-              hash(defFuncCB),
+              hash(closureCB),
               dataHash
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).environment())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, defFuncCB, DATA_PATH, 2, 3));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, closureCB, DATA_PATH, 2, 3));
     }
 
     @Test
     public void def_func_is_not_func_value_but_expr_evaluating_to_func() throws Exception {
       var environment = combineB(blobB());
-      var not_a_func_value_but_expr = callB(defFuncB(idFuncB()));
+      var not_a_func_value_but_expr = callB(exprFuncB(idFuncB()));
       var cat = closureCB(idFuncB().type());
       var hash =
           hash(
@@ -756,7 +756,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).func())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, cat, DATA_PATH, 1, DefinedFuncB.class, CallB.class));
+              hash, cat, DATA_PATH, 1, ExprFuncB.class, CallB.class));
     }
 
     @Test
@@ -774,7 +774,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).func())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, cat, DATA_PATH, 1, DefinedFuncB.class, CallB.class));
+              hash, cat, DATA_PATH, 1, ExprFuncB.class, CallB.class));
     }
 
     @Test
@@ -805,25 +805,25 @@ public class ExprBCorruptedTest extends TestContext {
        * Defined function in HashedDb.
        */
       var body = boolB(true);
-      var cat = definedFuncCB(intTB(), stringTB(), boolTB());
+      var cat = exprFuncCB(intTB(), stringTB(), boolTB());
       var hash =
           hash(
               hash(cat),
               hash(body)
           );
-      assertThat(((DefinedFuncB) bytecodeDb().get(hash)).body())
+      assertThat(((ExprFuncB) bytecodeDb().get(hash)).body())
           .isEqualTo(body);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(definedFuncCB());
+      obj_root_without_data_hash(exprFuncCB());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var bodyExpr = boolB(true);
-      var cat = definedFuncCB(intTB(), stringTB(), boolTB());
+      var cat = exprFuncCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           cat,
@@ -834,20 +834,20 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-          definedFuncCB(),
-          (Hash hash) -> ((DefinedFuncB) bytecodeDb().get(hash)).body());
+          exprFuncCB(),
+          (Hash hash) -> ((ExprFuncB) bytecodeDb().get(hash)).body());
     }
 
     @Test
     public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
       var body = intB(17);
-      var cat = definedFuncCB(intTB(), stringTB(), boolTB());
+      var cat = exprFuncCB(intTB(), stringTB(), boolTB());
       var hash =
           hash(
               hash(cat),
               hash(body)
           );
-      assertCall(() -> ((DefinedFuncB) bytecodeDb().get(hash)).body())
+      assertCall(() -> ((ExprFuncB) bytecodeDb().get(hash)).body())
           .throwsException(new DecodeExprWrongNodeTypeExc(
               hash, cat, DATA_PATH, boolTB(), intTB()));
     }
