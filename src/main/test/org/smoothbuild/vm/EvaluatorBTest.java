@@ -293,11 +293,12 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void nat_func() throws Exception {
-          var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
-          var call = callB(natFunc, intB(33));
+        public void native_func() throws Exception {
+          var nativeFuncB = nativeFuncB(
+              funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+          var call = callB(nativeFuncB, intB(33));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(eq(natFunc)))
+          when(nativeMethodLoader.load(eq(nativeFuncB)))
               .thenReturn(Try.result(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
@@ -305,29 +306,31 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void nat_func_passed_as_arg() throws NoSuchMethodException {
-          var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+        public void native_func_passed_as_arg() throws NoSuchMethodException {
+          var nativeFuncB = nativeFuncB(
+              funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(eq(natFunc)))
+          when(nativeMethodLoader.load(eq(nativeFuncB)))
               .thenReturn(Try.result(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
-          var natFuncT = natFunc.evalT();
-          var outerFunc = defFuncB(list(natFuncT), callB(refB(natFuncT, 0), intB(7)));
-          var call = callB(outerFunc, natFunc);
+          var nativeFuncT = nativeFuncB.evalT();
+          var outerFunc = defFuncB(list(nativeFuncT), callB(refB(nativeFuncT, 0), intB(7)));
+          var call = callB(outerFunc, nativeFuncB);
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(7));
         }
 
         @Test
-        public void nat_func_returned_from_call() throws NoSuchMethodException {
-          var natFunc = natFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+        public void native_func_returned_from_call() throws NoSuchMethodException {
+          var nativeFuncB = nativeFuncB(
+              funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
-          when(nativeMethodLoader.load(eq(natFunc)))
+          when(nativeMethodLoader.load(eq(nativeFuncB)))
               .thenReturn(Try.result(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
-          var outerFunc = defFuncB(natFunc);
+          var outerFunc = defFuncB(nativeFuncB);
           var call = callB(callB(outerFunc), intB(7));
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(7));
@@ -522,8 +525,8 @@ public class EvaluatorBTest extends TestContext {
 
       private CallB throwExceptionCall() throws IOException {
         var funcTB = funcTB(stringTB());
-        var natFuncB = natFuncB(funcTB, ThrowException.class);
-        return callB(natFuncB);
+        var nativeFuncB = nativeFuncB(funcTB, ThrowException.class);
+        return callB(nativeFuncB);
       }
 
       public static class ThrowException {
@@ -586,7 +589,7 @@ public class EvaluatorBTest extends TestContext {
             t.idFuncB(),
             t.ifFuncB(t.intTB()),
             t.mapFuncB(t.intTB(), t.blobTB()),
-            t.natFuncB(),
+            t.nativeFuncB(),
             t.intB(17),
             t.stringB("abc"),
             t.tupleB(t.intB(17))
@@ -595,7 +598,7 @@ public class EvaluatorBTest extends TestContext {
 
       @Test
       public void report_native_call_as_invoke_task() throws IOException {
-        var funcB = returnAbcNatFunc();
+        var funcB = returnAbcNativeFunc();
         var callB = callB(funcB);
         assertReport(
             callB,
@@ -743,9 +746,9 @@ public class EvaluatorBTest extends TestContext {
     }
 
     private CallB commandCall(String testName, String commands, boolean isPure) throws IOException {
-      var natFuncB = natFuncB(
+      var nativeFuncB = nativeFuncB(
           funcTB(stringTB(), stringTB(), stringTB()), ExecuteCommands.class, isPure);
-      return callB(natFuncB, stringB(testName), stringB(commands));
+      return callB(nativeFuncB, stringB(testName), stringB(commands));
     }
 
     public static class ExecuteCommands {

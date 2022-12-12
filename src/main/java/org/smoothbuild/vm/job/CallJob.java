@@ -17,7 +17,7 @@ import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.value.FuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.util.concurrent.Promise;
@@ -53,7 +53,7 @@ public class CallJob extends Job {
       case DefinedFuncB definedFuncB -> handleDefinedFunc(definedFuncB, resConsumer);
       case IfFuncB      ifFuncB      -> handleIfFunc(resConsumer);
       case MapFuncB     mapFuncB     -> handleMapFunc(resConsumer);
-      case NatFuncB     nativeFuncB  -> handleNatFunc(callB, nativeFuncB, resConsumer);
+      case NativeFuncB  nativeFuncB  -> handleNativeFunc(callB, nativeFuncB, resConsumer);
       // @formatter:on
     }
   }
@@ -125,11 +125,11 @@ public class CallJob extends Job {
     return context().bytecodeF();
   }
 
-  // handling NatFunc
+  // handling NativeFunc
 
-  private void handleNatFunc(CallB callB, NatFuncB natFuncB, Consumer<ValueB> res) {
-    var trace = trace(natFuncB);
-    var task = new InvokeTask(callB, natFuncB, context().nativeMethodLoader(), trace);
+  private void handleNativeFunc(CallB callB, NativeFuncB nativeFuncB, Consumer<ValueB> res) {
+    var trace = trace(nativeFuncB);
+    var task = new InvokeTask(callB, nativeFuncB, context().nativeMethodLoader(), trace);
     evaluateTransitively(task, args())
         .addConsumer(res);
   }

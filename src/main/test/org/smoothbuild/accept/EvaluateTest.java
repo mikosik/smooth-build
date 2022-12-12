@@ -330,7 +330,7 @@ public class EvaluateTest extends AcceptanceTestCase {
         }
 
         @Nested
-        class _in_nat_func {
+        class _in_native_func {
           @Test
           public void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
             createUserNativeJar(StringIdentity.class);

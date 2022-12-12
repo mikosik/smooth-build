@@ -30,7 +30,7 @@ import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
@@ -46,7 +46,7 @@ import org.smoothbuild.bytecode.type.value.ClosureCB;
 import org.smoothbuild.bytecode.type.value.DefinedFuncCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.IntTB;
-import org.smoothbuild.bytecode.type.value.NatFuncCB;
+import org.smoothbuild.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
 
@@ -89,10 +89,10 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newDefinedFunc(cat, body));
   }
 
-  public NatFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    var cat = categoryDb.natFunc(type);
+  public NativeFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+    var cat = categoryDb.nativeFunc(type);
     return wrapHashedDbExcAsBytecodeDbExc(
-        () -> newNatFunc(cat, jar, classBinaryName, isPure));
+        () -> newNativeFunc(cat, jar, classBinaryName, isPure));
   }
 
   public IntB int_(BigInteger value) {
@@ -271,9 +271,10 @@ public class BytecodeDb {
     return categoryDb.int_().newExpr(root, this);
   }
 
-  private NatFuncB newNatFunc(NatFuncCB type, BlobB jar, StringB classBinaryName, BoolB isPure)
+  private NativeFuncB newNativeFunc(
+      NativeFuncCB type, BlobB jar, StringB classBinaryName, BoolB isPure)
       throws HashedDbExc {
-    var data = writeNatFuncData(jar, classBinaryName, isPure);
+    var data = writeNativeFuncData(jar, classBinaryName, isPure);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
@@ -438,7 +439,7 @@ public class BytecodeDb {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeNatFuncData(BlobB jar, StringB classBinaryName, BoolB isPure)
+  private Hash writeNativeFuncData(BlobB jar, StringB classBinaryName, BoolB isPure)
       throws HashedDbExc {
     return hashedDb.writeSeq(jar.hash(), classBinaryName.hash(), isPure.hash());
   }

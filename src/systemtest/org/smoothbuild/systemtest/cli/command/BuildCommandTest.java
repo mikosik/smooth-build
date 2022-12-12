@@ -120,12 +120,12 @@ public class BuildCommandTest {
           """;
 
       @Test
-      public void shows_call_to_nat_func_when_enabled() throws IOException {
+      public void shows_call_to_native_func_when_enabled() throws IOException {
         testThatTaskHeaderShownWhenCallIsEnabled(NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }
 
       @Test
-      public void hides_call_to_nat_func_when_not_enabled() throws IOException {
+      public void hides_call_to_native_func_when_not_enabled() throws IOException {
         testThatTaskHeaderIsNotShownWhenCallIsDisabled(
             NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }

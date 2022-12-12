@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.load.MethodLoader;
@@ -23,7 +23,7 @@ import org.smoothbuild.vm.compute.Container;
 public class NativeMethodLoader {
   public static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
-  private final ConcurrentHashMap<NatFuncB, Try<Method>> cache;
+  private final ConcurrentHashMap<NativeFuncB, Try<Method>> cache;
 
   @Inject
   public NativeMethodLoader(MethodLoader methodLoader) {
@@ -31,13 +31,13 @@ public class NativeMethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Try<Method> load(NatFuncB natFuncB) {
-    return cache.computeIfAbsent(natFuncB, this::loadImpl);
+  public Try<Method> load(NativeFuncB nativeFuncB) {
+    return cache.computeIfAbsent(nativeFuncB, this::loadImpl);
   }
 
-  private Try<Method> loadImpl(NatFuncB natFuncB) {
-    var classBinaryName = natFuncB.classBinaryName().toJ();
-    var methodSpec = new MethodSpec(natFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
+  private Try<Method> loadImpl(NativeFuncB nativeFuncB) {
+    var classBinaryName = nativeFuncB.classBinaryName().toJ();
+    var methodSpec = new MethodSpec(nativeFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader.provide(methodSpec)
         .validate(this::validateMethodSignature)
         .mapError(e -> loadingError(classBinaryName, e));

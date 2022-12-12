@@ -15,7 +15,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
-import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.NATIVE_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
 import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
@@ -286,7 +286,7 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _nat_func extends _func_category_test_case {
+    class _native_func extends _func_category_test_case {
       @Test
       public void learning_test() throws Exception {
         /*
@@ -294,16 +294,16 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save func type in HashedDb.
          */
         var specHash = hash(
-            hash(NAT_FUNC.marker()),
+            hash(NATIVE_FUNC.marker()),
             hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
-            .isEqualTo(natFuncCB(stringTB(), boolTB(), intTB()).hash());
+            .isEqualTo(nativeFuncCB(stringTB(), boolTB(), intTB()).hash());
       }
 
       @Override
       protected CategoryKindB categoryKind() {
-        return NAT_FUNC;
+        return NATIVE_FUNC;
       }
     }
 

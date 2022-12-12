@@ -47,7 +47,7 @@ import org.smoothbuild.bytecode.expr.value.BoolB;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
 import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
@@ -935,14 +935,14 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   @Nested
-  class _nat_func {
+  class _native_func {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save
        * Method in HashedDb.
        */
-      var category = natFuncCB(intTB(), stringTB());
+      var category = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -956,11 +956,11 @@ public class ExprBCorruptedTest extends TestContext {
               )
           );
 
-      assertThat(((NatFuncB) bytecodeDb().get(hash)).jar())
+      assertThat(((NativeFuncB) bytecodeDb().get(hash)).jar())
           .isEqualTo(jar);
-      assertThat(((NatFuncB) bytecodeDb().get(hash)).classBinaryName())
+      assertThat(((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
           .isEqualTo(classBinaryName);
-      assertThat(((NatFuncB) bytecodeDb().get(hash)).isPure())
+      assertThat(((NativeFuncB) bytecodeDb().get(hash)).isPure())
           .isEqualTo(isPure);
     }
 
@@ -971,7 +971,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var category = natFuncCB(intTB(), stringTB());
+      var category = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -981,19 +981,19 @@ public class ExprBCorruptedTest extends TestContext {
           hash(isPure)
       );
       obj_root_with_two_data_hashes(category, dataHash,
-          (Hash hash) -> ((NatFuncB) bytecodeDb().get(hash)).classBinaryName());
+          (Hash hash) -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      var category = natFuncCB(intTB(), stringTB());
+      var category = nativeFuncCB(intTB(), stringTB());
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(category,
-          (Hash hash) -> ((NatFuncB) bytecodeDb().get(hash)).classBinaryName());
+          (Hash hash) -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName());
     }
 
     @Test
     public void data_is_seq_with_two_elem() throws Exception {
-      var category = natFuncCB(intTB(), stringTB());
+      var category = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var dataHash = hash(
@@ -1006,14 +1006,14 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
 
-      assertCall(() -> ((NatFuncB) bytecodeDb().get(hash)).classBinaryName())
+      assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
           .throwsException(new DecodeExprWrongSeqSizeExc(
               hash, category, DATA_PATH, 3, 2));
     }
 
     @Test
     public void data_is_seq_with_four_elems() throws Exception {
-      var type = natFuncCB(intTB(), stringTB());
+      var type = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -1029,14 +1029,14 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
 
-      assertCall(() -> ((NatFuncB) bytecodeDb().get(hash)).classBinaryName())
+      assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
           .throwsException(new DecodeExprWrongSeqSizeExc(
               hash, type, DATA_PATH, 3, 4));
     }
 
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
-      var category = natFuncCB(intTB(), stringTB());
+      var category = nativeFuncCB(intTB(), stringTB());
       var jar = stringB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -1049,14 +1049,14 @@ public class ExprBCorruptedTest extends TestContext {
                   hash(isPure)
               )
           );
-      assertCall(() -> ((NatFuncB) bytecodeDb().get(hash)).jar())
+      assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).jar())
           .throwsException(new DecodeExprWrongNodeClassExc(
               hash, category, DATA_PATH + "[0]", BlobB.class, StringB.class));
     }
 
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
-      var category = natFuncCB(intTB(), stringTB());
+      var category = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = intB();
       var isPure = boolB(true);
@@ -1070,14 +1070,14 @@ public class ExprBCorruptedTest extends TestContext {
               )
           );
 
-      assertCall(() -> ((NatFuncB) bytecodeDb().get(hash)).classBinaryName())
+      assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
           .throwsException(new DecodeExprWrongNodeClassExc(
               hash, category, DATA_PATH + "[1]", StringB.class, IntB.class));
     }
 
     @Test
     public void is_pure_is_not_bool_value() throws Exception {
-      var category = natFuncCB(intTB(), stringTB());
+      var category = nativeFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = stringB();
@@ -1091,7 +1091,7 @@ public class ExprBCorruptedTest extends TestContext {
               )
           );
 
-      assertCall(() -> ((NatFuncB) bytecodeDb().get(hash)).isPure())
+      assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).isPure())
           .throwsException(new DecodeExprWrongNodeClassExc(
               hash, category, DATA_PATH + "[2]", BoolB.class, StringB.class));
     }

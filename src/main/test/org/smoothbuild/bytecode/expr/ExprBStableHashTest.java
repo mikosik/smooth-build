@@ -162,11 +162,11 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
-  class _nat_func {
+  class _native_func {
     @Test
-    public void nat_func() {
+    public void native_func() {
       assertThat(
-          natFuncB(funcTB(boolTB(), intTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
+          nativeFuncB(funcTB(boolTB(), intTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
           .isEqualTo(Hash.decode("a2df7b97fd90e4bd311dfebd10d7a9dd12641e23"));
     }
   }

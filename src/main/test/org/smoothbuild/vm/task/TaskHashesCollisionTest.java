@@ -21,15 +21,15 @@ public class TaskHashesCollisionTest extends TestContext {
     addHash(list, set, new ConstTask(intB(7), traceB()));
     addHash(list, set, new ConstTask(intB(9), traceB()));
     addHash(list, set, new InvokeTask(callB(),
-        natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true)), null, traceB()));
+        nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true)), null, traceB()));
     addHash(list, set, new InvokeTask(callB(),
-        natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false)), null, traceB()));
+        nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false)), null, traceB()));
     addHash(list, set, new InvokeTask(callB(),
-        natFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true)), null, traceB()));
+        nativeFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true)), null, traceB()));
     addHash(list, set, new InvokeTask(callB(),
-        natFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true)), null, traceB()));
+        nativeFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true)), null, traceB()));
     addHash(list, set, new InvokeTask(callB(),
-        natFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true)), null, traceB()));
+        nativeFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true)), null, traceB()));
     addHash(list, set, new OrderTask(orderB(intTB()), traceB()));
     addHash(list, set, new OrderTask(orderB(blobTB()), traceB()));
     addHash(list, set, new PickTask(pickB(), traceB()));

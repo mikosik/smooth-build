@@ -2,7 +2,7 @@ package org.smoothbuild.vm.task;
 
 import static java.util.Arrays.asList;
 
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.value.TypeB;
@@ -12,7 +12,7 @@ public class TaskHashes {
     return switch (task) {
       case CombineTask combineTask -> combineHash();
       case ConstTask constTask -> constHash(constTask.instB());
-      case InvokeTask invokeTask -> invokeHash(invokeTask.natFunc());
+      case InvokeTask invokeTask -> invokeHash(invokeTask.nativeFunc());
       case OrderTask orderTask -> orderHash(orderTask.outputT());
       case PickTask pickTask -> pickHash();
       case SelectTask selectTask -> selectHash();
@@ -27,8 +27,8 @@ public class TaskHashes {
     return hash(1);
   }
 
-  private static Hash invokeHash(NatFuncB natFunc) {
-    return hash(2, natFunc.hash());
+  private static Hash invokeHash(NativeFuncB nativeFuncB) {
+    return hash(2, nativeFuncB.hash());
   }
 
   private static Hash orderHash(TypeB typeB) {

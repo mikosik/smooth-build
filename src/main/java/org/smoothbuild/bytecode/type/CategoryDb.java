@@ -16,7 +16,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
-import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.NATIVE_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
 import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
@@ -47,7 +47,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.DefinedFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IfFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.MapFuncKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.NatFuncKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.NativeFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.TupleKindB;
 import org.smoothbuild.bytecode.type.exc.CategoryDbExc;
@@ -73,7 +73,7 @@ import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.IfFuncCB;
 import org.smoothbuild.bytecode.type.value.IntTB;
 import org.smoothbuild.bytecode.type.value.MapFuncCB;
-import org.smoothbuild.bytecode.type.value.NatFuncCB;
+import org.smoothbuild.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.bytecode.type.value.StringTB;
 import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
@@ -175,12 +175,12 @@ public class CategoryDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> funcC(MAP_FUNC, funcT));
   }
 
-  public NatFuncCB natFunc(TypeB res, ImmutableList<TypeB> params) {
-    return funcC(NAT_FUNC, res, params);
+  public NativeFuncCB nativeFunc(TypeB res, ImmutableList<TypeB> params) {
+    return funcC(NATIVE_FUNC, res, params);
   }
 
-  public NatFuncCB natFunc(FuncTB funcTB) {
-    return funcC(NAT_FUNC, funcTB);
+  public NativeFuncCB nativeFunc(FuncTB funcTB) {
+    return funcC(NATIVE_FUNC, funcTB);
   }
 
   public TupleTB tuple(TypeB... items) {
@@ -244,7 +244,7 @@ public class CategoryDb {
       case FuncKindB        func        -> readFuncT(hash, rootSeq);
       case IfFuncKindB      ifFunc      -> readIfFuncCat(hash, rootSeq, ifFunc);
       case MapFuncKindB     mapFunc     -> readMapFuncCat(hash, rootSeq, mapFunc);
-      case NatFuncKindB     natFunc     -> readFuncCat(hash, rootSeq, natFunc);
+      case NativeFuncKindB  nativeFunc  -> readFuncCat(hash, rootSeq, nativeFunc);
       case OperKindB<?>     oper        -> readOperCat(hash, rootSeq, oper);
       case TupleKindB       tuple       -> readTupleT(hash, rootSeq);
     };

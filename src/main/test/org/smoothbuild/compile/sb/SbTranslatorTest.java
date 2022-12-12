@@ -160,13 +160,13 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = "class.binary.name";
           var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var natFuncS = annFuncS(ann, intTS(), "myFunc", nlist(itemS(blobTS())));
+          var nativeFuncS = annFuncS(ann, intTS(), "myFunc", nlist(itemS(blobTS())));
 
           var funcTB = funcTB(blobTB(), intTB());
-          var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
+          var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          assertTranslation(sbTranslator(fileLoader), monoizeS(natFuncS), natFuncB);
+          assertTranslation(sbTranslator(fileLoader), monoizeS(nativeFuncS), nativeFuncB);
         }
 
         @Test
@@ -175,15 +175,15 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = "class.binary.name";
           var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var natFuncS = annFuncS(ann, a, "myIdentity", nlist(itemS(a, "param")));
+          var nativeFuncS = annFuncS(ann, a, "myIdentity", nlist(itemS(a, "param")));
 
           var funcTB = funcTB(intTB(), intTB());
-          var natFuncB = natFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
+          var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
           var translator = sbTranslator(fileLoader);
-          var monoized = monoizeS(ImmutableMap.of(a, intTS()), natFuncS);
-          assertTranslation(translator, monoized, natFuncB);
+          var monoized = monoizeS(ImmutableMap.of(a, intTS()), nativeFuncS);
+          assertTranslation(translator, monoized, nativeFuncB);
         }
 
         @Test
@@ -384,11 +384,11 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath();
           var classBinaryName = "class.binary.name";
           var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var natFuncS = annFuncS(2, ann, intTS(), "myFunc", nlist(itemS(blobTS())));
+          var nativeFuncS = annFuncS(2, ann, intTS(), "myFunc", nlist(itemS(blobTS())));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
           var sbTranslator = sbTranslator(fileLoader);
-          assertNalMapping(sbTranslator, monoizeS(natFuncS), "myFunc", loc(2));
+          assertNalMapping(sbTranslator, monoizeS(nativeFuncS), "myFunc", loc(2));
         }
 
         @Test
@@ -511,8 +511,8 @@ public class SbTranslatorTest extends TestContext {
     }
 
     @Test
-    public void nat_func_translation_result() {
-      var myFunc = natFuncS(stringTS(), "myFunc", nlist());
+    public void native_func_translation_result() {
+      var myFunc = nativeFuncS(stringTS(), "myFunc", nlist());
       assertTranslationIsCached(monoizeS(myFunc));
     }
 

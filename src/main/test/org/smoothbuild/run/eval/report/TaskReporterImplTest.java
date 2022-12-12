@@ -47,7 +47,7 @@ public class TaskReporterImplTest extends TestContext {
   @Test
   public void invokeTaskHeaderForFuncWithMappedName() {
     var task = invokeTask();
-    var funcHash = task.natFunc().hash();
+    var funcHash = task.nativeFunc().hash();
     testHeader(bsMapping(funcHash, "myFunc"), task, header("myFunc()"));
   }
 

@@ -12,7 +12,7 @@ import org.smoothbuild.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IfFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.IntKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.MapFuncKindB;
-import org.smoothbuild.bytecode.type.CategoryKindB.NatFuncKindB;
+import org.smoothbuild.bytecode.type.CategoryKindB.NativeFuncKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.OrderKindB;
 import org.smoothbuild.bytecode.type.CategoryKindB.PickKindB;
@@ -39,7 +39,7 @@ public class CategoryKinds {
   public static final DefinedFuncKindB DEFINED_FUNC = new DefinedFuncKindB();
   public static final IfFuncKindB IF_FUNC = new IfFuncKindB();
   public static final MapFuncKindB MAP_FUNC = new MapFuncKindB();
-  public static final NatFuncKindB NAT_FUNC = new NatFuncKindB();
+  public static final NativeFuncKindB NATIVE_FUNC = new NativeFuncKindB();
 
   public static final OperKindB<CallCB> CALL = new CallKindB();
   public static final OperKindB<CombineCB> COMBINE = new CombineKindB();

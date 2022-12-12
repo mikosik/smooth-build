@@ -12,7 +12,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
-import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.NATIVE_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
 import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
@@ -39,7 +39,7 @@ import org.smoothbuild.bytecode.expr.value.FuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.hashed.Hash;
@@ -64,7 +64,7 @@ import org.smoothbuild.bytecode.type.value.FuncCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.IfFuncCB;
 import org.smoothbuild.bytecode.type.value.MapFuncCB;
-import org.smoothbuild.bytecode.type.value.NatFuncCB;
+import org.smoothbuild.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
 
@@ -166,9 +166,9 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class NatFuncKindB extends AbstFuncKindB<NatFuncCB> {
-    NatFuncKindB() {
-      super("NAT_FUNC", (byte) 7, NatFuncB.class, NatFuncCB::new);
+  public static final class NativeFuncKindB extends AbstFuncKindB<NativeFuncCB> {
+    NativeFuncKindB() {
+      super("NATIVE_FUNC", (byte) 7, NativeFuncB.class, NativeFuncCB::new);
     }
   }
 
@@ -257,7 +257,7 @@ public sealed abstract class CategoryKindB
       case 4 -> ARRAY;
       case 5 -> TUPLE;
       case 6 -> CLOSURE;
-      case 7 -> NAT_FUNC;
+      case 7 -> NATIVE_FUNC;
       case 8 -> ORDER;
       case 9 -> COMBINE;
       case 10 -> SELECT;

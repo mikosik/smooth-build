@@ -62,7 +62,7 @@ public class NativeMethodLoaderTest extends TestContext {
 
   private void assertLoadingCausesError(Class<?> clazz, String message) throws IOException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
-    assertThat(nativeMethodLoader.load(natFuncB(clazz)))
+    assertThat(nativeMethodLoader.load(nativeFuncB(clazz)))
         .isEqualTo(loadingError(clazz, message));
   }
 
@@ -113,9 +113,9 @@ public class NativeMethodLoaderTest extends TestContext {
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
-      var natFuncB = natFuncB(funcTB(stringTB()), jar, stringB(classBinaryName));
-      var resultMethod1 = nativeMethodLoader.load(natFuncB);
-      var resultMethod2 = nativeMethodLoader.load(natFuncB);
+      var nativeFuncB = nativeFuncB(funcTB(stringTB()), jar, stringB(classBinaryName));
+      var resultMethod1 = nativeMethodLoader.load(nativeFuncB);
+      var resultMethod2 = nativeMethodLoader.load(nativeFuncB);
       assertThat(resultMethod1)
           .isEqualTo(expected);
       assertThat(resultMethod1)

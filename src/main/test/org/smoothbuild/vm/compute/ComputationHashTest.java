@@ -65,8 +65,8 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_nat_call_task_and_empty_input_is_stable() {
-    var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
-    var task = new InvokeTask(callB(natFuncB), natFuncB, null, traceB());
+    var nativeFuncB = nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
+    var task = new InvokeTask(callB(nativeFuncB), nativeFuncB, null, traceB());
     var input = tupleB();
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("750ee778096a96419b3b8b300669f337f3e60d67"));
@@ -74,8 +74,8 @@ public class ComputationHashTest extends TestContext {
 
   @Test
   public void hash_of_computation_with_nat_call_task_and_non_empty_input_is_stable() {
-    var natFuncB = natFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
-    var task = new InvokeTask(callB(natFuncB), natFuncB, null, traceB());
+    var nativeFuncB = nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true));
+    var task = new InvokeTask(callB(nativeFuncB), nativeFuncB, null, traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(computationHash(Hash.of(13), task, input))
         .isEqualTo(Hash.decode("bc6ad5c125aadf19a301dd8b6af4300eee643ce5"));

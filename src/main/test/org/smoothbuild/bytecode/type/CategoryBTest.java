@@ -26,7 +26,7 @@ import org.smoothbuild.bytecode.expr.value.FuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.type.oper.CombineCB;
@@ -34,7 +34,7 @@ import org.smoothbuild.bytecode.type.value.ArrayTB;
 import org.smoothbuild.bytecode.type.value.ClosureCB;
 import org.smoothbuild.bytecode.type.value.DefinedFuncCB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
-import org.smoothbuild.bytecode.type.value.NatFuncCB;
+import org.smoothbuild.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.testing.TestContext;
@@ -93,8 +93,8 @@ public class CategoryBTest extends TestContext {
         args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
         args(f -> f.ifFunc(f.int_()), "IF_FUNC:(Bool,Int,Int)->Int"),
         args(f -> f.mapFunc(f.int_(), f.string()), "MAP_FUNC:([String],(String)->Int)->[Int]"),
-        args(f -> f.natFunc(f.string(), list()), "NAT_FUNC:()->String"),
-        args(f -> f.natFunc(f.string(), list(f.string())), "NAT_FUNC:(String)->String"),
+        args(f -> f.nativeFunc(f.string(), list()), "NATIVE_FUNC:()->String"),
+        args(f -> f.nativeFunc(f.string(), list(f.string())), "NATIVE_FUNC:(String)->String"),
 
         args(f -> f.tuple(), "{}"),
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
@@ -223,7 +223,7 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
-        Function<CategoryDb, NatFuncCB> factoryCall,
+        Function<CategoryDb, NativeFuncCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().res())
           .isEqualTo(execute(expected));
@@ -231,15 +231,15 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.natFunc(f.funcT(list(), f.int_())), f -> f.int_()),
-          args(f -> f.natFunc(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
-          args(f -> f.natFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob())
+          args(f -> f.nativeFunc(f.funcT(list(), f.int_())), f -> f.int_()),
+          args(f -> f.nativeFunc(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
+          args(f -> f.nativeFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob())
       );
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CategoryDb, NatFuncCB> factoryCall,
+    public void params(Function<CategoryDb, NativeFuncCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().params())
           .isEqualTo(execute(expected));
@@ -247,9 +247,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.natFunc(f.funcT(list(), f.int_())), f -> f.tuple()),
-          args(f -> f.natFunc(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
-          args(f -> f.natFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
+          args(f -> f.nativeFunc(f.funcT(list(), f.int_())), f -> f.tuple()),
+          args(f -> f.nativeFunc(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
+          args(f -> f.nativeFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
@@ -325,7 +325,7 @@ public class CategoryBTest extends TestContext {
         arguments(CONTEXT.mapFuncCB(), MapFuncB.class),
         arguments(CONTEXT.intTB(), IntB.class),
         arguments(
-            CONTEXT.natFuncCB(CONTEXT.boolTB(), CONTEXT.blobTB()), NatFuncB.class),
+            CONTEXT.nativeFuncCB(CONTEXT.boolTB(), CONTEXT.blobTB()), NativeFuncB.class),
         arguments(CONTEXT.personTB(), TupleB.class),
         arguments(CONTEXT.stringTB(), StringB.class),
 

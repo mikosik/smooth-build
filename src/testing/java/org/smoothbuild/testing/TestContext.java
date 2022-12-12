@@ -54,7 +54,7 @@ import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
@@ -77,7 +77,7 @@ import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.IfFuncCB;
 import org.smoothbuild.bytecode.type.value.IntTB;
 import org.smoothbuild.bytecode.type.value.MapFuncCB;
-import org.smoothbuild.bytecode.type.value.NatFuncCB;
+import org.smoothbuild.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.bytecode.type.value.StringTB;
 import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
@@ -493,20 +493,20 @@ public class TestContext {
     return categoryDb().int_();
   }
 
-  public NatFuncCB natFuncCB() {
-    return natFuncCB(boolTB(), blobTB());
+  public NativeFuncCB nativeFuncCB() {
+    return nativeFuncCB(boolTB(), blobTB());
   }
 
-  public NatFuncCB natFuncCB(TypeB resT) {
-    return categoryDb().natFunc(funcTB(resT));
+  public NativeFuncCB nativeFuncCB(TypeB resT) {
+    return categoryDb().nativeFunc(funcTB(resT));
   }
 
-  public NatFuncCB natFuncCB(TypeB param, TypeB resT) {
-    return categoryDb().natFunc(funcTB(param, resT));
+  public NativeFuncCB nativeFuncCB(TypeB param, TypeB resT) {
+    return categoryDb().nativeFunc(funcTB(param, resT));
   }
 
-  public NatFuncCB natFuncCB(TypeB param1, TypeB param2, TypeB resT) {
-    return categoryDb().natFunc(funcTB(param1, param2, resT));
+  public NativeFuncCB nativeFuncCB(TypeB param1, TypeB param2, TypeB resT) {
+    return categoryDb().nativeFunc(funcTB(param1, param2, resT));
   }
 
   public TupleTB personTB() {
@@ -731,12 +731,12 @@ public class TestContext {
     return defFuncB(stringB("abc"));
   }
 
-  public NatFuncB returnAbcNatFuncB() throws IOException {
-    return returnAbcNatFuncB(true);
+  public NativeFuncB returnAbcNativeFuncB() throws IOException {
+    return returnAbcNativeFuncB(true);
   }
 
-  public NatFuncB returnAbcNatFuncB(boolean isPure) throws IOException {
-    return natFuncB(funcTB(stringTB()), ReturnAbcFunc.class, isPure);
+  public NativeFuncB returnAbcNativeFuncB(boolean isPure) throws IOException {
+    return nativeFuncB(funcTB(stringTB()), ReturnAbcFunc.class, isPure);
   }
 
   public IntB intB() {
@@ -751,9 +751,9 @@ public class TestContext {
     return bytecodeDb().int_(value);
   }
 
-  public NatFuncB returnAbcNatFunc() throws IOException {
+  public NativeFuncB returnAbcNativeFunc() throws IOException {
     var funcTB = funcTB(stringTB());
-    return natFuncB(funcTB, ReturnAbcFunc.class);
+    return nativeFuncB(funcTB, ReturnAbcFunc.class);
   }
 
   public static class ReturnAbcFunc {
@@ -762,31 +762,32 @@ public class TestContext {
     }
   }
 
-  public NatFuncB natFuncB(Class<?> clazz) throws IOException {
-    return natFuncB(funcTB(), clazz);
+  public NativeFuncB nativeFuncB(Class<?> clazz) throws IOException {
+    return nativeFuncB(funcTB(), clazz);
   }
 
-  public NatFuncB natFuncB(FuncTB funcTB, Class<?> clazz) throws IOException {
-    return natFuncB(funcTB, clazz, true);
+  public NativeFuncB nativeFuncB(FuncTB funcTB, Class<?> clazz) throws IOException {
+    return nativeFuncB(funcTB, clazz, true);
   }
 
-  public NatFuncB natFuncB(FuncTB funcTB, Class<?> clazz, boolean isPure) throws IOException {
-    return natFuncB(funcTB, blobBJarWithPluginApi(clazz), stringB(clazz.getName()), boolB(isPure));
+  public NativeFuncB nativeFuncB(FuncTB funcTB, Class<?> clazz, boolean isPure) throws IOException {
+    return nativeFuncB(
+        funcTB, blobBJarWithPluginApi(clazz), stringB(clazz.getName()), boolB(isPure));
   }
 
-  public NatFuncB natFuncB() {
-    return natFuncB(funcTB());
+  public NativeFuncB nativeFuncB() {
+    return nativeFuncB(funcTB());
   }
 
-  public NatFuncB natFuncB(FuncTB funcTB) {
-    return natFuncB(funcTB, blobB(7), stringB("class binary name"), boolB(true));
+  public NativeFuncB nativeFuncB(FuncTB funcTB) {
+    return nativeFuncB(funcTB, blobB(7), stringB("class binary name"), boolB(true));
   }
 
-  public NatFuncB natFuncB(FuncTB type, BlobB jar, StringB classBinaryName) {
-    return natFuncB(type, jar, classBinaryName, boolB(true));
+  public NativeFuncB nativeFuncB(FuncTB type, BlobB jar, StringB classBinaryName) {
+    return nativeFuncB(type, jar, classBinaryName, boolB(true));
   }
 
-  public NatFuncB natFuncB(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+  public NativeFuncB nativeFuncB(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
     return bytecodeDb().nativeFunc(type, jar, classBinaryName, isPure);
   }
 
@@ -1321,7 +1322,7 @@ public class TestContext {
     return annFuncS(line, bytecodeS(path), resT, name, params);
   }
 
-  public static AnnFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {
+  public static AnnFuncS nativeFuncS(TypeS resT, String name, NList<ItemS> params) {
     return annFuncS(natAnnS(), resT, name, params);
   }
 
@@ -1493,15 +1494,15 @@ public class TestContext {
   }
 
   public InvokeTask invokeTask() {
-    return invokeTask(callB(), natFuncB(), traceB());
+    return invokeTask(callB(), nativeFuncB(), traceB());
   }
 
-  public InvokeTask invokeTask(CallB callB, NatFuncB natFunc) {
-    return invokeTask(callB, natFunc, null);
+  public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB) {
+    return invokeTask(callB, nativeFuncB, null);
   }
 
-  public InvokeTask invokeTask(CallB callB, NatFuncB natFunc, TraceB trace) {
-    return new InvokeTask(callB, natFunc, null, trace);
+  public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace) {
+    return new InvokeTask(callB, nativeFuncB, null, trace);
   }
 
   public CombineTask combineTask() {

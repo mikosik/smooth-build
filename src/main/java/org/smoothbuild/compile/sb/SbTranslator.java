@@ -29,7 +29,7 @@ import org.smoothbuild.bytecode.expr.oper.SelectB;
 import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.bytecode.type.value.ArrayTB;
@@ -205,7 +205,7 @@ public class SbTranslator {
     var annName = annFuncS.ann().name();
     return switch (annName) {
       case BYTECODE -> fetchFuncBytecode(annFuncS);
-      case NATIVE_PURE, NATIVE_IMPURE -> translateNatFunc(annFuncS);
+      case NATIVE_PURE, NATIVE_IMPURE -> translateNativeFunc(annFuncS);
       default -> throw new SbTranslatorExc("Illegal function annotation: " + annName + ".");
     };
   }
@@ -216,13 +216,13 @@ public class SbTranslator {
         translateExpr(exprFuncS.body()));
   }
 
-  private NatFuncB translateNatFunc(AnnFuncS natFuncS) {
-    var funcTB = translateT(natFuncS.schema().type());
-    var annS = natFuncS.ann();
+  private NativeFuncB translateNativeFunc(AnnFuncS nativeFuncS) {
+    var funcTB = translateT(nativeFuncS.schema().type());
+    var annS = nativeFuncS.ann();
     var jarB = loadNativeJar(annS.loc());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
     var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
-    return bytecodeF.natFunc(funcTB, jarB, classBinaryNameB, isPureB);
+    return bytecodeF.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
   private DefinedFuncB translateConstructor(ConstructorS constructorS) {

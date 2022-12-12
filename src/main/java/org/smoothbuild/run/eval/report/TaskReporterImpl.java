@@ -76,7 +76,7 @@ public class TaskReporterImpl implements TaskReporter {
     return switch (task) {
       case CombineTask combineTask -> "{...}";
       case ConstTask constTask -> label(constTask);
-      case InvokeTask invokeTask -> nameOf(invokeTask.natFunc()) + "()";
+      case InvokeTask invokeTask -> nameOf(invokeTask.nativeFunc()) + "()";
       case OrderTask orderTask -> "[...]";
       case PickTask pickTask -> "[].";
       case SelectTask selectTask -> "{}.";

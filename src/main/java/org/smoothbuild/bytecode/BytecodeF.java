@@ -31,7 +31,7 @@ import org.smoothbuild.bytecode.expr.value.DefinedFuncB;
 import org.smoothbuild.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.bytecode.expr.value.IntB;
 import org.smoothbuild.bytecode.expr.value.MapFuncB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
@@ -131,7 +131,7 @@ public class BytecodeF {
     return bytecodeDb.mapFunc(r, s);
   }
 
-  public NatFuncB natFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure) {
+  public NativeFuncB nativeFunc(FuncTB funcTB, BlobB jar, StringB classBinaryName, BoolB isPure) {
     return bytecodeDb.nativeFunc(funcTB, jar, classBinaryName, isPure);
   }
 

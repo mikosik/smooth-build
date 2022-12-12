@@ -8,26 +8,26 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.smoothbuild.bytecode.expr.oper.CallB;
-import org.smoothbuild.bytecode.expr.value.NatFuncB;
+import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.compute.Container;
 import org.smoothbuild.vm.execute.TraceB;
 
 public final class InvokeTask extends Task {
-  private final NatFuncB natFunc;
+  private final NativeFuncB nativeFuncB;
   private final NativeMethodLoader nativeMethodLoader;
 
-  public InvokeTask(CallB callB, NatFuncB natFunc, NativeMethodLoader methodLoader,
-      TraceB trace) {
-    super(callB, trace, natFunc.isPure().toJ() ? PURE : IMPURE);
+  public InvokeTask(
+      CallB callB, NativeFuncB nativeFuncB, NativeMethodLoader methodLoader, TraceB trace) {
+    super(callB, trace, nativeFuncB.isPure().toJ() ? PURE : IMPURE);
     this.nativeMethodLoader = methodLoader;
-    this.natFunc = natFunc;
+    this.nativeFuncB = nativeFuncB;
   }
 
   @Override
   public Output run(TupleB input, Container container) {
-    return nativeMethodLoader.load(natFunc)
+    return nativeMethodLoader.load(nativeFuncB)
         .map(m -> invokeMethod(m, input, container))
         .orElse(e -> logFatalAndReturnNullOutput(container, e));
   }
@@ -80,7 +80,7 @@ public final class InvokeTask extends Task {
     return new Output(null, container.messages());
   }
 
-  public NatFuncB natFunc() {
-    return natFunc;
+  public NativeFuncB nativeFunc() {
+    return nativeFuncB;
   }
 }

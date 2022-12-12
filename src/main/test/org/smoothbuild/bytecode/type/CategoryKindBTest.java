@@ -13,7 +13,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.INT;
 import static org.smoothbuild.bytecode.type.CategoryKinds.MAP_FUNC;
-import static org.smoothbuild.bytecode.type.CategoryKinds.NAT_FUNC;
+import static org.smoothbuild.bytecode.type.CategoryKinds.NATIVE_FUNC;
 import static org.smoothbuild.bytecode.type.CategoryKinds.ORDER;
 import static org.smoothbuild.bytecode.type.CategoryKinds.PICK;
 import static org.smoothbuild.bytecode.type.CategoryKinds.REF;
@@ -62,7 +62,7 @@ public class CategoryKindBTest {
         arguments(3, STRING),
         arguments(4, ARRAY),
         arguments(5, TUPLE),
-        arguments(7, NAT_FUNC),
+        arguments(7, NATIVE_FUNC),
         arguments(8, ORDER),
         arguments(9, COMBINE),
         arguments(10, SELECT),
