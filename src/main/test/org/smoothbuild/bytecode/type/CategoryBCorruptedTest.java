@@ -25,6 +25,7 @@ import static org.smoothbuild.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc;
 import static org.smoothbuild.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -186,7 +187,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
-            .isEqualTo(closureCB(intTB(), stringTB(), boolTB()).hash());
+            .isEqualTo(closureCB(stringTB(), boolTB(), intTB()).hash());
       }
 
       @Override
@@ -208,7 +209,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
-            .isEqualTo(definedFuncCB(intTB(), stringTB(), boolTB()).hash());
+            .isEqualTo(definedFuncCB(stringTB(), boolTB(), intTB()).hash());
       }
 
       @Override
@@ -227,7 +228,7 @@ public class CategoryBCorruptedTest extends TestContext {
          */
         var specHash = hash(
             hash(IF_FUNC.marker()),
-            hash(funcTB(boolTB(), intTB(), intTB(), intTB()))
+            hash(funcTB(list(boolTB(), intTB(), intTB()), intTB()))
         );
         assertThat(specHash)
             .isEqualTo(ifFuncCB(intTB()).hash());
@@ -235,7 +236,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
-        var illegalIfType = funcTB(boolTB(), intTB(), intTB(), blobTB());
+        var illegalIfType = funcTB(list(boolTB(), intTB(), intTB()), blobTB());
         var categoryHash = hash(
             hash(IF_FUNC.marker()),
             hash(illegalIfType)
@@ -297,7 +298,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
-            .isEqualTo(natFuncCB(intTB(), stringTB(), boolTB()).hash());
+            .isEqualTo(natFuncCB(stringTB(), boolTB(), intTB()).hash());
       }
 
       @Override

@@ -325,7 +325,7 @@ public class CategoryBTest extends TestContext {
         arguments(CONTEXT.mapFuncCB(), MapFuncB.class),
         arguments(CONTEXT.intTB(), IntB.class),
         arguments(
-            CONTEXT.natFuncCB(CONTEXT.blobTB(), CONTEXT.boolTB()), NatFuncB.class),
+            CONTEXT.natFuncCB(CONTEXT.boolTB(), CONTEXT.blobTB()), NatFuncB.class),
         arguments(CONTEXT.personTB(), TupleB.class),
         arguments(CONTEXT.stringTB(), StringB.class),
 

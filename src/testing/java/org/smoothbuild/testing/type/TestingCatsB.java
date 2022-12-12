@@ -104,7 +104,7 @@ public class TestingCatsB {
   }
 
   private static FuncTB func(TypeB res, TypeB... params) {
-    return CONTEXT.funcTB(res, list(params));
+    return CONTEXT.funcTB(list(params), res);
   }
 
   private static TupleTB tuple(TypeB... params) {

@@ -691,7 +691,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var bodyExpr = boolB(true);
-      var cat = closureCB(boolTB(), intTB(), stringTB());
+      var cat = closureCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           cat,
@@ -709,7 +709,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
       var environment = combineB(blobB());
-      var defFuncCB = closureCB(boolTB(), intTB(), stringTB());
+      var defFuncCB = closureCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(
           hash(environment)
       );
@@ -726,7 +726,7 @@ public class ExprBCorruptedTest extends TestContext {
     public void data_is_seq_with_three_elems() throws Exception {
       var environment = combineB(blobB());
       var body = boolB(true);
-      var defFuncCB = closureCB(boolTB(), intTB(), stringTB());
+      var defFuncCB = closureCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(
           hash(environment),
           hash(body),
@@ -781,7 +781,7 @@ public class ExprBCorruptedTest extends TestContext {
     public void def_func_type_is_not_equal_closure_type() throws Exception {
       var environment = combineB(blobB());
       var func = idFuncB();
-      var cat = closureCB(intTB(), blobTB());
+      var cat = closureCB(blobTB(), intTB());
       var hash =
           hash(
               hash(cat),
@@ -805,7 +805,7 @@ public class ExprBCorruptedTest extends TestContext {
        * Defined function in HashedDb.
        */
       var body = boolB(true);
-      var cat = definedFuncCB(boolTB(), intTB(), stringTB());
+      var cat = definedFuncCB(intTB(), stringTB(), boolTB());
       var hash =
           hash(
               hash(cat),
@@ -823,7 +823,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var bodyExpr = boolB(true);
-      var cat = definedFuncCB(boolTB(), intTB(), stringTB());
+      var cat = definedFuncCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           cat,
@@ -841,7 +841,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
       var body = intB(17);
-      var cat = definedFuncCB(boolTB(), intTB(), stringTB());
+      var cat = definedFuncCB(intTB(), stringTB(), boolTB());
       var hash =
           hash(
               hash(cat),
@@ -942,7 +942,7 @@ public class ExprBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save
        * Method in HashedDb.
        */
-      var category = natFuncCB(stringTB(), intTB());
+      var category = natFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -971,7 +971,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var category = natFuncCB(stringTB(), intTB());
+      var category = natFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -986,14 +986,14 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      var category = natFuncCB(stringTB(), intTB());
+      var category = natFuncCB(intTB(), stringTB());
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(category,
           (Hash hash) -> ((NatFuncB) bytecodeDb().get(hash)).classBinaryName());
     }
 
     @Test
     public void data_is_seq_with_two_elem() throws Exception {
-      var category = natFuncCB(stringTB(), intTB());
+      var category = natFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var dataHash = hash(
@@ -1013,7 +1013,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void data_is_seq_with_four_elems() throws Exception {
-      var type = natFuncCB(stringTB(), intTB());
+      var type = natFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -1036,7 +1036,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
-      var category = natFuncCB(stringTB(), intTB());
+      var category = natFuncCB(intTB(), stringTB());
       var jar = stringB();
       var classBinaryName = stringB();
       var isPure = boolB(true);
@@ -1056,7 +1056,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
-      var category = natFuncCB(stringTB(), intTB());
+      var category = natFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = intB();
       var isPure = boolB(true);
@@ -1077,7 +1077,7 @@ public class ExprBCorruptedTest extends TestContext {
 
     @Test
     public void is_pure_is_not_bool_value() throws Exception {
-      var category = natFuncCB(stringTB(), intTB());
+      var category = natFuncCB(intTB(), stringTB());
       var jar = blobB();
       var classBinaryName = stringB();
       var isPure = stringB();

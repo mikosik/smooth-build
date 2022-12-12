@@ -430,12 +430,19 @@ public class TestContext {
   }
 
   public ClosureCB closureCB() {
-    return closureCB(intTB(), blobTB(), stringTB());
+    return closureCB(blobTB(), stringTB(), intTB());
   }
 
-  public ClosureCB closureCB(TypeB resT, TypeB... paramTs) {
-    FuncTB funcTB = funcTB(resT, list(paramTs));
-    return closureB(funcTB);
+  public ClosureCB closureCB(TypeB resT) {
+    return closureB(funcTB(resT));
+  }
+
+  public ClosureCB closureCB(TypeB param, TypeB resT) {
+    return closureB(funcTB(param, resT));
+  }
+
+  public ClosureCB closureCB(TypeB param1, TypeB param2, TypeB resT) {
+    return closureB(funcTB(param1, param2, resT));
   }
 
   public ClosureCB closureB(FuncTB funcTB) {
@@ -447,11 +454,19 @@ public class TestContext {
   }
 
   public DefinedFuncCB definedFuncCB() {
-    return definedFuncCB(intTB(), blobTB(), stringTB());
+    return definedFuncCB(blobTB(), stringTB(), intTB());
   }
 
-  public DefinedFuncCB definedFuncCB(TypeB resT, TypeB... paramTs) {
-    return categoryDb().definedFunc(funcTB(resT, list(paramTs)));
+  public DefinedFuncCB definedFuncCB(TypeB resT) {
+    return categoryDb().definedFunc(funcTB(resT));
+  }
+
+  public DefinedFuncCB definedFuncCB(TypeB param, TypeB resT) {
+    return categoryDb().definedFunc(funcTB(param, resT));
+  }
+
+  public DefinedFuncCB definedFuncCB(TypeB param1, TypeB param2, TypeB resT) {
+    return categoryDb().definedFunc(funcTB(param1, param2, resT));
   }
 
   public FuncTB funcTB() {
@@ -459,22 +474,18 @@ public class TestContext {
   }
 
   public FuncTB funcTB(TypeB resT) {
-    return funcTB(resT, list());
+    return funcTB(list(), resT);
   }
 
   public FuncTB funcTB(TypeB param1, TypeB resT) {
-    return funcTB(resT, list(param1));
+    return funcTB(list(param1), resT);
   }
 
   public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resT) {
-    return funcTB(resT, list(param1, param2));
+    return funcTB(list(param1, param2), resT);
   }
 
-  public FuncTB funcTB(TypeB param1, TypeB param2, TypeB param3, TypeB resT) {
-    return funcTB(resT, list(param1, param2, param3));
-  }
-
-  public FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
+  public FuncTB funcTB(ImmutableList<TypeB> paramTs, TypeB resT) {
     return categoryDb().funcT(paramTs, resT);
   }
 
@@ -483,11 +494,19 @@ public class TestContext {
   }
 
   public NatFuncCB natFuncCB() {
-    return natFuncCB(blobTB(), boolTB());
+    return natFuncCB(boolTB(), blobTB());
   }
 
-  public NatFuncCB natFuncCB(TypeB resT, TypeB... paramTs) {
-    return categoryDb().natFunc(funcTB(resT, list(paramTs)));
+  public NatFuncCB natFuncCB(TypeB resT) {
+    return categoryDb().natFunc(funcTB(resT));
+  }
+
+  public NatFuncCB natFuncCB(TypeB param, TypeB resT) {
+    return categoryDb().natFunc(funcTB(param, resT));
+  }
+
+  public NatFuncCB natFuncCB(TypeB param1, TypeB param2, TypeB resT) {
+    return categoryDb().natFunc(funcTB(param1, param2, resT));
   }
 
   public TupleTB personTB() {
@@ -672,7 +691,7 @@ public class TestContext {
   }
 
   public DefinedFuncB defFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
-    var funcTB = funcTB(body.evalT(), paramTs);
+    var funcTB = funcTB(paramTs, body.evalT());
     return defFuncB(funcTB, body);
   }
 
@@ -681,10 +700,10 @@ public class TestContext {
   }
 
   public ClosureB closureB(ImmutableList<TypeB> paramTs, ExprB body) {
-    return closureB(paramTs, combineB(), body);
+    return closureB(combineB(), paramTs, body);
   }
 
-  public ClosureB closureB(ImmutableList<TypeB> paramTs, CombineB environment, ExprB body) {
+  public ClosureB closureB(CombineB environment, ImmutableList<TypeB> paramTs, ExprB body) {
     return closureB(environment, defFuncB(paramTs, body));
   }
 
