@@ -76,16 +76,16 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newBool(value));
   }
 
-  public NatFuncB natFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    var cat = categoryDb.natFunc(type);
-    return wrapHashedDbExcAsBytecodeDbExc(
-        () -> newNatFunc(cat, jar, classBinaryName, isPure));
-  }
-
   public ClosureB closure(FuncTB type, CombineB environment, ExprB body) {
     validateBodyEvalT(type, body);
     var cat = categoryDb.closure(type);
     return wrapHashedDbExcAsBytecodeDbExc(() -> newClosure(cat, environment, body));
+  }
+
+  public NatFuncB natFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+    var cat = categoryDb.natFunc(type);
+    return wrapHashedDbExcAsBytecodeDbExc(
+        () -> newNatFunc(cat, jar, classBinaryName, isPure));
   }
 
   public IntB int_(BigInteger value) {
