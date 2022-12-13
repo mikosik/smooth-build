@@ -12,15 +12,15 @@ import org.smoothbuild.compile.lang.type.SchemaS;
  * This class is immutable.
  */
 public final class AnnValueS extends NamedValueS {
-  private final AnnS ann;
+  private final AnnotationS annotation;
 
-  public AnnValueS(AnnS ann, SchemaS schema, String name, Loc loc) {
+  public AnnValueS(AnnotationS annotation, SchemaS schema, String name, Loc loc) {
     super(schema, name, loc);
-    this.ann = ann;
+    this.annotation = annotation;
   }
 
-  public AnnS ann() {
-    return ann;
+  public AnnotationS annotation() {
+    return annotation;
   }
 
   @Override
@@ -29,7 +29,7 @@ public final class AnnValueS extends NamedValueS {
       return true;
     }
     return object instanceof AnnValueS that
-        && this.ann().equals(that.ann())
+        && this.annotation().equals(that.annotation())
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.loc().equals(that.loc());
@@ -37,13 +37,13 @@ public final class AnnValueS extends NamedValueS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(ann(), schema(), name(), loc());
+    return Objects.hash(annotation(), schema(), name(), loc());
   }
 
 
   @Override
   public String toString() {
-    var fieldsString = ann().toString() + "\n" + fieldsToString();
+    var fieldsString = annotation().toString() + "\n" + fieldsToString();
     return "AnnVal(\n" + indent(fieldsString) + "\n)";
   }
 }

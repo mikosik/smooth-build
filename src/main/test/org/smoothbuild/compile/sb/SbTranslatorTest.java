@@ -78,7 +78,7 @@ public class SbTranslatorTest extends TestContext {
         public void mono_native_value() {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = "class.binary.name";
-          var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
+          var ann = nativeAnnotationS(loc(filePath, 1), stringS(classBinaryName));
           var natValS = annValS(ann, stringTS(), "myValue", loc(filePath, 2));
 
           var jar = blobB(37);
@@ -159,8 +159,8 @@ public class SbTranslatorTest extends TestContext {
         public void mono_native_function() {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = "class.binary.name";
-          var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var nativeFuncS = annFuncS(ann, intTS(), "myFunc", nlist(itemS(blobTS())));
+          var annotationS = nativeAnnotationS(loc(filePath, 1), stringS(classBinaryName));
+          var nativeFuncS = annFuncS(annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
 
           var funcTB = funcTB(blobTB(), intTB());
           var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
@@ -174,8 +174,8 @@ public class SbTranslatorTest extends TestContext {
           var a = varA();
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = "class.binary.name";
-          var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var nativeFuncS = annFuncS(ann, a, "myIdentity", nlist(itemS(a, "param")));
+          var annotationS = nativeAnnotationS(loc(filePath, 1), stringS(classBinaryName));
+          var nativeFuncS = annFuncS(annotationS, a, "myIdentity", nlist(itemS(a, "param")));
 
           var funcTB = funcTB(intTB(), intTB());
           var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
@@ -383,8 +383,8 @@ public class SbTranslatorTest extends TestContext {
         public void native_func() {
           var filePath = filePath();
           var classBinaryName = "class.binary.name";
-          var ann = natAnnS(loc(filePath, 1), stringS(classBinaryName));
-          var nativeFuncS = annFuncS(2, ann, intTS(), "myFunc", nlist(itemS(blobTS())));
+          var annotationS = nativeAnnotationS(loc(filePath, 1), stringS(classBinaryName));
+          var nativeFuncS = annFuncS(2, annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
           var sbTranslator = sbTranslator(fileLoader);

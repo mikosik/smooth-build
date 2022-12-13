@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.define.AnnFuncS;
-import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValueS;
+import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
@@ -34,7 +34,7 @@ import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
-import org.smoothbuild.compile.ps.ast.expr.AnnP;
+import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
@@ -65,8 +65,8 @@ public class PsTranslator {
     var schema = namedValueP.schemaS();
     var name = namedValueP.name();
     var loc = namedValueP.loc();
-    if (namedValueP.ann().isPresent()) {
-      var ann = translateAnn(namedValueP.ann().get());
+    if (namedValueP.annotation().isPresent()) {
+      var ann = translateAnnotation(namedValueP.annotation().get());
       return Optional.of(new AnnValueS(ann, schema, name, loc));
     } else {
       var body = translateExpr(namedValueP.body().get());
@@ -97,8 +97,8 @@ public class PsTranslator {
     var schema = namedFuncP.schemaS();
     var name = namedFuncP.name();
     var loc = namedFuncP.loc();
-    if (namedFuncP.ann().isPresent()) {
-      var ann = translateAnn(namedFuncP.ann().get());
+    if (namedFuncP.annotation().isPresent()) {
+      var ann = translateAnnotation(namedFuncP.annotation().get());
       var annFuncS = new AnnFuncS(ann, schema, name, params, loc);
       return Optional.of(annFuncS);
     } else {
@@ -107,9 +107,9 @@ public class PsTranslator {
     }
   }
 
-  private AnnS translateAnn(AnnP annP) {
-    var path = translateString(annP.path());
-    return new AnnS(annP.name(), path, annP.loc());
+  private AnnotationS translateAnnotation(AnnotationP annotationP) {
+    var path = translateString(annotationP.path());
+    return new AnnotationS(annotationP.name(), path, annotationP.loc());
   }
 
   private Optional<ImmutableList<ExprS>> translateExprs(List<ExprP> positionedArgs) {

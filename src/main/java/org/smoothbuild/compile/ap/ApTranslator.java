@@ -41,7 +41,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.ps.ast.Ast;
-import org.smoothbuild.compile.ps.ast.expr.AnnP;
+import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
@@ -90,7 +90,7 @@ public class ApTranslator {
         Optional<TypeP> type = createTypeSane(namedFunc.type());
         String name = nameNode.getText();
         Optional<ExprP> body = createPipeSane(namedFunc.pipe());
-        Optional<AnnP> annotation = createNativeSane(namedFunc.ann());
+        Optional<AnnotationP> annotation = createNativeSane(namedFunc.ann());
         var loc = locOf(filePath, nameNode);
         var params = createItems(name, namedFunc.itemList());
         evaluables.add(new NamedFuncP(type, name, params, body, annotation, loc));
@@ -104,18 +104,18 @@ public class ApTranslator {
         Optional<TypeP> type = createTypeSane(namedValue.type());
         String name = nameNode.getText();
         Optional<ExprP> expr = createPipeSane(namedValue.pipe());
-        Optional<AnnP> annotation = createNativeSane(namedValue.ann());
+        Optional<AnnotationP> annotation = createNativeSane(namedValue.ann());
         Loc loc = locOf(filePath, nameNode);
         evaluables.add(new NamedValueP(type, name, expr, annotation, loc));
         return null;
       }
 
-      private Optional<AnnP> createNativeSane(AnnContext annotation) {
+      private Optional<AnnotationP> createNativeSane(AnnContext annotation) {
         if (annotation == null) {
           return Optional.empty();
         } else {
           var name = annotation.NAME().getText();
-          return Optional.of(new AnnP(
+          return Optional.of(new AnnotationP(
               name,
               createStringNode(annotation, annotation.STRING()),
               locOf(filePath, annotation)));

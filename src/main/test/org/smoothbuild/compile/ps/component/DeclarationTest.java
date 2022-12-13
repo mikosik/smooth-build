@@ -758,7 +758,7 @@ public class DeclarationTest extends TestContext {
           var myFuncParams = nlist(
               itemS(3, stringTS(), "default", valueS(3, "myFunc:default", stringS(3, "value"))),
               itemS(4, stringTS(), "nonDefault"));
-          var ann = natAnnS(1, stringS(1, "Impl.met"));
+          var ann = nativeAnnotationS(1, stringS(1, "Impl.met"));
           var myFunc = annFuncS(2, ann, stringTS(), "myFunc", myFuncParams);
           module(code)
               .loadsWithSuccess()

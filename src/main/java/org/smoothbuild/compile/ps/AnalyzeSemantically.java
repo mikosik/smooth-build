@@ -235,8 +235,8 @@ public class AnalyzeSemantically {
       @Override
       public void visitNamedFunc(NamedFuncP namedFuncP) {
         super.visitNamedFunc(namedFuncP);
-        if (namedFuncP.ann().isPresent()) {
-          var ann = namedFuncP.ann().get();
+        if (namedFuncP.annotation().isPresent()) {
+          var ann = namedFuncP.annotation().get();
           var annName = ann.name();
           if (ANNOTATION_NAMES.contains(annName)) {
             if (namedFuncP.body().isPresent()) {
@@ -258,8 +258,8 @@ public class AnalyzeSemantically {
       @Override
       public void visitNamedValue(NamedValueP namedValueP) {
         super.visitNamedValue(namedValueP);
-        if (namedValueP.ann().isPresent()) {
-          var ann = namedValueP.ann().get();
+        if (namedValueP.annotation().isPresent()) {
+          var ann = namedValueP.annotation().get();
           var annName = ann.name();
           switch (annName) {
             case BYTECODE -> {
@@ -273,7 +273,9 @@ public class AnalyzeSemantically {
               }
             }
             case NATIVE_PURE, NATIVE_IMPURE -> logger.log(
-                compileError(namedValueP.ann().get(), "Value cannot have @" + annName + " annotation."));
+                compileError(
+                    namedValueP.annotation().get(),
+                    "Value cannot have @" + annName + " annotation."));
             default -> logger.log(compileError(ann, "Unknown annotation " + ann.q() + "."));
           }
         } else if (namedValueP.body().isEmpty()) {

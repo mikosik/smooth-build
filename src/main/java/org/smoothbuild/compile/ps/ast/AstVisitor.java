@@ -3,7 +3,7 @@ package org.smoothbuild.compile.ps.ast;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import org.smoothbuild.compile.ps.ast.expr.AnnP;
+import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
 import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
@@ -57,21 +57,21 @@ public class AstVisitor {
   }
 
   public void visitNamedValue(NamedValueP namedValueP) {
-    namedValueP.ann().ifPresent(this::visitAnn);
+    namedValueP.annotation().ifPresent(this::visitAnnotation);
     namedValueP.type().ifPresent(this::visitType);
     namedValueP.body().ifPresent(this::visitExpr);
     visitIdentifier(namedValueP);
   }
 
   public void visitNamedFunc(NamedFuncP namedFuncP) {
-    namedFuncP.ann().ifPresent(this::visitAnn);
+    namedFuncP.annotation().ifPresent(this::visitAnnotation);
     namedFuncP.resT().ifPresent(this::visitType);
     visitParams(namedFuncP.params());
     namedFuncP.body().ifPresent(this::visitExpr);
     visitIdentifier(namedFuncP);
   }
 
-  public void visitAnn(AnnP annotation) {
+  public void visitAnnotation(AnnotationP annotation) {
     visitString(annotation.path());
   }
 

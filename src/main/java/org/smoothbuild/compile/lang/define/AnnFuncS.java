@@ -13,15 +13,20 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class AnnFuncS extends NamedFuncS {
-  private final AnnS ann;
+  private final AnnotationS annotation;
 
-  public AnnFuncS(AnnS ann, FuncSchemaS schema, String name, NList<ItemS> params, Loc loc) {
+  public AnnFuncS(
+      AnnotationS annotation,
+      FuncSchemaS schema,
+      String name,
+      NList<ItemS> params,
+      Loc loc) {
     super(schema, name, params, loc);
-    this.ann = ann;
+    this.annotation = annotation;
   }
 
-  public AnnS ann() {
-    return ann;
+  public AnnotationS annotation() {
+    return annotation;
   }
 
   @Override
@@ -30,7 +35,7 @@ public final class AnnFuncS extends NamedFuncS {
       return true;
     }
     return object instanceof AnnFuncS that
-        && this.ann.equals(that.ann)
+        && this.annotation.equals(that.annotation)
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
@@ -39,12 +44,12 @@ public final class AnnFuncS extends NamedFuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(ann, schema(), name(), params(), loc());
+    return Objects.hash(annotation, schema(), name(), params(), loc());
   }
 
   @Override
   public String toString() {
-    var fields = ann.toString() + "\n" + fieldsToString();
+    var fields = annotation.toString() + "\n" + fieldsToString();
     return "AnnFuncS(\n" + indent(fields) + "\n)";
   }
 }

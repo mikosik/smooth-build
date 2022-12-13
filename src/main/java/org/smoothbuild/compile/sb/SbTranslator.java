@@ -40,7 +40,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Located;
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
-import org.smoothbuild.compile.lang.define.AnnS;
+import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnnValueS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
@@ -202,7 +202,7 @@ public class SbTranslator {
   }
 
   private ExprB translateAnnFunc(AnnFuncS annFuncS) {
-    var annName = annFuncS.ann().name();
+    var annName = annFuncS.annotation().name();
     return switch (annName) {
       case BYTECODE -> fetchFuncBytecode(annFuncS);
       case NATIVE_PURE, NATIVE_IMPURE -> translateNativeFunc(annFuncS);
@@ -218,7 +218,7 @@ public class SbTranslator {
 
   private NativeFuncB translateNativeFunc(AnnFuncS nativeFuncS) {
     var funcTB = translateT(nativeFuncS.schema().type());
-    var annS = nativeFuncS.ann();
+    var annS = nativeFuncS.annotation();
     var jarB = loadNativeJar(annS.loc());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
     var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
@@ -283,7 +283,7 @@ public class SbTranslator {
   }
 
   private ExprB translateAnnValue(AnnValueS annValueS) {
-    var annName = annValueS.ann().name();
+    var annName = annValueS.annotation().name();
     if (annName.equals(BYTECODE)) {
       return fetchValBytecode(annValueS);
     } else {
@@ -304,24 +304,25 @@ public class SbTranslator {
 
   private ExprB fetchValBytecode(AnnValueS annValueS) {
     var typeB = translateT(annValueS.schema().type());
-    return fetchBytecode(annValueS.ann(), typeB, annValueS.name());
+    return fetchBytecode(annValueS.annotation(), typeB, annValueS.name());
   }
 
   private ExprB fetchFuncBytecode(AnnFuncS annFuncS) {
     var typeB = translateT(annFuncS.schema().type());
-    return fetchBytecode(annFuncS.ann(), typeB, annFuncS.name());
+    return fetchBytecode(annFuncS.annotation(), typeB, annFuncS.name());
   }
 
-  private ExprB fetchBytecode(AnnS ann, TypeB typeB, String name) {
+  private ExprB fetchBytecode(AnnotationS annotation, TypeB typeB, String name) {
     var varNameToTypeMap = mapKeys(typeSbTranslator.varMap(), VarS::name);
-    var jar = loadNativeJar(ann.loc());
-    var bytecodeTry = bytecodeLoader.load(name, jar, ann.path().string(), varNameToTypeMap);
+    var jar = loadNativeJar(annotation.loc());
+    var bytecodeTry = bytecodeLoader.load(name, jar, annotation.path().string(), varNameToTypeMap);
     if (!bytecodeTry.isPresent()) {
-      throw new SbTranslatorExc(ann.loc() + ": " + bytecodeTry.error());
+      throw new SbTranslatorExc(annotation.loc() + ": " + bytecodeTry.error());
     }
     var bytecodeB = bytecodeTry.result();
     if (!bytecodeB.evalT().equals(typeB)) {
-      throw new SbTranslatorExc(ann.loc() + ": Bytecode provider returned object of wrong type "
+      throw new SbTranslatorExc(
+          annotation.loc() + ": Bytecode provider returned object of wrong type "
           + bytecodeB.evalT().q() + " when " + q(name) + " is declared as " + typeB.q() + ".");
     }
     return bytecodeB;

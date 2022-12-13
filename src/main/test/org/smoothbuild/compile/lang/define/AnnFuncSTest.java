@@ -11,7 +11,7 @@ public class AnnFuncSTest extends TestContext {
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));
     var funcTS = funcSchemaS(params, stringTS());
-    var func = new AnnFuncS(natAnnS(), funcTS, "myFunc", params, loc(1));
+    var func = new AnnFuncS(nativeAnnotationS(), funcTS, "myFunc", params, loc(1));
     assertThat(func.toString())
         .isEqualTo("""
             AnnFuncS(

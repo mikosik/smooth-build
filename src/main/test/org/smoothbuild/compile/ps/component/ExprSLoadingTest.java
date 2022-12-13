@@ -464,7 +464,7 @@ public class ExprSLoadingTest extends TestContext {
             .field;
           """;
       var myStruct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-      var getStruct = annFuncS(2, natAnnS(), myStruct, "getStruct", nlist());
+      var getStruct = annFuncS(2, nativeAnnotationS(), myStruct, "getStruct", nlist());
       var resultBody = selectS(7, callS(6, monoizeS(6, getStruct)), "field");
       var result = valueS(6, stringTS(), "result", resultBody);
       module(code)
@@ -608,8 +608,8 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(annFuncS(
-                2, natAnnS(1, stringS(1, "Impl.met"), false), stringTS(), "myFunc", nlist()));
+            .containsEvaluable(annFuncS(2, nativeAnnotationS(1, stringS(1, "Impl.met"), false),
+                stringTS(), "myFunc", nlist()));
       }
 
       @Test
@@ -620,7 +620,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(annFuncS(
-                2, natAnnS(1, stringS(1, "Impl.met"), false), varA(), "myFunc", nlist()));
+                2, nativeAnnotationS(1, stringS(1, "Impl.met"), false), varA(), "myFunc", nlist()));
       }
 
       @Test
@@ -630,8 +630,8 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(annFuncS(
-                2, natAnnS(1, stringS(1, "Impl.met"), true), stringTS(), "myFunc", nlist()));
+            .containsEvaluable(annFuncS(2,
+                nativeAnnotationS(1, stringS(1, "Impl.met"), true), stringTS(), "myFunc", nlist()));
       }
 
       @Test
@@ -642,7 +642,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(annFuncS(
-                2, natAnnS(1, stringS(1, "Impl.met"), true), varA(), "myFunc", nlist()));
+                2, nativeAnnotationS(1, stringS(1, "Impl.met"), true), varA(), "myFunc", nlist()));
       }
 
       @Test
@@ -654,7 +654,7 @@ public class ExprSLoadingTest extends TestContext {
                 0x07);
             """;
         var params = nlist(itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
-        var ann = natAnnS(1, stringS(1, "Impl.met"), true);
+        var ann = nativeAnnotationS(1, stringS(1, "Impl.met"), true);
         var myFunc = annFuncS(2, ann, stringTS(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
@@ -670,7 +670,7 @@ public class ExprSLoadingTest extends TestContext {
                 0x07);
             """;
         var params = nlist(itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
-        var ann = natAnnS(1, stringS(1, "Impl.met"), true);
+        var ann = nativeAnnotationS(1, stringS(1, "Impl.met"), true);
         var myFunc = annFuncS(2, ann, varA(), "myFunc", params);
         module(code)
             .loadsWithSuccess()

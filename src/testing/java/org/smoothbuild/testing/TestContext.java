@@ -83,8 +83,8 @@ import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
-import org.smoothbuild.compile.lang.define.AnnS;
 import org.smoothbuild.compile.lang.define.AnnValueS;
+import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
@@ -1190,45 +1190,45 @@ public class TestContext {
 
   // other smooth language thingies
 
-  private static AnnS bytecodeS(String path) {
+  private static AnnotationS bytecodeS(String path) {
     return bytecodeS(1, path);
   }
 
-  public static AnnS bytecodeS(int line, String path) {
+  public static AnnotationS bytecodeS(int line, String path) {
     return bytecodeS(line, stringS(line, path));
   }
 
-  public static AnnS bytecodeS(int line, StringS path) {
+  public static AnnotationS bytecodeS(int line, StringS path) {
     return bytecodeS(path, loc(line));
   }
 
-  public static AnnS bytecodeS(String path, Loc loc) {
+  public static AnnotationS bytecodeS(String path, Loc loc) {
     return bytecodeS(stringS(path), loc);
   }
 
-  public static AnnS bytecodeS(StringS path, Loc loc) {
-    return new AnnS(BYTECODE, path, loc);
+  public static AnnotationS bytecodeS(StringS path, Loc loc) {
+    return new AnnotationS(BYTECODE, path, loc);
   }
 
-  public static AnnS natAnnS() {
-    return natAnnS(1, stringS("impl"));
+  public static AnnotationS nativeAnnotationS() {
+    return nativeAnnotationS(1, stringS("impl"));
   }
 
-  public static AnnS natAnnS(int line, StringS classBinaryName) {
-    return natAnnS(line, classBinaryName, true);
+  public static AnnotationS nativeAnnotationS(int line, StringS classBinaryName) {
+    return nativeAnnotationS(line, classBinaryName, true);
   }
 
-  public static AnnS natAnnS(int line, StringS classBinaryName, boolean pure) {
-    return natAnnS(loc(line), classBinaryName, pure);
+  public static AnnotationS nativeAnnotationS(int line, StringS classBinaryName, boolean pure) {
+    return nativeAnnotationS(loc(line), classBinaryName, pure);
   }
 
-  public static AnnS natAnnS(Loc loc, StringS classBinaryName) {
-    return natAnnS(loc, classBinaryName, true);
+  public static AnnotationS nativeAnnotationS(Loc loc, StringS classBinaryName) {
+    return nativeAnnotationS(loc, classBinaryName, true);
   }
 
-  public static AnnS natAnnS(Loc loc, StringS classBinaryName, boolean pure) {
+  public static AnnotationS nativeAnnotationS(Loc loc, StringS classBinaryName, boolean pure) {
     var name = pure ? NATIVE_PURE : NATIVE_IMPURE;
-    return new AnnS(name, classBinaryName, loc);
+    return new AnnotationS(name, classBinaryName, loc);
   }
 
   public static ItemS itemS(TypeS type) {
@@ -1267,11 +1267,11 @@ public class TestContext {
     return annValS(line, bytecodeS(line - 1, "impl"), type, name);
   }
 
-  public static AnnValueS annValS(int line, AnnS ann, TypeS type, String name) {
+  public static AnnValueS annValS(int line, AnnotationS ann, TypeS type, String name) {
     return annValS(ann, type, name, loc(line));
   }
 
-  public static AnnValueS annValS(AnnS ann, TypeS type, String name, Loc loc) {
+  public static AnnValueS annValS(AnnotationS ann, TypeS type, String name, Loc loc) {
     return new AnnValueS(ann, schemaS(type), name, loc);
   }
 
@@ -1323,18 +1323,20 @@ public class TestContext {
   }
 
   public static AnnFuncS nativeFuncS(TypeS resT, String name, NList<ItemS> params) {
-    return annFuncS(natAnnS(), resT, name, params);
+    return annFuncS(nativeAnnotationS(), resT, name, params);
   }
 
-  public static AnnFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params) {
+  public static AnnFuncS annFuncS(AnnotationS ann, TypeS resT, String name, NList<ItemS> params) {
     return annFuncS(1, ann, resT, name, params);
   }
 
-  public static AnnFuncS annFuncS(int line, AnnS ann, TypeS resT, String name, NList<ItemS> params) {
+  public static AnnFuncS annFuncS(
+      int line, AnnotationS ann, TypeS resT, String name, NList<ItemS> params) {
     return annFuncS(ann, resT, name, params, loc(line));
   }
 
-  public static AnnFuncS annFuncS(AnnS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
+  public static AnnFuncS annFuncS(
+      AnnotationS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
     return new AnnFuncS(ann, funcSchemaS(params, resT), name, params, loc);
   }
 

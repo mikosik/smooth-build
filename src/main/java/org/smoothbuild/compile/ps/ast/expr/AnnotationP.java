@@ -8,10 +8,10 @@ import com.google.common.base.Objects;
 /**
  * Annotation.
  */
-public final class AnnP extends NalImpl {
+public final class AnnotationP extends NalImpl {
   private final StringP path;
 
-  public AnnP(String name, StringP path, Loc loc) {
+  public AnnotationP(String name, StringP path, Loc loc) {
     super(name, loc);
     this.path = path;
   }
@@ -22,7 +22,7 @@ public final class AnnP extends NalImpl {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof AnnP that
+    return object instanceof AnnotationP that
         && this.name().equals(that.name())
         && this.path().equals(that.path())
         && this.loc().equals(that.loc());

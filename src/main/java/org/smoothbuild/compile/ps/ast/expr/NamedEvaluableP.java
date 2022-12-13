@@ -12,12 +12,12 @@ import org.smoothbuild.compile.ps.ast.type.TypeP;
 public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP, EvaluableP
     permits NamedFuncP, NamedValueP {
   private final Optional<ExprP> body;
-  private final Optional<AnnP> ann;
+  private final Optional<AnnotationP> annotation;
 
-  protected NamedEvaluableP(String name, Optional<ExprP> body, Optional<AnnP> ann, Loc loc) {
+  protected NamedEvaluableP(String name, Optional<ExprP> body, Optional<AnnotationP> annotation, Loc loc) {
     super(name, loc);
     this.body = body;
-    this.ann = ann;
+    this.annotation = annotation;
   }
 
   @Override
@@ -25,8 +25,8 @@ public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
     return body;
   }
 
-  public Optional<AnnP> ann() {
-    return ann;
+  public Optional<AnnotationP> annotation() {
+    return annotation;
   }
 
   public abstract Optional<TypeP> evalT();

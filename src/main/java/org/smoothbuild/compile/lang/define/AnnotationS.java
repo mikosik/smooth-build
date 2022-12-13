@@ -8,7 +8,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 /**
  * Annotation.
  */
-public record AnnS(String name, StringS path, Loc loc) {
+public record AnnotationS(String name, StringS path, Loc loc) {
   @Override
   public String toString() {
     var fields = joinToString("\n",

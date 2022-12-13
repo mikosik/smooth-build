@@ -9,9 +9,9 @@ import org.smoothbuild.testing.TestContext;
 public class SelectSTest extends TestContext {
   @Test
   public void to_string() {
-    var annS = new AnnS("myAnnotation", stringS(7, "myPath"), loc(17));
+    var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), loc(17));
     var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));
-    var structValue = annValS(11, annS, structTS, "structValue");
+    var structValue = annValS(11, annotationS, structTS, "structValue");
     var selectS = selectS(3, monoizeS(12, structValue), "field");
     assertThat(selectS.toString())
         .isEqualTo("""

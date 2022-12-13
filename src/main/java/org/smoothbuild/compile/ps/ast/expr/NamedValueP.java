@@ -12,8 +12,12 @@ public final class NamedValueP extends NamedEvaluableP {
   private TypeS typeS;
   private SchemaS schemaS;
 
-  public NamedValueP(Optional<TypeP> type, String name, Optional<ExprP> body,
-      Optional<AnnP> annotation, Loc loc) {
+  public NamedValueP(
+      Optional<TypeP> type,
+      String name,
+      Optional<ExprP> body,
+      Optional<AnnotationP> annotation,
+      Loc loc) {
     super(name, body, annotation, loc);
     this.type = type;
   }

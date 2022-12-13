@@ -14,9 +14,14 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
   private FuncTS type;
   private FuncSchemaS funcSchemaS;
 
-  public NamedFuncP(Optional<TypeP> resT, String name, NList<ItemP> params, Optional<ExprP> body,
-      Optional<AnnP> ann, Loc loc) {
-    super(name, body, ann, loc);
+  public NamedFuncP(
+      Optional<TypeP> resT,
+      String name,
+      NList<ItemP> params,
+      Optional<ExprP> body,
+      Optional<AnnotationP> annotation,
+      Loc loc) {
+    super(name, body, annotation, loc);
     this.resT = resT;
     this.params = params;
   }
