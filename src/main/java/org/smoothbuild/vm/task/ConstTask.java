@@ -13,13 +13,13 @@ public final class ConstTask extends Task {
     super(valueB, trace, FAST);
   }
 
-  public ValueB instB() {
+  public ValueB valueB() {
     return (ValueB) exprB();
   }
 
   @Override
   public Output run(TupleB input, Container container) {
     checkArgument(input.items().size() == 0);
-    return new Output(instB(), container.messages());
+    return new Output(valueB(), container.messages());
   }
 }

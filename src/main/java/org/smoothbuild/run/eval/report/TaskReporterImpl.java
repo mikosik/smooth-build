@@ -84,10 +84,10 @@ public class TaskReporterImpl implements TaskReporter {
   }
 
   private String label(ConstTask constTask) {
-    var instB = constTask.instB();
-    return switch (instB) {
+    var valueB = constTask.valueB();
+    return switch (valueB) {
       case FuncB funcB -> nameOf(funcB);
-      default -> instB.type().name();
+      default -> valueB.type().name();
     };
   }
 

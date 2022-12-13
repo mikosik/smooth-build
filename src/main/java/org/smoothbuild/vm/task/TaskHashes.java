@@ -11,7 +11,7 @@ public class TaskHashes {
   public static Hash taskHash(Task task) {
     return switch (task) {
       case CombineTask combineTask -> combineHash();
-      case ConstTask constTask -> constHash(constTask.instB());
+      case ConstTask constTask -> constHash(constTask.valueB());
       case InvokeTask invokeTask -> invokeHash(invokeTask.nativeFunc());
       case OrderTask orderTask -> orderHash(orderTask.outputT());
       case PickTask pickTask -> pickHash();
