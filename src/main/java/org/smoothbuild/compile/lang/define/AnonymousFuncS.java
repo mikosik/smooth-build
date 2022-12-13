@@ -12,13 +12,13 @@ import org.smoothbuild.util.collect.NList;
  * Anonymous function.
  * This class is immutable.
  */
-public final class AnonFuncS implements ExprFuncS, MonoizableS {
+public final class AnonymousFuncS implements ExprFuncS, MonoizableS {
   private final FuncSchemaS schema;
   private final NList<ItemS> params;
   private final ExprS body;
   private final Loc loc;
 
-  public AnonFuncS(FuncSchemaS schema, NList<ItemS> params, ExprS body, Loc loc) {
+  public AnonymousFuncS(FuncSchemaS schema, NList<ItemS> params, ExprS body, Loc loc) {
     this.schema = schema;
     this.params = params;
     this.body = body;
@@ -51,7 +51,7 @@ public final class AnonFuncS implements ExprFuncS, MonoizableS {
     if (this == object) {
       return true;
     }
-    return object instanceof AnonFuncS that
+    return object instanceof AnonymousFuncS that
         && this.schema.equals(that.schema)
         && this.params.equals(that.params)
         && this.body.equals(that.body)
@@ -66,6 +66,6 @@ public final class AnonFuncS implements ExprFuncS, MonoizableS {
   @Override
   public String toString() {
     var fields = fieldsToString() + "\nbody = " + body;
-    return "AnonFuncS(\n" + indent(fields) + "\n)";
+    return "AnonymousFuncS(\n" + indent(fields) + "\n)";
   }
 }

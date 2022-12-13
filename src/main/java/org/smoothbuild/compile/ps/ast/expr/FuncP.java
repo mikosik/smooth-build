@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 public sealed interface FuncP
     extends EvaluableP
-    permits AnonFuncP, NamedFuncP {
+    permits AnonymousFuncP, NamedFuncP {
   public Optional<TypeP> resT();
 
   public NList<ItemP> params();

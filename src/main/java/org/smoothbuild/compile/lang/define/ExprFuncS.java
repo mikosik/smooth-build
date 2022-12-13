@@ -2,6 +2,6 @@ package org.smoothbuild.compile.lang.define;
 
 public sealed interface ExprFuncS
     extends FuncS
-    permits AnonFuncS, NamedExprFuncS {
+    permits AnonymousFuncS, NamedExprFuncS {
   public ExprS body();
 }

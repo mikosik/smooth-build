@@ -1048,7 +1048,7 @@ public class DeclarationTest extends TestContext {
     }
 
     @Nested
-    class _anon_func {
+    class _anonymous_function {
       @Test
       public void with_no_params() {
         var code = """
@@ -1558,7 +1558,7 @@ public class DeclarationTest extends TestContext {
       }
 
       @Test
-      public void not_consumed_by_consuming_expr_inside_anon_func_body() {
+      public void not_consumed_by_consuming_expr_inside_anonymous_function_body() {
         var code = """
             result = 7 | () -> [];
             """;

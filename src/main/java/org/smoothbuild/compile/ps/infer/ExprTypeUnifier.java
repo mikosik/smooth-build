@@ -31,7 +31,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnifierExc;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.EvaluableP;
@@ -193,15 +193,15 @@ public class ExprTypeUnifier {
   private Optional<TypeS> unifyExpr(ExprP exprP) {
     // @formatter:off
     return switch (exprP) {
-      case CallP       callP       -> unifyAndMemoize(this::unifyCall, callP);
-      case AnonFuncP   anonFuncP   -> unifyAndMemoize(this::unifyAnonFunc, anonFuncP);
-      case NamedArgP   namedArgP   -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
-      case OrderP      orderP      -> unifyAndMemoize(this::unifyOrder, orderP);
-      case RefP        refP        -> unifyAndMemoize(this::unifyRef, refP);
-      case SelectP     selectP     -> unifyAndMemoize(this::unifySelect, selectP);
-      case StringP     stringP     -> setAndMemoize(STRING, stringP);
-      case IntP        intP        -> setAndMemoize(INT, intP);
-      case BlobP       blobP       -> setAndMemoize(BLOB, blobP);
+      case CallP          callP          -> unifyAndMemoize(this::unifyCall, callP);
+      case AnonymousFuncP anonymousFuncP -> unifyAndMemoize(this::unifyAnonymousFunc, anonymousFuncP);
+      case NamedArgP      namedArgP      -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
+      case OrderP         orderP         -> unifyAndMemoize(this::unifyOrder, orderP);
+      case RefP           refP           -> unifyAndMemoize(this::unifyRef, refP);
+      case SelectP        selectP        -> unifyAndMemoize(this::unifySelect, selectP);
+      case StringP        stringP        -> setAndMemoize(STRING, stringP);
+      case IntP           intP           -> setAndMemoize(INT, intP);
+      case BlobP          blobP          -> setAndMemoize(BLOB, blobP);
     };
     // @formatter:on
   }
@@ -260,9 +260,9 @@ public class ExprTypeUnifier {
     }
   }
 
-  private Optional<TypeS> unifyAnonFunc(AnonFuncP anonFuncP) {
-    if (unifyEvaluableAndSetSchema(anonFuncP)) {
-      return unifyMonoizable(anonFuncP);
+  private Optional<TypeS> unifyAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    if (unifyEvaluableAndSetSchema(anonymousFuncP)) {
+      return unifyMonoizable(anonymousFuncP);
     } else {
       return Optional.empty();
     }

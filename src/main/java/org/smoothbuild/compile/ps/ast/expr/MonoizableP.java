@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableMap;
  * Expression that can be monomorphized.
  */
 public abstract sealed class MonoizableP extends ExprP
-    permits AnonFuncP, RefP {
+    permits AnonymousFuncP, RefP {
   private ImmutableMap<VarS, TypeS> monoizeVarMap;
 
   public MonoizableP(Loc loc) {

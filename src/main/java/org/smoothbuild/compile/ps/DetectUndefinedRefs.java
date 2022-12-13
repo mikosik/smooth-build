@@ -10,7 +10,7 @@ import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
@@ -58,8 +58,8 @@ public class DetectUndefinedRefs extends AstVisitor {
   }
 
   @Override
-  public void visitAnonFunc(AnonFuncP anonFuncP) {
-    visitFunc(anonFuncP);
+  public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    visitFunc(anonymousFuncP);
   }
 
   private void visitFunc(FuncP funcP) {

@@ -8,13 +8,13 @@ import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 
-public final class AnonFuncP extends MonoizableP implements FuncP {
+public final class AnonymousFuncP extends MonoizableP implements FuncP {
   private final NList<ItemP> params;
   private final ExprP body;
   private FuncTS type;
   private FuncSchemaS schemaS;
 
-  public AnonFuncP(NList<ItemP> params, ExprP body, Loc loc) {
+  public AnonymousFuncP(NList<ItemP> params, ExprP body, Loc loc) {
     super(loc);
     this.params = params;
     this.body = body;

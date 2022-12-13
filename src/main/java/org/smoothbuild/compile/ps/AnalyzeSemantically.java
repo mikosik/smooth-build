@@ -20,7 +20,7 @@ import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
@@ -302,9 +302,9 @@ public class AnalyzeSemantically {
   private static void detectAnonymousFuncParamWithDefaultValue(LogBuffer logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitAnonFunc(AnonFuncP anonFuncP) {
-        super.visitAnonFunc(anonFuncP);
-        anonFuncP.params().forEach(this::logErrorIfDefaultValuePresent);
+      public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+        super.visitAnonymousFunc(anonymousFuncP);
+        anonymousFuncP.params().forEach(this::logErrorIfDefaultValuePresent);
       }
 
       private void logErrorIfDefaultValuePresent(ItemP param) {

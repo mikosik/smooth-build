@@ -42,7 +42,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -193,7 +193,7 @@ public class ApTranslator {
       private ExprP createExpr(AtomicReference<ExprP> piped, ExprContext expr) {
         return switch (expr) {
           case ChainContext chain -> createChain(piped, chain);
-          case AnonymousFuncContext anonFunc -> createAnonFunc(anonFunc);
+          case AnonymousFuncContext anonymousFunc -> createAnonymousFunc(anonymousFunc);
           default -> throw new RuntimeException("shouldn't happen");
         };
       }
@@ -252,11 +252,11 @@ public class ApTranslator {
         return result;
       }
 
-      private AnonFuncP createAnonFunc(AnonymousFuncContext anonymousFunc) {
+      private AnonymousFuncP createAnonymousFunc(AnonymousFuncContext anonymousFunc) {
         var anonFunc = anonymousFunc.anonFunc();
         var params = createItems("anonymousFunc", anonFunc.itemList());
         var body = createExpr(anonFunc.expr());
-        return new AnonFuncP(params, body, locOf(filePath, anonFunc));
+        return new AnonymousFuncP(params, body, locOf(filePath, anonFunc));
       }
 
       private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {

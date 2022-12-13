@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -90,15 +90,15 @@ public class AstVisitor {
   public void visitExpr(ExprP expr) {
     // @formatter:off
     switch (expr) {
-      case BlobP       blobP       -> visitBlob(blobP);
-      case CallP       callP       -> visitCall(callP);
-      case IntP        intP        -> visitInt(intP);
-      case AnonFuncP   anonFuncP   -> visitAnonFunc(anonFuncP);
-      case NamedArgP   namedArgP   -> visitNamedArg(namedArgP);
-      case OrderP      orderP      -> visitOrder(orderP);
-      case RefP        refP        -> visitRef(refP);
-      case SelectP     selectP     -> visitSelect(selectP);
-      case StringP     stringP     -> visitString(stringP);
+      case BlobP          blobP          -> visitBlob(blobP);
+      case CallP          callP          -> visitCall(callP);
+      case IntP           intP           -> visitInt(intP);
+      case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
+      case NamedArgP      namedArgP      -> visitNamedArg(namedArgP);
+      case OrderP         orderP         -> visitOrder(orderP);
+      case RefP           refP           -> visitRef(refP);
+      case SelectP        selectP        -> visitSelect(selectP);
+      case StringP        stringP        -> visitString(stringP);
     }
     // @formatter:on
   }
@@ -122,9 +122,9 @@ public class AstVisitor {
   public void visitInt(IntP int_) {
   }
 
-  public void visitAnonFunc(AnonFuncP anonFuncP) {
-    visitParams(anonFuncP.params());
-    visitExpr(anonFuncP.bodyGet());
+  public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    visitParams(anonymousFuncP.params());
+    visitExpr(anonymousFuncP.bodyGet());
   }
 
   public void visitNamedArg(NamedArgP namedArg) {

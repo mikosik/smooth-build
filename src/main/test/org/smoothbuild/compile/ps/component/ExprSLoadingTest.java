@@ -52,16 +52,17 @@ public class ExprSLoadingTest extends TestContext {
   @Nested
   class _expr {
     @Nested
-    class _anon_func {
+    class _anonymous_function {
       @Test
-      public void mono_anon_func() {
+      public void mono_anonymous_function() {
         var code = """
             result =
               (Int int)
                 -> int;
             """;
-        var anonFunc = anonFuncS(2, nlist(itemS(2, INT, "int")), paramRefS(3, INT, "int"));
-        var monoized = monoizeS(2, varMap(), anonFunc);
+        var anonymousFunc = anonymousFuncS(
+            2, nlist(itemS(2, INT, "int")), paramRefS(3, INT, "int"));
+        var monoized = monoizeS(2, varMap(), anonymousFunc);
         var result = valueS(1, "result", monoized);
         module(code)
             .loadsWithSuccess()
@@ -69,15 +70,15 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void mono_anon_func_using_generic_type_of_enclosing_func() {
+      public void mono_anonymous_func_using_generic_type_of_enclosing_function() {
         var code = """
             (A)->A myFunc(A outerA) =
               (A a)
                 -> a;
             """;
         var body = paramRefS(3, varA(), "a");
-        var anonFunc = anonFuncS(2, varSetS(), nlist(itemS(2, varA(), "a")), body);
-        var monoized = monoizeS(2, varMap(), anonFunc);
+        var anonymousFunc = anonymousFuncS(2, varSetS(), nlist(itemS(2, varA(), "a")), body);
+        var monoized = monoizeS(2, varMap(), anonymousFunc);
         var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "outerA")), monoized);
         module(code)
             .loadsWithSuccess()
@@ -85,7 +86,7 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void mono_anon_func_using_generic_type_of_enclosing_func_two_level_deep() {
+      public void mono_anonymous_function_using_generic_type_of_enclosing_func_two_level_deep() {
         var code = """
             () -> (A)->A myFunc(A outerA) =
               ()
@@ -93,25 +94,27 @@ public class ExprSLoadingTest extends TestContext {
                   -> a;
             """;
         var deeperBody = paramRefS(4, varA(), "a");
-        var deeperAnonFunc = anonFuncS(3, varSetS(), nlist(itemS(3, varA(), "a")), deeperBody);
-        var monoDeeperAnonFunc = monoizeS(3, varMap(), deeperAnonFunc);
-        var anonFunc = anonFuncS(2, varSetS(), nlist(), monoDeeperAnonFunc);
-        var monoAnonFunc = monoizeS(2, varMap(), anonFunc);
-        var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "outerA")), monoAnonFunc);
+        var deeperAnonymousFunc = anonymousFuncS(
+            3, varSetS(), nlist(itemS(3, varA(), "a")), deeperBody);
+        var monoDeeperAnonymousFunc = monoizeS(3, varMap(), deeperAnonymousFunc);
+        var anonFunc = anonymousFuncS(2, varSetS(), nlist(), monoDeeperAnonymousFunc);
+        var monoAnonymousFunc = monoizeS(2, varMap(), anonFunc);
+        var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "outerA")), monoAnonymousFunc);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
       }
 
       @Test
-      public void poly_anon_func() {
+      public void poly_anonymous_function() {
         var code = """
             result =
               (A a)
                 -> a;
             """;
-        var anonFunc = anonFuncS(2, nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
-        var monoized = monoizeS(2, varMap(varA(), varB()), anonFunc);
+        var anonymousFunc = anonymousFuncS(
+            2, nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
+        var monoized = monoizeS(2, varMap(varA(), varB()), anonymousFunc);
         var result = valueS(1, "result", monoized);
         module(code)
             .loadsWithSuccess()

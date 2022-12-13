@@ -62,16 +62,16 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _call {
         @Test
-        public void call_anon_func() throws EvaluatorExcS {
-          var anonFuncS = anonFuncS(nlist(), intS(7));
-          var callS = callS(monoizeS(anonFuncS));
+        public void call_anonymous_func() throws EvaluatorExcS {
+          var anonymousFuncS = anonymousFuncS(nlist(), intS(7));
+          var callS = callS(monoizeS(anonymousFuncS));
           assertThat(evaluate(callS))
               .isEqualTo(intB(7));
         }
 
         @Test
-        public void call_anon_func_returning_value_from_its_closure() throws EvaluatorExcS {
-          var anonymousFunc = monoizeS(anonFuncS(nlist(), paramRefS(intTS(), "p")));
+        public void call_anonymous_function_returning_value_from_its_closure() throws EvaluatorExcS {
+          var anonymousFunc = monoizeS(anonymousFuncS(nlist(), paramRefS(intTS(), "p")));
           var myFunc = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), callS(anonymousFunc)));
           var callS = callS(myFunc, intS(7));
           assertThat(evaluate(callS))
@@ -172,19 +172,19 @@ public class EvaluatorSTest extends TestContext {
     @Nested
     class _monoizable {
       @Nested
-      class _anon_func {
+      class _anonymous_function {
         @Test
-        public void mono_anon_func() throws EvaluatorExcS {
-          assertThat(evaluate(monoizeS(anonFuncS(intS(7)))))
+        public void mono_anonymous_function() throws EvaluatorExcS {
+          assertThat(evaluate(monoizeS(anonymousFuncS(intS(7)))))
               .isEqualTo(closureB(intB(7)));
         }
 
         @Test
-        public void poly_anon_func() throws EvaluatorExcS {
+        public void poly_anonymous_function() throws EvaluatorExcS {
           var a = varA();
-          var polyAnonFuncS = anonFuncS(nlist(itemS(a, "a")), paramRefS(a, "a"));
-          var monoAnonFuncS = monoizeS(varMap(a, intTS()), polyAnonFuncS);
-          assertThat(evaluate(monoAnonFuncS))
+          var polyAnonymousFuncS = anonymousFuncS(nlist(itemS(a, "a")), paramRefS(a, "a"));
+          var monoAnonymousFuncS = monoizeS(varMap(a, intTS()), polyAnonymousFuncS);
+          assertThat(evaluate(monoAnonymousFuncS))
               .isEqualTo(closureB(list(intTB()), refB(intTB(), 0)));
         }
       }

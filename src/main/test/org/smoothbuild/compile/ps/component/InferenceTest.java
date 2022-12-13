@@ -162,8 +162,8 @@ public class InferenceTest extends TestContext {
           .evaluables()
           .get("myValue");
       var myValueBody = ((NamedExprValueS) myValue).body();
-      var anonFunc = ((MonoizeS) myValueBody).monoizableS();
-      assertThat(anonFunc.schema())
+      var anonymousFunc = ((MonoizeS) myValueBody).monoizableS();
+      assertThat(anonymousFunc.schema())
           .isEqualTo(expected);
     }
   }
@@ -826,9 +826,10 @@ public class InferenceTest extends TestContext {
       var code = """
               result = ((A a) -> 7)([]);
               """;
-      var anonFunc = anonFuncS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
+      var anonymousFunc = anonymousFuncS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(1, tupleTS());
-      var call = callS(1, monoizeS(1, varMap(varA(), arrayTS(tupleTS())), anonFunc), emptyArray);
+      var call = callS(
+          1, monoizeS(1, varMap(varA(), arrayTS(tupleTS())), anonymousFunc), emptyArray);
       module(code)
           .loadsWithSuccess()
           .containsEvaluable(valueS(1, "result", call));

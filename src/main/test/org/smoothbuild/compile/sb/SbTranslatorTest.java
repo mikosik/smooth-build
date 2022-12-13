@@ -243,17 +243,17 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void anon_func() {
-        var anonFuncS = anonFuncS(
+      public void anonymous_function() {
+        var anonymousFuncS = anonymousFuncS(
             varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
-        var monoAnonFuncS = monoizeS(varMap(varA(), intTS()), anonFuncS);
-        assertTranslation(monoAnonFuncS, closurizeB(list(intTB()), refB(intTB(), 0)));
+        var monoAnonymousFuncS = monoizeS(varMap(varA(), intTS()), anonymousFuncS);
+        assertTranslation(monoAnonymousFuncS, closurizeB(list(intTB()), refB(intTB(), 0)));
       }
 
       @Test
-      public void anon_func_referencing_param_of_enclosing_func() {
-        var monoAnonFuncS = monoizeS(anonFuncS(paramRefS(intTS(), "p")));
-        var monoFuncS = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), monoAnonFuncS));
+      public void anonymous_function_referencing_param_of_enclosing_function() {
+        var monoAnonymousFuncS = monoizeS(anonymousFuncS(paramRefS(intTS(), "p")));
+        var monoFuncS = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), monoAnonymousFuncS));
 
         var bodyB = closurizeB(refB(intTB(), 0));
         var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
@@ -262,11 +262,11 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void anon_func_with_param_referencing_param_of_enclosing_func() {
+      public void anonymous_function_with_param_referencing_param_of_enclosing_function() {
         // myFunc(Int p) = (Blob a) -> p;
-        var monoAnonFuncS = monoizeS(anonFuncS(
+        var monoAnonymousFuncS = monoizeS(anonymousFuncS(
             nlist(itemS(blobTS(), "a")), paramRefS(intTS(), "p")));
-        var monoFuncS = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), monoAnonFuncS));
+        var monoFuncS = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), monoAnonymousFuncS));
 
         var bodyB = closurizeB(list(blobTB()), refB(intTB(), 1));
         var funcB = exprFuncB(list(intTB()), bodyB);
@@ -317,10 +317,10 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void monoized_poly_expr_twice_with_outer_monoize_actually_setting_its_var() {
         // regression test
-        var monoAnonFuncS = monoizeS(anonFuncS(varSetS(), paramRefS(varA(), "a")));
+        var monoAnonymousFuncS = monoizeS(anonymousFuncS(varSetS(), paramRefS(varA(), "a")));
         var monoFuncS = monoizeS(
             varMap(varA(), intTS()),
-            funcS("myFunc", nlist(itemS(varA(), "a")), monoAnonFuncS));
+            funcS("myFunc", nlist(itemS(varA(), "a")), monoAnonymousFuncS));
 
         var bodyB = closurizeB(refB(intTB(), 0));
         var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
@@ -433,10 +433,10 @@ public class SbTranslatorTest extends TestContext {
 
       @Test
       public void anonymousFunc() {
-        var monoAnonFuncS = monoizeS(anonFuncS(7, nlist(), stringS("abc")));
+        var monoAnonymousFuncS = monoizeS(anonymousFuncS(7, nlist(), stringS("abc")));
 
         var sbTranslator = newTranslator();
-        var closureB = (ClosurizeB) sbTranslator.translateExpr(monoAnonFuncS);
+        var closureB = (ClosurizeB) sbTranslator.translateExpr(monoAnonymousFuncS);
         var nameMapping = sbTranslator.bsMapping().nameMapping();
         var locationMapping = sbTranslator.bsMapping().locMapping();
         assertThat(nameMapping.get(closureB.hash()))

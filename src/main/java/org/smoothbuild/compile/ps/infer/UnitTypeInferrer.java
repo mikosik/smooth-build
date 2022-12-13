@@ -4,7 +4,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -32,15 +32,15 @@ public class UnitTypeInferrer {
   public void infer(ExprP expr) {
     // @formatter:off
     switch (expr) {
-      case CallP       call       -> inferCall(call);
-      case AnonFuncP   anonFunc   -> inferAnonFunc(anonFunc);
-      case NamedArgP   namedArg   -> inferNamedArg(namedArg);
-      case OrderP      order      -> inferOrder(order);
-      case RefP        ref        -> inferMonoizable(ref);
-      case SelectP     select     -> inferSelect(select);
-      case StringP     string     -> {}
-      case IntP        int_       -> {}
-      case BlobP       blob       -> {}
+      case CallP          call          -> inferCall(call);
+      case AnonymousFuncP anonymousFunc -> inferAnonymousFunc(anonymousFunc);
+      case NamedArgP      namedArg      -> inferNamedArg(namedArg);
+      case OrderP         order         -> inferOrder(order);
+      case RefP           ref           -> inferMonoizable(ref);
+      case SelectP        select        -> inferSelect(select);
+      case StringP        string        -> {}
+      case IntP           int_          -> {}
+      case BlobP          blob          -> {}
     }
     // @formatter:on
   }
@@ -50,9 +50,9 @@ public class UnitTypeInferrer {
     call.args().forEach(this::infer);
   }
 
-  private void inferAnonFunc(AnonFuncP anonFunc) {
-    infer(anonFunc.bodyGet());
-    inferMonoizable(anonFunc);
+  private void inferAnonymousFunc(AnonymousFuncP anonymousFunc) {
+    infer(anonymousFunc.bodyGet());
+    inferMonoizable(anonymousFunc);
   }
 
   private void inferNamedArg(NamedArgP namedArg) {

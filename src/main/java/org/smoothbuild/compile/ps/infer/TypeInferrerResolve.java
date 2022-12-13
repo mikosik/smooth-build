@@ -14,7 +14,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.EvaluableP;
@@ -96,15 +96,15 @@ public class TypeInferrerResolve {
   private boolean resolveExpr(ExprP expr) {
     // @formatter:off
     return switch (expr) {
-      case CallP       callP       -> resolveCall(callP);
-      case AnonFuncP   anonFuncP   -> resolveAnonFunc(anonFuncP);
-      case NamedArgP   namedArgP   -> resolveNamedArg(namedArgP);
-      case OrderP      orderP      -> resolveOrder(orderP);
-      case SelectP     selectP     -> resolveSelect(selectP);
-      case RefP        refP        -> resolveMonoizable(refP);
-      case StringP     stringP     -> resolveExprType(stringP);
-      case IntP        intP        -> resolveExprType(intP);
-      case BlobP       blobP       -> resolveExprType(blobP);
+      case CallP          callP          -> resolveCall(callP);
+      case AnonymousFuncP anonymousFuncP -> resolveAnonymousFunc(anonymousFuncP);
+      case NamedArgP      namedArgP      -> resolveNamedArg(namedArgP);
+      case OrderP         orderP         -> resolveOrder(orderP);
+      case SelectP        selectP        -> resolveSelect(selectP);
+      case RefP           refP           -> resolveMonoizable(refP);
+      case StringP        stringP        -> resolveExprType(stringP);
+      case IntP           intP           -> resolveExprType(intP);
+      case BlobP          blobP          -> resolveExprType(blobP);
     };
     // @formatter:on
   }
@@ -115,16 +115,17 @@ public class TypeInferrerResolve {
         && resolveExprType(callP);
   }
 
-  private boolean resolveAnonFunc(AnonFuncP anonFuncP) {
-    return resolveEvaluable(anonFuncP) && resolveMonoizableAnonFunc(anonFuncP);
+  private boolean resolveAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    return resolveEvaluable(anonymousFuncP) && resolveMonoizableAnonymousFunc(anonymousFuncP);
   }
 
-  private boolean resolveMonoizableAnonFunc(AnonFuncP anonFuncP) {
+  private boolean resolveMonoizableAnonymousFunc(AnonymousFuncP anonymousFuncP) {
     // `(VarS)` cast is safe because anonFuncP.monoizeVarMap().keys() has only
     // TempVarS/VarS.
-    var varMapWithResolvedKeys = mapKeys(anonFuncP.monoizeVarMap(), v -> (VarS) unifier.resolve(v));
-    anonFuncP.setMonoizeVarMap(varMapWithResolvedKeys);
-    return resolveMonoizable(anonFuncP);
+    var varMapWithResolvedKeys = mapKeys(
+        anonymousFuncP.monoizeVarMap(), v -> (VarS) unifier.resolve(v));
+    anonymousFuncP.setMonoizeVarMap(varMapWithResolvedKeys);
+    return resolveMonoizable(anonymousFuncP);
   }
 
   private boolean resolveNamedArg(NamedArgP namedArgP) {

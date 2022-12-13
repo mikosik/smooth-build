@@ -15,7 +15,7 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
-import org.smoothbuild.compile.lang.define.AnonFuncS;
+import org.smoothbuild.compile.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
@@ -35,7 +35,7 @@ import org.smoothbuild.compile.lang.define.SelectS;
 import org.smoothbuild.compile.lang.define.StringS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
@@ -119,15 +119,15 @@ public class PsTranslator {
   private Optional<ExprS> translateExpr(ExprP expr) {
     // @formatter:off
     return switch (expr) {
-      case BlobP       blobP       -> Optional.of(translateBlob(blobP));
-      case CallP       callP       -> translateCall(callP);
-      case IntP        intP        -> Optional.of(translateInt(intP));
-      case AnonFuncP   anonFuncP   -> translateAnonFunc(anonFuncP);
-      case NamedArgP   namedArgP   -> translateExpr(namedArgP.expr());
-      case OrderP      orderP      -> translateOrder(orderP);
-      case RefP        refP        -> translateRef(refP);
-      case SelectP     selectP     -> translateSelect(selectP);
-      case StringP     stringP     -> Optional.of(translateString(stringP));
+      case BlobP          blobP          -> Optional.of(translateBlob(blobP));
+      case CallP          callP          -> translateCall(callP);
+      case IntP           intP           -> Optional.of(translateInt(intP));
+      case AnonymousFuncP anonymousFuncP -> translateAnonymousFunc(anonymousFuncP);
+      case NamedArgP      namedArgP      -> translateExpr(namedArgP.expr());
+      case OrderP         orderP         -> translateOrder(orderP);
+      case RefP           refP           -> translateRef(refP);
+      case SelectP        selectP        -> translateSelect(selectP);
+      case StringP        stringP        -> Optional.of(translateString(stringP));
     };
     // @formatter:on
   }
@@ -143,10 +143,10 @@ public class PsTranslator {
     return mapPair(callee, argExprs, (c, as) -> new CallS(c, as, call.loc()));
   }
 
-  private Optional<ExprS> translateAnonFunc(AnonFuncP anonFuncP) {
-    var params = translateParams(anonFuncP.params());
-    return translateFuncBody(params, anonFuncP.bodyGet())
-        .map(b -> monoizeAnonFunc(anonFuncP, params, b));
+  private Optional<ExprS> translateAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    var params = translateParams(anonymousFuncP.params());
+    return translateFuncBody(params, anonymousFuncP.bodyGet())
+        .map(b -> monoizeAnonymousFunc(anonymousFuncP, params, b));
   }
 
   private Optional<ExprS> translateFuncBody(NList<ItemS> params, ExprP expr) {
@@ -155,9 +155,11 @@ public class PsTranslator {
         .translateExpr(expr);
   }
 
-  private static MonoizeS monoizeAnonFunc(AnonFuncP anonFuncP, NList<ItemS> params, ExprS body) {
-    var anonFuncS = new AnonFuncS(anonFuncP.schemaS(), params, body, anonFuncP.loc());
-    return newMonoize(anonFuncP, anonFuncS);
+  private static MonoizeS monoizeAnonymousFunc(
+      AnonymousFuncP anonymousFuncP, NList<ItemS> params, ExprS body) {
+    var anonymousFuncS =
+        new AnonymousFuncS(anonymousFuncP.schemaS(), params, body, anonymousFuncP.loc());
+    return newMonoize(anonymousFuncP, anonymousFuncS);
   }
 
   private Optional<ExprS> translateSelect(SelectP selectP) {

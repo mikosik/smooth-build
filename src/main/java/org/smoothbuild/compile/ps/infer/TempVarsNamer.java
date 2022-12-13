@@ -13,7 +13,7 @@ import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.lang.type.tool.Unifier;
 import org.smoothbuild.compile.lang.type.tool.UnusedVarsGenerator;
-import org.smoothbuild.compile.ps.ast.expr.AnonFuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.EvaluableP;
@@ -61,15 +61,15 @@ public class TempVarsNamer {
   private VarSetS handleExpr(ExprP expr) {
     // @formatter:off
     return switch (expr) {
-      case CallP       callP       -> handleCall(callP);
-      case AnonFuncP   anonFuncP   -> handleAnonFunc(anonFuncP);
-      case NamedArgP   namedArgP   -> handleExpr(namedArgP.expr());
-      case OrderP      orderP      -> handleOrder(orderP);
-      case RefP        refP        -> varSetS();
-      case SelectP     selectP     -> handleExpr(selectP.selectable());
-      case IntP        intP        -> varSetS();
-      case BlobP       blobP       -> varSetS();
-      case StringP     stringP     -> varSetS();
+      case CallP          callP          -> handleCall(callP);
+      case AnonymousFuncP anonymousFuncP -> handleAnonymousFunc(anonymousFuncP);
+      case NamedArgP      namedArgP      -> handleExpr(namedArgP.expr());
+      case OrderP         orderP         -> handleOrder(orderP);
+      case RefP           refP           -> varSetS();
+      case SelectP        selectP        -> handleExpr(selectP.selectable());
+      case IntP           intP           -> varSetS();
+      case BlobP          blobP          -> varSetS();
+      case StringP        stringP        -> varSetS();
     };
     // @formatter:on
   }
@@ -78,8 +78,8 @@ public class TempVarsNamer {
     return handleChildren(concat(call.callee(), call.args()));
   }
 
-  private VarSetS handleAnonFunc(AnonFuncP anonFuncP) {
-    return nameVarsInEvaluable(anonFuncP);
+  private VarSetS handleAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    return nameVarsInEvaluable(anonymousFuncP);
   }
 
   private VarSetS handleOrder(OrderP order) {

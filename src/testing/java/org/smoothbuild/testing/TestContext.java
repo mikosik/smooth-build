@@ -85,7 +85,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
-import org.smoothbuild.compile.lang.define.AnonFuncS;
+import org.smoothbuild.compile.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.ConstructorS;
@@ -1363,32 +1363,33 @@ public class TestContext {
     return new NamedExprFuncS(schema, name, params, body, loc(line));
   }
 
-  public static AnonFuncS anonFuncS(VarSetS quantifiedVars, ExprS body) {
-    return anonFuncS(quantifiedVars, nlist(), body);
+  public static AnonymousFuncS anonymousFuncS(VarSetS quantifiedVars, ExprS body) {
+    return anonymousFuncS(quantifiedVars, nlist(), body);
   }
 
-  public static AnonFuncS anonFuncS(VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
-    return anonFuncS(1, quantifiedVars, params, body);
+  public static AnonymousFuncS anonymousFuncS(
+      VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
+    return anonymousFuncS(1, quantifiedVars, params, body);
   }
 
-  public static AnonFuncS anonFuncS(
+  public static AnonymousFuncS anonymousFuncS(
       int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
     var funcTS = funcTS(toTypes(params), body.evalT());
     var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
-    return new AnonFuncS(funcSchemaS, params, body, loc(line));
+    return new AnonymousFuncS(funcSchemaS, params, body, loc(line));
   }
 
-  public static AnonFuncS anonFuncS(ExprS body) {
-    return anonFuncS(1, nlist(), body);
+  public static AnonymousFuncS anonymousFuncS(ExprS body) {
+    return anonymousFuncS(1, nlist(), body);
   }
 
-  public static AnonFuncS anonFuncS(NList<ItemS> params, ExprS body) {
-    return anonFuncS(1, params, body);
+  public static AnonymousFuncS anonymousFuncS(NList<ItemS> params, ExprS body) {
+    return anonymousFuncS(1, params, body);
   }
 
-  public static AnonFuncS anonFuncS(int line, NList<ItemS> params, ExprS body) {
+  public static AnonymousFuncS anonymousFuncS(int line, NList<ItemS> params, ExprS body) {
     var funcSchemaS = funcSchemaS(toTypes(params), body.evalT());
-    return new AnonFuncS(funcSchemaS, params, body, loc(line));
+    return new AnonymousFuncS(funcSchemaS, params, body, loc(line));
   }
 
   public static NamedExprFuncS idFuncS() {

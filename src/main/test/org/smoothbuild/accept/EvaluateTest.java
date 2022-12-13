@@ -136,7 +136,7 @@ public class EvaluateTest extends AcceptanceTestCase {
     @Nested
     class _call {
       @Nested
-      class _anon_func {
+      class _anonymous_function {
         @Test
         public void const_func() throws Exception {
           createUserModule("""
