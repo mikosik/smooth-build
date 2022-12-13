@@ -11,6 +11,7 @@ import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.bytecode.expr.value.ClosureB;
 import org.smoothbuild.bytecode.expr.value.FuncB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.compile.lang.base.Loc;
@@ -86,13 +87,18 @@ public class TaskReporterImpl implements TaskReporter {
   private String label(ConstTask constTask) {
     var valueB = constTask.valueB();
     return switch (valueB) {
+      case ClosureB closureB -> nameOf(closureB.func());
       case FuncB funcB -> nameOf(funcB);
       default -> valueB.type().name();
     };
   }
 
   private Loc locationOf(ExprB exprB) {
-    return bsMapping.locMapping().get(exprB.hash());
+    if (exprB instanceof ClosureB closureB) {
+      return locationOf(closureB.func());
+    } else {
+      return bsMapping.locMapping().get(exprB.hash());
+    }
   }
 
   private String nameOf(FuncB funcB) {
