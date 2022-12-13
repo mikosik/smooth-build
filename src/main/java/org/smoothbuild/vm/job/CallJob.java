@@ -63,22 +63,21 @@ public class CallJob extends Job {
   private void handleClosure(ClosureB closureB, Consumer<ValueB> resultConsumer) {
     var closureEnvironment = closureB.environment().items();
     var closureBodyEnvironment = map(concat(args(), closureEnvironment), context()::jobFor);
-    handleFunc(closureBodyEnvironment, closureB, closureB.func().body(), resultConsumer);
+    handleFunc(closureBodyEnvironment, closureB.func(), resultConsumer);
   }
 
   private void handleExprFunc(ExprFuncB exprFuncB, Consumer<ValueB> resultConsumer) {
     var funcBodyEnvironment = map(args(), context()::jobFor);
-    handleFunc(funcBodyEnvironment, exprFuncB, exprFuncB.body(), resultConsumer);
+    handleFunc(funcBodyEnvironment, exprFuncB, resultConsumer);
   }
 
   private void handleFunc(
       ImmutableList<Job> funcBodyEnvironment,
-      FuncB funcB,
-      ExprB body,
+      ExprFuncB exprFuncB,
       Consumer<ValueB> resultConsumer) {
-    var trace = trace(funcB);
+    var trace = trace(exprFuncB);
     var newContext = context().withEnvironment(funcBodyEnvironment, trace);
-    evaluateImpl(newContext, body, resultConsumer);
+    evaluateImpl(newContext, exprFuncB.body(), resultConsumer);
   }
 
   // handling IfFunc
