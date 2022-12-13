@@ -8,15 +8,15 @@ import org.smoothbuild.testing.TestContext;
 public class CallSTest extends TestContext {
   @Test
   public void to_string() {
-    var defFuncS = monoizeS(4, varMap(varA(), intTS()), idFuncS());
-    var callS = callS(3, defFuncS, intS(3, 7));
+    var funcS = monoizeS(4, varMap(varA(), intTS()), idFuncS());
+    var callS = callS(3, funcS, intS(3, 7));
     assertThat(callS.toString())
         .isEqualTo("""
             CallS(
               callee = MonoizeS(
                 varMap = {A=Int}
                 monoizableS = EvaluableRefS(
-                  namedEvaluable = DefFuncS(
+                  namedEvaluable = NamedExprFuncS(
                     name = myId
                     schema = <A>(A)->A
                     params = [

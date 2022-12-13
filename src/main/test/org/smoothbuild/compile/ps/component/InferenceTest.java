@@ -5,8 +5,8 @@ import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.testing.TestContext;
 
@@ -161,7 +161,7 @@ public class InferenceTest extends TestContext {
           .getModuleAsDefinitions()
           .evaluables()
           .get("myValue");
-      var myValueBody = ((DefValueS) myValue).body();
+      var myValueBody = ((NamedExprValueS) myValue).body();
       var anonFunc = ((MonoizeS) myValueBody).monoizableS();
       assertThat(anonFunc.schema())
           .isEqualTo(expected);
@@ -808,17 +808,17 @@ public class InferenceTest extends TestContext {
   @Nested
   class _infer_unit_type {
     @Test
-    public void defined_function() {
+    public void expression_function() {
       var code = """
               Int myFunc(A a) = 7;
               result = myFunc([]);
               """;
-      var myFunc = defFuncS(1, "myFunc", nlist(itemS(1, varA(), "a")), intS(1, 7));
+      var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(2, tupleTS());
       var call = callS(2, monoizeS(2, varMap(varA(), arrayTS(tupleTS())), myFunc), emptyArray);
       module(code)
           .loadsWithSuccess()
-          .containsEvaluable(defValS(2, "result", call));
+          .containsEvaluable(valueS(2, "result", call));
     }
 
     @Test
@@ -831,7 +831,7 @@ public class InferenceTest extends TestContext {
       var call = callS(1, monoizeS(1, varMap(varA(), arrayTS(tupleTS())), anonFunc), emptyArray);
       module(code)
           .loadsWithSuccess()
-          .containsEvaluable(defValS(1, "result", call));
+          .containsEvaluable(valueS(1, "result", call));
     }
   }
 

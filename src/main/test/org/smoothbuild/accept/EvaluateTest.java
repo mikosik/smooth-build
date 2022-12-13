@@ -209,7 +209,7 @@ public class EvaluateTest extends AcceptanceTestCase {
       }
 
       @Nested
-      class _def_func {
+      class _expression_function {
         @Test
         public void const_func() throws Exception {
           createUserModule("""

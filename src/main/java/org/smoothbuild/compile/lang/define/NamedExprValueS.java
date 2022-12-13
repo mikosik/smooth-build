@@ -8,13 +8,13 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
- * Defined value (one that has a body).
+ * Named Expression Value (one that has a body).
  * This class is immutable.
  */
-public final class DefValueS extends NamedValueS {
+public final class NamedExprValueS extends NamedValueS {
   private final ExprS body;
 
-  public DefValueS(SchemaS schema, String name, ExprS body, Loc loc) {
+  public NamedExprValueS(SchemaS schema, String name, ExprS body, Loc loc) {
     super(schema, name, loc);
     this.body = body;
   }
@@ -28,7 +28,7 @@ public final class DefValueS extends NamedValueS {
     if (this == object) {
       return true;
     }
-    return object instanceof DefValueS that
+    return object instanceof NamedExprValueS that
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.body().equals(that.body())
@@ -43,7 +43,7 @@ public final class DefValueS extends NamedValueS {
   @Override
   public String toString() {
     var fieldsString = fieldsToString() + "\nbody = " + body;
-    return "DefVal(\n" + indent(fieldsString) + "\n)";
+    return "NamedExprValue(\n" + indent(fieldsString) + "\n)";
   }
 }
 

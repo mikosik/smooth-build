@@ -10,8 +10,10 @@ import org.smoothbuild.compile.lang.type.SchemaS;
  * Named value.
  * This class is immutable.
  */
-public sealed abstract class NamedValueS extends Sanal implements NamedEvaluableS
-    permits AnnValueS, DefValueS {
+public sealed abstract class NamedValueS
+    extends Sanal
+    implements NamedEvaluableS
+    permits AnnValueS, NamedExprValueS {
   public NamedValueS(SchemaS schema, String name, Loc loc) {
     super(schema, name, loc);
   }

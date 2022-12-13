@@ -18,8 +18,6 @@ import org.smoothbuild.compile.lang.define.AnnValueS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
-import org.smoothbuild.compile.lang.define.DefFuncS;
-import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
@@ -27,6 +25,8 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizableS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedExprFuncS;
+import org.smoothbuild.compile.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
@@ -70,7 +70,7 @@ public class PsTranslator {
       return Optional.of(new AnnValueS(ann, schema, name, loc));
     } else {
       var body = translateExpr(namedValueP.body().get());
-      return body.map(b -> new DefValueS(schema, name, b, loc));
+      return body.map(b -> new NamedExprValueS(schema, name, b, loc));
     }
   }
 
@@ -103,7 +103,7 @@ public class PsTranslator {
       return Optional.of(annFuncS);
     } else {
       return translateFuncBody(params, namedFuncP.body().get())
-          .map(b -> new DefFuncS(schema, name, params, b, loc));
+          .map(b -> new NamedExprFuncS(schema, name, params, b, loc));
     }
   }
 

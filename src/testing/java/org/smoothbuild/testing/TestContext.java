@@ -89,8 +89,6 @@ import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.ConstructorS;
-import org.smoothbuild.compile.lang.define.DefFuncS;
-import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.lang.define.IntS;
@@ -100,6 +98,8 @@ import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.MonoizableS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.lang.define.NamedExprFuncS;
+import org.smoothbuild.compile.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
 import org.smoothbuild.compile.lang.define.ParamRefS;
@@ -1252,7 +1252,7 @@ public class TestContext {
   }
 
   public static ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
-    return itemSPoly(line, type, name, body.map(b -> defValS(line, name, b)));
+    return itemSPoly(line, type, name, body.map(b -> valueS(line, name, b)));
   }
 
   public static ItemS itemS(int line, TypeS type, String name, NamedEvaluableS body) {
@@ -1275,16 +1275,16 @@ public class TestContext {
     return new AnnValueS(ann, schemaS(type), name, loc);
   }
 
-  public static DefValueS defValS(String name, ExprS body) {
-    return defValS(1, name, body);
+  public static NamedExprValueS valueS(String name, ExprS body) {
+    return valueS(1, name, body);
   }
 
-  public static DefValueS defValS(int line, String name, ExprS body) {
-    return defValS(line, body.evalT(), name, body);
+  public static NamedExprValueS valueS(int line, String name, ExprS body) {
+    return valueS(line, body.evalT(), name, body);
   }
 
-  public static DefValueS defValS(int line, TypeS type, String name, ExprS body) {
-    return new DefValueS(schemaS(type), name, body, loc(line));
+  public static NamedExprValueS valueS(int line, TypeS type, String name, ExprS body) {
+    return new NamedExprValueS(schemaS(type), name, body, loc(line));
   }
 
   public static NamedValueS emptyArrayValueS() {
@@ -1292,7 +1292,7 @@ public class TestContext {
   }
 
   public static NamedValueS emptyArrayValueS(VarS elemT) {
-    return defValS("emptyArray", orderS(elemT));
+    return valueS("emptyArray", orderS(elemT));
   }
 
   public static ConstructorS constructorS(StructTS structT) {
@@ -1338,22 +1338,22 @@ public class TestContext {
     return new AnnFuncS(ann, funcSchemaS(params, resT), name, params, loc);
   }
 
-  public static DefFuncS defFuncS(int line, String name, NList<ItemS> params, ExprS body) {
-    return defFuncS(line, body.evalT(), name, params, body);
+  public static NamedExprFuncS funcS(int line, String name, NList<ItemS> params, ExprS body) {
+    return funcS(line, body.evalT(), name, params, body);
   }
 
-  public static DefFuncS defFuncS(String name, NList<ItemS> params, ExprS body) {
-    return defFuncS(body.evalT(), name, params, body);
+  public static NamedExprFuncS funcS(String name, NList<ItemS> params, ExprS body) {
+    return funcS(body.evalT(), name, params, body);
   }
 
-  public static DefFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    return defFuncS(1, resT, name, params, body);
+  public static NamedExprFuncS funcS(TypeS resT, String name, NList<ItemS> params, ExprS body) {
+    return funcS(1, resT, name, params, body);
   }
 
-  public static DefFuncS defFuncS(
+  public static NamedExprFuncS funcS(
       int line, TypeS resT, String name, NList<ItemS> params, ExprS body) {
     var schema = funcSchemaS(params, resT);
-    return new DefFuncS(schema, name, params, body, loc(line));
+    return new NamedExprFuncS(schema, name, params, body, loc(line));
   }
 
   public static AnonFuncS anonFuncS(VarSetS quantifiedVars, ExprS body) {
@@ -1384,17 +1384,17 @@ public class TestContext {
     return new AnonFuncS(funcSchemaS, params, body, loc(line));
   }
 
-  public static DefFuncS idFuncS() {
+  public static NamedExprFuncS idFuncS() {
     var a = varA();
-    return defFuncS(a, "myId", nlist(itemS(a, "a")), paramRefS(a, "a"));
+    return funcS(a, "myId", nlist(itemS(a, "a")), paramRefS(a, "a"));
   }
 
-  public static DefFuncS intIdFuncS() {
-    return defFuncS(intTS(), "myIntId", nlist(itemS(intTS(), "i")), paramRefS(intTS(), "i"));
+  public static NamedExprFuncS intIdFuncS() {
+    return funcS(intTS(), "myIntId", nlist(itemS(intTS(), "i")), paramRefS(intTS(), "i"));
   }
 
-  public static DefFuncS returnIntFuncS() {
-    return defFuncS(intTS(), "myReturnInt", nlist(), intS(1, 3));
+  public static NamedExprFuncS returnIntFuncS() {
+    return funcS(intTS(), "myReturnInt", nlist(), intS(1, 3));
   }
 
   public static ItemSigS sigS(TypeS type, String name) {

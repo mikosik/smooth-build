@@ -71,26 +71,26 @@ public class EvaluatorSTest extends TestContext {
 
         @Test
         public void call_anon_func_returning_value_from_its_closure() throws EvaluatorExcS {
-          var anonFuncS = monoizeS(anonFuncS(nlist(), paramRefS(intTS(), "p")));
-          var defFuncS = monoizeS(defFuncS("myFunc", nlist(itemS(intTS(), "p")), callS(anonFuncS)));
-          var callS = callS(defFuncS, intS(7));
+          var anonymousFunc = monoizeS(anonFuncS(nlist(), paramRefS(intTS(), "p")));
+          var myFunc = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), callS(anonymousFunc)));
+          var callS = callS(myFunc, intS(7));
           assertThat(evaluate(callS))
               .isEqualTo(intB(7));
         }
 
         @Test
-        public void call_def_func() throws EvaluatorExcS {
-          var defFuncS = defFuncS("n", nlist(), intS(7));
-          var callS = callS(monoizeS(defFuncS));
+        public void call_expression_function() throws EvaluatorExcS {
+          var funcS = funcS("n", nlist(), intS(7));
+          var callS = callS(monoizeS(funcS));
           assertThat(evaluate(callS))
               .isEqualTo(intB(7));
         }
 
         @Test
-        public void call_poly_def_func() throws EvaluatorExcS {
+        public void call_poly_expression_function() throws EvaluatorExcS {
           var a = varA();
           var orderS = orderS(a, paramRefS(a, "e"));
-          var funcS = defFuncS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
+          var funcS = funcS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
           var callS = callS(monoizeS(varMap(a, intTS()), funcS), intS(7));
           assertThat(evaluate(callS))
               .isEqualTo(arrayB(intTB(), intB(7)));
@@ -148,7 +148,7 @@ public class EvaluatorSTest extends TestContext {
       class param_ref {
         @Test
         public void param_ref() throws EvaluatorExcS {
-          var func = monoizeS(defFuncS("n", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p")));
+          var func = monoizeS(funcS("n", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p")));
           var call = callS(func, intS(7));
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
@@ -191,15 +191,15 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _named_func {
         @Test
-        public void mono_def_func() throws EvaluatorExcS {
+        public void mono_expression_func() throws EvaluatorExcS {
           assertThat(evaluate(monoizeS(intIdFuncS())))
               .isEqualTo(idFuncB());
         }
 
         @Test
-        public void poly_def_func() throws EvaluatorExcS {
+        public void poly_expression_function() throws EvaluatorExcS {
           var a = varA();
-          var funcS = defFuncS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
+          var funcS = funcS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
           var monoizedS = monoizeS(varMap(a, intTS()), funcS);
           assertThat(evaluate(monoizedS))
               .isEqualTo(idFuncB());
@@ -233,8 +233,8 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _named_value {
         @Test
-        public void mono_def_value() throws EvaluatorExcS {
-          var namedValue = monoizeS(defValS(1, intTS(), "name", intS(7)));
+        public void mono_expression_value() throws EvaluatorExcS {
+          var namedValue = monoizeS(valueS(1, intTS(), "name", intS(7)));
           assertThat(evaluate(namedValue))
               .isEqualTo(intB(7));
         }
@@ -242,7 +242,7 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void poly_value() throws EvaluatorExcS {
           var a = varA();
-          var polyValue = defValS(1, arrayTS(a), "name", orderS(a));
+          var polyValue = valueS(1, arrayTS(a), "name", orderS(a));
           var monoizedValue = monoizeS(varMap(a, intTS()), polyValue);
           assertThat(evaluate(monoizedValue))
               .isEqualTo(arrayB(intTB()));

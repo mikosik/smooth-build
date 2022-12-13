@@ -168,7 +168,7 @@ public class VisibilityTest extends TestContext {
       }
 
       @Test
-      public void in_defined_func_body_is_visible() {
+      public void in_expression_function_body_is_visible() {
         module("""
              myFunc(String param) = param;
              """)
@@ -176,7 +176,7 @@ public class VisibilityTest extends TestContext {
       }
 
       @Test
-      public void outside_its_defined_function_body_is_not_visible() {
+      public void outside_its_expression_function_body_is_not_visible() {
         module("""
              myFunc(String param) = "abc";
              result = param;
@@ -224,7 +224,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void defined_function_argument() {
+        public void expression_function_argument() {
           var code = """
               String myFunc(Blob b) = "abc";
               result = myFunc(undefined);
@@ -234,7 +234,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void defined_function_body() {
+        public void exprssion_function_body() {
           var code = """
               result() = undefined;
               """;
@@ -243,7 +243,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void defined_function_in_call_expression() {
+        public void exprssion_function_in_call_expression() {
           var code = """
               result = undefined();
               """;
@@ -302,7 +302,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void defined_function_parameter() {
+        public void exprssion_function_parameter() {
           var code = """
               String myFunc(Undefined param) = "abc";
               """;
@@ -724,7 +724,7 @@ public class VisibilityTest extends TestContext {
     }
 
     @Nested
-    class _defined_function_shadowing {
+    class _expression_function_shadowing {
       @Nested
       class _imported {
         @Test
@@ -805,7 +805,7 @@ public class VisibilityTest extends TestContext {
     }
 
     @Nested
-    class _defined_function_param_shadowing {
+    class _expression_function_param_shadowing {
       @Test
       public void other_param_fails() {
         module("""

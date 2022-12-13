@@ -197,12 +197,12 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _expr_func extends _func_category_test_case {
+    class _expression_func extends _func_category_test_case {
       @Test
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save defined func type in HashedDb.
+         * to save expression function type in HashedDb.
          */
         var specHash = hash(
             hash(EXPR_FUNC.marker()),

@@ -742,7 +742,8 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void def_func_is_not_func_value_but_expr_evaluating_to_func() throws Exception {
+    public void expression_function_is_not_function_value_but_expression_evaluating_to_function()
+        throws Exception {
       var environment = combineB(blobB());
       var not_a_func_value_but_expr = callB(exprFuncB(idFuncB()));
       var cat = closureCB(idFuncB().type());
@@ -760,7 +761,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void def_func_is_not_def_func_but_closure() throws Exception {
+    public void expression_function_is_not_expression_function_but_closure() throws Exception {
       var environment = combineB(blobB());
       var not_a_func_value_but_closure = callB(closureB(idFuncB()), intB());
       var cat = closureCB(idFuncB().type());
@@ -778,7 +779,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void def_func_type_is_not_equal_closure_type() throws Exception {
+    public void expression_function_type_is_not_equal_closure_type() throws Exception {
       var environment = combineB(blobB());
       var func = idFuncB();
       var cat = closureCB(blobTB(), intTB());
@@ -797,12 +798,12 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   @Nested
-  class _defined_func {
+  class _expression_func {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save
-       * Defined function in HashedDb.
+       * expression function in HashedDb.
        */
       var body = boolB(true);
       var cat = exprFuncCB(intTB(), stringTB(), boolTB());

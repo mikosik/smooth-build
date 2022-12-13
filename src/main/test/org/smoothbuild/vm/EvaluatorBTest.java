@@ -239,7 +239,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void defined_function() {
+        public void expression_function() {
           var func = exprFuncB(intB(7));
           var call = callB(func);
           assertThat(evaluate(call))
@@ -247,7 +247,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void defined_function_passed_as_argument() {
+        public void expression_function_passed_as_argument() {
           var func = exprFuncB(intB(7));
           var paramT = func.evalT();
           var outerFunc = exprFuncB(list(paramT), callB(refB(paramT, 0)));
@@ -257,7 +257,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void defined_function_returned_from_call() {
+        public void expression_function_returned_from_call() {
           var func = exprFuncB(intB(7));
           var outerFunc = exprFuncB(func);
           var call = callB(callB(outerFunc));

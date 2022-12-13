@@ -5,13 +5,13 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class DefValueSTest extends TestContext {
+public class NamedExprValueSTest extends TestContext {
   @Test
   public void to_string() {
-    var annValS = new DefValueS(schemaS(stringTS()), "myVal", intS(9), loc(7));
+    var annValS = new NamedExprValueS(schemaS(stringTS()), "myVal", intS(9), loc(7));
     assertThat(annValS.toString())
         .isEqualTo("""
-            DefVal(
+            NamedExprValue(
               schema = <>String
               name = myVal
               loc = myBuild.smooth:7

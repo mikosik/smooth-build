@@ -6,15 +6,15 @@ import static org.smoothbuild.util.collect.NList.nlist;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class DefFuncSTest extends TestContext {
+public class NamedExprFuncSTest extends TestContext {
   @Test
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));
     var schema = funcSchemaS(params, stringTS());
-    var func = new DefFuncS(schema, "myFunc", params, intS(17), loc(1));
+    var func = new NamedExprFuncS(schema, "myFunc", params, intS(17), loc(1));
     assertThat(func.toString())
         .isEqualTo("""
-            DefFuncS(
+            NamedExprFuncS(
               name = myFunc
               schema = <>(Int)->String
               params = [

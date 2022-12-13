@@ -10,13 +10,13 @@ import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
 /**
- * Defined function (function that has body).
+ * Named Expression Function (function that has a body and a name).
  * This class is immutable.
  */
-public final class DefFuncS extends NamedFuncS implements ExprFuncS {
+public final class NamedExprFuncS extends NamedFuncS implements ExprFuncS {
   private final ExprS body;
 
-  public DefFuncS(FuncSchemaS schema, String name, NList<ItemS> params, ExprS body, Loc loc) {
+  public NamedExprFuncS(FuncSchemaS schema, String name, NList<ItemS> params, ExprS body, Loc loc) {
     super(schema, name, params, loc);
     this.body = body;
   }
@@ -31,7 +31,7 @@ public final class DefFuncS extends NamedFuncS implements ExprFuncS {
     if (this == object) {
       return true;
     }
-    return object instanceof DefFuncS that
+    return object instanceof NamedExprFuncS that
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
@@ -50,6 +50,6 @@ public final class DefFuncS extends NamedFuncS implements ExprFuncS {
         "name = " + name(),
         fieldsToString(),
         "body = " + body);
-    return "DefFuncS(\n" + indent(fields) + "\n)";
+    return "NamedExprFuncS(\n" + indent(fields) + "\n)";
   }
 }

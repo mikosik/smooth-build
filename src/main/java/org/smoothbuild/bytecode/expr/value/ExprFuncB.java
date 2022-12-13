@@ -9,7 +9,7 @@ import org.smoothbuild.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.value.ExprFuncCB;
 
 /**
- * Defined Function.
+ * Named Expression Function.
  * This class is thread-safe.
  */
 public final class ExprFuncB extends FuncB {

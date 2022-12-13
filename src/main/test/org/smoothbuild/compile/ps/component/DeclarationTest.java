@@ -756,7 +756,7 @@ public class DeclarationTest extends TestContext {
                 String nonDefault);
               """;
           var myFuncParams = nlist(
-              itemS(3, stringTS(), "default", defValS(3, "myFunc:default", stringS(3, "value"))),
+              itemS(3, stringTS(), "default", valueS(3, "myFunc:default", stringS(3, "value"))),
               itemS(4, stringTS(), "nonDefault"));
           var ann = natAnnS(1, stringS(1, "Impl.met"));
           var myFunc = annFuncS(2, ann, stringTS(), "myFunc", myFuncParams);
@@ -790,7 +790,7 @@ public class DeclarationTest extends TestContext {
           module(funcDeclaration("String param1,"))
               .loadsWithSuccess()
               .containsEvaluable(
-                  defFuncS(1, stringTS(), "myFunc", nlist(itemS(1, stringTS(), "param1")),
+                  funcS(1, stringTS(), "myFunc", nlist(itemS(1, stringTS(), "param1")),
                       stringS(1, "abc")));
         }
 
@@ -1016,7 +1016,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcCall("7,"))
               .loadsWithSuccess()
-              .containsEvaluable(defValS(2, intTS(), "result",
+              .containsEvaluable(valueS(2, intTS(), "result",
                   callS(2, monoizeS(2, intIdFuncS()), intS(2, 7))));
         }
 
@@ -1211,7 +1211,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(arrayLiteral("0x07,"))
               .loadsWithSuccess()
-              .containsEvaluable(defValS(1, arrayTS(blobTS()), "result",
+              .containsEvaluable(valueS(1, arrayTS(blobTS()), "result",
                   orderS(1, blobTS(), blobS(1, 7))));
         }
 

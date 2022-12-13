@@ -85,7 +85,7 @@ public class TypeCheckingTest extends TestContext {
   }
 
   @Nested
-  class _defined_function {
+  class _expression_function {
     @Nested
     class _res_type_and_its_body_type {
       @Test

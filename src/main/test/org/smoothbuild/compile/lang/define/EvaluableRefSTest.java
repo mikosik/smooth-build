@@ -12,7 +12,7 @@ public class EvaluableRefSTest extends TestContext {
     assertThat(evaluableRef.toString())
         .isEqualTo("""
             EvaluableRefS(
-              namedEvaluable = DefFuncS(
+              namedEvaluable = NamedExprFuncS(
                 name = myId
                 schema = <A>(A)->A
                 params = [

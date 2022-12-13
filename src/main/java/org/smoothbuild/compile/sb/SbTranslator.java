@@ -46,8 +46,6 @@ import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
 import org.smoothbuild.compile.lang.define.ConstructorS;
-import org.smoothbuild.compile.lang.define.DefFuncS;
-import org.smoothbuild.compile.lang.define.DefValueS;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.ExprFuncS;
 import org.smoothbuild.compile.lang.define.ExprS;
@@ -56,6 +54,8 @@ import org.smoothbuild.compile.lang.define.IntS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.MonoizableS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
+import org.smoothbuild.compile.lang.define.NamedExprFuncS;
+import org.smoothbuild.compile.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.define.OrderS;
@@ -195,8 +195,8 @@ public class SbTranslator {
 
   private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) {
     return switch (namedFuncS) {
-      case AnnFuncS n -> translateAnnFunc(n);
-      case DefFuncS d -> translateExprFunc(d);
+      case AnnFuncS a -> translateAnnFunc(a);
+      case NamedExprFuncS e -> translateExprFunc(e);
       case ConstructorS c -> translateConstructor(c);
     };
   }
@@ -278,7 +278,7 @@ public class SbTranslator {
   private ExprB translateNamedValue(Loc refLoc, NamedValueS namedValueS) {
     return switch (namedValueS) {
       case AnnValueS annValueS -> saveNalAndReturn(annValueS, translateAnnValue(annValueS));
-      case DefValueS defValueS -> translateDefValue(refLoc, defValueS);
+      case NamedExprValueS namedExprValueS -> translateNamedExprValue(refLoc, namedExprValueS);
     };
   }
 
@@ -291,10 +291,10 @@ public class SbTranslator {
     }
   }
 
-  private ExprB translateDefValue(Loc refLoc, DefValueS defValueS) {
-    var funcTB = bytecodeF.funcT(list(), translateT(defValueS.schema().type()));
-    var funcB = bytecodeF.exprFunc(funcTB, translateExpr(defValueS.body()));
-    saveNal(funcB, defValueS);
+  private ExprB translateNamedExprValue(Loc refLoc, NamedExprValueS namedExprValueS) {
+    var funcTB = bytecodeF.funcT(list(), translateT(namedExprValueS.schema().type()));
+    var funcB = bytecodeF.exprFunc(funcTB, translateExpr(namedExprValueS.body()));
+    saveNal(funcB, namedExprValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
     saveLoc(call, refLoc);
     return call;
