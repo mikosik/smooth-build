@@ -106,7 +106,8 @@ public class EvaluatorSTest extends TestContext {
 
         @Test
         public void call_native_argless_func() throws Exception {
-          var funcS = annFuncS(nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
+          var funcS = annotatedFuncS(
+              nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
           var callS = callS(monoizeS(funcS));
           var jarB = blobB(137);
           when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
@@ -120,7 +121,7 @@ public class EvaluatorSTest extends TestContext {
 
         @Test
         public void call_native_func_with_param() throws Exception {
-          var funcS = annFuncS(nativeAnnotationS(1, stringS("class binary name")),
+          var funcS = annotatedFuncS(nativeAnnotationS(1, stringS("class binary name")),
               intTS(), "f", nlist(itemS(intTS(), "p"))
           );
           var callS = callS(monoizeS(funcS), intS(77));
@@ -217,8 +218,8 @@ public class EvaluatorSTest extends TestContext {
               .thenReturn(Try.result(funcB));
 
           var a = varA();
-          var byteFuncS = byteFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
-          assertThat(evaluate(monoizeS(varMap(a, intTS()), byteFuncS)))
+          var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
+          assertThat(evaluate(monoizeS(varMap(a, intTS()), bytecodeFuncS)))
               .isEqualTo(funcB);
         }
 

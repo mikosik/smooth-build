@@ -15,6 +15,6 @@ public record AnnotationS(String name, StringS path, Loc loc) {
         "name = " + name,
         "path = " + path,
         "loc = " + loc);
-    return "AnnS(\n" + indent(fields) + "\n)";
+    return "AnnotationS(\n" + indent(fields) + "\n)";
   }
 }

@@ -82,7 +82,7 @@ import org.smoothbuild.bytecode.type.value.StringTB;
 import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.define.AnnFuncS;
+import org.smoothbuild.compile.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
@@ -1311,35 +1311,38 @@ public class TestContext {
     return new ConstructorS(funcSchemaS(params, structT), name, params, loc(line));
   }
 
-  public static AnnFuncS byteFuncS(String path, TypeS resT, String name, NList<ItemS> params) {
-    return byteFuncS(1, path, resT, name, params);
+  public static AnnotatedFuncS bytecodeFuncS(
+      String path, TypeS resT, String name, NList<ItemS> params) {
+    return bytecodeFuncS(1, path, resT, name, params);
   }
 
-  public static AnnFuncS byteFuncS(int line, TypeS resT, String name, NList<ItemS> params) {
-    return annFuncS(line, bytecodeS(line - 1, "impl"), resT, name, params);
+  public static AnnotatedFuncS bytecodeFuncS(
+      int line, TypeS resT, String name, NList<ItemS> params) {
+    return annotatedFuncS(line, bytecodeS(line - 1, "impl"), resT, name, params);
   }
 
-  public static AnnFuncS byteFuncS(
+  public static AnnotatedFuncS bytecodeFuncS(
       int line, String path, TypeS resT, String name, NList<ItemS> params) {
-    return annFuncS(line, bytecodeS(path), resT, name, params);
+    return annotatedFuncS(line, bytecodeS(path), resT, name, params);
   }
 
-  public static AnnFuncS nativeFuncS(TypeS resT, String name, NList<ItemS> params) {
-    return annFuncS(nativeAnnotationS(), resT, name, params);
+  public static AnnotatedFuncS nativeFuncS(TypeS resT, String name, NList<ItemS> params) {
+    return annotatedFuncS(nativeAnnotationS(), resT, name, params);
   }
 
-  public static AnnFuncS annFuncS(AnnotationS ann, TypeS resT, String name, NList<ItemS> params) {
-    return annFuncS(1, ann, resT, name, params);
+  public static AnnotatedFuncS annotatedFuncS(
+      AnnotationS ann, TypeS resT, String name, NList<ItemS> params) {
+    return annotatedFuncS(1, ann, resT, name, params);
   }
 
-  public static AnnFuncS annFuncS(
+  public static AnnotatedFuncS annotatedFuncS(
       int line, AnnotationS ann, TypeS resT, String name, NList<ItemS> params) {
-    return annFuncS(ann, resT, name, params, loc(line));
+    return annotatedFuncS(ann, resT, name, params, loc(line));
   }
 
-  public static AnnFuncS annFuncS(
+  public static AnnotatedFuncS annotatedFuncS(
       AnnotationS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
-    return new AnnFuncS(ann, funcSchemaS(params, resT), name, params, loc);
+    return new AnnotatedFuncS(ann, funcSchemaS(params, resT), name, params, loc);
   }
 
   public static NamedExprFuncS funcS(int line, String name, NList<ItemS> params, ExprS body) {

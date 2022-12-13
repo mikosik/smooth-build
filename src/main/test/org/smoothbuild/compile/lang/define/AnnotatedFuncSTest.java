@@ -6,16 +6,16 @@ import static org.smoothbuild.util.collect.NList.nlist;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class AnnFuncSTest extends TestContext {
+public class AnnotatedFuncSTest extends TestContext {
   @Test
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));
     var funcTS = funcSchemaS(params, stringTS());
-    var func = new AnnFuncS(nativeAnnotationS(), funcTS, "myFunc", params, loc(1));
+    var func = new AnnotatedFuncS(nativeAnnotationS(), funcTS, "myFunc", params, loc(1));
     assertThat(func.toString())
         .isEqualTo("""
-            AnnFuncS(
-              AnnS(
+            AnnotatedFuncS(
+              AnnotationS(
                 name = Native
                 path = StringS(String, "impl", myBuild.smooth:1)
                 loc = myBuild.smooth:1

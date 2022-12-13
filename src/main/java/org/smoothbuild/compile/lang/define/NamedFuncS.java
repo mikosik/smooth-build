@@ -11,7 +11,7 @@ import org.smoothbuild.util.collect.NList;
 public sealed abstract class NamedFuncS
     extends Sanal
     implements FuncS, NamedEvaluableS
-    permits AnnFuncS, NamedExprFuncS, ConstructorS {
+    permits AnnotatedFuncS, NamedExprFuncS, ConstructorS {
   private final NList<ItemS> params;
 
   public NamedFuncS(FuncSchemaS schemaS, String name, NList<ItemS> params, Loc loc) {

@@ -12,7 +12,7 @@ import static org.smoothbuild.util.collect.Optionals.pullUp;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.define.AnnFuncS;
+import org.smoothbuild.compile.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
@@ -98,9 +98,9 @@ public class PsTranslator {
     var name = namedFuncP.name();
     var loc = namedFuncP.loc();
     if (namedFuncP.annotation().isPresent()) {
-      var ann = translateAnnotation(namedFuncP.annotation().get());
-      var annFuncS = new AnnFuncS(ann, schema, name, params, loc);
-      return Optional.of(annFuncS);
+      var annotationS = translateAnnotation(namedFuncP.annotation().get());
+      var annotatedFuncS = new AnnotatedFuncS(annotationS, schema, name, params, loc);
+      return Optional.of(annotatedFuncS);
     } else {
       return translateFuncBody(params, namedFuncP.body().get())
           .map(b -> new NamedExprFuncS(schema, name, params, b, loc));

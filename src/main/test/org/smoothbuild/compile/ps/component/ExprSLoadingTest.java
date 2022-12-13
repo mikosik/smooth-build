@@ -133,7 +133,7 @@ public class ExprSLoadingTest extends TestContext {
 
         @Test
         public void with_reference_to_poly_func() {
-          var polyFunc = byteFuncS(6, varA(), "polyFunc", nlist());
+          var polyFunc = bytecodeFuncS(6, varA(), "polyFunc", nlist());
           var monoized = monoizeS(1, varMap(varA(), varA()), polyFunc);
           var paramDefaultValue = valueS("myFunc:b", callS(1, monoized));
           var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultValue);
@@ -464,7 +464,7 @@ public class ExprSLoadingTest extends TestContext {
             .field;
           """;
       var myStruct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-      var getStruct = annFuncS(2, nativeAnnotationS(), myStruct, "getStruct", nlist());
+      var getStruct = annotatedFuncS(2, nativeAnnotationS(), myStruct, "getStruct", nlist());
       var resultBody = selectS(7, callS(6, monoizeS(6, getStruct)), "field");
       var result = valueS(6, stringTS(), "result", resultBody);
       module(code)
@@ -608,8 +608,12 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(annFuncS(2, nativeAnnotationS(1, stringS(1, "Impl.met"), false),
-                stringTS(), "myFunc", nlist()));
+            .containsEvaluable(annotatedFuncS(
+                2,
+                nativeAnnotationS(1, stringS(1, "Impl.met"), false),
+                stringTS(),
+                "myFunc",
+                nlist()));
       }
 
       @Test
@@ -619,7 +623,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(annFuncS(
+            .containsEvaluable(annotatedFuncS(
                 2, nativeAnnotationS(1, stringS(1, "Impl.met"), false), varA(), "myFunc", nlist()));
       }
 
@@ -630,7 +634,7 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(annFuncS(2,
+            .containsEvaluable(annotatedFuncS(2,
                 nativeAnnotationS(1, stringS(1, "Impl.met"), true), stringTS(), "myFunc", nlist()));
       }
 
@@ -641,7 +645,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(annFuncS(
+            .containsEvaluable(annotatedFuncS(
                 2, nativeAnnotationS(1, stringS(1, "Impl.met"), true), varA(), "myFunc", nlist()));
       }
 
@@ -655,7 +659,7 @@ public class ExprSLoadingTest extends TestContext {
             """;
         var params = nlist(itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
         var ann = nativeAnnotationS(1, stringS(1, "Impl.met"), true);
-        var myFunc = annFuncS(2, ann, stringTS(), "myFunc", params);
+        var myFunc = annotatedFuncS(2, ann, stringTS(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
@@ -671,7 +675,7 @@ public class ExprSLoadingTest extends TestContext {
             """;
         var params = nlist(itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
         var ann = nativeAnnotationS(1, stringS(1, "Impl.met"), true);
-        var myFunc = annFuncS(2, ann, varA(), "myFunc", params);
+        var myFunc = annotatedFuncS(2, ann, varA(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
@@ -684,7 +688,7 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(byteFuncS(2, stringTS(), "myFunc", nlist()));
+            .containsEvaluable(bytecodeFuncS(2, stringTS(), "myFunc", nlist()));
       }
 
       @Test
@@ -694,7 +698,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(byteFuncS(2, varA(), "myFunc", nlist()));
+            .containsEvaluable(bytecodeFuncS(2, varA(), "myFunc", nlist()));
       }
 
       @Test
@@ -706,7 +710,7 @@ public class ExprSLoadingTest extends TestContext {
                 0x07);
             """;
         var params = nlist(itemS(3, blobTS(), "param1", valueS(3, "myFunc:param1", blobS(4, 7))));
-        var myFunc = byteFuncS(2, "Impl.met", stringTS(), "myFunc", params);
+        var myFunc = bytecodeFuncS(2, "Impl.met", stringTS(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
@@ -721,7 +725,7 @@ public class ExprSLoadingTest extends TestContext {
                 0x07);
             """;
         var params = nlist(itemS(3, blobTS(), "param1", valueS(3, "myFunc:param1", blobS(4, 7))));
-        var myFunc = byteFuncS(2, "Impl.met", varA(), "myFunc", params);
+        var myFunc = bytecodeFuncS(2, "Impl.met", varA(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);

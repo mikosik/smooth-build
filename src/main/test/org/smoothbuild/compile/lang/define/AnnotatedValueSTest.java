@@ -13,7 +13,7 @@ public class AnnotatedValueSTest extends TestContext {
     assertThat(annotatedValueS.toString())
         .isEqualTo("""
             AnnotatedValue(
-              AnnS(
+              AnnotationS(
                 name = myAnnotation
                 path = StringS(String, "myPath", myBuild.smooth:7)
                 loc = myBuild.smooth:17

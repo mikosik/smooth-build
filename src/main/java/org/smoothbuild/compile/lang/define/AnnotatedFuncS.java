@@ -12,10 +12,10 @@ import org.smoothbuild.util.collect.NList;
  * Annotated function that has no defined body.
  * This class is immutable.
  */
-public final class AnnFuncS extends NamedFuncS {
+public final class AnnotatedFuncS extends NamedFuncS {
   private final AnnotationS annotation;
 
-  public AnnFuncS(
+  public AnnotatedFuncS(
       AnnotationS annotation,
       FuncSchemaS schema,
       String name,
@@ -34,7 +34,7 @@ public final class AnnFuncS extends NamedFuncS {
     if (this == object) {
       return true;
     }
-    return object instanceof AnnFuncS that
+    return object instanceof AnnotatedFuncS that
         && this.annotation.equals(that.annotation)
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
@@ -50,6 +50,6 @@ public final class AnnFuncS extends NamedFuncS {
   @Override
   public String toString() {
     var fields = annotation.toString() + "\n" + fieldsToString();
-    return "AnnFuncS(\n" + indent(fields) + "\n)";
+    return "AnnotatedFuncS(\n" + indent(fields) + "\n)";
   }
 }

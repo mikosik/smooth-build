@@ -20,7 +20,7 @@ public class SelectSTest extends TestContext {
                 varMap = {}
                 monoizableS = EvaluableRefS(
                   namedEvaluable = AnnotatedValue(
-                    AnnS(
+                    AnnotationS(
                       name = myAnnotation
                       path = StringS(String, "myPath", myBuild.smooth:7)
                       loc = myBuild.smooth:17

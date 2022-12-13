@@ -39,7 +39,7 @@ import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Located;
 import org.smoothbuild.compile.lang.base.Nal;
-import org.smoothbuild.compile.lang.define.AnnFuncS;
+import org.smoothbuild.compile.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
@@ -197,18 +197,18 @@ public class SbTranslator {
 
   private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) {
     return switch (namedFuncS) {
-      case AnnFuncS a -> translateAnnFunc(a);
+      case AnnotatedFuncS a -> translateAnnotatedFunc(a);
       case NamedExprFuncS e -> translateExprFunc(e);
       case ConstructorS c -> translateConstructor(c);
     };
   }
 
-  private ExprB translateAnnFunc(AnnFuncS annFuncS) {
-    var annName = annFuncS.annotation().name();
-    return switch (annName) {
-      case BYTECODE -> fetchFuncBytecode(annFuncS);
-      case NATIVE_PURE, NATIVE_IMPURE -> translateNativeFunc(annFuncS);
-      default -> throw new SbTranslatorExc("Illegal function annotation: " + annName + ".");
+  private ExprB translateAnnotatedFunc(AnnotatedFuncS annotatedFuncS) {
+    var annotationName = annotatedFuncS.annotation().name();
+    return switch (annotationName) {
+      case BYTECODE -> fetchFuncBytecode(annotatedFuncS);
+      case NATIVE_PURE, NATIVE_IMPURE -> translateNativeFunc(annotatedFuncS);
+      default -> throw new SbTranslatorExc("Illegal function annotation: " + annotationName + ".");
     };
   }
 
@@ -218,7 +218,7 @@ public class SbTranslator {
         translateExpr(exprFuncS.body()));
   }
 
-  private NativeFuncB translateNativeFunc(AnnFuncS nativeFuncS) {
+  private NativeFuncB translateNativeFunc(AnnotatedFuncS nativeFuncS) {
     var funcTB = translateT(nativeFuncS.schema().type());
     var annS = nativeFuncS.annotation();
     var jarB = loadNativeJar(annS.loc());
@@ -309,9 +309,9 @@ public class SbTranslator {
     return fetchBytecode(annotatedValueS.annotation(), typeB, annotatedValueS.name());
   }
 
-  private ExprB fetchFuncBytecode(AnnFuncS annFuncS) {
-    var typeB = translateT(annFuncS.schema().type());
-    return fetchBytecode(annFuncS.annotation(), typeB, annFuncS.name());
+  private ExprB fetchFuncBytecode(AnnotatedFuncS annotatedFuncS) {
+    var typeB = translateT(annotatedFuncS.schema().type());
+    return fetchBytecode(annotatedFuncS.annotation(), typeB, annotatedFuncS.name());
   }
 
   private ExprB fetchBytecode(AnnotationS annotation, TypeB typeB, String name) {
