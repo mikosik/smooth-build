@@ -5,14 +5,14 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class AnnValueSTest extends TestContext {
+public class AnnotatedValueSTest extends TestContext {
   @Test
   public void to_string() {
-    var annS = new AnnotationS("myAnnotation", stringS(7, "myPath"), loc(17));
-    var annValS = new AnnValueS(annS, schemaS(stringTS()), "myVal", loc(7));
-    assertThat(annValS.toString())
+    var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), loc(17));
+    var annotatedValueS = new AnnotatedValueS(annotationS, schemaS(stringTS()), "myVal", loc(7));
+    assertThat(annotatedValueS.toString())
         .isEqualTo("""
-            AnnVal(
+            AnnotatedValue(
               AnnS(
                 name = myAnnotation
                 path = StringS(String, "myPath", myBuild.smooth:7)

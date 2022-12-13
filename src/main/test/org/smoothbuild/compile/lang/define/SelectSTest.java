@@ -11,7 +11,7 @@ public class SelectSTest extends TestContext {
   public void to_string() {
     var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), loc(17));
     var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));
-    var structValue = annValS(11, annotationS, structTS, "structValue");
+    var structValue = annotatedValueS(11, annotationS, structTS, "structValue");
     var selectS = selectS(3, monoizeS(12, structValue), "field");
     assertThat(selectS.toString())
         .isEqualTo("""
@@ -19,7 +19,7 @@ public class SelectSTest extends TestContext {
               selectable = MonoizeS(
                 varMap = {}
                 monoizableS = EvaluableRefS(
-                  namedEvaluable = AnnVal(
+                  namedEvaluable = AnnotatedValue(
                     AnnS(
                       name = myAnnotation
                       path = StringS(String, "myPath", myBuild.smooth:7)

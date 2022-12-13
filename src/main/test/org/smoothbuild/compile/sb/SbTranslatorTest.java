@@ -79,14 +79,15 @@ public class SbTranslatorTest extends TestContext {
         public void mono_native_value() {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = "class.binary.name";
-          var ann = nativeAnnotationS(loc(filePath, 1), stringS(classBinaryName));
-          var natValS = annValS(ann, stringTS(), "myValue", loc(filePath, 2));
+          var nativeAnnotation = nativeAnnotationS(loc(filePath, 1), stringS(classBinaryName));
+          var nativeValueS = annotatedValueS(
+              nativeAnnotation, stringTS(), "myValue", loc(filePath, 2));
 
           var jar = blobB(37);
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
           var translator = sbTranslator(fileLoader);
 
-          assertCall(() -> translator.translateExpr(monoizeS(natValS)))
+          assertCall(() -> translator.translateExpr(monoizeS(nativeValueS)))
               .throwsException(new SbTranslatorExc("Illegal value annotation: `@Native`."));
         }
 
@@ -96,12 +97,12 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath(PRJ, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-          var byteValS = annValS(ann, stringTS(), "myValue", loc(filePath, 2));
+          var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", loc(filePath, 2));
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var translator = sbTranslator(fileLoader);
-          assertTranslation(translator, monoizeS(byteValS), stringB("abc"));
+          assertTranslation(translator, monoizeS(bytecodeValueS), stringB("abc"));
         }
 
         @Test
@@ -112,12 +113,12 @@ public class SbTranslatorTest extends TestContext {
           var filePath = smoothFilePath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-          var byteValS = annValS(2, ann, funcTS, "myFunc");
+          var bytecodeValueS = annotatedValueS(2, ann, funcTS, "myFunc");
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var translator = sbTranslator(fileLoader);
-          var monoized = monoizeS(aToIntVarMapS(), byteValS);
+          var monoized = monoizeS(aToIntVarMapS(), bytecodeValueS);
           assertTranslation(translator, monoized, idFuncB());
         }
       }
@@ -353,12 +354,12 @@ public class SbTranslatorTest extends TestContext {
           var filePath = filePath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 7));
-          var byteValS = annValS(ann, stringTS(), "myValue", loc(filePath, 8));
+          var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", loc(filePath, 8));
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var sbTranslator = sbTranslator(fileLoader);
-          var exprB = sbTranslator.translateExpr(monoizeS(byteValS));
+          var exprB = sbTranslator.translateExpr(monoizeS(bytecodeValueS));
           assertNalMapping(sbTranslator, exprB, "myValue", loc(8));
         }
       }
@@ -511,11 +512,11 @@ public class SbTranslatorTest extends TestContext {
       var filePath = filePath(PRJ, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), loc(filePath, 1));
-      var bytecodeValS = annValS(ann, stringTS(), "myFunc", loc(filePath, 2));
+      var bytecodeValueS = annotatedValueS(ann, stringTS(), "myFunc", loc(filePath, 2));
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertTranslationIsCached(sbTranslator(fileLoader), monoizeS(bytecodeValS));
+      assertTranslationIsCached(sbTranslator(fileLoader), monoizeS(bytecodeValueS));
     }
 
     @Test

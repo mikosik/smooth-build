@@ -40,7 +40,7 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Located;
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
-import org.smoothbuild.compile.lang.define.AnnValueS;
+import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
@@ -279,15 +279,15 @@ public class SbTranslator {
 
   private ExprB translateNamedValue(Loc refLoc, NamedValueS namedValueS) {
     return switch (namedValueS) {
-      case AnnValueS annValueS -> saveNalAndReturn(annValueS, translateAnnValue(annValueS));
+      case AnnotatedValueS annotatedValueS -> translateAnnotatedValue(annotatedValueS);
       case NamedExprValueS namedExprValueS -> translateNamedExprValue(refLoc, namedExprValueS);
     };
   }
 
-  private ExprB translateAnnValue(AnnValueS annValueS) {
-    var annName = annValueS.annotation().name();
+  private ExprB translateAnnotatedValue(AnnotatedValueS annotatedValueS) {
+    var annName = annotatedValueS.annotation().name();
     if (annName.equals(BYTECODE)) {
-      return fetchValBytecode(annValueS);
+      return saveNalAndReturn(annotatedValueS, fetchValBytecode(annotatedValueS));
     } else {
       throw new SbTranslatorExc("Illegal value annotation: " + q("@" + annName) + ".");
     }
@@ -304,9 +304,9 @@ public class SbTranslator {
 
   // helpers
 
-  private ExprB fetchValBytecode(AnnValueS annValueS) {
-    var typeB = translateT(annValueS.schema().type());
-    return fetchBytecode(annValueS.annotation(), typeB, annValueS.name());
+  private ExprB fetchValBytecode(AnnotatedValueS annotatedValueS) {
+    var typeB = translateT(annotatedValueS.schema().type());
+    return fetchBytecode(annotatedValueS.annotation(), typeB, annotatedValueS.name());
   }
 
   private ExprB fetchFuncBytecode(AnnFuncS annFuncS) {

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.define.AnnFuncS;
-import org.smoothbuild.compile.lang.define.AnnValueS;
+import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
@@ -67,7 +67,7 @@ public class PsTranslator {
     var loc = namedValueP.loc();
     if (namedValueP.annotation().isPresent()) {
       var ann = translateAnnotation(namedValueP.annotation().get());
-      return Optional.of(new AnnValueS(ann, schema, name, loc));
+      return Optional.of(new AnnotatedValueS(ann, schema, name, loc));
     } else {
       var body = translateExpr(namedValueP.body().get());
       return body.map(b -> new NamedExprValueS(schema, name, b, loc));

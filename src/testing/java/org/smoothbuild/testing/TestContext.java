@@ -83,7 +83,7 @@ import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
-import org.smoothbuild.compile.lang.define.AnnValueS;
+import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
@@ -1263,16 +1263,18 @@ public class TestContext {
     return new ItemS(type, name, body, loc(line));
   }
 
-  public static AnnValueS byteValS(int line, TypeS type, String name) {
-    return annValS(line, bytecodeS(line - 1, "impl"), type, name);
+  public static AnnotatedValueS bytecodeValueS(int line, TypeS type, String name) {
+    return annotatedValueS(line, bytecodeS(line - 1, "impl"), type, name);
   }
 
-  public static AnnValueS annValS(int line, AnnotationS ann, TypeS type, String name) {
-    return annValS(ann, type, name, loc(line));
+  public static AnnotatedValueS annotatedValueS(
+      int line, AnnotationS annotationS, TypeS type, String name) {
+    return annotatedValueS(annotationS, type, name, loc(line));
   }
 
-  public static AnnValueS annValS(AnnotationS ann, TypeS type, String name, Loc loc) {
-    return new AnnValueS(ann, schemaS(type), name, loc);
+  public static AnnotatedValueS annotatedValueS(
+      AnnotationS annotationS, TypeS type, String name, Loc loc) {
+    return new AnnotatedValueS(annotationS, schemaS(type), name, loc);
   }
 
   public static NamedExprValueS valueS(String name, ExprS body) {

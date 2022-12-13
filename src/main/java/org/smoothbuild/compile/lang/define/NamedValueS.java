@@ -13,7 +13,7 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 public sealed abstract class NamedValueS
     extends Sanal
     implements NamedEvaluableS
-    permits AnnValueS, NamedExprValueS {
+    permits AnnotatedValueS, NamedExprValueS {
   public NamedValueS(SchemaS schema, String name, Loc loc) {
     super(schema, name, loc);
   }

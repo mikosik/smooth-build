@@ -125,7 +125,7 @@ public class ExprSLoadingTest extends TestContext {
       class _with_default_arg {
         @Test
         public void with_reference_to_poly_val() {
-          var polyVal = byteValS(4, varA(), "polyVal");
+          var polyVal = bytecodeValueS(4, varA(), "polyVal");
           var monoized = monoizeS(1, varMap(varA(), varA()), polyVal);
           var arg = monoizeS(2, varMap(varA(), intTS()), valueS(1, "myFunc:b", monoized));
           test_default_arg("polyVal", arg);
@@ -507,7 +507,7 @@ public class ExprSLoadingTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluable(byteValS(2, blobTS(), "myValue"));
+            .containsEvaluable(bytecodeValueS(2, blobTS(), "myValue"));
       }
 
       @Test
@@ -518,7 +518,7 @@ public class ExprSLoadingTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluable(byteValS(2, varA(), "myValue"));
+            .containsEvaluable(bytecodeValueS(2, varA(), "myValue"));
       }
     }
 
