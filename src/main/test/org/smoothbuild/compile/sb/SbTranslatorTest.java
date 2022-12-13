@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.oper.CallB;
+import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.compile.lang.base.Loc;
@@ -428,9 +429,22 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
-      public void anonFunc() {
+      public void anonymousFunc() {
         var monoAnonFuncS = monoizeS(anonFuncS(7, nlist(), stringS("abc")));
-        assertNalMapping(monoAnonFuncS, "<anonymous>", loc(7));
+
+        var sbTranslator = newTranslator();
+        var closureB = (ClosurizeB) sbTranslator.translateExpr(monoAnonFuncS);
+        var nameMapping = sbTranslator.bsMapping().nameMapping();
+        var locationMapping = sbTranslator.bsMapping().locMapping();
+        assertThat(nameMapping.get(closureB.hash()))
+            .isEqualTo(null);
+        assertThat(locationMapping.get(closureB.hash()))
+            .isEqualTo(loc(7));
+        var exprFuncB = closureB.func();
+        assertThat(nameMapping.get(exprFuncB.hash()))
+            .isEqualTo("<anonymous>");
+        assertThat(locationMapping.get(exprFuncB.hash()))
+            .isEqualTo(loc(7));
       }
 
       @Test

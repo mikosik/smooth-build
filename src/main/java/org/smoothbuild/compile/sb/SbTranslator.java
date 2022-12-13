@@ -40,8 +40,8 @@ import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Located;
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.define.AnnFuncS;
-import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnnValueS;
+import org.smoothbuild.compile.lang.define.AnnotationS;
 import org.smoothbuild.compile.lang.define.AnonFuncS;
 import org.smoothbuild.compile.lang.define.BlobS;
 import org.smoothbuild.compile.lang.define.CallS;
@@ -155,19 +155,21 @@ public class SbTranslator {
 
   public ExprB translateMonoizable(MonoizableS monoizableS) {
     return switch (monoizableS) {
-      case AnonFuncS anonFuncS -> translateAnonFunc(anonFuncS);
+      case AnonFuncS anonFuncS -> translateAnonymousFunc(anonFuncS);
       case EvaluableRefS evaluableRefS -> translateEvaluableRef(evaluableRefS);
     };
   }
 
-  private ExprB translateAnonFunc(AnonFuncS anonFuncS) {
+  private ExprB translateAnonymousFunc(AnonFuncS anonFuncS) {
     var funcB = funcBodySbTranslator(anonFuncS)
-        .translateAnonFuncImpl(anonFuncS);
-    return saveNalAndReturn("<anonymous>", anonFuncS, funcB);
+        .translateAnonymousFuncImpl(anonFuncS);
+    return saveLocAndReturn(anonFuncS, funcB);
   }
 
-  private ExprB translateAnonFuncImpl(AnonFuncS anonFuncS) {
-    return bytecodeF.closurize(translateExprFunc(anonFuncS));
+  private ExprB translateAnonymousFuncImpl(AnonFuncS anonFuncS) {
+    var exprFuncB = translateExprFunc(anonFuncS);
+    saveNal(exprFuncB, "<anonymous>", anonFuncS);
+    return bytecodeF.closurize(exprFuncB);
   }
 
   private ExprB translateEvaluableRef(EvaluableRefS evaluableRefS) {

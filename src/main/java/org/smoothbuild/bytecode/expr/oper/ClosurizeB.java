@@ -44,7 +44,7 @@ public final class ClosurizeB extends OperB {
     return bytecodeDb.closure(environmentB, func());
   }
 
-  private ExprFuncB func() {
+  public ExprFuncB func() {
     return readDataAsExpr(ExprFuncB.class);
   }
 
