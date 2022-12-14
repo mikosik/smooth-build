@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.ap;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.compile.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
@@ -40,6 +39,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.compile.lang.base.location.Location;
+import org.smoothbuild.compile.lang.base.location.Locations;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
@@ -77,9 +77,9 @@ public class ApTranslator {
       @Override
       public Void visitStruct(StructContext struct) {
         var name = struct.NAME().getText();
-        var loc = locOf(filePath, struct.NAME().getSymbol());
+        var location = fileLocation(filePath, struct.NAME().getSymbol());
         var fields = createItems(name, struct.itemList());
-        structs.add(new StructP(name, fields, loc));
+        structs.add(new StructP(name, fields, location));
         return null;
       }
 
@@ -91,9 +91,9 @@ public class ApTranslator {
         String name = nameNode.getText();
         Optional<ExprP> body = createPipeSane(namedFunc.pipe());
         Optional<AnnotationP> annotation = createNativeSane(namedFunc.ann());
-        var loc = locOf(filePath, nameNode);
+        var location = fileLocation(filePath, nameNode);
         var params = createItems(name, namedFunc.itemList());
-        evaluables.add(new NamedFuncP(type, name, params, body, annotation, loc));
+        evaluables.add(new NamedFuncP(type, name, params, body, annotation, location));
         return null;
       }
 
@@ -105,7 +105,7 @@ public class ApTranslator {
         String name = nameNode.getText();
         Optional<ExprP> expr = createPipeSane(namedValue.pipe());
         Optional<AnnotationP> annotation = createNativeSane(namedValue.ann());
-        var location = locOf(filePath, nameNode);
+        var location = fileLocation(filePath, nameNode);
         evaluables.add(new NamedValueP(type, name, expr, annotation, location));
         return null;
       }
@@ -118,7 +118,7 @@ public class ApTranslator {
           return Optional.of(new AnnotationP(
               name,
               createStringNode(annotation, annotation.STRING()),
-              locOf(filePath, annotation)));
+              fileLocation(filePath, annotation)));
         }
       }
 
@@ -140,9 +140,9 @@ public class ApTranslator {
         var type = createT(item.type());
         var nameNode = item.NAME();
         var name = nameNode.getText();
-        var loc = locOf(filePath, nameNode);
-        var defaultValue = createDefaultValue(ownerName + ":" + name, item, loc);
-        return new ItemP(type, name, defaultValue, loc);
+        var location = fileLocation(filePath, nameNode);
+        var defaultValue = createDefaultValue(ownerName + ":" + name, item, location);
+        return new ItemP(type, name, defaultValue, location);
       }
 
       private Optional<NamedValueP> createDefaultValue(
@@ -181,8 +181,8 @@ public class ApTranslator {
       }
 
       private void logPipedValueNotConsumedError(ExprContext parserRuleContext) {
-        var loc = locOf(filePath, parserRuleContext);
-        logs.log(compileError(loc, "Piped value is not consumed."));
+        var location = fileLocation(filePath, parserRuleContext);
+        logs.log(compileError(location, "Piped value is not consumed."));
       }
 
       private Optional<ExprP> createExprSane(ExprContext expr) {
@@ -207,9 +207,9 @@ public class ApTranslator {
       }
 
       private ExprP createChainHead(AtomicReference<ExprP> pipedArg, ChainHeadContext chainHead) {
-        var loc = locOf(filePath, chainHead);
+        var location = fileLocation(filePath, chainHead);
         if (chainHead.NAME() != null) {
-          return new RefP(chainHead.NAME().getText(), loc);
+          return new RefP(chainHead.NAME().getText(), location);
         }
         if (chainHead.array() != null) {
           var elems = map(chainHead.array().expr(), this::createExpr);
@@ -217,16 +217,16 @@ public class ApTranslator {
             elems = concat(pipedArg.get(), elems);
             pipedArg.set(null);
           }
-          return new OrderP(elems, loc);
+          return new OrderP(elems, location);
         }
         if (chainHead.parens() != null) {
            return createPipe(pipedArg, chainHead.parens().pipe());
         }
         if (chainHead.BLOB() != null) {
-          return new BlobP(chainHead.BLOB().getText().substring(2), loc);
+          return new BlobP(chainHead.BLOB().getText().substring(2), location);
         }
         if (chainHead.INT() != null) {
-          return new IntP(chainHead.INT().getText(), loc);
+          return new IntP(chainHead.INT().getText(), location);
         }
         if (chainHead.STRING() != null) {
           return createStringNode(chainHead, chainHead.STRING());
@@ -259,18 +259,18 @@ public class ApTranslator {
         var anonFunc = anonymousFunc.anonFunc();
         var params = createItems("anonymousFunc", anonFunc.itemList());
         var body = createExpr(anonFunc.expr());
-        return new AnonymousFuncP(params, body, locOf(filePath, anonFunc));
+        return new AnonymousFuncP(params, body, fileLocation(filePath, anonFunc));
       }
 
       private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
         var unquoted = unquote(quotedString.getText());
-        var location = locOf(filePath, expr);
+        var location = fileLocation(filePath, expr);
         return new StringP(unquoted, location);
       }
 
       private SelectP createSelect(ExprP selectable, SelectContext fieldRead) {
         var name = fieldRead.NAME().getText();
-        var location = locOf(filePath, fieldRead);
+        var location = fileLocation(filePath, fieldRead);
         return new SelectP(selectable, name, location);
       }
 
@@ -283,14 +283,14 @@ public class ApTranslator {
           if (nameNode == null) {
             result.add(exprP);
           } else {
-            result.add(new NamedArgP(nameNode.getText(), exprP, locOf(filePath, arg)));
+            result.add(new NamedArgP(nameNode.getText(), exprP, fileLocation(filePath, arg)));
           }
         }
         return result;
       }
 
       private ExprP createCall(ExprP callable, List<ExprP> args, ArgListContext argListContext) {
-        var location = locOf(filePath, argListContext);
+        var location = fileLocation(filePath, argListContext);
         return new CallP(callable, args, location);
       }
 
@@ -308,19 +308,19 @@ public class ApTranslator {
       }
 
       private TypeP createT(TypeNameContext type) {
-        return new TypeP(type.getText(), locOf(filePath, type.NAME()));
+        return new TypeP(type.getText(), fileLocation(filePath, type.NAME()));
       }
 
       private TypeP createArrayT(ArrayTContext arrayT) {
         TypeP elemType = createT(arrayT.type());
-        return new ArrayTP(elemType, locOf(filePath, arrayT));
+        return new ArrayTP(elemType, fileLocation(filePath, arrayT));
       }
 
       private TypeP createFuncT(FuncTContext funcT) {
         var types = map(funcT.type(), this::createT);
         var resT = types.get(types.size() - 1);
         var paramTs = types.subList(0, types.size() - 1);
-        return new FuncTP(resT, paramTs, locOf(filePath, funcT));
+        return new FuncTP(resT, paramTs, fileLocation(filePath, funcT));
       }
 
       private RuntimeException newRuntimeException(Class<?> clazz) {
@@ -336,15 +336,15 @@ public class ApTranslator {
     return quotedString.substring(1, quotedString.length() - 1);
   }
 
-  private static Location locOf(FilePath filePath, ParserRuleContext parserRuleContext) {
-    return locOf(filePath, parserRuleContext.getStart());
+  private static Location fileLocation(FilePath filePath, ParserRuleContext parserRuleContext) {
+    return fileLocation(filePath, parserRuleContext.getStart());
   }
 
-  private static Location locOf(FilePath filePath, TerminalNode node) {
-    return locOf(filePath, node.getSymbol());
+  private static Location fileLocation(FilePath filePath, TerminalNode node) {
+    return fileLocation(filePath, node.getSymbol());
   }
 
-  private static Location locOf(FilePath filePath, Token token) {
-    return fileLocation(filePath, token.getLine());
+  private static Location fileLocation(FilePath filePath, Token token) {
+    return Locations.fileLocation(filePath, token.getLine());
   }
 }
