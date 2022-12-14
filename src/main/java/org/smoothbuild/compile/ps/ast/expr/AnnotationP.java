@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
+import org.smoothbuild.compile.lang.base.location.Location;
 
 import com.google.common.base.Objects;
 
@@ -11,8 +11,8 @@ import com.google.common.base.Objects;
 public final class AnnotationP extends NalImpl {
   private final StringP path;
 
-  public AnnotationP(String name, StringP path, Loc loc) {
-    super(name, loc);
+  public AnnotationP(String name, StringP path, Location location) {
+    super(name, location);
     this.path = path;
   }
 
@@ -25,11 +25,11 @@ public final class AnnotationP extends NalImpl {
     return object instanceof AnnotationP that
         && this.name().equals(that.name())
         && this.path().equals(that.path())
-        && this.loc().equals(that.loc());
+        && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.name(), this.path, this.loc());
+    return Objects.hashCode(this.name(), this.path, this.location());
   }
 }

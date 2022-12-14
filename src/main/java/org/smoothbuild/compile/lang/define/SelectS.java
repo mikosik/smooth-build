@@ -4,11 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Lists.joinToString;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 
-public record SelectS(ExprS selectable, String field, Loc loc) implements ExprS {
+public record SelectS(ExprS selectable, String field, Location location) implements ExprS {
   public SelectS {
     checkArgument(selectable.evalT() instanceof StructTS);
   }
@@ -24,7 +24,7 @@ public record SelectS(ExprS selectable, String field, Loc loc) implements ExprS 
     var fields = joinToString("\n",
         "selectable = " + selectable,
         "field = " + field,
-        "loc = " + loc
+        "location = " + location
     );
     return "SelectS(\n" + indent(fields) + "\n)";
   }

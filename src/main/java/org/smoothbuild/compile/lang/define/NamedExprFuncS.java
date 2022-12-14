@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Lists.joinToString;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
@@ -16,8 +16,13 @@ import org.smoothbuild.util.collect.NList;
 public final class NamedExprFuncS extends NamedFuncS implements ExprFuncS {
   private final ExprS body;
 
-  public NamedExprFuncS(FuncSchemaS schema, String name, NList<ItemS> params, ExprS body, Loc loc) {
-    super(schema, name, params, loc);
+  public NamedExprFuncS(
+      FuncSchemaS schema,
+      String name,
+      NList<ItemS> params,
+      ExprS body,
+      Location location) {
+    super(schema, name, params, location);
     this.body = body;
   }
 
@@ -36,12 +41,12 @@ public final class NamedExprFuncS extends NamedFuncS implements ExprFuncS {
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.body.equals(that.body)
-        && this.loc().equals(that.loc());
+        && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema(), name(), params(), body, loc());
+    return Objects.hash(schema(), name(), params(), body, location());
   }
 
   @Override

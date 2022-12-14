@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.lang.define;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
@@ -9,5 +9,5 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 public sealed interface MonoizableS
     permits AnonymousFuncS, EvaluableRefS {
   public SchemaS schema();
-  public Loc loc();
+  public Location location();
 }

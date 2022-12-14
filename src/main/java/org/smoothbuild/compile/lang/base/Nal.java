@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.lang.base;
 
+import org.smoothbuild.compile.lang.base.location.Located;
 import org.smoothbuild.util.collect.Named;
 
 /**

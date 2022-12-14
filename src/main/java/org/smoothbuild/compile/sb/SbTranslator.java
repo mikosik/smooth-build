@@ -36,9 +36,10 @@ import org.smoothbuild.bytecode.type.value.ArrayTB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
 import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
-import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.Located;
 import org.smoothbuild.compile.lang.base.Nal;
+import org.smoothbuild.compile.lang.base.location.FileLocation;
+import org.smoothbuild.compile.lang.base.location.Located;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
@@ -68,6 +69,7 @@ import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
+import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.util.collect.Maps;
 import org.smoothbuild.util.collect.NList;
@@ -84,17 +86,26 @@ public class SbTranslator {
   private final NList<ItemS> environment;
   private final Map<CacheKey, ExprB> cache;
   private final Map<Hash, String> nameMapping;
-  private final Map<Hash, Loc> locMapping;
+  private final Map<Hash, Location> locationMapping;
 
   @Inject
-  public SbTranslator(BytecodeF bytecodeF, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+  public SbTranslator(
+      BytecodeF bytecodeF,
+      FileLoader fileLoader,
+      BytecodeLoader bytecodeLoader) {
     this(bytecodeF, new TypeSbTranslator(bytecodeF, ImmutableMap.of()), fileLoader, bytecodeLoader,
         nlist(), new HashMap<>(), new HashMap<>(), new HashMap<>());
   }
 
-  public SbTranslator(BytecodeF bytecodeF, TypeSbTranslator typeSbTranslator, FileLoader fileLoader,
-      BytecodeLoader bytecodeLoader, NList<ItemS> environment, Map<CacheKey, ExprB> cache,
-      Map<Hash, String> nameMapping, Map<Hash, Loc> locMapping) {
+  public SbTranslator(
+      BytecodeF bytecodeF,
+      TypeSbTranslator typeSbTranslator,
+      FileLoader fileLoader,
+      BytecodeLoader bytecodeLoader,
+      NList<ItemS> environment,
+      Map<CacheKey, ExprB> cache,
+      Map<Hash, String> nameMapping,
+      Map<Hash, Location> locationMapping) {
     this.bytecodeF = bytecodeF;
     this.typeSbTranslator = typeSbTranslator;
     this.fileLoader = fileLoader;
@@ -102,11 +113,11 @@ public class SbTranslator {
     this.environment = environment;
     this.cache = cache;
     this.nameMapping = nameMapping;
-    this.locMapping = locMapping;
+    this.locationMapping = locationMapping;
   }
 
   public BsMapping bsMapping() {
-    return new BsMapping(nameMapping, locMapping);
+    return new BsMapping(nameMapping, locationMapping);
   }
 
   private ImmutableList<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
@@ -149,7 +160,7 @@ public class SbTranslator {
     var varMap = Maps.concat(monoizedVarMap, typeSbTranslator.varMap());
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
-        environment, cache, nameMapping, locMapping);
+        environment, cache, nameMapping, locationMapping);
     return sbTranslator.translateMonoizable(monoizeS.monoizableS());
   }
 
@@ -175,7 +186,7 @@ public class SbTranslator {
   private ExprB translateEvaluableRef(EvaluableRefS evaluableRefS) {
     return switch (evaluableRefS.namedEvaluable()) {
       case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
-      case NamedValueS namedValS -> translateNamedValueWithCache(evaluableRefS.loc(), namedValS);
+      case NamedValueS namedValS -> translateNamedValueWithCache(evaluableRefS.location(), namedValS);
     };
   }
 
@@ -192,7 +203,7 @@ public class SbTranslator {
   private SbTranslator funcBodySbTranslator(FuncS funcS) {
     var newEnvironment = nlistWithShadowing(concat(funcS.params(), environment));
     return new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
-        newEnvironment, cache, nameMapping, locMapping);
+        newEnvironment, cache, nameMapping, locationMapping);
   }
 
   private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) {
@@ -221,7 +232,7 @@ public class SbTranslator {
   private NativeFuncB translateNativeFunc(AnnotatedFuncS nativeFuncS) {
     var funcTB = translateT(nativeFuncS.schema().type());
     var annS = nativeFuncS.annotation();
-    var jarB = loadNativeJar(annS.loc());
+    var jarB = loadNativeJar(annS.location());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
     var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
     return bytecodeF.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB);
@@ -253,7 +264,7 @@ public class SbTranslator {
     var index = environment.indexOf(paramRefS.paramName());
     if (index == null) {
       throw new SbTranslatorExc("Reference to unknown parameter `" + paramRefS.paramName()
-          + "` at " + paramRefS.loc() + ".");
+          + "` at " + paramRefS.location() + ".");
     }
     return bytecodeF.ref(translateT(paramRefS.evalT()), BigInteger.valueOf(index));
   }
@@ -272,15 +283,15 @@ public class SbTranslator {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateNamedValueWithCache(Loc refLoc, NamedValueS namedValueS) {
+  private ExprB translateNamedValueWithCache(Location refLocation, NamedValueS namedValueS) {
     var key = new CacheKey(namedValueS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateNamedValue(refLoc, namedValueS));
+    return computeIfAbsent(cache, key, name -> translateNamedValue(refLocation, namedValueS));
   }
 
-  private ExprB translateNamedValue(Loc refLoc, NamedValueS namedValueS) {
+  private ExprB translateNamedValue(Location refLocation, NamedValueS namedValueS) {
     return switch (namedValueS) {
       case AnnotatedValueS annotatedValueS -> translateAnnotatedValue(annotatedValueS);
-      case NamedExprValueS namedExprValueS -> translateNamedExprValue(refLoc, namedExprValueS);
+      case NamedExprValueS namedExprValueS -> translateNamedExprValue(refLocation, namedExprValueS);
     };
   }
 
@@ -293,12 +304,12 @@ public class SbTranslator {
     }
   }
 
-  private ExprB translateNamedExprValue(Loc refLoc, NamedExprValueS namedExprValueS) {
+  private ExprB translateNamedExprValue(Location refLocation, NamedExprValueS namedExprValueS) {
     var funcTB = bytecodeF.funcT(list(), translateT(namedExprValueS.schema().type()));
     var funcB = bytecodeF.exprFunc(funcTB, translateExpr(namedExprValueS.body()));
     saveNal(funcB, namedExprValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
-    saveLoc(call, refLoc);
+    saveLoc(call, refLocation);
     return call;
   }
 
@@ -316,28 +327,38 @@ public class SbTranslator {
 
   private ExprB fetchBytecode(AnnotationS annotation, TypeB typeB, String name) {
     var varNameToTypeMap = mapKeys(typeSbTranslator.varMap(), VarS::name);
-    var jar = loadNativeJar(annotation.loc());
+    var jar = loadNativeJar(annotation.location());
     var bytecodeTry = bytecodeLoader.load(name, jar, annotation.path().string(), varNameToTypeMap);
     if (!bytecodeTry.isPresent()) {
-      throw new SbTranslatorExc(annotation.loc() + ": " + bytecodeTry.error());
+      throw new SbTranslatorExc(annotation.location() + ": " + bytecodeTry.error());
     }
     var bytecodeB = bytecodeTry.result();
     if (!bytecodeB.evalT().equals(typeB)) {
       throw new SbTranslatorExc(
-          annotation.loc() + ": Bytecode provider returned object of wrong type "
+          annotation.location() + ": Bytecode provider returned object of wrong type "
           + bytecodeB.evalT().q() + " when " + q(name) + " is declared as " + typeB.q() + ".");
     }
     return bytecodeB;
   }
 
-  private BlobB loadNativeJar(Loc loc) {
-    var filePath = loc.file().withExtension("jar");
+  private BlobB loadNativeJar(Location location) {
+    var filePath = filePathOf(location).withExtension("jar");
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {
-      String message = loc + ": Error loading native jar: File %s doesn't exist."
+      var message = location + ": Error loading native jar: File %s doesn't exist."
           .formatted(filePath.q());
       throw new SbTranslatorExc(message);
+    }
+  }
+
+  private static FilePath filePathOf(Location location) {
+    if (location instanceof FileLocation sourceLocation) {
+      return sourceLocation.file();
+    } else {
+      throw new SbTranslatorExc(location
+          + ": Error loading native jar: Impossible to infer native file name for location "
+          + location + ".");
     }
   }
 
@@ -382,11 +403,11 @@ public class SbTranslator {
   }
 
   private void saveLoc(ExprB exprB, Located located) {
-    saveLoc(exprB, located.loc());
+    saveLoc(exprB, located.location());
   }
 
-  private void saveLoc(ExprB exprB, Loc loc) {
-    locMapping.put(exprB.hash(), loc);
+  private void saveLoc(ExprB exprB, Location location) {
+    locationMapping.put(exprB.hash(), location);
   }
 
   private static record CacheKey(String name, ImmutableMap<VarS, TypeB> varMap) {}

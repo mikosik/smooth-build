@@ -4,6 +4,7 @@ import static java.util.Comparator.comparing;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.isVarName;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.startsWithLowerCase;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.startsWithUpperCase;
+import static org.smoothbuild.compile.lang.base.location.Locations.internalLocation;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.ANNOTATION_NAMES;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
@@ -15,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Nal;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
@@ -109,7 +110,7 @@ public class AnalyzeSemantically {
           visitType(func.resT());
           func.paramTs().forEach(this::visitType);
         } else if (!isDefinedType(type)) {
-          logger.log(compileError(type.loc(), type.q() + " type is undefined."));
+          logger.log(compileError(type.location(), type.q() + " type is undefined."));
         }
       }
 
@@ -126,7 +127,7 @@ public class AnalyzeSemantically {
     nals.addAll(ast.structs());
     nals.addAll(constructorNames(ast));
     nals.addAll(ast.evaluables());
-    nals.sort(comparing(n -> n.loc().line()));
+    nals.sort(comparing(n -> n.location().toString()));
 
     for (Nal nal : nals) {
       logIfDuplicate(logger, imported.tDefs(), nal);
@@ -154,16 +155,14 @@ public class AnalyzeSemantically {
   private static void logIfDuplicate(Logger logger, Bindings<? extends Nal> others, Nal nal) {
     Nal other = others.getOrNull(nal.name());
     if (other != null) {
-      logger.log(alreadyDefinedError(nal, other.loc()));
+      logger.log(alreadyDefinedError(nal, other.location()));
     }
   }
 
   private static void logIfDuplicate(Logger logger, Map<String, ? extends Nal> others, Nal nal) {
     String name = nal.name();
     if (others.containsKey(name)) {
-      Nal otherNal = others.get(name);
-      Loc loc = otherNal.loc();
-      logger.log(alreadyDefinedError(nal, loc));
+      logger.log(alreadyDefinedError(nal, others.get(name).location()));
     }
   }
 
@@ -188,13 +187,13 @@ public class AnalyzeSemantically {
   }
 
   private static void findDuplicateNames(Logger logger, List<? extends Nal> nodes) {
-    Map<String, Loc> alreadyDefined = new HashMap<>();
+    Map<String, Location> alreadyDefined = new HashMap<>();
     for (Nal named : nodes) {
       String name = named.name();
       if (alreadyDefined.containsKey(name)) {
         logger.log(alreadyDefinedError(named, alreadyDefined.get(name)));
       }
-      alreadyDefined.put(name, named.loc());
+      alreadyDefined.put(name, named.location());
     }
   }
 
@@ -204,10 +203,10 @@ public class AnalyzeSemantically {
       public void visitIdentifier(RefableP refable) {
         var name = refable.name();
         if (name.equals("_")) {
-          logger.log(compileError(refable.loc(), "`" + name + "` is illegal identifier name. "
+          logger.log(compileError(refable.location(), "`" + name + "` is illegal identifier name. "
               + "`_` is reserved for future use."));
         } else if (!startsWithLowerCase(name)) {
-          logger.log(compileError(refable.loc(), "`" + name + "` is illegal identifier name. "
+          logger.log(compileError(refable.location(), "`" + name + "` is illegal identifier name. "
           + "Identifiers should start with lowercase."));
         }
       }
@@ -217,13 +216,13 @@ public class AnalyzeSemantically {
         super.visitStruct(struct);
         var name = struct.name();
         if (name.equals("_")) {
-          logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name. "
+          logger.log(compileError(struct.location(), "`" + name + "` is illegal struct name. "
               + "`_` is reserved for future use."));
         } else if (isVarName(name)) {
-          logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name."
+          logger.log(compileError(struct.location(), "`" + name + "` is illegal struct name."
               + " All-uppercase names are reserved for type variables in generic types."));
         } else if (!startsWithUpperCase(name)) {
-          logger.log(compileError(struct.loc(), "`" + name + "` is illegal struct name."
+          logger.log(compileError(struct.location(), "`" + name + "` is illegal struct name."
               + " Struct name must start with uppercase letter."));
         }
       }
@@ -248,7 +247,7 @@ public class AnalyzeSemantically {
                   + " annotation must declare result type."));
             }
           } else {
-            logger.log(compileError(ann.loc(), "Unknown annotation " + ann.q() + "."));
+            logger.log(compileError(ann.location(), "Unknown annotation " + ann.q() + "."));
           }
         } else if (namedFuncP.body().isEmpty()) {
           logger.log(compileError(namedFuncP, "Function body is missing."));
@@ -292,7 +291,7 @@ public class AnalyzeSemantically {
       public void visitField(ItemP field) {
         super.visitField(field);
         if (field.defaultValue().isPresent()) {
-          logger.log(compileError(field.loc(), "Struct field `" + field.name()
+          logger.log(compileError(field.location(), "Struct field `" + field.name()
               + "` has default value. Only function parameters can have default value."));
         }
       }
@@ -309,17 +308,17 @@ public class AnalyzeSemantically {
 
       private void logErrorIfDefaultValuePresent(ItemP param) {
         if (param.defaultValue().isPresent()) {
-          logger.log(compileError(param.loc(),
+          logger.log(compileError(param.location(),
               "Parameter " + param.q() + " of anonymous function cannot have default value."));
         }
       }
     }.visitAst(ast);
   }
 
-  private static Log alreadyDefinedError(Nal nal, Loc loc) {
-    String atLoc = loc.equals(Loc.internal())
+  private static Log alreadyDefinedError(Nal nal, Location location) {
+    String atLoc = location.equals(internalLocation())
         ? " internally."
-        : " at " + loc + ".";
-    return compileError(nal.loc(), "`" + nal.name() + "` is already defined" + atLoc);
+        : " at " + location + ".";
+    return compileError(nal.location(), "`" + nal.name() + "` is already defined" + atLoc);
   }
 }

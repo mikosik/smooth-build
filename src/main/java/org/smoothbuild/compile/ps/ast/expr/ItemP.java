@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
@@ -17,8 +17,8 @@ public final class ItemP extends NalImpl implements RefableP {
   private final Optional<NamedValueP> defaultValue;
   private TypeS typeS;
 
-  public ItemP(TypeP type, String name, Optional<NamedValueP> defaultValue, Loc loc) {
-    super(name, loc);
+  public ItemP(TypeP type, String name, Optional<NamedValueP> defaultValue, Location location) {
+    super(name, location);
     this.type = type;
     this.defaultValue = defaultValue;
   }

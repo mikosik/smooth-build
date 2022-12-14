@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Sanal;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
@@ -14,8 +14,8 @@ public sealed abstract class NamedFuncS
     permits AnnotatedFuncS, NamedExprFuncS, ConstructorS {
   private final NList<ItemS> params;
 
-  public NamedFuncS(FuncSchemaS schemaS, String name, NList<ItemS> params, Loc loc) {
-    super(schemaS, name, loc);
+  public NamedFuncS(FuncSchemaS schemaS, String name, NList<ItemS> params, Location location) {
+    super(schemaS, name, location);
     this.params = params;
   }
 

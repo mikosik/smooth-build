@@ -17,7 +17,7 @@ public class OrderSTest extends TestContext {
                 IntS(Int, 44, myBuild.smooth:4)
                 IntS(Int, 55, myBuild.smooth:5)
               ]
-              loc = myBuild.smooth:3
+              location = myBuild.smooth:3
             )""");
   }
 }

@@ -20,13 +20,13 @@ public class EvaluableRefSTest extends TestContext {
                     type = A
                     name = a
                     defaultValue = Optional.empty
-                    loc = myBuild.smooth:1
+                    location = myBuild.smooth:1
                   )
                 ]
-                loc = myBuild.smooth:1
+                location = myBuild.smooth:1
                 body = ParamRefS(A, a, myBuild.smooth:1)
               )
-              loc = myBuild.smooth:7
+              location = myBuild.smooth:7
             )""");
   }
 }

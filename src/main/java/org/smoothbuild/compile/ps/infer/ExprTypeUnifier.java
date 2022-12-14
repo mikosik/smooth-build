@@ -17,7 +17,7 @@ import static org.smoothbuild.util.collect.Optionals.pullUp;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
@@ -151,7 +151,7 @@ public class ExprTypeUnifier {
   }
 
   private static ItemS itemS(ItemP itemP) {
-    return new ItemS(itemP.typeS(), itemP.name(), Optional.empty(), itemP.loc());
+    return new ItemS(itemP.typeS(), itemP.name(), Optional.empty(), itemP.location());
   }
 
   private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
@@ -185,7 +185,7 @@ public class ExprTypeUnifier {
       return true;
     } catch (UnifierExc e) {
       logger.log(compileError(
-          evaluableP.loc(), evaluableP.q() + " body type is not equal to declared type."));
+          evaluableP.location(), evaluableP.q() + " body type is not equal to declared type."));
       return false;
     }
   }
@@ -224,7 +224,7 @@ public class ExprTypeUnifier {
     callP.setPositionedArgs(positionedArgs);
     if (positionedArgs.isPresent()) {
       var argTs = pullUp(map(positionedArgs.get(), this::unifyExpr));
-      return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, a, callP.loc()));
+      return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, a, callP.location()));
     } else {
       map(callP.args(), this::unifyExpr);
       return Optional.empty();
@@ -248,14 +248,14 @@ public class ExprTypeUnifier {
     }
   }
 
-  private Optional<TypeS> unifyCall(TypeS calleeT, ImmutableList<TypeS> argTs, Loc loc) {
+  private Optional<TypeS> unifyCall(TypeS calleeT, ImmutableList<TypeS> argTs, Location location) {
     var resT = unifier.newTempVar();
     var funcT = new FuncTS(argTs, resT);
     try {
       unifier.unify(funcT, calleeT);
       return Optional.of(resT);
     } catch (UnifierExc e) {
-      logger.log(compileError(loc, "Illegal call."));
+      logger.log(compileError(location, "Illegal call."));
       return Optional.empty();
     }
   }
@@ -275,17 +275,17 @@ public class ExprTypeUnifier {
   private Optional<TypeS> unifyOrder(OrderP orderP) {
     var elems = orderP.elems();
     var elemTs = pullUp(map(elems, this::unifyExpr));
-    return elemTs.flatMap(types -> unifyElemsWithArray(types, orderP.loc()));
+    return elemTs.flatMap(types -> unifyElemsWithArray(types, orderP.location()));
   }
 
-  private Optional<TypeS> unifyElemsWithArray(ImmutableList<TypeS> elemTs, Loc loc) {
+  private Optional<TypeS> unifyElemsWithArray(ImmutableList<TypeS> elemTs, Location location) {
     var elemVar = unifier.newTempVar();
     for (TypeS elemT : elemTs) {
       try {
         unifier.unify(elemVar, elemT);
       } catch (UnifierExc e) {
-        logger.log(compileError(
-            loc, "Cannot infer type for array literal. Its element types are not compatible."));
+        logger.log(compileError(location,
+            "Cannot infer type for array literal. Its element types are not compatible."));
         return Optional.empty();
       }
     }
@@ -327,13 +327,13 @@ public class ExprTypeUnifier {
       if (unifier.resolve(t) instanceof StructTS structTS) {
         var itemSigS = structTS.fields().get(selectP.field());
         if (itemSigS == null) {
-          logger.log(compileError(selectP.loc(), "Unknown field `" + selectP.field() + "`."));
+          logger.log(compileError(selectP.location(), "Unknown field `" + selectP.field() + "`."));
           return Optional.empty();
         } else {
           return Optional.of(itemSigS.type());
         }
       } else {
-        logger.log(compileError(selectP.loc(), "Illegal field access."));
+        logger.log(compileError(selectP.location(), "Illegal field access."));
         return Optional.empty();
       }
     });

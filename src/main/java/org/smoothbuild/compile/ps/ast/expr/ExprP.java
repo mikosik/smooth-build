@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import org.smoothbuild.compile.lang.base.Loc;
-import org.smoothbuild.compile.lang.base.Located;
+import org.smoothbuild.compile.lang.base.location.Located;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.TypeS;
 
 /**
@@ -10,15 +10,15 @@ import org.smoothbuild.compile.lang.type.TypeS;
 public sealed abstract class ExprP implements Located
     permits BlobP, CallP, IntP, MonoizableP, NamedArgP, OrderP, SelectP, StringP {
   private TypeS type;
-  private final Loc loc;
+  private final Location location;
 
-  public ExprP(Loc loc) {
-    this.loc = loc;
+  public ExprP(Location location) {
+    this.location = location;
   }
 
   @Override
-  public Loc loc() {
-    return loc;
+  public Location location() {
+    return location;
   }
 
   public TypeS typeS() {

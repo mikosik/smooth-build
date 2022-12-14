@@ -50,7 +50,7 @@ public class ItemSTest {
               type = String
               name = name
               defaultValue = Optional.empty
-              loc = myBuild.smooth:11
+              location = myBuild.smooth:11
             )""");
   }
 }

@@ -2,7 +2,6 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.fs.space.Space.PRJ;
 
 import java.util.Optional;
 
@@ -47,7 +46,7 @@ public class ListRunner {
   }
 
   private static boolean isEvaluableValue(NamedEvaluableS evaluable) {
-    return evaluable.loc().file().space().equals(PRJ)
+    return evaluable.location().isInProjectSpace()
         && evaluable instanceof NamedValueS
         && evaluable.schema().quantifiedVars().isEmpty();
   }

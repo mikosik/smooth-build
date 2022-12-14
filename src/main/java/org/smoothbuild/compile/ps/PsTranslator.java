@@ -64,13 +64,13 @@ public class PsTranslator {
   public Optional<NamedEvaluableS> translateNamedValue(NamedValueP namedValueP) {
     var schema = namedValueP.schemaS();
     var name = namedValueP.name();
-    var loc = namedValueP.loc();
+    var location = namedValueP.location();
     if (namedValueP.annotation().isPresent()) {
       var ann = translateAnnotation(namedValueP.annotation().get());
-      return Optional.of(new AnnotatedValueS(ann, schema, name, loc));
+      return Optional.of(new AnnotatedValueS(ann, schema, name, location));
     } else {
       var body = translateExpr(namedValueP.body().get());
-      return body.map(b -> new NamedExprValueS(schema, name, b, loc));
+      return body.map(b -> new NamedExprValueS(schema, name, b, location));
     }
   }
 
@@ -90,13 +90,13 @@ public class PsTranslator {
     var type = paramP.typeS();
     var name = paramP.name();
     var body = paramP.defaultValue().flatMap(this::translateNamedValue);
-    return new ItemS(type, name, body, paramP.loc());
+    return new ItemS(type, name, body, paramP.location());
   }
 
   private Optional<NamedFuncS> translateNamedFunc(NamedFuncP namedFuncP, NList<ItemS> params) {
     var schema = namedFuncP.schemaS();
     var name = namedFuncP.name();
-    var loc = namedFuncP.loc();
+    var loc = namedFuncP.location();
     if (namedFuncP.annotation().isPresent()) {
       var annotationS = translateAnnotation(namedFuncP.annotation().get());
       var annotatedFuncS = new AnnotatedFuncS(annotationS, schema, name, params, loc);
@@ -109,7 +109,7 @@ public class PsTranslator {
 
   private AnnotationS translateAnnotation(AnnotationP annotationP) {
     var path = translateString(annotationP.path());
-    return new AnnotationS(annotationP.name(), path, annotationP.loc());
+    return new AnnotationS(annotationP.name(), path, annotationP.location());
   }
 
   private Optional<ImmutableList<ExprS>> translateExprs(List<ExprP> positionedArgs) {
@@ -134,13 +134,13 @@ public class PsTranslator {
 
   private Optional<ExprS> translateOrder(OrderP order) {
     var elems = translateExprs(order.elems());
-    return elems.map(es -> new OrderS((ArrayTS) order.typeS(), es, order.loc()));
+    return elems.map(es -> new OrderS((ArrayTS) order.typeS(), es, order.location()));
   }
 
   private Optional<ExprS> translateCall(CallP call) {
     var callee = translateExpr(call.callee());
     var argExprs = call.positionedArgs().flatMap(this::translateExprs);
-    return mapPair(callee, argExprs, (c, as) -> new CallS(c, as, call.loc()));
+    return mapPair(callee, argExprs, (c, as) -> new CallS(c, as, call.location()));
   }
 
   private Optional<ExprS> translateAnonymousFunc(AnonymousFuncP anonymousFuncP) {
@@ -158,13 +158,13 @@ public class PsTranslator {
   private static MonoizeS monoizeAnonymousFunc(
       AnonymousFuncP anonymousFuncP, NList<ItemS> params, ExprS body) {
     var anonymousFuncS =
-        new AnonymousFuncS(anonymousFuncP.schemaS(), params, body, anonymousFuncP.loc());
+        new AnonymousFuncS(anonymousFuncP.schemaS(), params, body, anonymousFuncP.location());
     return newMonoize(anonymousFuncP, anonymousFuncS);
   }
 
   private Optional<ExprS> translateSelect(SelectP selectP) {
     var selectable = translateExpr(selectP.selectable());
-    return selectable.map(s -> new SelectS(s, selectP.field(), selectP.loc()));
+    return selectable.map(s -> new SelectS(s, selectP.field(), selectP.location()));
   }
 
   private Optional<ExprS> translateRef(RefP ref) {
@@ -174,30 +174,30 @@ public class PsTranslator {
 
   private ExprS translateRef(RefP ref, RefableS refable) {
     return switch (refable) {
-      case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.loc());
+      case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.location());
       case NamedEvaluableS evaluableS -> monoizeNamedEvaluable(ref, evaluableS);
     };
   }
 
   private static ExprS monoizeNamedEvaluable(
       MonoizableP monoizableP, NamedEvaluableS namedEvaluableS) {
-    var evaluableRefS = new EvaluableRefS(namedEvaluableS, monoizableP.loc());
+    var evaluableRefS = new EvaluableRefS(namedEvaluableS, monoizableP.location());
     return newMonoize(monoizableP, evaluableRefS);
   }
 
   private static MonoizeS newMonoize(MonoizableP monoizableP, MonoizableS monoizableS) {
-    return new MonoizeS(monoizableP.monoizeVarMap(), monoizableS, monoizableP.loc());
+    return new MonoizeS(monoizableP.monoizeVarMap(), monoizableS, monoizableP.location());
   }
 
   private BlobS translateBlob(BlobP blob) {
-    return new BlobS(BLOB, blob.byteString(), blob.loc());
+    return new BlobS(BLOB, blob.byteString(), blob.location());
   }
 
   private IntS translateInt(IntP int_) {
-    return new IntS(INT, int_.bigInteger(), int_.loc());
+    return new IntS(INT, int_.bigInteger(), int_.location());
   }
 
   private StringS translateString(StringP string) {
-    return new StringS(STRING, string.unescapedValue(), string.loc());
+    return new StringS(STRING, string.unescapedValue(), string.location());
   }
 }

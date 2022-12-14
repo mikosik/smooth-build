@@ -2,8 +2,8 @@ package org.smoothbuild.compile.ps.ast.expr;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
 /**
@@ -14,8 +14,12 @@ public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
   private final Optional<ExprP> body;
   private final Optional<AnnotationP> annotation;
 
-  protected NamedEvaluableP(String name, Optional<ExprP> body, Optional<AnnotationP> annotation, Loc loc) {
-    super(name, loc);
+  protected NamedEvaluableP(
+      String name,
+      Optional<ExprP> body,
+      Optional<AnnotationP> annotation,
+      Location location) {
+    super(name, location);
     this.body = body;
     this.annotation = annotation;
   }
@@ -49,6 +53,6 @@ public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
 
   @Override
   public String toString() {
-    return "[" + name() + ":" + loc() + "]";
+    return "[" + name() + ":" + location() + "]";
   }
 }

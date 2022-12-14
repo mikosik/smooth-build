@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Strings.indent;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
@@ -16,13 +16,13 @@ public final class AnonymousFuncS implements ExprFuncS, MonoizableS {
   private final FuncSchemaS schema;
   private final NList<ItemS> params;
   private final ExprS body;
-  private final Loc loc;
+  private final Location location;
 
-  public AnonymousFuncS(FuncSchemaS schema, NList<ItemS> params, ExprS body, Loc loc) {
+  public AnonymousFuncS(FuncSchemaS schema, NList<ItemS> params, ExprS body, Location location) {
     this.schema = schema;
     this.params = params;
     this.body = body;
-    this.loc = loc;
+    this.location = location;
   }
 
 
@@ -42,8 +42,8 @@ public final class AnonymousFuncS implements ExprFuncS, MonoizableS {
   }
 
   @Override
-  public Loc loc() {
-    return loc;
+  public Location location() {
+    return location;
   }
 
   @Override
@@ -55,12 +55,12 @@ public final class AnonymousFuncS implements ExprFuncS, MonoizableS {
         && this.schema.equals(that.schema)
         && this.params.equals(that.params)
         && this.body.equals(that.body)
-        && this.loc().equals(that.loc());
+        && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema, params, body, loc());
+    return Objects.hash(schema, params, body, location());
   }
 
   @Override

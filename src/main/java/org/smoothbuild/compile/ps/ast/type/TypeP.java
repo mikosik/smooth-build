@@ -1,11 +1,11 @@
 package org.smoothbuild.compile.ps.ast.type;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
+import org.smoothbuild.compile.lang.base.location.Location;
 
 public sealed class TypeP extends NalImpl permits ArrayTP, FuncTP {
-  public TypeP(String name, Loc loc) {
-    super(name, loc);
+  public TypeP(String name, Location location) {
+    super(name, location);
   }
 
   @Override

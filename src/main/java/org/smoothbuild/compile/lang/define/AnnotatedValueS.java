@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Strings.indent;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
@@ -14,8 +14,8 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 public final class AnnotatedValueS extends NamedValueS {
   private final AnnotationS annotation;
 
-  public AnnotatedValueS(AnnotationS annotation, SchemaS schema, String name, Loc loc) {
-    super(schema, name, loc);
+  public AnnotatedValueS(AnnotationS annotation, SchemaS schema, String name, Location location) {
+    super(schema, name, location);
     this.annotation = annotation;
   }
 
@@ -32,12 +32,12 @@ public final class AnnotatedValueS extends NamedValueS {
         && this.annotation().equals(that.annotation())
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
-        && this.loc().equals(that.loc());
+        && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(annotation(), schema(), name(), loc());
+    return Objects.hash(annotation(), schema(), name(), location());
   }
 
 

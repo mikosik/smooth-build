@@ -2,8 +2,8 @@ package org.smoothbuild.compile.lang.define;
 
 import static org.smoothbuild.util.collect.Lists.joinToString;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Sanal;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
@@ -14,15 +14,15 @@ public sealed abstract class NamedValueS
     extends Sanal
     implements NamedEvaluableS
     permits AnnotatedValueS, NamedExprValueS {
-  public NamedValueS(SchemaS schema, String name, Loc loc) {
-    super(schema, name, loc);
+  public NamedValueS(SchemaS schema, String name, Location location) {
+    super(schema, name, location);
   }
 
   protected String fieldsToString() {
     return joinToString("\n",
         "schema = " + schema(),
         "name = " + name(),
-        "loc = " + loc()
+        "location = " + location()
     );
   }
 }

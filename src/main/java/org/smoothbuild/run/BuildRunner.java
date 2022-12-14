@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.compile.lang.base.Loc.commandLineLoc;
+import static org.smoothbuild.compile.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.run.FindTopValues.findTopValues;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -68,7 +68,7 @@ public class BuildRunner {
 
   private Optional<ImmutableList<ValueB>> evaluate(ImmutableList<NamedValueS> namedValues) {
     var exprs = map(namedValues,
-        v -> new MonoizeS(new EvaluableRefS(v, commandLineLoc()), commandLineLoc()));
+        v -> new MonoizeS(new EvaluableRefS(v, commandLineLocation()), commandLineLocation()));
     try {
       return evaluator.evaluate(exprs);
     } catch (EvaluatorExcS e) {

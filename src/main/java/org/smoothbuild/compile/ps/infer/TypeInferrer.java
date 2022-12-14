@@ -157,7 +157,7 @@ public class TypeInferrer {
         } catch (UnifierExc e) {
           var message = "Parameter %s has type %s so it cannot have default value with type %s."
                   .formatted(param.q(), resolvedParamT.q(), defaultvalue.schemaS().type().q());
-          this.logger.log(compileError(defaultvalue.loc(), message));
+          this.logger.log(compileError(defaultvalue.location(), message));
         }
       });
     }

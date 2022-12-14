@@ -4,16 +4,16 @@ import static java.util.Objects.requireNonNullElse;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 
 import com.google.common.base.Strings;
 
 /**
  * Smooth stack trace.
  */
-public record TraceS(String name, Loc loc, TraceS tail) {
-  public TraceS(String tag, Loc loc) {
-    this(tag, loc, null);
+public record TraceS(String name, Location location, TraceS tail) {
+  public TraceS(String tag, Location location) {
+    this(tag, location, null);
   }
 
   @Override
@@ -22,7 +22,8 @@ public record TraceS(String name, Loc loc, TraceS tail) {
   }
 
   private String toString(int padding) {
-    var line =  "@ " + Strings.padEnd(Objects.toString(name, ""), padding, ' ') + loc.toString();
+    var line =  "@ " + Strings.padEnd(Objects.toString(name, ""), padding, ' ')
+        + location.toString();
     if (tail == null) {
       return line;
     } else {

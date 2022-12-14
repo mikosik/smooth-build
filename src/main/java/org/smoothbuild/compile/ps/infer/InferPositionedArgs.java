@@ -70,7 +70,7 @@ public class InferPositionedArgs {
         var param = params.get().get(i);
         if (param.defaultValue().isPresent()) {
           var name = ((RefP) call.callee()).name() + ":" + param.name();
-          var element = new RefP(name, call.loc());
+          var element = new RefP(name, call.location());
           result.set(i, element);
         } else {
           error = true;

@@ -18,7 +18,7 @@ public class AnnotatedFuncSTest extends TestContext {
               AnnotationS(
                 name = Native
                 path = StringS(String, "impl", myBuild.smooth:1)
-                loc = myBuild.smooth:1
+                location = myBuild.smooth:1
               )
               schema = <>(Int)->String
               params = [
@@ -26,10 +26,10 @@ public class AnnotatedFuncSTest extends TestContext {
                   type = Int
                   name = myParam
                   defaultValue = Optional.empty
-                  loc = myBuild.smooth:1
+                  location = myBuild.smooth:1
                 )
               ]
-              loc = myBuild.smooth:1
+              location = myBuild.smooth:1
             )""");
   }
 }

@@ -2,16 +2,18 @@ package org.smoothbuild.compile.lang.base;
 
 import static java.util.Objects.requireNonNull;
 
+import org.smoothbuild.compile.lang.base.location.Location;
+
 /**
  * Default Nal implementation.
  */
 public class NalImpl implements Nal {
   private final String name;
-  private final Loc loc;
+  private final Location location;
 
-  public NalImpl(String name, Loc loc) {
+  public NalImpl(String name, Location location) {
     this.name = requireNonNull(name);
-    this.loc = loc;
+    this.location = location;
   }
 
   @Override
@@ -20,7 +22,7 @@ public class NalImpl implements Nal {
   }
 
   @Override
-  public Loc loc() {
-    return loc;
+  public Location location() {
+    return location;
   }
 }

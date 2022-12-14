@@ -2,7 +2,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -14,8 +14,8 @@ public final class AnonymousFuncP extends MonoizableP implements FuncP {
   private FuncTS type;
   private FuncSchemaS schemaS;
 
-  public AnonymousFuncP(NList<ItemP> params, ExprP body, Loc loc) {
-    super(loc);
+  public AnonymousFuncP(NList<ItemP> params, ExprP body, Location location) {
+    super(location);
     this.params = params;
     this.body = body;
   }

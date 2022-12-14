@@ -71,7 +71,7 @@ public class ModuleCreator {
 
   public void visitStruct(StructP struct) {
     Optional<StructTS> structTS = inferStructType(types, bindings, logBuffer, struct);
-    Optional<TDefS> structDefS = structTS.map(s -> new StructDefS(s, struct.loc()));
+    Optional<TDefS> structDefS = structTS.map(s -> new StructDefS(s, struct.location()));
     types.add(struct.name(), structDefS);
     var ctorS = structTS.map(st -> loadConstructor(struct, st));
     bindings.add(struct.constructor().name(), ctorS);
@@ -82,11 +82,11 @@ public class ModuleCreator {
     var name = constructorP.name();
     var fieldSigs = structT.fields();
     var params = structP.fields().map(
-        f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.loc()));
+        f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.location()));
     var funcTS = new FuncTS(toTypes(params), structT);
     var schema = new FuncSchemaS(varSetS(), funcTS);
-    var loc = structP.loc();
-    return new ConstructorS(schema, name, params, loc);
+    var location = structP.location();
+    return new ConstructorS(schema, name, params, location);
   }
 
   public void visitRefable(RefableP refableP) {

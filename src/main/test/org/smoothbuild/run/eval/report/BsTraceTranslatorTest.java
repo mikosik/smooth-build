@@ -1,10 +1,11 @@
 package org.smoothbuild.run.eval.report;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compile.lang.base.location.Locations.unknownLocation;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.testing.TestContext;
 
@@ -65,7 +66,7 @@ public class BsTraceTranslatorTest extends TestContext {
         .isEqualTo(
             traceS("name4", loc(4),
             traceS("name2", loc(3),
-            traceS("", Loc.unknown()))));
+            traceS("", unknownLocation()))));
 
   }
 
@@ -76,7 +77,7 @@ public class BsTraceTranslatorTest extends TestContext {
         HASH3, "name3",
         HASH4, "name4"
         );
-    ImmutableMap<Hash, Loc> locs = ImmutableMap.of(
+    ImmutableMap<Hash, Location> locs = ImmutableMap.of(
         HASH1, loc(1),
         HASH2, loc(2),
         HASH3, loc(3),

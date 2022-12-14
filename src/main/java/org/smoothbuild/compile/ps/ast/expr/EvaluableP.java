@@ -2,7 +2,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Located;
+import org.smoothbuild.compile.lang.base.location.Located;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 

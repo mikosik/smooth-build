@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
@@ -14,8 +14,8 @@ public abstract sealed class MonoizableP extends ExprP
     permits AnonymousFuncP, RefP {
   private ImmutableMap<VarS, TypeS> monoizeVarMap;
 
-  public MonoizableP(Loc loc) {
-    super(loc);
+  public MonoizableP(Location location) {
+    super(location);
   }
 
   public abstract SchemaS schemaS();

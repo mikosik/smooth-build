@@ -2,15 +2,15 @@ package org.smoothbuild.compile.ps.ast.expr;
 
 import static org.smoothbuild.util.Strings.q;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 public final class RefP extends MonoizableP {
   private final String name;
   private SchemaS schemaS;
 
-  public RefP(String name, Loc loc) {
-    super(loc);
+  public RefP(String name, Location location) {
+    super(location);
     this.name = name;
   }
 

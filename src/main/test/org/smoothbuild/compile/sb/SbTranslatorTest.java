@@ -21,7 +21,7 @@ import org.smoothbuild.bytecode.expr.oper.CallB;
 import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.bytecode.expr.value.ExprFuncB;
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
@@ -578,32 +578,32 @@ public class SbTranslatorTest extends TestContext {
         .isEqualTo(expected);
   }
 
-  private void assertValNalMapping(ExprS exprS, Loc expectedCallLoc, String expectedName,
-      Loc expectedLoc) {
+  private void assertValNalMapping(
+      ExprS exprS, Location expectedCallLocation, String expectedName, Location expectedLocation) {
     var sbTranslator = newTranslator();
     var call = ((CallB) sbTranslator.translateExpr(exprS));
-    assertNalMapping(sbTranslator, call, null, expectedCallLoc);
+    assertNalMapping(sbTranslator, call, null, expectedCallLocation);
     var called = call.dataSeq().get(0);
-    assertNalMapping(sbTranslator, called, expectedName, expectedLoc);
+    assertNalMapping(sbTranslator, called, expectedName, expectedLocation);
   }
 
-  private void assertNalMapping(ExprS exprS, String expectedName, Loc expectedLoc) {
-    assertNalMapping(newTranslator(), exprS, expectedName, expectedLoc);
+  private void assertNalMapping(ExprS exprS, String expectedName, Location expectedLocation) {
+    assertNalMapping(newTranslator(), exprS, expectedName, expectedLocation);
   }
 
   private void assertNalMapping(
-      SbTranslator sbTranslator, ExprS exprS, String expectedName, Loc expectedLoc) {
+      SbTranslator sbTranslator, ExprS exprS, String expectedName, Location expectedLocation) {
     var exprB = sbTranslator.translateExpr(exprS);
-    assertNalMapping(sbTranslator, exprB, expectedName, expectedLoc);
+    assertNalMapping(sbTranslator, exprB, expectedName, expectedLocation);
   }
 
   private static void assertNalMapping(
-      SbTranslator sbTranslator, ExprB exprB, String expectedName, Loc expectedLoc) {
+      SbTranslator sbTranslator, ExprB exprB, String expectedName, Location expectedLocation) {
     var bsMapping = sbTranslator.bsMapping();
     assertThat(bsMapping.nameMapping().get(exprB.hash()))
         .isEqualTo(expectedName);
     assertThat(bsMapping.locMapping().get(exprB.hash()))
-        .isEqualTo(expectedLoc);
+        .isEqualTo(expectedLocation);
   }
 
   private SbTranslator newTranslator() {

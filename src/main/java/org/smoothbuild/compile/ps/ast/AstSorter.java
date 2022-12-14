@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Nal;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
@@ -48,41 +48,41 @@ public class AstSorter {
     return maybe(sorted);
   }
 
-  private static TopologicalSortingRes<String, NamedEvaluableP, Loc> sortEvaluablesByDeps(
+  private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(
       ImmutableList<NamedEvaluableP> evaluables) {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(r -> names.add(r.name()));
 
-    HashSet<GraphNode<String, NamedEvaluableP, Loc>> nodes = new HashSet<>();
+    HashSet<GraphNode<String, NamedEvaluableP, Location>> nodes = new HashSet<>();
     nodes.addAll(map(evaluables, r -> evaluable(r, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, NamedEvaluableP, Loc> evaluable(
+  private static GraphNode<String, NamedEvaluableP, Location> evaluable(
       NamedEvaluableP evaluable, Set<String> names) {
-    Set<GraphEdge<Loc, String>> deps = new HashSet<>();
+    Set<GraphEdge<Location, String>> deps = new HashSet<>();
     new AstVisitor() {
       @Override
       public void visitRef(RefP ref) {
         super.visitRef(ref);
         if (names.contains(ref.name())) {
-          deps.add(new GraphEdge<>(ref.loc(), ref.name()));
+          deps.add(new GraphEdge<>(ref.location(), ref.name()));
         }
       }
     }.visitNamedEvaluable(evaluable);
     return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(deps));
   }
 
-  private static TopologicalSortingRes<String, StructP, Loc> sortStructsByDeps(
+  private static TopologicalSortingRes<String, StructP, Location> sortStructsByDeps(
       NList<StructP> structs) {
     var structNames = Sets.map(structs, Nal::name);
     var nodes = map(structs, struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, StructP, Loc> structToGraphNode(
+  private static GraphNode<String, StructP, Location> structToGraphNode(
       StructP struct, Set<String> funcNames) {
-    Set<GraphEdge<Loc, String>> deps = new HashSet<>();
+    Set<GraphEdge<Location, String>> deps = new HashSet<>();
     new AstVisitor() {
       @Override
       public void visitField(ItemP field) {
@@ -99,7 +99,7 @@ public class AstSorter {
           }
           default -> {
             if (funcNames.contains(type.name())) {
-              deps.add(new GraphEdge<>(type.loc(), type.name()));
+              deps.add(new GraphEdge<>(type.location(), type.name()));
             }
           }
         }
@@ -108,10 +108,10 @@ public class AstSorter {
     return new GraphNode<>(struct.name(), struct, ImmutableList.copyOf(deps));
   }
 
-  private static Log createCycleError(String name, List<GraphEdge<Loc, String>> cycle) {
-    // Choosing edge with lowest line number and printing a cycle starting from that edge
+  private static Log createCycleError(String name, List<GraphEdge<Location, String>> cycle) {
+    // Choosing edge lexicographically first and printing a cycle starting from that edge
     // is a way to make report deterministic and (as a result) to make testing those reports simple.
-    int edgeIndex = chooseEdgeWithLowestLineNumber(cycle);
+    int edgeIndex = chooseEdgeLexicographicallyFirst(cycle);
     rotate(cycle, -edgeIndex);
 
     String previous = cycle.get(cycle.size() - 1).targetKey();
@@ -124,13 +124,13 @@ public class AstSorter {
     return error(name + " contains cycle:\n" + join("\n", lines));
   }
 
-  private static int chooseEdgeWithLowestLineNumber(List<GraphEdge<Loc, String>> cycle) {
-    int lowestLineNumber = Integer.MAX_VALUE;
+  private static int chooseEdgeLexicographicallyFirst(List<GraphEdge<Location, String>> cycle) {
+    String firstLexicographically = cycle.get(0).value().toString();
     int result = 0;
-    for (int i = 0; i < cycle.size(); i++) {
-      int line = cycle.get(i).value().line();
-      if (line < lowestLineNumber) {
-        lowestLineNumber = line;
+    for (int i = 1; i < cycle.size(); i++) {
+      String toString = cycle.get(i).value().toString();
+      if (toString.compareTo(firstLexicographically) < 0) {
+        firstLexicographically = toString;
         result = i;
       }
     }

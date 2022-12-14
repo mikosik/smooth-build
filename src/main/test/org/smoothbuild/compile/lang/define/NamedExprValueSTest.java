@@ -14,7 +14,7 @@ public class NamedExprValueSTest extends TestContext {
             NamedExprValue(
               schema = <>String
               name = myVal
-              loc = myBuild.smooth:7
+              location = myBuild.smooth:7
               body = IntS(Int, 9, myBuild.smooth:1)
             )""");
   }

@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Lists.joinToString;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
@@ -14,8 +14,8 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class ConstructorS extends NamedFuncS {
-  public ConstructorS(FuncSchemaS schema, String name, NList<ItemS> params, Loc loc) {
-    super(schema, name, params, loc);
+  public ConstructorS(FuncSchemaS schema, String name, NList<ItemS> params, Location location) {
+    super(schema, name, params, location);
   }
 
   @Override
@@ -27,12 +27,12 @@ public final class ConstructorS extends NamedFuncS {
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
-        && this.loc().equals(that.loc());
+        && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema(), name(), params(), loc());
+    return Objects.hash(schema(), name(), params(), location());
   }
 
   @Override

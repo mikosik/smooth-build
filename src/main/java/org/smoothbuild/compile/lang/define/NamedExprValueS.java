@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Strings.indent;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.SchemaS;
 
 /**
@@ -14,8 +14,8 @@ import org.smoothbuild.compile.lang.type.SchemaS;
 public final class NamedExprValueS extends NamedValueS {
   private final ExprS body;
 
-  public NamedExprValueS(SchemaS schema, String name, ExprS body, Loc loc) {
-    super(schema, name, loc);
+  public NamedExprValueS(SchemaS schema, String name, ExprS body, Location location) {
+    super(schema, name, location);
     this.body = body;
   }
 
@@ -32,12 +32,12 @@ public final class NamedExprValueS extends NamedValueS {
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.body().equals(that.body())
-        && this.loc().equals(that.loc());
+        && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(schema(), name(), body(), loc());
+    return Objects.hash(schema(), name(), body(), location());
   }
 
   @Override

@@ -14,7 +14,7 @@ import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.value.ClosureB;
 import org.smoothbuild.bytecode.expr.value.FuncB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -93,7 +93,7 @@ public class TaskReporterImpl implements TaskReporter {
     };
   }
 
-  private Loc locationOf(ExprB exprB) {
+  private Location locationOf(ExprB exprB) {
     if (exprB instanceof ClosureB closureB) {
       return locationOf(closureB.func());
     } else {

@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.ap;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.compile.lang.base.Loc.loc;
+import static org.smoothbuild.compile.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
@@ -39,7 +39,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
@@ -105,8 +105,8 @@ public class ApTranslator {
         String name = nameNode.getText();
         Optional<ExprP> expr = createPipeSane(namedValue.pipe());
         Optional<AnnotationP> annotation = createNativeSane(namedValue.ann());
-        Loc loc = locOf(filePath, nameNode);
-        evaluables.add(new NamedValueP(type, name, expr, annotation, loc));
+        var location = locOf(filePath, nameNode);
+        evaluables.add(new NamedValueP(type, name, expr, annotation, location));
         return null;
       }
 
@@ -145,13 +145,16 @@ public class ApTranslator {
         return new ItemP(type, name, defaultValue, loc);
       }
 
-      private Optional<NamedValueP> createDefaultValue(String name, ItemContext item, Loc loc) {
+      private Optional<NamedValueP> createDefaultValue(
+          String name, ItemContext item, Location location) {
         return createExprSane(item.expr())
-            .map(e -> namedValueForDefaultArgument(name, e, loc));
+            .map(e -> namedValueForDefaultArgument(name, e, location));
       }
 
-      private NamedValueP namedValueForDefaultArgument(String name, ExprP body, Loc loc) {
-        return new NamedValueP(Optional.empty(), name, Optional.of(body), Optional.empty(), loc);
+      private NamedValueP namedValueForDefaultArgument(
+          String name, ExprP body, Location location) {
+        return new NamedValueP(Optional.empty(), name, Optional.of(body), Optional.empty(),
+            location);
       }
 
       private Optional<ExprP> createPipeSane(PipeContext pipe) {
@@ -260,15 +263,15 @@ public class ApTranslator {
       }
 
       private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
-        String unquoted = unquote(quotedString.getText());
-        Loc loc = locOf(filePath, expr);
-        return new StringP(unquoted, loc);
+        var unquoted = unquote(quotedString.getText());
+        var location = locOf(filePath, expr);
+        return new StringP(unquoted, location);
       }
 
       private SelectP createSelect(ExprP selectable, SelectContext fieldRead) {
-        String name = fieldRead.NAME().getText();
-        Loc loc = locOf(filePath, fieldRead);
-        return new SelectP(selectable, name, loc);
+        var name = fieldRead.NAME().getText();
+        var location = locOf(filePath, fieldRead);
+        return new SelectP(selectable, name, location);
       }
 
       private List<ExprP> createArgList(ArgListContext argList) {
@@ -287,8 +290,8 @@ public class ApTranslator {
       }
 
       private ExprP createCall(ExprP callable, List<ExprP> args, ArgListContext argListContext) {
-        Loc loc = locOf(filePath, argListContext);
-        return new CallP(callable, args, loc);
+        var location = locOf(filePath, argListContext);
+        return new CallP(callable, args, location);
       }
 
       private Optional<TypeP> createTypeSane(TypeContext type) {
@@ -333,15 +336,15 @@ public class ApTranslator {
     return quotedString.substring(1, quotedString.length() - 1);
   }
 
-  private static Loc locOf(FilePath filePath, ParserRuleContext parserRuleContext) {
+  private static Location locOf(FilePath filePath, ParserRuleContext parserRuleContext) {
     return locOf(filePath, parserRuleContext.getStart());
   }
 
-  private static Loc locOf(FilePath filePath, TerminalNode node) {
+  private static Location locOf(FilePath filePath, TerminalNode node) {
     return locOf(filePath, node.getSymbol());
   }
 
-  private static Loc locOf(FilePath filePath, Token token) {
-    return loc(filePath, token.getLine());
+  private static Location locOf(FilePath filePath, Token token) {
+    return fileLocation(filePath, token.getLine());
   }
 }

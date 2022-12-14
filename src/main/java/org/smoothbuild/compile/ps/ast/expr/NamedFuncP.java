@@ -2,7 +2,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -20,8 +20,8 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
       NList<ItemP> params,
       Optional<ExprP> body,
       Optional<AnnotationP> annotation,
-      Loc loc) {
-    super(name, body, annotation, loc);
+      Location location) {
+    super(name, body, annotation, location);
     this.resT = resT;
     this.params = params;
   }

@@ -1,7 +1,9 @@
 package org.smoothbuild.run.eval.report;
 
+import static org.smoothbuild.compile.lang.base.location.Locations.unknownLocation;
+
 import org.smoothbuild.bytecode.hashed.Hash;
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.vm.execute.TraceB;
@@ -39,7 +41,7 @@ public class BsTraceTranslator {
     return bsMapping.nameMapping().getOrDefault(funcHash, "???");
   }
 
-  private Loc locFor(Hash hash) {
-    return bsMapping.locMapping().getOrDefault(hash, Loc.unknown());
+  private Location locFor(Hash hash) {
+    return bsMapping.locMapping().getOrDefault(hash, unknownLocation());
   }
 }

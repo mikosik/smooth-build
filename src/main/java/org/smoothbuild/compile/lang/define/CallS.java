@@ -3,7 +3,7 @@ package org.smoothbuild.compile.lang.define;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Lists.joinToString;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 
@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public record CallS(ExprS callee, ImmutableList<ExprS> args, Loc loc)
+public record CallS(ExprS callee, ImmutableList<ExprS> args, Location location)
     implements ExprS {
   public CallS {
     if (callee.evalT() instanceof FuncTS funcTS) {
@@ -40,7 +40,7 @@ public record CallS(ExprS callee, ImmutableList<ExprS> args, Loc loc)
     var fields = joinToString("\n",
         "callee = " + callee,
         "args = [\n" + indent(joinToString(args, "\n")) + "\n]",
-        "loc = " + loc
+        "location = " + location
     );
     return "CallS(\n" + indent(fields) + "\n)";
   }

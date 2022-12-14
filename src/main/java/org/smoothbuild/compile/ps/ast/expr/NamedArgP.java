@@ -1,14 +1,14 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.util.Strings;
 
 public final class NamedArgP extends ExprP {
   private final String name;
   private final ExprP expr;
 
-  public NamedArgP(String name, ExprP expr, Loc loc) {
-    super(loc);
+  public NamedArgP(String name, ExprP expr, Location location) {
+    super(location);
     this.name = name;
     this.expr = expr;
   }

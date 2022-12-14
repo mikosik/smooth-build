@@ -23,19 +23,19 @@ public class SelectSTest extends TestContext {
                     AnnotationS(
                       name = myAnnotation
                       path = StringS(String, "myPath", myBuild.smooth:7)
-                      loc = myBuild.smooth:17
+                      location = myBuild.smooth:17
                     )
                     schema = <>MyStruct
                     name = structValue
-                    loc = myBuild.smooth:11
+                    location = myBuild.smooth:11
                   )
-                  loc = myBuild.smooth:12
+                  location = myBuild.smooth:12
                 )
                 evalT = MyStruct
-                loc = myBuild.smooth:12
+                location = myBuild.smooth:12
               )
               field = field
-              loc = myBuild.smooth:3
+              location = myBuild.smooth:3
             )""");
   }
 }

@@ -7,6 +7,7 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.structNameToCtorName;
+import static org.smoothbuild.compile.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
@@ -81,7 +82,7 @@ import org.smoothbuild.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.bytecode.type.value.StringTB;
 import org.smoothbuild.bytecode.type.value.TupleTB;
 import org.smoothbuild.bytecode.type.value.TypeB;
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.lang.define.AnnotationS;
@@ -1136,8 +1137,8 @@ public class TestContext {
     return monoizeS(varMap, monoizableS, loc(line));
   }
 
-  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS, Loc loc) {
-    return new MonoizeS(varMap, monoizableS, loc);
+  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS, Location location) {
+    return new MonoizeS(varMap, monoizableS, location);
   }
 
   public static OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {
@@ -1202,12 +1203,12 @@ public class TestContext {
     return bytecodeS(path, loc(line));
   }
 
-  public static AnnotationS bytecodeS(String path, Loc loc) {
-    return bytecodeS(stringS(path), loc);
+  public static AnnotationS bytecodeS(String path, Location location) {
+    return bytecodeS(stringS(path), location);
   }
 
-  public static AnnotationS bytecodeS(StringS path, Loc loc) {
-    return new AnnotationS(BYTECODE, path, loc);
+  public static AnnotationS bytecodeS(StringS path, Location location) {
+    return new AnnotationS(BYTECODE, path, location);
   }
 
   public static AnnotationS nativeAnnotationS() {
@@ -1222,13 +1223,14 @@ public class TestContext {
     return nativeAnnotationS(loc(line), classBinaryName, pure);
   }
 
-  public static AnnotationS nativeAnnotationS(Loc loc, StringS classBinaryName) {
-    return nativeAnnotationS(loc, classBinaryName, true);
+  public static AnnotationS nativeAnnotationS(Location location, StringS classBinaryName) {
+    return nativeAnnotationS(location, classBinaryName, true);
   }
 
-  public static AnnotationS nativeAnnotationS(Loc loc, StringS classBinaryName, boolean pure) {
+  public static AnnotationS nativeAnnotationS(
+      Location location, StringS classBinaryName, boolean pure) {
     var name = pure ? NATIVE_PURE : NATIVE_IMPURE;
-    return new AnnotationS(name, classBinaryName, loc);
+    return new AnnotationS(name, classBinaryName, location);
   }
 
   public static ItemS itemS(TypeS type) {
@@ -1273,8 +1275,8 @@ public class TestContext {
   }
 
   public static AnnotatedValueS annotatedValueS(
-      AnnotationS annotationS, TypeS type, String name, Loc loc) {
-    return new AnnotatedValueS(annotationS, schemaS(type), name, loc);
+      AnnotationS annotationS, TypeS type, String name, Location location) {
+    return new AnnotatedValueS(annotationS, schemaS(type), name, location);
   }
 
   public static NamedExprValueS valueS(String name, ExprS body) {
@@ -1341,8 +1343,8 @@ public class TestContext {
   }
 
   public static AnnotatedFuncS annotatedFuncS(
-      AnnotationS ann, TypeS resT, String name, NList<ItemS> params, Loc loc) {
-    return new AnnotatedFuncS(ann, funcSchemaS(params, resT), name, params, loc);
+      AnnotationS ann, TypeS resT, String name, NList<ItemS> params, Location location) {
+    return new AnnotatedFuncS(ann, funcSchemaS(params, resT), name, params, location);
   }
 
   public static NamedExprFuncS funcS(int line, String name, NList<ItemS> params, ExprS body) {
@@ -1429,32 +1431,32 @@ public class TestContext {
     return traceS(code, loc(line));
   }
 
-  public static TraceS traceS(String code, Loc loc) {
-    return traceS(code, loc, null);
+  public static TraceS traceS(String code, Location location) {
+    return traceS(code, location, null);
   }
 
   public static TraceS traceS(String code2, int line2, String code1, int line1) {
     return traceS(code2, loc(line2), new TraceS(code1, loc(line1)));
   }
 
-  public static TraceS traceS(String code, Loc loc, TraceS tail) {
-    return new TraceS(code, loc, tail);
+  public static TraceS traceS(String code, Location location, TraceS tail) {
+    return new TraceS(code, location, tail);
   }
 
-  public static Loc loc() {
+  public static Location loc() {
     return loc(11);
   }
 
-  public static Loc loc(int line) {
+  public static Location loc(int line) {
     return loc(filePath(), line);
   }
 
-  public static Loc loc(Space space) {
+  public static Location loc(Space space) {
     return loc(filePath(space, path("path")), 17);
   }
 
-  public static Loc loc(FilePath filePath, int line) {
-    return Loc.loc(filePath, line);
+  public static Location loc(FilePath filePath, int line) {
+    return fileLocation(filePath, line);
   }
 
   public static FilePath filePath(Space space, PathS path) {
@@ -1589,7 +1591,7 @@ public class TestContext {
     return new BsMapping(Map.of(hash, name), Map.of());
   }
 
-  public static BsMapping bsMapping(Hash hash, Loc loc) {
-    return new BsMapping(Map.of(), Map.of(hash, loc));
+  public static BsMapping bsMapping(Hash hash, Location location) {
+    return new BsMapping(Map.of(), Map.of(hash, location));
   }
 }

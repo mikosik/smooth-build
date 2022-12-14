@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.ps;
 
 import static java.lang.String.join;
-import static org.smoothbuild.compile.lang.base.Loc.loc;
+import static org.smoothbuild.compile.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
@@ -23,7 +23,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothLexer;
 import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
@@ -57,17 +57,17 @@ public class ParseModule {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int lineNumber,
         int charNumber, String message, RecognitionException e) {
-      Loc loc = createLoc(offendingSymbol, lineNumber);
+      var location = createLoc(offendingSymbol, lineNumber);
       String text = unlines(
           message,
           errorLine(recognizer, lineNumber),
           markingLine((Token) offendingSymbol, charNumber));
-      logger.log(compileError(loc, text));
+      logger.log(compileError(location, text));
     }
 
-    private Loc createLoc(Object offendingSymbol, int line) {
+    private Location createLoc(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
-        return loc(filePath, line);
+        return fileLocation(filePath, line);
       } else {
         return locOf(filePath, (Token) offendingSymbol);
       }
@@ -121,7 +121,7 @@ public class ParseModule {
     }
   }
 
-  private static Loc locOf(FilePath filePath, Token token) {
-    return loc(filePath, token.getLine());
+  private static Location locOf(FilePath filePath, Token token) {
+    return fileLocation(filePath, token.getLine());
   }
 }

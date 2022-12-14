@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.Tanal;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -21,8 +21,8 @@ import com.google.common.collect.ImmutableList;
 public final class ItemS extends Tanal implements RefableS {
   private final Optional<NamedEvaluableS> defaultValue;
 
-  public ItemS(TypeS type, String name, Optional<NamedEvaluableS> defaultValue, Loc loc) {
-    super(type, name, loc);
+  public ItemS(TypeS type, String name, Optional<NamedEvaluableS> defaultValue, Location location) {
+    super(type, name, location);
     this.defaultValue = defaultValue;
   }
 
@@ -40,7 +40,7 @@ public final class ItemS extends Tanal implements RefableS {
         "type = " + type().name(),
         "name = " + name(),
         "defaultValue = " + defaultValue,
-        "loc = " + loc()
+        "location = " + location()
     );
     return "ItemS(\n" + indent(fields) + "\n)";
   }
@@ -54,11 +54,11 @@ public final class ItemS extends Tanal implements RefableS {
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.name(), that.name())
         && Objects.equals(this.defaultValue, that.defaultValue)
-        && Objects.equals(this.loc(), that.loc());
+        && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), name(), defaultValue, loc());
+    return Objects.hash(type(), name(), defaultValue, location());
   }
 }

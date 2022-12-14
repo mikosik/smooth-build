@@ -2,7 +2,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -17,8 +17,8 @@ public final class NamedValueP extends NamedEvaluableP {
       String name,
       Optional<ExprP> body,
       Optional<AnnotationP> annotation,
-      Loc loc) {
-    super(name, body, annotation, loc);
+      Location location) {
+    super(name, body, annotation, location);
     this.type = type;
   }
 

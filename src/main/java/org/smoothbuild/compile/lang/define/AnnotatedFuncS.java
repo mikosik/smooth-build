@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Strings.indent;
 
 import java.util.Objects;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
@@ -20,8 +20,8 @@ public final class AnnotatedFuncS extends NamedFuncS {
       FuncSchemaS schema,
       String name,
       NList<ItemS> params,
-      Loc loc) {
-    super(schema, name, params, loc);
+      Location location) {
+    super(schema, name, params, location);
     this.annotation = annotation;
   }
 
@@ -39,12 +39,12 @@ public final class AnnotatedFuncS extends NamedFuncS {
         && this.schema().equals(that.schema())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
-        && this.loc().equals(that.loc());
+        && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(annotation, schema(), name(), params(), loc());
+    return Objects.hash(annotation, schema(), name(), params(), location());
   }
 
   @Override

@@ -6,8 +6,8 @@ import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Loc;
 import org.smoothbuild.compile.lang.base.NalImpl;
+import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 
@@ -17,15 +17,20 @@ public final class StructP extends NalImpl {
   private final NList<ItemP> fields;
   private final NamedFuncP ctor;
 
-  public StructP(String name, List<ItemP> fields, Loc loc) {
-    this(name, nlistWithShadowing(ImmutableList.copyOf(fields)), loc);
+  public StructP(String name, List<ItemP> fields, Location location) {
+    this(name, nlistWithShadowing(ImmutableList.copyOf(fields)), location);
   }
 
-  private StructP(String name, NList<ItemP> fields, Loc loc) {
-    super(name, loc);
+  private StructP(String name, NList<ItemP> fields, Location location) {
+    super(name, location);
     this.fields = fields;
-    this.ctor = new NamedFuncP(Optional.of(new TypeP(name, loc)), structNameToCtorName(name), fields,
-        Optional.empty(), Optional.empty(), loc);
+    this.ctor = new NamedFuncP(
+        Optional.of(new TypeP(name, location)),
+        structNameToCtorName(name),
+        fields,
+        Optional.empty(),
+        Optional.empty(),
+        location);
   }
 
   public NamedFuncP constructor() {

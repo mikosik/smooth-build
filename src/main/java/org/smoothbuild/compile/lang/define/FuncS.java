@@ -33,7 +33,7 @@ public sealed interface FuncS
         "params = [",
         indent(joinToString(params(), "\n")),
         "]",
-        "loc = " + loc()
+        "location = " + location()
     );
   }
 }

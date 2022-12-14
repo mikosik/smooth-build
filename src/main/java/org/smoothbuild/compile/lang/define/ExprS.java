@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.lang.define;
 
-import org.smoothbuild.compile.lang.base.Located;
+import org.smoothbuild.compile.lang.base.location.Located;
 import org.smoothbuild.compile.lang.type.TypeS;
 
 /**

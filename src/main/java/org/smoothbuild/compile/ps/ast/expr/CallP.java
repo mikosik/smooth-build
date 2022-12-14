@@ -3,7 +3,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.base.Loc;
+import org.smoothbuild.compile.lang.base.location.Location;
 
 import com.google.common.collect.ImmutableList;
 
@@ -12,8 +12,8 @@ public final class CallP extends ExprP {
   private final List<ExprP> args;
   private Optional<ImmutableList<ExprP>> positionedArgs;
 
-  public CallP(ExprP callee, List<ExprP> args, Loc loc) {
-    super(loc);
+  public CallP(ExprP callee, List<ExprP> args, Location location) {
+    super(location);
     this.callee = callee;
     this.args = ImmutableList.copyOf(args);
   }
