@@ -995,7 +995,7 @@ public class VisibilityTest extends TestContext {
           module("""
                String {}
                """)
-              .loadsWithError(1, "`" + "String" + "` is already defined internally.");
+              .loadsWithError(1, "`" + "String" + "` is already defined at internal location.");
         }
 
         @Test
