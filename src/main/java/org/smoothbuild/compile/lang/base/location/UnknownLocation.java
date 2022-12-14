@@ -6,6 +6,11 @@ public final class UnknownLocation implements Location {
   private UnknownLocation() {}
 
   @Override
+  public String description() {
+    return "unknown location";
+  }
+
+  @Override
   public String toString() {
     return "???";
   }

@@ -11,4 +11,8 @@ public sealed interface Location
   public default boolean isInProjectSpace() {
     return (this instanceof SourceLocation source) && source.space().equals(PRJ);
   }
+
+  public default String description() {
+    return toString();
+  }
 }

@@ -9,4 +9,9 @@ public final class InternalLocation implements Location {
   public String toString() {
     return "internal";
   }
+
+  @Override
+  public String description() {
+    return "internal location";
+  }
 }
