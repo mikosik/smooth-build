@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 
 public final class StructP extends NalImpl {
   private final NList<ItemP> fields;
-  private final NamedFuncP ctor;
+  private final NamedFuncP constructor;
 
   public StructP(String name, List<ItemP> fields, Location location) {
     this(name, nlistWithShadowing(ImmutableList.copyOf(fields)), location);
@@ -24,7 +24,7 @@ public final class StructP extends NalImpl {
   private StructP(String name, NList<ItemP> fields, Location location) {
     super(name, location);
     this.fields = fields;
-    this.ctor = new NamedFuncP(
+    this.constructor = new NamedFuncP(
         Optional.of(new TypeP(name, location)),
         structNameToCtorName(name),
         fields,
@@ -34,7 +34,7 @@ public final class StructP extends NalImpl {
   }
 
   public NamedFuncP constructor() {
-    return ctor;
+    return constructor;
   }
 
   public NList<ItemP> fields() {
