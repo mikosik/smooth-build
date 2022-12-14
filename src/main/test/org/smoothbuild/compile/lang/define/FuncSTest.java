@@ -45,6 +45,6 @@ public class FuncSTest extends TestContext {
 
   private FuncS myFunc(TypeS resT, ImmutableList<ItemS> params) {
     var schema = funcSchemaS(toTypes(params), resT);
-    return new NamedExprFuncS(schema, "name", nlist(params), stringS(), loc(1));
+    return new NamedExprFuncS(schema, "name", nlist(params), stringS(), location(1));
   }
 }

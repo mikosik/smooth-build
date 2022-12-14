@@ -8,7 +8,7 @@ import org.smoothbuild.testing.TestContext;
 public class EvaluableRefSTest extends TestContext {
   @Test
   public void to_string() {
-    var evaluableRef = new EvaluableRefS(idFuncS(), loc(7));
+    var evaluableRef = new EvaluableRefS(idFuncS(), location(7));
     assertThat(evaluableRef.toString())
         .isEqualTo("""
             EvaluableRefS(

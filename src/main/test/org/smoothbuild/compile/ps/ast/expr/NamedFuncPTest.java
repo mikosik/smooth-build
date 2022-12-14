@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import static org.smoothbuild.testing.TestContext.loc;
+import static org.smoothbuild.testing.TestContext.location;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
@@ -23,6 +23,6 @@ public class NamedFuncPTest {
   }
 
   private static NamedFuncP func(String name, int line) {
-    return new NamedFuncP(null, name, nlist(), null, null, loc(line));
+    return new NamedFuncP(null, name, nlist(), null, null, location(line));
   }
 }

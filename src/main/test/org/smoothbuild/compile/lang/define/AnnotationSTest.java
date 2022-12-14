@@ -8,7 +8,7 @@ import org.smoothbuild.testing.TestContext;
 public class AnnotationSTest extends TestContext {
   @Test
   public void to_string() {
-    var annS = new AnnotationS("myAnnotation", stringS(7, "myPath"), loc(17));
+    var annS = new AnnotationS("myAnnotation", stringS(7, "myPath"), location(17));
     assertThat(annS.toString())
         .isEqualTo("""
             AnnotationS(

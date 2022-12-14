@@ -8,8 +8,8 @@ import org.smoothbuild.testing.TestContext;
 public class NamedExprValueSTest extends TestContext {
   @Test
   public void to_string() {
-    var annValS = new NamedExprValueS(schemaS(stringTS()), "myVal", intS(9), loc(7));
-    assertThat(annValS.toString())
+    var namedExprValueS = new NamedExprValueS(schemaS(stringTS()), "myVal", intS(9), location(7));
+    assertThat(namedExprValueS.toString())
         .isEqualTo("""
             NamedExprValue(
               schema = <>String

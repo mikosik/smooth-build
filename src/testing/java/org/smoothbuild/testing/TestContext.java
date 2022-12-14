@@ -1074,7 +1074,7 @@ public class TestContext {
   }
 
   public static BlobS blobS(int line, int data) {
-    return new BlobS(blobTS(), intToByteString(data), loc(line));
+    return new BlobS(blobTS(), intToByteString(data), location(line));
   }
 
   public static CallS callS(ExprS callable, ExprS... args) {
@@ -1082,7 +1082,7 @@ public class TestContext {
   }
 
   public static CallS callS(int line, ExprS callable, ExprS... args) {
-    return new CallS(callable, list(args), loc(line));
+    return new CallS(callable, list(args), location(line));
   }
 
   public static IntS intS(int value) {
@@ -1090,7 +1090,7 @@ public class TestContext {
   }
 
   public static IntS intS(int line, int value) {
-    return new IntS(intTS(), BigInteger.valueOf(value), loc(line));
+    return new IntS(intTS(), BigInteger.valueOf(value), location(line));
   }
 
   public static ImmutableMap<VarS, TypeS> varMap() {
@@ -1116,7 +1116,7 @@ public class TestContext {
 
   public static MonoizeS monoizeS(
       int line, ImmutableMap<VarS, TypeS> varMap, NamedEvaluableS namedEvaluableS) {
-    var loc = loc(line);
+    var loc = location(line);
     var evaluableRefS = new EvaluableRefS(namedEvaluableS, loc);
     return monoizeS(varMap, evaluableRefS, loc);
   }
@@ -1126,23 +1126,27 @@ public class TestContext {
   }
 
   public static MonoizeS monoizeS(int line, MonoizableS monoizableS) {
-    return monoizeS(ImmutableMap.of(), monoizableS, loc(line));
+    return monoizeS(ImmutableMap.of(), monoizableS, location(line));
   }
 
   public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS) {
     return monoizeS(1, varMap, monoizableS);
   }
 
-  public static MonoizeS monoizeS(int line, ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS) {
-    return monoizeS(varMap, monoizableS, loc(line));
+  public static MonoizeS monoizeS(
+      int line, ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS) {
+    return monoizeS(varMap, monoizableS, location(line));
   }
 
-  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS, Location location) {
+  public static MonoizeS monoizeS(
+      ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS, Location location) {
     return new MonoizeS(varMap, monoizableS, location);
   }
 
   public static OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {
-    return new OrderS(arrayTS(firstElem.evalT()), concat(firstElem, list(restElems)), loc(line));
+    return new OrderS(
+        arrayTS(firstElem.evalT()),
+        concat(firstElem, list(restElems)), location(line));
   }
 
   public static OrderS orderS(TypeS elemT, ExprS... exprs) {
@@ -1150,7 +1154,7 @@ public class TestContext {
   }
 
   public static OrderS orderS(int line, TypeS elemT, ExprS... exprs) {
-    return new OrderS(arrayTS(elemT), list(exprs), loc(line));
+    return new OrderS(arrayTS(elemT), list(exprs), location(line));
   }
 
   public static ParamRefS paramRefS(TypeS type) {
@@ -1162,11 +1166,11 @@ public class TestContext {
   }
 
   public static ParamRefS paramRefS(int line, TypeS type, String name) {
-    return new ParamRefS(type, name, loc(line));
+    return new ParamRefS(type, name, location(line));
   }
 
   public static EvaluableRefS evaluableRefS(int line, NamedEvaluableS namedEvaluableS) {
-    return new EvaluableRefS(namedEvaluableS, loc(line));
+    return new EvaluableRefS(namedEvaluableS, location(line));
   }
 
   public static SelectS selectS(ExprS selectable, String field) {
@@ -1174,7 +1178,7 @@ public class TestContext {
   }
 
   public static SelectS selectS(int line, ExprS selectable, String field) {
-    return new SelectS(selectable, field, loc(line));
+    return new SelectS(selectable, field, location(line));
   }
 
   public static StringS stringS() {
@@ -1186,7 +1190,7 @@ public class TestContext {
   }
 
   public static StringS stringS(int line, String data) {
-    return new StringS(stringTS(), data, loc(line));
+    return new StringS(stringTS(), data, location(line));
   }
 
   // other smooth language thingies
@@ -1200,7 +1204,7 @@ public class TestContext {
   }
 
   public static AnnotationS bytecodeS(int line, StringS path) {
-    return bytecodeS(path, loc(line));
+    return bytecodeS(path, location(line));
   }
 
   public static AnnotationS bytecodeS(String path, Location location) {
@@ -1220,7 +1224,7 @@ public class TestContext {
   }
 
   public static AnnotationS nativeAnnotationS(int line, StringS classBinaryName, boolean pure) {
-    return nativeAnnotationS(loc(line), classBinaryName, pure);
+    return nativeAnnotationS(location(line), classBinaryName, pure);
   }
 
   public static AnnotationS nativeAnnotationS(Location location, StringS classBinaryName) {
@@ -1262,7 +1266,7 @@ public class TestContext {
   }
 
   public static ItemS itemSPoly(int line, TypeS type, String name, Optional<NamedEvaluableS> body) {
-    return new ItemS(type, name, body, loc(line));
+    return new ItemS(type, name, body, location(line));
   }
 
   public static AnnotatedValueS bytecodeValueS(int line, TypeS type, String name) {
@@ -1271,7 +1275,7 @@ public class TestContext {
 
   public static AnnotatedValueS annotatedValueS(
       int line, AnnotationS annotationS, TypeS type, String name) {
-    return annotatedValueS(annotationS, type, name, loc(line));
+    return annotatedValueS(annotationS, type, name, location(line));
   }
 
   public static AnnotatedValueS annotatedValueS(
@@ -1288,7 +1292,7 @@ public class TestContext {
   }
 
   public static NamedExprValueS valueS(int line, TypeS type, String name, ExprS body) {
-    return new NamedExprValueS(schemaS(type), name, body, loc(line));
+    return new NamedExprValueS(schemaS(type), name, body, location(line));
   }
 
   public static NamedValueS emptyArrayValueS() {
@@ -1309,8 +1313,8 @@ public class TestContext {
 
   public static ConstructorS constructorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
-    var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), loc(2)));
-    return new ConstructorS(funcSchemaS(params, structT), name, params, loc(line));
+    var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), location(2)));
+    return new ConstructorS(funcSchemaS(params, structT), name, params, location(line));
   }
 
   public static AnnotatedFuncS bytecodeFuncS(
@@ -1339,7 +1343,7 @@ public class TestContext {
 
   public static AnnotatedFuncS annotatedFuncS(
       int line, AnnotationS ann, TypeS resT, String name, NList<ItemS> params) {
-    return annotatedFuncS(ann, resT, name, params, loc(line));
+    return annotatedFuncS(ann, resT, name, params, location(line));
   }
 
   public static AnnotatedFuncS annotatedFuncS(
@@ -1362,7 +1366,7 @@ public class TestContext {
   public static NamedExprFuncS funcS(
       int line, TypeS resT, String name, NList<ItemS> params, ExprS body) {
     var schema = funcSchemaS(params, resT);
-    return new NamedExprFuncS(schema, name, params, body, loc(line));
+    return new NamedExprFuncS(schema, name, params, body, location(line));
   }
 
   public static AnonymousFuncS anonymousFuncS(VarSetS quantifiedVars, ExprS body) {
@@ -1378,7 +1382,7 @@ public class TestContext {
       int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
     var funcTS = funcTS(toTypes(params), body.evalT());
     var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
-    return new AnonymousFuncS(funcSchemaS, params, body, loc(line));
+    return new AnonymousFuncS(funcSchemaS, params, body, location(line));
   }
 
   public static AnonymousFuncS anonymousFuncS(ExprS body) {
@@ -1391,7 +1395,7 @@ public class TestContext {
 
   public static AnonymousFuncS anonymousFuncS(int line, NList<ItemS> params, ExprS body) {
     var funcSchemaS = funcSchemaS(toTypes(params), body.evalT());
-    return new AnonymousFuncS(funcSchemaS, params, body, loc(line));
+    return new AnonymousFuncS(funcSchemaS, params, body, location(line));
   }
 
   public static NamedExprFuncS idFuncS() {
@@ -1424,11 +1428,11 @@ public class TestContext {
   }
 
   public static TraceS traceS() {
-    return traceS("trace-tag", loc(17));
+    return traceS("trace-tag", location(17));
   }
 
   public static TraceS traceS(String code, int line) {
-    return traceS(code, loc(line));
+    return traceS(code, location(line));
   }
 
   public static TraceS traceS(String code, Location location) {
@@ -1436,26 +1440,26 @@ public class TestContext {
   }
 
   public static TraceS traceS(String code2, int line2, String code1, int line1) {
-    return traceS(code2, loc(line2), new TraceS(code1, loc(line1)));
+    return traceS(code2, location(line2), new TraceS(code1, location(line1)));
   }
 
   public static TraceS traceS(String code, Location location, TraceS tail) {
     return new TraceS(code, location, tail);
   }
 
-  public static Location loc() {
-    return loc(11);
+  public static Location location() {
+    return location(11);
   }
 
-  public static Location loc(int line) {
-    return loc(filePath(), line);
+  public static Location location(int line) {
+    return location(filePath(), line);
   }
 
-  public static Location loc(Space space) {
-    return loc(filePath(space, path("path")), 17);
+  public static Location location(Space space) {
+    return location(filePath(space, path("path")), 17);
   }
 
-  public static Location loc(FilePath filePath, int line) {
+  public static Location location(FilePath filePath, int line) {
     return fileLocation(filePath, line);
   }
 

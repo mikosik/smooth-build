@@ -11,7 +11,7 @@ public class NamedExprFuncSTest extends TestContext {
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));
     var schema = funcSchemaS(params, stringTS());
-    var func = new NamedExprFuncS(schema, "myFunc", params, intS(17), loc(1));
+    var func = new NamedExprFuncS(schema, "myFunc", params, intS(17), location(1));
     assertThat(func.toString())
         .isEqualTo("""
             NamedExprFuncS(

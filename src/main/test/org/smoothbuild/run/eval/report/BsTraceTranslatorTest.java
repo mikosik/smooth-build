@@ -32,8 +32,8 @@ public class BsTraceTranslatorTest extends TestContext {
     var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
     var trace = traceB(HASH1, HASH2);
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(traceS("name2", loc(2),
-            traceS("", loc(1))));
+        .isEqualTo(traceS("name2", location(2),
+            traceS("", location(1))));
   }
 
   @Test
@@ -42,9 +42,9 @@ public class BsTraceTranslatorTest extends TestContext {
     var trace = traceB(HASH3, HASH4, traceB(HASH1, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(
-            traceS("name4", loc(4),
-            traceS("name2", loc(3),
-            traceS("", loc(1)))));
+            traceS("name4", location(4),
+            traceS("name2", location(3),
+            traceS("", location(1)))));
   }
 
   @Test
@@ -53,9 +53,9 @@ public class BsTraceTranslatorTest extends TestContext {
     var trace = traceB(HASH3, HASH4, traceB(HASH1, UNKNOWN_HASH));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(
-            traceS("name4", loc(4),
-            traceS("???", loc(3),
-            traceS("", loc(1)))));
+            traceS("name4", location(4),
+            traceS("???", location(3),
+            traceS("", location(1)))));
   }
 
   @Test
@@ -64,8 +64,8 @@ public class BsTraceTranslatorTest extends TestContext {
     var trace = traceB(HASH3, HASH4, traceB(UNKNOWN_HASH, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
         .isEqualTo(
-            traceS("name4", loc(4),
-            traceS("name2", loc(3),
+            traceS("name4", location(4),
+            traceS("name2", location(3),
             traceS("", unknownLocation()))));
 
   }
@@ -78,10 +78,10 @@ public class BsTraceTranslatorTest extends TestContext {
         HASH4, "name4"
         );
     ImmutableMap<Hash, Location> locs = ImmutableMap.of(
-        HASH1, loc(1),
-        HASH2, loc(2),
-        HASH3, loc(3),
-        HASH4, loc(4)
+        HASH1, location(1),
+        HASH2, location(2),
+        HASH3, location(3),
+        HASH4, location(4)
     );
     return new BsMapping(names, locs);
   }

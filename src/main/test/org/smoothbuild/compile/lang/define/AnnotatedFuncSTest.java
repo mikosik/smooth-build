@@ -11,7 +11,7 @@ public class AnnotatedFuncSTest extends TestContext {
   public void to_string() {
     var params = nlist(itemS(intTS(), "myParam"));
     var funcTS = funcSchemaS(params, stringTS());
-    var func = new AnnotatedFuncS(nativeAnnotationS(), funcTS, "myFunc", params, loc(1));
+    var func = new AnnotatedFuncS(nativeAnnotationS(), funcTS, "myFunc", params, location(1));
     assertThat(func.toString())
         .isEqualTo("""
             AnnotatedFuncS(

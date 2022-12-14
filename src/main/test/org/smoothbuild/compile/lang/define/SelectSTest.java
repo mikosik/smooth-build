@@ -9,7 +9,7 @@ import org.smoothbuild.testing.TestContext;
 public class SelectSTest extends TestContext {
   @Test
   public void to_string() {
-    var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), loc(17));
+    var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), location(17));
     var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));
     var structValue = annotatedValueS(11, annotationS, structTS, "structValue");
     var selectS = selectS(3, monoizeS(12, structValue), "field");
