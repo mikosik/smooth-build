@@ -45,7 +45,7 @@ public final class ClosurizeB extends OperB {
   }
 
   public ExprFuncB func() {
-    return readDataAsExpr(ExprFuncB.class);
+    return readData(ExprFuncB.class);
   }
 
   @Override

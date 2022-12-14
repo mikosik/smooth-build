@@ -19,7 +19,7 @@ public final class ExprFuncB extends FuncB {
   }
 
   public ExprB body() {
-    var body = readDataAsExpr();
+    var body = readData();
     var resT = type().result();
     var bodyT = body.evalT();
     if (!resT.equals(bodyT)) {

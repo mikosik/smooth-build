@@ -67,20 +67,13 @@ public abstract class ExprB {
     return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
   }
 
-  protected <T extends ExprB> T readDataAsExpr(Class<T> clazz) {
-    ExprB expr = readDataAsExpr();
-    if (!clazz.isInstance(expr)) {
-      throw new DecodeExprWrongNodeClassExc(
-          hash(), category(), DATA_PATH, clazz, expr.getClass());
-    }
-    @SuppressWarnings("unchecked")
-    T result = (T) expr;
-    return result;
+  protected <T extends ExprB> T readData(Class<T> clazz) {
+    var exprB = readData();
+    return castNode(DATA_PATH, exprB, clazz);
   }
 
-  protected ExprB readDataAsExpr() {
-    return wrapBytecodeDbExcAsDecodeExprNodeException(
-        hash(), category(), DATA_PATH, () -> bytecodeDb.get(dataHash()));
+  protected ExprB readData() {
+    return readNode(DATA_PATH, dataHash());
   }
 
   protected long readDataSeqSize() {
@@ -91,12 +84,12 @@ public abstract class ExprB {
   protected ImmutableList<ValueB> readDataSeqElems(int expectedSize) {
     var seqHashes = readDataSeqHashes(expectedSize);
     var exprs = readDataSeqElems(seqHashes);
-    return castDataSeqElem(exprs, ValueB.class);
+    return castDataSeqElements(exprs, ValueB.class);
   }
 
   protected <T extends ExprB> ImmutableList<T> readDataSeqElems(Class<T> clazz) {
     var exprs = readDataSeqElems();
-    return castDataSeqElem(exprs, clazz);
+    return castDataSeqElements(exprs, clazz);
   }
 
   protected ImmutableList<ExprB> readDataSeqElems() {
@@ -107,7 +100,7 @@ public abstract class ExprB {
   private ImmutableList<ExprB> readDataSeqElems(ImmutableList<Hash> seq) {
     Builder<ExprB> builder = ImmutableList.builder();
     for (int i = 0; i < seq.size(); i++) {
-      var expr = readDataSeqElem(i, seq.get(i));
+      var expr = readNode(indexOfDataNode(i), seq.get(i));
       builder.add(expr);
     }
     return builder.build();
@@ -128,17 +121,17 @@ public abstract class ExprB {
 
   protected <T> T readDataSeqElem(int i, int expectedSize, Class<T> clazz) {
     var expr = readDataSeqElem(i, expectedSize);
-    return castDataSeqElem(expr, i, clazz);
+    return castNode(indexOfDataNode(i), expr, clazz);
   }
 
   private ExprB readDataSeqElem(int i, int expectedSize) {
     var elemHash = readDataSeqElemHash(i, expectedSize);
-    return readDataSeqElem(i, elemHash);
+    return readNode(indexOfDataNode(i), elemHash);
   }
 
-  private ExprB readDataSeqElem(int i, Hash elemHash) {
+  private ExprB readNode(String nodePath, Hash nodeHash) {
     return wrapBytecodeDbExcAsDecodeExprNodeException(
-        hash(), category(), DATA_PATH, i, () -> bytecodeDb.get(elemHash));
+        hash(), category(), nodePath, () -> bytecodeDb.get(nodeHash));
   }
 
   protected Hash readDataSeqElemHash(int i, int expectedSize) {
@@ -150,28 +143,28 @@ public abstract class ExprB {
     return toCommaSeparatedString(exprs, ExprB::valToStringSafe);
   }
 
-  private <T> T castDataSeqElem(ExprB expr, int index, Class<T> clazz) {
-    if (clazz.isInstance(expr)) {
-      @SuppressWarnings("unchecked")
-      T result = (T) expr;
-      return result;
-    } else {
-      throw new DecodeExprWrongNodeClassExc(
-          hash(), category(), DATA_PATH, index, clazz, expr.getClass());
-    }
-  }
-
-  private <T> ImmutableList<T> castDataSeqElem(ImmutableList<ExprB> elems, Class<T> clazz) {
+  private <T> ImmutableList<T> castDataSeqElements(ImmutableList<ExprB> elems, Class<T> clazz) {
     for (int i = 0; i < elems.size(); i++) {
-      ExprB elem = elems.get(i);
-      if (!clazz.isInstance(elem)) {
-        throw new DecodeExprWrongNodeClassExc(
-            hash(), category(), DATA_PATH, i, clazz, elem.getClass());
-      }
+      castNode(indexOfDataNode(i), elems.get(i), clazz);
     }
     @SuppressWarnings("unchecked")
     ImmutableList<T> result = (ImmutableList<T>) elems;
     return result;
+  }
+
+  private <T> T castNode(String nodePath, ExprB nodeExpr, Class<T> clazz) {
+    if (clazz.isInstance(nodeExpr)) {
+      @SuppressWarnings("unchecked")
+      T result = (T) nodeExpr;
+      return result;
+    } else {
+      throw new DecodeExprWrongNodeClassExc(
+          hash(), category(), nodePath, clazz, nodeExpr.getClass());
+    }
+  }
+
+  private static String indexOfDataNode(int i) {
+    return DATA_PATH + "[" + i + "]";
   }
 
   @Override
