@@ -131,10 +131,10 @@ public class EqualTest extends SystemTestCase {
     @Test
     public void struct_is_equal_to_itself() throws Exception {
       createUserModule("""
-          Person {
+          Person(
             String firstName,
             String secondName,
-          }
+          )
           result = equal(person("aaa", "bbb"), person("aaa", "bbb"));
           """);
       runSmoothBuild("result");
@@ -147,10 +147,10 @@ public class EqualTest extends SystemTestCase {
     public void struct_is_not_equal_to_the_same_struct_with_different_field_value() throws
         Exception {
       createUserModule("""
-          Person {
+          Person(
             String firstName,
             String secondName,
-          }
+          )
           result = equal(person("aaa", "bbb"), person("aaa", "ccc"));
           """);
       runSmoothBuild("result");

@@ -288,9 +288,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_arg() {
       module("""
-        MyStruct {
+        MyStruct(
           String field,
-        }
+        )
         myValue = myStruct("abc");
         String myFunc(String s) = "abc";
         result = myFunc(myValue.field);
@@ -301,9 +301,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_body() {
       module("""
-          MyStruct {
+          MyStruct(
             String field,
-          }
+          )
           myValue = myStruct("abc");
           result() = myValue.field;
           """)
@@ -313,9 +313,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void value_body() {
       module("""
-          MyStruct {
+          MyStruct(
             String field,
-          }
+          )
           myValue = myStruct("abc");
           result = myValue.field;
           """)
@@ -325,9 +325,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem() {
       module("""
-           MyStruct {
+           MyStruct(
              String field,
-           }
+           )
            myValue = myStruct("abc");
            result = [myValue.field];
            """)
@@ -337,9 +337,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void param_default_value() {
       module("""
-        MyStruct {
+        MyStruct(
           String field,
-        }
+        )
         value = myStruct("abc");
         String myFunc(String value = value.field) = "abc";
         """)
@@ -349,9 +349,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_in_call_expression() {
       module("""
-        MyStruct {
+        MyStruct(
           ()->String myFunc
-        }
+        )
         String justAbc() = "abc";
         result = myStruct(justAbc).myFunc();
         """)
@@ -361,9 +361,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_in_call_expression_fails_when_field_type_is_not_a_func() {
       module("""
-        MyStruct {
+        MyStruct(
           String myField
-        }
+        )
         result = myStruct("abc").myField();
         """)
           .loadsWithError(4, "Illegal call.");
@@ -372,12 +372,12 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void struct_in_select_expression() {
       String code = """
-            S1 {
+            S1(
               S2 f1,
-            }
-            S2 {
+            )
+            S2(
               String f2,
-            }
+            )
             String result = s1(s2("abc")).f1.f2;
             """;
       module(code)
@@ -386,10 +386,10 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void struct_in_select_expression_fails_when_field_type_is_not_a_struct() {
-      String code = """
-            MyStruct {
+      var code = """
+            MyStruct(
               String myField,
-            }
+            )
             String result = myStruct("abc").myField.otherField;
             """;
       module(code)
@@ -399,9 +399,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void parens_content() {
       module("""
-          MyStruct {
+          MyStruct(
             String field,
-          }
+          )
           myValue = myStruct("abc");
           result = (myValue.field);
           """)
@@ -478,11 +478,6 @@ public class ExprSUsageTest extends TestContext {
                   mismatched input '|' expecting {'(', ')', ',', '.'}
                   String myFunc(String param = "abc" | myIdentity()) = "abc";
                                                      ^"""
-              ),
-              err(2, """
-                  extraneous input ')' expecting {'=', ';'}
-                  String myFunc(String param = "abc" | myIdentity()) = "abc";
-                                                                   ^"""
               )
           );
     }
@@ -490,9 +485,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void parens_content() {
       module("""
-          MyStruct {
+          MyStruct(
             String field,
-          }
+          )
           myValue = myStruct("abc");
           result = (myValue.field);
           """)
@@ -560,10 +555,10 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void struct_in_select_expression() {
-      String code = """
-            MyStruct {
+      var code = """
+            MyStruct(
               String myField
-            }
+            )
             myFunc() = myStruct("abc");
             result = myFunc().myField;
             """;
@@ -780,10 +775,10 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void struct_in_select_expression() {
-      String code = """
-            MyStruct {
+      var code = """
+            MyStruct(
               String myField
-            }
+            )
             myFunc(MyStruct param) = param.myField;
             """;
       module(code)
@@ -877,10 +872,10 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void struct_in_select_expression() {
-      String code = """
-            MyStruct {
+      var code = """
+            MyStruct(
               String myField
-            }
+            )
             myValue = myStruct("abc");
             result = myValue.myField;
             """;
@@ -913,7 +908,7 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_arg_fails() {
       module("""
-          MyStruct {}
+          MyStruct()
           String myFunc(String param) = "abc";
           result = myFunc(MyStruct);
           """)
@@ -923,7 +918,7 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_body_fails() {
       module("""
-          MyStruct {}
+          MyStruct()
           result() = MyStruct;
           """)
           .loadsWithError(2, "`MyStruct` is undefined.");
@@ -932,7 +927,7 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void value_body_fails() {
       module("""
-          MyStruct {}
+          MyStruct()
           result = MyStruct;
           """)
           .loadsWithError(2, "`MyStruct` is undefined.");
@@ -941,7 +936,7 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void array_elem_fails() {
       module("""
-          MyStruct {}
+          MyStruct()
           result = [MyStruct];
           """)
           .loadsWithError(2, "`MyStruct` is undefined.");
@@ -950,7 +945,7 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void param_default_value_fails() {
       module("""
-          MyStruct {}
+          MyStruct()
           String myFunc(String value = MyStruct) = "abc";
           """)
           .loadsWithError(2, "`MyStruct` is undefined.");
@@ -959,7 +954,7 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void func_in_call_expression_fails() {
       module("""
-            MyStruct {}
+            MyStruct()
             result = MyStruct();
             """)
           .loadsWith(err(2, "`MyStruct` is undefined."));
@@ -967,10 +962,10 @@ public class ExprSUsageTest extends TestContext {
 
     @Test
     public void struct_in_select_expression() {
-      String code = """
-            MyStruct {
+      var code = """
+            MyStruct(
               String myField
-            }
+            )
             result = MyStruct.myField;
             """;
       module(code)
@@ -980,10 +975,10 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void field_type() {
       module("""
-          ReferencingStruct {
+          ReferencingStruct(
            MyStruct field
-          }
-          MyStruct {}
+          )
+          MyStruct()
           """)
           .loadsWithSuccess();
     }
@@ -991,11 +986,11 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void field_arrayed_type() {
       module("""
-          ReferencingStruct {
+          ReferencingStruct(
            String firstField,
            [MyStruct] field
-          }
-          MyStruct {}
+          )
+          MyStruct()
           """)
           .loadsWithSuccess();
     }
@@ -1006,7 +1001,7 @@ public class ExprSUsageTest extends TestContext {
           @Native("Impl.met")
           MyStruct myFunc();
           MyStruct myValue = myFunc();
-          MyStruct {}
+          MyStruct()
           """)
           .loadsWithSuccess();
     }
@@ -1016,7 +1011,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           @Native("Impl.met")
           [MyStruct] myValue();
-          MyStruct {}
+          MyStruct()
           """)
           .loadsWithSuccess();
     }
@@ -1025,7 +1020,7 @@ public class ExprSUsageTest extends TestContext {
     public void func_param_type() {
       module("""
           String myFunc(MyStruct param) = "abc";
-          MyStruct {}
+          MyStruct()
           """)
           .loadsWithSuccess();
     }
@@ -1034,7 +1029,7 @@ public class ExprSUsageTest extends TestContext {
     public void func_arrayed_type() {
       module("""
           String myFunc([MyStruct] param) = "abc";
-          MyStruct {}
+          MyStruct()
           """)
           .loadsWithSuccess();
     }
@@ -1044,7 +1039,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           @Native("Impl.met")
           MyStruct myFunc(String param);
-          MyStruct {}
+          MyStruct()
           """)
           .loadsWithSuccess();
     }
@@ -1053,7 +1048,7 @@ public class ExprSUsageTest extends TestContext {
     public void func_arrayed_result_type() {
       module("""
           [MyStruct] myFunc(String param) = [];
-          MyStruct {}
+          MyStruct()
           """)
           .loadsWithSuccess();
     }
@@ -1061,7 +1056,7 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void parens_content_failes() {
       module("""
-          MyStruct {}
+          MyStruct()
           result = (MyStruct);
           """)
           .loadsWithError(2, "`MyStruct` is undefined.");
@@ -1198,9 +1193,9 @@ public class ExprSUsageTest extends TestContext {
     @Test
     public void struct_in_select_expression() {
       var code = """
-          MyStruct {
+          MyStruct(
             Int myField
-          }
+          )
           result = (myStruct(7)).myField;
           """;
       module(code)

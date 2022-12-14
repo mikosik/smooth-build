@@ -52,7 +52,7 @@ public class VisibilityTest extends TestContext {
       @Test
       public void ctor_declared_above_is_visible() {
         module("""
-             MyStruct {}
+             MyStruct()
              result = myStruct;
              """)
             .loadsWithSuccess();
@@ -62,7 +62,7 @@ public class VisibilityTest extends TestContext {
       public void ctor_declared_below_is_visible() {
         module("""
              result = myStruct;
-             MyStruct {}
+             MyStruct()
              """)
             .loadsWithSuccess();
       }
@@ -70,7 +70,7 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_declared_above_is_visible() {
         module("""
-             MyStruct {}
+             MyStruct()
              @Native("impl.met")
              MyStruct myFunc();
              """)
@@ -82,7 +82,7 @@ public class VisibilityTest extends TestContext {
         module("""
              @Native("impl.met")
              MyStruct myFunc();
-             MyStruct {}
+             MyStruct()
              """)
             .loadsWithSuccess();
       }
@@ -121,7 +121,7 @@ public class VisibilityTest extends TestContext {
       @Test
       public void ctor_is_visible() {
         DefsS imported = module("""
-          OtherModuleStruct{}
+          OtherModuleStruct()
           """)
             .loadsWithSuccess()
             .getModuleAsDefinitions();
@@ -135,7 +135,7 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_is_visible() {
         DefsS imported = module("""
-          OtherModuleStruct{}
+          OtherModuleStruct()
           """)
             .loadsWithSuccess()
             .getModuleAsDefinitions();
@@ -322,12 +322,12 @@ public class VisibilityTest extends TestContext {
         @Test
         public void struct_field() {
           var code = """
-              MyStruct {
-                Undefined field
-              }
+              MyStruct(
+                UndefinedType field
+              )
               """;
           module(code)
-              .loadsWithError(2, "`Undefined` type is undefined.");
+              .loadsWithError(2, "`UndefinedType` type is undefined.");
         }
       }
     }
@@ -361,9 +361,9 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct() {
         module("""
-             MyStruct {
+             MyStruct(
                MyStruct myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -373,9 +373,9 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_through_array() {
         module("""
-             MyStruct {
+             MyStruct(
                [MyStruct] myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -385,9 +385,9 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_through_func_result() {
         module("""
-             MyStruct {
+             MyStruct(
                ()->MyStruct myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -397,9 +397,9 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_through_func_param() {
         module("""
-             MyStruct {
+             MyStruct(
                (MyStruct)->Blob myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -458,12 +458,12 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_struct() {
         module("""
-             MyStruct1 {
+             MyStruct1(
                MyStruct2 myField
-             }
-             MyStruct2 {
+             )
+             MyStruct2(
                MyStruct1 myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -474,12 +474,12 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_struct_through_array() {
         module("""
-             MyStruct1 {
+             MyStruct1(
                MyStruct2 myField
-             }
-             MyStruct2 {
+             )
+             MyStruct2(
                [MyStruct1] myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -490,12 +490,12 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_struct_through_func_result() {
         module("""
-             MyStruct1 {
+             MyStruct1(
                MyStruct2 myField
-             }
-             MyStruct2 {
+             )
+             MyStruct2(
                ()->MyStruct1 myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -506,12 +506,12 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_struct_through_func_param() {
         module("""
-             MyStruct1 {
+             MyStruct1(
                MyStruct2 myField
-             }
-             MyStruct2 {
+             )
+             MyStruct2(
                (MyStruct1)->Blob myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -581,15 +581,15 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_struct_struct_through_array() {
         module("""
-             MyStruct1 {
+             MyStruct1(
                MyStruct2 myField
-             }
-             MyStruct2 {
+             )
+             MyStruct2(
                MyStruct3 myField
-             }
-             MyStruct3 {
+             )
+             MyStruct3(
                [MyStruct1] myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -601,15 +601,15 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_struct_struct_through_func_result() {
         module("""
-             MyStruct1 {
+             MyStruct1(
                [MyStruct2] myField
-             }
-             MyStruct2 {
+             )
+             MyStruct2(
                [MyStruct3] myField
-             }
-             MyStruct3 {
+             )
+             MyStruct3(
                ()->MyStruct1 myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -621,15 +621,15 @@ public class VisibilityTest extends TestContext {
       @Test
       public void struct_struct_struct_through_func_param() {
         module("""
-             MyStruct1 {
+             MyStruct1(
                [MyStruct2] myField
-             }
-             MyStruct2 {
+             )
+             MyStruct2(
                [MyStruct3] myField
-             }
-             MyStruct3 {
+             )
+             MyStruct3(
                (MyStruct1)->Blob myField
-             }
+             )
              """)
             .loadsWithError("""
               Type hierarchy contains cycle:
@@ -679,7 +679,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void ctor_fails() {
           DefsS imported = module("""
-            OtherModuleStruct {}
+            OtherModuleStruct()
             """)
               .withImportedModFiles()
               .loadsWithSuccess()
@@ -715,7 +715,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void ctor_fails() {
           module("""
-               MyStruct {}
+               MyStruct()
                myStruct = "abc";
                """)
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myStruct"));
@@ -760,7 +760,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void ctor_fails() {
           DefsS imported = module("""
-            OtherModuleStruct {}
+            OtherModuleStruct()
             """)
               .withImportedModFiles()
               .loadsWithSuccess()
@@ -796,7 +796,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void ctor_fails() {
           module("""
-               MyStruct {}
+               MyStruct()
                myStruct() = "abc";
                """)
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myStruct"));
@@ -851,7 +851,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void constructor_succeeds() {
           DefsS imported = module("""
-              OtherModuleStruct {}
+              OtherModuleStruct()
               """)
               .withImportedModFiles()
               .loadsWithSuccess()
@@ -887,7 +887,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void constructor_succeeds() {
           module("""
-             MyStruct {}
+             MyStruct()
              String myFunc(String myStruct) = "abc";
              """)
               .loadsWithSuccess();
@@ -942,7 +942,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void constructor_succeeds() {
           var imported = module("""
-              OtherModuleStruct {}
+              OtherModuleStruct()
               """)
               .withImportedModFiles()
               .loadsWithSuccess()
@@ -978,7 +978,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void constructor_succeeds() {
           module("""
-             MyStruct {}
+             MyStruct()
              myValue = (String myStruct) -> 7;
              """)
               .loadsWithSuccess();
@@ -993,7 +993,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void base_type_fails() {
           module("""
-               String {}
+               String()
                """)
               .loadsWithError(1, "`" + "String" + "` is already defined at internal location.");
         }
@@ -1001,13 +1001,13 @@ public class VisibilityTest extends TestContext {
         @Test
         public void struct_fails() {
           DefsS imported = module("""
-            OtherModuleStruct {}
+            OtherModuleStruct()
             """)
               .withImportedModFiles()
               .loadsWithSuccess()
               .getModuleAsDefinitions();
           module("""
-                OtherModuleStruct {}
+                OtherModuleStruct()
                 """)
               .withImported(imported)
               .loadsWith(
@@ -1022,8 +1022,8 @@ public class VisibilityTest extends TestContext {
         @Test
         public void struct_fails() {
           module("""
-               OtherModuleStruct {}
-               OtherModuleStruct {}
+               OtherModuleStruct()
+               OtherModuleStruct()
                """)
               .loadsWith(
                   err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")),
@@ -1038,10 +1038,10 @@ public class VisibilityTest extends TestContext {
       @Test
       public void other_field_fails() {
         module("""
-             MyStruct {
+             MyStruct(
                String field,
                String field
-             }
+             )
              """)
             .loadsWithError(3, alreadyDefinedIn(filePath(), 2, "field"));
       }
@@ -1058,9 +1058,9 @@ public class VisibilityTest extends TestContext {
               .loadsWithSuccess()
               .getModuleAsDefinitions();
           module("""
-              MyStruct {
+              MyStruct(
                 String otherModuleValue,
-              }
+              )
               """)
               .withImported(imported)
               .loadsWithSuccess();
@@ -1075,9 +1075,9 @@ public class VisibilityTest extends TestContext {
               .loadsWithSuccess()
               .getModuleAsDefinitions();
           module("""
-              MyStruct {
+              MyStruct(
                 String otherModuleFunc,
-              }
+              )
               """)
               .withImported(imported)
               .loadsWithSuccess();
@@ -1086,15 +1086,15 @@ public class VisibilityTest extends TestContext {
         @Test
         public void ctor_succeeds() {
           DefsS imported = module("""
-              OtherModuleStruct {}
+              OtherModuleStruct()
               """)
               .withImportedModFiles()
               .loadsWithSuccess()
               .getModuleAsDefinitions();
           module("""
-              MyStruct {
+              MyStruct(
                 String otherModuleStruct,
-              }
+              )
               """)
               .withImported(imported)
               .loadsWithSuccess();
@@ -1107,9 +1107,9 @@ public class VisibilityTest extends TestContext {
         public void value_succeeds() {
           module("""
               myValue = "abc";
-              MyStruct {
+              MyStruct(
                 String myValue,
-              }
+              )
               """)
               .loadsWithSuccess();
         }
@@ -1118,9 +1118,9 @@ public class VisibilityTest extends TestContext {
         public void func_succeeds() {
           module("""
               myFunc() = "abc";
-              MyStruct {
+              MyStruct(
                 String myFunc,
-              }
+              )
               """)
               .loadsWithSuccess();
         }
@@ -1128,10 +1128,10 @@ public class VisibilityTest extends TestContext {
         @Test
         public void ctor_succeeds() {
           module("""
-             MyStruct {}
-             MyOtherStruct {
+             MyStruct()
+             MyOtherStruct(
                 String myStruct,
-             }
+             )
              """)
               .loadsWithSuccess();
         }
@@ -1151,7 +1151,7 @@ public class VisibilityTest extends TestContext {
               .loadsWithSuccess()
               .getModuleAsDefinitions();
           module("""
-                OtherModuleValue{}
+                OtherModuleValue()
                 """)
               .withImported(imported)
               .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleValue"));
@@ -1166,7 +1166,7 @@ public class VisibilityTest extends TestContext {
               .loadsWithSuccess()
               .getModuleAsDefinitions();
           module("""
-                OtherModuleFunc{}
+                OtherModuleFunc()
                 """)
               .withImported(imported)
               .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunc"));
@@ -1179,7 +1179,7 @@ public class VisibilityTest extends TestContext {
         public void value_fails() {
           module("""
                myValue = "abc";
-               MyValue{}
+               MyValue()
                """)
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myValue"));
         }
@@ -1188,7 +1188,7 @@ public class VisibilityTest extends TestContext {
         public void func_fails() {
           module("""
                myFunc() = "abc";
-               MyFunc{}
+               MyFunc()
                """)
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
         }

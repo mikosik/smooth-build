@@ -616,14 +616,14 @@ public class InferenceTest extends TestContext {
       @Test
       public void structs_with_the_same_object_db_representation() {
         var code = """
-            MyStruct1 {
+            MyStruct1(
               String x,
               String y,
-            }
-            MyStruct2 {
+            )
+            MyStruct2(
               String a,
               String b,
-            }
+            )
             A myEqual(A a1, A a2) = a1;
             result = myEqual(myStruct1("aaa", "bbb"), myStruct2("aaa", "bbb"));
             """;

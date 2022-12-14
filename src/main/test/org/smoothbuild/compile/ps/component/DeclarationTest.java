@@ -38,17 +38,17 @@ public class DeclarationTest extends TestContext {
     class _struct {
       @Test
       public void declaring_empty_struct_is_allowed() {
-        module("MyStruct {}")
+        module("MyStruct()")
             .loadsWithSuccess();
       }
 
       @Test
       public void declaring_non_empty_struct_is_allowed() {
-        String code = """
-            MyStruct {
+        var code = """
+            MyStruct(
               String fieldA,
               String fieldB
-            }
+            )
             """;
         module(code)
             .loadsWithSuccess();
@@ -58,54 +58,42 @@ public class DeclarationTest extends TestContext {
       class _name {
         @Test
         public void that_is_normal_name() {
-          module("""
-             MyStruct{}
-             """)
+          module("MyStruct()")
               .loadsWithSuccess();
         }
 
         @Test
         public void that_is_illegal_fails() {
-          module("""
-             MyStruct^{}
-             """)
+          module("MyStruct^()")
               .loadsWithError(1, """
             token recognition error at: '^'
-            MyStruct^{}
+            MyStruct^()
                     ^""");
         }
 
         @Test
         public void that_starts_with_small_letter_fails() {
-          module("""
-             myStruct{}
-             """)
+          module("myStruct()")
               .loadsWithError(1, "`myStruct` is illegal struct name. "
                   + "Struct name must start with uppercase letter.");
         }
 
         @Test
         public void that_is_single_capital_letter_fails() {
-          module("""
-             A{}
-             """)
+          module("A()")
               .loadsWithError(1, "`A` is illegal struct name. "
                   + "All-uppercase names are reserved for type variables in generic types.");
         }
 
         @Test
         public void that_is_underscore_fails() {
-          module("""
-             _{}
-             """)
+          module("_()")
               .loadsWithError(1, "`_` is illegal struct name. `_` is reserved for future use.");
         }
 
         @Test
         public void that_is_multiple_capital_letters_fails() {
-          module("""
-             ABC{}
-             """)
+          module("ABC()")
               .loadsWithError(1, "`ABC` is illegal struct name. "
                   + "All-uppercase names are reserved for type variables in generic types.");
         }
@@ -120,19 +108,20 @@ public class DeclarationTest extends TestContext {
           public void can_be_monotype(TestedTS testedT) {
             module(unlines(
                 testedT.typeDeclarationsAsString(),
-                "MyStruct {",
+                "MyStruct(",
                 "  " + testedT.name() + " field,",
-                "}"))
+                ")"))
                 .loadsWithSuccess();
           }
 
           @Test
           public void cannot_be_polytype() {
-            module("""
-                MyStruct {
+            var code = """
+                MyStruct(
                  (B)->A field
-                }
-                """)
+                )
+                """;
+            module(code)
                 .loadsWithError(
                     2, "Field type cannot be polymorphic. Found field `field` with type `(B)->A`.");
           }
@@ -141,35 +130,38 @@ public class DeclarationTest extends TestContext {
           public void cannot_be_polytype_regression_test() {
             // Verify that illegal field type does not cause error during processing of code that
             // references field's struct.
-            module("""
-                MyStruct {
-                 (B)->A field
-                }
+            var code = """
+                MyStruct(
+                  (B)->A field
+                )
                 @Native("impl")
                 MyStruct myFunction();
-                """)
+                """;
+            module(code)
                 .loadsWithError(
                     2, "Field type cannot be polymorphic. Found field `field` with type `(B)->A`.");
           }
 
           @Test
           public void cannot_be_polytype_array() {
-            module("""
-                MyStruct {
-                 [A] field
-                }
-                """)
+            var code = """
+                MyStruct(
+                  [A] field
+                )
+                """;
+            module(code)
                 .loadsWithError(
                     2, "Field type cannot be polymorphic. Found field `field` with type `[A]`.");
           }
 
           @Test
           public void cannot_be_type_which_encloses_it() {
-            module("""
-             MyStruct {
-               MyStruct field
-             }
-             """)
+            var code = """
+                MyStruct(
+                  MyStruct field
+                )
+                """;
+            module(code)
                 .loadsWithError("""
                   Type hierarchy contains cycle:
                   myBuild.smooth:2: MyStruct ~> MyStruct""");
@@ -177,12 +169,13 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void cannot_be_array_type_which_elem_type_encloses_it() {
-            module("""
-              MyStruct {
-                String firstField,
-                [MyStruct] field
-              }
-              """)
+            var code = """
+                MyStruct(
+                  String firstField,
+                  [MyStruct] field
+                )
+                """;
+            module(code)
                 .loadsWithError("""
                   Type hierarchy contains cycle:
                   myBuild.smooth:3: MyStruct ~> MyStruct""");
@@ -190,11 +183,12 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void cannot_declare_func_which_result_type_encloses_it() {
-            module("""
-              MyStruct {
-                ()->MyStruct field
-              }
-              """)
+            var code = """
+                MyStruct(
+                  ()->MyStruct field
+                )
+                """;
+            module(code)
                 .loadsWithError("""
                   Type hierarchy contains cycle:
                   myBuild.smooth:2: MyStruct ~> MyStruct""");
@@ -202,11 +196,12 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void cannot_declare_func_which_param_type_encloses_it() {
-            module("""
-              MyStruct {
-                (MyStruct)->Blob field
-              }
-              """)
+            var code = """
+                MyStruct(
+                  (MyStruct)->Blob field
+                )
+                """;
+            module(code)
                 .loadsWithError("""
                   Type hierarchy contains cycle:
                   myBuild.smooth:2: MyStruct ~> MyStruct""");
@@ -218,9 +213,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_is_legal() {
             module("""
-             MyStruct {
+             MyStruct(
                String field
-             }
+             )
              """)
                 .loadsWithSuccess();
           }
@@ -228,9 +223,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_is_illegal_fails() {
             module("""
-             MyStruct {
+             MyStruct(
                String field^
-             }
+             )
              """)
                 .loadsWithError(2, """
               token recognition error at: '^'
@@ -241,9 +236,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_starts_with_large_letter_fails() {
             module("""
-             MyStruct {
+             MyStruct(
                String Field
-             }
+             )
              """)
                 .loadsWithError(2,
                     "`Field` is illegal identifier name. Identifiers should start with lowercase.");
@@ -252,9 +247,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_is_single_large_letter_fails() {
             module("""
-             MyStruct {
+             MyStruct(
                String A
-             }
+             )
              """)
                 .loadsWithError(2,
                     "`A` is illegal identifier name. Identifiers should start with lowercase.");
@@ -263,9 +258,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void that_is_single_underscore_fails() {
             module("""
-             MyStruct {
+             MyStruct(
                String _
-             }
+             )
              """)
                 .loadsWithError(2,
                     "`_` is illegal identifier name. `_` is reserved for future use.");
@@ -277,9 +272,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void is_illegal() {
             module("""
-             MyStruct {
+             MyStruct(
                Int myField = 7
-             }
+             )
              """)
                 .loadsWithError(2, "Struct field `myField` has default value. "
                     + "Only function parameters can have default value.");
@@ -316,7 +311,7 @@ public class DeclarationTest extends TestContext {
 
         private String structDeclaration(String string) {
           return """
-              MyStruct { PLACEHOLDER }
+              MyStruct( PLACEHOLDER )
               """.replace("PLACEHOLDER", string);
         }
       }
@@ -977,8 +972,8 @@ public class DeclarationTest extends TestContext {
       class _ctor {
         @Test
         public void creating_empty_struct_instance_is_allowed() {
-          String code = """
-              MyStruct {}
+          var code = """
+              MyStruct()
               result = myStruct();
               """;
           module(code)
@@ -987,10 +982,10 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void creating_non_empty_struct_is_allowed() {
-          String code = """
-              MyStruct {
+          var code = """
+              MyStruct(
                 String field,
-              }
+              )
               result = myStruct("abc");
               """;
           module(code)
@@ -999,10 +994,10 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void calling_ctor_without_all_params_causes_error() {
-          String code = """
-              MyStruct {
+          var code = """
+              MyStruct(
                 String field,
-              }
+              )
               result = myStruct();
               """;
           module(code)
@@ -1261,10 +1256,10 @@ public class DeclarationTest extends TestContext {
     class _select {
       @Test
       public void reading_field() {
-        String code = """
-            MyStruct {
+        var code = """
+            MyStruct(
               String field,
-            }
+            )
             String result = myStruct("abc").field;
             """;
         module(code)
@@ -1273,10 +1268,10 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void reading_field_that_does_not_exist_causes_error() {
-        String code = """
-            MyStruct {
+        var code = """
+            MyStruct(
               String field,
-            }
+            )
             result = myStruct("abc").otherField;
             """;
         module(code)
@@ -1510,9 +1505,9 @@ public class DeclarationTest extends TestContext {
       @Test
       public void not_consumed_by_select() {
         var code = """
-            MyStruct {
+            MyStruct(
               String myField
-            }
+            )
             myValue = myStruct("def");
             result = "abc" | myValue.myField;
             """;
@@ -1598,9 +1593,9 @@ public class DeclarationTest extends TestContext {
       @Test
       public void not_consumed_by_expression_after_parens_containing_inner_pipe() {
         var code = """
-            MyStruct {
+            MyStruct(
               Int myField
-            }
+            )
             v = myStruct(7);
             A id(A a) = a;
             result = "abc" | (v | id()).myField;

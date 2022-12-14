@@ -77,10 +77,10 @@ public class ArtifactTest extends SystemTestCase {
   public void storing_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name()
       throws Exception {
     createUserModule("""
-            NotAFile {
+            NotAFile(
               Blob content,
               String path,
-            }
+            )
             
             result = notAFile(0x41, "file.txt");
             """);

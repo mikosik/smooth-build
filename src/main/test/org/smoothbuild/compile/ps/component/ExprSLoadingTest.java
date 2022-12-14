@@ -272,9 +272,9 @@ public class ExprSLoadingTest extends TestContext {
         var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var constructor = constructorS(1, struct, "myStruct");
         module("""
-          MyStruct {
+          MyStruct(
             String field
-          }
+          )
           """)
             .loadsWithSuccess()
             .containsEvaluable(constructor);
@@ -283,9 +283,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void with_ctor_reference_and_arg() {
         var code = """
-            MyStruct {
+            MyStruct(
               String field
-            }
+            )
             result = myStruct(
               "aaa");
             """;
@@ -382,7 +382,7 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void to_ctor() {
         var code = """
-            MyStruct {}
+            MyStruct()
             ()->MyStruct result =
               myStruct;
             """;
@@ -460,9 +460,9 @@ public class ExprSLoadingTest extends TestContext {
       var code = """
           @Native("impl")
           MyStruct getStruct();
-          MyStruct {
+          MyStruct(
             String field,
-          }
+          )
           result = getStruct()
             .field;
           """;
@@ -740,8 +740,8 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void empty_struct_type() {
         module("""
-          MyStruct {
-          }
+          MyStruct(
+          )
           """)
             .loadsWithSuccess()
             .containsType(structTS("MyStruct", nlist()));
@@ -750,9 +750,9 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void struct_type() {
         module("""
-          MyStruct {
+          MyStruct(
             String field
-          }
+          )
           """)
             .loadsWithSuccess()
             .containsType(structTS("MyStruct", nlist(sigS(stringTS(), "field"))));

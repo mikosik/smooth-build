@@ -39,8 +39,8 @@ public class TestedTSF {
   public static final TestedTS STRING = new TestedTS(stringTS());
   public static final TestedTS STRUCT = new TestedTS(
       structTS("Person", nlist(itemSigS(stringTS(), "name"))),
-      Set.of("Person{ String name }"),
-      Set.of("Person{ String name }")
+      Set.of("Person(String name)"),
+      Set.of("Person(String name)")
   );
   public static final List<TestedTS> TESTED_TYPES = list(
       BLOB,

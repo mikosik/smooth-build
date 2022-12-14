@@ -150,13 +150,13 @@ public class BuildCommandTest {
     @Nested
     class _combine_matcher extends SystemTestCase {
       private static final String COMBINE = """
-          MyStruct {
+          MyStruct(
             String myField
-          }
+          )
           result = myStruct("abc");
           """;
       private static final String COMBINE_TASK_HEADER = """
-          {...}                                       build.smooth:1                 exec
+          (,)                                         build.smooth:1                 exec
           """;
 
       @Test
@@ -279,7 +279,7 @@ public class BuildCommandTest {
           ];
           """;
       private static final String ORDER_TASK_HEADER = """
-          [...]                                       build.smooth:1                 exec
+          [,]                                         build.smooth:1                 exec
           """;
 
       @Test
@@ -302,9 +302,9 @@ public class BuildCommandTest {
     @Nested
     class _select_matcher extends SystemTestCase {
       private static final String SELECT = """
-            MyStruct {
+            MyStruct(
               String myField
-            }
+            )
             aStruct = myStruct("abc");
             result = aStruct.myField;
             """;
@@ -520,9 +520,9 @@ public class BuildCommandTest {
     @Test
     public void select() throws IOException {
       createUserModule("""
-          MyStruct {
+          MyStruct(
             String myField
-          }
+          )
           result = myStruct("abc").myField;
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
@@ -553,7 +553,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          [...]                                       build.smooth:1                 exec
+          [,]                                         build.smooth:1                 exec
           """);
     }
 

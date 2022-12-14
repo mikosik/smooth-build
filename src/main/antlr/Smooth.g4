@@ -1,7 +1,7 @@
 grammar Smooth;
 
 mod          : ( struct | namedFunc | namedValue )* EOF ;
-struct       : NAME '{' itemList '}' ;
+struct       : NAME '(' itemList ')' ;
 namedFunc    : ann? type? NAME '(' itemList ')' ('=' pipe)? ';' ;
 namedValue   : ann? type? NAME ('=' pipe)? ';' ;
 itemList     : ( item ( ',' item )* ','? )? ;

@@ -26,7 +26,7 @@ import org.smoothbuild.vm.task.Task;
 public class TaskReporterImplTest extends TestContext {
   @Test
   public void combineTaskHeader() {
-    testHeader(combineTask(), header("{...}"));
+    testHeader(combineTask(), header("(,)"));
   }
 
   @Test
@@ -53,7 +53,7 @@ public class TaskReporterImplTest extends TestContext {
 
   @Test
   public void orderTaskHeader() {
-    testHeader(orderTask(), header("[...]"));
+    testHeader(orderTask(), header("[,]"));
   }
 
   @Test
@@ -144,7 +144,7 @@ public class TaskReporterImplTest extends TestContext {
         infoMessage());
     taskReporter.report(task(), computationResultWithMessages(messages));
     var header = """
-        [...]                                       unknown                        exec
+        [,]                                         unknown                        exec
           @ ??? ???
           @     ???""";
     var logs = list(

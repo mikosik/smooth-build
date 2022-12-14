@@ -216,10 +216,10 @@ public class NativeTest extends AcceptanceTestCase {
         public void struct_of_wrong_type() throws Exception {
           createUserNativeJar(ReturnStringStruct.class);
           createUserModule(format("""
-            Person {
+            Person(
               String firstName,
               String lastName,
-            }
+            )
             @Native("%s")
             Person returnStringStruct();
             result = returnStringStruct();
