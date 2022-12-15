@@ -8,8 +8,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.fs.base.PathS;
 
-import com.google.common.truth.Truth;
-
 public class MemoryDirTest {
   private final MemoryElement child = createChild(PathS.path("childName1"));
   private final MemoryElement child2 = createChild(PathS.path("childName2"));
@@ -20,7 +18,7 @@ public class MemoryDirTest {
   @Test
   public void name() {
     memoryDir = new MemoryDir(parent, path);
-    Truth.assertThat(memoryDir.name())
+    assertThat(memoryDir.name())
         .isEqualTo(path);
   }
 

@@ -17,8 +17,6 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.task.Output;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class ComputationCacheTest extends TestContext {
@@ -27,7 +25,7 @@ public class ComputationCacheTest extends TestContext {
 
   @Test
   public void cache_does_not_contain_not_written_result() throws Exception {
-    Truth.assertThat(computationCache().contains(hash))
+    assertThat(computationCache().contains(hash))
         .isFalse();
   }
 
@@ -35,7 +33,7 @@ public class ComputationCacheTest extends TestContext {
   public void cache_contains_written_result() throws Exception {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(stringB("result"), messageArrayEmpty()));
-    Truth.assertThat(computationCache.contains(hash))
+    assertThat(computationCache.contains(hash))
         .isTrue();
   }
 
@@ -63,7 +61,7 @@ public class ComputationCacheTest extends TestContext {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(strV, messages));
 
-    Truth.assertThat(computationCache.read(hash, stringTB()).messages())
+    assertThat(computationCache.read(hash, stringTB()).messages())
         .isEqualTo(messages);
   }
 
@@ -129,7 +127,7 @@ public class ComputationCacheTest extends TestContext {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(file, messageArrayEmpty()));
 
-    Truth.assertThat(computationCache.read(hash, bytecodeF().fileT()).valueB())
+    assertThat(computationCache.read(hash, bytecodeF().fileT()).valueB())
         .isEqualTo(file);
   }
 
@@ -139,7 +137,7 @@ public class ComputationCacheTest extends TestContext {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(blob, messageArrayEmpty()));
 
-    Truth.assertThat(computationCache.read(hash, blobTB()).valueB())
+    assertThat(computationCache.read(hash, blobTB()).valueB())
         .isEqualTo(blob);
   }
 

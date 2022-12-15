@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class NativeFuncBTest extends TestContext {
   @Test
   public void type_is_read_correctly() {
@@ -20,7 +18,7 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    Truth.assertThat(nativeFuncB.evalT())
+    assertThat(nativeFuncB.evalT())
         .isEqualTo(funcT);
   }
 
@@ -69,7 +67,7 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    Truth.assertThat(bytecodeDbOther().get(nativeFuncB.hash()))
+    assertThat(bytecodeDbOther().get(nativeFuncB.hash()))
         .isEqualTo(nativeFuncB);
   }
 
@@ -96,7 +94,7 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    Truth.assertThat(nativeFuncB.toString())
+    assertThat(nativeFuncB.toString())
         .isEqualTo("NativeFunc((Int)->String)@" + nativeFuncB.hash());
   }
 }

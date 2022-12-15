@@ -1,9 +1,9 @@
 package org.smoothbuild.compile.lang.type.tool;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.lang.type.VarS;
-
-import com.google.common.truth.Truth;
 
 public class AlphabeticalVarsGeneratorTest {
   private static final String DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -32,7 +32,7 @@ public class AlphabeticalVarsGeneratorTest {
   }
 
   private static void checkNameAtIndex(int index, String name) {
-    Truth.assertThat(find(index))
+    assertThat(find(index))
         .isEqualTo(new VarS(name));
   }
 

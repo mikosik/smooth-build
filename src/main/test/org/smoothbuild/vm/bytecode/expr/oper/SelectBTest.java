@@ -12,8 +12,6 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
-import com.google.common.truth.Truth;
-
 public class SelectBTest extends TestContext {
   @Test
   public void creating_select_with_non_tuple_expr_causes_exception() {
@@ -40,7 +38,7 @@ public class SelectBTest extends TestContext {
   public void data_returns_tuple_and_index() {
     var selectable = tupleB(intB(7));
     var index = intB(0);
-    Truth.assertThat(selectB(selectable, index).dataSeq())
+    assertThat(selectB(selectable, index).dataSeq())
         .isEqualTo(list(selectable, index));
   }
 
@@ -71,7 +69,7 @@ public class SelectBTest extends TestContext {
   public void select_can_be_read_back_by_hash() {
     TupleB tuple = animalB("rabbit", 7);
     SelectB select = selectB(tuple, intB(0));
-    Truth.assertThat(bytecodeDbOther().get(select.hash()))
+    assertThat(bytecodeDbOther().get(select.hash()))
         .isEqualTo(select);
   }
 

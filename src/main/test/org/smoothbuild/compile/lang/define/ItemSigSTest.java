@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
 import com.google.common.testing.EqualsTester;
-import com.google.common.truth.Truth;
 
 public class ItemSigSTest extends TestContext {
   private final String name = "name";
@@ -30,7 +29,7 @@ public class ItemSigSTest extends TestContext {
   @Test
   public void type_getter() {
     item = new ItemSigS(stringTS(), name);
-    Truth.assertThat(item.type())
+    assertThat(item.type())
         .isEqualTo(stringTS());
   }
 

@@ -11,18 +11,16 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class RefBTest extends TestContext {
   @Test
   public void type_of_ref_expr_is_ref_type() {
-    Truth.assertThat(refB(intTB(), 123).category())
+    assertThat(refB(intTB(), 123).category())
         .isEqualTo(refCB(intTB()));
   }
 
   @Test
   public void value_returns_stored_value() {
-    Truth.assertThat(refB(123).value())
+    assertThat(refB(123).value())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -49,7 +47,7 @@ public class RefBTest extends TestContext {
   @Test
   public void ref_can_be_read_back_by_hash() {
     var ref = refB(intTB(), 123);
-    Truth.assertThat(bytecodeDbOther().get(ref.hash()))
+    assertThat(bytecodeDbOther().get(ref.hash()))
         .isEqualTo(ref);
   }
 
@@ -63,7 +61,7 @@ public class RefBTest extends TestContext {
   @Test
   public void to_string() {
     var ref = refB(intTB(), 123);
-    Truth.assertThat(ref.toString())
+    assertThat(ref.toString())
         .isEqualTo("REF:Int(123)@" + ref.hash());
   }
 }

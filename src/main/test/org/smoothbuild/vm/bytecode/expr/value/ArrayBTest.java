@@ -16,8 +16,6 @@ import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class ArrayBTest extends TestContext {
@@ -138,7 +136,7 @@ public class ArrayBTest extends TestContext {
         .add(str1)
         .add(str2)
         .build();
-    Truth.assertThat(bytecodeDbOther().get(array.hash()))
+    assertThat(bytecodeDbOther().get(array.hash()))
         .isEqualTo(array);
   }
 

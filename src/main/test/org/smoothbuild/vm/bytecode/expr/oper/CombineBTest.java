@@ -10,19 +10,17 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class CombineBTest extends TestContext {
   @Test
   public void category_returns_category() {
     var combineH = combineB(intB(3));
-    Truth.assertThat(combineH.category())
+    assertThat(combineH.category())
         .isEqualTo(combineCB(intTB()));
   }
 
   @Test
   public void items_returns_items() {
-    Truth.assertThat(combineB(intB(1), stringB("abc")).dataSeq())
+    assertThat(combineB(intB(1), stringB("abc")).dataSeq())
         .isEqualTo(list(intB(1), stringB("abc")));
   }
 
@@ -50,7 +48,7 @@ public class CombineBTest extends TestContext {
   @Test
   public void combine_can_be_read_back_by_hash() {
     CombineB combine = combineB(intB(1));
-    Truth.assertThat(bytecodeDbOther().get(combine.hash()))
+    assertThat(bytecodeDbOther().get(combine.hash()))
         .isEqualTo(combine);
   }
 

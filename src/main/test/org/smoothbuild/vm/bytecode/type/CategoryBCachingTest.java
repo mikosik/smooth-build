@@ -12,8 +12,6 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 
-import com.google.common.truth.Truth;
-
 public class CategoryBCachingTest extends TestContext {
   @ParameterizedTest
   @MethodSource("factories")
@@ -27,7 +25,7 @@ public class CategoryBCachingTest extends TestContext {
   public void read_type_is_cached(Function<CategoryDb, CategoryB> factory) {
     var hash = factory.apply(categoryDb()).hash();
     var catDb = categoryDbOther();
-    Truth.assertThat(catDb.get(hash))
+    assertThat(catDb.get(hash))
         .isSameInstanceAs(catDb.get(hash));
   }
 

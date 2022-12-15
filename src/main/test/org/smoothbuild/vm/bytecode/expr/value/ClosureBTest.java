@@ -12,8 +12,6 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 
-import com.google.common.truth.Truth;
-
 public class ClosureBTest extends TestContext {
   @Test
   public void setting_environment_to_null_throws_exception() {
@@ -37,7 +35,7 @@ public class ClosureBTest extends TestContext {
   public void environment_contains_object_passed_during_construction() {
     var environment = combineB(intB());
     var closureB = closureB(environment, intB(33));
-    Truth.assertThat(closureB.environment())
+    assertThat(closureB.environment())
         .isEqualTo(environment);
   }
 
@@ -45,7 +43,7 @@ public class ClosureBTest extends TestContext {
   public void closure_contains_object_passed_during_construction() {
     var func = exprFuncB(intB(33));
     var closureB = closureB(combineB(intB()), func);
-    Truth.assertThat(closureB.func())
+    assertThat(closureB.func())
         .isEqualTo(func);
   }
 
@@ -73,7 +71,7 @@ public class ClosureBTest extends TestContext {
   @Test
   public void closure_can_be_read_by_hash() {
     var closure = closureB(intB());
-    Truth.assertThat(bytecodeDbOther().get(closure.hash()))
+    assertThat(bytecodeDbOther().get(closure.hash()))
         .isEqualTo(closure);
   }
 
@@ -88,7 +86,7 @@ public class ClosureBTest extends TestContext {
   @Test
   public void to_string() {
     var closure = closureB(list(stringTB()), intB());
-    Truth.assertThat(closure.toString())
+    assertThat(closure.toString())
         .isEqualTo("Closure((String)->Int)@" + closure.hash());
   }
 }

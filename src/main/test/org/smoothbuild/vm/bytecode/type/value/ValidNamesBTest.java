@@ -2,19 +2,20 @@ package org.smoothbuild.vm.bytecode.type.value;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.bytecode.type.value.ValidNamesB.arrayTypeName;
+import static org.smoothbuild.vm.bytecode.type.value.ValidNamesB.funcTypeName;
+import static org.smoothbuild.vm.bytecode.type.value.ValidNamesB.tupleTypeName;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-
-import com.google.common.truth.Truth;
 
 public class ValidNamesBTest extends TestContext {
   @Nested
   class _array_type_name {
     @Test
     public void array_type_name() {
-      Truth.assertThat(ValidNamesB.arrayTypeName(stringTB()))
+      assertThat(arrayTypeName(stringTB()))
           .isEqualTo("[String]");
     }
   }
@@ -23,7 +24,7 @@ public class ValidNamesBTest extends TestContext {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      Truth.assertThat(ValidNamesB.funcTypeName(list(blobTB(), boolTB()), stringTB()))
+      assertThat(funcTypeName(list(blobTB(), boolTB()), stringTB()))
           .isEqualTo("(Blob,Bool)->String");
     }
   }
@@ -32,7 +33,7 @@ public class ValidNamesBTest extends TestContext {
   class _tuple_type_name {
     @Test
     public void func_type_name() {
-      assertThat(ValidNamesB.tupleTypeName(list(blobTB(), boolTB())))
+      assertThat(tupleTypeName(list(blobTB(), boolTB())))
           .isEqualTo("{Blob,Bool}");
     }
   }

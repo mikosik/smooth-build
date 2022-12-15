@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class IfFuncBTest extends TestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<IfFuncB> {
@@ -36,7 +34,7 @@ public class IfFuncBTest extends TestContext {
   @Test
   public void if_can_be_read_back_by_hash() {
     var ifB = ifFuncB(intTB());
-    Truth.assertThat(bytecodeDbOther().get(ifB.hash()))
+    assertThat(bytecodeDbOther().get(ifB.hash()))
         .isEqualTo(ifB);
   }
 

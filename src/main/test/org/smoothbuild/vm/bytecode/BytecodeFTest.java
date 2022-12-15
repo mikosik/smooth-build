@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.run.eval.MessageStruct;
 import org.smoothbuild.testing.TestContext;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class BytecodeFTest extends TestContext {
@@ -19,7 +17,7 @@ public class BytecodeFTest extends TestContext {
 
   @Test
   public void blob_data_can_be_read_back() throws Exception {
-    Truth.assertThat(bytecodeF().blob(sink -> sink.write(bytes)).source().readByteString())
+    assertThat(bytecodeF().blob(sink -> sink.write(bytes)).source().readByteString())
         .isEqualTo(bytes);
   }
 

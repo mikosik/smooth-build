@@ -3,6 +3,7 @@ package org.smoothbuild.fs.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.fs.base.PathS.path;
+import static org.smoothbuild.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -12,8 +13,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
-
-import com.google.common.truth.Truth;
 
 import okio.BufferedSink;
 import okio.ByteString;
@@ -43,8 +42,8 @@ public class RecursivePathsIteratorTest {
   @Test
   public void is_empty_when_dir_doesnt_exist() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    PathS path = path("my/file");
-    Truth.assertThat(RecursivePathsIterator.recursivePathsIterator(fileSystem, path).hasNext())
+    var path = path("my/file");
+    assertThat(recursivePathsIterator(fileSystem, path).hasNext())
         .isFalse();
   }
 
@@ -55,7 +54,7 @@ public class RecursivePathsIteratorTest {
       sink.write(ByteString.encodeUtf8("abc"));
     }
     try {
-      RecursivePathsIterator.recursivePathsIterator(fileSystem, path("my/file"));
+      recursivePathsIterator(fileSystem, path("my/file"));
       fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -67,7 +66,7 @@ public class RecursivePathsIteratorTest {
     FileSystem fileSystem = new MemoryFileSystem();
     createFiles(fileSystem, "dir", list("1.txt", "2.txt", "subdir/somefile"));
 
-    PathIterator iterator = RecursivePathsIterator.recursivePathsIterator(fileSystem, path("dir"));
+    PathIterator iterator = recursivePathsIterator(fileSystem, path("dir"));
     iterator.next();
     fileSystem.delete(path("dir/subdir"));
 
@@ -80,7 +79,7 @@ public class RecursivePathsIteratorTest {
     FileSystem fileSystem = new MemoryFileSystem();
     createFiles(fileSystem, rootDir, names);
 
-    PathIterator iterator = RecursivePathsIterator.recursivePathsIterator(fileSystem, path(expectedRootDir));
+    PathIterator iterator = recursivePathsIterator(fileSystem, path(expectedRootDir));
     List<String> created = new ArrayList<>();
     while (iterator.hasNext()) {
       created.add(iterator.next().toString());

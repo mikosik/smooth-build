@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -9,8 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
-
-import com.google.common.truth.Truth;
 
 public class ExprFuncBTest extends TestContext {
   @Test
@@ -30,7 +29,7 @@ public class ExprFuncBTest extends TestContext {
   @Test
   public void type_of_func_is_func_type() {
     var funcT = funcTB(stringTB(), intTB());
-    Truth.assertThat(exprFuncB(funcT, intB()).evalT())
+    assertThat(exprFuncB(funcT, intB()).evalT())
         .isEqualTo(funcT);
   }
 
@@ -39,7 +38,7 @@ public class ExprFuncBTest extends TestContext {
     var funcT = funcTB(boolTB(), intTB());
     var body = intB(33);
     var exprFuncB = exprFuncB(funcT, body);
-    Truth.assertThat(exprFuncB.body())
+    assertThat(exprFuncB.body())
         .isEqualTo(body);
   }
 
@@ -68,7 +67,7 @@ public class ExprFuncBTest extends TestContext {
   public void func_can_be_read_by_hash() {
     var funcT = funcTB(stringTB(), intTB());
     var func = exprFuncB(funcT, intB());
-    Truth.assertThat(bytecodeDbOther().get(func.hash()))
+    assertThat(bytecodeDbOther().get(func.hash()))
         .isEqualTo(func);
   }
 
@@ -77,7 +76,7 @@ public class ExprFuncBTest extends TestContext {
     var funcT = funcTB(stringTB(), intTB());
     var func = exprFuncB(funcT, intB());
     var funcRead = (ExprFuncB) bytecodeDbOther().get(func.hash());
-    Truth.assertThat(func.body())
+    assertThat(func.body())
         .isEqualTo(funcRead.body());
   }
 
@@ -85,7 +84,7 @@ public class ExprFuncBTest extends TestContext {
   public void to_string() {
     var funcT = funcTB(stringTB(), intTB());
     var func = exprFuncB(funcT, intB());
-    Truth.assertThat(func.toString())
+    assertThat(func.toString())
         .isEqualTo("ExprFunc((String)->Int)@" + func.hash());
   }
 }

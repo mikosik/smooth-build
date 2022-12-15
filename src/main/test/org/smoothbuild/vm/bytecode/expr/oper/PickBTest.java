@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class PickBTest extends TestContext {
   @Test
   public void creating_pick_with_non_array_expr_as_pickable_causes_exception() {
@@ -32,7 +30,7 @@ public class PickBTest extends TestContext {
   public void data_returns_array_and_index() {
     var pickable = arrayB(intB(7));
     var index = intB(0);
-    Truth.assertThat(pickB(pickable, index).dataSeq())
+    assertThat(pickB(pickable, index).dataSeq())
         .isEqualTo(list(pickable, index));
   }
 
@@ -62,7 +60,7 @@ public class PickBTest extends TestContext {
   @Test
   public void pick_can_be_read_back_by_hash() {
     var pick = pickB(arrayB(intB(7)), intB(0));
-    Truth.assertThat(bytecodeDbOther().get(pick.hash()))
+    assertThat(bytecodeDbOther().get(pick.hash()))
         .isEqualTo(pick);
   }
 
@@ -78,7 +76,7 @@ public class PickBTest extends TestContext {
   @Test
   public void to_string() {
     var pick = pickB(arrayB(intB(17)), intB(0));
-    Truth.assertThat(pick.toString())
+    assertThat(pick.toString())
         .isEqualTo("PICK:Int(???)@" + pick.hash());
   }
 }

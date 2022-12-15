@@ -68,8 +68,6 @@ import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IntTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class ExprBCorruptedTest extends TestContext {
@@ -380,7 +378,7 @@ public class ExprBCorruptedTest extends TestContext {
               )
           );
 
-      Truth.assertThat(((CallB) bytecodeDb().get(hash)).dataSeq())
+      assertThat(((CallB) bytecodeDb().get(hash)).dataSeq())
           .isEqualTo(list(func, args));
     }
 
@@ -680,7 +678,7 @@ public class ExprBCorruptedTest extends TestContext {
                   hash(func)
               )
           );
-      Truth.assertThat(((ClosureB) bytecodeDb().get(hash)).environment())
+      assertThat(((ClosureB) bytecodeDb().get(hash)).environment())
           .isEqualTo(environment);
       assertThat(((ClosureB) bytecodeDb().get(hash)).func())
           .isEqualTo(func);
@@ -815,7 +813,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(category),
               hash(func)
           );
-      Truth.assertThat(((ClosurizeB) bytecodeDb().get(hash)).func())
+      assertThat(((ClosurizeB) bytecodeDb().get(hash)).func())
           .isEqualTo(func);
     }
 
@@ -873,7 +871,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(cat),
               hash(body)
           );
-      Truth.assertThat(((ExprFuncB) bytecodeDb().get(hash)).body())
+      assertThat(((ExprFuncB) bytecodeDb().get(hash)).body())
           .isEqualTo(body);
     }
 
@@ -1277,7 +1275,7 @@ public class ExprBCorruptedTest extends TestContext {
                   hash(index)
               )
           );
-      Truth.assertThat(((PickB) bytecodeDb().get(hash)).dataSeq())
+      assertThat(((PickB) bytecodeDb().get(hash)).dataSeq())
           .isEqualTo(list(pickable, index));
     }
 
@@ -1457,7 +1455,7 @@ public class ExprBCorruptedTest extends TestContext {
                   hash(index)
               )
           );
-      Truth.assertThat(((SelectB) bytecodeDb().get(hash)).dataSeq())
+      assertThat(((SelectB) bytecodeDb().get(hash)).dataSeq())
           .isEqualTo(list(selectable, index));
     }
 

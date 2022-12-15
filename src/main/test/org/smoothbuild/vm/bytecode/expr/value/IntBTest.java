@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class IntBTest extends TestContext {
   @Test
   public void type_of_int_is_int_type() {
@@ -51,7 +49,7 @@ public class IntBTest extends TestContext {
   @Test
   public void int_can_be_read_back_by_hash() {
     IntB i = intB(123);
-    Truth.assertThat(bytecodeDbOther().get(i.hash()))
+    assertThat(bytecodeDbOther().get(i.hash()))
         .isEqualTo(i);
   }
 

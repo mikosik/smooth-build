@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class CallBTest extends TestContext {
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
@@ -49,7 +47,7 @@ public class CallBTest extends TestContext {
   public void dataSeq_returns_data() {
     var func = exprFuncB(list(stringTB()), intB());
     var args = stringB();
-    Truth.assertThat(callB(func, args).dataSeq())
+    assertThat(callB(func, args).dataSeq())
         .isEqualTo(list(func, combineB(args)));
   }
 
@@ -76,7 +74,7 @@ public class CallBTest extends TestContext {
   @Test
   public void call_can_be_read_back_by_hash() {
     var call = callB(exprFuncB(list(stringTB()), intB()), stringB());
-    Truth.assertThat(bytecodeDbOther().get(call.hash()))
+    assertThat(bytecodeDbOther().get(call.hash()))
         .isEqualTo(call);
   }
 
@@ -92,7 +90,7 @@ public class CallBTest extends TestContext {
   public void to_string() {
     var func = exprFuncB(list(stringTB()), intB());
     var call = callB(func, stringB());
-    Truth.assertThat(call.toString())
+    assertThat(call.toString())
         .isEqualTo("CALL:Int(???)@" + call.hash());
   }
 }

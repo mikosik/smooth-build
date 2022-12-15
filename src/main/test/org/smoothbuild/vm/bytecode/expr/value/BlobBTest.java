@@ -11,8 +11,6 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class BlobBTest extends TestContext {
@@ -69,7 +67,7 @@ public class BlobBTest extends TestContext {
   public void blob_can_be_read_by_hash() {
     BlobB blob = blobB(bytes);
     Hash hash = blob.hash();
-    Truth.assertThat(bytecodeDbOther().get(hash))
+    assertThat(bytecodeDbOther().get(hash))
         .isEqualTo(blob);
   }
 

@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class TupleBTest extends TestContext {
   @Test
   public void setting_item_to_null_throws_exception() {
@@ -83,7 +81,7 @@ public class TupleBTest extends TestContext {
   @Test
   public void tuples_can_be_read_by_hash() {
     TupleB person = johnDoePerson();
-    Truth.assertThat(bytecodeDbOther().get(person.hash()))
+    assertThat(bytecodeDbOther().get(person.hash()))
         .isEqualTo(person);
   }
 

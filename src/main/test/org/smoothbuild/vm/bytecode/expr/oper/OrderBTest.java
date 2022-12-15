@@ -11,13 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class OrderBTest extends TestContext {
   @Test
   public void category_returns_category() {
     var orderH = orderB(intTB());
-    Truth.assertThat(orderH.category())
+    assertThat(orderH.category())
         .isEqualTo(orderCB(intTB()));
   }
 
@@ -35,7 +33,7 @@ public class OrderBTest extends TestContext {
 
   @Test
   public void elems_returns_elems() {
-    Truth.assertThat(orderB(intB(2)).dataSeq())
+    assertThat(orderB(intB(2)).dataSeq())
         .isEqualTo(list(intB(2)));
   }
 
@@ -65,7 +63,7 @@ public class OrderBTest extends TestContext {
   @Test
   public void array_can_be_read_back_by_hash() {
     OrderB array = orderB(intB(1));
-    Truth.assertThat(bytecodeDbOther().get(array.hash()))
+    assertThat(bytecodeDbOther().get(array.hash()))
         .isEqualTo(array);
   }
 

@@ -9,8 +9,6 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.fs.base.PathS;
 
-import com.google.common.truth.Truth;
-
 import okio.BufferedSink;
 import okio.ByteString;
 
@@ -25,7 +23,7 @@ public class MemoryFileTest {
   @Test
   public void name() {
     file = new MemoryFile(parent, name);
-    Truth.assertThat(file.name())
+    assertThat(file.name())
         .isEqualTo(name);
   }
 

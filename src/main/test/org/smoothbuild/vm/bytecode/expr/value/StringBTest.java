@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import com.google.common.truth.Truth;
-
 public class StringBTest extends TestContext {
   private final String string = "my string";
   private final String otherString = "my string 2";
@@ -58,9 +56,9 @@ public class StringBTest extends TestContext {
 
   @Test
   public void str_can_be_read_back_by_hash() {
-    StringB str = stringB(string);
-    Truth.assertThat(bytecodeDbOther().get(str.hash()))
-        .isEqualTo(str);
+    var stringB = stringB(string);
+    assertThat(bytecodeDbOther().get(stringB.hash()))
+        .isEqualTo(stringB);
   }
 
   @Test

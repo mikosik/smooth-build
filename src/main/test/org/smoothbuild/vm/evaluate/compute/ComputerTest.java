@@ -24,8 +24,6 @@ import org.smoothbuild.vm.evaluate.task.PickTask;
 import org.smoothbuild.vm.evaluate.task.SelectTask;
 import org.smoothbuild.vm.evaluate.task.Task;
 
-import com.google.common.truth.Truth;
-
 public class ComputerTest extends TestContext {
   @Nested
   class _combine_task {
@@ -393,10 +391,10 @@ public class ComputerTest extends TestContext {
           .isEqualTo(memoryValue);
     }
     if (diskValue == null) {
-      Truth.assertThat(computationCache.contains(taskHash))
+      assertThat(computationCache.contains(taskHash))
           .isFalse();
     } else {
-      Truth.assertThat(computationCache.read(taskHash, diskValue.type()))
+      assertThat(computationCache.read(taskHash, diskValue.type()))
           .isEqualTo(output(diskValue));
     }
   }

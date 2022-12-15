@@ -11,8 +11,6 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
-import com.google.common.truth.Truth;
-
 public class BoolBTest extends TestContext {
   @Test
   public void type_of_bool_is_bool_type() {
@@ -58,7 +56,7 @@ public class BoolBTest extends TestContext {
   public void bool_can_be_read_back_by_hash() {
     BoolB bool = boolB(true);
     Hash hash = bool.hash();
-    Truth.assertThat(bytecodeDbOther().get(hash))
+    assertThat(bytecodeDbOther().get(hash))
         .isEqualTo(bool);
   }
 
