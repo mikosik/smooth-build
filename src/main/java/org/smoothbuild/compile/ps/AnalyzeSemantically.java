@@ -199,7 +199,7 @@ public class AnalyzeSemantically {
   private static void detectIllegalNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitIdentifier(RefableP refable) {
+      public void visitNameOf(RefableP refable) {
         var name = refable.name();
         if (name.equals("_")) {
           logger.log(compileError(refable.location(), "`" + name + "` is illegal identifier name. "

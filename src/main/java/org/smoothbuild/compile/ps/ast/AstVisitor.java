@@ -42,7 +42,7 @@ public class AstVisitor {
 
   public void visitField(ItemP field) {
     visitType(field.type());
-    visitIdentifier(field);
+    visitNameOf(field);
   }
 
   public void visitNamedEvaluable(List<NamedEvaluableP> namedEvaluable) {
@@ -60,7 +60,7 @@ public class AstVisitor {
     namedValueP.annotation().ifPresent(this::visitAnnotation);
     namedValueP.type().ifPresent(this::visitType);
     namedValueP.body().ifPresent(this::visitExpr);
-    visitIdentifier(namedValueP);
+    visitNameOf(namedValueP);
   }
 
   public void visitNamedFunc(NamedFuncP namedFuncP) {
@@ -68,7 +68,7 @@ public class AstVisitor {
     namedFuncP.resT().ifPresent(this::visitType);
     visitParams(namedFuncP.params());
     namedFuncP.body().ifPresent(this::visitExpr);
-    visitIdentifier(namedFuncP);
+    visitNameOf(namedFuncP);
   }
 
   public void visitAnnotation(AnnotationP annotation) {
@@ -82,7 +82,7 @@ public class AstVisitor {
   public void visitParam(int index, ItemP param) {
     visitType(param.type());
     param.defaultValue().ifPresent(this::visitNamedValue);
-    visitIdentifier(param);
+    visitNameOf(param);
   }
 
   public void visitType(TypeP type) {}
@@ -143,7 +143,7 @@ public class AstVisitor {
 
   public void visitString(StringP string) {}
 
-  public void visitIdentifier(RefableP refable) {}
+  public void visitNameOf(RefableP refable) {}
 
   public <E> void visitIndexedElements(List<E> elems, BiConsumer<Integer, ? super E> consumer) {
     for (int i = 0; i < elems.size(); i++) {
