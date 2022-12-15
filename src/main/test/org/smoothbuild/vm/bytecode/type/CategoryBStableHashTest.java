@@ -29,6 +29,7 @@ public class CategoryBStableHashTest extends TestContext {
     assertHash(arrayTB(tupleTB(blobTB())), "1d73ae3fd6da8970c2059cdf7316d9e1d0cc533d");
 
     assertHash(callCB(intTB()), "93463aa95e883e4d5f33d295bba45c5e41c01a04");
+    assertHash(closurizeCB(funcTB(intTB())), "d36e2582f304e55a40b15146435d6f150e888863");
     assertHash(combineCB(), "eced763485dfe3cf62431dcfaca0345aa9ed436d");
     assertHash(combineCB(intTB()), "ab67fcfb2ff1bcfe601019231f1332aeb11bc3e3");
     assertHash(orderCB(intTB()), "c9918a676b1fee41885c7993a262f9cf5e733345");

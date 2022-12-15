@@ -745,6 +745,41 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
+    class _closurize {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save Closurize type in HashedDb.
+         */
+        var hash = hash(
+            hash(CategoryKinds.CLOSURIZE.marker()),
+            hash(funcTB(intTB(), blobTB()))
+        );
+        assertThat(hash)
+            .isEqualTo(closurizeCB(funcTB(intTB(), blobTB())).hash());
+      }
+
+      @Nested
+      class _oper_cat_tests extends OperCatTestSet {
+        protected _oper_cat_tests() {
+          super(CategoryKinds.CLOSURIZE, FuncTB.class);
+        }
+      }
+
+      @Test
+      public void with_evaluation_type_not_being_tuple_type() throws Exception {
+        var hash = hash(
+            hash(CategoryKinds.COMBINE.marker()),
+            hash(intTB())
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                hash, CategoryKinds.COMBINE, CategoryDb.DATA_PATH, TupleTB.class, IntTB.class));
+      }
+    }
+
+    @Nested
     class _combine {
       @Test
       public void learning_test() throws Exception {
