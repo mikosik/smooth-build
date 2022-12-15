@@ -20,8 +20,6 @@ import org.smoothbuild.bytecode.expr.value.MapFuncB;
 import org.smoothbuild.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.bytecode.type.value.FuncTB;
-import org.smoothbuild.util.concurrent.Promise;
-import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.execute.TraceB;
 import org.smoothbuild.vm.task.InvokeTask;
 
@@ -38,12 +36,10 @@ public class CallJob extends Job {
   }
 
   @Override
-  public Promise<ValueB> evaluateImpl() {
-    var result = new PromisedValue<ValueB>();
+  public void evaluateImpl(Consumer<ValueB> result) {
     evaluateImpl(
         exprB().dataSeq().get(0),
         funcB -> onFuncEvaluated(exprB(), funcB, result));
-    return result;
   }
 
   private void onFuncEvaluated(CallB callB, ValueB funcB, Consumer<ValueB> resConsumer) {
@@ -129,8 +125,7 @@ public class CallJob extends Job {
   private void handleNativeFunc(CallB callB, NativeFuncB nativeFuncB, Consumer<ValueB> res) {
     var trace = trace(nativeFuncB);
     var task = new InvokeTask(callB, nativeFuncB, context().nativeMethodLoader(), trace);
-    evaluateTransitively(task, args())
-        .addConsumer(res);
+    evaluateTransitively(task, args(), res);
   }
 
   //helpers

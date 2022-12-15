@@ -2,8 +2,9 @@ package org.smoothbuild.vm.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.function.Consumer;
+
 import org.smoothbuild.bytecode.expr.value.ValueB;
-import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.task.ConstTask;
 
 public class ConstJob extends Job {
@@ -17,8 +18,8 @@ public class ConstJob extends Job {
   }
 
   @Override
-  protected Promise<ValueB> evaluateImpl() {
+  protected void evaluateImpl(Consumer<ValueB> result) {
     var task = new ConstTask(exprB(), context().trace());
-    return evaluateTransitively(task, list());
+    evaluateTransitively(task, list(), result);
   }
 }

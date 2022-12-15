@@ -3,6 +3,8 @@ package org.smoothbuild.vm.job;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
+import java.util.function.Consumer;
+
 import org.smoothbuild.bytecode.expr.ExprB;
 import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
@@ -32,28 +34,29 @@ public abstract class Job {
 
   public final Promise<ValueB> evaluate() {
     // Double-checked locking.
-    Promise<ValueB> result = promise;
-    if (result != null) {
-      return result;
+    Promise<ValueB> localPromise = promise;
+    if (localPromise != null) {
+      return localPromise;
     }
     synchronized (this) {
-      result = promise;
-      if (result == null) {
-        promise = result = evaluateImpl();
+      localPromise = promise;
+      if (localPromise == null) {
+        var newPromise = new PromisedValue<ValueB>();
+        promise = localPromise = newPromise;
+        context().taskExecutor().enqueue(() -> evaluateImpl(newPromise));
       }
-      return result;
+      return localPromise;
     }
   }
 
-  protected abstract Promise<ValueB> evaluateImpl();
+  protected abstract void evaluateImpl(Consumer<ValueB> result);
 
-  protected PromisedValue<ValueB> evaluateTransitively(Task task, ImmutableList<ExprB> deps) {
-    var result = new PromisedValue<ValueB>();
+  protected void evaluateTransitively(
+      Task task, ImmutableList<ExprB> deps, Consumer<ValueB> result) {
     var depJs = map(deps, context::jobFor);
     var depResults = map(depJs, Job::evaluate);
     runWhenAllAvailable(depResults,
         () -> context.taskExecutor().enqueue(task, toInput(depResults), result));
-    return result;
   }
 
   private TupleB toInput(ImmutableList<Promise<ValueB>> depResults) {

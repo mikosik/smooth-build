@@ -12,6 +12,7 @@ import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
+import org.smoothbuild.util.function.ThrowingRunnable;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.task.Task;
 
@@ -35,10 +36,16 @@ public class TaskExecutor {
   }
 
   public void enqueue(Task task, TupleB input, Consumer<ValueB> consumer) {
+    enqueue(() -> {
+      var resHandler = new ResHandler(task, executor, taskReporter, consumer);
+      computer.compute(task, input, resHandler);
+    });
+  }
+
+  public void enqueue(ThrowingRunnable throwingRunnable) {
     executor.enqueue(() -> {
       try {
-        var resHandler = new ResHandler(task, executor, taskReporter, consumer);
-        computer.compute(task, input, resHandler);
+        throwingRunnable.run();
       } catch (Throwable e) {
         reportComputerException(e);
         executor.terminate();
