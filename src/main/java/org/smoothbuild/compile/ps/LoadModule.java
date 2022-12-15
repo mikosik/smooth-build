@@ -2,6 +2,7 @@ package org.smoothbuild.compile.ps;
 
 import static org.smoothbuild.compile.ps.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefs.detectUndefinedRefs;
+import static org.smoothbuild.compile.ps.FindSyntaxErrors.findSyntaxErrors;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.ps.ParseModule.parseModule;
 import static org.smoothbuild.compile.ps.ast.AstSorter.sortByDeps;
@@ -35,6 +36,11 @@ public class LoadModule {
       return maybeLogs(logBuffer);
     }
     var ast = maybeAst.value();
+    logBuffer.logAll(findSyntaxErrors(imported, ast));
+    if (logBuffer.containsAtLeast(ERROR)) {
+      return maybeLogs(logBuffer);
+    }
+
     logBuffer.logAll(analyzeSemantically(imported, ast));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
