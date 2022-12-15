@@ -4,7 +4,7 @@ import static org.smoothbuild.compile.ps.AnalyzeSemantically.analyzeSemantically
 import static org.smoothbuild.compile.ps.DetectUndefinedRefs.detectUndefinedRefs;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.ps.ParseModule.parseModule;
-import static org.smoothbuild.compile.ps.ast.AstSorter.sortParsedByDeps;
+import static org.smoothbuild.compile.ps.ast.AstSorter.sortByDeps;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
@@ -40,7 +40,7 @@ public class LoadModule {
       return maybeLogs(logBuffer);
     }
 
-    Maybe<Ast> maybeSortedAst = sortParsedByDeps(ast);
+    Maybe<Ast> maybeSortedAst = sortByDeps(ast);
     logBuffer.logAll(maybeSortedAst.logs());
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);

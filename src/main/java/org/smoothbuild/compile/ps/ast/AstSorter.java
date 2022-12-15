@@ -33,7 +33,7 @@ import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingRes;
 import com.google.common.collect.ImmutableList;
 
 public class AstSorter {
-  public static Maybe<Ast> sortParsedByDeps(Ast ast) {
+  public static Maybe<Ast> sortByDeps(Ast ast) {
     var sortedTs = sortStructsByDeps(ast.structs());
     if (sortedTs.sorted() == null) {
       Log error = createCycleError("Type hierarchy", sortedTs.cycle());
