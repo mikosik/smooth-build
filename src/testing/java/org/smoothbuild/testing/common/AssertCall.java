@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.smoothbuild.util.function.ThrowingRunnable;
+
 import com.google.common.truth.Fact;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
@@ -130,10 +132,6 @@ public class AssertCall {
         failWithoutActual(first, allWithoutFirst.toArray(Fact[]::new));
       }
     }
-  }
-
-  public interface ThrowingRunnable {
-    public void run() throws Throwable;
   }
 }
 
