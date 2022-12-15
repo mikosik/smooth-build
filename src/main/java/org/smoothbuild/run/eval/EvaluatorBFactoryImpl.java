@@ -4,8 +4,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
-import org.smoothbuild.vm.EvaluatorB;
-import org.smoothbuild.vm.execute.TaskReporter;
+import org.smoothbuild.vm.evaluate.EvaluatorB;
+import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;

@@ -8,11 +8,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.value.BlobB;
-import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.util.collect.Try;
+import org.smoothbuild.vm.bytecode.BytecodeF;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class BytecodeLoader {
   private final BytecodeMethodLoader methodLoader;

@@ -1,9 +1,9 @@
 package org.smoothbuild.slib.bool;
 
-import org.smoothbuild.bytecode.expr.value.BoolB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.bytecode.expr.value.ValueB;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.bytecode.expr.value.BoolB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class NotFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) {

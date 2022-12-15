@@ -10,25 +10,25 @@ import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.value.ClosureB;
-import org.smoothbuild.bytecode.expr.value.FuncB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.vm.compute.ComputationResult;
-import org.smoothbuild.vm.compute.ResultSource;
-import org.smoothbuild.vm.execute.TaskReporter;
-import org.smoothbuild.vm.task.CombineTask;
-import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.InvokeTask;
-import org.smoothbuild.vm.task.OrderTask;
-import org.smoothbuild.vm.task.PickTask;
-import org.smoothbuild.vm.task.SelectTask;
-import org.smoothbuild.vm.task.Task;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
+import org.smoothbuild.vm.bytecode.expr.value.FuncB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.evaluate.compute.ComputationResult;
+import org.smoothbuild.vm.evaluate.compute.ResultSource;
+import org.smoothbuild.vm.evaluate.execute.TaskReporter;
+import org.smoothbuild.vm.evaluate.task.CombineTask;
+import org.smoothbuild.vm.evaluate.task.ConstTask;
+import org.smoothbuild.vm.evaluate.task.InvokeTask;
+import org.smoothbuild.vm.evaluate.task.OrderTask;
+import org.smoothbuild.vm.evaluate.task.PickTask;
+import org.smoothbuild.vm.evaluate.task.SelectTask;
+import org.smoothbuild.vm.evaluate.task.Task;
 
 public class TaskReporterImpl implements TaskReporter {
   // visible for testing

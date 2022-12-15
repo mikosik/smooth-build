@@ -5,9 +5,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Map;
 
-import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.value.ValueB;
-import org.smoothbuild.bytecode.type.value.TypeB;
+import org.smoothbuild.vm.bytecode.BytecodeF;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class ReturnIdFunc {
   public static ValueB bytecode(BytecodeF f, Map<String, TypeB> varMap) {

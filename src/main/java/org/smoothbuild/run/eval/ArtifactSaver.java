@@ -21,9 +21,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.value.ArrayB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -33,6 +30,9 @@ import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.util.collect.DuplicatesDetector;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 public class ArtifactSaver {
   private final Reporter reporter;

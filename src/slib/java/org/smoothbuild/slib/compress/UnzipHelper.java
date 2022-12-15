@@ -1,23 +1,23 @@
 package org.smoothbuild.slib.compress;
 
 import static java.util.function.Function.identity;
-import static org.smoothbuild.plugin.UnzipBlob.unzipBlob;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.slib.java.UnjarFunc.JAR_MANIFEST_PATH;
 import static org.smoothbuild.util.collect.Maps.toMap;
+import static org.smoothbuild.vm.evaluate.plugin.UnzipBlob.unzipBlob;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.smoothbuild.bytecode.expr.value.ArrayB;
-import org.smoothbuild.bytecode.expr.value.BlobB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.io.DuplicateFileNameExc;
 import org.smoothbuild.util.io.IllegalZipEntryFileNameExc;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableMap;
 

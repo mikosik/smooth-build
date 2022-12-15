@@ -6,7 +6,6 @@ import static org.smoothbuild.out.log.Level.INFO;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 
-import org.smoothbuild.bytecode.BytecodeModule;
 import org.smoothbuild.fs.FileSystemModule;
 import org.smoothbuild.install.InstallationModule;
 import org.smoothbuild.out.log.Level;
@@ -14,7 +13,8 @@ import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;
 import org.smoothbuild.run.eval.report.TaskMatcher;
 import org.smoothbuild.run.eval.report.TaskMatchers;
-import org.smoothbuild.vm.EvaluatorBModule;
+import org.smoothbuild.vm.bytecode.BytecodeModule;
+import org.smoothbuild.vm.evaluate.EvaluatorBModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.compile.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.lang.define.MonoizeS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
@@ -21,6 +20,7 @@ import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.EvaluatorExcS;
 import org.smoothbuild.run.eval.EvaluatorS;
 import org.smoothbuild.util.collect.Maps;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

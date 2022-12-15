@@ -9,14 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ThrowException;
 import org.smoothbuild.util.collect.Try;
+import org.smoothbuild.vm.bytecode.BytecodeF;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 import com.google.common.collect.ImmutableMap;
 

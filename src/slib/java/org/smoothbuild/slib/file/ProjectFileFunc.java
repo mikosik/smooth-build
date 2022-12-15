@@ -5,12 +5,12 @@ import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 
-import org.smoothbuild.bytecode.expr.value.StringB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.bytecode.expr.value.StringB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.evaluate.compute.Container;
 
 public class ProjectFileFunc {
   public static ValueB func(Container container, TupleB args) throws IOException {

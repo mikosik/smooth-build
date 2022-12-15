@@ -2,10 +2,10 @@ package org.smoothbuild.slib.array;
 
 import java.math.BigInteger;
 
-import org.smoothbuild.bytecode.expr.value.ArrayB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.bytecode.expr.value.ValueB;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class SizeFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) {

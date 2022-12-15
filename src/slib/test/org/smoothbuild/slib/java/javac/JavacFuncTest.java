@@ -6,8 +6,8 @@ import static org.smoothbuild.slib.java.javac.JavacFunc.classesFromJarFiles;
 import static org.smoothbuild.testing.common.JarTester.jarByteString;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class JavacFuncTest extends TestContext {
   @Test

@@ -13,19 +13,19 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.value.ArrayB;
-import org.smoothbuild.bytecode.expr.value.IntB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.bytecode.type.value.TypeB;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.load.FileLoader;
-import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.util.collect.Try;
-import org.smoothbuild.vm.task.NativeMethodLoader;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
+import org.smoothbuild.vm.bytecode.expr.value.IntB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.type.value.TypeB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.vm.evaluate.task.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableMap;
 

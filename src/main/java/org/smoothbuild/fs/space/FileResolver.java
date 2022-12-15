@@ -8,9 +8,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.SmoothConstants;
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathState;
+import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableMap;
 

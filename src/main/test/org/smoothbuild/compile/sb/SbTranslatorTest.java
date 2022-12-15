@@ -16,11 +16,6 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.oper.CallB;
-import org.smoothbuild.bytecode.expr.oper.ClosurizeB;
-import org.smoothbuild.bytecode.expr.value.BlobB;
-import org.smoothbuild.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.ExprS;
 import org.smoothbuild.fs.space.FilePath;
@@ -29,6 +24,11 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.oper.CallB;
+import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 
 import com.google.common.collect.ImmutableMap;
 

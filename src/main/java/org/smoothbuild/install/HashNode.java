@@ -3,7 +3,7 @@ package org.smoothbuild.install;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
-import org.smoothbuild.bytecode.hashed.Hash;
+import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
 

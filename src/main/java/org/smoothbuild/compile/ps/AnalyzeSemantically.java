@@ -4,7 +4,6 @@ import static java.util.Comparator.comparing;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.isVarName;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.startsWithLowerCase;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.startsWithUpperCase;
-import static org.smoothbuild.compile.lang.base.location.Locations.internalLocation;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.ANNOTATION_NAMES;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;

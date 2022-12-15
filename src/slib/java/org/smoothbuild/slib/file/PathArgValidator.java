@@ -2,10 +2,10 @@ package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.fs.base.PathS.path;
 
-import org.smoothbuild.bytecode.expr.value.StringB;
 import org.smoothbuild.fs.base.IllegalPathExc;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.bytecode.expr.value.StringB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class PathArgValidator {
   public static PathS validatedProjectPath(NativeApi nativeApi, String name, StringB path) {

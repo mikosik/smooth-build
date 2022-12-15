@@ -9,12 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.bytecode.BytecodeF;
-import org.smoothbuild.bytecode.expr.value.BlobB;
-import org.smoothbuild.bytecode.expr.value.ValueB;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.util.collect.Try;
+import org.smoothbuild.vm.bytecode.BytecodeF;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 /**
  * This class is thread-safe.

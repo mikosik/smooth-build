@@ -4,10 +4,10 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
 
-import org.smoothbuild.bytecode.expr.value.BlobB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.bytecode.expr.value.ValueB;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 import okio.BufferedSource;
 

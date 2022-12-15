@@ -11,11 +11,11 @@ import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.bytecode.expr.value.ArrayB;
-import org.smoothbuild.bytecode.expr.value.BlobB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.bytecode.expr.value.ValueB;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 import okio.BufferedSink;
 import okio.BufferedSource;

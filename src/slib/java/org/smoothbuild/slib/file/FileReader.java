@@ -2,11 +2,11 @@ package org.smoothbuild.slib.file;
 
 import java.io.IOException;
 
-import org.smoothbuild.bytecode.expr.value.BlobB;
-import org.smoothbuild.bytecode.expr.value.StringB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.StringB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.evaluate.compute.Container;
 
 import okio.BufferedSource;
 

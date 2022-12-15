@@ -6,12 +6,12 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.bytecode.expr.value.ArrayBBuilder;
-import org.smoothbuild.bytecode.expr.value.BlobBBuilder;
-import org.smoothbuild.bytecode.expr.value.StringB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
+import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
+import org.smoothbuild.vm.bytecode.expr.value.StringB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 import okio.ForwardingSink;
 import okio.Okio;

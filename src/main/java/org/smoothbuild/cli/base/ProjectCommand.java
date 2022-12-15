@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
-import org.smoothbuild.bytecode.BytecodeExc;
+import org.smoothbuild.vm.bytecode.BytecodeExc;
 
 import picocli.CommandLine.Option;
 

@@ -2,11 +2,11 @@ package org.smoothbuild.run.eval.report;
 
 import static org.smoothbuild.compile.lang.base.location.Locations.unknownLocation;
 
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.TraceS;
 import org.smoothbuild.compile.sb.BsMapping;
-import org.smoothbuild.vm.execute.TraceB;
+import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.vm.evaluate.execute.TraceB;
 
 public class BsTraceTranslator {
   private final BsMapping bsMapping;

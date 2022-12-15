@@ -2,8 +2,8 @@ package org.smoothbuild.fs.space;
 
 import static java.util.Arrays.asList;
 
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.fs.base.PathS;
+import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 /**
  * This class is immutable.

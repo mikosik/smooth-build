@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.func.bytecode;
 
-import org.smoothbuild.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 public class WithoutBytecodeF {
   public static ValueB bytecode() {

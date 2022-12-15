@@ -13,10 +13,10 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
+import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
 

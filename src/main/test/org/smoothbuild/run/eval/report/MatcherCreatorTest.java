@@ -34,7 +34,7 @@ import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.task.Task;
+import org.smoothbuild.vm.evaluate.task.Task;
 
 import picocli.CommandLine.TypeConversionException;
 

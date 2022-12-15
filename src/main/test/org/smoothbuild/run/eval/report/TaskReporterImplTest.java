@@ -11,17 +11,17 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.run.eval.report.TaskMatchers.NONE;
 import static org.smoothbuild.run.eval.report.TaskReporterImpl.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.vm.compute.ResultSource.DISK;
-import static org.smoothbuild.vm.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.vm.compute.ResultSource.MEMORY;
-import static org.smoothbuild.vm.compute.ResultSource.NOOP;
+import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
+import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.vm.evaluate.compute.ResultSource.MEMORY;
+import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.compute.ResultSource;
-import org.smoothbuild.vm.task.Task;
+import org.smoothbuild.vm.evaluate.compute.ResultSource;
+import org.smoothbuild.vm.evaluate.task.Task;
 
 public class TaskReporterImplTest extends TestContext {
   @Test

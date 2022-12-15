@@ -13,8 +13,8 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 
 import okio.Buffer;
 

@@ -1,10 +1,10 @@
 package org.smoothbuild.slib.array;
 
-import org.smoothbuild.bytecode.expr.value.ArrayB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
-import org.smoothbuild.bytecode.expr.value.ValueB;
-import org.smoothbuild.bytecode.type.value.ArrayTB;
-import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
+import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class ConcatFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) {

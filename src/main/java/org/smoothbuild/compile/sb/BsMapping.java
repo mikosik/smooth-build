@@ -2,8 +2,8 @@ package org.smoothbuild.compile.sb;
 
 import java.util.Map;
 
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.base.location.Location;
+import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableMap;
 

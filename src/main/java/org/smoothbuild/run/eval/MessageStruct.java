@@ -7,11 +7,11 @@ import static org.smoothbuild.out.log.Level.WARNING;
 
 import java.util.Set;
 
-import org.smoothbuild.bytecode.expr.ExprB;
-import org.smoothbuild.bytecode.expr.value.ArrayB;
-import org.smoothbuild.bytecode.expr.value.StringB;
-import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.out.log.Level;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
+import org.smoothbuild.vm.bytecode.expr.value.StringB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class MessageStruct {
   private static final Set<String> SEVERITIES = Set.of(

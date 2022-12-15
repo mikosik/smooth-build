@@ -28,9 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.bytecode.BytecodeModule;
-import org.smoothbuild.bytecode.expr.value.ValueB;
-import org.smoothbuild.bytecode.hashed.Hash;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
@@ -45,7 +42,10 @@ import org.smoothbuild.run.eval.EvaluatorBFactory;
 import org.smoothbuild.run.eval.EvaluatorBFactoryImpl;
 import org.smoothbuild.run.eval.report.TaskMatcher;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.SandboxHash;
+import org.smoothbuild.vm.bytecode.BytecodeModule;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.vm.evaluate.SandboxHash;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

@@ -10,9 +10,9 @@ import static org.smoothbuild.util.io.Okios.readAndClose;
 import java.net.URI;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.bytecode.expr.value.TupleB;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 import okio.BufferedSource;
 import okio.ByteString;

@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.sb;
 
-import org.smoothbuild.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
 
 import com.google.common.collect.ImmutableList;
 

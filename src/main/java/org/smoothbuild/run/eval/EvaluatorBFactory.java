@@ -1,7 +1,7 @@
 package org.smoothbuild.run.eval;
 
 import org.smoothbuild.compile.sb.BsMapping;
-import org.smoothbuild.vm.EvaluatorB;
+import org.smoothbuild.vm.evaluate.EvaluatorB;
 
 @FunctionalInterface
 public interface EvaluatorBFactory {

@@ -4,13 +4,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.out.log.Level;
-import org.smoothbuild.vm.task.CombineTask;
-import org.smoothbuild.vm.task.ConstTask;
-import org.smoothbuild.vm.task.InvokeTask;
-import org.smoothbuild.vm.task.OrderTask;
-import org.smoothbuild.vm.task.PickTask;
-import org.smoothbuild.vm.task.SelectTask;
-import org.smoothbuild.vm.task.Task;
+import org.smoothbuild.vm.evaluate.task.CombineTask;
+import org.smoothbuild.vm.evaluate.task.ConstTask;
+import org.smoothbuild.vm.evaluate.task.InvokeTask;
+import org.smoothbuild.vm.evaluate.task.OrderTask;
+import org.smoothbuild.vm.evaluate.task.PickTask;
+import org.smoothbuild.vm.evaluate.task.SelectTask;
+import org.smoothbuild.vm.evaluate.task.Task;
 
 import com.google.common.collect.ImmutableMap;
 

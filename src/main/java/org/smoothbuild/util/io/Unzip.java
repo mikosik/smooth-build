@@ -7,8 +7,8 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.function.Predicate;
 
-import org.smoothbuild.bytecode.expr.value.BlobB;
 import org.smoothbuild.util.function.ThrowingBiConsumer;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.io.inputstream.ZipInputStream;

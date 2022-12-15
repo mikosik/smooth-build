@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.task.Task;
+import org.smoothbuild.vm.evaluate.task.Task;
 
 public class TaskMatchersTest extends TestContext {
   @ParameterizedTest
