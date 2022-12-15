@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +74,11 @@ public class ExprBCollisionTest extends TestContext {
         callB(nativeFuncB(funcTB(intTB(),intTB() )), intB(1)),
         callB(nativeFuncB(funcTB(intTB(),intTB() )), intB(2)),
         callB(nativeFuncB(funcTB(intTB(),stringTB() )), intB(1)),
+        closurizeB(list(), intB(0)),
+        closurizeB(list(), intB(1)),
+        closurizeB(list(intTB()), intB(0)),
+        closurizeB(list(intTB()), intB(1)),
+        closurizeB(list(blobTB()), intB(0)),
         combineB(),
         combineB(intB(0)),
         combineB(intB(1)),

@@ -450,6 +450,10 @@ public class TestContext {
     return categoryDb().closure(funcTB);
   }
 
+  public ClosurizeCB closurizeCB() {
+    return closurizeCB(funcTB());
+  }
+
   public ClosurizeCB closurizeCB(FuncTB evalT) {
     return categoryDb().closurize(evalT);
   }
@@ -867,7 +871,11 @@ public class TestContext {
   }
 
   public ClosurizeB closurizeB(ImmutableList<TypeB> paramTs, ExprB body) {
-    return bytecodeDb().closurize(exprFuncB(paramTs, body));
+    return closurizeB(exprFuncB(paramTs, body));
+  }
+
+  public ClosurizeB closurizeB(ExprFuncB exprFuncB) {
+    return bytecodeDb().closurize(exprFuncB);
   }
 
   public CombineB combineB(ExprB... items) {

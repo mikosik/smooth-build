@@ -6,6 +6,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.type.oper.ClosurizeCB;
@@ -45,7 +46,13 @@ public final class ClosurizeB extends OperB {
   }
 
   public ExprFuncB func() {
-    return readData(ExprFuncB.class);
+    var exprFuncB = readData(ExprFuncB.class);
+    var evalT = evalT();
+    var funcT = exprFuncB.type();
+    if (!evalT.equals(funcT)) {
+      throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, evalT, funcT);
+    }
+    return exprFuncB;
   }
 
   @Override

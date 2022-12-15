@@ -44,7 +44,6 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
-import com.google.common.truth.Truth;
 
 public class CategoryBTest extends TestContext {
   @ParameterizedTest

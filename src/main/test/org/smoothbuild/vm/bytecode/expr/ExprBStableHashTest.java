@@ -124,6 +124,16 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
+  class _closurize {
+    @Test
+    public void closurize() {
+      var closurizeB = closurizeB(exprFuncB(list(intTB()), stringB("abc")));
+      assertThat(closurizeB.hash())
+          .isEqualTo(Hash.decode("62acdd168be585fc281500e78f9a2d8666d09755"));
+    }
+  }
+
+  @Nested
   class _expr_func {
     @Test
     public void with_zero_params() {

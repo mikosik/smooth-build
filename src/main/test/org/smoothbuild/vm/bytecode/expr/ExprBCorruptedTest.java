@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.bytecode.expr.ExprB.DATA_PATH;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.cannotReadRootException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;
 
@@ -36,6 +37,7 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvalTypeExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
+import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
@@ -182,7 +184,7 @@ public class ExprBCorruptedTest extends TestContext {
               notHashOfSeq
           );
       assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(ValueB.class))
-          .throwsException(new DecodeExprNodeExc(hash, type, ExprB.DATA_PATH))
+          .throwsException(new DecodeExprNodeExc(hash, type, DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
@@ -199,7 +201,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(arrayTB),
               dataHash);
       assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(StringB.class))
-          .throwsException(new DecodeExprNodeExc(hash, arrayTB, ExprB.DATA_PATH + "[0]"))
+          .throwsException(new DecodeExprNodeExc(hash, arrayTB, DATA_PATH + "[0]"))
           .withCause(new DecodeExprNoSuchExprExc(nowhereHash));
     }
 
@@ -221,7 +223,7 @@ public class ExprBCorruptedTest extends TestContext {
               ));
       assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(StringB.class))
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, arrayTB, ExprB.DATA_PATH, 1, stringTB(), boolTB()));
+              hash, arrayTB, DATA_PATH, 1, stringTB(), boolTB()));
     }
 
     @Test
@@ -239,7 +241,7 @@ public class ExprBCorruptedTest extends TestContext {
               ));
       assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(StringB.class))
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, arrayTB, ExprB.DATA_PATH, 1, ValueB.class, RefB.class));
+              hash, arrayTB, DATA_PATH, 1, ValueB.class, RefB.class));
     }
   }
 
@@ -328,7 +330,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(boolTB()),
               dataHash);
       assertCall(() -> ((BoolB) bytecodeDb().get(hash)).toJ())
-          .throwsException(new DecodeExprNodeExc(hash, boolTB(), ExprB.DATA_PATH))
+          .throwsException(new DecodeExprNodeExc(hash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanExc(dataHash, new DecodeByteExc(dataHash)));
     }
 
@@ -340,7 +342,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(boolTB()),
               dataHash);
       assertCall(() -> ((BoolB) bytecodeDb().get(hash)).toJ())
-          .throwsException(new DecodeExprNodeExc(hash, boolTB(), ExprB.DATA_PATH))
+          .throwsException(new DecodeExprNodeExc(hash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanExc(dataHash, new DecodeByteExc(dataHash)));
     }
 
@@ -353,7 +355,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(boolTB()),
               dataHash);
       assertCall(() -> ((BoolB) bytecodeDb().get(hash)).toJ())
-          .throwsException(new DecodeExprNodeExc(hash, boolTB(), ExprB.DATA_PATH))
+          .throwsException(new DecodeExprNodeExc(hash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanExc(dataHash));
     }
   }
@@ -423,7 +425,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
       assertCall(() -> ((CallB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, cat, ExprB.DATA_PATH, 2, 1));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, cat, DATA_PATH, 2, 1));
     }
 
     @Test
@@ -443,7 +445,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
       assertCall(() -> ((CallB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, cat, ExprB.DATA_PATH, 2, 3));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, cat, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -479,7 +481,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((CallB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, type, ExprB.DATA_PATH + "[1]", CombineB.class, IntB.class));
+              hash, type, DATA_PATH + "[1]", CombineB.class, IntB.class));
     }
 
     @Test
@@ -497,7 +499,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((CallB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, type, ExprB.DATA_PATH + "[1]", CombineB.class, RefB.class));
+              hash, type, DATA_PATH + "[1]", CombineB.class, RefB.class));
     }
 
     @Test
@@ -603,7 +605,7 @@ public class ExprBCorruptedTest extends TestContext {
               notHashOfSeq
           );
       assertCall(() -> ((CombineB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeExprNodeExc(hash, combineCB(), ExprB.DATA_PATH))
+          .throwsException(new DecodeExprNodeExc(hash, combineCB(), DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
@@ -619,7 +621,7 @@ public class ExprBCorruptedTest extends TestContext {
               )
           );
       assertCall(() -> ((CombineB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeExprNodeExc(hash, combineCB(), ExprB.DATA_PATH + "[0]"))
+          .throwsException(new DecodeExprNodeExc(hash, combineCB(), DATA_PATH + "[0]"))
           .withCause(new DecodeExprNoSuchExprExc(nowhere));
     }
 
@@ -720,7 +722,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).environment())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, closureCB, ExprB.DATA_PATH, 2, 1));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, closureCB, DATA_PATH, 2, 1));
     }
 
     @Test
@@ -739,7 +741,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).environment())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, closureCB, ExprB.DATA_PATH, 2, 3));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, closureCB, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -758,7 +760,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).func())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, cat, ExprB.DATA_PATH, 1, ExprFuncB.class, CallB.class));
+              hash, cat, DATA_PATH, 1, ExprFuncB.class, CallB.class));
     }
 
     @Test
@@ -776,7 +778,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).func())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, cat, ExprB.DATA_PATH, 1, ExprFuncB.class, CallB.class));
+              hash, cat, DATA_PATH, 1, ExprFuncB.class, CallB.class));
     }
 
     @Test
@@ -794,7 +796,65 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).func())
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, cat, ExprB.DATA_PATH, funcTB(blobTB(), intTB()), funcTB(intTB(), intTB())));
+              hash, cat, DATA_PATH, funcTB(blobTB(), intTB()), funcTB(intTB(), intTB())));
+    }
+  }
+
+  @Nested
+  class _closurize {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save
+       * closurize in HashedDb.
+       */
+      var func = exprFuncB(list(intTB()), intB(7));
+      var category = closurizeCB(func.type());
+      var hash =
+          hash(
+              hash(category),
+              hash(func)
+          );
+      Truth.assertThat(((ClosurizeB) bytecodeDb().get(hash)).func())
+          .isEqualTo(func);
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(exprFuncCB());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var func = exprFuncB(list(intTB()), intB(7));
+      var category = closurizeCB(func.type());
+      var dataHash = hash(func);
+      obj_root_with_two_data_hashes(
+          category,
+          dataHash,
+          (Hash hash) -> ((ClosureB) bytecodeDb().get(hash)).func());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
+          closurizeCB(),
+          (Hash hash) -> ((ClosurizeB) bytecodeDb().get(hash)).func());
+    }
+
+    @Test
+    public void func_type_is_not_equal_closurize_evaluation_type() throws Exception {
+      var func = exprFuncB(list(blobTB()), intB(7));
+      var evalT = funcTB(blobTB(), stringTB());
+      var category = closurizeCB(evalT);
+      var hash =
+          hash(
+              hash(category),
+              hash(func)
+          );
+      assertCall(() -> ((ClosurizeB) bytecodeDb().get(hash)).func())
+          .throwsException(new DecodeExprWrongNodeTypeExc(
+              hash, category, DATA_PATH, evalT, func.type()));
     }
   }
 
@@ -851,7 +911,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((ExprFuncB) bytecodeDb().get(hash)).body())
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, cat, ExprB.DATA_PATH, boolTB(), intTB()));
+              hash, cat, DATA_PATH, boolTB(), intTB()));
     }
   }
 
@@ -1010,7 +1070,7 @@ public class ExprBCorruptedTest extends TestContext {
 
       assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
           .throwsException(new DecodeExprWrongSeqSizeExc(
-              hash, category, ExprB.DATA_PATH, 3, 2));
+              hash, category, DATA_PATH, 3, 2));
     }
 
     @Test
@@ -1033,7 +1093,7 @@ public class ExprBCorruptedTest extends TestContext {
 
       assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
           .throwsException(new DecodeExprWrongSeqSizeExc(
-              hash, type, ExprB.DATA_PATH, 3, 4));
+              hash, type, DATA_PATH, 3, 4));
     }
 
     @Test
@@ -1053,7 +1113,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).jar())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, category, ExprB.DATA_PATH + "[0]", BlobB.class, StringB.class));
+              hash, category, DATA_PATH + "[0]", BlobB.class, StringB.class));
     }
 
     @Test
@@ -1074,7 +1134,7 @@ public class ExprBCorruptedTest extends TestContext {
 
       assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).classBinaryName())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, category, ExprB.DATA_PATH + "[1]", StringB.class, IntB.class));
+              hash, category, DATA_PATH + "[1]", StringB.class, IntB.class));
     }
 
     @Test
@@ -1095,7 +1155,7 @@ public class ExprBCorruptedTest extends TestContext {
 
       assertCall(() -> ((NativeFuncB) bytecodeDb().get(hash)).isPure())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, category, ExprB.DATA_PATH + "[2]", BoolB.class, StringB.class));
+              hash, category, DATA_PATH + "[2]", BoolB.class, StringB.class));
     }
   }
 
@@ -1160,7 +1220,7 @@ public class ExprBCorruptedTest extends TestContext {
               notHashOfSeq
           );
       assertCall(() -> ((OrderB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeExprNodeExc(hash, orderCB(), ExprB.DATA_PATH))
+          .throwsException(new DecodeExprNodeExc(hash, orderCB(), DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
@@ -1176,7 +1236,7 @@ public class ExprBCorruptedTest extends TestContext {
               )
           );
       assertCall(() -> ((OrderB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeExprNodeExc(hash, orderCB(), ExprB.DATA_PATH + "[0]"))
+          .throwsException(new DecodeExprNodeExc(hash, orderCB(), DATA_PATH + "[0]"))
           .withCause(new DecodeExprNoSuchExprExc(nowhereHash));
     }
 
@@ -1259,7 +1319,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
       assertCall(() -> ((PickB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, pickCB(), ExprB.DATA_PATH, 2, 1));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, pickCB(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1277,7 +1337,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
       assertCall(() -> ((PickB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, pickCB(), ExprB.DATA_PATH, 2, 3));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, pickCB(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1314,7 +1374,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((PickB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, type, ExprB.DATA_PATH, 1, IntB.class, stringTB()));
+              hash, type, DATA_PATH, 1, IntB.class, stringTB()));
     }
 
     @Test
@@ -1440,7 +1500,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((SelectB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongSeqSizeExc(
-              hash, selectCB(), ExprB.DATA_PATH, 2, 1));
+              hash, selectCB(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1459,7 +1519,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((SelectB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongSeqSizeExc(
-              hash, selectCB(), ExprB.DATA_PATH, 2, 3));
+              hash, selectCB(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1533,7 +1593,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((SelectB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, type, ExprB.DATA_PATH + "[1]", IntB.class, StringB.class));
+              hash, type, DATA_PATH + "[1]", IntB.class, StringB.class));
     }
   }
 
@@ -1582,7 +1642,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(stringTB()),
               notStringHash);
       assertCall(() -> ((StringB) bytecodeDb().get(hash)).toJ())
-          .throwsException(new DecodeExprNodeExc(hash, stringTB(), ExprB.DATA_PATH))
+          .throwsException(new DecodeExprNodeExc(hash, stringTB(), DATA_PATH))
           .withCause(new DecodeStringExc(notStringHash, null));
     }
   }
@@ -1635,7 +1695,7 @@ public class ExprBCorruptedTest extends TestContext {
               hash(personTB()),
               notSeqHash);
       assertCall(() -> ((TupleB) bytecodeDb().get(hash)).get(0))
-          .throwsException(new DecodeExprNodeExc(hash, personTB(), ExprB.DATA_PATH))
+          .throwsException(new DecodeExprNodeExc(hash, personTB(), DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notSeqHash, byteCount % Hash.lengthInBytes()));
     }
@@ -1653,7 +1713,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash
           );
       assertCall(() -> ((TupleB) bytecodeDb().get(hash)).get(0))
-          .throwsException(new DecodeExprNodeExc(hash, personTB(), ExprB.DATA_PATH + "[0]"))
+          .throwsException(new DecodeExprNodeExc(hash, personTB(), DATA_PATH + "[0]"))
           .withCause(new DecodeExprNoSuchExprExc(nowhereHash));
     }
 
@@ -1668,7 +1728,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash);
       TupleB tuple = (TupleB) bytecodeDb().get(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, personTB(), ExprB.DATA_PATH, 2, 1));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, personTB(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1684,7 +1744,7 @@ public class ExprBCorruptedTest extends TestContext {
               dataHash);
       var tuple = (TupleB) bytecodeDb().get(hash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, personTB(), ExprB.DATA_PATH, 2, 3));
+          .throwsException(new DecodeExprWrongSeqSizeExc(hash, personTB(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1698,7 +1758,7 @@ public class ExprBCorruptedTest extends TestContext {
       var tuple = (TupleB) bytecodeDb().get(hash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, personTB(), ExprB.DATA_PATH, personTB(), "`{String,Bool}`"));
+              hash, personTB(), DATA_PATH, personTB(), "`{String,Bool}`"));
     }
 
     @Test
@@ -1712,7 +1772,7 @@ public class ExprBCorruptedTest extends TestContext {
       var tuple = (TupleB) bytecodeDb().get(hash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, personTB(), ExprB.DATA_PATH + "[1]", ValueB.class, RefB.class));
+              hash, personTB(), DATA_PATH + "[1]", ValueB.class, RefB.class));
     }
   }
 
@@ -1752,7 +1812,7 @@ public class ExprBCorruptedTest extends TestContext {
             hash(category),
             dataHash);
     assertCall(() -> readClosure.accept(hash))
-        .throwsException(new DecodeExprNodeExc(hash, category, ExprB.DATA_PATH))
+        .throwsException(new DecodeExprNodeExc(hash, category, DATA_PATH))
         .withCause(new NoSuchDataExc(dataHash));
   }
 
@@ -1764,7 +1824,7 @@ public class ExprBCorruptedTest extends TestContext {
             hash(category),
             dataHash);
     assertCall(() -> readClosure.accept(hash))
-        .throwsException(new DecodeExprNodeExc(hash, category, ExprB.DATA_PATH))
+        .throwsException(new DecodeExprNodeExc(hash, category, DATA_PATH))
         .withCause(new DecodeExprNoSuchExprExc(dataHash));
   }
 
