@@ -41,15 +41,15 @@ public class DetectUndefinedRefs extends AstVisitor {
   }
 
   @Override
-  public void visitStruct(StructP struct) {
-    super.visitStruct(struct);
-    definedNames.add(struct.constructor().name());
+  public void visitStruct(StructP structP) {
+    super.visitStruct(structP);
+    definedNames.add(structP.constructor().name());
   }
 
   @Override
-  public void visitNamedEvaluable(NamedEvaluableP namedEvaluable) {
-    super.visitNamedEvaluable(namedEvaluable);
-    definedNames.add(namedEvaluable.name());
+  public void visitNamedEvaluable(NamedEvaluableP namedEvaluableP) {
+    super.visitNamedEvaluable(namedEvaluableP);
+    definedNames.add(namedEvaluableP.name());
   }
 
   @Override
