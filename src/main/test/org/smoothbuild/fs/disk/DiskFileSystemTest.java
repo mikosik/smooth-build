@@ -9,13 +9,13 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
-import org.smoothbuild.fs.base.GenericFileSystemTestCase;
+import org.smoothbuild.fs.base.AbstractFileSystemTestSuite;
 import org.smoothbuild.fs.base.PathS;
 
 import okio.BufferedSink;
 import okio.ByteString;
 
-public class DiskFileSystemTest extends GenericFileSystemTestCase {
+public class DiskFileSystemTest extends AbstractFileSystemTestSuite {
   private Path tempDir;
 
   @BeforeEach

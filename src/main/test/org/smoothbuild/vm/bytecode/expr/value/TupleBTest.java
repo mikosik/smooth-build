@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.ExprBTestCase;
+import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
 import com.google.common.truth.Truth;
 
@@ -58,7 +58,7 @@ public class TupleBTest extends TestContext {
   }
 
   @Nested
-  class _equals_hash_hashcode extends ExprBTestCase<TupleB> {
+  class _equals_hash_hashcode extends AbstractExprBTestSuite<TupleB> {
     @Override
     protected List<TupleB> equalExprs() {
       return list(

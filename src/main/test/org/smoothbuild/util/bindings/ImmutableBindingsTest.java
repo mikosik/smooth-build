@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-public class ImmutableBindingsTest extends AbstractBindingsTestCase {
+public class ImmutableBindingsTest extends AbstractBindingsTestSuite {
   @Test
   public void to_string() {
     var bindings = newBindings(elem("value-a", 7), elem("value-b", 8));

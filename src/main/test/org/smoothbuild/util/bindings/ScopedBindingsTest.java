@@ -1,17 +1,17 @@
 package org.smoothbuild.util.bindings;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.bindings.AbstractBindingsTestCase.elem;
-import static org.smoothbuild.util.bindings.AbstractBindingsTestCase.mapOfElems;
+import static org.smoothbuild.util.bindings.AbstractBindingsTestSuite.elem;
+import static org.smoothbuild.util.bindings.AbstractBindingsTestSuite.mapOfElems;
 import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.util.bindings.AbstractBindingsTestCase.Elem;
+import org.smoothbuild.util.bindings.AbstractBindingsTestSuite.Elem;
 
 public class ScopedBindingsTest {
   @Nested
-  class _elem_in_outer_scope extends AbstractBindingsTestCase {
+  class _elem_in_outer_scope extends AbstractBindingsTestSuite {
     @Override
     public Bindings<Elem> newBindings(Elem... elems) {
       var outer = immutableBindings(mapOfElems(elems));
@@ -20,7 +20,7 @@ public class ScopedBindingsTest {
   }
 
   @Nested
-  class _elem_in_inner_scope extends AbstractBindingsTestCase {
+  class _elem_in_inner_scope extends AbstractBindingsTestSuite {
     @Override
     public Bindings<Elem> newBindings(Elem... elems) {
       return ScopedBindingsTest.newBindings(immutableBindings(), elems);

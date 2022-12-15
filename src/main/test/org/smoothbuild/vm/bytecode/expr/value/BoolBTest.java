@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.ExprBTestCase;
+import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.truth.Truth;
@@ -36,7 +36,7 @@ public class BoolBTest extends TestContext {
 
 
   @Nested
-  class _equals_hash_hashcode extends ExprBTestCase<BoolB> {
+  class _equals_hash_hashcode extends AbstractExprBTestSuite<BoolB> {
     @Override
     protected List<BoolB> equalExprs() {
       return list(

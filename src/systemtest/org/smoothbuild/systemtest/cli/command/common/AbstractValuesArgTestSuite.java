@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
 
-public abstract class ValuesArgTestCase extends SystemTestCase {
+public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
   @Test
   public void missing_value_arg_causes_error() throws Exception {
     createUserModule("""

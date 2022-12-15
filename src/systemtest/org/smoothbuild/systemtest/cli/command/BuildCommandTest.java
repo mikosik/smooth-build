@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.cli.command.BuildCommand;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
-import org.smoothbuild.systemtest.cli.command.common.DefaultModuleTestCase;
-import org.smoothbuild.systemtest.cli.command.common.LockFileTestCase;
-import org.smoothbuild.systemtest.cli.command.common.LogLevelOptionTestCase;
-import org.smoothbuild.systemtest.cli.command.common.ValuesArgTestCase;
+import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
+import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
+import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
+import org.smoothbuild.systemtest.cli.command.common.AbstractValuesArgTestSuite;
 import org.smoothbuild.testing.func.nativ.ReportError;
 import org.smoothbuild.testing.func.nativ.ReportInfo;
 import org.smoothbuild.testing.func.nativ.ReportWarning;
@@ -55,7 +55,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _default_module extends DefaultModuleTestCase {
+  class _default_module extends AbstractDefaultModuleTestSuite {
     @Override
     protected CommandWithArgs commandNameWithArg() {
       return buildCommand("result");
@@ -63,7 +63,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _lock_file extends LockFileTestCase {
+  class _lock_file extends AbstractLockFileTestSuite {
     @Override
     protected CommandWithArgs commandNameWithArg() {
       return buildCommand("result");
@@ -71,7 +71,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _value_args extends ValuesArgTestCase {
+  class _value_args extends AbstractValuesArgTestSuite {
     @Override
     protected String commandName() {
       return BuildCommand.NAME;
@@ -84,7 +84,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class _log_level_option extends LogLevelOptionTestCase {
+  class _log_level_option extends AbstractLogLevelOptionTestSuite {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
       runSmooth(buildCommand(option, "result"));

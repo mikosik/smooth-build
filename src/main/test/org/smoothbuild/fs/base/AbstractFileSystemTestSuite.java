@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import okio.BufferedSink;
 import okio.ByteString;
 
-public abstract class GenericFileSystemTestCase {
+public abstract class AbstractFileSystemTestSuite {
   private static final ByteString bytes = ByteString.encodeUtf8("abc");
   protected FileSystem fileSystem;
   protected PathS path = path("some/dir/myFile");

@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 
-public abstract class AbstractBindingsTestCase {
+public abstract class AbstractBindingsTestSuite {
   private Bindings<Elem> bindings;
 
   @Test

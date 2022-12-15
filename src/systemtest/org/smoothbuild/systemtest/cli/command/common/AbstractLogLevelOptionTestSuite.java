@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
-public abstract class LogLevelOptionTestCase extends SystemTestCase {
+public abstract class AbstractLogLevelOptionTestSuite extends SystemTestCase {
   @Test
   public void illegal_log_level_value_causes_error() throws IOException {
     createUserModule("""

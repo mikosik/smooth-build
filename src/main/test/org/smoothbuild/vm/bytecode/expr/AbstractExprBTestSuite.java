@@ -10,7 +10,7 @@ import org.smoothbuild.testing.TestContext;
 
 import com.google.common.testing.EqualsTester;
 
-public abstract class ExprBTestCase<T extends ExprB> extends TestContext {
+public abstract class AbstractExprBTestSuite<T extends ExprB> extends TestContext {
   protected abstract List<T> equalExprs();
 
   protected abstract List<T> nonEqualExprs();

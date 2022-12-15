@@ -12,7 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
-import org.smoothbuild.vm.bytecode.expr.ExprBTestCase;
+import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
@@ -109,7 +109,7 @@ public class ArrayBTest extends TestContext {
   }
 
   @Nested
-  class _equals_hash_hashcode extends ExprBTestCase<ArrayB> {
+  class _equals_hash_hashcode extends AbstractExprBTestSuite<ArrayB> {
     @Override
     protected List<ArrayB> equalExprs() {
       return list(

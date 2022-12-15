@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
 
-public abstract class DefaultModuleTestCase extends SystemTestCase {
+public abstract class AbstractDefaultModuleTestSuite extends SystemTestCase {
   @Test
   public void missing_default_module_causes_error_without_creating_smooth_dir() {
     runSmooth(commandNameWithArg());

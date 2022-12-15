@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
-import org.smoothbuild.systemtest.cli.command.common.DefaultModuleTestCase;
-import org.smoothbuild.systemtest.cli.command.common.LockFileTestCase;
-import org.smoothbuild.systemtest.cli.command.common.LogLevelOptionTestCase;
+import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
+import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
+import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
 
 public class ListCommandTest {
   @Nested
@@ -33,7 +33,7 @@ public class ListCommandTest {
   }
 
   @Nested
-  class DefaultModule extends DefaultModuleTestCase {
+  class DefaultModule extends AbstractDefaultModuleTestSuite {
     @Override
     protected CommandWithArgs commandNameWithArg() {
       return listCommand();
@@ -41,7 +41,7 @@ public class ListCommandTest {
   }
 
   @Nested
-  class LockFile extends LockFileTestCase {
+  class LockFile extends AbstractLockFileTestSuite {
     @Override
     protected CommandWithArgs commandNameWithArg() {
       return listCommand();
@@ -49,7 +49,7 @@ public class ListCommandTest {
   }
 
   @Nested
-  class LogLevelOption extends LogLevelOptionTestCase {
+  class LogLevelOption extends AbstractLogLevelOptionTestSuite {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
       runSmooth(listCommand(option, "result"));

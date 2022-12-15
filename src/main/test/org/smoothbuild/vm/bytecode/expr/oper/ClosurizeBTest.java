@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.ExprBTestCase;
+import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
 public class ClosurizeBTest extends TestContext {
   @Test
@@ -28,7 +28,7 @@ public class ClosurizeBTest extends TestContext {
   }
 
   @Nested
-  class _equals_hash_hashcode extends ExprBTestCase<ClosurizeB> {
+  class _equals_hash_hashcode extends AbstractExprBTestSuite<ClosurizeB> {
     @Override
     protected List<ClosurizeB> equalExprs() {
       return list(

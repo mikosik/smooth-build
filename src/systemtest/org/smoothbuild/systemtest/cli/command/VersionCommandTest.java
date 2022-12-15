@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.install.BuildVersion;
 import org.smoothbuild.systemtest.SystemTestCase;
-import org.smoothbuild.systemtest.cli.command.common.LogLevelOptionTestCase;
+import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
 
 public class VersionCommandTest {
   @Nested
@@ -34,7 +34,7 @@ public class VersionCommandTest {
   }
 
   @Nested
-  class LogLevelOption extends LogLevelOptionTestCase {
+  class LogLevelOption extends AbstractLogLevelOptionTestSuite {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
       runSmooth(versionCommand(option));

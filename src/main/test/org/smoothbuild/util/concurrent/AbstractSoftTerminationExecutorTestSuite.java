@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public abstract class AbstractSoftTerminationExecutorTestCase {
+public abstract class AbstractSoftTerminationExecutorTestSuite {
   private SoftTerminationExecutor executor;
 
   @BeforeEach

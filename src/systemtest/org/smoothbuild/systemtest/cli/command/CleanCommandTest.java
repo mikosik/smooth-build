@@ -19,9 +19,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
-import org.smoothbuild.systemtest.cli.command.common.DefaultModuleTestCase;
-import org.smoothbuild.systemtest.cli.command.common.LockFileTestCase;
-import org.smoothbuild.systemtest.cli.command.common.LogLevelOptionTestCase;
+import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
+import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
+import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
 
 public class CleanCommandTest {
   @Nested
@@ -73,7 +73,7 @@ public class CleanCommandTest {
   }
 
   @Nested
-  class DefaultModule extends DefaultModuleTestCase {
+  class DefaultModule extends AbstractDefaultModuleTestSuite {
     @Override
     protected CommandWithArgs commandNameWithArg() {
       return cleanCommand();
@@ -81,7 +81,7 @@ public class CleanCommandTest {
   }
 
   @Nested
-  class LockFile extends LockFileTestCase {
+  class LockFile extends AbstractLockFileTestSuite {
     @Override
     protected CommandWithArgs commandNameWithArg() {
       return cleanCommand();
@@ -89,7 +89,7 @@ public class CleanCommandTest {
   }
 
   @Nested
-  class LogLevelOption extends LogLevelOptionTestCase {
+  class LogLevelOption extends AbstractLogLevelOptionTestSuite {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
       runSmooth(cleanCommand(option));

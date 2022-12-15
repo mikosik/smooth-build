@@ -137,7 +137,7 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _infer_named_function_result_type extends _infer_function_result_type_suite {
+  class _infer_named_function_result_type extends _abstract_infer_function_result_type_suite {
     @Override
     public void assertInferredFunctionType(
         String declarations, String params, String body, SchemaS expected) {
@@ -150,7 +150,7 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _infer_anonymous_function_result_type extends _infer_function_result_type_suite {
+  class _infer_anonymous_function_result_type extends _abstract_infer_function_result_type_suite {
     @Override
     public void assertInferredFunctionType(
         String declarations, String params, String body, SchemaS expected) {
@@ -168,7 +168,7 @@ public class InferenceTest extends TestContext {
     }
   }
 
-  abstract class _infer_function_result_type_suite {
+  static abstract class _abstract_infer_function_result_type_suite {
     public void assertInferredFunctionType(String params, String body, SchemaS expected) {
       assertInferredFunctionType("", params, body, expected);
     }

@@ -153,7 +153,7 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _closure extends _func_category_test_case {
+    class _closure extends _abstract_func_category_test_suite {
       @Test
       public void learning_test() throws Exception {
         /*
@@ -175,7 +175,7 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _expression_func extends _func_category_test_case {
+    class _expression_func extends _abstract_func_category_test_suite {
       @Test
       public void learning_test() throws Exception {
         /*
@@ -197,7 +197,7 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _if_func extends _func_category_test_case {
+    class _if_func extends _abstract_func_category_test_suite {
       @Test
       public void learning_test() throws Exception {
         /*
@@ -231,7 +231,7 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _map_func extends _func_category_test_case {
+    class _map_func extends _abstract_func_category_test_suite {
       @Test
       public void learning_test() throws Exception {
         /*
@@ -265,7 +265,7 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     @Nested
-    class _native_func extends _func_category_test_case {
+    class _native_func extends _abstract_func_category_test_suite {
       @Test
       public void learning_test() throws Exception {
         /*
@@ -286,7 +286,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
     }
 
-    abstract class _func_category_test_case {
+    abstract class _abstract_func_category_test_suite {
       protected abstract CategoryKindB categoryKind();
 
       @Test
@@ -737,7 +737,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _oper_cat_tests extends OperCatTestSet {
+      class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
           super(CategoryKinds.CALL);
         }
@@ -761,7 +761,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _oper_cat_tests extends OperCatTestSet {
+      class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
           super(CategoryKinds.CLOSURIZE, FuncTB.class);
         }
@@ -796,7 +796,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _oper_cat_tests extends OperCatTestSet {
+      class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
           super(CategoryKinds.COMBINE, TupleTB.class);
         }
@@ -831,7 +831,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _oper_cat_tests extends OperCatTestSet {
+      class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
           super(CategoryKinds.ORDER, ArrayTB.class);
         }
@@ -866,7 +866,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _oper_cat_tests extends OperCatTestSet {
+      class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
           super(CategoryKinds.PICK);
         }
@@ -890,7 +890,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _oper_cat_tests extends OperCatTestSet {
+      class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
           super(CategoryKinds.REF);
         }
@@ -914,22 +914,22 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Nested
-      class _oper_cat_tests extends OperCatTestSet {
+      class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
           super(CategoryKinds.SELECT);
         }
       }
     }
 
-    private abstract class OperCatTestSet {
+    private abstract class AbstractOperCategoryTestSuite {
       private final CategoryKindB categoryKindB;
       private final Class<? extends CategoryB> type;
 
-      protected OperCatTestSet(CategoryKindB categoryKindB) {
+      protected AbstractOperCategoryTestSuite(CategoryKindB categoryKindB) {
         this(categoryKindB, TypeB.class);
       }
 
-      protected OperCatTestSet(CategoryKindB categoryKindB, Class<? extends CategoryB> type) {
+      protected AbstractOperCategoryTestSuite(CategoryKindB categoryKindB, Class<? extends CategoryB> type) {
         this.categoryKindB = categoryKindB;
         this.type = type;
       }
