@@ -69,7 +69,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class ApTranslator {
-  public static Maybe<Ast> fromParseTree(FilePath filePath, ModContext module) {
+  public static Maybe<Ast> translate(FilePath filePath, ModContext module) {
     var logs = new LogBuffer();
     List<StructP> structs = new ArrayList<>();
     List<NamedEvaluableP> evaluables = new ArrayList<>();

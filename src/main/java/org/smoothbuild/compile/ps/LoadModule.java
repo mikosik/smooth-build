@@ -1,6 +1,5 @@
 package org.smoothbuild.compile.ps;
 
-import static org.smoothbuild.compile.ap.ApTranslator.fromParseTree;
 import static org.smoothbuild.compile.ps.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefs.detectUndefinedRefs;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
@@ -11,6 +10,7 @@ import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
+import org.smoothbuild.compile.ap.ApTranslator;
 import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
@@ -29,7 +29,7 @@ public class LoadModule {
       return maybeLogs(logBuffer);
     }
 
-    var maybeAst = fromParseTree(filePath, moduleContext.value());
+    var maybeAst = ApTranslator.translate(filePath, moduleContext.value());
     logBuffer.logAll(maybeAst.logs());
     if (maybeAst.logs().containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
