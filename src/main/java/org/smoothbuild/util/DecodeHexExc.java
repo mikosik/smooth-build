@@ -2,7 +2,7 @@ package org.smoothbuild.util;
 
 public class DecodeHexExc extends Exception {
   public static DecodeHexExc expectedEvenNumberOfDigits() {
-    return new DecodeHexExc("Expected even number of digits.");
+    return new DecodeHexExc("Digits count is odd.");
   }
 
   public static DecodeHexExc invalidHexDigits(String invalid) {

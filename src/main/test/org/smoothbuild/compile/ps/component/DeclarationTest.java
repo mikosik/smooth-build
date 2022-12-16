@@ -1302,13 +1302,13 @@ public class DeclarationTest extends TestContext {
           @Test
           public void has_only_one_digit() {
             module("result = 0x1;")
-                .loadsWithError(1, "Illegal Blob literal. Expected even number of digits.");
+                .loadsWithError(1, "Illegal Blob literal: Digits count is odd.");
           }
 
           @Test
           public void has_odd_number_of_digits() {
             module("result = 0x123;")
-                .loadsWithError(1, "Illegal Blob literal. Expected even number of digits.");
+                .loadsWithError(1, "Illegal Blob literal: Digits count is odd.");
           }
 
           @Test
@@ -1437,7 +1437,8 @@ public class DeclarationTest extends TestContext {
             module("""
              result = "\\A";
              """)
-                .loadsWithError(1, "Illegal escape sequence at char index = 1. "
+                .loadsWithError(1, "Illegal String literal: "
+                    + "Illegal escape sequence at char index = 1. "
                     + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
           }
 
@@ -1447,7 +1448,8 @@ public class DeclarationTest extends TestContext {
                 result = "\\";
                 """;
             module(code)
-                .loadsWithError(1, "Missing escape code after backslash \\ at char index = 0.");
+                .loadsWithError(1, "Illegal String literal: "
+                    + "Missing escape code after backslash \\ at char index = 0.");
           }
         }
       }
@@ -1462,7 +1464,8 @@ public class DeclarationTest extends TestContext {
                 @Native("\\A")
                 String myFunc();
                 """;
-            var error = err(1, "Illegal escape sequence at char index = 1. "
+            var error = err(1, "Illegal String literal: "
+                + "Illegal escape sequence at char index = 1. "
                 + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
 
             module(module).loadsWith(error);
@@ -1473,7 +1476,8 @@ public class DeclarationTest extends TestContext {
             var module = """
                 @Native("\\")
                 String myFunc();""";
-            var error = err(1, "Missing escape code after backslash \\ at char index = 0.");
+            var error = err(1, "Illegal String literal:"
+                + " Missing escape code after backslash \\ at char index = 0.");
 
             module(module).loadsWith(error);
           }

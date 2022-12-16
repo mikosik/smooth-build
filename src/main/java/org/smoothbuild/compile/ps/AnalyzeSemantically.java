@@ -51,7 +51,7 @@ public class AnalyzeSemantically {
         try {
           blob.decodeByteString();
         } catch (DecodeHexExc e) {
-          logger.log(compileError(blob, "Illegal Blob literal. " + e.getMessage()));
+          logger.log(compileError(blob, "Illegal Blob literal: " + e.getMessage()));
         }
       }
 
@@ -71,7 +71,7 @@ public class AnalyzeSemantically {
         try {
           string.calculateUnescaped();
         } catch (UnescapingFailedExc e) {
-          logger.log(compileError(string, e.getMessage()));
+          logger.log(compileError(string, "Illegal String literal: " + e.getMessage()));
         }
       }
     }.visitAst(ast);
