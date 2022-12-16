@@ -1,6 +1,7 @@
 package org.smoothbuild.util.collect;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.Maps.filterKeys;
 import static com.google.common.collect.Streams.stream;
 import static java.util.stream.Collectors.toList;
 
@@ -33,7 +34,7 @@ public class Maps {
       ImmutableMap<? extends T, ? extends U> map2) {
     return ImmutableMap.<T, U>builder()
         .putAll(map1)
-        .putAll(com.google.common.collect.Maps.filterKeys(map2, key -> !map1.containsKey(key)))
+        .putAll(filterKeys(map2, key -> !map1.containsKey(key)))
         .build();
   }
 
