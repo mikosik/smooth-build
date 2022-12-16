@@ -2,8 +2,8 @@ package org.smoothbuild.compile.ps;
 
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.compile.lang.base.ValidNamesS.isVarName;
-import static org.smoothbuild.compile.lang.base.ValidNamesS.startsWithUpperCase;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +18,6 @@ import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
-import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
@@ -102,7 +101,7 @@ public class AnalyzeSemantically {
   private static void detectDuplicateGlobalNames(Logger logger, DefsS imported, Ast ast) {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
-    nals.addAll(constructorNames(ast));
+    nals.addAll(map(ast.structs(), StructP::constructor));
     nals.addAll(ast.evaluables());
     nals.sort(comparing(n -> n.location().toString()));
 
@@ -115,18 +114,6 @@ public class AnalyzeSemantically {
       logIfDuplicate(logger, checked, nal);
       checked.put(nal.name(), nal);
     }
-  }
-
-  private static List<NamedFuncP> constructorNames(Ast ast) {
-    // Return only constructors of structs with legal names (that starts with uppercase).
-    // Adding constructors of structs with lowercase names would cause `already defined` error
-    // because constructor name would collide with struct name.
-    // Lowercase struct names will be detected as illegal by other check in this class.
-    return ast.structs()
-        .stream()
-        .filter(s -> startsWithUpperCase(s.name()))
-        .map(StructP::constructor)
-        .toList();
   }
 
   private static void logIfDuplicate(Logger logger, Bindings<? extends Nal> others, Nal nal) {
