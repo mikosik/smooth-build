@@ -220,8 +220,8 @@ public class ExprTypeUnifier {
 
   private Optional<TypeS> unifyCall(CallP callP) {
     var calleeT = unifyExpr(callP.callee());
-    var positionedArgs = positionedArgs(callP);
-    callP.setPositionedArgs(positionedArgs);
+    inferPositionedArgsImpl(callP);
+    var positionedArgs = callP.positionedArgs();
     if (positionedArgs.isPresent()) {
       var argTs = pullUp(map(positionedArgs.get(), this::unifyExpr));
       return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, a, callP.location()));
@@ -231,20 +231,20 @@ public class ExprTypeUnifier {
     }
   }
 
-  private Optional<ImmutableList<ExprP>> positionedArgs(CallP callP) {
+  private void inferPositionedArgsImpl(CallP callP) {
     if (callP.callee() instanceof RefP refP) {
-      return bindings.get(refP.name())
-          .flatMap(refableS -> inferPositionedArgs(callP, refableParams(refableS), logger));
+      bindings.get(refP.name())
+          .ifPresentOrElse(refableS -> {
+            if (refableS instanceof NamedFuncS namedFuncS) {
+              inferPositionedArgs(callP, namedFuncS.params(), logger);
+            } else {
+              inferPositionedArgs(callP, logger);
+            }
+          }, () -> {
+            callP.setPositionedArgs(Optional.empty());
+          });
     } else {
-      return inferPositionedArgs(callP, Optional.empty(), logger);
-    }
-  }
-
-  private static Optional<NList<ItemS>> refableParams(RefableS refableS) {
-    if (refableS instanceof NamedFuncS namedFuncS) {
-      return Optional.of(namedFuncS.params());
-    } else {
-      return Optional.empty();
+      inferPositionedArgs(callP, logger);
     }
   }
 

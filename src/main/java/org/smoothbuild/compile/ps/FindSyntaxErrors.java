@@ -9,7 +9,6 @@ import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 
-import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
