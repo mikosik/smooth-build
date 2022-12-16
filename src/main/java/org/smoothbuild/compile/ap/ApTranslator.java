@@ -71,8 +71,8 @@ import com.google.common.collect.ImmutableList;
 public class ApTranslator {
   public static Maybe<Ast> translate(FilePath filePath, ModContext module) {
     var logs = new LogBuffer();
-    List<StructP> structs = new ArrayList<>();
-    List<NamedEvaluableP> evaluables = new ArrayList<>();
+    var structs = new ArrayList<StructP>();
+    var evaluables = new ArrayList<NamedEvaluableP>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
