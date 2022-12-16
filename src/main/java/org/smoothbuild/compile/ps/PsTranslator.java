@@ -139,8 +139,8 @@ public class PsTranslator {
 
   private Optional<ExprS> translateCall(CallP call) {
     var callee = translateExpr(call.callee());
-    var argExprs = call.positionedArgs().flatMap(this::translateExprs);
-    return mapPair(callee, argExprs, (c, as) -> new CallS(c, as, call.location()));
+    var args = translateExprs(call.positionedArgs());
+    return mapPair(callee, args, (c, as) -> new CallS(c, as, call.location()));
   }
 
   private Optional<ExprS> translateAnonymousFunc(AnonymousFuncP anonymousFuncP) {

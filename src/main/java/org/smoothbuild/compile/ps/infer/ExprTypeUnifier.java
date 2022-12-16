@@ -7,7 +7,6 @@ import static org.smoothbuild.compile.lang.type.TypeFS.STRING;
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.compile.ps.infer.BindingsHelper.funcBodyScopeBindings;
-import static org.smoothbuild.compile.ps.infer.InferPositionedArgs.inferPositionedArgs;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.util.collect.Optionals.flatMapPair;
@@ -20,7 +19,6 @@ import java.util.function.Function;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
-import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.lang.define.RefableS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
@@ -220,32 +218,9 @@ public class ExprTypeUnifier {
 
   private Optional<TypeS> unifyCall(CallP callP) {
     var calleeT = unifyExpr(callP.callee());
-    inferPositionedArgsImpl(callP);
     var positionedArgs = callP.positionedArgs();
-    if (positionedArgs.isPresent()) {
-      var argTs = pullUp(map(positionedArgs.get(), this::unifyExpr));
-      return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, a, callP.location()));
-    } else {
-      map(callP.args(), this::unifyExpr);
-      return Optional.empty();
-    }
-  }
-
-  private void inferPositionedArgsImpl(CallP callP) {
-    if (callP.callee() instanceof RefP refP) {
-      bindings.get(refP.name())
-          .ifPresentOrElse(refableS -> {
-            if (refableS instanceof NamedFuncS namedFuncS) {
-              inferPositionedArgs(callP, namedFuncS.params(), logger);
-            } else {
-              inferPositionedArgs(callP, logger);
-            }
-          }, () -> {
-            callP.setPositionedArgs(Optional.empty());
-          });
-    } else {
-      inferPositionedArgs(callP, logger);
-    }
+    var argTs = pullUp(map(positionedArgs, this::unifyExpr));
+    return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, a, callP.location()));
   }
 
   private Optional<TypeS> unifyCall(TypeS calleeT, ImmutableList<TypeS> argTs, Location location) {

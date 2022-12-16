@@ -111,7 +111,7 @@ public class TypeInferrerResolve {
 
   private boolean resolveCall(CallP callP) {
     return resolveExpr(callP.callee())
-        && callP.positionedArgs().get().stream().allMatch(this::resolveExpr)
+        && callP.positionedArgs().stream().allMatch(this::resolveExpr)
         && resolveExprType(callP);
   }
 
