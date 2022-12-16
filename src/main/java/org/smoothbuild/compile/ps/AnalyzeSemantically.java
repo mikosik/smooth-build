@@ -35,9 +35,7 @@ import org.smoothbuild.util.bindings.Bindings;
 public class AnalyzeSemantically {
   public static ImmutableLogs analyzeSemantically(DefsS imported, Ast ast) {
     var logBuffer = new LogBuffer();
-    decodeBlobLiterals(logBuffer, ast);
-    decodeIntLiterals(logBuffer, ast);
-    decodeStringLiterals(logBuffer, ast);
+    decodeLiterals(logBuffer, ast);
     detectUndefinedTypes(logBuffer, imported, ast);
     detectDuplicateGlobalNames(logBuffer, imported, ast);
     detectDuplicateFieldNames(logBuffer, ast);
@@ -45,7 +43,7 @@ public class AnalyzeSemantically {
     return logBuffer.toImmutableLogs();
   }
 
-  private static void decodeBlobLiterals(Logger logger, Ast ast) {
+  private static void decodeLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitBlob(BlobP blob) {
@@ -56,11 +54,7 @@ public class AnalyzeSemantically {
           logger.log(compileError(blob, "Illegal Blob literal. " + e.getMessage()));
         }
       }
-    }.visitAst(ast);
-  }
 
-  private static void decodeIntLiterals(Logger logger, Ast ast) {
-    new AstVisitor() {
       @Override
       public void visitInt(IntP intP) {
         super.visitInt(intP);
@@ -70,11 +64,7 @@ public class AnalyzeSemantically {
           logger.log(compileError(intP, "Illegal Int literal: `" + intP.literal() + "`."));
         }
       }
-    }.visitAst(ast);
-  }
 
-  private static void decodeStringLiterals(Logger logger, Ast ast) {
-    new AstVisitor() {
       @Override
       public void visitString(StringP string) {
         super.visitString(string);
