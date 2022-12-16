@@ -8,7 +8,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.lang.base.Nal;
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.out.report.Console;
@@ -17,20 +17,20 @@ import org.smoothbuild.out.report.Reporter;
 public class ListRunner {
   private final Reporter reporter;
   private final Console console;
-  private final DefsLoader defsLoader;
+  private final DefinitionsLoader definitionsLoader;
 
   @Inject
-  public ListRunner(DefsLoader defsLoader, Reporter reporter, Console console) {
+  public ListRunner(DefinitionsLoader definitionsLoader, Reporter reporter, Console console) {
     this.reporter = reporter;
     this.console = console;
-    this.defsLoader = defsLoader;
+    this.definitionsLoader = definitionsLoader;
   }
 
   public int run() {
-    Optional<DefsS> defsS = defsLoader.loadDefs();
-    if (defsS.isPresent()) {
+    Optional<DefinitionsS> definitions = definitionsLoader.loadDefinitions();
+    if (definitions.isPresent()) {
       reporter.startNewPhase("Values that can be evaluated:");
-      defsS.get()
+      definitions.get()
           .evaluables()
           .asMap()
           .values()

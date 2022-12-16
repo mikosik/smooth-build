@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.NamedValueS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
@@ -15,8 +15,8 @@ import com.google.common.collect.ImmutableList;
 
 public class FindTopValues {
   public static Optional<ImmutableList<NamedValueS>> findTopValues(
-      Reporter reporter, DefsS defs, List<String> names) {
-    var topEvaluables = defs.evaluables();
+      Reporter reporter, DefinitionsS definitions, List<String> names) {
+    var topEvaluables = definitions.evaluables();
     var matchingTopEvaluables = new HashSet<NamedValueS>();
     var logs = new LogBuffer();
     for (String name : names) {

@@ -9,7 +9,7 @@ import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestContext.importedModFiles;
 import static org.smoothbuild.testing.TestContext.modFiles;
 
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
@@ -21,7 +21,7 @@ import org.smoothbuild.out.log.Maybe;
 public class TestingModLoader {
   private final String sourceCode;
   private ModFiles modFiles;
-  private DefsS imported;
+  private DefinitionsS imported;
   private Maybe<ModuleS> moduleS;
 
   TestingModLoader(String sourceCode) {
@@ -33,7 +33,7 @@ public class TestingModLoader {
     return this;
   }
 
-  public TestingModLoader withImported(DefsS imported) {
+  public TestingModLoader withImported(DefinitionsS imported) {
     this.imported = imported;
     return this;
   }
@@ -80,8 +80,8 @@ public class TestingModLoader {
         .isEqualTo(expected);
   }
 
-  public DefsS getModuleAsDefinitions() {
-    return DefsS.empty()
+  public DefinitionsS getModuleAsDefinitions() {
+    return DefinitionsS.empty()
         .withModule(loadInternalModule())
         .withModule(moduleS.value());
   }
@@ -116,8 +116,10 @@ public class TestingModLoader {
   }
 
   private Maybe<ModuleS> load() {
-    DefsS importedSane = imported != null ? imported : DefsS.empty().withModule(loadInternalModule());
-    ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();
+    var importedSane = imported != null
+        ? imported
+        : DefinitionsS.empty().withModule(loadInternalModule());
+    var modFilesSane = this.modFiles != null ? modFiles : modFiles();
     return loadModule(modFilesSane, sourceCode, importedSane);
   }
 

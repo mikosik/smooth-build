@@ -4,7 +4,6 @@ import static org.smoothbuild.testing.TestingModLoader.err;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.lang.define.DefsS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.testing.TestContext;
 
@@ -92,7 +91,7 @@ public class VisibilityTest extends TestContext {
     class _imported {
       @Test
       public void value_is_visible() {
-        DefsS imported = module("""
+        var imported = module("""
           String otherModuleValue = "abc";
           """)
             .loadsWithSuccess()
@@ -106,7 +105,7 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void func_is_visible() {
-        DefsS imported = module("""
+        var imported = module("""
           String otherModuleFunc() = "abc";
           """)
             .loadsWithSuccess()
@@ -120,7 +119,7 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void ctor_is_visible() {
-        DefsS imported = module("""
+        var imported = module("""
           OtherModuleStruct()
           """)
             .loadsWithSuccess()
@@ -134,7 +133,7 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_is_visible() {
-        DefsS imported = module("""
+        var imported = module("""
           OtherModuleStruct()
           """)
             .loadsWithSuccess()
@@ -648,7 +647,7 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
@@ -663,7 +662,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void func_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
@@ -678,7 +677,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void ctor_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             OtherModuleStruct()
             """)
               .withImportedModFiles()
@@ -729,7 +728,7 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
@@ -744,7 +743,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void func_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
@@ -759,7 +758,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void ctor_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             OtherModuleStruct()
             """)
               .withImportedModFiles()
@@ -820,7 +819,7 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void named_value_succeeds() {
-          DefsS imported = module("""
+          var imported = module("""
               otherModuleValue = "abc";
               """)
               .withImportedModFiles()
@@ -835,7 +834,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void named_function_succeeds() {
-          DefsS imported = module("""
+          var imported = module("""
               otherModuleFunc() = "abc";
               """)
               .withImportedModFiles()
@@ -850,7 +849,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void constructor_succeeds() {
-          DefsS imported = module("""
+          var imported = module("""
               OtherModuleStruct()
               """)
               .withImportedModFiles()
@@ -1000,7 +999,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void struct_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             OtherModuleStruct()
             """)
               .withImportedModFiles()
@@ -1051,7 +1050,7 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          DefsS imported = module("""
+          var imported = module("""
               otherModuleValue = "abc";
               """)
               .withImportedModFiles()
@@ -1068,7 +1067,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void func_succeeds() {
-          DefsS imported = module("""
+          var imported = module("""
               otherModuleFunc() = "abc";
               """)
               .withImportedModFiles()
@@ -1085,7 +1084,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void ctor_succeeds() {
-          DefsS imported = module("""
+          var imported = module("""
               OtherModuleStruct()
               """)
               .withImportedModFiles()
@@ -1144,7 +1143,7 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
@@ -1159,7 +1158,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void func_fails() {
-          DefsS imported = module("""
+          var imported = module("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()

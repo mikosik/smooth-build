@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.fs.space.FilePath;
@@ -25,7 +25,7 @@ import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 
-public class DefsLoader {
+public class DefinitionsLoader {
   private static final ImmutableList<FilePath> MODULES =
       ImmutableList.<FilePath>builder()
           .addAll(SLIB_MODS)
@@ -37,32 +37,32 @@ public class DefsLoader {
   private final Reporter reporter;
 
   @Inject
-  public DefsLoader(FileResolver fileResolver, ModFilesDetector modFilesDetector,
-      Reporter reporter) {
+  public DefinitionsLoader(
+      FileResolver fileResolver, ModFilesDetector modFilesDetector, Reporter reporter) {
     this.fileResolver = fileResolver;
     this.modFilesDetector = modFilesDetector;
     this.reporter = reporter;
   }
 
-  public Optional<DefsS> loadDefs() {
+  public Optional<DefinitionsS> loadDefinitions() {
     reporter.startNewPhase("Parsing");
 
     var internalMod = loadInternalModule();
-    var allDefs = DefsS.empty().withModule(internalMod);
+    var allDefinitions = DefinitionsS.empty().withModule(internalMod);
     var files = modFilesDetector.detect(MODULES);
     for (ModFiles modFiles : files) {
-      Maybe<ModuleS> module = load(allDefs, modFiles);
+      Maybe<ModuleS> module = load(allDefinitions, modFiles);
       reporter.report(modFiles.smoothFile().toString(), module.logs().toList());
       if (module.containsProblem()) {
         return Optional.empty();
       } else {
-        allDefs = allDefs.withModule(module.value());
+        allDefinitions = allDefinitions.withModule(module.value());
       }
     }
-    return Optional.of(allDefs);
+    return Optional.of(allDefinitions);
   }
 
-  private Maybe<ModuleS> load(DefsS imported, ModFiles modFiles) {
+  private Maybe<ModuleS> load(DefinitionsS imported, ModFiles modFiles) {
     var sourceCode = readFileContent(modFiles.smoothFile());
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());

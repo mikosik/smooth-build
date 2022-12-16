@@ -27,16 +27,20 @@ import com.google.common.collect.ImmutableMap;
 
 public class BuildRunner {
   private final ArtifactsRemover artifactsRemover;
-  private final DefsLoader defsLoader;
+  private final DefinitionsLoader definitionsLoader;
   private final EvaluatorS evaluator;
   private final ArtifactSaver artifactSaver;
   private final Reporter reporter;
 
   @Inject
-  public BuildRunner(ArtifactsRemover artifactsRemover, DefsLoader defsLoader,
-      EvaluatorS evaluator, ArtifactSaver artifactSaver, Reporter reporter) {
+  public BuildRunner(
+      ArtifactsRemover artifactsRemover,
+      DefinitionsLoader definitionsLoader,
+      EvaluatorS evaluator,
+      ArtifactSaver artifactSaver,
+      Reporter reporter) {
     this.artifactsRemover = artifactsRemover;
-    this.defsLoader = defsLoader;
+    this.definitionsLoader = definitionsLoader;
     this.evaluator = evaluator;
     this.artifactSaver = artifactSaver;
     this.reporter = reporter;
@@ -60,7 +64,7 @@ public class BuildRunner {
   }
 
   public Optional<ImmutableMap<NamedValueS, ValueB>> evaluate(List<String> names) {
-    var defsOpt = defsLoader.loadDefs();
+    var defsOpt = definitionsLoader.loadDefinitions();
     var evaluablesOpt = defsOpt.flatMap(d -> findTopValues(reporter, d, names));
     var evaluationsOpt = evaluablesOpt.flatMap(this::evaluate);
     return mapPair(evaluablesOpt, evaluationsOpt, Maps::zip);

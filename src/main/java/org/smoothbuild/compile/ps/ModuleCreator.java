@@ -10,7 +10,7 @@ import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.define.ConstructorS;
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
@@ -37,7 +37,7 @@ public class ModuleCreator {
   private final LogBuffer logBuffer;
   private final PsTranslator psTranslator;
 
-  public static Maybe<ModuleS> createModuleS(ModFiles modFiles, Ast ast, DefsS imported) {
+  public static Maybe<ModuleS> createModuleS(ModFiles modFiles, Ast ast, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
     var types = newOptionalScopedBindings(imported.types());
     var evaluables = newOptionalScopedBindings(imported.evaluables());

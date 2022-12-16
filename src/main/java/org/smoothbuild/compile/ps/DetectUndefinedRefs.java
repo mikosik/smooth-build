@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.smoothbuild.compile.lang.base.NalImpl;
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
@@ -33,7 +33,7 @@ public class DetectUndefinedRefs extends AstVisitor {
     this.logs = logs;
   }
 
-  public static Logs detectUndefinedRefs(Ast ast, DefsS imported) {
+  public static Logs detectUndefinedRefs(Ast ast, DefinitionsS imported) {
     ImmutableSet<String> definedNames = imported.evaluables().asMap().keySet();
     var detectUndefinedRefs = new DetectUndefinedRefs(ast, definedNames, new LogBuffer());
     detectUndefinedRefs.visitAst(ast);

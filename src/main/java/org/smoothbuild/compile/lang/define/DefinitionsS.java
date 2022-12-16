@@ -10,16 +10,16 @@ import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 
-public record DefsS(
+public record DefinitionsS(
     ImmutableBindings<TypeDefinitionS> types,
     ImmutableBindings<NamedEvaluableS> evaluables) {
 
-  public static DefsS empty() {
-    return new DefsS(immutableBindings(), immutableBindings());
+  public static DefinitionsS empty() {
+    return new DefinitionsS(immutableBindings(), immutableBindings());
   }
 
-  public DefsS withModule(ModuleS module) {
-    return new DefsS(
+  public DefinitionsS withModule(ModuleS module) {
+    return new DefinitionsS(
         merge(types, module.types()),
         merge(evaluables, module.evaluables())
     );

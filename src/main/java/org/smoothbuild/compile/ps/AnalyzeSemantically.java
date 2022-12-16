@@ -12,7 +12,7 @@ import java.util.Map;
 
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.location.Location;
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.AstVisitor;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
@@ -32,7 +32,7 @@ import org.smoothbuild.util.UnescapingFailedExc;
 import org.smoothbuild.util.bindings.Bindings;
 
 public class AnalyzeSemantically {
-  public static ImmutableLogs analyzeSemantically(DefsS imported, Ast ast) {
+  public static ImmutableLogs analyzeSemantically(DefinitionsS imported, Ast ast) {
     var logBuffer = new LogBuffer();
     decodeLiterals(logBuffer, ast);
     detectUndefinedTypes(logBuffer, imported, ast);
@@ -76,7 +76,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void detectUndefinedTypes(Logger logger, DefsS imported, Ast ast) {
+  private static void detectUndefinedTypes(Logger logger, DefinitionsS imported, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitType(TypeP type) {
@@ -98,7 +98,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void detectDuplicateGlobalNames(Logger logger, DefsS imported, Ast ast) {
+  private static void detectDuplicateGlobalNames(Logger logger, DefinitionsS imported, Ast ast) {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
     nals.addAll(map(ast.structs(), StructP::constructor));

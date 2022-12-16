@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
@@ -44,7 +44,7 @@ import org.smoothbuild.util.collect.Named;
 import com.google.common.collect.ImmutableList;
 
 public class CallsPreprocessor {
-  public static Logs preprocessCalls(Ast ast, DefsS imported) {
+  public static Logs preprocessCalls(Ast ast, DefinitionsS imported) {
     var logger = new LogBuffer();
     var localBindings = localBindings(ast);
     new Preprocessor(imported, localBindings, logger)
@@ -59,11 +59,11 @@ public class CallsPreprocessor {
   }
 
   private static class Preprocessor extends AstVisitor {
-    private final DefsS imported;
+    private final DefinitionsS imported;
     private final Bindings<RefableP> localBindings;
     private final LogBuffer logger;
 
-    public Preprocessor(DefsS imported, Bindings<RefableP> localBindings, LogBuffer logger) {
+    public Preprocessor(DefinitionsS imported, Bindings<RefableP> localBindings, LogBuffer logger) {
       this.localBindings = localBindings;
       this.imported = imported;
       this.logger = logger;

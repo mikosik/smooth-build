@@ -13,7 +13,7 @@ import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.compile.ap.ApTranslator;
-import org.smoothbuild.compile.lang.define.DefsS;
+import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.ps.ast.Ast;
@@ -22,7 +22,8 @@ import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
 
 public class LoadModule {
-  public static Maybe<ModuleS> loadModule(ModFiles modFiles, String sourceCode, DefsS imported) {
+  public static Maybe<ModuleS> loadModule(
+      ModFiles modFiles, String sourceCode, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
     var filePath = modFiles.smoothFile();
     Maybe<ModContext> moduleContext = parseModule(filePath, sourceCode);
