@@ -26,7 +26,7 @@ public class FindSyntaxErrors {
    * Detect syntax errors that are not caught by Antlr
    * because its grammar is not so demanding, so it can be more compact.
    */
-  public static LogBuffer findSyntaxErrors(DefsS imported, Ast ast) {
+  public static LogBuffer findSyntaxErrors(Ast ast) {
     var logBuffer = new LogBuffer();
     detectIllegalNames(logBuffer, ast);
     detectIllegalAnnotations(logBuffer, ast);

@@ -36,7 +36,7 @@ public class LoadModule {
       return maybeLogs(logBuffer);
     }
     var ast = maybeAst.value();
-    logBuffer.logAll(findSyntaxErrors(imported, ast));
+    logBuffer.logAll(findSyntaxErrors(ast));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
