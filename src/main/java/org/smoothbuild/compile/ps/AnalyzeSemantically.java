@@ -93,7 +93,7 @@ public class AnalyzeSemantically {
       private boolean isDefinedType(TypeP type) {
         return isVarName(type.name())
             || ast.structs().containsName(type.name())
-            || imported.tDefs().contains(type.name());
+            || imported.types().contains(type.name());
       }
     }.visitAst(ast);
   }
@@ -106,7 +106,7 @@ public class AnalyzeSemantically {
     nals.sort(comparing(n -> n.location().toString()));
 
     for (Nal nal : nals) {
-      logIfDuplicate(logger, imported.tDefs(), nal);
+      logIfDuplicate(logger, imported.types(), nal);
       logIfDuplicate(logger, imported.evaluables(), nal);
     }
     Map<String, Nal> checked = new HashMap<>();

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.smoothbuild.compile.lang.define.ItemSigS;
 import org.smoothbuild.compile.lang.define.RefableS;
-import org.smoothbuild.compile.lang.define.TDefS;
+import org.smoothbuild.compile.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.StructTS;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -39,7 +39,7 @@ public class TypeInferrer {
   private final Logger logger;
 
   public TypeInferrer(
-      OptionalBindings<TDefS> types,
+      OptionalBindings<TypeDefinitionS> types,
       OptionalBindings<? extends RefableS> bindings,
       Logger logger) {
     this(new Unifier(), new TypePsTranslator(types), bindings, logger);
@@ -57,7 +57,7 @@ public class TypeInferrer {
   }
 
   public static Optional<StructTS> inferStructType(
-      OptionalBindings<TDefS> types,
+      OptionalBindings<TypeDefinitionS> types,
       OptionalBindings<? extends RefableS> outerBindings,
       Logger logger,
       StructP struct) {

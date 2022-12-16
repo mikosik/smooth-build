@@ -8,7 +8,7 @@ import static org.smoothbuild.util.collect.Optionals.pullUp;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.Tanal;
-import org.smoothbuild.compile.lang.define.TDefS;
+import org.smoothbuild.compile.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.lang.type.ArrayTS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
@@ -19,9 +19,9 @@ import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.util.bindings.OptionalBindings;
 
 public class TypePsTranslator {
-  private final OptionalBindings<TDefS> types;
+  private final OptionalBindings<TypeDefinitionS> types;
 
-  public TypePsTranslator(OptionalBindings<TDefS> types) {
+  public TypePsTranslator(OptionalBindings<TypeDefinitionS> types) {
     this.types = types;
   }
 

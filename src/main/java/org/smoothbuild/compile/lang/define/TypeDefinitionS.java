@@ -7,8 +7,8 @@ import org.smoothbuild.compile.lang.type.TypeS;
 /**
  * Type definition.
  */
-public class TDefS extends Tanal {
-  public TDefS(TypeS type, String name, Location location) {
-    super(type, name, location);
+public class TypeDefinitionS extends Tanal {
+  public TypeDefinitionS(TypeS typeS, Location location) {
+    super(typeS, typeS.name(), location);
   }
 }

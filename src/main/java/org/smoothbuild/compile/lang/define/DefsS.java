@@ -11,7 +11,7 @@ import org.smoothbuild.util.collect.Named;
 import com.google.common.collect.ImmutableMap;
 
 public record DefsS(
-    ImmutableBindings<TDefS> tDefs,
+    ImmutableBindings<TypeDefinitionS> types,
     ImmutableBindings<NamedEvaluableS> evaluables) {
 
   public static DefsS empty() {
@@ -20,7 +20,7 @@ public record DefsS(
 
   public DefsS withModule(ModuleS module) {
     return new DefsS(
-        merge(tDefs, module.tDefs()),
+        merge(types, module.types()),
         merge(evaluables, module.evaluables())
     );
   }

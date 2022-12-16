@@ -15,8 +15,7 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
-import org.smoothbuild.compile.lang.define.StructDefS;
-import org.smoothbuild.compile.lang.define.TDefS;
+import org.smoothbuild.compile.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
@@ -33,14 +32,14 @@ import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.OptionalScopedBindings;
 
 public class ModuleCreator {
-  private final OptionalScopedBindings<TDefS> types;
+  private final OptionalScopedBindings<TypeDefinitionS> types;
   private final OptionalScopedBindings<NamedEvaluableS> bindings;
   private final LogBuffer logBuffer;
   private final PsTranslator psTranslator;
 
   public static Maybe<ModuleS> createModuleS(ModFiles modFiles, Ast ast, DefsS imported) {
     var logBuffer = new LogBuffer();
-    var types = newOptionalScopedBindings(imported.tDefs());
+    var types = newOptionalScopedBindings(imported.types());
     var evaluables = newOptionalScopedBindings(imported.evaluables());
     var moduleCreator = new ModuleCreator(types, evaluables, logBuffer);
     ast.structs().forEach(moduleCreator::visitStruct);
@@ -60,7 +59,7 @@ public class ModuleCreator {
   }
 
   private ModuleCreator(
-      OptionalScopedBindings<TDefS> types,
+      OptionalScopedBindings<TypeDefinitionS> types,
       OptionalScopedBindings<NamedEvaluableS> bindings,
       LogBuffer logBuffer) {
     this.types = types;
@@ -70,11 +69,11 @@ public class ModuleCreator {
   }
 
   public void visitStruct(StructP struct) {
-    Optional<StructTS> structTS = inferStructType(types, bindings, logBuffer, struct);
-    Optional<TDefS> structDefS = structTS.map(s -> new StructDefS(s, struct.location()));
-    types.add(struct.name(), structDefS);
-    var ctorS = structTS.map(st -> loadConstructor(struct, st));
-    bindings.add(struct.constructor().name(), ctorS);
+    var structTS = inferStructType(types, bindings, logBuffer, struct);
+    var structDefinitionS = structTS.map(s -> new TypeDefinitionS(s, struct.location()));
+    types.add(struct.name(), structDefinitionS);
+    var constructorS = structTS.map(st -> loadConstructor(struct, st));
+    bindings.add(struct.constructor().name(), constructorS);
   }
 
   private static NamedEvaluableS loadConstructor(StructP structP, StructTS structT) {

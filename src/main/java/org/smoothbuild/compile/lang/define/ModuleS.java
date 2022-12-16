@@ -4,6 +4,6 @@ import org.smoothbuild.util.bindings.ImmutableBindings;
 
 public record ModuleS(
     ModFiles files,
-    ImmutableBindings<TDefS> tDefs,
+    ImmutableBindings<TypeDefinitionS> types,
     ImmutableBindings<NamedEvaluableS> evaluables) {
 }

@@ -69,7 +69,7 @@ public class TestingModLoader {
 
   public void containsType(TypeS expected) {
     var name = expected.name();
-    var types = moduleS.value().tDefs();
+    var types = moduleS.value().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.contains(name))
         .isTrue();
