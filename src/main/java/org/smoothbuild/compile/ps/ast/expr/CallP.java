@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 
 public final class CallP extends ExprP {
   private final ExprP callee;
-  private final List<ExprP> args;
+  private final ImmutableList<ExprP> args;
   private Optional<ImmutableList<ExprP>> positionedArgs;
 
   public CallP(ExprP callee, List<ExprP> args, Location location) {
@@ -22,7 +22,7 @@ public final class CallP extends ExprP {
     return callee;
   }
 
-  public List<ExprP> args() {
+  public ImmutableList<ExprP> args() {
     return args;
   }
 
