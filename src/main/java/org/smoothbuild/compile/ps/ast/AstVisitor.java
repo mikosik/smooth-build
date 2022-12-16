@@ -8,6 +8,7 @@ import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
@@ -67,8 +68,12 @@ public class AstVisitor {
     namedFuncP.annotation().ifPresent(this::visitAnnotation);
     namedFuncP.resT().ifPresent(this::visitType);
     visitParams(namedFuncP.params());
-    namedFuncP.body().ifPresent(this::visitExpr);
+    namedFuncP.body().ifPresent(expr -> visitFuncBody(namedFuncP, expr));
     visitNameOf(namedFuncP);
+  }
+
+  public void visitFuncBody(FuncP funcP, ExprP expr) {
+    visitExpr(expr);
   }
 
   public void visitAnnotation(AnnotationP annotation) {
@@ -124,7 +129,7 @@ public class AstVisitor {
 
   public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
     visitParams(anonymousFuncP.params());
-    visitExpr(anonymousFuncP.bodyGet());
+    visitFuncBody(anonymousFuncP, anonymousFuncP.bodyGet());
   }
 
   public void visitNamedArg(NamedArgP namedArg) {
