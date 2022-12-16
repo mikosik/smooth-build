@@ -1,6 +1,7 @@
 package org.smoothbuild.util.bindings;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -23,8 +24,8 @@ public final class ImmutableBindings<E> extends AbstractBindings<E> {
   }
 
   @Override
-  public E getOrNull(String name) {
-    return bindings.get(name);
+  public Optional<E> getOptional(String name) {
+    return Optional.ofNullable(bindings.get(name));
   }
 
   @Override

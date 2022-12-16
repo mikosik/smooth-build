@@ -20,9 +20,9 @@ public class FindTopValues {
     var matchingTopEvaluables = new HashSet<NamedValueS>();
     var logs = new LogBuffer();
     for (String name : names) {
-      var topEvaluable = topEvaluables.getOrNull(name);
-      if (topEvaluable != null) {
-        if (topEvaluable instanceof NamedValueS namedValue) {
+      var topEvaluable = topEvaluables.getOptional(name);
+      if (topEvaluable.isPresent()) {
+        if (topEvaluable.get() instanceof NamedValueS namedValue) {
           if (namedValue.schema().quantifiedVars().isEmpty()) {
             matchingTopEvaluables.add(namedValue);
           } else {

@@ -91,9 +91,9 @@ public class CallsPreprocessor {
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP) {
       if (callP.callee() instanceof RefP refP) {
         var name = refP.name();
-        var local = localBindings.getOrNull(name);
-        if (local != null) {
-          return inferPositionedArgs(callP, local);
+        var optional = localBindings.getOptional(name);
+        if (optional.isPresent()) {
+          return inferPositionedArgs(callP, optional.get());
         } else {
           return inferPositionedArgs(callP, imported.evaluables().get(name));
         }

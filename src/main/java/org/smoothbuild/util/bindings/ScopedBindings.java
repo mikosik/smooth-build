@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.common.base.Splitter;
 
@@ -23,12 +24,14 @@ public class ScopedBindings<E> extends AbstractBindings<E> {
   }
 
   @Override
-  public E getOrNull(String name) {
+  public Optional<E> getOptional(String name) {
     E element = innerScopeBindings.get(name);
     if (element == null) {
-      return outerScopeBindings.getOrNull(name);
+      @SuppressWarnings("unchecked") // safe because Optional is immutable
+      Optional<E> cast = (Optional<E>) outerScopeBindings.getOptional(name);
+      return cast;
     } else {
-      return element;
+      return Optional.of(element);
     }
   }
 

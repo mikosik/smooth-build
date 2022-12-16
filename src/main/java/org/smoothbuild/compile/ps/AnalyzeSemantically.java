@@ -117,14 +117,12 @@ public class AnalyzeSemantically {
   }
 
   private static void logIfDuplicate(Logger logger, Bindings<? extends Nal> others, Nal nal) {
-    Nal other = others.getOrNull(nal.name());
-    if (other != null) {
-      logger.log(alreadyDefinedError(nal, other.location()));
-    }
+    others.getOptional(nal.name())
+        .ifPresent(other -> logger.log(alreadyDefinedError(nal, other.location())));
   }
 
   private static void logIfDuplicate(Logger logger, Map<String, ? extends Nal> others, Nal nal) {
-    String name = nal.name();
+    var name = nal.name();
     if (others.containsKey(name)) {
       logger.log(alreadyDefinedError(nal, others.get(name).location()));
     }

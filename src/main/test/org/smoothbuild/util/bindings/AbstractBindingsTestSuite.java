@@ -5,6 +5,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.util.collect.Nameables;
@@ -30,17 +31,17 @@ public abstract class AbstractBindingsTestSuite {
   }
 
   @Test
-  public void getOrNull_element() {
+  public void getOptional_element() {
     bindings = newBindings(elem("name", 7));
-    assertThat(bindings.getOrNull("name"))
-        .isEqualTo(elem("name", 7));
+    assertThat(bindings.getOptional("name"))
+        .isEqualTo(Optional.of(elem("name", 7)));
   }
 
   @Test
   public void getOrNull_missing_element_returns_null() {
     bindings = newBindings();
-    assertThat(bindings.getOrNull("name"))
-        .isNull();
+    assertThat(bindings.getOptional("name"))
+        .isEqualTo(Optional.empty());
   }
 
   @Test
