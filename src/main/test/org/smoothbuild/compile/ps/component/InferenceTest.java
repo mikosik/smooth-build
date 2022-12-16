@@ -871,8 +871,8 @@ public class InferenceTest extends TestContext {
       var code = """
           @Native("impl")
           A firstElem([A] array);
-          valueWithNoninferableType = firstElem(7);
-          Int myValue = valueWithNoninferableType(7);
+          valueWithNonInferableType = firstElem(7);
+          Int myValue = valueWithNonInferableType(7);
           """;
       module(code)
           .loadsWithProblems();
