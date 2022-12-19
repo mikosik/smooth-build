@@ -37,7 +37,7 @@ import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.ImmutableBindings;
-import org.smoothbuild.util.bindings.ScopedBindings;
+import org.smoothbuild.util.bindings.MutableBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Named;
 
@@ -77,7 +77,7 @@ public class CallsPreprocessor {
 
     @Override
     public void visitFuncBody(FuncP funcP, ExprP body) {
-      var funcBodyBindings = new ScopedBindings<>(localBindings);
+      var funcBodyBindings = new MutableBindings<>(localBindings);
       funcP.params().forEach(p -> funcBodyBindings.add(p.name(), p));
       new Preprocessor(imported, funcBodyBindings, logger)
           .visitExpr(body);

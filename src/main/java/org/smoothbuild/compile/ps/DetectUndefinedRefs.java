@@ -20,8 +20,6 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.Strings;
 
-import com.google.common.collect.ImmutableSet;
-
 public class DetectUndefinedRefs extends ModuleVisitorP {
   private final ModuleP moduleP;
   private final Set<String> definedNames;
@@ -34,7 +32,7 @@ public class DetectUndefinedRefs extends ModuleVisitorP {
   }
 
   public static Logs detectUndefinedRefs(ModuleP moduleP, DefinitionsS imported) {
-    ImmutableSet<String> definedNames = imported.evaluables().asMap().keySet();
+    Set<String> definedNames = imported.evaluables().asMap().keySet();
     var detectUndefinedRefs = new DetectUndefinedRefs(moduleP, definedNames, new LogBuffer());
     detectUndefinedRefs.visitAst(moduleP);
     return detectUndefinedRefs.logs;

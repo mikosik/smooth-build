@@ -9,13 +9,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.util.bindings.AbstractBindingsTestSuite.Elem;
 
-public class ScopedBindingsTest {
+public abstract class AbstractScopedBindingsTestSuite {
+  protected abstract Bindings<Elem> newMapBindings(Bindings<Elem> innerScope, Elem... elems);
+
   @Nested
   class _elem_in_outer_scope extends AbstractBindingsTestSuite {
     @Override
     public Bindings<Elem> newBindings(Elem... elems) {
       var outer = immutableBindings(mapOfElems(elems));
-      return new ScopedBindings<>(outer);
+      return newMapBindings(outer);
     }
   }
 
@@ -23,7 +25,7 @@ public class ScopedBindingsTest {
   class _elem_in_inner_scope extends AbstractBindingsTestSuite {
     @Override
     public Bindings<Elem> newBindings(Elem... elems) {
-      return ScopedBindingsTest.newBindings(immutableBindings(), elems);
+      return newMapBindings(immutableBindings(), elems);
     }
   }
 
@@ -31,7 +33,7 @@ public class ScopedBindingsTest {
   public void element_in_inner_bounds_shadows_element_from_outer_bounds() {
     var outer = immutableBindings(mapOfElems(elem("value-a", 7)));
     var shadowing = elem("value-a", 9);
-    var inner = newBindings(outer, shadowing);
+    var inner = newMapBindings(outer, shadowing);
     assertThat(inner.get(shadowing.name()))
         .isEqualTo(shadowing);
   }
@@ -39,21 +41,13 @@ public class ScopedBindingsTest {
   @Test
   public void to_string() {
     var empty = ImmutableBindings.<Elem>immutableBindings();
-    var inner = newBindings(empty, elem("value-a", 7), elem("value-b", 8));
-    var outer = newBindings(inner, elem("value-c", 9));
+    var inner = newMapBindings(empty, elem("value-a", 7), elem("value-b", 8));
+    var outer = newMapBindings(inner, elem("value-c", 9));
     assertThat(outer.toString())
         .isEqualTo("""
               Elem[name=value-c, value=9]
                 Elem[name=value-a, value=7]
                 Elem[name=value-b, value=8]
                   <no bindings>""");
-  }
-
-  private static ScopedBindings<Elem> newBindings(Bindings<Elem> innerScope, Elem... elems) {
-    var scopedBindings = new ScopedBindings<>(innerScope);
-    for (Elem elem : elems) {
-      scopedBindings.add(elem.name(), elem);
-    }
-    return scopedBindings;
   }
 }

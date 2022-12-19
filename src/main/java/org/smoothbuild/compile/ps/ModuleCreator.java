@@ -29,11 +29,11 @@ import org.smoothbuild.compile.ps.infer.TypeInferrer;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.bindings.Bindings;
-import org.smoothbuild.util.bindings.OptionalScopedBindings;
+import org.smoothbuild.util.bindings.OptionalBindings;
 
 public class ModuleCreator {
-  private final OptionalScopedBindings<TypeDefinitionS> types;
-  private final OptionalScopedBindings<NamedEvaluableS> bindings;
+  private final OptionalBindings<TypeDefinitionS> types;
+  private final OptionalBindings<NamedEvaluableS> bindings;
   private final LogBuffer logBuffer;
   private final PsTranslator psTranslator;
 
@@ -49,19 +49,19 @@ public class ModuleCreator {
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     } else {
-      var modS = new ModuleS(modFiles, types.innerScopeBindings(), evaluables.innerScopeBindings());
+      var modS = new ModuleS(modFiles, types.innerScopeBindingsReduced(), evaluables.innerScopeBindingsReduced());
       return maybe(modS, logBuffer);
     }
   }
 
-  public static <T> OptionalScopedBindings<T> newOptionalScopedBindings(
+  public static <T> OptionalBindings<T> newOptionalScopedBindings(
       Bindings<? extends T> outerScopeBindings) {
-    return new OptionalScopedBindings<>(outerScopeBindings.map(Optional::of));
+    return new OptionalBindings<>(outerScopeBindings.map(Optional::of));
   }
 
   private ModuleCreator(
-      OptionalScopedBindings<TypeDefinitionS> types,
-      OptionalScopedBindings<NamedEvaluableS> bindings,
+      OptionalBindings<TypeDefinitionS> types,
+      OptionalBindings<NamedEvaluableS> bindings,
       LogBuffer logBuffer) {
     this.types = types;
     this.bindings = bindings;

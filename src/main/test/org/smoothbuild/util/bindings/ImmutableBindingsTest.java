@@ -1,21 +1,12 @@
 package org.smoothbuild.util.bindings;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.util.bindings.AbstractBindingsTestSuite.mapOfElems;
 
-import org.junit.jupiter.api.Test;
+import org.smoothbuild.util.bindings.AbstractBindingsTestSuite.Elem;
 
-public class ImmutableBindingsTest extends AbstractBindingsTestSuite {
-  @Test
-  public void to_string() {
-    var bindings = newBindings(elem("value-a", 7), elem("value-b", 8));
-    assertThat(bindings.toString())
-        .isEqualTo("""
-              Elem[name=value-a, value=7]
-              Elem[name=value-b, value=8]""");
-  }
-
+public class ImmutableBindingsTest extends AbstractScopedBindingsTestSuite {
   @Override
-  public ImmutableBindings<Elem> newBindings(Elem... elems) {
-    return ImmutableBindings.immutableBindings(mapOfElems(elems));
+  protected Bindings<Elem> newMapBindings(Bindings<Elem> innerScope, Elem... elems) {
+    return ImmutableBindings.immutableBindings(innerScope, mapOfElems(elems));
   }
 }
