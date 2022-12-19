@@ -2,6 +2,7 @@ package org.smoothbuild.compile.ps;
 
 import static org.smoothbuild.compile.ps.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.compile.ps.CallsPreprocessor.preprocessCalls;
+import static org.smoothbuild.compile.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefs.detectUndefinedRefs;
 import static org.smoothbuild.compile.ps.FindSyntaxErrors.findSyntaxErrors;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
@@ -38,6 +39,11 @@ public class LoadModule {
     }
     var moduleP = maybeModule.value();
     logBuffer.logAll(findSyntaxErrors(moduleP));
+    if (logBuffer.containsAtLeast(ERROR)) {
+      return maybeLogs(logBuffer);
+    }
+
+    logBuffer.logAll(decodeLiterals(moduleP));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }

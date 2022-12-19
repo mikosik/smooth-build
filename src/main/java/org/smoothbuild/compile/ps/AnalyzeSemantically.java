@@ -14,11 +14,8 @@ import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.ps.ast.expr.BlobP;
-import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
-import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
@@ -27,53 +24,16 @@ import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.DecodeHexExc;
-import org.smoothbuild.util.UnescapingFailedExc;
 import org.smoothbuild.util.bindings.Bindings;
 
 public class AnalyzeSemantically {
   public static ImmutableLogs analyzeSemantically(DefinitionsS imported, ModuleP moduleP) {
     var logBuffer = new LogBuffer();
-    decodeLiterals(logBuffer, moduleP);
     detectUndefinedTypes(logBuffer, imported, moduleP);
     detectDuplicateGlobalNames(imported, moduleP, logBuffer);
     detectDuplicateFieldNames(logBuffer, moduleP);
     detectDuplicateParamNames(logBuffer, moduleP);
     return logBuffer.toImmutableLogs();
-  }
-
-  private static void decodeLiterals(Logger logger, ModuleP moduleP) {
-    new ModuleVisitorP() {
-      @Override
-      public void visitBlob(BlobP blob) {
-        super.visitBlob(blob);
-        try {
-          blob.decodeByteString();
-        } catch (DecodeHexExc e) {
-          logger.log(compileError(blob, "Illegal Blob literal: " + e.getMessage()));
-        }
-      }
-
-      @Override
-      public void visitInt(IntP intP) {
-        super.visitInt(intP);
-        try {
-          intP.decodeBigInteger();
-        } catch (NumberFormatException e) {
-          logger.log(compileError(intP, "Illegal Int literal: `" + intP.literal() + "`."));
-        }
-      }
-
-      @Override
-      public void visitString(StringP string) {
-        super.visitString(string);
-        try {
-          string.calculateUnescaped();
-        } catch (UnescapingFailedExc e) {
-          logger.log(compileError(string, "Illegal String literal: " + e.getMessage()));
-        }
-      }
-    }.visitAst(moduleP);
   }
 
   private static void detectUndefinedTypes(Logger logger, DefinitionsS imported, ModuleP moduleP) {
