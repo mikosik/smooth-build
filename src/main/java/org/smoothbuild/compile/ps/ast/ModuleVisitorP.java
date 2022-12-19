@@ -11,6 +11,7 @@ import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
@@ -23,10 +24,10 @@ import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
-public class AstVisitor {
-  public void visitAst(Ast ast) {
-    visitStructs(ast.structs());
-    visitNamedEvaluable(ast.evaluables());
+public class ModuleVisitorP {
+  public void visitAst(ModuleP moduleP) {
+    visitStructs(moduleP.structs());
+    visitNamedEvaluable(moduleP.evaluables());
   }
 
   public void visitStructs(List<StructP> structs) {

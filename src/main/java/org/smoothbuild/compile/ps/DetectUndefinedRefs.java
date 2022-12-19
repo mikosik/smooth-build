@@ -8,10 +8,10 @@ import java.util.Set;
 
 import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
-import org.smoothbuild.compile.ps.ast.Ast;
-import org.smoothbuild.compile.ps.ast.AstVisitor;
+import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
@@ -22,21 +22,21 @@ import org.smoothbuild.util.Strings;
 
 import com.google.common.collect.ImmutableSet;
 
-public class DetectUndefinedRefs extends AstVisitor {
-  private final Ast ast;
+public class DetectUndefinedRefs extends ModuleVisitorP {
+  private final ModuleP moduleP;
   private final Set<String> definedNames;
   private final LogBuffer logs;
 
-  public DetectUndefinedRefs(Ast ast, Set<String> definedNames, LogBuffer logs) {
-    this.ast = ast;
+  public DetectUndefinedRefs(ModuleP moduleP, Set<String> definedNames, LogBuffer logs) {
+    this.moduleP = moduleP;
     this.definedNames = new HashSet<>(definedNames);
     this.logs = logs;
   }
 
-  public static Logs detectUndefinedRefs(Ast ast, DefinitionsS imported) {
+  public static Logs detectUndefinedRefs(ModuleP moduleP, DefinitionsS imported) {
     ImmutableSet<String> definedNames = imported.evaluables().asMap().keySet();
-    var detectUndefinedRefs = new DetectUndefinedRefs(ast, definedNames, new LogBuffer());
-    detectUndefinedRefs.visitAst(ast);
+    var detectUndefinedRefs = new DetectUndefinedRefs(moduleP, definedNames, new LogBuffer());
+    detectUndefinedRefs.visitAst(moduleP);
     return detectUndefinedRefs.logs;
   }
 
@@ -67,7 +67,7 @@ public class DetectUndefinedRefs extends AstVisitor {
     funcP.body().ifPresent(body -> {
       var definedNamesInBodyScope = new HashSet<>(definedNames);
       definedNamesInBodyScope.addAll(map(funcP.params(), NalImpl::name));
-      new DetectUndefinedRefs(ast, definedNamesInBodyScope, logs)
+      new DetectUndefinedRefs(moduleP, definedNamesInBodyScope, logs)
           .visitExpr(body);
     });
   }

@@ -40,7 +40,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.base.location.Locations;
-import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
@@ -48,6 +47,7 @@ import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
@@ -69,7 +69,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class ApTranslator {
-  public static Maybe<Ast> translate(FilePath filePath, ModContext module) {
+  public static Maybe<ModuleP> translate(FilePath filePath, ModContext module) {
     var logs = new LogBuffer();
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
@@ -328,7 +328,7 @@ public class ApTranslator {
             + " without children.");
       }
     }.visit(module);
-    var ast = new Ast(structs, evaluables);
+    var ast = new ModuleP(structs, evaluables);
     return maybe(logs.containsAtLeast(Level.ERROR) ? null : ast, logs);
   }
 

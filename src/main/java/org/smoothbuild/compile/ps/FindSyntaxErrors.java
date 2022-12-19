@@ -9,10 +9,10 @@ import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 
-import org.smoothbuild.compile.ps.ast.Ast;
-import org.smoothbuild.compile.ps.ast.AstVisitor;
+import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.RefableP;
@@ -25,17 +25,17 @@ public class FindSyntaxErrors {
    * Detect syntax errors that are not caught by Antlr
    * because its grammar is not so demanding, so it can be more compact.
    */
-  public static LogBuffer findSyntaxErrors(Ast ast) {
+  public static LogBuffer findSyntaxErrors(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
-    detectIllegalNames(logBuffer, ast);
-    detectIllegalAnnotations(logBuffer, ast);
-    detectStructFieldWithDefaultValue(logBuffer, ast);
-    detectAnonymousFuncParamWithDefaultValue(logBuffer, ast);
+    detectIllegalNames(logBuffer, moduleP);
+    detectIllegalAnnotations(logBuffer, moduleP);
+    detectStructFieldWithDefaultValue(logBuffer, moduleP);
+    detectAnonymousFuncParamWithDefaultValue(logBuffer, moduleP);
     return logBuffer;
   }
 
-  private static void detectIllegalNames(Logger logger, Ast ast) {
-    new AstVisitor() {
+  private static void detectIllegalNames(Logger logger, ModuleP moduleP) {
+    new ModuleVisitorP() {
       @Override
       public void visitNameOf(RefableP refable) {
         var name = refable.name();
@@ -63,11 +63,11 @@ public class FindSyntaxErrors {
               + " Struct name must start with uppercase letter."));
         }
       }
-    }.visitAst(ast);
+    }.visitAst(moduleP);
   }
 
-  private static void detectIllegalAnnotations(Logger logger, Ast ast) {
-    new AstVisitor() {
+  private static void detectIllegalAnnotations(Logger logger, ModuleP moduleP) {
+    new ModuleVisitorP() {
       @Override
       public void visitNamedFunc(NamedFuncP namedFuncP) {
         super.visitNamedFunc(namedFuncP);
@@ -119,11 +119,11 @@ public class FindSyntaxErrors {
         }
 
       }
-    }.visitAst(ast);
+    }.visitAst(moduleP);
   }
 
-  private static void detectStructFieldWithDefaultValue(LogBuffer logger, Ast ast) {
-    new AstVisitor() {
+  private static void detectStructFieldWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
+    new ModuleVisitorP() {
       @Override
       public void visitField(ItemP field) {
         super.visitField(field);
@@ -132,11 +132,11 @@ public class FindSyntaxErrors {
               + "` has default value. Only function parameters can have default value."));
         }
       }
-    }.visitAst(ast);
+    }.visitAst(moduleP);
   }
 
-  private static void detectAnonymousFuncParamWithDefaultValue(LogBuffer logger, Ast ast) {
-    new AstVisitor() {
+  private static void detectAnonymousFuncParamWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
+    new ModuleVisitorP() {
       @Override
       public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
         super.visitAnonymousFunc(anonymousFuncP);
@@ -149,6 +149,6 @@ public class FindSyntaxErrors {
               "Parameter " + param.q() + " of anonymous function cannot have default value."));
         }
       }
-    }.visitAst(ast);
+    }.visitAst(moduleP);
   }
 }

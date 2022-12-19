@@ -1,20 +1,18 @@
-package org.smoothbuild.compile.ps.ast;
+package org.smoothbuild.compile.ps.ast.expr;
 
 import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.List;
 
-import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
-import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class Ast {
+public class ModuleP {
   private final NList<StructP> structs;
   private final ImmutableList<NamedEvaluableP> evaluables;
 
-  public Ast(List<StructP> structs, List<NamedEvaluableP> evaluables) {
+  public ModuleP(List<StructP> structs, List<NamedEvaluableP> evaluables) {
     this.structs = nlistWithShadowing(ImmutableList.copyOf(structs));
     this.evaluables = ImmutableList.copyOf(evaluables);
   }

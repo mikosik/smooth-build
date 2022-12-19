@@ -13,11 +13,11 @@ import java.util.Map;
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
-import org.smoothbuild.compile.ps.ast.Ast;
-import org.smoothbuild.compile.ps.ast.AstVisitor;
+import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.StringP;
 import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
@@ -32,18 +32,18 @@ import org.smoothbuild.util.UnescapingFailedExc;
 import org.smoothbuild.util.bindings.Bindings;
 
 public class AnalyzeSemantically {
-  public static ImmutableLogs analyzeSemantically(DefinitionsS imported, Ast ast) {
+  public static ImmutableLogs analyzeSemantically(DefinitionsS imported, ModuleP moduleP) {
     var logBuffer = new LogBuffer();
-    decodeLiterals(logBuffer, ast);
-    detectUndefinedTypes(logBuffer, imported, ast);
-    detectDuplicateGlobalNames(logBuffer, imported, ast);
-    detectDuplicateFieldNames(logBuffer, ast);
-    detectDuplicateParamNames(logBuffer, ast);
+    decodeLiterals(logBuffer, moduleP);
+    detectUndefinedTypes(logBuffer, imported, moduleP);
+    detectDuplicateGlobalNames(imported, moduleP, logBuffer);
+    detectDuplicateFieldNames(logBuffer, moduleP);
+    detectDuplicateParamNames(logBuffer, moduleP);
     return logBuffer.toImmutableLogs();
   }
 
-  private static void decodeLiterals(Logger logger, Ast ast) {
-    new AstVisitor() {
+  private static void decodeLiterals(Logger logger, ModuleP moduleP) {
+    new ModuleVisitorP() {
       @Override
       public void visitBlob(BlobP blob) {
         super.visitBlob(blob);
@@ -73,11 +73,11 @@ public class AnalyzeSemantically {
           logger.log(compileError(string, "Illegal String literal: " + e.getMessage()));
         }
       }
-    }.visitAst(ast);
+    }.visitAst(moduleP);
   }
 
-  private static void detectUndefinedTypes(Logger logger, DefinitionsS imported, Ast ast) {
-    new AstVisitor() {
+  private static void detectUndefinedTypes(Logger logger, DefinitionsS imported, ModuleP moduleP) {
+    new ModuleVisitorP() {
       @Override
       public void visitType(TypeP type) {
         if (type instanceof ArrayTP array) {
@@ -92,17 +92,18 @@ public class AnalyzeSemantically {
 
       private boolean isDefinedType(TypeP type) {
         return isVarName(type.name())
-            || ast.structs().containsName(type.name())
+            || moduleP.structs().containsName(type.name())
             || imported.types().contains(type.name());
       }
-    }.visitAst(ast);
+    }.visitAst(moduleP);
   }
 
-  private static void detectDuplicateGlobalNames(Logger logger, DefinitionsS imported, Ast ast) {
+  private static void detectDuplicateGlobalNames(
+      DefinitionsS imported, ModuleP moduleP, Logger logger) {
     List<Nal> nals = new ArrayList<>();
-    nals.addAll(ast.structs());
-    nals.addAll(map(ast.structs(), StructP::constructor));
-    nals.addAll(ast.evaluables());
+    nals.addAll(moduleP.structs());
+    nals.addAll(map(moduleP.structs(), StructP::constructor));
+    nals.addAll(moduleP.evaluables());
     nals.sort(comparing(n -> n.location().toString()));
 
     for (Nal nal : nals) {
@@ -128,24 +129,24 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static void detectDuplicateFieldNames(Logger logger, Ast ast) {
-    new AstVisitor() {
+  private static void detectDuplicateFieldNames(Logger logger, ModuleP moduleP) {
+    new ModuleVisitorP() {
       @Override
       public void visitFields(List<ItemP> fields) {
         super.visitFields(fields);
         findDuplicateNames(logger, fields);
       }
-    }.visitAst(ast);
+    }.visitAst(moduleP);
   }
 
-  private static void detectDuplicateParamNames(Logger logger, Ast ast) {
-    new AstVisitor() {
+  private static void detectDuplicateParamNames(Logger logger, ModuleP moduleP) {
+    new ModuleVisitorP() {
       @Override
       public void visitParams(List<ItemP> params) {
         super.visitParams(params);
         findDuplicateNames(logger, params);
       }
-    }.visitAst(ast);
+    }.visitAst(moduleP);
   }
 
   private static void findDuplicateNames(Logger logger, List<? extends Nal> nodes) {

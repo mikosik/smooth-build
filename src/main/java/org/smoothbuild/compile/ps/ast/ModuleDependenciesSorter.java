@@ -16,6 +16,7 @@ import java.util.Set;
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.StructP;
@@ -32,19 +33,19 @@ import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingRes;
 
 import com.google.common.collect.ImmutableList;
 
-public class AstSorter {
-  public static Maybe<Ast> sortByDeps(Ast ast) {
-    var sortedTs = sortStructsByDeps(ast.structs());
+public class ModuleDependenciesSorter {
+  public static Maybe<ModuleP> sortByDependencies(ModuleP moduleP) {
+    var sortedTs = sortStructsByDeps(moduleP.structs());
     if (sortedTs.sorted() == null) {
       Log error = createCycleError("Type hierarchy", sortedTs.cycle());
       return maybeLogs(error);
     }
-    var sortedEvaluables = sortEvaluablesByDeps(ast.evaluables());
+    var sortedEvaluables = sortEvaluablesByDeps(moduleP.evaluables());
     if (sortedEvaluables.sorted() == null) {
       Log error = createCycleError("Dependency graph", sortedEvaluables.cycle());
       return maybeLogs(error);
     }
-    Ast sorted = new Ast(sortedTs.valuesReversed(), sortedEvaluables.valuesReversed());
+    ModuleP sorted = new ModuleP(sortedTs.valuesReversed(), sortedEvaluables.valuesReversed());
     return maybe(sorted);
   }
 
@@ -61,7 +62,7 @@ public class AstSorter {
   private static GraphNode<String, NamedEvaluableP, Location> evaluable(
       NamedEvaluableP evaluable, Set<String> names) {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
-    new AstVisitor() {
+    new ModuleVisitorP() {
       @Override
       public void visitRef(RefP ref) {
         super.visitRef(ref);
@@ -83,7 +84,7 @@ public class AstSorter {
   private static GraphNode<String, StructP, Location> structToGraphNode(
       StructP struct, Set<String> funcNames) {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
-    new AstVisitor() {
+    new ModuleVisitorP() {
       @Override
       public void visitField(ItemP field) {
         super.visitField(field);

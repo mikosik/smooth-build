@@ -6,7 +6,7 @@ import static org.smoothbuild.compile.ps.DetectUndefinedRefs.detectUndefinedRefs
 import static org.smoothbuild.compile.ps.FindSyntaxErrors.findSyntaxErrors;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.ps.ParseModule.parseModule;
-import static org.smoothbuild.compile.ps.ast.AstSorter.sortByDeps;
+import static org.smoothbuild.compile.ps.ast.ModuleDependenciesSorter.sortByDependencies;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
@@ -16,7 +16,6 @@ import org.smoothbuild.compile.ap.ApTranslator;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
-import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
@@ -32,41 +31,41 @@ public class LoadModule {
       return maybeLogs(logBuffer);
     }
 
-    var maybeAst = ApTranslator.translate(filePath, moduleContext.value());
-    logBuffer.logAll(maybeAst.logs());
-    if (maybeAst.logs().containsAtLeast(ERROR)) {
+    var maybeModule = ApTranslator.translate(filePath, moduleContext.value());
+    logBuffer.logAll(maybeModule.logs());
+    if (maybeModule.logs().containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
-    var ast = maybeAst.value();
-    logBuffer.logAll(findSyntaxErrors(ast));
+    var moduleP = maybeModule.value();
+    logBuffer.logAll(findSyntaxErrors(moduleP));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
 
-    logBuffer.logAll(analyzeSemantically(imported, ast));
+    logBuffer.logAll(analyzeSemantically(imported, moduleP));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
 
-    Maybe<Ast> maybeSortedAst = sortByDeps(ast);
-    logBuffer.logAll(maybeSortedAst.logs());
+    var maybeSortedModuleP = sortByDependencies(moduleP);
+    logBuffer.logAll(maybeSortedModuleP.logs());
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
-    Ast sortedAst = maybeSortedAst.value();
+    var sortedModuleP = maybeSortedModuleP.value();
 
-    Logs undefinedRefsProblems = detectUndefinedRefs(sortedAst, imported);
+    Logs undefinedRefsProblems = detectUndefinedRefs(sortedModuleP, imported);
     logBuffer.logAll(undefinedRefsProblems);
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
 
-    logBuffer.logAll(preprocessCalls(sortedAst, imported));
+    logBuffer.logAll(preprocessCalls(sortedModuleP, imported));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
 
-    var mod = createModuleS(modFiles, sortedAst, imported);
+    var mod = createModuleS(modFiles, sortedModuleP, imported);
     logBuffer.logAll(mod.logs());
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);

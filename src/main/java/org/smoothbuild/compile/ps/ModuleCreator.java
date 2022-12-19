@@ -19,8 +19,8 @@ import org.smoothbuild.compile.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.StructTS;
-import org.smoothbuild.compile.ps.ast.Ast;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.RefableP;
@@ -37,13 +37,14 @@ public class ModuleCreator {
   private final LogBuffer logBuffer;
   private final PsTranslator psTranslator;
 
-  public static Maybe<ModuleS> createModuleS(ModFiles modFiles, Ast ast, DefinitionsS imported) {
+  public static Maybe<ModuleS> createModuleS(
+      ModFiles modFiles, ModuleP moduleP, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
     var types = newOptionalScopedBindings(imported.types());
     var evaluables = newOptionalScopedBindings(imported.evaluables());
     var moduleCreator = new ModuleCreator(types, evaluables, logBuffer);
-    ast.structs().forEach(moduleCreator::visitStruct);
-    ast.evaluables().forEach(moduleCreator::visitRefable);
+    moduleP.structs().forEach(moduleCreator::visitStruct);
+    moduleP.evaluables().forEach(moduleCreator::visitRefable);
 
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);

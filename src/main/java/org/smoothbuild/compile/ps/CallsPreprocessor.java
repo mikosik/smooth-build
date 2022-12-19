@@ -20,13 +20,13 @@ import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
-import org.smoothbuild.compile.ps.ast.Ast;
-import org.smoothbuild.compile.ps.ast.AstVisitor;
+import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
@@ -44,21 +44,21 @@ import org.smoothbuild.util.collect.Named;
 import com.google.common.collect.ImmutableList;
 
 public class CallsPreprocessor {
-  public static Logs preprocessCalls(Ast ast, DefinitionsS imported) {
+  public static Logs preprocessCalls(ModuleP moduleP, DefinitionsS imported) {
     var logger = new LogBuffer();
-    var localBindings = localBindings(ast);
+    var localBindings = localBindings(moduleP);
     new Preprocessor(imported, localBindings, logger)
-        .visitAst(ast);
+        .visitAst(moduleP);
     return logger;
   }
 
-  private static ImmutableBindings<RefableP> localBindings(Ast ast) {
-    var constructors = map(ast.structs(), s -> (RefableP) s.constructor());
-    var localRefables = concat(ast.evaluables(), constructors);
+  private static ImmutableBindings<RefableP> localBindings(ModuleP moduleP) {
+    var constructors = map(moduleP.structs(), s -> (RefableP) s.constructor());
+    var localRefables = concat(moduleP.evaluables(), constructors);
     return immutableBindings(toMap(localRefables, Named::name, e -> e));
   }
 
-  private static class Preprocessor extends AstVisitor {
+  private static class Preprocessor extends ModuleVisitorP {
     private final DefinitionsS imported;
     private final Bindings<RefableP> localBindings;
     private final LogBuffer logger;
