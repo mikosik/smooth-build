@@ -9,10 +9,13 @@ import org.smoothbuild.compile.ps.ast.type.TypeP;
 /**
  * Evaluable that has fully qualified name.
  */
-public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP, EvaluableP
+public sealed abstract class NamedEvaluableP
+    extends NalImpl
+    implements RefableP, EvaluableP, WithScopeP
     permits NamedFuncP, NamedValueP {
   private final Optional<ExprP> body;
   private final Optional<AnnotationP> annotation;
+  private ScopeP scope;
 
   protected NamedEvaluableP(
       String name,
@@ -22,6 +25,16 @@ public sealed abstract class NamedEvaluableP extends NalImpl implements RefableP
     super(name, location);
     this.body = body;
     this.annotation = annotation;
+  }
+
+  @Override
+  public ScopeP scope() {
+    return scope;
+  }
+
+  @Override
+  public void setScope(ScopeP scope) {
+    this.scope = scope;
   }
 
   @Override

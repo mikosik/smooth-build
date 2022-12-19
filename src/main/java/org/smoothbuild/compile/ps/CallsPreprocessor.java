@@ -76,11 +76,11 @@ public class CallsPreprocessor {
     }
 
     @Override
-    public void visitFuncBody(FuncP funcP, ExprP body) {
+    public void visitFuncBody(FuncP funcP, ExprP exprP) {
       var funcBodyBindings = new MutableBindings<>(localBindings);
       funcP.params().forEach(p -> funcBodyBindings.add(p.name(), p));
       new Preprocessor(imported, funcBodyBindings, logger)
-          .visitExpr(body);
+          .visitExpr(exprP);
     }
 
     @Override

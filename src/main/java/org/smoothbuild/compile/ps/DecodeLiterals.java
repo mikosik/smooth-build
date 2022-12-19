@@ -23,12 +23,12 @@ public class DecodeLiterals {
   private static void decodeLiterals(ModuleP moduleP, Logger logger) {
     new ModuleVisitorP() {
       @Override
-      public void visitBlob(BlobP blob) {
-        super.visitBlob(blob);
+      public void visitBlob(BlobP blobP) {
+        super.visitBlob(blobP);
         try {
-          blob.decodeByteString();
+          blobP.decodeByteString();
         } catch (DecodeHexExc e) {
-          logger.log(compileError(blob, "Illegal Blob literal: " + e.getMessage()));
+          logger.log(compileError(blobP, "Illegal Blob literal: " + e.getMessage()));
         }
       }
 
@@ -43,12 +43,12 @@ public class DecodeLiterals {
       }
 
       @Override
-      public void visitString(StringP string) {
-        super.visitString(string);
+      public void visitString(StringP stringP) {
+        super.visitString(stringP);
         try {
-          string.calculateUnescaped();
+          stringP.calculateUnescaped();
         } catch (UnescapingFailedExc e) {
-          logger.log(compileError(string, "Illegal String literal: " + e.getMessage()));
+          logger.log(compileError(stringP, "Illegal String literal: " + e.getMessage()));
         }
       }
     }.visitModule(moduleP);

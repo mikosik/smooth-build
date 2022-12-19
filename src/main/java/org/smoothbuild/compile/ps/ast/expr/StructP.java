@@ -13,9 +13,10 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class StructP extends NalImpl {
+public final class StructP extends NalImpl implements WithScopeP {
   private final NList<ItemP> fields;
   private final NamedFuncP constructor;
+  private ScopeP scope;
 
   public StructP(String name, List<ItemP> fields, Location location) {
     this(name, nlistWithShadowing(ImmutableList.copyOf(fields)), location);
@@ -33,11 +34,21 @@ public final class StructP extends NalImpl {
         location);
   }
 
+  public NList<ItemP> fields() {
+    return fields;
+  }
+
   public NamedFuncP constructor() {
     return constructor;
   }
 
-  public NList<ItemP> fields() {
-    return fields;
+  @Override
+  public ScopeP scope() {
+    return scope;
+  }
+
+  @Override
+  public void setScope(ScopeP scope) {
+    this.scope = scope;
   }
 }

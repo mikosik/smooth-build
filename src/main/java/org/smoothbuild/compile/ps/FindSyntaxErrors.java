@@ -37,29 +37,29 @@ public class FindSyntaxErrors {
   private static void detectIllegalNames(Logger logger, ModuleP moduleP) {
     new ModuleVisitorP() {
       @Override
-      public void visitNameOf(RefableP refable) {
-        var name = refable.name();
+      public void visitNameOf(RefableP refableP) {
+        var name = refableP.name();
         if (name.equals("_")) {
-          logger.log(compileError(refable.location(), "`" + name + "` is illegal identifier name. "
+          logger.log(compileError(refableP.location(), "`" + name + "` is illegal identifier name. "
               + "`_` is reserved for future use."));
         } else if (!startsWithLowerCase(name)) {
-          logger.log(compileError(refable.location(), "`" + name + "` is illegal identifier name. "
+          logger.log(compileError(refableP.location(), "`" + name + "` is illegal identifier name. "
           + "Identifiers should start with lowercase."));
         }
       }
 
       @Override
-      public void visitStruct(StructP struct) {
-        super.visitStruct(struct);
-        var name = struct.name();
+      public void visitStruct(StructP structP) {
+        super.visitStruct(structP);
+        var name = structP.name();
         if (name.equals("_")) {
-          logger.log(compileError(struct.location(), "`" + name + "` is illegal struct name. "
+          logger.log(compileError(structP.location(), "`" + name + "` is illegal struct name. "
               + "`_` is reserved for future use."));
         } else if (isVarName(name)) {
-          logger.log(compileError(struct.location(), "`" + name + "` is illegal struct name."
+          logger.log(compileError(structP.location(), "`" + name + "` is illegal struct name."
               + " All-uppercase names are reserved for type variables in generic types."));
         } else if (!startsWithUpperCase(name)) {
-          logger.log(compileError(struct.location(), "`" + name + "` is illegal struct name."
+          logger.log(compileError(structP.location(), "`" + name + "` is illegal struct name."
               + " Struct name must start with uppercase letter."));
         }
       }

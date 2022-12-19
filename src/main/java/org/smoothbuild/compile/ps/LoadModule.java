@@ -1,12 +1,12 @@
 package org.smoothbuild.compile.ps;
 
-import static org.smoothbuild.compile.ps.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.compile.ps.CallsPreprocessor.preprocessCalls;
 import static org.smoothbuild.compile.ps.DecodeLiterals.decodeLiterals;
-import static org.smoothbuild.compile.ps.DetectUndefinedRefs.detectUndefinedRefs;
+import static org.smoothbuild.compile.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
 import static org.smoothbuild.compile.ps.FindSyntaxErrors.findSyntaxErrors;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.ps.ParseModule.parseModule;
+import static org.smoothbuild.compile.ps.ScopesInitializer.initializeScopes;
 import static org.smoothbuild.compile.ps.ast.ModuleDependenciesSorter.sortByDependencies;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
@@ -18,7 +18,6 @@ import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.out.log.LogBuffer;
-import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
 
 public class LoadModule {
@@ -44,11 +43,7 @@ public class LoadModule {
     }
 
     logBuffer.logAll(decodeLiterals(moduleP));
-    if (logBuffer.containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-
-    logBuffer.logAll(analyzeSemantically(imported, moduleP));
+    logBuffer.logAll(initializeScopes(moduleP));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }
@@ -60,8 +55,7 @@ public class LoadModule {
     }
     var sortedModuleP = maybeSortedModuleP.value();
 
-    Logs undefinedRefsProblems = detectUndefinedRefs(sortedModuleP, imported);
-    logBuffer.logAll(undefinedRefsProblems);
+    logBuffer.logAll(detectUndefinedRefablesAndTypes(sortedModuleP, imported));
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     }

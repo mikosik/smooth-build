@@ -37,16 +37,14 @@ public class ModuleDependenciesSorter {
   public static Maybe<ModuleP> sortByDependencies(ModuleP moduleP) {
     var sortedTs = sortStructsByDeps(moduleP.structs());
     if (sortedTs.sorted() == null) {
-      Log error = createCycleError("Type hierarchy", sortedTs.cycle());
-      return maybeLogs(error);
+      return maybeLogs(createCycleError("Type hierarchy", sortedTs.cycle()));
     }
     var sortedEvaluables = sortEvaluablesByDeps(moduleP.evaluables());
     if (sortedEvaluables.sorted() == null) {
-      Log error = createCycleError("Dependency graph", sortedEvaluables.cycle());
-      return maybeLogs(error);
+      return maybeLogs(createCycleError("Dependency graph", sortedEvaluables.cycle()));
     }
-    ModuleP sorted = new ModuleP(sortedTs.valuesReversed(), sortedEvaluables.valuesReversed());
-    return maybe(sorted);
+    return maybe(
+        new ModuleP(sortedTs.valuesReversed(), sortedEvaluables.valuesReversed(), moduleP.scope()));
   }
 
   private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(
@@ -64,10 +62,10 @@ public class ModuleDependenciesSorter {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
     new ModuleVisitorP() {
       @Override
-      public void visitRef(RefP ref) {
-        super.visitRef(ref);
-        if (names.contains(ref.name())) {
-          deps.add(new GraphEdge<>(ref.location(), ref.name()));
+      public void visitRef(RefP refP) {
+        super.visitRef(refP);
+        if (names.contains(refP.name())) {
+          deps.add(new GraphEdge<>(refP.location(), refP.name()));
         }
       }
     }.visitNamedEvaluable(evaluable);

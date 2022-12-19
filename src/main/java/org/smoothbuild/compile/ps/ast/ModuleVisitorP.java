@@ -27,15 +27,15 @@ import org.smoothbuild.compile.ps.ast.type.TypeP;
 public class ModuleVisitorP {
   public void visitModule(ModuleP moduleP) {
     visitStructs(moduleP.structs());
-    visitNamedEvaluable(moduleP.evaluables());
+    visitNamedEvaluables(moduleP.evaluables());
   }
 
-  public void visitStructs(List<StructP> structs) {
-    structs.forEach(this::visitStruct);
+  public void visitStructs(List<StructP> structPs) {
+    structPs.forEach(this::visitStruct);
   }
 
-  public void visitStruct(StructP struct) {
-    visitFields(struct.fields());
+  public void visitStruct(StructP structP) {
+    visitFields(structP.fields());
   }
 
   public void visitFields(List<ItemP> fields) {
@@ -47,12 +47,12 @@ public class ModuleVisitorP {
     visitNameOf(field);
   }
 
-  public void visitNamedEvaluable(List<NamedEvaluableP> namedEvaluable) {
-    namedEvaluable.forEach(this::visitNamedEvaluable);
+  public void visitNamedEvaluables(List<NamedEvaluableP> namedEvaluablePs) {
+    namedEvaluablePs.forEach(this::visitNamedEvaluable);
   }
 
-  public void visitNamedEvaluable(NamedEvaluableP namedEvaluable) {
-    switch (namedEvaluable) {
+  public void visitNamedEvaluable(NamedEvaluableP namedEvaluableP) {
+    switch (namedEvaluableP) {
       case NamedFuncP func -> visitNamedFunc(func);
       case NamedValueP value -> visitNamedValue(value);
     }
@@ -73,12 +73,12 @@ public class ModuleVisitorP {
     visitNameOf(namedFuncP);
   }
 
-  public void visitFuncBody(FuncP funcP, ExprP expr) {
-    visitExpr(expr);
+  public void visitFuncBody(FuncP funcP, ExprP exprP) {
+    visitExpr(exprP);
   }
 
-  public void visitAnnotation(AnnotationP annotation) {
-    visitString(annotation.path());
+  public void visitAnnotation(AnnotationP annotationP) {
+    visitString(annotationP.path());
   }
 
   public void visitParams(List<ItemP> params) {
@@ -91,11 +91,11 @@ public class ModuleVisitorP {
     visitNameOf(param);
   }
 
-  public void visitType(TypeP type) {}
+  public void visitType(TypeP typeP) {}
 
-  public void visitExpr(ExprP expr) {
+  public void visitExpr(ExprP exprP) {
     // @formatter:off
-    switch (expr) {
+    switch (exprP) {
       case BlobP          blobP          -> visitBlob(blobP);
       case CallP          callP          -> visitCall(callP);
       case IntP           intP           -> visitInt(intP);
@@ -117,15 +117,15 @@ public class ModuleVisitorP {
     visitExpr(arg);
   }
 
-  public void visitBlob(BlobP blob) {
+  public void visitBlob(BlobP blobP) {
   }
 
-  public void visitCall(CallP call) {
-    visitExpr(call.callee());
-    visitArgs(call.args());
+  public void visitCall(CallP callP) {
+    visitExpr(callP.callee());
+    visitArgs(callP.args());
   }
 
-  public void visitInt(IntP int_) {
+  public void visitInt(IntP intP) {
   }
 
   public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
@@ -137,19 +137,19 @@ public class ModuleVisitorP {
     visitExpr(namedArg.expr());
   }
 
-  public void visitOrder(OrderP order) {
-    order.elems().forEach(this::visitExpr);
+  public void visitOrder(OrderP orderP) {
+    orderP.elems().forEach(this::visitExpr);
   }
 
-  public void visitSelect(SelectP select) {
-    visitExpr(select.selectable());
+  public void visitSelect(SelectP selectP) {
+    visitExpr(selectP.selectable());
   }
 
-  public void visitRef(RefP ref) {}
+  public void visitRef(RefP refP) {}
 
-  public void visitString(StringP string) {}
+  public void visitString(StringP stringP) {}
 
-  public void visitNameOf(RefableP refable) {}
+  public void visitNameOf(RefableP refableP) {}
 
   public <E> void visitIndexedElements(List<E> elems, BiConsumer<Integer, ? super E> consumer) {
     for (int i = 0; i < elems.size(); i++) {

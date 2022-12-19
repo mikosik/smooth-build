@@ -13,7 +13,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public sealed interface FuncP
-    extends EvaluableP
+    extends EvaluableP, WithScopeP
     permits AnonymousFuncP, NamedFuncP {
   public Optional<TypeP> resT();
 

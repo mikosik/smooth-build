@@ -13,6 +13,7 @@ public final class AnonymousFuncP extends MonoizableP implements FuncP {
   private final ExprP body;
   private FuncTS type;
   private FuncSchemaS schemaS;
+  private ScopeP scope;
 
   public AnonymousFuncP(NList<ItemP> params, ExprP body, Location location) {
     super(location);
@@ -57,6 +58,16 @@ public final class AnonymousFuncP extends MonoizableP implements FuncP {
   @Override
   public void setSchemaS(FuncSchemaS schemaS) {
     this.schemaS = schemaS;
+  }
+
+  @Override
+  public ScopeP scope() {
+    return scope;
+  }
+
+  @Override
+  public void setScope(ScopeP scope) {
+    this.scope = scope;
   }
 
   @Override

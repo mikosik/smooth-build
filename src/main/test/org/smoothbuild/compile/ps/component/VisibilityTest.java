@@ -1204,7 +1204,7 @@ public class VisibilityTest extends TestContext {
                myValue = "abc";
                MyValue()
                """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myValue"));
+              .loadsWithError(1, alreadyDefinedIn(filePath(), 2, "myValue"));
         }
 
         @Test
@@ -1213,7 +1213,7 @@ public class VisibilityTest extends TestContext {
                myFunc() = "abc";
                MyFunc()
                """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
+              .loadsWithError(1, alreadyDefinedIn(filePath(), 2, "myFunc"));
         }
       }
     }
