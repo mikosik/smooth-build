@@ -1,6 +1,6 @@
 package org.smoothbuild.util.bindings;
 
-import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.util.collect.Lists.joinToString;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Map;
@@ -42,9 +42,7 @@ public abstract class AbstractBindings<E> implements Bindings<E>{
   }
 
   public static <T> String bindingsToString(Map<String, T> bindings) {
-    var string = bindings.values().stream()
-        .map(s -> "" + s)
-        .collect(joining("\n"));
+    var string = joinToString(bindings.values(), "\n");
     return string.isEmpty() ? "<no bindings>" : string;
   }
 }
