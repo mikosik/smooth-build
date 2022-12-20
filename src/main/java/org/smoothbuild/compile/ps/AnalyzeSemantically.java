@@ -24,13 +24,12 @@ import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.bindings.Bindings;
 
 public class AnalyzeSemantically {
   public static ImmutableLogs analyzeSemantically(DefinitionsS imported, ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     detectUndefinedTypes(logBuffer, imported, moduleP);
-    detectDuplicateGlobalNames(imported, moduleP, logBuffer);
+    detectDuplicateGlobalNames(moduleP, logBuffer);
     detectDuplicateFieldNames(logBuffer, moduleP);
     detectDuplicateParamNames(logBuffer, moduleP);
     return logBuffer.toImmutableLogs();
@@ -58,28 +57,18 @@ public class AnalyzeSemantically {
     }.visitModule(moduleP);
   }
 
-  private static void detectDuplicateGlobalNames(
-      DefinitionsS imported, ModuleP moduleP, Logger logger) {
+  private static void detectDuplicateGlobalNames(ModuleP moduleP, Logger logger) {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(moduleP.structs());
     nals.addAll(map(moduleP.structs(), StructP::constructor));
     nals.addAll(moduleP.evaluables());
     nals.sort(comparing(n -> n.location().toString()));
 
-    for (Nal nal : nals) {
-      logIfDuplicate(logger, imported.types(), nal);
-      logIfDuplicate(logger, imported.evaluables(), nal);
-    }
     Map<String, Nal> checked = new HashMap<>();
     for (Nal nal : nals) {
       logIfDuplicate(logger, checked, nal);
       checked.put(nal.name(), nal);
     }
-  }
-
-  private static void logIfDuplicate(Logger logger, Bindings<? extends Nal> others, Nal nal) {
-    others.getOptional(nal.name())
-        .ifPresent(other -> logger.log(alreadyDefinedError(nal, other.location())));
   }
 
   private static void logIfDuplicate(Logger logger, Map<String, ? extends Nal> others, Nal nal) {

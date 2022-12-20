@@ -646,7 +646,7 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _imported {
         @Test
-        public void value_fails() {
+        public void value_succeeds() {
           var imported = module("""
             otherModuleValue = "abc";
             """)
@@ -656,12 +656,11 @@ public class VisibilityTest extends TestContext {
           module("""
                otherModuleValue = "def";
                """)
-              .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleValue"));
+              .withImported(imported);
         }
 
         @Test
-        public void func_fails() {
+        public void func_succeeds() {
           var imported = module("""
             otherModuleFunc() = "abc";
             """)
@@ -671,12 +670,11 @@ public class VisibilityTest extends TestContext {
           module("""
                 otherModuleFunc = "def";
                 """)
-              .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunc"));
+              .withImported(imported);
         }
 
         @Test
-        public void ctor_fails() {
+        public void ctor_succeeds() {
           var imported = module("""
             OtherModuleStruct()
             """)
@@ -686,8 +684,7 @@ public class VisibilityTest extends TestContext {
           module("""
                 otherModuleStruct = "def";
                 """)
-              .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleStruct"));
+              .withImported(imported);
         }
       }
 
@@ -727,7 +724,7 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _imported {
         @Test
-        public void value_fails() {
+        public void value_succeeds() {
           var imported = module("""
             otherModuleValue = "abc";
             """)
@@ -737,12 +734,11 @@ public class VisibilityTest extends TestContext {
           module("""
                 otherModuleValue() = "def";
                 """)
-              .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleValue"));
+              .withImported(imported);
         }
 
         @Test
-        public void func_fails() {
+        public void func_succeeds() {
           var imported = module("""
             otherModuleFunc() = "abc";
             """)
@@ -752,12 +748,11 @@ public class VisibilityTest extends TestContext {
           module("""
                 otherModuleFunc() = "def";
                 """)
-              .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunc"));
+              .withImported(imported);
         }
 
         @Test
-        public void ctor_fails() {
+        public void ctor_succeeds() {
           var imported = module("""
             OtherModuleStruct()
             """)
@@ -767,8 +762,7 @@ public class VisibilityTest extends TestContext {
           module("""
                 otherModuleStruct() = "def";
                 """)
-              .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleStruct"));
+              .withImported(imported);
         }
       }
 
@@ -990,18 +984,16 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _imported {
         @Test
-        public void base_type_fails() {
-          module("""
-               String()
-               """)
-              .loadsWithError(1, "`" + "String" + "` is already defined at internal location.");
+        public void base_type_succeeds() {
+          var code = "String()";
+          module(code)
+              .loadsWithSuccess();
         }
 
         @Test
-        public void struct_fails() {
-          var imported = module("""
-            OtherModuleStruct()
-            """)
+        public void struct_succeeds() {
+          var code = "OtherModuleStruct()";
+          var imported = module(code)
               .withImportedModFiles()
               .loadsWithSuccess()
               .getModuleAsDefinitions();
@@ -1009,10 +1001,7 @@ public class VisibilityTest extends TestContext {
                 OtherModuleStruct()
                 """)
               .withImported(imported)
-              .loadsWith(
-                  err(1, alreadyDefinedIn(importedFilePath(), "OtherModuleStruct")),
-                  err(1, alreadyDefinedIn(importedFilePath(), "otherModuleStruct"))
-              );
+              .loadsWithSuccess();
         }
       }
 
@@ -1142,7 +1131,7 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _imported {
         @Test
-        public void value_fails() {
+        public void value_succeeds() {
           var imported = module("""
             otherModuleValue = "abc";
             """)
@@ -1153,11 +1142,11 @@ public class VisibilityTest extends TestContext {
                 OtherModuleValue()
                 """)
               .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleValue"));
+              .loadsWithSuccess();
         }
 
         @Test
-        public void func_fails() {
+        public void func_succeeds() {
           var imported = module("""
             otherModuleFunc() = "abc";
             """)
@@ -1168,7 +1157,7 @@ public class VisibilityTest extends TestContext {
                 OtherModuleFunc()
                 """)
               .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunc"));
+              .loadsWithSuccess();
         }
       }
 
