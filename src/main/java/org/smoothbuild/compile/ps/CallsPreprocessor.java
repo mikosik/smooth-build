@@ -48,7 +48,7 @@ public class CallsPreprocessor {
     var logger = new LogBuffer();
     var localBindings = localBindings(moduleP);
     new Preprocessor(imported, localBindings, logger)
-        .visitAst(moduleP);
+        .visitModule(moduleP);
     return logger;
   }
 

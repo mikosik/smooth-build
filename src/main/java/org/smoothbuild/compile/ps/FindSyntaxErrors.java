@@ -63,7 +63,7 @@ public class FindSyntaxErrors {
               + " Struct name must start with uppercase letter."));
         }
       }
-    }.visitAst(moduleP);
+    }.visitModule(moduleP);
   }
 
   private static void detectIllegalAnnotations(Logger logger, ModuleP moduleP) {
@@ -119,7 +119,7 @@ public class FindSyntaxErrors {
         }
 
       }
-    }.visitAst(moduleP);
+    }.visitModule(moduleP);
   }
 
   private static void detectStructFieldWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
@@ -132,7 +132,7 @@ public class FindSyntaxErrors {
               + "` has default value. Only function parameters can have default value."));
         }
       }
-    }.visitAst(moduleP);
+    }.visitModule(moduleP);
   }
 
   private static void detectAnonymousFuncParamWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
@@ -149,6 +149,6 @@ public class FindSyntaxErrors {
               "Parameter " + param.q() + " of anonymous function cannot have default value."));
         }
       }
-    }.visitAst(moduleP);
+    }.visitModule(moduleP);
   }
 }

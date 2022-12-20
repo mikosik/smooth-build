@@ -34,7 +34,7 @@ public class DetectUndefinedRefs extends ModuleVisitorP {
   public static Logs detectUndefinedRefs(ModuleP moduleP, DefinitionsS imported) {
     Set<String> definedNames = imported.evaluables().toMap().keySet();
     var detectUndefinedRefs = new DetectUndefinedRefs(moduleP, definedNames, new LogBuffer());
-    detectUndefinedRefs.visitAst(moduleP);
+    detectUndefinedRefs.visitModule(moduleP);
     return detectUndefinedRefs.logs;
   }
 

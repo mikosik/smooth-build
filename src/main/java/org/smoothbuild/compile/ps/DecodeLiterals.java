@@ -51,6 +51,6 @@ public class DecodeLiterals {
           logger.log(compileError(string, "Illegal String literal: " + e.getMessage()));
         }
       }
-    }.visitAst(moduleP);
+    }.visitModule(moduleP);
   }
 }

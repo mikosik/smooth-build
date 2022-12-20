@@ -25,7 +25,7 @@ import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 
 public class ModuleVisitorP {
-  public void visitAst(ModuleP moduleP) {
+  public void visitModule(ModuleP moduleP) {
     visitStructs(moduleP.structs());
     visitNamedEvaluable(moduleP.evaluables());
   }

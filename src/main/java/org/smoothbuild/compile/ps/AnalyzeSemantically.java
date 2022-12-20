@@ -55,7 +55,7 @@ public class AnalyzeSemantically {
             || moduleP.structs().containsName(type.name())
             || imported.types().contains(type.name());
       }
-    }.visitAst(moduleP);
+    }.visitModule(moduleP);
   }
 
   private static void detectDuplicateGlobalNames(
@@ -96,7 +96,7 @@ public class AnalyzeSemantically {
         super.visitFields(fields);
         findDuplicateNames(logger, fields);
       }
-    }.visitAst(moduleP);
+    }.visitModule(moduleP);
   }
 
   private static void detectDuplicateParamNames(Logger logger, ModuleP moduleP) {
@@ -106,7 +106,7 @@ public class AnalyzeSemantically {
         super.visitParams(params);
         findDuplicateNames(logger, params);
       }
-    }.visitAst(moduleP);
+    }.visitModule(moduleP);
   }
 
   private static void findDuplicateNames(Logger logger, List<? extends Nal> nodes) {
