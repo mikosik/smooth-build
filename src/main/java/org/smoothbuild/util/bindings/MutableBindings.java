@@ -20,7 +20,7 @@ public class MutableBindings<E> extends Bindings<E> {
     return innerScopeMap;
   }
 
-  public void add(String name, E elem) {
-    innerScopeMap.put(name, elem);
+  public E add(String name, E elem) {
+    return innerScopeMap.put(name, elem);
   }
 }
