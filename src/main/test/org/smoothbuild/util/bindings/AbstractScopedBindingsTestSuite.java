@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.util.bindings.AbstractBindingsTestSuite.Elem;
 
 public abstract class AbstractScopedBindingsTestSuite {
-  protected abstract Bindings<Elem> newMapBindings(Bindings<Elem> innerScope, Elem... elems);
+  protected abstract Bindings<Elem> newMapBindings(
+      ImmutableBindings<Elem> outerScope, Elem... elems);
 
   @Nested
   class _elem_in_outer_scope extends AbstractBindingsTestSuite {
@@ -40,14 +41,12 @@ public abstract class AbstractScopedBindingsTestSuite {
 
   @Test
   public void to_string() {
-    var empty = ImmutableBindings.<Elem>immutableBindings();
-    var inner = newMapBindings(empty, elem("value-a", 7), elem("value-b", 8));
-    var outer = newMapBindings(inner, elem("value-c", 9));
-    assertThat(outer.toString())
+    var outer = immutableBindings(mapOfElems(elem("value-a", 7), elem("value-b", 8)));
+    var inner = newMapBindings(outer, elem("value-c", 9));
+    assertThat(inner.toString())
         .isEqualTo("""
-              Elem[name=value-c, value=9]
-                Elem[name=value-a, value=7]
-                Elem[name=value-b, value=8]
-                  <no bindings>""");
+            Elem[name=value-a, value=7]
+            Elem[name=value-b, value=8]
+              Elem[name=value-c, value=9]""");
   }
 }

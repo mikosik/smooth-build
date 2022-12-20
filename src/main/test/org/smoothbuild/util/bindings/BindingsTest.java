@@ -57,7 +57,7 @@ public class BindingsTest {
     equalsTester.testEquals();
   }
 
-  private static Bindings<Labeled<String>> immutableBindingsWith(Labeled<String> labeled) {
+  private static ImmutableBindings<Labeled<String>> immutableBindingsWith(Labeled<String> labeled) {
     return immutableBindings(Map.of(labeled.nameSane(), labeled));
   }
 

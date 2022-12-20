@@ -1,7 +1,6 @@
 package org.smoothbuild.util.bindings;
 
-import static com.google.common.collect.Streams.stream;
-import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.joinToString;
 import static org.smoothbuild.util.collect.Maps.mapValues;
@@ -11,8 +10,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-
-import com.google.common.base.Splitter;
 
 public abstract class Bindings<E> {
   private final Bindings<? extends E> outerScopeBindings;
@@ -48,9 +45,13 @@ public abstract class Bindings<E> {
   }
 
   public <T> ImmutableBindings<T> map(Function<? super E, T> mapper) {
-    var mappedOuter = outerScopeBindings == null ? null : outerScopeBindings.map(mapper);
     var mappedInner = mapValues(innerScopeMap(), mapper);
-    return immutableBindings(mappedOuter, mappedInner);
+    if (outerScopeBindings == null) {
+      return immutableBindings(mappedInner);
+    } else {
+      var mappedOuter = outerScopeBindings.map(mapper);
+      return immutableBindings(mappedOuter, mappedInner);
+    }
   }
 
   @Override
@@ -74,20 +75,11 @@ public abstract class Bindings<E> {
     if (outerScopeBindings == null) {
       return innerBindings;
     } else {
-      return innerBindings
-          + "\n"
-          + indent(outerScopeBindings.toString());
+      return outerScopeBindings + "\n" + indent(innerBindings);
     }
   }
   public static <T> String bindingsToString(Map<String, T> bindings) {
     var string = joinToString(bindings.values(), "\n");
     return string.isEmpty() ? "<no bindings>" : string;
-  }
-
-  private String indent(String text) {
-    var lines = Splitter.onPattern("\r?\n").split(text);
-    return stream(lines)
-        .map(l -> "  " + l)
-        .collect(joining("\n"));
   }
 }

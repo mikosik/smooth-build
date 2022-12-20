@@ -16,7 +16,7 @@ public class ImmutableBindings<E> extends Bindings<E> {
   }
 
   public static <E> ImmutableBindings<E> immutableBindings(
-      Bindings<? extends E> outerScopeBindings, Map<String, ? extends E> innerScopeMap) {
+      ImmutableBindings<? extends E> outerScopeBindings, Map<String, ? extends E> innerScopeMap) {
     return new ImmutableBindings<>(outerScopeBindings, innerScopeMap);
   }
 
