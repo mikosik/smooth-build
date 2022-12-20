@@ -1,3 +1,4 @@
+
 ### smooth-build tutorial
 
 Smooth uses `build.smooth` file located in project's root directory as
@@ -165,19 +166,19 @@ Each field may be of different type.
 It is possible to define struct type in following way (comma after last field is not mandatory):
 
 ```
-Person {
+Person(
   String firstName,
   String lastName,
-}
+)
 ```
 
 and obviously it is possible to use struct type as a field type in other struct.
 
 ```
-Dog {
+Dog(
   String name,
   Person owner,
-}
+)
 ```
 
 Definition of each struct automatically generates constructor for that struct.
@@ -339,19 +340,19 @@ it may (or may not) be used also after last element.
 For example following struct definition uses comma after last field
 
 ```
-Person {
+Person(
   String firstName,
   String lastName,
-}
+)
 ```
 
 but it is acceptable to skip it without changing semantics
 
 ```
-Person {
+Person(
   String firstName,
   String lastName
-}
+)
 ```
 
 This works the same when defining function parameters, arguments in function call,
