@@ -642,7 +642,7 @@ public class VisibilityTest extends TestContext {
   @Nested
   class _shadowing {
     @Nested
-    class _value_shadowing {
+    class _named_value_shadowing {
       @Nested
       class _imported {
         @Test
@@ -723,7 +723,7 @@ public class VisibilityTest extends TestContext {
     }
 
     @Nested
-    class _expression_function_shadowing {
+    class _named_function_shadowing {
       @Nested
       class _imported {
         @Test
@@ -804,7 +804,7 @@ public class VisibilityTest extends TestContext {
     }
 
     @Nested
-    class _expression_function_param_shadowing {
+    class _named_function_param_shadowing {
       @Test
       public void other_param_fails() {
         module("""
