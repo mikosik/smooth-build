@@ -66,13 +66,6 @@ public abstract class AbstractBindingsTestSuite {
         .isEqualTo(7);
   }
 
-  @Test
-  public void asMap() {
-    bindings = newBindings(elem("name", 7), elem("other", 5));
-    assertThat(bindings.asMap())
-        .isEqualTo(mapOfElems(elem("name", 7), elem("other", 5)));
-  }
-
   public abstract Bindings<Elem> newBindings(Elem... elems);
 
   public static ImmutableMap<String, Elem> mapOfElems(Elem... nameables) {

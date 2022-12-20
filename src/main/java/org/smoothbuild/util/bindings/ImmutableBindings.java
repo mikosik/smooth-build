@@ -4,15 +4,15 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-public final class ImmutableBindings<E> extends Bindings<E> {
-  private final ImmutableMap<String, E> innerScopeMap;
+public class ImmutableBindings<E> extends Bindings<E> {
+  protected final ImmutableMap<String, E> innerScopeMap;
 
-  public static <E> ImmutableBindings<E> immutableBindings() {
-    return immutableBindings(ImmutableMap.of());
+  public static <E> FlatBindings<E> immutableBindings() {
+    return new FlatBindings<>(ImmutableMap.of());
   }
 
-  public static <E> ImmutableBindings<E> immutableBindings(Map<String, ? extends E> innerScopeMap) {
-    return new ImmutableBindings<>(null, innerScopeMap);
+  public static <E> FlatBindings<E> immutableBindings(Map<String, ? extends E> innerScopeMap) {
+    return new FlatBindings<>(innerScopeMap);
   }
 
   public static <E> ImmutableBindings<E> immutableBindings(
@@ -20,7 +20,7 @@ public final class ImmutableBindings<E> extends Bindings<E> {
     return new ImmutableBindings<>(outerScopeBindings, innerScopeMap);
   }
 
-  private ImmutableBindings(
+  protected ImmutableBindings(
       Bindings<? extends E> outerScopeBindings,
       Map<String, ? extends E> innerScopeMap) {
     super(outerScopeBindings);

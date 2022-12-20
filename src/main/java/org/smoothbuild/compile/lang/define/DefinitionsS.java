@@ -4,15 +4,14 @@ import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 
 import java.util.HashMap;
 
-import org.smoothbuild.util.bindings.Bindings;
-import org.smoothbuild.util.bindings.ImmutableBindings;
+import org.smoothbuild.util.bindings.FlatBindings;
 import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 
 public record DefinitionsS(
-    ImmutableBindings<TypeDefinitionS> types,
-    ImmutableBindings<NamedEvaluableS> evaluables) {
+    FlatBindings<TypeDefinitionS> types,
+    FlatBindings<NamedEvaluableS> evaluables) {
 
   public static DefinitionsS empty() {
     return new DefinitionsS(immutableBindings(), immutableBindings());
@@ -25,11 +24,11 @@ public record DefinitionsS(
     );
   }
 
-  public <E extends Named> ImmutableBindings<E> merge(
-      Bindings<E> outer, Bindings<? extends E> inner) {
+  public <E extends Named> FlatBindings<E> merge(
+      FlatBindings<E> outer, FlatBindings<? extends E> inner) {
     var map = new HashMap<String, E>();
-    map.putAll(outer.asMap());
-    map.putAll(inner.asMap());
+    map.putAll(outer.toMap());
+    map.putAll(inner.toMap());
     return immutableBindings(ImmutableMap.copyOf(map));
   }
 }

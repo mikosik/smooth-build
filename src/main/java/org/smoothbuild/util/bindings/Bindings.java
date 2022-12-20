@@ -6,7 +6,6 @@ import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.joinToString;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -46,15 +45,6 @@ public abstract class Bindings<E> {
     } else {
       return Optional.of(element);
     }
-  }
-
-  public Map<String, E> asMap() {
-    var result = new HashMap<String, E>();
-    if (outerScopeBindings != null) {
-      result.putAll(outerScopeBindings.asMap());
-    }
-    result.putAll(innerScopeMap());
-    return result;
   }
 
   public <T> ImmutableBindings<T> map(Function<? super E, T> mapper) {

@@ -22,7 +22,7 @@ public class OptionalBindings<E> extends MutableBindings<Optional<E>> {
     return castBindings;
   }
 
-  public ImmutableBindings<E> innerScopeBindingsReduced() {
+  public FlatBindings<E> innerScopeBindingsReduced() {
     return immutableBindings(
         mapEntries(innerScopeMap(), OptionalBindings::reduceOptionals));
   }

@@ -1,9 +1,9 @@
 package org.smoothbuild.compile.lang.define;
 
-import org.smoothbuild.util.bindings.ImmutableBindings;
+import org.smoothbuild.util.bindings.FlatBindings;
 
 public record ModuleS(
     ModFiles files,
-    ImmutableBindings<TypeDefinitionS> types,
-    ImmutableBindings<NamedEvaluableS> evaluables) {
+    FlatBindings<TypeDefinitionS> types,
+    FlatBindings<NamedEvaluableS> evaluables) {
 }
