@@ -28,7 +28,6 @@ import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.infer.TypeInferrer;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.util.bindings.Bindings;
 import org.smoothbuild.util.bindings.OptionalBindings;
 
 public class ModuleCreator {
@@ -40,8 +39,8 @@ public class ModuleCreator {
   public static Maybe<ModuleS> createModuleS(
       ModFiles modFiles, ModuleP moduleP, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
-    var types = newOptionalScopedBindings(imported.types());
-    var evaluables = newOptionalScopedBindings(imported.evaluables());
+    var types = new OptionalBindings<>(imported.types().map(Optional::of));
+    var evaluables = new OptionalBindings<>(imported.evaluables().map(Optional::of));
     var moduleCreator = new ModuleCreator(types, evaluables, logBuffer);
     moduleP.structs().forEach(moduleCreator::visitStruct);
     moduleP.evaluables().forEach(moduleCreator::visitRefable);
@@ -49,14 +48,11 @@ public class ModuleCreator {
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     } else {
-      var modS = new ModuleS(modFiles, types.innerScopeBindingsReduced(), evaluables.innerScopeBindingsReduced());
+      var typeBindings = types.innerScopeBindingsReduced();
+      var evaluableBindings = evaluables.innerScopeBindingsReduced();
+      var modS = new ModuleS(modFiles, typeBindings, evaluableBindings);
       return maybe(modS, logBuffer);
     }
-  }
-
-  public static <T> OptionalBindings<T> newOptionalScopedBindings(
-      Bindings<? extends T> outerScopeBindings) {
-    return new OptionalBindings<>(outerScopeBindings.map(Optional::of));
   }
 
   private ModuleCreator(
