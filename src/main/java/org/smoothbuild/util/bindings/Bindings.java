@@ -11,6 +11,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.google.common.collect.ImmutableMap;
+
 public abstract class Bindings<E> {
   private final Bindings<? extends E> outerScopeBindings;
 
@@ -27,10 +29,14 @@ public abstract class Bindings<E> {
     return getOptional(name).isPresent();
   }
 
-  protected abstract Map<String, E> innerScopeMap();
+  public Map<String, E> innermostScopeMap() {
+    return ImmutableMap.copyOf(innermostScopeMapImpl());
+  }
+
+  protected abstract Map<String, E> innermostScopeMapImpl();
 
   public Optional<E> getOptional(String name) {
-    E element = innerScopeMap().get(name);
+    E element = innermostScopeMapImpl().get(name);
     if (element == null) {
       if (outerScopeBindings == null) {
         return Optional.empty();
@@ -45,7 +51,7 @@ public abstract class Bindings<E> {
   }
 
   public <T> ImmutableBindings<T> map(Function<? super E, T> mapper) {
-    var mappedInner = mapValues(innerScopeMap(), mapper);
+    var mappedInner = mapValues(innermostScopeMapImpl(), mapper);
     if (outerScopeBindings == null) {
       return immutableBindings(mappedInner);
     } else {
@@ -61,17 +67,17 @@ public abstract class Bindings<E> {
     }
     return object instanceof Bindings<?> that
         && Objects.equals(this.outerScopeBindings, that.outerScopeBindings)
-        && Objects.equals(this.innerScopeMap(), that.innerScopeMap());
+        && Objects.equals(this.innermostScopeMapImpl(), that.innermostScopeMapImpl());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(outerScopeBindings, innerScopeMap());
+    return Objects.hash(outerScopeBindings, innermostScopeMapImpl());
   }
 
   @Override
   public String toString() {
-    var innerBindings = bindingsToString(innerScopeMap());
+    var innerBindings = bindingsToString(innermostScopeMapImpl());
     if (outerScopeBindings == null) {
       return innerBindings;
     } else {

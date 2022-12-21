@@ -24,7 +24,7 @@ public class OptionalBindings<E> extends MutableBindings<Optional<E>> {
 
   public FlatBindings<E> innerScopeBindingsReduced() {
     return immutableBindings(
-        mapEntries(innerScopeMap(), OptionalBindings::reduceOptionals));
+        mapEntries(innermostScopeMapImpl(), OptionalBindings::reduceOptionals));
   }
 
   private static <T> Entry<String, T> reduceOptionals(Entry<String, Optional<T>> e) {

@@ -28,6 +28,14 @@ public abstract class AbstractScopedBindingsTestSuite {
     public Bindings<Elem> newBindings(Elem... elems) {
       return newMapBindings(immutableBindings(), elems);
     }
+
+    @Test
+    public void innermost_scope_map() {
+      var outer = immutableBindings(mapOfElems(elem("1", 1)));
+      var bindings = newMapBindings(outer, elem("2", 2));
+      assertThat(bindings.innermostScopeMap())
+          .isEqualTo(mapOfElems(elem("2", 2)));
+    }
   }
 
   @Test

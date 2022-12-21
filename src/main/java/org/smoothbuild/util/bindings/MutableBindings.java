@@ -16,7 +16,7 @@ public class MutableBindings<E> extends Bindings<E> {
   }
 
   @Override
-  protected Map<String, E> innerScopeMap() {
+  protected Map<String, E> innermostScopeMapImpl() {
     return innerScopeMap;
   }
 
