@@ -150,6 +150,22 @@ public class VisibilityTest extends TestContext {
     @Nested
     class _param {
       @Nested
+      class default_value {
+        @Test
+        public void is_not_visible_outside_function_body_via_function_name_prefixed_reference() {
+          // Despite internally CallsPreprocessor creates references to parameter default values
+          // that are further in processing handled correctly, for now it is not available
+          // in the language to simplify it.
+          var code = """
+              myFunc(Int param = 7) = 8;
+              myResult = myFunc:param;
+              """;
+          module(code)
+              .loadsWithProblems();
+        }
+      }
+
+      @Nested
       class _of_named_function {
         @Test
         public void is_visible_in_its_body() {
