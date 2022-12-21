@@ -9,11 +9,10 @@ import java.util.Set;
 import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
+import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
-import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.out.log.LogBuffer;
@@ -51,23 +50,11 @@ public class DetectUndefinedRefs extends ModuleVisitorP {
   }
 
   @Override
-  public void visitNamedFunc(NamedFuncP namedFuncP) {
-    visitFunc(namedFuncP);
-  }
-
-  @Override
-  public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    visitFunc(anonymousFuncP);
-  }
-
-  private void visitFunc(FuncP funcP) {
-    funcP.params().forEach(p -> p.defaultValue().ifPresent(this::visitNamedValue));
-    funcP.body().ifPresent(body -> {
-      var definedNamesInBodyScope = new HashSet<>(definedNames);
-      definedNamesInBodyScope.addAll(map(funcP.params(), NalImpl::name));
-      new DetectUndefinedRefs(moduleP, definedNamesInBodyScope, logs)
-          .visitExpr(body);
-    });
+  public void visitFuncBody(FuncP funcP, ExprP body) {
+    var definedNamesInBodyScope = new HashSet<>(definedNames);
+    definedNamesInBodyScope.addAll(map(funcP.params(), NalImpl::name));
+    new DetectUndefinedRefs(moduleP, definedNamesInBodyScope, logs)
+        .visitExpr(body);
   }
 
   @Override

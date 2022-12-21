@@ -297,9 +297,9 @@ public class VisibilityTest extends TestContext {
       }
 
       @Nested
-      class _type_cannot_be_used_as_type_of {
+      class _type_cannot_be_used {
         @Test
-        public void named_value() {
+        public void as_type_of_named_value() {
           var code = """
               @Bytecode("Impl.met")
               Undefined myValue;
@@ -309,7 +309,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void native_function_result() {
+        public void as_type_of_native_function_result() {
           var code = """
               @Native("Impl.met")
               Undefined myFunc();
@@ -319,7 +319,16 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void exprssion_function_parameter() {
+        public void as_type_of_named_function_result() {
+          var code = """
+              [Undefined] myFunc() = [];
+              """;
+          module(code)
+              .loadsWithError(1, "`Undefined` type is undefined.");
+        }
+
+        @Test
+        public void as_type_of_named_function_parameter() {
           var code = """
               String myFunc(Undefined param) = "abc";
               """;
@@ -328,7 +337,16 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void anonymous_function_parameter() {
+        public void inside_param_default_value() {
+          var code = """
+              Int myFunc((A)->Int param = (Undefined x) -> 7) = 7;
+              """;
+          module(code)
+              .loadsWithError(1, "`Undefined` type is undefined.");
+        }
+
+        @Test
+        public void as_type_of_anonymous_function_parameter() {
           var code = """
               myValue = (Undefined param) -> 7;
               """;
@@ -337,7 +355,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void struct_field() {
+        public void as_type_of_struct_field() {
           var code = """
               MyStruct(
                 UndefinedType field
@@ -348,7 +366,6 @@ public class VisibilityTest extends TestContext {
         }
       }
     }
-
   }
 
   @Nested
