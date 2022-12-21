@@ -149,54 +149,56 @@ public class VisibilityTest extends TestContext {
 
     @Nested
     class _param {
-      @Test
-      public void in_anonymous_func_body_is_visible() {
-        module("""
-             myValue = (String param) -> param;
-             """)
-            .loadsWithSuccess();
-      }
-
-      @Test
-      public void outside_its_anonymous_function_body_is_not_visible() {
-        module("""
-             myValue = (String param) -> "abc";
-             result = param;
-             """)
-            .loadsWithError(2, "`param` is undefined.");
-      }
-
-      @Test
-      public void in_expression_function_body_is_visible() {
-        module("""
+      @Nested
+      class _of_named_function {
+        @Test
+        public void is_visible_in_its_body() {
+          module("""
              myFunc(String param) = param;
              """)
-            .loadsWithSuccess();
-      }
+              .loadsWithSuccess();
+        }
 
-      @Test
-      public void outside_its_expression_function_body_is_not_visible() {
-        module("""
+        @Test
+        public void is_not_visible_outside_its_body() {
+          module("""
              myFunc(String param) = "abc";
              result = param;
              """)
-            .loadsWithError(2, "`param` is undefined.");
+              .loadsWithError(2, "`param` is undefined.");
+        }
+
+        @Test
+        public void is_not_visible_in_its_default_value() {
+          module("func(String withDefault = withDefault) = withDefault;")
+              .loadsWithError(1, "`withDefault` is undefined.");
+        }
+
+        @Test
+        public void is_not_visible_in_default_value_of_other_param() {
+          module("func(String param, String withDefault = param) = param;\n")
+              .loadsWithError(1, "`param` is undefined.");
+        }
       }
 
-      @Test
-      public void in_default_value_of_other_param_is_not_visible() {
-        module("""
-        func(String param, String withDefault = param) = param;
-        """)
-            .loadsWithError(1, "`param` is undefined.");
-      }
+      @Nested
+      class _of_anonymous_function {
+        @Test
+        public void is_visible_in_its_body() {
+          module("""
+             myValue = (String param) -> param;
+             """)
+              .loadsWithSuccess();
+        }
 
-      @Test
-      public void in_its_default_value_is_not_visible() {
-        module("""
-        func(String withDefault = withDefault) = withDefault;
-        """)
-            .loadsWithError(1, "`withDefault` is undefined.");
+        @Test
+        public void is_not_visible_outside_its_body() {
+          module("""
+             myValue = (String param) -> "abc";
+             result = param;
+             """)
+              .loadsWithError(2, "`param` is undefined.");
+        }
       }
     }
 
