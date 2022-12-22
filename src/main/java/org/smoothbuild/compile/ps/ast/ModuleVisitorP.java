@@ -26,6 +26,10 @@ import org.smoothbuild.compile.ps.ast.type.TypeP;
 
 public class ModuleVisitorP {
   public void visitModule(ModuleP moduleP) {
+    visitModuleChildren(moduleP);
+  }
+
+  public void visitModuleChildren(ModuleP moduleP) {
     visitStructs(moduleP.structs());
     visitNamedEvaluables(moduleP.evaluables());
   }
@@ -35,6 +39,10 @@ public class ModuleVisitorP {
   }
 
   public void visitStruct(StructP structP) {
+    visitStructChildren(structP);
+  }
+
+  public void visitStructChildren(StructP structP) {
     visitFields(structP.fields());
   }
 
@@ -59,6 +67,10 @@ public class ModuleVisitorP {
   }
 
   public void visitNamedValue(NamedValueP namedValueP) {
+    visitNamedValueChildren(namedValueP);
+  }
+
+  public void visitNamedValueChildren(NamedValueP namedValueP) {
     namedValueP.annotation().ifPresent(this::visitAnnotation);
     namedValueP.type().ifPresent(this::visitType);
     namedValueP.body().ifPresent(this::visitExpr);
@@ -66,6 +78,10 @@ public class ModuleVisitorP {
   }
 
   public void visitNamedFunc(NamedFuncP namedFuncP) {
+    visitNamedFuncChildren(namedFuncP);
+  }
+
+  public void visitNamedFuncChildren(NamedFuncP namedFuncP) {
     namedFuncP.annotation().ifPresent(this::visitAnnotation);
     namedFuncP.resT().ifPresent(this::visitType);
     visitParams(namedFuncP.params());
@@ -129,6 +145,10 @@ public class ModuleVisitorP {
   }
 
   public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    visitAnonymousFuncChildren(anonymousFuncP);
+  }
+
+  public void visitAnonymousFuncChildren(AnonymousFuncP anonymousFuncP) {
     visitParams(anonymousFuncP.params());
     visitFuncBody(anonymousFuncP, anonymousFuncP.bodyGet());
   }

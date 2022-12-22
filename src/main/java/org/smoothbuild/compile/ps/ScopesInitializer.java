@@ -2,8 +2,6 @@ package org.smoothbuild.compile.ps;
 
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 
-import java.util.function.Consumer;
-
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
@@ -48,15 +46,16 @@ public class ScopesInitializer extends ModuleVisitorP {
 
     @Override
     public void visitModule(ModuleP moduleP) {
-      handle(
-          moduleP,
-          i -> i.visitModule(moduleP),
-          () -> {
-            new BindingsAdder(scope, log)
-                .visitModule(moduleP);
-            super.visitModule(moduleP);
-            addFunctionParameterDefaultValuesToModuleScope(scope);
-          });
+      newInitializerForScopeOf(moduleP)
+          .visitModuleChildren(moduleP);
+    }
+
+    @Override
+    public void visitModuleChildren(ModuleP moduleP) {
+      new BindingsAdder(scope, log)
+          .visitModule(moduleP);
+      super.visitModuleChildren(moduleP);
+      addFunctionParameterDefaultValuesToModuleScope(scope);
     }
 
     private void addFunctionParameterDefaultValuesToModuleScope(ScopeP moduleScope) {
@@ -75,43 +74,50 @@ public class ScopesInitializer extends ModuleVisitorP {
 
     @Override
     public void visitStruct(StructP structP) {
-      handle(
-          structP,
-          i -> i.visitStruct(structP),
-          () -> {
-            visitFields(structP.fields());
-            new BindingsAdder(scope, log)
-                .visitFields(structP.fields());
-          });
+      newInitializerForScopeOf(structP)
+          .visitStructChildren(structP);
+    }
+
+    @Override
+    public void visitStructChildren(StructP structP) {
+      visitFields(structP.fields());
+      new BindingsAdder(scope, log)
+          .visitFields(structP.fields());
     }
 
     @Override
     public void visitNamedValue(NamedValueP namedValueP) {
-      handle(
-          namedValueP,
-          i -> i.visitNamedValue(namedValueP),
-          () -> handleBody(namedValueP));
+      newInitializerForScopeOf(namedValueP)
+          .visitNamedValueChildren(namedValueP);
+    }
+
+    @Override
+    public void visitNamedValueChildren(NamedValueP namedValueP) {
+      handleBody(namedValueP);
     }
 
     @Override
     public void visitNamedFunc(NamedFuncP namedFuncP) {
-      handle(
-          namedFuncP,
-          i -> i.visitNamedFunc(namedFuncP),
-          () -> {
-            var params = (namedFuncP).params();
-            visitParams(params);
-            handleFunc(namedFuncP, params);
-          });
+      newInitializerForScopeOf(namedFuncP)
+          .visitNamedFuncChildren(namedFuncP);
+    }
 
+    @Override
+    public void visitNamedFuncChildren(NamedFuncP namedFuncP) {
+      var params = namedFuncP.params();
+      visitParams(params);
+      handleFunc(namedFuncP, params);
     }
 
     @Override
     public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-      handle(
-          anonymousFuncP,
-          i -> i.visitAnonymousFunc(anonymousFuncP),
-          () -> handleFunc(anonymousFuncP, anonymousFuncP.params()));
+      newInitializerForScopeOf(anonymousFuncP)
+          .visitAnonymousFuncChildren(anonymousFuncP);
+    }
+
+    @Override
+    public void visitAnonymousFuncChildren(AnonymousFuncP anonymousFuncP) {
+      handleFunc(anonymousFuncP, anonymousFuncP.params());
     }
 
     private void handleFunc(FuncP funcP, NList<ItemP> params) {
@@ -120,21 +126,15 @@ public class ScopesInitializer extends ModuleVisitorP {
       handleBody(funcP);
     }
 
-    private <T extends WithScopeP> void handle(
-        T withScope, Consumer<Initializer> consumer, Runnable runnable) {
-      var ourScope = withScope.scope();
-      if (ourScope == null) {
-        withScope.setScope(scope.newInnerScope());
-        var initializer = new Initializer(withScope.scope(), log);
-        consumer.accept(initializer);
-      } else {
-        runnable.run();
-      }
-    }
-
     private void handleBody(EvaluableP evaluableP) {
       evaluableP.body()
           .ifPresent(b -> new Initializer(scope, log).visitExpr(b));
+    }
+
+    private Initializer newInitializerForScopeOf(WithScopeP withScopeP) {
+      var newScope = scope.newInnerScope();
+      withScopeP.setScope(newScope);
+      return new Initializer(withScopeP.scope(), log);
     }
   }
 
