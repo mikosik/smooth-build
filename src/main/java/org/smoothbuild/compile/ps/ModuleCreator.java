@@ -65,12 +65,12 @@ public class ModuleCreator {
     this.psTranslator = new PsTranslator(bindings);
   }
 
-  public void visitStruct(StructP struct) {
-    var structTS = inferStructType(types, bindings, logBuffer, struct);
-    var structDefinitionS = structTS.map(s -> new TypeDefinitionS(s, struct.location()));
-    types.add(struct.name(), structDefinitionS);
-    var constructorS = structTS.map(st -> loadConstructor(struct, st));
-    bindings.add(struct.constructor().name(), constructorS);
+  public void visitStruct(StructP structP) {
+    var structTS = inferStructType(types, bindings, logBuffer, structP);
+    var structDefinitionS = structTS.map(s -> new TypeDefinitionS(s, structP.location()));
+    types.add(structP.name(), structDefinitionS);
+    var constructorS = structTS.map(st -> loadConstructor(structP, st));
+    bindings.add(structP.constructor().name(), constructorS);
   }
 
   private static NamedEvaluableS loadConstructor(StructP structP, StructTS structT) {
@@ -116,7 +116,7 @@ public class ModuleCreator {
     }
   }
 
-  private void addDefaultValueToBindings(ItemS param) {
-    param.defaultValue().ifPresent(v -> bindings.add(v.name(), Optional.of(v)));
+  private void addDefaultValueToBindings(ItemS paramS) {
+    paramS.defaultValue().ifPresent(v -> bindings.add(v.name(), Optional.of(v)));
   }
 }
