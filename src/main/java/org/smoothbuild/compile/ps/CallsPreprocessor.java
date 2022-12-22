@@ -18,7 +18,6 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
@@ -26,8 +25,10 @@ import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
+import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.RefableP;
+import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.expr.WithScopeP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -65,15 +66,21 @@ public class CallsPreprocessor {
     }
 
     @Override
+    public void visitStruct(StructP structP) {
+      newPreprocessorForScope(structP)
+          .visitStructChildren(structP);
+    }
+
+    @Override
     public void visitFuncBody(FuncP funcP, ExprP exprP) {
       newPreprocessorForScope(funcP)
           .visitExpr(exprP);
     }
 
     @Override
-    public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-      newPreprocessorForScope(anonymousFuncP)
-          .visitAnonymousFuncChildren(anonymousFuncP);
+    public void visitNamedValue(NamedValueP namedValueP) {
+      newPreprocessorForScope(namedValueP)
+          .visitNamedValueChildren(namedValueP);
     }
 
     private Preprocessor newPreprocessorForScope(WithScopeP withScopeP) {
