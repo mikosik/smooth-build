@@ -8,10 +8,8 @@
    Each element has the same type which is known as array's element type.
  - __base type__ - Unstructured type that is built into language.
    Base type cannot be declared by user.
-   They include `Any`, `Blob`, `Bool`, `Nothing` `String`.
- - __composed type__ - Type that is composed of other types. Composed types include:
-   `Array`, `Func`. Note that struct type is not a composed type. 
- - __default argument__ - Value assigned to function parameter upon its declaration.
+   They include `Blob`, `Bool`, `Int`, `String`.
+  - __default argument__ - Value assigned to function parameter upon its declaration.
    Function can be called without specifying such parameter in which case default argument is used.
  - __monotype (monomorphic type)__ - Type that does not have free type variables.
  - __polytype (polymorphic type)__ - Type that has free type variables.
