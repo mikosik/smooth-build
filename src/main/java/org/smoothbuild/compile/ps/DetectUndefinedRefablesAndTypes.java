@@ -8,10 +8,11 @@ import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
-import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
+import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.ScopeP;
 import org.smoothbuild.compile.ps.ast.expr.StructP;
+import org.smoothbuild.compile.ps.ast.expr.WithScopeP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
@@ -43,25 +44,30 @@ public class DetectUndefinedRefablesAndTypes {
 
     @Override
     public void visitModule(ModuleP moduleP) {
-      var detector = new Detector(imported, moduleP.scope(), log);
-      detector.visitStructs(moduleP.structs());
-      detector.visitNamedEvaluables(moduleP.evaluables());
+      newDetector(moduleP)
+          .visitModuleChildren(moduleP);
     }
 
     @Override
     public void visitStruct(StructP structP) {
-      super.visitStruct(structP);
+      newDetector(structP)
+          .visitStructChildren(structP);
     }
 
     @Override
-    public void visitNamedEvaluable(NamedEvaluableP namedEvaluableP) {
-      super.visitNamedEvaluable(namedEvaluableP);
+    public void visitNamedValue(NamedValueP namedValueP) {
+      newDetector(namedValueP)
+          .visitNamedValueChildren(namedValueP);
     }
 
     @Override
     public void visitFuncBody(FuncP funcP, ExprP exprP) {
-      new Detector(imported, funcP.scope(), log)
+      newDetector(funcP)
           .visitExpr(exprP);
+    }
+
+    private Detector newDetector(WithScopeP withScopeP) {
+      return new Detector(imported, withScopeP.scope(), log);
     }
 
     @Override
