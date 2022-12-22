@@ -65,12 +65,6 @@ public class CallsPreprocessor {
     }
 
     @Override
-    public void visitCall(CallP callP) {
-      super.visitCall(callP);
-      callP.setPositionedArgs(inferPositionedArgs(callP));
-    }
-
-    @Override
     public void visitFuncBody(FuncP funcP, ExprP exprP) {
       newPreprocessorForScope(funcP)
           .visitExpr(exprP);
@@ -84,6 +78,12 @@ public class CallsPreprocessor {
 
     private Preprocessor newPreprocessorForScope(WithScopeP withScopeP) {
       return new Preprocessor(imported, withScopeP.scope().refables(), logger);
+    }
+
+    @Override
+    public void visitCall(CallP callP) {
+      super.visitCall(callP);
+      callP.setPositionedArgs(inferPositionedArgs(callP));
     }
 
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP) {
