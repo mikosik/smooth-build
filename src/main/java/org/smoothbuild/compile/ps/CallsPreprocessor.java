@@ -8,9 +8,6 @@ import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +28,12 @@ import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.RefableP;
+import org.smoothbuild.compile.ps.ast.expr.WithScopeP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.bindings.Bindings;
-import org.smoothbuild.util.bindings.ImmutableBindings;
-import org.smoothbuild.util.bindings.MutableBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Named;
 
@@ -46,27 +42,26 @@ import com.google.common.collect.ImmutableList;
 public class CallsPreprocessor {
   public static Logs preprocessCalls(ModuleP moduleP, DefinitionsS imported) {
     var logger = new LogBuffer();
-    var localBindings = localBindings(moduleP);
-    new Preprocessor(imported, localBindings, logger)
+    new Preprocessor(imported, immutableBindings(), logger)
         .visitModule(moduleP);
     return logger;
   }
 
-  private static ImmutableBindings<RefableP> localBindings(ModuleP moduleP) {
-    var constructors = map(moduleP.structs(), s -> (RefableP) s.constructor());
-    var localRefables = concat(moduleP.evaluables(), constructors);
-    return immutableBindings(toMap(localRefables, Named::name, e -> e));
-  }
-
   private static class Preprocessor extends ModuleVisitorP {
     private final DefinitionsS imported;
-    private final Bindings<RefableP> localBindings;
+    private final Bindings<RefableP> refables;
     private final LogBuffer logger;
 
-    public Preprocessor(DefinitionsS imported, Bindings<RefableP> localBindings, LogBuffer logger) {
-      this.localBindings = localBindings;
+    public Preprocessor(DefinitionsS imported, Bindings<RefableP> refables, LogBuffer logger) {
       this.imported = imported;
+      this.refables = refables;
       this.logger = logger;
+    }
+
+    @Override
+    public void visitModule(ModuleP moduleP) {
+      newPreprocessorForScope(moduleP)
+          .visitModuleChildren(moduleP);
     }
 
     @Override
@@ -77,21 +72,24 @@ public class CallsPreprocessor {
 
     @Override
     public void visitFuncBody(FuncP funcP, ExprP exprP) {
-      var funcBodyBindings = new MutableBindings<>(localBindings);
-      funcP.params().forEach(p -> funcBodyBindings.add(p.name(), p));
-      new Preprocessor(imported, funcBodyBindings, logger)
+      newPreprocessorForScope(funcP)
           .visitExpr(exprP);
     }
 
     @Override
     public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-      super.visitAnonymousFunc(anonymousFuncP);
+      newPreprocessorForScope(anonymousFuncP)
+          .visitAnonymousFuncChildren(anonymousFuncP);
+    }
+
+    private Preprocessor newPreprocessorForScope(WithScopeP withScopeP) {
+      return new Preprocessor(imported, withScopeP.scope().refables(), logger);
     }
 
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP) {
       if (callP.callee() instanceof RefP refP) {
         var name = refP.name();
-        var optional = localBindings.getOptional(name);
+        var optional = refables.getOptional(name);
         if (optional.isPresent()) {
           return inferPositionedArgs(callP, optional.get());
         } else {
@@ -120,8 +118,7 @@ public class CallsPreprocessor {
       }
     }
 
-
-    public static ImmutableList<ExprP> inferPositionedArgs(CallP callP, Logger logger) {
+    private static ImmutableList<ExprP> inferPositionedArgs(CallP callP, Logger logger) {
       var args = callP.args();
       for (var arg : args) {
         if (arg instanceof NamedArgP namedArgP) {
