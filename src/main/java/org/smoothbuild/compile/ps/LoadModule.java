@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.ps;
 
+import static org.smoothbuild.compile.ap.ApTranslator.translateAp;
 import static org.smoothbuild.compile.ps.CallsPreprocessor.preprocessCalls;
 import static org.smoothbuild.compile.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
@@ -12,65 +13,67 @@ import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
-import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.compile.ap.ApTranslator;
+import java.util.function.Supplier;
+
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
 
 public class LoadModule {
   public static Maybe<ModuleS> loadModule(
       ModFiles modFiles, String sourceCode, DefinitionsS imported) {
-    var logBuffer = new LogBuffer();
-    var filePath = modFiles.smoothFile();
-    Maybe<ModContext> moduleContext = parseModule(filePath, sourceCode);
-    logBuffer.logAll(moduleContext.logs());
-    if (logBuffer.containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-
-    var maybeModule = ApTranslator.translate(filePath, moduleContext.value());
-    logBuffer.logAll(maybeModule.logs());
-    if (maybeModule.logs().containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-    var moduleP = maybeModule.value();
-    logBuffer.logAll(findSyntaxErrors(moduleP));
-    if (logBuffer.containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-
-    logBuffer.logAll(decodeLiterals(moduleP));
-    logBuffer.logAll(initializeScopes(moduleP));
-    if (logBuffer.containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-
-    var maybeSortedModuleP = sortByDependencies(moduleP);
-    logBuffer.logAll(maybeSortedModuleP.logs());
-    if (logBuffer.containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-    var sortedModuleP = maybeSortedModuleP.value();
-
-    logBuffer.logAll(detectUndefinedRefablesAndTypes(sortedModuleP, imported));
-    if (logBuffer.containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-
-    logBuffer.logAll(preprocessCalls(sortedModuleP, imported));
-    if (logBuffer.containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-
-    var mod = createModuleS(modFiles, sortedModuleP, imported);
-    logBuffer.logAll(mod.logs());
-    if (logBuffer.containsAtLeast(ERROR)) {
-      return maybeLogs(logBuffer);
-    }
-
-    return maybe(mod.value(), logBuffer);
+    return new Loader(modFiles, sourceCode, imported)
+        .load();
   }
+
+  private static class Loader {
+    private final ModFiles modFiles;
+    private final String sourceCode;
+    private final DefinitionsS imported;
+    private final LogBuffer logBuffer = new LogBuffer();
+
+    private Loader(ModFiles modFiles, String sourceCode, DefinitionsS imported) {
+      this.modFiles = modFiles;
+      this.sourceCode = sourceCode;
+      this.imported = imported;
+    }
+
+    public Maybe<ModuleS> load() {
+      try {
+        return maybe(loadImpl(), logBuffer);
+      } catch (FailedException e) {
+        return maybeLogs(logBuffer);
+      }
+    }
+
+    private ModuleS loadImpl() throws FailedException {
+      var modContext = runAndHandleMaybe(() -> parseModule(modFiles.smoothFile(), sourceCode));
+      var moduleP = runAndHandleMaybe(() -> translateAp(modFiles.smoothFile(), modContext));
+      runAndHandleLogs(() -> findSyntaxErrors(moduleP));
+      runAndHandleLogs(() -> decodeLiterals(moduleP));
+      runAndHandleLogs(() -> initializeScopes(moduleP));
+      runAndHandleLogs(() -> detectUndefinedRefablesAndTypes(moduleP, imported));
+      runAndHandleLogs(() -> preprocessCalls(moduleP, imported));
+      var sortedModuleP = runAndHandleMaybe(() -> sortByDependencies(moduleP));
+      return runAndHandleMaybe(() -> createModuleS(modFiles, sortedModuleP, imported));
+    }
+
+    private <T> T runAndHandleMaybe(Supplier<Maybe<T>> supplier) throws FailedException {
+      Maybe<T> maybe = supplier.get();
+      runAndHandleLogs(maybe::logs);
+      return maybe.value();
+    }
+
+    private void runAndHandleLogs(Supplier<Logs> supplier) throws FailedException {
+      logBuffer.logAll(supplier.get());
+      if (logBuffer.containsAtLeast(ERROR)) {
+        throw new FailedException();
+      }
+    }
+  }
+
+  private static class FailedException extends Exception {}
 }
