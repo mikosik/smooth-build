@@ -22,7 +22,7 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
 
-public class LoadModule {
+public class ModuleLoader {
   public static Maybe<ModuleS> loadModule(
       ModFiles modFiles, String sourceCode, DefinitionsS imported) {
     return new Loader(modFiles, sourceCode, imported)

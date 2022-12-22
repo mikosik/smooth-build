@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
-import static org.smoothbuild.compile.ps.LoadModule.loadModule;
+import static org.smoothbuild.compile.ps.ModuleLoader.loadModule;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 import static org.smoothbuild.out.log.Log.error;
