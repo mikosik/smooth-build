@@ -6,8 +6,8 @@ import static org.smoothbuild.compile.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
 import static org.smoothbuild.compile.ps.FindSyntaxErrors.findSyntaxErrors;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
-import static org.smoothbuild.compile.ps.ParseModule.parseModule;
 import static org.smoothbuild.compile.ps.ScopesInitializer.initializeScopes;
+import static org.smoothbuild.compile.ps.SmoothCodeParser.parseSmoothCode;
 import static org.smoothbuild.compile.ps.ast.ModuleDependenciesSorter.sortByDependencies;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
@@ -50,7 +50,7 @@ public class ModuleLoader {
     }
 
     private ModuleS loadImpl() throws FailedException {
-      var modContext = runAndHandleMaybe(() -> parseModule(modFiles.smoothFile(), sourceCode));
+      var modContext = runAndHandleMaybe(() -> parseSmoothCode(modFiles.smoothFile(), sourceCode));
       var moduleP = runAndHandleMaybe(() -> translateAp(modFiles.smoothFile(), modContext));
       runAndHandleLogs(() -> findSyntaxErrors(moduleP));
       runAndHandleLogs(() -> decodeLiterals(moduleP));

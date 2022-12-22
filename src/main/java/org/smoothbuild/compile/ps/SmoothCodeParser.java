@@ -29,8 +29,8 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 
-public class ParseModule {
-  public static Maybe<ModContext> parseModule(FilePath filePath, String sourceCode) {
+public class SmoothCodeParser {
+  public static Maybe<ModContext> parseSmoothCode(FilePath filePath, String sourceCode) {
     var logBuffer = new LogBuffer();
     ErrorListener errorListener = new ErrorListener(filePath, logBuffer);
     SmoothLexer lexer = new SmoothLexer(CharStreams.fromString(sourceCode));
