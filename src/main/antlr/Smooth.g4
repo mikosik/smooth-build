@@ -7,7 +7,7 @@ namedValue   : ann? type? NAME ('=' pipe)? ';' ;
 itemList     : ( item ( ',' item )* ','? )? ;
 item         : type NAME ( '=' expr )? ;
 ann          : '@' NAME '(' STRING ')' ;
-pipe         : expr ( p+='|' expr )* ;
+pipe         : expr ( p+='>' expr )* ;
 expr         : chainHead ( chainPart )*   # chain
              | anonFunc                   # anonymousFunc
              ;

@@ -214,7 +214,7 @@ public class ExprSLoadingTest extends TestContext {
         var code = """
             Int myIntId(Int i) = i;
             result = 7
-              | myIntId();
+              > myIntId();
             """;
         var myIntId = intIdFuncS();
         var result = valueS(2, intTS(), "result", callS(3, monoizeS(3, myIntId), intS(2, 7)));
@@ -414,7 +414,7 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void order_with_piped_value() {
         module("""
-          result = 0x07 |
+          result = 0x07 >
           [
             0x08
           ];

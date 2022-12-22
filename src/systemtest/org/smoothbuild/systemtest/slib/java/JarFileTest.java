@@ -13,7 +13,7 @@ public class JarFileTest extends SystemTestCase {
     createUserModule("""
             aFile =
                 [file(0x41, "dir/file1.txt"), file(0x42, "file2.txt")]
-              | jarFile("file.jar");
+              > jarFile("file.jar");
             result = unjar(aFile.content);
             """);
     runSmoothBuild("result");

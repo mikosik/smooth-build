@@ -1083,7 +1083,7 @@ public class DeclarationTest extends TestContext {
       @Test
       public void pipe_inside_body() {
         var code = """
-            result = () -> (7 | []);
+            result = () -> (7 > []);
             """;
         module(code)
             .loadsWithSuccess();
@@ -1513,7 +1513,7 @@ public class DeclarationTest extends TestContext {
               String myField
             )
             myValue = myStruct("def");
-            result = "abc" | myValue.myField;
+            result = "abc" > myValue.myField;
             """;
         module(code)
             .loadsWithError(5, "Piped value is not consumed.");
@@ -1522,7 +1522,7 @@ public class DeclarationTest extends TestContext {
       @Test
       public void not_consumed_by_int_literal() {
         var code = """
-            result = "abc" | 7;
+            result = "abc" > 7;
             """;
         module(code)
             .loadsWithError(1, "Piped value is not consumed.");
@@ -1531,7 +1531,7 @@ public class DeclarationTest extends TestContext {
       @Test
       public void not_consumed_by_string_literal() {
         var code = """
-            result = "abc" | "def";
+            result = "abc" > "def";
             """;
         module(code)
             .loadsWithError(1, "Piped value is not consumed.");
@@ -1540,7 +1540,7 @@ public class DeclarationTest extends TestContext {
       @Test
       public void not_consumed_by_blob_literal() {
         var code = """
-            result = "abc" | 0xAA;
+            result = "abc" > 0xAA;
             """;
         module(code)
             .loadsWithError(1, "Piped value is not consumed.");
@@ -1550,7 +1550,7 @@ public class DeclarationTest extends TestContext {
       public void not_consumed_by_value_ref() {
         var code = """
             myValue = 7;
-            result = "abc" | myValue;
+            result = "abc" > myValue;
             """;
         module(code)
             .loadsWithError(2, "Piped value is not consumed.");
@@ -1559,7 +1559,7 @@ public class DeclarationTest extends TestContext {
       @Test
       public void not_consumed_by_consuming_expr_inside_anonymous_function_body() {
         var code = """
-            result = 7 | () -> [];
+            result = 7 > () -> [];
             """;
         module(code)
             .loadsWithError(1, "Piped value is not consumed.");
@@ -1568,7 +1568,7 @@ public class DeclarationTest extends TestContext {
       @Test
       public void not_consumed_by_expression_inside_parens() {
         var code = """
-            result = "abc" | (7);
+            result = "abc" > (7);
             """;
         module(code)
             .loadsWithError(1, "Piped value is not consumed.");
@@ -1577,7 +1577,7 @@ public class DeclarationTest extends TestContext {
       @Test
       public void not_consumed_by_first_expr_of_inner_pipe_inside_parens() {
         var code = """
-            result = "abc" | (7 | []);
+            result = "abc" > (7 > []);
             """;
         module(code)
             .loadsWithError(1, "Piped value is not consumed.");
@@ -1588,7 +1588,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             String stringId(String string) = string;
             A id(A a) = a;
-            result = "abc" | (stringId | id())();
+            result = "abc" > (stringId > id())();
             """;
         module(code)
             .loadsWithSuccess();
@@ -1602,7 +1602,7 @@ public class DeclarationTest extends TestContext {
             )
             v = myStruct(7);
             A id(A a) = a;
-            result = "abc" | (v | id()).myField;
+            result = "abc" > (v > id()).myField;
             """;
         module(code)
             .loadsWithError(6, "Piped value is not consumed.");

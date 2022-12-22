@@ -416,16 +416,16 @@ public class ExprSUsageTest extends TestContext {
       module("""
           A myIdentity(A a) = a;
           String myFunc(String param) = "abc";
-          result = myFunc("abc" | myIdentity());
+          result = myFunc("abc" > myIdentity());
           """)
           .loadsWith(
               err(3, """
-                  mismatched input '|' expecting {')', ','}
-                  result = myFunc("abc" | myIdentity());
+                  mismatched input '>' expecting {')', ','}
+                  result = myFunc("abc" > myIdentity());
                                         ^"""),
               err(3, """
                   extraneous input ')' expecting ';'
-                  result = myFunc("abc" | myIdentity());
+                  result = myFunc("abc" > myIdentity());
                                                       ^""")
           );
     }
@@ -435,7 +435,7 @@ public class ExprSUsageTest extends TestContext {
       module("""
           A myIdentity(A a) = a;
           String myFunc(String param) = "abc";
-          result() = "abc" | myIdentity();
+          result() = "abc" > myIdentity();
           """)
           .loadsWithSuccess();
     }
@@ -444,7 +444,7 @@ public class ExprSUsageTest extends TestContext {
     public void value_body() {
       module("""
           A myIdentity(A a) = a;
-          result = "abc" | myIdentity();
+          result = "abc" > myIdentity();
           """)
           .loadsWithSuccess();
     }
@@ -453,16 +453,16 @@ public class ExprSUsageTest extends TestContext {
     public void array_elem() {
       module("""
              String myIdentity(String string) = string;
-             result = ["abc" | myIdentity()];
+             result = ["abc" > myIdentity()];
              """)
           .loadsWith(
               err(2, """
-                  mismatched input '|' expecting {',', ']'}
-                  result = ["abc" | myIdentity()];
+                  mismatched input '>' expecting {',', ']'}
+                  result = ["abc" > myIdentity()];
                                   ^"""),
               err(2, """
                   extraneous input ']' expecting ';'
-                  result = ["abc" | myIdentity()];
+                  result = ["abc" > myIdentity()];
                                                 ^""")
           );
     }
@@ -471,12 +471,12 @@ public class ExprSUsageTest extends TestContext {
     public void param_default_value() {
       module("""
           A myIdentity(A a) = a;
-          String myFunc(String param = "abc" | myIdentity()) = "abc";
+          String myFunc(String param = "abc" > myIdentity()) = "abc";
           """)
           .loadsWith(
               err(2, """
-                  mismatched input '|' expecting {'(', ')', ',', '.'}
-                  String myFunc(String param = "abc" | myIdentity()) = "abc";
+                  mismatched input '>' expecting {'(', ')', ',', '.'}
+                  String myFunc(String param = "abc" > myIdentity()) = "abc";
                                                      ^"""
               )
           );

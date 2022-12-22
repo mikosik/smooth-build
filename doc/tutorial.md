@@ -7,11 +7,11 @@ a description of project's build process.
 One of the simplest non-trivial build files is:
 
 ```
-File release = projectFiles("src") | javac() | jar();
+File release = projectFiles("src") > javac() > jar();
 ```
 
-This script defines value `release` which body contains function calls separated by `|`.
-Separator `|` means that expression on the left (of `|`) is passed as the first argument
+This script defines value `release` which body contains function calls separated by `>`.
+Separator `>` means that expression on the left (of `>`) is passed as the first argument
 to function call on the right. So in our example call to [projectFiles](api/projectFiles.md) 
 function returns all files from `src` directory located at project's root.
 That result is passed as argument to call to [javac](api/javac.md) function that invokes java 
@@ -38,7 +38,7 @@ Smooth is capable of inferring type of any expression,
 so we don't have to declare it explicitly.
 Our initial example can be simplified to
 ```
-release = projectFiles("src") | javac() | jar();
+release = projectFiles("src") > javac() > jar();
 ```
 For educational reasons we will keep writing types explicitly in our examples.
 
@@ -59,8 +59,8 @@ Note that there's ugly duplicated code in this example.
 We make it clean further in this tutorial for now we just focus on parallelism. 
 
 ```
-File main = projectFiles("src-main") | javac() | jar();
-File deps = projectFiles("src-deps") | javac() | jar();
+File main = projectFiles("src-main") > javac() > jar();
+File deps = projectFiles("src-deps") > javac() > jar();
 ```
 
 As both functions (`main` and `deps`) do not depend on each other
@@ -73,7 +73,7 @@ It is enough to ask smooth to build those jars with `smooth build main deps`.
 If you run build command twice for our initial example
 
 ```
-File release = projectFiles("src") | javac() | jar();
+File release = projectFiles("src") > javac() > jar();
 ```
 
 you will notice that second evaluation completes almost instantly.
@@ -224,10 +224,10 @@ Below example of two level deep array (array of arrays of `String`).
 Let's look once again at `release` value that we defined at the beginning of this tutorial.
 
 ```
-File release = projectFiles("src") | javac() | jar();
+File release = projectFiles("src") > javac() > jar();
 ```
 
-It uses function chaining (represented by pipe symbol `|`) to pass function call result as
+It uses function chaining (represented by pipe symbol `>`) to pass function call result as
 argument to other function call.
 In fact function chaining is just syntactic sugar for more standard function calls.
 We can refactor above function definition to:
@@ -243,7 +243,7 @@ We can define our own functions in `build.smooth` same way we defined values so 
 Let's refactor our initial example by splitting it into two functions and adding result types:
 
 ```
-[File] classes(String sourcePath) = projectFiles(sourcePath) | javac();
+[File] classes(String sourcePath) = projectFiles(sourcePath) > javac();
 File release = jar(classes("src"));
 ```
 
@@ -254,7 +254,7 @@ This way we can build our own set of reusable functions.
 For example:
 
 ```
-File javaJar(String srcPath) = projectFiles(srcPath) | javac() | jar();
+File javaJar(String srcPath) = projectFiles(srcPath) > javac() > jar();
 File main = javaJar("src/main");
 File other = javaJar("src/other"); 
 ```

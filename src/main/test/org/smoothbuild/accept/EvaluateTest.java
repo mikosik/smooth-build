@@ -102,7 +102,7 @@ public class EvaluateTest extends AcceptanceTestCase {
             )
             Int return7(String s) = 7;
             aStruct = myStruct(return7);
-            Int result = "abc" | aStruct.field();
+            Int result = "abc" > aStruct.field();
             """);
         evaluate("result");
         assertThat(artifact())
@@ -125,7 +125,7 @@ public class EvaluateTest extends AcceptanceTestCase {
       @Test
       public void order_consumes_piped_value() throws Exception {
         createUserModule("""
-            [Int] result = 1 | [2, 3];
+            [Int] result = 1 > [2, 3];
             """);
         evaluate("result");
         assertThat(artifact())
@@ -200,7 +200,7 @@ public class EvaluateTest extends AcceptanceTestCase {
         public void call_consumes_piped_value() throws Exception {
           createUserModule("""
             myFunc(Int int) = int;
-            result = 7 | ((Int int) -> int)();
+            result = 7 > ((Int int) -> int)();
             """);
           evaluate("result");
           assertThat(artifact())
@@ -277,7 +277,7 @@ public class EvaluateTest extends AcceptanceTestCase {
         public void call_consumes_piped_value() throws Exception {
           createUserModule("""
             myFunc(Int int) = int;
-            result = 7 | myFunc();
+            result = 7 > myFunc();
             """);
           evaluate("result");
           assertThat(artifact())
