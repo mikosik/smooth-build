@@ -1,5 +1,8 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
+
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.location.Location;
@@ -47,5 +50,17 @@ public final class NamedValueP extends NamedEvaluableP {
 
   public void setSchemaS(SchemaS schemaS) {
     this.schemaS = schemaS;
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "type = " + type,
+        "name = " + name(),
+        "body = " + body(),
+        "annotation = " + annotation(),
+        "location = " + location()
+    );
+    return "NamedValueP(\n" + indent(fields) + "\n)";
   }
 }

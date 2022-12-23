@@ -1,5 +1,7 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Optional;
@@ -42,5 +44,15 @@ public final class ItemP extends NalImpl implements RefableP {
 
   public static ImmutableList<TypeS> toTypeS(NList<ItemP> params) {
     return map(params, ItemP::typeS);
+  }
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "type = " + type,
+        "name = " + name(),
+        "defaultValue = " + defaultValue,
+        "location = " + location()
+    );
+    return "ItemP(\n" + indent(fields) + "\n)";
   }
 }

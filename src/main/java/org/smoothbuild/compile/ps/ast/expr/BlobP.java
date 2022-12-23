@@ -1,5 +1,8 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
+
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.util.DecodeHexExc;
 import org.smoothbuild.util.Hex;
@@ -25,5 +28,14 @@ public final class BlobP extends ExprP {
 
   public ByteString byteString() {
     return byteString;
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "literal = " + literal,
+        "location = " + location()
+    );
+    return "BlobP(\n" + indent(fields) + "\n)";
   }
 }

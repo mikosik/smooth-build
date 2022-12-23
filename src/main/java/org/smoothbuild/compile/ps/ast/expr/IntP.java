@@ -1,6 +1,8 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
 import static java.lang.Character.isDigit;
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
 
 import java.math.BigInteger;
 
@@ -52,5 +54,14 @@ public final class IntP extends ExprP {
 
   public BigInteger bigInteger() {
     return bigInteger;
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "literal = " + literal,
+        "location = " + location()
+    );
+    return "IntP(\n" + indent(fields) + "\n)";
   }
 }

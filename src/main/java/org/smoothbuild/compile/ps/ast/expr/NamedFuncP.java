@@ -1,5 +1,8 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Lists.joinToString;
+
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.location.Location;
@@ -59,5 +62,20 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
   @Override
   public void setSchemaS(FuncSchemaS funcSchemaS) {
     this.funcSchemaS = funcSchemaS;
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "resT = " + resT,
+        "name = " + name(),
+        "params = [",
+        indent(joinToString(params(), "\n")),
+        "]",
+        "body = " + body(),
+        "annotation = " + annotation(),
+        "location = " + location()
+    );
+    return "NamedFuncP(\n" + indent(fields) + "\n)";
   }
 }
