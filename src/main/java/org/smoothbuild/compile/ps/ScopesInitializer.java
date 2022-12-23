@@ -21,7 +21,6 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.bindings.MutableBindings;
-import org.smoothbuild.util.collect.NList;
 
 /**
  * For each syntactic construct that implements WithScope
@@ -98,15 +97,14 @@ public class ScopesInitializer extends ModuleVisitorP {
 
     @Override
     public void visitNamedFunc(NamedFuncP namedFuncP) {
+      visitNamedFuncNotScopedChildren(namedFuncP);
       newInitializerForScopeOf(namedFuncP)
-          .visitNamedFuncChildren(namedFuncP);
+          .visitNamedFuncScopedChildren(namedFuncP);
     }
 
     @Override
-    public void visitNamedFuncChildren(NamedFuncP namedFuncP) {
-      var params = namedFuncP.params();
-      visitParams(params);
-      handleFunc(namedFuncP, params);
+    public void visitNamedFuncScopedChildren(NamedFuncP namedFuncP) {
+      handleFunc(namedFuncP);
     }
 
     @Override
@@ -117,12 +115,12 @@ public class ScopesInitializer extends ModuleVisitorP {
 
     @Override
     public void visitAnonymousFuncChildren(AnonymousFuncP anonymousFuncP) {
-      handleFunc(anonymousFuncP, anonymousFuncP.params());
+      handleFunc(anonymousFuncP);
     }
 
-    private void handleFunc(FuncP funcP, NList<ItemP> params) {
+    private void handleFunc(FuncP funcP) {
       new BindingsAdder(scope, log)
-          .visitParams(params);
+          .visitParams(funcP.params());
       handleBody(funcP);
     }
 

@@ -55,6 +55,13 @@ public class ModuleVisitorP {
     visitNameOf(field);
   }
 
+  public void visitFunc(FuncP funcP) {
+    switch (funcP) {
+      case NamedFuncP namedFuncP -> visitNamedFunc(namedFuncP);
+      case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
+    }
+  }
+
   public void visitNamedEvaluables(List<NamedEvaluableP> namedEvaluablePs) {
     namedEvaluablePs.forEach(this::visitNamedEvaluable);
   }
@@ -78,15 +85,19 @@ public class ModuleVisitorP {
   }
 
   public void visitNamedFunc(NamedFuncP namedFuncP) {
-    visitNamedFuncChildren(namedFuncP);
+    visitNamedFuncNotScopedChildren(namedFuncP);
+    visitNamedFuncScopedChildren(namedFuncP);
   }
 
-  public void visitNamedFuncChildren(NamedFuncP namedFuncP) {
+  public void visitNamedFuncNotScopedChildren(NamedFuncP namedFuncP) {
     namedFuncP.annotation().ifPresent(this::visitAnnotation);
     namedFuncP.resT().ifPresent(this::visitType);
     visitParams(namedFuncP.params());
-    namedFuncP.body().ifPresent(expr -> visitFuncBody(namedFuncP, expr));
     visitNameOf(namedFuncP);
+  }
+
+  public void visitNamedFuncScopedChildren(NamedFuncP namedFuncP) {
+    namedFuncP.body().ifPresent(expr -> visitFuncBody(namedFuncP, expr));
   }
 
   public void visitFuncBody(FuncP funcP, ExprP exprP) {
