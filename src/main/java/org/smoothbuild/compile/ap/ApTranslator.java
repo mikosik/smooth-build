@@ -78,7 +78,7 @@ public class ApTranslator {
       public Void visitStruct(StructContext struct) {
         var name = struct.NAME().getText();
         var location = fileLocation(filePath, struct.NAME().getSymbol());
-        var fields = createItems(name, struct.itemList());
+        var fields = createItems(struct.itemList());
         structs.add(new StructP(name, fields, location));
         return null;
       }
@@ -92,7 +92,7 @@ public class ApTranslator {
         Optional<ExprP> body = createPipeSane(namedFunc.pipe());
         Optional<AnnotationP> annotation = createNativeSane(namedFunc.ann());
         var location = fileLocation(filePath, nameNode);
-        var params = createItems(name, namedFunc.itemList());
+        var params = createItems(namedFunc.itemList());
         evaluables.add(new NamedFuncP(type, name, params, body, annotation, location));
         return null;
       }
@@ -122,26 +122,26 @@ public class ApTranslator {
         }
       }
 
-      private NList<ItemP> createItems(String ownerName, ItemListContext itemList) {
-        return nlistWithShadowing(createItemsList(ownerName, itemList));
+      private NList<ItemP> createItems(ItemListContext itemList) {
+        return nlistWithShadowing(createItemsList(itemList));
       }
 
-      private ImmutableList<ItemP> createItemsList(String ownerName, ItemListContext itemList) {
+      private ImmutableList<ItemP> createItemsList(ItemListContext itemList) {
         if (itemList != null) {
           return sane(itemList.item())
               .stream()
-              .map(item -> createItem(ownerName, item))
+              .map(this::createItem)
               .collect(toImmutableList());
         }
         return ImmutableList.of();
       }
 
-      private ItemP createItem(String ownerName, ItemContext item) {
+      private ItemP createItem(ItemContext item) {
         var type = createT(item.type());
         var nameNode = item.NAME();
         var name = nameNode.getText();
         var location = fileLocation(filePath, nameNode);
-        var defaultValue = createDefaultValue(ownerName + ":" + name, item, location);
+        var defaultValue = createDefaultValue(name, item, location);
         return new ItemP(type, name, defaultValue, location);
       }
 
@@ -257,7 +257,7 @@ public class ApTranslator {
 
       private AnonymousFuncP createAnonymousFunc(AnonymousFuncContext anonymousFunc) {
         var anonFunc = anonymousFunc.anonFunc();
-        var params = createItems("anonymousFunc", anonFunc.itemList());
+        var params = createItems(anonFunc.itemList());
         var body = createExpr(anonFunc.expr());
         return new AnonymousFuncP(params, body, fileLocation(filePath, anonFunc));
       }

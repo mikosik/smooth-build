@@ -23,7 +23,11 @@ public abstract class Bindings<E> {
 
   public E get(String name) {
     return getOptional(name)
-        .orElseThrow(() -> new NoSuchElementException(name));
+        .orElseThrow(() -> noSuchElementException(name));
+  }
+
+  private static NoSuchElementException noSuchElementException(String name) {
+    return new NoSuchElementException(name);
   }
 
   public boolean contains(String name) {

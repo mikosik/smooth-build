@@ -55,9 +55,11 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class PsTranslator {
+  private final String scopeName;
   private final OptionalBindings<? extends RefableS> bindings;
 
-  public PsTranslator(OptionalBindings<? extends RefableS> bindings) {
+  public PsTranslator(String scopeName, OptionalBindings<? extends RefableS> bindings) {
+    this.scopeName = scopeName;
     this.bindings = bindings;
   }
 
@@ -102,7 +104,7 @@ public class PsTranslator {
       var annotatedFuncS = new AnnotatedFuncS(annotationS, schema, name, params, loc);
       return Optional.of(annotatedFuncS);
     } else {
-      return translateFuncBody(params, namedFuncP.body().get())
+      return translateFuncBody(scopeName + namedFuncP.name() + ":", params, namedFuncP.body().get())
           .map(b -> new NamedExprFuncS(schema, name, params, b, loc));
     }
   }
@@ -145,13 +147,13 @@ public class PsTranslator {
 
   private Optional<ExprS> translateAnonymousFunc(AnonymousFuncP anonymousFuncP) {
     var params = translateParams(anonymousFuncP.params());
-    return translateFuncBody(params, anonymousFuncP.bodyGet())
+    return translateFuncBody(scopeName + "?:", params, anonymousFuncP.bodyGet())
         .map(b -> monoizeAnonymousFunc(anonymousFuncP, params, b));
   }
 
-  private Optional<ExprS> translateFuncBody(NList<ItemS> params, ExprP expr) {
+  private Optional<ExprS> translateFuncBody(String funcScopeName, NList<ItemS> params, ExprP expr) {
     var bindingsInBody = funcBodyScopeBindings(bindings, params);
-    return new PsTranslator(bindingsInBody)
+    return new PsTranslator(funcScopeName, bindingsInBody)
         .translateExpr(expr);
   }
 

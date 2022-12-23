@@ -62,7 +62,7 @@ public class ModuleCreator {
     this.types = types;
     this.bindings = bindings;
     this.logBuffer = logBuffer;
-    this.psTranslator = new PsTranslator(bindings);
+    this.psTranslator = new PsTranslator("", bindings);
   }
 
   public void visitStruct(StructP structP) {
@@ -110,13 +110,14 @@ public class ModuleCreator {
       @SuppressWarnings("unchecked") // safe as NamedFuncS is immutable
       var namedEvaluableS = (Optional<NamedEvaluableS>) (Object) funcS;
       bindings.add(namedFuncP.name(), namedEvaluableS);
-      funcS.ifPresent(f -> f.params().forEach(this::addDefaultValueToBindings));
+      funcS.ifPresent(f -> f.params()
+          .forEach(paramS -> addDefaultValueToBindings(f.name(), paramS)));
     } else {
       bindings.add(namedFuncP.name(), Optional.empty());
     }
   }
 
-  private void addDefaultValueToBindings(ItemS paramS) {
-    paramS.defaultValue().ifPresent(v -> bindings.add(v.name(), Optional.of(v)));
+  private void addDefaultValueToBindings(String name, ItemS paramS) {
+    paramS.defaultValue().ifPresent(v -> bindings.add(name + ":" + v.name(), Optional.of(v)));
   }
 }

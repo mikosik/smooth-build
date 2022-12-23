@@ -751,7 +751,7 @@ public class DeclarationTest extends TestContext {
                 String nonDefault);
               """;
           var myFuncParams = nlist(
-              itemS(3, stringTS(), "default", valueS(3, "myFunc:default", stringS(3, "value"))),
+              itemS(3, stringTS(), "default", valueS(3, "default", stringS(3, "value"))),
               itemS(4, stringTS(), "nonDefault"));
           var ann = nativeAnnotationS(1, stringS(1, "Impl.met"));
           var myFunc = annotatedFuncS(2, ann, stringTS(), "myFunc", myFuncParams);
