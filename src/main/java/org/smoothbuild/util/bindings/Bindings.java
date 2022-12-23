@@ -6,6 +6,7 @@ import static org.smoothbuild.util.collect.Lists.joinToString;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -85,7 +86,11 @@ public abstract class Bindings<E> {
     }
   }
   public static <T> String bindingsToString(Map<String, T> bindings) {
-    var string = joinToString(bindings.values(), "\n");
+    var string = joinToString(bindings.entrySet(), Bindings::bindingToString, "\n");
     return string.isEmpty() ? "<no bindings>" : string;
+  }
+
+  private static <T> String bindingToString(Entry<String, T> e) {
+    return e.getKey() + " -> " + e.getValue();
   }
 }

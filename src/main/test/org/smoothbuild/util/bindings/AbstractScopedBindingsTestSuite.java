@@ -53,8 +53,8 @@ public abstract class AbstractScopedBindingsTestSuite {
     var inner = newMapBindings(outer, elem("value-c", 9));
     assertThat(inner.toString())
         .isEqualTo("""
-            Elem[name=value-a, value=7]
-            Elem[name=value-b, value=8]
-              Elem[name=value-c, value=9]""");
+            value-a -> Elem[name=value-a, value=7]
+            value-b -> Elem[name=value-b, value=8]
+              value-c -> Elem[name=value-c, value=9]""");
   }
 }
