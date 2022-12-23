@@ -214,6 +214,19 @@ public class NListTest {
   }
 
   @Nested
+  class _values_to_pretty_string {
+    @Test
+    public void values_to_string() {
+      var nlist = nlist(n0, n1, n2);
+      assertThat(nlist.valuesToPrettyString())
+          .isEqualTo("""
+              zero
+              one
+              two""");
+    }
+  }
+
+  @Nested
   class _get_index {
     @Test
     public void returns_element_at_given_index() {

@@ -1,6 +1,7 @@
 package org.smoothbuild.util.collect;
 
 import static com.google.common.base.Suppliers.memoize;
+import static org.smoothbuild.util.collect.Lists.joinToString;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.AbstractList;
@@ -165,6 +166,10 @@ public class NList<T extends Nameable> extends AbstractList<T> {
 
   public String valuesToString() {
     return toCommaSeparatedString(list());
+  }
+
+  public String valuesToPrettyString() {
+    return joinToString(list(), "\n");
   }
 
   // overriden methods from List<T>
