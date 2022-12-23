@@ -125,10 +125,14 @@ public class FindSyntaxErrors {
   private static void detectStructFieldWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
     new ModuleVisitorP() {
       @Override
-      public void visitField(ItemP field) {
-        super.visitField(field);
-        if (field.defaultValue().isPresent()) {
-          logger.log(compileError(field.location(), "Struct field `" + field.name()
+      public void visitStruct(StructP structP) {
+        super.visitStruct(structP);
+        structP.fields().forEach(this::logErrorIfDefaultValuePresent);
+      }
+
+      private void logErrorIfDefaultValuePresent(ItemP param) {
+        if (param.defaultValue().isPresent()) {
+          logger.log(compileError(param.location(), "Struct field `" + param.name()
               + "` has default value. Only function parameters can have default value."));
         }
       }
