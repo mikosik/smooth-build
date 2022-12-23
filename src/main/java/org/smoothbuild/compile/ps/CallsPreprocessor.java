@@ -28,7 +28,6 @@ import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.RefableP;
-import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.expr.WithScopeP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -66,12 +65,6 @@ public class CallsPreprocessor {
     }
 
     @Override
-    public void visitStruct(StructP structP) {
-      newPreprocessorForScope(structP)
-          .visitStructChildren(structP);
-    }
-
-    @Override
     public void visitFuncBody(FuncP funcP, ExprP exprP) {
       newPreprocessorForScope(funcP)
           .visitExpr(exprP);
@@ -80,7 +73,7 @@ public class CallsPreprocessor {
     @Override
     public void visitNamedValue(NamedValueP namedValueP) {
       newPreprocessorForScope(namedValueP)
-          .visitNamedValueChildren(namedValueP);
+          .visitNamedValueBody(namedValueP);
     }
 
     private Preprocessor newPreprocessorForScope(WithScopeP withScopeP) {

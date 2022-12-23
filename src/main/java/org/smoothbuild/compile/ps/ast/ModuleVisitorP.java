@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.ps.ast;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
@@ -39,27 +38,11 @@ public class ModuleVisitorP {
   }
 
   public void visitStruct(StructP structP) {
-    visitStructChildren(structP);
+    visitStructSignature(structP);
   }
 
-  public void visitStructChildren(StructP structP) {
-    visitFields(structP.fields());
-  }
-
-  public void visitFields(List<ItemP> fields) {
-    fields.forEach(this::visitField);
-  }
-
-  public void visitField(ItemP field) {
-    visitType(field.type());
-    visitNameOf(field);
-  }
-
-  public void visitFunc(FuncP funcP) {
-    switch (funcP) {
-      case NamedFuncP namedFuncP -> visitNamedFunc(namedFuncP);
-      case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
-    }
+  public void visitStructSignature(StructP structP) {
+    visitItems(structP.fields());
   }
 
   public void visitNamedEvaluables(List<NamedEvaluableP> namedEvaluablePs) {
@@ -74,30 +57,34 @@ public class ModuleVisitorP {
   }
 
   public void visitNamedValue(NamedValueP namedValueP) {
-    visitNamedValueChildren(namedValueP);
+    visitNamedValueSignature(namedValueP);
+    visitNamedValueBody(namedValueP);
   }
 
-  public void visitNamedValueChildren(NamedValueP namedValueP) {
+  public void visitNamedValueSignature(NamedValueP namedValueP) {
     namedValueP.annotation().ifPresent(this::visitAnnotation);
     namedValueP.type().ifPresent(this::visitType);
-    namedValueP.body().ifPresent(this::visitExpr);
     visitNameOf(namedValueP);
   }
 
-  public void visitNamedFunc(NamedFuncP namedFuncP) {
-    visitNamedFuncNotScopedChildren(namedFuncP);
-    visitNamedFuncScopedChildren(namedFuncP);
+  public void visitNamedValueBody(NamedValueP namedValueP) {
+    namedValueP.body().ifPresent(this::visitExpr);
   }
 
-  public void visitNamedFuncNotScopedChildren(NamedFuncP namedFuncP) {
+  public void visitNamedFunc(NamedFuncP namedFuncP) {
+    visitNamedFuncSignature(namedFuncP);
+    visitFuncBody(namedFuncP);
+  }
+
+  public void visitNamedFuncSignature(NamedFuncP namedFuncP) {
     namedFuncP.annotation().ifPresent(this::visitAnnotation);
     namedFuncP.resT().ifPresent(this::visitType);
-    visitParams(namedFuncP.params());
+    visitItems(namedFuncP.params());
     visitNameOf(namedFuncP);
   }
 
-  public void visitNamedFuncScopedChildren(NamedFuncP namedFuncP) {
-    namedFuncP.body().ifPresent(expr -> visitFuncBody(namedFuncP, expr));
+  public void visitFuncBody(FuncP funcP) {
+    funcP.body().ifPresent(expr -> visitFuncBody(funcP, expr));
   }
 
   public void visitFuncBody(FuncP funcP, ExprP exprP) {
@@ -108,14 +95,14 @@ public class ModuleVisitorP {
     visitString(annotationP.path());
   }
 
-  public void visitParams(List<ItemP> params) {
-    visitIndexedElements(params, this::visitParam);
+  public void visitItems(List<ItemP> itemPs) {
+    itemPs.forEach(this::visitItem);
   }
 
-  public void visitParam(int index, ItemP param) {
-    visitType(param.type());
-    param.defaultValue().ifPresent(this::visitNamedValue);
-    visitNameOf(param);
+  public void visitItem(ItemP itemP) {
+    visitType(itemP.type());
+    visitNameOf(itemP);
+    itemP.defaultValue().ifPresent(this::visitNamedValue);
   }
 
   public void visitType(TypeP typeP) {}
@@ -156,12 +143,12 @@ public class ModuleVisitorP {
   }
 
   public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    visitAnonymousFuncChildren(anonymousFuncP);
+    visitAnonymousFuncSignature(anonymousFuncP);
+    visitFuncBody(anonymousFuncP);
   }
 
-  public void visitAnonymousFuncChildren(AnonymousFuncP anonymousFuncP) {
-    visitParams(anonymousFuncP.params());
-    visitFuncBody(anonymousFuncP, anonymousFuncP.bodyGet());
+  public void visitAnonymousFuncSignature(AnonymousFuncP anonymousFuncP) {
+    visitItems(anonymousFuncP.params());
   }
 
   public void visitNamedArg(NamedArgP namedArg) {
@@ -181,10 +168,4 @@ public class ModuleVisitorP {
   public void visitString(StringP stringP) {}
 
   public void visitNameOf(RefableP refableP) {}
-
-  public <E> void visitIndexedElements(List<E> elems, BiConsumer<Integer, ? super E> consumer) {
-    for (int i = 0; i < elems.size(); i++) {
-      consumer.accept(i, elems.get(i));
-    }
-  }
 }

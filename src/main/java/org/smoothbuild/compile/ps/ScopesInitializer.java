@@ -6,9 +6,7 @@ import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
-import org.smoothbuild.compile.ps.ast.expr.EvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
-import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
@@ -45,14 +43,12 @@ public class ScopesInitializer extends ModuleVisitorP {
 
     @Override
     public void visitModule(ModuleP moduleP) {
-      newInitializerForScopeOf(moduleP)
+      createScopeWithBindingsAndWrapInsideInitializer(moduleP)
           .visitModuleChildren(moduleP);
     }
 
     @Override
     public void visitModuleChildren(ModuleP moduleP) {
-      new BindingsAdder(scope, log)
-          .visitModule(moduleP);
       super.visitModuleChildren(moduleP);
       addFunctionParameterDefaultValuesToModuleScope(scope);
     }
@@ -73,102 +69,65 @@ public class ScopesInitializer extends ModuleVisitorP {
 
     @Override
     public void visitStruct(StructP structP) {
-      newInitializerForScopeOf(structP)
-          .visitStructChildren(structP);
-    }
-
-    @Override
-    public void visitStructChildren(StructP structP) {
-      visitFields(structP.fields());
-      new BindingsAdder(scope, log)
-          .visitFields(structP.fields());
+      createScopeWithBindingsAndWrapInsideInitializer(structP)
+          .visitStructSignature(structP);
     }
 
     @Override
     public void visitNamedValue(NamedValueP namedValueP) {
-      newInitializerForScopeOf(namedValueP)
-          .visitNamedValueChildren(namedValueP);
-    }
-
-    @Override
-    public void visitNamedValueChildren(NamedValueP namedValueP) {
-      handleBody(namedValueP);
+      visitNamedValueSignature(namedValueP);
+      createScopeWithBindingsAndWrapInsideInitializer(namedValueP)
+          .visitNamedValueBody(namedValueP);
     }
 
     @Override
     public void visitNamedFunc(NamedFuncP namedFuncP) {
-      visitNamedFuncNotScopedChildren(namedFuncP);
-      newInitializerForScopeOf(namedFuncP)
-          .visitNamedFuncScopedChildren(namedFuncP);
-    }
-
-    @Override
-    public void visitNamedFuncScopedChildren(NamedFuncP namedFuncP) {
-      handleFunc(namedFuncP);
+      visitNamedFuncSignature(namedFuncP);
+      createScopeWithBindingsAndWrapInsideInitializer(namedFuncP)
+          .visitFuncBody(namedFuncP);
     }
 
     @Override
     public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-      newInitializerForScopeOf(anonymousFuncP)
-          .visitAnonymousFuncChildren(anonymousFuncP);
+      visitAnonymousFuncSignature(anonymousFuncP);
+      createScopeWithBindingsAndWrapInsideInitializer(anonymousFuncP)
+          .visitFuncBody(anonymousFuncP);
     }
 
-    @Override
-    public void visitAnonymousFuncChildren(AnonymousFuncP anonymousFuncP) {
-      handleFunc(anonymousFuncP);
-    }
-
-    private void handleFunc(FuncP funcP) {
-      new BindingsAdder(scope, log)
-          .visitParams(funcP.params());
-      handleBody(funcP);
-    }
-
-    private void handleBody(EvaluableP evaluableP) {
-      evaluableP.body()
-          .ifPresent(b -> new Initializer(scope, log).visitExpr(b));
-    }
-
-    private Initializer newInitializerForScopeOf(WithScopeP withScopeP) {
+    private Initializer createScopeWithBindingsAndWrapInsideInitializer(WithScopeP withScopeP) {
       var newScope = scope.newInnerScope();
       withScopeP.setScope(newScope);
-      return new Initializer(withScopeP.scope(), log);
-    }
-  }
-
-  private static class BindingsAdder extends ModuleVisitorP {
-    private final ScopeP scope;
-    private final Logger log;
-
-    private BindingsAdder(ScopeP scope, Logger log) {
-      this.scope = scope;
-      this.log = log;
+      var initializer = new Initializer(newScope, log);
+      initializer.addBindingsFromScopeOf(withScopeP);
+      return initializer;
     }
 
-    @Override
-    public void visitNamedValue(NamedValueP namedValueP) {
-      addRefable(namedValueP);
+    private void addBindingsFromScopeOf(WithScopeP withScopeP) {
+      // @formatter:off
+      switch (withScopeP) {
+        case ModuleP     moduleP     -> addBindingsFromScopeOf(moduleP);
+        case StructP     structP     -> addBindingsFromScopeOf(structP);
+        case NamedValueP namedValueP -> addBindingsFromScopeOf(namedValueP);
+        case FuncP       funcP       -> addBindingsFromScopeOf(funcP);
+      }
+      // @formatter:on
     }
 
-    @Override
-    public void visitNamedFunc(NamedFuncP namedFuncP) {
-      addRefable(namedFuncP);
+    private void addBindingsFromScopeOf(ModuleP moduleP) {
+      moduleP.structs().forEach(this::addType);
+      moduleP.structs().forEach(s -> addRefable(s.constructor()));
+      moduleP.evaluables().forEach(this::addRefable);
     }
 
-    @Override
-    public void visitParam(int index, ItemP param) {
-      addRefable(param);
+    private void addBindingsFromScopeOf(StructP structP) {
+      structP.fields().forEach(this::addRefable);
     }
 
-    @Override
-    public void visitField(ItemP field) {
-      addRefable(field);
+    private void addBindingsFromScopeOf(NamedValueP namedValueP) {
     }
 
-    @Override
-    public void visitStruct(StructP structP) {
-      addRefable(structP.constructor());
-      addType(structP);
+    private void addBindingsFromScopeOf(FuncP funcP) {
+      funcP.params().forEach(this::addRefable);
     }
 
     private void addType(StructP type) {

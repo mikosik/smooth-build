@@ -51,13 +51,14 @@ public class DetectUndefinedRefablesAndTypes {
     @Override
     public void visitStruct(StructP structP) {
       newDetector(structP)
-          .visitStructChildren(structP);
+          .visitItems(structP.fields());
     }
 
     @Override
     public void visitNamedValue(NamedValueP namedValueP) {
+      visitNamedValueSignature(namedValueP);
       newDetector(namedValueP)
-          .visitNamedValueChildren(namedValueP);
+          .visitNamedValueBody(namedValueP);
     }
 
     @Override

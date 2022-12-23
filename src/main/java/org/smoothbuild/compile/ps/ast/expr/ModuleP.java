@@ -8,7 +8,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class ModuleP implements WithScopeP {
+public final class ModuleP implements WithScopeP {
   private final NList<StructP> structs;
   private final ImmutableList<NamedEvaluableP> evaluables;
   private ScopeP scope;

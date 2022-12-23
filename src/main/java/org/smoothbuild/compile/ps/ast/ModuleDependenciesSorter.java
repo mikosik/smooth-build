@@ -15,7 +15,6 @@ import java.util.Set;
 
 import org.smoothbuild.compile.lang.base.Nal;
 import org.smoothbuild.compile.lang.base.location.Location;
-import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
@@ -84,9 +83,9 @@ public class ModuleDependenciesSorter {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
     new ModuleVisitorP() {
       @Override
-      public void visitField(ItemP field) {
-        super.visitField(field);
-        addToDeps(field.type());
+      public void visitStructSignature(StructP structP) {
+        super.visitStructSignature(structP);
+        structP.fields().forEach(f -> addToDeps(f.type()));
       }
 
       private void addToDeps(TypeP type) {
