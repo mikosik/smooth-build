@@ -192,7 +192,7 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void is_not_visible_in_default_value_of_other_param() {
-          module("func(String param, String withDefault = param) = param;\n")
+          module("func(String param, String withDefault = param) = param;")
               .loadsWithError(1, "`param` is undefined.");
         }
       }
