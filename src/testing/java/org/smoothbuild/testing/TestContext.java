@@ -76,6 +76,11 @@ import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.VarSetS;
+import org.smoothbuild.compile.ps.ast.expr.IntP;
+import org.smoothbuild.compile.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
+import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
+import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.compile.sb.BytecodeMethodLoader;
@@ -1455,6 +1460,63 @@ public class TestContext {
     return new TraceS(code, location, tail);
   }
 
+  // P - parsed objects
+
+  public static NamedFuncP namedFuncP() {
+    return namedFuncP(nlist());
+  }
+
+  public static NamedFuncP namedFuncP(NList<ItemP> params) {
+    return namedFuncP("myFunc", params);
+  }
+
+  public static NamedFuncP namedFuncP(String name, NList<ItemP> params) {
+    return new NamedFuncP(
+        Optional.empty(), name, params, Optional.empty(), Optional.empty(), location());
+  }
+
+  public static NamedValueP namedValueP() {
+    return namedValueP(intP());
+  }
+
+  public static NamedValueP namedValueP(IntP body) {
+    return namedValueP("myValue", body);
+  }
+
+  public static NamedValueP namedValueP(String name) {
+    return namedValueP(name, intP());
+  }
+
+  public static NamedValueP namedValueP(String name, IntP body) {
+    return new NamedValueP(Optional.empty(), name, Optional.of(body), Optional.empty(), location());
+  }
+
+  public static ItemP itemP() {
+    return itemP(Optional.of(namedValueP()));
+  }
+
+  public static ItemP itemP(Optional<NamedValueP> defaultValue) {
+    return itemP("param1", defaultValue);
+  }
+
+  public static ItemP itemP(String name) {
+    return itemP(name, Optional.empty());
+  }
+
+  public static ItemP itemP(String name, NamedValueP defaultValue) {
+    return itemP(name, Optional.of(defaultValue));
+  }
+
+  public static ItemP itemP(String name, Optional<NamedValueP> defaultValue) {
+    return new ItemP(new TypeP("Int", location()), name, defaultValue, location());
+  }
+
+  public static IntP intP() {
+    return new IntP("7", location());
+  }
+
+  // location
+
   public static Location location() {
     return location(11);
   }
@@ -1510,6 +1572,8 @@ public class TestContext {
   public static SynchronizedFileSystem synchronizedMemoryFileSystem() {
     return new SynchronizedFileSystem(new MemoryFileSystem());
   }
+
+  // Task, Computation, Output
 
   public Task task() {
     return orderTask();
