@@ -1,13 +1,13 @@
 package org.smoothbuild.compile.ps;
 
-import static org.smoothbuild.compile.ap.ApTranslator.translateAp;
+import static org.smoothbuild.compile.parser.ApTranslator.translateAp;
+import static org.smoothbuild.compile.parser.SmoothCodeParser.parseSmoothCode;
 import static org.smoothbuild.compile.ps.CallsPreprocessor.preprocessCalls;
 import static org.smoothbuild.compile.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
 import static org.smoothbuild.compile.ps.FindSyntaxErrors.findSyntaxErrors;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.ps.ScopesInitializer.initializeScopes;
-import static org.smoothbuild.compile.ps.SmoothCodeParser.parseSmoothCode;
 import static org.smoothbuild.compile.ps.ast.ModuleDependenciesSorter.sortByDependencies;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;

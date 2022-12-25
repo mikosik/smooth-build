@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.ap;
+package org.smoothbuild.compile.parser;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.compile.ps.CompileError.compileError;

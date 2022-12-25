@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.ps;
+package org.smoothbuild.compile.parser;
 
 import static java.lang.String.join;
 import static org.smoothbuild.compile.lang.base.location.Locations.fileLocation;
