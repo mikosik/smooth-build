@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.ps.ast.type;
 
 import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Lists.joinToString;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
 
 import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.base.location.Location;

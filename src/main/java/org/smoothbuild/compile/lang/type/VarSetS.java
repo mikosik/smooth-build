@@ -4,7 +4,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.Sets.union;
 
 import java.util.Collection;

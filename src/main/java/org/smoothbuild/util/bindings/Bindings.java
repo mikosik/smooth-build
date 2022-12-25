@@ -1,7 +1,7 @@
 package org.smoothbuild.util.bindings;
 
 import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Lists.joinToString;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Map;

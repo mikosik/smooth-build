@@ -2,7 +2,7 @@ package org.smoothbuild.compile.lang.base;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
-import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
 
 import java.util.List;
 

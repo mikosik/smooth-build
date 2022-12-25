@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.lang.define;
 
-import static org.smoothbuild.util.collect.Lists.joinToString;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
 
 import java.math.BigInteger;
 

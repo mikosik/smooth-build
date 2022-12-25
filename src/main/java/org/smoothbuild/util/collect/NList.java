@@ -1,8 +1,8 @@
 package org.smoothbuild.util.collect;
 
 import static com.google.common.base.Suppliers.memoize;
-import static org.smoothbuild.util.collect.Lists.joinToString;
-import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
+import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
 
 import java.util.AbstractList;
 import java.util.Comparator;

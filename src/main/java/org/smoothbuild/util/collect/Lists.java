@@ -2,7 +2,6 @@ package org.smoothbuild.util.collect;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
-import static java.util.stream.Collectors.joining;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -108,28 +107,6 @@ public class Lists {
 
   public static <E> List<E> sane(List<E> list) {
     return list == null ? new ArrayList<>() : list;
-  }
-
-  public static <T> String toCommaSeparatedString(Iterable<T> list) {
-    return toCommaSeparatedString(list, Object::toString);
-  }
-
-  public static <T> String toCommaSeparatedString(
-      Iterable<T> list, Function<? super T, String> func) {
-    return joinToString(list, func, ",");
-  }
-
-  public static String joinToString(String delimiter, Object... elems) {
-    return joinToString(list(elems), Object::toString, delimiter);
-  }
-
-  public static <T> String joinToString(Iterable<T> list, String delimiter) {
-    return joinToString(list, Object::toString, delimiter);
-  }
-
-  public static <T> String joinToString(Iterable<T> list, Function<? super T, String> func,
-      String delimiter) {
-    return stream(list).map(func).collect(joining(delimiter));
   }
 
   public static <E> ImmutableList<E> sort(List<E> list, Comparator<? super E> comparator) {

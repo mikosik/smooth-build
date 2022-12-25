@@ -13,7 +13,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.sane;
 import static org.smoothbuild.util.collect.Lists.skip;
 import static org.smoothbuild.util.collect.Lists.sort;
-import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.Lists.zip;
 
 import java.util.ArrayList;
@@ -419,63 +418,6 @@ public class ListsTest {
 
   private static <T> BiFunction<T, T, Boolean> alwaysTruePredicate() {
     return (a, b) -> true;
-  }
-
-  @Nested
-  class _to_comma_separated_string {
-    @Nested
-    class _with_func {
-      @Test
-      public void empty_list(){
-        assertThat(toCommaSeparatedString(asList(), String::trim))
-            .isEqualTo("");
-      }
-
-      @Test
-      public void one_elem_list(){
-        assertThat(toCommaSeparatedString(asList(" one "), String::trim))
-            .isEqualTo("one");
-      }
-
-      @Test
-      public void two_elems_list(){
-        assertThat(toCommaSeparatedString(asList(" one ", " two "), String::trim))
-            .isEqualTo("one,two");
-      }
-
-      @Test
-      public void three_elems_list(){
-        assertThat(toCommaSeparatedString(asList(" one ", " two ", " three "), String::trim))
-            .isEqualTo("one,two,three");
-      }
-    }
-
-    @Nested
-    class _without_func {
-      @Test
-      public void empty_list(){
-        assertThat(toCommaSeparatedString(asList()))
-            .isEqualTo("");
-      }
-
-      @Test
-      public void one_elem_list(){
-        assertThat(toCommaSeparatedString(asList(1)))
-            .isEqualTo("1");
-      }
-
-      @Test
-      public void two_elems_list(){
-        assertThat(toCommaSeparatedString(asList(1, 2)))
-            .isEqualTo("1,2");
-      }
-
-      @Test
-      public void three_elems_list(){
-        assertThat(toCommaSeparatedString(asList(1, 2, 3)))
-            .isEqualTo("1,2,3");
-      }
-    }
   }
 
   @Nested

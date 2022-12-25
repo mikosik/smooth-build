@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.type;
 
 import static java.lang.String.join;
-import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
 
 import java.util.Objects;
 import java.util.Set;

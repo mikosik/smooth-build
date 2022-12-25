@@ -1,6 +1,6 @@
 package org.smoothbuild.out.log;
 
-import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
 
 import java.util.Collection;
 import java.util.Iterator;

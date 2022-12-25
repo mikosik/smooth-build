@@ -2,7 +2,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 
 import static java.lang.Character.isDigit;
 import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Lists.joinToString;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
 
 import java.math.BigInteger;
 
