@@ -18,6 +18,7 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.FuncP;
@@ -65,9 +66,17 @@ public class CallsPreprocessor {
     }
 
     @Override
-    public void visitFuncBody(FuncP funcP, ExprP exprP) {
-      newPreprocessorForScope(funcP)
-          .visitExpr(exprP);
+    public void visitNamedFunc(NamedFuncP namedFuncP) {
+      visitNamedFuncSignature(namedFuncP);
+      newPreprocessorForScope(namedFuncP)
+          .visitFuncBody(namedFuncP);
+    }
+
+    @Override
+    public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+      visitAnonymousFuncSignature(anonymousFuncP);
+      newPreprocessorForScope(anonymousFuncP)
+          .visitFuncBody(anonymousFuncP);
     }
 
     @Override
