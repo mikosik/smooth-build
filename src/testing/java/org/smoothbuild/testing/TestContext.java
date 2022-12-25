@@ -19,9 +19,11 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
+import static org.smoothbuild.util.collect.Nameables.toMap;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
@@ -77,11 +79,13 @@ import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.VarSetS;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
+import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
+import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.type.TypeP;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.BytecodeLoader;
@@ -103,7 +107,9 @@ import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
+import org.smoothbuild.util.bindings.FlatBindings;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -1268,6 +1274,10 @@ public class TestContext {
     return itemS(line, type, name, Optional.of(body));
   }
 
+  public static ItemS itemS(String name, ExprS body) {
+    return itemS(body.evalT(), name, Optional.of(body));
+  }
+
   public static ItemS itemS(TypeS type, String name, Optional<ExprS> body) {
     return itemS(1, type, name, body);
   }
@@ -1467,6 +1477,10 @@ public class TestContext {
     return new AnonymousFuncP(params, body, location());
   }
 
+  public static CallP callP(RefP callee) {
+    return new CallP(callee, list(), location());
+  }
+
   public static NamedFuncP namedFuncP() {
     return namedFuncP(nlist());
   }
@@ -1508,6 +1522,10 @@ public class TestContext {
     return itemP(name, Optional.empty());
   }
 
+  public static ItemP itemP(String name, ExprP defaultValue) {
+    return itemP(name, namedValueP(defaultValue));
+  }
+
   public static ItemP itemP(String name, NamedValueP defaultValue) {
     return itemP(name, Optional.of(defaultValue));
   }
@@ -1518,6 +1536,10 @@ public class TestContext {
 
   public static IntP intP() {
     return new IntP("7", location());
+  }
+
+  public static RefP refP(String name, Location location) {
+    return new RefP(name, location);
   }
 
   // location
@@ -1674,5 +1696,10 @@ public class TestContext {
 
   public static BsMapping bsMapping(Hash hash, Location location) {
     return new BsMapping(Map.of(), Map.of(hash, location));
+  }
+
+  @SafeVarargs
+  public static <T extends Named> FlatBindings<T> bindings(T... nameds) {
+    return immutableBindings(toMap(list(nameds)));
   }
 }
