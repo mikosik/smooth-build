@@ -1,9 +1,9 @@
 package org.smoothbuild.compile.lang.define;
 
-import org.smoothbuild.util.bindings.FlatBindings;
+import org.smoothbuild.util.bindings.SingleScopeBindings;
 
 public record ModuleS(
     ModFiles files,
-    FlatBindings<TypeDefinitionS> types,
-    FlatBindings<NamedEvaluableS> evaluables) {
+    SingleScopeBindings<TypeDefinitionS> types,
+    SingleScopeBindings<NamedEvaluableS> evaluables) {
 }

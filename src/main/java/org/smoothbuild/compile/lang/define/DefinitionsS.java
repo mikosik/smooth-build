@@ -2,14 +2,14 @@ package org.smoothbuild.compile.lang.define;
 
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
-import org.smoothbuild.util.bindings.FlatBindings;
+import org.smoothbuild.util.bindings.SingleScopeBindings;
 import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 
 public record DefinitionsS(
-    FlatBindings<TypeDefinitionS> types,
-    FlatBindings<NamedEvaluableS> evaluables) {
+    SingleScopeBindings<TypeDefinitionS> types,
+    SingleScopeBindings<NamedEvaluableS> evaluables) {
 
   public static DefinitionsS empty() {
     return new DefinitionsS(immutableBindings(), immutableBindings());
@@ -22,8 +22,9 @@ public record DefinitionsS(
     );
   }
 
-  public <E extends Named> FlatBindings<E> merge(
-      FlatBindings<E> outer, FlatBindings<? extends E> inner) {
+  public <E extends Named> SingleScopeBindings<E> merge(
+      SingleScopeBindings<? extends E> outer,
+      SingleScopeBindings<? extends E> inner) {
     var builder = ImmutableMap.<String, E>builder();
     builder.putAll(outer.toMap());
     builder.putAll(inner.toMap());

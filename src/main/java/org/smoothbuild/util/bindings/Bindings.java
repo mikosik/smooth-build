@@ -16,12 +16,13 @@ import com.google.common.collect.ImmutableMap;
 public abstract class Bindings<E> {
   private final Bindings<? extends E> outerScopeBindings;
 
-  public static <E> FlatBindings<E> immutableBindings() {
-    return new FlatBindings<>(ImmutableMap.of());
+  public static <E> SingleScopeBindings<E> immutableBindings() {
+    return new SingleScopeBindings<>(ImmutableMap.of());
   }
 
-  public static <E> FlatBindings<E> immutableBindings(Map<String, ? extends E> innerScopeMap) {
-    return new FlatBindings<>(innerScopeMap);
+  public static <E> SingleScopeBindings<E> immutableBindings(
+      Map<String, ? extends E> innerScopeMap) {
+    return new SingleScopeBindings<>(innerScopeMap);
   }
 
   public static <E> ImmutableBindings<E> immutableBindings(
