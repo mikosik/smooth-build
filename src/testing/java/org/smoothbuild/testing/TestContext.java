@@ -76,6 +76,8 @@ import org.smoothbuild.compile.lang.type.TypeFS;
 import org.smoothbuild.compile.lang.type.TypeS;
 import org.smoothbuild.compile.lang.type.VarS;
 import org.smoothbuild.compile.lang.type.VarSetS;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
+import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.IntP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
@@ -1461,6 +1463,9 @@ public class TestContext {
   }
 
   // P - parsed objects
+  public static AnonymousFuncP anonymousFuncP(NList<ItemP> params, ExprP body) {
+    return new AnonymousFuncP(params, body, location());
+  }
 
   public static NamedFuncP namedFuncP() {
     return namedFuncP(nlist());
@@ -1479,7 +1484,7 @@ public class TestContext {
     return namedValueP(intP());
   }
 
-  public static NamedValueP namedValueP(IntP body) {
+  public static NamedValueP namedValueP(ExprP body) {
     return namedValueP("myValue", body);
   }
 
@@ -1487,7 +1492,7 @@ public class TestContext {
     return namedValueP(name, intP());
   }
 
-  public static NamedValueP namedValueP(String name, IntP body) {
+  public static NamedValueP namedValueP(String name, ExprP body) {
     return new NamedValueP(Optional.empty(), name, Optional.of(body), Optional.empty(), location());
   }
 

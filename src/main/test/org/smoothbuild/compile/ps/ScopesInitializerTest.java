@@ -26,7 +26,7 @@ public class ScopesInitializerTest extends TestContext {
   }
 
   @Test
-  public void function_scope_has_its_parameter() {
+  public void named_function_scope_has_its_parameter() {
     var param = itemP("param");
     var namedFuncP = namedFuncP("myFunc", nlist(param));
     var moduleP = new ModuleP(list(), list(namedFuncP));
@@ -34,6 +34,18 @@ public class ScopesInitializerTest extends TestContext {
     initializeScopes(moduleP);
 
     assertThat(namedFuncP.scope().refables().get("param"))
+        .isEqualTo(param);
+  }
+
+  @Test
+  public void anonymous_function_scope_has_its_parameter() {
+    var param = itemP("param");
+    var anonymousFuncP = anonymousFuncP(nlist(param), intP());
+    var moduleP = new ModuleP(list(), list(namedValueP(anonymousFuncP)));
+
+    initializeScopes(moduleP);
+
+    assertThat(anonymousFuncP.scope().refables().get("param"))
         .isEqualTo(param);
   }
 }
