@@ -4,7 +4,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.util.collect.Sets.union;
 
 import java.util.Collection;
@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import org.smoothbuild.util.collect.Iterables;
 import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.collect.ImmutableList;
@@ -159,7 +160,7 @@ public final class VarSetS implements Set<VarS> {
 
   @Override
   public String toString() {
-    return "<" + toCommaSeparatedString(elements, VarS::name) + ">";
+    return "<" + joinWithCommaToString(elements, VarS::name) + ">";
   }
 }
 

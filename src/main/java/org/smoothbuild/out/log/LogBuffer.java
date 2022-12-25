@@ -4,11 +4,13 @@ import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import org.smoothbuild.util.collect.Iterables;
 
 public class LogBuffer extends ArrayList<Log> implements Logger, Logs {
   @Override
@@ -53,6 +55,6 @@ public class LogBuffer extends ArrayList<Log> implements Logger, Logs {
 
   @Override
   public String toString() {
-    return toCommaSeparatedString(this, Log::toString);
+    return joinWithCommaToString(this, Log::toString);
   }
 }

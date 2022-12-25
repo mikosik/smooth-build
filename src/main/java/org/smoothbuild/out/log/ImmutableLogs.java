@@ -1,6 +1,6 @@
 package org.smoothbuild.out.log;
 
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import org.smoothbuild.util.collect.Iterables;
 
 import com.google.common.collect.ImmutableList;
 
@@ -70,6 +72,6 @@ public class ImmutableLogs implements Logs {
 
   @Override
   public String toString() {
-    return toCommaSeparatedString(logs, Log::toString);
+    return joinWithCommaToString(logs, Log::toString);
   }
 }

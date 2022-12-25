@@ -1,10 +1,11 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.Objects;
 
+import org.smoothbuild.util.collect.Iterables;
 import org.smoothbuild.vm.bytecode.expr.Helpers.HashedDbCallable;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
@@ -138,7 +139,7 @@ public abstract class ExprB {
   }
 
   protected static String exprsToString(ImmutableList<? extends ExprB> exprs) {
-    return toCommaSeparatedString(exprs, ExprB::valToStringSafe);
+    return joinWithCommaToString(exprs, ExprB::valToStringSafe);
   }
 
   private <T> ImmutableList<T> castDataSeqElements(ImmutableList<ExprB> elems, Class<T> clazz) {

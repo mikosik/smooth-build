@@ -1,13 +1,14 @@
 package org.smoothbuild.testing.type;
 
 import static java.lang.String.join;
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.Objects;
 import java.util.Set;
 
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.util.collect.Iterables;
 
 import com.google.common.collect.ImmutableList;
 
@@ -93,7 +94,7 @@ public class TestedTS {
 
     @Override
     public String name() {
-      return "(" + toCommaSeparatedString(paramTs, TestedTS::name) + ")->" + resT.name();
+      return "(" + joinWithCommaToString(paramTs, TestedTS::name) + ")->" + resT.name();
     }
   }
 

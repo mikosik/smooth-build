@@ -1,8 +1,10 @@
 package org.smoothbuild.vm.bytecode.type.value;
 
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.List;
+
+import org.smoothbuild.util.collect.Iterables;
 
 public class ValidNamesB {
   public static final String BLOB = "Blob";
@@ -23,6 +25,6 @@ public class ValidNamesB {
   }
 
   private static String commaSeparatedTypeNames(Iterable<? extends TypeB> itemTs) {
-    return toCommaSeparatedString(itemTs, TypeB::name);
+    return joinWithCommaToString(itemTs, TypeB::name);
   }
 }

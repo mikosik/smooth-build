@@ -7,11 +7,11 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.util.function.Function;
 
 public class Iterables {
-  public static <T> String toCommaSeparatedString(Iterable<T> list) {
-    return toCommaSeparatedString(list, Object::toString);
+  public static <T> String joinWithCommaToString(Iterable<T> list) {
+    return joinWithCommaToString(list, Object::toString);
   }
 
-  public static <T> String toCommaSeparatedString(
+  public static <T> String joinWithCommaToString(
       Iterable<T> list, Function<? super T, String> func) {
     return joinToString(list, func, ",");
   }

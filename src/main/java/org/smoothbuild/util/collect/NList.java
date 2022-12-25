@@ -2,7 +2,7 @@ package org.smoothbuild.util.collect;
 
 import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.AbstractList;
 import java.util.Comparator;
@@ -165,7 +165,7 @@ public class NList<T extends Nameable> extends AbstractList<T> {
   }
 
   public String valuesToString() {
-    return toCommaSeparatedString(list());
+    return joinWithCommaToString(list());
   }
 
   public String valuesToPrettyString() {

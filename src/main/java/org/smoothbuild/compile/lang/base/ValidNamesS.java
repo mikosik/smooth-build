@@ -2,12 +2,13 @@ package org.smoothbuild.compile.lang.base;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.List;
 
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.util.collect.Iterables;
 
 public class ValidNamesS {
   public static final String BLOB = "Blob";
@@ -48,7 +49,7 @@ public class ValidNamesS {
   }
 
   private static String commaSeparatedTypeNames(List<? extends TypeS> elemTs) {
-    return toCommaSeparatedString(elemTs, TypeS::name);
+    return joinWithCommaToString(elemTs, TypeS::name);
   }
 
   public static String structNameToCtorName(String name) {

@@ -3,7 +3,7 @@ package org.smoothbuild.out.log;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.util.collect.Iterables.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -73,6 +73,6 @@ public class Maybe<V> {
   }
 
   private String logsToString() {
-    return "[" + toCommaSeparatedString(logs.toList()) + "]";
+    return "[" + joinWithCommaToString(logs.toList()) + "]";
   }
 }
