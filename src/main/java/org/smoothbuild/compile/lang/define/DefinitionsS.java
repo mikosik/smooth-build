@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.lang.define;
 
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
 import org.smoothbuild.util.bindings.FlatBindings;
 import org.smoothbuild.util.collect.Named;

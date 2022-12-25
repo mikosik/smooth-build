@@ -1,6 +1,5 @@
 package org.smoothbuild.util.bindings;
 
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 import static org.smoothbuild.util.collect.Maps.mapEntries;
 
 import java.util.Map;

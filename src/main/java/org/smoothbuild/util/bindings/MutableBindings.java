@@ -6,11 +6,7 @@ import java.util.Map;
 public class MutableBindings<E> extends Bindings<E> {
   private final HashMap<String, E> innerScopeMap;
 
-  public MutableBindings() {
-    this(null);
-  }
-
-  public MutableBindings(Bindings<? extends E> outerScopeBindings) {
+  protected MutableBindings(Bindings<? extends E> outerScopeBindings) {
     super(outerScopeBindings);
     this.innerScopeMap = new HashMap<>();
   }

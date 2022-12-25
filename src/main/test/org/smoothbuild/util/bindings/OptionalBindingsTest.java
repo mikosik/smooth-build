@@ -1,7 +1,7 @@
 package org.smoothbuild.util.bindings;
 
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

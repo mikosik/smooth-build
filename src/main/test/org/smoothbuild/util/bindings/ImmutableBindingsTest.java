@@ -1,7 +1,7 @@
 package org.smoothbuild.util.bindings;
 
 import static org.smoothbuild.util.bindings.AbstractBindingsTestSuite.mapOfElems;
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
 import org.smoothbuild.util.bindings.AbstractBindingsTestSuite.Elem;
 

@@ -3,7 +3,7 @@ package org.smoothbuild.util.bindings;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.bindings.AbstractBindingsTestSuite.elem;
 import static org.smoothbuild.util.bindings.AbstractBindingsTestSuite.mapOfElems;
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

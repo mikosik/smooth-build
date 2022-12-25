@@ -1,6 +1,7 @@
 package org.smoothbuild.util.bindings;
 
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.util.collect.Labeled.labeled;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ public class BindingsTest {
     equalsTester.addEqualityGroup(
         immutableBindings(),
         immutableBindings(Map.of()),
-        new MutableBindings<>()
+        mutableBindings()
     );
 
     // element-1 in inner scope
@@ -39,13 +40,13 @@ public class BindingsTest {
     // element-1 in outer scope
     equalsTester.addEqualityGroup(
         immutableBindings(immutableBindingsWith(labeled1), Map.of()),
-        new MutableBindings<>(immutableBindingsWith(labeled1))
+        mutableBindings(immutableBindingsWith(labeled1))
     );
 
     // element-2 in outer scope
     equalsTester.addEqualityGroup(
         immutableBindings(immutableBindingsWith(labeled2), Map.of()),
-        new MutableBindings<>(immutableBindingsWith(labeled2))
+        mutableBindings(immutableBindingsWith(labeled2))
     );
 
     // element-1 in outer scope and element-2 in inner scope
@@ -67,7 +68,7 @@ public class BindingsTest {
 
   private static Bindings<Labeled<String>> mutableBindingsWith(
       Bindings<Labeled<String>> outerScopeBindings, Labeled<String> labeled) {
-    var mutableBindings = new MutableBindings<>(outerScopeBindings);
+    var mutableBindings = mutableBindings(outerScopeBindings);
     mutableBindings.add(labeled.nameSane(), labeled);
     return mutableBindings;
   }

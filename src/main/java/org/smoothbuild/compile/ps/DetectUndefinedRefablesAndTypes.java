@@ -2,6 +2,7 @@ package org.smoothbuild.compile.ps;
 
 import static org.smoothbuild.compile.lang.base.ValidNamesS.isVarName;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
+import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
@@ -20,12 +21,11 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.Strings;
-import org.smoothbuild.util.bindings.MutableBindings;
 
 public class DetectUndefinedRefablesAndTypes {
   public static Logs detectUndefinedRefablesAndTypes(ModuleP moduleP, DefinitionsS imported) {
     var log = new LogBuffer();
-    var emptyScope = new ScopeP(new MutableBindings<>(), new MutableBindings<>());
+    var emptyScope = new ScopeP(mutableBindings(), mutableBindings());
     new Detector(imported, emptyScope, log)
         .visitModule(moduleP);
     return log;

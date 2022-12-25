@@ -1,7 +1,6 @@
 package org.smoothbuild.util.bindings;
 
 import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.joinToString;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
@@ -16,6 +15,27 @@ import com.google.common.collect.ImmutableMap;
 
 public abstract class Bindings<E> {
   private final Bindings<? extends E> outerScopeBindings;
+
+  public static <E> FlatBindings<E> immutableBindings() {
+    return new FlatBindings<>(ImmutableMap.of());
+  }
+
+  public static <E> FlatBindings<E> immutableBindings(Map<String, ? extends E> innerScopeMap) {
+    return new FlatBindings<>(innerScopeMap);
+  }
+
+  public static <E> ImmutableBindings<E> immutableBindings(
+      ImmutableBindings<? extends E> outerScopeBindings, Map<String, ? extends E> innerScopeMap) {
+    return new ImmutableBindings<>(outerScopeBindings, innerScopeMap);
+  }
+
+  public static <T> MutableBindings<T> mutableBindings() {
+    return new MutableBindings<>(null);
+  }
+
+  public static <T> MutableBindings<T> mutableBindings(Bindings<? extends T> outerScopeBindings) {
+    return new MutableBindings<>(outerScopeBindings);
+  }
 
   protected Bindings(Bindings<? extends E> outerScopeBindings) {
     this.outerScopeBindings = outerScopeBindings;

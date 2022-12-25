@@ -7,7 +7,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.util.bindings.ImmutableBindings.immutableBindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
 import java.util.ArrayList;
 import java.util.List;
