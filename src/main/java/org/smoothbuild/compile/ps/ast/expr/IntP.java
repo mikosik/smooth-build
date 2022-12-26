@@ -1,31 +1,22 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
 import static java.lang.Character.isDigit;
-import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Iterables.joinToString;
 
 import java.math.BigInteger;
-import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.location.Location;
 
-public final class IntP extends ExprP {
-  private final String literal;
+public final class IntP extends LiteralP {
   private BigInteger bigInteger;
 
   public IntP(String literal, Location location) {
-    super(location);
-    this.literal = literal;
-  }
-
-  public String literal() {
-    return literal;
+    super(literal, location);
   }
 
   public void decodeBigInteger() throws NumberFormatException {
-    assertNoLeadingZeros(literal);
-    assertNotNegativeZero(literal);
-    bigInteger = new BigInteger(literal, 10);
+    assertNoLeadingZeros(literal());
+    assertNotNegativeZero(literal());
+    bigInteger = new BigInteger(literal(), 10);
   }
 
   private static void assertNoLeadingZeros(String literal) {
@@ -55,29 +46,5 @@ public final class IntP extends ExprP {
 
   public BigInteger bigInteger() {
     return bigInteger;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (this == object) {
-      return true;
-    }
-    return object instanceof IntP that
-        && Objects.equals(this.literal, that.literal)
-        && Objects.equals(this.location(), that.location());
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(literal, location());
-  }
-
-  @Override
-  public String toString() {
-    var fields = joinToString("\n",
-        "literal = " + literal,
-        "location = " + location()
-    );
-    return "IntP(\n" + indent(fields) + "\n)";
   }
 }
