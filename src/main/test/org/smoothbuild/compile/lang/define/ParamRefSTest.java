@@ -10,6 +10,11 @@ public class ParamRefSTest extends TestContext {
   public void to_string() {
     var paramRefS = paramRefS(7, intTS(), "myName");
     assertThat(paramRefS.toString())
-        .isEqualTo("ParamRefS(Int, myName, myBuild.smooth:7)");
+        .isEqualTo("""
+            ParamRefS(
+              evalT = Int
+              paramName = myName
+              location = myBuild.smooth:7
+            )""");
   }
 }

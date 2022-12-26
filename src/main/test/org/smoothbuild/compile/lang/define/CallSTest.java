@@ -28,7 +28,11 @@ public class CallSTest extends TestContext {
                       )
                     ]
                     location = myBuild.smooth:1
-                    body = ParamRefS(A, a, myBuild.smooth:1)
+                    body = ParamRefS(
+                      evalT = A
+                      paramName = a
+                      location = myBuild.smooth:1
+                    )
                   )
                   location = myBuild.smooth:4
                 )
