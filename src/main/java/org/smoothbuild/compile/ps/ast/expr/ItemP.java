@@ -4,6 +4,7 @@ import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 import static org.smoothbuild.util.collect.Lists.map;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.NalImpl;
@@ -45,6 +46,24 @@ public final class ItemP extends NalImpl implements RefableP {
   public static ImmutableList<TypeS> toTypeS(NList<ItemP> params) {
     return map(params, ItemP::typeS);
   }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    return object instanceof ItemP that
+        && Objects.equals(this.type, that.type)
+        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.defaultValue, that.defaultValue())
+        && Objects.equals(this.location(), that.location());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, name(), defaultValue, location());
+  }
+
   @Override
   public String toString() {
     var fields = joinToString("\n",

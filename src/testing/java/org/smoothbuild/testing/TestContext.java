@@ -1478,7 +1478,11 @@ public class TestContext {
   }
 
   public static CallP callP(RefP callee) {
-    return new CallP(callee, list(), location());
+    return callP(callee, location());
+  }
+
+  public static CallP callP(RefP callee, Location location) {
+    return new CallP(callee, list(), location);
   }
 
   public static NamedFuncP namedFuncP() {
@@ -1536,6 +1540,10 @@ public class TestContext {
 
   public static IntP intP() {
     return new IntP("7", location());
+  }
+
+  public static RefP refP(String name) {
+    return new RefP(name, location(7));
   }
 
   public static RefP refP(String name, Location location) {

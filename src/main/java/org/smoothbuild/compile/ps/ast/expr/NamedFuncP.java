@@ -3,6 +3,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.location.Location;
@@ -14,7 +15,7 @@ import org.smoothbuild.util.collect.NList;
 public final class NamedFuncP extends NamedEvaluableP implements FuncP {
   private final Optional<TypeP> resT;
   private final NList<ItemP> params;
-  private FuncTS type;
+  private FuncTS typeS;
   private FuncSchemaS funcSchemaS;
 
   public NamedFuncP(
@@ -46,12 +47,12 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
 
   @Override
   public FuncTS typeS() {
-    return type;
+    return typeS;
   }
 
   @Override
   public void setTypeS(FuncTS type) {
-    this.type = type;
+    this.typeS = type;
   }
 
   @Override
@@ -62,6 +63,25 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
   @Override
   public void setSchemaS(FuncSchemaS funcSchemaS) {
     this.funcSchemaS = funcSchemaS;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    return object instanceof NamedFuncP that
+        && Objects.equals(this.resT, that.resT)
+        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.params, that.params)
+        && Objects.equals(this.body(), that.body())
+        && Objects.equals(this.annotation(), that.annotation())
+        && Objects.equals(this.location(), that.location());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(resT, name(), params, body(), annotation(), location());
   }
 
   @Override

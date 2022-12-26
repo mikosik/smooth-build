@@ -14,10 +14,9 @@ public class NamedFuncPTest {
 
     tester.addEqualityGroup(func("equal", 11), func("equal", 11));
 
-    tester.addEqualityGroup(func("a", 1), func("a", 2), func("a", 3));
-    tester.addEqualityGroup(func("b", 1), func("b", 2), func("b", 3));
-    tester.addEqualityGroup(func("ab", 1), func("ab", 2), func("ab", 3));
-    tester.addEqualityGroup(func("ba", 1), func("ba", 2), func("ba", 3));
+    tester.addEqualityGroup(func("a", 1), func("a", 1));
+    tester.addEqualityGroup(func("a", 2), func("a", 2));
+    tester.addEqualityGroup(func("b", 1), func("b", 1));
 
     tester.testEquals();
   }

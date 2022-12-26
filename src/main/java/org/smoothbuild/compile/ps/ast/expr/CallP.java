@@ -1,6 +1,10 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
+
 import java.util.List;
+import java.util.Objects;
 
 import org.smoothbuild.compile.lang.base.location.Location;
 
@@ -44,5 +48,31 @@ public final class CallP extends ExprP {
    */
   public ImmutableList<ExprP> positionedArgs() {
     return positionedArgs;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    return object instanceof CallP that
+        && Objects.equals(this.callee, that.callee)
+        && Objects.equals(this.args(), that.args())
+        && Objects.equals(this.location(), that.location());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(callee, args, location());
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "callee = " + callee,
+        "args = " + args,
+        "location = " + location()
+    );
+    return "CallP(\n" + indent(fields) + "\n)";
   }
 }

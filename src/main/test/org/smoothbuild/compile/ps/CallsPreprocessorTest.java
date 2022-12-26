@@ -18,7 +18,7 @@ public class CallsPreprocessorTest extends TestContext  {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
     var importedS = new DefinitionsS(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
-    var callP = callP(refP("myFunc", callLocation));
+    var callP = callP(refP("myFunc"), callLocation);
     var namedValueP = namedValueP("value", callP);
     var moduleP = new ModuleP(list(), list(namedValueP));
 
@@ -34,7 +34,7 @@ public class CallsPreprocessorTest extends TestContext  {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
     var importedS = new DefinitionsS(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
-    var callP = callP(refP("myFunc", callLocation));
+    var callP = callP(refP("myFunc"), callLocation);
     var namedValueP = namedFuncP("value", nlist(itemP("p", callP)));
     var moduleP = new ModuleP(list(), list(namedValueP));
 

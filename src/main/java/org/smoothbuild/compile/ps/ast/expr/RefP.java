@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
 
 import java.util.Objects;
 
@@ -36,16 +37,20 @@ public final class RefP extends MonoizableP {
     }
     return object instanceof RefP that
         && Objects.equals(this.name, that.name)
-        && Objects.equals(this.schemaS, that.schemaS);
+        && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, schemaS);
+    return Objects.hash(name, location());
   }
 
   @Override
   public String toString() {
-    return "RefP(`" + q(name) + "`)";
+    var fields = joinToString("\n",
+        "name = " + name,
+        "location = " + location()
+    );
+    return "RefP(\n" + indent(fields) + "\n)";
   }
 }

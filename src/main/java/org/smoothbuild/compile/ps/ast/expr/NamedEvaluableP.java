@@ -52,15 +52,4 @@ public sealed abstract class NamedEvaluableP
   public String q() {
     return super.q();
   }
-
-  @Override
-  public final boolean equals(Object object) {
-    return object instanceof NamedEvaluableP that
-        && this.name().equals(that.name());
-  }
-
-  @Override
-  public final int hashCode() {
-    return name().hashCode();
-  }
 }

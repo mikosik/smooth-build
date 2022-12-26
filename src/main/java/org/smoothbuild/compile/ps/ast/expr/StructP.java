@@ -1,9 +1,12 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
 import static org.smoothbuild.compile.lang.base.ValidNamesS.structNameToCtorName;
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
 import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.NalImpl;
@@ -50,5 +53,31 @@ public final class StructP extends NalImpl implements WithScopeP {
   @Override
   public void setScope(ScopeP scope) {
     this.scope = scope;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    return object instanceof StructP that
+        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.fields, that.fields)
+        && Objects.equals(this.location(), that.location());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name(), fields, location());
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "name = " + name(),
+        "fields = " + this.fields,
+        "location = " + location()
+    );
+    return "StructP(\n" + indent(fields) + "\n)";
   }
 }

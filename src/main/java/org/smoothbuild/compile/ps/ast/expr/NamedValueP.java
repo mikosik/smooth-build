@@ -3,6 +3,7 @@ package org.smoothbuild.compile.ps.ast.expr;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.compile.lang.base.location.Location;
@@ -50,6 +51,23 @@ public final class NamedValueP extends NamedEvaluableP {
 
   public void setSchemaS(SchemaS schemaS) {
     this.schemaS = schemaS;
+  }
+  @Override
+  public boolean equals(Object object) {
+    if (this == object) {
+      return true;
+    }
+    return object instanceof NamedValueP that
+        && Objects.equals(this.type, that.type)
+        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.body(), that.body())
+        && Objects.equals(this.annotation(), that.annotation())
+        && Objects.equals(this.location(), that.location());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, name(), body(), annotation(), location());
   }
 
   @Override

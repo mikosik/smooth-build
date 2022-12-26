@@ -1,5 +1,8 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
+
 import org.smoothbuild.compile.lang.base.NalImpl;
 import org.smoothbuild.compile.lang.base.location.Location;
 
@@ -31,5 +34,15 @@ public final class AnnotationP extends NalImpl {
   @Override
   public int hashCode() {
     return Objects.hashCode(this.name(), this.value, this.location());
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "name = " + name(),
+        "value = " + value,
+        "location = " + location()
+    );
+    return "AnnotationP(\n" + indent(fields) + "\n)";
   }
 }
