@@ -9,27 +9,27 @@ import com.google.common.base.Objects;
  * Annotation.
  */
 public final class AnnotationP extends NalImpl {
-  private final StringP path;
+  private final StringP value;
 
-  public AnnotationP(String name, StringP path, Location location) {
+  public AnnotationP(String name, StringP value, Location location) {
     super(name, location);
-    this.path = path;
+    this.value = value;
   }
 
-  public StringP path() {
-    return path;
+  public StringP value() {
+    return value;
   }
 
   @Override
   public boolean equals(Object object) {
     return object instanceof AnnotationP that
         && this.name().equals(that.name())
-        && this.path().equals(that.path())
+        && this.value().equals(that.value())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(this.name(), this.path, this.location());
+    return Objects.hashCode(this.name(), this.value, this.location());
   }
 }

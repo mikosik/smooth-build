@@ -92,7 +92,7 @@ public class ModuleVisitorP {
   }
 
   public void visitAnnotation(AnnotationP annotationP) {
-    visitString(annotationP.path());
+    visitString(annotationP.value());
   }
 
   public void visitItems(List<ItemP> itemPs) {

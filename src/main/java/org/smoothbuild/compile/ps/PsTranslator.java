@@ -110,7 +110,7 @@ public class PsTranslator {
   }
 
   private AnnotationS translateAnnotation(AnnotationP annotationP) {
-    var path = translateString(annotationP.path());
+    var path = translateString(annotationP.value());
     return new AnnotationS(annotationP.name(), path, annotationP.location());
   }
 
