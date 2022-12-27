@@ -1,12 +1,12 @@
 package org.smoothbuild.compile.lang.type;
 
-import org.smoothbuild.compile.lang.base.ValidNamesS;
+import org.smoothbuild.compile.lang.base.TypeNamesS;
 
 /**
  * This class is immutable.
  */
 public final class BoolTS extends TypeS {
   public BoolTS() {
-    super(ValidNamesS.BOOL);
+    super(TypeNamesS.BOOL);
   }
 }

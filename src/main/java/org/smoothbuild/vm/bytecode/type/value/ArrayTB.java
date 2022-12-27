@@ -16,7 +16,7 @@ public final class ArrayTB extends TypeB {
   private final TypeB elem;
 
   public ArrayTB(Hash hash, TypeB elem) {
-    super(hash, ValidNamesB.arrayTypeName(elem), ARRAY);
+    super(hash, TypeNamesB.arrayTypeName(elem), ARRAY);
     this.elem = requireNonNull(elem);
   }
 

@@ -6,40 +6,40 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class ValidNamesSTest extends TestContext {
+public class TypeNamesSTest extends TestContext {
   @Test
   public void is_upper_case() {
     for (char i = 'A'; i <= 'Z'; i++) {
-      assertThat(ValidNamesS.isUpperCase(i))
+      assertThat(TypeNamesS.isUpperCase(i))
           .isTrue();
     }
     for (char i = 'a'; i <= 'z'; i++) {
-      assertThat(ValidNamesS.isUpperCase(i))
+      assertThat(TypeNamesS.isUpperCase(i))
           .isFalse();
     }
     for (char i = '0'; i <= '9'; i++) {
-      assertThat(ValidNamesS.isUpperCase(i))
+      assertThat(TypeNamesS.isUpperCase(i))
           .isFalse();
     }
-    assertThat(ValidNamesS.isUpperCase('_'))
+    assertThat(TypeNamesS.isUpperCase('_'))
         .isFalse();
   }
 
   @Test
   public void is_lower_case() {
     for (char i = 'A'; i <= 'Z'; i++) {
-      assertThat(ValidNamesS.isLowerCase(i))
+      assertThat(TypeNamesS.isLowerCase(i))
           .isFalse();
     }
     for (char i = 'a'; i <= 'z'; i++) {
-      assertThat(ValidNamesS.isLowerCase(i))
+      assertThat(TypeNamesS.isLowerCase(i))
           .isTrue();
     }
     for (char i = '0'; i <= '9'; i++) {
-      assertThat(ValidNamesS.isLowerCase(i))
+      assertThat(TypeNamesS.isLowerCase(i))
           .isFalse();
     }
-    assertThat(ValidNamesS.isLowerCase('_'))
+    assertThat(TypeNamesS.isLowerCase('_'))
         .isFalse();
   }
 
@@ -47,31 +47,31 @@ public class ValidNamesSTest extends TestContext {
   class _starts_with_upper_case {
     @Test
     public void lower_case() {
-      assertThat(ValidNamesS.startsWithUpperCase("abc"))
+      assertThat(TypeNamesS.startsWithUpperCase("abc"))
           .isFalse();
     }
 
     @Test
     public void upper_case() {
-      assertThat(ValidNamesS.startsWithUpperCase("Abc"))
+      assertThat(TypeNamesS.startsWithUpperCase("Abc"))
           .isTrue();
     }
 
     @Test
     public void empty_string_does_not_start_with_uppercase() {
-      assertThat(ValidNamesS.startsWithUpperCase(""))
+      assertThat(TypeNamesS.startsWithUpperCase(""))
           .isFalse();
     }
 
     @Test
     public void digit() {
-      assertThat(ValidNamesS.startsWithUpperCase("3"))
+      assertThat(TypeNamesS.startsWithUpperCase("3"))
           .isFalse();
     }
 
     @Test
     public void underscore() {
-      assertThat(ValidNamesS.startsWithLowerCase("_"))
+      assertThat(TypeNamesS.startsWithLowerCase("_"))
           .isFalse();
     }
   }
@@ -80,31 +80,31 @@ public class ValidNamesSTest extends TestContext {
   class _starts_with_lower_case {
     @Test
     public void lower_case() {
-      assertThat(ValidNamesS.startsWithLowerCase("abc"))
+      assertThat(TypeNamesS.startsWithLowerCase("abc"))
           .isTrue();
     }
 
     @Test
     public void upper_case() {
-      assertThat(ValidNamesS.startsWithLowerCase("Abc"))
+      assertThat(TypeNamesS.startsWithLowerCase("Abc"))
           .isFalse();
     }
 
     @Test
     public void empty_string_does_not_start_with_lowercase() {
-      assertThat(ValidNamesS.startsWithLowerCase(""))
+      assertThat(TypeNamesS.startsWithLowerCase(""))
           .isFalse();
     }
 
     @Test
     public void digit() {
-      assertThat(ValidNamesS.startsWithLowerCase("3"))
+      assertThat(TypeNamesS.startsWithLowerCase("3"))
           .isFalse();
     }
 
     @Test
     public void underscore() {
-      assertThat(ValidNamesS.startsWithLowerCase("_"))
+      assertThat(TypeNamesS.startsWithLowerCase("_"))
           .isFalse();
     }
   }
@@ -113,73 +113,73 @@ public class ValidNamesSTest extends TestContext {
   class _var_name {
     @Test
     public void uppercase_A_character_is_type_var_name() {
-      assertThat(ValidNamesS.isVarName("A"))
+      assertThat(TypeNamesS.isVarName("A"))
           .isTrue();
     }
 
     @Test
     public void lowercase_a_character_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName("a"))
+      assertThat(TypeNamesS.isVarName("a"))
           .isFalse();
     }
 
     @Test
     public void uppercase_AA_character_is_type_var_name() {
-      assertThat(ValidNamesS.isVarName("AA"))
+      assertThat(TypeNamesS.isVarName("AA"))
           .isTrue();
     }
 
     @Test
     public void mixed_case_Aa_character_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName("Aa"))
+      assertThat(TypeNamesS.isVarName("Aa"))
           .isFalse();
     }
 
     @Test
     public void uppercase_B_character_is_type_var_name() {
-      assertThat(ValidNamesS.isVarName("B"))
+      assertThat(TypeNamesS.isVarName("B"))
           .isTrue();
     }
 
     @Test
     public void lowercase_b_character_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName("b"))
+      assertThat(TypeNamesS.isVarName("b"))
           .isFalse();
     }
 
     @Test
     public void empty_string_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName(""))
+      assertThat(TypeNamesS.isVarName(""))
           .isFalse();
     }
 
     @Test
     public void underscore_character_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName("_"))
+      assertThat(TypeNamesS.isVarName("_"))
           .isFalse();
     }
 
     @Test
     public void uppercase_A_with_underscore_character_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName("A_"))
+      assertThat(TypeNamesS.isVarName("A_"))
           .isFalse();
     }
 
     @Test
     public void whitespace_string_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName(" "))
+      assertThat(TypeNamesS.isVarName(" "))
           .isFalse();
     }
 
     @Test
     public void longer_string_starting_with_lowercase_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName("alphabet"))
+      assertThat(TypeNamesS.isVarName("alphabet"))
           .isFalse();
     }
 
     @Test
     public void longer_string_starting_with_uppercase_is_not_type_var_name() {
-      assertThat(ValidNamesS.isVarName("Alphabet"))
+      assertThat(TypeNamesS.isVarName("Alphabet"))
           .isFalse();
     }
   }
@@ -188,7 +188,7 @@ public class ValidNamesSTest extends TestContext {
   class _array_type_name {
     @Test
     public void array_type_name() {
-      assertThat(ValidNamesS.arrayTypeName(stringTS()))
+      assertThat(TypeNamesS.arrayTypeName(stringTS()))
           .isEqualTo("[String]");
     }
   }
@@ -197,7 +197,7 @@ public class ValidNamesSTest extends TestContext {
   class _func_type_name {
     @Test
     public void func_type_name() {
-      assertThat(ValidNamesS.funcTypeName(tupleTS(blobTS(), boolTS()), stringTS()))
+      assertThat(TypeNamesS.funcTypeName(tupleTS(blobTS(), boolTS()), stringTS()))
           .isEqualTo("(Blob,Bool)->String");
     }
   }
@@ -206,7 +206,7 @@ public class ValidNamesSTest extends TestContext {
   class _struct_name_to_ctor_name {
     @Test
     public void func_type_name() {
-      assertThat(ValidNamesS.structNameToCtorName("MyStruct"))
+      assertThat(TypeNamesS.structNameToCtorName("MyStruct"))
           .isEqualTo("myStruct");
     }
   }

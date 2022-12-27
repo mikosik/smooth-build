@@ -6,7 +6,7 @@ import static java.io.OutputStream.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.compile.lang.base.ValidNamesS.structNameToCtorName;
+import static org.smoothbuild.compile.lang.base.TypeNamesS.structNameToCtorName;
 import static org.smoothbuild.compile.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;

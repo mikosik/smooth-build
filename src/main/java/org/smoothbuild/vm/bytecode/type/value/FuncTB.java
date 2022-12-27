@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.type.value;
 
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.FUNC;
-import static org.smoothbuild.vm.bytecode.type.value.ValidNamesB.funcTypeName;
+import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.funcTypeName;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;

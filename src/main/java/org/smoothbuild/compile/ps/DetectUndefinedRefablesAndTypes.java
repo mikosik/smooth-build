@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps;
 
-import static org.smoothbuild.compile.lang.base.ValidNamesS.isVarName;
+import static org.smoothbuild.compile.lang.base.TypeNamesS.isVarName;
 import static org.smoothbuild.compile.ps.CompileError.compileError;
 import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 

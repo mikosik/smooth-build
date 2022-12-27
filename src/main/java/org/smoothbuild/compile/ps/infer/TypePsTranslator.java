@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps.infer;
 
-import static org.smoothbuild.compile.lang.base.ValidNamesS.isVarName;
+import static org.smoothbuild.compile.lang.base.TypeNamesS.isVarName;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Optionals.mapPair;
 import static org.smoothbuild.util.collect.Optionals.pullUp;

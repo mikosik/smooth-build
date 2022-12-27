@@ -13,7 +13,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
  */
 public class BlobTB extends TypeB {
   public BlobTB(Hash hash) {
-    super(hash, ValidNamesB.BLOB, BLOB);
+    super(hash, TypeNamesB.BLOB, BLOB);
   }
 
   @Override

@@ -9,14 +9,14 @@ import java.util.List;
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
 
-public class ValidNamesS {
+public class TypeNamesS {
   public static final String BLOB = "Blob";
   public static final String BOOL = "Bool";
   public static final String INT = "Int";
   public static final String STRING = "String";
 
   public static boolean isVarName(String name) {
-    return !name.isEmpty() && name.chars().allMatch(ValidNamesS::isUpperCase);
+    return !name.isEmpty() && name.chars().allMatch(TypeNamesS::isUpperCase);
   }
 
   public static boolean startsWithLowerCase(String name) {

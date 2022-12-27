@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import static org.smoothbuild.compile.lang.base.ValidNamesS.structNameToCtorName;
+import static org.smoothbuild.compile.lang.base.TypeNamesS.structNameToCtorName;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 import static org.smoothbuild.util.collect.NList.nlistWithShadowing;

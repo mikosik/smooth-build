@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.lang.type;
 
-import static org.smoothbuild.compile.lang.base.ValidNamesS.tupleTypeName;
+import static org.smoothbuild.compile.lang.base.TypeNamesS.tupleTypeName;
 import static org.smoothbuild.compile.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.map;
 

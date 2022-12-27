@@ -4,7 +4,7 @@ import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.List;
 
-public class ValidNamesB {
+public class TypeNamesB {
   public static final String BLOB = "Blob";
   public static final String BOOL = "Bool";
   public static final String INT = "Int";
