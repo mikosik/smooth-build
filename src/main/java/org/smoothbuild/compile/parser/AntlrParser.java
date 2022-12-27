@@ -22,7 +22,7 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothAntlrLexer;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.out.log.LogBuffer;
@@ -30,7 +30,7 @@ import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 
 public class AntlrParser {
-  public static Maybe<ModContext> antlrParse(FilePath filePath, String sourceCode) {
+  public static Maybe<ModuleContext> antlrParse(FilePath filePath, String sourceCode) {
     var logBuffer = new LogBuffer();
     var errorListener = new ErrorListener(filePath, logBuffer);
     var smoothAntlrLexer = new SmoothAntlrLexer(CharStreams.fromString(sourceCode));
@@ -40,8 +40,8 @@ public class AntlrParser {
     var smoothAntlrParser = new SmoothAntlrParser(new CommonTokenStream(smoothAntlrLexer));
     smoothAntlrParser.removeErrorListeners();
     smoothAntlrParser.addErrorListener(errorListener);
-    var mod = smoothAntlrParser.mod();
-    var result = logBuffer.containsAtLeast(ERROR) ? null : mod;
+    var moduleC = smoothAntlrParser.module();
+    var result = logBuffer.containsAtLeast(ERROR) ? null : moduleC;
     return maybe(result, logBuffer);
   }
 

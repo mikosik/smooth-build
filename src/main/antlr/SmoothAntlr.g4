@@ -1,12 +1,12 @@
 grammar SmoothAntlr;
 
-mod           : ( struct | namedFunc | namedValue )* EOF ;
+module        : ( struct | namedFunc | namedValue )* EOF ;
 struct        : NAME '(' itemList ')' ;
-namedFunc     : ann? type? NAME '(' itemList ')' ('=' pipe)? ';' ;
-namedValue    : ann? type? NAME ('=' pipe)? ';' ;
+namedFunc     : annotation? type? NAME '(' itemList ')' ('=' pipe)? ';' ;
+namedValue    : annotation? type? NAME ('=' pipe)? ';' ;
 itemList      : ( item ( ',' item )* ','? )? ;
 item          : type NAME ( '=' expr )? ;
-ann           : '@' NAME '(' STRING ')' ;
+annotation    : '@' NAME '(' STRING ')' ;
 pipe          : expr ( p+='>' expr )* ;
 expr          : chain
               | anonymousFunc

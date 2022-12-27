@@ -18,7 +18,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothAntlrBaseVisitor;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnnContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnnotationContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnonymousFuncContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgListContext;
@@ -30,7 +30,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.FuncTContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemListContext;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.NamedFuncContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.NamedValueContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.PipeContext;
@@ -69,7 +69,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class ApTranslator {
-  public static Maybe<ModuleP> translateAp(FilePath filePath, ModContext module) {
+  public static Maybe<ModuleP> translateAp(FilePath filePath, ModuleContext module) {
     var logs = new LogBuffer();
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
@@ -90,7 +90,7 @@ public class ApTranslator {
         Optional<TypeP> type = createTypeSane(namedFunc.type());
         String name = nameNode.getText();
         Optional<ExprP> body = createPipeSane(namedFunc.pipe());
-        Optional<AnnotationP> annotation = createNativeSane(namedFunc.ann());
+        Optional<AnnotationP> annotation = createNativeSane(namedFunc.annotation());
         var location = fileLocation(filePath, nameNode);
         var params = createItems(namedFunc.itemList());
         evaluables.add(new NamedFuncP(type, name, params, body, annotation, location));
@@ -104,13 +104,13 @@ public class ApTranslator {
         Optional<TypeP> type = createTypeSane(namedValue.type());
         String name = nameNode.getText();
         Optional<ExprP> expr = createPipeSane(namedValue.pipe());
-        Optional<AnnotationP> annotation = createNativeSane(namedValue.ann());
+        Optional<AnnotationP> annotation = createNativeSane(namedValue.annotation());
         var location = fileLocation(filePath, nameNode);
         evaluables.add(new NamedValueP(type, name, expr, annotation, location));
         return null;
       }
 
-      private Optional<AnnotationP> createNativeSane(AnnContext annotation) {
+      private Optional<AnnotationP> createNativeSane(AnnotationContext annotation) {
         if (annotation == null) {
           return Optional.empty();
         } else {
