@@ -29,12 +29,12 @@ public class Maps {
         .collect(toImmutableMap(keyFunction, valueFunction));
   }
 
-  public static <T, U> ImmutableMap<T, U> concat(
-      ImmutableMap<? extends T, ? extends U> map1,
-      ImmutableMap<? extends T, ? extends U> map2) {
+  public static <T, U> ImmutableMap<T, U> override(
+      ImmutableMap<? extends T, ? extends U> overriding,
+      ImmutableMap<? extends T, ? extends U> overriden) {
     return ImmutableMap.<T, U>builder()
-        .putAll(map1)
-        .putAll(filterKeys(map2, key -> !map1.containsKey(key)))
+        .putAll(overriding)
+        .putAll(filterKeys(overriden, key -> !overriding.containsKey(key)))
         .build();
   }
 

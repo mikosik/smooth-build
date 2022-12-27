@@ -10,6 +10,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
+import static org.smoothbuild.util.collect.Maps.override;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
@@ -157,7 +158,7 @@ public class SbTranslator {
 
   private ExprB translateMonoize(MonoizeS monoizeS) {
     var monoizedVarMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
-    var varMap = Maps.concat(monoizedVarMap, typeSbTranslator.varMap());
+    var varMap = override(monoizedVarMap, typeSbTranslator.varMap());
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
         environment, cache, nameMapping, locationMapping);

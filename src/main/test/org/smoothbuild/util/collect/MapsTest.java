@@ -7,7 +7,7 @@ import static java.util.Map.entry;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.util.collect.Maps.concat;
+import static org.smoothbuild.util.collect.Maps.override;
 import static org.smoothbuild.util.collect.Maps.mapEntries;
 import static org.smoothbuild.util.collect.Maps.sort;
 import static org.smoothbuild.util.collect.Maps.toMap;
@@ -114,34 +114,34 @@ public class MapsTest {
   }
 
   @Nested
-  class _concat {
+  class _override {
     @Test
     public void two_empty_maps() {
-      assertThat(Maps.<Integer, String>concat(ImmutableMap.of(), ImmutableMap.of()))
+      assertThat(Maps.<Integer, String>override(ImmutableMap.of(), ImmutableMap.of()))
           .isEqualTo(Map.of());
     }
 
     @Test
     public void empty_and_non_empty() {
-      assertThat(concat(ImmutableMap.of(), ImmutableMap.of(1, "one")))
+      assertThat(override(ImmutableMap.of(), ImmutableMap.of(1, "one")))
           .isEqualTo(Map.of(1, "one"));
     }
 
     @Test
     public void non_empty_and_empty() {
-      assertThat(concat(ImmutableMap.of(1, "one"), ImmutableMap.of()))
+      assertThat(override(ImmutableMap.of(1, "one"), ImmutableMap.of()))
           .isEqualTo(Map.of(1, "one"));
     }
 
     @Test
     public void non_empty_and_non_empty() {
-      assertThat(concat(ImmutableMap.of(1, "one"), ImmutableMap.of(2, "two")))
+      assertThat(override(ImmutableMap.of(1, "one"), ImmutableMap.of(2, "two")))
           .isEqualTo(Map.of(1, "one", 2, "two"));
     }
 
     @Test
     public void with_same_mapping() {
-      assertThat(concat(ImmutableMap.of(1, "first map"), ImmutableMap.of(1, "second map")))
+      assertThat(override(ImmutableMap.of(1, "first map"), ImmutableMap.of(1, "second map")))
           .isEqualTo(Map.of(1, "first map"));
     }
   }

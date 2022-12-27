@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.lang.define;
 
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.util.collect.Maps.concat;
+import static org.smoothbuild.util.collect.Maps.override;
 
 import org.smoothbuild.util.bindings.SingleScopeBindings;
 import org.smoothbuild.util.collect.Named;
@@ -24,6 +24,6 @@ public record DefinitionsS(
   public <E extends Named> SingleScopeBindings<E> merge(
       SingleScopeBindings<E> outer,
       SingleScopeBindings<E> inner) {
-    return immutableBindings(concat(inner.toMap(), outer.toMap()));
+    return immutableBindings(override(inner.toMap(), outer.toMap()));
   }
 }
