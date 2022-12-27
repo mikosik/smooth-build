@@ -1,40 +1,40 @@
 grammar SmoothAntlr;
 
-mod          : ( struct | namedFunc | namedValue )* EOF ;
-struct       : NAME '(' itemList ')' ;
-namedFunc    : ann? type? NAME '(' itemList ')' ('=' pipe)? ';' ;
-namedValue   : ann? type? NAME ('=' pipe)? ';' ;
-itemList     : ( item ( ',' item )* ','? )? ;
-item         : type NAME ( '=' expr )? ;
-ann          : '@' NAME '(' STRING ')' ;
-pipe         : expr ( p+='>' expr )* ;
-expr         : chain
-             | anonymousFunc
-             ;
-chain        : chainHead ( chainPart )* ;
-chainHead    : NAME
-             | array
-             | parens
-             | BLOB
-             | INT
-             | STRING
-             ;
-chainPart    : argList | select ;
-parens       : '(' pipe ')' ;
-argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
-arg          : ( NAME '=' )? expr ;
-select       : '.' NAME ;
-array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
+mod           : ( struct | namedFunc | namedValue )* EOF ;
+struct        : NAME '(' itemList ')' ;
+namedFunc     : ann? type? NAME '(' itemList ')' ('=' pipe)? ';' ;
+namedValue    : ann? type? NAME ('=' pipe)? ';' ;
+itemList      : ( item ( ',' item )* ','? )? ;
+item          : type NAME ( '=' expr )? ;
+ann           : '@' NAME '(' STRING ')' ;
+pipe          : expr ( p+='>' expr )* ;
+expr          : chain
+              | anonymousFunc
+              ;
+chain         : chainHead ( chainPart )* ;
+chainHead     : NAME
+              | array
+              | parens
+              | BLOB
+              | INT
+              | STRING
+              ;
+chainPart     : argList | select ;
+parens        : '(' pipe ')' ;
+argList       : '(' ( arg ( ',' arg )* ','? )? ')' ;
+arg           : ( NAME '=' )? expr ;
+select        : '.' NAME ;
+array         : '[' ( expr (',' expr)* (',')? )?  ']' ;
 anonymousFunc : '(' itemList ')' '->' expr ;
-type         : NAME                                          # typeName
-             | '[' type ']'                                  # arrayT
-             | '(' ( type (',' type)*)? ')' '->' type  # funcT
-             ;
+type          : NAME                                          # typeName
+              | '[' type ']'                                  # arrayT
+              | '(' ( type (',' type)*)? ')' '->' type  # funcT
+              ;
 
-NAME         : NON_DIGIT_CHAR NAME_CHAR* ;
-INT          : '-'? DIGIT+ ;
-BLOB         : '0x' HEX_DIGIT* ;
-STRING       : '"' (ESC | ~('\r' | '\n'))*? '"' ;
+NAME                      : NON_DIGIT_CHAR NAME_CHAR* ;
+INT                       : '-'? DIGIT+ ;
+BLOB                      : '0x' HEX_DIGIT* ;
+STRING                    : '"' (ESC | ~('\r' | '\n'))*? '"' ;
 
 fragment ESC              : '\\"'
                           | '\\\\'
