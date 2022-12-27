@@ -18,7 +18,6 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothAntlrBaseVisitor;
-import org.smoothbuild.antlr.lang.SmoothAntlrBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnnContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnonymousFuncContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgContext;
@@ -195,11 +194,13 @@ public class ApTranslator {
       }
 
       private ExprP createExpr(AtomicReference<ExprP> piped, ExprContext expr) {
-        return switch (expr) {
-          case ChainContext chain -> createChain(piped, chain);
-          case AnonymousFuncContext anonymousFunc -> createAnonymousFunc(anonymousFunc);
-          default -> throw new RuntimeException("shouldn't happen");
-        };
+        if (expr.chain() != null) {
+          return createChain(piped, expr.chain());
+        } else if (expr.anonymousFunc() != null) {
+          return createAnonymousFunc(expr.anonymousFunc());
+        } else {
+          throw new RuntimeException("shouldn't happen");
+        }
       }
 
       private ExprP createChain(AtomicReference<ExprP> piped, ChainContext chain) {
@@ -257,10 +258,9 @@ public class ApTranslator {
       }
 
       private AnonymousFuncP createAnonymousFunc(AnonymousFuncContext anonymousFunc) {
-        var anonFunc = anonymousFunc.anonFunc();
-        var params = createItems(anonFunc.itemList());
-        var body = createExpr(anonFunc.expr());
-        return new AnonymousFuncP(params, body, fileLocation(filePath, anonFunc));
+        var params = createItems(anonymousFunc.itemList());
+        var body = createExpr(anonymousFunc.expr());
+        return new AnonymousFuncP(params, body, fileLocation(filePath, anonymousFunc));
       }
 
       private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {

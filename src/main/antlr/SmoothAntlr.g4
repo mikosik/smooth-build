@@ -8,9 +8,10 @@ itemList     : ( item ( ',' item )* ','? )? ;
 item         : type NAME ( '=' expr )? ;
 ann          : '@' NAME '(' STRING ')' ;
 pipe         : expr ( p+='>' expr )* ;
-expr         : chainHead ( chainPart )*   # chain
-             | anonFunc                   # anonymousFunc
+expr         : chain
+             | anonymousFunc
              ;
+chain        : chainHead ( chainPart )* ;
 chainHead    : NAME
              | array
              | parens
@@ -24,7 +25,7 @@ argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg          : ( NAME '=' )? expr ;
 select       : '.' NAME ;
 array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
-anonFunc     : '(' itemList ')' '->' expr ;
+anonymousFunc : '(' itemList ')' '->' expr ;
 type         : NAME                                          # typeName
              | '[' type ']'                                  # arrayT
              | '(' ( type (',' type)*)? ')' '->' type  # funcT
