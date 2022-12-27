@@ -12,7 +12,7 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 
-public class ProjectFileFunc {
+public class FileFunc {
   public static ValueB func(Container container, TupleB args) throws IOException {
     StringB path = (StringB) args.get(0);
     PathS validatedPath = validatedProjectPath(container, "path", path);

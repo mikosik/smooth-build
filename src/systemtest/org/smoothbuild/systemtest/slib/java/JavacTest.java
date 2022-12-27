@@ -66,8 +66,8 @@ public class JavacTest extends SystemTestCase {
         }
         """);
     createUserModule("""
-            libraryJar = projectFiles("srclib") > javac() > jar() > File("library.jar");
-            result = concat([(projectFiles("src") > javac(libs = [libraryJar])), javac(projectFiles("srclib"))]);
+            libraryJar = files("srclib") > javac() > jar() > File("library.jar");
+            result = concat([(files("src") > javac(libs = [libraryJar])), javac(files("srclib"))]);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();

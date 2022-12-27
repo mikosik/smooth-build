@@ -17,7 +17,7 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 
-public class ProjectFilesFunc {
+public class FilesFunc {
   public static ValueB func(Container container, TupleB args) throws IOException {
     StringB dir = (StringB) args.get(0);
     PathS path = validatedProjectPath(container, "dir", dir);

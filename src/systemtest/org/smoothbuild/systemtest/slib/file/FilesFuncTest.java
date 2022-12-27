@@ -6,11 +6,11 @@ import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
-public class ProjectFilesTest extends SystemTestCase {
+public class FilesFuncTest extends SystemTestCase {
   @Test
   public void listing_files_from_smooth_dir_causes_error() throws Exception {
     createUserModule("""
-            result = projectFiles(".smooth");
+            result = files(".smooth");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -20,7 +20,7 @@ public class ProjectFilesTest extends SystemTestCase {
   @Test
   public void listing_files_from_smooth_dir_subdir_causes_error() throws Exception {
     createUserModule("""
-            result = projectFiles(".smooth/subdir/file.txt");
+            result = files(".smooth/subdir/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -30,7 +30,7 @@ public class ProjectFilesTest extends SystemTestCase {
   @Test
   public void illegal_path_causes_error() throws Exception {
     createUserModule("""
-            result = projectFiles("..");
+            result = files("..");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -40,7 +40,7 @@ public class ProjectFilesTest extends SystemTestCase {
   @Test
   public void nonexistent_path_causes_error() throws Exception {
     createUserModule("""
-            result = projectFiles("nonexistent/path.txt");
+            result = files("nonexistent/path.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -51,7 +51,7 @@ public class ProjectFilesTest extends SystemTestCase {
   public void non_dir_path_causes_error() throws Exception {
     createFile("file.txt", "abc");
     createUserModule("""
-            result = projectFiles("file.txt");
+            result = files("file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -63,7 +63,7 @@ public class ProjectFilesTest extends SystemTestCase {
     createFile("dir/file.txt", "abc");
     createFile("dir/subdir/file.txt", "def");
     createUserModule("""
-            result = projectFiles("dir");
+            result = files("dir");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -73,7 +73,7 @@ public class ProjectFilesTest extends SystemTestCase {
 
   @Test
   public void files_from_project_root_are_returned_except_content_of_smooth_dir() throws Exception {
-    String script = "result = projectFiles(\".\");";
+    String script = "result = files(\".\");";
     createUserModule(script);
     createFile("dir/file.txt", "abc");
     runSmoothBuild("result");
@@ -87,7 +87,7 @@ public class ProjectFilesTest extends SystemTestCase {
   public void result_is_not_cached() throws Exception {
     createFile("dir/file.txt", "abc");
     createUserModule("""
-            result = projectFiles("dir");
+            result = files("dir");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();

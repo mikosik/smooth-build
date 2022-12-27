@@ -5,6 +5,7 @@ Change Log
 Version 0.21.0 (??????????)
 ---------------------------
 
+ * changed smooth slib: renamed projectFiles -> files, projectFile -> file
  * changed smooth language: synthetic constructor name is equal to struct name
  * changed smooth language: changed pipe symbol from `|` to `>`
  * changed smooth language: added anonymous functions

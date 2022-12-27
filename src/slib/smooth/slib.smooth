@@ -23,11 +23,11 @@ Int size([A] array);
 @Native("org.smoothbuild.slib.array.ConcatFunc")
 [A] concat([[A]] array);
 
-@NativeImpure("org.smoothbuild.slib.file.ProjectFileFunc")
-File projectFile(String path);
+@NativeImpure("org.smoothbuild.slib.file.FileFunc")
+File file(String path);
 
-@NativeImpure("org.smoothbuild.slib.file.ProjectFilesFunc")
-[File] projectFiles(String dir);
+@NativeImpure("org.smoothbuild.slib.file.FilesFunc")
+[File] files(String dir);
 
 @Native("org.smoothbuild.slib.file.FilterFunc")
 [File] filter([File] files, String pattern);

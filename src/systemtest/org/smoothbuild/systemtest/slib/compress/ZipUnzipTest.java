@@ -13,7 +13,7 @@ public class ZipUnzipTest extends SystemTestCase {
     createFile("dir/file1.txt", "abc");
     createFile("file2.txt", "def");
     createUserModule("""
-            result = [projectFile("dir/file1.txt"), projectFile("file2.txt")] > zip() > unzip();
+            result = [file("dir/file1.txt"), file("file2.txt")] > zip() > unzip();
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
