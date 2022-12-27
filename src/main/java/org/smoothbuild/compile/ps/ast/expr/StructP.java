@@ -1,6 +1,5 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import static org.smoothbuild.compile.lang.base.TypeNamesS.structNameToCtorName;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
@@ -30,7 +29,7 @@ public final class StructP extends NalImpl implements WithScopeP {
     this.fields = fields;
     this.constructor = new NamedFuncP(
         Optional.of(new TypeP(name, location)),
-        structNameToCtorName(name),
+        name,
         fields,
         Optional.empty(),
         Optional.empty(),

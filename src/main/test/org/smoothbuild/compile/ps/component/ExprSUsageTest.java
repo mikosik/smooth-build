@@ -291,7 +291,7 @@ public class ExprSUsageTest extends TestContext {
         MyStruct(
           String field,
         )
-        myValue = myStruct("abc");
+        myValue = MyStruct("abc");
         String myFunc(String s) = "abc";
         result = myFunc(myValue.field);
         """)
@@ -304,7 +304,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct(
             String field,
           )
-          myValue = myStruct("abc");
+          myValue = MyStruct("abc");
           result() = myValue.field;
           """)
           .loadsWithSuccess();
@@ -316,7 +316,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct(
             String field,
           )
-          myValue = myStruct("abc");
+          myValue = MyStruct("abc");
           result = myValue.field;
           """)
           .loadsWithSuccess();
@@ -328,7 +328,7 @@ public class ExprSUsageTest extends TestContext {
            MyStruct(
              String field,
            )
-           myValue = myStruct("abc");
+           myValue = MyStruct("abc");
            result = [myValue.field];
            """)
           .loadsWithSuccess();
@@ -340,7 +340,7 @@ public class ExprSUsageTest extends TestContext {
         MyStruct(
           String field,
         )
-        value = myStruct("abc");
+        value = MyStruct("abc");
         String myFunc(String value = value.field) = "abc";
         """)
           .loadsWithSuccess();
@@ -353,7 +353,7 @@ public class ExprSUsageTest extends TestContext {
           ()->String myFunc
         )
         String justAbc() = "abc";
-        result = myStruct(justAbc).myFunc();
+        result = MyStruct(justAbc).myFunc();
         """)
           .loadsWithSuccess();
     }
@@ -364,7 +364,7 @@ public class ExprSUsageTest extends TestContext {
         MyStruct(
           String myField
         )
-        result = myStruct("abc").myField();
+        result = MyStruct("abc").myField();
         """)
           .loadsWithError(4, "Illegal call.");
     }
@@ -378,7 +378,7 @@ public class ExprSUsageTest extends TestContext {
             S2(
               String f2,
             )
-            String result = s1(s2("abc")).f1.f2;
+            String result = S1(S2("abc")).f1.f2;
             """;
       module(code)
           .loadsWithSuccess();
@@ -390,7 +390,7 @@ public class ExprSUsageTest extends TestContext {
             MyStruct(
               String myField,
             )
-            String result = myStruct("abc").myField.otherField;
+            String result = MyStruct("abc").myField.otherField;
             """;
       module(code)
           .loadsWithError(4, "Illegal field access.");
@@ -402,7 +402,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct(
             String field,
           )
-          myValue = myStruct("abc");
+          myValue = MyStruct("abc");
           result = (myValue.field);
           """)
           .loadsWithSuccess();
@@ -488,7 +488,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct(
             String field,
           )
-          myValue = myStruct("abc");
+          myValue = MyStruct("abc");
           result = (myValue.field);
           """)
           .loadsWithSuccess();
@@ -559,7 +559,7 @@ public class ExprSUsageTest extends TestContext {
             MyStruct(
               String myField
             )
-            myFunc() = myStruct("abc");
+            myFunc() = MyStruct("abc");
             result = myFunc().myField;
             """;
       module(code)
@@ -876,7 +876,7 @@ public class ExprSUsageTest extends TestContext {
             MyStruct(
               String myField
             )
-            myValue = myStruct("abc");
+            myValue = MyStruct("abc");
             result = myValue.myField;
             """;
       module(code)
@@ -905,73 +905,6 @@ public class ExprSUsageTest extends TestContext {
 
   @Nested
   class _struct_type_used_as {
-    @Test
-    public void func_arg_fails() {
-      module("""
-          MyStruct()
-          String myFunc(String param) = "abc";
-          result = myFunc(MyStruct);
-          """)
-          .loadsWithError(3, "`MyStruct` is undefined.");
-    }
-
-    @Test
-    public void func_body_fails() {
-      module("""
-          MyStruct()
-          result() = MyStruct;
-          """)
-          .loadsWithError(2, "`MyStruct` is undefined.");
-    }
-
-    @Test
-    public void value_body_fails() {
-      module("""
-          MyStruct()
-          result = MyStruct;
-          """)
-          .loadsWithError(2, "`MyStruct` is undefined.");
-    }
-
-    @Test
-    public void array_elem_fails() {
-      module("""
-          MyStruct()
-          result = [MyStruct];
-          """)
-          .loadsWithError(2, "`MyStruct` is undefined.");
-    }
-
-    @Test
-    public void param_default_value_fails() {
-      module("""
-          MyStruct()
-          String myFunc(String value = MyStruct) = "abc";
-          """)
-          .loadsWithError(2, "`MyStruct` is undefined.");
-    }
-
-    @Test
-    public void func_in_call_expression_fails() {
-      module("""
-            MyStruct()
-            result = MyStruct();
-            """)
-          .loadsWith(err(2, "`MyStruct` is undefined."));
-    }
-
-    @Test
-    public void struct_in_select_expression() {
-      var code = """
-            MyStruct(
-              String myField
-            )
-            result = MyStruct.myField;
-            """;
-      module(code)
-          .loadsWithError(4, "`MyStruct` is undefined.");
-    }
-
     @Test
     public void field_type() {
       module("""
@@ -1051,15 +984,6 @@ public class ExprSUsageTest extends TestContext {
           MyStruct()
           """)
           .loadsWithSuccess();
-    }
-
-    @Test
-    public void parens_content_failes() {
-      module("""
-          MyStruct()
-          result = (MyStruct);
-          """)
-          .loadsWithError(2, "`MyStruct` is undefined.");
     }
   }
 
@@ -1196,7 +1120,7 @@ public class ExprSUsageTest extends TestContext {
           MyStruct(
             Int myField
           )
-          result = (myStruct(7)).myField;
+          result = (MyStruct(7)).myField;
           """;
       module(code)
           .loadsWithSuccess();

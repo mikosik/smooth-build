@@ -12,7 +12,7 @@ public class JarFileTest extends SystemTestCase {
   public void jar_unjar() throws IOException {
     createUserModule("""
             aFile =
-                [file(0x41, "dir/file1.txt"), file(0x42, "file2.txt")]
+                [File(0x41, "dir/file1.txt"), File(0x42, "file2.txt")]
               > jarFile("file.jar");
             result = unjar(aFile.content);
             """);

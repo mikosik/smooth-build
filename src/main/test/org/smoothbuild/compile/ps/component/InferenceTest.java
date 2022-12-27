@@ -625,7 +625,7 @@ public class InferenceTest extends TestContext {
               String b,
             )
             A myEqual(A a1, A a2) = a1;
-            result = myEqual(myStruct1("aaa", "bbb"), myStruct2("aaa", "bbb"));
+            result = myEqual(MyStruct1("aaa", "bbb"), MyStruct2("aaa", "bbb"));
             """;
         module(code)
             .loadsWithError(10, "Illegal call.");

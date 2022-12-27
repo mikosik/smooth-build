@@ -135,7 +135,7 @@ public class EqualTest extends SystemTestCase {
             String firstName,
             String secondName,
           )
-          result = equal(person("aaa", "bbb"), person("aaa", "bbb"));
+          result = equal(Person("aaa", "bbb"), Person("aaa", "bbb"));
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
@@ -151,7 +151,7 @@ public class EqualTest extends SystemTestCase {
             String firstName,
             String secondName,
           )
-          result = equal(person("aaa", "bbb"), person("aaa", "ccc"));
+          result = equal(Person("aaa", "bbb"), Person("aaa", "ccc"));
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();

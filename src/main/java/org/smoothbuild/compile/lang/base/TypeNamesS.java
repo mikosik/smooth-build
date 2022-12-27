@@ -1,7 +1,5 @@
 package org.smoothbuild.compile.lang.base;
 
-import static com.google.common.base.CaseFormat.LOWER_CAMEL;
-import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.List;
@@ -49,9 +47,5 @@ public class TypeNamesS {
 
   private static String commaSeparatedTypeNames(List<? extends TypeS> elemTs) {
     return joinWithCommaToString(elemTs, TypeS::name);
-  }
-
-  public static String structNameToCtorName(String name) {
-    return UPPER_CAMEL.to(LOWER_CAMEL, name);
   }
 }

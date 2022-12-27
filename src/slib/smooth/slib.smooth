@@ -33,7 +33,7 @@ File projectFile(String path);
 [File] filter([File] files, String pattern);
 
 File jarFile([File] files, String path, Blob manifest = 0x) =
-    jar(files, manifest) > file(path);
+    jar(files, manifest) > File(path);
 
 @Native("org.smoothbuild.slib.java.JarFunc")
 Blob jar([File] files, Blob manifest = 0x);

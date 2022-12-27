@@ -974,7 +974,7 @@ public class DeclarationTest extends TestContext {
         public void creating_empty_struct_instance_is_allowed() {
           var code = """
               MyStruct()
-              result = myStruct();
+              result = MyStruct();
               """;
           module(code)
               .loadsWithSuccess();
@@ -986,7 +986,7 @@ public class DeclarationTest extends TestContext {
               MyStruct(
                 String field,
               )
-              result = myStruct("abc");
+              result = MyStruct("abc");
               """;
           module(code)
               .loadsWithSuccess();
@@ -998,7 +998,7 @@ public class DeclarationTest extends TestContext {
               MyStruct(
                 String field,
               )
-              result = myStruct();
+              result = MyStruct();
               """;
           module(code)
               .loadsWithError(4, "Parameter `field` must be specified.");
@@ -1260,7 +1260,7 @@ public class DeclarationTest extends TestContext {
             MyStruct(
               String field,
             )
-            String result = myStruct("abc").field;
+            String result = MyStruct("abc").field;
             """;
         module(code)
             .loadsWithSuccess();
@@ -1272,7 +1272,7 @@ public class DeclarationTest extends TestContext {
             MyStruct(
               String field,
             )
-            result = myStruct("abc").otherField;
+            result = MyStruct("abc").otherField;
             """;
         module(code)
             .loadsWithError(4, "Unknown field `otherField`.");

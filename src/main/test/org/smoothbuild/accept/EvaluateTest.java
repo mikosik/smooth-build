@@ -87,7 +87,7 @@ public class EvaluateTest extends AcceptanceTestCase {
             MyStruct(
               String field,
             )
-            String result = myStruct("abc").field;
+            String result = MyStruct("abc").field;
             """);
         evaluate("result");
         assertThat(artifact())
@@ -101,7 +101,7 @@ public class EvaluateTest extends AcceptanceTestCase {
               (String)->Int field,
             )
             Int return7(String s) = 7;
-            aStruct = myStruct(return7);
+            aStruct = MyStruct(return7);
             Int result = "abc" > aStruct.field();
             """);
         evaluate("result");

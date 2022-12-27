@@ -52,7 +52,7 @@ public class VisibilityTest extends TestContext {
       public void ctor_declared_above_is_visible() {
         module("""
              MyStruct()
-             result = myStruct;
+             result = MyStruct;
              """)
             .loadsWithSuccess();
       }
@@ -60,7 +60,7 @@ public class VisibilityTest extends TestContext {
       @Test
       public void ctor_declared_below_is_visible() {
         module("""
-             result = myStruct;
+             result = MyStruct;
              MyStruct()
              """)
             .loadsWithSuccess();
@@ -118,14 +118,14 @@ public class VisibilityTest extends TestContext {
       }
 
       @Test
-      public void ctor_is_visible() {
+      public void constructor_is_visible() {
         var imported = module("""
           OtherModuleStruct()
           """)
             .loadsWithSuccess()
             .getModuleAsDefinitions();
         module("""
-              myValue = otherModuleStruct;
+              myValue = OtherModuleStruct;
               """)
             .withImported(imported)
             .loadsWithSuccess();
@@ -742,15 +742,6 @@ public class VisibilityTest extends TestContext {
                """)
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
         }
-
-        @Test
-        public void ctor_fails() {
-          module("""
-               MyStruct()
-               myStruct = "abc";
-               """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myStruct"));
-        }
       }
     }
 
@@ -819,15 +810,6 @@ public class VisibilityTest extends TestContext {
                myFunc() = "def";
                """)
               .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
-        }
-
-        @Test
-        public void ctor_fails() {
-          module("""
-               MyStruct()
-               myStruct() = "abc";
-               """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myStruct"));
         }
       }
     }
@@ -1049,8 +1031,7 @@ public class VisibilityTest extends TestContext {
                OtherModuleStruct()
                """)
               .loadsWith(
-                  err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")),
-                  err(2, alreadyDefinedIn(filePath(), "otherModuleStruct"))
+                  err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct"))
               );
         }
       }
@@ -1157,63 +1138,6 @@ public class VisibilityTest extends TestContext {
              )
              """)
               .loadsWithSuccess();
-        }
-      }
-    }
-
-    @Nested
-    class _ctor_shadowing {
-      @Nested
-      class _imported {
-        @Test
-        public void value_succeeds() {
-          var imported = module("""
-            otherModuleValue = "abc";
-            """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-                OtherModuleValue()
-                """)
-              .withImported(imported)
-              .loadsWithSuccess();
-        }
-
-        @Test
-        public void func_succeeds() {
-          var imported = module("""
-            otherModuleFunc() = "abc";
-            """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-                OtherModuleFunc()
-                """)
-              .withImported(imported)
-              .loadsWithSuccess();
-        }
-      }
-
-      @Nested
-      class _local {
-        @Test
-        public void value_fails() {
-          module("""
-               myValue = "abc";
-               MyValue()
-               """)
-              .loadsWithError(1, alreadyDefinedIn(filePath(), 2, "myValue"));
-        }
-
-        @Test
-        public void func_fails() {
-          module("""
-               myFunc() = "abc";
-               MyFunc()
-               """)
-              .loadsWithError(1, alreadyDefinedIn(filePath(), 2, "myFunc"));
         }
       }
     }

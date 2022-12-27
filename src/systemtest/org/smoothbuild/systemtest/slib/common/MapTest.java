@@ -22,7 +22,7 @@ public class MapTest extends SystemTestCase {
   @Test
   public void mapping_files_to_path() throws Exception {
     String code = """
-        files = [file(0x01, "test01.txt"), file(0x02, "test02.txt")];
+        files = [File(0x01, "test01.txt"), File(0x02, "test02.txt")];
         pathOf(File file) = file.path;
         result = map(files, pathOf);
         """;

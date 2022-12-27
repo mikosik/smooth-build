@@ -270,7 +270,7 @@ public class ExprSLoadingTest extends TestContext {
       @Test
       public void with_ctor_reference() {
         var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
-        var constructor = constructorS(1, struct, "myStruct");
+        var constructor = constructorS(1, struct, "MyStruct");
         module("""
           MyStruct(
             String field
@@ -286,7 +286,7 @@ public class ExprSLoadingTest extends TestContext {
             MyStruct(
               String field
             )
-            result = myStruct(
+            result = MyStruct(
               "aaa");
             """;
         var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
@@ -384,7 +384,7 @@ public class ExprSLoadingTest extends TestContext {
         var code = """
             MyStruct()
             ()->MyStruct result =
-              myStruct;
+              MyStruct;
             """;
         var structT = structTS("MyStruct", nlist());
         var constructor = constructorS(1, structT);

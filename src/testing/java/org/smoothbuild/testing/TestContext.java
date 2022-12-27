@@ -6,7 +6,6 @@ import static java.io.OutputStream.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.compile.lang.base.TypeNamesS.structNameToCtorName;
 import static org.smoothbuild.compile.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.lang.define.ItemS.toTypes;
 import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
@@ -1333,7 +1332,7 @@ public class TestContext {
   }
 
   public static ConstructorS constructorS(int line, StructTS structT) {
-    return constructorS(line, structT, structNameToCtorName(structT.name()));
+    return constructorS(line, structT, structT.name());
   }
 
   public static ConstructorS constructorS(int line, StructTS structT, String name) {

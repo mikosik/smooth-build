@@ -64,7 +64,7 @@ public class ArtifactTest extends SystemTestCase {
   @Test
   public void store_file_artifact() throws Exception {
     createUserModule("""
-            result = file(0x41, "file.txt");
+            result = File(0x41, "file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -82,7 +82,7 @@ public class ArtifactTest extends SystemTestCase {
               String path,
             )
             
-            result = notAFile(0x41, "file.txt");
+            result = NotAFile(0x41, "file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -186,7 +186,7 @@ public class ArtifactTest extends SystemTestCase {
   @Test
   public void store_array_of_files_artifact() throws Exception {
     createUserModule("""
-            result = [file(0x41, "file1.txt"), file(0x42, "file2.txt")];
+            result = [File(0x41, "file1.txt"), File(0x42, "file2.txt")];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -198,7 +198,7 @@ public class ArtifactTest extends SystemTestCase {
   @Test
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
     createUserModule("""
-            myFile = file(0x41, "file.txt");
+            myFile = File(0x41, "file.txt");
             result = [myFile, myFile];
             """);
     runSmoothBuild("result");

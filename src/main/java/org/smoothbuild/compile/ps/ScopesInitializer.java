@@ -115,8 +115,17 @@ public class ScopesInitializer extends ModuleVisitorP {
 
     private void addBindingsFromScopeOf(ModuleP moduleP) {
       moduleP.structs().forEach(this::addType);
-      moduleP.structs().forEach(s -> addRefable(s.constructor()));
+      moduleP.structs().forEach(this::addConstructor);
       moduleP.evaluables().forEach(this::addRefable);
+    }
+
+    private void addConstructor(StructP structP) {
+      var constructor = structP.constructor();
+      // No need to report error when other refable with same name is already defined.
+      // Constructor name starts with capital letter, so it can collide only
+      // with other constructor name. This can only happen when other structure
+      // with same name is declared which will be reported when adding struct type.
+      scope.refables().add(constructor.name(), constructor);
     }
 
     private void addBindingsFromScopeOf(StructP structP) {

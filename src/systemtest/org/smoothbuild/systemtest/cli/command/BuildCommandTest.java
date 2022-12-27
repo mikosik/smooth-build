@@ -153,7 +153,7 @@ public class BuildCommandTest {
           MyStruct(
             String myField
           )
-          result = myStruct("abc");
+          result = MyStruct("abc");
           """;
       private static final String COMBINE_TASK_HEADER = """
           (,)                                         build.smooth:1                 exec
@@ -305,7 +305,7 @@ public class BuildCommandTest {
             MyStruct(
               String myField
             )
-            aStruct = myStruct("abc");
+            aStruct = MyStruct("abc");
             result = aStruct.myField;
             """;
       private static final String SELECT_TASK_HEADER = """
@@ -523,7 +523,7 @@ public class BuildCommandTest {
           MyStruct(
             String myField
           )
-          result = myStruct("abc").myField;
+          result = MyStruct("abc").myField;
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();

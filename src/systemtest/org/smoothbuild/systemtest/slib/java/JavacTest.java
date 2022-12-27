@@ -17,7 +17,7 @@ public class JavacTest extends SystemTestCase {
   @Test
   public void error_is_logged_when_compilation_error_occurs() throws Exception {
     createUserModule("""
-            result = [file(toBlob("public private class MyClass {}"), "MyClass.java")]
+            result = [File(toBlob("public private class MyClass {}"), "MyClass.java")]
               > javac();
             """);
     runSmoothBuild("result");
@@ -40,7 +40,7 @@ public class JavacTest extends SystemTestCase {
     String classSource = "public class MyClass { "
         + "public static String myMethod() {return \\\"test-string\\\";}}";
     createUserModule(
-        "  result = [file(toBlob(\"" + classSource + "\"), \"MyClass.java\")] > javac();  ");
+        "  result = [File(toBlob(\"" + classSource + "\"), \"MyClass.java\")] > javac();  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(invoke(artifactAbsolutePath("result").resolve("MyClass.class"), "myMethod"))
@@ -66,7 +66,7 @@ public class JavacTest extends SystemTestCase {
         }
         """);
     createUserModule("""
-            libraryJar = projectFiles("srclib") > javac() > jar() > file("library.jar");
+            libraryJar = projectFiles("srclib") > javac() > jar() > File("library.jar");
             result = concat([(projectFiles("src") > javac(libs = [libraryJar])), javac(projectFiles("srclib"))]);
             """);
     runSmoothBuild("result");
@@ -83,7 +83,7 @@ public class JavacTest extends SystemTestCase {
   @Test
   public void duplicate_java_files_cause_error() throws Exception {
     createUserModule("""
-            classFile = file(toBlob("public class MyClass {}"), "MyClass.java");
+            classFile = File(toBlob("public class MyClass {}"), "MyClass.java");
             result = [classFile, classFile] > javac();
             """);
     runSmoothBuild("result");
@@ -94,7 +94,7 @@ public class JavacTest extends SystemTestCase {
   @Test
   public void illegal_source_param_causes_error() throws Exception {
     createUserModule("""
-            result = [file(toBlob("public class MyClass {}"), "MyClass.java")]
+            result = [File(toBlob("public class MyClass {}"), "MyClass.java")]
               > javac(source="0.9");
             """);
     runSmoothBuild("result");
@@ -105,7 +105,7 @@ public class JavacTest extends SystemTestCase {
   @Test
   public void illegal_target_param_causes_error() throws Exception {
     createUserModule("""
-            result = [file(toBlob("public class MyClass {}"), "MyClass.java")]
+            result = [File(toBlob("public class MyClass {}"), "MyClass.java")]
               > javac(target="0.9");
             """);
     runSmoothBuild("result");
@@ -117,7 +117,7 @@ public class JavacTest extends SystemTestCase {
   public void compiling_enum_with_source_param_set_to_too_old_java_version_causes_error()
       throws Exception {
     createUserModule("""
-            result = [file(toBlob("public enum MyClass { VALUE }"), "MyClass.java")]
+            result = [File(toBlob("public enum MyClass { VALUE }"), "MyClass.java")]
               > javac(source="1.4", target="1.4");
             """);
     runSmoothBuild("result");

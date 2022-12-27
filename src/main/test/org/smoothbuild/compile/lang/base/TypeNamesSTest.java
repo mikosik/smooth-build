@@ -201,13 +201,4 @@ public class TypeNamesSTest extends TestContext {
           .isEqualTo("(Blob,Bool)->String");
     }
   }
-
-  @Nested
-  class _struct_name_to_ctor_name {
-    @Test
-    public void func_type_name() {
-      assertThat(TypeNamesS.structNameToCtorName("MyStruct"))
-          .isEqualTo("myStruct");
-    }
-  }
 }

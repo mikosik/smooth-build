@@ -1,4 +1,5 @@
 
+
 ### smooth-build tutorial
 
 Smooth uses `build.smooth` file located in project's root directory as
@@ -184,12 +185,12 @@ Dog(
 Definition of each struct automatically generates constructor for that struct.
 
 ```
-Person person = person("John", "Doe");
+Person person = Person("John", "Doe");
 ```
 
 As one can guess constructor of given struct is a function that
  - returns value of given struct type
- - has the same name as given struct with first letter lowercased
+ - has the same name as given struct
  - has parameter for each struct's field with the same name and type as that field
 
 Apart from being automatically generated, constructor is an ordinary function and
@@ -268,7 +269,7 @@ Let's create function that creates text file.
 
 ```
 File textFile(String text, String name = "file.txt") 
-  = file(toBlob(text), name);
+  = File(toBlob(text), name);
 ```
 
 We can call it without specifying `name` parameter as it has default value:
