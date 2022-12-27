@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.ps;
 
-import static org.smoothbuild.compile.parser.ApTranslator.translateAp;
-import static org.smoothbuild.compile.parser.SmoothCodeParser.parseSmoothCode;
+import static org.smoothbuild.compile.parser.SmoothParser.parse;
 import static org.smoothbuild.compile.ps.CallsPreprocessor.preprocessCalls;
 import static org.smoothbuild.compile.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
@@ -36,8 +35,7 @@ public class ModuleLoader {
 
     @Override
     protected ModuleS processImpl() throws FailedException {
-      var modContext = addLogsAndGetValue(parseSmoothCode(modFiles.smoothFile(), sourceCode));
-      var moduleP = addLogsAndGetValue(translateAp(modFiles.smoothFile(), modContext));
+      var moduleP = addLogsAndGetValue(parse(modFiles, sourceCode));
       addLogs(findSyntaxErrors(moduleP));
       addLogs(decodeLiterals(moduleP));
       addLogs(initializeScopes(moduleP));

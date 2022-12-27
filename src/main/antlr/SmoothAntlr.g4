@@ -1,4 +1,4 @@
-grammar Smooth;
+grammar SmoothAntlr;
 
 mod          : ( struct | namedFunc | namedValue )* EOF ;
 struct       : NAME '(' itemList ')' ;

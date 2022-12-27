@@ -20,27 +20,27 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.smoothbuild.antlr.lang.SmoothLexer;
-import org.smoothbuild.antlr.lang.SmoothParser;
-import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrLexer;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModContext;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 
-public class SmoothCodeParser {
-  public static Maybe<ModContext> parseSmoothCode(FilePath filePath, String sourceCode) {
+public class AntlrParser {
+  public static Maybe<ModContext> antlrParse(FilePath filePath, String sourceCode) {
     var logBuffer = new LogBuffer();
-    ErrorListener errorListener = new ErrorListener(filePath, logBuffer);
-    SmoothLexer lexer = new SmoothLexer(CharStreams.fromString(sourceCode));
-    lexer.removeErrorListeners();
-    lexer.addErrorListener(errorListener);
+    var errorListener = new ErrorListener(filePath, logBuffer);
+    var smoothAntlrLexer = new SmoothAntlrLexer(CharStreams.fromString(sourceCode));
+    smoothAntlrLexer.removeErrorListeners();
+    smoothAntlrLexer.addErrorListener(errorListener);
 
-    SmoothParser parser = new SmoothParser(new CommonTokenStream(lexer));
-    parser.removeErrorListeners();
-    parser.addErrorListener(errorListener);
-    var mod = parser.mod();
+    var smoothAntlrParser = new SmoothAntlrParser(new CommonTokenStream(smoothAntlrLexer));
+    smoothAntlrParser.removeErrorListeners();
+    smoothAntlrParser.addErrorListener(errorListener);
+    var mod = smoothAntlrParser.mod();
     var result = logBuffer.containsAtLeast(ERROR) ? null : mod;
     return maybe(result, logBuffer);
   }

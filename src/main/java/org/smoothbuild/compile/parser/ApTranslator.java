@@ -17,27 +17,28 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
-import org.smoothbuild.antlr.lang.SmoothParser.AnnContext;
-import org.smoothbuild.antlr.lang.SmoothParser.AnonymousFuncContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ArrayTContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ChainHeadContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
-import org.smoothbuild.antlr.lang.SmoothParser.FuncTContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ItemContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ItemListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.antlr.lang.SmoothParser.NamedFuncContext;
-import org.smoothbuild.antlr.lang.SmoothParser.NamedValueContext;
-import org.smoothbuild.antlr.lang.SmoothParser.PipeContext;
-import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
-import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
-import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
-import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrBaseVisitor;
+import org.smoothbuild.antlr.lang.SmoothAntlrBaseVisitor;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnnContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnonymousFuncContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgListContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArrayTContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainHeadContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ChainPartContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ExprContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.FuncTContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemListContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.NamedFuncContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.NamedValueContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.PipeContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.SelectContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
 import org.smoothbuild.compile.lang.base.location.Location;
 import org.smoothbuild.compile.lang.base.location.Locations;
 import org.smoothbuild.compile.ps.ast.expr.AnnotationP;
@@ -73,7 +74,7 @@ public class ApTranslator {
     var logs = new LogBuffer();
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
-    new SmoothBaseVisitor<Void>() {
+    new SmoothAntlrBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
         var name = struct.NAME().getText();

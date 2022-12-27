@@ -80,7 +80,7 @@
             <arg line="-o ${dir.build.java.smooth-parser}"/>
             <arg line="-package org.smoothbuild.antlr.lang"/>
             <arg line="-visitor"/>
-            <arg line="Smooth.g4"/>
+            <arg line="SmoothAntlr.g4"/>
             <classpath>
                 <pathelement location="${lib.antlr4}"/>
                 <pathelement location="${lib.antlr4-runtime}"/>
