@@ -20,11 +20,14 @@ import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 
+/**
+ * Detect syntax errors that are not caught by Antlr.
+ * We could extend Antlr grammar to catch those,
+ * but it would make it more complex.
+ * Catching those errors here makes it easier
+ * to provide more detailed error message.
+ */
 public class FindSyntaxErrors {
-  /**
-   * Detect syntax errors that are not caught by Antlr
-   * because its grammar is not so demanding, so it can be more compact.
-   */
   public static LogBuffer findSyntaxErrors(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     detectIllegalNames(logBuffer, moduleP);
