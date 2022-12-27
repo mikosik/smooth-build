@@ -1,7 +1,8 @@
 package org.smoothbuild.compile.parser;
 
-import static org.smoothbuild.compile.parser.ApTranslator.translateAp;
 import static org.smoothbuild.compile.parser.AntlrParser.antlrParse;
+import static org.smoothbuild.compile.parser.ApTranslator.translateAp;
+import static org.smoothbuild.compile.parser.FindSyntaxErrors.findSyntaxErrors;
 
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
@@ -26,7 +27,9 @@ public class SmoothParser {
     @Override
     protected ModuleP processImpl() throws FailedException {
       var modContext = addLogsAndGetValue(antlrParse(modFiles.smoothFile(), sourceCode));
-      return addLogsAndGetValue(translateAp(modFiles.smoothFile(), modContext));
+      var moduleP = addLogsAndGetValue(translateAp(modFiles.smoothFile(), modContext));
+      addLogs(findSyntaxErrors(moduleP));
+      return moduleP;
     }
   }
 }
