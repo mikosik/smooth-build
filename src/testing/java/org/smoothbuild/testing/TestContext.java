@@ -1486,16 +1486,28 @@ public class TestContext {
   }
 
   public static NamedFuncP namedFuncP() {
-    return namedFuncP(nlist());
+    return namedFuncP(nlist(itemP()));
+  }
+
+  public static NamedFuncP namedFuncP(String name) {
+    return namedFuncP(name, nlist(itemP()));
   }
 
   public static NamedFuncP namedFuncP(NList<ItemP> params) {
     return namedFuncP("myFunc", params);
   }
 
+  public static NamedFuncP namedFuncP(String name, ExprP body) {
+    return namedFuncP(name, nlist(), Optional.of(body));
+  }
+
   public static NamedFuncP namedFuncP(String name, NList<ItemP> params) {
+    return namedFuncP(name, params, Optional.empty());
+  }
+
+  public static NamedFuncP namedFuncP(String name, NList<ItemP> params, Optional<ExprP> body) {
     return new NamedFuncP(
-        Optional.empty(), name, params, Optional.empty(), Optional.empty(), location());
+        Optional.empty(), name, params, body, Optional.empty(), location());
   }
 
   public static NamedValueP namedValueP() {
