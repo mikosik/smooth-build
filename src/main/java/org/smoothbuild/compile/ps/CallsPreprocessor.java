@@ -21,7 +21,6 @@ import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
-import org.smoothbuild.compile.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;

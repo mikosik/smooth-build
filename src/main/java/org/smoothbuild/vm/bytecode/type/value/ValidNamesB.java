@@ -4,8 +4,6 @@ import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.List;
 
-import org.smoothbuild.util.collect.Iterables;
-
 public class ValidNamesB {
   public static final String BLOB = "Blob";
   public static final String BOOL = "Bool";

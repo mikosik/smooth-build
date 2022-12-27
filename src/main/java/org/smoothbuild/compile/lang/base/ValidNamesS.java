@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.smoothbuild.compile.lang.type.TupleTS;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.util.collect.Iterables;
 
 public class ValidNamesS {
   public static final String BLOB = "Blob";

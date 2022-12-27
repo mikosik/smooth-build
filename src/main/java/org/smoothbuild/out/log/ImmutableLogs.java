@@ -10,8 +10,6 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import org.smoothbuild.util.collect.Iterables;
-
 import com.google.common.collect.ImmutableList;
 
 public class ImmutableLogs implements Logs {

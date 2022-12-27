@@ -4,7 +4,6 @@ import static org.smoothbuild.compile.parser.SmoothParser.parse;
 import static org.smoothbuild.compile.ps.CallsPreprocessor.preprocessCalls;
 import static org.smoothbuild.compile.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
-import static org.smoothbuild.compile.parser.FindSyntaxErrors.findSyntaxErrors;
 import static org.smoothbuild.compile.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.ps.ScopesInitializer.initializeScopes;
 import static org.smoothbuild.compile.ps.ast.ModuleDependenciesSorter.sortByDependencies;

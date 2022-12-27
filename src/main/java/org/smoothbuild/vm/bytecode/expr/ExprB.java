@@ -5,7 +5,6 @@ import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.Objects;
 
-import org.smoothbuild.util.collect.Iterables;
 import org.smoothbuild.vm.bytecode.expr.Helpers.HashedDbCallable;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassExc;

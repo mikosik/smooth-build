@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.smoothbuild.util.collect.Iterables;
-
 public class LogBuffer extends ArrayList<Log> implements Logger, Logs {
   @Override
   public void fatal(String message) {

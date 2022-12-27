@@ -17,7 +17,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-import org.smoothbuild.util.collect.Iterables;
 import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.collect.ImmutableList;

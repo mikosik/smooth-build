@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.smoothbuild.compile.lang.type.FuncTS;
 import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.util.collect.Iterables;
 
 import com.google.common.collect.ImmutableList;
 
