@@ -6,13 +6,10 @@ import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
+import org.smoothbuild.compile.ps.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
-import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
-import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.ScopeP;
-import org.smoothbuild.compile.ps.ast.expr.StructP;
 import org.smoothbuild.compile.ps.ast.expr.WithScopeP;
 import org.smoothbuild.compile.ps.ast.type.ArrayTP;
 import org.smoothbuild.compile.ps.ast.type.FuncTP;
@@ -31,7 +28,7 @@ public class DetectUndefinedRefablesAndTypes {
     return log;
   }
 
-  private static class Detector extends ModuleVisitorP {
+  private static class Detector extends ScopingModuleVisitorP {
     private final DefinitionsS imported;
     private final ScopeP scope;
     private final Logger log;
@@ -43,38 +40,7 @@ public class DetectUndefinedRefablesAndTypes {
     }
 
     @Override
-    public void visitModule(ModuleP moduleP) {
-      newDetector(moduleP)
-          .visitModuleChildren(moduleP);
-    }
-
-    @Override
-    public void visitStruct(StructP structP) {
-      visitStructSignature(structP);
-    }
-
-    @Override
-    public void visitNamedValue(NamedValueP namedValueP) {
-      visitNamedValueSignature(namedValueP);
-      newDetector(namedValueP)
-          .visitNamedValueBody(namedValueP);
-    }
-
-    @Override
-    public void visitNamedFunc(NamedFuncP namedFuncP) {
-      visitNamedFuncSignature(namedFuncP);
-      newDetector(namedFuncP)
-          .visitFuncBody(namedFuncP);
-    }
-
-    @Override
-    public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-      visitAnonymousFuncSignature(anonymousFuncP);
-      newDetector(anonymousFuncP)
-          .visitFuncBody(anonymousFuncP);
-    }
-
-    private ModuleVisitorP newDetector(WithScopeP withScopeP) {
+    protected ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP) {
       return new Detector(imported, withScopeP.scope(), log);
     }
 

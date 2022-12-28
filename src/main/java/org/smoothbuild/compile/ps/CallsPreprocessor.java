@@ -18,14 +18,13 @@ import org.smoothbuild.compile.lang.define.ItemS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.NamedFuncS;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
+import org.smoothbuild.compile.ps.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.ps.ast.expr.CallP;
 import org.smoothbuild.compile.ps.ast.expr.ExprP;
 import org.smoothbuild.compile.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
-import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.RefableP;
 import org.smoothbuild.compile.ps.ast.expr.WithScopeP;
@@ -47,7 +46,7 @@ public class CallsPreprocessor {
     return logger;
   }
 
-  private static class Preprocessor extends ModuleVisitorP {
+  private static class Preprocessor extends ScopingModuleVisitorP {
     private final DefinitionsS imported;
     private final Bindings<RefableP> refables;
     private final LogBuffer logger;
@@ -59,32 +58,7 @@ public class CallsPreprocessor {
     }
 
     @Override
-    public void visitModule(ModuleP moduleP) {
-      newPreprocessorForScope(moduleP)
-          .visitModuleChildren(moduleP);
-    }
-
-    @Override
-    public void visitNamedFunc(NamedFuncP namedFuncP) {
-      visitNamedFuncSignature(namedFuncP);
-      newPreprocessorForScope(namedFuncP)
-          .visitFuncBody(namedFuncP);
-    }
-
-    @Override
-    public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-      visitAnonymousFuncSignature(anonymousFuncP);
-      newPreprocessorForScope(anonymousFuncP)
-          .visitFuncBody(anonymousFuncP);
-    }
-
-    @Override
-    public void visitNamedValue(NamedValueP namedValueP) {
-      newPreprocessorForScope(namedValueP)
-          .visitNamedValueBody(namedValueP);
-    }
-
-    private ModuleVisitorP newPreprocessorForScope(WithScopeP withScopeP) {
+    protected ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP) {
       return new Preprocessor(imported, withScopeP.scope().refables(), logger);
     }
 
