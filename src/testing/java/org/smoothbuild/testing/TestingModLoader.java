@@ -4,9 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
-import static org.smoothbuild.compile.ps.PsTranslator.translatePs;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestContext.importedModFiles;
 import static org.smoothbuild.testing.TestContext.modFiles;
@@ -14,6 +12,7 @@ import static org.smoothbuild.testing.TestContext.modFiles;
 import java.io.IOException;
 
 import org.mockito.Mockito;
+import org.smoothbuild.compile.FsTranslator;
 import org.smoothbuild.compile.fp.FpTranslator;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
@@ -128,13 +127,8 @@ public class TestingModLoader {
         : DefinitionsS.empty().withModule(loadInternalModule());
     var modFilesSane = this.modFiles != null ? modFiles : modFiles();
     var fileResolver = createFileResolver(modFilesSane);
-    var moduleP = new FpTranslator(fileResolver)
-        .translateFp(modFilesSane);
-    if (moduleP.containsProblem()) {
-      return maybeLogs(moduleP.logs());
-    } else {
-      return translatePs(moduleP.value(), importedSane);
-    }
+    return new FsTranslator(new FpTranslator(fileResolver))
+        .translateFs(modFilesSane, importedSane);
   }
 
   private FileResolver createFileResolver(ModFiles modFilesSane) {
