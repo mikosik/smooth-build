@@ -1,8 +1,5 @@
 package org.smoothbuild.compile.sb;
 
-import static org.smoothbuild.compile.lang.type.AnnotationNames.BYTECODE;
-import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_IMPURE;
-import static org.smoothbuild.compile.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -21,42 +18,42 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.base.Nal;
-import org.smoothbuild.compile.lang.base.location.FileLocation;
-import org.smoothbuild.compile.lang.base.location.Located;
-import org.smoothbuild.compile.lang.base.location.Location;
-import org.smoothbuild.compile.lang.define.AnnotatedFuncS;
-import org.smoothbuild.compile.lang.define.AnnotatedValueS;
-import org.smoothbuild.compile.lang.define.AnnotationS;
-import org.smoothbuild.compile.lang.define.AnonymousFuncS;
-import org.smoothbuild.compile.lang.define.BlobS;
-import org.smoothbuild.compile.lang.define.CallS;
-import org.smoothbuild.compile.lang.define.ConstructorS;
-import org.smoothbuild.compile.lang.define.EvaluableRefS;
-import org.smoothbuild.compile.lang.define.ExprFuncS;
-import org.smoothbuild.compile.lang.define.ExprS;
-import org.smoothbuild.compile.lang.define.FuncS;
-import org.smoothbuild.compile.lang.define.IntS;
-import org.smoothbuild.compile.lang.define.ItemS;
-import org.smoothbuild.compile.lang.define.MonoizableS;
-import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedExprFuncS;
-import org.smoothbuild.compile.lang.define.NamedExprValueS;
-import org.smoothbuild.compile.lang.define.NamedFuncS;
-import org.smoothbuild.compile.lang.define.NamedValueS;
-import org.smoothbuild.compile.lang.define.OrderS;
-import org.smoothbuild.compile.lang.define.ParamRefS;
-import org.smoothbuild.compile.lang.define.SelectS;
-import org.smoothbuild.compile.lang.define.StringS;
-import org.smoothbuild.compile.lang.type.ArrayTS;
-import org.smoothbuild.compile.lang.type.FuncTS;
-import org.smoothbuild.compile.lang.type.StructTS;
-import org.smoothbuild.compile.lang.type.TupleTS;
-import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
+import org.smoothbuild.compile.fs.lang.base.Nal;
+import org.smoothbuild.compile.fs.lang.base.location.FileLocation;
+import org.smoothbuild.compile.fs.lang.base.location.Located;
+import org.smoothbuild.compile.fs.lang.base.location.Location;
+import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
+import org.smoothbuild.compile.fs.lang.define.AnnotatedValueS;
+import org.smoothbuild.compile.fs.lang.define.AnnotationS;
+import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
+import org.smoothbuild.compile.fs.lang.define.BlobS;
+import org.smoothbuild.compile.fs.lang.define.CallS;
+import org.smoothbuild.compile.fs.lang.define.ConstructorS;
+import org.smoothbuild.compile.fs.lang.define.EvaluableRefS;
+import org.smoothbuild.compile.fs.lang.define.ExprFuncS;
+import org.smoothbuild.compile.fs.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.FuncS;
+import org.smoothbuild.compile.fs.lang.define.IntS;
+import org.smoothbuild.compile.fs.lang.define.ItemS;
+import org.smoothbuild.compile.fs.lang.define.MonoizableS;
+import org.smoothbuild.compile.fs.lang.define.MonoizeS;
+import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
+import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
+import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
+import org.smoothbuild.compile.fs.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.define.OrderS;
+import org.smoothbuild.compile.fs.lang.define.ParamRefS;
+import org.smoothbuild.compile.fs.lang.define.SelectS;
+import org.smoothbuild.compile.fs.lang.define.StringS;
+import org.smoothbuild.compile.fs.lang.type.AnnotationNames;
+import org.smoothbuild.compile.fs.lang.type.ArrayTS;
+import org.smoothbuild.compile.fs.lang.type.FuncTS;
+import org.smoothbuild.compile.fs.lang.type.StructTS;
+import org.smoothbuild.compile.fs.lang.type.TupleTS;
+import org.smoothbuild.compile.fs.lang.type.TypeS;
+import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
-import org.smoothbuild.util.collect.Maps;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -218,8 +215,8 @@ public class SbTranslator {
   private ExprB translateAnnotatedFunc(AnnotatedFuncS annotatedFuncS) {
     var annotationName = annotatedFuncS.annotation().name();
     return switch (annotationName) {
-      case BYTECODE -> fetchFuncBytecode(annotatedFuncS);
-      case NATIVE_PURE, NATIVE_IMPURE -> translateNativeFunc(annotatedFuncS);
+      case AnnotationNames.BYTECODE -> fetchFuncBytecode(annotatedFuncS);
+      case AnnotationNames.NATIVE_PURE, AnnotationNames.NATIVE_IMPURE -> translateNativeFunc(annotatedFuncS);
       default -> throw new SbTranslatorExc("Illegal function annotation: " + annotationName + ".");
     };
   }
@@ -235,7 +232,7 @@ public class SbTranslator {
     var annS = nativeFuncS.annotation();
     var jarB = loadNativeJar(annS.location());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
-    var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
+    var isPureB = bytecodeF.bool(annS.name().equals(AnnotationNames.NATIVE_PURE));
     return bytecodeF.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
@@ -298,7 +295,7 @@ public class SbTranslator {
 
   private ExprB translateAnnotatedValue(AnnotatedValueS annotatedValueS) {
     var annName = annotatedValueS.annotation().name();
-    if (annName.equals(BYTECODE)) {
+    if (annName.equals(AnnotationNames.BYTECODE)) {
       return saveNalAndReturn(annotatedValueS, fetchValBytecode(annotatedValueS));
     } else {
       throw new SbTranslatorExc("Illegal value annotation: " + q("@" + annName) + ".");

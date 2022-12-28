@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.compile.lang.base.location.Locations.commandLineLocation;
+import static org.smoothbuild.compile.fs.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.run.FindTopValues.findTopValues;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -12,9 +12,9 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.define.EvaluableRefS;
-import org.smoothbuild.compile.lang.define.MonoizeS;
-import org.smoothbuild.compile.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.define.EvaluableRefS;
+import org.smoothbuild.compile.fs.lang.define.MonoizeS;
+import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.EvaluatorExcS;

@@ -5,8 +5,8 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
+import org.smoothbuild.compile.fs.lang.type.TypeS;
+import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 

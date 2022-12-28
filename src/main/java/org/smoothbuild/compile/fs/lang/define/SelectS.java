@@ -1,0 +1,31 @@
+package org.smoothbuild.compile.fs.lang.define;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.util.collect.Iterables.joinToString;
+
+import org.smoothbuild.compile.fs.lang.base.location.Location;
+import org.smoothbuild.compile.fs.lang.type.StructTS;
+import org.smoothbuild.compile.fs.lang.type.TypeS;
+
+public record SelectS(ExprS selectable, String field, Location location) implements ExprS {
+  public SelectS {
+    checkArgument(selectable.evalT() instanceof StructTS);
+  }
+
+  @Override
+  public TypeS evalT() {
+    var structTS = (StructTS) selectable.evalT();
+    return structTS.fields().get(field).type();
+  }
+
+  @Override
+  public String toString() {
+    var fields = joinToString("\n",
+        "selectable = " + selectable,
+        "field = " + field,
+        "location = " + location
+    );
+    return "SelectS(\n" + indent(fields) + "\n)";
+  }
+}

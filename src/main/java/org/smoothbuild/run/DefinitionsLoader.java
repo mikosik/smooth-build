@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
+import static org.smoothbuild.compile.fs.lang.define.LoadInternalMod.loadInternalModule;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 
@@ -8,9 +8,9 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.FsTranslator;
-import org.smoothbuild.compile.lang.define.DefinitionsS;
-import org.smoothbuild.compile.lang.define.ModFiles;
+import org.smoothbuild.compile.fs.FsTranslator;
+import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
+import org.smoothbuild.compile.fs.lang.define.ModFiles;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.install.ModFilesDetector;
 import org.smoothbuild.out.report.Reporter;

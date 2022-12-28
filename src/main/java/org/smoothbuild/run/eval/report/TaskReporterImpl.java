@@ -10,7 +10,7 @@ import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.base.location.Location;
+import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;

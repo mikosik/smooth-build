@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.compile.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.base.SynchronizedFileSystem;

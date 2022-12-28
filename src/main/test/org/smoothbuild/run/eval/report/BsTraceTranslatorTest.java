@@ -1,10 +1,10 @@
 package org.smoothbuild.run.eval.report;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compile.lang.base.location.Locations.unknownLocation;
+import static org.smoothbuild.compile.fs.lang.base.location.Locations.unknownLocation;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.lang.base.location.Location;
+import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.hashed.Hash;

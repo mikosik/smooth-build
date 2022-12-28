@@ -13,7 +13,7 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;

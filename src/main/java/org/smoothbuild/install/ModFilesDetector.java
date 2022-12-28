@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.define.ModFiles;
+import org.smoothbuild.compile.fs.lang.define.ModFiles;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 

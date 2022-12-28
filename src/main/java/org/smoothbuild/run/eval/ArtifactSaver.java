@@ -21,9 +21,9 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.define.NamedValueS;
-import org.smoothbuild.compile.lang.type.ArrayTS;
-import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.compile.fs.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.type.ArrayTS;
+import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;

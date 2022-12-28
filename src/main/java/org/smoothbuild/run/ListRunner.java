@@ -7,10 +7,10 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.base.Nal;
-import org.smoothbuild.compile.lang.define.DefinitionsS;
-import org.smoothbuild.compile.lang.define.NamedEvaluableS;
-import org.smoothbuild.compile.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.base.Nal;
+import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
+import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 

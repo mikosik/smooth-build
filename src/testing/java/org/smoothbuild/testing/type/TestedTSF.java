@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.type;
 
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.compile.lang.define.ItemSigS.itemSigS;
+import static org.smoothbuild.compile.fs.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.testing.TestContext.arrayTS;
 import static org.smoothbuild.testing.TestContext.blobTS;
 import static org.smoothbuild.testing.TestContext.boolTS;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.smoothbuild.compile.lang.define.ItemSigS;
+import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 import org.smoothbuild.testing.type.TestedTS.TestedArrayTS;
 import org.smoothbuild.testing.type.TestedTS.TestedFuncTS;
 

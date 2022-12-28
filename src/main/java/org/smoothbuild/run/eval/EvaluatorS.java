@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.out.report.Reporter;

@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.compile.lang.define.DefinitionsS;
-import org.smoothbuild.compile.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
+import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 

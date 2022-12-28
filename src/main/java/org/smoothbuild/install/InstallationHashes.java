@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.lang.define.ModFiles;
+import org.smoothbuild.compile.fs.lang.define.ModFiles;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.vm.bytecode.hashed.Hash;

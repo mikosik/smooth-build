@@ -2,16 +2,16 @@ package org.smoothbuild.compile.sb;
 
 import static org.smoothbuild.util.collect.Lists.map;
 
-import org.smoothbuild.compile.lang.type.ArrayTS;
-import org.smoothbuild.compile.lang.type.BlobTS;
-import org.smoothbuild.compile.lang.type.BoolTS;
-import org.smoothbuild.compile.lang.type.FuncTS;
-import org.smoothbuild.compile.lang.type.IntTS;
-import org.smoothbuild.compile.lang.type.StringTS;
-import org.smoothbuild.compile.lang.type.StructTS;
-import org.smoothbuild.compile.lang.type.TupleTS;
-import org.smoothbuild.compile.lang.type.TypeS;
-import org.smoothbuild.compile.lang.type.VarS;
+import org.smoothbuild.compile.fs.lang.type.ArrayTS;
+import org.smoothbuild.compile.fs.lang.type.BlobTS;
+import org.smoothbuild.compile.fs.lang.type.BoolTS;
+import org.smoothbuild.compile.fs.lang.type.FuncTS;
+import org.smoothbuild.compile.fs.lang.type.IntTS;
+import org.smoothbuild.compile.fs.lang.type.StringTS;
+import org.smoothbuild.compile.fs.lang.type.StructTS;
+import org.smoothbuild.compile.fs.lang.type.TupleTS;
+import org.smoothbuild.compile.fs.lang.type.TypeS;
+import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;

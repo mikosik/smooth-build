@@ -7,7 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.smoothbuild.compile.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.ExprS;
 
 public class SbTranslatorFacade {
   private final Provider<SbTranslator> sbTranslatorProv;
