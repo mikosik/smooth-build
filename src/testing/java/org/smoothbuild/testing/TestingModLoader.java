@@ -3,7 +3,8 @@ package org.smoothbuild.testing;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
-import static org.smoothbuild.compile.ps.ModuleLoader.loadModule;
+import static org.smoothbuild.compile.parser.SmoothParser.parse;
+import static org.smoothbuild.compile.ps.PsTranslator.translatePs;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestContext.importedModFiles;
@@ -120,7 +121,12 @@ public class TestingModLoader {
         ? imported
         : DefinitionsS.empty().withModule(loadInternalModule());
     var modFilesSane = this.modFiles != null ? modFiles : modFiles();
-    return loadModule(modFilesSane, sourceCode, importedSane);
+    var moduleP = parse(modFilesSane, sourceCode);
+    if (moduleP.containsProblem()) {
+      return Maybe.maybeLogs(moduleP.logs());
+    } else {
+      return translatePs(moduleP.value(), importedSane);
+    }
   }
 
   public static Log err(int line, String message) {

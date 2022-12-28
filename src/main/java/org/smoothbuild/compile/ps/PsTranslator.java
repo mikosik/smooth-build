@@ -1,6 +1,5 @@
 package org.smoothbuild.compile.ps;
 
-import static org.smoothbuild.compile.parser.SmoothParser.parse;
 import static org.smoothbuild.compile.ps.CallsPreprocessor.preprocessCalls;
 import static org.smoothbuild.compile.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
@@ -9,32 +8,29 @@ import static org.smoothbuild.compile.ps.ScopesInitializer.initializeScopes;
 import static org.smoothbuild.compile.ps.ast.ModuleDependenciesSorter.sortByDependencies;
 
 import org.smoothbuild.compile.lang.define.DefinitionsS;
-import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.log.MaybeProcessor;
 
-public class ModuleLoader {
-  public static Maybe<ModuleS> loadModule(
-      ModFiles modFiles, String sourceCode, DefinitionsS imported) {
-    return new Loader(modFiles, sourceCode, imported)
+public class PsTranslator {
+  public static Maybe<ModuleS> translatePs(
+      ModuleP moduleP, DefinitionsS imported) {
+    return new Translator(moduleP, imported)
         .process();
   }
 
-  private static class Loader extends MaybeProcessor<ModuleS> {
-    private final ModFiles modFiles;
-    private final String sourceCode;
+  private static class Translator extends MaybeProcessor<ModuleS> {
     private final DefinitionsS imported;
+    private final ModuleP moduleP;
 
-    private Loader(ModFiles modFiles, String sourceCode, DefinitionsS imported) {
-      this.modFiles = modFiles;
-      this.sourceCode = sourceCode;
+    private Translator(ModuleP moduleP, DefinitionsS imported) {
+      this.moduleP = moduleP;
       this.imported = imported;
     }
 
     @Override
     protected ModuleS processImpl() throws FailedException {
-      var moduleP = addLogsAndGetValue(parse(modFiles, sourceCode));
       addLogs(decodeLiterals(moduleP));
       addLogs(initializeScopes(moduleP));
       addLogs(detectUndefinedRefablesAndTypes(moduleP, imported));

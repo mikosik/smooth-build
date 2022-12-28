@@ -1,7 +1,8 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
-import static org.smoothbuild.compile.ps.ModuleLoader.loadModule;
+import static org.smoothbuild.compile.parser.SmoothParser.parse;
+import static org.smoothbuild.compile.ps.PsTranslator.translatePs;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 import static org.smoothbuild.out.log.Log.error;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
+import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.install.ModFilesDetector;
@@ -67,7 +69,12 @@ public class DefinitionsLoader {
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());
     } else {
-      return loadModule(modFiles, sourceCode.value(), imported);
+      Maybe<ModuleP> parse = parse(modFiles, sourceCode.value());
+      if (parse.containsProblem()) {
+        return maybeLogs(parse.logs());
+      } else {
+        return translatePs(parse.value(), imported);
+      }
     }
   }
 
