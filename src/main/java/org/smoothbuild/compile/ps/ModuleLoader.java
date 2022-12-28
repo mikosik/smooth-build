@@ -40,7 +40,7 @@ public class ModuleLoader {
       addLogs(detectUndefinedRefablesAndTypes(moduleP, imported));
       addLogs(preprocessCalls(moduleP, imported));
       var sortedModuleP = addLogsAndGetValue(sortByDependencies(moduleP));
-      return addLogsAndGetValue(createModuleS(modFiles, sortedModuleP, imported));
+      return addLogsAndGetValue(createModuleS(sortedModuleP, imported));
     }
   }
 }

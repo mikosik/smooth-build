@@ -12,7 +12,6 @@ import java.util.Optional;
 import org.smoothbuild.compile.lang.define.ConstructorS;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ItemS;
-import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.define.TypeDefinitionS;
@@ -36,8 +35,7 @@ public class ModuleCreator {
   private final LogBuffer logBuffer;
   private final PsTranslator psTranslator;
 
-  public static Maybe<ModuleS> createModuleS(
-      ModFiles modFiles, ModuleP moduleP, DefinitionsS imported) {
+  public static Maybe<ModuleS> createModuleS(ModuleP moduleP, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
     var types = new OptionalBindings<>(imported.types().map(Optional::of));
     var evaluables = new OptionalBindings<>(imported.evaluables().map(Optional::of));
@@ -50,7 +48,7 @@ public class ModuleCreator {
     } else {
       var typeBindings = types.innerScopeBindingsReduced();
       var evaluableBindings = evaluables.innerScopeBindingsReduced();
-      var modS = new ModuleS(modFiles, typeBindings, evaluableBindings);
+      var modS = new ModuleS(typeBindings, evaluableBindings);
       return maybe(modS, logBuffer);
     }
   }

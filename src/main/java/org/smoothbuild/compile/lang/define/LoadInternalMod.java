@@ -10,7 +10,7 @@ import org.smoothbuild.compile.lang.type.TypeS;
 public class LoadInternalMod {
   public static ModuleS loadInternalModule() {
     var types = immutableBindings(toMap(TypeFS.baseTs(), TypeS::name, t -> baseTypeDefinitions(t)));
-    return new ModuleS(null, types, immutableBindings());
+    return new ModuleS(types, immutableBindings());
   }
 
   private static TypeDefinitionS baseTypeDefinitions(TypeS baseTypeS) {
