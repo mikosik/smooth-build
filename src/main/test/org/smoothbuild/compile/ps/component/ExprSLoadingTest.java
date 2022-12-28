@@ -130,7 +130,7 @@ public class ExprSLoadingTest extends TestContext {
         public void with_reference_to_poly_val() {
           var polyVal = bytecodeValueS(4, varA(), "polyVal");
           var monoized = monoizeS(1, varMap(varA(), varA()), polyVal);
-          var arg = monoizeS(2, varMap(varA(), intTS()), valueS(1, "b", monoized));
+          var arg = monoizeS(2, varMap(varA(), intTS()), valueS(1, "myFunc:b", monoized));
           test_default_arg("polyVal", arg);
         }
 
@@ -138,14 +138,14 @@ public class ExprSLoadingTest extends TestContext {
         public void with_reference_to_poly_func() {
           var polyFunc = bytecodeFuncS(6, varA(), "polyFunc", nlist());
           var monoized = monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramDefaultValue = valueS("b", callS(1, monoized));
+          var paramDefaultValue = valueS("myFunc:b", callS(1, monoized));
           var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultValue);
           test_default_arg("polyFunc()", expected);
         }
 
         @Test
         public void with_reference_to_int() {
-          var paramDefaultValue = valueS("b", intS(1, 7));
+          var paramDefaultValue = valueS("myFunc:b", intS(1, 7));
           test_default_arg("7", monoizeS(2, paramDefaultValue));
         }
 
@@ -582,7 +582,7 @@ public class ExprSLoadingTest extends TestContext {
                 0x07)
                 = "abc";
             """;
-        var params = nlist(itemS(2, blobTS(), "param1", valueS(2, "param1", blobS(3, 7))));
+        var params = nlist(itemS(2, blobTS(), "param1", valueS(2, "myFunc:param1", blobS(3, 7))));
         var myFunc = funcS(1, stringTS(), "myFunc", params, stringS(4, "abc"));
         module(code)
             .loadsWithSuccess()
@@ -597,7 +597,7 @@ public class ExprSLoadingTest extends TestContext {
                 7)
                 = a;
             """;
-        var params = nlist(itemS(2, varA(), "a", valueS(2, "a", intS(3, 7))));
+        var params = nlist(itemS(2, varA(), "a", valueS(2, "myFunc:a", intS(3, 7))));
         var myFunc = funcS(1, varA(), "myFunc", params, paramRefS(4, varA(), "a"));
         module(code)
             .loadsWithSuccess()
@@ -660,7 +660,7 @@ public class ExprSLoadingTest extends TestContext {
               Blob p1 =
                 0x07);
             """;
-        var params = nlist(itemS(3, blobTS(), "p1", valueS(3, "p1", blobS(4, 7))));
+        var params = nlist(itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
         var ann = nativeAnnotationS(1, stringS(1, "Impl.met"), true);
         var myFunc = annotatedFuncS(2, ann, stringTS(), "myFunc", params);
         module(code)
@@ -676,7 +676,7 @@ public class ExprSLoadingTest extends TestContext {
               Blob p1 =
                 0x07);
             """;
-        var params = nlist(itemS(3, blobTS(), "p1", valueS(3, "p1", blobS(4, 7))));
+        var params = nlist(itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
         var ann = nativeAnnotationS(1, stringS(1, "Impl.met"), true);
         var myFunc = annotatedFuncS(2, ann, varA(), "myFunc", params);
         module(code)
@@ -712,7 +712,7 @@ public class ExprSLoadingTest extends TestContext {
               Blob param1 =
                 0x07);
             """;
-        var params = nlist(itemS(3, blobTS(), "param1", valueS(3, "param1", blobS(4, 7))));
+        var params = nlist(itemS(3, blobTS(), "param1", valueS(3, "myFunc:param1", blobS(4, 7))));
         var myFunc = bytecodeFuncS(2, "Impl.met", stringTS(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
@@ -727,7 +727,7 @@ public class ExprSLoadingTest extends TestContext {
               Blob param1 =
                 0x07);
             """;
-        var params = nlist(itemS(3, blobTS(), "param1", valueS(3, "param1", blobS(4, 7))));
+        var params = nlist(itemS(3, blobTS(), "param1", valueS(3, "myFunc:param1", blobS(4, 7))));
         var myFunc = bytecodeFuncS(2, "Impl.met", varA(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
@@ -771,7 +771,7 @@ public class ExprSLoadingTest extends TestContext {
             [A] empty = [];
             """;
         var empty = valueS(5, "empty", orderS(5, varA()));
-        var defaultValue = valueS(2, "param1", monoizeS(3, varMap(varA(), varA()), empty));
+        var defaultValue = valueS(2, "myFunc:param1", monoizeS(3, varMap(varA(), varA()), empty));
         var params = nlist(itemS(2, arrayTS(intTS()), "param1", defaultValue));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
@@ -789,7 +789,7 @@ public class ExprSLoadingTest extends TestContext {
             [A] empty = [];
             """;
         var empty = valueS(5, "empty", orderS(5, varA()));
-        var defaultValue = valueS(2, "param1", monoizeS(3, varMap(varA(), varA()), empty));
+        var defaultValue = valueS(2, "myFunc:param1", monoizeS(3, varMap(varA(), varA()), empty));
         var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", Optional.of(defaultValue)));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
@@ -805,7 +805,7 @@ public class ExprSLoadingTest extends TestContext {
                 11)
                 = 7;
             """;
-        var defaultValue = valueS(2, "param1", intS(3, 11));
+        var defaultValue = valueS(2, "myFunc:param1", intS(3, 11));
         var params = nlist(itemS(2, intTS(), "param1", defaultValue));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)

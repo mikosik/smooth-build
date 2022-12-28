@@ -20,12 +20,13 @@ public final class NamedFuncP extends NamedEvaluableP implements FuncP {
 
   public NamedFuncP(
       Optional<TypeP> resT,
-      String name,
+      String fullName,
+      String simpleName,
       NList<ItemP> params,
       Optional<ExprP> body,
       Optional<AnnotationP> annotation,
       Location location) {
-    super(name, body, annotation, location);
+    super(fullName, simpleName, body, annotation, location);
     this.resT = resT;
     this.params = params;
   }

@@ -78,7 +78,7 @@ public class ApTranslator {
       public Void visitStruct(StructContext struct) {
         var name = struct.NAME().getText();
         var location = fileLocation(filePath, struct.NAME().getSymbol());
-        var fields = createItems(struct.itemList());
+        var fields = createItems(name, struct.itemList());
         structs.add(new StructP(name, fields, location));
         return null;
       }
@@ -92,8 +92,8 @@ public class ApTranslator {
         Optional<ExprP> body = createPipeSane(namedFunc.pipe());
         Optional<AnnotationP> annotation = createNativeSane(namedFunc.annotation());
         var location = fileLocation(filePath, nameNode);
-        var params = createItems(namedFunc.itemList());
-        evaluables.add(new NamedFuncP(type, name, params, body, annotation, location));
+        var params = createItems(name, namedFunc.itemList());
+        evaluables.add(new NamedFuncP(type, name, name, params, body, annotation, location));
         return null;
       }
 
@@ -106,7 +106,7 @@ public class ApTranslator {
         Optional<ExprP> expr = createPipeSane(namedValue.pipe());
         Optional<AnnotationP> annotation = createNativeSane(namedValue.annotation());
         var location = fileLocation(filePath, nameNode);
-        evaluables.add(new NamedValueP(type, name, expr, annotation, location));
+        evaluables.add(new NamedValueP(type, name, name, expr, annotation, location));
         return null;
       }
 
@@ -122,39 +122,40 @@ public class ApTranslator {
         }
       }
 
-      private NList<ItemP> createItems(ItemListContext itemList) {
-        return nlistWithShadowing(createItemsList(itemList));
+      private NList<ItemP> createItems(String ownerName, ItemListContext itemList) {
+        return nlistWithShadowing(createItemsList(ownerName, itemList));
       }
 
-      private ImmutableList<ItemP> createItemsList(ItemListContext itemList) {
+      private ImmutableList<ItemP> createItemsList(String ownerName, ItemListContext itemList) {
         if (itemList != null) {
           return sane(itemList.item())
               .stream()
-              .map(this::createItem)
+              .map(item -> createItem(ownerName, item))
               .collect(toImmutableList());
         }
         return ImmutableList.of();
       }
 
-      private ItemP createItem(ItemContext item) {
+      private ItemP createItem(String ownerName, ItemContext item) {
         var type = createT(item.type());
         var nameNode = item.NAME();
-        var name = nameNode.getText();
+        var itemName = nameNode.getText();
         var location = fileLocation(filePath, nameNode);
-        var defaultValue = createDefaultValue(name, item, location);
-        return new ItemP(type, name, defaultValue, location);
+        var defaultValue = createDefaultValue(ownerName, itemName, item, location);
+        return new ItemP(type, itemName, defaultValue, location);
       }
 
       private Optional<NamedValueP> createDefaultValue(
-          String name, ItemContext item, Location location) {
+          String ownerName, String itemName, ItemContext item, Location location) {
         return createExprSane(item.expr())
-            .map(e -> namedValueForDefaultArgument(name, e, location));
+            .map(e -> namedValueForDefaultArgument(ownerName, itemName, e, location));
       }
 
       private NamedValueP namedValueForDefaultArgument(
-          String name, ExprP body, Location location) {
-        return new NamedValueP(Optional.empty(), name, Optional.of(body), Optional.empty(),
-            location);
+          String ownerName, String itemName, ExprP body, Location location) {
+        String fullName = ownerName + ":" + itemName;
+        return new NamedValueP(
+            Optional.empty(), fullName, itemName, Optional.of(body), Optional.empty(), location);
       }
 
       private Optional<ExprP> createPipeSane(PipeContext pipe) {
@@ -258,7 +259,7 @@ public class ApTranslator {
       }
 
       private AnonymousFuncP createAnonymousFunc(AnonymousFuncContext anonymousFunc) {
-        var params = createItems(anonymousFunc.itemList());
+        var params = createItems("anonymousFunc", anonymousFunc.itemList());
         var body = createExpr(anonymousFunc.expr());
         return new AnonymousFuncP(params, body, fileLocation(filePath, anonymousFunc));
       }

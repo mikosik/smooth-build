@@ -110,14 +110,13 @@ public class ModuleCreator {
       @SuppressWarnings("unchecked") // safe as NamedFuncS is immutable
       var namedEvaluableS = (Optional<NamedEvaluableS>) (Object) funcS;
       bindings.add(namedFuncP.name(), namedEvaluableS);
-      funcS.ifPresent(f -> f.params()
-          .forEach(paramS -> addDefaultValueToBindings(f.name(), paramS)));
+      funcS.ifPresent(f -> f.params().forEach(this::addDefaultValueToBindings));
     } else {
       bindings.add(namedFuncP.name(), Optional.empty());
     }
   }
 
-  private void addDefaultValueToBindings(String name, ItemS paramS) {
-    paramS.defaultValue().ifPresent(v -> bindings.add(name + ":" + v.name(), Optional.of(v)));
+  private void addDefaultValueToBindings(ItemS paramS) {
+    paramS.defaultValue().ifPresent(v -> bindings.add(v.name(), Optional.of(v)));
   }
 }

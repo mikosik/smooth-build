@@ -13,18 +13,26 @@ public sealed abstract class NamedEvaluableP
     extends NalImpl
     implements RefableP, EvaluableP, WithScopeP
     permits NamedFuncP, NamedValueP {
+  private final String simpleName;
   private final Optional<ExprP> body;
   private final Optional<AnnotationP> annotation;
   private ScopeP scope;
 
   protected NamedEvaluableP(
-      String name,
+      String fullName,
+      String simpleName,
       Optional<ExprP> body,
       Optional<AnnotationP> annotation,
       Location location) {
-    super(name, location);
+    super(fullName, location);
+    this.simpleName = simpleName;
     this.body = body;
     this.annotation = annotation;
+  }
+
+  @Override
+  public String simpleName() {
+    return simpleName;
   }
 
   @Override

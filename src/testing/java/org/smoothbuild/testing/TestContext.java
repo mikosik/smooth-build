@@ -1492,6 +1492,10 @@ public class TestContext {
     return namedFuncP(name, nlist(itemP()));
   }
 
+  public static NamedFuncP namedFuncP(String name, int line) {
+    return namedFuncP(name, nlist(itemP()), Optional.empty(), location(line));
+  }
+
   public static NamedFuncP namedFuncP(NList<ItemP> params) {
     return namedFuncP("myFunc", params);
   }
@@ -1505,8 +1509,13 @@ public class TestContext {
   }
 
   public static NamedFuncP namedFuncP(String name, NList<ItemP> params, Optional<ExprP> body) {
+    return namedFuncP(name, params, body, location());
+  }
+
+  public static NamedFuncP namedFuncP(
+      String name, NList<ItemP> params, Optional<ExprP> body, Location location) {
     return new NamedFuncP(
-        Optional.empty(), name, params, body, Optional.empty(), location());
+        Optional.empty(), name, simpleName(name), params, body, Optional.empty(), location);
   }
 
   public static NamedValueP namedValueP() {
@@ -1522,7 +1531,8 @@ public class TestContext {
   }
 
   public static NamedValueP namedValueP(String name, ExprP body) {
-    return new NamedValueP(Optional.empty(), name, Optional.of(body), Optional.empty(), location());
+    return new NamedValueP(
+        Optional.empty(), name, simpleName(name), Optional.of(body), Optional.empty(), location());
   }
 
   public static ItemP itemP() {
@@ -1720,5 +1730,9 @@ public class TestContext {
   @SafeVarargs
   public static <T extends Named> SingleScopeBindings<T> bindings(T... nameds) {
     return immutableBindings(toMap(list(nameds)));
+  }
+
+  private static String simpleName(String fullName) {
+    return fullName.substring(Math.max(0, fullName.lastIndexOf(':')));
   }
 }

@@ -30,6 +30,7 @@ public final class StructP extends NalImpl implements WithScopeP {
     this.constructor = new NamedFuncP(
         Optional.of(new TypeP(name, location)),
         name,
+        name,
         fields,
         Optional.empty(),
         Optional.empty(),

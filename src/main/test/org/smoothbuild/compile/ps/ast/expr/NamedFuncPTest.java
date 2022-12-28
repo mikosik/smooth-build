@@ -1,13 +1,11 @@
 package org.smoothbuild.compile.ps.ast.expr;
 
-import static org.smoothbuild.testing.TestContext.location;
-import static org.smoothbuild.util.collect.NList.nlist;
-
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.testing.TestContext;
 
 import com.google.common.testing.EqualsTester;
 
-public class NamedFuncPTest {
+public class NamedFuncPTest extends TestContext {
   @Test
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
@@ -22,6 +20,6 @@ public class NamedFuncPTest {
   }
 
   private static NamedFuncP func(String name, int line) {
-    return new NamedFuncP(null, name, nlist(), null, null, location(line));
+    return namedFuncP(name, line);
   }
 }

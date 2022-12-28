@@ -26,6 +26,11 @@ public final class ItemP extends NalImpl implements RefableP {
     this.defaultValue = defaultValue;
   }
 
+  @Override
+  public String simpleName() {
+    return name();
+  }
+
   public TypeP type() {
     return type;
   }

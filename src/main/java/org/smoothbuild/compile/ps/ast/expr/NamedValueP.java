@@ -18,11 +18,12 @@ public final class NamedValueP extends NamedEvaluableP {
 
   public NamedValueP(
       Optional<TypeP> type,
-      String name,
+      String fullName,
+      String simpleName,
       Optional<ExprP> body,
       Optional<AnnotationP> annotation,
       Location location) {
-    super(name, body, annotation, location);
+    super(fullName, simpleName, body, annotation, location);
     this.type = type;
   }
 

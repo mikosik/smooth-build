@@ -7,4 +7,5 @@ import org.smoothbuild.compile.lang.base.Nal;
  */
 public sealed interface RefableP extends Nal
     permits ItemP, NamedEvaluableP {
+  public String simpleName();
 }
