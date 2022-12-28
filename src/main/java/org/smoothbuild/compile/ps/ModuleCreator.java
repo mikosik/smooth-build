@@ -62,7 +62,7 @@ public class ModuleCreator {
     this.types = types;
     this.bindings = bindings;
     this.logBuffer = logBuffer;
-    this.psTranslator = new PsTranslator("", bindings);
+    this.psTranslator = new PsTranslator(bindings);
   }
 
   public void visitStruct(StructP structP) {
