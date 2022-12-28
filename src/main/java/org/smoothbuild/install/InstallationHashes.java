@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.fs.lang.define.ModFiles;
+import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -67,17 +67,17 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    var files = modFilesDetector.detect(SLIB_MODS);
-    for (ModFiles modFiles : files) {
-      builder.add(modNode(modFiles));
+    var modules = modFilesDetector.detect(SLIB_MODS);
+    for (ModuleResources module : modules) {
+      builder.add(modNode(module));
     }
     return new HashNode("standard libraries", builder.build());
   }
 
-  private HashNode modNode(ModFiles modFiles) throws IOException {
-    FilePath smoothFile = modFiles.smoothFile();
+  private HashNode modNode(ModuleResources module) throws IOException {
+    FilePath smoothFile = module.smoothFile();
     Optional<HashNode> smoothNode = nodeFor(Optional.of(smoothFile));
-    Optional<HashNode> nativeNode = nodeFor(modFiles.nativeFile());
+    Optional<HashNode> nativeNode = nodeFor(module.nativeFile());
     var nodes = Stream.of(smoothNode, nativeNode)
         .flatMap(Optional::stream)
         .collect(toImmutableList());

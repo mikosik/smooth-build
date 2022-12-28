@@ -50,7 +50,7 @@ import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
-import org.smoothbuild.compile.fs.lang.define.ModFiles;
+import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.lang.define.MonoizableS;
 import org.smoothbuild.compile.fs.lang.define.MonoizeS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
@@ -1439,16 +1439,16 @@ public class TestContext {
     return new ItemSigS(type, name);
   }
 
-  public static ModFiles modFiles() {
-    return modFiles(smoothFilePath());
+  public static ModuleResources moduleResources() {
+    return moduleResources(smoothFilePath());
   }
 
-  public static ModFiles importedModFiles() {
-    return modFiles(importedFilePath());
+  public static ModuleResources importedModuleResources() {
+    return moduleResources(importedFilePath());
   }
 
-  private static ModFiles modFiles(FilePath filePath) {
-    return new ModFiles(filePath, empty());
+  private static ModuleResources moduleResources(FilePath filePath) {
+    return new ModuleResources(filePath, empty());
   }
 
   public static TraceS traceS() {

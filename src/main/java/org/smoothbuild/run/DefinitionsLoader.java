@@ -36,8 +36,8 @@ public class DefinitionsLoader {
 
   public Optional<DefinitionsS> loadDefinitions() {
     reporter.startNewPhase("Parsing");
-    var files = modFilesDetector.detect(MODULES);
-    var definitions = fsTranslator.translateFs(files);
+    var modules = modFilesDetector.detect(MODULES);
+    var definitions = fsTranslator.translateFs(modules);
     if (definitions.containsProblem()) {
       definitions.logs().forEach(reporter::report);
       return Optional.empty();

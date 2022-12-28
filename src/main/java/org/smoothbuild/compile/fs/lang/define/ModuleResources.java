@@ -8,7 +8,7 @@ import org.smoothbuild.fs.space.FilePath;
 
 import com.google.common.collect.ImmutableList;
 
-public record ModFiles(FilePath smoothFile, Optional<FilePath> nativeFile) {
+public record ModuleResources(FilePath smoothFile, Optional<FilePath> nativeFile) {
   public ImmutableList<FilePath> asList() {
     if (nativeFile.isPresent()) {
       return list(smoothFile, nativeFile.get());

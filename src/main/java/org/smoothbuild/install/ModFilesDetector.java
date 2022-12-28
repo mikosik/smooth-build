@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.fs.lang.define.ModFiles;
+import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 
@@ -21,8 +21,8 @@ public class ModFilesDetector {
     this.fileResolver = fileResolver;
   }
 
-  public ImmutableList<ModFiles> detect(List<FilePath> smoothFiles) {
-    return map(smoothFiles, file -> new ModFiles(file, nativeFileFor(file)));
+  public ImmutableList<ModuleResources> detect(List<FilePath> smoothFiles) {
+    return map(smoothFiles, file -> new ModuleResources(file, nativeFileFor(file)));
   }
 
   private Optional<FilePath> nativeFileFor(FilePath file) {

@@ -6,8 +6,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
-import static org.smoothbuild.testing.TestContext.importedModFiles;
-import static org.smoothbuild.testing.TestContext.modFiles;
+import static org.smoothbuild.testing.TestContext.importedModuleResources;
+import static org.smoothbuild.testing.TestContext.moduleResources;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.fp.FpTranslator;
 import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
-import org.smoothbuild.compile.fs.lang.define.ModFiles;
+import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
@@ -26,16 +26,10 @@ import org.smoothbuild.out.log.Maybe;
 public class TestingModuleLoader {
   private final String sourceCode;
   private String importedSourceCode;
-  private ModFiles modFiles;
   private Maybe<DefinitionsS> definitions;
 
   TestingModuleLoader(String sourceCode) {
     this.sourceCode = sourceCode;
-  }
-
-  public TestingModuleLoader withImportedModFiles() {
-    this.modFiles = importedModFiles();
-    return this;
   }
 
   public TestingModuleLoader withImported(String imported) {
@@ -119,23 +113,23 @@ public class TestingModuleLoader {
   }
 
   private Maybe<DefinitionsS> load() {
-    var modFilesSane = this.modFiles != null ? modFiles : modFiles();
     var fileResolver = mock(FileResolver.class);
-    var moduleFiles = new ArrayList<ModFiles>();
+    var modules = new ArrayList<ModuleResources>();
     if (importedSourceCode != null) {
-      var importedModuleFiles = importedModFiles();
-      moduleFiles.add(importedModuleFiles);
-      mockFileContent(fileResolver, importedModuleFiles, importedSourceCode);
+      var importedModule = importedModuleResources();
+      modules.add(importedModule);
+      mockFileContent(fileResolver, importedModule, importedSourceCode);
     }
-    mockFileContent(fileResolver, modFilesSane, sourceCode);
-    moduleFiles.add(modFilesSane);
+    var module = moduleResources();
+    mockFileContent(fileResolver, module, sourceCode);
+    modules.add(module);
     return new FsTranslator(new FpTranslator(fileResolver))
-        .translateFs(moduleFiles);
+        .translateFs(modules);
   }
 
-  private void mockFileContent(FileResolver fileResolver, ModFiles moduleFiles, String code) {
+  private void mockFileContent(FileResolver fileResolver, ModuleResources module, String code) {
     try {
-      when(fileResolver.readFileContentAndCacheHash(moduleFiles.smoothFile()))
+      when(fileResolver.readFileContentAndCacheHash(module.smoothFile()))
           .thenReturn(code);
     } catch (IOException e) {
       throw new RuntimeException("cannot happen", e);

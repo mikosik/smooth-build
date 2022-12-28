@@ -11,7 +11,7 @@ import java.nio.file.NoSuchFileException;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.fs.lang.define.ModFiles;
+import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
@@ -30,25 +30,25 @@ public class FpTranslator {
     this.fileResolver = fileResolver;
   }
 
-  public Maybe<ModuleP> translateFp(ModFiles modFiles) {
-    return new Parser(fileResolver, modFiles)
+  public Maybe<ModuleP> translateFp(ModuleResources moduleResources) {
+    return new Parser(fileResolver, moduleResources)
         .process();
   }
 
   private static class Parser extends MaybeProcessor<ModuleP> {
     private final FileResolver fileResolver;
-    private final ModFiles modFiles;
+    private final ModuleResources moduleResources;
 
-    private Parser(FileResolver fileResolver, ModFiles modFiles) {
+    private Parser(FileResolver fileResolver, ModuleResources moduleResources) {
       this.fileResolver = fileResolver;
-      this.modFiles = modFiles;
+      this.moduleResources = moduleResources;
     }
 
     @Override
     protected ModuleP processImpl() throws FailedException {
-      var sourceCode = addLogsAndGetValue(readFileContent(modFiles.smoothFile()));
-      var modContext = addLogsAndGetValue(antlrParse(modFiles.smoothFile(), sourceCode));
-      var moduleP = addLogsAndGetValue(translateAp(modFiles.smoothFile(), modContext));
+      var sourceCode = addLogsAndGetValue(readFileContent(moduleResources.smoothFile()));
+      var modContext = addLogsAndGetValue(antlrParse(moduleResources.smoothFile(), sourceCode));
+      var moduleP = addLogsAndGetValue(translateAp(moduleResources.smoothFile(), modContext));
       addLogs(FindSyntaxErrors.findSyntaxErrors(moduleP));
       return moduleP;
     }
