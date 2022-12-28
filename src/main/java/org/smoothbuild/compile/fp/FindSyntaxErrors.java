@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.parser;
+package org.smoothbuild.compile.fp;
 
 import static org.smoothbuild.compile.lang.base.TypeNamesS.isVarName;
 import static org.smoothbuild.compile.lang.base.TypeNamesS.startsWithLowerCase;

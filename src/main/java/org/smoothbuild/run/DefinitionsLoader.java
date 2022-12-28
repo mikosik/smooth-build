@@ -1,16 +1,11 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
-import static org.smoothbuild.compile.parser.SmoothParser.parse;
 import static org.smoothbuild.compile.ps.PsTranslator.translatePs;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
-import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
-import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -18,9 +13,9 @@ import javax.inject.Inject;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
+import org.smoothbuild.compile.fp.FpTranslator;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.install.ModFilesDetector;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.report.Reporter;
@@ -34,14 +29,14 @@ public class DefinitionsLoader {
           .add(PRJ_MOD_FILE_PATH)
           .build();
 
-  private final FileResolver fileResolver;
+  private final FpTranslator fpTranslator;
   private final ModFilesDetector modFilesDetector;
   private final Reporter reporter;
 
   @Inject
   public DefinitionsLoader(
-      FileResolver fileResolver, ModFilesDetector modFilesDetector, Reporter reporter) {
-    this.fileResolver = fileResolver;
+      FpTranslator fpTranslator, ModFilesDetector modFilesDetector, Reporter reporter) {
+    this.fpTranslator = fpTranslator;
     this.modFilesDetector = modFilesDetector;
     this.reporter = reporter;
   }
@@ -65,26 +60,11 @@ public class DefinitionsLoader {
   }
 
   private Maybe<ModuleS> load(DefinitionsS imported, ModFiles modFiles) {
-    var sourceCode = readFileContent(modFiles.smoothFile());
-    if (sourceCode.containsProblem()) {
-      return maybeLogs(sourceCode.logs());
+    Maybe<ModuleP> moduleP = fpTranslator.translateFp(modFiles);
+    if (moduleP.containsProblem()) {
+      return maybeLogs(moduleP.logs());
     } else {
-      Maybe<ModuleP> parse = parse(modFiles, sourceCode.value());
-      if (parse.containsProblem()) {
-        return maybeLogs(parse.logs());
-      } else {
-        return translatePs(parse.value(), imported);
-      }
-    }
-  }
-
-  private Maybe<String> readFileContent(FilePath filePath) {
-    try {
-      return maybe(fileResolver.readFileContentAndCacheHash(filePath));
-    } catch (NoSuchFileException e) {
-      return maybeLogs(error("'" + filePath + "' doesn't exist."));
-    } catch (IOException e) {
-      return maybeLogs(error("Cannot read build script file '" + filePath + "'."));
+      return translatePs(moduleP.value(), imported);
     }
   }
 }

@@ -2,20 +2,26 @@ package org.smoothbuild.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static org.mockito.Mockito.when;
 import static org.smoothbuild.compile.lang.define.LoadInternalMod.loadInternalModule;
-import static org.smoothbuild.compile.parser.SmoothParser.parse;
 import static org.smoothbuild.compile.ps.PsTranslator.translatePs;
 import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestContext.importedModFiles;
 import static org.smoothbuild.testing.TestContext.modFiles;
 
+import java.io.IOException;
+
+import org.mockito.Mockito;
+import org.smoothbuild.compile.fp.FpTranslator;
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.lang.define.ModFiles;
 import org.smoothbuild.compile.lang.define.ModuleS;
 import org.smoothbuild.compile.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.lang.type.SchemaS;
 import org.smoothbuild.compile.lang.type.TypeS;
+import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 
@@ -121,12 +127,25 @@ public class TestingModLoader {
         ? imported
         : DefinitionsS.empty().withModule(loadInternalModule());
     var modFilesSane = this.modFiles != null ? modFiles : modFiles();
-    var moduleP = parse(modFilesSane, sourceCode);
+    var fileResolver = createFileResolver(modFilesSane);
+    var moduleP = new FpTranslator(fileResolver)
+        .translateFp(modFilesSane);
     if (moduleP.containsProblem()) {
-      return Maybe.maybeLogs(moduleP.logs());
+      return maybeLogs(moduleP.logs());
     } else {
       return translatePs(moduleP.value(), importedSane);
     }
+  }
+
+  private FileResolver createFileResolver(ModFiles modFilesSane) {
+    var fileResolver = Mockito.mock(FileResolver.class);
+    try {
+      when(fileResolver.readFileContentAndCacheHash(modFilesSane.smoothFile()))
+          .thenReturn(sourceCode);
+    } catch (IOException e) {
+      throw new RuntimeException("cannot happen", e);
+    }
+    return fileResolver;
   }
 
   public static Log err(int line, String message) {
