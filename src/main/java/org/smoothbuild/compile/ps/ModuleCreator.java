@@ -33,7 +33,7 @@ public class ModuleCreator {
   private final OptionalBindings<TypeDefinitionS> types;
   private final OptionalBindings<NamedEvaluableS> bindings;
   private final LogBuffer logBuffer;
-  private final PsTranslator psTranslator;
+  private final PsConverter psConverter;
 
   public static Maybe<ModuleS> createModuleS(ModuleP moduleP, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
@@ -60,7 +60,7 @@ public class ModuleCreator {
     this.types = types;
     this.bindings = bindings;
     this.logBuffer = logBuffer;
-    this.psTranslator = new PsTranslator(bindings);
+    this.psConverter = new PsConverter(bindings);
   }
 
   public void visitStruct(StructP structP) {
@@ -94,7 +94,7 @@ public class ModuleCreator {
   public void visitValue(NamedValueP namedValueP) {
     var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
     if (typeInferrer.inferNamedValueSchema(namedValueP)) {
-      var valueS = psTranslator.translateNamedValue(namedValueP);
+      var valueS = psConverter.convertNamedValue(namedValueP);
       bindings.add(namedValueP.name(), valueS);
     } else {
       bindings.add(namedValueP.name(), Optional.empty());
@@ -104,7 +104,7 @@ public class ModuleCreator {
   public void visitFunc(NamedFuncP namedFuncP) {
     var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
     if (typeInferrer.inferNamedFuncSchema(namedFuncP)) {
-      var funcS = psTranslator.translateNamedFunc(namedFuncP);
+      var funcS = psConverter.convertNamedFunc(namedFuncP);
       @SuppressWarnings("unchecked") // safe as NamedFuncS is immutable
       var namedEvaluableS = (Optional<NamedEvaluableS>) (Object) funcS;
       bindings.add(namedFuncP.name(), namedEvaluableS);

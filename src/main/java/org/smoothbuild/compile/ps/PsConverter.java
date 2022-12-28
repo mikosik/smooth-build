@@ -54,105 +54,105 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class PsTranslator {
+public class PsConverter {
   private final OptionalBindings<? extends RefableS> bindings;
 
-  public PsTranslator(OptionalBindings<? extends RefableS> bindings) {
+  public PsConverter(OptionalBindings<? extends RefableS> bindings) {
     this.bindings = bindings;
   }
 
-  public Optional<NamedEvaluableS> translateNamedValue(NamedValueP namedValueP) {
+  public Optional<NamedEvaluableS> convertNamedValue(NamedValueP namedValueP) {
     var schema = namedValueP.schemaS();
     var name = namedValueP.name();
     var location = namedValueP.location();
     if (namedValueP.annotation().isPresent()) {
-      var ann = translateAnnotation(namedValueP.annotation().get());
+      var ann = convertAnnotation(namedValueP.annotation().get());
       return Optional.of(new AnnotatedValueS(ann, schema, name, location));
     } else {
-      var body = translateExpr(namedValueP.body().get());
+      var body = convertExpr(namedValueP.body().get());
       return body.map(b -> new NamedExprValueS(schema, name, b, location));
     }
   }
 
-  public Optional<NamedFuncS> translateNamedFunc(NamedFuncP namedFuncP) {
-    return translateNamedFunc(namedFuncP, translateParams(namedFuncP));
+  public Optional<NamedFuncS> convertNamedFunc(NamedFuncP namedFuncP) {
+    return convertNamedFunc(namedFuncP, convertParams(namedFuncP));
   }
 
-  private NList<ItemS> translateParams(NamedFuncP namedFuncP) {
-    return NList.nlist(map(namedFuncP.params().list(), this::translateParam));
+  private NList<ItemS> convertParams(NamedFuncP namedFuncP) {
+    return NList.nlist(map(namedFuncP.params().list(), this::convertParam));
   }
 
-  private NList<ItemS> translateParams(NList<ItemP> params) {
-    return nlist(map(params.list(), this::translateParam));
+  private NList<ItemS> convertParams(NList<ItemP> params) {
+    return nlist(map(params.list(), this::convertParam));
   }
 
-  public ItemS translateParam(ItemP paramP) {
+  public ItemS convertParam(ItemP paramP) {
     var type = paramP.typeS();
     var name = paramP.name();
-    var body = paramP.defaultValue().flatMap(this::translateNamedValue);
+    var body = paramP.defaultValue().flatMap(this::convertNamedValue);
     return new ItemS(type, name, body, paramP.location());
   }
 
-  private Optional<NamedFuncS> translateNamedFunc(NamedFuncP namedFuncP, NList<ItemS> params) {
+  private Optional<NamedFuncS> convertNamedFunc(NamedFuncP namedFuncP, NList<ItemS> params) {
     var schema = namedFuncP.schemaS();
     var name = namedFuncP.name();
     var loc = namedFuncP.location();
     if (namedFuncP.annotation().isPresent()) {
-      var annotationS = translateAnnotation(namedFuncP.annotation().get());
+      var annotationS = convertAnnotation(namedFuncP.annotation().get());
       var annotatedFuncS = new AnnotatedFuncS(annotationS, schema, name, params, loc);
       return Optional.of(annotatedFuncS);
     } else {
-      return translateFuncBody(params, namedFuncP.body().get())
+      return convertFuncBody(params, namedFuncP.body().get())
           .map(b -> new NamedExprFuncS(schema, name, params, b, loc));
     }
   }
 
-  private AnnotationS translateAnnotation(AnnotationP annotationP) {
-    var path = translateString(annotationP.value());
+  private AnnotationS convertAnnotation(AnnotationP annotationP) {
+    var path = convertString(annotationP.value());
     return new AnnotationS(annotationP.name(), path, annotationP.location());
   }
 
-  private Optional<ImmutableList<ExprS>> translateExprs(List<ExprP> positionedArgs) {
-    return pullUp(map(positionedArgs, this::translateExpr));
+  private Optional<ImmutableList<ExprS>> convertExprs(List<ExprP> positionedArgs) {
+    return pullUp(map(positionedArgs, this::convertExpr));
   }
 
-  private Optional<ExprS> translateExpr(ExprP expr) {
+  private Optional<ExprS> convertExpr(ExprP expr) {
     // @formatter:off
     return switch (expr) {
-      case BlobP          blobP          -> Optional.of(translateBlob(blobP));
-      case CallP          callP          -> translateCall(callP);
-      case IntP           intP           -> Optional.of(translateInt(intP));
-      case AnonymousFuncP anonymousFuncP -> translateAnonymousFunc(anonymousFuncP);
-      case NamedArgP      namedArgP      -> translateExpr(namedArgP.expr());
-      case OrderP         orderP         -> translateOrder(orderP);
-      case RefP           refP           -> translateRef(refP);
-      case SelectP        selectP        -> translateSelect(selectP);
-      case StringP        stringP        -> Optional.of(translateString(stringP));
+      case BlobP          blobP          -> Optional.of(convertBlob(blobP));
+      case CallP          callP          -> convertCall(callP);
+      case IntP           intP           -> Optional.of(convertInt(intP));
+      case AnonymousFuncP anonymousFuncP -> convertAnonymousFunc(anonymousFuncP);
+      case NamedArgP      namedArgP      -> convertExpr(namedArgP.expr());
+      case OrderP         orderP         -> convertOrder(orderP);
+      case RefP           refP           -> convertRef(refP);
+      case SelectP        selectP        -> convertSelect(selectP);
+      case StringP        stringP        -> Optional.of(convertString(stringP));
     };
     // @formatter:on
   }
 
-  private Optional<ExprS> translateOrder(OrderP order) {
-    var elems = translateExprs(order.elems());
+  private Optional<ExprS> convertOrder(OrderP order) {
+    var elems = convertExprs(order.elems());
     return elems.map(es -> new OrderS((ArrayTS) order.typeS(), es, order.location()));
   }
 
-  private Optional<ExprS> translateCall(CallP call) {
-    var callee = translateExpr(call.callee());
-    var args = translateExprs(call.positionedArgs());
+  private Optional<ExprS> convertCall(CallP call) {
+    var callee = convertExpr(call.callee());
+    var args = convertExprs(call.positionedArgs());
     return mapPair(callee, args, (c, as) -> new CallS(c, as, call.location()));
   }
 
-  private Optional<ExprS> translateAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    var params = translateParams(anonymousFuncP.params());
-    return translateFuncBody(params, anonymousFuncP.bodyGet())
+  private Optional<ExprS> convertAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    var params = convertParams(anonymousFuncP.params());
+    return convertFuncBody(params, anonymousFuncP.bodyGet())
         .map(b -> monoizeAnonymousFunc(anonymousFuncP, params, b));
   }
 
-  private Optional<ExprS> translateFuncBody(NList<ItemS> params, ExprP expr) {
+  private Optional<ExprS> convertFuncBody(NList<ItemS> params, ExprP expr) {
     var bindingsInBody = funcBodyScopeBindings(bindings, params);
-    return new PsTranslator(bindingsInBody)
-        .translateExpr(expr);
+    return new PsConverter(bindingsInBody)
+        .convertExpr(expr);
   }
 
   private static MonoizeS monoizeAnonymousFunc(
@@ -162,17 +162,17 @@ public class PsTranslator {
     return newMonoize(anonymousFuncP, anonymousFuncS);
   }
 
-  private Optional<ExprS> translateSelect(SelectP selectP) {
-    var selectable = translateExpr(selectP.selectable());
+  private Optional<ExprS> convertSelect(SelectP selectP) {
+    var selectable = convertExpr(selectP.selectable());
     return selectable.map(s -> new SelectS(s, selectP.field(), selectP.location()));
   }
 
-  private Optional<ExprS> translateRef(RefP ref) {
+  private Optional<ExprS> convertRef(RefP ref) {
     return bindings.get(ref.name())
-        .map(r -> translateRef(ref, r));
+        .map(r -> convertRef(ref, r));
   }
 
-  private ExprS translateRef(RefP ref, RefableS refable) {
+  private ExprS convertRef(RefP ref, RefableS refable) {
     return switch (refable) {
       case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.location());
       case NamedEvaluableS evaluableS -> monoizeNamedEvaluable(ref, evaluableS);
@@ -189,15 +189,15 @@ public class PsTranslator {
     return new MonoizeS(monoizableP.monoizeVarMap(), monoizableS, monoizableP.location());
   }
 
-  private BlobS translateBlob(BlobP blob) {
+  private BlobS convertBlob(BlobP blob) {
     return new BlobS(BLOB, blob.byteString(), blob.location());
   }
 
-  private IntS translateInt(IntP int_) {
+  private IntS convertInt(IntP int_) {
     return new IntS(INT, int_.bigInteger(), int_.location());
   }
 
-  private StringS translateString(StringP string) {
+  private StringS convertString(StringP string) {
     return new StringS(STRING, string.unescapedValue(), string.location());
   }
 }
