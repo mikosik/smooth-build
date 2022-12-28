@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.ps.component;
 
-import static org.smoothbuild.testing.TestingModLoader.err;
+import static org.smoothbuild.testing.TestingModuleLoader.err;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

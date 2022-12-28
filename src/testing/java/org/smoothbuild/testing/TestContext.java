@@ -316,8 +316,8 @@ public class TestContext {
     return new JarClassLoaderProv(bytecodeF(), getSystemClassLoader());
   }
 
-  public TestingModLoader module(String code) {
-    return new TestingModLoader(code);
+  public TestingModuleLoader module(String code) {
+    return new TestingModuleLoader(code);
   }
 
   public TaskReporterImpl taskReporter() {

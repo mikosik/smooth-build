@@ -23,27 +23,27 @@ import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 
-public class TestingModLoader {
+public class TestingModuleLoader {
   private final String sourceCode;
   private String importedSourceCode;
   private ModFiles modFiles;
   private Maybe<DefinitionsS> definitions;
 
-  TestingModLoader(String sourceCode) {
+  TestingModuleLoader(String sourceCode) {
     this.sourceCode = sourceCode;
   }
 
-  public TestingModLoader withImportedModFiles() {
+  public TestingModuleLoader withImportedModFiles() {
     this.modFiles = importedModFiles();
     return this;
   }
 
-  public TestingModLoader withImported(String imported) {
+  public TestingModuleLoader withImported(String imported) {
     this.importedSourceCode = imported;
     return this;
   }
 
-  public TestingModLoader loadsWithSuccess() {
+  public TestingModuleLoader loadsWithSuccess() {
     definitions = load();
     assertWithMessage(messageWithSourceCode())
         .that(definitions.logs().toList())
