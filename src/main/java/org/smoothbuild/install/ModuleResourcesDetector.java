@@ -13,11 +13,11 @@ import org.smoothbuild.fs.space.FileResolver;
 
 import com.google.common.collect.ImmutableList;
 
-public class ModFilesDetector {
+public class ModuleResourcesDetector {
   private final FileResolver fileResolver;
 
   @Inject
-  public ModFilesDetector(FileResolver fileResolver) {
+  public ModuleResourcesDetector(FileResolver fileResolver) {
     this.fileResolver = fileResolver;
   }
 

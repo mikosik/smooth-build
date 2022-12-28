@@ -23,14 +23,16 @@ import com.google.common.collect.ImmutableList;
 public class InstallationHashes {
   private final InstallationPaths installationPaths;
   private final FileResolver fileResolver;
-  private final ModFilesDetector modFilesDetector;
+  private final ModuleResourcesDetector moduleResourcesDetector;
 
   @Inject
-  public InstallationHashes(InstallationPaths installationPaths, FileResolver fileResolver,
-      ModFilesDetector modFilesDetector) {
+  public InstallationHashes(
+      InstallationPaths installationPaths,
+      FileResolver fileResolver,
+      ModuleResourcesDetector moduleResourcesDetector) {
     this.installationPaths = installationPaths;
     this.fileResolver = fileResolver;
-    this.modFilesDetector = modFilesDetector;
+    this.moduleResourcesDetector = moduleResourcesDetector;
   }
 
   public HashNode installationNode() throws IOException {
@@ -67,7 +69,7 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    var modules = modFilesDetector.detect(SLIB_MODS);
+    var modules = moduleResourcesDetector.detect(SLIB_MODS);
     for (ModuleResources module : modules) {
       builder.add(modNode(module));
     }

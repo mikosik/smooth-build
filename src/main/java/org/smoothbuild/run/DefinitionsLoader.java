@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.install.ModFilesDetector;
+import org.smoothbuild.install.ModuleResourcesDetector;
 import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
@@ -23,20 +23,22 @@ public class DefinitionsLoader {
           .build();
 
   private final FsTranslator fsTranslator;
-  private final ModFilesDetector modFilesDetector;
+  private final ModuleResourcesDetector moduleResourcesDetector;
   private final Reporter reporter;
 
   @Inject
   public DefinitionsLoader(
-      FsTranslator fsTranslator, ModFilesDetector modFilesDetector, Reporter reporter) {
+      FsTranslator fsTranslator,
+      ModuleResourcesDetector moduleResourcesDetector,
+      Reporter reporter) {
     this.fsTranslator = fsTranslator;
-    this.modFilesDetector = modFilesDetector;
+    this.moduleResourcesDetector = moduleResourcesDetector;
     this.reporter = reporter;
   }
 
   public Optional<DefinitionsS> loadDefinitions() {
     reporter.startNewPhase("Parsing");
-    var modules = modFilesDetector.detect(MODULES);
+    var modules = moduleResourcesDetector.detect(MODULES);
     var definitions = fsTranslator.translateFs(modules);
     if (definitions.containsProblem()) {
       definitions.logs().forEach(reporter::report);
