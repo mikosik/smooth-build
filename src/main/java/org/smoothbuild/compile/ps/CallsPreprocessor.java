@@ -84,7 +84,7 @@ public class CallsPreprocessor {
           .visitNamedValueBody(namedValueP);
     }
 
-    private Preprocessor newPreprocessorForScope(WithScopeP withScopeP) {
+    private ModuleVisitorP newPreprocessorForScope(WithScopeP withScopeP) {
       return new Preprocessor(imported, withScopeP.scope().refables(), logger);
     }
 

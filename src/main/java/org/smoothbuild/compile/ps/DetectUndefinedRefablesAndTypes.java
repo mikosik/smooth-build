@@ -6,9 +6,9 @@ import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 
 import org.smoothbuild.compile.lang.define.DefinitionsS;
 import org.smoothbuild.compile.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.ps.ast.expr.ExprP;
-import org.smoothbuild.compile.ps.ast.expr.FuncP;
+import org.smoothbuild.compile.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.ps.ast.expr.ModuleP;
+import org.smoothbuild.compile.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.ps.ast.expr.RefP;
 import org.smoothbuild.compile.ps.ast.expr.ScopeP;
@@ -50,8 +50,7 @@ public class DetectUndefinedRefablesAndTypes {
 
     @Override
     public void visitStruct(StructP structP) {
-      newDetector(structP)
-          .visitItems(structP.fields());
+      visitStructSignature(structP);
     }
 
     @Override
@@ -62,12 +61,20 @@ public class DetectUndefinedRefablesAndTypes {
     }
 
     @Override
-    public void visitFuncBody(FuncP funcP, ExprP exprP) {
-      newDetector(funcP)
-          .visitExpr(exprP);
+    public void visitNamedFunc(NamedFuncP namedFuncP) {
+      visitNamedFuncSignature(namedFuncP);
+      newDetector(namedFuncP)
+          .visitFuncBody(namedFuncP);
     }
 
-    private Detector newDetector(WithScopeP withScopeP) {
+    @Override
+    public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+      visitAnonymousFuncSignature(anonymousFuncP);
+      newDetector(anonymousFuncP)
+          .visitFuncBody(anonymousFuncP);
+    }
+
+    private ModuleVisitorP newDetector(WithScopeP withScopeP) {
       return new Detector(imported, withScopeP.scope(), log);
     }
 
