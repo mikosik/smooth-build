@@ -2,21 +2,20 @@ package org.smoothbuild.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.compile.fs.lang.define.LoadInternalMod.loadInternalModule;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestContext.importedModFiles;
 import static org.smoothbuild.testing.TestContext.modFiles;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import org.mockito.Mockito;
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.fp.FpTranslator;
 import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.compile.fs.lang.define.ModFiles;
-import org.smoothbuild.compile.fs.lang.define.ModuleS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
@@ -26,9 +25,9 @@ import org.smoothbuild.out.log.Maybe;
 
 public class TestingModLoader {
   private final String sourceCode;
+  private String importedSourceCode;
   private ModFiles modFiles;
-  private DefinitionsS imported;
-  private Maybe<ModuleS> moduleS;
+  private Maybe<DefinitionsS> definitions;
 
   TestingModLoader(String sourceCode) {
     this.sourceCode = sourceCode;
@@ -39,15 +38,15 @@ public class TestingModLoader {
     return this;
   }
 
-  public TestingModLoader withImported(DefinitionsS imported) {
-    this.imported = imported;
+  public TestingModLoader withImported(String imported) {
+    this.importedSourceCode = imported;
     return this;
   }
 
   public TestingModLoader loadsWithSuccess() {
-    moduleS = load();
+    definitions = load();
     assertWithMessage(messageWithSourceCode())
-        .that(moduleS.logs().toList())
+        .that(definitions.logs().toList())
         .isEmpty();
     return this;
   }
@@ -66,7 +65,7 @@ public class TestingModLoader {
   }
 
   private NamedEvaluableS assertContainsEvaluable(String name) {
-    var evaluables = moduleS.value().evaluables();
+    var evaluables = definitions.value().evaluables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(evaluables.contains(name))
         .isTrue();
@@ -75,7 +74,7 @@ public class TestingModLoader {
 
   public void containsType(TypeS expected) {
     var name = expected.name();
-    var types = moduleS.value().types();
+    var types = definitions.value().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.contains(name))
         .isTrue();
@@ -86,10 +85,8 @@ public class TestingModLoader {
         .isEqualTo(expected);
   }
 
-  public DefinitionsS getModuleAsDefinitions() {
-    return DefinitionsS.empty()
-        .withModule(loadInternalModule())
-        .withModule(moduleS.value());
+  public DefinitionsS getLoadedDefinitions() {
+    return definitions.value();
   }
 
   public void loadsWithProblems() {
@@ -121,25 +118,28 @@ public class TestingModLoader {
         + "\n====================\n";
   }
 
-  private Maybe<ModuleS> load() {
-    var importedSane = imported != null
-        ? imported
-        : DefinitionsS.empty().withModule(loadInternalModule());
+  private Maybe<DefinitionsS> load() {
     var modFilesSane = this.modFiles != null ? modFiles : modFiles();
-    var fileResolver = createFileResolver(modFilesSane);
+    var fileResolver = mock(FileResolver.class);
+    var moduleFiles = new ArrayList<ModFiles>();
+    if (importedSourceCode != null) {
+      var importedModuleFiles = importedModFiles();
+      moduleFiles.add(importedModuleFiles);
+      mockFileContent(fileResolver, importedModuleFiles, importedSourceCode);
+    }
+    mockFileContent(fileResolver, modFilesSane, sourceCode);
+    moduleFiles.add(modFilesSane);
     return new FsTranslator(new FpTranslator(fileResolver))
-        .translateFs(modFilesSane, importedSane);
+        .translateFs(moduleFiles);
   }
 
-  private FileResolver createFileResolver(ModFiles modFilesSane) {
-    var fileResolver = Mockito.mock(FileResolver.class);
+  private void mockFileContent(FileResolver fileResolver, ModFiles moduleFiles, String code) {
     try {
-      when(fileResolver.readFileContentAndCacheHash(modFilesSane.smoothFile()))
-          .thenReturn(sourceCode);
+      when(fileResolver.readFileContentAndCacheHash(moduleFiles.smoothFile()))
+          .thenReturn(code);
     } catch (IOException e) {
       throw new RuntimeException("cannot happen", e);
     }
-    return fileResolver;
   }
 
   public static Log err(int line, String message) {

@@ -158,7 +158,7 @@ public class InferenceTest extends TestContext {
           + "myValue = (" + params + ") -> " + body + ";";
       var myValue = module(code)
           .loadsWithSuccess()
-          .getModuleAsDefinitions()
+          .getLoadedDefinitions()
           .evaluables()
           .get("myValue");
       var myValueBody = ((NamedExprValueS) myValue).body();

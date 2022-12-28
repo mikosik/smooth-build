@@ -91,58 +91,33 @@ public class VisibilityTest extends TestContext {
     class _imported {
       @Test
       public void value_is_visible() {
-        var imported = module("""
-          String otherModuleValue = "abc";
-          """)
-            .loadsWithSuccess()
-            .getModuleAsDefinitions();
-        module("""
-          myValue = otherModuleValue;
-          """)
-            .withImported(imported)
+        module("myValue = otherModuleValue;")
+            .withImported("Int otherModuleValue = 7;")
             .loadsWithSuccess();
       }
 
       @Test
       public void func_is_visible() {
-        var imported = module("""
-          String otherModuleFunc() = "abc";
-          """)
-            .loadsWithSuccess()
-            .getModuleAsDefinitions();
-        module("""
-              myValue = otherModuleFunc;
-              """)
-            .withImported(imported)
+        module("myValue = otherModuleFunc;")
+            .withImported("Int otherModuleFunc() = 7;")
             .loadsWithSuccess();
       }
 
       @Test
       public void constructor_is_visible() {
-        var imported = module("""
-          OtherModuleStruct()
-          """)
-            .loadsWithSuccess()
-            .getModuleAsDefinitions();
-        module("""
-              myValue = OtherModuleStruct;
-              """)
-            .withImported(imported)
+        module("myValue = OtherModuleStruct;")
+            .withImported("OtherModuleStruct()")
             .loadsWithSuccess();
       }
 
       @Test
       public void struct_is_visible() {
-        var imported = module("""
-          OtherModuleStruct()
-          """)
-            .loadsWithSuccess()
-            .getModuleAsDefinitions();
-        module("""
-          @Native("impl.met")
-          OtherModuleStruct myFunc();
-          """)
-            .withImported(imported)
+        var code = """
+            @Native("impl.met")
+            OtherModuleStruct myFunc();
+            """;
+        module(code)
+            .withImported("OtherModuleStruct()")
             .loadsWithSuccess();
       }
     }
@@ -251,7 +226,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void exprssion_function_body() {
+        public void expression_function_body() {
           var code = """
               result() = undefined;
               """;
@@ -260,7 +235,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void exprssion_function_in_call_expression() {
+        public void expression_function_in_call_expression() {
           var code = """
               result = undefined();
               """;
@@ -682,44 +657,20 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          var imported = module("""
-            otherModuleValue = "abc";
-            """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-               otherModuleValue = "def";
-               """)
-              .withImported(imported);
+          module("otherModuleValue = 8;")
+              .withImported("otherModuleValue = 7;");
         }
 
         @Test
         public void func_succeeds() {
-          var imported = module("""
-            otherModuleFunc() = "abc";
-            """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-                otherModuleFunc = "def";
-                """)
-              .withImported(imported);
+          module("otherModuleFunc = 7;")
+              .withImported("otherModuleFunc() = 8;");
         }
 
         @Test
-        public void ctor_succeeds() {
-          var imported = module("""
-            OtherModuleStruct()
-            """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-                otherModuleStruct = "def";
-                """)
-              .withImported(imported);
+        public void constructor_succeeds() {
+          module("otherModuleStruct = 7;")
+              .withImported("OtherModuleStruct()");
         }
       }
 
@@ -751,44 +702,20 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          var imported = module("""
-            otherModuleValue = "abc";
-            """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-                otherModuleValue() = "def";
-                """)
-              .withImported(imported);
+          module("otherModuleValue() = 8;")
+              .withImported("otherModuleValue = 7;");
         }
 
         @Test
         public void func_succeeds() {
-          var imported = module("""
-            otherModuleFunc() = "abc";
-            """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-                otherModuleFunc() = "def";
-                """)
-              .withImported(imported);
+          module("otherModuleFunc() = 8;")
+              .withImported("otherModuleFunc() = 7;");
         }
 
         @Test
         public void ctor_succeeds() {
-          var imported = module("""
-            OtherModuleStruct()
-            """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-                otherModuleStruct() = "def";
-                """)
-              .withImported(imported);
+          module("otherModuleStruct() = 7;")
+              .withImported("OtherModuleStruct()");
         }
       }
 
@@ -830,46 +757,22 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void named_value_succeeds() {
-          var imported = module("""
-              otherModuleValue = "abc";
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              String myFunc(String otherModuleValue) = "abc";
-              """)
-              .withImported(imported)
+          module("Int myFunc(String otherModuleValue) = 8;")
+              .withImported("otherModuleValue = 7;")
               .loadsWithSuccess();
         }
 
         @Test
         public void named_function_succeeds() {
-          var imported = module("""
-              otherModuleFunc() = "abc";
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              String myFunc(String otherModuleFunc) = "abc";
-              """)
-              .withImported(imported)
+          module("Int myFunc(String otherModuleFunc) = 8;")
+              .withImported("otherModuleFunc() = 7;")
               .loadsWithSuccess();
         }
 
         @Test
         public void constructor_succeeds() {
-          var imported = module("""
-              OtherModuleStruct()
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              String myFunc(String otherModuleStruct) = "abc";
-              """)
-              .withImported(imported)
+          module("Int myFunc(String otherModuleStruct) = 7;")
+              .withImported("OtherModuleStruct()")
               .loadsWithSuccess();
         }
       }
@@ -921,46 +824,22 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void named_value_succeeds() {
-          var imported = module("""
-              otherModuleValue = "abc";
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              myValue = (String otherModuleValue) -> 7;
-              """)
-              .withImported(imported)
+          module("myValue = (String otherModuleValue) -> 7;")
+              .withImported("otherModuleValue = 8;")
               .loadsWithSuccess();
         }
 
         @Test
         public void named_function_succeeds() {
-          var imported = module("""
-              otherModuleFunc() = "abc";
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              myValue = (String otherModuleFunc) -> 7;
-              """)
-              .withImported(imported)
+          module("myValue = (String otherModuleFunc) -> 7;")
+              .withImported("otherModuleFunc() = 8;")
               .loadsWithSuccess();
         }
 
         @Test
         public void constructor_succeeds() {
-          var imported = module("""
-              OtherModuleStruct()
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              myValue = (String otherModuleStruct) -> 7;
-              """)
-              .withImported(imported)
+          module("myValue = (String otherModuleStruct) -> 7;")
+              .withImported("OtherModuleStruct()")
               .loadsWithSuccess();
         }
       }
@@ -1009,15 +888,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void struct_succeeds() {
-          var code = "OtherModuleStruct()";
-          var imported = module(code)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-                OtherModuleStruct()
-                """)
-              .withImported(imported)
+          module("OtherModuleStruct()")
+              .withImported("OtherModuleStruct()")
               .loadsWithSuccess();
         }
       }
@@ -1055,52 +927,22 @@ public class VisibilityTest extends TestContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          var imported = module("""
-              otherModuleValue = "abc";
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              MyStruct(
-                String otherModuleValue,
-              )
-              """)
-              .withImported(imported)
+          module("MyStruct(Int otherModuleValue)")
+              .withImported("otherModuleValue = 7;")
               .loadsWithSuccess();
         }
 
         @Test
         public void func_succeeds() {
-          var imported = module("""
-              otherModuleFunc() = "abc";
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              MyStruct(
-                String otherModuleFunc,
-              )
-              """)
-              .withImported(imported)
+          module("MyStruct(String otherModuleFunc)")
+              .withImported("otherModuleFunc() = 7;")
               .loadsWithSuccess();
         }
 
         @Test
         public void ctor_succeeds() {
-          var imported = module("""
-              OtherModuleStruct()
-              """)
-              .withImportedModFiles()
-              .loadsWithSuccess()
-              .getModuleAsDefinitions();
-          module("""
-              MyStruct(
-                String otherModuleStruct,
-              )
-              """)
-              .withImported(imported)
+          module("MyStruct(String otherModuleStruct)")
+              .withImported("OtherModuleStruct()")
               .loadsWithSuccess();
         }
       }

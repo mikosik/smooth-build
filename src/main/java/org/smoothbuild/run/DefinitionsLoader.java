@@ -1,6 +1,5 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.compile.fs.lang.define.LoadInternalMod.loadInternalModule;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 
@@ -10,7 +9,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
-import org.smoothbuild.compile.fs.lang.define.ModFiles;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.install.ModFilesDetector;
 import org.smoothbuild.out.report.Reporter;
@@ -38,19 +36,13 @@ public class DefinitionsLoader {
 
   public Optional<DefinitionsS> loadDefinitions() {
     reporter.startNewPhase("Parsing");
-
-    var internalMod = loadInternalModule();
-    var allDefinitions = DefinitionsS.empty().withModule(internalMod);
     var files = modFilesDetector.detect(MODULES);
-    for (ModFiles modFiles : files) {
-      var module = fsTranslator.translateFs(modFiles, allDefinitions);
-      reporter.report(modFiles.smoothFile().toString(), module.logs().toList());
-      if (module.containsProblem()) {
-        return Optional.empty();
-      } else {
-        allDefinitions = allDefinitions.withModule(module.value());
-      }
+    var definitions = fsTranslator.translateFs(files);
+    if (definitions.containsProblem()) {
+      definitions.logs().forEach(reporter::report);
+      return Optional.empty();
+    } else {
+      return Optional.of(definitions.value());
     }
-    return Optional.of(allDefinitions);
   }
 }
