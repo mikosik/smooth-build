@@ -40,11 +40,7 @@ public class DefinitionsLoader {
     reporter.startNewPhase("Parsing");
     var modules = moduleResourcesDetector.detect(MODULES);
     var definitions = fsTranslator.translateFs(modules);
-    if (definitions.containsProblem()) {
-      definitions.logs().forEach(reporter::report);
-      return Optional.empty();
-    } else {
-      return Optional.of(definitions.value());
-    }
+    definitions.logs().forEach(reporter::report);
+    return definitions.valueOptional();
   }
 }
