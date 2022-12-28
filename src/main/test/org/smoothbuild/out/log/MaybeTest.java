@@ -68,44 +68,6 @@ public class MaybeTest {
     }
   }
 
-  @Nested
-  class _has_problems {
-    @Test
-    public void returns_false_when_only_value_is_present() {
-      var maybe = maybe("abc");
-      assertThat(maybe.containsProblem())
-          .isFalse();
-    }
-
-    @Test
-    public void returns_false_when_only_info_log_is_present() {
-      var maybe = maybe("abc", info("message"));
-      assertThat(maybe.containsProblem())
-          .isFalse();
-    }
-
-    @Test
-    public void returns_false_when_only_warning_log_is_present() {
-      var maybe = maybe("abc", warning("message"));
-      assertThat(maybe.containsProblem())
-          .isFalse();
-    }
-
-    @Test
-    public void returns_true_when_error_log_is_present() {
-      var maybe = maybe(null, error("message"));
-      assertThat(maybe.containsProblem())
-          .isTrue();
-    }
-
-    @Test
-    public void returns_true_when_fatal_log_is_present() {
-      var maybe = maybe(null, fatal("message"));
-      assertThat(maybe.containsProblem())
-          .isTrue();
-    }
-  }
-
   @Test
   public void test_equals_and_hashcode() {
     new EqualsTester()

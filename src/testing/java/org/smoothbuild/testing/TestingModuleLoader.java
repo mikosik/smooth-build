@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestContext.importedModuleResources;
@@ -86,7 +87,7 @@ public class TestingModuleLoader {
   public void loadsWithProblems() {
     var module = load();
     assertWithMessage(messageWithSourceCode())
-        .that(module.containsProblem())
+        .that(module.logs().containsAtLeast(ERROR))
         .isTrue();
   }
 

@@ -47,10 +47,6 @@ public class Maybe<V> {
     return logs;
   }
 
-  public boolean containsProblem() {
-    return logs.containsAtLeast(ERROR);
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
