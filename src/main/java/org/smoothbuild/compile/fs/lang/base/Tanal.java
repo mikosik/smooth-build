@@ -1,8 +1,10 @@
 package org.smoothbuild.compile.fs.lang.base;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
+import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 
 /**
@@ -18,5 +20,9 @@ public abstract class Tanal extends NalImpl {
 
   public TypeS type() {
     return type;
+  }
+
+  public SchemaS schema() {
+    return new SchemaS(varSetS(), type);
   }
 }

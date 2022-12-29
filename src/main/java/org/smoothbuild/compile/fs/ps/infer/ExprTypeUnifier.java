@@ -14,7 +14,6 @@ import java.util.function.Function;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
-import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.RefableS;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
@@ -49,7 +48,6 @@ import org.smoothbuild.util.bindings.OptionalBindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class ExprTypeUnifier {
   private final Unifier unifier;
@@ -270,20 +268,8 @@ public class ExprTypeUnifier {
     return refable.flatMap(r -> unifyRef(refP, r));
   }
 
-  private Optional<? extends TypeS> unifyRef(RefP ref, RefableS refable) {
-    return switch (refable) {
-      case ItemS item -> unifyItemRef(ref, item);
-      case NamedEvaluableS evaluable -> unifyEvaluableRef(ref, evaluable);
-    };
-  }
-
-  private static Optional<TypeS> unifyItemRef(RefP refP, ItemS item) {
-    refP.setMonoizeVarMap(ImmutableMap.of());
-    return Optional.of(item.type());
-  }
-
-  private Optional<TypeS> unifyEvaluableRef(RefP refP, NamedEvaluableS namedEvaluableS) {
-    refP.setSchemaS(namedEvaluableS.schema());
+  private Optional<TypeS> unifyRef(RefP refP, RefableS refableS) {
+    refP.setSchemaS(refableS.schema());
     return unifyMonoizable(refP);
   }
 
