@@ -59,8 +59,7 @@ public class ScopesInitializer extends ModuleVisitorP {
           for (var param : namedFuncP.params()) {
             if (param.defaultValue().isPresent()) {
               var defaultValue = param.defaultValue().get();
-              var name = namedFuncP.name() + ":" + defaultValue.name();
-              moduleScope.refables().add(name, defaultValue);
+              moduleScope.refables().add(defaultValue.name(), defaultValue);
             }
           }
         }

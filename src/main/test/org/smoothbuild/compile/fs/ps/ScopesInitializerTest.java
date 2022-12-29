@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs.ps;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compile.fs.ps.ScopesInitializer.initializeScopes;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
@@ -20,7 +21,7 @@ public class ScopesInitializerTest extends TestContext {
       var namedFuncP = namedFuncP("myFunc");
       var moduleP = new ModuleP(list(), list(namedFuncP));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(moduleP.scope().refables().get("myFunc"))
           .isEqualTo(namedFuncP);
@@ -31,7 +32,7 @@ public class ScopesInitializerTest extends TestContext {
       var namedValueP = namedValueP("myValue");
       var moduleP = new ModuleP(list(), list(namedValueP));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(moduleP.scope().refables().get("myValue"))
           .isEqualTo(namedValueP);
@@ -39,12 +40,12 @@ public class ScopesInitializerTest extends TestContext {
 
     @Test
     public void module_scope_has_its_member_function_param_default_value_in_refables() {
-      var defaultValue = namedValueP("param");
+      var defaultValue = namedValueP("myFunc:param");
       var param = itemP("param", defaultValue);
       var namedFuncP = namedFuncP("myFunc", nlist(param));
       var moduleP = new ModuleP(list(), list(namedFuncP));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(moduleP.scope().refables().get("myFunc:param"))
           .isEqualTo(defaultValue);
@@ -57,12 +58,12 @@ public class ScopesInitializerTest extends TestContext {
     class _parameter_default_value {
       @Test
       public void parameter_default_value_scope_refables_does_not_contain_that_parameter() {
-        var defaultValue = namedValueP("param");
+        var defaultValue = namedValueP("myFunc:param");
         var param = itemP("param", defaultValue);
         var namedFuncP = namedFuncP("myFunc", nlist(param));
         var moduleP = new ModuleP(list(), list(namedFuncP));
 
-        ScopesInitializer.initializeScopes(moduleP);
+        initializeScopes(moduleP);
 
         assertThat(defaultValue.scope().refables().getOptional("param"))
             .isEqualTo(Optional.empty());
@@ -70,13 +71,13 @@ public class ScopesInitializerTest extends TestContext {
 
       @Test
       public void parameter_default_value_scope_refables_does_not_contain_other_parameter() {
-        var param1DefaultValue = namedValueP("param");
+        var param1DefaultValue = namedValueP("myFunc:param");
         var param1 = itemP("param1", param1DefaultValue);
         var param2 = itemP("param2");
         var namedFuncP = namedFuncP("myFunc", nlist(param1, param2));
         var moduleP = new ModuleP(list(), list(namedFuncP));
 
-        ScopesInitializer.initializeScopes(moduleP);
+        initializeScopes(moduleP);
 
         assertThat(param1DefaultValue.scope().refables().getOptional("param2"))
             .isEqualTo(Optional.empty());
@@ -94,12 +95,12 @@ public class ScopesInitializerTest extends TestContext {
 
       private void testThatParameterDefaultValueScopeHasModuleMemberInRefables(
           NamedEvaluableP member) {
-        var defaultValue = namedValueP("param");
+        var defaultValue = namedValueP("myFuncWithParamWithDefaultValue:param");
         var param = itemP("param", defaultValue);
         var namedFuncP = namedFuncP("myFuncWithParamWithDefaultValue", nlist(param));
         var moduleP = new ModuleP(list(), list(namedFuncP, member));
 
-        ScopesInitializer.initializeScopes(moduleP);
+        initializeScopes(moduleP);
 
         assertThat(defaultValue.scope().refables().get(member.name()))
             .isEqualTo(member);
@@ -112,7 +113,7 @@ public class ScopesInitializerTest extends TestContext {
       var namedFuncP = namedFuncP("myFunc", nlist(param));
       var moduleP = new ModuleP(list(), list(namedFuncP));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(namedFuncP.scope().refables().get("param"))
           .isEqualTo(param);
@@ -125,7 +126,7 @@ public class ScopesInitializerTest extends TestContext {
       var namedFuncP = namedFuncP("myFunc", nlist(param));
       var moduleP = new ModuleP(list(), list(namedFuncP, namedValueP));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(namedFuncP.scope().refables().get("myValue"))
           .isEqualTo(namedValueP);
@@ -138,7 +139,7 @@ public class ScopesInitializerTest extends TestContext {
       var namedFuncP = namedFuncP("myFunc", nlist(param));
       var moduleP = new ModuleP(list(), list(namedFuncP, otherFunc));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(namedFuncP.scope().refables().get("otherFunc"))
           .isEqualTo(otherFunc);
@@ -154,7 +155,7 @@ public class ScopesInitializerTest extends TestContext {
       var namedValueP = namedValueP("myValue", anonymousFuncP);
       var moduleP = new ModuleP(list(), list(namedValueP));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(anonymousFuncP.scope().refables().get("myValue"))
           .isEqualTo(namedValueP);
@@ -167,7 +168,7 @@ public class ScopesInitializerTest extends TestContext {
       var namedValueP = namedFuncP("myFunc", anonymousFuncP);
       var moduleP = new ModuleP(list(), list(namedValueP));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(anonymousFuncP.scope().refables().get("myFunc"))
           .isEqualTo(namedValueP);
@@ -179,7 +180,7 @@ public class ScopesInitializerTest extends TestContext {
       var anonymousFuncP = anonymousFuncP(nlist(param), intP());
       var moduleP = new ModuleP(list(), list(namedValueP(anonymousFuncP)));
 
-      ScopesInitializer.initializeScopes(moduleP);
+      initializeScopes(moduleP);
 
       assertThat(anonymousFuncP.scope().refables().get("param"))
           .isEqualTo(param);
