@@ -56,8 +56,6 @@ public class TypeInferrerResolve {
     switch (evaluableP) {
       case NamedValueP valueP -> valueP.setSchemaS(resolveSchema(valueP.schemaS()));
       case FuncP       funcP  -> funcP.setSchemaS(resolveSchema(funcP.schemaS()));
-      // TODO remove once bug in intellij is fixed
-      default -> throw new IllegalStateException("Unexpected value: " + evaluableP);
     }
     // @formatter:off
     return true;
