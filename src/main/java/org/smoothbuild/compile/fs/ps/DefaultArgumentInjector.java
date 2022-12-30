@@ -38,20 +38,20 @@ import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallsPreprocessor {
-  public static Logs preprocessCalls(ModuleP moduleP, DefinitionsS imported) {
+public class DefaultArgumentInjector {
+  public static Logs injectDefaultArguments(ModuleP moduleP, DefinitionsS imported) {
     var logger = new LogBuffer();
-    new Preprocessor(imported, immutableBindings(), logger)
+    new Visitor(imported, immutableBindings(), logger)
         .visitModule(moduleP);
     return logger;
   }
 
-  private static class Preprocessor extends ScopingModuleVisitorP {
+  private static class Visitor extends ScopingModuleVisitorP {
     private final DefinitionsS imported;
     private final Bindings<RefableP> refables;
     private final LogBuffer logger;
 
-    public Preprocessor(DefinitionsS imported, Bindings<RefableP> refables, LogBuffer logger) {
+    public Visitor(DefinitionsS imported, Bindings<RefableP> refables, LogBuffer logger) {
       this.imported = imported;
       this.refables = refables;
       this.logger = logger;
@@ -59,7 +59,7 @@ public class CallsPreprocessor {
 
     @Override
     protected ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP) {
-      return new Preprocessor(imported, withScopeP.scope().refables(), logger);
+      return new Visitor(imported, withScopeP.scope().refables(), logger);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class CallsPreprocessor {
           .stream()
           .dropWhile(a -> !(a instanceof NamedArgP))
           .dropWhile(a -> a instanceof NamedArgP)
-          .map(Preprocessor::positionalArgumentsMustBePlacedBeforeNamedArguments)
+          .map(Visitor::positionalArgumentsMustBePlacedBeforeNamedArguments)
           .collect(toList());
     }
 
@@ -181,7 +181,7 @@ public class CallsPreprocessor {
           .filter(a -> a instanceof NamedArgP)
           .map(a -> (NamedArgP) a)
           .filter(a -> params.isEmpty() || !params.containsName(a.name()))
-          .map(Preprocessor::unknownParameterError)
+          .map(Visitor::unknownParameterError)
           .collect(toList());
     }
 
@@ -193,7 +193,7 @@ public class CallsPreprocessor {
           .filter(a -> a instanceof NamedArgP)
           .map(a -> (NamedArgP) a)
           .filter(a -> !names.add(a.name()))
-          .map(Preprocessor::paramIsAlreadyAssignedError)
+          .map(Visitor::paramIsAlreadyAssignedError)
           .collect(toList());
     }
 

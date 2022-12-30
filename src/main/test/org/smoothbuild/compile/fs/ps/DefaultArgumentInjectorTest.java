@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.fs.ps;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.compile.fs.ps.CallsPreprocessor.preprocessCalls;
+import static org.smoothbuild.compile.fs.ps.DefaultArgumentInjector.injectDefaultArguments;
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
@@ -11,7 +11,7 @@ import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
 import org.smoothbuild.testing.TestContext;
 
-public class CallsPreprocessorTest extends TestContext  {
+public class DefaultArgumentInjectorTest extends TestContext  {
   @Test
   public void missing_call_argument_is_filled_with_reference_to_default_argument() {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
@@ -22,7 +22,7 @@ public class CallsPreprocessorTest extends TestContext  {
     var moduleP = new ModuleP(list(), list(namedValueP));
 
     ScopesInitializer.initializeScopes(moduleP);
-    preprocessCalls(moduleP, importedS);
+    injectDefaultArguments(moduleP, importedS);
 
     assertThat(callP.positionedArgs())
         .isEqualTo(list(refP("myFunc:param", callLocation)));
@@ -38,7 +38,7 @@ public class CallsPreprocessorTest extends TestContext  {
     var moduleP = new ModuleP(list(), list(namedValueP));
 
     ScopesInitializer.initializeScopes(moduleP);
-    preprocessCalls(moduleP, importedS);
+    injectDefaultArguments(moduleP, importedS);
 
     assertThat(callP.positionedArgs())
         .isEqualTo(list(refP("myFunc:param", callLocation)));

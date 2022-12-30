@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.fs.ps;
 
-import static org.smoothbuild.compile.fs.ps.CallsPreprocessor.preprocessCalls;
 import static org.smoothbuild.compile.fs.ps.DecodeLiterals.decodeLiterals;
+import static org.smoothbuild.compile.fs.ps.DefaultArgumentInjector.injectDefaultArguments;
 import static org.smoothbuild.compile.fs.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
 import static org.smoothbuild.compile.fs.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.fs.ps.ScopesInitializer.initializeScopes;
@@ -34,7 +34,7 @@ public class PsTranslator {
       addLogs(decodeLiterals(moduleP));
       addLogs(initializeScopes(moduleP));
       addLogs(detectUndefinedRefablesAndTypes(moduleP, imported));
-      addLogs(preprocessCalls(moduleP, imported));
+      addLogs(injectDefaultArguments(moduleP, imported));
       var sortedModuleP = addLogsAndGetValue(sortByDependencies(moduleP));
       return addLogsAndGetValue(createModuleS(sortedModuleP, imported));
     }
