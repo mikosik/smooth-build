@@ -16,24 +16,8 @@ public class CallSTest extends TestContext {
               callee = MonoizeS(
                 varMap = {A=Int}
                 monoizableS = EvaluableRefS(
-                  namedEvaluable = NamedExprFuncS(
-                    name = myId
-                    schema = <A>(A)->A
-                    params = [
-                      ItemS(
-                        type = A
-                        name = a
-                        defaultValue = Optional.empty
-                        location = myBuild.smooth:1
-                      )
-                    ]
-                    location = myBuild.smooth:1
-                    body = ParamRefS(
-                      evalT = A
-                      paramName = a
-                      location = myBuild.smooth:1
-                    )
-                  )
+                  schema = <A>(A)->A
+                  name = myId
                   location = myBuild.smooth:4
                 )
                 evalT = (Int)->Int

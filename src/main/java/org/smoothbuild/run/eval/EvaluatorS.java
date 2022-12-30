@@ -5,9 +5,11 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.fs.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 import com.google.common.collect.ImmutableList;
@@ -25,11 +27,12 @@ public class EvaluatorS {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<ValueB>> evaluate(ImmutableList<? extends ExprS> exprs)
+  public Optional<ImmutableList<ValueB>> evaluate(
+      ImmutableBindings<NamedEvaluableS> evaluables, ImmutableList<? extends ExprS> exprs)
       throws EvaluatorExcS {
     try {
       reporter.startNewPhase("Compiling");
-      var sbTranslation = sbTranslatorFacade.translate(exprs);
+      var sbTranslation = sbTranslatorFacade.translate(evaluables, exprs);
       reporter.startNewPhase("Evaluating");
       var vm = evaluatorBFactory.newEvaluatorB(sbTranslation.bsMapping());
       return vm.evaluate(sbTranslation.exprBs());

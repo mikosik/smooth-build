@@ -39,6 +39,6 @@ public record DefinitionsS(
         indent(evaluables.toString()),
         "]"
     );
-    return "TypeDefinitionS(\n" + indent(fields) + "\n)";
+    return "DefinitionsS(\n" + indent(fields) + "\n)";
   }
 }

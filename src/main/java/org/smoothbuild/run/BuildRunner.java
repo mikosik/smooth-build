@@ -14,11 +14,13 @@ import javax.inject.Inject;
 
 import org.smoothbuild.compile.fs.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.fs.lang.define.MonoizeS;
+import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.EvaluatorExcS;
 import org.smoothbuild.run.eval.EvaluatorS;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.Maps;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
@@ -64,20 +66,29 @@ public class BuildRunner {
   }
 
   public Optional<ImmutableMap<NamedValueS, ValueB>> evaluate(List<String> names) {
-    var defsOpt = definitionsLoader.loadDefinitions();
-    var evaluablesOpt = defsOpt.flatMap(d -> findTopValues(reporter, d, names));
-    var evaluationsOpt = evaluablesOpt.flatMap(this::evaluate);
-    return mapPair(evaluablesOpt, evaluationsOpt, Maps::zip);
+    return definitionsLoader.loadDefinitions()
+        .flatMap(d -> evaluate(d.evaluables(), names));
   }
 
-  private Optional<ImmutableList<ValueB>> evaluate(ImmutableList<NamedValueS> namedValues) {
-    var exprs = map(namedValues,
-        v -> new MonoizeS(new EvaluableRefS(v, commandLineLocation()), commandLineLocation()));
+  private Optional<ImmutableMap<NamedValueS, ValueB>> evaluate(
+      ImmutableBindings<NamedEvaluableS> evaluables, List<String> names) {
+    var valuesOpt = findTopValues(reporter, evaluables, names);
+    var evaluationsOpt = valuesOpt.flatMap(namedValues -> evaluate(evaluables, namedValues));
+    return mapPair(valuesOpt, evaluationsOpt, Maps::zip);
+  }
+
+  private Optional<ImmutableList<ValueB>> evaluate(
+      ImmutableBindings<NamedEvaluableS> evaluables, ImmutableList<NamedValueS> namedValues) {
+    var exprs = map(namedValues, v -> new MonoizeS(refTo(v), commandLineLocation()));
     try {
-      return evaluator.evaluate(exprs);
+      return evaluator.evaluate(evaluables, exprs);
     } catch (EvaluatorExcS e) {
       reporter.report(fatal(e.getMessage()));
       return Optional.empty();
     }
+  }
+
+  private static EvaluableRefS refTo(NamedValueS v) {
+    return new EvaluableRefS(v.schema(), v.name(), commandLineLocation());
   }
 }

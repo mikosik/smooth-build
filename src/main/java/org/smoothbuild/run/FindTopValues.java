@@ -6,21 +6,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
+import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.util.bindings.Bindings;
 
 import com.google.common.collect.ImmutableList;
 
 public class FindTopValues {
   public static Optional<ImmutableList<NamedValueS>> findTopValues(
-      Reporter reporter, DefinitionsS definitions, List<String> names) {
-    var topEvaluables = definitions.evaluables();
+      Reporter reporter, Bindings<NamedEvaluableS> evaluables, List<String> names) {
     var matchingTopEvaluables = new HashSet<NamedValueS>();
     var logs = new LogBuffer();
     for (String name : names) {
-      var topEvaluable = topEvaluables.getOptional(name);
+      var topEvaluable = evaluables.getOptional(name);
       if (topEvaluable.isPresent()) {
         if (topEvaluable.get() instanceof NamedValueS namedValue) {
           if (namedValue.schema().quantifiedVars().isEmpty()) {

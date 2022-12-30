@@ -19,16 +19,8 @@ public class SelectSTest extends TestContext {
               selectable = MonoizeS(
                 varMap = {}
                 monoizableS = EvaluableRefS(
-                  namedEvaluable = AnnotatedValue(
-                    AnnotationS(
-                      name = myAnnotation
-                      path = StringS(String, "myPath", myBuild.smooth:7)
-                      location = myBuild.smooth:17
-                    )
-                    schema = <>MyStruct
-                    name = structValue
-                    location = myBuild.smooth:11
-                  )
+                  schema = <>MyStruct
+                  name = structValue
                   location = myBuild.smooth:12
                 )
                 evalT = MyStruct

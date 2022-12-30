@@ -5,6 +5,7 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static java.io.OutputStream.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Optional.empty;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.compile.fs.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.fs.lang.define.ItemS.toTypes;
@@ -34,8 +35,6 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import javax.inject.Provider;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
@@ -106,6 +105,7 @@ import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.bindings.SingleScopeBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Named;
@@ -284,20 +284,27 @@ public class TestContext {
 
   public SbTranslatorFacade sbTranslatorFacade(
       FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new SbTranslatorFacade(sbTranslatorProv(fileLoader, bytecodeLoader));
+    return new SbTranslatorFacade(bytecodeF(), fileLoader, bytecodeLoader);
   }
 
-  public Provider<SbTranslator> sbTranslatorProv(
-      FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return () -> sbTranslator(fileLoader, bytecodeLoader);
+  public SbTranslator sbTranslator(ImmutableBindings<NamedEvaluableS> evaluables) {
+    return sbTranslator(fileLoader(), evaluables);
   }
 
-  public SbTranslator sbTranslator(FileLoader fileLoader) {
-    return sbTranslator(fileLoader, bytecodeLoader());
+  public SbTranslator sbTranslator(
+      FileLoader fileLoader, ImmutableBindings<NamedEvaluableS> evaluables) {
+    return sbTranslator(fileLoader, bytecodeLoader(), evaluables);
   }
 
-  private SbTranslator sbTranslator(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new SbTranslator(bytecodeF(), fileLoader, bytecodeLoader);
+  private SbTranslator sbTranslator(
+      FileLoader fileLoader,
+      BytecodeLoader bytecodeLoader,
+      ImmutableBindings<NamedEvaluableS> evaluables) {
+    return new SbTranslator(bytecodeF(), fileLoader, bytecodeLoader, evaluables);
+  }
+
+  private FileLoader fileLoader() {
+    return mock(FileLoader.class);
   }
 
   private BytecodeLoader bytecodeLoader() {
@@ -1137,7 +1144,7 @@ public class TestContext {
   public static MonoizeS monoizeS(
       int line, ImmutableMap<VarS, TypeS> varMap, NamedEvaluableS namedEvaluableS) {
     var loc = location(line);
-    var evaluableRefS = new EvaluableRefS(namedEvaluableS, loc);
+    var evaluableRefS = new EvaluableRefS(namedEvaluableS.schema(), namedEvaluableS.name(), loc);
     return monoizeS(varMap, evaluableRefS, loc);
   }
 
@@ -1190,7 +1197,7 @@ public class TestContext {
   }
 
   public static EvaluableRefS evaluableRefS(int line, NamedEvaluableS namedEvaluableS) {
-    return new EvaluableRefS(namedEvaluableS, location(line));
+    return new EvaluableRefS(namedEvaluableS.schema(), namedEvaluableS.name(), location(line));
   }
 
   public static SelectS selectS(ExprS selectable, String field) {

@@ -182,7 +182,8 @@ public class PsConverter {
 
   private static ExprS monoizeNamedEvaluable(
       MonoizableP monoizableP, NamedEvaluableS namedEvaluableS) {
-    var evaluableRefS = new EvaluableRefS(namedEvaluableS, monoizableP.location());
+    var evaluableRefS = new EvaluableRefS(
+        namedEvaluableS.schema(), namedEvaluableS.name(), monoizableP.location());
     return newMonoize(monoizableP, evaluableRefS);
   }
 

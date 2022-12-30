@@ -8,6 +8,7 @@ import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
@@ -18,12 +19,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
+import org.smoothbuild.util.bindings.ImmutableBindings;
+import org.smoothbuild.util.bindings.SingleScopeBindings;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
@@ -41,8 +45,8 @@ public class SbTranslatorTest extends TestContext {
       class _named_value {
         @Test
         public void mono_expression_value() {
-          var valS = valueS("myValue", intS(7));
-          assertTranslation(monoizeS(valS), callB(exprFuncB(intB(7))));
+          var valueS = valueS("myValue", intS(7));
+          assertTranslation(valueS, callB(exprFuncB(intB(7))));
         }
 
         @Test
@@ -50,14 +54,17 @@ public class SbTranslatorTest extends TestContext {
           var emptyArrayVal = emptyArrayValueS();
           var monoized = monoizeS(aToIntVarMapS(), emptyArrayVal);
           var orderB = orderB(intTB());
-          assertTranslation(monoized, callB(exprFuncB(orderB)));
+          assertTranslation(bindings(emptyArrayVal), monoized, callB(exprFuncB(orderB)));
         }
 
         @Test
         public void mono_expression_value_referencing_other_expression_value() {
           var otherValue = valueS("otherValue", intS(7));
           var myValue = valueS("myValue", monoizeS(otherValue));
-          assertTranslation(monoizeS(myValue), callB(exprFuncB(callB(exprFuncB(intB(7))))));
+          assertTranslation(
+              bindings(otherValue, myValue),
+              monoizeS(myValue),
+              callB(exprFuncB(callB(exprFuncB(intB(7))))));
         }
 
         @Test
@@ -65,14 +72,17 @@ public class SbTranslatorTest extends TestContext {
           var a = varA();
           var b = varB();
 
-          var emptyArrayValS = emptyArrayValueS(a);
-          var bEmptyArrayMonoValS = monoizeS(ImmutableMap.of(a, b), emptyArrayValS);
+          var emptyArrayValueS = emptyArrayValueS(a);
+          var monoizedEmptyArrayValueS = monoizeS(ImmutableMap.of(a, b), emptyArrayValueS);
 
-          var referencingValS = valueS("referencing", bEmptyArrayMonoValS);
-          var referencingMonoValS = monoizeS(ImmutableMap.of(b, intTS()), referencingValS);
+          var referencingValueS = valueS("referencing", monoizedEmptyArrayValueS);
+          var monoizedReferencingValueS = monoizeS(ImmutableMap.of(b, intTS()), referencingValueS);
 
           var orderB = orderB(intTB());
-          assertTranslation(referencingMonoValS, callB(exprFuncB(callB(exprFuncB(orderB)))));
+          assertTranslation(
+              bindings(emptyArrayValueS, referencingValueS),
+              monoizedReferencingValueS,
+              callB(exprFuncB(callB(exprFuncB(orderB)))));
         }
 
         @Test
@@ -85,7 +95,7 @@ public class SbTranslatorTest extends TestContext {
 
           var jar = blobB(37);
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-          var translator = sbTranslator(fileLoader);
+          var translator = sbTranslator(fileLoader, bindings(nativeValueS));
 
           assertCall(() -> translator.translateExpr(monoizeS(nativeValueS)))
               .throwsException(new SbTranslatorExc("Illegal value annotation: `@Native`."));
@@ -101,8 +111,8 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var translator = sbTranslator(fileLoader);
-          assertTranslation(translator, monoizeS(bytecodeValueS), stringB("abc"));
+          assertTranslation(
+              fileLoader, bindings(bytecodeValueS), monoizeS(bytecodeValueS), stringB("abc"));
         }
 
         @Test
@@ -117,9 +127,8 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var translator = sbTranslator(fileLoader);
           var monoized = monoizeS(aToIntVarMapS(), bytecodeValueS);
-          assertTranslation(translator, monoized, idFuncB());
+          assertTranslation(fileLoader, bindings(bytecodeValueS), monoized, idFuncB());
         }
       }
 
@@ -128,15 +137,15 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void mono_expression_function() {
           var funcS = funcS("myFunc", nlist(), intS(7));
-          assertTranslation(monoizeS(funcS), exprFuncB(intB(7)));
+          assertTranslation(funcS, exprFuncB(intB(7)));
         }
 
         @Test
         public void poly_expression_function() {
-          var identity = idFuncS();
-          var monoized = monoizeS(aToIntVarMapS(), identity);
+          var funcS = idFuncS();
+          var monoized = monoizeS(aToIntVarMapS(), funcS);
           var funcB = exprFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
-          assertTranslation(monoized, funcB);
+          assertTranslation(bindings(funcS), monoized, funcB);
         }
 
         @Test
@@ -154,7 +163,7 @@ public class SbTranslatorTest extends TestContext {
           var idFuncB = exprFuncB(funcTB(intTB(), intTB()), refB(intTB(), 0));
           var wrapFuncB = exprFuncB(funcTB(intTB(), intTB()),
               callB(idFuncB, refB(intTB(), 0)));
-          assertTranslation(wrapMonoFuncS, wrapFuncB);
+          assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, wrapFuncB);
         }
 
         @Test
@@ -168,7 +177,7 @@ public class SbTranslatorTest extends TestContext {
           var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          assertTranslation(sbTranslator(fileLoader), monoizeS(nativeFuncS), nativeFuncB);
+          assertTranslation(fileLoader, bindings(nativeFuncS), monoizeS(nativeFuncS), nativeFuncB);
         }
 
         @Test
@@ -183,9 +192,8 @@ public class SbTranslatorTest extends TestContext {
           var nativeFuncB = nativeFuncB(funcTB, blobB(37), stringB(classBinaryName), boolB(true));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          var translator = sbTranslator(fileLoader);
           var monoized = monoizeS(ImmutableMap.of(a, intTS()), nativeFuncS);
-          assertTranslation(translator, monoized, nativeFuncB);
+          assertTranslation(fileLoader, bindings(nativeFuncS), monoized, nativeFuncB);
         }
 
         @Test
@@ -199,7 +207,8 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          assertTranslation(sbTranslator(fileLoader), monoizeS(bytecodeFuncS), returnAbcFuncB());
+          assertTranslation(
+              fileLoader, bindings(bytecodeFuncS), monoizeS(bytecodeFuncS), returnAbcFuncB());
         }
 
         @Test
@@ -214,9 +223,8 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var translator = sbTranslator(fileLoader);
           var monoized = monoizeS(ImmutableMap.of(a, intTS()), bytecodeFuncS);
-          assertTranslation(translator, monoized, idFuncB());
+          assertTranslation(fileLoader, bindings(bytecodeFuncS), monoized, idFuncB());
         }
 
       }
@@ -253,7 +261,7 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void anonymous_function_referencing_param_of_enclosing_function() {
         var monoAnonymousFuncS = monoizeS(anonymousFuncS(paramRefS(intTS(), "p")));
-        var monoFuncS = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), monoAnonymousFuncS));
+        var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoAnonymousFuncS);
 
         var bodyB = closurizeB(refB(intTB(), 0));
         var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
@@ -266,7 +274,7 @@ public class SbTranslatorTest extends TestContext {
         // myFunc(Int p) = (Blob a) -> p;
         var monoAnonymousFuncS = monoizeS(anonymousFuncS(
             nlist(itemS(blobTS(), "a")), paramRefS(intTS(), "p")));
-        var monoFuncS = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), monoAnonymousFuncS));
+        var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoAnonymousFuncS);
 
         var bodyB = closurizeB(list(blobTB()), refB(intTB(), 1));
         var funcB = exprFuncB(list(intTB()), bodyB);
@@ -277,27 +285,26 @@ public class SbTranslatorTest extends TestContext {
       @Test
       public void call() {
         var funcS = funcS("myFunc", nlist(), stringS("abc"));
-        var call = callS(monoizeS(funcS));
-        assertTranslation(call, callB(exprFuncB(stringB("abc"))));
+        var callS = callS(monoizeS(funcS));
+        assertTranslation(bindings(funcS), callS, callB(exprFuncB(stringB("abc"))));
       }
 
       @Test
       public void order() {
-        var order = orderS(intTS(), intS(3), intS(7));
-        assertTranslation(order, orderB(intB(3), intB(7)));
+        var orderS = orderS(intTS(), intS(3), intS(7));
+        assertTranslation(orderS, orderB(intB(3), intB(7)));
       }
 
       @Test
       public void param_ref() {
-        var func = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-        assertTranslation(monoizeS(func), idFuncB());
+        var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
+        assertTranslation(funcS, idFuncB());
       }
 
       @Test
       public void param_ref_to_unknown_param_causes_exception() {
-        var func = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p2"));
-        var monoFunc = monoizeS(func);
-        assertCall(() -> newTranslator().translateExpr(monoFunc))
+        var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p2"));
+        assertCall(() -> newTranslator(bindings(funcS)).translateExpr(monoizeS(funcS)))
             .throwsException(
                 new SbTranslatorExc("Reference to unknown parameter `p2` at myBuild.smooth:1."));
       }
@@ -311,21 +318,20 @@ public class SbTranslatorTest extends TestContext {
 
         var ctorB = exprFuncB(list(stringTB()), combineB(refB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
-        assertTranslation(selectS, selectB(callB, intB(0)));
+        assertTranslation(bindings(constructorS), selectS, selectB(callB, intB(0)));
       }
 
       @Test
       public void monoized_poly_expr_twice_with_outer_monoize_actually_setting_its_var() {
         // regression test
         var monoAnonymousFuncS = monoizeS(anonymousFuncS(varSetS(), paramRefS(varA(), "a")));
-        var monoFuncS = monoizeS(
-            varMap(varA(), intTS()),
-            funcS("myFunc", nlist(itemS(varA(), "a")), monoAnonymousFuncS));
+        var funcS = funcS("myFunc", nlist(itemS(varA(), "a")), monoAnonymousFuncS);
+        var monoizeS = monoizeS(varMap(varA(), intTS()), funcS);
 
         var bodyB = closurizeB(refB(intTB(), 0));
         var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
-        assertTranslation(monoFuncS, funcB);
+        assertTranslation(bindings(funcS), monoizeS, funcB);
       }
     }
   }
@@ -338,15 +344,21 @@ public class SbTranslatorTest extends TestContext {
       class _named_value {
         @Test
         public void expression_value() {
-          var valS = valueS(3, "myValue", intS(7, 37));
-          assertValNalMapping(monoizeS(9, valS), location(9), "myValue", location(3));
+          var valueS = valueS(3, "myValue", intS(7, 37));
+          assertValueNalMapping(
+              bindings(valueS), monoizeS(9, valueS), location(9), "myValue", location(3));
         }
 
         @Test
         public void expression_value_referencing_other_expression_value() {
-          var otherValue = valueS(6, "otherValue", intS(7, 37));
-          var valS = valueS(5, "myValue", monoizeS(otherValue));
-          assertValNalMapping(monoizeS(9, valS), location(9), "myValue", location(5));
+          var otherValueS = valueS(6, "otherValue", intS(7, 37));
+          var valueS = valueS(5, "myValue", monoizeS(otherValueS));
+          assertValueNalMapping(
+              bindings(otherValueS, valueS),
+              monoizeS(9, valueS),
+              location(9),
+              "myValue",
+              location(5));
         }
 
         @Test
@@ -359,7 +371,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var sbTranslator = sbTranslator(fileLoader);
+          var sbTranslator = sbTranslator(fileLoader, bindings(bytecodeValueS));
           var exprB = sbTranslator.translateExpr(monoizeS(bytecodeValueS));
           assertNalMapping(sbTranslator, exprB, "myValue", location(8));
         }
@@ -370,13 +382,13 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void expression_function() {
           var funcS = funcS(7, "myFunc", nlist(), intS(37));
-          assertNalMapping(monoizeS(funcS), "myFunc", location(7));
+          assertNalMapping(bindings(funcS), monoizeS(funcS), "myFunc", location(7));
         }
 
         @Test
         public void expression_inside_expression_function_body() {
           var funcS = funcS(7, "myFunc", nlist(), intS(8, 37));
-          var sbTranslator = newTranslator();
+          var sbTranslator = newTranslator(bindings(funcS));
           var funcB = (ExprFuncB) sbTranslator.translateExpr(monoizeS(funcS));
           var body = funcB.body();
           assertNalMapping(sbTranslator, body, null, location(8));
@@ -391,7 +403,7 @@ public class SbTranslatorTest extends TestContext {
               2, annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
-          var sbTranslator = sbTranslator(fileLoader);
+          var sbTranslator = sbTranslator(fileLoader, bindings(nativeFuncS));
           assertNalMapping(sbTranslator, monoizeS(nativeFuncS), "myFunc", location(2));
         }
 
@@ -406,7 +418,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
-          var sbTranslator = sbTranslator(fileLoader);
+          var sbTranslator = sbTranslator(fileLoader, bindings(bytecodeFuncS));
           assertNalMapping(sbTranslator, monoizeS(bytecodeFuncS), "myFunc", location(2));
         }
       }
@@ -455,7 +467,7 @@ public class SbTranslatorTest extends TestContext {
       public void call() {
         var funcS = funcS(7, "myFunc", nlist(), stringS("abc"));
         var call = callS(8, monoizeS(funcS));
-        assertNalMapping(call, null, location(8));
+        assertNalMapping(bindings(funcS), call, null, location(8));
       }
 
       @Test
@@ -466,9 +478,9 @@ public class SbTranslatorTest extends TestContext {
 
       @Test
       public void param_ref() {
-        var func = funcS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
-        var sbTranslator = newTranslator();
-        var funcB = (ExprFuncB) sbTranslator.translateExpr(monoizeS(func));
+        var funcS = funcS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
+        var sbTranslator = newTranslator(bindings(funcS));
+        var funcB = (ExprFuncB) sbTranslator.translateExpr(monoizeS(funcS));
         var refB = funcB.body();
         assertNalMapping(sbTranslator, refB, null, location(5));
       }
@@ -479,7 +491,7 @@ public class SbTranslatorTest extends TestContext {
         var constructorS = constructorS(structTS);
         var callS = callS(monoizeS(constructorS), stringS("abc"));
         var selectS = selectS(4, callS, "field");
-        assertNalMapping(selectS, null, location(4));
+        assertNalMapping(bindings(constructorS), selectS, null, location(4));
       }
 
       @Nested
@@ -488,14 +500,14 @@ public class SbTranslatorTest extends TestContext {
         public void expression_value() {
           var emptyArrayVal = valueS(7, "emptyArray", orderS(varA()));
           var monoized = monoizeS(4, aToIntVarMapS(), emptyArrayVal);
-          assertNalMapping(monoized, null, location(4));
+          assertNalMapping(bindings(emptyArrayVal), monoized, null, location(4));
         }
 
         @Test
         public void expression_function() {
           var identity = idFuncS();
           var monoized = monoizeS(aToIntVarMapS(), identity);
-          assertNalMapping(monoized, "myId", location(1));
+          assertNalMapping(bindings(idFuncS()), monoized, "myId", location(1));
         }
       }
     }
@@ -505,8 +517,8 @@ public class SbTranslatorTest extends TestContext {
   class _caching {
     @Test
     public void expression_value_translation_result() {
-      var myValue = valueS("myVal", stringS("abcdefghi"));
-      assertTranslationIsCached(monoizeS(myValue));
+      var valueS = valueS("myVal", stringS("abcdefghi"));
+      assertTranslationIsCached(valueS);
     }
 
     @Test
@@ -519,19 +531,19 @@ public class SbTranslatorTest extends TestContext {
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertTranslationIsCached(sbTranslator(fileLoader), monoizeS(bytecodeValueS));
+      assertTranslationIsCached(fileLoader, bindings(bytecodeValueS), monoizeS(bytecodeValueS));
     }
 
     @Test
     public void expression_function_translation_result() {
-      var myFunc = funcS("myFunc", nlist(), stringS("abcdefghi"));
-      assertTranslationIsCached(monoizeS(myFunc));
+      var funcS = funcS("myFunc", nlist(), stringS("abcdefghi"));
+      assertTranslationIsCached(funcS);
     }
 
     @Test
     public void native_function_translation_result() {
-      var myFunc = nativeFuncS(stringTS(), "myFunc", nlist());
-      assertTranslationIsCached(monoizeS(myFunc));
+      var funcS = nativeFuncS(stringTS(), "myFunc", nlist());
+      assertTranslationIsCached(funcS);
     }
 
     @Test
@@ -544,34 +556,63 @@ public class SbTranslatorTest extends TestContext {
       var fileLoader = createFileLoaderMock(
           filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
 
-      assertTranslationIsCached(sbTranslator(fileLoader), monoizeS(bytecodeFuncS));
+      assertTranslationIsCached(fileLoader, bindings(bytecodeFuncS), monoizeS(bytecodeFuncS));
     }
 
     @Test
     public void constructor_translation_result() {
       var myStruct = structTS("MyStruct", nlist(sigS(stringTS(), "name")));
-      assertTranslationIsCached(
-          monoizeS(constructorS(myStruct)));
+      assertTranslationIsCached(constructorS(myStruct));
     }
 
     @Test
     public void monoized_poly_function_translation_result() {
-      var monoized = monoizeS(aToIntVarMapS(), idFuncS());
-      assertTranslationIsCached(monoized);
+      var funcS = idFuncS();
+      var monoizeS = monoizeS(aToIntVarMapS(), funcS);
+      assertTranslationIsCached(bindings(funcS), monoizeS);
     }
 
-    private void assertTranslationIsCached(ExprS exprS) {
-      assertTranslationIsCached(newTranslator(), exprS);
+    private void assertTranslationIsCached(NamedEvaluableS namedEvaluableS) {
+      assertTranslationIsCached(bindings(namedEvaluableS), monoizeS(namedEvaluableS));
     }
 
-    private void assertTranslationIsCached(SbTranslator sbTranslator, ExprS exprS) {
+    private void assertTranslationIsCached(
+        ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
+      assertTranslationIsCached(exprS, newTranslator(evaluables));
+    }
+
+    private void assertTranslationIsCached(
+        FileLoader fileLoader, SingleScopeBindings<NamedEvaluableS> evaluables, ExprS exprS) {
+      var sbTranslator = newTranslator(fileLoader, evaluables);
+      assertTranslationIsCached(exprS, sbTranslator);
+    }
+
+    private void assertTranslationIsCached(ExprS exprS, SbTranslator sbTranslator) {
       assertThat(sbTranslator.translateExpr(exprS))
           .isSameInstanceAs(sbTranslator.translateExpr(exprS));
     }
   }
 
+  private void assertTranslation(
+      SingleScopeBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB expected) {
+    assertTranslation(newTranslator(evaluables), exprS, expected);
+  }
+
+  private void assertTranslation(NamedEvaluableS namedEvaluableS, ExprB expectedB) {
+    assertTranslation(bindings(namedEvaluableS), monoizeS(namedEvaluableS), expectedB);
+  }
+
   private void assertTranslation(ExprS exprS, ExprB expected) {
     assertTranslation(newTranslator(), exprS, expected);
+  }
+
+  private void assertTranslation(
+      FileLoader fileLoader,
+      SingleScopeBindings<NamedEvaluableS> evaluables,
+      ExprS exprS,
+      ExprB expected) {
+    var sbTranslator = newTranslator(fileLoader, evaluables);
+    assertTranslation(sbTranslator, exprS, expected);
   }
 
   private void assertTranslation(SbTranslator sbTranslator, ExprS exprS, ExprB expected) {
@@ -579,13 +620,40 @@ public class SbTranslatorTest extends TestContext {
         .isEqualTo(expected);
   }
 
-  private void assertValNalMapping(
+  private void assertValueNalMapping(
       ExprS exprS, Location expectedCallLocation, String expectedName, Location expectedLocation) {
-    var sbTranslator = newTranslator();
+    assertValueNalMapping(
+        newTranslator(), exprS, expectedCallLocation, expectedName, expectedLocation);
+  }
+
+  private void assertValueNalMapping(
+      ImmutableBindings<NamedEvaluableS> evaluables,
+      ExprS exprS,
+      Location expectedCallLocation,
+      String expectedName,
+      Location expectedLocation) {
+    assertValueNalMapping(
+        newTranslator(evaluables), exprS, expectedCallLocation, expectedName, expectedLocation);
+  }
+
+  private static void assertValueNalMapping(
+      SbTranslator sbTranslator,
+      ExprS exprS,
+      Location expectedCallLocation,
+      String expectedName,
+      Location expectedLocation) {
     var call = ((CallB) sbTranslator.translateExpr(exprS));
     assertNalMapping(sbTranslator, call, null, expectedCallLocation);
     var called = call.dataSeq().get(0);
     assertNalMapping(sbTranslator, called, expectedName, expectedLocation);
+  }
+
+  private void assertNalMapping(
+      ImmutableBindings<NamedEvaluableS> evaluables,
+      ExprS exprS,
+      String expectedName,
+      Location expectedLocation) {
+    assertNalMapping(newTranslator(evaluables), exprS, expectedName, expectedLocation);
   }
 
   private void assertNalMapping(ExprS exprS, String expectedName, Location expectedLocation) {
@@ -608,13 +676,22 @@ public class SbTranslatorTest extends TestContext {
   }
 
   private SbTranslator newTranslator() {
+    return newTranslator(immutableBindings());
+  }
+
+  private SbTranslator newTranslator(ImmutableBindings<NamedEvaluableS> evaluables) {
     try {
-      FileLoader mock = mock(FileLoader.class);
-      when(mock.load(any())).thenReturn(blobB(1));
-      return sbTranslator(mock);
+      var fileLoader = mock(FileLoader.class);
+      when(fileLoader.load(any())).thenReturn(blobB(1));
+      return sbTranslator(fileLoader, evaluables);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private SbTranslator newTranslator(
+      FileLoader fileLoader, ImmutableBindings<NamedEvaluableS> evaluables) {
+    return sbTranslator(fileLoader, evaluables);
   }
 
   private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {

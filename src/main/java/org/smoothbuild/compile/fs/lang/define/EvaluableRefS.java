@@ -9,17 +9,12 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
 /**
  * Reference to named evaluable.
  */
-public record EvaluableRefS(NamedEvaluableS namedEvaluable, Location location) implements MonoizableS {
-
-  @Override
-  public SchemaS schema() {
-    return namedEvaluable.schema();
-  }
-
+public record EvaluableRefS(SchemaS schema, String name, Location location) implements MonoizableS {
   @Override
   public String toString() {
     var fields = joinToString("\n",
-        "namedEvaluable = " + namedEvaluable,
+        "schema = " + schema,
+        "name = " + name,
         "location = " + location
     );
     return "EvaluableRefS(\n" + indent(fields) + "\n)";

@@ -37,6 +37,7 @@ import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.MonoizableS;
 import org.smoothbuild.compile.fs.lang.define.MonoizeS;
+import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
@@ -54,6 +55,7 @@ import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -81,6 +83,7 @@ public class SbTranslator {
   private final TypeSbTranslator typeSbTranslator;
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
+  private final ImmutableBindings<NamedEvaluableS> evaluables;
   private final NList<ItemS> environment;
   private final Map<CacheKey, ExprB> cache;
   private final Map<Hash, String> nameMapping;
@@ -90,9 +93,17 @@ public class SbTranslator {
   public SbTranslator(
       BytecodeF bytecodeF,
       FileLoader fileLoader,
-      BytecodeLoader bytecodeLoader) {
-    this(bytecodeF, new TypeSbTranslator(bytecodeF, ImmutableMap.of()), fileLoader, bytecodeLoader,
-        nlist(), new HashMap<>(), new HashMap<>(), new HashMap<>());
+      BytecodeLoader bytecodeLoader,
+      ImmutableBindings<NamedEvaluableS> evaluables) {
+    this(bytecodeF,
+        new TypeSbTranslator(bytecodeF, ImmutableMap.of()),
+        fileLoader,
+        bytecodeLoader,
+        evaluables,
+        nlist(),
+        new HashMap<>(),
+        new HashMap<>(),
+        new HashMap<>());
   }
 
   public SbTranslator(
@@ -100,6 +111,7 @@ public class SbTranslator {
       TypeSbTranslator typeSbTranslator,
       FileLoader fileLoader,
       BytecodeLoader bytecodeLoader,
+      ImmutableBindings<NamedEvaluableS> evaluables,
       NList<ItemS> environment,
       Map<CacheKey, ExprB> cache,
       Map<Hash, String> nameMapping,
@@ -108,6 +120,7 @@ public class SbTranslator {
     this.typeSbTranslator = typeSbTranslator;
     this.fileLoader = fileLoader;
     this.bytecodeLoader = bytecodeLoader;
+    this.evaluables = evaluables;
     this.environment = environment;
     this.cache = cache;
     this.nameMapping = nameMapping;
@@ -157,8 +170,16 @@ public class SbTranslator {
     var monoizedVarMap = mapValues(monoizeS.varMap(), typeSbTranslator::translate);
     var varMap = override(monoizedVarMap, typeSbTranslator.varMap());
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
-    var sbTranslator = new SbTranslator(bytecodeF, newTypeSbTranslator, fileLoader, bytecodeLoader,
-        environment, cache, nameMapping, locationMapping);
+    var sbTranslator = new SbTranslator(
+        bytecodeF,
+        newTypeSbTranslator,
+        fileLoader,
+        bytecodeLoader,
+        evaluables,
+        environment,
+        cache,
+        nameMapping,
+        locationMapping);
     return sbTranslator.translateMonoizable(monoizeS.monoizableS());
   }
 
@@ -182,7 +203,7 @@ public class SbTranslator {
   }
 
   private ExprB translateEvaluableRef(EvaluableRefS evaluableRefS) {
-    return switch (evaluableRefS.namedEvaluable()) {
+    return switch (evaluables.get(evaluableRefS.name())) {
       case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
       case NamedValueS namedValS -> translateNamedValueWithCache(evaluableRefS.location(), namedValS);
     };
@@ -200,8 +221,16 @@ public class SbTranslator {
 
   private SbTranslator funcBodySbTranslator(FuncS funcS) {
     var newEnvironment = nlistWithShadowing(concat(funcS.params(), environment));
-    return new SbTranslator(bytecodeF, typeSbTranslator, fileLoader, bytecodeLoader,
-        newEnvironment, cache, nameMapping, locationMapping);
+    return new SbTranslator(
+        bytecodeF,
+        typeSbTranslator,
+        fileLoader,
+        bytecodeLoader,
+        evaluables,
+        newEnvironment,
+        cache,
+        nameMapping,
+        locationMapping);
   }
 
   private ExprB translateNamedFuncImpl(NamedFuncS namedFuncS) {

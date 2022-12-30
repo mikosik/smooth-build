@@ -14,10 +14,12 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
@@ -40,20 +42,17 @@ public class EvaluatorSTest extends TestContext {
     class _constant {
       @Test
       public void blob() throws EvaluatorExcS {
-        assertThat(evaluate(blobS(7)))
-            .isEqualTo(blobB(7));
+        assertEvaluation(blobS(7), blobB(7));
       }
 
       @Test
       public void int_() throws EvaluatorExcS {
-        assertThat(evaluate(intS(8)))
-            .isEqualTo(intB(8));
+        assertEvaluation(intS(8), intB(8));
       }
 
       @Test
       public void string() throws EvaluatorExcS {
-        assertThat(evaluate(stringS("abc")))
-            .isEqualTo(stringB("abc"));
+        assertEvaluation(stringS("abc"), stringB("abc"));
       }
     }
 
@@ -65,25 +64,23 @@ public class EvaluatorSTest extends TestContext {
         public void call_anonymous_func() throws EvaluatorExcS {
           var anonymousFuncS = anonymousFuncS(nlist(), intS(7));
           var callS = callS(monoizeS(anonymousFuncS));
-          assertThat(evaluate(callS))
-              .isEqualTo(intB(7));
+          assertEvaluation(callS, intB(7));
         }
 
         @Test
-        public void call_anonymous_function_returning_value_from_its_closure() throws EvaluatorExcS {
+        public void call_anonymous_function_returning_value_from_its_closure()
+            throws EvaluatorExcS {
           var anonymousFunc = monoizeS(anonymousFuncS(nlist(), paramRefS(intTS(), "p")));
-          var myFunc = monoizeS(funcS("myFunc", nlist(itemS(intTS(), "p")), callS(anonymousFunc)));
-          var callS = callS(myFunc, intS(7));
-          assertThat(evaluate(callS))
-              .isEqualTo(intB(7));
+          var funcS = funcS("myFunc", nlist(itemS(intTS(), "p")), callS(anonymousFunc));
+          var callS = callS(monoizeS(funcS), intS(7));
+          assertEvaluation(bindings(funcS), callS, intB(7));
         }
 
         @Test
         public void call_expression_function() throws EvaluatorExcS {
           var funcS = funcS("n", nlist(), intS(7));
           var callS = callS(monoizeS(funcS));
-          assertThat(evaluate(callS))
-              .isEqualTo(intB(7));
+          assertEvaluation(bindings(funcS), callS, intB(7));
         }
 
         @Test
@@ -92,16 +89,14 @@ public class EvaluatorSTest extends TestContext {
           var orderS = orderS(a, paramRefS(a, "e"));
           var funcS = funcS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
           var callS = callS(monoizeS(varMap(a, intTS()), funcS), intS(7));
-          assertThat(evaluate(callS))
-              .isEqualTo(arrayB(intTB(), intB(7)));
+          assertEvaluation(bindings(funcS), callS, arrayB(intTB(), intB(7)));
         }
 
         @Test
         public void call_constructor() throws EvaluatorExcS {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
           var callS = callS(monoizeS(constructorS), intS(7));
-          assertThat(evaluate(callS))
-              .isEqualTo(tupleB(intB(7)));
+          assertEvaluation(bindings(constructorS), callS,tupleB(intB(7)));
         }
 
         @Test
@@ -115,8 +110,7 @@ public class EvaluatorSTest extends TestContext {
           when(nativeMethodLoader.load(any()))
               .thenReturn(Try.result(
                   EvaluatorSTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
-          assertThat(evaluate(callS))
-              .isEqualTo(intB(173));
+          assertEvaluation(bindings(funcS), callS, intB(173));
         }
 
         @Test
@@ -131,8 +125,7 @@ public class EvaluatorSTest extends TestContext {
           when(nativeMethodLoader.load(any()))
               .thenReturn(Try.result(
                   EvaluatorSTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-          assertThat(evaluate(callS))
-              .isEqualTo(intB(77));
+          assertEvaluation(bindings(funcS), callS, intB(77));
         }
       }
 
@@ -140,8 +133,9 @@ public class EvaluatorSTest extends TestContext {
       class _order {
         @Test
         public void order() throws EvaluatorExcS {
-          assertThat(evaluate(orderS(intTS(), intS(7), intS(8))))
-              .isEqualTo(arrayB(intTB(), intB(7), intB(8)));
+          assertEvaluation(
+              orderS(intTS(), intS(7), intS(8)),
+              arrayB(intTB(), intB(7), intB(8)));
         }
       }
 
@@ -149,10 +143,9 @@ public class EvaluatorSTest extends TestContext {
       class param_ref {
         @Test
         public void param_ref() throws EvaluatorExcS {
-          var func = monoizeS(funcS("n", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p")));
-          var call = callS(func, intS(7));
-          assertThat(evaluate(call))
-              .isEqualTo(intB(7));
+          var funcS = funcS("n", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
+          var callS = callS(monoizeS(funcS), intS(7));
+          assertEvaluation(bindings(funcS), callS, intB(7));
         }
       }
 
@@ -163,8 +156,7 @@ public class EvaluatorSTest extends TestContext {
           var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
           var constructorS = constructorS(structTS);
           var callS = callS(monoizeS(constructorS), intS(7));
-          assertThat(evaluate(selectS(callS, "f")))
-              .isEqualTo(intB(7));
+          assertEvaluation(bindings(constructorS), selectS(callS, "f"), intB(7));
         }
       }
     }
@@ -175,8 +167,9 @@ public class EvaluatorSTest extends TestContext {
       class _anonymous_function {
         @Test
         public void mono_anonymous_function() throws EvaluatorExcS {
-          assertThat(evaluate(monoizeS(anonymousFuncS(intS(7)))))
-              .isEqualTo(closureB(intB(7)));
+          assertEvaluation(
+              monoizeS(anonymousFuncS(intS(7))),
+              closureB(intB(7)));
         }
 
         @Test
@@ -184,8 +177,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var polyAnonymousFuncS = anonymousFuncS(nlist(itemS(a, "a")), paramRefS(a, "a"));
           var monoAnonymousFuncS = monoizeS(varMap(a, intTS()), polyAnonymousFuncS);
-          assertThat(evaluate(monoAnonymousFuncS))
-              .isEqualTo(closureB(list(intTB()), refB(intTB(), 0)));
+          assertEvaluation(monoAnonymousFuncS, closureB(list(intTB()), refB(intTB(), 0)));
         }
       }
 
@@ -193,8 +185,7 @@ public class EvaluatorSTest extends TestContext {
       class _named_func {
         @Test
         public void mono_expression_func() throws EvaluatorExcS {
-          assertThat(evaluate(monoizeS(intIdFuncS())))
-              .isEqualTo(idFuncB());
+          assertEvaluation(intIdFuncS(), idFuncB());
         }
 
         @Test
@@ -202,8 +193,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var funcS = funcS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
           var monoizedS = monoizeS(varMap(a, intTS()), funcS);
-          assertThat(evaluate(monoizedS))
-              .isEqualTo(idFuncB());
+          assertEvaluation(bindings(funcS), monoizedS, idFuncB());
         }
 
         @Test
@@ -219,15 +209,14 @@ public class EvaluatorSTest extends TestContext {
 
           var a = varA();
           var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
-          assertThat(evaluate(monoizeS(varMap(a, intTS()), bytecodeFuncS)))
-              .isEqualTo(funcB);
+          assertEvaluation(
+              bindings(bytecodeFuncS), monoizeS(varMap(a, intTS()), bytecodeFuncS), funcB);
         }
 
         @Test
         public void constructor() throws EvaluatorExcS {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-          assertThat(evaluate(monoizeS(constructorS)))
-              .isEqualTo(exprFuncB(list(intTB()), combineB(refB(intTB(), 0))));
+          assertEvaluation(constructorS, exprFuncB(list(intTB()), combineB(refB(intTB(), 0))));
         }
       }
 
@@ -235,9 +224,8 @@ public class EvaluatorSTest extends TestContext {
       class _named_value {
         @Test
         public void mono_expression_value() throws EvaluatorExcS {
-          var namedValue = monoizeS(valueS(1, intTS(), "name", intS(7)));
-          assertThat(evaluate(namedValue))
-              .isEqualTo(intB(7));
+          var valueS = valueS(1, intTS(), "name", intS(7));
+          assertEvaluation(bindings(valueS), monoizeS(valueS), intB(7));
         }
 
         @Test
@@ -245,8 +233,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var polyValue = valueS(1, arrayTS(a), "name", orderS(a));
           var monoizedValue = monoizeS(varMap(a, intTS()), polyValue);
-          assertThat(evaluate(monoizedValue))
-              .isEqualTo(arrayB(intTB()));
+          assertEvaluation(bindings(polyValue), monoizedValue, arrayB(intTB()));
         }
       }
 
@@ -254,16 +241,33 @@ public class EvaluatorSTest extends TestContext {
       class _constructor {
         @Test
         public void constructor() throws EvaluatorExcS {
-          var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
-          assertThat(evaluate(monoizeS(constructorS)))
-              .isEqualTo(exprFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(refB(intTB(), 0))));
+          assertEvaluation(
+              constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field")))),
+              exprFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(refB(intTB(), 0))));
         }
       }
     }
   }
 
-  private ExprB evaluate(ExprS exprS) throws EvaluatorExcS {
-    var resultMap = newEvaluator().evaluate(list(exprS)).get();
+  private void assertEvaluation(NamedEvaluableS namedEvaluableS, ExprB exprB) throws EvaluatorExcS {
+    assertThat(evaluate(bindings(namedEvaluableS), monoizeS(namedEvaluableS)))
+        .isEqualTo(exprB);
+  }
+
+  private void assertEvaluation(ExprS exprS, ExprB exprB) throws EvaluatorExcS {
+    assertEvaluation(bindings(), exprS, exprB);
+  }
+
+  private void assertEvaluation(
+      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB exprB)
+      throws EvaluatorExcS {
+    assertThat(evaluate(evaluables, exprS))
+        .isEqualTo(exprB);
+  }
+
+  private ExprB evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS)
+      throws EvaluatorExcS {
+    var resultMap = newEvaluator().evaluate(evaluables, list(exprS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
     return resultMap.get(0);
@@ -271,8 +275,8 @@ public class EvaluatorSTest extends TestContext {
 
   private EvaluatorS newEvaluator() {
     var sbTranslatorFacade = sbTranslatorFacade(fileLoader, bytecodeLoader);
-    var vm = evaluatorB(nativeMethodLoader);
-    return new EvaluatorS(sbTranslatorFacade, (bsMapping) -> vm, reporter());
+    var evaluatorB = evaluatorB(nativeMethodLoader);
+    return new EvaluatorS(sbTranslatorFacade, (bsMapping) -> evaluatorB, reporter());
   }
 
   public static IntB returnInt(NativeApi nativeApi, TupleB args) {
