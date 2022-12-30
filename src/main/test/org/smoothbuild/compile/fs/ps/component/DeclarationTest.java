@@ -824,7 +824,7 @@ public class DeclarationTest extends TestContext {
       class _func {
         @Test
         public void passing_more_positional_args_than_params_causes_error() {
-          String code = """
+          var code = """
               myIdentity(String param) = param;
               result = myIdentity("abc", "def");
               """;
@@ -834,7 +834,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void passing_less_positional_args_than_params_causes_error() {
-          String code = """
+          var code = """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst("abc");
               """;
@@ -844,7 +844,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void passing_less_positional_args_than_params_causes_error_version_without_name() {
-          String code = """
+          var code = """
               returnFirst(String param1, String param2) = param1;
               funcValue = returnFirst;
               result = funcValue("abc");
@@ -856,7 +856,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void named_arg_which_doesnt_exist_causes_error() {
-          String code = """
+          var code = """
               myIdentity(String param) = param;
               result = myIdentity(wrongName="abc");
               """;
@@ -866,7 +866,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void named_args_can_be_passed_in_the_same_order_as_params() {
-          String code = """
+          var code = """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param1="abc", param2="def");
               """;
@@ -876,7 +876,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void named_args_can_be_passed_in_different_order_than_params() {
-          String code = """
+          var code = """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param2="def", param1="abc");
               """;
@@ -886,7 +886,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void all_named_args_must_come_after_positional() {
-          String code = """
+          var code = """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param2="def", "abc");
               """;
@@ -896,7 +896,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void assigning_arg_by_name_twice_causes_error() {
-          String code = """
+          var code = """
               myIdentity(String param) = param;
               result = myIdentity(param="abc", param="abc");
               """;
@@ -906,7 +906,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void assigning_by_name_arg_that_is_assigned_by_position_causes_error() {
-          String code = """
+          var code = """
               myIdentity(String param) = param;
               result = myIdentity("abc", param="abc");
               """;
@@ -916,7 +916,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void param_with_default_value_can_be_assigned_positionally() {
-          String code = """
+          var code = """
               myIdentity(String param1="abc", String param2="def") = param1;
               result = myIdentity("abc", "def");
               """;
@@ -926,7 +926,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void param_with_default_value_can_be_assigned_by_name() {
-          String code = """
+          var code = """
             myIdentity(String param1="abc", String param2="def") = param1;
             result = myIdentity(param1="abc", param2="def");
             """;
@@ -936,7 +936,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void anonymous_function_parameter_names_are_always_stripped() {
-          String code = """
+          var code = """
             myFunc(String param) = param;
             valueReferencingFunc = myFunc;
             result = ((Int int) -> int)(param=7);
@@ -947,7 +947,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void named_function_parameter_names_are_stripped_during_assignment() {
-          String code = """
+          var code = """
             myFunc(String param) = param;
             valueReferencingFunc = myFunc;
             result = valueReferencingFunc(param="abc");
@@ -958,7 +958,7 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void named_function_parameter_default_values_are_stripped_during_assignment() {
-          String code = """
+          var code = """
             myFunc(String param = "abc") = param;
             valueReferencingFunc = myFunc;
             result = valueReferencingFunc();
