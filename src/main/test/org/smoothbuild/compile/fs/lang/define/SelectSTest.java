@@ -1,10 +1,10 @@
 package org.smoothbuild.compile.fs.lang.define;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.NList;
-
-import com.google.common.truth.Truth;
 
 public class SelectSTest extends TestContext {
   @Test
@@ -13,7 +13,7 @@ public class SelectSTest extends TestContext {
     var structTS = structTS("MyStruct", NList.nlist(sigS(intTS(), "field")));
     var structValue = annotatedValueS(11, annotationS, structTS, "structValue");
     var selectS = selectS(3, monoizeS(12, structValue), "field");
-    Truth.assertThat(selectS.toString())
+    assertThat(selectS.toString())
         .isEqualTo("""
             SelectS(
               selectable = MonoizeS(

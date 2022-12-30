@@ -1,15 +1,15 @@
 package org.smoothbuild.compile.fs.lang.define;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-
-import com.google.common.truth.Truth;
 
 public class OrderSTest extends TestContext {
   @Test
   public void to_string() {
     var orderS = orderS(3, intS(4, 44), intS(5, 55));
-    Truth.assertThat(orderS.toString())
+    assertThat(orderS.toString())
         .isEqualTo("""
             OrderS(
               evalT = [Int]

@@ -1,16 +1,16 @@
 package org.smoothbuild.compile.fs.lang.define;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-
-import com.google.common.truth.Truth;
 
 public class CallSTest extends TestContext {
   @Test
   public void to_string() {
     var funcS = monoizeS(4, varMap(varA(), intTS()), idFuncS());
     var callS = callS(3, funcS, intS(3, 7));
-    Truth.assertThat(callS.toString())
+    assertThat(callS.toString())
         .isEqualTo("""
             CallS(
               callee = MonoizeS(

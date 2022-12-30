@@ -18,7 +18,6 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestedTS;
-import org.smoothbuild.util.collect.NList;
 
 public class DeclarationTest extends TestContext {
   @Nested
@@ -289,7 +288,7 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
               .loadsWithSuccess()
-              .containsType(TestContext.structTS("MyStruct", NList.nlist(sigS(stringTS(), "field"))));
+              .containsType(structTS("MyStruct", nlist(sigS(stringTS(), "field"))));
         }
 
         @Test
@@ -1013,7 +1012,7 @@ public class DeclarationTest extends TestContext {
           module(funcCall("7,"))
               .loadsWithSuccess()
               .containsEvaluable(valueS(2, intTS(), "result",
-                  TestContext.callS(2, TestContext.monoizeS(2, intIdFuncS()), intS(2, 7))));
+                  callS(2, monoizeS(2, intIdFuncS()), intS(2, 7))));
         }
 
         @Test

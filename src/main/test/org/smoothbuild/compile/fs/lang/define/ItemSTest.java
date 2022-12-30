@@ -9,8 +9,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.common.truth.Truth;
-
 public class ItemSTest {
   private final String name = "name";
   private ItemS param;
@@ -30,14 +28,14 @@ public class ItemSTest {
   @Test
   public void type_getter() {
     param = new ItemS(stringTS(), name, Optional.empty(), location());
-    Truth.assertThat(param.type())
+    assertThat(param.type())
         .isEqualTo(stringTS());
   }
 
   @Test
   public void name_getter() {
     param = new ItemS(stringTS(), name, Optional.empty(), location());
-    Truth.assertThat(param.name())
+    assertThat(param.name())
         .isEqualTo(name);
   }
 
