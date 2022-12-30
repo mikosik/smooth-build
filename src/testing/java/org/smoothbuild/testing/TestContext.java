@@ -1285,11 +1285,11 @@ public class TestContext {
     return itemSPoly(line, type, name, body.map(b -> valueS(line, name, b)));
   }
 
-  public static ItemS itemS(int line, TypeS type, String name, NamedEvaluableS body) {
+  public static ItemS itemS(int line, TypeS type, String name, NamedValueS body) {
     return itemSPoly(line, type, name, Optional.of(body));
   }
 
-  public static ItemS itemSPoly(int line, TypeS type, String name, Optional<NamedEvaluableS> body) {
+  public static ItemS itemSPoly(int line, TypeS type, String name, Optional<NamedValueS> body) {
     return new ItemS(type, name, body, location(line));
   }
 

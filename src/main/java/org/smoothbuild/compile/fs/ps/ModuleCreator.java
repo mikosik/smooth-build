@@ -92,8 +92,7 @@ public class ModuleCreator {
   public void visitValue(NamedValueP namedValueP) {
     var typeInferrer = new TypeInferrer(types, bindings, logBuffer);
     if (typeInferrer.inferNamedValueSchema(namedValueP)) {
-      var valueS = psConverter.convertNamedValue(namedValueP);
-      bindings.add(namedValueP.name(), valueS);
+      bindings.add(namedValueP.name(), psConverter.convertNamedValue(namedValueP).map(v -> v));
     } else {
       bindings.add(namedValueP.name(), Optional.empty());
     }

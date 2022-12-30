@@ -28,6 +28,7 @@ import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
+import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
 import org.smoothbuild.compile.fs.lang.define.ParamRefS;
 import org.smoothbuild.compile.fs.lang.define.RefableS;
@@ -61,7 +62,7 @@ public class PsConverter {
     this.bindings = bindings;
   }
 
-  public Optional<NamedEvaluableS> convertNamedValue(NamedValueP namedValueP) {
+  public Optional<NamedValueS> convertNamedValue(NamedValueP namedValueP) {
     var schema = namedValueP.schemaS();
     var name = namedValueP.name();
     var location = namedValueP.location();
