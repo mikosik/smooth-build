@@ -30,8 +30,8 @@ public class Maps {
   }
 
   public static <T, U> ImmutableMap<T, U> override(
-      ImmutableMap<? extends T, ? extends U> overriding,
-      ImmutableMap<? extends T, ? extends U> overriden) {
+      Map<? extends T, ? extends U> overriding,
+      Map<? extends T, ? extends U> overriden) {
     return ImmutableMap.<T, U>builder()
         .putAll(overriding)
         .putAll(filterKeys(overriden, key -> !overriding.containsKey(key)))
