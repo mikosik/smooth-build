@@ -63,9 +63,7 @@ public abstract class Bindings<E> {
       if (outerScopeBindings == null) {
         return Optional.empty();
       } else {
-        @SuppressWarnings("unchecked") // safe because Optional is immutable
-        Optional<E> cast = (Optional<E>) outerScopeBindings.getOptional(name);
-        return cast;
+        return outerScopeBindings.getOptional(name).map(e -> e);
       }
     } else {
       return Optional.of(element);
