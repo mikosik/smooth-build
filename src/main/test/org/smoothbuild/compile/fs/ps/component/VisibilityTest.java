@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs.ps.component;
 
 import static org.smoothbuild.testing.TestingModuleLoader.err;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -659,21 +660,24 @@ public class VisibilityTest extends TestContext {
         public void value_succeeds() {
           module("otherModuleValue = 8;")
               .withImported("otherModuleValue = 7;")
-              .loadsWithSuccess();
+              .loadsWithSuccess()
+              .containsEvaluableWithSchema("otherModuleValue", schemaS(intTS()));
         }
 
         @Test
         public void func_succeeds() {
           module("otherModuleFunc = 7;")
               .withImported("otherModuleFunc() = 8;")
-              .loadsWithSuccess();
+              .loadsWithSuccess()
+              .containsEvaluableWithSchema("otherModuleFunc", schemaS(intTS()));
         }
 
         @Test
         public void constructor_succeeds() {
           module("otherModuleStruct = 7;")
               .withImported("OtherModuleStruct()")
-              .loadsWithSuccess();
+              .loadsWithSuccess()
+              .containsEvaluableWithSchema("otherModuleStruct", schemaS(intTS()));
         }
       }
 
@@ -707,21 +711,24 @@ public class VisibilityTest extends TestContext {
         public void value_succeeds() {
           module("otherModuleValue() = 8;")
               .withImported("otherModuleValue = 7;")
-              .loadsWithSuccess();
+              .loadsWithSuccess()
+              .containsEvaluableWithSchema("otherModuleValue", schemaS(funcTS(intTS())));
         }
 
         @Test
-        public void func_succeeds() {
+        public void function_succeeds() {
           module("otherModuleFunc() = 8;")
               .withImported("otherModuleFunc() = 7;")
-              .loadsWithSuccess();
+              .loadsWithSuccess()
+              .containsEvaluableWithSchema("otherModuleFunc", schemaS(funcTS(intTS())));
         }
 
         @Test
-        public void ctor_succeeds() {
+        public void constructor_succeeds() {
           module("otherModuleStruct() = 7;")
               .withImported("OtherModuleStruct()")
-              .loadsWithSuccess();
+              .loadsWithSuccess()
+              .containsEvaluableWithSchema("otherModuleStruct", schemaS(funcTS(intTS())));
         }
       }
 
@@ -889,14 +896,16 @@ public class VisibilityTest extends TestContext {
         public void base_type_succeeds() {
           var code = "String()";
           module(code)
-              .loadsWithSuccess();
+              .loadsWithSuccess()
+              .containsType(structTS("String", nlist()));
         }
 
         @Test
         public void struct_succeeds() {
           module("OtherModuleStruct()")
-              .withImported("OtherModuleStruct()")
-              .loadsWithSuccess();
+              .withImported("OtherModuleStruct(Int int)")
+              .loadsWithSuccess()
+              .containsType(structTS("OtherModuleStruct", nlist()));
         }
       }
 
