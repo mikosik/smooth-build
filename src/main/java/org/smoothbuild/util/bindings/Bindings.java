@@ -18,13 +18,12 @@ import com.google.common.collect.ImmutableMap;
 public abstract class Bindings<E> {
   private final Bindings<? extends E> outerScopeBindings;
 
-  public static <E> SingleScopeBindings<E> immutableBindings() {
-    return new SingleScopeBindings<>(ImmutableMap.of());
+  public static <E> FlatBindings<E> immutableBindings() {
+    return new FlatBindings<>(ImmutableMap.of());
   }
 
-  public static <E> SingleScopeBindings<E> immutableBindings(
-      Map<String, ? extends E> innerScopeMap) {
-    return new SingleScopeBindings<>(innerScopeMap);
+  public static <E> FlatBindings<E> immutableBindings(Map<String, ? extends E> innerScopeMap) {
+    return new FlatBindings<>(innerScopeMap);
   }
 
   public static <E> ImmutableBindings<E> immutableBindings(
@@ -86,7 +85,7 @@ public abstract class Bindings<E> {
     return Maps.override(innermostScopeMap(), outerScopeBindings.toMap());
   }
 
-  public static <E> SingleScopeBindings<E> override(
+  public static <E> FlatBindings<E> override(
       Bindings<E> overriding,
       Bindings<E> overriden) {
     return immutableBindings(Maps.override(overriding.toMap(), overriden.toMap()));

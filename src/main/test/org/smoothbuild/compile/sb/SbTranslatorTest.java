@@ -26,8 +26,8 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
+import org.smoothbuild.util.bindings.FlatBindings;
 import org.smoothbuild.util.bindings.ImmutableBindings;
-import org.smoothbuild.util.bindings.SingleScopeBindings;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
@@ -582,7 +582,7 @@ public class SbTranslatorTest extends TestContext {
     }
 
     private void assertTranslationIsCached(
-        FileLoader fileLoader, SingleScopeBindings<NamedEvaluableS> evaluables, ExprS exprS) {
+        FileLoader fileLoader, FlatBindings<NamedEvaluableS> evaluables, ExprS exprS) {
       var sbTranslator = newTranslator(fileLoader, evaluables);
       assertTranslationIsCached(exprS, sbTranslator);
     }
@@ -594,7 +594,7 @@ public class SbTranslatorTest extends TestContext {
   }
 
   private void assertTranslation(
-      SingleScopeBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB expected) {
+      FlatBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB expected) {
     assertTranslation(newTranslator(evaluables), exprS, expected);
   }
 
@@ -608,7 +608,7 @@ public class SbTranslatorTest extends TestContext {
 
   private void assertTranslation(
       FileLoader fileLoader,
-      SingleScopeBindings<NamedEvaluableS> evaluables,
+      FlatBindings<NamedEvaluableS> evaluables,
       ExprS exprS,
       ExprB expected) {
     var sbTranslator = newTranslator(fileLoader, evaluables);

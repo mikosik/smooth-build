@@ -105,8 +105,8 @@ import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
+import org.smoothbuild.util.bindings.FlatBindings;
 import org.smoothbuild.util.bindings.ImmutableBindings;
-import org.smoothbuild.util.bindings.SingleScopeBindings;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.vm.bytecode.BytecodeF;
@@ -1735,7 +1735,7 @@ public class TestContext {
   }
 
   @SafeVarargs
-  public static <T extends Named> SingleScopeBindings<T> bindings(T... nameds) {
+  public static <T extends Named> FlatBindings<T> bindings(T... nameds) {
     return immutableBindings(toMap(list(nameds)));
   }
 
