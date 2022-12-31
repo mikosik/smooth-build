@@ -4,7 +4,7 @@ import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.isVarName;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
@@ -20,7 +20,7 @@ import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.Strings;
 
 public class DetectUndefinedRefablesAndTypes {
-  public static Logs detectUndefinedRefablesAndTypes(ModuleP moduleP, DefinitionsS imported) {
+  public static Logs detectUndefinedRefablesAndTypes(ModuleP moduleP, ScopeS imported) {
     var log = new LogBuffer();
     var emptyScope = new ScopeP(mutableBindings(), mutableBindings());
     new Detector(imported, emptyScope, log)
@@ -29,11 +29,11 @@ public class DetectUndefinedRefablesAndTypes {
   }
 
   private static class Detector extends ScopingModuleVisitorP {
-    private final DefinitionsS imported;
+    private final ScopeS imported;
     private final ScopeP scope;
     private final Logger log;
 
-    public Detector(DefinitionsS imported, ScopeP scope, Logger log) {
+    public Detector(ScopeS imported, ScopeP scope, Logger log) {
       this.scope = scope;
       this.imported = imported;
       this.log = log;

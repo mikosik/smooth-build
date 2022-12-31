@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.expr.CallP;
@@ -39,7 +39,7 @@ import org.smoothbuild.util.collect.Named;
 import com.google.common.collect.ImmutableList;
 
 public class DefaultArgumentInjector {
-  public static Logs injectDefaultArguments(ModuleP moduleP, DefinitionsS imported) {
+  public static Logs injectDefaultArguments(ModuleP moduleP, ScopeS imported) {
     var logger = new LogBuffer();
     new Visitor(imported, immutableBindings(), logger)
         .visitModule(moduleP);
@@ -47,11 +47,11 @@ public class DefaultArgumentInjector {
   }
 
   private static class Visitor extends ScopingModuleVisitorP {
-    private final DefinitionsS imported;
+    private final ScopeS imported;
     private final Bindings<RefableP> refables;
     private final LogBuffer logger;
 
-    public Visitor(DefinitionsS imported, Bindings<RefableP> refables, LogBuffer logger) {
+    public Visitor(ScopeS imported, Bindings<RefableP> refables, LogBuffer logger) {
       this.imported = imported;
       this.refables = refables;
       this.logger = logger;

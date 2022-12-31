@@ -3,12 +3,9 @@ package org.smoothbuild.run;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 
-import java.util.Optional;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.fs.lang.base.Nal;
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.out.report.Console;
@@ -27,7 +24,7 @@ public class ListRunner {
   }
 
   public int run() {
-    Optional<DefinitionsS> definitions = definitionsLoader.loadDefinitions();
+    var definitions = definitionsLoader.loadDefinitions();
     if (definitions.isPresent()) {
       reporter.startNewPhase("Values that can be evaluated:");
       definitions.get()

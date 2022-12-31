@@ -8,7 +8,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.fs.FsTranslator;
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.install.ModuleResourcesDetector;
 import org.smoothbuild.out.report.Reporter;
@@ -36,7 +36,7 @@ public class DefinitionsLoader {
     this.reporter = reporter;
   }
 
-  public Optional<DefinitionsS> loadDefinitions() {
+  public Optional<ScopeS> loadDefinitions() {
     reporter.startNewPhase("Parsing");
     var modules = moduleResourcesDetector.detect(MODULES);
     var definitions = fsTranslator.translateFs(modules);

@@ -7,10 +7,10 @@ import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import java.util.Optional;
 
 import org.smoothbuild.compile.fs.lang.define.ConstructorS;
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ModuleS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
@@ -33,7 +33,7 @@ public class ModuleCreator {
   private final LogBuffer logBuffer;
   private final PsConverter psConverter;
 
-  public static Maybe<ModuleS> createModuleS(ModuleP moduleP, DefinitionsS imported) {
+  public static Maybe<ModuleS> createModuleS(ModuleP moduleP, ScopeS imported) {
     var logBuffer = new LogBuffer();
     var types = new OptionalBindings<>(imported.types().map(Optional::of));
     var evaluables = new OptionalBindings<>(imported.evaluables().map(Optional::of));
@@ -46,7 +46,7 @@ public class ModuleCreator {
     } else {
       var typeBindings = types.innerScopeBindingsReduced();
       var evaluableBindings = evaluables.innerScopeBindingsReduced();
-      var modS = new ModuleS(typeBindings, evaluableBindings);
+      var modS = new ModuleS(new ScopeS(typeBindings, evaluableBindings));
       return maybe(modS, logBuffer);
     }
   }

@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs;
 
 import static org.smoothbuild.compile.fs.lang.define.LoadInternalMod.loadInternalModule;
+import static org.smoothbuild.compile.fs.lang.define.ScopeS.override;
 import static org.smoothbuild.compile.fs.ps.PsTranslator.translatePs;
 
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.compile.fs.fp.FpTranslator;
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.log.MaybeProcessor;
 
@@ -25,12 +26,12 @@ public class FsTranslator {
     this.fpTranslator = fpTranslator;
   }
 
-  public Maybe<DefinitionsS> translateFs(List<ModuleResources> modules) {
+  public Maybe<ScopeS> translateFs(List<ModuleResources> modules) {
     return new Translator(fpTranslator, modules)
         .process();
   }
 
-  private static class Translator extends MaybeProcessor<DefinitionsS> {
+  private static class Translator extends MaybeProcessor<ScopeS> {
     private final FpTranslator fpTranslator;
     private final List<ModuleResources> modules;
 
@@ -40,15 +41,15 @@ public class FsTranslator {
     }
 
     @Override
-    protected DefinitionsS processImpl() throws FailedException {
+    protected ScopeS processImpl() throws FailedException {
       var internalModule = loadInternalModule();
-      var definitionsS = DefinitionsS.empty().withModule(internalModule);
+      var current = internalModule.members();
       for (ModuleResources moduleResources : modules) {
         var moduleP = addLogsAndGetValue(fpTranslator.translateFp(moduleResources));
-        var moduleS = addLogsAndGetValue(translatePs(moduleP, definitionsS));
-        definitionsS = definitionsS.withModule(moduleS);
+        var moduleS = addLogsAndGetValue(translatePs(moduleP, current));
+        current = override(moduleS.members(), current);
       }
-      return definitionsS;
+      return current;
     }
   }
 }

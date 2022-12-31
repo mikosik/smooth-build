@@ -3,7 +3,6 @@ package org.smoothbuild.util.bindings;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 import static org.smoothbuild.util.collect.Maps.mapValues;
-import static org.smoothbuild.util.collect.Maps.override;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,6 +10,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+
+import org.smoothbuild.util.collect.Maps;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -82,7 +83,13 @@ public abstract class Bindings<E> {
   }
 
   public ImmutableMap<String, E> toMap() {
-    return override(innermostScopeMap(), outerScopeBindings.toMap());
+    return Maps.override(innermostScopeMap(), outerScopeBindings.toMap());
+  }
+
+  public static <E> SingleScopeBindings<E> override(
+      Bindings<E> overriding,
+      Bindings<E> overriden) {
+    return immutableBindings(Maps.override(overriding.toMap(), overriden.toMap()));
   }
 
   @Override

@@ -7,24 +7,23 @@ import static org.smoothbuild.compile.fs.ps.ModuleCreator.createModuleS;
 import static org.smoothbuild.compile.fs.ps.ScopesInitializer.initializeScopes;
 import static org.smoothbuild.compile.fs.ps.ast.ModuleDependenciesSorter.sortByDependencies;
 
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.compile.fs.lang.define.ModuleS;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.log.MaybeProcessor;
 
 public class PsTranslator {
-  public static Maybe<ModuleS> translatePs(
-      ModuleP moduleP, DefinitionsS imported) {
+  public static Maybe<ModuleS> translatePs(ModuleP moduleP, ScopeS imported) {
     return new Translator(moduleP, imported)
         .process();
   }
 
   private static class Translator extends MaybeProcessor<ModuleS> {
-    private final DefinitionsS imported;
+    private final ScopeS imported;
     private final ModuleP moduleP;
 
-    private Translator(ModuleP moduleP, DefinitionsS imported) {
+    private Translator(ModuleP moduleP, ScopeS imported) {
       this.moduleP = moduleP;
       this.imported = imported;
     }

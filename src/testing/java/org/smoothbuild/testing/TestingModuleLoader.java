@@ -15,9 +15,9 @@ import java.util.ArrayList;
 
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.fp.FpTranslator;
-import org.smoothbuild.compile.fs.lang.define.DefinitionsS;
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.fs.space.FileResolver;
@@ -27,7 +27,7 @@ import org.smoothbuild.out.log.Maybe;
 public class TestingModuleLoader {
   private final String sourceCode;
   private String importedSourceCode;
-  private Maybe<DefinitionsS> definitions;
+  private Maybe<ScopeS> definitions;
 
   TestingModuleLoader(String sourceCode) {
     this.sourceCode = sourceCode;
@@ -80,7 +80,7 @@ public class TestingModuleLoader {
         .isEqualTo(expected);
   }
 
-  public DefinitionsS getLoadedDefinitions() {
+  public ScopeS getLoadedDefinitions() {
     return definitions.value();
   }
 
@@ -113,7 +113,7 @@ public class TestingModuleLoader {
         + "\n====================\n";
   }
 
-  private Maybe<DefinitionsS> load() {
+  private Maybe<ScopeS> load() {
     var fileResolver = mock(FileResolver.class);
     var modules = new ArrayList<ModuleResources>();
     if (importedSourceCode != null) {
