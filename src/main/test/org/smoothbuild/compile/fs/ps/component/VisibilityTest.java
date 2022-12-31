@@ -658,19 +658,22 @@ public class VisibilityTest extends TestContext {
         @Test
         public void value_succeeds() {
           module("otherModuleValue = 8;")
-              .withImported("otherModuleValue = 7;");
+              .withImported("otherModuleValue = 7;")
+              .loadsWithSuccess();
         }
 
         @Test
         public void func_succeeds() {
           module("otherModuleFunc = 7;")
-              .withImported("otherModuleFunc() = 8;");
+              .withImported("otherModuleFunc() = 8;")
+              .loadsWithSuccess();
         }
 
         @Test
         public void constructor_succeeds() {
           module("otherModuleStruct = 7;")
-              .withImported("OtherModuleStruct()");
+              .withImported("OtherModuleStruct()")
+              .loadsWithSuccess();
         }
       }
 
@@ -703,19 +706,22 @@ public class VisibilityTest extends TestContext {
         @Test
         public void value_succeeds() {
           module("otherModuleValue() = 8;")
-              .withImported("otherModuleValue = 7;");
+              .withImported("otherModuleValue = 7;")
+              .loadsWithSuccess();
         }
 
         @Test
         public void func_succeeds() {
           module("otherModuleFunc() = 8;")
-              .withImported("otherModuleFunc() = 7;");
+              .withImported("otherModuleFunc() = 7;")
+              .loadsWithSuccess();
         }
 
         @Test
         public void ctor_succeeds() {
           module("otherModuleStruct() = 7;")
-              .withImported("OtherModuleStruct()");
+              .withImported("OtherModuleStruct()")
+              .loadsWithSuccess();
         }
       }
 
