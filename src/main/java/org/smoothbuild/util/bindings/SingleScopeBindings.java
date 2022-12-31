@@ -9,6 +9,7 @@ public class SingleScopeBindings<E> extends ImmutableBindings<E> {
     super(null, innerScopeMap);
   }
 
+  @Override
   public ImmutableMap<String, E> toMap() {
     return innerScopeMap;
   }

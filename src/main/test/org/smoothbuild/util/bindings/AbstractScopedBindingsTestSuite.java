@@ -38,6 +38,25 @@ public abstract class AbstractScopedBindingsTestSuite {
     }
   }
 
+  @Nested
+  class _to_map {
+    @Test
+    public void returns_map_containing_elements_from_outer_and_inner_scope() {
+      var outer = immutableBindings(mapOfElems(elem("1", 1)));
+      var bindings = newMapBindings(outer, elem("2", 2));
+      assertThat(bindings.toMap())
+          .isEqualTo(mapOfElems(elem("1", 1), elem("2", 2)));
+    }
+
+    @Test
+    public void returned_map_does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
+      var outer = immutableBindings(mapOfElems(elem("1", 1)));
+      var bindings = newMapBindings(outer, elem("1", 11));
+      assertThat(bindings.toMap())
+          .isEqualTo(mapOfElems(elem("1", 11)));
+    }
+  }
+
   @Test
   public void element_in_inner_bounds_shadows_element_from_outer_bounds() {
     var outer = immutableBindings(mapOfElems(elem("value-a", 7)));

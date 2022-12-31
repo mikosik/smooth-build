@@ -3,6 +3,7 @@ package org.smoothbuild.util.bindings;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 import static org.smoothbuild.util.collect.Maps.mapValues;
+import static org.smoothbuild.util.collect.Maps.override;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -78,6 +79,10 @@ public abstract class Bindings<E> {
       var mappedOuter = outerScopeBindings.map(mapper);
       return immutableBindings(mappedOuter, mappedInner);
     }
+  }
+
+  public ImmutableMap<String, E> toMap() {
+    return override(innermostScopeMap(), outerScopeBindings.toMap());
   }
 
   @Override
