@@ -1,22 +1,12 @@
 package org.smoothbuild.util.bindings;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class MutableBindings<E> extends Bindings<E> {
-  private final HashMap<String, E> innerScopeMap;
-
-  protected MutableBindings(Bindings<? extends E> outerScopeBindings) {
-    super(outerScopeBindings);
-    this.innerScopeMap = new HashMap<>();
-  }
-
-  @Override
-  protected Map<String, E> innermostScopeMapImpl() {
-    return innerScopeMap;
-  }
-
-  public E add(String name, E elem) {
-    return innerScopeMap.put(name, elem);
-  }
+public sealed interface MutableBindings<E> extends Bindings<E>
+    permits FlatMutableBindings, ScopedMutableBindings {
+  /**
+   * @return element that has been overwritten. For ScopedBindings,
+   * when element is present in outer scoped, adding element with same
+   * name doesn't overwrite one from outer scope but shadows it so
+   * in such case method returns null.
+   */
+  public E add(String name, E elem);
 }

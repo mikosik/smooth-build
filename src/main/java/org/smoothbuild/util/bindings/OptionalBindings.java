@@ -1,5 +1,6 @@
 package org.smoothbuild.util.bindings;
 
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Maps.mapEntries;
 
 import java.util.Map;
@@ -7,8 +8,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class OptionalBindings<E> extends MutableBindings<Optional<E>> {
-
+public final class OptionalBindings<E> extends ScopedMutableBindings<Optional<E>> {
   public OptionalBindings(Bindings<? extends Optional<? extends E>> outerScopeBindings) {
     // Cast is safe here as outerScopeBindings won't be modified.
     super(unsafeCast(outerScopeBindings));
@@ -21,12 +21,12 @@ public class OptionalBindings<E> extends MutableBindings<Optional<E>> {
     return castBindings;
   }
 
-  public FlatBindings<E> innerScopeBindingsReduced() {
-    return immutableBindings(
-        mapEntries(innermostScopeMapImpl(), OptionalBindings::reduceOptionals));
+  public FlatImmutableBindings<E> innerScopeBindingsReduced() {
+    return immutableBindings(mapEntries(
+        innerMostScopeBindings().asMap(), OptionalBindings::reduceOptionals));
   }
 
-  private static <T> Entry<String, T> reduceOptionals(Entry<String, Optional<T>> e) {
+  private static <T> Entry<String, T> reduceOptionals(Entry<String, ? extends Optional<T>> e) {
     return Map.entry(
         e.getKey(),
         (e.getValue()).orElseThrow(() -> newNoSuchElementException(e.getKey())));

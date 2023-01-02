@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.fs;
 
 import static org.smoothbuild.compile.fs.lang.define.LoadInternalMod.loadInternalModule;
-import static org.smoothbuild.compile.fs.lang.define.ScopeS.override;
+import static org.smoothbuild.compile.fs.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.fs.ps.PsTranslator.translatePs;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class FsTranslator {
       for (ModuleResources moduleResources : modules) {
         var moduleP = addLogsAndGetValue(fpTranslator.translateFp(moduleResources));
         var moduleS = addLogsAndGetValue(translatePs(moduleP, current));
-        current = override(moduleS.members(), current);
+        current = scopeS(current, moduleS.members());
       }
       return current;
     }

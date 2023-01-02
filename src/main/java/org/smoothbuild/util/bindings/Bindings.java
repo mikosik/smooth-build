@@ -1,126 +1,47 @@
 package org.smoothbuild.util.bindings;
 
-import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Iterables.joinToString;
-import static org.smoothbuild.util.collect.Maps.mapValues;
-
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.smoothbuild.util.collect.Maps;
-
 import com.google.common.collect.ImmutableMap;
 
-public abstract class Bindings<E> {
-  private final Bindings<? extends E> outerScopeBindings;
-
-  public static <E> FlatBindings<E> immutableBindings() {
-    return new FlatBindings<>(ImmutableMap.of());
+public sealed interface Bindings<E>
+    permits AbstractBindings, ImmutableBindings, MutableBindings {
+  public static <E> FlatImmutableBindings<E> immutableBindings() {
+    return new FlatImmutableBindings<>(ImmutableMap.of());
   }
 
-  public static <E> FlatBindings<E> immutableBindings(Map<String, ? extends E> innerScopeMap) {
-    return new FlatBindings<>(innerScopeMap);
+  public static <E> FlatImmutableBindings<E> immutableBindings(Map<String, E> innerScopeMap) {
+    return new FlatImmutableBindings<>(innerScopeMap);
   }
 
-  public static <E> ImmutableBindings<E> immutableBindings(
+  public static <E> ScopedImmutableBindings<E> immutableBindings(
       ImmutableBindings<? extends E> outerScopeBindings, Map<String, ? extends E> innerScopeMap) {
-    return new ImmutableBindings<>(outerScopeBindings, innerScopeMap);
+    return immutableBindings(outerScopeBindings, immutableBindings(innerScopeMap));
   }
 
-  public static <T> MutableBindings<T> mutableBindings() {
-    return new MutableBindings<>(null);
+  public static <E> ScopedImmutableBindings<E> immutableBindings(
+      ImmutableBindings<? extends E> outerScopeBindings,
+      ImmutableBindings<? extends E> innerScopeBindings) {
+    return new ScopedImmutableBindings<>(outerScopeBindings, innerScopeBindings);
   }
 
-  public static <T> MutableBindings<T> mutableBindings(Bindings<? extends T> outerScopeBindings) {
-    return new MutableBindings<>(outerScopeBindings);
+  public static <T> FlatMutableBindings<T> mutableBindings() {
+    return new FlatMutableBindings<>();
   }
 
-  protected Bindings(Bindings<? extends E> outerScopeBindings) {
-    this.outerScopeBindings = outerScopeBindings;
+  public static <T> ScopedMutableBindings<T> mutableBindings(Bindings<T> outerScopeBindings) {
+    return new ScopedMutableBindings<>(outerScopeBindings);
   }
 
-  public E get(String name) {
-    return getOptional(name)
-        .orElseThrow(() -> new NoSuchElementException(name));
-  }
+  public boolean contains(String name);
 
-  public boolean contains(String name) {
-    return getOptional(name).isPresent();
-  }
+  public E get(String name);
 
-  public Map<String, E> innermostScopeMap() {
-    return ImmutableMap.copyOf(innermostScopeMapImpl());
-  }
+  public Optional<E> getOptional(String name);
 
-  protected abstract Map<String, E> innermostScopeMapImpl();
+  public <M> Bindings<M> map(Function<? super E, M> mapper);
 
-  public Optional<E> getOptional(String name) {
-    E element = innermostScopeMapImpl().get(name);
-    if (element == null) {
-      if (outerScopeBindings == null) {
-        return Optional.empty();
-      } else {
-        return outerScopeBindings.getOptional(name).map(e -> e);
-      }
-    } else {
-      return Optional.of(element);
-    }
-  }
-
-  public <T> ImmutableBindings<T> map(Function<? super E, T> mapper) {
-    var mappedInner = mapValues(innermostScopeMapImpl(), mapper);
-    if (outerScopeBindings == null) {
-      return immutableBindings(mappedInner);
-    } else {
-      var mappedOuter = outerScopeBindings.map(mapper);
-      return immutableBindings(mappedOuter, mappedInner);
-    }
-  }
-
-  public ImmutableMap<String, E> toMap() {
-    return Maps.override(innermostScopeMap(), outerScopeBindings.toMap());
-  }
-
-  public static <E> FlatBindings<E> override(
-      Bindings<E> overriding,
-      Bindings<E> overriden) {
-    return immutableBindings(Maps.override(overriding.toMap(), overriden.toMap()));
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (this == object) {
-      return true;
-    }
-    return object instanceof Bindings<?> that
-        && Objects.equals(this.outerScopeBindings, that.outerScopeBindings)
-        && Objects.equals(this.innermostScopeMapImpl(), that.innermostScopeMapImpl());
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(outerScopeBindings, innermostScopeMapImpl());
-  }
-
-  @Override
-  public String toString() {
-    var innerBindings = bindingsToString(innermostScopeMapImpl());
-    if (outerScopeBindings == null) {
-      return innerBindings;
-    } else {
-      return outerScopeBindings + "\n" + indent(innerBindings);
-    }
-  }
-  public static <T> String bindingsToString(Map<String, T> bindings) {
-    var string = joinToString(bindings.entrySet(), Bindings::bindingToString, "\n");
-    return string.isEmpty() ? "<no bindings>" : string;
-  }
-
-  private static <T> String bindingToString(Entry<String, T> e) {
-    return e.getKey() + " -> " + e.getValue();
-  }
+  public ImmutableMap<String, E> asMap();
 }

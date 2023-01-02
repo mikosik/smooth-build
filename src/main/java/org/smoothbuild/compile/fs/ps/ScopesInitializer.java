@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs.ps;
 
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
+import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
@@ -27,7 +28,7 @@ import org.smoothbuild.util.bindings.MutableBindings;
 public class ScopesInitializer extends ModuleVisitorP {
   public static Logs initializeScopes(ModuleP moduleP) {
     var log = new LogBuffer();
-    new Initializer(new ScopeP(null, null), log)
+    new Initializer(new ScopeP(mutableBindings(), mutableBindings()), log)
         .visitModule(moduleP);
     return log;
   }
@@ -54,7 +55,7 @@ public class ScopesInitializer extends ModuleVisitorP {
     }
 
     private void addFunctionParameterDefaultValuesToModuleScope(ScopeP moduleScope) {
-      for (var refableP : moduleScope.refables().innermostScopeMap().values()) {
+      for (var refableP : moduleScope.refables().asMap().values()) {
         if (refableP instanceof NamedFuncP namedFuncP) {
           for (var param : namedFuncP.params()) {
             if (param.defaultValue().isPresent()) {

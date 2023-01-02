@@ -1,16 +1,17 @@
 package org.smoothbuild.compile.fs.lang.define;
 
-import org.smoothbuild.util.bindings.Bindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+
 import org.smoothbuild.util.bindings.ImmutableBindings;
 
 public record ScopeS(
   ImmutableBindings<TypeDefinitionS> types,
   ImmutableBindings<NamedEvaluableS> evaluables) {
 
-  public static ScopeS override(ScopeS overriding, ScopeS overriden) {
+  public static ScopeS scopeS(ScopeS outer, ScopeS inner) {
     return new ScopeS(
-        Bindings.override(overriding.types(), overriden.types()),
-        Bindings.override(overriding.evaluables(), overriden.evaluables())
+        immutableBindings(outer.types(), inner.types()),
+        immutableBindings(outer.evaluables(), inner.evaluables())
     );
   }
 }
