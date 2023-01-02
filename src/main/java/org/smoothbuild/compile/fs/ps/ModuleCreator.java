@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs.ps;
 
 import static org.smoothbuild.compile.fs.lang.define.ScopeS.scopeS;
+import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
@@ -16,7 +17,6 @@ import org.smoothbuild.compile.fs.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.lang.type.StructTS;
-import org.smoothbuild.compile.fs.lang.type.VarSetS;
 import org.smoothbuild.compile.fs.ps.ast.expr.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.expr.NamedFuncP;
@@ -79,7 +79,7 @@ public class ModuleCreator {
     var params = structP.fields().map(
         f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.location()));
     var funcTS = new FuncTS(ItemS.toTypes(params), structT);
-    var schema = new FuncSchemaS(VarSetS.varSetS(), funcTS);
+    var schema = new FuncSchemaS(varSetS(), funcTS);
     var location = structP.location();
     return new ConstructorS(schema, name, params, location);
   }

@@ -78,7 +78,7 @@ public class PsConverter {
   }
 
   private NList<ItemS> convertParams(NamedFuncP namedFuncP) {
-    return NList.nlist(map(namedFuncP.params().list(), this::convertParam));
+    return nlist(map(namedFuncP.params().list(), this::convertParam));
   }
 
   private NList<ItemS> convertParams(NList<ItemP> params) {

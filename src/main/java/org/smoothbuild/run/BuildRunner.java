@@ -12,10 +12,10 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.fs.lang.define.RefS;
 import org.smoothbuild.compile.fs.lang.define.MonoizeS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.define.RefS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.EvaluatorExcS;

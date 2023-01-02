@@ -1,6 +1,8 @@
 package org.smoothbuild.compile.fs.ps.component;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.compile.fs.lang.type.TypeFS.INT;
+import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.Optional;
@@ -11,10 +13,7 @@ import org.smoothbuild.compile.fs.lang.define.CallS;
 import org.smoothbuild.compile.fs.lang.define.EvaluableS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
-import org.smoothbuild.compile.fs.lang.type.TypeFS;
-import org.smoothbuild.compile.fs.lang.type.VarSetS;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.collect.NList;
 
 public class ExprSLoadingTest extends TestContext {
   @Nested
@@ -61,9 +60,9 @@ public class ExprSLoadingTest extends TestContext {
               (Int int)
                 -> int;
             """;
-        var anonymousFunc = TestContext.anonymousFuncS(
-            2, NList.nlist(TestContext.itemS(2, TypeFS.INT, "int")), paramRefS(3, TypeFS.INT, "int"));
-        var monoized = TestContext.monoizeS(2, varMap(), anonymousFunc);
+        var anonymousFunc = anonymousFuncS(
+            2, nlist(itemS(2, INT, "int")), paramRefS(3, INT, "int"));
+        var monoized = monoizeS(2, varMap(), anonymousFunc);
         var result = valueS(1, "result", monoized);
         module(code)
             .loadsWithSuccess()
@@ -78,11 +77,11 @@ public class ExprSLoadingTest extends TestContext {
                 -> a;
             """;
         var body = paramRefS(3, varA(), "a");
-        var anonymousFunc = anonymousFuncS(2, VarSetS.varSetS(), NList.nlist(
-            TestContext.itemS(2, varA(), "a")), body);
-        var monoized = TestContext.monoizeS(2, varMap(), anonymousFunc);
-        var myFunc = TestContext.funcS(1, "myFunc", NList.nlist(
-            TestContext.itemS(1, varA(), "outerA")), monoized);
+        var anonymousFunc = anonymousFuncS(2, varSetS(), nlist(
+            itemS(2, varA(), "a")), body);
+        var monoized = monoizeS(2, varMap(), anonymousFunc);
+        var myFunc = funcS(1, "myFunc", nlist(
+            itemS(1, varA(), "outerA")), monoized);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
@@ -98,12 +97,12 @@ public class ExprSLoadingTest extends TestContext {
             """;
         var deeperBody = paramRefS(4, varA(), "a");
         var deeperAnonymousFunc = anonymousFuncS(
-            3, VarSetS.varSetS(), NList.nlist(TestContext.itemS(3, varA(), "a")), deeperBody);
-        var monoDeeperAnonymousFunc = TestContext.monoizeS(3, varMap(), deeperAnonymousFunc);
-        var anonFunc = anonymousFuncS(2, VarSetS.varSetS(), nlist(), monoDeeperAnonymousFunc);
-        var monoAnonymousFunc = TestContext.monoizeS(2, varMap(), anonFunc);
-        var myFunc = TestContext.funcS(1, "myFunc", NList.nlist(
-            TestContext.itemS(1, varA(), "outerA")), monoAnonymousFunc);
+            3, varSetS(), nlist(itemS(3, varA(), "a")), deeperBody);
+        var monoDeeperAnonymousFunc = monoizeS(3, varMap(), deeperAnonymousFunc);
+        var anonFunc = anonymousFuncS(2, varSetS(), nlist(), monoDeeperAnonymousFunc);
+        var monoAnonymousFunc = monoizeS(2, varMap(), anonFunc);
+        var myFunc = funcS(1, "myFunc", nlist(
+            itemS(1, varA(), "outerA")), monoAnonymousFunc);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
@@ -116,9 +115,9 @@ public class ExprSLoadingTest extends TestContext {
               (A a)
                 -> a;
             """;
-        var anonymousFunc = TestContext.anonymousFuncS(
-            2, NList.nlist(TestContext.itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
-        var monoized = TestContext.monoizeS(2, varMap(varA(), varB()), anonymousFunc);
+        var anonymousFunc = anonymousFuncS(
+            2, nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
+        var monoized = monoizeS(2, varMap(varA(), varB()), anonymousFunc);
         var result = valueS(1, "result", monoized);
         module(code)
             .loadsWithSuccess()
@@ -133,24 +132,24 @@ public class ExprSLoadingTest extends TestContext {
         @Test
         public void with_reference_to_poly_val() {
           var polyVal = bytecodeValueS(4, varA(), "polyVal");
-          var monoized = TestContext.monoizeS(1, varMap(varA(), varA()), polyVal);
-          var arg = TestContext.monoizeS(2, varMap(varA(), intTS()), valueS(1, "myFunc:b", monoized));
+          var monoized = monoizeS(1, varMap(varA(), varA()), polyVal);
+          var arg = monoizeS(2, varMap(varA(), intTS()), valueS(1, "myFunc:b", monoized));
           test_default_arg("polyVal", arg);
         }
 
         @Test
         public void with_reference_to_poly_func() {
-          var polyFunc = TestContext.bytecodeFuncS(6, varA(), "polyFunc", nlist());
-          var monoized = TestContext.monoizeS(1, varMap(varA(), varA()), polyFunc);
-          var paramDefaultValue = valueS("myFunc:b", TestContext.callS(1, monoized));
-          var expected = TestContext.monoizeS(2, varMap(varA(), intTS()), paramDefaultValue);
+          var polyFunc = bytecodeFuncS(6, varA(), "polyFunc", nlist());
+          var monoized = monoizeS(1, varMap(varA(), varA()), polyFunc);
+          var paramDefaultValue = valueS("myFunc:b", callS(1, monoized));
+          var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultValue);
           test_default_arg("polyFunc()", expected);
         }
 
         @Test
         public void with_reference_to_int() {
           var paramDefaultValue = valueS("myFunc:b", intS(1, 7));
-          test_default_arg("7", TestContext.monoizeS(2, paramDefaultValue));
+          test_default_arg("7", monoizeS(2, paramDefaultValue));
         }
 
         private void test_default_arg(String bodyCode, ExprS expected) {
@@ -180,7 +179,7 @@ public class ExprSLoadingTest extends TestContext {
             result = myReturnInt();
             """;
         var myReturnInt = returnIntFuncS();
-        var result = valueS(2, intTS(), "result", TestContext.callS(2, TestContext.monoizeS(2, myReturnInt)));
+        var result = valueS(2, intTS(), "result", callS(2, monoizeS(2, myReturnInt)));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -193,7 +192,7 @@ public class ExprSLoadingTest extends TestContext {
             result = myIntId(3);
             """;
         var myIntId = intIdFuncS();
-        var result = valueS(2, intTS(), "result", TestContext.callS(2, TestContext.monoizeS(2, myIntId), intS(2, 3)));
+        var result = valueS(2, intTS(), "result", callS(2, monoizeS(2, myIntId), intS(2, 3)));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -207,7 +206,7 @@ public class ExprSLoadingTest extends TestContext {
               7);
             """;
         var myIntId = intIdFuncS();
-        var result = valueS(2, intTS(), "result", TestContext.callS(2, TestContext.monoizeS(2, myIntId), intS(3, 7)));
+        var result = valueS(2, intTS(), "result", callS(2, monoizeS(2, myIntId), intS(3, 7)));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -221,7 +220,7 @@ public class ExprSLoadingTest extends TestContext {
               > myIntId();
             """;
         var myIntId = intIdFuncS();
-        var result = valueS(2, intTS(), "result", TestContext.callS(3, TestContext.monoizeS(3, myIntId), intS(2, 7)));
+        var result = valueS(2, intTS(), "result", callS(3, monoizeS(3, myIntId), intS(2, 7)));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -235,8 +234,8 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(2, intTS(), "result",
-                TestContext.callS(2,
-                    TestContext.monoizeS(2, varMap(varA(), intTS()), idFuncS()),
+                callS(2,
+                    monoizeS(2, varMap(varA(), intTS()), idFuncS()),
                     intS(2, 7))));
       }
 
@@ -248,8 +247,8 @@ public class ExprSLoadingTest extends TestContext {
             result = myValue();
             """;
         var myReturnInt = returnIntFuncS();
-        var myValue = valueS(2, funcTS(intTS()), "myValue", TestContext.monoizeS(2, myReturnInt));
-        var result = valueS(3, intTS(), "result", TestContext.callS(3, TestContext.monoizeS(3, myValue)));
+        var myValue = valueS(2, funcTS(intTS()), "myValue", monoizeS(2, myReturnInt));
+        var result = valueS(3, intTS(), "result", callS(3, monoizeS(3, myValue)));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -264,8 +263,8 @@ public class ExprSLoadingTest extends TestContext {
               7);
             """;
         var myIntId = intIdFuncS();
-        var myValue = valueS(2, TestContext.funcTS(intTS(), intTS()), "myValue", TestContext.monoizeS(2, myIntId));
-        var result = valueS(3, intTS(), "result", TestContext.callS(3, TestContext.monoizeS(3, myValue), intS(4, 7)));
+        var myValue = valueS(2, funcTS(intTS(), intTS()), "myValue", monoizeS(2, myIntId));
+        var result = valueS(3, intTS(), "result", callS(3, monoizeS(3, myValue), intS(4, 7)));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -273,7 +272,7 @@ public class ExprSLoadingTest extends TestContext {
 
       @Test
       public void with_ctor_reference() {
-        var struct = TestContext.structTS("MyStruct", NList.nlist(sigS(stringTS(), "field")));
+        var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var constructor = constructorS(1, struct, "MyStruct");
         module("""
           MyStruct(
@@ -293,9 +292,9 @@ public class ExprSLoadingTest extends TestContext {
             result = MyStruct(
               "aaa");
             """;
-        var struct = TestContext.structTS("MyStruct", NList.nlist(sigS(stringTS(), "field")));
+        var struct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
         var constructor = constructorS(1, struct);
-        var resultBody = TestContext.callS(4, TestContext.monoizeS(4, constructor), stringS(5, "aaa"));
+        var resultBody = callS(4, monoizeS(4, constructor), stringS(5, "aaa"));
         var result = valueS(4, struct, "result", resultBody);
         module(code)
             .loadsWithSuccess()
@@ -309,8 +308,8 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(
-                1, stringTS(), "result", NList.nlist(TestContext.itemS(1, funcTS(stringTS()), "f")),
-                TestContext.callS(1, paramRefS(funcTS(stringTS()), "f"))));
+                1, stringTS(), "result", nlist(itemS(1, funcTS(stringTS()), "f")),
+                callS(1, paramRefS(funcTS(stringTS()), "f"))));
       }
 
       @Test
@@ -320,9 +319,9 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(
-                1, stringTS(), "result", NList.nlist(
-                    TestContext.itemS(1, TestContext.funcTS(blobTS(), stringTS()), "f")),
-                TestContext.callS(1, paramRefS(TestContext.funcTS(blobTS(), stringTS()), "f"), blobS(1, 9))));
+                1, stringTS(), "result", nlist(
+                    itemS(1, funcTS(blobTS(), stringTS()), "f")),
+                callS(1, paramRefS(funcTS(blobTS(), stringTS()), "f"), blobS(1, 9))));
       }
     }
 
@@ -336,7 +335,7 @@ public class ExprSLoadingTest extends TestContext {
               myValue;
             """;
         var myValue = valueS(1, stringTS(), "myValue", stringS("abc"));
-        var result = valueS(2, stringTS(), "result", TestContext.monoizeS(3, myValue));
+        var result = valueS(2, stringTS(), "result", monoizeS(3, myValue));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -351,7 +350,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(2, arrayTS(intTS()), "result",
-                TestContext.monoizeS(3, varMap(varA(), intTS()),
+                monoizeS(3, varMap(varA(), intTS()),
                     valueS(1, arrayTS(varA()), "myValue", orderS(varA())))));
       }
 
@@ -362,8 +361,8 @@ public class ExprSLoadingTest extends TestContext {
             ()->String result =
               myFunc;
             """;
-        var myFunc = TestContext.funcS(1, "myFunc", nlist(), stringS("abc"));
-        var result = valueS(2, funcTS(stringTS()), "result", TestContext.monoizeS(3, myFunc));
+        var myFunc = funcS(1, "myFunc", nlist(), stringS("abc"));
+        var result = valueS(2, funcTS(stringTS()), "result", monoizeS(3, myFunc));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -376,24 +375,24 @@ public class ExprSLoadingTest extends TestContext {
             (Int)->Int result =
               myId;
             """;
-        var myId = TestContext.funcS(1, "myId", NList.nlist(TestContext.itemS(varA(), "a")), paramRefS(1, varA(), "a"));
-        var resultBody = TestContext.monoizeS(3, varMap(varA(), intTS()), myId);
-        var result = valueS(2, TestContext.funcTS(intTS(), intTS()), "result", resultBody);
+        var myId = funcS(1, "myId", nlist(itemS(varA(), "a")), paramRefS(1, varA(), "a"));
+        var resultBody = monoizeS(3, varMap(varA(), intTS()), myId);
+        var result = valueS(2, funcTS(intTS(), intTS()), "result", resultBody);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
       }
 
       @Test
-      public void to_ctor() {
+      public void to_constructor() {
         var code = """
             MyStruct()
             ()->MyStruct result =
               MyStruct;
             """;
-        var structT = TestContext.structTS("MyStruct", nlist());
+        var structT = structTS("MyStruct", nlist());
         var constructor = constructorS(1, structT);
-        var result = valueS(2, funcTS(structT), "result", TestContext.monoizeS(3, constructor));
+        var result = valueS(2, funcTS(structT), "result", monoizeS(3, constructor));
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(result);
@@ -413,7 +412,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(
-                1, arrayTS(blobTS()), "result", TestContext.orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
+                1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
       }
 
       @Test
@@ -426,7 +425,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(
-                1, arrayTS(blobTS()), "result", TestContext.orderS(2, blobTS(), blobS(1, 7), blobS(3, 8))));
+                1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(1, 7), blobS(3, 8))));
       }
 
       @Test
@@ -438,8 +437,8 @@ public class ExprSLoadingTest extends TestContext {
             returnInt,
           ];
           """;
-        var returnInt = TestContext.funcS(1, "returnInt", nlist(), intS(1, 7));
-        var orderS = TestContext.orderS(3, TestContext.monoizeS(4, returnInt));
+        var returnInt = funcS(1, "returnInt", nlist(), intS(1, 7));
+        var orderS = orderS(3, monoizeS(4, returnInt));
         var expected = valueS(2, "result", orderS);
         module(code)
             .loadsWithSuccess()
@@ -454,7 +453,7 @@ public class ExprSLoadingTest extends TestContext {
             = param1;
           """;
       var body = paramRefS(2, blobTS(), "param1");
-      var myFunc = funcS(1, blobTS(), "myFunc", NList.nlist(TestContext.itemS(1, blobTS(), "param1")), body);
+      var myFunc = funcS(1, blobTS(), "myFunc", nlist(itemS(1, blobTS(), "param1")), body);
       module(code)
           .loadsWithSuccess()
           .containsEvaluable(myFunc);
@@ -471,10 +470,10 @@ public class ExprSLoadingTest extends TestContext {
           result = getStruct()
             .field;
           """;
-      var myStruct = TestContext.structTS("MyStruct", NList.nlist(sigS(stringTS(), "field")));
-      var getStruct = TestContext.annotatedFuncS(2, nativeAnnotationS(), myStruct, "getStruct",
+      var myStruct = structTS("MyStruct", nlist(sigS(stringTS(), "field")));
+      var getStruct = annotatedFuncS(2, nativeAnnotationS(), myStruct, "getStruct",
           nlist());
-      var resultBody = selectS(7, TestContext.callS(6, TestContext.monoizeS(6, getStruct)), "field");
+      var resultBody = selectS(7, callS(6, monoizeS(6, getStruct)), "field");
       var result = valueS(6, stringTS(), "result", resultBody);
       module(code)
           .loadsWithSuccess()
@@ -505,7 +504,7 @@ public class ExprSLoadingTest extends TestContext {
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluable(valueS(1, arrayTS(varA()), "myValue", TestContext.orderS(2, varA())));
+            .containsEvaluable(valueS(1, arrayTS(varA()), "myValue", orderS(2, varA())));
       }
 
       @Test
@@ -551,7 +550,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(funcS(1, arrayTS(varA()), "myFunc", nlist(),
-                TestContext.orderS(2, varA())));
+                orderS(2, varA())));
       }
 
       @Test
@@ -563,7 +562,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(
-                funcS(1, stringTS(), "myFunc", NList.nlist(TestContext.itemS(2, blobTS(), "param1")),
+                funcS(1, stringTS(), "myFunc", nlist(itemS(2, blobTS(), "param1")),
                     stringS(3, "abc")));
       }
 
@@ -576,7 +575,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(
-                funcS(1, varA(), "myFunc", NList.nlist(TestContext.itemS(2, varA(), "a")),
+                funcS(1, varA(), "myFunc", nlist(itemS(2, varA(), "a")),
                     paramRefS(3, varA(), "a")));
       }
 
@@ -588,8 +587,8 @@ public class ExprSLoadingTest extends TestContext {
                 0x07)
                 = "abc";
             """;
-        var params = NList.nlist(
-            TestContext.itemS(2, blobTS(), "param1", valueS(2, "myFunc:param1", blobS(3, 7))));
+        var params = nlist(
+            itemS(2, blobTS(), "param1", valueS(2, "myFunc:param1", blobS(3, 7))));
         var myFunc = funcS(1, stringTS(), "myFunc", params, stringS(4, "abc"));
         module(code)
             .loadsWithSuccess()
@@ -604,7 +603,7 @@ public class ExprSLoadingTest extends TestContext {
                 7)
                 = a;
             """;
-        var params = NList.nlist(TestContext.itemS(2, varA(), "a", valueS(2, "myFunc:a", intS(3, 7))));
+        var params = nlist(itemS(2, varA(), "a", valueS(2, "myFunc:a", intS(3, 7))));
         var myFunc = funcS(1, varA(), "myFunc", params, paramRefS(4, varA(), "a"));
         module(code)
             .loadsWithSuccess()
@@ -618,7 +617,7 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(TestContext.annotatedFuncS(
+            .containsEvaluable(annotatedFuncS(
                 2,
                 nativeAnnotationS(1, stringS(1, "Impl.met"), false),
                 stringTS(),
@@ -633,7 +632,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(TestContext.annotatedFuncS(
+            .containsEvaluable(annotatedFuncS(
                 2, nativeAnnotationS(1, stringS(1, "Impl.met"), false), varA(), "myFunc", nlist()));
       }
 
@@ -644,7 +643,7 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(TestContext.annotatedFuncS(2,
+            .containsEvaluable(annotatedFuncS(2,
                 nativeAnnotationS(1, stringS(1, "Impl.met"), true), stringTS(), "myFunc", nlist()));
       }
 
@@ -655,7 +654,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(TestContext.annotatedFuncS(
+            .containsEvaluable(annotatedFuncS(
                 2, nativeAnnotationS(1, stringS(1, "Impl.met"), true), varA(), "myFunc", nlist()));
       }
 
@@ -667,10 +666,10 @@ public class ExprSLoadingTest extends TestContext {
               Blob p1 =
                 0x07);
             """;
-        var params = NList.nlist(
-            TestContext.itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
+        var params = nlist(
+            itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
         var ann = nativeAnnotationS(1, stringS(1, "Impl.met"), true);
-        var myFunc = TestContext.annotatedFuncS(2, ann, stringTS(), "myFunc", params);
+        var myFunc = annotatedFuncS(2, ann, stringTS(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
@@ -684,10 +683,10 @@ public class ExprSLoadingTest extends TestContext {
               Blob p1 =
                 0x07);
             """;
-        var params = NList.nlist(
-            TestContext.itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
+        var params = nlist(
+            itemS(3, blobTS(), "p1", valueS(3, "myFunc:p1", blobS(4, 7))));
         var ann = nativeAnnotationS(1, stringS(1, "Impl.met"), true);
-        var myFunc = TestContext.annotatedFuncS(2, ann, varA(), "myFunc", params);
+        var myFunc = annotatedFuncS(2, ann, varA(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
@@ -700,7 +699,7 @@ public class ExprSLoadingTest extends TestContext {
           String myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(TestContext.bytecodeFuncS(2, stringTS(), "myFunc", nlist()));
+            .containsEvaluable(bytecodeFuncS(2, stringTS(), "myFunc", nlist()));
       }
 
       @Test
@@ -710,7 +709,7 @@ public class ExprSLoadingTest extends TestContext {
           A myFunc();
           """)
             .loadsWithSuccess()
-            .containsEvaluable(TestContext.bytecodeFuncS(2, varA(), "myFunc", nlist()));
+            .containsEvaluable(bytecodeFuncS(2, varA(), "myFunc", nlist()));
       }
 
       @Test
@@ -721,8 +720,8 @@ public class ExprSLoadingTest extends TestContext {
               Blob param1 =
                 0x07);
             """;
-        var params = NList.nlist(
-            TestContext.itemS(3, blobTS(), "param1", valueS(3, "myFunc:param1", blobS(4, 7))));
+        var params = nlist(
+            itemS(3, blobTS(), "param1", valueS(3, "myFunc:param1", blobS(4, 7))));
         var myFunc = bytecodeFuncS(2, "Impl.met", stringTS(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
@@ -737,8 +736,8 @@ public class ExprSLoadingTest extends TestContext {
               Blob param1 =
                 0x07);
             """;
-        var params = NList.nlist(
-            TestContext.itemS(3, blobTS(), "param1", valueS(3, "myFunc:param1", blobS(4, 7))));
+        var params = nlist(
+            itemS(3, blobTS(), "param1", valueS(3, "myFunc:param1", blobS(4, 7))));
         var myFunc = bytecodeFuncS(2, "Impl.met", varA(), "myFunc", params);
         module(code)
             .loadsWithSuccess()
@@ -755,7 +754,7 @@ public class ExprSLoadingTest extends TestContext {
           )
           """)
             .loadsWithSuccess()
-            .containsType(TestContext.structTS("MyStruct", nlist()));
+            .containsType(structTS("MyStruct", nlist()));
       }
 
       @Test
@@ -766,7 +765,7 @@ public class ExprSLoadingTest extends TestContext {
           )
           """)
             .loadsWithSuccess()
-            .containsType(TestContext.structTS("MyStruct", NList.nlist(sigS(stringTS(), "field"))));
+            .containsType(structTS("MyStruct", nlist(sigS(stringTS(), "field"))));
       }
     }
 
@@ -781,9 +780,9 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             [A] empty = [];
             """;
-        var empty = valueS(5, "empty", TestContext.orderS(5, varA()));
-        var defaultValue = valueS(2, "myFunc:param1", TestContext.monoizeS(3, varMap(varA(), varA()), empty));
-        var params = NList.nlist(TestContext.itemS(2, arrayTS(intTS()), "param1", defaultValue));
+        var empty = valueS(5, "empty", orderS(5, varA()));
+        var defaultValue = valueS(2, "myFunc:param1", monoizeS(3, varMap(varA(), varA()), empty));
+        var params = nlist(itemS(2, arrayTS(intTS()), "param1", defaultValue));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
@@ -799,9 +798,9 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             [A] empty = [];
             """;
-        var empty = valueS(5, "empty", TestContext.orderS(5, varA()));
-        var defaultValue = valueS(2, "myFunc:param1", TestContext.monoizeS(3, varMap(varA(), varA()), empty));
-        var params = NList.nlist(itemSPoly(2, arrayTS(varB()), "param1", Optional.of(defaultValue)));
+        var empty = valueS(5, "empty", orderS(5, varA()));
+        var defaultValue = valueS(2, "myFunc:param1", monoizeS(3, varMap(varA(), varA()), empty));
+        var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", Optional.of(defaultValue)));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
@@ -817,7 +816,7 @@ public class ExprSLoadingTest extends TestContext {
                 = 7;
             """;
         var defaultValue = valueS(2, "myFunc:param1", intS(3, 11));
-        var params = NList.nlist(TestContext.itemS(2, intTS(), "param1", defaultValue));
+        var params = nlist(itemS(2, intTS(), "param1", defaultValue));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
             .loadsWithSuccess()
@@ -849,7 +848,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
           .loadsWithSuccess()
           .containsEvaluable(valueS(
-              1, arrayTS(blobTS()), "result", TestContext.orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
+              1, arrayTS(blobTS()), "result", orderS(2, blobTS(), blobS(3, 7), blobS(4, 8))));
     }
   }
 }

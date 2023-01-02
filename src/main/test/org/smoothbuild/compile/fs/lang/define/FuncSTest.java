@@ -2,13 +2,13 @@ package org.smoothbuild.compile.fs.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -44,6 +44,6 @@ public class FuncSTest extends TestContext {
 
   private FuncS myFunc(TypeS resT, ImmutableList<ItemS> params) {
     var schema = funcSchemaS(ItemS.toTypes(params), resT);
-    return new NamedExprFuncS(schema, "name", NList.nlist(params), stringS(), location(1));
+    return new NamedExprFuncS(schema, "name", nlist(params), stringS(), location(1));
   }
 }

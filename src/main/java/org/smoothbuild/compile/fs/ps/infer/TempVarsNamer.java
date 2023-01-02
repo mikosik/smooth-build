@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
+import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Maps.toMap;
 
@@ -31,7 +32,7 @@ public class TempVarsNamer {
   private final VarSetS outerScopeVars;
 
   public TempVarsNamer(Unifier unifier) {
-    this(unifier, VarSetS.varSetS());
+    this(unifier, varSetS());
   }
 
   private TempVarsNamer(Unifier unifier, VarSetS outerScopeVars) {
@@ -64,11 +65,11 @@ public class TempVarsNamer {
       case AnonymousFuncP anonymousFuncP -> handleAnonymousFunc(anonymousFuncP);
       case NamedArgP      namedArgP      -> handleExpr(namedArgP.expr());
       case OrderP         orderP         -> handleOrder(orderP);
-      case RefP           refP           -> VarSetS.varSetS();
+      case RefP           refP           -> varSetS();
       case SelectP        selectP        -> handleExpr(selectP.selectable());
-      case IntP           intP           -> VarSetS.varSetS();
-      case BlobP          blobP          -> VarSetS.varSetS();
-      case StringP        stringP        -> VarSetS.varSetS();
+      case IntP           intP           -> varSetS();
+      case BlobP          blobP          -> varSetS();
+      case StringP        stringP        -> varSetS();
     };
     // @formatter:on
   }
@@ -90,13 +91,13 @@ public class TempVarsNamer {
     for (var child : children) {
       vars.addAll(handleExpr(child));
     }
-    return VarSetS.varSetS(vars);
+    return varSetS(vars);
   }
 
   private VarSetS nameVars(TypeS resolvedT, Optional<ExprP> body) {
     var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
     var varsInScope = outerScopeVars.withAdded(thisScopeVars);
-    var innerScopeVars = body.map(b -> handleExpr(varsInScope, b)).orElse(VarSetS.varSetS());
+    var innerScopeVars = body.map(b -> handleExpr(varsInScope, b)).orElse(varSetS());
     var reservedVars = varsInScope.withAdded(innerScopeVars);
     var resolvedAndRenamedT = nameVars(resolvedT, reservedVars);
     unifier.unifyOrFailWithRuntimeException(resolvedAndRenamedT, resolvedT);

@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
+import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Maps.mapKeys;
 import static org.smoothbuild.util.collect.Maps.mapValues;
@@ -70,7 +71,7 @@ public class TypeInferrerResolve {
   }
 
   private VarSetS resolveQuantifiedVars(SchemaS schemaS) {
-    return VarSetS.varSetS(schemaS.quantifiedVars().stream().map(v -> (VarS) unifier.resolve(v)).toList());
+    return varSetS(schemaS.quantifiedVars().stream().map(v -> (VarS) unifier.resolve(v)).toList());
   }
 
   private TypeS resolveType(SchemaS schemaS) {
