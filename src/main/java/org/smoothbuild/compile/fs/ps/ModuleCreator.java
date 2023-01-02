@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.fs.ps;
 
+import static org.smoothbuild.compile.fs.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
@@ -44,10 +45,12 @@ public class ModuleCreator {
     if (logBuffer.containsAtLeast(ERROR)) {
       return maybeLogs(logBuffer);
     } else {
-      var typeBindings = types.innerScopeBindingsReduced();
-      var evaluableBindings = evaluables.innerScopeBindingsReduced();
-      var modS = new ModuleS(new ScopeS(typeBindings, evaluableBindings));
-      return maybe(modS, logBuffer);
+      var members = new ScopeS(
+          types.innerScopeBindingsReduced(),
+          evaluables.innerScopeBindingsReduced());
+      var scope = scopeS(imported, members);
+      var moduleS = new ModuleS(members, scope);
+      return maybe(moduleS, logBuffer);
     }
   }
 
