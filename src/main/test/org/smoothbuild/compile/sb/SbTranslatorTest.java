@@ -305,7 +305,7 @@ public class SbTranslatorTest extends TestContext {
         var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(monoizeS(funcS)))
             .throwsException(
-                new SbTranslatorExc("Reference to unknown parameter `p2` at myBuild.smooth:1."));
+                new SbTranslatorExc("Cannot resolve `p2` at myBuild.smooth:1."));
       }
 
       @Test
@@ -371,7 +371,7 @@ public class SbTranslatorTest extends TestContext {
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));
           var sbTranslator = sbTranslator(fileLoader, bindings(bytecodeValueS));
-          var exprB = sbTranslator.translateExpr(monoizeS(bytecodeValueS));
+          var exprB = sbTranslator.translateExpr(monoizeS(3, bytecodeValueS));
           assertNalMapping(sbTranslator, exprB, "myValue", location(8));
         }
       }
@@ -381,7 +381,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void expression_function() {
           var funcS = funcS(7, "myFunc", nlist(), intS(37));
-          assertNalMapping(bindings(funcS), monoizeS(funcS), "myFunc", location(7));
+          assertNalMapping(bindings(funcS), monoizeS(3, funcS), "myFunc", location(7));
         }
 
         @Test
@@ -403,7 +403,7 @@ public class SbTranslatorTest extends TestContext {
 
           var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), blobB(37));
           var sbTranslator = sbTranslator(fileLoader, bindings(nativeFuncS));
-          assertNalMapping(sbTranslator, monoizeS(nativeFuncS), "myFunc", location(2));
+          assertNalMapping(sbTranslator, monoizeS(3, nativeFuncS), "myFunc", location(2));
         }
 
         @Test
@@ -481,7 +481,7 @@ public class SbTranslatorTest extends TestContext {
         var sbTranslator = newTranslator(bindings(funcS));
         var funcB = (ExprFuncB) sbTranslator.translateExpr(monoizeS(funcS));
         var refB = funcB.body();
-        assertNalMapping(sbTranslator, refB, null, location(5));
+        assertNalMapping(sbTranslator, refB, "p", location(5));
       }
 
       @Test

@@ -546,6 +546,19 @@ public class BuildCommandTest {
     }
 
     @Test
+    public void value_reference() throws IOException {
+      createUserModule("""
+          myValue = "abc";
+          result = myValue;
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          myValue                                     build.smooth:1
+          """);
+    }
+
+    @Test
     public void literal_array() throws IOException {
       createUserModule("""
           result = ["abc"];
@@ -590,19 +603,6 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           Int                                         build.smooth:1
-          """);
-    }
-
-    @Test
-    public void value() throws IOException {
-      createUserModule("""
-          myValue = "abc";
-          result = myValue;
-          """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSysOutContains("""
-            String                                      build.smooth:1
           """);
     }
   }

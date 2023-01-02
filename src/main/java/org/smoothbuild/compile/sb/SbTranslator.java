@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -29,7 +30,6 @@ import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
 import org.smoothbuild.compile.fs.lang.define.ConstructorS;
-import org.smoothbuild.compile.fs.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.fs.lang.define.ExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.FuncS;
@@ -43,7 +43,7 @@ import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
-import org.smoothbuild.compile.fs.lang.define.ParamRefS;
+import org.smoothbuild.compile.fs.lang.define.RefS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
 import org.smoothbuild.compile.fs.lang.type.AnnotationNames;
@@ -142,7 +142,6 @@ public class SbTranslator {
       case CallS       callS       -> saveLocAndReturn(callS,     translateCall(callS));
       case IntS        intS        -> saveLocAndReturn(intS,      translateInt(intS));
       case OrderS      orderS      -> saveLocAndReturn(orderS,    translateOrder(orderS));
-      case ParamRefS   paramRefS   -> saveLocAndReturn(paramRefS, translateParamRef(paramRefS));
       case SelectS     selectS     -> saveLocAndReturn(selectS,   translateSelect(selectS));
       case StringS     stringS     -> saveLocAndReturn(stringS,   translateString(stringS));
       case MonoizeS    monoizeS    -> translateMonoize(monoizeS);
@@ -186,7 +185,7 @@ public class SbTranslator {
   public ExprB translateMonoizable(MonoizableS monoizableS) {
     return switch (monoizableS) {
       case AnonymousFuncS anonymousFuncS -> translateAnonymousFunc(anonymousFuncS);
-      case EvaluableRefS evaluableRefS -> translateEvaluableRef(evaluableRefS);
+      case RefS refS -> translateRef(refS);
     };
   }
 
@@ -202,11 +201,24 @@ public class SbTranslator {
     return bytecodeF.closurize(exprFuncB);
   }
 
-  private ExprB translateEvaluableRef(EvaluableRefS evaluableRefS) {
-    return switch (evaluables.get(evaluableRefS.name())) {
-      case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
-      case NamedValueS namedValS -> translateNamedValueWithCache(evaluableRefS.location(), namedValS);
-    };
+  private ExprB translateRef(RefS refS) {
+    var itemS = environment.get(refS.name());
+    if (itemS == null) {
+      Optional<NamedEvaluableS> namedEvaluableS = evaluables.getOptional(refS.name());
+      if (namedEvaluableS.isPresent()) {
+        return switch (namedEvaluableS.get()) {
+          case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
+          case NamedValueS namedValS -> translateNamedValueWithCache(refS.location(), namedValS);
+        };
+      } else {
+        throw new SbTranslatorExc(
+            "Cannot resolve `" + refS.name() + "` at " + refS.location() + ".");
+      }
+    } else {
+      var index = environment.indexOf(refS.name());
+      return saveNalAndReturn(
+          refS, bytecodeF.ref(translateT(itemS.type()), BigInteger.valueOf(index)));
+    }
   }
 
   private ExprB translateNamedFuncWithCache(NamedFuncS namedFuncS) {
@@ -285,15 +297,6 @@ public class SbTranslator {
     var arrayTB = translateT(orderS.evalT());
     var elemsB = translateExprs(orderS.elems());
     return bytecodeF.order(arrayTB, elemsB);
-  }
-
-  private RefB translateParamRef(ParamRefS paramRefS) {
-    var index = environment.indexOf(paramRefS.paramName());
-    if (index == null) {
-      throw new SbTranslatorExc("Reference to unknown parameter `" + paramRefS.paramName()
-          + "` at " + paramRefS.location() + ".");
-    }
-    return bytecodeF.ref(translateT(paramRefS.evalT()), BigInteger.valueOf(index));
   }
 
   private SelectB translateSelect(SelectS selectS) {

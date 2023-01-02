@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.compile.fs.lang.define.EvaluableRefS;
+import org.smoothbuild.compile.fs.lang.define.RefS;
 import org.smoothbuild.compile.fs.lang.define.MonoizeS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
@@ -88,7 +88,7 @@ public class BuildRunner {
     }
   }
 
-  private static EvaluableRefS refTo(NamedValueS v) {
-    return new EvaluableRefS(v.schema(), v.name(), commandLineLocation());
+  private static RefS refTo(NamedValueS v) {
+    return new RefS(v.schema(), v.name(), commandLineLocation());
   }
 }

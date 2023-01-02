@@ -18,7 +18,7 @@ public class SelectSTest extends TestContext {
             SelectS(
               selectable = MonoizeS(
                 varMap = {}
-                monoizableS = EvaluableRefS(
+                monoizableS = RefS(
                   schema = <>MyStruct
                   name = structValue
                   location = myBuild.smooth:12

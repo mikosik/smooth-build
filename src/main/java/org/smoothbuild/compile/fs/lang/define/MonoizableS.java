@@ -7,7 +7,7 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
  * Monomorphizable expression.
  */
 public sealed interface MonoizableS
-    permits AnonymousFuncS, EvaluableRefS {
+    permits AnonymousFuncS, RefS {
   public SchemaS schema();
   public Location location();
 }

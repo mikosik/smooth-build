@@ -18,19 +18,17 @@ import org.smoothbuild.compile.fs.lang.define.AnnotationS;
 import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
-import org.smoothbuild.compile.fs.lang.define.EvaluableRefS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.MonoizableS;
 import org.smoothbuild.compile.fs.lang.define.MonoizeS;
-import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
-import org.smoothbuild.compile.fs.lang.define.ParamRefS;
+import org.smoothbuild.compile.fs.lang.define.RefS;
 import org.smoothbuild.compile.fs.lang.define.RefableS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
@@ -174,17 +172,12 @@ public class PsConverter {
   }
 
   private ExprS convertRef(RefP ref, RefableS refable) {
-    return switch (refable) {
-      case ItemS itemS -> new ParamRefS(itemS.type(), ref.name(), ref.location());
-      case NamedEvaluableS evaluableS -> monoizeNamedEvaluable(ref, evaluableS);
-    };
+    return monoizeRefable(ref, refable);
   }
 
-  private static ExprS monoizeNamedEvaluable(
-      MonoizableP monoizableP, NamedEvaluableS namedEvaluableS) {
-    var evaluableRefS = new EvaluableRefS(
-        namedEvaluableS.schema(), namedEvaluableS.name(), monoizableP.location());
-    return newMonoize(monoizableP, evaluableRefS);
+  private static ExprS monoizeRefable(MonoizableP monoizableP, RefableS refableS) {
+    var refS = new RefS(refableS.schema(), refableS.name(), monoizableP.location());
+    return newMonoize(monoizableP, refS);
   }
 
   private static MonoizeS newMonoize(MonoizableP monoizableP, MonoizableS monoizableS) {

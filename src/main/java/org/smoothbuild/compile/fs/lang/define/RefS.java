@@ -3,17 +3,21 @@ package org.smoothbuild.compile.fs.lang.define;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 
+import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
-import org.smoothbuild.compile.fs.lang.type.TypeS;
+import org.smoothbuild.compile.fs.lang.type.SchemaS;
 
-public record ParamRefS(TypeS evalT, String paramName, Location location) implements ExprS {
+/**
+ * Reference to RefableS.
+ */
+public record RefS(SchemaS schema, String name, Location location) implements MonoizableS, Nal {
   @Override
   public String toString() {
     var fields = joinToString("\n",
-        "evalT = " + evalT,
-        "paramName = " + paramName,
+        "schema = " + schema,
+        "name = " + name,
         "location = " + location
     );
-    return "ParamRefS(\n" + indent(fields) + "\n)";
+    return "RefS(\n" + indent(fields) + "\n)";
   }
 }
