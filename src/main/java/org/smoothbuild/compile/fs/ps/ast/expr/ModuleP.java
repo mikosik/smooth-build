@@ -2,17 +2,14 @@ package org.smoothbuild.compile.fs.ps.ast.expr;
 
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
-import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.List;
 import java.util.Objects;
 
-import org.smoothbuild.util.collect.NList;
-
 import com.google.common.collect.ImmutableList;
 
 public final class ModuleP implements WithScopeP {
-  private final NList<StructP> structs;
+  private final ImmutableList<StructP> structs;
   private final ImmutableList<NamedEvaluableP> evaluables;
   private ScopeP scope;
 
@@ -21,7 +18,7 @@ public final class ModuleP implements WithScopeP {
   }
 
   public ModuleP(List<StructP> structs, List<NamedEvaluableP> evaluables, ScopeP scope) {
-    this.structs = nlistWithShadowing(ImmutableList.copyOf(structs));
+    this.structs = ImmutableList.copyOf(structs);
     this.evaluables = ImmutableList.copyOf(evaluables);
     this.scope = scope;
   }
@@ -30,7 +27,7 @@ public final class ModuleP implements WithScopeP {
     return evaluables;
   }
 
-  public NList<StructP> structs() {
+  public ImmutableList<StructP> structs() {
     return structs;
   }
 

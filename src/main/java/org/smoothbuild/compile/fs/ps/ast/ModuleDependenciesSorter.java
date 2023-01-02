@@ -24,7 +24,6 @@ import org.smoothbuild.compile.fs.ps.ast.type.FuncTP;
 import org.smoothbuild.compile.fs.ps.ast.type.TypeP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Sets;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
@@ -72,7 +71,7 @@ public class ModuleDependenciesSorter {
   }
 
   private static TopologicalSortingRes<String, StructP, Location> sortStructsByDeps(
-      NList<StructP> structs) {
+      List<StructP> structs) {
     var structNames = Sets.map(structs, Nal::name);
     var nodes = map(structs, struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
