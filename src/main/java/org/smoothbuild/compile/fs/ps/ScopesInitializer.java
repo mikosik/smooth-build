@@ -33,7 +33,7 @@ public class ScopesInitializer extends ModuleVisitorP {
     return log;
   }
 
-  private static class Initializer extends ModuleVisitorP {
+  private static class Initializer extends ModuleVisitorP{
     private final ScopeP scope;
     private final Logger log;
 
@@ -46,25 +46,6 @@ public class ScopesInitializer extends ModuleVisitorP {
     public void visitModule(ModuleP moduleP) {
       createScopeWithBindingsAndWrapInsideInitializer(moduleP)
           .visitModuleChildren(moduleP);
-    }
-
-    @Override
-    public void visitModuleChildren(ModuleP moduleP) {
-      super.visitModuleChildren(moduleP);
-      addFunctionParameterDefaultValuesToModuleScope(scope);
-    }
-
-    private void addFunctionParameterDefaultValuesToModuleScope(ScopeP moduleScope) {
-      for (var refableP : moduleScope.refables().asMap().values()) {
-        if (refableP instanceof NamedFuncP namedFuncP) {
-          for (var param : namedFuncP.params()) {
-            if (param.defaultValue().isPresent()) {
-              var defaultValue = param.defaultValue().get();
-              moduleScope.refables().add(defaultValue.name(), defaultValue);
-            }
-          }
-        }
-      }
     }
 
     @Override
@@ -85,6 +66,13 @@ public class ScopesInitializer extends ModuleVisitorP {
       visitNamedFuncSignature(namedFuncP);
       createScopeWithBindingsAndWrapInsideInitializer(namedFuncP)
           .visitFuncBody(namedFuncP);
+
+      for (var param : namedFuncP.params()) {
+        if (param.defaultValue().isPresent()) {
+          var defaultValue = param.defaultValue().get();
+          scope.refables().add(defaultValue.name(), defaultValue);
+        }
+      }
     }
 
     @Override
