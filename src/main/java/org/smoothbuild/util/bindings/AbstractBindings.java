@@ -1,5 +1,7 @@
 package org.smoothbuild.util.bindings;
 
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+
 import java.util.NoSuchElementException;
 
 public abstract sealed class AbstractBindings<E>
@@ -15,5 +17,10 @@ public abstract sealed class AbstractBindings<E>
   @Override
   public boolean contains(String name) {
     return getOptional(name).isPresent();
+  }
+
+  @Override
+  public FlatImmutableBindings<E> toFlatImmutable() {
+    return immutableBindings(asMap());
   }
 }
