@@ -1,9 +1,8 @@
 package org.smoothbuild.util.bindings;
 
-public sealed class ScopedMutableBindings<E>
+public final class ScopedMutableBindings<E>
     extends ScopedBindings<E>
-    implements MutableBindings<E>
-    permits OptionalBindings {
+    implements MutableBindings<E> {
   ScopedMutableBindings(Bindings<? extends E> outerScopeBindings) {
     super(outerScopeBindings, new FlatMutableBindings<>());
   }

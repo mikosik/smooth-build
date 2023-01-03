@@ -2,7 +2,6 @@ package org.smoothbuild.compile.fs.ps.infer;
 
 import static com.google.common.collect.Maps.toMap;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
-import static org.smoothbuild.compile.fs.ps.infer.BindingsHelper.funcBodyScopeBindings;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.util.collect.Optionals.flatMapPair;
@@ -13,8 +12,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
-import org.smoothbuild.compile.fs.lang.define.ItemS;
-import org.smoothbuild.compile.fs.lang.define.RefableS;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
@@ -44,35 +41,27 @@ import org.smoothbuild.compile.fs.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.expr.StringP;
 import org.smoothbuild.compile.fs.ps.ast.type.TypeP;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.bindings.OptionalBindings;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 public class ExprTypeUnifier {
   private final Unifier unifier;
-  private final TypePsTranslator typePsTranslator;
-  private final OptionalBindings<? extends RefableS> bindings;
+  private final TypeTeller typeTeller;
   private final VarSetS outerScopeVars;
   private final Logger logger;
 
-  public ExprTypeUnifier(
-      Unifier unifier,
-      TypePsTranslator typePsTranslator,
-      OptionalBindings<? extends RefableS> bindings,
-      Logger logger) {
-    this(unifier, typePsTranslator, bindings, VarSetS.varSetS(), logger);
+  public ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller, Logger logger) {
+    this(unifier, typeTeller, VarSetS.varSetS(), logger);
   }
 
   public ExprTypeUnifier(
       Unifier unifier,
-      TypePsTranslator typePsTranslator,
-      OptionalBindings<? extends RefableS> bindings,
+      TypeTeller typeTeller,
       VarSetS outerScopeVars,
       Logger logger) {
     this.unifier = unifier;
-    this.typePsTranslator = typePsTranslator;
-    this.bindings = bindings;
+    this.typeTeller = typeTeller;
     this.outerScopeVars = outerScopeVars;
     this.logger = logger;
   }
@@ -120,7 +109,7 @@ public class ExprTypeUnifier {
     return translateOrGenerateTempVar(namedValueP.evalT())
         .map(evalT -> {
           namedValueP.setTypeS(evalT);
-          return unifyEvaluableBody(namedValueP, evalT, evalT, bindings);
+          return unifyEvaluableBody(namedValueP, evalT, evalT, typeTeller);
         })
         .orElse(false);
   }
@@ -133,27 +122,22 @@ public class ExprTypeUnifier {
   }
 
   private boolean unifyFunc(FuncP funcP, ImmutableList<TypeS> paramTs, TypeS resT) {
-    var paramsS = funcP.params().map(ExprTypeUnifier::itemS);
-    var bodyBindings = funcBodyScopeBindings(bindings, paramsS);
+    var typeTellerForBody = typeTeller.withScope(funcP.scope());
     var funcTS = new FuncTS(paramTs, resT);
     funcP.setTypeS(funcTS);
-    return unifyEvaluableBody(funcP, resT, funcTS, bodyBindings);
-  }
-
-  private static ItemS itemS(ItemP itemP) {
-    return new ItemS(itemP.typeS(), itemP.name(), Optional.empty(), itemP.location());
+    return unifyEvaluableBody(funcP, resT, funcTS, typeTellerForBody);
   }
 
   private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
-    var paramTs = pullUp(map(params, p -> typePsTranslator.translate(p.type())));
+    var paramTs = pullUp(map(params, p -> typeTeller.translate(p.type())));
     paramTs.ifPresent(types -> zip(params, types, ItemP::setTypeS));
     return paramTs;
   }
 
-  private Boolean unifyEvaluableBody(EvaluableP evaluableP, TypeS evalT, TypeS type,
-      OptionalBindings<? extends RefableS> bindings) {
+  private Boolean unifyEvaluableBody(
+      EvaluableP evaluableP, TypeS evalT, TypeS type, TypeTeller typeTeller) {
     var vars = outerScopeVars.withAdded(type.vars());
-    return new ExprTypeUnifier(unifier, typePsTranslator, bindings, vars, logger)
+    return new ExprTypeUnifier(unifier, typeTeller, vars, logger)
         .unifyEvaluableBody(evaluableP, evalT);
   }
 
@@ -260,12 +244,12 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> unifyRef(RefP refP) {
-    var refable = bindings.get(refP.name());
-    return refable.flatMap(r -> unifyRef(refP, r));
+    Optional<SchemaS> schemaS = typeTeller.schemaFor(refP.name());
+    return schemaS.flatMap(s -> unifyRef(refP, s));
   }
 
-  private Optional<TypeS> unifyRef(RefP refP, RefableS refableS) {
-    refP.setSchemaS(refableS.schema());
+  private Optional<TypeS> unifyRef(RefP refP, SchemaS schemaS) {
+    refP.setSchemaS(schemaS);
     return unifyMonoizable(refP);
   }
 
@@ -295,7 +279,7 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> translateOrGenerateTempVar(Optional<TypeP> typeP) {
-    return typeP.map(typePsTranslator::translate)
+    return typeP.map(typeTeller::translate)
         .orElseGet(() -> Optional.of(unifier.newTempVar()));
   }
 }

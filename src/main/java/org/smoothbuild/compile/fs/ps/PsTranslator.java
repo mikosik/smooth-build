@@ -3,9 +3,10 @@ package org.smoothbuild.compile.fs.ps;
 import static org.smoothbuild.compile.fs.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.fs.ps.DefaultArgumentInjector.injectDefaultArguments;
 import static org.smoothbuild.compile.fs.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
-import static org.smoothbuild.compile.fs.ps.ModuleCreator.createModuleS;
+import static org.smoothbuild.compile.fs.ps.PsConverter.convertPs;
 import static org.smoothbuild.compile.fs.ps.ScopesInitializer.initializeScopes;
 import static org.smoothbuild.compile.fs.ps.ast.ModuleDependenciesSorter.sortByDependencies;
+import static org.smoothbuild.compile.fs.ps.infer.TypeInferrer.inferTypes;
 
 import org.smoothbuild.compile.fs.lang.define.ModuleS;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
@@ -35,7 +36,8 @@ public class PsTranslator {
       addLogs(detectUndefinedRefablesAndTypes(moduleP, imported));
       addLogs(injectDefaultArguments(moduleP, imported));
       var sortedModuleP = addLogsAndGetValue(sortByDependencies(moduleP));
-      return addLogsAndGetValue(createModuleS(sortedModuleP, imported));
+      addLogs(inferTypes(sortedModuleP, imported));
+      return convertPs(moduleP, imported);
     }
   }
 }

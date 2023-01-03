@@ -1,13 +1,13 @@
 package org.smoothbuild.compile.fs.ps;
 
+import static org.smoothbuild.compile.fs.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.fs.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.fs.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.fs.lang.type.TypeFS.STRING;
-import static org.smoothbuild.compile.fs.ps.infer.BindingsHelper.funcBodyScopeBindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.NList.nlist;
-import static org.smoothbuild.util.collect.Optionals.mapPair;
-import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,62 +18,117 @@ import org.smoothbuild.compile.fs.lang.define.AnnotationS;
 import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
+import org.smoothbuild.compile.fs.lang.define.ConstructorS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
+import org.smoothbuild.compile.fs.lang.define.ModuleS;
 import org.smoothbuild.compile.fs.lang.define.MonoizableS;
 import org.smoothbuild.compile.fs.lang.define.MonoizeS;
+import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
 import org.smoothbuild.compile.fs.lang.define.RefS;
-import org.smoothbuild.compile.fs.lang.define.RefableS;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
+import org.smoothbuild.compile.fs.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
+import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.ps.ast.expr.AnnotationP;
 import org.smoothbuild.compile.fs.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.expr.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.expr.CallP;
+import org.smoothbuild.compile.fs.ps.ast.expr.ConstructorP;
 import org.smoothbuild.compile.fs.ps.ast.expr.ExprP;
+import org.smoothbuild.compile.fs.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.expr.IntP;
 import org.smoothbuild.compile.fs.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.expr.MonoizableP;
 import org.smoothbuild.compile.fs.ps.ast.expr.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.expr.OrderP;
 import org.smoothbuild.compile.fs.ps.ast.expr.RefP;
+import org.smoothbuild.compile.fs.ps.ast.expr.RefableP;
 import org.smoothbuild.compile.fs.ps.ast.expr.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.expr.StringP;
-import org.smoothbuild.util.bindings.OptionalBindings;
+import org.smoothbuild.compile.fs.ps.ast.expr.StructP;
+import org.smoothbuild.compile.fs.ps.infer.TypeTeller;
+import org.smoothbuild.util.bindings.FlatImmutableBindings;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 
 public class PsConverter {
-  private final OptionalBindings<? extends RefableS> bindings;
+  private final TypeTeller typeTeller;
+  private final ScopeS imported;
 
-  public PsConverter(OptionalBindings<? extends RefableS> bindings) {
-    this.bindings = bindings;
+  public static ModuleS convertPs(ModuleP moduleP, ScopeS imported) {
+    var typeTeller = new TypeTeller(imported, moduleP.scope());
+    return new PsConverter(typeTeller, imported)
+        .convertModule(moduleP);
   }
 
-  public Optional<NamedValueS> convertNamedValue(NamedValueP namedValueP) {
+  private PsConverter(TypeTeller typeTeller, ScopeS imported) {
+    this.typeTeller = typeTeller;
+    this.imported = imported;
+  }
+
+  private ModuleS convertModule(ModuleP moduleP) {
+    var structs = map(moduleP.structs(), this::convertStruct);
+    var evaluables = map(moduleP.scope().refables().asMap().values(), this::convertRefableP);
+    var members = new ScopeS(bindings(structs), bindings(evaluables));
+    var scope = scopeS(imported, members);
+    return new ModuleS(members, scope);
+  }
+
+  private static <T extends Named> FlatImmutableBindings<T> bindings(ImmutableList<T> nameds) {
+    return immutableBindings(toMap(nameds, Named::name, n -> n));
+  }
+
+  private TypeDefinitionS convertStruct(StructP structP) {
+    return new TypeDefinitionS(structP.typeS(), structP.location());
+  }
+
+  private ConstructorS convertConstructor(ConstructorP constructorP) {
+    var fields = constructorP.params();
+    var params = fields.map(
+        f -> new ItemS(fields.get(f.name()).typeS(), f.name(), Optional.empty(), f.location()));
+    return new ConstructorS(
+        constructorP.schemaS(), constructorP.name(), params, constructorP.location());
+  }
+
+  private NamedEvaluableS convertRefableP(RefableP refableP) {
+    return switch (refableP) {
+      case ConstructorP constructorP -> convertConstructor(constructorP);
+      case NamedFuncP namedFuncP -> convertNamedFunc(namedFuncP);
+      case NamedValueP namedValueP -> convertNamedValue(namedValueP);
+      case ItemP itemP -> throw new RuntimeException("Internal error: unexpected ItemP.");
+    };
+  }
+
+  public NamedValueS convertNamedValue(NamedValueP namedValueP) {
     var schema = namedValueP.schemaS();
     var name = namedValueP.name();
     var location = namedValueP.location();
     if (namedValueP.annotation().isPresent()) {
       var ann = convertAnnotation(namedValueP.annotation().get());
-      return Optional.of(new AnnotatedValueS(ann, schema, name, location));
-    } else {
+      return new AnnotatedValueS(ann, schema, name, location);
+    } else if (namedValueP.body().isPresent()) {
       var body = convertExpr(namedValueP.body().get());
-      return body.map(b -> new NamedExprValueS(schema, name, b, location));
+      return new NamedExprValueS(schema, name, body, location);
+    } else {
+      throw new RuntimeException("Internal error: NamedValueP without annotation and body.");
     }
   }
 
-  public Optional<NamedFuncS> convertNamedFunc(NamedFuncP namedFuncP) {
+  public NamedFuncS convertNamedFunc(NamedFuncP namedFuncP) {
     return convertNamedFunc(namedFuncP, convertParams(namedFuncP));
   }
 
@@ -88,21 +143,22 @@ public class PsConverter {
   public ItemS convertParam(ItemP paramP) {
     var type = paramP.typeS();
     var name = paramP.name();
-    var body = paramP.defaultValue().flatMap(this::convertNamedValue);
+    var body = paramP.defaultValue().map(this::convertNamedValue);
     return new ItemS(type, name, body, paramP.location());
   }
 
-  private Optional<NamedFuncS> convertNamedFunc(NamedFuncP namedFuncP, NList<ItemS> params) {
+  private NamedFuncS convertNamedFunc(NamedFuncP namedFuncP, NList<ItemS> params) {
     var schema = namedFuncP.schemaS();
     var name = namedFuncP.name();
     var loc = namedFuncP.location();
     if (namedFuncP.annotation().isPresent()) {
       var annotationS = convertAnnotation(namedFuncP.annotation().get());
-      var annotatedFuncS = new AnnotatedFuncS(annotationS, schema, name, params, loc);
-      return Optional.of(annotatedFuncS);
+      return new AnnotatedFuncS(annotationS, schema, name, params, loc);
+    } else if (namedFuncP.body().isPresent()){
+      var body = convertFuncBody(namedFuncP, namedFuncP.body().get());
+      return new NamedExprFuncS(schema, name, params, body, loc);
     } else {
-      return convertFuncBody(params, namedFuncP.body().get())
-          .map(b -> new NamedExprFuncS(schema, name, params, b, loc));
+      throw new RuntimeException("Internal error: NamedFuncP without annotation and body.");
     }
   }
 
@@ -111,47 +167,46 @@ public class PsConverter {
     return new AnnotationS(annotationP.name(), path, annotationP.location());
   }
 
-  private Optional<ImmutableList<ExprS>> convertExprs(List<ExprP> positionedArgs) {
-    return pullUp(map(positionedArgs, this::convertExpr));
+  private ImmutableList<ExprS> convertExprs(List<ExprP> positionedArgs) {
+    return map(positionedArgs, this::convertExpr);
   }
 
-  private Optional<ExprS> convertExpr(ExprP expr) {
+  private ExprS convertExpr(ExprP expr) {
     // @formatter:off
     return switch (expr) {
-      case BlobP          blobP          -> Optional.of(convertBlob(blobP));
+      case BlobP          blobP          -> convertBlob(blobP);
       case CallP          callP          -> convertCall(callP);
-      case IntP           intP           -> Optional.of(convertInt(intP));
+      case IntP           intP           -> convertInt(intP);
       case AnonymousFuncP anonymousFuncP -> convertAnonymousFunc(anonymousFuncP);
       case NamedArgP      namedArgP      -> convertExpr(namedArgP.expr());
       case OrderP         orderP         -> convertOrder(orderP);
       case RefP           refP           -> convertRef(refP);
       case SelectP        selectP        -> convertSelect(selectP);
-      case StringP        stringP        -> Optional.of(convertString(stringP));
+      case StringP        stringP        -> convertString(stringP);
     };
     // @formatter:on
   }
 
-  private Optional<ExprS> convertOrder(OrderP order) {
+  private ExprS convertOrder(OrderP order) {
     var elems = convertExprs(order.elems());
-    return elems.map(es -> new OrderS((ArrayTS) order.typeS(), es, order.location()));
+    return new OrderS((ArrayTS) order.typeS(), elems, order.location());
   }
 
-  private Optional<ExprS> convertCall(CallP call) {
+  private ExprS convertCall(CallP call) {
     var callee = convertExpr(call.callee());
     var args = convertExprs(call.positionedArgs());
-    return mapPair(callee, args, (c, as) -> new CallS(c, as, call.location()));
+    return new CallS(callee, args, call.location());
   }
 
-  private Optional<ExprS> convertAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+  private ExprS convertAnonymousFunc(AnonymousFuncP anonymousFuncP) {
     var params = convertParams(anonymousFuncP.params());
-    return convertFuncBody(params, anonymousFuncP.bodyGet())
-        .map(b -> monoizeAnonymousFunc(anonymousFuncP, params, b));
+    var body = convertFuncBody(anonymousFuncP, anonymousFuncP.bodyGet());
+    return monoizeAnonymousFunc(anonymousFuncP, params, body);
   }
 
-  private Optional<ExprS> convertFuncBody(NList<ItemS> params, ExprP expr) {
-    var bindingsInBody = funcBodyScopeBindings(bindings, params);
-    return new PsConverter(bindingsInBody)
-        .convertExpr(expr);
+  private ExprS convertFuncBody(FuncP funcP, ExprP body) {
+    var typeTellerForBody = typeTeller.withScope(funcP.scope());
+    return new PsConverter(typeTellerForBody, imported).convertExpr(body);
   }
 
   private static MonoizeS monoizeAnonymousFunc(
@@ -161,23 +216,22 @@ public class PsConverter {
     return newMonoize(anonymousFuncP, anonymousFuncS);
   }
 
-  private Optional<ExprS> convertSelect(SelectP selectP) {
+  private ExprS convertSelect(SelectP selectP) {
     var selectable = convertExpr(selectP.selectable());
-    return selectable.map(s -> new SelectS(s, selectP.field(), selectP.location()));
+    return new SelectS(selectable, selectP.field(), selectP.location());
   }
 
-  private Optional<ExprS> convertRef(RefP ref) {
-    return bindings.get(ref.name())
-        .map(r -> convertRef(ref, r));
+  private ExprS convertRef(RefP refP) {
+    return convertRef(refP, typeTeller.schemaFor(refP.name()).get());
   }
 
-  private ExprS convertRef(RefP ref, RefableS refable) {
-    return monoizeRefable(ref, refable);
+  private ExprS convertRef(RefP refP, SchemaS schemaS) {
+    return monoizeRefable(refP, schemaS);
   }
 
-  private static ExprS monoizeRefable(MonoizableP monoizableP, RefableS refableS) {
-    var refS = new RefS(refableS.schema(), refableS.name(), monoizableP.location());
-    return newMonoize(monoizableP, refS);
+  private static ExprS monoizeRefable(RefP refP, SchemaS schemaS) {
+    var refS = new RefS(schemaS, refP.name(), refP.location());
+    return newMonoize(refP, refS);
   }
 
   private static MonoizeS newMonoize(MonoizableP monoizableP, MonoizableS monoizableS) {

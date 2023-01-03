@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import org.smoothbuild.compile.fs.lang.base.NalImpl;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
+import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -17,6 +18,7 @@ public final class StructP extends NalImpl implements WithScopeP {
   private final NList<ItemP> fields;
   private final NamedFuncP constructor;
   private ScopeP scope;
+  private StructTS structTS;
 
   public StructP(String name, List<ItemP> fields, Location location) {
     this(name, nlistWithShadowing(ImmutableList.copyOf(fields)), location);
@@ -44,6 +46,14 @@ public final class StructP extends NalImpl implements WithScopeP {
   @Override
   public void setScope(ScopeP scope) {
     this.scope = scope;
+  }
+
+  public StructTS typeS() {
+    return structTS;
+  }
+
+  public void setTypeS(StructTS structTS) {
+    this.structTS = structTS;
   }
 
   @Override

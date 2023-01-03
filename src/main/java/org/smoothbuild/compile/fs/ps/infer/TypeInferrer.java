@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
+import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.toMap;
@@ -7,9 +8,11 @@ import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
 
+import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
-import org.smoothbuild.compile.fs.lang.define.RefableS;
-import org.smoothbuild.compile.fs.lang.define.TypeDefinitionS;
+import org.smoothbuild.compile.fs.lang.define.ScopeS;
+import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
+import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
@@ -17,11 +20,13 @@ import org.smoothbuild.compile.fs.lang.type.VarSetS;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
 import org.smoothbuild.compile.fs.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.fs.ps.ast.expr.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.expr.NamedValueP;
+import org.smoothbuild.compile.fs.ps.ast.expr.RefableP;
 import org.smoothbuild.compile.fs.ps.ast.expr.StructP;
+import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.bindings.OptionalBindings;
 import org.smoothbuild.util.collect.NList;
 
 /**
@@ -34,47 +39,85 @@ import org.smoothbuild.util.collect.NList;
  */
 public class TypeInferrer {
   private final Unifier unifier;
-  private final TypePsTranslator typePsTranslator;
-  private final OptionalBindings<? extends RefableS> bindings;
+  private final TypeTeller typeTeller;
   private final Logger logger;
 
-  public TypeInferrer(
-      OptionalBindings<TypeDefinitionS> types,
-      OptionalBindings<? extends RefableS> bindings,
-      Logger logger) {
-    this(new Unifier(), new TypePsTranslator(types), bindings, logger);
+  public static LogBuffer inferTypes(ModuleP moduleP, ScopeS imported) {
+    var logBuffer = new LogBuffer();
+    var typeTeller = new TypeTeller(imported, moduleP.scope());
+    new TypeInferrer(typeTeller, logBuffer)
+        .visitModule(moduleP);
+    return logBuffer;
   }
 
-  public TypeInferrer(
-      Unifier unifier,
-      TypePsTranslator typePsTranslator,
-      OptionalBindings<? extends RefableS> bindings,
-      Logger logger) {
+  private TypeInferrer(TypeTeller typeTeller, Logger logger) {
+    this(new Unifier(), typeTeller, logger);
+  }
+
+  private TypeInferrer(Unifier unifier, TypeTeller typeTeller, Logger logger) {
     this.unifier = unifier;
-    this.typePsTranslator = typePsTranslator;
-    this.bindings = bindings;
+    this.typeTeller = typeTeller;
     this.logger = logger;
   }
 
-  public static Optional<StructTS> inferStructType(
-      OptionalBindings<TypeDefinitionS> types,
-      OptionalBindings<? extends RefableS> outerBindings,
-      Logger logger,
-      StructP struct) {
-    return new TypeInferrer(types, outerBindings, logger)
+  private void visitModule(ModuleP moduleP) {
+    moduleP.structs().forEach(this::visitStruct);
+    moduleP.evaluables().forEach(this::visitRefable);
+  }
+
+  private void visitStruct(StructP structP) {
+    var structTS = inferStructType(typeTeller, logger, structP);
+    structTS.ifPresent(st -> visitConstructor(structP, st));
+  }
+
+  private void visitConstructor(StructP structP, StructTS structT) {
+    var constructorP = structP.constructor();
+    var fieldSigs = structT.fields();
+    var params = structP.fields().map(
+        f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.location()));
+    var funcTS = new FuncTS(ItemS.toTypes(params), structT);
+    var schema = new FuncSchemaS(varSetS(), funcTS);
+    constructorP.setSchemaS(schema);
+    constructorP.setTypeS(funcTS);
+  }
+
+  private void visitRefable(RefableP refableP) {
+    switch (refableP) {
+      case NamedFuncP namedFuncP -> visitFunc(namedFuncP);
+      case NamedValueP namedValueP -> visitValue(namedValueP);
+      case ItemP itemP -> throw new RuntimeException("shouldn't happen");
+    }
+  }
+
+  private void visitValue(NamedValueP namedValueP) {
+    new TypeInferrer(typeTeller, logger)
+        .inferNamedValueSchema(namedValueP);
+  }
+
+  private void visitFunc(NamedFuncP namedFuncP) {
+    new TypeInferrer(typeTeller, logger)
+        .inferNamedFuncSchema(namedFuncP);
+  }
+
+  private Optional<StructTS> inferStructType(
+      TypeTeller typeTeller, Logger logger, StructP struct) {
+    return new TypeInferrer(typeTeller, logger)
         .inferStructT(struct);
   }
 
   private Optional<StructTS> inferStructT(StructP struct) {
-    return pullUp(map(struct.fields().list(), this::inferFieldSig))
+    Optional<StructTS> structTS = pullUp(map(struct.fields().list(), this::inferFieldSig))
         .map(NList::nlist)
         .map(is -> new StructTS(struct.name(), is));
+    structTS.ifPresent(struct::setTypeS);
+    return structTS;
   }
 
   private Optional<ItemSigS> inferFieldSig(ItemP field) {
-    return typePsTranslator.translate(field.type())
+    return typeTeller.translate(field.type())
         .flatMap(t -> {
           if (t.vars().isEmpty()) {
+            field.setTypeS(t);
             return Optional.of(new ItemSigS(t, field.name()));
           } else {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
@@ -87,7 +130,7 @@ public class TypeInferrer {
 
   // value
 
-  public boolean inferNamedValueSchema(NamedValueP namedValue) {
+  private boolean inferNamedValueSchema(NamedValueP namedValue) {
     if (unifyNamedValue(namedValue)) {
       nameImplicitVars(namedValue);
       return resolveValueSchema(namedValue);
@@ -97,7 +140,7 @@ public class TypeInferrer {
   }
 
   private boolean unifyNamedValue(NamedValueP namedValue) {
-    return new ExprTypeUnifier(unifier, typePsTranslator, bindings, logger)
+    return new ExprTypeUnifier(unifier, typeTeller, logger)
         .unifyNamedValue(namedValue);
   }
 
@@ -113,20 +156,18 @@ public class TypeInferrer {
 
   // func
 
-  public boolean inferNamedFuncSchema(NamedFuncP namedFunc) {
+  private void inferNamedFuncSchema(NamedFuncP namedFunc) {
     var params = namedFunc.params();
     if (inferParamDefaultValues(params) && unifyNamedFunc(namedFunc)) {
       nameImplicitVars(namedFunc);
       if (resolveNamedFunc(namedFunc)) {
         detectTypeErrorsBetweenParamAndItsDefaultValue(namedFunc);
-        return true;
       }
     }
-    return false;
   }
 
   private boolean unifyNamedFunc(NamedFuncP namedFunc) {
-    return new ExprTypeUnifier(unifier, typePsTranslator, bindings, logger)
+    return new ExprTypeUnifier(unifier, typeTeller, logger)
         .unifyNamedFunc(namedFunc);
   }
 
@@ -181,7 +222,7 @@ public class TypeInferrer {
   }
 
   private boolean inferParamDefaultValue(NamedValueP defaultValue) {
-    return new TypeInferrer(new Unifier(), typePsTranslator, bindings, logger)
+    return new TypeInferrer(new Unifier(), typeTeller, logger)
         .inferNamedValueSchema(defaultValue);
   }
 }
