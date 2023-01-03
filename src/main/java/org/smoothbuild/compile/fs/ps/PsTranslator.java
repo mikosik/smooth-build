@@ -10,7 +10,7 @@ import static org.smoothbuild.compile.fs.ps.infer.TypeInferrer.inferTypes;
 
 import org.smoothbuild.compile.fs.lang.define.ModuleS;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
-import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.log.MaybeProcessor;
 

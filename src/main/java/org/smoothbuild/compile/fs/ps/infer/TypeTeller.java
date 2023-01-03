@@ -14,13 +14,13 @@ import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
-import org.smoothbuild.compile.fs.ps.ast.expr.ItemP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedEvaluableP;
-import org.smoothbuild.compile.fs.ps.ast.expr.ScopeP;
-import org.smoothbuild.compile.fs.ps.ast.expr.StructP;
-import org.smoothbuild.compile.fs.ps.ast.type.ArrayTP;
-import org.smoothbuild.compile.fs.ps.ast.type.FuncTP;
-import org.smoothbuild.compile.fs.ps.ast.type.TypeP;
+import org.smoothbuild.compile.fs.ps.ast.define.ArrayTP;
+import org.smoothbuild.compile.fs.ps.ast.define.FuncTP;
+import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
+import org.smoothbuild.compile.fs.ps.ast.define.ScopeP;
+import org.smoothbuild.compile.fs.ps.ast.define.StructP;
+import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 
 public class TypeTeller {
   private final ScopeS imported;

@@ -2,26 +2,26 @@ package org.smoothbuild.compile.fs.ps.ast;
 
 import java.util.List;
 
-import org.smoothbuild.compile.fs.ps.ast.expr.AnnotationP;
-import org.smoothbuild.compile.fs.ps.ast.expr.AnonymousFuncP;
-import org.smoothbuild.compile.fs.ps.ast.expr.BlobP;
-import org.smoothbuild.compile.fs.ps.ast.expr.CallP;
-import org.smoothbuild.compile.fs.ps.ast.expr.ExprP;
-import org.smoothbuild.compile.fs.ps.ast.expr.FuncP;
-import org.smoothbuild.compile.fs.ps.ast.expr.IntP;
-import org.smoothbuild.compile.fs.ps.ast.expr.ItemP;
-import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedArgP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedEvaluableP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedFuncP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedValueP;
-import org.smoothbuild.compile.fs.ps.ast.expr.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.expr.RefP;
-import org.smoothbuild.compile.fs.ps.ast.expr.RefableP;
-import org.smoothbuild.compile.fs.ps.ast.expr.SelectP;
-import org.smoothbuild.compile.fs.ps.ast.expr.StringP;
-import org.smoothbuild.compile.fs.ps.ast.expr.StructP;
-import org.smoothbuild.compile.fs.ps.ast.type.TypeP;
+import org.smoothbuild.compile.fs.ps.ast.define.AnnotationP;
+import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
+import org.smoothbuild.compile.fs.ps.ast.define.CallP;
+import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
+import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.IntP;
+import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
+import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
+import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
+import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
+import org.smoothbuild.compile.fs.ps.ast.define.StringP;
+import org.smoothbuild.compile.fs.ps.ast.define.StructP;
+import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 
 public class ModuleVisitorP {
   public void visitModule(ModuleP moduleP) {

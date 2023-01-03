@@ -4,17 +4,17 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
-import org.smoothbuild.compile.fs.ps.ast.expr.AnonymousFuncP;
-import org.smoothbuild.compile.fs.ps.ast.expr.BlobP;
-import org.smoothbuild.compile.fs.ps.ast.expr.CallP;
-import org.smoothbuild.compile.fs.ps.ast.expr.ExprP;
-import org.smoothbuild.compile.fs.ps.ast.expr.IntP;
-import org.smoothbuild.compile.fs.ps.ast.expr.MonoizableP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedArgP;
-import org.smoothbuild.compile.fs.ps.ast.expr.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.expr.RefP;
-import org.smoothbuild.compile.fs.ps.ast.expr.SelectP;
-import org.smoothbuild.compile.fs.ps.ast.expr.StringP;
+import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
+import org.smoothbuild.compile.fs.ps.ast.define.CallP;
+import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
+import org.smoothbuild.compile.fs.ps.ast.define.IntP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
+import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
+import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
+import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 
 /**
  * Infers unit type (which is empty tuple) for each quantified var

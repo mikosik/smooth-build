@@ -10,13 +10,13 @@ import static org.smoothbuild.compile.fs.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.fs.ps.ast.expr.AnonymousFuncP;
-import org.smoothbuild.compile.fs.ps.ast.expr.ItemP;
-import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedFuncP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedValueP;
-import org.smoothbuild.compile.fs.ps.ast.expr.RefableP;
-import org.smoothbuild.compile.fs.ps.ast.expr.StructP;
+import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
+import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
+import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 

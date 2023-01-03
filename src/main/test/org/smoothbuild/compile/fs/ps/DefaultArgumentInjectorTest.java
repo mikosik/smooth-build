@@ -8,7 +8,7 @@ import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
-import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.testing.TestContext;
 
 public class DefaultArgumentInjectorTest extends TestContext  {

@@ -9,8 +9,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
-import org.smoothbuild.compile.fs.ps.ast.expr.NamedEvaluableP;
+import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.testing.TestContext;
 
 public class ScopesInitializerTest extends TestContext {

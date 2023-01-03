@@ -3,10 +3,10 @@ package org.smoothbuild.compile.fs.ps;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.fs.ps.ast.expr.BlobP;
-import org.smoothbuild.compile.fs.ps.ast.expr.IntP;
-import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
-import org.smoothbuild.compile.fs.ps.ast.expr.StringP;
+import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
+import org.smoothbuild.compile.fs.ps.ast.define.IntP;
+import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
