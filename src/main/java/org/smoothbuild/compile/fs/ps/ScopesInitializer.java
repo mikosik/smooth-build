@@ -78,37 +78,37 @@ public class ScopesInitializer extends ModuleVisitorP {
     }
 
     private Initializer createScopeWithBindingsAndWrapInsideInitializer(WithScopeP withScopeP) {
-      var scopeFiller = new ScopeFiller(scope, log);
-      var newScope = scopeFiller.addBindingsFromScopeOf(withScopeP);
+      var scopeFiller = new ScopeCreator(scope, log);
+      var newScope = scopeFiller.createScopeFor(withScopeP);
       withScopeP.setScope(newScope);
       return new Initializer(newScope, log);
     }
   }
 
-  private static class ScopeFiller extends ModuleVisitorP {
+  private static class ScopeCreator extends ModuleVisitorP {
     private final ScopeP scope;
     private final Logger log;
     private final MutableBindings<RefableP> refables = mutableBindings();
     private final MutableBindings<StructP> types = mutableBindings();
 
-    public ScopeFiller(ScopeP scope, Logger log) {
+    public ScopeCreator(ScopeP scope, Logger log) {
       this.scope = scope;
       this.log = log;
     }
 
-    private ScopeP addBindingsFromScopeOf(WithScopeP withScopeP) {
+    private ScopeP createScopeFor(WithScopeP withScopeP) {
       // @formatter:off
       switch (withScopeP) {
-        case ModuleP     moduleP     -> addBindingsFromScopeOf(moduleP);
-        case StructP     structP     -> addBindingsFromScopeOf(structP);
-        case NamedValueP namedValueP -> addBindingsFromScopeOf(namedValueP);
-        case FuncP       funcP       -> addBindingsFromScopeOf(funcP);
+        case ModuleP     moduleP     -> initializeScopeFor(moduleP);
+        case StructP     structP     -> initializeScopeFor(structP);
+        case NamedValueP namedValueP -> initializeScopeFor(namedValueP);
+        case FuncP       funcP       -> initializeScopeFor(funcP);
       }
       // @formatter:on
       return scope.newInnerScope(refables.toFlatImmutable(), types.toFlatImmutable());
     }
 
-    private void addBindingsFromScopeOf(ModuleP moduleP) {
+    private void initializeScopeFor(ModuleP moduleP) {
       moduleP.structs().forEach(this::addType);
       moduleP.structs().forEach(this::addConstructor);
       moduleP.evaluables().forEach(this::addNamedEvaluable);
@@ -135,14 +135,14 @@ public class ScopesInitializer extends ModuleVisitorP {
       refables.add(constructor.name(), constructor);
     }
 
-    private void addBindingsFromScopeOf(StructP structP) {
+    private void initializeScopeFor(StructP structP) {
       structP.fields().forEach(this::addRefable);
     }
 
-    private void addBindingsFromScopeOf(NamedValueP namedValueP) {
+    private void initializeScopeFor(NamedValueP namedValueP) {
     }
 
-    private void addBindingsFromScopeOf(FuncP funcP) {
+    private void initializeScopeFor(FuncP funcP) {
       funcP.params().forEach(this::addRefable);
     }
 
