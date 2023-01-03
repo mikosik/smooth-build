@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs.ps;
 
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 
 import org.smoothbuild.compile.fs.lang.base.Nal;
@@ -9,6 +10,7 @@ import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.expr.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.expr.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.expr.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.expr.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.expr.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.expr.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.expr.RefableP;
@@ -28,12 +30,12 @@ import org.smoothbuild.util.bindings.MutableBindings;
 public class ScopesInitializer extends ModuleVisitorP {
   public static Logs initializeScopes(ModuleP moduleP) {
     var log = new LogBuffer();
-    new Initializer(new ScopeP(mutableBindings(), mutableBindings()), log)
+    new Initializer(new ScopeP(immutableBindings(), immutableBindings()), log)
         .visitModule(moduleP);
     return log;
   }
 
-  private static class Initializer extends ModuleVisitorP{
+  private static class Initializer extends ModuleVisitorP {
     private final ScopeP scope;
     private final Logger log;
 
@@ -66,13 +68,6 @@ public class ScopesInitializer extends ModuleVisitorP {
       visitNamedFuncSignature(namedFuncP);
       createScopeWithBindingsAndWrapInsideInitializer(namedFuncP)
           .visitFuncBody(namedFuncP);
-
-      for (var param : namedFuncP.params()) {
-        if (param.defaultValue().isPresent()) {
-          var defaultValue = param.defaultValue().get();
-          scope.refables().add(defaultValue.name(), defaultValue);
-        }
-      }
     }
 
     @Override
@@ -83,14 +78,25 @@ public class ScopesInitializer extends ModuleVisitorP {
     }
 
     private Initializer createScopeWithBindingsAndWrapInsideInitializer(WithScopeP withScopeP) {
-      var newScope = scope.newInnerScope();
+      var scopeFiller = new ScopeFiller(scope, log);
+      var newScope = scopeFiller.addBindingsFromScopeOf(withScopeP);
       withScopeP.setScope(newScope);
-      var initializer = new Initializer(newScope, log);
-      initializer.addBindingsFromScopeOf(withScopeP);
-      return initializer;
+      return new Initializer(newScope, log);
+    }
+  }
+
+  private static class ScopeFiller extends ModuleVisitorP {
+    private final ScopeP scope;
+    private final Logger log;
+    private final MutableBindings<RefableP> refables = mutableBindings();
+    private final MutableBindings<StructP> types = mutableBindings();
+
+    public ScopeFiller(ScopeP scope, Logger log) {
+      this.scope = scope;
+      this.log = log;
     }
 
-    private void addBindingsFromScopeOf(WithScopeP withScopeP) {
+    private ScopeP addBindingsFromScopeOf(WithScopeP withScopeP) {
       // @formatter:off
       switch (withScopeP) {
         case ModuleP     moduleP     -> addBindingsFromScopeOf(moduleP);
@@ -99,12 +105,25 @@ public class ScopesInitializer extends ModuleVisitorP {
         case FuncP       funcP       -> addBindingsFromScopeOf(funcP);
       }
       // @formatter:on
+      return scope.newInnerScope(refables.toFlatImmutable(), types.toFlatImmutable());
     }
 
     private void addBindingsFromScopeOf(ModuleP moduleP) {
       moduleP.structs().forEach(this::addType);
       moduleP.structs().forEach(this::addConstructor);
-      moduleP.evaluables().forEach(this::addRefable);
+      moduleP.evaluables().forEach(this::addNamedEvaluable);
+    }
+
+    private void addNamedEvaluable(NamedEvaluableP namedEvaluableP) {
+      addRefable(namedEvaluableP);
+      if (namedEvaluableP instanceof NamedFuncP namedFuncP) {
+        for (var param : namedFuncP.params()) {
+          if (param.defaultValue().isPresent()) {
+            var defaultValue = param.defaultValue().get();
+            addRefable(defaultValue);
+          }
+        }
+      }
     }
 
     private void addConstructor(StructP structP) {
@@ -113,7 +132,7 @@ public class ScopesInitializer extends ModuleVisitorP {
       // Constructor name starts with capital letter, so it can collide only
       // with other constructor name. This can only happen when other structure
       // with same name is declared which will be reported when adding struct type.
-      scope.refables().add(constructor.name(), constructor);
+      refables.add(constructor.name(), constructor);
     }
 
     private void addBindingsFromScopeOf(StructP structP) {
@@ -128,11 +147,11 @@ public class ScopesInitializer extends ModuleVisitorP {
     }
 
     private void addType(StructP type) {
-      addBinding(scope.types(), type);
+      addBinding(types, type);
     }
 
     private void addRefable(RefableP refableP) {
-      addBinding(scope.refables(), refableP);
+      addBinding(refables, refableP);
     }
 
     private <T extends Nal> void addBinding(MutableBindings<T> bindings, T binding) {

@@ -1,13 +1,17 @@
 package org.smoothbuild.compile.fs.ps.ast.expr;
 
-import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
+import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
-import org.smoothbuild.util.bindings.MutableBindings;
+import org.smoothbuild.util.bindings.ImmutableBindings;
 
 public record ScopeP(
-    MutableBindings<RefableP> refables,
-    MutableBindings<StructP> types) {
-  public ScopeP newInnerScope() {
-    return new ScopeP(mutableBindings(refables), mutableBindings(types));
+    ImmutableBindings<RefableP> refables,
+    ImmutableBindings<StructP> types) {
+  public ScopeP newInnerScope(
+      ImmutableBindings<RefableP> innerRefables,
+      ImmutableBindings<StructP> innerTypes) {
+    return new ScopeP(
+        immutableBindings(refables, innerRefables),
+        immutableBindings(types, innerTypes));
   }
 }
