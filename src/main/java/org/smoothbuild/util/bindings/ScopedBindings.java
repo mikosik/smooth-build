@@ -54,19 +54,6 @@ public sealed class ScopedBindings<E>
     return innerScopeBindings;
   }
 
-  public FlatBindings<? extends E> innerMostScopeBindings() {
-    // casts are safe - java compiler is not smart enough to handle that automatically
-    return switch (innerScopeBindings) {
-      case FlatBindings<?> flatBindings -> cast(flatBindings);
-      case ScopedBindings<?> scopedBindings -> cast(scopedBindings.innerMostScopeBindings());
-    };
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <E> FlatBindings<E> cast(FlatBindings<?> flatBindings) {
-    return (FlatBindings<E>) flatBindings;
-  }
-
   @Override
   public boolean equals(Object object) {
     if (this == object) {
