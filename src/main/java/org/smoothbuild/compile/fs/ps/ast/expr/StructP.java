@@ -6,11 +6,9 @@ import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.smoothbuild.compile.fs.lang.base.NalImpl;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
-import org.smoothbuild.compile.fs.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -27,14 +25,7 @@ public final class StructP extends NalImpl implements WithScopeP {
   private StructP(String name, NList<ItemP> fields, Location location) {
     super(name, location);
     this.fields = fields;
-    this.constructor = new NamedFuncP(
-        Optional.of(new TypeP(name, location)),
-        name,
-        name,
-        fields,
-        Optional.empty(),
-        Optional.empty(),
-        location);
+    this.constructor = new ConstructorP(this);
   }
 
   public NList<ItemP> fields() {

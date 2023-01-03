@@ -12,7 +12,10 @@ import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.ps.ast.type.TypeP;
 import org.smoothbuild.util.collect.NList;
 
-public final class NamedFuncP extends NamedEvaluableP implements FuncP {
+public sealed class NamedFuncP
+    extends NamedEvaluableP
+    implements FuncP
+    permits ConstructorP {
   private final Optional<TypeP> resT;
   private final NList<ItemP> params;
   private FuncTS typeS;
