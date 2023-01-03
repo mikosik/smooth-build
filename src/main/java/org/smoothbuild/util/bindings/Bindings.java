@@ -43,7 +43,7 @@ public sealed interface Bindings<E>
 
   public <M> Bindings<M> map(Function<? super E, M> mapper);
 
-  public ImmutableMap<String, E> asMap();
+  public ImmutableMap<String, E> toMap();
 
   public FlatImmutableBindings<E> toFlatImmutable();
 }

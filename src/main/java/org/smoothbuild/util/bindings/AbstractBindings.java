@@ -21,6 +21,6 @@ public abstract sealed class AbstractBindings<E>
 
   @Override
   public FlatImmutableBindings<E> toFlatImmutable() {
-    return immutableBindings(asMap());
+    return immutableBindings(toMap());
   }
 }

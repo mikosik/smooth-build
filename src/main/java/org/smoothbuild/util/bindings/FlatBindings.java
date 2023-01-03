@@ -30,7 +30,7 @@ public sealed class FlatBindings<E> extends AbstractBindings<E>
   }
 
   @Override
-  public ImmutableMap<String, E> asMap() {
+  public ImmutableMap<String, E> toMap() {
     return ImmutableMap.copyOf(map);
   }
 

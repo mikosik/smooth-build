@@ -207,7 +207,7 @@ public class BindingsTest {
       var first = elem("name", 7);
       var second = elem("other", 5);
       var bindings = newBindings(first, second);
-      assertThat(bindings.asMap())
+      assertThat(bindings.toMap())
           .isEqualTo(Map.of("name", first, "other", second));
     }
 
@@ -264,12 +264,12 @@ public class BindingsTest {
     }
 
     @Nested
-    class _as_map {
+    class _to_map {
       @Test
       public void contains_elements_from_outer_and_inner_scope() {
         var outer = immutableBindings(mapOfElems(elem("1", 1)));
         var bindings = newBindings(outer, elem("2", 2));
-        assertThat(bindings.asMap())
+        assertThat(bindings.toMap())
             .isEqualTo(mapOfElems(elem("1", 1), elem("2", 2)));
       }
 
@@ -277,7 +277,7 @@ public class BindingsTest {
       public void does_not_contain_elements_from_outer_scope_overwritten_in_inner_scope() {
         var outer = immutableBindings(mapOfElems(elem("1", 1)));
         var bindings = newBindings(outer, elem("1", 11));
-        assertThat(bindings.asMap())
+        assertThat(bindings.toMap())
             .isEqualTo(mapOfElems(elem("1", 11)));
       }
     }

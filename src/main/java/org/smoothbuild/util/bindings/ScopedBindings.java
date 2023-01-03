@@ -42,8 +42,8 @@ public sealed class ScopedBindings<E>
   }
 
   @Override
-  public ImmutableMap<String, E> asMap() {
-    return override(innerScopeBindings.asMap(), outerScopeBindings.asMap());
+  public ImmutableMap<String, E> toMap() {
+    return override(innerScopeBindings.toMap(), outerScopeBindings.toMap());
   }
 
   public Bindings<? extends E> outerScopeBindings() {

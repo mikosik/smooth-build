@@ -82,7 +82,7 @@ public class PsConverter {
 
   private ModuleS convertModule(ModuleP moduleP) {
     var structs = map(moduleP.structs(), this::convertStruct);
-    var evaluables = map(moduleP.scope().refables().asMap().values(), this::convertRefableP);
+    var evaluables = map(moduleP.scope().refables().toMap().values(), this::convertRefableP);
     var members = new ScopeS(bindings(structs), bindings(evaluables));
     var scope = scopeS(imported, members);
     return new ModuleS(members, scope);

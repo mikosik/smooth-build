@@ -29,7 +29,7 @@ public class ListRunner {
       reporter.startNewPhase("Values that can be evaluated:");
       definitions.get()
           .evaluables()
-          .asMap()
+          .toMap()
           .values()
           .stream()
           .filter(ListRunner::isEvaluableValue)
