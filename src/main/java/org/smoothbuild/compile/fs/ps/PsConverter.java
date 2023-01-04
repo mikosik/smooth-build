@@ -6,7 +6,7 @@ import static org.smoothbuild.compile.fs.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.fs.lang.type.TypeFS.STRING;
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.toMap;
+import static org.smoothbuild.util.collect.Maps.mapValues;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
@@ -59,9 +59,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.fs.ps.infer.TypeTeller;
-import org.smoothbuild.util.bindings.FlatImmutableBindings;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 
@@ -81,15 +79,12 @@ public class PsConverter {
   }
 
   private ModuleS convertModule(ModuleP moduleP) {
-    var structs = map(moduleP.structs(), this::convertStruct);
-    var evaluables = map(moduleP.scope().refables().toMap().values(), this::convertRefableP);
-    var members = new ScopeS(bindings(structs), bindings(evaluables));
-    var scope = scopeS(imported, members);
-    return new ModuleS(members, scope);
-  }
-
-  private static <T extends Named> FlatImmutableBindings<T> bindings(ImmutableList<T> nameds) {
-    return immutableBindings(toMap(nameds, Named::name, n -> n));
+    var scopeP = moduleP.scope();
+    var structs = mapValues(scopeP.types().toMap(), this::convertStruct);
+    var evaluables = mapValues(scopeP.refables().toMap(), this::convertRefableP);
+    var members = new ScopeS(immutableBindings(structs), immutableBindings(evaluables));
+    var scopeS = scopeS(imported, members);
+    return new ModuleS(members, scopeS);
   }
 
   private TypeDefinitionS convertStruct(StructP structP) {
