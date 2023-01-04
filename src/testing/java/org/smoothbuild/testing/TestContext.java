@@ -57,7 +57,7 @@ import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
-import org.smoothbuild.compile.fs.lang.define.RefS;
+import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
 import org.smoothbuild.compile.fs.lang.define.TraceS;
@@ -1132,7 +1132,7 @@ public class TestContext {
   }
 
   public static MonoizeS monoizeS(int line, NamedEvaluableS namedEvaluableS) {
-    return monoizeS(line, refS(line, namedEvaluableS));
+    return monoizeS(line, referenceS(line, namedEvaluableS));
   }
 
   public static MonoizeS monoizeS(
@@ -1143,8 +1143,8 @@ public class TestContext {
   public static MonoizeS monoizeS(
       int line, ImmutableMap<VarS, TypeS> varMap, NamedEvaluableS namedEvaluableS) {
     var location = location(line);
-    var refS = new RefS(namedEvaluableS.schema(), namedEvaluableS.name(), location);
-    return monoizeS(varMap, refS, location);
+    var referenceS = new ReferenceS(namedEvaluableS.schema(), namedEvaluableS.name(), location);
+    return monoizeS(varMap, referenceS, location);
   }
 
   public static MonoizeS monoizeS(MonoizableS monoizableS) {
@@ -1192,15 +1192,15 @@ public class TestContext {
   }
 
   public static MonoizeS paramRefS(int line, TypeS type, String name) {
-    return monoizeS(line, refS(line, new SchemaS(varSetS(), type), name));
+    return monoizeS(line, referenceS(line, new SchemaS(varSetS(), type), name));
   }
 
-  public static RefS refS(int line, NamedEvaluableS namedEvaluableS) {
-    return refS(line, namedEvaluableS.schema(), namedEvaluableS.name());
+  public static ReferenceS referenceS(int line, NamedEvaluableS namedEvaluableS) {
+    return referenceS(line, namedEvaluableS.schema(), namedEvaluableS.name());
   }
 
-  public static RefS refS(int line, SchemaS schema, String name) {
-    return new RefS(schema, name, location(line));
+  public static ReferenceS referenceS(int line, SchemaS schema, String name) {
+    return new ReferenceS(schema, name, location(line));
   }
 
   public static SelectS selectS(ExprS selectable, String field) {

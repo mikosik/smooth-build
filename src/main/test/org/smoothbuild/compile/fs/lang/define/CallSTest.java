@@ -15,7 +15,7 @@ public class CallSTest extends TestContext {
             CallS(
               callee = MonoizeS(
                 varMap = {A=Int}
-                monoizableS = RefS(
+                monoizableS = ReferenceS(
                   schema = <A>(A)->A
                   name = myId
                   location = myBuild.smooth:4

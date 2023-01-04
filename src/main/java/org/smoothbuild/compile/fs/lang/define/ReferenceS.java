@@ -10,7 +10,8 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
 /**
  * Reference to RefableS.
  */
-public record RefS(SchemaS schema, String name, Location location) implements MonoizableS, Nal {
+public record ReferenceS(SchemaS schema, String name, Location location)
+    implements MonoizableS, Nal {
   @Override
   public String toString() {
     var fields = joinToString("\n",
@@ -18,6 +19,6 @@ public record RefS(SchemaS schema, String name, Location location) implements Mo
         "name = " + name,
         "location = " + location
     );
-    return "RefS(\n" + indent(fields) + "\n)";
+    return "ReferenceS(\n" + indent(fields) + "\n)";
   }
 }

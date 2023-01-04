@@ -43,7 +43,7 @@ import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
-import org.smoothbuild.compile.fs.lang.define.RefS;
+import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
 import org.smoothbuild.compile.fs.lang.type.AnnotationNames;
@@ -184,7 +184,7 @@ public class SbTranslator {
   public ExprB translateMonoizable(MonoizableS monoizableS) {
     return switch (monoizableS) {
       case AnonymousFuncS anonymousFuncS -> translateAnonymousFunc(anonymousFuncS);
-      case RefS refS -> translateRef(refS);
+      case ReferenceS referenceS -> translateReference(referenceS);
     };
   }
 
@@ -200,23 +200,23 @@ public class SbTranslator {
     return bytecodeF.closurize(exprFuncB);
   }
 
-  private ExprB translateRef(RefS refS) {
-    var itemS = environment.get(refS.name());
+  private ExprB translateReference(ReferenceS referenceS) {
+    var itemS = environment.get(referenceS.name());
     if (itemS == null) {
-      Optional<NamedEvaluableS> namedEvaluableS = evaluables.getOptional(refS.name());
+      Optional<NamedEvaluableS> namedEvaluableS = evaluables.getOptional(referenceS.name());
       if (namedEvaluableS.isPresent()) {
         return switch (namedEvaluableS.get()) {
           case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
-          case NamedValueS namedValS -> translateNamedValueWithCache(refS.location(), namedValS);
+          case NamedValueS namedValueS -> translateNamedValueWithCache(referenceS, namedValueS);
         };
       } else {
         throw new SbTranslatorExc(
-            "Cannot resolve `" + refS.name() + "` at " + refS.location() + ".");
+            "Cannot resolve `" + referenceS.name() + "` at " + referenceS.location() + ".");
       }
     } else {
-      var index = environment.indexOf(refS.name());
+      var index = environment.indexOf(referenceS.name());
       return saveNalAndReturn(
-          refS, bytecodeF.reference(translateT(itemS.type()), BigInteger.valueOf(index)));
+          referenceS, bytecodeF.reference(translateT(itemS.type()), BigInteger.valueOf(index)));
     }
   }
 
@@ -312,9 +312,10 @@ public class SbTranslator {
     return bytecodeF.string(stringS.string());
   }
 
-  private ExprB translateNamedValueWithCache(Location refLocation, NamedValueS namedValueS) {
+  private ExprB translateNamedValueWithCache(ReferenceS referenceS, NamedValueS namedValueS) {
     var key = new CacheKey(namedValueS.name(), typeSbTranslator.varMap());
-    return computeIfAbsent(cache, key, name -> translateNamedValue(refLocation, namedValueS));
+    return computeIfAbsent(
+        cache, key, name -> translateNamedValue(referenceS.location(), namedValueS));
   }
 
   private ExprB translateNamedValue(Location refLocation, NamedValueS namedValueS) {

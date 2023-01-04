@@ -31,7 +31,7 @@ import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
-import org.smoothbuild.compile.fs.lang.define.RefS;
+import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
@@ -225,8 +225,8 @@ public class PsConverter {
   }
 
   private static ExprS monoizeRefable(ReferenceP referenceP, SchemaS schemaS) {
-    var refS = new RefS(schemaS, referenceP.name(), referenceP.location());
-    return newMonoize(referenceP, refS);
+    var referenceS = new ReferenceS(schemaS, referenceP.name(), referenceP.location());
+    return newMonoize(referenceP, referenceS);
   }
 
   private static MonoizeS newMonoize(MonoizableP monoizableP, MonoizableS monoizableS) {

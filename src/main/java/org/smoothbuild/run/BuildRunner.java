@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import org.smoothbuild.compile.fs.lang.define.MonoizeS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
-import org.smoothbuild.compile.fs.lang.define.RefS;
+import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.ArtifactSaver;
 import org.smoothbuild.run.eval.EvaluatorExcS;
@@ -79,7 +79,7 @@ public class BuildRunner {
 
   private Optional<ImmutableList<ValueB>> evaluate(
       ImmutableBindings<NamedEvaluableS> evaluables, ImmutableList<NamedValueS> namedValues) {
-    var exprs = map(namedValues, v -> new MonoizeS(refTo(v), commandLineLocation()));
+    var exprs = map(namedValues, v -> new MonoizeS(referenceTo(v), commandLineLocation()));
     try {
       return evaluator.evaluate(evaluables, exprs);
     } catch (EvaluatorExcS e) {
@@ -88,7 +88,7 @@ public class BuildRunner {
     }
   }
 
-  private static RefS refTo(NamedValueS v) {
-    return new RefS(v.schema(), v.name(), commandLineLocation());
+  private static ReferenceS referenceTo(NamedValueS namedValueS) {
+    return new ReferenceS(namedValueS.schema(), namedValueS.name(), commandLineLocation());
   }
 }

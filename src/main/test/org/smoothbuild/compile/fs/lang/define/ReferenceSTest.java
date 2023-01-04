@@ -5,13 +5,13 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
-public class RefSTest extends TestContext {
+public class ReferenceSTest extends TestContext {
   @Test
   public void to_string() {
-    var refS = new RefS(schemaS(intTS()), "referenced", location(7));
+    var refS = new ReferenceS(schemaS(intTS()), "referenced", location(7));
     assertThat(refS.toString())
         .isEqualTo("""
-            RefS(
+            ReferenceS(
               schema = <>Int
               name = referenced
               location = myBuild.smooth:7
