@@ -2,7 +2,7 @@ package org.smoothbuild.vm.bytecode.type;
 
 import java.util.Objects;
 
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.Strings;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -11,7 +11,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 /**
  * Category of ExprB.
  */
-public abstract class CategoryB implements Named {
+public abstract class CategoryB {
   private final String name;
   private final Hash hash;
   private final CategoryKindB kind;
@@ -22,9 +22,12 @@ public abstract class CategoryB implements Named {
     this.kind = kind;
   }
 
-  @Override
   public String name() {
     return name;
+  }
+
+  public String q() {
+    return Strings.q(name);
   }
 
   public abstract ExprB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb);
