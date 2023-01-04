@@ -2,7 +2,7 @@ package org.smoothbuild.compile.fs.ps;
 
 import static org.smoothbuild.compile.fs.ps.DecodeLiterals.decodeLiterals;
 import static org.smoothbuild.compile.fs.ps.DefaultArgumentInjector.injectDefaultArguments;
-import static org.smoothbuild.compile.fs.ps.DetectUndefinedRefablesAndTypes.detectUndefinedRefablesAndTypes;
+import static org.smoothbuild.compile.fs.ps.DetectUndefinedReferenceablesAndTypes.detectUndefinedReferenceablesAndTypes;
 import static org.smoothbuild.compile.fs.ps.PsConverter.convertPs;
 import static org.smoothbuild.compile.fs.ps.ScopesInitializer.initializeScopes;
 import static org.smoothbuild.compile.fs.ps.ast.ModuleDependenciesSorter.sortByDependencies;
@@ -33,7 +33,7 @@ public class PsTranslator {
     protected ModuleS processImpl() throws FailedException {
       addLogs(decodeLiterals(moduleP));
       addLogs(initializeScopes(moduleP));
-      addLogs(detectUndefinedRefablesAndTypes(moduleP, imported));
+      addLogs(detectUndefinedReferenceablesAndTypes(moduleP, imported));
       addLogs(injectDefaultArguments(moduleP, imported));
       var sortedModuleP = addLogsAndGetValue(sortByDependencies(moduleP));
       addLogs(inferTypes(sortedModuleP, imported));

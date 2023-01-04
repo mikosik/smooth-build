@@ -81,7 +81,7 @@ public class PsConverter {
   private ModuleS convertModule(ModuleP moduleP) {
     var scopeP = moduleP.scope();
     var structs = mapValues(scopeP.types().toMap(), this::convertStruct);
-    var evaluables = mapValues(scopeP.referencables().toMap(), this::convertRefableP);
+    var evaluables = mapValues(scopeP.referencables().toMap(), this::convertReferenceableP);
     var members = new ScopeS(immutableBindings(structs), immutableBindings(evaluables));
     var scopeS = scopeS(imported, members);
     return new ModuleS(members, scopeS);
@@ -99,7 +99,7 @@ public class PsConverter {
         constructorP.schemaS(), constructorP.name(), params, constructorP.location());
   }
 
-  private NamedEvaluableS convertRefableP(ReferenceableP referenceableP) {
+  private NamedEvaluableS convertReferenceableP(ReferenceableP referenceableP) {
     return switch (referenceableP) {
       case ConstructorP constructorP -> convertConstructor(constructorP);
       case NamedFuncP namedFuncP -> convertNamedFunc(namedFuncP);
@@ -221,10 +221,10 @@ public class PsConverter {
   }
 
   private ExprS convertReference(ReferenceP referenceP, SchemaS schemaS) {
-    return monoizeRefable(referenceP, schemaS);
+    return monoizeReferenceable(referenceP, schemaS);
   }
 
-  private static ExprS monoizeRefable(ReferenceP referenceP, SchemaS schemaS) {
+  private static ExprS monoizeReferenceable(ReferenceP referenceP, SchemaS schemaS) {
     var referenceS = new ReferenceS(schemaS, referenceP.name(), referenceP.location());
     return newMonoize(referenceP, referenceS);
   }

@@ -54,8 +54,8 @@ public class TestingModuleLoader {
   }
 
   public void containsEvaluableWithSchema(String name, SchemaS expectedT) {
-    var refable = assertContainsEvaluable(name);
-    assertThat(refable.schema())
+    var referenceable = assertContainsEvaluable(name);
+    assertThat(referenceable.schema())
         .isEqualTo(expectedT);
   }
 

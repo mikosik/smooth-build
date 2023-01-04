@@ -17,7 +17,7 @@ public class ScopesInitializerTest extends TestContext {
   @Nested
   class _module {
     @Test
-    public void module_scope_has_its_member_function_in_refables() {
+    public void module_scope_has_its_member_function_in_referenceables() {
       var namedFuncP = namedFuncP("myFunc");
       var moduleP = new ModuleP(list(), list(namedFuncP));
 
@@ -28,7 +28,7 @@ public class ScopesInitializerTest extends TestContext {
     }
 
     @Test
-    public void module_scope_has_its_member_value_in_refables() {
+    public void module_scope_has_its_member_value_in_referenceables() {
       var namedValueP = namedValueP("myValue");
       var moduleP = new ModuleP(list(), list(namedValueP));
 
@@ -39,7 +39,7 @@ public class ScopesInitializerTest extends TestContext {
     }
 
     @Test
-    public void module_scope_has_its_member_function_param_default_value_in_refables() {
+    public void module_scope_has_its_member_function_param_default_value_in_referenceables() {
       var defaultValue = namedValueP("myFunc:param");
       var param = itemP("param", defaultValue);
       var namedFuncP = namedFuncP("myFunc", nlist(param));
@@ -57,7 +57,7 @@ public class ScopesInitializerTest extends TestContext {
     @Nested
     class _parameter_default_value {
       @Test
-      public void parameter_default_value_scope_refables_does_not_contain_that_parameter() {
+      public void parameter_default_value_scope_referenceables_does_not_contain_that_parameter() {
         var defaultValue = namedValueP("myFunc:param");
         var param = itemP("param", defaultValue);
         var namedFuncP = namedFuncP("myFunc", nlist(param));
@@ -70,7 +70,7 @@ public class ScopesInitializerTest extends TestContext {
       }
 
       @Test
-      public void parameter_default_value_scope_refables_does_not_contain_other_parameter() {
+      public void parameter_default_value_scope_referenceables_does_not_contain_other_parameter() {
         var param1DefaultValue = namedValueP("myFunc:param");
         var param1 = itemP("param1", param1DefaultValue);
         var param2 = itemP("param2");
@@ -84,16 +84,16 @@ public class ScopesInitializerTest extends TestContext {
       }
 
       @Test
-      public void parameter_default_value_scope_refables_contains_function_from_module() {
-        testThatParameterDefaultValueScopeHasModuleMemberInRefables(namedFuncP("myFunc"));
+      public void parameter_default_value_scope_referenceables_contains_function_from_module() {
+        testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(namedFuncP("myFunc"));
       }
 
       @Test
-      public void parameter_default_value_scope_refables_contains_value_from_module() {
-        testThatParameterDefaultValueScopeHasModuleMemberInRefables(namedValueP("myValue"));
+      public void parameter_default_value_scope_referenceables_contains_value_from_module() {
+        testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(namedValueP("myValue"));
       }
 
-      private void testThatParameterDefaultValueScopeHasModuleMemberInRefables(
+      private void testThatParameterDefaultValueScopeHasModuleMemberInReferenceables(
           NamedEvaluableP member) {
         var defaultValue = namedValueP("myFuncWithParamWithDefaultValue:param");
         var param = itemP("param", defaultValue);

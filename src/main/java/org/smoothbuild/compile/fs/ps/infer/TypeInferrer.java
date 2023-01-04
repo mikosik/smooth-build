@@ -62,7 +62,7 @@ public class TypeInferrer {
 
   private void visitModule(ModuleP moduleP) {
     moduleP.structs().forEach(this::visitStruct);
-    moduleP.evaluables().forEach(this::visitRefable);
+    moduleP.evaluables().forEach(this::visitReferenceable);
   }
 
   private void visitStruct(StructP structP) {
@@ -81,7 +81,7 @@ public class TypeInferrer {
     constructorP.setTypeS(funcTS);
   }
 
-  private void visitRefable(ReferenceableP referenceableP) {
+  private void visitReferenceable(ReferenceableP referenceableP) {
     switch (referenceableP) {
       case NamedFuncP namedFuncP -> visitFunc(namedFuncP);
       case NamedValueP namedValueP -> visitValue(namedValueP);

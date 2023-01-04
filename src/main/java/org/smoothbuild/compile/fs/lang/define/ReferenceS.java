@@ -8,7 +8,7 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 
 /**
- * Reference to RefableS.
+ * Reference to ReferenceableS.
  */
 public record ReferenceS(SchemaS schema, String name, Location location)
     implements MonoizableS, Nal {

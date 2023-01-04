@@ -19,8 +19,8 @@ import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.Strings;
 
-public class DetectUndefinedRefablesAndTypes {
-  public static Logs detectUndefinedRefablesAndTypes(ModuleP moduleP, ScopeS imported) {
+public class DetectUndefinedReferenceablesAndTypes {
+  public static Logs detectUndefinedReferenceablesAndTypes(ModuleP moduleP, ScopeS imported) {
     var log = new LogBuffer();
     var emptyScope = new ScopeP(immutableBindings(), immutableBindings());
     new Detector(imported, emptyScope, log)

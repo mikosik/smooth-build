@@ -115,12 +115,12 @@ public class ScopesInitializer extends ModuleVisitorP {
     }
 
     private void addNamedEvaluable(NamedEvaluableP namedEvaluableP) {
-      addRefable(namedEvaluableP);
+      addReferenceable(namedEvaluableP);
       if (namedEvaluableP instanceof NamedFuncP namedFuncP) {
         for (var param : namedFuncP.params()) {
           if (param.defaultValue().isPresent()) {
             var defaultValue = param.defaultValue().get();
-            addRefable(defaultValue);
+            addReferenceable(defaultValue);
           }
         }
       }
@@ -128,7 +128,7 @@ public class ScopesInitializer extends ModuleVisitorP {
 
     private void addConstructor(StructP structP) {
       var constructor = structP.constructor();
-      // No need to report error when other refable with same name is already defined.
+      // No need to report error when other referenceable with same name is already defined.
       // Constructor name starts with capital letter, so it can collide only
       // with other constructor name. This can only happen when other structure
       // with same name is declared which will be reported when adding struct type.
@@ -136,21 +136,21 @@ public class ScopesInitializer extends ModuleVisitorP {
     }
 
     private void initializeScopeFor(StructP structP) {
-      structP.fields().forEach(this::addRefable);
+      structP.fields().forEach(this::addReferenceable);
     }
 
     private void initializeScopeFor(NamedValueP namedValueP) {
     }
 
     private void initializeScopeFor(FuncP funcP) {
-      funcP.params().forEach(this::addRefable);
+      funcP.params().forEach(this::addReferenceable);
     }
 
     private void addType(StructP type) {
       addBinding(types, type);
     }
 
-    private void addRefable(ReferenceableP referenceableP) {
+    private void addReferenceable(ReferenceableP referenceableP) {
       addBinding(referenceables, referenceableP);
     }
 
