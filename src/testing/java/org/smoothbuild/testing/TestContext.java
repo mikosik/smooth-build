@@ -23,8 +23,8 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.NList.nlist;
-import static org.smoothbuild.util.collect.Nameds.toMap;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
@@ -1739,7 +1739,7 @@ public class TestContext {
 
   @SafeVarargs
   public static <T extends Named> ImmutableBindings<T> bindings(T... nameds) {
-    return immutableBindings(toMap(list(nameds)));
+    return immutableBindings(toMap(list(nameds), Named::name, v -> v));
   }
 
   private static String simpleName(String fullName) {
