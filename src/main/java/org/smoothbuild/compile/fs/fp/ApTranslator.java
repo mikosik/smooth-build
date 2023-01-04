@@ -55,7 +55,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
@@ -212,7 +212,7 @@ public class ApTranslator {
       private ExprP createChainHead(AtomicReference<ExprP> pipedArg, ChainHeadContext chainHead) {
         var location = fileLocation(filePath, chainHead);
         if (chainHead.NAME() != null) {
-          return new RefP(chainHead.NAME().getText(), location);
+          return new ReferenceP(chainHead.NAME().getText(), location);
         }
         if (chainHead.array() != null) {
           var elems = map(chainHead.array().expr(), this::createExpr);

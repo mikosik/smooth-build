@@ -12,7 +12,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 
@@ -36,7 +36,7 @@ public class UnitTypeInferrer {
       case AnonymousFuncP anonymousFunc -> inferAnonymousFunc(anonymousFunc);
       case NamedArgP      namedArg      -> inferNamedArg(namedArg);
       case OrderP         order         -> inferOrder(order);
-      case RefP           ref           -> inferMonoizable(ref);
+      case ReferenceP     referenceP    -> inferMonoizable(referenceP);
       case SelectP        select        -> inferSelect(select);
       case StringP        string        -> {}
       case IntP           int_          -> {}

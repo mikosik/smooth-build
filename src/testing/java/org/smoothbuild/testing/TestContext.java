@@ -83,7 +83,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.BytecodeLoader;
@@ -1486,11 +1486,11 @@ public class TestContext {
     return new AnonymousFuncP(params, body, location());
   }
 
-  public static CallP callP(RefP callee) {
+  public static CallP callP(ReferenceP callee) {
     return callP(callee, location());
   }
 
-  public static CallP callP(RefP callee, Location location) {
+  public static CallP callP(ReferenceP callee, Location location) {
     return new CallP(callee, list(), location);
   }
 
@@ -1573,12 +1573,12 @@ public class TestContext {
     return new IntP("7", location());
   }
 
-  public static RefP refP(String name) {
-    return new RefP(name, location(7));
+  public static ReferenceP referenceP(String name) {
+    return new ReferenceP(name, location(7));
   }
 
-  public static RefP refP(String name, Location location) {
-    return new RefP(name, location);
+  public static ReferenceP referenceP(String name, Location location) {
+    return new ReferenceP(name, location);
   }
 
   // location

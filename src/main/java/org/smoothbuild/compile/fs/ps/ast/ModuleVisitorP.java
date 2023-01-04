@@ -16,8 +16,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
 import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
@@ -116,7 +116,7 @@ public class ModuleVisitorP {
       case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
       case NamedArgP      namedArgP      -> visitNamedArg(namedArgP);
       case OrderP         orderP         -> visitOrder(orderP);
-      case RefP           refP           -> visitRef(refP);
+      case ReferenceP     referenceP     -> visitRef(referenceP);
       case SelectP        selectP        -> visitSelect(selectP);
       case StringP        stringP        -> visitString(stringP);
     }
@@ -163,7 +163,7 @@ public class ModuleVisitorP {
     visitExpr(selectP.selectable());
   }
 
-  public void visitRef(RefP refP) {}
+  public void visitRef(ReferenceP referenceP) {}
 
   public void visitString(StringP stringP) {}
 

@@ -26,7 +26,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.out.log.Logger;
@@ -99,7 +99,7 @@ public class TypeInferrerResolve {
       case NamedArgP      namedArgP      -> resolveNamedArg(namedArgP);
       case OrderP         orderP         -> resolveOrder(orderP);
       case SelectP        selectP        -> resolveSelect(selectP);
-      case RefP           refP           -> resolveMonoizable(refP);
+      case ReferenceP     referenceP     -> resolveMonoizable(referenceP);
       case StringP        stringP        -> resolveExprType(stringP);
       case IntP           intP           -> resolveExprType(intP);
       case BlobP          blobP          -> resolveExprType(blobP);

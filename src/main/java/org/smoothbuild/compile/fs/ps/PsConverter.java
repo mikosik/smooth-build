@@ -53,8 +53,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
 import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
@@ -175,7 +175,7 @@ public class PsConverter {
       case AnonymousFuncP anonymousFuncP -> convertAnonymousFunc(anonymousFuncP);
       case NamedArgP      namedArgP      -> convertExpr(namedArgP.expr());
       case OrderP         orderP         -> convertOrder(orderP);
-      case RefP           refP           -> convertRef(refP);
+      case ReferenceP     referenceP     -> convertReference(referenceP);
       case SelectP        selectP        -> convertSelect(selectP);
       case StringP        stringP        -> convertString(stringP);
     };
@@ -216,17 +216,17 @@ public class PsConverter {
     return new SelectS(selectable, selectP.field(), selectP.location());
   }
 
-  private ExprS convertRef(RefP refP) {
-    return convertRef(refP, typeTeller.schemaFor(refP.name()).get());
+  private ExprS convertReference(ReferenceP referenceP) {
+    return convertReference(referenceP, typeTeller.schemaFor(referenceP.name()).get());
   }
 
-  private ExprS convertRef(RefP refP, SchemaS schemaS) {
-    return monoizeRefable(refP, schemaS);
+  private ExprS convertReference(ReferenceP referenceP, SchemaS schemaS) {
+    return monoizeRefable(referenceP, schemaS);
   }
 
-  private static ExprS monoizeRefable(RefP refP, SchemaS schemaS) {
-    var refS = new RefS(schemaS, refP.name(), refP.location());
-    return newMonoize(refP, refS);
+  private static ExprS monoizeRefable(ReferenceP referenceP, SchemaS schemaS) {
+    var refS = new RefS(schemaS, referenceP.name(), referenceP.location());
+    return newMonoize(referenceP, refS);
   }
 
   private static MonoizeS newMonoize(MonoizableP monoizableP, MonoizableS monoizableS) {

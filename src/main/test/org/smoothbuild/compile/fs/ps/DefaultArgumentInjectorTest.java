@@ -17,7 +17,7 @@ public class DefaultArgumentInjectorTest extends TestContext  {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
     var importedS = new ScopeS(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
-    var callP = callP(refP("myFunc"), callLocation);
+    var callP = callP(referenceP("myFunc"), callLocation);
     var namedValueP = namedValueP("value", callP);
     var moduleP = new ModuleP(list(), list(namedValueP));
 
@@ -25,7 +25,7 @@ public class DefaultArgumentInjectorTest extends TestContext  {
     injectDefaultArguments(moduleP, importedS);
 
     assertThat(callP.positionedArgs())
-        .isEqualTo(list(refP("myFunc:param", callLocation)));
+        .isEqualTo(list(referenceP("myFunc:param", callLocation)));
   }
 
   @Test
@@ -33,7 +33,7 @@ public class DefaultArgumentInjectorTest extends TestContext  {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
     var importedS = new ScopeS(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
-    var callP = callP(refP("myFunc"), callLocation);
+    var callP = callP(referenceP("myFunc"), callLocation);
     var namedValueP = namedFuncP("value", nlist(itemP("p", callP)));
     var moduleP = new ModuleP(list(), list(namedValueP));
 
@@ -41,6 +41,6 @@ public class DefaultArgumentInjectorTest extends TestContext  {
     injectDefaultArguments(moduleP, importedS);
 
     assertThat(callP.positionedArgs())
-        .isEqualTo(list(refP("myFunc:param", callLocation)));
+        .isEqualTo(list(referenceP("myFunc:param", callLocation)));
   }
 }

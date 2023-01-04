@@ -36,7 +36,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
@@ -171,7 +171,7 @@ public class ExprTypeUnifier {
       case AnonymousFuncP anonymousFuncP -> unifyAndMemoize(this::unifyAnonymousFunc, anonymousFuncP);
       case NamedArgP      namedArgP      -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP         orderP         -> unifyAndMemoize(this::unifyOrder, orderP);
-      case RefP           refP           -> unifyAndMemoize(this::unifyRef, refP);
+      case ReferenceP     referenceP     -> unifyAndMemoize(this::unifyReference, referenceP);
       case SelectP        selectP        -> unifyAndMemoize(this::unifySelect, selectP);
       case StringP        stringP        -> setAndMemoize(TypeFS.STRING, stringP);
       case IntP           intP           -> setAndMemoize(TypeFS.INT, intP);
@@ -243,14 +243,14 @@ public class ExprTypeUnifier {
     return Optional.of(new ArrayTS(elemVar));
   }
 
-  private Optional<TypeS> unifyRef(RefP refP) {
-    Optional<SchemaS> schemaS = typeTeller.schemaFor(refP.name());
-    return schemaS.flatMap(s -> unifyRef(refP, s));
+  private Optional<TypeS> unifyReference(ReferenceP referenceP) {
+    Optional<SchemaS> schemaS = typeTeller.schemaFor(referenceP.name());
+    return schemaS.flatMap(s -> unifyReference(referenceP, s));
   }
 
-  private Optional<TypeS> unifyRef(RefP refP, SchemaS schemaS) {
-    refP.setSchemaS(schemaS);
-    return unifyMonoizable(refP);
+  private Optional<TypeS> unifyReference(ReferenceP referenceP, SchemaS schemaS) {
+    referenceP.setSchemaS(schemaS);
+    return unifyMonoizable(referenceP);
   }
 
   private Optional<TypeS> unifyMonoizable(MonoizableP monoizableP) {

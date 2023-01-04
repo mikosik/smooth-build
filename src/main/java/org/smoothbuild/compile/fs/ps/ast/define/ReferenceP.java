@@ -8,11 +8,11 @@ import java.util.Objects;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 
-public final class RefP extends MonoizableP {
+public final class ReferenceP extends MonoizableP {
   private final String name;
   private SchemaS schemaS;
 
-  public RefP(String name, Location location) {
+  public ReferenceP(String name, Location location) {
     super(location);
     this.name = name;
   }
@@ -35,7 +35,7 @@ public final class RefP extends MonoizableP {
     if (this == object) {
       return true;
     }
-    return object instanceof RefP that
+    return object instanceof ReferenceP that
         && Objects.equals(this.name, that.name)
         && Objects.equals(this.location(), that.location());
   }
@@ -51,6 +51,6 @@ public final class RefP extends MonoizableP {
         "name = " + name,
         "location = " + location()
     );
-    return "RefP(\n" + indent(fields) + "\n)";
+    return "ReferenceP(\n" + indent(fields) + "\n)";
   }
 }

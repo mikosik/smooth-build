@@ -23,7 +23,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 
@@ -65,7 +65,7 @@ public class TempVarsNamer {
       case AnonymousFuncP anonymousFuncP -> handleAnonymousFunc(anonymousFuncP);
       case NamedArgP      namedArgP      -> handleExpr(namedArgP.expr());
       case OrderP         orderP         -> handleOrder(orderP);
-      case RefP           refP           -> varSetS();
+      case ReferenceP     referenceP     -> varSetS();
       case SelectP        selectP        -> handleExpr(selectP.selectable());
       case IntP           intP           -> varSetS();
       case BlobP          blobP          -> varSetS();

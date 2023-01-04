@@ -10,7 +10,7 @@ import org.smoothbuild.compile.fs.ps.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.define.ArrayTP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.ScopeP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.compile.fs.ps.ast.define.WithScopeP;
@@ -45,10 +45,10 @@ public class DetectUndefinedRefablesAndTypes {
     }
 
     @Override
-    public void visitRef(RefP refP) {
-      var name = refP.name();
+    public void visitRef(ReferenceP referenceP) {
+      var name = referenceP.name();
       if (!(imported.evaluables().contains(name) || scope.refables().contains(name))) {
-        log.log(compileError(refP, Strings.q(name) + " is undefined."));
+        log.log(compileError(referenceP, Strings.q(name) + " is undefined."));
       }
     }
 

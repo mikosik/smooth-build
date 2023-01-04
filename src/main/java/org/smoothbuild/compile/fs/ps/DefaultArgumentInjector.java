@@ -26,8 +26,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
 import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.WithScopeP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -70,8 +70,8 @@ public class DefaultArgumentInjector {
     }
 
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP) {
-      if (callP.callee() instanceof RefP refP) {
-        var name = refP.name();
+      if (callP.callee() instanceof ReferenceP referenceP) {
+        var name = referenceP.name();
         var optional = refables.getOptional(name);
         if (optional.isPresent()) {
           return inferPositionedArgs(callP, optional.get());
@@ -156,8 +156,8 @@ public class DefaultArgumentInjector {
         if (result.get(i) == null) {
           var param = params.get(i);
           if (param.hasDefaultValue()) {
-            var name = ((RefP) callP.callee()).name() + ":" + param.name();
-            var element = new RefP(name, callP.location());
+            var name = ((ReferenceP) callP.callee()).name() + ":" + param.name();
+            var element = new ReferenceP(name, callP.location());
             result.set(i, element);
           } else {
             error = true;

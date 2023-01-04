@@ -19,7 +19,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ArrayTP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.out.log.Log;
@@ -60,10 +60,10 @@ public class ModuleDependenciesSorter {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
     new ModuleVisitorP() {
       @Override
-      public void visitRef(RefP refP) {
-        super.visitRef(refP);
-        if (names.contains(refP.name())) {
-          deps.add(new GraphEdge<>(refP.location(), refP.name()));
+      public void visitRef(ReferenceP referenceP) {
+        super.visitRef(referenceP);
+        if (names.contains(referenceP.name())) {
+          deps.add(new GraphEdge<>(referenceP.location(), referenceP.name()));
         }
       }
     }.visitNamedEvaluable(evaluable);
