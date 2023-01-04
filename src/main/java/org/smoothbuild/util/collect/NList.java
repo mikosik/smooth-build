@@ -95,29 +95,29 @@ public class NList<T extends Named> extends AbstractList<T> {
   }
 
   private static <E extends Named> ImmutableMap<String, Integer> calculateIndexMap(
-      Iterable<E> withNames) {
+      Iterable<E> nameds) {
     Builder<String, Integer> builder = ImmutableMap.builder();
     var names = new HashSet<String>();
     int i = 0;
-    for (E withName : withNames) {
+    for (E named : nameds) {
       int index = i;
-      var n = withName.name();
-      if (!names.contains(n)) {
-        builder.put(n, index);
-        names.add(n);
+      var name = named.name();
+      if (!names.contains(name)) {
+        builder.put(name, index);
+        names.add(name);
       }
       i++;
     }
     return builder.build();
   }
 
-  private static <E extends Named> ImmutableMap<String, E> calculateMap(Iterable<E> withNames) {
+  private static <E extends Named> ImmutableMap<String, E> calculateMap(Iterable<E> nameds) {
     Builder<String, E> builder = ImmutableMap.builder();
     var names = new HashSet<String>();
-    for (E withName : withNames) {
-      var name = withName.name();
+    for (E named : nameds) {
+      var name = named.name();
       if (!names.contains(name)) {
-        builder.put(name, withName);
+        builder.put(name, named);
         names.add(name);
       }
     }
