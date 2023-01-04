@@ -15,8 +15,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ScopeP;
+import org.smoothbuild.compile.fs.ps.ast.define.ScopedP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
-import org.smoothbuild.compile.fs.ps.ast.define.WithScopeP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
@@ -45,10 +45,10 @@ public class ScopesInitializer extends ModuleVisitorP {
     }
 
     @Override
-    protected ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP) {
+    protected ModuleVisitorP createVisitorForScopeOf(ScopedP scopedP) {
       var scopeFiller = new ScopeCreator(scope, log);
-      var newScope = scopeFiller.createScopeFor(withScopeP);
-      withScopeP.setScope(newScope);
+      var newScope = scopeFiller.createScopeFor(scopedP);
+      scopedP.setScope(newScope);
       return new Initializer(newScope, log);
     }
   }
@@ -64,9 +64,9 @@ public class ScopesInitializer extends ModuleVisitorP {
       this.log = log;
     }
 
-    private ScopeP createScopeFor(WithScopeP withScopeP) {
+    private ScopeP createScopeFor(ScopedP scopedP) {
       // @formatter:off
-      switch (withScopeP) {
+      switch (scopedP) {
         case ModuleP     moduleP     -> initializeScopeFor(moduleP);
         case StructP     structP     -> initializeScopeFor(structP);
         case NamedValueP namedValueP -> initializeScopeFor(namedValueP);

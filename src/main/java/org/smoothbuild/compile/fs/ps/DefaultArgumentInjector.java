@@ -28,7 +28,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
-import org.smoothbuild.compile.fs.ps.ast.define.WithScopeP;
+import org.smoothbuild.compile.fs.ps.ast.define.ScopedP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
@@ -59,8 +59,8 @@ public class DefaultArgumentInjector {
     }
 
     @Override
-    protected ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP) {
-      return new Visitor(imported, withScopeP.scope().referencables(), logger);
+    protected ModuleVisitorP createVisitorForScopeOf(ScopedP scopedP) {
+      return new Visitor(imported, scopedP.scope().referencables(), logger);
     }
 
     @Override

@@ -4,11 +4,11 @@ import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
+import org.smoothbuild.compile.fs.ps.ast.define.ScopedP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
-import org.smoothbuild.compile.fs.ps.ast.define.WithScopeP;
 
 public abstract class ScopingModuleVisitorP extends ModuleVisitorP {
-  protected abstract ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP);
+  protected abstract ModuleVisitorP createVisitorForScopeOf(ScopedP scopedP);
 
   @Override
   public final void visitModule(ModuleP moduleP) {

@@ -14,7 +14,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class StructP extends NalImpl implements WithScopeP {
+public final class StructP extends NalImpl implements ScopedP {
   private final NList<ItemP> fields;
   private final NamedFuncP constructor;
   private ScopeP scope;

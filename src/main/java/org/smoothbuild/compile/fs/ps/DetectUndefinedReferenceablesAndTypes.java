@@ -12,8 +12,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.FuncTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.ScopeP;
+import org.smoothbuild.compile.fs.ps.ast.define.ScopedP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
-import org.smoothbuild.compile.fs.ps.ast.define.WithScopeP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
@@ -40,8 +40,8 @@ public class DetectUndefinedReferenceablesAndTypes {
     }
 
     @Override
-    protected ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP) {
-      return new Detector(imported, withScopeP.scope(), log);
+    protected ModuleVisitorP createVisitorForScopeOf(ScopedP scopedP) {
+      return new Detector(imported, scopedP.scope(), log);
     }
 
     @Override

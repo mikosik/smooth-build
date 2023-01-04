@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import com.google.common.collect.ImmutableList;
 
-public final class ModuleP implements WithScopeP {
+public final class ModuleP implements ScopedP {
   private final ImmutableList<StructP> structs;
   private final ImmutableList<NamedEvaluableP> evaluables;
   private ScopeP scope;
