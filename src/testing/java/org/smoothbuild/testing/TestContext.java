@@ -24,7 +24,7 @@ import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
-import static org.smoothbuild.util.collect.Nameables.toMap;
+import static org.smoothbuild.util.collect.Nameds.toMap;
 import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;

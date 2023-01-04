@@ -2,7 +2,7 @@ package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.TestContext.location;
-import static org.smoothbuild.util.collect.Nameables.toMap;
+import static org.smoothbuild.util.collect.Nameds.toMap;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.NalImpl;
 
-public class NameablesTest {
+public class NamedsTest {
   private static final Nal ONE = new NalImpl("one", location(1));
   private static final Nal TWO = new NalImpl("two", location(2));
 
