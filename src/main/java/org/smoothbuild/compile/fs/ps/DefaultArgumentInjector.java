@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.util.bindings.Bindings;
-import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.Lists;
+import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.collect.ImmutableList;
 
@@ -84,7 +85,7 @@ public class DefaultArgumentInjector {
 
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP, RefableP refableP) {
       if (refableP instanceof NamedFuncP namedFuncP) {
-        var mappedParams = namedFuncP.params().map(Param::new);
+        var mappedParams = Lists.map(namedFuncP.params(), Param::new);
         return inferPositionedArgs(callP, mappedParams, logger);
       } else {
         return inferPositionedArgs(callP, logger);
@@ -93,7 +94,7 @@ public class DefaultArgumentInjector {
 
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP, NamedEvaluableS namedEvaluableS) {
       if (namedEvaluableS instanceof NamedFuncS namedFuncS) {
-        var mappedParams = namedFuncS.params().map(Param::new);
+        var mappedParams = Lists.map(namedFuncS.params(), Param::new);
         return inferPositionedArgs(callP, mappedParams, logger);
       } else {
         return inferPositionedArgs(callP, logger);
@@ -113,7 +114,7 @@ public class DefaultArgumentInjector {
     }
 
     private static ImmutableList<ExprP> inferPositionedArgs(
-        CallP callP, NList<Param> params, Logger logger) {
+        CallP callP, List<Param> params, Logger logger) {
       var logBuffer = new LogBuffer();
       var positionalArgs = leadingPositionalArgs(callP);
       logBuffer.logAll(findPositionalArgAfterNamedArgError(callP));
@@ -134,7 +135,8 @@ public class DefaultArgumentInjector {
     }
 
     private static ImmutableList<ExprP> positionedArgs(CallP callP,
-        NList<Param> params, int positionalArgsCount, Logger logBuffer) {
+        List<Param> params, int positionalArgsCount, Logger logBuffer) {
+      var names = Lists.map(params, Param::name);
       var args = callP.args();
       // Case where positional args count exceeds function params count is reported as error
       // during call unification. Here we silently ignore it by creating list that is big enough
@@ -144,7 +146,7 @@ public class DefaultArgumentInjector {
       for (int i = 0; i < args.size(); i++) {
         var arg = args.get(i);
         if (arg instanceof NamedArgP namedArgP) {
-          result.set(params.indexOf(namedArgP.name()), namedArgP.expr());
+          result.set(names.indexOf(namedArgP.name()), namedArgP.expr());
         } else {
           result.set(i, arg);
         }
@@ -175,18 +177,19 @@ public class DefaultArgumentInjector {
           .collect(toList());
     }
 
-    private static List<Log> findUnknownParamNameErrors(CallP callP, NList<Param> params) {
+    private static List<Log> findUnknownParamNameErrors(CallP callP, List<Param> params) {
+      var names = Sets.map(params, Param::name);
       return callP.args()
           .stream()
           .filter(a -> a instanceof NamedArgP)
           .map(a -> (NamedArgP) a)
-          .filter(a -> params.isEmpty() || !params.containsName(a.name()))
+          .filter(a -> !names.contains(a.name()))
           .map(Visitor::unknownParameterError)
           .collect(toList());
     }
 
     private static List<Log> findDuplicateAssignmentErrors(
-        CallP callP, List<ExprP> positionalArgs, NList<Param> params) {
+        CallP callP, List<ExprP> positionalArgs, List<Param> params) {
       var names = positionalArgNames(positionalArgs, params);
       return callP.args()
           .stream()
@@ -197,18 +200,15 @@ public class DefaultArgumentInjector {
           .collect(toList());
     }
 
-    private static Set<String> positionalArgNames(List<ExprP> positionalArgs, NList<Param> params) {
+    private static Set<String> positionalArgNames(List<ExprP> positionalArgs, List<Param> params) {
       return params.stream()
           .limit(positionalArgs.size())
-          .flatMap(p -> p.nameO().stream())
+          .map(Param::name)
           .collect(toSet());
     }
 
-    private static Log paramsMustBeSpecifiedError(CallP callP, int i, NList<Param> params) {
-      var paramName = params.get(i).nameO()
-          .map(n -> "`" + n + "`")
-          .orElse("#" + (i + 1));
-      return compileError(callP, "Parameter " + paramName + " must be specified.");
+    private static Log paramsMustBeSpecifiedError(CallP callP, int i, List<Param> params) {
+      return compileError(callP, "Parameter " + q(params.get(i).name()) + " must be specified.");
     }
 
     private static Log unknownParameterError(NamedArgP namedArgP) {
@@ -224,7 +224,7 @@ public class DefaultArgumentInjector {
     }
   }
 
-  private static record Param(String name, boolean hasDefaultValue) implements Named {
+  private static record Param(String name, boolean hasDefaultValue) {
     public Param(ItemS param) {
       this(param.name(), param.defaultValue().isPresent());
     }
