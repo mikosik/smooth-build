@@ -4,16 +4,15 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Maps.toMap;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.util.collect.Nameables;
-import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
@@ -304,13 +303,13 @@ public class BindingsTest {
   }
 
   private static ImmutableBindings<Elem> immutableBindingsWith(Elem elem) {
-    return immutableBindings(Map.of(elem.nameSane(), elem));
+    return immutableBindings(Map.of(elem.name(), elem));
   }
 
   private static Bindings<Elem> mutableBindingsWith(Elem... elems) {
     FlatMutableBindings<Elem> bindings = mutableBindings();
     for (Elem elem : elems) {
-      bindings.add(elem.nameSane(), elem);
+      bindings.add(elem.name(), elem);
     }
     return bindings;
   }
@@ -319,18 +318,18 @@ public class BindingsTest {
       Bindings<Elem> outerScopeBindings, Elem... elems) {
     var mutableBindings = mutableBindings(outerScopeBindings);
     for (Elem elem : elems) {
-      mutableBindings.add(elem.nameSane(), elem);
+      mutableBindings.add(elem.name(), elem);
     }
     return mutableBindings;
   }
 
   public static ImmutableMap<String, Elem> mapOfElems(Elem... nameables) {
-    return Nameables.toMap(Arrays.asList(nameables));
+    return toMap(list(nameables), Elem::name, e -> e);
   }
 
   public static Elem elem(String name, int value) {
     return new Elem(name, value);
   }
 
-  protected static record Elem(String name, Integer value) implements Named {}
+  protected static record Elem(String name, Integer value) {}
 }
