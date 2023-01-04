@@ -3,6 +3,7 @@ package org.smoothbuild.vm.bytecode.type;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.vm.bytecode.type.CategoryKindB.fromMarker;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
@@ -26,6 +27,8 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.vm.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
 import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
+import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc;
+import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +36,6 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import org.smoothbuild.util.collect.Lists;
-import org.smoothbuild.vm.bytecode.expr.Helpers;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
@@ -54,7 +56,6 @@ import org.smoothbuild.vm.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatRootExc;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc;
 import org.smoothbuild.vm.bytecode.type.oper.CallCB;
 import org.smoothbuild.vm.bytecode.type.oper.ClosurizeCB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
@@ -116,7 +117,7 @@ public class CategoryDb {
   // methods for getting Val-s types
 
   public ArrayTB array(TypeB elemT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newArray(elemT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newArray(elemT));
   }
 
   public BlobTB blob() {
@@ -149,7 +150,7 @@ public class CategoryDb {
   }
 
   private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, FuncTB funcTB) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newFuncC(funcKind, funcTB));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newFuncC(funcKind, funcTB));
   }
 
   public FuncTB funcT(ImmutableList<TypeB> params, TypeB result) {
@@ -157,12 +158,12 @@ public class CategoryDb {
   }
 
   public FuncTB funcT(TupleTB params, TypeB result) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newFuncT(params, result));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newFuncT(params, result));
   }
 
   public IfFuncCB ifFunc(TypeB t) {
     var funcT = funcT(list(bool(), t, t), t);
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> funcC(IF_FUNC, funcT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> funcC(IF_FUNC, funcT));
   }
 
   public IntTB int_() {
@@ -171,7 +172,7 @@ public class CategoryDb {
 
   public MapFuncCB mapFunc(TypeB r, TypeB s) {
     var funcT = funcT(list(array(s), funcT(list(s), r)), array(r));
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> funcC(MAP_FUNC, funcT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> funcC(MAP_FUNC, funcT));
   }
 
   public NativeFuncCB nativeFunc(ImmutableList<TypeB> params, TypeB result) {
@@ -187,7 +188,7 @@ public class CategoryDb {
   }
 
   public TupleTB tuple(ImmutableList<TypeB> items) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(items));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(items));
   }
 
   public StringTB string() {
@@ -197,31 +198,31 @@ public class CategoryDb {
   // methods for getting Expr-s types
 
   public CallCB call(TypeB evalT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(CALL, evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(CALL, evalT));
   }
 
   public ClosurizeCB closurize(FuncTB evalT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(evalT));
   }
 
   public CombineCB combine(TupleTB evalT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(COMBINE, evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(COMBINE, evalT));
   }
 
   public OrderCB order(ArrayTB evalT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(ORDER, evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(ORDER, evalT));
   }
 
   public PickCB pick(TypeB evalT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(PICK, evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(PICK, evalT));
   }
 
   public ReferenceCB reference(TypeB evalT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(REFERENCE, evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(REFERENCE, evalT));
   }
 
   public SelectCB select(TypeB evalT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(SELECT, evalT));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(SELECT, evalT));
   }
 
   // methods for reading from db
@@ -308,14 +309,14 @@ public class CategoryDb {
     return readFuncCat(hash, rootSeq, ifFuncKind, (FuncTB funcTB) -> {
       var params = funcTB.params();
       if (params.size() != 3) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc(hash, funcTB);
+        throw illegalIfFuncTypeExc(hash, funcTB);
       }
       var result = funcTB.result();
       boolean first = params.get(0).equals(bool);
       boolean second = params.get(1).equals(result);
       boolean third = params.get(2).equals(result);
       if (!(first && second && third)) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc(hash, funcTB);
+        throw illegalIfFuncTypeExc(hash, funcTB);
       }
     });
   }
@@ -324,25 +325,25 @@ public class CategoryDb {
     return readFuncCat(hash, rootSeq, mapFuncKind, (FuncTB funcTB) -> {
       var params = funcTB.params();
       if (!(funcTB.result() instanceof ArrayTB outputArrayT)) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc(hash, funcTB);
+        throw illegalMapFuncTypeExc(hash, funcTB);
       }
       if (params.size() != 2) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc(hash, funcTB);
+        throw illegalMapFuncTypeExc(hash, funcTB);
       }
       if (!(params.get(0) instanceof ArrayTB inputArrayT)) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc(hash, funcTB);
+        throw illegalMapFuncTypeExc(hash, funcTB);
       }
       if (!(params.get(1) instanceof FuncTB mappingFuncT)) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc(hash, funcTB);
+        throw illegalMapFuncTypeExc(hash, funcTB);
       }
       if (mappingFuncT.params().size() != 1) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc(hash, funcTB);
+        throw illegalMapFuncTypeExc(hash, funcTB);
       }
       if (!inputArrayT.elem().equals(mappingFuncT.params().get(0))) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc(hash, funcTB);
+        throw illegalMapFuncTypeExc(hash, funcTB);
       }
       if (!outputArrayT.elem().equals(mappingFuncT.result())) {
-        throw DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc(hash, funcTB);
+        throw illegalMapFuncTypeExc(hash, funcTB);
       }
     });
   }
