@@ -2,6 +2,7 @@ package org.smoothbuild.util.collect;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.ImmutableSortedSet.toImmutableSortedSet;
+import static com.google.common.collect.Streams.stream;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -34,9 +35,8 @@ public class Sets {
   }
 
   public static <E, R> ImmutableSet<R> map(
-      Collection<E> set, Function<? super E, ? extends R> func) {
-    return set
-        .stream()
+      Iterable<E> set, Function<? super E, ? extends R> func) {
+    return stream(set)
         .map(func)
         .collect(toImmutableSet());
   }
