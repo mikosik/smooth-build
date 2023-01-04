@@ -6,13 +6,10 @@ import static java.util.Objects.requireNonNull;
 import java.util.Map;
 import java.util.Objects;
 
-import org.smoothbuild.util.collect.Named;
-
 /**
  * Polymorphic type (aka type schema).
  */
-public sealed class SchemaS implements Named
-    permits FuncSchemaS {
+public sealed class SchemaS permits FuncSchemaS {
   private final String name;
   private final VarSetS quantifiedVars;
   private final TypeS type;
@@ -33,7 +30,6 @@ public sealed class SchemaS implements Named
     return quantifiedVars.toString() + type.name();
   }
 
-  @Override
   public String name() {
     return name;
   }
