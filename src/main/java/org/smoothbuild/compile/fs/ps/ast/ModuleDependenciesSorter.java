@@ -87,16 +87,16 @@ public class ModuleDependenciesSorter {
         structP.fields().forEach(f -> addToDeps(f.type()));
       }
 
-      private void addToDeps(TypeP type) {
-        switch (type) {
+      private void addToDeps(TypeP typeP) {
+        switch (typeP) {
           case ArrayTP arrayT -> addToDeps(arrayT.elemT());
           case FuncTP funcT -> {
             addToDeps(funcT.resT());
             funcT.paramTs().forEach(this::addToDeps);
           }
           default -> {
-            if (funcNames.contains(type.name())) {
-              deps.add(new GraphEdge<>(type.location(), type.name()));
+            if (funcNames.contains(typeP.name())) {
+              deps.add(new GraphEdge<>(typeP.location(), typeP.name()));
             }
           }
         }
