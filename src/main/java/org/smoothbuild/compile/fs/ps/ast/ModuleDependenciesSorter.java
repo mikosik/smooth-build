@@ -60,8 +60,8 @@ public class ModuleDependenciesSorter {
     Set<GraphEdge<Location, String>> deps = new HashSet<>();
     new ModuleVisitorP() {
       @Override
-      public void visitRef(ReferenceP referenceP) {
-        super.visitRef(referenceP);
+      public void visitReference(ReferenceP referenceP) {
+        super.visitReference(referenceP);
         if (names.contains(referenceP.name())) {
           deps.add(new GraphEdge<>(referenceP.location(), referenceP.name()));
         }

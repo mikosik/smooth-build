@@ -116,7 +116,7 @@ public class ModuleVisitorP {
       case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
       case NamedArgP      namedArgP      -> visitNamedArg(namedArgP);
       case OrderP         orderP         -> visitOrder(orderP);
-      case ReferenceP     referenceP     -> visitRef(referenceP);
+      case ReferenceP     referenceP     -> visitReference(referenceP);
       case SelectP        selectP        -> visitSelect(selectP);
       case StringP        stringP        -> visitString(stringP);
     }
@@ -163,7 +163,7 @@ public class ModuleVisitorP {
     visitExpr(selectP.selectable());
   }
 
-  public void visitRef(ReferenceP referenceP) {}
+  public void visitReference(ReferenceP referenceP) {}
 
   public void visitString(StringP stringP) {}
 
