@@ -15,8 +15,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.type.TestingCatsB;
-import org.smoothbuild.util.collect.Labeled;
-import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
@@ -291,15 +289,15 @@ public class CategoryBTest extends TestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("tuple_item_cases")
-    public void tuple_item(
+    @MethodSource("tuple_items_cases")
+    public void tuple_items(
         Function<CategoryDb, TupleTB> factoryCall,
-        Function<CategoryDb, NList<Labeled<TypeB>>> expected) {
+        Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).items())
           .isEqualTo(execute(expected));
     }
 
-    public static List<Arguments> tuple_item_cases() {
+    public static List<Arguments> tuple_items_cases() {
       return asList(
           args(f -> f.tuple(), f -> list()),
           args(f -> f.tuple(f.string()), f -> list(f.string())),
