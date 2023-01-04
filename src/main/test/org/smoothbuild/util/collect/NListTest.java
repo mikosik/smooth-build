@@ -2,7 +2,6 @@ package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Labeled.labeled;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.NList.nlist;
@@ -14,9 +13,9 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableMap;
 
 public class NListTest {
-  private static final Nameable n0 = new NameableImpl("zero");
-  private static final Nameable n1 = new NameableImpl("one");
-  private static final Nameable n2 = new NameableImpl("two");
+  private static final Named n0 = named("zero");
+  private static final Named n2 = named("two");
+  private static final Named n1 = named("one");
 
   @Nested
   class _constructing {
@@ -51,14 +50,14 @@ public class NListTest {
     class _from_list_with_shadowing {
       @Test
       public void using_non_unique_names_factory_method() {
-        assertThat(nlistWithShadowing(list(n0, n1, n2, labeled(n0.nameSane(), ""))))
-            .containsExactly(n0, n1, n2, labeled(n0.nameSane(), ""))
+        assertThat(nlistWithShadowing(list(n0, n1, n2, named(n0.nameSane()))))
+            .containsExactly(n0, n1, n2, named(n0.nameSane()))
             .inOrder();
       }
 
       @Test
       public void using_normal_factory_method_fails() {
-        assertCall(() -> nlist(list(n0, n1, n2, labeled(n0.nameSane(), ""))))
+        assertCall(() -> nlist(list(n0, n1, n2, named(n0.name()))))
             .throwsException(new IllegalArgumentException(
                 "List contains two elements with same name = \"zero\"."));
       }
@@ -146,8 +145,8 @@ public class NListTest {
     @Test
     public void maps_elements() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.map(v -> labeled(v.nameSane().concat("!"))))
-          .containsExactly(labeled("zero!"), labeled("one!"), labeled("two!"))
+      assertThat(nlist.map(v -> named(v.name().concat("!"))))
+          .containsExactly(named("zero!"), named("one!"), named("two!"))
           .inOrder();
     }
   }
@@ -170,7 +169,7 @@ public class NListTest {
 
     @Test
     public void returns_first_occurrence_when_more_than_one_element_has_given_name() {
-      var nlist = nlistWithShadowing(list(n0, n1, n2, labeled(n0.nameSane(), "")));
+      var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.name())));
       assertThat(nlist.get(n0.nameSane()))
           .isSameInstanceAs(n0);
     }
@@ -255,9 +254,20 @@ public class NListTest {
 
     @Test
     public void non_unique_names() {
-      var nlist = nlistWithShadowing(list(n0, n1, n2, labeled(n0.nameSane(), "")));
+      var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.name())));
       assertThat(nlist.indexOf(n0.nameSane()))
           .isEqualTo(0);
+    }
+  }
+
+  private static Named named(String name) {
+    return new MyNamed(name);
+  }
+
+  private static record MyNamed(String name) implements Named {
+    @Override
+    public String toString() {
+      return name;
     }
   }
 }
