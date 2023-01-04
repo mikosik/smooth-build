@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.Strings;
 
 /**
  * Monomorphic type.
  * This class and all its subclasses are immutable.
  */
-public abstract sealed class TypeS implements Named
+public abstract sealed class TypeS
     permits ArrayTS, BlobTS, BoolTS, FuncTS, IntTS, StringTS, StructTS, TupleTS, VarS {
   private final VarSetS vars;
   private final String name;
@@ -28,9 +28,12 @@ public abstract sealed class TypeS implements Named
     this.vars = vars;
   }
 
-  @Override
   public String name() {
     return name;
+  }
+
+  public String q() {
+    return Strings.q(name);
   }
 
   public VarSetS vars() {
