@@ -26,7 +26,7 @@ public final class ItemP extends NalImpl implements RefableP {
   }
 
   @Override
-  public String simpleName() {
+  public String shortName() {
     return name();
   }
 

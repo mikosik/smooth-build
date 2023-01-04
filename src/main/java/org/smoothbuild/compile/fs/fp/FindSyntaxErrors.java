@@ -41,7 +41,7 @@ public class FindSyntaxErrors {
     new ModuleVisitorP() {
       @Override
       public void visitNameOf(RefableP refableP) {
-        var name = refableP.simpleName();
+        var name = refableP.shortName();
         if (name.equals("_")) {
           logger.log(compileError(refableP.location(), "`" + name + "` is illegal identifier name. "
               + "`_` is reserved for future use."));

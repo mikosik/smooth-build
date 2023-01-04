@@ -30,7 +30,7 @@ public sealed abstract class NamedEvaluableP
   }
 
   @Override
-  public String simpleName() {
+  public String shortName() {
     return simpleName;
   }
 
