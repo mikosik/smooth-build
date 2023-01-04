@@ -5,7 +5,7 @@ import org.smoothbuild.compile.fs.lang.base.Nal;
 /**
  * Referencable.
  */
-public sealed interface RefableP extends Nal
+public sealed interface ReferenceableP extends Nal
     permits ItemP, NamedEvaluableP {
   public String shortName();
 }

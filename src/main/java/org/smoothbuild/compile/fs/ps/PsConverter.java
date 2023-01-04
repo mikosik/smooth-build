@@ -53,8 +53,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
@@ -81,7 +81,7 @@ public class PsConverter {
   private ModuleS convertModule(ModuleP moduleP) {
     var scopeP = moduleP.scope();
     var structs = mapValues(scopeP.types().toMap(), this::convertStruct);
-    var evaluables = mapValues(scopeP.refables().toMap(), this::convertRefableP);
+    var evaluables = mapValues(scopeP.referencables().toMap(), this::convertRefableP);
     var members = new ScopeS(immutableBindings(structs), immutableBindings(evaluables));
     var scopeS = scopeS(imported, members);
     return new ModuleS(members, scopeS);
@@ -99,8 +99,8 @@ public class PsConverter {
         constructorP.schemaS(), constructorP.name(), params, constructorP.location());
   }
 
-  private NamedEvaluableS convertRefableP(RefableP refableP) {
-    return switch (refableP) {
+  private NamedEvaluableS convertRefableP(ReferenceableP referenceableP) {
+    return switch (referenceableP) {
       case ConstructorP constructorP -> convertConstructor(constructorP);
       case NamedFuncP namedFuncP -> convertNamedFunc(namedFuncP);
       case NamedValueP namedValueP -> convertNamedValue(namedValueP);

@@ -13,7 +13,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ScopeP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.fs.ps.ast.define.WithScopeP;
@@ -88,7 +88,7 @@ public class ScopesInitializer extends ModuleVisitorP {
   private static class ScopeCreator extends ModuleVisitorP {
     private final ScopeP scope;
     private final Logger log;
-    private final MutableBindings<RefableP> refables = mutableBindings();
+    private final MutableBindings<ReferenceableP> referenceables = mutableBindings();
     private final MutableBindings<StructP> types = mutableBindings();
 
     public ScopeCreator(ScopeP scope, Logger log) {
@@ -105,7 +105,7 @@ public class ScopesInitializer extends ModuleVisitorP {
         case FuncP       funcP       -> initializeScopeFor(funcP);
       }
       // @formatter:on
-      return scope.newInnerScope(refables.toFlatImmutable(), types.toFlatImmutable());
+      return scope.newInnerScope(referenceables.toFlatImmutable(), types.toFlatImmutable());
     }
 
     private void initializeScopeFor(ModuleP moduleP) {
@@ -132,7 +132,7 @@ public class ScopesInitializer extends ModuleVisitorP {
       // Constructor name starts with capital letter, so it can collide only
       // with other constructor name. This can only happen when other structure
       // with same name is declared which will be reported when adding struct type.
-      refables.add(constructor.name(), constructor);
+      referenceables.add(constructor.name(), constructor);
     }
 
     private void initializeScopeFor(StructP structP) {
@@ -150,8 +150,8 @@ public class ScopesInitializer extends ModuleVisitorP {
       addBinding(types, type);
     }
 
-    private void addRefable(RefableP refableP) {
-      addBinding(refables, refableP);
+    private void addRefable(ReferenceableP referenceableP) {
+      addBinding(referenceables, referenceableP);
     }
 
     private <T extends Nal> void addBinding(MutableBindings<T> bindings, T binding) {

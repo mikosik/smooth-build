@@ -16,8 +16,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
@@ -167,5 +167,5 @@ public class ModuleVisitorP {
 
   public void visitString(StringP stringP) {}
 
-  public void visitNameOf(RefableP refableP) {}
+  public void visitNameOf(ReferenceableP referenceableP) {}
 }

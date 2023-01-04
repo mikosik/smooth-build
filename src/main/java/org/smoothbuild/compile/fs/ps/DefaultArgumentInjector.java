@@ -26,8 +26,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.WithScopeP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
@@ -49,18 +49,18 @@ public class DefaultArgumentInjector {
 
   private static class Visitor extends ScopingModuleVisitorP {
     private final ScopeS imported;
-    private final Bindings<RefableP> refables;
+    private final Bindings<ReferenceableP> referenceables;
     private final LogBuffer logger;
 
-    public Visitor(ScopeS imported, Bindings<RefableP> refables, LogBuffer logger) {
+    public Visitor(ScopeS imported, Bindings<ReferenceableP> referenceables, LogBuffer logger) {
       this.imported = imported;
-      this.refables = refables;
+      this.referenceables = referenceables;
       this.logger = logger;
     }
 
     @Override
     protected ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP) {
-      return new Visitor(imported, withScopeP.scope().refables(), logger);
+      return new Visitor(imported, withScopeP.scope().referencables(), logger);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class DefaultArgumentInjector {
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP) {
       if (callP.callee() instanceof ReferenceP referenceP) {
         var name = referenceP.name();
-        var optional = refables.getOptional(name);
+        var optional = referenceables.getOptional(name);
         if (optional.isPresent()) {
           return inferPositionedArgs(callP, optional.get());
         } else {
@@ -83,8 +83,8 @@ public class DefaultArgumentInjector {
       }
     }
 
-    private ImmutableList<ExprP> inferPositionedArgs(CallP callP, RefableP refableP) {
-      if (refableP instanceof NamedFuncP namedFuncP) {
+    private ImmutableList<ExprP> inferPositionedArgs(CallP callP, ReferenceableP referenceableP) {
+      if (referenceableP instanceof NamedFuncP namedFuncP) {
         var mappedParams = Lists.map(namedFuncP.params(), Param::new);
         return inferPositionedArgs(callP, mappedParams, logger);
       } else {

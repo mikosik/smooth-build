@@ -47,7 +47,7 @@ public class DetectUndefinedRefablesAndTypes {
     @Override
     public void visitRef(ReferenceP referenceP) {
       var name = referenceP.name();
-      if (!(imported.evaluables().contains(name) || scope.refables().contains(name))) {
+      if (!(imported.evaluables().contains(name) || scope.referencables().contains(name))) {
         log.log(compileError(referenceP, Strings.q(name) + " is undefined."));
       }
     }

@@ -36,7 +36,7 @@ public class TypeTeller {
   }
 
   public Optional<SchemaS> schemaFor(String name) {
-    return scopeP.refables().getOptional(name)
+    return scopeP.referencables().getOptional(name)
         .map(r -> switch (r) {
           case NamedEvaluableP namedEvaluableP -> Optional.ofNullable(namedEvaluableP.schemaS());
           case ItemP itemP ->

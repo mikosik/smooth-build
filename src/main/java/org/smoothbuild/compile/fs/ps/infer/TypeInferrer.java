@@ -23,7 +23,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
@@ -81,8 +81,8 @@ public class TypeInferrer {
     constructorP.setTypeS(funcTS);
   }
 
-  private void visitRefable(RefableP refableP) {
-    switch (refableP) {
+  private void visitRefable(ReferenceableP referenceableP) {
+    switch (referenceableP) {
       case NamedFuncP namedFuncP -> visitFunc(namedFuncP);
       case NamedValueP namedValueP -> visitValue(namedValueP);
       case ItemP itemP -> throw new RuntimeException("shouldn't happen");

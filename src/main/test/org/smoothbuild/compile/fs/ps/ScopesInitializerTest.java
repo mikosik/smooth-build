@@ -23,7 +23,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(moduleP.scope().refables().get("myFunc"))
+      assertThat(moduleP.scope().referencables().get("myFunc"))
           .isEqualTo(namedFuncP);
     }
 
@@ -34,7 +34,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(moduleP.scope().refables().get("myValue"))
+      assertThat(moduleP.scope().referencables().get("myValue"))
           .isEqualTo(namedValueP);
     }
 
@@ -47,7 +47,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(moduleP.scope().refables().get("myFunc:param"))
+      assertThat(moduleP.scope().referencables().get("myFunc:param"))
           .isEqualTo(defaultValue);
     }
   }
@@ -65,7 +65,7 @@ public class ScopesInitializerTest extends TestContext {
 
         initializeScopes(moduleP);
 
-        assertThat(defaultValue.scope().refables().getOptional("param"))
+        assertThat(defaultValue.scope().referencables().getOptional("param"))
             .isEqualTo(Optional.empty());
       }
 
@@ -79,7 +79,7 @@ public class ScopesInitializerTest extends TestContext {
 
         initializeScopes(moduleP);
 
-        assertThat(param1DefaultValue.scope().refables().getOptional("param2"))
+        assertThat(param1DefaultValue.scope().referencables().getOptional("param2"))
             .isEqualTo(Optional.empty());
       }
 
@@ -102,7 +102,7 @@ public class ScopesInitializerTest extends TestContext {
 
         initializeScopes(moduleP);
 
-        assertThat(defaultValue.scope().refables().get(member.name()))
+        assertThat(defaultValue.scope().referencables().get(member.name()))
             .isEqualTo(member);
       }
     }
@@ -115,7 +115,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(namedFuncP.scope().refables().get("param"))
+      assertThat(namedFuncP.scope().referencables().get("param"))
           .isEqualTo(param);
     }
 
@@ -128,7 +128,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(namedFuncP.scope().refables().get("myValue"))
+      assertThat(namedFuncP.scope().referencables().get("myValue"))
           .isEqualTo(namedValueP);
     }
 
@@ -141,7 +141,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(namedFuncP.scope().refables().get("otherFunc"))
+      assertThat(namedFuncP.scope().referencables().get("otherFunc"))
           .isEqualTo(otherFunc);
     }
   }
@@ -157,7 +157,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(anonymousFuncP.scope().refables().get("myValue"))
+      assertThat(anonymousFuncP.scope().referencables().get("myValue"))
           .isEqualTo(namedValueP);
     }
 
@@ -170,7 +170,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(anonymousFuncP.scope().refables().get("myFunc"))
+      assertThat(anonymousFuncP.scope().referencables().get("myFunc"))
           .isEqualTo(namedValueP);
     }
 
@@ -182,7 +182,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(anonymousFuncP.scope().refables().get("param"))
+      assertThat(anonymousFuncP.scope().referencables().get("param"))
           .isEqualTo(param);
     }
   }

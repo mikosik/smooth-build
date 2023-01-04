@@ -14,7 +14,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class ItemP extends NalImpl implements RefableP {
+public final class ItemP extends NalImpl implements ReferenceableP {
   private final TypeP type;
   private final Optional<NamedValueP> defaultValue;
   private TypeS typeS;

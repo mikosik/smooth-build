@@ -5,13 +5,13 @@ import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import org.smoothbuild.util.bindings.ImmutableBindings;
 
 public record ScopeP(
-    ImmutableBindings<RefableP> refables,
+    ImmutableBindings<ReferenceableP> referencables,
     ImmutableBindings<StructP> types) {
   public ScopeP newInnerScope(
-      ImmutableBindings<RefableP> innerRefables,
+      ImmutableBindings<ReferenceableP> innerReferenceables,
       ImmutableBindings<StructP> innerTypes) {
     return new ScopeP(
-        immutableBindings(refables, innerRefables),
+        immutableBindings(referencables, innerReferenceables),
         immutableBindings(types, innerTypes));
   }
 }

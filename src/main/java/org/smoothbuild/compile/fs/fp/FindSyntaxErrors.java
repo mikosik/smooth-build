@@ -15,7 +15,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
-import org.smoothbuild.compile.fs.ps.ast.define.RefableP;
+import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
@@ -40,14 +40,14 @@ public class FindSyntaxErrors {
   private static void detectIllegalNames(Logger logger, ModuleP moduleP) {
     new ModuleVisitorP() {
       @Override
-      public void visitNameOf(RefableP refableP) {
-        var name = refableP.shortName();
+      public void visitNameOf(ReferenceableP referenceableP) {
+        var name = referenceableP.shortName();
         if (name.equals("_")) {
-          logger.log(compileError(refableP.location(), "`" + name + "` is illegal identifier name. "
-              + "`_` is reserved for future use."));
+          logger.log(compileError(referenceableP.location(), "`" + name
+              + "` is illegal identifier name. `_` is reserved for future use."));
         } else if (!startsWithLowerCase(name)) {
-          logger.log(compileError(refableP.location(), "`" + name + "` is illegal identifier name. "
-          + "Identifiers should start with lowercase."));
+          logger.log(compileError(referenceableP.location(), "`" + name
+              + "` is illegal identifier name. Identifiers should start with lowercase."));
         }
       }
 

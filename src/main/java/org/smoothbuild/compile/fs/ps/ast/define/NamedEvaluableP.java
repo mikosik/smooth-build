@@ -10,7 +10,7 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
  */
 public sealed abstract class NamedEvaluableP
     extends NalImpl
-    implements RefableP, EvaluableP, WithScopeP
+    implements ReferenceableP, EvaluableP, WithScopeP
     permits NamedFuncP, NamedValueP {
   private final String simpleName;
   private final Optional<ExprP> body;
