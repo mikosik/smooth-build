@@ -41,22 +41,22 @@ public class ItemSigS implements Named {
   }
 
   @Override
-  public String toString() {
-    return type().name() + nameO().map(n -> " " + n).orElse("");
-  }
-
-  @Override
   public boolean equals(Object object) {
     if (object == this) {
       return true;
     }
     return object instanceof ItemSigS that
-        && Objects.equals(this.type(), that.type())
-        && Objects.equals(this.nameO(), that.nameO());
+        && Objects.equals(this.type, that.type)
+        && Objects.equals(this.name, that.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), nameO());
+    return Objects.hash(type, name);
+  }
+
+  @Override
+  public String toString() {
+    return type().name() + " " + name;
   }
 }
