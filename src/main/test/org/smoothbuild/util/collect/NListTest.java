@@ -41,7 +41,7 @@ public class NListTest {
 
     @Test
     public void from_map() {
-      assertThat(nlist(toMap(list(n0, n1, n2), Nameable::nameSane, v -> v)))
+      assertThat(nlist(toMap(list(n0, n1, n2), Named::name, v -> v)))
           .containsExactly(n0, n1, n2)
           .inOrder();
     }
@@ -50,8 +50,8 @@ public class NListTest {
     class _from_list_with_shadowing {
       @Test
       public void using_non_unique_names_factory_method() {
-        assertThat(nlistWithShadowing(list(n0, n1, n2, named(n0.nameSane()))))
-            .containsExactly(n0, n1, n2, named(n0.nameSane()))
+        assertThat(nlistWithShadowing(list(n0, n1, n2, named(n0.name()))))
+            .containsExactly(n0, n1, n2, named(n0.name()))
             .inOrder();
       }
 
@@ -95,7 +95,7 @@ public class NListTest {
     public void map_related_methods_dont_call_list_and_indexMap_suppliers() {
       var nlist = new NList<>(
           this::throwException,
-          () -> ImmutableMap.of(n1.nameSane(), n1),
+          () -> ImmutableMap.of(n1.name(), n1),
           this::throwException);
       nlist.containsName("name");
       nlist.get("name");
@@ -156,7 +156,7 @@ public class NListTest {
     @Test
     public void returns_element_with_given_name() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.get(n0.nameSane()))
+      assertThat(nlist.get(n0.name()))
           .isEqualTo(n0);
     }
 
@@ -170,7 +170,7 @@ public class NListTest {
     @Test
     public void returns_first_occurrence_when_more_than_one_element_has_given_name() {
       var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.name())));
-      assertThat(nlist.get(n0.nameSane()))
+      assertThat(nlist.get(n0.name()))
           .isSameInstanceAs(n0);
     }
   }
@@ -180,7 +180,7 @@ public class NListTest {
     @Test
     public void returns_true_when_element_with_given_name_exists() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.containsName(n0.nameSane()))
+      assertThat(nlist.containsName(n0.name()))
           .isTrue();
     }
 
@@ -248,14 +248,14 @@ public class NListTest {
     @Test
     public void unique_names() {
       var nlist = nlist(n0, n1, n2);
-      assertThat(nlist.indexOf(n0.nameSane()))
+      assertThat(nlist.indexOf(n0.name()))
           .isEqualTo(0);
     }
 
     @Test
     public void non_unique_names() {
       var nlist = nlistWithShadowing(list(n0, n1, n2, named(n0.name())));
-      assertThat(nlist.indexOf(n0.nameSane()))
+      assertThat(nlist.indexOf(n0.name()))
           .isEqualTo(0);
     }
   }
