@@ -3,6 +3,26 @@ package org.smoothbuild.vm.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.bytecode.type.CategoryDb.DATA_PATH;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BOOL;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CALL;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CLOSURE;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CLOSURIZE;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.COMBINE;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.EXPR_FUNC;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.FUNC;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.IF_FUNC;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.INT;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.MAP_FUNC;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.NATIVE_FUNC;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ORDER;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.PICK;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.REFERENCE;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.SELECT;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.STRING;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.TUPLE;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,7 +86,7 @@ public class CategoryBCorruptedTest extends TestContext {
        * to save base type in HashedDb.
        */
       var hash = hash(
-          hash(CategoryKinds.STRING.marker())
+          hash(STRING.marker())
       );
       assertThat(hash)
           .isEqualTo(stringTB().hash());
@@ -74,22 +94,22 @@ public class CategoryBCorruptedTest extends TestContext {
 
     @Test
     public void blob_with_additional_child() throws Exception {
-      test_base_type_with_additional_child(CategoryKinds.BLOB);
+      test_base_type_with_additional_child(BLOB);
     }
 
     @Test
     public void bool_with_additional_child() throws Exception {
-      test_base_type_with_additional_child(CategoryKinds.BOOL);
+      test_base_type_with_additional_child(BOOL);
     }
 
     @Test
     public void int_with_additional_child() throws Exception {
-      test_base_type_with_additional_child(CategoryKinds.INT);
+      test_base_type_with_additional_child(INT);
     }
 
     @Test
     public void string_with_additional_child() throws Exception {
-      test_base_type_with_additional_child(CategoryKinds.STRING);
+      test_base_type_with_additional_child(STRING);
     }
 
     private void test_base_type_with_additional_child(CategoryKindB kind) throws Exception {
@@ -113,7 +133,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save array type in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.ARRAY.marker()),
+            hash(ARRAY.marker()),
             hash(stringTB())
         );
         assertThat(hash)
@@ -122,33 +142,33 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void without_data() throws Exception {
-        assert_reading_cat_without_data_causes_exc(CategoryKinds.ARRAY);
+        assert_reading_cat_without_data_causes_exc(ARRAY);
       }
 
       @Test
       public void with_additional_data() throws Exception {
-        assert_reading_cat_with_additional_data_causes_exc(CategoryKinds.ARRAY);
+        assert_reading_cat_with_additional_data_causes_exc(ARRAY);
       }
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
-        assert_reading_cat_with_data_pointing_nowhere_causes_exc(CategoryKinds.ARRAY);
+        assert_reading_cat_with_data_pointing_nowhere_causes_exc(ARRAY);
       }
 
       @Test
       public void with_corrupted_type_as_data() throws Exception {
-        assert_reading_cat_with_corrupted_type_as_data_causes_exc(CategoryKinds.ARRAY);
+        assert_reading_cat_with_corrupted_type_as_data_causes_exc(ARRAY);
       }
 
       @Test
       public void with_type_being_oper_type() throws Exception {
         var hash = hash(
-            hash(CategoryKinds.ARRAY.marker()),
+            hash(ARRAY.marker()),
             hash(referenceCB())
         );
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, CategoryKinds.ARRAY, CategoryDb.DATA_PATH, TypeB.class, ReferenceCB.class));
+                hash, ARRAY, DATA_PATH, TypeB.class, ReferenceCB.class));
       }
     }
 
@@ -161,7 +181,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save closure type in HashedDb.
          */
         var specHash = hash(
-            hash(CategoryKinds.CLOSURE.marker()),
+            hash(CLOSURE.marker()),
             hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
@@ -170,7 +190,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Override
       protected CategoryKindB categoryKind() {
-        return CategoryKinds.CLOSURE;
+        return CLOSURE;
       }
     }
 
@@ -183,7 +203,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save expression function type in HashedDb.
          */
         var specHash = hash(
-            hash(CategoryKinds.EXPR_FUNC.marker()),
+            hash(EXPR_FUNC.marker()),
             hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
@@ -192,7 +212,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Override
       protected CategoryKindB categoryKind() {
-        return CategoryKinds.EXPR_FUNC;
+        return EXPR_FUNC;
       }
     }
 
@@ -205,7 +225,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save if func category in HashedDb.
          */
         var specHash = hash(
-            hash(CategoryKinds.IF_FUNC.marker()),
+            hash(IF_FUNC.marker()),
             hash(funcTB(list(boolTB(), intTB(), intTB()), intTB()))
         );
         assertThat(specHash)
@@ -216,7 +236,7 @@ public class CategoryBCorruptedTest extends TestContext {
       public void illegal_func_type_causes_error() throws Exception {
         var illegalIfType = funcTB(list(boolTB(), intTB(), intTB()), blobTB());
         var categoryHash = hash(
-            hash(CategoryKinds.IF_FUNC.marker()),
+            hash(IF_FUNC.marker()),
             hash(illegalIfType)
         );
         assertCall(() -> categoryDb().get(categoryHash))
@@ -226,7 +246,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Override
       protected CategoryKindB categoryKind() {
-        return CategoryKinds.IF_FUNC;
+        return IF_FUNC;
       }
     }
 
@@ -239,7 +259,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save map func category in HashedDb.
          */
         var specHash = hash(
-            hash(CategoryKinds.MAP_FUNC.marker()),
+            hash(MAP_FUNC.marker()),
             hash(funcTB(arrayTB(blobTB()), funcTB(blobTB(), intTB()), arrayTB(intTB())))
         );
         assertThat(specHash)
@@ -250,7 +270,7 @@ public class CategoryBCorruptedTest extends TestContext {
       public void illegal_func_type_causes_error() throws Exception {
         var illegalType = funcTB(arrayTB(blobTB()), funcTB(stringTB(), intTB()), arrayTB(intTB()));
         var categoryHash = hash(
-            hash(CategoryKinds.MAP_FUNC.marker()),
+            hash(MAP_FUNC.marker()),
             hash(illegalType)
         );
         assertCall(() -> categoryDb().get(categoryHash))
@@ -260,7 +280,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Override
       protected CategoryKindB categoryKind() {
-        return CategoryKinds.MAP_FUNC;
+        return MAP_FUNC;
       }
     }
 
@@ -273,7 +293,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save func type in HashedDb.
          */
         var specHash = hash(
-            hash(CategoryKinds.NATIVE_FUNC.marker()),
+            hash(NATIVE_FUNC.marker()),
             hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
@@ -282,7 +302,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Override
       protected CategoryKindB categoryKind() {
-        return CategoryKinds.NATIVE_FUNC;
+        return NATIVE_FUNC;
       }
     }
 
@@ -307,7 +327,7 @@ public class CategoryBCorruptedTest extends TestContext {
             dataHash
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, categoryKind(), CategoryDb.DATA_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, categoryKind(), DATA_PATH))
             .withCause(new DecodeCatExc(dataHash));
       }
 
@@ -320,7 +340,7 @@ public class CategoryBCorruptedTest extends TestContext {
         );
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, categoryKind(), CategoryDb.DATA_PATH, FuncTB.class, ReferenceCB.class));
+                typeHash, categoryKind(), DATA_PATH, FuncTB.class, ReferenceCB.class));
       }
     }
 
@@ -333,7 +353,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save func type in HashedDb.
          */
         var specHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(tupleTB(stringTB(), boolTB())),
                 hash(intTB()))
@@ -344,18 +364,18 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void without_data() throws Exception {
-        assert_reading_cat_without_data_causes_exc(CategoryKinds.FUNC);
+        assert_reading_cat_without_data_causes_exc(FUNC);
       }
 
       @Test
       public void with_additional_data() throws Exception {
-        assert_reading_cat_with_additional_data_causes_exc(CategoryKinds.FUNC);
+        assert_reading_cat_with_additional_data_causes_exc(FUNC);
       }
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
         assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
-            CategoryKinds.FUNC);
+            FUNC);
       }
 
       @Test
@@ -363,11 +383,11 @@ public class CategoryBCorruptedTest extends TestContext {
         var notHashOfSeq = hash("abc");
         var hash =
             hash(
-                hash(CategoryKinds.FUNC.marker()),
+                hash(FUNC.marker()),
                 notHashOfSeq
             );
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, CategoryKinds.FUNC, CategoryDb.DATA_PATH));
+            .throwsException(new DecodeCatNodeExc(hash, FUNC, DATA_PATH));
       }
 
       @Test
@@ -375,7 +395,7 @@ public class CategoryBCorruptedTest extends TestContext {
         var paramTs = tupleTB(stringTB(), boolTB());
         var resT = intTB();
         var hash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(paramTs),
                 hash(resT),
@@ -383,20 +403,20 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeExc(hash, CategoryKinds.FUNC, CategoryDb.DATA_PATH, 2, 3));
+            .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 3));
       }
 
       @Test
       public void with_data_having_one_elems() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var hash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(paramTs)
             )
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeExc(hash, CategoryKinds.FUNC, CategoryDb.DATA_PATH, 2, 1));
+            .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 1));
       }
 
       @ParameterizedTest
@@ -405,11 +425,11 @@ public class CategoryBCorruptedTest extends TestContext {
           throws Exception {
         var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
         var typeHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             notHashOfSeq
         );
         assertCall(() -> ((FuncTB) categoryDb().get(typeHash)).result())
-            .throwsException(new DecodeCatNodeExc(typeHash, CategoryKinds.FUNC, CategoryDb.DATA_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, DATA_PATH))
             .withCause(new DecodeHashSeqExc(
                 notHashOfSeq, byteCount % Hash.lengthInBytes()));
       }
@@ -419,14 +439,14 @@ public class CategoryBCorruptedTest extends TestContext {
         var paramTs = tupleTB(stringTB(), boolTB());
         var nowhere = Hash.of(33);
         var typeHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(paramTs),
                 nowhere
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, CategoryKinds.FUNC, CategoryDb.FUNC_RES_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, CategoryDb.FUNC_RES_PATH))
             .withCause(new DecodeCatExc(nowhere));
       }
 
@@ -434,7 +454,7 @@ public class CategoryBCorruptedTest extends TestContext {
       public void with_result_being_oper_type() throws Exception {
         var paramT = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(paramT),
                 hash(referenceCB())
@@ -442,21 +462,21 @@ public class CategoryBCorruptedTest extends TestContext {
         );
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, CategoryKinds.FUNC, CategoryDb.FUNC_RES_PATH, TypeB.class, ReferenceCB.class));
+                typeHash, FUNC, CategoryDb.FUNC_RES_PATH, TypeB.class, ReferenceCB.class));
       }
 
       @Test
       public void with_result_type_corrupted() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var typeHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(paramTs),
                 corruptedArrayTHash()
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, CategoryKinds.FUNC, CategoryDb.FUNC_RES_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, CategoryDb.FUNC_RES_PATH))
             .withCause(corruptedArrayTypeExc());
       }
 
@@ -464,21 +484,21 @@ public class CategoryBCorruptedTest extends TestContext {
       public void with_params_pointing_nowhere() throws Exception {
         var nowhere = Hash.of(33);
         var typeHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 nowhere,
                 hash(intTB())
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, CategoryKinds.FUNC, CategoryDb.FUNC_PARAMS_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, CategoryDb.FUNC_PARAMS_PATH))
             .withCause(new DecodeCatExc(nowhere));
       }
 
       @Test
       public void with_params_not_being_tuple() throws Exception {
         var typeHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(stringTB()),
                 hash(intTB())
@@ -486,13 +506,13 @@ public class CategoryBCorruptedTest extends TestContext {
         );
         assertThatGet(typeHash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, CategoryKinds.FUNC, CategoryDb.FUNC_PARAMS_PATH, TupleTB.class, StringTB.class));
+                typeHash, FUNC, CategoryDb.FUNC_PARAMS_PATH, TupleTB.class, StringTB.class));
       }
 
       @Test
       public void with_params_being_oper_type() throws Exception {
         var typeHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 hash(referenceCB()),
                 hash(intTB())
@@ -500,20 +520,20 @@ public class CategoryBCorruptedTest extends TestContext {
         );
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, CategoryKinds.FUNC, CategoryDb.FUNC_PARAMS_PATH, TypeB.class, ReferenceCB.class));
+                typeHash, FUNC, CategoryDb.FUNC_PARAMS_PATH, TypeB.class, ReferenceCB.class));
       }
 
       @Test
       public void with_params_type_corrupted() throws Exception {
         var typeHash = hash(
-            hash(CategoryKinds.FUNC.marker()),
+            hash(FUNC.marker()),
             hash(
                 corruptedArrayTHash(),
                 hash(intTB())
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, CategoryKinds.FUNC, CategoryDb.FUNC_PARAMS_PATH))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, CategoryDb.FUNC_PARAMS_PATH))
             .withCause(corruptedArrayTypeExc());
       }
     }
@@ -527,7 +547,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save Tuple type in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.TUPLE.marker()),
+            hash(TUPLE.marker()),
             hash(
                 hash(stringTB()),
                 hash(stringTB())
@@ -539,18 +559,18 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void without_data() throws Exception {
-        assert_reading_cat_without_data_causes_exc(CategoryKinds.TUPLE);
+        assert_reading_cat_without_data_causes_exc(TUPLE);
       }
 
       @Test
       public void with_additional_data() throws Exception {
-        assert_reading_cat_with_additional_data_causes_exc(CategoryKinds.TUPLE);
+        assert_reading_cat_with_additional_data_causes_exc(TUPLE);
       }
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
         assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
-            CategoryKinds.TUPLE);
+            TUPLE);
       }
 
       @Test
@@ -558,11 +578,11 @@ public class CategoryBCorruptedTest extends TestContext {
         Hash notHashOfSeq = hash("abc");
         Hash hash =
             hash(
-                hash(CategoryKinds.TUPLE.marker()),
+                hash(TUPLE.marker()),
                 notHashOfSeq
             );
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, CategoryKinds.TUPLE, CategoryDb.DATA_PATH));
+            .throwsException(new DecodeCatNodeExc(hash, TUPLE, DATA_PATH));
       }
 
       @Test
@@ -570,13 +590,13 @@ public class CategoryBCorruptedTest extends TestContext {
         Hash stringHash = hash(stringB("abc"));
         Hash hash =
             hash(
-                hash(CategoryKinds.TUPLE.marker()),
+                hash(TUPLE.marker()),
                 hash(
                     stringHash
                 )
             );
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, CategoryKinds.TUPLE, "data[0]"))
+            .throwsException(new DecodeCatNodeExc(hash, TUPLE, "data[0]"))
             .withCause(new DecodeCatExc(stringHash));
       }
 
@@ -584,26 +604,26 @@ public class CategoryBCorruptedTest extends TestContext {
       public void with_elems_being_seq_of_oper_types() throws Exception {
         Hash hash =
             hash(
-                hash(CategoryKinds.TUPLE.marker()),
+                hash(TUPLE.marker()),
                 hash(
                     hash(referenceCB())
                 )
             );
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, CategoryKinds.TUPLE, "data", 0, TypeB.class, ReferenceCB.class));
+                hash, TUPLE, "data", 0, TypeB.class, ReferenceCB.class));
       }
 
       @Test
       public void with_corrupted_elem_type() throws Exception {
         Hash hash =
             hash(
-                hash(CategoryKinds.TUPLE.marker()),
+                hash(TUPLE.marker()),
                 hash(
                     corruptedArrayTHash(),
                     hash(stringTB())));
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, CategoryKinds.TUPLE, "data[0]"))
+            .throwsException(new DecodeCatNodeExc(hash, TUPLE, "data[0]"))
             .withCause(corruptedArrayTypeExc());
       }
     }
@@ -636,7 +656,7 @@ public class CategoryBCorruptedTest extends TestContext {
         dataHash
     );
     assertCall(() -> categoryDb().get(typeHash))
-        .throwsException(new DecodeCatNodeExc(typeHash, kind, CategoryDb.DATA_PATH))
+        .throwsException(new DecodeCatNodeExc(typeHash, kind, DATA_PATH))
         .withCause(new DecodeCatExc(dataHash));
   }
 
@@ -648,7 +668,7 @@ public class CategoryBCorruptedTest extends TestContext {
         dataHash
     );
     assertCall(() -> categoryDb().get(typeHash))
-        .throwsException(new DecodeCatNodeExc(typeHash, kind, CategoryDb.DATA_PATH))
+        .throwsException(new DecodeCatNodeExc(typeHash, kind, DATA_PATH))
         .withCause(new NoSuchDataExc(dataHash));
   }
 
@@ -659,7 +679,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(kind.marker()),
             corruptedArrayTHash());
     assertThatGet(hash)
-        .throwsException(new DecodeCatNodeExc(hash, kind, CategoryDb.DATA_PATH))
+        .throwsException(new DecodeCatNodeExc(hash, kind, DATA_PATH))
         .withCause(corruptedArrayTypeExc());
   }
 
@@ -672,12 +692,12 @@ public class CategoryBCorruptedTest extends TestContext {
   }
 
   private DecodeCatNodeExc corruptedArrayTypeExc() throws Exception {
-    return new DecodeCatNodeExc(corruptedArrayTHash(), CategoryKinds.ARRAY, CategoryDb.DATA_PATH);
+    return new DecodeCatNodeExc(corruptedArrayTHash(), ARRAY, DATA_PATH);
   }
 
   private Hash corruptedArrayTHash() throws Exception {
     return hash(
-        hash(CategoryKinds.ARRAY.marker()),
+        hash(ARRAY.marker()),
         Hash.of(33)
     );
   }
@@ -729,7 +749,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save call type in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.CALL.marker()),
+            hash(CALL.marker()),
             hash(intTB())
         );
         assertThat(hash)
@@ -739,7 +759,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Nested
       class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
-          super(CategoryKinds.CALL);
+          super(CALL);
         }
       }
     }
@@ -753,7 +773,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save Closurize type in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.CLOSURIZE.marker()),
+            hash(CLOSURIZE.marker()),
             hash(funcTB(intTB(), blobTB()))
         );
         assertThat(hash)
@@ -763,19 +783,19 @@ public class CategoryBCorruptedTest extends TestContext {
       @Nested
       class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
-          super(CategoryKinds.CLOSURIZE, FuncTB.class);
+          super(CLOSURIZE, FuncTB.class);
         }
       }
 
       @Test
       public void with_evaluation_type_not_being_tuple_type() throws Exception {
         var hash = hash(
-            hash(CategoryKinds.COMBINE.marker()),
+            hash(COMBINE.marker()),
             hash(intTB())
         );
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, CategoryKinds.COMBINE, CategoryDb.DATA_PATH, TupleTB.class, IntTB.class));
+                hash, COMBINE, DATA_PATH, TupleTB.class, IntTB.class));
       }
     }
 
@@ -788,7 +808,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save Combine type in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.COMBINE.marker()),
+            hash(COMBINE.marker()),
             hash(tupleTB(intTB(), stringTB()))
         );
         assertThat(hash)
@@ -798,19 +818,19 @@ public class CategoryBCorruptedTest extends TestContext {
       @Nested
       class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
-          super(CategoryKinds.COMBINE, TupleTB.class);
+          super(COMBINE, TupleTB.class);
         }
       }
 
       @Test
       public void with_evaluation_type_not_being_tuple_type() throws Exception {
         var hash = hash(
-            hash(CategoryKinds.COMBINE.marker()),
+            hash(COMBINE.marker()),
             hash(intTB())
         );
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, CategoryKinds.COMBINE, CategoryDb.DATA_PATH, TupleTB.class, IntTB.class));
+                hash, COMBINE, DATA_PATH, TupleTB.class, IntTB.class));
       }
     }
 
@@ -823,7 +843,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save Order type in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.ORDER.marker()),
+            hash(ORDER.marker()),
             hash(arrayTB(intTB()))
         );
         assertThat(hash)
@@ -833,19 +853,19 @@ public class CategoryBCorruptedTest extends TestContext {
       @Nested
       class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
-          super(CategoryKinds.ORDER, ArrayTB.class);
+          super(ORDER, ArrayTB.class);
         }
       }
 
       @Test
       public void with_evaluation_type_not_being_array_type() throws Exception {
         var hash = hash(
-            hash(CategoryKinds.ORDER.marker()),
+            hash(ORDER.marker()),
             hash(intTB())
         );
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, CategoryKinds.ORDER, CategoryDb.DATA_PATH, ArrayTB.class, IntTB.class));
+                hash, ORDER, DATA_PATH, ArrayTB.class, IntTB.class));
       }
     }
 
@@ -858,7 +878,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save Pick type in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.PICK.marker()),
+            hash(PICK.marker()),
             hash(intTB())
         );
         assertThat(hash)
@@ -868,7 +888,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Nested
       class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
-          super(CategoryKinds.PICK);
+          super(PICK);
         }
       }
     }
@@ -882,7 +902,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save param-ref in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.REFERENCE.marker()),
+            hash(REFERENCE.marker()),
             hash(intTB())
         );
         assertThat(hash)
@@ -892,7 +912,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Nested
       class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
-          super(CategoryKinds.REFERENCE);
+          super(REFERENCE);
         }
       }
     }
@@ -906,7 +926,7 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save Select type in HashedDb.
          */
         var hash = hash(
-            hash(CategoryKinds.SELECT.marker()),
+            hash(SELECT.marker()),
             hash(intTB())
         );
         assertThat(hash)
@@ -916,7 +936,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Nested
       class _oper_cat_tests extends AbstractOperCategoryTestSuite {
         protected _oper_cat_tests() {
-          super(CategoryKinds.SELECT);
+          super(SELECT);
         }
       }
     }
@@ -962,7 +982,7 @@ public class CategoryBCorruptedTest extends TestContext {
         );
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, categoryKindB, CategoryDb.DATA_PATH, type, ReferenceCB.class));
+                hash, categoryKindB, DATA_PATH, type, ReferenceCB.class));
       }
     }
   }
