@@ -10,7 +10,7 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
  */
 public sealed abstract class NamedEvaluableS
     extends Sanal
-    implements EvaluableS, RefableS, Nal
+    implements EvaluableS, ReferenceableS, Nal
     permits NamedFuncS, NamedValueS {
   public NamedEvaluableS(SchemaS schema, String name, Location location) {
     super(schema, name, location);

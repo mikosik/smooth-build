@@ -6,7 +6,7 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
 /**
  * Referencable.
  */
-public sealed interface RefableS
+public sealed interface ReferenceableS
     extends Nal
     permits ItemS, NamedEvaluableS {
   public SchemaS schema();

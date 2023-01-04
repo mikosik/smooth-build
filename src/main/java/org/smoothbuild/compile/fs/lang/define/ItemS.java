@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
  * Item is a func param or a struct field.
  * This class is immutable.
  */
-public final class ItemS extends Tanal implements RefableS {
+public final class ItemS extends Tanal implements ReferenceableS {
   private final Optional<NamedValueS> defaultValue;
 
   public ItemS(TypeS type, String name, Optional<NamedValueS> defaultValue, Location location) {
