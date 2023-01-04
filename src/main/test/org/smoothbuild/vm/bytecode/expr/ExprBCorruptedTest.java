@@ -41,7 +41,7 @@ import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.RefB;
+import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -235,11 +235,11 @@ public class ExprBCorruptedTest extends TestContext {
                       hash(stringTB()),
                       hash("aaa")
                   ),
-                  hash(refB(1))
+                  hash(referenceB(1))
               ));
       assertCall(() -> ((ArrayB) bytecodeDb().get(hash)).elems(StringB.class))
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, arrayTB, DATA_PATH, 1, ValueB.class, RefB.class));
+              hash, arrayTB, DATA_PATH, 1, ValueB.class, ReferenceB.class));
     }
   }
 
@@ -492,12 +492,12 @@ public class ExprBCorruptedTest extends TestContext {
               hash(type),
               hash(
                   hash(func),
-                  hash(refB(1))
+                  hash(referenceB(1))
               )
           );
       assertCall(() -> ((CallB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, type, DATA_PATH + "[1]", CombineB.class, RefB.class));
+              hash, type, DATA_PATH + "[1]", CombineB.class, ReferenceB.class));
     }
 
     @Test
@@ -1266,7 +1266,7 @@ public class ExprBCorruptedTest extends TestContext {
        * pick in HashedDb.
        */
       var pickable = orderB(stringB("abc"));
-      var index = refB(intTB(), 7);
+      var index = referenceB(intTB(), 7);
       var hash =
           hash(
               hash(pickCB(stringTB())),
@@ -1361,7 +1361,7 @@ public class ExprBCorruptedTest extends TestContext {
     public void index_is_not_int_expr() throws Exception {
       var type = pickCB(stringTB());
       var pickable = arrayB(stringB("abc"));
-      var index = refB(stringTB(), 7);
+      var index = referenceB(stringTB(), 7);
       var hash =
           hash(
               hash(type),
@@ -1396,7 +1396,7 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   @Nested
-  class _ref {
+  class _reference {
     @Test
     public void learning_test() throws Exception {
       /*
@@ -1406,15 +1406,15 @@ public class ExprBCorruptedTest extends TestContext {
       ByteString byteString = ByteString.of((byte) 3, (byte) 2);
       var hash =
           hash(
-              hash(refCB(stringTB())),
+              hash(referenceCB(stringTB())),
               hash(byteString));
-      assertThat(((RefB) bytecodeDb().get(hash)).value())
+      assertThat(((ReferenceB) bytecodeDb().get(hash)).value())
           .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(refCB());
+      obj_root_without_data_hash(referenceCB());
     }
 
     @Test
@@ -1422,17 +1422,17 @@ public class ExprBCorruptedTest extends TestContext {
       var index = intB(0);
       var dataHash = hash(index);
       obj_root_with_two_data_hashes(
-          refCB(intTB()),
+          referenceCB(intTB()),
           dataHash,
-          (Hash hash) -> ((RefB) bytecodeDb().get(hash)).value()
+          (Hash hash) -> ((ReferenceB) bytecodeDb().get(hash)).value()
       );
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          refCB(intTB()),
-          (Hash hash) -> ((RefB) bytecodeDb().get(hash)).value());
+          referenceCB(intTB()),
+          (Hash hash) -> ((ReferenceB) bytecodeDb().get(hash)).value());
     }
   }
 
@@ -1766,11 +1766,11 @@ public class ExprBCorruptedTest extends TestContext {
               hash(personTB()),
               hash(
                   hash(stringB("John")),
-                  hash(refB(1))));
+                  hash(referenceB(1))));
       var tuple = (TupleB) bytecodeDb().get(hash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, personTB(), DATA_PATH + "[1]", ValueB.class, RefB.class));
+              hash, personTB(), DATA_PATH + "[1]", ValueB.class, ReferenceB.class));
     }
   }
 

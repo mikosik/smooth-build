@@ -22,7 +22,7 @@ import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.RefB;
+import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -139,8 +139,8 @@ public class BytecodeF {
     return bytecodeDb.pick(array, index);
   }
 
-  public RefB ref(TypeB evalT, BigInteger value) {
-    return bytecodeDb.ref(evalT, value);
+  public ReferenceB reference(TypeB evalT, BigInteger value) {
+    return bytecodeDb.reference(evalT, value);
   }
 
   public SelectB select(ExprB tuple, IntB index) {

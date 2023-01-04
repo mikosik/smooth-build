@@ -94,9 +94,9 @@ public class ExprBCollisionTest extends TestContext {
         pickB(arrayB(intB(1)), intB(0)),
         pickB(arrayB(intB(1)), intB(1)),
         pickB(arrayB(intB(1), intB(2)), intB(0)),
-        refB(intTB(), 0),
-        refB(intTB(), 1),
-        refB(stringTB(), 0),
+        referenceB(intTB(), 0),
+        referenceB(intTB(), 1),
+        referenceB(stringTB(), 0),
         selectB(tupleB(intB(1), stringB("a")), intB(0)),
         selectB(tupleB(intB(1), stringB("a")), intB(1)),
         selectB(tupleB(intB(1), stringB("b")), intB(0))

@@ -19,7 +19,7 @@ import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.RefB;
+import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -103,7 +103,7 @@ public class CategoryBTest extends TestContext {
         args(f -> f.combine(f.tuple(f.string(), f.int_())), "COMBINE:{String,Int}"),
         args(f -> f.order(f.array(f.string())), "ORDER:[String]"),
         args(f -> f.pick(f.int_()), "PICK:Int"),
-        args(f -> f.ref(f.int_()), "REF:Int"),
+        args(f -> f.reference(f.int_()), "REFERENCE:Int"),
         args(f -> f.select(f.int_()), "SELECT:Int")
     );
   }
@@ -340,7 +340,7 @@ public class CategoryBTest extends TestContext {
         arguments(
             CONTEXT.combineCB(CONTEXT.intTB(), CONTEXT.stringTB()), CombineB.class),
         arguments(CONTEXT.pickCB(), PickB.class),
-        arguments(CONTEXT.refCB(CONTEXT.intTB()), RefB.class),
+        arguments(CONTEXT.referenceCB(CONTEXT.intTB()), ReferenceB.class),
         arguments(CONTEXT.selectCB(CONTEXT.intTB()), SelectB.class)
     );
   }
@@ -395,8 +395,8 @@ public class CategoryBTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("types")
-    public void ref(TypeB type) {
-      assertThat(refCB(type).evalT())
+    public void reference(TypeB type) {
+      assertThat(referenceCB(type).evalT())
           .isEqualTo(type);
     }
 
@@ -448,7 +448,7 @@ public class CategoryBTest extends TestContext {
     tester.addEqualityGroup(mapFuncCB(), mapFuncCB());
     tester.addEqualityGroup(orderCB(), orderCB());
     tester.addEqualityGroup(pickCB(), pickCB());
-    tester.addEqualityGroup(refCB(intTB()), refCB(intTB()));
+    tester.addEqualityGroup(referenceCB(intTB()), referenceCB(intTB()));
     tester.addEqualityGroup(selectCB(intTB()), selectCB(intTB()));
 
     tester.testEquals();

@@ -13,8 +13,8 @@ public class ElemFunc {
     var arrayParamT = f.arrayT(varA);
     var indexParamT = f.intT();
     var paramTs = f.tupleT(arrayParamT, indexParamT);
-    var arrayParamRef = f.ref(arrayParamT, BigInteger.ZERO);
-    var indexParamRef = f.ref(indexParamT, BigInteger.ONE);
+    var arrayParamRef = f.reference(arrayParamT, BigInteger.ZERO);
+    var indexParamRef = f.reference(indexParamT, BigInteger.ONE);
     var body = f.pick(arrayParamRef, indexParamRef);
     var funcT = f.funcT(paramTs, varA);
     return f.exprFunc(funcT, body);

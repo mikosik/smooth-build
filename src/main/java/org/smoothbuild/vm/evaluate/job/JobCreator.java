@@ -11,7 +11,7 @@ import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.RefB;
+import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -46,7 +46,7 @@ public class JobCreator {
       case ValueB     value     -> new ConstJob(value, context);
       case OrderB     order     -> new OperJob<>(OrderTask::new, order, context);
       case PickB      pick      -> new OperJob<>(PickTask::new, pick, context);
-      case RefB       ref       -> jobForEnv(ref);
+      case ReferenceB reference -> jobForReferenced(reference);
       case SelectB    select    -> new OperJob<>(SelectTask::new, select, context);
       // `default` is needed because ExprB is not sealed because it is in different package
       // than its subclasses and code is not modularized.
@@ -59,15 +59,15 @@ public class JobCreator {
     return closurize.buildClosure(map(environment, Job::exprB));
   }
 
-  private Job jobForEnv(RefB ref) {
-    int index = ref.value().intValue();
+  private Job jobForReferenced(ReferenceB reference) {
+    int index = reference.value().intValue();
     var job = environment.get(index);
     var jobEvalT = job.exprB().evalT();
-    if (jobEvalT.equals(ref.evalT())) {
+    if (jobEvalT.equals(reference.evalT())) {
       return job;
     } else {
       throw new RuntimeException("environment(%d) evalT is %s but expected %s."
-          .formatted(index, jobEvalT.q(), ref.evalT().q()));
+          .formatted(index, jobEvalT.q(), reference.evalT().q()));
     }
   }
 

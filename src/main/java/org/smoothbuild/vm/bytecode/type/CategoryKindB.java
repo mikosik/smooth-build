@@ -8,7 +8,7 @@ import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.RefB;
+import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -35,7 +35,7 @@ import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.oper.OperCB;
 import org.smoothbuild.vm.bytecode.type.oper.OrderCB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
-import org.smoothbuild.vm.bytecode.type.oper.RefCB;
+import org.smoothbuild.vm.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.ClosureCB;
@@ -58,7 +58,7 @@ public sealed abstract class CategoryKindB
   }
 
   public static sealed class OperKindB<T extends OperCB> extends CategoryKindB
-      permits CallKindB, CombineKindB, OrderKindB, PickKindB, RefKindB, SelectKindB {
+      permits CallKindB, CombineKindB, OrderKindB, PickKindB, ReferenceKindB, SelectKindB {
     private final BiFunction<Hash, TypeB, T> constructor;
     private final Class<? extends TypeB> dataClass;
 
@@ -188,9 +188,9 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class RefKindB extends OperKindB<RefCB> {
-    RefKindB() {
-      super("REF", (byte) 14, RefCB::new, TypeB.class, RefB.class);
+  public static final class ReferenceKindB extends OperKindB<ReferenceCB> {
+    ReferenceKindB() {
+      super("REFERENCE", (byte) 14, ReferenceCB::new, TypeB.class, ReferenceB.class);
     }
   }
 
@@ -244,7 +244,7 @@ public sealed abstract class CategoryKindB
       case 11 -> CategoryKinds.CALL;
       case 12 -> CategoryKinds.PICK;
       case 13 -> CategoryKinds.IF_FUNC;
-      case 14 -> CategoryKinds.REF;
+      case 14 -> CategoryKinds.REFERENCE;
       case 15 -> CategoryKinds.MAP_FUNC;
       case 16 -> CategoryKinds.FUNC;
       case 17 -> CategoryKinds.CLOSURIZE;

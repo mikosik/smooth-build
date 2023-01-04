@@ -48,7 +48,7 @@ public class CategoryBCachingTest extends TestContext {
         catDb -> catDb.mapFunc(catDb.int_(), catDb.string()),
         catDb -> catDb.order(catDb.array(catDb.int_())),
         catDb -> catDb.pick(catDb.int_()),
-        catDb -> catDb.ref(catDb.int_()),
+        catDb -> catDb.reference(catDb.int_()),
         catDb -> catDb.select(catDb.int_()),
 
         catDb -> catDb.array(catDb.blob()),

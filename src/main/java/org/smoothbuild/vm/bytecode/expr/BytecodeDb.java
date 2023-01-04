@@ -18,7 +18,7 @@ import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.RefB;
+import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
@@ -140,8 +140,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(pickable, index));
   }
 
-  public RefB ref(TypeB evalT, BigInteger value) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newRef(evalT, value));
+  public ReferenceB reference(TypeB evalT, BigInteger value) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newReference(evalT, value));
   }
 
   public SelectB select(ExprB selectable, IntB index) {
@@ -357,9 +357,9 @@ public class BytecodeDb {
     }
   }
 
-  private RefB newRef(TypeB evalT, BigInteger index) throws HashedDbExc {
-    var data = writeRefData(index);
-    var type = categoryDb.ref(evalT);
+  private ReferenceB newReference(TypeB evalT, BigInteger index) throws HashedDbExc {
+    var data = writeReferenceData(index);
+    var type = categoryDb.reference(evalT);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
@@ -413,7 +413,7 @@ public class BytecodeDb {
     return hashedDb.writeSeq(pickable.hash(), index.hash());
   }
 
-  private Hash writeRefData(BigInteger value) throws HashedDbExc {
+  private Hash writeReferenceData(BigInteger value) throws HashedDbExc {
     return hashedDb.writeBigInteger(value);
   }
 

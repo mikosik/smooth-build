@@ -121,7 +121,7 @@ public class EvaluatorBTest extends TestContext {
       public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used() {
         var innerFunc = exprFuncB(list(arrayTB(boolTB())), intB(7));
         var outerFunc = exprFuncB(list(arrayTB(boolTB())),
-            callB(innerFunc, refB(arrayTB(boolTB()), 0)));
+            callB(innerFunc, referenceB(arrayTB(boolTB()), 0)));
         var call = callB(outerFunc, orderB(boolTB()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
@@ -134,7 +134,7 @@ public class EvaluatorBTest extends TestContext {
       @Test
       public void task_for_func_arg_that_is_used_twice_is_executed_only_once() {
         var arrayT = arrayTB(intTB());
-        var func = exprFuncB(list(arrayT), combineB(refB(arrayT, 0), refB(arrayT, 0)));
+        var func = exprFuncB(list(arrayT), combineB(referenceB(arrayT, 0), referenceB(arrayT, 0)));
         var call = callB(func, orderB(intB(7)));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
@@ -233,7 +233,7 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void closure_with_environment() {
-          var closure = closureB(combineB(intB(7)), refB(intTB(), 0));
+          var closure = closureB(combineB(intB(7)), referenceB(intTB(), 0));
           var call = callB(closure);
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
@@ -251,7 +251,7 @@ public class EvaluatorBTest extends TestContext {
         public void expression_function_passed_as_argument() {
           var func = exprFuncB(intB(7));
           var paramT = func.evalT();
-          var outerFunc = exprFuncB(list(paramT), callB(refB(paramT, 0)));
+          var outerFunc = exprFuncB(list(paramT), callB(referenceB(paramT, 0)));
           var call = callB(outerFunc, func);
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
@@ -286,7 +286,7 @@ public class EvaluatorBTest extends TestContext {
         public void map_func() {
           var s = intTB();
           var r = tupleTB(s);
-          var func = exprFuncB(funcTB(s, r), combineB(refB(s, 0)));
+          var func = exprFuncB(funcTB(s, r), combineB(referenceB(s, 0)));
           var mapFunc = mapFuncB(r, s);
           var map = callB(mapFunc, arrayB(intB(1), intB(2)), func);
           assertThat(evaluate(map))
@@ -316,7 +316,7 @@ public class EvaluatorBTest extends TestContext {
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var nativeFuncT = nativeFuncB.evalT();
-          var outerFunc = exprFuncB(list(nativeFuncT), callB(refB(nativeFuncT, 0), intB(7)));
+          var outerFunc = exprFuncB(list(nativeFuncT), callB(referenceB(nativeFuncT, 0), intB(7)));
           var call = callB(outerFunc, nativeFuncB);
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(7));
@@ -357,7 +357,7 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void closure_returning_its_arg() {
-          var closurize = closurizeB(list(intTB()), refB(intTB(), 0));
+          var closurize = closurizeB(list(intTB()), referenceB(intTB(), 0));
           var outerFunc = exprFuncB(list(intTB()), closurize);
           var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
           var callB = callB(closureReturnedByOuterFunc, intB(18));
@@ -367,7 +367,7 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void closure_returning_value_from_environment() {
-          var closurize = closurizeB(refB(intTB(), 0));
+          var closurize = closurizeB(referenceB(intTB(), 0));
           var outerFunc = exprFuncB(list(intTB()), closurize);
           var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
           assertThat(evaluate(callB(closureReturnedByOuterFunc)))
@@ -377,11 +377,12 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void closure_passed_as_argument_and_then_returned_by_another_closure() {
           var returnIntTB = funcTB(intTB());
-          var returnReturnIntClosure = closurizeB(refB(returnIntTB, 0));
+          var returnReturnIntClosure = closurizeB(referenceB(returnIntTB, 0));
           var innerFunc = exprFuncB(list(returnIntTB), returnReturnIntClosure);
 
-          var returnIntAnonymousFunc = closurizeB(refB(intTB(), 0));
-          var outerFunc = exprFuncB(list(intTB()), callB(callB(callB(innerFunc, returnIntAnonymousFunc))));
+          var returnIntAnonymousFunc = closurizeB(referenceB(intTB(), 0));
+          var body = callB(callB(callB(innerFunc, returnIntAnonymousFunc)));
+          var outerFunc = exprFuncB(list(intTB()), body);
 
           var callB = callB(outerFunc, intB(17));
           assertThat(evaluate(callB))
@@ -430,26 +431,26 @@ public class EvaluatorBTest extends TestContext {
       }
 
       @Nested
-      class _ref {
+      class _reference {
         @Test
-        public void ref_referencing_func_param() {
-          var exprFuncB = exprFuncB(list(intTB()), refB(intTB(), 0));
+        public void reference_referencing_func_param() {
+          var exprFuncB = exprFuncB(list(intTB()), referenceB(intTB(), 0));
           assertThat(evaluate(callB(exprFuncB, intB(7))))
               .isEqualTo(intB(7));
         }
 
         @Test
-        public void ref_referencing_environment() {
-          var body = refB(intTB(), 1);
+        public void reference_referencing_environment() {
+          var body = referenceB(intTB(), 1);
           var closureB = closureB(combineB(intB(17)), list(intTB()), body);
           assertThat(evaluate(callB(closureB, intB(7))))
               .isEqualTo(intB(17));
         }
 
         @Test
-        public void ref_with_index_outside_of_environment_size_causes_fatal()
+        public void reference_with_index_outside_of_environment_size_causes_fatal()
             throws InterruptedException {
-          var closureB = closureB(combineB(intB()), list(intTB()), refB(intTB(), 2));
+          var closureB = closureB(combineB(intB()), list(intTB()), referenceB(intTB(), 2));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
           vm.evaluate(list(callB(closureB, intB(7))));
@@ -458,9 +459,9 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void ref_inside_inner_func_cannot_access_params_of_func_that_called_inner_func()
+        public void reference_inside_inner_func_cannot_access_params_of_func_that_called_inner_func()
             throws InterruptedException {
-          var innerFuncB = exprFuncB(list(), refB(intTB(), 0));
+          var innerFuncB = exprFuncB(list(), referenceB(intTB(), 0));
           var outerFuncB = exprFuncB(list(intTB()), callB(innerFuncB));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
@@ -475,9 +476,9 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void ref_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
+        public void reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
             throws InterruptedException {
-          var funcB = exprFuncB(list(blobTB()), refB(intTB(), 0));
+          var funcB = exprFuncB(list(blobTB()), referenceB(intTB(), 0));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
           vm.evaluate(list(callB(funcB, blobB())));

@@ -14,8 +14,8 @@ import com.google.common.collect.ImmutableList;
  * Reference to environment value.
  * This class is thread-safe.
  */
-public class RefB extends OperB {
-  public RefB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+public class ReferenceB extends OperB {
+  public ReferenceB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
   }
 

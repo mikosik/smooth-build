@@ -116,7 +116,7 @@ import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.RefB;
+import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -139,7 +139,7 @@ import org.smoothbuild.vm.bytecode.type.oper.ClosurizeCB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.oper.OrderCB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
-import org.smoothbuild.vm.bytecode.type.oper.RefCB;
+import org.smoothbuild.vm.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.BlobTB;
@@ -590,12 +590,12 @@ public class TestContext {
     return categoryDb().pick(evalT);
   }
 
-  public RefCB refCB() {
-    return refCB(intTB());
+  public ReferenceCB referenceCB() {
+    return referenceCB(intTB());
   }
 
-  public RefCB refCB(TypeB evalT) {
-    return categoryDb().ref(evalT);
+  public ReferenceCB referenceCB(TypeB evalT) {
+    return categoryDb().reference(evalT);
   }
 
   public SelectCB selectCB() {
@@ -747,7 +747,7 @@ public class TestContext {
   }
 
   public ExprFuncB idFuncB() {
-    return exprFuncB(list(intTB()), refB(intTB(), 0));
+    return exprFuncB(list(intTB()), referenceB(intTB(), 0));
   }
 
   public ExprFuncB returnAbcFuncB() {
@@ -929,12 +929,12 @@ public class TestContext {
     return bytecodeDb().pick(array, index);
   }
 
-  public RefB refB(int index) {
-    return refB(intTB(), index);
+  public ReferenceB referenceB(int index) {
+    return referenceB(intTB(), index);
   }
 
-  public RefB refB(TypeB evalT, int index) {
-    return bytecodeDb().ref(evalT, BigInteger.valueOf(index));
+  public ReferenceB referenceB(TypeB evalT, int index) {
+    return bytecodeDb().reference(evalT, BigInteger.valueOf(index));
   }
 
   public SelectB selectB() {

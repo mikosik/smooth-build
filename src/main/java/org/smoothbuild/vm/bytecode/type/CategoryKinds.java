@@ -16,7 +16,7 @@ import org.smoothbuild.vm.bytecode.type.CategoryKindB.NativeFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.OrderKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.PickKindB;
-import org.smoothbuild.vm.bytecode.type.CategoryKindB.RefKindB;
+import org.smoothbuild.vm.bytecode.type.CategoryKindB.ReferenceKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.SelectKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.StringKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.TupleKindB;
@@ -24,7 +24,7 @@ import org.smoothbuild.vm.bytecode.type.oper.CallCB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.oper.OrderCB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
-import org.smoothbuild.vm.bytecode.type.oper.RefCB;
+import org.smoothbuild.vm.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 
 public class CategoryKinds {
@@ -45,7 +45,7 @@ public class CategoryKinds {
   public static final OperKindB<CombineCB> COMBINE = new CombineKindB();
   public static final OperKindB<OrderCB> ORDER = new OrderKindB();
   public static final OperKindB<PickCB> PICK = new PickKindB();
-  public static final OperKindB<RefCB> REF = new RefKindB();
+  public static final OperKindB<ReferenceCB> REFERENCE = new ReferenceKindB();
   public static final OperKindB<SelectCB> SELECT = new SelectKindB();
   public static final ClosurizeKindB CLOSURIZE = new ClosurizeKindB();
 }

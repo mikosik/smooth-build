@@ -19,7 +19,7 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.MAP_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.NATIVE_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ORDER;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.PICK;
-import static org.smoothbuild.vm.bytecode.type.CategoryKinds.REF;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.REFERENCE;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.STRING;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.TUPLE;
@@ -61,7 +61,7 @@ import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.oper.OperCB;
 import org.smoothbuild.vm.bytecode.type.oper.OrderCB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
-import org.smoothbuild.vm.bytecode.type.oper.RefCB;
+import org.smoothbuild.vm.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.BlobTB;
@@ -216,8 +216,8 @@ public class CategoryDb {
     return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(PICK, evalT));
   }
 
-  public RefCB ref(TypeB evalT) {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(REF, evalT));
+  public ReferenceCB reference(TypeB evalT) {
+    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> newOper(REFERENCE, evalT));
   }
 
   public SelectCB select(TypeB evalT) {

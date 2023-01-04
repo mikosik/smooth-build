@@ -177,7 +177,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var polyAnonymousFuncS = anonymousFuncS(nlist(itemS(a, "a")), paramRefS(a, "a"));
           var monoAnonymousFuncS = monoizeS(varMap(a, intTS()), polyAnonymousFuncS);
-          assertEvaluation(monoAnonymousFuncS, closureB(list(intTB()), refB(intTB(), 0)));
+          assertEvaluation(monoAnonymousFuncS, closureB(list(intTB()), referenceB(intTB(), 0)));
         }
       }
 
@@ -216,7 +216,7 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void constructor() throws EvaluatorExcS {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-          assertEvaluation(constructorS, exprFuncB(list(intTB()), combineB(refB(intTB(), 0))));
+          assertEvaluation(constructorS, exprFuncB(list(intTB()), combineB(referenceB(intTB(), 0))));
         }
       }
 
@@ -243,7 +243,7 @@ public class EvaluatorSTest extends TestContext {
         public void constructor() throws EvaluatorExcS {
           assertEvaluation(
               constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field")))),
-              exprFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(refB(intTB(), 0))));
+              exprFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(referenceB(intTB(), 0))));
         }
       }
     }
