@@ -22,18 +22,18 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 /**
- * Nameable list.
+ * List of Named.
  *
  * This class is thread-safe.
  */
-public class NList<T extends Nameable> extends AbstractList<T> {
+public class NList<T extends Named> extends AbstractList<T> {
   private static final NList<?> EMPTY = nlist(ImmutableList.of());
 
   private final Supplier<ImmutableList<T>> list;
   private final Supplier<ImmutableMap<String, T>> map;
   private final Supplier<ImmutableMap<String, Integer>> indexMap;
 
-  public static <T extends Nameable> NList<T> nlist() {
+  public static <T extends Named> NList<T> nlist() {
     // cast is safe as EMPTY is empty
     @SuppressWarnings("unchecked")
     NList<T> result = (NList<T>) EMPTY;
@@ -41,11 +41,11 @@ public class NList<T extends Nameable> extends AbstractList<T> {
   }
 
   @SafeVarargs
-  public static <E extends Nameable> NList<E> nlist(E... elems) {
+  public static <E extends Named> NList<E> nlist(E... elems) {
     return nlist(Lists.list(elems));
   }
 
-  public static <E extends Nameable> NList<E> nlist(ImmutableList<E> list) {
+  public static <E extends Named> NList<E> nlist(ImmutableList<E> list) {
     checkContainsNoDuplicatedNames(list);
     return new NList<>(
         () -> list,
@@ -53,22 +53,20 @@ public class NList<T extends Nameable> extends AbstractList<T> {
         () -> calculateIndexMap(list));
   }
 
-  private static <E extends Nameable> void checkContainsNoDuplicatedNames(ImmutableList<E> list) {
+  private static <E extends Named> void checkContainsNoDuplicatedNames(ImmutableList<E> list) {
     HashSet<String> names = new HashSet<>();
     for (E elem : list) {
-      if (elem.nameO().isPresent()) {
-        String name = elem.nameO().get();
-        if (names.contains(name)) {
-          throw new IllegalArgumentException(
-              "List contains two elements with same name = \"" + name + "\".");
-        } else {
-          names.add(name);
-        }
+      String name = elem.name();
+      if (names.contains(name)) {
+        throw new IllegalArgumentException(
+            "List contains two elements with same name = \"" + name + "\".");
+      } else {
+        names.add(name);
       }
     }
   }
 
-  public static <E extends Nameable> NList<E> nlist(ImmutableMap<String, E> map) {
+  public static <E extends Named> NList<E> nlist(ImmutableMap<String, E> map) {
     return new NList<>(
         () -> map.values().asList(),
         () -> map,
@@ -79,7 +77,7 @@ public class NList<T extends Nameable> extends AbstractList<T> {
    * Creates nlist which allows elements with duplicated names. When {@link #get(String)}
    * is called and more than one element has given name then the first one is returned.
    */
-  public static <E extends Nameable> NList<E> nlistWithShadowing(ImmutableList<E> list) {
+  public static <E extends Named> NList<E> nlistWithShadowing(ImmutableList<E> list) {
     return new NList<>(
         () -> list,
         () -> calculateMap(list),
@@ -96,39 +94,37 @@ public class NList<T extends Nameable> extends AbstractList<T> {
     this.indexMap = memoize(indexMap);
   }
 
-  private static <E extends Nameable> ImmutableMap<String, Integer> calculateIndexMap(
-      Iterable<E> nameables) {
+  private static <E extends Named> ImmutableMap<String, Integer> calculateIndexMap(
+      Iterable<E> withNames) {
     Builder<String, Integer> builder = ImmutableMap.builder();
     var names = new HashSet<String>();
     int i = 0;
-    for (E nameable : nameables) {
+    for (E withName : withNames) {
       int index = i;
-      nameable.nameO().ifPresent(n -> {
-        if (!names.contains(n)) {
-          builder.put(n, index);
-          names.add(n);
-        }
-      });
+      var n = withName.name();
+      if (!names.contains(n)) {
+        builder.put(n, index);
+        names.add(n);
+      }
       i++;
     }
     return builder.build();
   }
 
-  private static <E extends Nameable> ImmutableMap<String, E> calculateMap(Iterable<E> nameables) {
+  private static <E extends Named> ImmutableMap<String, E> calculateMap(Iterable<E> withNames) {
     Builder<String, E> builder = ImmutableMap.builder();
     var names = new HashSet<String>();
-    for (E nameable : nameables) {
-      nameable.nameO().ifPresent(n -> {
-        if (!names.contains(n)) {
-          builder.put(n, nameable);
-          names.add(n);
-        }
-      });
+    for (E withName : withNames) {
+      var name = withName.name();
+      if (!names.contains(name)) {
+        builder.put(name, withName);
+        names.add(name);
+      }
     }
     return builder.build();
   }
 
-  public <R  extends Nameable> NList<R> map(Function<T, R> mapping) {
+  public <R  extends Named> NList<R> map(Function<T, R> mapping) {
     return nlist(Lists.map(list(), mapping));
   }
 
