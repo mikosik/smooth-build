@@ -19,6 +19,7 @@ public abstract class ScopingModuleVisitorP extends ModuleVisitorP {
   @Override
   public final void visitStruct(StructP structP) {
     visitStructSignature(structP);
+    createVisitorForScopeOf(structP);
   }
 
   @Override
