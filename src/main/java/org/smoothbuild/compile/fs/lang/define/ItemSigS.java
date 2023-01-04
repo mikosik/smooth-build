@@ -2,32 +2,23 @@ package org.smoothbuild.compile.fs.lang.define;
 
 import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.empty;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import org.smoothbuild.compile.fs.lang.type.TypeS;
-import org.smoothbuild.util.collect.NameableImpl;
+import org.smoothbuild.util.collect.Named;
 
 /**
  * Item signature.
  * This class is immutable.
  */
-public class ItemSigS extends NameableImpl {
+public class ItemSigS implements Named {
   private final TypeS type;
+  private final String name;
 
   public ItemSigS(TypeS type, String name) {
-    this(type, Optional.of(name));
-  }
-
-  public ItemSigS(TypeS type, Optional<String> name) {
-    super(name);
     this.type = requireNonNull(type);
-  }
-
-  public static ItemSigS itemSigS(TypeS type) {
-    return new ItemSigS(type, empty());
+    this.name = requireNonNull(name);
   }
 
   public static ItemSigS itemSigS(TypeS type, String name) {
@@ -38,9 +29,14 @@ public class ItemSigS extends NameableImpl {
     return type;
   }
 
+  @Override
+  public String name() {
+    return name;
+  }
+
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(nameSane(), minNameLength, ' ');
+    String namePart = padEnd(name, minNameLength, ' ');
     return typePart + namePart;
   }
 

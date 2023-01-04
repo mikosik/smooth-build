@@ -1347,7 +1347,7 @@ public class TestContext {
 
   public static ConstructorS constructorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
-    var params = fields.map(f -> new ItemS(f.type(), f.nameSane(), empty(), location(2)));
+    var params = fields.map(f -> new ItemS(f.type(), f.name(), empty(), location(2)));
     return new ConstructorS(funcSchemaS(params, structT), name, params, location(line));
   }
 

@@ -79,7 +79,7 @@ public class TypeSTest {
         arguments(tupleTS(varA(), varB()), "{A,B}"),
 
         arguments(structTS("MyStruct", nlist()), "MyStruct"),
-        arguments(structTS("MyStruct", nlist(itemSigS(intTS()))), "MyStruct"),
+        arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct"),
 
         arguments(arrayTS(blobTS()), "[Blob]"),
         arguments(arrayTS(boolTS()), "[Bool]"),
@@ -91,7 +91,7 @@ public class TypeSTest {
         arguments(arrayTS(tupleTS(varA())), "[{A}]"),
         arguments(arrayTS(tupleTS(varA(), varB())), "[{A,B}]"),
         arguments(arrayTS(structTS("MyStruct", nlist())), "[MyStruct]"),
-        arguments(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS())))), "[MyStruct]"),
+        arguments(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS(), "field")))), "[MyStruct]"),
         arguments(arrayTS(varA()), "[A]"),
 
 
@@ -105,7 +105,9 @@ public class TypeSTest {
         arguments(arrayTS(arrayTS(tupleTS(varA()))), "[[{A}]]"),
         arguments(arrayTS(arrayTS(tupleTS(varA(), varB()))), "[[{A,B}]]"),
         arguments(arrayTS(arrayTS(structTS("MyStruct", nlist()))), "[[MyStruct]]"),
-        arguments(arrayTS(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS()))))), "[[MyStruct]]"),
+        arguments(
+            arrayTS(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS(), "filed"))))),
+            "[[MyStruct]]"),
         arguments(arrayTS(arrayTS(stringTS())), "[[String]]"),
 
         arguments(funcTS(arrayTS(varA()), varA()), "([A])->A"),
