@@ -7,7 +7,7 @@ import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
+import org.smoothbuild.compile.fs.ps.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
@@ -35,7 +35,7 @@ public class ScopesInitializer extends ModuleVisitorP {
     return log;
   }
 
-  private static class Initializer extends ModuleVisitorP {
+  private static class Initializer extends ScopingModuleVisitorP {
     private final ScopeP scope;
     private final Logger log;
 
@@ -45,39 +45,7 @@ public class ScopesInitializer extends ModuleVisitorP {
     }
 
     @Override
-    public void visitModule(ModuleP moduleP) {
-      createScopeWithBindingsAndWrapInsideInitializer(moduleP)
-          .visitModuleChildren(moduleP);
-    }
-
-    @Override
-    public void visitStruct(StructP structP) {
-      createScopeWithBindingsAndWrapInsideInitializer(structP)
-          .visitStructSignature(structP);
-    }
-
-    @Override
-    public void visitNamedValue(NamedValueP namedValueP) {
-      visitNamedValueSignature(namedValueP);
-      createScopeWithBindingsAndWrapInsideInitializer(namedValueP)
-          .visitNamedValueBody(namedValueP);
-    }
-
-    @Override
-    public void visitNamedFunc(NamedFuncP namedFuncP) {
-      visitNamedFuncSignature(namedFuncP);
-      createScopeWithBindingsAndWrapInsideInitializer(namedFuncP)
-          .visitFuncBody(namedFuncP);
-    }
-
-    @Override
-    public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-      visitAnonymousFuncSignature(anonymousFuncP);
-      createScopeWithBindingsAndWrapInsideInitializer(anonymousFuncP)
-          .visitFuncBody(anonymousFuncP);
-    }
-
-    private Initializer createScopeWithBindingsAndWrapInsideInitializer(WithScopeP withScopeP) {
+    protected ModuleVisitorP createVisitorForScopeOf(WithScopeP withScopeP) {
       var scopeFiller = new ScopeCreator(scope, log);
       var newScope = scopeFiller.createScopeFor(withScopeP);
       withScopeP.setScope(newScope);
