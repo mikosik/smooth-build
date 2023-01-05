@@ -72,11 +72,11 @@ public class TypeSTest {
         arguments(stringTS(), "String"),
         arguments(varA(), "A"),
 
-        arguments(tupleTS(), "{}"),
-        arguments(tupleTS(intTS()), "{Int}"),
-        arguments(tupleTS(intTS(), boolTS()), "{Int,Bool}"),
-        arguments(tupleTS(varA()), "{A}"),
-        arguments(tupleTS(varA(), varB()), "{A,B}"),
+        arguments(tupleTS(), "()"),
+        arguments(tupleTS(intTS()), "(Int)"),
+        arguments(tupleTS(intTS(), boolTS()), "(Int,Bool)"),
+        arguments(tupleTS(varA()), "(A)"),
+        arguments(tupleTS(varA(), varB()), "(A,B)"),
 
         arguments(structTS("MyStruct", nlist()), "MyStruct"),
         arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct"),
@@ -85,11 +85,11 @@ public class TypeSTest {
         arguments(arrayTS(boolTS()), "[Bool]"),
         arguments(arrayTS(intTS()), "[Int]"),
         arguments(arrayTS(stringTS()), "[String]"),
-        arguments(arrayTS(tupleTS()), "[{}]"),
-        arguments(arrayTS(tupleTS(intTS())), "[{Int}]"),
-        arguments(arrayTS(tupleTS(intTS(), boolTS())), "[{Int,Bool}]"),
-        arguments(arrayTS(tupleTS(varA())), "[{A}]"),
-        arguments(arrayTS(tupleTS(varA(), varB())), "[{A,B}]"),
+        arguments(arrayTS(tupleTS()), "[()]"),
+        arguments(arrayTS(tupleTS(intTS())), "[(Int)]"),
+        arguments(arrayTS(tupleTS(intTS(), boolTS())), "[(Int,Bool)]"),
+        arguments(arrayTS(tupleTS(varA())), "[(A)]"),
+        arguments(arrayTS(tupleTS(varA(), varB())), "[(A,B)]"),
         arguments(arrayTS(structTS("MyStruct", nlist())), "[MyStruct]"),
         arguments(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS(), "field")))), "[MyStruct]"),
         arguments(arrayTS(varA()), "[A]"),
@@ -99,11 +99,11 @@ public class TypeSTest {
         arguments(arrayTS(arrayTS(blobTS())), "[[Blob]]"),
         arguments(arrayTS(arrayTS(boolTS())), "[[Bool]]"),
         arguments(arrayTS(arrayTS(intTS())), "[[Int]]"),
-        arguments(arrayTS(tupleTS()), "[{}]"),
-        arguments(arrayTS(arrayTS(tupleTS(intTS()))), "[[{Int}]]"),
-        arguments(arrayTS(arrayTS(tupleTS(intTS(), boolTS()))), "[[{Int,Bool}]]"),
-        arguments(arrayTS(arrayTS(tupleTS(varA()))), "[[{A}]]"),
-        arguments(arrayTS(arrayTS(tupleTS(varA(), varB()))), "[[{A,B}]]"),
+        arguments(arrayTS(arrayTS(tupleTS())), "[[()]]"),
+        arguments(arrayTS(arrayTS(tupleTS(intTS()))), "[[(Int)]]"),
+        arguments(arrayTS(arrayTS(tupleTS(intTS(), boolTS()))), "[[(Int,Bool)]]"),
+        arguments(arrayTS(arrayTS(tupleTS(varA()))), "[[(A)]]"),
+        arguments(arrayTS(arrayTS(tupleTS(varA(), varB()))), "[[(A,B)]]"),
         arguments(arrayTS(arrayTS(structTS("MyStruct", nlist()))), "[[MyStruct]]"),
         arguments(
             arrayTS(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS(), "filed"))))),
@@ -115,7 +115,7 @@ public class TypeSTest {
         arguments(funcTS(varA(), varA()), "(A)->A"),
         arguments(funcTS(stringTS()), "()->String"),
         arguments(funcTS(stringTS(), stringTS()), "(String)->String"),
-        arguments(funcTS(tupleTS(intTS()), stringTS()), "({Int})->String")
+        arguments(funcTS(tupleTS(intTS()), stringTS()), "((Int))->String")
     );
   }
 

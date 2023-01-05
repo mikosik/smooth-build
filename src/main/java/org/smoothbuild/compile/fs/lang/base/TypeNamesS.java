@@ -42,7 +42,7 @@ public class TypeNamesS {
   }
 
   public static String tupleTypeName(List<? extends TypeS> elemTs) {
-    return "{" + commaSeparatedTypeNames(elemTs) + "}";
+    return "(" + commaSeparatedTypeNames(elemTs) + ")";
   }
 
   private static String commaSeparatedTypeNames(List<? extends TypeS> elemTs) {
