@@ -32,8 +32,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * Type inferring consists of
  *   - replacing not declared types with TempVar-s
- *   - walking expression tree converting types to normalized
- *       and unifying them {@link ExprTypeUnifier}
+ *   - walking expression tree unifying types with {@link ExprTypeUnifier}
  *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
