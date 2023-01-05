@@ -288,130 +288,130 @@ public class UnifierTest extends TestContext {
     class _non_temp_vs_non_temp_var {
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void unify_equal_base_types(TypeS type) throws UnifierExc {
+      public void base_vs_itself_succeeds(TypeS type) throws UnifierExc {
         unifier.unify(type, type);
       }
 
       @Test
-      public void unify_non_equal_base_types_fails() {
+      public void base_vs_different_base_fails() {
         assertUnifyFails(intTS(), blobTS());
       }
 
       @Test
-      public void unify_var_and_base_type_fails() {
+      public void base_vs_var_fails() {
         assertUnifyFails(varA(), blobTS());
       }
 
       @Test
-      public void unify_equal_array_types() throws UnifierExc {
+      public void array_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             arrayTS(intTS()),
             arrayTS(intTS()));
       }
 
       @Test
-      public void unify_equal_array2_types() throws UnifierExc {
+      public void array2__vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             arrayTS(arrayTS(intTS())),
             arrayTS(arrayTS(intTS())));
       }
 
       @Test
-      public void unify_non_equal_array_types_fails() {
+      public void array_vs_array_with_different_element_fails() {
         assertUnifyFails(arrayTS(intTS()), arrayTS(blobTS()));
       }
 
       @Test
-      public void unify_equal_tuple_types() throws UnifierExc {
+      public void tuple_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             tupleTS(intTS(), blobTS()),
             tupleTS(intTS(), blobTS()));
       }
 
       @Test
-      public void unify_equal_tuple2_types() throws UnifierExc {
+      public void tuple2_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             tupleTS(tupleTS(intTS(), blobTS())),
             tupleTS(tupleTS(intTS(), blobTS())));
       }
 
       @Test
-      public void unify_non_equal_tuple_types_with_different_elem_type_fails() {
+      public void tuple_vs_tuple_with_different_elements_fails() {
         assertUnifyFails(tupleTS(intTS(), blobTS()), tupleTS(intTS(), stringTS()));
       }
 
       @Test
-      public void unify_non_equal_tuple_types_with_different_size_fails() {
+      public void tuple_vs_tuple_with_one_element_missing_fails() {
         assertUnifyFails(tupleTS(intTS(), blobTS()), tupleTS(intTS()));
       }
 
       @Test
-      public void unify_equal_func_types() throws UnifierExc {
+      public void function_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             funcTS(blobTS(), intTS()),
             funcTS(blobTS(), intTS()));
       }
 
       @Test
-      public void unify_equal_func_types_with_res_being_func() throws UnifierExc {
+      public void function_with_result_being_function_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             funcTS(funcTS(intTS())),
             funcTS(funcTS(intTS())));
       }
 
       @Test
-      public void unify_equal_func_types_with_param_being_func() throws UnifierExc {
+      public void function_with_parameter_being_function_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             funcTS(funcTS(intTS()), blobTS()),
             funcTS(funcTS(intTS()), blobTS()));
       }
 
       @Test
-      public void unify_non_equal_func_types_that_differs_with_res_fails() {
+      public void function_vs_function_with_different_result_type_fails() {
         assertUnifyFails(funcTS(intTS()), funcTS(blobTS()));
       }
 
       @Test
-      public void unify_non_equal_func_types_that_differs_with_param_fails() {
+      public void function_vs_function_with_different_parameter_fails() {
         assertUnifyFails(funcTS(blobTS(), intTS()), funcTS(stringTS(), intTS()));
       }
 
       @Test
-      public void unify_non_equal_func_types_that_differs_with_param_count_fails() {
+      public void function_vs_function_with_one_parameter_missing_fails() {
         assertUnifyFails(funcTS(blobTS(), intTS()), funcTS(intTS()));
       }
 
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void unify_base_and_array_fails(TypeS type) {
+      public void base_vs_array_fails(TypeS type) {
         assertUnifyFails(type, arrayTS(type));
       }
 
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void unify_base_and_tuple_fails(TypeS type) {
+      public void base_vs_tuple_fails(TypeS type) {
         assertUnifyFails(type, tupleTS(type));
       }
 
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void unify_base_and_func_fails(TypeS type) {
+      public void base_vs_function_fails(TypeS type) {
         assertUnifyFails(type, funcTS(type));
         assertUnifyFails(type, funcTS(type, type));
       }
 
       @Test
-      public void unify_array_and_tuple_fails() {
+      public void array_vs_tuple_fails() {
         assertUnifyFails(arrayTS(intTS()), tupleTS(intTS()));
       }
 
       @Test
-      public void unify_array_and_func_fails() {
+      public void array_vs_function_fails() {
         assertUnifyFails(arrayTS(intTS()), funcTS(intTS()));
       }
 
       @Test
-      public void unify_tuple_and_func_fails() {
+      public void tuple_vs_function_fails() {
         assertUnifyFails(tupleTS(intTS()), funcTS(intTS()));
       }
 
