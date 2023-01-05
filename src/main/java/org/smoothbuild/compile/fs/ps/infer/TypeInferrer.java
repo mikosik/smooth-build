@@ -50,11 +50,7 @@ public class TypeInferrer {
   }
 
   private TypeInferrer(TypeTeller typeTeller, Logger logger) {
-    this(new Unifier(), typeTeller, logger);
-  }
-
-  private TypeInferrer(Unifier unifier, TypeTeller typeTeller, Logger logger) {
-    this.unifier = unifier;
+    this.unifier = new Unifier();
     this.typeTeller = typeTeller;
     this.logger = logger;
   }
@@ -65,7 +61,7 @@ public class TypeInferrer {
   }
 
   private void visitStruct(StructP structP) {
-    var structTS = inferStructType(typeTeller, logger, structP);
+    var structTS = inferStructT(structP);
     structTS.ifPresent(st -> visitConstructor(structP, st));
   }
 
@@ -89,19 +85,11 @@ public class TypeInferrer {
   }
 
   private void visitValue(NamedValueP namedValueP) {
-    new TypeInferrer(typeTeller, logger)
-        .inferNamedValueSchema(namedValueP);
+    inferNamedValueSchema(namedValueP);
   }
 
   private void visitFunc(NamedFuncP namedFuncP) {
-    new TypeInferrer(typeTeller, logger)
-        .inferNamedFuncSchema(namedFuncP);
-  }
-
-  private Optional<StructTS> inferStructType(
-      TypeTeller typeTeller, Logger logger, StructP struct) {
-    return new TypeInferrer(typeTeller, logger)
-        .inferStructT(struct);
+    inferNamedFuncSchema(namedFuncP);
   }
 
   private Optional<StructTS> inferStructT(StructP struct) {
@@ -221,7 +209,6 @@ public class TypeInferrer {
   }
 
   private boolean inferParamDefaultValue(NamedValueP defaultValue) {
-    return new TypeInferrer(new Unifier(), typeTeller, logger)
-        .inferNamedValueSchema(defaultValue);
+    return inferNamedValueSchema(defaultValue);
   }
 }
