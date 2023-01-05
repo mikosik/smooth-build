@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
+import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.compile.fs.lang.type.TempVarS;
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
@@ -101,6 +102,7 @@ public class Unifier {
       case ArrayTS array1 -> unifyNormalizedArray(array1, normal2);
       case FuncTS func1 -> unifyNormalizedFunc(func1, normal2);
       case TupleTS tuple1 -> unifyNormalizedTuple(tuple1, normal2);
+      case StructTS structTS -> unifyNormalizedStruct(structTS, normal2);
       case TempVarS tempVarS -> throw new RuntimeException("shouldn't happen");
       // default case also handles VarS
       default -> {
@@ -144,6 +146,29 @@ public class Unifier {
       }
       for (int i = 0; i < items1.size(); i++) {
         unifyNormalized(items1.get(i), items2.get(i));
+      }
+    } else {
+      throw new UnifierExc();
+    }
+  }
+
+  private void unifyNormalizedStruct(StructTS struct1, TypeS normal2) throws UnifierExc {
+    if (normal2 instanceof StructTS struct2) {
+      if (!struct1.name().equals(struct2.name())) {
+        throw new UnifierExc();
+      }
+      var items1 = struct1.fields();
+      var items2 = struct2.fields();
+      if (items1.size() != items2.size()) {
+        throw new UnifierExc();
+      }
+      for (int i = 0; i < items1.size(); i++) {
+        if (!items1.get(i).name().equals(items2.get(i).name())) {
+          throw new UnifierExc();
+        }
+      }
+      for (int i = 0; i < items1.size(); i++) {
+        unifyNormalized(items1.get(i).type(), items2.get(i).type());
       }
     } else {
       throw new UnifierExc();

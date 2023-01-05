@@ -1051,11 +1051,15 @@ public class TestContext {
   }
 
   public static StructTS structTS(TypeS... fieldTs) {
+    return structTS("MyStruct", fieldTs);
+  }
+
+  public static StructTS structTS(String myStruct, TypeS... fieldTs) {
     Builder<ItemSigS> builder = ImmutableList.builder();
     for (int i = 0; i < fieldTs.length; i++) {
       builder.add(sigS(fieldTs[i], "param" + i));
     }
-    return structTS("MyStruct", nlist(builder.build()));
+    return structTS(myStruct, nlist(builder.build()));
   }
 
   public static StructTS structTS(String name, NList<ItemSigS> fields) {
