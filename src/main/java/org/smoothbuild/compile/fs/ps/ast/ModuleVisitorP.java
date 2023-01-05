@@ -148,6 +148,7 @@ public class ModuleVisitorP {
   }
 
   public void visitAnonymousFuncSignature(AnonymousFuncP anonymousFuncP) {
+    visitType(anonymousFuncP.resT());
     visitItems(anonymousFuncP.params());
   }
 
