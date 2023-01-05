@@ -51,8 +51,8 @@ public class ModuleVisitorP {
 
   public void visitNamedEvaluable(NamedEvaluableP namedEvaluableP) {
     switch (namedEvaluableP) {
-      case NamedFuncP func -> visitNamedFunc(func);
-      case NamedValueP value -> visitNamedValue(value);
+      case NamedFuncP namedFuncP -> visitNamedFunc(namedFuncP);
+      case NamedValueP namedValueP -> visitNamedValue(namedValueP);
     }
   }
 
@@ -151,8 +151,8 @@ public class ModuleVisitorP {
     visitItems(anonymousFuncP.params());
   }
 
-  public void visitNamedArg(NamedArgP namedArg) {
-    visitExpr(namedArg.expr());
+  public void visitNamedArg(NamedArgP namedArgP) {
+    visitExpr(namedArgP.expr());
   }
 
   public void visitOrder(OrderP orderP) {
