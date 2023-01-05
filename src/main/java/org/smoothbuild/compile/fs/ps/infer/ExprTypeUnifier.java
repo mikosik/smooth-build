@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
 import static com.google.common.collect.Maps.toMap;
+import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
@@ -52,10 +53,10 @@ public class ExprTypeUnifier {
   private final Logger logger;
 
   public ExprTypeUnifier(Unifier unifier, TypeTeller typeTeller, Logger logger) {
-    this(unifier, typeTeller, VarSetS.varSetS(), logger);
+    this(unifier, typeTeller, varSetS(), logger);
   }
 
-  public ExprTypeUnifier(
+  private ExprTypeUnifier(
       Unifier unifier,
       TypeTeller typeTeller,
       VarSetS outerScopeVars,
