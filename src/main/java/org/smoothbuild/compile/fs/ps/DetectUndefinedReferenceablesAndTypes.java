@@ -8,7 +8,9 @@ import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.ScopingModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.define.ArrayTP;
+import org.smoothbuild.compile.fs.ps.ast.define.ExplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncTP;
+import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.ScopeP;
@@ -54,18 +56,26 @@ public class DetectUndefinedReferenceablesAndTypes {
 
     @Override
     public void visitType(TypeP typeP) {
-      if (typeP instanceof ArrayTP array) {
-        visitType(array.elemT());
-      } else if (typeP instanceof FuncTP func) {
-        visitType(func.resT());
-        func.paramTs().forEach(this::visitType);
-      } else if (!isDefinedType(typeP)) {
-        log.log(compileError(typeP.location(), typeP.q() + " type is undefined."));
+      switch (typeP) {
+        case ArrayTP array -> visitType(array.elemT());
+        case FuncTP func -> visitFuncType(func);
+        case ExplicitTP explicitTP -> visitExplicitType(explicitTP);
+        case ImplicitTP implicitTP -> {}
       }
     }
 
-    private boolean isDefinedType(TypeP type) {
-      var name = type.name();
+    private void visitExplicitType(ExplicitTP explicitTP) {
+      if (!isKnownTypeName(explicitTP.name())) {
+        log.log(compileError(explicitTP.location(), explicitTP.q() + " type is undefined."));
+      }
+    }
+
+    private void visitFuncType(FuncTP func) {
+      visitType(func.resT());
+      func.paramTs().forEach(this::visitType);
+    }
+
+    private boolean isKnownTypeName(String name) {
       return isVarName(name)
              || scope.types().contains(name)
              || imported.types().contains(name);

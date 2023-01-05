@@ -12,6 +12,7 @@ import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.util.collect.NList;
 
 public final class AnonymousFuncP extends MonoizableP implements FuncP {
+  private final ImplicitTP resT;
   private final NList<ItemP> params;
   private final ExprP body;
   private FuncTS typeS;
@@ -20,13 +21,14 @@ public final class AnonymousFuncP extends MonoizableP implements FuncP {
 
   public AnonymousFuncP(NList<ItemP> params, ExprP body, Location location) {
     super(location);
+    this.resT = new ImplicitTP(location);
     this.params = params;
     this.body = body;
   }
 
   @Override
-  public Optional<TypeP> resT() {
-    return Optional.empty();
+  public TypeP resT() {
+    return resT;
   }
 
   @Override

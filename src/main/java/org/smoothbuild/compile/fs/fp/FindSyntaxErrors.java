@@ -11,6 +11,7 @@ import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
@@ -79,10 +80,10 @@ public class FindSyntaxErrors {
           var annName = ann.name();
           if (ANNOTATION_NAMES.contains(annName)) {
             if (namedFuncP.body().isPresent()) {
-              logger.log(compileError(namedFuncP,
-                  "Function " + namedFuncP.q() + " with @" + annName + " annotation cannot have body."));
+              logger.log(compileError(namedFuncP, "Function " + namedFuncP.q() + " with @" + annName
+                  + " annotation cannot have body."));
             }
-            if (namedFuncP.resT().isEmpty()) {
+            if (namedFuncP.resT() instanceof ImplicitTP) {
               logger.log(compileError(namedFuncP, "Function " + namedFuncP.q() + " with @" + annName
                   + " annotation must declare result type."));
             }
@@ -103,12 +104,12 @@ public class FindSyntaxErrors {
           switch (annName) {
             case BYTECODE -> {
               if (namedValueP.body().isPresent()) {
-                logger.log(
-                    compileError(namedValueP, "Value with @" + annName + " annotation cannot have body."));
+                logger.log(compileError(
+                    namedValueP, "Value with @" + annName + " annotation cannot have body."));
               }
-              if (namedValueP.type().isEmpty()) {
-                logger.log(compileError(namedValueP, "Value " + namedValueP.q() + " with @" + annName
-                    + " annotation must declare type."));
+              if (namedValueP.type() instanceof ImplicitTP) {
+                logger.log(compileError(namedValueP, "Value " + namedValueP.q() + " with @"
+                    + annName + " annotation must declare type."));
               }
             }
             case NATIVE_PURE, NATIVE_IMPURE -> logger.log(

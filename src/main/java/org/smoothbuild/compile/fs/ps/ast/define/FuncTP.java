@@ -4,7 +4,7 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncTP extends TypeP {
+public final class FuncTP extends ExplicitTP {
   private final TypeP resT;
   private final ImmutableList<TypeP> paramTs;
 

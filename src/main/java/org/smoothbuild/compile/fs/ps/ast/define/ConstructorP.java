@@ -5,7 +5,7 @@ import java.util.Optional;
 public final class ConstructorP extends NamedFuncP {
   public ConstructorP(StructP structP) {
     super(
-        Optional.of(new TypeP(structP.name(), structP.location())),
+        new ExplicitTP(structP.name(), structP.location()),
         structP.name(),
         structP.name(),
         structP.fields(),

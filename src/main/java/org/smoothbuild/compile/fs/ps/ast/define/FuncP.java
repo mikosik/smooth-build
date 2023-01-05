@@ -1,7 +1,5 @@
 package org.smoothbuild.compile.fs.ps.ast.define;
 
-import java.util.Optional;
-
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
@@ -12,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 public sealed interface FuncP
     extends EvaluableP, ScopedP
     permits AnonymousFuncP, NamedFuncP {
-  public Optional<TypeP> resT();
+  public TypeP resT();
 
   public NList<ItemP> params();
 

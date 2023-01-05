@@ -11,12 +11,12 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 
 public final class NamedValueP extends NamedEvaluableP {
-  private final Optional<TypeP> type;
+  private final TypeP type;
   private TypeS typeS;
   private SchemaS schemaS;
 
   public NamedValueP(
-      Optional<TypeP> type,
+      TypeP type,
       String fullName,
       String simpleName,
       Optional<ExprP> body,
@@ -26,12 +26,12 @@ public final class NamedValueP extends NamedEvaluableP {
     this.type = type;
   }
 
-  public Optional<TypeP> type() {
+  public TypeP type() {
     return type;
   }
 
   @Override
-  public Optional<TypeP> evalT() {
+  public TypeP evalT() {
     return type();
   }
 

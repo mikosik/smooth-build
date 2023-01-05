@@ -45,8 +45,10 @@ import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ArrayTP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
+import org.smoothbuild.compile.fs.ps.ast.define.ExplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncTP;
+import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
@@ -85,13 +87,13 @@ public class ApTranslator {
 
       @Override
       public Void visitNamedFunc(NamedFuncContext namedFunc) {
-        TerminalNode nameNode = namedFunc.NAME();
-        visitChildren(namedFunc);
-        Optional<TypeP> type = createTypeSane(namedFunc.type());
-        String name = nameNode.getText();
-        Optional<ExprP> body = createPipeSane(namedFunc.pipe());
-        Optional<AnnotationP> annotation = createNativeSane(namedFunc.annotation());
+        var nameNode = namedFunc.NAME();
         var location = fileLocation(filePath, nameNode);
+        visitChildren(namedFunc);
+        var type = createTypeSane(namedFunc.type(), location);
+        var name = nameNode.getText();
+        var body = createPipeSane(namedFunc.pipe());
+        var annotation = createNativeSane(namedFunc.annotation());
         var params = createItems(name, namedFunc.itemList());
         evaluables.add(new NamedFuncP(type, name, name, params, body, annotation, location));
         return null;
@@ -99,13 +101,13 @@ public class ApTranslator {
 
       @Override
       public Void visitNamedValue(NamedValueContext namedValue) {
-        TerminalNode nameNode = namedValue.NAME();
-        visitChildren(namedValue);
-        Optional<TypeP> type = createTypeSane(namedValue.type());
-        String name = nameNode.getText();
-        Optional<ExprP> expr = createPipeSane(namedValue.pipe());
-        Optional<AnnotationP> annotation = createNativeSane(namedValue.annotation());
+        var nameNode = namedValue.NAME();
         var location = fileLocation(filePath, nameNode);
+        visitChildren(namedValue);
+        var type = createTypeSane(namedValue.type(), location);
+        var name = nameNode.getText();
+        var expr = createPipeSane(namedValue.pipe());
+        var annotation = createNativeSane(namedValue.annotation());
         evaluables.add(new NamedValueP(type, name, name, expr, annotation, location));
         return null;
       }
@@ -153,9 +155,10 @@ public class ApTranslator {
 
       private NamedValueP namedValueForDefaultArgument(
           String ownerName, String itemName, ExprP body, Location location) {
-        String fullName = ownerName + ":" + itemName;
+        var name = ownerName + ":" + itemName;
+        var type = new ImplicitTP(location);
         return new NamedValueP(
-            Optional.empty(), fullName, itemName, Optional.of(body), Optional.empty(), location);
+            type, name, itemName, Optional.of(body), Optional.empty(), location);
       }
 
       private Optional<ExprP> createPipeSane(PipeContext pipe) {
@@ -296,8 +299,8 @@ public class ApTranslator {
         return new CallP(callable, args, location);
       }
 
-      private Optional<TypeP> createTypeSane(TypeContext type) {
-        return type == null ? Optional.empty() : Optional.of(createT(type));
+      private TypeP createTypeSane(TypeContext type, Location location) {
+        return type == null ? new ImplicitTP(location) : createT(type);
       }
 
       private TypeP createT(TypeContext type) {
@@ -310,11 +313,11 @@ public class ApTranslator {
       }
 
       private TypeP createT(TypeNameContext type) {
-        return new TypeP(type.getText(), fileLocation(filePath, type.NAME()));
+        return new ExplicitTP(type.getText(), fileLocation(filePath, type.NAME()));
       }
 
       private TypeP createArrayT(ArrayTContext arrayT) {
-        TypeP elemType = createT(arrayT.type());
+        var elemType = createT(arrayT.type());
         return new ArrayTP(elemType, fileLocation(filePath, arrayT));
       }
 

@@ -30,6 +30,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.EvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
@@ -279,8 +280,11 @@ public class ExprTypeUnifier {
     });
   }
 
-  private Optional<TypeS> translateOrGenerateTempVar(Optional<TypeP> typeP) {
-    return typeP.map(typeTeller::translate)
-        .orElseGet(() -> Optional.of(unifier.newTempVar()));
+  private Optional<TypeS> translateOrGenerateTempVar(TypeP typeP) {
+    if (typeP instanceof ImplicitTP) {
+      return Optional.of(unifier.newTempVar());
+    } else {
+      return typeTeller.translate(typeP);
+    }
   }
 }

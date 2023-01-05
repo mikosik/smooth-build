@@ -63,7 +63,7 @@ public class ModuleVisitorP {
 
   public void visitNamedValueSignature(NamedValueP namedValueP) {
     namedValueP.annotation().ifPresent(this::visitAnnotation);
-    namedValueP.type().ifPresent(this::visitType);
+    visitType(namedValueP.type());
     visitNameOf(namedValueP);
   }
 
@@ -78,7 +78,7 @@ public class ModuleVisitorP {
 
   public void visitNamedFuncSignature(NamedFuncP namedFuncP) {
     namedFuncP.annotation().ifPresent(this::visitAnnotation);
-    namedFuncP.resT().ifPresent(this::visitType);
+    visitType(namedFuncP.resT());
     visitItems(namedFuncP.params());
     visitNameOf(namedFuncP);
   }

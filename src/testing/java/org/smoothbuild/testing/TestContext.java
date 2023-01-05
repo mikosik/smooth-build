@@ -78,13 +78,14 @@ import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.compile.fs.lang.type.VarSetS;
 import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
+import org.smoothbuild.compile.fs.ps.ast.define.ExplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
+import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
-import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.compile.sb.BytecodeMethodLoader;
@@ -1524,8 +1525,8 @@ public class TestContext {
 
   public static NamedFuncP namedFuncP(
       String name, NList<ItemP> params, Optional<ExprP> body, Location location) {
-    return new NamedFuncP(
-        Optional.empty(), name, simpleName(name), params, body, Optional.empty(), location);
+    var resT = new ImplicitTP(location);
+    return new NamedFuncP(resT, name, simpleName(name), params, body, Optional.empty(), location);
   }
 
   public static NamedValueP namedValueP() {
@@ -1541,8 +1542,10 @@ public class TestContext {
   }
 
   public static NamedValueP namedValueP(String name, ExprP body) {
+    var location = location();
+    var type = new ImplicitTP(location);
     return new NamedValueP(
-        Optional.empty(), name, simpleName(name), Optional.of(body), Optional.empty(), location());
+        type, name, simpleName(name), Optional.of(body), Optional.empty(), location);
   }
 
   public static ItemP itemP() {
@@ -1566,7 +1569,7 @@ public class TestContext {
   }
 
   public static ItemP itemP(String name, Optional<NamedValueP> defaultValue) {
-    return new ItemP(new TypeP("Int", location()), name, defaultValue, location());
+    return new ItemP(new ExplicitTP("Int", location()), name, defaultValue, location());
   }
 
   public static IntP intP() {

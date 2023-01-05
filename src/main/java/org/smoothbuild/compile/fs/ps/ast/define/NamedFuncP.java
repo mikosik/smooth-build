@@ -15,13 +15,13 @@ public sealed class NamedFuncP
     extends NamedEvaluableP
     implements FuncP
     permits ConstructorP {
-  private final Optional<TypeP> resT;
+  private final TypeP resT;
   private final NList<ItemP> params;
   private FuncTS typeS;
   private FuncSchemaS funcSchemaS;
 
   public NamedFuncP(
-      Optional<TypeP> resT,
+      TypeP resT,
       String fullName,
       String simpleName,
       NList<ItemP> params,
@@ -34,7 +34,7 @@ public sealed class NamedFuncP
   }
 
   @Override
-  public Optional<TypeP> resT() {
+  public TypeP resT() {
     return resT;
   }
 
@@ -44,7 +44,7 @@ public sealed class NamedFuncP
   }
 
   @Override
-  public Optional<TypeP> evalT() {
+  public TypeP evalT() {
     return resT();
   }
 

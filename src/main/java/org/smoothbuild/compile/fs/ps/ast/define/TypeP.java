@@ -6,8 +6,8 @@ import static org.smoothbuild.util.collect.Iterables.joinToString;
 import org.smoothbuild.compile.fs.lang.base.NalImpl;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 
-public sealed class TypeP extends NalImpl permits ArrayTP, FuncTP {
-  public TypeP(String name, Location location) {
+public abstract sealed class TypeP extends NalImpl permits ExplicitTP, ImplicitTP {
+  protected TypeP(String name, Location location) {
     super(name, location);
   }
 
