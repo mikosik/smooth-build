@@ -20,7 +20,8 @@ import org.smoothbuild.compile.fs.lang.type.VarS;
 import com.google.common.collect.Sets;
 
 /**
- * Unifier allows unifying types and type parameters, so it is possible to infer types.
+ * Unifier allows unifying types (`TypeS`s)
+ * and type parameters (`Var`s), so it is possible to infer types.
  *
  * Unifier treats differently VarS and TempVarS.
  * VarS represents type parameter that is fixed and any unification with type different
