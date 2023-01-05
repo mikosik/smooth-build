@@ -40,29 +40,21 @@ public class Unifier {
     this.tempVarCounter = 0;
   }
 
+  // unification
+
   public void unifyOrFailWithRuntimeException(TypeS type1, TypeS type2) {
     try {
-      unifyNormalized(normalize(type1), normalize(type2));
+      unify(type1, type2);
     } catch (UnifierExc e) {
       throw new RuntimeException(
           "unifyOrFailWithRuntimeException() caused exception. This means we have bug in code. "
-          + "type1 = " + type1 + ", type2 = " + type2, e);
+              + "type1 = " + type1 + ", type2 = " + type2, e);
     }
   }
 
   public void unify(TypeS type1, TypeS type2) throws UnifierExc {
-    unifyNormalized(normalize(type1), normalize(type2));
+    unifyNormalized(type1, type2);
   }
-
-  public TypeS resolve(TypeS type) {
-    return denormalize(type);
-  }
-
-  public VarS newTempVar() {
-    return newTempVar(null);
-  }
-
-  // unification
 
   private void unifyNormalized(TypeS normal1, TypeS normal2) throws UnifierExc {
     if (normal1 instanceof TempVarS tempVar1) {
@@ -158,18 +150,8 @@ public class Unifier {
     }
   }
 
-  // normalization
-
-  private TypeS normalize(TypeS type) {
-    return type.mapComponents(this::normalizeComponent);
-  }
-
-  private VarS normalizeComponent(TypeS type) {
-    if (type instanceof TempVarS var) {
-      return var;
-    } else {
-      return newTempVar(normalize(type));
-    }
+  public VarS newTempVar() {
+    return newTempVar(null);
   }
 
   private TempVarS newTempVar(TypeS normal) {
@@ -178,26 +160,26 @@ public class Unifier {
     return var;
   }
 
-  // denormalization
+  // resolving
 
-  private TypeS denormalize(TypeS normal) {
-    return switch (normal) {
-      case TempVarS tempVar -> denormalizeTempVar(tempVar);
-      default -> denormalizeNormal(normal);
+  public TypeS resolve(TypeS typeS) {
+    return switch (typeS) {
+      case TempVarS tempVar -> resolveTempVar(tempVar);
+      default -> resolveNormal(typeS);
     };
   }
 
-  private TypeS denormalizeTempVar(TempVarS tempVar) {
+  private TypeS resolveTempVar(TempVarS tempVar) {
     var unified = unifiedFor(tempVar);
     if (unified.normal == null) {
       return unified.mainVar;
     } else {
-      return denormalizeNormal(unified.normal);
+      return resolveNormal(unified.normal);
     }
   }
 
-  private TypeS denormalizeNormal(TypeS normal) {
-    return normal.mapComponents(this::denormalize);
+  private TypeS resolveNormal(TypeS normal) {
+    return normal.mapComponents(this::resolve);
   }
 
   // Unified helpers
