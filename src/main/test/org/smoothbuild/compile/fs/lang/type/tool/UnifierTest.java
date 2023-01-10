@@ -1,13 +1,21 @@
 package org.smoothbuild.compile.fs.lang.type.tool;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.concat;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.compile.fs.lang.type.FieldSetTS;
 import org.smoothbuild.compile.fs.lang.type.TypeFS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
@@ -96,6 +104,32 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
+      public void temp_vs_struct_of_temp() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfers(
+            unifier,
+            a,
+            structTS("MyStruct", b),
+            a,
+            structTS("MyStruct", b));
+      }
+
+      @Test
+      public void temp_vs_interface_of_temp() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfers(
+            unifier,
+            a,
+            interfaceTS(b),
+            a,
+            interfaceTS(b));
+      }
+
+      @Test
       public void array_of_temps_vs_array_of_different_temps() throws UnifierExc {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
@@ -157,6 +191,19 @@ public class UnifierTest extends TestContext {
             unifier,
             structTS("MyStruct", a, intTS()),
             structTS("MyStruct", b, intTS()),
+            a,
+            b);
+      }
+
+      @Test
+      public void interface_with_field_temp_vs_interface_with_field_other_temp() throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        var b = unifier.newTempVar();
+        assertUnifyInfersEquality(
+            unifier,
+            interfaceTS(a, intTS()),
+            interfaceTS(b, intTS()),
             a,
             b);
       }
@@ -244,6 +291,19 @@ public class UnifierTest extends TestContext {
               structTS("MyStruct", type, intTS()));
         }
 
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void temp_and_interface_with_field(TypeS type) throws UnifierExc {
+          var unifier = new Unifier();
+          var a = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              a,
+              interfaceTS(type, intTS()),
+              a,
+              interfaceTS(type, intTS()));
+        }
+
         public static ImmutableList<TypeS> typesToTest() {
           return concat(TypeFS.baseTs(), new VarS("A"));
         }
@@ -314,6 +374,20 @@ public class UnifierTest extends TestContext {
               unifier,
               structTS("MyStruct", var, intTS()),
               structTS("MyStruct", type, intTS()),
+              var,
+              type);
+        }
+
+        @ParameterizedTest
+        @MethodSource("typesToTest")
+        public void unify_interface_with_field_temp_with_interface_with_field_base(TypeS type)
+            throws UnifierExc {
+          var unifier = new Unifier();
+          var var = unifier.newTempVar();
+          assertUnifyInfers(
+              unifier,
+              interfaceTS(var, intTS()),
+              interfaceTS(type, intTS()),
               var,
               type);
         }
@@ -405,10 +479,25 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
+      public void var_vs_interface_fails() {
+        assertUnifyFails(
+            varA(),
+            interfaceTS(varA()));
+      }
+
+      @Test
       public void array_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             arrayTS(intTS()),
             arrayTS(intTS()));
+      }
+
+      @Test
+      public void array_with_interface_vs_array_with_compatible_interface_succeeds()
+          throws UnifierExc {
+        unifier.unify(
+            arrayTS(interfaceTS(sigS(intTS(), "myField"))),
+            arrayTS(interfaceTS(sigS(stringTS(), "otherField"))));
       }
 
       @Test
@@ -439,10 +528,23 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
+      public void array_vs_interface_fails() {
+        assertUnifyFails(arrayTS(intTS()), interfaceTS(intTS()));
+      }
+
+      @Test
       public void tuple_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             tupleTS(intTS(), blobTS()),
             tupleTS(intTS(), blobTS()));
+      }
+
+      @Test
+      public void tuple_with_interface_vs_tuple_with_compatible_interface_succeeds()
+          throws UnifierExc {
+        unifier.unify(
+            tupleTS(interfaceTS(sigS(intTS(), "myField"))),
+            tupleTS(interfaceTS(sigS(stringTS(), "otherField"))));
       }
 
       @Test
@@ -473,10 +575,23 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
+      public void tuple_vs_interface_fails() {
+        assertUnifyFails(tupleTS(intTS()), interfaceTS(intTS()));
+      }
+
+      @Test
       public void function_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             funcTS(blobTS(), intTS()),
             funcTS(blobTS(), intTS()));
+      }
+
+      @Test
+      public void function_with_interface_vs_function_with_compatible_interface_succeeds()
+          throws UnifierExc {
+        unifier.unify(
+            funcTS(interfaceTS(sigS(intTS(), "myField"))),
+            funcTS(interfaceTS(sigS(stringTS(), "otherField"))));
       }
 
       @Test
@@ -514,10 +629,30 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
+      public void function_vs_interface_fails() {
+        assertUnifyFails(funcTS(intTS()), interfaceTS(intTS()));
+      }
+
+      @Test
       public void struct_vs_itself_succeeds() throws UnifierExc {
         unifier.unify(
             structTS("MyStruct", intTS(), blobTS()),
             structTS("MyStruct", intTS(), blobTS()));
+      }
+
+      @Test
+      public void struct_with_interface_vs_struct_with_compatible_interface_succeeds()
+          throws UnifierExc {
+        unifier.unify(
+            structTS(interfaceTS(sigS(intTS(), "myField"))),
+            structTS(interfaceTS(sigS(stringTS(), "otherField"))));
+      }
+
+      @Test
+      public void struct_vs_itself_with_fields_reordered_fails() {
+        assertUnifyFails(
+            structTS("MyStruct", sigS(intTS(), "myIntField"), sigS(blobTS(), "myBlobField")),
+            structTS("MyStruct", sigS(blobTS(), "myBlobField"), sigS(intTS(), "myIntField")));
       }
 
       @Test
@@ -528,15 +663,269 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void struct_vs_struct_with_different_field_fails() {
+      public void struct_vs_struct_with_different_field_type_fails() {
         assertUnifyFails(
             structTS("MyStruct", intTS(), blobTS()),
             structTS("MyStruct", intTS(), stringTS()));
       }
 
+      @Test
+      public void struct_vs_struct_with_different_field_name_fails() {
+        assertUnifyFails(
+            structTS("MyStruct", sigS(intTS(), "myField")),
+            structTS("MyStruct", sigS(intTS(), "otherField")));
+      }
+
+      @Test
+      public void struct_vs_matching_interface_succeeds() throws UnifierExc {
+        unifier.unify(
+            structTS("MyStruct", sigS(intTS(), "myField")),
+            interfaceTS(sigS(intTS(), "myField")));
+      }
+
+      @Test
+      public void struct_vs_matching_interface_with_changed_field_type_fails() {
+        assertUnifyFails(
+            structTS("MyStruct", sigS(intTS(), "myField")),
+            interfaceTS(sigS(blobTS(), "myField")));
+      }
+
+      @Test
+      public void struct_vs_matching_interface_with_changed_field_name_fails() {
+        assertUnifyFails(
+            structTS("MyStruct", sigS(intTS(), "myField")),
+            interfaceTS(sigS(intTS(), "otherField")));
+      }
+
+      @Test
+      public void interface_vs_itself_succeeds() throws UnifierExc {
+        unifier.unify(
+            interfaceTS(intTS(), blobTS()),
+            interfaceTS(intTS(), blobTS()));
+      }
+
+      @Test
+      public void interface_vs_interface_with_different_field_type_fails() {
+        assertUnifyFails(
+            interfaceTS(sigS(intTS(), "myField")),
+            interfaceTS(sigS(blobTS(), "myField")));
+      }
+
+      @Test
+      public void interface_vs_interface_with_different_field_name_succeeds() throws UnifierExc {
+        assertUnifyThroughTemp(
+            interfaceTS(sigS(intTS(), "myField")),
+            interfaceTS(sigS(intTS(), "otherField")),
+            interfaceTS(sigS(intTS(), "otherField"), sigS(intTS(), "myField")));
+      }
+
       public static ImmutableList<TypeS> typesToTest() {
         return concat(TypeFS.baseTs(), new VarS("A"));
       }
+    }
+  }
+
+  @Nested
+  class _merging_field_sets {
+    @Nested
+    class _legal_field_set_merges {
+      @ParameterizedTest
+      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      public void array_element(FieldSetTS type1, FieldSetTS type2, TypeS expected)
+          throws UnifierExc {
+        assertUnifyThroughTemp(
+            arrayTS(type1),
+            arrayTS(type2),
+            arrayTS(expected)
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      public void tuple_element(FieldSetTS type1, FieldSetTS type2, TypeS expected)
+          throws UnifierExc {
+        assertUnifyThroughTemp(
+            tupleTS(type1),
+            tupleTS(type2),
+            tupleTS(expected)
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      public void func_result(FieldSetTS type1, FieldSetTS type2, TypeS expected)
+          throws UnifierExc {
+        assertUnifyThroughTemp(
+            funcTS(type1),
+            funcTS(type2),
+            funcTS(expected)
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      public void func_param(FieldSetTS type1, FieldSetTS type2, TypeS expected)
+          throws UnifierExc {
+        assertUnifyThroughTemp(
+            funcTS(type1, intTS()),
+            funcTS(type2, intTS()),
+            funcTS(expected, intTS())
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      public void struct_field(FieldSetTS type1, FieldSetTS type2, TypeS expected)
+          throws UnifierExc {
+        assertUnifyThroughTemp(
+            structTS(type1),
+            structTS(type2),
+            structTS(expected)
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(LegalFieldSetMergesProvider.class)
+      public void interface_field(FieldSetTS type1, FieldSetTS type2, TypeS expected)
+          throws UnifierExc {
+        assertUnifyThroughTemp(
+            interfaceTS(type1),
+            interfaceTS(type2),
+            interfaceTS(expected)
+        );
+      }
+    }
+
+    @Nested
+    class _illegal_field_set_merges {
+      @ParameterizedTest
+      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      public void array_element(FieldSetTS type1, FieldSetTS type2) {
+        assertUnifyFails(
+            arrayTS(type1),
+            arrayTS(type2)
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      public void tuple_element(FieldSetTS type1, FieldSetTS type2) {
+        assertUnifyFails(
+            tupleTS(type1),
+            tupleTS(type2)
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      public void func_result(FieldSetTS type1, FieldSetTS type2) {
+        assertUnifyFails(
+            funcTS(type1),
+            funcTS(type2)
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      public void func_param(FieldSetTS type1, FieldSetTS type2) {
+        assertUnifyFails(
+            funcTS(type1, intTS()),
+            funcTS(type2, intTS())
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      public void struct_field(FieldSetTS type1, FieldSetTS type2) {
+        assertUnifyFails(
+            structTS(type1),
+            structTS(type2)
+        );
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(IllegalFieldSetMergesProvider.class)
+      public void interface_field(FieldSetTS type1, FieldSetTS type2) {
+        assertUnifyFails(
+            interfaceTS(type1),
+            interfaceTS(type2)
+        );
+      }
+    }
+  }
+
+  private static class LegalFieldSetMergesProvider implements ArgumentsProvider {
+    @Override
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+      return Stream.of(
+          // struct vs struct
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              structTS("MyStruct", sigS(intTS(), "myField"))),
+
+          // interface vs interface
+          arguments(
+              interfaceTS(sigS(intTS(), "myField")),
+              interfaceTS(sigS(intTS(), "myField")),
+              interfaceTS(sigS(intTS(), "myField"))),
+          arguments(
+              interfaceTS(sigS(intTS(), "myField")),
+              interfaceTS(),
+              interfaceTS(sigS(intTS(), "myField"))),
+          arguments(
+              interfaceTS(sigS(intTS(), "myField")),
+              interfaceTS(sigS(intTS(), "otherField")),
+              interfaceTS(sigS(intTS(), "otherField"), sigS(intTS(), "myField"))),
+
+          // struct vs interface
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              interfaceTS(sigS(intTS(), "myField")),
+              structTS("MyStruct", sigS(intTS(), "myField"))),
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              interfaceTS(),
+              structTS("MyStruct", sigS(intTS(), "myField")))
+      );
+    }
+  }
+
+  private static class IllegalFieldSetMergesProvider implements ArgumentsProvider {
+    @Override
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+      return Stream.of(
+          // struct vs struct
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              structTS("OtherStruct", sigS(intTS(), "myField"))),
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              structTS("MyStruct", sigS(blobTS(), "myField"))),
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              structTS("MyStruct", sigS(intTS(), "otherField"))),
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              structTS("MyStruct")),
+
+
+          // interface vs interface
+          arguments(
+              interfaceTS(sigS(intTS(), "myField")),
+              interfaceTS(sigS(blobTS(), "myField"))),
+
+          // struct vs interface
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              interfaceTS(sigS(blobTS(), "myField"))),
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              interfaceTS(sigS(intTS(), "otherField"))),
+          arguments(
+              structTS("MyStruct", sigS(intTS(), "myField")),
+              interfaceTS(sigS(intTS(), "myField"), sigS(intTS(), "otherField")))
+      );
     }
   }
 
@@ -893,6 +1282,26 @@ public class UnifierTest extends TestContext {
       assertThat(unifier.resolve(funcTS(b, a)))
           .isEqualTo(funcTS(boolTS(), intTS()));
     }
+
+    @Test
+    public void struct_type() throws UnifierExc {
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      unifier.unify(a, intTS());
+      unifier.unify(b, boolTS());
+      assertThat(unifier.resolve(structTS(a, b)))
+          .isEqualTo(structTS(intTS(), boolTS()));
+    }
+
+    @Test
+    public void interface_type() throws UnifierExc {
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      unifier.unify(a, intTS());
+      unifier.unify(b, boolTS());
+      assertThat(unifier.resolve(interfaceTS(a, b)))
+          .isEqualTo(interfaceTS(intTS(), boolTS()));
+    }
   }
 
   private void assertUnifyInfersEquality(TypeS type1, TypeS type2, VarS var1, VarS var2)
@@ -934,6 +1343,21 @@ public class UnifierTest extends TestContext {
     Unifier unifier = new Unifier();
     unifier.unify(type1, type2);
     assertThat(unifier.resolve(var))
+        .isEqualTo(expected);
+  }
+
+  private void assertUnifyThroughTemp(TypeS type1, TypeS type2, TypeS expected) throws UnifierExc {
+    assertUnifyThroughTempImpl(type1, type2, expected);
+    assertUnifyThroughTempImpl(type2, type1, expected);
+  }
+
+  private static void assertUnifyThroughTempImpl(TypeS type1, TypeS type2, TypeS expected)
+      throws UnifierExc {
+    var unifier = new Unifier();
+    var temp = unifier.newTempVar();
+    unifier.unify(temp, type1);
+    unifier.unify(temp, type2);
+    assertThat(unifier.resolve(temp))
         .isEqualTo(expected);
   }
 

@@ -18,6 +18,7 @@ import static org.smoothbuild.testing.TestContext.varB;
 import static org.smoothbuild.testing.TestContext.varC;
 import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
@@ -58,13 +59,29 @@ public class TypeSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("names")
+  @MethodSource("to_string")
   public void to_string(TypeS type, String name) {
     assertThat(type.toString())
         .isEqualTo(name);
   }
 
   public static List<Arguments> names() {
+    return concat(name_or_to_string(),
+        list(
+            arguments(structTS("MyStruct", nlist()), "MyStruct"),
+            arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct")
+        ));
+  }
+
+  public static List<Arguments> to_string() {
+    return concat(name_or_to_string(),
+        list(
+            arguments(structTS("MyStruct", nlist()), "MyStruct()"),
+            arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct(Int field)")
+        ));
+  }
+
+  public static List<Arguments> name_or_to_string() {
     return asList(
         arguments(blobTS(), "Blob"),
         arguments(boolTS(), "Bool"),
@@ -77,9 +94,6 @@ public class TypeSTest {
         arguments(tupleTS(intTS(), boolTS()), "(Int,Bool)"),
         arguments(tupleTS(varA()), "(A)"),
         arguments(tupleTS(varA(), varB()), "(A,B)"),
-
-        arguments(structTS("MyStruct", nlist()), "MyStruct"),
-        arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct"),
 
         arguments(arrayTS(blobTS()), "[Blob]"),
         arguments(arrayTS(boolTS()), "[Bool]"),

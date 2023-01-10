@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.sb;
 
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
@@ -7,6 +8,7 @@ import org.smoothbuild.compile.fs.lang.type.BlobTS;
 import org.smoothbuild.compile.fs.lang.type.BoolTS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.lang.type.IntTS;
+import org.smoothbuild.compile.fs.lang.type.InterfaceTS;
 import org.smoothbuild.compile.fs.lang.type.StringTS;
 import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
@@ -44,6 +46,7 @@ public class TypeSbTranslator {
       case StringTS stringTS -> bytecodeF.stringT();
       case StructTS structTS -> translate(structTS);
       case TupleTS tupleTS -> translate(tupleTS);
+      case InterfaceTS interfaceTS -> throw unexpectedCaseExc(interfaceTS);
     };
   }
 

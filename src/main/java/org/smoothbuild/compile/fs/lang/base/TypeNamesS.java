@@ -4,8 +4,11 @@ import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.List;
 
+import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
+
+import com.google.common.collect.ImmutableMap;
 
 public class TypeNamesS {
   public static final String BLOB = "Blob";
@@ -43,6 +46,10 @@ public class TypeNamesS {
 
   public static String tupleTypeName(List<? extends TypeS> elemTs) {
     return "(" + commaSeparatedTypeNames(elemTs) + ")";
+  }
+
+  public static String interfaceTypeName(ImmutableMap<String, ItemSigS> fields) {
+    return "(" + joinWithCommaToString(fields.values()) + ")";
   }
 
   private static String commaSeparatedTypeNames(List<? extends TypeS> elemTs) {

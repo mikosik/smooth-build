@@ -67,6 +67,7 @@ import org.smoothbuild.compile.fs.lang.type.BoolTS;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.lang.type.IntTS;
+import org.smoothbuild.compile.fs.lang.type.InterfaceTS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.StringTS;
 import org.smoothbuild.compile.fs.lang.type.StructTS;
@@ -1032,6 +1033,22 @@ public class TestContext {
     return new FuncSchemaS(quantifiedVars, funcTS);
   }
 
+  public static InterfaceTS interfaceTS() {
+    return interfaceTS(ImmutableMap.of());
+  }
+
+  public static InterfaceTS interfaceTS(TypeS... fieldTs) {
+    return interfaceTS(typesToItemSigsMap(fieldTs));
+  }
+
+  public static InterfaceTS interfaceTS(ItemSigS... fieldTs) {
+    return interfaceTS(itemSigsToMap(fieldTs));
+  }
+
+  public static InterfaceTS interfaceTS(ImmutableMap<String, ItemSigS> fieldSignatures) {
+    return new InterfaceTS(fieldSignatures);
+  }
+
   public static SchemaS schemaS(TypeS typeS) {
     return new SchemaS(typeS.vars(), typeS);
   }
@@ -1054,12 +1071,44 @@ public class TestContext {
     return structTS("MyStruct", fieldTs);
   }
 
+  public static StructTS structTS(String myStruct) {
+    return structTS(myStruct, nlist());
+  }
+
   public static StructTS structTS(String myStruct, TypeS... fieldTs) {
+    return structTS(myStruct, nlist(typesToItemSigs(fieldTs)));
+  }
+
+  public static StructTS structTS(String myStruct, ItemSigS... fieldSigs) {
+    return structTS(myStruct, nlist(fieldSigs));
+  }
+
+  private static ImmutableList<ItemSigS> typesToItemSigs(TypeS... fieldTs) {
     Builder<ItemSigS> builder = ImmutableList.builder();
     for (int i = 0; i < fieldTs.length; i++) {
       builder.add(sigS(fieldTs[i], "param" + i));
     }
-    return structTS(myStruct, nlist(builder.build()));
+    return builder.build();
+  }
+
+  public static ImmutableMap<String, ItemSigS> typesToItemSigsMap(TypeS... types) {
+    return itemSigsToMap(typeTsToSigS(types));
+  }
+
+  public static ImmutableMap<String, ItemSigS> itemSigsToMap(ItemSigS... itemSigs) {
+    return itemSigsToMap(list(itemSigs));
+  }
+
+  public static ImmutableMap<String, ItemSigS> itemSigsToMap(ImmutableList<ItemSigS> sigs) {
+    return toMap(sigs, ItemSigS::name, f -> f);
+  }
+
+  private static ImmutableList<ItemSigS> typeTsToSigS(TypeS... types) {
+    Builder<ItemSigS> builder = ImmutableList.builder();
+    for (int i = 0; i < types.length; i++) {
+      builder.add(sigS(types[i], "param" + i));
+    }
+    return builder.build();
   }
 
   public static StructTS structTS(String name, NList<ItemSigS> fields) {

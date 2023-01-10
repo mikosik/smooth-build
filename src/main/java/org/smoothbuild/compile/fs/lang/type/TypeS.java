@@ -14,7 +14,7 @@ import org.smoothbuild.util.Strings;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class TypeS
-    permits ArrayTS, BlobTS, BoolTS, FuncTS, IntTS, StringTS, StructTS, TupleTS, VarS {
+    permits ArrayTS, BlobTS, BoolTS, FieldSetTS, FuncTS, IntTS, StringTS, TupleTS, VarS {
   private final VarSetS vars;
   private final String name;
 

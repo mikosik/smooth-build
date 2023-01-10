@@ -23,7 +23,7 @@ public class SelectSTest extends TestContext {
                   name = structValue
                   location = myBuild.smooth:12
                 )
-                evalT = MyStruct
+                evalT = MyStruct(Int field)
                 location = myBuild.smooth:12
               )
               field = field
