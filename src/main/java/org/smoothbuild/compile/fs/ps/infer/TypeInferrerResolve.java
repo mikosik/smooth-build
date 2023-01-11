@@ -2,8 +2,7 @@ package org.smoothbuild.compile.fs.ps.infer;
 
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
-import static org.smoothbuild.util.collect.Maps.mapKeys;
-import static org.smoothbuild.util.collect.Maps.mapValues;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Optional;
 
@@ -114,16 +113,7 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    return resolveEvaluable(anonymousFuncP) && resolveMonoizableAnonymousFunc(anonymousFuncP);
-  }
-
-  private boolean resolveMonoizableAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    // `(VarS)` cast is safe because anonFuncP.monoizeVarMap().keys() has only
-    // TempVarS/VarS.
-    var varMapWithResolvedKeys = mapKeys(
-        anonymousFuncP.monoizeVarMap(), v -> (VarS) unifier.resolve(v));
-    anonymousFuncP.setMonoizeVarMap(varMapWithResolvedKeys);
-    return resolveMonoizable(anonymousFuncP);
+    return resolveEvaluable(anonymousFuncP) && resolveMonoizable(anonymousFuncP);
   }
 
   private boolean resolveNamedArg(NamedArgP namedArgP) {
@@ -147,12 +137,12 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveMonoizable(MonoizableP monoizableP) {
-    var varMapWithResolvedValues = mapValues(monoizableP.monoizeVarMap(), unifier::resolve);
-    if (varMapWithResolvedValues.values().stream().anyMatch(this::hasTempVar)) {
+    var resolvedTypeArgs = map(monoizableP.typeArgs(), unifier::resolve);
+    if (resolvedTypeArgs.stream().anyMatch(this::hasTempVar)) {
       logger.log(compileError(monoizableP.location(), "Cannot infer actual type parameters."));
       return false;
     }
-    monoizableP.setMonoizeVarMap(varMapWithResolvedValues);
+    monoizableP.setTypeArgs(resolvedTypeArgs);
     return true;
   }
 

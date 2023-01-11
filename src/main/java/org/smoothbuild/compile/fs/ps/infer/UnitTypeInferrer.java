@@ -64,9 +64,9 @@ public class UnitTypeInferrer {
   }
 
   private void inferMonoizable(MonoizableP monoizableP) {
-    for (var monoizedVar : monoizableP.monoizeVarMap().values()) {
-      var resolvedMonoizedVar = unifier.resolve(monoizedVar);
-      for (var var : resolvedMonoizedVar.vars()) {
+    for (var typeArg : monoizableP.typeArgs()) {
+      var resolvedTypeArg = unifier.resolve(typeArg);
+      for (var var : resolvedTypeArg.vars()) {
         if (var.isTemporary()) {
           unifier.unifyOrFailWithRuntimeException(var, new TupleTS(list()));
         }
