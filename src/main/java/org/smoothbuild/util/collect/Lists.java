@@ -12,6 +12,8 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.smoothbuild.util.function.ThrowingBiFunction;
 
@@ -22,6 +24,12 @@ public class Lists {
   @SafeVarargs
   public static <E> ImmutableList<E> list(E... elems) {
     return ImmutableList.copyOf(elems);
+  }
+
+  public static <E> ImmutableList<E> generate(int size, Supplier<E> supplier) {
+    return Stream.generate(supplier)
+        .limit(size)
+        .collect(toImmutableList());
   }
 
   public static <R, S extends R, T extends R> ImmutableList<R> concat(S elem, Iterable<T> list) {
