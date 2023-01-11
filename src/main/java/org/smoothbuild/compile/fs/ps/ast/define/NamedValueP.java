@@ -52,6 +52,7 @@ public final class NamedValueP extends NamedEvaluableP {
   public void setSchemaS(SchemaS schemaS) {
     this.schemaS = schemaS;
   }
+
   @Override
   public boolean equals(Object object) {
     if (this == object) {
