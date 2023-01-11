@@ -16,7 +16,7 @@ public final class StructTS extends FieldSetTS {
   private final NList<ItemSigS> fields;
 
   public StructTS(String name, NList<ItemSigS> fields) {
-    super(name);
+    super(name, calculateFieldSetVars(fields));
     this.fields = fields;
   }
 
@@ -27,6 +27,15 @@ public final class StructTS extends FieldSetTS {
   @Override
   public StructTS mapComponents(Function<TypeS, TypeS> mapper) {
     return new StructTS(name(), fields.map(f -> f.mapType(mapper)));
+  }
+
+  @Override
+  public StructTS mapVars(Function<VarS, TypeS> varMapper) {
+    if (vars().isEmpty()) {
+      return this;
+    } else {
+      return new StructTS(name(), fields.map(f -> f.mapVarsInType(varMapper)));
+    }
   }
 
   @Override

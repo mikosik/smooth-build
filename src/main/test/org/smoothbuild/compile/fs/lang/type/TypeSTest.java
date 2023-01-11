@@ -10,6 +10,8 @@ import static org.smoothbuild.testing.TestContext.blobTS;
 import static org.smoothbuild.testing.TestContext.boolTS;
 import static org.smoothbuild.testing.TestContext.funcTS;
 import static org.smoothbuild.testing.TestContext.intTS;
+import static org.smoothbuild.testing.TestContext.interfaceTS;
+import static org.smoothbuild.testing.TestContext.sigS;
 import static org.smoothbuild.testing.TestContext.stringTS;
 import static org.smoothbuild.testing.TestContext.structTS;
 import static org.smoothbuild.testing.TestContext.tupleTS;
@@ -129,7 +131,14 @@ public class TypeSTest {
         arguments(funcTS(varA(), varA()), "(A)->A"),
         arguments(funcTS(stringTS()), "()->String"),
         arguments(funcTS(stringTS(), stringTS()), "(String)->String"),
-        arguments(funcTS(tupleTS(intTS()), stringTS()), "((Int))->String")
+        arguments(funcTS(tupleTS(intTS()), stringTS()), "((Int))->String"),
+
+
+        arguments(interfaceTS(), "()"),
+        arguments(interfaceTS(sigS(intTS(), "field1")), "(Int field1)"),
+        arguments(
+            interfaceTS(sigS(intTS(), "field1"), sigS(blobTS(), "field2")),
+            "(Int field1,Blob field2)")
     );
   }
 
@@ -155,7 +164,15 @@ public class TypeSTest {
         arguments(funcTS(boolTS(), blobTS()), varSetS()),
         arguments(funcTS(boolTS(), varA()), varSetS(varA())),
         arguments(funcTS(varA(), blobTS()), varSetS(varA())),
-        arguments(funcTS(varB(), varA()), varSetS(varA(), varB()))
+        arguments(funcTS(varB(), varA()), varSetS(varA(), varB())),
+
+        arguments(structTS(intTS()), varSetS()),
+        arguments(structTS(intTS(), varA()), varSetS(varA())),
+        arguments(structTS(varB(), varA()), varSetS(varA(), varB())),
+
+        arguments(interfaceTS(intTS()), varSetS()),
+        arguments(interfaceTS(intTS(), varA()), varSetS(varA())),
+        arguments(interfaceTS(varB(), varA()), varSetS(varA(), varB()))
     );
   }
 
@@ -188,7 +205,17 @@ public class TypeSTest {
         arguments(funcTS(boolTS(), varS("A")), addPrefix, funcTS(boolTS(), varS("prefix.A"))),
         arguments(funcTS(varS("A"), blobTS()), addPrefix, funcTS(varS("prefix.A"), blobTS())),
         arguments(funcTS(boolTS(), varS("p.A")), addPrefix, funcTS(boolTS(), varS("prefix.p.A"))),
-        arguments(funcTS(varS("p.A"), blobTS()), addPrefix, funcTS(varS("prefix.p.A"), blobTS()))
+        arguments(funcTS(varS("p.A"), blobTS()), addPrefix, funcTS(varS("prefix.p.A"), blobTS())),
+
+        arguments(structTS("MyStruct", intTS()), addPrefix, structTS("MyStruct", intTS())),
+        arguments(
+            structTS(varA(), varB()), addPrefix,
+            structTS(varS("prefix.A"), varS("prefix.B"))),
+
+        arguments(interfaceTS(intTS()), addPrefix, interfaceTS(intTS())),
+        arguments(
+            interfaceTS(varA(), varB()), addPrefix,
+            interfaceTS(varS("prefix.A"), varS("prefix.B")))
     );
   }
 

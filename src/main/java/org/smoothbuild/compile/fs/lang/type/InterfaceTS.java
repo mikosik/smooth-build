@@ -16,7 +16,7 @@ public final class InterfaceTS extends FieldSetTS {
   private final ImmutableMap<String, ItemSigS> fields;
 
   public InterfaceTS(ImmutableMap<String, ItemSigS> fields) {
-    super(interfaceTypeName(fields));
+    super(interfaceTypeName(fields), calculateFieldSetVars(fields.values()));
     this.fields = fields;
   }
 
@@ -28,6 +28,15 @@ public final class InterfaceTS extends FieldSetTS {
   @Override
   public InterfaceTS mapComponents(Function<TypeS, TypeS> mapper) {
     return new InterfaceTS(mapValues(fields, f -> f.mapType(mapper)));
+  }
+
+  @Override
+  public InterfaceTS mapVars(Function<VarS, TypeS> varMapper) {
+    if (vars().isEmpty()) {
+      return this;
+    } else {
+      return new InterfaceTS(mapValues(fields, f -> f.mapVarsInType(varMapper)));
+    }
   }
 
   @Override
