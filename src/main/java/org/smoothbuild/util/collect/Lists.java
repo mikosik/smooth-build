@@ -4,6 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -64,15 +65,19 @@ public class Lists {
   }
 
   public static <T, S, R, E extends Throwable> ImmutableList<R> zip(
-      List<T> listA, List<S> listB, ThrowingBiFunction<T, S, R, E> biFunction)
+      Collection<T> collection1,
+      Collection<S> collection2,
+      ThrowingBiFunction<T, S, R, E> biFunction)
       throws E {
-    if (listA.size() != listB.size()) {
+    if (collection1.size() != collection2.size()) {
       throw new IllegalArgumentException(
-          "List sizes differ " + listA.size() + " != " + listB.size() + " .");
+          "List sizes differ " + collection1.size() + " != " + collection2.size() + " .");
     }
     Builder<R> builder = ImmutableList.builder();
-    for (int i = 0; i < listA.size(); i++) {
-      builder.add(biFunction.apply(listA.get(i), listB.get(i)));
+    var iterator1 = collection1.iterator();
+    var iterator2 = collection2.iterator();
+    while (iterator1.hasNext()) {
+      builder.add(biFunction.apply(iterator1.next(), iterator2.next()));
     }
     return builder.build();
   }
