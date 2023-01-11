@@ -12,6 +12,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.smoothbuild.util.function.ThrowingBiFunction;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -61,8 +63,9 @@ public class Lists {
         .collect(toImmutableList());
   }
 
-  public static <T, S, R> ImmutableList<R> zip(
-      List<T> listA, List<S> listB, BiFunction<T, S, R> biFunction) {
+  public static <T, S, R, E extends Throwable> ImmutableList<R> zip(
+      List<T> listA, List<S> listB, ThrowingBiFunction<T, S, R, E> biFunction)
+      throws E {
     if (listA.size() != listB.size()) {
       throw new IllegalArgumentException(
           "List sizes differ " + listA.size() + " != " + listB.size() + " .");
