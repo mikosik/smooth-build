@@ -7,14 +7,13 @@ import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 import java.util.List;
 import java.util.Objects;
 
-import org.smoothbuild.compile.fs.lang.base.NalImpl;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class StructP extends NalImpl implements ScopedP {
+public final class StructP extends TanalP implements ScopedP {
   private final NList<ItemP> fields;
   private final NamedFuncP constructor;
   private ScopeP scope;

@@ -2,14 +2,13 @@ package org.smoothbuild.compile.fs.ps.ast.define;
 
 import java.util.Optional;
 
-import org.smoothbuild.compile.fs.lang.base.NalImpl;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 
 /**
  * Evaluable that has fully qualified name.
  */
 public sealed abstract class NamedEvaluableP
-    extends NalImpl
+    extends TanalP
     implements ReferenceableP, EvaluableP
     permits NamedFuncP, NamedValueP {
   private final String shortName;

@@ -1,24 +1,18 @@
 package org.smoothbuild.compile.fs.ps.ast.define;
 
-import org.smoothbuild.compile.fs.lang.base.location.Located;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 
 /**
  * Expression in smooth language.
  */
-public sealed abstract class ExprP implements Located
+public sealed abstract class ExprP
+    extends TalP
     permits CallP, InstantiateP, LiteralP, NamedArgP, OrderP, SelectP {
   private TypeS type;
-  private final Location location;
 
   public ExprP(Location location) {
-    this.location = location;
-  }
-
-  @Override
-  public Location location() {
-    return location;
+    super(location);
   }
 
   public TypeS typeS() {

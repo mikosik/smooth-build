@@ -3,10 +3,12 @@ package org.smoothbuild.compile.fs.ps.ast.define;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 
-import org.smoothbuild.compile.fs.lang.base.NalImpl;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 
-public abstract sealed class TypeP extends NalImpl permits ExplicitTP, ImplicitTP {
+public abstract sealed class TypeP
+    extends TanalP
+    permits ExplicitTP, ImplicitTP {
+
   protected TypeP(String name, Location location) {
     super(name, location);
   }
