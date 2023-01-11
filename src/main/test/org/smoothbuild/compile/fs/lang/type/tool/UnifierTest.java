@@ -215,7 +215,7 @@ public class UnifierTest extends TestContext {
       class _temp_as_root {
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void temp_and_base(TypeS type) throws UnifierExc {
+        public void temp_vs_base(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var a = unifier.newTempVar();
           assertUnifyInfers(
@@ -228,7 +228,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void temp_and_array(TypeS type) throws UnifierExc {
+        public void temp_vs_array(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var a = unifier.newTempVar();
           assertUnifyInfers(
@@ -241,7 +241,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void temp_and_tuple(TypeS type) throws UnifierExc {
+        public void temp_vs_tuple(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var a = unifier.newTempVar();
           assertUnifyInfers(
@@ -254,7 +254,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void temp_and_func_with_res(TypeS type) throws UnifierExc {
+        public void temp_vs_func_with_res(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var a = unifier.newTempVar();
           assertUnifyInfers(
@@ -267,7 +267,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void temp_and_func_with_param(TypeS type) throws UnifierExc {
+        public void temp_vs_func_with_param(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var a = unifier.newTempVar();
           assertUnifyInfers(
@@ -280,7 +280,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void temp_and_struct_with_field(TypeS type) throws UnifierExc {
+        public void temp_vs_struct_with_field(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var a = unifier.newTempVar();
           assertUnifyInfers(
@@ -293,7 +293,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void temp_and_interface_with_field(TypeS type) throws UnifierExc {
+        public void temp_vs_interface_with_field(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var a = unifier.newTempVar();
           assertUnifyInfers(
@@ -313,7 +313,7 @@ public class UnifierTest extends TestContext {
       class _temp_as_component {
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void unify_array_of_temp_a_with_array_of_base(TypeS type) throws UnifierExc {
+        public void unify_array_of_temp_a_vs_array_of_base(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var var = unifier.newTempVar();
           assertUnifyInfers(
@@ -326,7 +326,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void unify_tuple_of_temp_with_tuple_of_base(TypeS type) throws UnifierExc {
+        public void unify_tuple_of_temp_vs_tuple_of_base(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var var = unifier.newTempVar();
           assertUnifyInfers(
@@ -339,7 +339,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void unify_func_with_res_temp_with_func_with_res_base(TypeS type) throws UnifierExc {
+        public void unify_func_with_res_temp_vs_func_with_res_base(TypeS type) throws UnifierExc {
           var unifier = new Unifier();
           var var = unifier.newTempVar();
           assertUnifyInfers(
@@ -352,7 +352,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void unify_func_with_param_temp_with_func_with_param_base(TypeS type)
+        public void unify_func_with_param_temp_vs_func_with_param_base(TypeS type)
             throws UnifierExc {
           var unifier = new Unifier();
           var var = unifier.newTempVar();
@@ -366,7 +366,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void unify_struct_with_field_temp_with_struct_with_field_base(TypeS type)
+        public void unify_struct_with_field_temp_vs_struct_with_field_base(TypeS type)
             throws UnifierExc {
           var unifier = new Unifier();
           var var = unifier.newTempVar();
@@ -380,7 +380,7 @@ public class UnifierTest extends TestContext {
 
         @ParameterizedTest
         @MethodSource("typesToTest")
-        public void unify_interface_with_field_temp_with_interface_with_field_base(TypeS type)
+        public void unify_interface_with_field_temp_vs_interface_with_field_base(TypeS type)
             throws UnifierExc {
           var unifier = new Unifier();
           var var = unifier.newTempVar();
@@ -999,7 +999,7 @@ public class UnifierTest extends TestContext {
     @Nested
     class _transitive_cases {
       @Test
-      public void unify_a_with_b_unified_with_concrete_type() throws UnifierExc {
+      public void unify_a_vs_b_vs_concrete_type() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, b);
@@ -1009,7 +1009,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void unify_a_with_array_b_unified_with_c() throws UnifierExc {
+      public void unify_a_vs_array_b_vs_c() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
@@ -1020,7 +1020,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void unify_array_a_with_b_unified_with_array_c() throws UnifierExc {
+      public void unify_array_a_vs_b_vs_array_c() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
@@ -1034,7 +1034,7 @@ public class UnifierTest extends TestContext {
     @Nested
     class _join_separate_unified_groups {
       @Test
-      public void join_array_of_x_with_array_of_y() throws UnifierExc {
+      public void join_array_of_x_vs_array_of_y() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -1047,7 +1047,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_array_of_x_with_array_of_int() throws UnifierExc {
+      public void join_array_of_x_vs_array_of_int() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -1059,7 +1059,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_array_of_int_with_array_of_blob_fails() throws UnifierExc {
+      public void join_array_of_int_vs_array_of_blob_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, arrayTS(intTS()));
@@ -1069,7 +1069,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_tuple_of_x_with_tuple_of_y() throws UnifierExc {
+      public void join_tuple_of_x_vs_tuple_of_y() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -1082,7 +1082,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_tuple_of_x_with_tuple_of_int() throws UnifierExc {
+      public void join_tuple_of_x_vs_tuple_of_int() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -1094,7 +1094,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_tuple_of_int_with_tuple_of_blob_fails() throws UnifierExc {
+      public void join_tuple_of_int_vs_tuple_of_blob_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, tupleTS(intTS()));
@@ -1104,7 +1104,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_func_with_res_x_with_func_with_res_y() throws UnifierExc {
+      public void join_func_with_res_x_vs_func_with_res_y() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -1117,7 +1117,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_func_with_res_x_with_func_with_res_int() throws UnifierExc {
+      public void join_func_with_res_x_vs_func_with_res_int() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -1129,7 +1129,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_func_with_res_int_with_func_with_res_blob_fails() throws UnifierExc {
+      public void join_func_with_res_int_vs_func_with_res_blob_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, funcTS(intTS()));
@@ -1139,7 +1139,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_func_with_param_x_with_func_with_param_y() throws UnifierExc {
+      public void join_func_vs_param_x_with_func_vs_param_y() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -1152,7 +1152,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_func_with_param_x_with_func_with_param_int() throws UnifierExc {
+      public void join_func_with_param_x_vs_func_with_param_int() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -1164,7 +1164,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_func_with_param_int_with_func_with_param_blob_fails() throws UnifierExc {
+      public void join_func_with_param_int_vs_func_with_param_blob_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, funcTS(intTS(), intTS()));
@@ -1174,7 +1174,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_func_with_func_with_different_param_count_fails() throws UnifierExc {
+      public void join_func_vs_func_with_different_param_count_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, funcTS(intTS(), intTS()));
@@ -1184,7 +1184,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_array_with_tuple_fails() throws UnifierExc {
+      public void join_array_vs_tuple_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, arrayTS(intTS()));
@@ -1194,7 +1194,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_array_with_func_fails() throws UnifierExc {
+      public void join_array_vs_func_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, arrayTS(intTS()));
@@ -1204,7 +1204,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_tuple_with_func_fails() throws UnifierExc {
+      public void join_tuple_vs_func_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.unify(a, tupleTS(intTS()));
