@@ -3,6 +3,7 @@ package org.smoothbuild.compile.fs.ps.component;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.compile.fs.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.Optional;
@@ -62,7 +63,7 @@ public class ExprSLoadingTest extends TestContext {
             """;
         var anonymousFunc = anonymousFuncS(
             2, nlist(itemS(2, INT, "int")), paramRefS(3, INT, "int"));
-        var monoized = monoizeS(2, varMap(), anonymousFunc);
+        var monoized = monoizeS(2, anonymousFunc);
         var result = valueS(1, "result", monoized);
         module(code)
             .loadsWithSuccess()
@@ -79,7 +80,7 @@ public class ExprSLoadingTest extends TestContext {
         var body = paramRefS(3, varA(), "a");
         var anonymousFunc = anonymousFuncS(2, varSetS(), nlist(
             itemS(2, varA(), "a")), body);
-        var monoized = monoizeS(2, varMap(), anonymousFunc);
+        var monoized = monoizeS(2, anonymousFunc);
         var myFunc = funcS(1, "myFunc", nlist(
             itemS(1, varA(), "outerA")), monoized);
         module(code)
@@ -98,9 +99,9 @@ public class ExprSLoadingTest extends TestContext {
         var deeperBody = paramRefS(4, varA(), "a");
         var deeperAnonymousFunc = anonymousFuncS(
             3, varSetS(), nlist(itemS(3, varA(), "a")), deeperBody);
-        var monoDeeperAnonymousFunc = monoizeS(3, varMap(), deeperAnonymousFunc);
+        var monoDeeperAnonymousFunc = monoizeS(3, deeperAnonymousFunc);
         var anonFunc = anonymousFuncS(2, varSetS(), nlist(), monoDeeperAnonymousFunc);
-        var monoAnonymousFunc = monoizeS(2, varMap(), anonFunc);
+        var monoAnonymousFunc = monoizeS(2, anonFunc);
         var myFunc = funcS(1, "myFunc", nlist(
             itemS(1, varA(), "outerA")), monoAnonymousFunc);
         module(code)
@@ -117,7 +118,7 @@ public class ExprSLoadingTest extends TestContext {
             """;
         var anonymousFunc = anonymousFuncS(
             2, nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
-        var monoized = monoizeS(2, varMap(varA(), varB()), anonymousFunc);
+        var monoized = monoizeS(2, list(varB()), anonymousFunc);
         var result = valueS(1, "result", monoized);
         module(code)
             .loadsWithSuccess()
@@ -132,17 +133,17 @@ public class ExprSLoadingTest extends TestContext {
         @Test
         public void with_reference_to_poly_val() {
           var polyVal = bytecodeValueS(4, varA(), "polyVal");
-          var monoized = monoizeS(1, varMap(varA(), varA()), polyVal);
-          var arg = monoizeS(2, varMap(varA(), intTS()), valueS(1, "myFunc:b", monoized));
+          var monoized = monoizeS(1, list(varA()), polyVal);
+          var arg = monoizeS(2, list(intTS()), valueS(1, "myFunc:b", monoized));
           test_default_arg("polyVal", arg);
         }
 
         @Test
         public void with_reference_to_poly_func() {
           var polyFunc = bytecodeFuncS(6, varA(), "polyFunc", nlist());
-          var monoized = monoizeS(1, varMap(varA(), varA()), polyFunc);
+          var monoized = monoizeS(1, list(varA()), polyFunc);
           var paramDefaultValue = valueS("myFunc:b", callS(1, monoized));
-          var expected = monoizeS(2, varMap(varA(), intTS()), paramDefaultValue);
+          var expected = monoizeS(2, list(intTS()), paramDefaultValue);
           test_default_arg("polyFunc()", expected);
         }
 
@@ -235,7 +236,7 @@ public class ExprSLoadingTest extends TestContext {
             .loadsWithSuccess()
             .containsEvaluable(valueS(2, intTS(), "result",
                 callS(2,
-                    monoizeS(2, varMap(varA(), intTS()), idFuncS()),
+                    monoizeS(2, list(intTS()), idFuncS()),
                     intS(2, 7))));
       }
 
@@ -350,7 +351,7 @@ public class ExprSLoadingTest extends TestContext {
           """)
             .loadsWithSuccess()
             .containsEvaluable(valueS(2, arrayTS(intTS()), "result",
-                monoizeS(3, varMap(varA(), intTS()),
+                monoizeS(3, list(intTS()),
                     valueS(1, arrayTS(varA()), "myValue", orderS(varA())))));
       }
 
@@ -376,7 +377,7 @@ public class ExprSLoadingTest extends TestContext {
               myId;
             """;
         var myId = funcS(1, "myId", nlist(itemS(varA(), "a")), paramRefS(1, varA(), "a"));
-        var resultBody = monoizeS(3, varMap(varA(), intTS()), myId);
+        var resultBody = monoizeS(3, list(intTS()), myId);
         var result = valueS(2, funcTS(intTS(), intTS()), "result", resultBody);
         module(code)
             .loadsWithSuccess()
@@ -781,7 +782,7 @@ public class ExprSLoadingTest extends TestContext {
             [A] empty = [];
             """;
         var empty = valueS(5, "empty", orderS(5, varA()));
-        var defaultValue = valueS(2, "myFunc:param1", monoizeS(3, varMap(varA(), varA()), empty));
+        var defaultValue = valueS(2, "myFunc:param1", monoizeS(3, list(varA()), empty));
         var params = nlist(itemS(2, arrayTS(intTS()), "param1", defaultValue));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)
@@ -799,7 +800,7 @@ public class ExprSLoadingTest extends TestContext {
             [A] empty = [];
             """;
         var empty = valueS(5, "empty", orderS(5, varA()));
-        var defaultValue = valueS(2, "myFunc:param1", monoizeS(3, varMap(varA(), varA()), empty));
+        var defaultValue = valueS(2, "myFunc:param1", monoizeS(3, list(varA()), empty));
         var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", Optional.of(defaultValue)));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code)

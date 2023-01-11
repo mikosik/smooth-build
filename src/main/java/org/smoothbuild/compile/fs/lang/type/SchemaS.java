@@ -2,8 +2,9 @@ package org.smoothbuild.compile.fs.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.util.collect.Maps.zip;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -47,7 +48,8 @@ public sealed class SchemaS permits FuncSchemaS {
     return type;
   }
 
-  public TypeS monoize(Map<VarS, TypeS> map) {
+  public TypeS monoize(List<TypeS> typeArgs) {
+    var map = zip(quantifiedVars.asList(), typeArgs);
     return type.mapVars(v -> quantifiedVars.contains(v) ? map.get(v) : v);
   }
 

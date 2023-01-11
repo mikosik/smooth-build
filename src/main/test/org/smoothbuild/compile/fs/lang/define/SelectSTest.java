@@ -17,7 +17,7 @@ public class SelectSTest extends TestContext {
         .isEqualTo("""
             SelectS(
               selectable = MonoizeS(
-                varMap = {}
+                typeArgs = <>
                 monoizableS = ReferenceS(
                   schema = <>MyStruct
                   name = structValue

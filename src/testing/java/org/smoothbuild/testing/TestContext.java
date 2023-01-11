@@ -1115,10 +1115,6 @@ public class TestContext {
     return new StructTS(name, fields);
   }
 
-  public static ImmutableMap<VarS, TypeS> aToIntVarMapS() {
-    return ImmutableMap.of(varA(), intTS());
-  }
-
   public static VarS tempVarA() {
     return tempVar("A");
   }
@@ -1189,16 +1185,15 @@ public class TestContext {
     return monoizeS(line, referenceS(line, namedEvaluableS));
   }
 
-  public static MonoizeS monoizeS(
-      ImmutableMap<VarS, TypeS> varMap, NamedEvaluableS namedEvaluableS) {
-    return monoizeS(1, varMap, namedEvaluableS);
+  public static MonoizeS monoizeS(ImmutableList<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
+    return monoizeS(1, typeArgs, namedEvaluableS);
   }
 
   public static MonoizeS monoizeS(
-      int line, ImmutableMap<VarS, TypeS> varMap, NamedEvaluableS namedEvaluableS) {
+      int line, ImmutableList<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
     var location = location(line);
     var referenceS = new ReferenceS(namedEvaluableS.schema(), namedEvaluableS.name(), location);
-    return monoizeS(varMap, referenceS, location);
+    return monoizeS(typeArgs, referenceS, location);
   }
 
   public static MonoizeS monoizeS(MonoizableS monoizableS) {
@@ -1210,21 +1205,21 @@ public class TestContext {
   }
 
   public static MonoizeS monoizeS(MonoizableS monoizableS, Location location) {
-    return monoizeS(ImmutableMap.of(), monoizableS, location);
+    return monoizeS(list(), monoizableS, location);
   }
 
-  public static MonoizeS monoizeS(ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS) {
-    return monoizeS(1, varMap, monoizableS);
-  }
-
-  public static MonoizeS monoizeS(
-      int line, ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS) {
-    return monoizeS(varMap, monoizableS, location(line));
+  public static MonoizeS monoizeS(ImmutableList<TypeS> typeArgs, MonoizableS monoizableS) {
+    return monoizeS(1, typeArgs, monoizableS);
   }
 
   public static MonoizeS monoizeS(
-      ImmutableMap<VarS, TypeS> varMap, MonoizableS monoizableS, Location location) {
-    return new MonoizeS(varMap, monoizableS, location);
+      int line, ImmutableList<TypeS> typeArgs, MonoizableS monoizableS) {
+    return monoizeS(typeArgs, monoizableS, location(line));
+  }
+
+  public static MonoizeS monoizeS(
+      ImmutableList<TypeS> typeArgs, MonoizableS monoizableS, Location location) {
+    return new MonoizeS(typeArgs, monoizableS, location);
   }
 
   public static OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {

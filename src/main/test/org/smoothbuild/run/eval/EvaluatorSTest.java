@@ -88,7 +88,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var orderS = orderS(a, paramRefS(a, "e"));
           var funcS = funcS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
-          var callS = callS(monoizeS(varMap(a, intTS()), funcS), intS(7));
+          var callS = callS(monoizeS(list(intTS()), funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, arrayB(intTB(), intB(7)));
         }
 
@@ -176,7 +176,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_anonymous_function() throws EvaluatorExcS {
           var a = varA();
           var polyAnonymousFuncS = anonymousFuncS(nlist(itemS(a, "a")), paramRefS(a, "a"));
-          var monoAnonymousFuncS = monoizeS(varMap(a, intTS()), polyAnonymousFuncS);
+          var monoAnonymousFuncS = monoizeS(list(intTS()), polyAnonymousFuncS);
           assertEvaluation(monoAnonymousFuncS, closureB(list(intTB()), referenceB(intTB(), 0)));
         }
       }
@@ -192,7 +192,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_expression_function() throws EvaluatorExcS {
           var a = varA();
           var funcS = funcS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
-          var monoizedS = monoizeS(varMap(a, intTS()), funcS);
+          var monoizedS = monoizeS(list(intTS()), funcS);
           assertEvaluation(bindings(funcS), monoizedS, idFuncB());
         }
 
@@ -210,7 +210,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
           assertEvaluation(
-              bindings(bytecodeFuncS), monoizeS(varMap(a, intTS()), bytecodeFuncS), funcB);
+              bindings(bytecodeFuncS), monoizeS(list(intTS()), bytecodeFuncS), funcB);
         }
 
         @Test
@@ -232,7 +232,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_value() throws EvaluatorExcS {
           var a = varA();
           var polyValue = valueS(1, arrayTS(a), "name", orderS(a));
-          var monoizedValue = monoizeS(varMap(a, intTS()), polyValue);
+          var monoizedValue = monoizeS(list(intTS()), polyValue);
           assertEvaluation(bindings(polyValue), monoizedValue, arrayB(intTB()));
         }
       }

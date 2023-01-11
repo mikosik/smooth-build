@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs.ps.component;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
@@ -815,7 +816,7 @@ public class InferenceTest extends TestContext {
               """;
       var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(2, tupleTS());
-      var call = callS(2, monoizeS(2, varMap(varA(), arrayTS(tupleTS())), myFunc), emptyArray);
+      var call = callS(2, monoizeS(2, list(arrayTS(tupleTS())), myFunc), emptyArray);
       module(code)
           .loadsWithSuccess()
           .containsEvaluable(valueS(2, "result", call));
@@ -829,7 +830,7 @@ public class InferenceTest extends TestContext {
       var anonymousFunc = anonymousFuncS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(1, tupleTS());
       var call = callS(
-          1, monoizeS(1, varMap(varA(), arrayTS(tupleTS())), anonymousFunc), emptyArray);
+          1, monoizeS(1, list(arrayTS(tupleTS())), anonymousFunc), emptyArray);
       module(code)
           .loadsWithSuccess()
           .containsEvaluable(valueS(1, "result", call));

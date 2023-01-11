@@ -230,7 +230,9 @@ public class PsConverter {
   }
 
   private static MonoizeS newMonoize(MonoizableP monoizableP, MonoizableS monoizableS) {
-    return new MonoizeS(monoizableP.monoizeVarMap(), monoizableS, monoizableP.location());
+    return new MonoizeS(
+        monoizableP.monoizeVarMap().values().asList(),
+        monoizableS, monoizableP.location());
   }
 
   private BlobS convertBlob(BlobP blob) {

@@ -259,7 +259,7 @@ public class ExprTypeUnifier {
     var schema = monoizableP.schemaS();
     var varMap = toMap(schema.quantifiedVars(), v -> (TypeS) unifier.newTempVar());
     monoizableP.setMonoizeVarMap(varMap);
-    return Optional.of(schema.monoize(monoizableP.monoizeVarMap()));
+    return Optional.of(schema.monoize(monoizableP.monoizeVarMap().values().asList()));
   }
 
   private Optional<TypeS> unifySelect(SelectP selectP) {
