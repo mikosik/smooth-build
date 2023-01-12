@@ -182,9 +182,14 @@ public class PsConverter {
     // @formatter:on
   }
 
-  private ExprS convertOrder(OrderP order) {
-    var elems = convertExprs(order.elems());
-    return new OrderS((ArrayTS) order.typeS(), elems, order.location());
+  private AnonymousFuncS convertAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    var params = convertParams(anonymousFuncP.params());
+    var body = convertFuncBody(anonymousFuncP, anonymousFuncP.bodyGet());
+    return new AnonymousFuncS(anonymousFuncP.schemaS(), params, body, anonymousFuncP.location());
+  }
+
+  private BlobS convertBlob(BlobP blob) {
+    return new BlobS(BLOB, blob.byteString(), blob.location());
   }
 
   private ExprS convertCall(CallP call) {
@@ -193,15 +198,13 @@ public class PsConverter {
     return new CallS(callee, args, call.location());
   }
 
-  private AnonymousFuncS convertAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    var params = convertParams(anonymousFuncP.params());
-    var body = convertFuncBody(anonymousFuncP, anonymousFuncP.bodyGet());
-    return new AnonymousFuncS(anonymousFuncP.schemaS(), params, body, anonymousFuncP.location());
-  }
-
   private ExprS convertFuncBody(FuncP funcP, ExprP body) {
     var typeTellerForBody = typeTeller.withScope(funcP.scope());
     return new PsConverter(typeTellerForBody, imported).convertExpr(body);
+  }
+
+  private IntS convertInt(IntP int_) {
+    return new IntS(INT, int_.bigInteger(), int_.location());
   }
 
   private MonoizableS convertMonoizable(MonoizableP monoizable) {
@@ -216,9 +219,9 @@ public class PsConverter {
     return new MonoizeS(monoizeP.typeArgs(), monoizableS, monoizeP.location());
   }
 
-  private ExprS convertSelect(SelectP selectP) {
-    var selectable = convertExpr(selectP.selectable());
-    return new SelectS(selectable, selectP.field(), selectP.location());
+  private ExprS convertOrder(OrderP order) {
+    var elems = convertExprs(order.elems());
+    return new OrderS((ArrayTS) order.typeS(), elems, order.location());
   }
 
   private ReferenceS convertReference(ReferenceP referenceP) {
@@ -229,12 +232,9 @@ public class PsConverter {
     return new ReferenceS(schemaS, referenceP.name(), referenceP.location());
   }
 
-  private BlobS convertBlob(BlobP blob) {
-    return new BlobS(BLOB, blob.byteString(), blob.location());
-  }
-
-  private IntS convertInt(IntP int_) {
-    return new IntS(INT, int_.bigInteger(), int_.location());
+  private ExprS convertSelect(SelectP selectP) {
+    var selectable = convertExpr(selectP.selectable());
+    return new SelectS(selectable, selectP.field(), selectP.location());
   }
 
   private StringS convertString(StringP string) {
