@@ -124,6 +124,16 @@ public class ModuleVisitorP {
     // @formatter:on
   }
 
+  public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    visitAnonymousFuncSignature(anonymousFuncP);
+    visitFuncBody(anonymousFuncP);
+  }
+
+  public void visitAnonymousFuncSignature(AnonymousFuncP anonymousFuncP) {
+    visitType(anonymousFuncP.resT());
+    visitItems(anonymousFuncP.params());
+  }
+
   public void visitArgs(List<ExprP> args) {
     args.forEach(this::visitArg);
   }
@@ -141,16 +151,6 @@ public class ModuleVisitorP {
   }
 
   public void visitInt(IntP intP) {
-  }
-
-  public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    visitAnonymousFuncSignature(anonymousFuncP);
-    visitFuncBody(anonymousFuncP);
-  }
-
-  public void visitAnonymousFuncSignature(AnonymousFuncP anonymousFuncP) {
-    visitType(anonymousFuncP.resT());
-    visitItems(anonymousFuncP.params());
   }
 
   private void visitMonoizableP(MonoizableP monoizableP) {
@@ -172,11 +172,11 @@ public class ModuleVisitorP {
     orderP.elems().forEach(this::visitExpr);
   }
 
+  public void visitReference(ReferenceP referenceP) {}
+
   public void visitSelect(SelectP selectP) {
     visitExpr(selectP.selectable());
   }
-
-  public void visitReference(ReferenceP referenceP) {}
 
   public void visitString(StringP stringP) {}
 
