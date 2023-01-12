@@ -1,29 +1,24 @@
 package org.smoothbuild.compile.fs.ps.ast.define;
 
+import org.smoothbuild.compile.fs.lang.base.location.Located;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
-import org.smoothbuild.compile.fs.lang.type.TypeS;
-
-import com.google.common.collect.ImmutableList;
 
 /**
- * Expression that can be monomorphized.
+ * Entity that can be monomorphized.
  */
-public abstract sealed class MonoizableP extends ExprP
+public abstract sealed class MonoizableP implements Located
     permits AnonymousFuncP, ReferenceP {
-  private ImmutableList<TypeS> typeArgs;
+  private final Location location;
 
   public MonoizableP(Location location) {
-    super(location);
+    this.location = location;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 
   public abstract SchemaS schemaS();
-
-  public void setTypeArgs(ImmutableList<TypeS> typeArgs) {
-    this.typeArgs = typeArgs;
-  }
-
-  public ImmutableList<TypeS> typeArgs() {
-    return typeArgs;
-  }
 }

@@ -19,6 +19,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.EvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -62,10 +63,9 @@ public class TempVarsNamer {
     // @formatter:off
     return switch (expr) {
       case CallP          callP          -> handleCall(callP);
-      case AnonymousFuncP anonymousFuncP -> handleAnonymousFunc(anonymousFuncP);
+      case MonoizeP       monoizeP       -> handleMonoize(monoizeP);
       case NamedArgP      namedArgP      -> handleExpr(namedArgP.expr());
       case OrderP         orderP         -> handleOrder(orderP);
-      case ReferenceP     referenceP     -> varSetS();
       case SelectP        selectP        -> handleExpr(selectP.selectable());
       case IntP           intP           -> varSetS();
       case BlobP          blobP          -> varSetS();
@@ -76,6 +76,13 @@ public class TempVarsNamer {
 
   private VarSetS handleCall(CallP call) {
     return handleChildren(concat(call.callee(), call.args()));
+  }
+
+  private VarSetS handleMonoize(MonoizeP monoizeP) {
+    return switch (monoizeP.monoizable()) {
+      case AnonymousFuncP anonymousFuncP -> handleAnonymousFunc(anonymousFuncP);
+      case ReferenceP referenceP -> varSetS();
+    };
   }
 
   private VarSetS handleAnonymousFunc(AnonymousFuncP anonymousFuncP) {

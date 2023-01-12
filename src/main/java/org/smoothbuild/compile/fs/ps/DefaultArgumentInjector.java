@@ -24,6 +24,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
@@ -70,7 +71,8 @@ public class DefaultArgumentInjector {
     }
 
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP) {
-      if (callP.callee() instanceof ReferenceP referenceP) {
+      if (callP.callee() instanceof MonoizeP monoizeP
+          && monoizeP.monoizable() instanceof ReferenceP referenceP) {
         var name = referenceP.name();
         var optional = referenceables.getOptional(name);
         if (optional.isPresent()) {
@@ -156,8 +158,9 @@ public class DefaultArgumentInjector {
         if (result.get(i) == null) {
           var param = params.get(i);
           if (param.hasDefaultValue()) {
-            var name = ((ReferenceP) callP.callee()).name() + ":" + param.name();
-            var element = new ReferenceP(name, callP.location());
+            var name = nameOfReferencedCallee(callP) + ":" + param.name();
+            var location = callP.location();
+            var element = new MonoizeP(new ReferenceP(name, location), location);
             result.set(i, element);
           } else {
             error = true;
@@ -166,6 +169,10 @@ public class DefaultArgumentInjector {
         }
       }
       return error ? null : ImmutableList.copyOf(result);
+    }
+
+    private static String nameOfReferencedCallee(CallP callP) {
+      return ((ReferenceP) ((MonoizeP) callP.callee()).monoizable()).name();
     }
 
     private static List<Log> findPositionalArgAfterNamedArgError(CallP callP) {

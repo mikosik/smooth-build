@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.testing.TestContext;
@@ -157,7 +158,8 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(anonymousFuncP.scope().referencables().get("myValue"))
+      var cast = ((AnonymousFuncP) anonymousFuncP.monoizable());
+      assertThat(cast.scope().referencables().get("myValue"))
           .isEqualTo(namedValueP);
     }
 
@@ -170,7 +172,8 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(anonymousFuncP.scope().referencables().get("myFunc"))
+      var cast = ((AnonymousFuncP) anonymousFuncP.monoizable());
+      assertThat(cast.scope().referencables().get("myFunc"))
           .isEqualTo(namedValueP);
     }
 
@@ -182,7 +185,8 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      assertThat(anonymousFuncP.scope().referencables().get("param"))
+      var cast = ((AnonymousFuncP) anonymousFuncP.monoizable());
+      assertThat(cast.scope().referencables().get("param"))
           .isEqualTo(param);
     }
   }

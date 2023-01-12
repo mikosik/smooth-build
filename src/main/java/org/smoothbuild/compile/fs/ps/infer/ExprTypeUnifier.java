@@ -34,6 +34,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -170,10 +171,9 @@ public class ExprTypeUnifier {
     // @formatter:off
     return switch (exprP) {
       case CallP          callP          -> unifyAndMemoize(this::unifyCall, callP);
-      case AnonymousFuncP anonymousFuncP -> unifyAndMemoize(this::unifyAnonymousFunc, anonymousFuncP);
+      case MonoizeP       monoizeP       -> unifyAndMemoize(this::unifyMonoize, monoizeP);
       case NamedArgP      namedArgP      -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP         orderP         -> unifyAndMemoize(this::unifyOrder, orderP);
-      case ReferenceP     referenceP     -> unifyAndMemoize(this::unifyReference, referenceP);
       case SelectP        selectP        -> unifyAndMemoize(this::unifySelect, selectP);
       case StringP        stringP        -> setAndMemoize(TypeFS.STRING, stringP);
       case IntP           intP           -> setAndMemoize(TypeFS.INT, intP);
@@ -213,12 +213,26 @@ public class ExprTypeUnifier {
     }
   }
 
-  private Optional<TypeS> unifyAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    if (unifyEvaluableAndSetSchema(anonymousFuncP)) {
-      return unifyMonoizable(anonymousFuncP);
+  private Optional<TypeS> unifyMonoize(MonoizeP monoizeP) {
+    var monoizableP = monoizeP.monoizable();
+    if (unifyMonoizable(monoizableP)) {
+      var schema = monoizableP.schemaS();
+      monoizeP.setTypeArgs(generate(schema.quantifiedVars().size(), unifier::newTempVar));
+      return Optional.of(schema.monoize(monoizeP.typeArgs()));
     } else {
       return Optional.empty();
     }
+  }
+
+  private boolean unifyMonoizable(MonoizableP monoizableP) {
+    return switch (monoizableP) {
+      case AnonymousFuncP anonymousFuncP -> unifyAnonymousFunc(anonymousFuncP);
+      case ReferenceP referenceP -> unifyReference(referenceP);
+    };
+  }
+
+  private boolean unifyAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    return unifyEvaluableAndSetSchema(anonymousFuncP);
   }
 
   private Optional<TypeS> unifyNamedArg(NamedArgP namedArgP) {
@@ -245,20 +259,14 @@ public class ExprTypeUnifier {
     return Optional.of(new ArrayTS(elemVar));
   }
 
-  private Optional<TypeS> unifyReference(ReferenceP referenceP) {
+  private boolean unifyReference(ReferenceP referenceP) {
     Optional<SchemaS> schemaS = typeTeller.schemaFor(referenceP.name());
-    return schemaS.flatMap(s -> unifyReference(referenceP, s));
-  }
-
-  private Optional<TypeS> unifyReference(ReferenceP referenceP, SchemaS schemaS) {
-    referenceP.setSchemaS(schemaS);
-    return unifyMonoizable(referenceP);
-  }
-
-  private Optional<TypeS> unifyMonoizable(MonoizableP monoizableP) {
-    var schema = monoizableP.schemaS();
-    monoizableP.setTypeArgs(generate(schema.quantifiedVars().size(), unifier::newTempVar));
-    return Optional.of(schema.monoize(monoizableP.typeArgs()));
+    if (schemaS.isPresent()) {
+      referenceP.setSchemaS(schemaS.get());
+      return true;
+    } else {
+      return false;
+    }
   }
 
   private Optional<TypeS> unifySelect(SelectP selectP) {

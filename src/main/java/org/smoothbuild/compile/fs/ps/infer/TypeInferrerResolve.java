@@ -21,6 +21,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -94,11 +95,10 @@ public class TypeInferrerResolve {
     // @formatter:off
     return switch (expr) {
       case CallP          callP          -> resolveCall(callP);
-      case AnonymousFuncP anonymousFuncP -> resolveAnonymousFunc(anonymousFuncP);
+      case MonoizeP       monoizeP       -> resolveMonoize(monoizeP);
       case NamedArgP      namedArgP      -> resolveNamedArg(namedArgP);
       case OrderP         orderP         -> resolveOrder(orderP);
       case SelectP        selectP        -> resolveSelect(selectP);
-      case ReferenceP     referenceP     -> resolveMonoizable(referenceP);
       case StringP        stringP        -> resolveExprType(stringP);
       case IntP           intP           -> resolveExprType(intP);
       case BlobP          blobP          -> resolveExprType(blobP);
@@ -112,8 +112,30 @@ public class TypeInferrerResolve {
         && resolveExprType(callP);
   }
 
+  private boolean resolveMonoize(MonoizeP monoizeP) {
+    return resolveMonoizable(monoizeP.monoizable()) && resolveMonoizeTypeArgs(monoizeP);
+  }
+
+  private boolean resolveMonoizeTypeArgs(MonoizeP monoizeP) {
+    var resolvedTypeArgs = map(monoizeP.typeArgs(), unifier::resolve);
+    if (resolvedTypeArgs.stream().anyMatch(this::hasTempVar)) {
+      logger.log(compileError(monoizeP.location(), "Cannot infer actual type parameters."));
+      return false;
+    }
+    monoizeP.setTypeArgs(resolvedTypeArgs);
+    return true;
+  }
+
+  private boolean resolveMonoizable(MonoizableP monoizableP) {
+    return switch (monoizableP) {
+      case AnonymousFuncP anonymousFuncP -> resolveAnonymousFunc(anonymousFuncP);
+      case ReferenceP referenceP -> true;
+    };
+  }
+
+
   private boolean resolveAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    return resolveEvaluable(anonymousFuncP) && resolveMonoizable(anonymousFuncP);
+    return resolveEvaluable(anonymousFuncP);
   }
 
   private boolean resolveNamedArg(NamedArgP namedArgP) {
@@ -133,16 +155,6 @@ public class TypeInferrerResolve {
 
   private boolean resolveExprType(ExprP exprP) {
     exprP.setTypeS(unifier.resolve(exprP.typeS()));
-    return true;
-  }
-
-  private boolean resolveMonoizable(MonoizableP monoizableP) {
-    var resolvedTypeArgs = map(monoizableP.typeArgs(), unifier::resolve);
-    if (resolvedTypeArgs.stream().anyMatch(this::hasTempVar)) {
-      logger.log(compileError(monoizableP.location(), "Cannot infer actual type parameters."));
-      return false;
-    }
-    monoizableP.setTypeArgs(resolvedTypeArgs);
     return true;
   }
 

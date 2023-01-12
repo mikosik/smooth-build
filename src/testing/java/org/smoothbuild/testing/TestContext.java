@@ -84,6 +84,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
@@ -1531,16 +1533,21 @@ public class TestContext {
   }
 
   // P - parsed objects
-  public static AnonymousFuncP anonymousFuncP(NList<ItemP> params, ExprP body) {
-    return new AnonymousFuncP(params, body, location());
+
+  public static MonoizeP anonymousFuncP(NList<ItemP> params, ExprP body) {
+    return monoizeP(new AnonymousFuncP(params, body, location()));
   }
 
-  public static CallP callP(ReferenceP callee) {
+  public static CallP callP(ExprP callee) {
     return callP(callee, location());
   }
 
-  public static CallP callP(ReferenceP callee, Location location) {
+  public static CallP callP(ExprP callee, Location location) {
     return new CallP(callee, list(), location);
+  }
+
+  public static MonoizeP monoizeP(MonoizableP monoizableP) {
+    return new MonoizeP(monoizableP, monoizableP.location());
   }
 
   public static NamedFuncP namedFuncP() {
@@ -1624,12 +1631,12 @@ public class TestContext {
     return new IntP("7", location());
   }
 
-  public static ReferenceP referenceP(String name) {
-    return new ReferenceP(name, location(7));
+  public static MonoizeP referenceP(String name) {
+    return referenceP(name, location(7));
   }
 
-  public static ReferenceP referenceP(String name, Location location) {
-    return new ReferenceP(name, location);
+  public static MonoizeP referenceP(String name, Location location) {
+    return monoizeP(new ReferenceP(name, location));
   }
 
   // location

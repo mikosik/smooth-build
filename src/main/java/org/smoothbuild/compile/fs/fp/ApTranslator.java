@@ -52,6 +52,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
@@ -215,7 +216,8 @@ public class ApTranslator {
       private ExprP createChainHead(AtomicReference<ExprP> pipedArg, ChainHeadContext chainHead) {
         var location = fileLocation(filePath, chainHead);
         if (chainHead.NAME() != null) {
-          return new ReferenceP(chainHead.NAME().getText(), location);
+          var referenceP = new ReferenceP(chainHead.NAME().getText(), location);
+          return new MonoizeP(referenceP, location);
         }
         if (chainHead.array() != null) {
           var elems = map(chainHead.array().expr(), this::createExpr);
@@ -261,10 +263,12 @@ public class ApTranslator {
         return result;
       }
 
-      private AnonymousFuncP createAnonymousFunc(AnonymousFuncContext anonymousFunc) {
+      private MonoizeP createAnonymousFunc(AnonymousFuncContext anonymousFunc) {
         var params = createItems("anonymousFunc", anonymousFunc.itemList());
         var body = createExpr(anonymousFunc.expr());
-        return new AnonymousFuncP(params, body, fileLocation(filePath, anonymousFunc));
+        var location = fileLocation(filePath, anonymousFunc);
+        var anonymousFuncP = new AnonymousFuncP(params, body, location);
+        return new MonoizeP(anonymousFuncP, location);
       }
 
       private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {

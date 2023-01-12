@@ -10,6 +10,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
@@ -33,10 +34,9 @@ public class UnitTypeInferrer {
     // @formatter:off
     switch (expr) {
       case CallP          call          -> inferCall(call);
-      case AnonymousFuncP anonymousFunc -> inferAnonymousFunc(anonymousFunc);
+      case MonoizeP       monoizeP      -> inferMonoize(monoizeP);
       case NamedArgP      namedArg      -> inferNamedArg(namedArg);
       case OrderP         order         -> inferOrder(order);
-      case ReferenceP     referenceP    -> inferMonoizable(referenceP);
       case SelectP        select        -> inferSelect(select);
       case StringP        string        -> {}
       case IntP           int_          -> {}
@@ -50,9 +50,31 @@ public class UnitTypeInferrer {
     call.args().forEach(this::infer);
   }
 
+  private void inferMonoize(MonoizeP monoizeP) {
+    inferMonoizable(monoizeP.monoizable());
+    inferMonoizeTypeArgs(monoizeP);
+  }
+
+  private void inferMonoizeTypeArgs(MonoizeP monoizeP) {
+    for (var typeArg : monoizeP.typeArgs()) {
+      var resolvedTypeArg = unifier.resolve(typeArg);
+      for (var var : resolvedTypeArg.vars()) {
+        if (var.isTemporary()) {
+          unifier.unifyOrFailWithRuntimeException(var, new TupleTS(list()));
+        }
+      }
+    }
+  }
+
+  private void inferMonoizable(MonoizableP monoizableP) {
+    switch (monoizableP) {
+      case AnonymousFuncP anonymousFuncP -> inferAnonymousFunc(anonymousFuncP);
+      case ReferenceP referenceP -> {}
+    }
+  }
+
   private void inferAnonymousFunc(AnonymousFuncP anonymousFunc) {
     infer(anonymousFunc.bodyGet());
-    inferMonoizable(anonymousFunc);
   }
 
   private void inferNamedArg(NamedArgP namedArg) {
@@ -61,17 +83,6 @@ public class UnitTypeInferrer {
 
   private void inferOrder(OrderP order) {
     order.elems().forEach(this::infer);
-  }
-
-  private void inferMonoizable(MonoizableP monoizableP) {
-    for (var typeArg : monoizableP.typeArgs()) {
-      var resolvedTypeArg = unifier.resolve(typeArg);
-      for (var var : resolvedTypeArg.vars()) {
-        if (var.isTemporary()) {
-          unifier.unifyOrFailWithRuntimeException(var, new TupleTS(list()));
-        }
-      }
-    }
   }
 
   private void inferSelect(SelectP select) {

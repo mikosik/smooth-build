@@ -8,7 +8,7 @@ import org.smoothbuild.compile.fs.lang.type.TypeS;
  * Expression in smooth language.
  */
 public sealed abstract class ExprP implements Located
-    permits CallP, LiteralP, MonoizableP, NamedArgP, OrderP, SelectP {
+    permits CallP, LiteralP, MonoizeP, NamedArgP, OrderP, SelectP {
   private TypeS type;
   private final Location location;
 

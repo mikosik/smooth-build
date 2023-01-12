@@ -11,6 +11,8 @@ import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
@@ -113,10 +115,9 @@ public class ModuleVisitorP {
       case BlobP          blobP          -> visitBlob(blobP);
       case CallP          callP          -> visitCall(callP);
       case IntP           intP           -> visitInt(intP);
-      case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
+      case MonoizeP       monoizeP       -> visitMonoizeP(monoizeP);
       case NamedArgP      namedArgP      -> visitNamedArg(namedArgP);
       case OrderP         orderP         -> visitOrder(orderP);
-      case ReferenceP     referenceP     -> visitReference(referenceP);
       case SelectP        selectP        -> visitSelect(selectP);
       case StringP        stringP        -> visitString(stringP);
     }
@@ -150,6 +151,17 @@ public class ModuleVisitorP {
   public void visitAnonymousFuncSignature(AnonymousFuncP anonymousFuncP) {
     visitType(anonymousFuncP.resT());
     visitItems(anonymousFuncP.params());
+  }
+
+  private void visitMonoizableP(MonoizableP monoizableP) {
+    switch (monoizableP) {
+      case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
+      case ReferenceP referenceP -> visitReference(referenceP);
+    }
+  }
+
+  public void visitMonoizeP(MonoizeP monoizeP) {
+    visitMonoizableP(monoizeP.monoizable());
   }
 
   public void visitNamedArg(NamedArgP namedArgP) {

@@ -49,6 +49,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
+import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -172,10 +173,9 @@ public class PsConverter {
       case BlobP          blobP          -> convertBlob(blobP);
       case CallP          callP          -> convertCall(callP);
       case IntP           intP           -> convertInt(intP);
-      case AnonymousFuncP anonymousFuncP -> convertAnonymousFunc(anonymousFuncP);
+      case MonoizeP       monoizeP       -> convertMonoize(monoizeP);
       case NamedArgP      namedArgP      -> convertExpr(namedArgP.expr());
       case OrderP         orderP         -> convertOrder(orderP);
-      case ReferenceP     referenceP     -> convertReference(referenceP);
       case SelectP        selectP        -> convertSelect(selectP);
       case StringP        stringP        -> convertString(stringP);
     };
@@ -193,10 +193,10 @@ public class PsConverter {
     return new CallS(callee, args, call.location());
   }
 
-  private ExprS convertAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+  private AnonymousFuncS convertAnonymousFunc(AnonymousFuncP anonymousFuncP) {
     var params = convertParams(anonymousFuncP.params());
     var body = convertFuncBody(anonymousFuncP, anonymousFuncP.bodyGet());
-    return monoizeAnonymousFunc(anonymousFuncP, params, body);
+    return new AnonymousFuncS(anonymousFuncP.schemaS(), params, body, anonymousFuncP.location());
   }
 
   private ExprS convertFuncBody(FuncP funcP, ExprP body) {
@@ -204,11 +204,16 @@ public class PsConverter {
     return new PsConverter(typeTellerForBody, imported).convertExpr(body);
   }
 
-  private static MonoizeS monoizeAnonymousFunc(
-      AnonymousFuncP anonymousFuncP, NList<ItemS> params, ExprS body) {
-    var anonymousFuncS =
-        new AnonymousFuncS(anonymousFuncP.schemaS(), params, body, anonymousFuncP.location());
-    return newMonoize(anonymousFuncP, anonymousFuncS);
+  private MonoizableS convertMonoizable(MonoizableP monoizable) {
+    return switch (monoizable) {
+      case AnonymousFuncP anonymousFuncP -> convertAnonymousFunc(anonymousFuncP);
+      case ReferenceP referenceP -> convertReference(referenceP);
+    };
+  }
+
+  private ExprS convertMonoize(MonoizeP monoizeP) {
+    var monoizableS = convertMonoizable(monoizeP.monoizable());
+    return new MonoizeS(monoizeP.typeArgs(), monoizableS, monoizeP.location());
   }
 
   private ExprS convertSelect(SelectP selectP) {
@@ -216,21 +221,12 @@ public class PsConverter {
     return new SelectS(selectable, selectP.field(), selectP.location());
   }
 
-  private ExprS convertReference(ReferenceP referenceP) {
+  private ReferenceS convertReference(ReferenceP referenceP) {
     return convertReference(referenceP, typeTeller.schemaFor(referenceP.name()).get());
   }
 
-  private ExprS convertReference(ReferenceP referenceP, SchemaS schemaS) {
-    return monoizeReferenceable(referenceP, schemaS);
-  }
-
-  private static ExprS monoizeReferenceable(ReferenceP referenceP, SchemaS schemaS) {
-    var referenceS = new ReferenceS(schemaS, referenceP.name(), referenceP.location());
-    return newMonoize(referenceP, referenceS);
-  }
-
-  private static MonoizeS newMonoize(MonoizableP monoizableP, MonoizableS monoizableS) {
-    return new MonoizeS(monoizableP.typeArgs(), monoizableS, monoizableP.location());
+  private ReferenceS convertReference(ReferenceP referenceP, SchemaS schemaS) {
+    return new ReferenceS(schemaS, referenceP.name(), referenceP.location());
   }
 
   private BlobS convertBlob(BlobP blob) {
