@@ -50,7 +50,7 @@ public sealed class SchemaS permits FuncSchemaS {
 
   public TypeS monoize(List<TypeS> typeArgs) {
     var map = zip(quantifiedVars.asList(), typeArgs);
-    return type.mapVars(v -> quantifiedVars.contains(v) ? map.get(v) : v);
+    return type.mapVars(v -> map.getOrDefault(v, v));
   }
 
   @Override
