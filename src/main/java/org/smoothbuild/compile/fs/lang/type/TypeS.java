@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
+import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 import org.smoothbuild.util.Strings;
 
 /**
@@ -43,39 +44,61 @@ public abstract sealed class TypeS
   }
 
   public TypeS mapTemps(Function<TypeS, TypeS> map) {
-    return switch (this) {
-      // @formatter:off
-      case ArrayTS     a -> new ArrayTS(a.elem().mapTemps(map));
-      case FuncTS      f -> new FuncTS((TupleTS) f.params().mapTemps(map), f.res().mapTemps(map));
-      case InterfaceTS i -> new InterfaceTS(mapValues(i.fieldSet(), f -> f.mapType(map)));
-      case StructTS    s -> new StructTS(name(), s.fields().map(f -> f.mapType(map)));
-      case TupleTS     t -> new TupleTS(map(t.items(), type -> type.mapTemps(map)));
-      case TempVarS    v -> map.apply(v);
-      default            -> this;
-      // @formatter:on
-    };
+    return mapVars(t -> t instanceof TempVarS ? map.apply(t) : t);
   }
 
   public TypeS mapVars(Map<VarS, VarS> map) {
     return mapVars(v -> map.getOrDefault(v, v));
   }
 
-  public TypeS mapVars(Function<VarS, TypeS> map) {
+  public TypeS mapVars(Function<? super VarS, TypeS> map) {
     if (vars().isEmpty()) {
       return this;
     } else {
       return switch (this) {
         // @formatter:off
-        case ArrayTS     a -> new ArrayTS(a.elem().mapVars(map));
-        case FuncTS      f -> new FuncTS((TupleTS) f.params().mapVars(map), f.res().mapVars(map));
-        case InterfaceTS i -> new InterfaceTS(mapValues(i.fieldSet(), f -> f.mapVarsInType(map)));
-        case StructTS    s -> new StructTS(name(), s.fields().map(f -> f.mapVarsInType(map)));
-        case TupleTS     t -> new TupleTS(map(t.items(), type -> type.mapVars(map)));
+        case ArrayTS     a -> mapVarsInArray(a, map);
+        case FuncTS      f -> mapVarsInFunc(f, map);
+        case InterfaceTS i -> mapVarsInInterface(i, map);
+        case StructTS    s -> mapVarsInStruct(s, map);
+        case TupleTS     t -> mapVarsInTuple(t, map);
         case VarS        v -> map.apply(v);
         default            -> this;
         // @formatter:on
       };
     }
+  }
+
+  private static ArrayTS mapVarsInArray(ArrayTS arrayTS, Function<? super VarS, TypeS> map) {
+    var elem = arrayTS.elem().mapVars(map);
+    return new ArrayTS(elem);
+  }
+
+  private static FuncTS mapVarsInFunc(FuncTS funcTS, Function<? super VarS, TypeS> map) {
+    var params = (TupleTS) funcTS.params().mapVars(map);
+    var result = funcTS.res().mapVars(map);
+    return new FuncTS(params, result);
+  }
+
+  private static InterfaceTS mapVarsInInterface(
+      InterfaceTS interfaceTS, Function<? super VarS, TypeS> map) {
+    var fields = mapValues(interfaceTS.fieldSet(), f -> mapItemSigComponents(f, map));
+    return new InterfaceTS(fields);
+  }
+
+  private static StructTS mapVarsInStruct(
+      StructTS structTS, Function<? super VarS, TypeS> map) {
+    var fields = structTS.fields().map(f -> mapItemSigComponents(f, map));
+    return new StructTS(structTS.name(), fields);
+  }
+
+  private static ItemSigS mapItemSigComponents(ItemSigS f, Function<? super VarS, TypeS> map) {
+    return new ItemSigS(f.type().mapVars(map), f.name());
+  }
+
+  private static TupleTS mapVarsInTuple(TupleTS tupleTS, Function<? super VarS, TypeS> map) {
+    var items = map(tupleTS.items(), type -> type.mapVars(map));
+    return new TupleTS(items);
   }
 
   @Override

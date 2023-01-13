@@ -4,10 +4,8 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 import org.smoothbuild.compile.fs.lang.type.TypeS;
-import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.util.collect.Named;
 
 /**
@@ -34,14 +32,6 @@ public class ItemSigS implements Named {
   @Override
   public String name() {
     return name;
-  }
-
-  public ItemSigS mapType(Function<TypeS, TypeS> mapper) {
-    return new ItemSigS(mapper.apply(type), name);
-  }
-
-  public ItemSigS mapVarsInType(Function<VarS, TypeS> varMapper) {
-    return mapType(t -> t.mapVars(varMapper));
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
