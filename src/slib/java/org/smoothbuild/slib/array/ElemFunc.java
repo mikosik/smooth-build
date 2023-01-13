@@ -7,6 +7,9 @@ import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
+/**
+ * A elem([A] array, Int index);
+ */
 public class ElemFunc {
   public static ValueB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
     var varA = varMap.get("A");

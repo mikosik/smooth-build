@@ -7,7 +7,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 /**
- * [R] map([S] array, R(S) mapper)
+ * [R] map([S] array, S->R mapper)
  */
 public class MapFunc {
   public static ValueB bytecode(BytecodeF f, Map<String, TypeB> varMap) {
