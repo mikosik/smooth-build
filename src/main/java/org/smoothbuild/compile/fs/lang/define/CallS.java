@@ -7,12 +7,10 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * This class is immutable.
  */
-public record CallS(ExprS callee, ImmutableList<ExprS> args, Location location)
+public record CallS(ExprS callee, CombineS args, Location location)
     implements ExprS {
   public CallS {
     if (callee.evalT() instanceof FuncTS funcTS) {
@@ -22,11 +20,12 @@ public record CallS(ExprS callee, ImmutableList<ExprS> args, Location location)
     }
   }
 
-  private static void validateArgsSize(FuncTS funcTS, ImmutableList<ExprS> args) {
+  private static void validateArgsSize(FuncTS funcTS, CombineS args) {
     int paramsCount = funcTS.params().size();
-    if (args.size() != paramsCount) {
+    int argsCount = args.elems().size();
+    if (argsCount != paramsCount) {
       throw new IllegalArgumentException(
-          "Call requires " + paramsCount + " but args size is " + args.size() + ".");
+          "Call requires " + paramsCount + " but args size is " + argsCount + ".");
     }
   }
 
@@ -39,7 +38,7 @@ public record CallS(ExprS callee, ImmutableList<ExprS> args, Location location)
   public String toString() {
     var fields = joinToString("\n",
         "callee = " + callee,
-        "args = [\n" + indent(joinToString(args, "\n")) + "\n]",
+        "args = " + args,
         "location = " + location
     );
     return "CallS(\n" + indent(fields) + "\n)";

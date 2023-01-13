@@ -130,6 +130,16 @@ public class EvaluatorSTest extends TestContext {
       }
 
       @Nested
+      class _combine {
+        @Test
+        public void combine() throws EvaluatorExcS {
+          assertEvaluation(
+              combineS(intS(7), stringS("abc")),
+              tupleB(intB(7), stringB("abc")));
+        }
+      }
+
+      @Nested
       class _order {
         @Test
         public void order() throws EvaluatorExcS {
@@ -140,7 +150,7 @@ public class EvaluatorSTest extends TestContext {
       }
 
       @Nested
-      class param_ref {
+      class _param_ref {
         @Test
         public void param_ref() throws EvaluatorExcS {
           var funcS = funcS("n", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));

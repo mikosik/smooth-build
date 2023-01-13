@@ -18,6 +18,7 @@ import org.smoothbuild.compile.fs.lang.define.AnnotationS;
 import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
+import org.smoothbuild.compile.fs.lang.define.CombineS;
 import org.smoothbuild.compile.fs.lang.define.ConstructorS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
@@ -38,6 +39,7 @@ import org.smoothbuild.compile.fs.lang.define.StringS;
 import org.smoothbuild.compile.fs.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
+import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.ps.ast.define.AnnotationP;
 import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
@@ -194,8 +196,14 @@ public class PsConverter {
 
   private ExprS convertCall(CallP call) {
     var callee = convertExpr(call.callee());
-    var args = convertExprs(call.positionedArgs());
+    var args = convertArgs(call);
     return new CallS(callee, args, call.location());
+  }
+
+  private CombineS convertArgs(CallP call) {
+    var args = convertExprs(call.positionedArgs());
+    var evalT = new TupleTS(map(args, ExprS::evalT));
+    return new CombineS(evalT, args, call.location());
   }
 
   private ExprS convertFuncBody(FuncP funcP, ExprP body) {

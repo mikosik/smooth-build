@@ -24,9 +24,13 @@ public class CallSTest extends TestContext {
                 evalT = (Int)->Int
                 location = myBuild.smooth:4
               )
-              args = [
-                IntS(Int, 7, myBuild.smooth:3)
-              ]
+              args = CombineS(
+                evalT = (Int)
+                elems = [
+                  IntS(Int, 7, myBuild.smooth:3)
+                ]
+                location = myBuild.smooth:3
+              )
               location = myBuild.smooth:3
             )""");
   }

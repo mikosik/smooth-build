@@ -286,6 +286,12 @@ public class SbTranslatorTest extends TestContext {
       }
 
       @Test
+      public void combine() {
+        var combineS = combineS(intS(3), stringS("abc"));
+        assertTranslation(combineS, combineB(intB(3), stringB("abc")));
+      }
+
+      @Test
       public void order() {
         var orderS = orderS(intTS(), intS(3), intS(7));
         assertTranslation(orderS, orderB(intB(3), intB(7)));

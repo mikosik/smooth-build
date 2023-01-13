@@ -23,6 +23,7 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.NList.nlist;
 import static org.smoothbuild.util.io.Okios.intToByteString;
@@ -44,6 +45,7 @@ import org.smoothbuild.compile.fs.lang.define.AnnotationS;
 import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
+import org.smoothbuild.compile.fs.lang.define.CombineS;
 import org.smoothbuild.compile.fs.lang.define.ConstructorS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
@@ -1160,7 +1162,17 @@ public class TestContext {
   }
 
   public static CallS callS(int line, ExprS callable, ExprS... args) {
-    return new CallS(callable, list(args), location(line));
+    return new CallS(callable, combineS(line, args), location(line));
+  }
+
+  public static CombineS combineS(ExprS... args) {
+    return combineS(13, args);
+  }
+
+  private static CombineS combineS(int line, ExprS... args) {
+    var argsList = list(args);
+    var evalT = new TupleTS(map(argsList, ExprS::evalT));
+    return new CombineS(evalT, argsList, location(line));
   }
 
   public static IntS intS(int value) {

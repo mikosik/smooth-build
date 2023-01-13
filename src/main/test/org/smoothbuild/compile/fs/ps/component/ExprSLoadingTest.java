@@ -167,7 +167,7 @@ public class ExprSLoadingTest extends TestContext {
           EvaluableS result = module(code)
               .loadsWithSuccess()
               .getLoadedDefinitions().evaluables().get("result");
-          ExprS actualDefArg = ((CallS) ((NamedExprValueS) result).body()).args().get(0);
+          ExprS actualDefArg = ((CallS) ((NamedExprValueS) result).body()).args().elems().get(0);
           assertThat(actualDefArg)
               .isEqualTo(expected);
         }

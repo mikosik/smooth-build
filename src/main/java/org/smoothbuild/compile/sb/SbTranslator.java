@@ -29,6 +29,7 @@ import org.smoothbuild.compile.fs.lang.define.AnnotationS;
 import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
+import org.smoothbuild.compile.fs.lang.define.CombineS;
 import org.smoothbuild.compile.fs.lang.define.ConstructorS;
 import org.smoothbuild.compile.fs.lang.define.ExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
@@ -60,6 +61,7 @@ import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
+import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
@@ -139,6 +141,7 @@ public class SbTranslator {
     return switch (exprS) {
       case BlobS       blobS       -> saveLocAndReturn(blobS,     translateBlob(blobS));
       case CallS       callS       -> saveLocAndReturn(callS,     translateCall(callS));
+      case CombineS    combineS    -> saveLocAndReturn(combineS,  translateCombine(combineS));
       case IntS        intS        -> saveLocAndReturn(intS,      translateInt(intS));
       case OrderS      orderS      -> saveLocAndReturn(orderS,    translateOrder(orderS));
       case SelectS     selectS     -> saveLocAndReturn(selectS,   translateSelect(selectS));
@@ -154,10 +157,13 @@ public class SbTranslator {
 
   private CallB translateCall(CallS callS) {
     var callableB = translateExpr(callS.callee());
-    var argsB = translateExprs(callS.args());
-    var combineB = bytecodeF.combine(argsB);
-    saveLoc(combineB, callS);
-    return bytecodeF.call(callableB, combineB);
+    var argsB = (CombineB) translateExpr(callS.args());
+    return bytecodeF.call(callableB, argsB);
+  }
+
+  private CombineB translateCombine(CombineS combineS) {
+    var elemBs = translateExprs(combineS.elems());
+    return bytecodeF.combine(elemBs);
   }
 
   private IntB translateInt(IntS intS) {
