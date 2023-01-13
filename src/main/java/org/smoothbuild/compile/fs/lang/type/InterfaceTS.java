@@ -1,9 +1,6 @@
 package org.smoothbuild.compile.fs.lang.type;
 
 import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.interfaceTypeName;
-import static org.smoothbuild.util.collect.Maps.mapValues;
-
-import java.util.function.Function;
 
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 
@@ -23,20 +20,6 @@ public final class InterfaceTS extends FieldSetTS {
   @Override
   public ImmutableMap<String, ItemSigS> fieldSet() {
     return fields;
-  }
-
-  @Override
-  public InterfaceTS mapComponents(Function<TypeS, TypeS> mapper) {
-    return new InterfaceTS(mapValues(fields, f -> f.mapType(mapper)));
-  }
-
-  @Override
-  public InterfaceTS mapVars(Function<VarS, TypeS> varMapper) {
-    if (vars().isEmpty()) {
-      return this;
-    } else {
-      return new InterfaceTS(mapValues(fields, f -> f.mapVarsInType(varMapper)));
-    }
   }
 
   @Override

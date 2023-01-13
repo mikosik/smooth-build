@@ -2,11 +2,9 @@ package org.smoothbuild.compile.fs.lang.type;
 
 import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.tupleTypeName;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
@@ -23,20 +21,6 @@ public final class TupleTS extends TypeS {
 
   private static VarSetS calculateVars(List<? extends TypeS> items) {
     return varSetS(items);
-  }
-
-  @Override
-  public TupleTS mapComponents(Function<TypeS, TypeS> mapper) {
-    return new TupleTS(map(items, mapper));
-  }
-
-  @Override
-  public TupleTS mapVars(Function<VarS, TypeS> varMapper) {
-    if (vars().isEmpty()) {
-      return this;
-    } else {
-      return new TupleTS(map(items, t -> t.mapVars(varMapper)));
-    }
   }
 
   public ImmutableList<TypeS> items() {

@@ -2,8 +2,6 @@ package org.smoothbuild.compile.fs.lang.type;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.function.Function;
-
 import org.smoothbuild.compile.fs.lang.base.TypeNamesS;
 
 /**
@@ -15,20 +13,6 @@ public final class ArrayTS extends TypeS {
   public ArrayTS(TypeS elem) {
     super(TypeNamesS.arrayTypeName(elem), elem.vars());
     this.elem = requireNonNull(elem);
-  }
-
-  @Override
-  public TypeS mapComponents(Function<TypeS, TypeS> mapper) {
-    return new ArrayTS(mapper.apply(elem));
-  }
-
-  @Override
-  public ArrayTS mapVars(Function<VarS, TypeS> varMapper) {
-    if (vars().isEmpty()) {
-      return this;
-    } else {
-      return new ArrayTS(elem.mapVars(varMapper));
-    }
   }
 
   public TypeS elem() {

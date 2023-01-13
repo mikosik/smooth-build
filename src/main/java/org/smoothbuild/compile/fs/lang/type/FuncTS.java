@@ -6,7 +6,6 @@ import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.concat;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
@@ -29,20 +28,6 @@ public final class FuncTS extends TypeS {
 
   public static VarSetS calculateFuncVars(TupleTS paramTs, TypeS resT) {
     return varSetS(concat(resT, paramTs.items()));
-  }
-
-  @Override
-  public TypeS mapComponents(Function<TypeS, TypeS> mapper) {
-    return new FuncTS(params.mapComponents(mapper), mapper.apply(res));
-  }
-
-  @Override
-  public FuncTS mapVars(Function<VarS, TypeS> varMapper) {
-    if (vars().isEmpty()) {
-      return this;
-    } else {
-      return new FuncTS(params.mapVars(varMapper), res.mapVars(varMapper));
-    }
   }
 
   public TupleTS params() {

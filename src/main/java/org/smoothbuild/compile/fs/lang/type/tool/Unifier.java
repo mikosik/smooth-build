@@ -274,7 +274,7 @@ public class Unifier {
   }
 
   private TypeS resolveNonTemp(TypeS type) {
-    return type.mapComponents(this::resolve);
+    return type.mapTemps(this::resolve);
   }
 
   // Unified helpers
