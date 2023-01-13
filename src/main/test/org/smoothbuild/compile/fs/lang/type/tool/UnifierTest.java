@@ -5,6 +5,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.concat;
 
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Nested;
@@ -64,146 +65,40 @@ public class UnifierTest extends TestContext {
             .isEqualTo(unifier.resolve(c));
       }
 
-      @Test
-      public void temp_vs_array_of_temps() throws UnifierExc {
+      @ParameterizedTest
+      @ArgumentsSource(ComposableFactories.class)
+      public void temp_vs_composed_with_that_temp_fails(Function<TypeS, TypeS> composedFactory) {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        assertUnifyFails(unifier, a, composedFactory.apply(a));
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(ComposableFactories.class)
+      public void temp_vs_composed_with_different_temp_succeeds(
+          Function<TypeS, TypeS> composedFactory) throws UnifierExc {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         assertUnifyInfers(
             unifier,
             a,
-            arrayTS(b),
+            composedFactory.apply(b),
             a,
-            arrayTS(b));
+            composedFactory.apply(b));
       }
 
-      @Test
-      public void temp_vs_tuple_of_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfers(
-            unifier,
-            a,
-            tupleTS(b),
-            a,
-            tupleTS(b));
-      }
-
-      @Test
-      public void temp_vs_function_of_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfers(
-            unifier,
-            a,
-            funcTS(b, intTS()),
-            a,
-            funcTS(b, intTS()));
-      }
-
-      @Test
-      public void temp_vs_struct_of_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfers(
-            unifier,
-            a,
-            structTS("MyStruct", b),
-            a,
-            structTS("MyStruct", b));
-      }
-
-      @Test
-      public void temp_vs_interface_of_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfers(
-            unifier,
-            a,
-            interfaceTS(b),
-            a,
-            interfaceTS(b));
-      }
-
-      @Test
-      public void array_of_temps_vs_array_of_different_temps() throws UnifierExc {
+      @ParameterizedTest
+      @ArgumentsSource(ComposableFactories.class)
+      public void composed_with_temp_vs_same_composed_with_other_temp_succeeds(
+          Function<TypeS, TypeS> composedFactory) throws UnifierExc {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         assertUnifyInfersEquality(
             unifier,
-            arrayTS(a),
-            arrayTS(b),
-            a,
-            b);
-      }
-
-      @Test
-      public void tuple_with_temp_vs_tuple_with_other_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfersEquality(
-            unifier,
-            tupleTS(a),
-            tupleTS(b),
-            a,
-            b
-        );
-      }
-
-      @Test
-      public void func_with_res_temp_vs_func_with_res_other_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfersEquality(
-            unifier,
-            funcTS(a),
-            funcTS(b),
-            a,
-            b);
-      }
-
-      @Test
-      public void func_with_param_temp_vs_func_with_param_other_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfersEquality(
-            unifier,
-            funcTS(a, intTS()),
-            funcTS(b, intTS()),
-            a,
-            b);
-      }
-
-      @Test
-      public void struct_with_field_temp_vs_struct_with_field_other_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfersEquality(
-            unifier,
-            structTS("MyStruct", a, intTS()),
-            structTS("MyStruct", b, intTS()),
-            a,
-            b);
-      }
-
-      @Test
-      public void interface_with_field_temp_vs_interface_with_field_other_temp() throws UnifierExc {
-        var unifier = new Unifier();
-        var a = unifier.newTempVar();
-        var b = unifier.newTempVar();
-        assertUnifyInfersEquality(
-            unifier,
-            interfaceTS(a, intTS()),
-            interfaceTS(b, intTS()),
+            composedFactory.apply(a),
+            composedFactory.apply(b),
             a,
             b);
       }
@@ -931,56 +826,21 @@ public class UnifierTest extends TestContext {
 
   @Nested
   class _cycles {
-    @Test
-    public void one_elem_cycle_through_array_elem() {
-      assertUnifyFails(varA(), arrayTS(varA()));
+    @ParameterizedTest
+    @ArgumentsSource(ComposableFactories.class)
+    public void one_elem_cycle_through_composed(Function<TypeS, TypeS> composedFactory) {
+      var a = unifier.newTempVar();
+      assertUnifyFails(a, composedFactory.apply(a));
     }
 
-    @Test
-    public void two_elem_cycle_through_array_elem() throws UnifierExc {
+    @ParameterizedTest
+    @ArgumentsSource(ComposableFactories.class)
+    public void two_elem_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
+        throws UnifierExc {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
-      unifier.unify(a, arrayTS(b));
-      assertUnifyFails(b, arrayTS(a));
-    }
-
-    @Test
-    public void one_elem_cycle_through_tuple_elem() {
-      assertUnifyFails(varA(), tupleTS(varA()));
-    }
-
-    @Test
-    public void two_elem_cycle_through_tuple_elem() throws UnifierExc {
-      var a = unifier.newTempVar();
-      var b = unifier.newTempVar();
-      unifier.unify(a, tupleTS(b));
-      assertUnifyFails(b, tupleTS(a));
-    }
-
-    @Test
-    public void one_elem_cycle_through_func_res() {
-      assertUnifyFails(varA(), funcTS(varA()));
-    }
-
-    @Test
-    public void two_elem_cycle_through_func_res() throws UnifierExc {
-      var a = unifier.newTempVar();
-      var b = unifier.newTempVar();
-      unifier.unify(a, funcTS(b));
-      assertUnifyFails(b, funcTS(a));
-    }
-
-    @Test
-    public void one_elem_cycle_through_func_param() {
-      assertUnifyFails(varA(), funcTS(varA(), intTS()));
-    }
-
-    @Test
-    public void two_elem_cycle_through_func_param() throws UnifierExc {
-      var a = unifier.newTempVar();
-      var b = unifier.newTempVar();
-      unifier.unify(a, funcTS(b, intTS()));
-      assertUnifyFails(b, funcTS(a, intTS()));
+      unifier.unify(a, composedFactory.apply(b));
+      assertUnifyFails(b, composedFactory.apply(a));
     }
 
     @Test
@@ -1362,9 +1222,31 @@ public class UnifierTest extends TestContext {
   }
 
   private void assertUnifyFails(TypeS type1, TypeS type2) {
+    assertUnifyFails(unifier, type1, type2);
+  }
+
+  private static void assertUnifyFails(Unifier unifier, TypeS type1, TypeS type2) {
     assertCall(() -> unifier.unify(type1, type2))
         .throwsException(UnifierExc.class);
     assertCall(() -> unifier.unify(type2, type1))
         .throwsException(UnifierExc.class);
+  }
+
+  private static class ComposableFactories implements ArgumentsProvider {
+    @Override
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+      return Stream.of(
+          composableFactory(t -> arrayTS(t)),
+          composableFactory(t -> funcTS(t)),
+          composableFactory(t -> funcTS(t, intTS())),
+          composableFactory(t -> tupleTS(t)),
+          composableFactory(t -> structTS(t)),
+          composableFactory(t -> interfaceTS(t))
+      );
+    }
+  }
+
+  private static Arguments composableFactory(Function<TypeS, TypeS> composableFactory) {
+    return arguments(composableFactory);
   }
 }
