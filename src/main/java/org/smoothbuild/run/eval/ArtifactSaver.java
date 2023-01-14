@@ -80,13 +80,13 @@ public class ArtifactSaver {
     } else if (valueS.schema().type().name().equals(FileStruct.NAME)) {
       return saveFile(artifactPath, (TupleB) valueB);
     } else {
-      return saveBaseVal(artifactPath, valueB);
+      return saveBaseValue(artifactPath, valueB);
     }
   }
 
   private PathS saveFile(PathS artifactPath, TupleB file) throws IOException, DuplicatedPathsExc {
     saveFileArray(artifactPath, list(file));
-    return artifactPath.append(fileValPath(file));
+    return artifactPath.append(fileValuePath(file));
   }
 
   private PathS saveArray(ArrayTS arrayTS, PathS artifactPath, ArrayB arrayB)
@@ -121,7 +121,7 @@ public class ArtifactSaver {
       DuplicatedPathsExc {
     DuplicatesDetector<PathS> duplicatesDetector = new DuplicatesDetector<>();
     for (TupleB file : files) {
-      PathS filePath = fileValPath(file);
+      PathS filePath = fileValuePath(file);
       PathS sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
         PathS targetPath = targetPath(fileContent(file));
@@ -145,14 +145,14 @@ public class ArtifactSaver {
             + delimiter + list);
   }
 
-  private PathS saveBaseVal(PathS artifactPath, ValueB valueB) throws IOException {
+  private PathS saveBaseValue(PathS artifactPath, ValueB valueB) throws IOException {
     PathS targetPath = targetPath(valueB);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;
   }
 
-  private static PathS fileValPath(TupleB file) {
+  private static PathS fileValuePath(TupleB file) {
     return path(FileStruct.filePath(file).toJ());
   }
 
