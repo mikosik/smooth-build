@@ -10,12 +10,12 @@ import org.smoothbuild.compile.fs.lang.type.TypeS;
 
 public record SelectS(ExprS selectable, String field, Location location) implements ExprS {
   public SelectS {
-    checkArgument(selectable.evalT() instanceof StructTS);
+    checkArgument(selectable.evaluationT() instanceof StructTS);
   }
 
   @Override
-  public TypeS evalT() {
-    var structTS = (StructTS) selectable.evalT();
+  public TypeS evaluationT() {
+    var structTS = (StructTS) selectable.evaluationT();
     return structTS.fields().get(field).type();
   }
 

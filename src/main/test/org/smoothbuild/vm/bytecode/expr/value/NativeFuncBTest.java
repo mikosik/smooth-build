@@ -18,7 +18,7 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    assertThat(nativeFuncB.evalT())
+    assertThat(nativeFuncB.evaluationT())
         .isEqualTo(funcT);
   }
 

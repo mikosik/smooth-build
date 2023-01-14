@@ -8,7 +8,7 @@ import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvalTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeExc;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
@@ -36,7 +36,7 @@ public class SelectB extends OperB {
   @Override
   public ImmutableList<ExprB> dataSeq() {
     ExprB selectable = readSelectable();
-    if (selectable.evalT() instanceof TupleTB tupleT) {
+    if (selectable.evaluationT() instanceof TupleTB tupleT) {
       IntB index = readIndex();
       int i = index.toJ().intValue();
       int size = tupleT.items().size();
@@ -44,13 +44,13 @@ public class SelectB extends OperB {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), category(), i, size);
       }
       var fieldT = tupleT.items().get(i);
-      if (!evalT().equals(fieldT)) {
-        throw new DecodeSelectWrongEvalTypeExc(hash(), category(), fieldT);
+      if (!evaluationT().equals(fieldT)) {
+        throw new DecodeSelectWrongEvaluationTypeExc(hash(), category(), fieldT);
       }
       return list(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassExc(
-          hash(), category(), "tuple", TupleTB.class, selectable.evalT().getClass());
+          hash(), category(), "tuple", TupleTB.class, selectable.evaluationT().getClass());
     }
   }
 

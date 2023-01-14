@@ -197,32 +197,32 @@ public class CategoryDb {
 
   // methods for getting Expr-s types
 
-  public CallCB call(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(CALL, evalT));
+  public CallCB call(TypeB evaluationT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(CALL, evaluationT));
   }
 
-  public ClosurizeCB closurize(FuncTB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(evalT));
+  public ClosurizeCB closurize(FuncTB evaluationT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(evaluationT));
   }
 
-  public CombineCB combine(TupleTB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(COMBINE, evalT));
+  public CombineCB combine(TupleTB evaluationT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(COMBINE, evaluationT));
   }
 
-  public OrderCB order(ArrayTB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(ORDER, evalT));
+  public OrderCB order(ArrayTB evaluationT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(ORDER, evaluationT));
   }
 
-  public PickCB pick(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(PICK, evalT));
+  public PickCB pick(TypeB evaluationT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(PICK, evaluationT));
   }
 
-  public ReferenceCB reference(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(REFERENCE, evalT));
+  public ReferenceCB reference(TypeB evaluationT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(REFERENCE, evaluationT));
   }
 
-  public SelectCB select(TypeB evalT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(SELECT, evalT));
+  public SelectCB select(TypeB evaluationT) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(SELECT, evaluationT));
   }
 
   // methods for reading from db
@@ -280,13 +280,13 @@ public class CategoryDb {
   }
 
   private OperCB readClosurizeCat(Hash hash, List<Hash> rootSeq, ClosurizeKindB closurizeKindB) {
-    var evalT = readDataAsType(hash, rootSeq, closurizeKindB, FuncTB.class);
-    return newClosurize(hash, evalT);
+    var evaluationT = readDataAsType(hash, rootSeq, closurizeKindB, FuncTB.class);
+    return newClosurize(hash, evaluationT);
   }
 
   private OperCB readOperCat(Hash hash, List<Hash> rootSeq, OperKindB<?> operKind) {
-    var evalT = readDataAsType(hash, rootSeq, operKind, operKind.dataClass());
-    return newOper(operKind.constructor(), hash, evalT);
+    var evaluationT = readDataAsType(hash, rootSeq, operKind, operKind.dataClass());
+    return newOper(operKind.constructor(), hash, evaluationT);
   }
 
   private FuncTB readFuncT(Hash rootHash, List<Hash> rootSeq) {
@@ -461,14 +461,14 @@ public class CategoryDb {
     return cache(new ClosurizeCB(rootHash, funcTB));
   }
 
-  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evalT) throws HashedDbExc {
-    var rootHash = writeRootWithData(kind, evalT);
-    return newOper(kind.constructor(), rootHash, evalT);
+  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT) throws HashedDbExc {
+    var rootHash = writeRootWithData(kind, evaluationT);
+    return newOper(kind.constructor(), rootHash, evaluationT);
   }
 
-  private <T extends OperCB> T newOper(BiFunction<Hash, TypeB, T> constructor, Hash rootHash,
-      TypeB evalT) {
-    return cache(constructor.apply(rootHash, evalT));
+  private <T extends OperCB> T newOper(
+      BiFunction<Hash, TypeB, T> constructor, Hash rootHash, TypeB evaluationT) {
+    return cache(constructor.apply(rootHash, evaluationT));
   }
 
   private <T extends CategoryB> T cache(T type) {

@@ -2,12 +2,12 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
-import org.smoothbuild.vm.bytecode.type.Validator;
 import org.smoothbuild.vm.bytecode.type.oper.CallCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
@@ -41,19 +41,21 @@ public class CallB extends OperB {
   }
 
   private void validate(ExprB func, CombineB argsCombine) {
-    if (func.evalT() instanceof FuncTB funcTB) {
+    if (func.evaluationT() instanceof FuncTB funcTB) {
       validate(funcTB, argsCombine);
     } else {
-      throw new DecodeExprWrongNodeTypeExc(hash(), this.category(), "func", FuncTB.class, func.evalT());
+      throw new DecodeExprWrongNodeTypeExc(
+          hash(), this.category(), "func", FuncTB.class, func.evaluationT());
     }
   }
 
   protected void validate(FuncTB funcTB, CombineB argsCombine) {
-    var argsT = argsCombine.evalT();
-    Validator.validateArgs(funcTB, argsT.items(), () -> illegalArgsExc(funcTB.params(), argsT));
+    var argsT = argsCombine.evaluationT();
+    validateArgs(funcTB, argsT.items(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resultT = funcTB.result();
-    if (!evalT().equals(resultT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), this.category(), "call.result", evalT(), resultT);
+    if (!evaluationT().equals(resultT)) {
+      throw new DecodeExprWrongNodeTypeExc(
+          hash(), this.category(), "call.result", evaluationT(), resultT);
     }
   }
 

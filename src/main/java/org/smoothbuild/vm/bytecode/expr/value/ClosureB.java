@@ -28,10 +28,10 @@ public final class ClosureB extends FuncB {
 
   public ExprFuncB func() {
     var func = readDataSeqElem(BODY_IDX, DATA_SEQ_SIZE, ExprFuncB.class);
-    var evalT = type();
+    var evaluationT = type();
     var funcT = func.type();
-    if (!evalT.equals(funcT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, evalT, funcT);
+    if (!evaluationT.equals(funcT)) {
+      throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, evaluationT, funcT);
     }
     return func;
   }

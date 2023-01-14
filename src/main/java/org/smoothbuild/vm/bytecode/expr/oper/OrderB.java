@@ -26,16 +26,16 @@ public class OrderB extends OperB {
   }
 
   @Override
-  public ArrayTB evalT() {
-    return category().evalT();
+  public ArrayTB evaluationT() {
+    return category().evaluationT();
   }
 
   @Override
   public ImmutableList<ExprB> dataSeq() {
     var elems = readDataSeqElems(ExprB.class);
-    var expectedElemT = category().evalT().elem();
+    var expectedElemT = category().evaluationT().elem();
     for (int i = 0; i < elems.size(); i++) {
-      var actualT = elems.get(i).evalT();
+      var actualT = elems.get(i).evaluationT();
       if (!expectedElemT.equals(actualT)) {
         throw new DecodeExprWrongNodeTypeExc(hash(), category(), "elems", i, expectedElemT, actualT);
       }

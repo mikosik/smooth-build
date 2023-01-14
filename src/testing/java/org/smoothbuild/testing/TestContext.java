@@ -478,8 +478,8 @@ public class TestContext {
     return closurizeCB(funcTB());
   }
 
-  public ClosurizeCB closurizeCB(FuncTB evalT) {
-    return categoryDb().closurize(evalT);
+  public ClosurizeCB closurizeCB(FuncTB evaluationT) {
+    return categoryDb().closurize(evaluationT);
   }
 
   public ExprFuncCB exprFuncCB() {
@@ -556,8 +556,8 @@ public class TestContext {
     return callCB(intTB());
   }
 
-  public CallCB callCB(TypeB evalT) {
-    return categoryDb().call(evalT);
+  public CallCB callCB(TypeB evaluationT) {
+    return categoryDb().call(evaluationT);
   }
 
   public CombineCB combineCB(TypeB... itemTs) {
@@ -592,24 +592,24 @@ public class TestContext {
     return pickCB(intTB());
   }
 
-  public PickCB pickCB(TypeB evalT) {
-    return categoryDb().pick(evalT);
+  public PickCB pickCB(TypeB evaluationT) {
+    return categoryDb().pick(evaluationT);
   }
 
   public ReferenceCB referenceCB() {
     return referenceCB(intTB());
   }
 
-  public ReferenceCB referenceCB(TypeB evalT) {
-    return categoryDb().reference(evalT);
+  public ReferenceCB referenceCB(TypeB evaluationT) {
+    return categoryDb().reference(evaluationT);
   }
 
   public SelectCB selectCB() {
     return selectCB(intTB());
   }
 
-  public SelectCB selectCB(TypeB evalT) {
-    return categoryDb().select(evalT);
+  public SelectCB selectCB(TypeB evaluationT) {
+    return categoryDb().select(evaluationT);
   }
 
   // InstB-s
@@ -627,7 +627,7 @@ public class TestContext {
   }
 
   public ArrayB arrayB(ValueB... elems) {
-    return arrayB(elems[0].evalT(), elems);
+    return arrayB(elems[0].evaluationT(), elems);
   }
 
   public ArrayB arrayB(TypeB elemT, ValueB... elems) {
@@ -720,7 +720,7 @@ public class TestContext {
   }
 
   public ExprFuncB exprFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
-    var funcTB = funcTB(paramTs, body.evalT());
+    var funcTB = funcTB(paramTs, body.evaluationT());
     return exprFuncB(funcTB, body);
   }
 
@@ -919,7 +919,7 @@ public class TestContext {
   }
 
   public OrderB orderB(ExprB... elems) {
-    return orderB(elems[0].evalT(), elems);
+    return orderB(elems[0].evaluationT(), elems);
   }
 
   public OrderB orderB(TypeB elemT, ExprB... elems) {
@@ -939,8 +939,8 @@ public class TestContext {
     return referenceB(intTB(), index);
   }
 
-  public ReferenceB referenceB(TypeB evalT, int index) {
-    return bytecodeDb().reference(evalT, BigInteger.valueOf(index));
+  public ReferenceB referenceB(TypeB evaluationT, int index) {
+    return bytecodeDb().reference(evaluationT, BigInteger.valueOf(index));
   }
 
   public SelectB selectB() {
@@ -1171,8 +1171,8 @@ public class TestContext {
 
   private static CombineS combineS(int line, ExprS... args) {
     var argsList = list(args);
-    var evalT = new TupleTS(map(argsList, ExprS::evalT));
-    return new CombineS(evalT, argsList, location(line));
+    var evaluationT = new TupleTS(map(argsList, ExprS::evaluationT));
+    return new CombineS(evaluationT, argsList, location(line));
   }
 
   public static IntS intS(int value) {
@@ -1238,7 +1238,7 @@ public class TestContext {
 
   public static OrderS orderS(int line, ExprS headElem, ExprS... tailElems) {
     return new OrderS(
-        arrayTS(headElem.evalT()),
+        arrayTS(headElem.evaluationT()),
         concat(headElem, list(tailElems)), location(line));
   }
 
@@ -1347,7 +1347,7 @@ public class TestContext {
   }
 
   public static ItemS itemS(String name, ExprS body) {
-    return itemS(body.evalT(), name, Optional.of(body));
+    return itemS(body.evaluationT(), name, Optional.of(body));
   }
 
   public static ItemS itemS(TypeS type, String name, Optional<ExprS> body) {
@@ -1385,7 +1385,7 @@ public class TestContext {
   }
 
   public static NamedExprValueS valueS(int line, String name, ExprS body) {
-    return valueS(line, body.evalT(), name, body);
+    return valueS(line, body.evaluationT(), name, body);
   }
 
   public static NamedExprValueS valueS(int line, TypeS type, String name, ExprS body) {
@@ -1449,11 +1449,11 @@ public class TestContext {
   }
 
   public static NamedExprFuncS funcS(int line, String name, NList<ItemS> params, ExprS body) {
-    return funcS(line, body.evalT(), name, params, body);
+    return funcS(line, body.evaluationT(), name, params, body);
   }
 
   public static NamedExprFuncS funcS(String name, NList<ItemS> params, ExprS body) {
-    return funcS(body.evalT(), name, params, body);
+    return funcS(body.evaluationT(), name, params, body);
   }
 
   public static NamedExprFuncS funcS(TypeS resultT, String name, NList<ItemS> params, ExprS body) {
@@ -1477,7 +1477,7 @@ public class TestContext {
 
   public static AnonymousFuncS anonymousFuncS(
       int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
-    var funcTS = funcTS(toTypes(params), body.evalT());
+    var funcTS = funcTS(toTypes(params), body.evaluationT());
     var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
     return new AnonymousFuncS(funcSchemaS, params, body, location(line));
   }
@@ -1491,7 +1491,7 @@ public class TestContext {
   }
 
   public static AnonymousFuncS anonymousFuncS(int line, NList<ItemS> params, ExprS body) {
-    var funcSchemaS = funcSchemaS(toTypes(params), body.evalT());
+    var funcSchemaS = funcSchemaS(toTypes(params), body.evaluationT());
     return new AnonymousFuncS(funcSchemaS, params, body, location(line));
   }
 

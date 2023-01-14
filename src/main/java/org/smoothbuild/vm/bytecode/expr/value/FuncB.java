@@ -15,7 +15,7 @@ public abstract sealed class FuncB extends ValueB
   }
 
   @Override
-  public FuncTB evalT() {
+  public FuncTB evaluationT() {
     return type();
   }
 

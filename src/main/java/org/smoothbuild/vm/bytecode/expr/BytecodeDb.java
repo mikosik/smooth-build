@@ -84,7 +84,7 @@ public class BytecodeDb {
   }
 
   public ExprFuncB exprFunc(FuncTB type, ExprB body) {
-    validateBodyEvalT(type, body);
+    validateBodyEvaluationT(type, body);
     var cat = categoryDb.exprFunc(type);
     return wrapHashedDbExcAsBytecodeDbExc(() -> newExprFunc(cat, body));
   }
@@ -110,7 +110,7 @@ public class BytecodeDb {
   // methods for creating OperB subclasses
 
   public CallB call(ExprB func, CombineB args) {
-    var funcTB = castEvalTypeToFuncTB(func);
+    var funcTB = castEvaluationTypeToFuncTB(func);
     validateArgsInCall(funcTB, args);
     return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(funcTB, func, args));
   }
@@ -131,17 +131,17 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newMapFunc(r, s));
   }
 
-  public OrderB order(ArrayTB evalT, ImmutableList<ExprB> elems) {
-    validateOrderElems(evalT.elem(), elems);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evalT, elems));
+  public OrderB order(ArrayTB evaluationT, ImmutableList<ExprB> elems) {
+    validateOrderElems(evaluationT.elem(), elems);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evaluationT, elems));
   }
 
   public PickB pick(ExprB pickable, ExprB index) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(pickable, index));
   }
 
-  public ReferenceB reference(TypeB evalT, BigInteger value) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newReference(evalT, value));
+  public ReferenceB reference(TypeB evaluationT, BigInteger value) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newReference(evaluationT, value));
   }
 
   public SelectB select(ExprB selectable, IntB index) {
@@ -150,17 +150,17 @@ public class BytecodeDb {
 
   // validators
 
-  private static void validateBodyEvalT(FuncTB funcTB, ExprB body) {
-    if (!body.evalT().equals(funcTB.result())) {
-      var message = "body.evalT() = %s should be equal to funcTB.res() = %s."
-          .formatted(body.evalT().q(), funcTB.result().q());
+  private static void validateBodyEvaluationT(FuncTB funcTB, ExprB body) {
+    if (!body.evaluationT().equals(funcTB.result())) {
+      var message = "body.evaluationT() = %s should be equal to funcTB.res() = %s."
+          .formatted(body.evaluationT().q(), funcTB.result().q());
       throw new IllegalArgumentException(message);
     }
   }
 
   private void validateOrderElems(TypeB elemT, ImmutableList<ExprB> elems) {
     for (int i = 0; i < elems.size(); i++) {
-      var iElemT = elems.get(i).evalT();
+      var iElemT = elems.get(i).evaluationT();
       if (!elemT.equals(iElemT)) {
         throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
             + " but element at index " + i + " has type " + iElemT.q() + ".");
@@ -168,8 +168,8 @@ public class BytecodeDb {
     }
   }
 
-  private FuncTB castEvalTypeToFuncTB(ExprB func) {
-    if (func.evalT() instanceof FuncTB funcT) {
+  private FuncTB castEvaluationTypeToFuncTB(ExprB func) {
+    if (func.evaluationT() instanceof FuncTB funcT) {
       return funcT;
     } else {
       throw new IllegalArgumentException("`func` component doesn't evaluate to FuncB.");
@@ -177,8 +177,8 @@ public class BytecodeDb {
   }
 
   private void validateArgsInCall(FuncTB funcTB, CombineB args) {
-    validateArgs(funcTB, args.evalT().items(), () -> {
-      throw illegalArgs(funcTB, args.evalT());
+    validateArgs(funcTB, args.evaluationT().items(), () -> {
+      throw illegalArgs(funcTB, args.evaluationT());
     });
   }
 
@@ -309,8 +309,8 @@ public class BytecodeDb {
   }
 
   private CombineB newCombine(ImmutableList<ExprB> items) throws HashedDbExc {
-    var evalT = categoryDb.tuple(map(items, ExprB::evalT));
-    var combineCB = categoryDb.combine(evalT);
+    var evaluationT = categoryDb.tuple(map(items, ExprB::evaluationT));
+    var combineCB = categoryDb.combine(evaluationT);
     var data = writeCombineData(items);
     var root = newRoot(combineCB, data);
     return combineCB.newExpr(root, this);
@@ -328,60 +328,60 @@ public class BytecodeDb {
     return mapFuncCB.newExpr(root, this);
   }
 
-  private OrderB newOrder(ArrayTB evalT, ImmutableList<ExprB> elems) throws HashedDbExc {
-    var orderCB = categoryDb.order(evalT);
+  private OrderB newOrder(ArrayTB evaluationT, ImmutableList<ExprB> elems) throws HashedDbExc {
+    var orderCB = categoryDb.order(evaluationT);
     var data = writeOrderData(elems);
     var root = newRoot(orderCB, data);
     return orderCB.newExpr(root, this);
   }
 
   private PickB newPick(ExprB pickable, ExprB index) throws HashedDbExc {
-    var evalT = pickEvalT(pickable);
-    if (!(index.evalT() instanceof IntTB)) {
+    var evaluationT = pickEvaluationT(pickable);
+    if (!(index.evaluationT() instanceof IntTB)) {
       throw new IllegalArgumentException(
-          "index.evalT() should be IntTB but is " + index.evalT().q() + ".");
+          "index.evaluationT() should be IntTB but is " + index.evaluationT().q() + ".");
     }
     var data = writePickData(pickable, index);
-    var cat = categoryDb.pick(evalT);
-    var root = newRoot(cat, data);
-    return cat.newExpr(root, this);
+    var category = categoryDb.pick(evaluationT);
+    var root = newRoot(category, data);
+    return category.newExpr(root, this);
   }
 
-  private TypeB pickEvalT(ExprB pickable) {
-    var evalT = pickable.evalT();
-    if (evalT instanceof ArrayTB arrayT) {
+  private TypeB pickEvaluationT(ExprB pickable) {
+    var evaluationT = pickable.evaluationT();
+    if (evaluationT instanceof ArrayTB arrayT) {
       return arrayT.elem();
     } else {
       throw new IllegalArgumentException(
-          "pickable.evalT() should be ArrayTB but is " + evalT.q() + ".");
+          "pickable.evaluationT() should be ArrayTB but is " + evaluationT.q() + ".");
     }
   }
 
-  private ReferenceB newReference(TypeB evalT, BigInteger index) throws HashedDbExc {
+  private ReferenceB newReference(TypeB evaluationT, BigInteger index) throws HashedDbExc {
     var data = writeReferenceData(index);
-    var type = categoryDb.reference(evalT);
+    var type = categoryDb.reference(evaluationT);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
   private SelectB newSelect(ExprB selectable, IntB index) throws HashedDbExc {
-    var evalT = selectEvalT(selectable, index);
+    var evaluationT = selectEvaluationT(selectable, index);
     var data = writeSelectData(selectable, index);
-    var cat = categoryDb.select(evalT);
-    var root = newRoot(cat, data);
-    return cat.newExpr(root, this);
+    var category = categoryDb.select(evaluationT);
+    var root = newRoot(category, data);
+    return category.newExpr(root, this);
   }
 
-  private TypeB selectEvalT(ExprB selectable, IntB index) {
-    var evalT = selectable.evalT();
-    if (evalT instanceof TupleTB tuple) {
+  private TypeB selectEvaluationT(ExprB selectable, IntB index) {
+    var evaluationT = selectable.evaluationT();
+    if (evaluationT instanceof TupleTB tuple) {
       int intIndex = index.toJ().intValue();
       var items = tuple.items();
       checkElementIndex(intIndex, items.size());
       return items.get(intIndex);
     } else {
       throw new IllegalArgumentException(
-          "selectable.evalT() should be TupleTB but is " + evalT.q() + ".");
+          "selectable.evaluationT() should be TupleTB but is " + evaluationT.q() + ".");
     }
   }
 

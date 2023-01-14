@@ -27,7 +27,7 @@ public class ClosureBTest extends TestContext {
 
   @Test
   public void type_of_closure_is_func_type() {
-    assertThat(closureB(idFuncB()).evalT())
+    assertThat(closureB(idFuncB()).evaluationT())
         .isEqualTo(idFuncB().type());
   }
 

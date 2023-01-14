@@ -44,7 +44,7 @@ public sealed class NamedFuncP
   }
 
   @Override
-  public TypeP evalT() {
+  public TypeP evaluationT() {
     return resultT();
   }
 

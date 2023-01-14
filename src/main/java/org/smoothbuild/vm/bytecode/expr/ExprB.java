@@ -57,7 +57,7 @@ public abstract class ExprB {
     return merkleRoot.category();
   }
 
-  public abstract TypeB evalT();
+  public abstract TypeB evaluationT();
 
   public abstract String exprToString();
 

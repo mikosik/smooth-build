@@ -202,8 +202,8 @@ public class PsConverter {
 
   private CombineS convertArgs(CallP call) {
     var args = convertExprs(call.positionedArgs());
-    var evalT = new TupleTS(map(args, ExprS::evalT));
-    return new CombineS(evalT, args, call.location());
+    var evaluationT = new TupleTS(map(args, ExprS::evaluationT));
+    return new CombineS(evaluationT, args, call.location());
   }
 
   private ExprS convertFuncBody(FuncP funcP, ExprP body) {

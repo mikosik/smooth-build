@@ -8,12 +8,12 @@ import org.smoothbuild.compile.fs.lang.type.TupleTS;
 
 import com.google.common.collect.ImmutableList;
 
-public record CombineS(TupleTS evalT, ImmutableList<ExprS> elems, Location location)
+public record CombineS(TupleTS evaluationT, ImmutableList<ExprS> elems, Location location)
     implements ExprS {
   @Override
   public String toString() {
     var fields = joinToString("\n",
-        "evalT = " + evalT,
+        "evaluationT = " + evaluationT,
         "elems = [\n" + indent(joinToString(elems, "\n")) + "\n]",
         "location = " + location
     );

@@ -21,7 +21,7 @@ public final class ExprFuncB extends FuncB {
   public ExprB body() {
     var body = readData();
     var resultT = type().result();
-    var bodyT = body.evalT();
+    var bodyT = body.evaluationT();
     if (!resultT.equals(bodyT)) {
       throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, resultT, bodyT);
     }

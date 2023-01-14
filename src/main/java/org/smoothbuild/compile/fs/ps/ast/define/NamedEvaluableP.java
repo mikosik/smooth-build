@@ -53,7 +53,7 @@ public sealed abstract class NamedEvaluableP
     return annotation;
   }
 
-  public abstract TypeP evalT();
+  public abstract TypeP evaluationT();
 
   @Override
   public String q() {

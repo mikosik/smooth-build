@@ -59,7 +59,7 @@ public final class InvokeTask extends Task {
       }
       return new Output(null, container.messages());
     }
-    if (!outputT().equals(result.evalT())) {
+    if (!outputT().equals(result.evaluationT())) {
       logFaultyImplementation(container, "Its declared result type == "
           + outputT().q() + " but it returned object with type == " + result.category().q() + ".");
       return new Output(null, container.messages());

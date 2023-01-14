@@ -250,7 +250,7 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void expression_function_passed_as_argument() {
           var func = exprFuncB(intB(7));
-          var paramT = func.evalT();
+          var paramT = func.evaluationT();
           var outerFunc = exprFuncB(list(paramT), callB(referenceB(paramT, 0)));
           var call = callB(outerFunc, func);
           assertThat(evaluate(call))
@@ -315,7 +315,7 @@ public class EvaluatorBTest extends TestContext {
               .thenReturn(Try.result(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
-          var nativeFuncT = nativeFuncB.evalT();
+          var nativeFuncT = nativeFuncB.evaluationT();
           var outerFunc = exprFuncB(list(nativeFuncT), callB(referenceB(nativeFuncT, 0), intB(7)));
           var call = callB(outerFunc, nativeFuncB);
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
@@ -490,7 +490,8 @@ public class EvaluatorBTest extends TestContext {
 
         private ArgumentMatcher<List<Log>> isLogListWithFatalWrongEnvironmentType() {
           return isLogListWithFatalMessageStartingWith("Computation failed with: "
-              + "java.lang.RuntimeException: environment(0) evalT is `Blob` but expected `Int`");
+              + "java.lang.RuntimeException: environment(0) evaluationT is `Blob`"
+              + " but expected `Int`");
         }
       }
 

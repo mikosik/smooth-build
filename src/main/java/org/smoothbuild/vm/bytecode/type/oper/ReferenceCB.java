@@ -10,8 +10,8 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class ReferenceCB extends OperCB {
-  public ReferenceCB(Hash hash, TypeB evalT) {
-    super(hash, REFERENCE, evalT);
+  public ReferenceCB(Hash hash, TypeB evaluationT) {
+    super(hash, REFERENCE, evaluationT);
   }
 
   @Override

@@ -7,7 +7,7 @@ import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvalTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvaluationTypeExc;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
@@ -36,15 +36,15 @@ public class PickB extends OperB {
   @Override
   public ImmutableList<ExprB> dataSeq() {
     ExprB pickable = readPickable();
-    if (pickable.evalT() instanceof ArrayTB arrayT) {
+    if (pickable.evaluationT() instanceof ArrayTB arrayT) {
       var elemT = arrayT.elem();
-      if (!evalT().equals(elemT)) {
-        throw new DecodePickWrongEvalTypeExc(hash(), category(), elemT);
+      if (!evaluationT().equals(elemT)) {
+        throw new DecodePickWrongEvaluationTypeExc(hash(), category(), elemT);
       }
       return list(pickable, readIndex());
     } else {
       throw new DecodeExprWrongNodeTypeExc(
-          hash(), category(), "array", ArrayTB.class, pickable.evalT());
+          hash(), category(), "array", ArrayTB.class, pickable.evaluationT());
     }
   }
 
@@ -54,9 +54,9 @@ public class PickB extends OperB {
 
   private ExprB readIndex() {
     ExprB index = readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
-    if (!(index.evalT() instanceof IntTB)) {
+    if (!(index.evaluationT() instanceof IntTB)) {
       throw new DecodeExprWrongNodeTypeExc(
-          hash(), category(), ExprB.DATA_PATH, IDX_IDX, IntB.class, index.evalT());
+          hash(), category(), ExprB.DATA_PATH, IDX_IDX, IntB.class, index.evaluationT());
     }
     return index;
   }

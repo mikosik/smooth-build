@@ -31,7 +31,7 @@ public final class NamedValueP extends NamedEvaluableP {
   }
 
   @Override
-  public TypeP evalT() {
+  public TypeP evaluationT() {
     return type();
   }
 

@@ -10,7 +10,7 @@ public class ConcatFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) {
     ArrayB array = (ArrayB) args.get(0);
     var factory = nativeApi.factory();
-    var elemT = ((ArrayTB) array.evalT().elem()).elem();
+    var elemT = ((ArrayTB) array.evaluationT().elem()).elem();
     var resultBuilder = factory.arrayBuilderWithElems(elemT);
     var elems = array.elems(ArrayB.class);
     for (ArrayB elem : elems) {

@@ -21,11 +21,11 @@ public class CallSTest extends TestContext {
                   name = myId
                   location = myBuild.smooth:4
                 )
-                evalT = (Int)->Int
+                evaluationT = (Int)->Int
                 location = myBuild.smooth:4
               )
               args = CombineS(
-                evalT = (Int)
+                evaluationT = (Int)
                 elems = [
                   IntS(Int, 7, myBuild.smooth:3)
                 ]

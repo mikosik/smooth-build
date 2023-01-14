@@ -93,9 +93,9 @@ public class ComputationCache {
       } else {
         Hash resultObjectHash = Hash.read(source);
         ExprB expr = bytecodeDb.get(resultObjectHash);
-        if (!type.equals(expr.evalT())) {
+        if (!type.equals(expr.evaluationT())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type.q()
-              + " as second child of its Merkle root, but got " + expr.evalT().q());
+              + " as second child of its Merkle root, but got " + expr.evaluationT().q());
         } else {
           return new Output((ValueB) expr, messages);
         }

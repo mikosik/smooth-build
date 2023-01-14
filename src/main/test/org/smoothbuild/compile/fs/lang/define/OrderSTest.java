@@ -12,7 +12,7 @@ public class OrderSTest extends TestContext {
     assertThat(orderS.toString())
         .isEqualTo("""
             OrderS(
-              evalT = [Int]
+              evaluationT = [Int]
               elems = [
                 IntS(Int, 44, myBuild.smooth:4)
                 IntS(Int, 55, myBuild.smooth:5)

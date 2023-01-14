@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
 public record MonoizeS(
       ImmutableList<TypeS> typeArgs,
       MonoizableS monoizableS,
-      TypeS evalT,
+      TypeS evaluationT,
       Location location)
     implements ExprS {
 
@@ -34,7 +34,7 @@ public record MonoizeS(
     var fields = joinToString("\n",
         "typeArgs = " + "<" + joinToString(typeArgs, ",") + ">",
         "monoizableS = " + monoizableS,
-        "evalT = " + evalT,
+        "evaluationT = " + evaluationT,
         "location = " + location
     );
     return "MonoizeS(\n" + indent(fields) + "\n)";

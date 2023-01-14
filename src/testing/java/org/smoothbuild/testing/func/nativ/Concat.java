@@ -10,9 +10,9 @@ public class Concat {
     ArrayB first = (ArrayB) args.get(0);
     ArrayB second = (ArrayB) args.get(1);
 
-    var elemT = first.evalT().elem();
+    var elementT = first.evaluationT().elem();
     return nativeApi.factory()
-        .arrayBuilderWithElems(elemT)
+        .arrayBuilderWithElems(elementT)
         .addAll(first.elems(ValueB.class))
         .addAll(second.elems(ValueB.class))
         .build();

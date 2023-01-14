@@ -103,7 +103,7 @@ public class CallJob extends Job {
   private void onMapArgsEvaluated(ArrayB arrayB, Consumer<ValueB> resultConsumer) {
     var mappingFuncExprB = args().get(1);
     var callBs = map(arrayB.elems(ValueB.class), e -> newCallB(mappingFuncExprB, e));
-    var mappingFuncResultT = ((FuncTB) mappingFuncExprB.evalT()).result();
+    var mappingFuncResultT = ((FuncTB) mappingFuncExprB.evaluationT()).result();
     var orderB = bytecodeF().order(bytecodeF().arrayT(mappingFuncResultT), callBs);
     evaluateImpl(orderB, resultConsumer);
   }

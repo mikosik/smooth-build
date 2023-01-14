@@ -350,14 +350,14 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
-      assertThat(categoryDb().call(type).evalT())
+      assertThat(categoryDb().call(type).evaluationT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("combine_cases")
     public void combine(CombineCB type, TupleTB expected) {
-      assertThat(type.evalT())
+      assertThat(type.evaluationT())
           .isEqualTo(expected);
     }
 
@@ -374,7 +374,7 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void closurize(TypeB typeB) {
-      assertThat(closurizeCB(funcTB(typeB)).evalT())
+      assertThat(closurizeCB(funcTB(typeB)).evaluationT())
           .isEqualTo(funcTB(typeB));
     }
 
@@ -382,28 +382,28 @@ public class CategoryBTest extends TestContext {
     @MethodSource("types")
     public void order(TypeB type) {
       var array = arrayTB(type);
-      assertThat(orderCB(type).evalT())
+      assertThat(orderCB(type).evaluationT())
           .isEqualTo(array);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void pick(TypeB type) {
-      assertThat(pickCB(type).evalT())
+      assertThat(pickCB(type).evaluationT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void reference(TypeB type) {
-      assertThat(referenceCB(type).evalT())
+      assertThat(referenceCB(type).evaluationT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeB type) {
-      assertThat(selectCB(type).evalT())
+      assertThat(selectCB(type).evaluationT())
           .isEqualTo(type);
     }
 

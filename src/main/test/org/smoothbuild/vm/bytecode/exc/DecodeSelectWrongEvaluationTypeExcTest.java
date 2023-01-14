@@ -4,13 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvalTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeExc;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
-public class DecodeSelectWrongEvalTypeExcTest extends TestContext {
+public class DecodeSelectWrongEvaluationTypeExcTest extends TestContext {
   @Test
   public void message() {
-    var exception = new DecodeSelectWrongEvalTypeExc(
+    var exception = new DecodeSelectWrongEvaluationTypeExc(
         Hash.of(13), selectCB(intTB()), stringTB());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT:Int` object"

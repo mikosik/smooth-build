@@ -28,8 +28,8 @@ public class CombineB extends OperB {
   }
 
   @Override
-  public TupleTB evalT() {
-    return category().evalT();
+  public TupleTB evaluationT() {
+    return category().evaluationT();
   }
 
   public ImmutableList<ExprB> items() {
@@ -38,16 +38,16 @@ public class CombineB extends OperB {
 
   @Override
   public ImmutableList<ExprB> dataSeq() {
-    var expectedItemTs = category().evalT().items();
+    var expectedItemTs = category().evaluationT().items();
     var items = readDataSeqElems(ExprB.class);
     allMatchOtherwise(
         expectedItemTs,
         items,
-        (type, item) -> type.equals(item.evalT()),
+        (type, item) -> type.equals(item.evaluationT()),
         (type, item) -> { throw new DecodeCombineWrongItemsSizeExc(hash(), category(), item); },
         (index) -> {
           throw new DecodeExprWrongNodeTypeExc(hash(), category(), "items", index,
-              expectedItemTs.get(index), items.get(index).evalT());
+              expectedItemTs.get(index), items.get(index).evaluationT());
         }
     );
     return items;

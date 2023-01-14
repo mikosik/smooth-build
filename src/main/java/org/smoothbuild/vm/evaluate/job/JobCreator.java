@@ -62,12 +62,12 @@ public class JobCreator {
   private Job jobForReferenced(ReferenceB reference) {
     int index = reference.value().intValue();
     var job = environment.get(index);
-    var jobEvalT = job.exprB().evalT();
-    if (jobEvalT.equals(reference.evalT())) {
+    var jobEvaluationT = job.exprB().evaluationT();
+    if (jobEvaluationT.equals(reference.evaluationT())) {
       return job;
     } else {
-      throw new RuntimeException("environment(%d) evalT is %s but expected %s."
-          .formatted(index, jobEvalT.q(), reference.evalT().q()));
+      throw new RuntimeException("environment(%d) evaluationT is %s but expected %s."
+          .formatted(index, jobEvaluationT.q(), reference.evaluationT().q()));
     }
   }
 

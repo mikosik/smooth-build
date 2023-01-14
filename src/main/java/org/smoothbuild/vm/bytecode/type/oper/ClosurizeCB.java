@@ -15,8 +15,8 @@ public final class ClosurizeCB extends OperCB {
   }
 
   @Override
-  public FuncTB evalT() {
-    return ((FuncTB) super.evalT());
+  public FuncTB evaluationT() {
+    return ((FuncTB) super.evaluationT());
   }
 
   @Override

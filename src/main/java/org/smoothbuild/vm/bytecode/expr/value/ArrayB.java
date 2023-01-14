@@ -23,7 +23,7 @@ public final class ArrayB extends ValueB {
   }
 
   @Override
-  public ArrayTB evalT() {
+  public ArrayTB evaluationT() {
     return type();
   }
 

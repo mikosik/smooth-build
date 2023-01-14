@@ -30,8 +30,8 @@ public final class ClosurizeB extends OperB {
   }
 
   @Override
-  public FuncTB evalT() {
-    return category().evalT();
+  public FuncTB evaluationT() {
+    return category().evaluationT();
   }
 
   @Override
@@ -47,10 +47,10 @@ public final class ClosurizeB extends OperB {
 
   public ExprFuncB func() {
     var exprFuncB = readData(ExprFuncB.class);
-    var evalT = evalT();
+    var evaluationT = evaluationT();
     var funcT = exprFuncB.type();
-    if (!evalT.equals(funcT)) {
-      throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, evalT, funcT);
+    if (!evaluationT.equals(funcT)) {
+      throw new DecodeExprWrongNodeTypeExc(hash(), category(), DATA_PATH, evaluationT, funcT);
     }
     return exprFuncB;
   }

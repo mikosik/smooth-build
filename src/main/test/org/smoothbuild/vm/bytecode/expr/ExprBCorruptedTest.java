@@ -33,9 +33,9 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongSeqSizeExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvalTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvaluationTypeExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvalTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeExc;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
@@ -447,7 +447,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void func_component_evalT_is_not_func() throws Exception {
+    public void func_component_evaluation_type_is_not_func() throws Exception {
       var func = intB(3);
       var args = combineB(stringB(), intB());
       var type = callCB(stringTB());
@@ -483,7 +483,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void args_component_evalT_is_not_combine_but_different_oper() throws Exception {
+    public void args_component_evaluation_type_is_not_combine_but_different_oper() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
       var func = exprFuncB(funcT, intB());
       var type = callCB(intTB());
@@ -501,7 +501,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void evalT_is_different_than_func_evalT_result() throws Exception {
+    public void evaluation_type_is_different_than_func_evaluation_type_result() throws Exception {
       var funcT = funcTB(stringTB(), intTB());
       var func = exprFuncB(funcT, intB());
       var args = combineB(stringB());
@@ -520,7 +520,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void func_evalT_params_does_not_match_args_evalTs() throws Exception {
+    public void func_evaluation_type_params_does_not_match_args_evaluation_types() throws Exception {
       var funcT = funcTB(stringTB(), boolTB(), intTB());
       var func = exprFuncB(funcT, intB());
       var args = combineB(stringB(), intB());
@@ -843,8 +843,8 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void func_type_is_not_equal_closurize_evaluation_type() throws Exception {
       var func = exprFuncB(list(blobTB()), intB(7));
-      var evalT = funcTB(blobTB(), stringTB());
-      var category = closurizeCB(evalT);
+      var evaluationT = funcTB(blobTB(), stringTB());
+      var category = closurizeCB(evaluationT);
       var hash =
           hash(
               hash(category),
@@ -852,7 +852,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
       assertCall(() -> ((ClosurizeB) bytecodeDb().get(hash)).func())
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, category, DATA_PATH, evalT, func.type()));
+              hash, category, DATA_PATH, evaluationT, func.type()));
     }
   }
 
@@ -1391,7 +1391,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
 
       assertCall(() -> ((PickB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodePickWrongEvalTypeExc(hash, type, stringTB()));
+          .throwsException(new DecodePickWrongEvaluationTypeExc(hash, type, stringTB()));
     }
   }
 
@@ -1573,7 +1573,7 @@ public class ExprBCorruptedTest extends TestContext {
           );
 
       assertCall(() -> ((SelectB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeSelectWrongEvalTypeExc(hash, type, stringTB()));
+          .throwsException(new DecodeSelectWrongEvaluationTypeExc(hash, type, stringTB()));
     }
 
     @Test

@@ -8,11 +8,12 @@ import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 
 import com.google.common.collect.ImmutableList;
 
-public record OrderS(ArrayTS evalT, ImmutableList<ExprS> elems, Location location) implements ExprS {
+public record OrderS(ArrayTS evaluationT, ImmutableList<ExprS> elems, Location location)
+    implements ExprS {
   @Override
   public String toString() {
     var fields = joinToString("\n",
-        "evalT = " + evalT,
+        "evaluationT = " + evaluationT,
         "elems = [\n" + indent(joinToString(elems, "\n")) + "\n]",
         "location = " + location
     );

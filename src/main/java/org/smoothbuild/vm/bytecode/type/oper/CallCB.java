@@ -13,8 +13,8 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
  * This class is immutable.
  */
 public class CallCB extends OperCB {
-  public CallCB(Hash hash, TypeB evalT) {
-    super(hash, CALL, evalT);
+  public CallCB(Hash hash, TypeB evaluationT) {
+    super(hash, CALL, evaluationT);
   }
 
   @Override

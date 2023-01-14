@@ -301,14 +301,14 @@ public class SbTranslator {
   }
 
   private OrderB translateOrder(OrderS orderS) {
-    var arrayTB = translateT(orderS.evalT());
+    var arrayTB = translateT(orderS.evaluationT());
     var elemsB = translateExprs(orderS.elems());
     return bytecodeF.order(arrayTB, elemsB);
   }
 
   private SelectB translateSelect(SelectS selectS) {
     var selectableB = translateExpr(selectS.selectable());
-    var structTS = (StructTS) selectS.selectable().evalT();
+    var structTS = (StructTS) selectS.selectable().evaluationT();
     var indexJ = structTS.fields().indexOf(selectS.field());
     var bigInteger = BigInteger.valueOf(indexJ);
     var indexB = bytecodeF.int_(bigInteger);
@@ -371,10 +371,10 @@ public class SbTranslator {
       throw new SbTranslatorExc(annotation.location() + ": " + bytecodeTry.error());
     }
     var bytecodeB = bytecodeTry.result();
-    if (!bytecodeB.evalT().equals(typeB)) {
-      throw new SbTranslatorExc(
-          annotation.location() + ": Bytecode provider returned object of wrong type "
-          + bytecodeB.evalT().q() + " when " + q(name) + " is declared as " + typeB.q() + ".");
+    if (!bytecodeB.evaluationT().equals(typeB)) {
+      throw new SbTranslatorExc(annotation.location()
+          + ": Bytecode provider returned object of wrong type " + bytecodeB.evaluationT().q()
+          + " when " + q(name) + " is declared as " + typeB.q() + ".");
     }
     return bytecodeB;
   }

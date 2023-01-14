@@ -139,8 +139,8 @@ public class BytecodeF {
     return bytecodeDb.pick(array, index);
   }
 
-  public ReferenceB reference(TypeB evalT, BigInteger value) {
-    return bytecodeDb.reference(evalT, value);
+  public ReferenceB reference(TypeB evaluationT, BigInteger value) {
+    return bytecodeDb.reference(evaluationT, value);
   }
 
   public SelectB select(ExprB tuple, IntB index) {
