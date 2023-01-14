@@ -177,7 +177,7 @@ public class BytecodeDb {
   }
 
   private void validateArgsInCall(FuncTB funcTB, CombineB args) {
-    validateArgs(funcTB, args.evaluationT().items(), () -> {
+    validateArgs(funcTB, args.evaluationT().elements(), () -> {
       throw illegalArgs(funcTB, args.evaluationT());
     });
   }
@@ -189,7 +189,7 @@ public class BytecodeDb {
   }
 
   private static String itemTsToString(TupleTB argsT) {
-    return "(" + joinWithCommaToString(argsT.items()) + ")";
+    return "(" + joinWithCommaToString(argsT.elements()) + ")";
   }
 
   // generic getter
@@ -376,9 +376,9 @@ public class BytecodeDb {
     var evaluationT = selectable.evaluationT();
     if (evaluationT instanceof TupleTB tuple) {
       int intIndex = index.toJ().intValue();
-      var items = tuple.items();
-      checkElementIndex(intIndex, items.size());
-      return items.get(intIndex);
+      var elements = tuple.elements();
+      checkElementIndex(intIndex, elements.size());
+      return elements.get(intIndex);
     } else {
       throw new IllegalArgumentException(
           "selectable.evaluationT() should be TupleTB but is " + evaluationT.q() + ".");

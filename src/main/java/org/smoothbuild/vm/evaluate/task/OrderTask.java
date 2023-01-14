@@ -17,7 +17,7 @@ public final class OrderTask extends Task {
     ArrayB array = container
         .factory()
         .arrayBuilder((ArrayTB) outputT())
-        .addAll(input.items())
+        .addAll(input.elements())
         .build();
     return new Output(array, container.messages());
   }

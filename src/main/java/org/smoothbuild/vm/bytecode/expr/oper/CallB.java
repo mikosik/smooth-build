@@ -51,7 +51,7 @@ public class CallB extends OperB {
 
   protected void validate(FuncTB funcTB, CombineB argsCombine) {
     var argsT = argsCombine.evaluationT();
-    validateArgs(funcTB, argsT.items(), () -> illegalArgsExc(funcTB.params(), argsT));
+    validateArgs(funcTB, argsT.elements(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resultT = funcTB.result();
     if (!evaluationT().equals(resultT)) {
       throw new DecodeExprWrongNodeTypeExc(

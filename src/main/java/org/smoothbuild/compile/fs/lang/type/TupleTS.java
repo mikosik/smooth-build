@@ -12,23 +12,23 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class TupleTS extends TypeS {
-  private final ImmutableList<TypeS> items;
+  private final ImmutableList<TypeS> elements;
 
-  public TupleTS(List<? extends TypeS> items) {
-    super(tupleTypeName(items), calculateVars(items));
-    this.items = ImmutableList.copyOf(items);
+  public TupleTS(List<? extends TypeS> elements) {
+    super(tupleTypeName(elements), calculateVars(elements));
+    this.elements = ImmutableList.copyOf(elements);
   }
 
-  private static VarSetS calculateVars(List<? extends TypeS> items) {
-    return varSetS(items);
+  private static VarSetS calculateVars(List<? extends TypeS> elements) {
+    return varSetS(elements);
   }
 
-  public ImmutableList<TypeS> items() {
-    return items;
+  public ImmutableList<TypeS> elements() {
+    return elements;
   }
 
   public int size() {
-    return items.size();
+    return elements.size();
   }
 
   @Override
@@ -37,11 +37,11 @@ public final class TupleTS extends TypeS {
       return true;
     }
     return object instanceof TupleTS that
-        && items.equals(that.items);
+        && elements.equals(that.elements);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(items);
+    return Objects.hash(elements);
   }
 }

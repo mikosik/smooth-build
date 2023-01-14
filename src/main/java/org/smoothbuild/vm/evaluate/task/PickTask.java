@@ -19,7 +19,7 @@ public final class PickTask extends Task {
 
   @Override
   public Output run(TupleB input, Container container) {
-    var components = input.items();
+    var components = input.elements();
     checkArgument(components.size() == 2);
     int index = index(components).toJ().intValue();
     var elems = array(components).elems(ValueB.class);

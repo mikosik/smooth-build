@@ -39,11 +39,11 @@ public class SelectB extends OperB {
     if (selectable.evaluationT() instanceof TupleTB tupleT) {
       IntB index = readIndex();
       int i = index.toJ().intValue();
-      int size = tupleT.items().size();
+      int size = tupleT.elements().size();
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), category(), i, size);
       }
-      var fieldT = tupleT.items().get(i);
+      var fieldT = tupleT.elements().get(i);
       if (!evaluationT().equals(fieldT)) {
         throw new DecodeSelectWrongEvaluationTypeExc(hash(), category(), fieldT);
       }

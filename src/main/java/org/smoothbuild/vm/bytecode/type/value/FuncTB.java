@@ -14,7 +14,7 @@ public final class FuncTB extends TypeB {
   private final TypeB result;
 
   public FuncTB(Hash hash, TupleTB params, TypeB result) {
-    super(hash, funcTypeName(params.items(), result), FUNC);
+    super(hash, funcTypeName(params.elements(), result), FUNC);
     this.params = params;
     this.result = result;
   }

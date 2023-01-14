@@ -18,11 +18,11 @@ public class TypeNamesB {
     return "(" + commaSeparatedTypeNames(paramTs) + ")->" + resultT.name();
   }
 
-  public static String tupleTypeName(Iterable<? extends TypeB> itemTs) {
-    return "{" + commaSeparatedTypeNames(itemTs) + "}";
+  public static String tupleTypeName(Iterable<? extends TypeB> elementTypes) {
+    return "{" + commaSeparatedTypeNames(elementTypes) + "}";
   }
 
-  private static String commaSeparatedTypeNames(Iterable<? extends TypeB> itemTs) {
-    return joinWithCommaToString(itemTs, TypeB::name);
+  private static String commaSeparatedTypeNames(Iterable<? extends TypeB> types) {
+    return joinWithCommaToString(types, TypeB::name);
   }
 }

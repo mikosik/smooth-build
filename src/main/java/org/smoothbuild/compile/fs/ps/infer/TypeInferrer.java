@@ -176,7 +176,7 @@ public class TypeInferrer {
       param.defaultValue().ifPresent(defaultvalue -> {
         var schema = namedFunc.schemaS();
         var paramUnifier = new Unifier();
-        var resolvedParamT = schema.type().params().items().get(index);
+        var resolvedParamT = schema.type().params().elements().get(index);
         var paramT = replaceVarsWithTempVars(schema.quantifiedVars(), resolvedParamT, paramUnifier);
         var defaultValueType = replaceQuantifiedVarsWithTempVars(
             defaultvalue.schemaS(), paramUnifier);

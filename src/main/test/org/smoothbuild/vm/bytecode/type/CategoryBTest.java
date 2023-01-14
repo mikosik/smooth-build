@@ -293,7 +293,7 @@ public class CategoryBTest extends TestContext {
     public void tuple_items(
         Function<CategoryDb, TupleTB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).items())
+      assertThat(execute(factoryCall).elements())
           .isEqualTo(execute(expected));
     }
 

@@ -235,9 +235,9 @@ public class Unifier {
   }
 
   private TupleTS unifyTupleAndTuple(TupleTS tuple1, TupleTS tuple2) throws UnifierExc {
-    var items1 = tuple1.items();
-    var items2 = tuple2.items();
-    return new TupleTS(zip(items1, items2, this::unify));
+    var elements1 = tuple1.elements();
+    var elements2 = tuple2.elements();
+    return new TupleTS(zip(elements1, elements2, this::unify));
   }
 
   private <T> ImmutableList<T> zip(

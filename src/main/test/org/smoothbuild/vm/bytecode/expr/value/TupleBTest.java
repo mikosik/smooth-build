@@ -13,7 +13,7 @@ import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
 public class TupleBTest extends TestContext {
   @Test
-  public void setting_item_to_null_throws_exception() {
+  public void setting_element_to_null_throws_exception() {
     assertCall(() -> bytecodeDb().tuple(list(stringB("John"), null)))
         .throwsException(NullPointerException.class);
   }
@@ -26,7 +26,7 @@ public class TupleBTest extends TestContext {
   }
 
   @Test
-  public void item_contains_object_passed_to_builder() {
+  public void element_contains_object_passed_to_builder() {
     TupleB person = johnDoePerson();
     assertThat(person.category())
         .isEqualTo(personTB());
@@ -35,21 +35,21 @@ public class TupleBTest extends TestContext {
   }
 
   @Test
-  public void reading_items_with_negative_index_throws_exception() {
+  public void reading_elements_with_negative_index_throws_exception() {
     TupleB person = johnDoePerson();
     assertCall(() -> person.get(-1))
         .throwsException(IndexOutOfBoundsException.class);
   }
 
   @Test
-  public void reading_items_with_index_greater_than_max_index_throws_exception() {
+  public void reading_elements_with_index_greater_than_max_index_throws_exception() {
     TupleB person = johnDoePerson();
     assertCall(() -> person.get(2))
         .throwsException(IndexOutOfBoundsException.class);
   }
 
   @Test
-  public void tuple_hash_is_different_of_its_item_hash() {
+  public void tuple_hash_is_different_of_its_element_hash() {
     TupleB person = johnDoePerson();
     assertThat(person.hash())
         .isNotEqualTo(person.get(0).hash());
@@ -86,7 +86,7 @@ public class TupleBTest extends TestContext {
   }
 
   @Test
-  public void tuples_read_by_hash_have_equal_items() {
+  public void tuples_read_by_hash_have_equal_elements() {
     TupleB person = johnDoePerson();
     TupleB personRead = (TupleB) bytecodeDbOther().get(person.hash());
     assertThat(personRead.get(0))

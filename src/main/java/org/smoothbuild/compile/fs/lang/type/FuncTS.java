@@ -27,7 +27,7 @@ public final class FuncTS extends TypeS {
   }
 
   public static VarSetS calculateFuncVars(TupleTS paramTs, TypeS resultT) {
-    return varSetS(concat(resultT, paramTs.items()));
+    return varSetS(concat(resultT, paramTs.elements()));
   }
 
   public TupleTS params() {

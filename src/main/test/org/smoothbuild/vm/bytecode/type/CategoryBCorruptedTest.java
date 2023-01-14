@@ -574,7 +574,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_elems_not_being_seq_of_hashes() throws Exception {
+      public void with_elements_not_being_seq_of_hashes() throws Exception {
         Hash notHashOfSeq = hash("abc");
         Hash hash =
             hash(
@@ -586,7 +586,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_elems_being_array_of_non_type() throws Exception {
+      public void with_elements_being_array_of_non_type() throws Exception {
         Hash stringHash = hash(stringB("abc"));
         Hash hash =
             hash(
@@ -601,7 +601,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_elems_being_seq_of_oper_types() throws Exception {
+      public void with_elements_being_seq_of_oper_types() throws Exception {
         Hash hash =
             hash(
                 hash(TUPLE.marker()),
@@ -615,7 +615,7 @@ public class CategoryBCorruptedTest extends TestContext {
       }
 
       @Test
-      public void with_corrupted_elem_type() throws Exception {
+      public void with_corrupted_element_type() throws Exception {
         Hash hash =
             hash(
                 hash(TUPLE.marker()),

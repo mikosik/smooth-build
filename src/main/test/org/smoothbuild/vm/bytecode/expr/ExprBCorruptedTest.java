@@ -26,7 +26,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongItemsSizeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeExc;
@@ -636,7 +636,7 @@ public class ExprBCorruptedTest extends TestContext {
               ));
 
       assertCall(() -> ((CombineB) bytecodeDb().get(hash)).dataSeq())
-          .throwsException(new DecodeCombineWrongItemsSizeExc(hash, type, 1));
+          .throwsException(new DecodeCombineWrongElementsSizeExc(hash, type, 1));
     }
 
     @Test
@@ -655,7 +655,7 @@ public class ExprBCorruptedTest extends TestContext {
 
       assertCall(() -> ((CombineB) bytecodeDb().get(hash)).dataSeq())
           .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, type, "items[1]", boolTB(), stringTB()));
+              hash, type, "elements", 1, boolTB(), stringTB()));
     }
   }
 
@@ -1699,7 +1699,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void with_seq_elem_pointing_nowhere() throws Exception {
+    public void with_seq_element_pointing_nowhere() throws Exception {
       var nowhereHash = Hash.of(33);
       var dataHash = hash(
           nowhereHash,
@@ -1716,7 +1716,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void with_too_few_elems() throws Exception {
+    public void with_too_few_elements() throws Exception {
       var dataHash =
           hash(
               hash(stringB("John")));
@@ -1730,7 +1730,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void with_too_many_elems() throws Exception {
+    public void with_too_many_elements() throws Exception {
       var dataHash =
           hash(
               hash(stringB("John")),
@@ -1746,7 +1746,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void with_elem_of_wrong_type() throws Exception {
+    public void with_element_of_wrong_type() throws Exception {
       var hash =
           hash(
               hash(personTB()),
@@ -1760,7 +1760,7 @@ public class ExprBCorruptedTest extends TestContext {
     }
 
     @Test
-    public void with_elem_being_oper() throws Exception {
+    public void with_element_being_oper() throws Exception {
       var hash =
           hash(
               hash(personTB()),

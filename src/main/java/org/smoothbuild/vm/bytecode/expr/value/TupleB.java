@@ -4,11 +4,11 @@ import static com.google.common.base.Suppliers.memoize;
 import static java.util.Objects.checkIndex;
 import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.vm.bytecode.type.Validator.validateTuple;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
-import org.smoothbuild.vm.bytecode.type.Validator;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
@@ -19,11 +19,11 @@ import com.google.common.collect.ImmutableList;
  * This class is thread-safe.
  */
 public final class TupleB extends ValueB {
-  private final Supplier<ImmutableList<ValueB>> itemsSupplier;
+  private final Supplier<ImmutableList<ValueB>> elementsSupplier;
 
   public TupleB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    this.itemsSupplier = memoize(this::instantiateItems);
+    this.elementsSupplier = memoize(this::instantiateItems);
   }
 
   @Override
@@ -37,31 +37,31 @@ public final class TupleB extends ValueB {
   }
 
   public ValueB get(int index) {
-    ImmutableList<ValueB> items = items();
-    checkIndex(index, items.size());
-    return items.get(index);
+    ImmutableList<ValueB> elements = elements();
+    checkIndex(index, elements.size());
+    return elements.get(index);
   }
 
-  public ImmutableList<ValueB> items() {
-    return itemsSupplier.get();
+  public ImmutableList<ValueB> elements() {
+    return elementsSupplier.get();
   }
 
   private ImmutableList<ValueB> instantiateItems() {
     var type = type();
-    var expectedItemTs = type.items();
-    var items = readDataSeqElems(expectedItemTs.size());
-    var itemTs = map(items, ValueB::type);
-    Validator.validateTuple(type, itemTs, () -> {throw new DecodeExprWrongNodeTypeExc(hash(),
-        category(), DATA_PATH, type, asTupleToString(itemTs));});
-    return items;
+    var expectedElementTs = type.elements();
+    var elements = readDataSeqElems(expectedElementTs.size());
+    var elementTs = map(elements, ValueB::type);
+    validateTuple(type, elementTs, () -> {throw new DecodeExprWrongNodeTypeExc(hash(),
+        category(), DATA_PATH, type, asTupleToString(elementTs));});
+    return elements;
   }
 
-  private static String asTupleToString(ImmutableList<TypeB> ItemTs) {
-    return "`{" + joinWithCommaToString(ItemTs) + "}`";
+  private static String asTupleToString(ImmutableList<TypeB> elementTs) {
+    return "`{" + joinWithCommaToString(elementTs) + "}`";
   }
 
   @Override
   public String exprToString() {
-    return "{" + exprsToString(items()) + '}';
+    return "{" + exprsToString(elements()) + '}';
   }
 }

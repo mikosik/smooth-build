@@ -19,7 +19,7 @@ public class Validator {
   public static void validateTuple(TupleTB tupleTB, ImmutableList<TypeB> itemTs,
       Supplier<RuntimeException> exceptionThrower) {
     allMatchOtherwise(
-        tupleTB.items(),
+        tupleTB.elements(),
         itemTs,
         CategoryB::equals,
         (expectedSize, actualSize) -> { throw exceptionThrower.get(); },

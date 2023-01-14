@@ -18,7 +18,7 @@ public final class SelectTask extends Task {
 
   @Override
   public Output run(TupleB input, Container container) {
-    var components = input.items();
+    var components = input.elements();
     checkArgument(components.size() == 2);
     var tuple = selectable(components);
     var index = index(components);

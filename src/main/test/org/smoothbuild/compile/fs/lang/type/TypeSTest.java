@@ -358,7 +358,7 @@ public class TypeSTest {
     @ParameterizedTest
     @MethodSource("tuple_items_cases")
     public void func_params(TupleTS type, Object expected) {
-      assertThat(type.items())
+      assertThat(type.elements())
           .isEqualTo(expected);
     }
 

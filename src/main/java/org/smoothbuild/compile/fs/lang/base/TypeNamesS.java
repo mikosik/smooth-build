@@ -41,7 +41,7 @@ public class TypeNamesS {
   }
 
   public static String funcTypeName(TupleTS paramTs, TypeS resultT) {
-    return "(" + commaSeparatedTypeNames(paramTs.items()) + ")->" + resultT.name();
+    return "(" + commaSeparatedTypeNames(paramTs.elements()) + ")->" + resultT.name();
   }
 
   public static String tupleTypeName(List<? extends TypeS> elemTs) {

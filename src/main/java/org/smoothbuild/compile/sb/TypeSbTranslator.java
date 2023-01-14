@@ -68,7 +68,7 @@ public class TypeSbTranslator {
   }
 
   public TupleTB translate(TupleTS tuple) {
-    return bytecodeF.tupleT(map(tuple.items(), this::translate));
+    return bytecodeF.tupleT(map(tuple.elements(), this::translate));
   }
 
   public ArrayTB translate(ArrayTS array) {

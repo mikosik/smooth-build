@@ -19,7 +19,7 @@ public final class ConstTask extends Task {
 
   @Override
   public Output run(TupleB input, Container container) {
-    checkArgument(input.items().size() == 0);
+    checkArgument(input.elements().size() == 0);
     return new Output(valueB(), container.messages());
   }
 }
