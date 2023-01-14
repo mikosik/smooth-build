@@ -254,7 +254,7 @@ public class TypeSTest {
     @ParameterizedTest
     @MethodSource("func_result_cases")
     public void func_result(FuncTS type, TypeS expected) {
-      assertThat(type.res())
+      assertThat(type.result())
           .isEqualTo(expected);
     }
 

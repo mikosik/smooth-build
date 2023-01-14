@@ -31,7 +31,7 @@ public record CallS(ExprS callee, CombineS args, Location location)
 
   @Override
   public TypeS evalT() {
-    return ((FuncTS) callee.evalT()).res();
+    return ((FuncTS) callee.evalT()).result();
   }
 
   @Override

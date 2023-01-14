@@ -4,7 +4,6 @@ import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.collect.Iterables.joinToString;
 
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
-import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.util.collect.NList;
 
 /**
@@ -17,10 +16,6 @@ public sealed interface FuncS
 
   @Override
   public FuncSchemaS schema();
-
-  public default TypeS resT() {
-    return schema().type().res();
-  }
 
   public default boolean canBeCalledArgless() {
     return params().stream()

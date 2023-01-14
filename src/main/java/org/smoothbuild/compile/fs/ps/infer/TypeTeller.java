@@ -52,8 +52,8 @@ public class TypeTeller {
     return switch (type) {
       case ArrayTP array -> translate(array.elemT()).map(ArrayTS::new);
       case FuncTP func -> {
-        var resultOpt = translate(func.resT());
-        var paramsOpt = pullUp(map(func.paramTs(), this::translate));
+        var resultOpt = translate(func.result());
+        var paramsOpt = pullUp(map(func.params(), this::translate));
         yield mapPair(resultOpt, paramsOpt, (r, p) -> new FuncTS(p, r));
       }
       default -> typeWithName(type);

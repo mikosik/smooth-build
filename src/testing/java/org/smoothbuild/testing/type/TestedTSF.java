@@ -98,38 +98,38 @@ public class TestedTSF {
     );
   }
 
-  public TestedTS func(TestedTS resT, ImmutableList<TestedTS> paramTs) {
-    return f(resT, paramTs);
+  public TestedTS func(TestedTS resultT, ImmutableList<TestedTS> paramTs) {
+    return f(resultT, paramTs);
   }
 
-  public static TestedTS f(TestedTS resT, TestedTS... paramTestedTs) {
-    return f(resT, list(paramTestedTs));
+  public static TestedTS f(TestedTS resultT, TestedTS... paramTestedTs) {
+    return f(resultT, list(paramTestedTs));
   }
 
-  public static TestedFuncTS f(TestedTS resT, ImmutableList<TestedTS> paramTestedTs) {
+  public static TestedFuncTS f(TestedTS resultT, ImmutableList<TestedTS> paramTestedTs) {
     var paramSigs = toSigs(paramTestedTs);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
     String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
-        resT.name(),
+        resultT.name(),
         name,
         toParamDeclarationString(paramTestedTs));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
-        .addAll(resT.allDeclarations())
+        .addAll(resultT.allDeclarations())
         .addAll(paramTestedTs.stream()
             .flatMap(t -> t.allDeclarations().stream())
             .collect(toList()))
         .build();
     Set<String> typeDeclarations = ImmutableSet.<String>builder()
-        .addAll(resT.typeDeclarations())
+        .addAll(resultT.typeDeclarations())
         .addAll(paramTestedTs.stream()
             .flatMap(t -> t.typeDeclarations().stream())
             .collect(toList()))
         .build();
     return new TestedFuncTS(
-        resT,
+        resultT,
         paramTestedTs,
-        funcTS(map(paramSigs, ItemSigS::type), resT.type()),
+        funcTS(map(paramSigs, ItemSigS::type), resultT.type()),
         typeDeclarations,
         declarations
     );

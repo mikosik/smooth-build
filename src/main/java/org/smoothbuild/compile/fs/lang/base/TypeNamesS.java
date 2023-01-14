@@ -40,8 +40,8 @@ public class TypeNamesS {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(TupleTS paramTs, TypeS resT) {
-    return "(" + commaSeparatedTypeNames(paramTs.items()) + ")->" + resT.name();
+  public static String funcTypeName(TupleTS paramTs, TypeS resultT) {
+    return "(" + commaSeparatedTypeNames(paramTs.items()) + ")->" + resultT.name();
   }
 
   public static String tupleTypeName(List<? extends TypeS> elemTs) {

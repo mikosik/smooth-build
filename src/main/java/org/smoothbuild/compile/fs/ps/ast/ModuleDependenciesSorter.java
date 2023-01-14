@@ -91,8 +91,8 @@ public class ModuleDependenciesSorter {
         switch (typeP) {
           case ArrayTP arrayT -> addToDeps(arrayT.elemT());
           case FuncTP funcT -> {
-            addToDeps(funcT.resT());
-            funcT.paramTs().forEach(this::addToDeps);
+            addToDeps(funcT.result());
+            funcT.params().forEach(this::addToDeps);
           }
           default -> {
             if (funcNames.contains(typeP.name())) {

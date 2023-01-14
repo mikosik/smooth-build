@@ -64,7 +64,7 @@ public class TypeSbTranslator {
   }
 
   public FuncTB translate(FuncTS func) {
-    return bytecodeF.funcT(translate(func.params()), translate(func.res()));
+    return bytecodeF.funcT(translate(func.params()), translate(func.result()));
   }
 
   public TupleTB translate(TupleTS tuple) {

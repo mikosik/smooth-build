@@ -5,20 +5,20 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import com.google.common.collect.ImmutableList;
 
 public final class FuncTP extends ExplicitTP {
-  private final TypeP resT;
-  private final ImmutableList<TypeP> paramTs;
+  private final TypeP result;
+  private final ImmutableList<TypeP> params;
 
-  public FuncTP(TypeP resT, ImmutableList<TypeP> paramTs, Location location) {
-    super("[" + resT.name() + "]", location);
-    this.resT = resT;
-    this.paramTs = paramTs;
+  public FuncTP(TypeP result, ImmutableList<TypeP> params, Location location) {
+    super("[" + result.name() + "]", location);
+    this.result = result;
+    this.params = params;
   }
 
-  public TypeP resT() {
-    return resT;
+  public TypeP result() {
+    return result;
   }
 
-  public ImmutableList<TypeP> paramTs() {
-    return paramTs;
+  public ImmutableList<TypeP> params() {
+    return params;
   }
 }

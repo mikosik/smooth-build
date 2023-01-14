@@ -15,13 +15,13 @@ public sealed class NamedFuncP
     extends NamedEvaluableP
     implements FuncP
     permits ConstructorP {
-  private final TypeP resT;
+  private final TypeP resultT;
   private final NList<ItemP> params;
   private FuncTS typeS;
   private FuncSchemaS funcSchemaS;
 
   public NamedFuncP(
-      TypeP resT,
+      TypeP resultT,
       String fullName,
       String simpleName,
       NList<ItemP> params,
@@ -29,13 +29,13 @@ public sealed class NamedFuncP
       Optional<AnnotationP> annotation,
       Location location) {
     super(fullName, simpleName, body, annotation, location);
-    this.resT = resT;
+    this.resultT = resultT;
     this.params = params;
   }
 
   @Override
-  public TypeP resT() {
-    return resT;
+  public TypeP resultT() {
+    return resultT;
   }
 
   @Override
@@ -45,7 +45,7 @@ public sealed class NamedFuncP
 
   @Override
   public TypeP evalT() {
-    return resT();
+    return resultT();
   }
 
   @Override
@@ -74,7 +74,7 @@ public sealed class NamedFuncP
       return true;
     }
     return object instanceof NamedFuncP that
-        && Objects.equals(this.resT, that.resT)
+        && Objects.equals(this.resultT, that.resultT)
         && Objects.equals(this.name(), that.name())
         && Objects.equals(this.params, that.params)
         && Objects.equals(this.body(), that.body())
@@ -84,13 +84,13 @@ public sealed class NamedFuncP
 
   @Override
   public int hashCode() {
-    return Objects.hash(resT, name(), params, body(), annotation(), location());
+    return Objects.hash(resultT, name(), params, body(), annotation(), location());
   }
 
   @Override
   public String toString() {
     var fields = joinToString("\n",
-        "resT = " + resT,
+        "resulT = " + resultT,
         "name = " + name(),
         "params = [",
         indent(joinToString(params(), "\n")),

@@ -6,7 +6,7 @@ import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-public class WithNonValRes {
+public class WithNonValueResult {
   public static OrderB bytecode(BytecodeF bytecodeF, Map<String, TypeB> varMap) {
     return null;
   }

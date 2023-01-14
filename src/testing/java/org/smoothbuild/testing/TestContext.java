@@ -458,16 +458,16 @@ public class TestContext {
     return closureCB(blobTB(), stringTB(), intTB());
   }
 
-  public ClosureCB closureCB(TypeB resT) {
-    return closureB(funcTB(resT));
+  public ClosureCB closureCB(TypeB resultT) {
+    return closureB(funcTB(resultT));
   }
 
-  public ClosureCB closureCB(TypeB param, TypeB resT) {
-    return closureB(funcTB(param, resT));
+  public ClosureCB closureCB(TypeB param, TypeB resultT) {
+    return closureB(funcTB(param, resultT));
   }
 
-  public ClosureCB closureCB(TypeB param1, TypeB param2, TypeB resT) {
-    return closureB(funcTB(param1, param2, resT));
+  public ClosureCB closureCB(TypeB param1, TypeB param2, TypeB resultT) {
+    return closureB(funcTB(param1, param2, resultT));
   }
 
   public ClosureCB closureB(FuncTB funcTB) {
@@ -486,36 +486,36 @@ public class TestContext {
     return exprFuncCB(blobTB(), stringTB(), intTB());
   }
 
-  public ExprFuncCB exprFuncCB(TypeB resT) {
-    return categoryDb().exprFunc(funcTB(resT));
+  public ExprFuncCB exprFuncCB(TypeB resultT) {
+    return categoryDb().exprFunc(funcTB(resultT));
   }
 
-  public ExprFuncCB exprFuncCB(TypeB param, TypeB resT) {
-    return categoryDb().exprFunc(funcTB(param, resT));
+  public ExprFuncCB exprFuncCB(TypeB param, TypeB resultT) {
+    return categoryDb().exprFunc(funcTB(param, resultT));
   }
 
-  public ExprFuncCB exprFuncCB(TypeB param1, TypeB param2, TypeB resT) {
-    return categoryDb().exprFunc(funcTB(param1, param2, resT));
+  public ExprFuncCB exprFuncCB(TypeB param1, TypeB param2, TypeB resultT) {
+    return categoryDb().exprFunc(funcTB(param1, param2, resultT));
   }
 
   public FuncTB funcTB() {
     return funcTB(blobTB(), stringTB(), intTB());
   }
 
-  public FuncTB funcTB(TypeB resT) {
-    return funcTB(list(), resT);
+  public FuncTB funcTB(TypeB resultT) {
+    return funcTB(list(), resultT);
   }
 
-  public FuncTB funcTB(TypeB param1, TypeB resT) {
-    return funcTB(list(param1), resT);
+  public FuncTB funcTB(TypeB param1, TypeB resultT) {
+    return funcTB(list(param1), resultT);
   }
 
-  public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resT) {
-    return funcTB(list(param1, param2), resT);
+  public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resultT) {
+    return funcTB(list(param1, param2), resultT);
   }
 
-  public FuncTB funcTB(ImmutableList<TypeB> paramTs, TypeB resT) {
-    return categoryDb().funcT(paramTs, resT);
+  public FuncTB funcTB(ImmutableList<TypeB> paramTs, TypeB resultT) {
+    return categoryDb().funcT(paramTs, resultT);
   }
 
   public IntTB intTB() {
@@ -526,16 +526,16 @@ public class TestContext {
     return nativeFuncCB(boolTB(), blobTB());
   }
 
-  public NativeFuncCB nativeFuncCB(TypeB resT) {
-    return categoryDb().nativeFunc(funcTB(resT));
+  public NativeFuncCB nativeFuncCB(TypeB resultT) {
+    return categoryDb().nativeFunc(funcTB(resultT));
   }
 
-  public NativeFuncCB nativeFuncCB(TypeB param, TypeB resT) {
-    return categoryDb().nativeFunc(funcTB(param, resT));
+  public NativeFuncCB nativeFuncCB(TypeB param, TypeB resultT) {
+    return categoryDb().nativeFunc(funcTB(param, resultT));
   }
 
-  public NativeFuncCB nativeFuncCB(TypeB param1, TypeB param2, TypeB resT) {
-    return categoryDb().nativeFunc(funcTB(param1, param2, resT));
+  public NativeFuncCB nativeFuncCB(TypeB param1, TypeB param2, TypeB resultT) {
+    return categoryDb().nativeFunc(funcTB(param1, param2, resultT));
   }
 
   public TupleTB personTB() {
@@ -985,20 +985,20 @@ public class TestContext {
     return TypeFS.BOOL;
   }
 
-  public static FuncTS funcTS(TypeS resT) {
-    return funcTS(list(), resT);
+  public static FuncTS funcTS(TypeS resultT) {
+    return funcTS(list(), resultT);
   }
 
-  public static FuncTS funcTS(TypeS param1, TypeS resT) {
-    return funcTS(list(param1), resT);
+  public static FuncTS funcTS(TypeS param1, TypeS resultT) {
+    return funcTS(list(param1), resultT);
   }
 
-  public static FuncTS funcTS(TypeS param1, TypeS param2, TypeS resT) {
-    return funcTS(list(param1, param2), resT);
+  public static FuncTS funcTS(TypeS param1, TypeS param2, TypeS resultT) {
+    return funcTS(list(param1, param2), resultT);
   }
 
-  public static FuncTS funcTS(ImmutableList<TypeS> paramTs, TypeS resT) {
-    return new FuncTS(tupleTS(paramTs), resT);
+  public static FuncTS funcTS(ImmutableList<TypeS> paramTs, TypeS resultT) {
+    return new FuncTS(tupleTS(paramTs), resultT);
   }
 
   public static TupleTS tupleTS(TypeS... itemTs) {
@@ -1013,20 +1013,20 @@ public class TestContext {
     return TypeFS.INT;
   }
 
-  public static FuncSchemaS funcSchemaS(NList<ItemS> params, TypeS resT) {
-    return funcSchemaS(toTypes(params), resT);
+  public static FuncSchemaS funcSchemaS(NList<ItemS> params, TypeS resultT) {
+    return funcSchemaS(toTypes(params), resultT);
   }
 
-  public static FuncSchemaS funcSchemaS(TypeS resT) {
-    return funcSchemaS(funcTS(list(), resT));
+  public static FuncSchemaS funcSchemaS(TypeS resultT) {
+    return funcSchemaS(funcTS(list(), resultT));
   }
 
-  public static FuncSchemaS funcSchemaS(TypeS param1, TypeS resT) {
-    return funcSchemaS(funcTS(list(param1), resT));
+  public static FuncSchemaS funcSchemaS(TypeS param1, TypeS resultT) {
+    return funcSchemaS(funcTS(list(param1), resultT));
   }
 
-  public static FuncSchemaS funcSchemaS(ImmutableList<TypeS> paramTs, TypeS resT) {
-    return funcSchemaS(funcTS(paramTs, resT));
+  public static FuncSchemaS funcSchemaS(ImmutableList<TypeS> paramTs, TypeS resultT) {
+    return funcSchemaS(funcTS(paramTs, resultT));
   }
 
   private static FuncSchemaS funcSchemaS(FuncTS funcTS) {
@@ -1236,10 +1236,10 @@ public class TestContext {
     return new MonoizeS(typeArgs, monoizableS, location);
   }
 
-  public static OrderS orderS(int line, ExprS firstElem, ExprS... restElems) {
+  public static OrderS orderS(int line, ExprS headElem, ExprS... tailElems) {
     return new OrderS(
-        arrayTS(firstElem.evalT()),
-        concat(firstElem, list(restElems)), location(line));
+        arrayTS(headElem.evalT()),
+        concat(headElem, list(tailElems)), location(line));
   }
 
   public static OrderS orderS(TypeS elemT, ExprS... exprs) {
@@ -1415,37 +1415,37 @@ public class TestContext {
   }
 
   public static AnnotatedFuncS bytecodeFuncS(
-      String path, TypeS resT, String name, NList<ItemS> params) {
-    return bytecodeFuncS(1, path, resT, name, params);
+      String path, TypeS resultT, String name, NList<ItemS> params) {
+    return bytecodeFuncS(1, path, resultT, name, params);
   }
 
   public static AnnotatedFuncS bytecodeFuncS(
-      int line, TypeS resT, String name, NList<ItemS> params) {
-    return annotatedFuncS(line, bytecodeS(line - 1, "impl"), resT, name, params);
+      int line, TypeS resultT, String name, NList<ItemS> params) {
+    return annotatedFuncS(line, bytecodeS(line - 1, "impl"), resultT, name, params);
   }
 
   public static AnnotatedFuncS bytecodeFuncS(
-      int line, String path, TypeS resT, String name, NList<ItemS> params) {
-    return annotatedFuncS(line, bytecodeS(path), resT, name, params);
+      int line, String path, TypeS resultT, String name, NList<ItemS> params) {
+    return annotatedFuncS(line, bytecodeS(path), resultT, name, params);
   }
 
-  public static AnnotatedFuncS nativeFuncS(TypeS resT, String name, NList<ItemS> params) {
-    return annotatedFuncS(nativeAnnotationS(), resT, name, params);
-  }
-
-  public static AnnotatedFuncS annotatedFuncS(
-      AnnotationS ann, TypeS resT, String name, NList<ItemS> params) {
-    return annotatedFuncS(1, ann, resT, name, params);
+  public static AnnotatedFuncS nativeFuncS(TypeS resultT, String name, NList<ItemS> params) {
+    return annotatedFuncS(nativeAnnotationS(), resultT, name, params);
   }
 
   public static AnnotatedFuncS annotatedFuncS(
-      int line, AnnotationS ann, TypeS resT, String name, NList<ItemS> params) {
-    return annotatedFuncS(ann, resT, name, params, location(line));
+      AnnotationS ann, TypeS resultT, String name, NList<ItemS> params) {
+    return annotatedFuncS(1, ann, resultT, name, params);
   }
 
   public static AnnotatedFuncS annotatedFuncS(
-      AnnotationS ann, TypeS resT, String name, NList<ItemS> params, Location location) {
-    return new AnnotatedFuncS(ann, funcSchemaS(params, resT), name, params, location);
+      int line, AnnotationS ann, TypeS resultT, String name, NList<ItemS> params) {
+    return annotatedFuncS(ann, resultT, name, params, location(line));
+  }
+
+  public static AnnotatedFuncS annotatedFuncS(
+      AnnotationS ann, TypeS resultT, String name, NList<ItemS> params, Location location) {
+    return new AnnotatedFuncS(ann, funcSchemaS(params, resultT), name, params, location);
   }
 
   public static NamedExprFuncS funcS(int line, String name, NList<ItemS> params, ExprS body) {
@@ -1456,13 +1456,13 @@ public class TestContext {
     return funcS(body.evalT(), name, params, body);
   }
 
-  public static NamedExprFuncS funcS(TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    return funcS(1, resT, name, params, body);
+  public static NamedExprFuncS funcS(TypeS resultT, String name, NList<ItemS> params, ExprS body) {
+    return funcS(1, resultT, name, params, body);
   }
 
   public static NamedExprFuncS funcS(
-      int line, TypeS resT, String name, NList<ItemS> params, ExprS body) {
-    var schema = funcSchemaS(params, resT);
+      int line, TypeS resultT, String name, NList<ItemS> params, ExprS body) {
+    var schema = funcSchemaS(params, resultT);
     return new NamedExprFuncS(schema, name, params, body, location(line));
   }
 
@@ -1592,8 +1592,9 @@ public class TestContext {
 
   public static NamedFuncP namedFuncP(
       String name, NList<ItemP> params, Optional<ExprP> body, Location location) {
-    var resT = new ImplicitTP(location);
-    return new NamedFuncP(resT, name, simpleName(name), params, body, Optional.empty(), location);
+    var resultT = new ImplicitTP(location);
+    return new NamedFuncP(
+        resultT, name, simpleName(name), params, body, Optional.empty(), location);
   }
 
   public static NamedValueP namedValueP() {

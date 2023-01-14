@@ -214,8 +214,8 @@ public class Unifier {
 
   private FuncTS unifyFunctionAndType(FuncTS func1, TypeS type) throws UnifierExc {
     if (type instanceof FuncTS func2) {
-      var result1 = func1.res();
-      var result2 = func2.res();
+      var result1 = func1.result();
+      var result2 = func2.result();
       var result = unify(result1, result2);
       var params1 = func1.params();
       var params2 = func2.params();

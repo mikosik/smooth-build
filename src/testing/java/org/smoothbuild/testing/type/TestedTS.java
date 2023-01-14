@@ -81,19 +81,23 @@ public class TestedTS {
   }
 
   public static class TestedFuncTS extends TestedTS {
-    public final TestedTS resT;
+    public final TestedTS resultT;
     public final ImmutableList<TestedTS> paramTs;
 
-    public TestedFuncTS(TestedTS resT, ImmutableList<TestedTS> paramTs, FuncTS type,
-        Set<String> typeDeclarations, Set<String> allDeclarations) {
+    public TestedFuncTS(
+        TestedTS resultT,
+        ImmutableList<TestedTS> paramTs,
+        FuncTS type,
+        Set<String> typeDeclarations,
+        Set<String> allDeclarations) {
       super(type, typeDeclarations, allDeclarations);
-      this.resT = resT;
+      this.resultT = resultT;
       this.paramTs = paramTs;
     }
 
     @Override
     public String name() {
-      return "(" + joinWithCommaToString(paramTs, TestedTS::name) + ")->" + resT.name();
+      return "(" + joinWithCommaToString(paramTs, TestedTS::name) + ")->" + resultT.name();
     }
   }
 

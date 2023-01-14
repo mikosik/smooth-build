@@ -18,7 +18,7 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.testing.func.bytecode.NonStaticMethod;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
-import org.smoothbuild.testing.func.bytecode.WithNonValRes;
+import org.smoothbuild.testing.func.bytecode.WithNonValueResult;
 import org.smoothbuild.testing.func.bytecode.WithThreeParams;
 import org.smoothbuild.testing.func.bytecode.WithoutBytecodeF;
 import org.smoothbuild.util.collect.Try;
@@ -88,7 +88,7 @@ public class BytecodeMethodLoaderTest extends TestContext {
 
   @Test
   public void loading_method_with_non_val_result_causes_error() throws Exception {
-    assertLoadingCausesError(WithNonValRes.class,
+    assertLoadingCausesError(WithNonValueResult.class,
         "Providing method result type is not " + ValueB.class.getCanonicalName() + ".");
   }
 

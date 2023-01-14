@@ -83,7 +83,7 @@ public class FindSyntaxErrors {
               logger.log(compileError(namedFuncP, "Function " + namedFuncP.q() + " with @" + annName
                   + " annotation cannot have body."));
             }
-            if (namedFuncP.resT() instanceof ImplicitTP) {
+            if (namedFuncP.resultT() instanceof ImplicitTP) {
               logger.log(compileError(namedFuncP, "Function " + namedFuncP.q() + " with @" + annName
                   + " annotation must declare result type."));
             }

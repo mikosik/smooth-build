@@ -80,7 +80,7 @@ public class ModuleVisitorP {
 
   public void visitNamedFuncSignature(NamedFuncP namedFuncP) {
     namedFuncP.annotation().ifPresent(this::visitAnnotation);
-    visitType(namedFuncP.resT());
+    visitType(namedFuncP.resultT());
     visitItems(namedFuncP.params());
     visitNameOf(namedFuncP);
   }
@@ -130,7 +130,7 @@ public class ModuleVisitorP {
   }
 
   public void visitAnonymousFuncSignature(AnonymousFuncP anonymousFuncP) {
-    visitType(anonymousFuncP.resT());
+    visitType(anonymousFuncP.resultT());
     visitItems(anonymousFuncP.params());
   }
 

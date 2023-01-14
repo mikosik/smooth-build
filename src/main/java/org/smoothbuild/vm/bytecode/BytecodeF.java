@@ -173,12 +173,12 @@ public class BytecodeF {
     return categoryDb.bool();
   }
 
-  public FuncTB funcT(ImmutableList<TypeB> paramTs, TypeB resT) {
-    return categoryDb.funcT(paramTs, resT);
+  public FuncTB funcT(ImmutableList<TypeB> paramTs, TypeB resultT) {
+    return categoryDb.funcT(paramTs, resultT);
   }
 
-  public FuncTB funcT(TupleTB paramTs, TypeB resT) {
-    return categoryDb.funcT(paramTs, resT);
+  public FuncTB funcT(TupleTB paramTs, TypeB resultT) {
+    return categoryDb.funcT(paramTs, resultT);
   }
 
   public IntTB intT() {

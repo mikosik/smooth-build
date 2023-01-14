@@ -71,8 +71,8 @@ public class DetectUndefinedReferenceablesAndTypes {
     }
 
     private void visitFuncType(FuncTP func) {
-      visitType(func.resT());
-      func.paramTs().forEach(this::visitType);
+      visitType(func.result());
+      func.params().forEach(this::visitType);
     }
 
     private boolean isKnownTypeName(String name) {

@@ -13,29 +13,29 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public final class FuncTS extends TypeS {
-  private final TypeS res;
+  private final TypeS result;
   private final TupleTS params;
 
-  public FuncTS(ImmutableList<TypeS> paramTs, TypeS resT) {
-    this(new TupleTS(paramTs), resT);
+  public FuncTS(ImmutableList<TypeS> paramTs, TypeS resultT) {
+    this(new TupleTS(paramTs), resultT);
   }
 
-  public FuncTS(TupleTS params, TypeS res) {
-    super(funcTypeName(params, res), calculateFuncVars(params, res));
-    this.res = requireNonNull(res);
+  public FuncTS(TupleTS params, TypeS result) {
+    super(funcTypeName(params, result), calculateFuncVars(params, result));
+    this.result = requireNonNull(result);
     this.params = requireNonNull(params);
   }
 
-  public static VarSetS calculateFuncVars(TupleTS paramTs, TypeS resT) {
-    return varSetS(concat(resT, paramTs.items()));
+  public static VarSetS calculateFuncVars(TupleTS paramTs, TypeS resultT) {
+    return varSetS(concat(resultT, paramTs.items()));
   }
 
   public TupleTS params() {
     return params;
   }
 
-  public TypeS res() {
-    return res;
+  public TypeS result() {
+    return result;
   }
 
   @Override
@@ -45,11 +45,11 @@ public final class FuncTS extends TypeS {
     }
     return object instanceof FuncTS that
         && params.equals(that.params)
-        && res.equals(that.res);
+        && result.equals(that.result);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(params, res);
+    return Objects.hash(params, result);
   }
 }

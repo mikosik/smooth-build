@@ -327,9 +327,9 @@ public class ApTranslator {
 
       private TypeP createFuncT(FuncTContext funcT) {
         var types = map(funcT.type(), this::createT);
-        var resT = types.get(types.size() - 1);
-        var paramTs = types.subList(0, types.size() - 1);
-        return new FuncTP(resT, paramTs, fileLocation(filePath, funcT));
+        var resultType = types.get(types.size() - 1);
+        var paramTypesS = types.subList(0, types.size() - 1);
+        return new FuncTP(resultType, paramTypesS, fileLocation(filePath, funcT));
       }
 
       private RuntimeException newRuntimeException(Class<?> clazz) {

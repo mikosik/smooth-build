@@ -119,16 +119,16 @@ public class ExprTypeUnifier {
 
   private boolean unifyFunc(FuncP funcP) {
     var paramTs = inferParamTs(funcP.params());
-    var resT = translateOrGenerateTempVar(funcP.resT());
-    return mapPair(paramTs, resT, (p, r) -> unifyFunc(funcP, p, r))
+    var resultT = translateOrGenerateTempVar(funcP.resultT());
+    return mapPair(paramTs, resultT, (p, r) -> unifyFunc(funcP, p, r))
         .orElse(false);
   }
 
-  private boolean unifyFunc(FuncP funcP, ImmutableList<TypeS> paramTs, TypeS resT) {
+  private boolean unifyFunc(FuncP funcP, ImmutableList<TypeS> paramTs, TypeS resultT) {
     var typeTellerForBody = typeTeller.withScope(funcP.scope());
-    var funcTS = new FuncTS(paramTs, resT);
+    var funcTS = new FuncTS(paramTs, resultT);
     funcP.setTypeS(funcTS);
-    return unifyEvaluableBody(funcP, resT, funcTS, typeTellerForBody);
+    return unifyEvaluableBody(funcP, resultT, funcTS, typeTellerForBody);
   }
 
   private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
@@ -202,11 +202,11 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> unifyCall(TypeS calleeT, ImmutableList<TypeS> argTs, Location location) {
-    var resT = unifier.newTempVar();
-    var funcT = new FuncTS(argTs, resT);
+    var resultT = unifier.newTempVar();
+    var funcT = new FuncTS(argTs, resultT);
     try {
       unifier.unify(funcT, calleeT);
-      return Optional.of(resT);
+      return Optional.of(resultT);
     } catch (UnifierExc e) {
       logger.log(CompileError.compileError(location, "Illegal call."));
       return Optional.empty();

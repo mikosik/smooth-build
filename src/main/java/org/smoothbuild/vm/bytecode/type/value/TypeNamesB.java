@@ -14,8 +14,8 @@ public class TypeNamesB {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(List<? extends TypeB> paramTs, TypeB resT) {
-    return "(" + commaSeparatedTypeNames(paramTs) + ")->" + resT.name();
+  public static String funcTypeName(List<? extends TypeB> paramTs, TypeB resultT) {
+    return "(" + commaSeparatedTypeNames(paramTs) + ")->" + resultT.name();
   }
 
   public static String tupleTypeName(Iterable<? extends TypeB> itemTs) {

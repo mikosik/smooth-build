@@ -393,13 +393,13 @@ public class CategoryBCorruptedTest extends TestContext {
       @Test
       public void with_data_having_three_elems() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
-        var resT = intTB();
+        var resultT = intTB();
         var hash = hash(
             hash(FUNC.marker()),
             hash(
                 hash(paramTs),
-                hash(resT),
-                hash(resT)
+                hash(resultT),
+                hash(resultT)
             )
         );
         assertThatGet(hash)

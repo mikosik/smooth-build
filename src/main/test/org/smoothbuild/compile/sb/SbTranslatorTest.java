@@ -215,7 +215,7 @@ public class SbTranslatorTest extends TestContext {
           var filePath = smoothFilePath();
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(classBinaryName, location(filePath, 1));
-          var bytecodeFuncS = annotatedFuncS(1, ann, funcTS.res(), "myFunc", nlist(itemS(a, "p")));
+          var bytecodeFuncS = annotatedFuncS(1, ann, funcTS.result(), "myFunc", nlist(itemS(a, "p")));
 
           var fileLoader = createFileLoaderMock(
               filePath.withExtension("jar"), blobBJarWithJavaByteCode(clazz));

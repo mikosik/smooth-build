@@ -76,7 +76,7 @@ public abstract sealed class TypeS
 
   private static FuncTS mapVarsInFunc(FuncTS funcTS, Function<? super VarS, TypeS> map) {
     var params = (TupleTS) funcTS.params().mapVars(map);
-    var result = funcTS.res().mapVars(map);
+    var result = funcTS.result().mapVars(map);
     return new FuncTS(params, result);
   }
 
