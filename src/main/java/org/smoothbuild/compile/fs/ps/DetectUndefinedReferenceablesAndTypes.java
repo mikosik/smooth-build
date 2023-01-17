@@ -2,7 +2,7 @@ package org.smoothbuild.compile.fs.ps;
 
 import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.isVarName;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compile.fs.ps.ast.define.ScopeP.emptyScope;
 
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
@@ -24,8 +24,7 @@ import org.smoothbuild.util.Strings;
 public class DetectUndefinedReferenceablesAndTypes {
   public static Logs detectUndefinedReferenceablesAndTypes(ModuleP moduleP, ScopeS imported) {
     var log = new LogBuffer();
-    var emptyScope = new ScopeP("", immutableBindings(), immutableBindings());
-    new Detector(imported, emptyScope, log)
+    new Detector(imported, emptyScope(), log)
         .visitModule(moduleP);
     return log;
   }
