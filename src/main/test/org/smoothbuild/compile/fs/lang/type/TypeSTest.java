@@ -178,44 +178,56 @@ public class TypeSTest {
 
   @ParameterizedTest
   @MethodSource("map_vars")
-  public void map_vars(TypeS type, Function<VarS, TypeS> varMapper, TypeS expected) {
-    assertThat(type.mapVars(varMapper))
+  public void map_vars(TypeS type, TypeS expected) {
+    Function<VarS, TypeS> addPrefix = (VarS v) -> new VarS("prefix." + v.name());
+    assertThat(type.mapVars(addPrefix))
         .isEqualTo(expected);
   }
 
   public static List<Arguments> map_vars() {
-    Function<VarS, VarS> addPrefix = (VarS v) -> new VarS("prefix." + v.name());
     return List.of(
-        arguments(blobTS(), addPrefix, blobTS()),
-        arguments(boolTS(), addPrefix, boolTS()),
-        arguments(intTS(), addPrefix, intTS()),
-        arguments(stringTS(), addPrefix, stringTS()),
+        arguments(blobTS(), blobTS()),
+        arguments(boolTS(), boolTS()),
+        arguments(intTS(), intTS()),
+        arguments(stringTS(), stringTS()),
 
-        arguments(varS("A"), addPrefix, varS("prefix.A")),
-        arguments(varS("pre.A"), addPrefix, varS("prefix.pre.A")),
+        arguments(varS("A"), varS("prefix.A")),
+        arguments(varS("pre.A"), varS("prefix.pre.A")),
 
-        arguments(tupleTS(intTS()), addPrefix, tupleTS(intTS())),
-        arguments(tupleTS(varA(), varB()), addPrefix, tupleTS(varS("prefix.A"), varS("prefix.B"))),
+        arguments(tupleTS(intTS()), tupleTS(intTS())),
+        arguments(tupleTS(varA(), varB()), tupleTS(varS("prefix.A"), varS("prefix.B"))),
+        arguments(tupleTS(tupleTS(varA())), tupleTS(tupleTS(varS("prefix.A")))),
 
-        arguments(arrayTS(intTS()), addPrefix, arrayTS(intTS())),
-        arguments(arrayTS(varS("A")), addPrefix, arrayTS(varS("prefix.A"))),
-        arguments(arrayTS(varS("p.A")), addPrefix, arrayTS(varS("prefix.p.A"))),
+        arguments(arrayTS(intTS()), arrayTS(intTS())),
+        arguments(arrayTS(varS("A")), arrayTS(varS("prefix.A"))),
+        arguments(arrayTS(varS("p.A")), arrayTS(varS("prefix.p.A"))),
+        arguments(arrayTS(arrayTS(varS("A"))), arrayTS(arrayTS(varS("prefix.A")))),
 
-        arguments(funcTS(boolTS(), blobTS()), addPrefix, funcTS(boolTS(), blobTS())),
-        arguments(funcTS(boolTS(), varS("A")), addPrefix, funcTS(boolTS(), varS("prefix.A"))),
-        arguments(funcTS(varS("A"), blobTS()), addPrefix, funcTS(varS("prefix.A"), blobTS())),
-        arguments(funcTS(boolTS(), varS("p.A")), addPrefix, funcTS(boolTS(), varS("prefix.p.A"))),
-        arguments(funcTS(varS("p.A"), blobTS()), addPrefix, funcTS(varS("prefix.p.A"), blobTS())),
-
-        arguments(structTS("MyStruct", intTS()), addPrefix, structTS("MyStruct", intTS())),
+        arguments(funcTS(boolTS(), blobTS()), funcTS(boolTS(), blobTS())),
+        arguments(funcTS(boolTS(), varS("A")), funcTS(boolTS(), varS("prefix.A"))),
+        arguments(funcTS(varS("A"), blobTS()), funcTS(varS("prefix.A"), blobTS())),
+        arguments(funcTS(boolTS(), varS("p.A")), funcTS(boolTS(), varS("prefix.p.A"))),
+        arguments(funcTS(varS("p.A"), blobTS()), funcTS(varS("prefix.p.A"), blobTS())),
+        arguments(funcTS(funcTS(varS("A"))), funcTS(funcTS(varS("prefix.A")))),
         arguments(
-            structTS(varA(), varB()), addPrefix,
+            funcTS(funcTS(varS("A"), intTS()), intTS()),
+            funcTS(funcTS(varS("prefix.A"), intTS()), intTS())),
+
+        arguments(structTS("MyStruct", intTS()), structTS("MyStruct", intTS())),
+        arguments(
+            structTS(varA(), varB()),
             structTS(varS("prefix.A"), varS("prefix.B"))),
-
-        arguments(interfaceTS(intTS()), addPrefix, interfaceTS(intTS())),
         arguments(
-            interfaceTS(varA(), varB()), addPrefix,
-            interfaceTS(varS("prefix.A"), varS("prefix.B")))
+            structTS("S1", structTS("S2", varS("A"))),
+            structTS("S1", structTS("S2", varS("prefix.A")))),
+
+        arguments(interfaceTS(intTS()), interfaceTS(intTS())),
+        arguments(
+            interfaceTS(varA(), varB()),
+            interfaceTS(varS("prefix.A"), varS("prefix.B"))),
+        arguments(
+            interfaceTS(interfaceTS(varS("A"))),
+            interfaceTS(interfaceTS(varS("prefix.A"))))
     );
   }
 
