@@ -19,9 +19,9 @@ import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.EvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -95,7 +95,7 @@ public class TypeInferrerResolve {
     // @formatter:off
     return switch (expr) {
       case CallP          callP          -> resolveCall(callP);
-      case MonoizeP       monoizeP       -> resolveMonoize(monoizeP);
+      case InstantiateP   instantiateP   -> resolveInstantiate(instantiateP);
       case NamedArgP      namedArgP      -> resolveNamedArg(namedArgP);
       case OrderP         orderP         -> resolveOrder(orderP);
       case SelectP        selectP        -> resolveSelect(selectP);
@@ -112,17 +112,17 @@ public class TypeInferrerResolve {
         && resolveExprType(callP);
   }
 
-  private boolean resolveMonoize(MonoizeP monoizeP) {
-    return resolveMonoizable(monoizeP.monoizable()) && resolveMonoizeTypeArgs(monoizeP);
+  private boolean resolveInstantiate(InstantiateP instantiateP) {
+    return resolveMonoizable(instantiateP.monoizable()) && resolveInstantiateTypeArgs(instantiateP);
   }
 
-  private boolean resolveMonoizeTypeArgs(MonoizeP monoizeP) {
-    var resolvedTypeArgs = map(monoizeP.typeArgs(), unifier::resolve);
+  private boolean resolveInstantiateTypeArgs(InstantiateP instantiateP) {
+    var resolvedTypeArgs = map(instantiateP.typeArgs(), unifier::resolve);
     if (resolvedTypeArgs.stream().anyMatch(this::hasTempVar)) {
-      logger.log(compileError(monoizeP.location(), "Cannot infer actual type parameters."));
+      logger.log(compileError(instantiateP.location(), "Cannot infer actual type parameters."));
       return false;
     }
-    monoizeP.setTypeArgs(resolvedTypeArgs);
+    instantiateP.setTypeArgs(resolvedTypeArgs);
     return true;
   }
 

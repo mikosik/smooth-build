@@ -11,13 +11,13 @@ import org.smoothbuild.compile.fs.lang.type.TypeS;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Monomorphization of MonoizableP.
+ * Instantiation of polymorphic entity.
  */
-public final class MonoizeP extends ExprP {
+public final class InstantiateP extends ExprP {
   private final MonoizableP monoizable;
   private ImmutableList<TypeS> typeArgs;
 
-  public MonoizeP(MonoizableP monoizable, Location location) {
+  public InstantiateP(MonoizableP monoizable, Location location) {
     super(location);
     this.monoizable = monoizable;
   }
@@ -39,7 +39,7 @@ public final class MonoizeP extends ExprP {
     if (this == object) {
       return true;
     }
-    return object instanceof MonoizeP that
+    return object instanceof InstantiateP that
         && Objects.equals(this.monoizable, that.monoizable)
         && Objects.equals(this.location(), that.location());
   }
@@ -55,6 +55,6 @@ public final class MonoizeP extends ExprP {
         "monoizable = " + monoizable,
         "location = " + location()
     );
-    return "MonoizeP(\n" + indent(fields) + "\n)";
+    return "InstantiateP(\n" + indent(fields) + "\n)";
   }
 }

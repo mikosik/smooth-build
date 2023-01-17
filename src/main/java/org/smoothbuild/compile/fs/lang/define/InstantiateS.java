@@ -11,22 +11,22 @@ import org.smoothbuild.compile.fs.lang.type.TypeS;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Monomorphization of monomorphizable expression.
+ * Instantiation of polymorphic entity.
  */
-public record MonoizeS(
+public record InstantiateS(
       ImmutableList<TypeS> typeArgs,
       MonoizableS monoizableS,
       TypeS evaluationT,
       Location location)
     implements ExprS {
 
-  public MonoizeS(MonoizableS monoizableS, Location location) {
+  public InstantiateS(MonoizableS monoizableS, Location location) {
     this(list(), monoizableS, location);
     checkArgument(monoizableS.schema().quantifiedVars().isEmpty());
   }
 
-  public MonoizeS(ImmutableList<TypeS> typeArgs, MonoizableS monoizableS, Location location) {
-    this(typeArgs, monoizableS, monoizableS.schema().monoize(typeArgs), location);
+  public InstantiateS(ImmutableList<TypeS> typeArgs, MonoizableS monoizableS, Location location) {
+    this(typeArgs, monoizableS, monoizableS.schema().instantiate(typeArgs), location);
   }
 
   @Override
@@ -37,6 +37,6 @@ public record MonoizeS(
         "evaluationT = " + evaluationT,
         "location = " + location
     );
-    return "MonoizeS(\n" + indent(fields) + "\n)";
+    return "InstantiateS(\n" + indent(fields) + "\n)";
   }
 }

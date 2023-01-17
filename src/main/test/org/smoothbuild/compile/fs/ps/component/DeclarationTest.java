@@ -1012,7 +1012,7 @@ public class DeclarationTest extends TestContext {
           module(funcCall("7,"))
               .loadsWithSuccess()
               .containsEvaluable(valueS(2, intTS(), "result",
-                  callS(2, monoizeS(2, intIdFuncS()), intS(2, 7))));
+                  callS(2, instantiateS(2, intIdFuncS()), intS(2, 7))));
         }
 
         @Test

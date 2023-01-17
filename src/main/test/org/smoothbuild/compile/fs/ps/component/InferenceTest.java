@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.fs.lang.define.MonoizeS;
+import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.testing.TestContext;
@@ -163,7 +163,7 @@ public class InferenceTest extends TestContext {
           .evaluables()
           .get("myValue");
       var myValueBody = ((NamedExprValueS) myValue).body();
-      var anonymousFunc = ((MonoizeS) myValueBody).monoizableS();
+      var anonymousFunc = ((InstantiateS) myValueBody).monoizableS();
       assertThat(anonymousFunc.schema())
           .isEqualTo(expected);
     }
@@ -771,7 +771,7 @@ public class InferenceTest extends TestContext {
       }
 
       @Test
-      public void two_differently_monoized_calls_to_poly_function_with_poly_default_value_within_one_expr() {
+      public void two_differently_instantitaed_calls_to_poly_function_with_poly_default_value_within_one_expr() {
         var code = """
           [A] empty([A] array = []) = array;
           myFunc([String] s, [Int] i) = 7;
@@ -816,7 +816,7 @@ public class InferenceTest extends TestContext {
               """;
       var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(2, tupleTS());
-      var call = callS(2, monoizeS(2, list(arrayTS(tupleTS())), myFunc), emptyArray);
+      var call = callS(2, instantiateS(2, list(arrayTS(tupleTS())), myFunc), emptyArray);
       module(code)
           .loadsWithSuccess()
           .containsEvaluable(valueS(2, "result", call));
@@ -830,7 +830,7 @@ public class InferenceTest extends TestContext {
       var anonymousFunc = anonymousFuncS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(1, tupleTS());
       var call = callS(
-          1, monoizeS(1, list(arrayTS(tupleTS())), anonymousFunc), emptyArray);
+          1, instantiateS(1, list(arrayTS(tupleTS())), anonymousFunc), emptyArray);
       module(code)
           .loadsWithSuccess()
           .containsEvaluable(valueS(1, "result", call));

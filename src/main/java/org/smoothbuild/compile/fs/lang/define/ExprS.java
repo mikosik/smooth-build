@@ -7,6 +7,6 @@ import org.smoothbuild.compile.fs.lang.type.TypeS;
  * Expression.
  */
 public sealed interface ExprS extends Located
-    permits CallS, CombineS, ConstantS, MonoizeS, OrderS, SelectS {
+    permits CallS, CombineS, ConstantS, InstantiateS, OrderS, SelectS {
   public TypeS evaluationT();
 }

@@ -48,12 +48,12 @@ import org.smoothbuild.compile.fs.lang.define.CallS;
 import org.smoothbuild.compile.fs.lang.define.CombineS;
 import org.smoothbuild.compile.fs.lang.define.ConstructorS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.lang.define.MonoizableS;
-import org.smoothbuild.compile.fs.lang.define.MonoizeS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
@@ -84,10 +84,10 @@ import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
+import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
@@ -1191,49 +1191,50 @@ public class TestContext {
     return ImmutableMap.of(var, type);
   }
 
-  public static MonoizeS monoizeS(NamedEvaluableS namedEvaluableS) {
-    return monoizeS(17, namedEvaluableS);
+  public static InstantiateS instantiateS(NamedEvaluableS namedEvaluableS) {
+    return instantiateS(17, namedEvaluableS);
   }
 
-  public static MonoizeS monoizeS(int line, NamedEvaluableS namedEvaluableS) {
-    return monoizeS(line, referenceS(line, namedEvaluableS));
+  public static InstantiateS instantiateS(int line, NamedEvaluableS namedEvaluableS) {
+    return instantiateS(line, referenceS(line, namedEvaluableS));
   }
 
-  public static MonoizeS monoizeS(ImmutableList<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
-    return monoizeS(1, typeArgs, namedEvaluableS);
+  public static InstantiateS instantiateS(
+      ImmutableList<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
+    return instantiateS(1, typeArgs, namedEvaluableS);
   }
 
-  public static MonoizeS monoizeS(
+  public static InstantiateS instantiateS(
       int line, ImmutableList<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
     var location = location(line);
     var referenceS = new ReferenceS(namedEvaluableS.schema(), namedEvaluableS.name(), location);
-    return monoizeS(typeArgs, referenceS, location);
+    return instantiateS(typeArgs, referenceS, location);
   }
 
-  public static MonoizeS monoizeS(MonoizableS monoizableS) {
-    return monoizeS(monoizableS, monoizableS.location());
+  public static InstantiateS instantiateS(MonoizableS monoizableS) {
+    return instantiateS(monoizableS, monoizableS.location());
   }
 
-  public static MonoizeS monoizeS(int line, MonoizableS monoizableS) {
-    return monoizeS(monoizableS, location(line));
+  public static InstantiateS instantiateS(int line, MonoizableS monoizableS) {
+    return instantiateS(monoizableS, location(line));
   }
 
-  public static MonoizeS monoizeS(MonoizableS monoizableS, Location location) {
-    return monoizeS(list(), monoizableS, location);
+  public static InstantiateS instantiateS(MonoizableS monoizableS, Location location) {
+    return instantiateS(list(), monoizableS, location);
   }
 
-  public static MonoizeS monoizeS(ImmutableList<TypeS> typeArgs, MonoizableS monoizableS) {
-    return monoizeS(1, typeArgs, monoizableS);
+  public static InstantiateS instantiateS(ImmutableList<TypeS> typeArgs, MonoizableS monoizableS) {
+    return instantiateS(1, typeArgs, monoizableS);
   }
 
-  public static MonoizeS monoizeS(
+  public static InstantiateS instantiateS(
       int line, ImmutableList<TypeS> typeArgs, MonoizableS monoizableS) {
-    return monoizeS(typeArgs, monoizableS, location(line));
+    return instantiateS(typeArgs, monoizableS, location(line));
   }
 
-  public static MonoizeS monoizeS(
+  public static InstantiateS instantiateS(
       ImmutableList<TypeS> typeArgs, MonoizableS monoizableS, Location location) {
-    return new MonoizeS(typeArgs, monoizableS, location);
+    return new InstantiateS(typeArgs, monoizableS, location);
   }
 
   public static OrderS orderS(int line, ExprS headElem, ExprS... tailElems) {
@@ -1250,12 +1251,12 @@ public class TestContext {
     return new OrderS(arrayTS(elemT), list(exprs), location(line));
   }
 
-  public static MonoizeS paramRefS(TypeS type, String name) {
+  public static InstantiateS paramRefS(TypeS type, String name) {
     return paramRefS(1, type, name);
   }
 
-  public static MonoizeS paramRefS(int line, TypeS type, String name) {
-    return monoizeS(line, referenceS(line, new SchemaS(varSetS(), type), name));
+  public static InstantiateS paramRefS(int line, TypeS type, String name) {
+    return instantiateS(line, referenceS(line, new SchemaS(varSetS(), type), name));
   }
 
   public static ReferenceS referenceS(int line, NamedEvaluableS namedEvaluableS) {
@@ -1546,8 +1547,8 @@ public class TestContext {
 
   // P - parsed objects
 
-  public static MonoizeP anonymousFuncP(NList<ItemP> params, ExprP body) {
-    return monoizeP(new AnonymousFuncP(params, body, location()));
+  public static InstantiateP anonymousFuncP(NList<ItemP> params, ExprP body) {
+    return instantiateP(new AnonymousFuncP(params, body, location()));
   }
 
   public static CallP callP(ExprP callee) {
@@ -1558,8 +1559,8 @@ public class TestContext {
     return new CallP(callee, list(), location);
   }
 
-  public static MonoizeP monoizeP(MonoizableP monoizableP) {
-    return new MonoizeP(monoizableP, monoizableP.location());
+  public static InstantiateP instantiateP(MonoizableP monoizableP) {
+    return new InstantiateP(monoizableP, monoizableP.location());
   }
 
   public static NamedFuncP namedFuncP() {
@@ -1644,12 +1645,12 @@ public class TestContext {
     return new IntP("7", location());
   }
 
-  public static MonoizeP referenceP(String name) {
+  public static InstantiateP referenceP(String name) {
     return referenceP(name, location(7));
   }
 
-  public static MonoizeP referenceP(String name, Location location) {
-    return monoizeP(new ReferenceP(name, location));
+  public static InstantiateP referenceP(String name, Location location) {
+    return instantiateP(new ReferenceP(name, location));
   }
 
   // location

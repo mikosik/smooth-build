@@ -8,11 +8,11 @@ import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
@@ -115,7 +115,7 @@ public class ModuleVisitorP {
       case BlobP          blobP          -> visitBlob(blobP);
       case CallP          callP          -> visitCall(callP);
       case IntP           intP           -> visitInt(intP);
-      case MonoizeP       monoizeP       -> visitMonoizeP(monoizeP);
+      case InstantiateP   instantiateP   -> visitInstantiateP(instantiateP);
       case NamedArgP      namedArgP      -> visitNamedArg(namedArgP);
       case OrderP         orderP         -> visitOrder(orderP);
       case SelectP        selectP        -> visitSelect(selectP);
@@ -160,8 +160,8 @@ public class ModuleVisitorP {
     }
   }
 
-  public void visitMonoizeP(MonoizeP monoizeP) {
-    visitMonoizableP(monoizeP.monoizable());
+  public void visitInstantiateP(InstantiateP instantiateP) {
+    visitMonoizableP(instantiateP.monoizable());
   }
 
   public void visitNamedArg(NamedArgP namedArgP) {

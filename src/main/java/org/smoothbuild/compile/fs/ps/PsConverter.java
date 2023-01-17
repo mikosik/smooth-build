@@ -21,11 +21,11 @@ import org.smoothbuild.compile.fs.lang.define.CallS;
 import org.smoothbuild.compile.fs.lang.define.CombineS;
 import org.smoothbuild.compile.fs.lang.define.ConstructorS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ModuleS;
 import org.smoothbuild.compile.fs.lang.define.MonoizableS;
-import org.smoothbuild.compile.fs.lang.define.MonoizeS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
@@ -47,11 +47,11 @@ import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ConstructorP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -175,7 +175,7 @@ public class PsConverter {
       case BlobP          blobP          -> convertBlob(blobP);
       case CallP          callP          -> convertCall(callP);
       case IntP           intP           -> convertInt(intP);
-      case MonoizeP       monoizeP       -> convertMonoize(monoizeP);
+      case InstantiateP   instantiateP   -> convertInstantiate(instantiateP);
       case NamedArgP      namedArgP      -> convertExpr(namedArgP.expr());
       case OrderP         orderP         -> convertOrder(orderP);
       case SelectP        selectP        -> convertSelect(selectP);
@@ -222,9 +222,9 @@ public class PsConverter {
     };
   }
 
-  private ExprS convertMonoize(MonoizeP monoizeP) {
-    var monoizableS = convertMonoizable(monoizeP.monoizable());
-    return new MonoizeS(monoizeP.typeArgs(), monoizableS, monoizeP.location());
+  private ExprS convertInstantiate(InstantiateP instantiateP) {
+    var monoizableS = convertMonoizable(instantiateP.monoizable());
+    return new InstantiateS(instantiateP.typeArgs(), monoizableS, instantiateP.location());
   }
 
   private ExprS convertOrder(OrderP order) {

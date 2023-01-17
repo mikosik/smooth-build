@@ -63,23 +63,23 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void call_anonymous_func() throws EvaluatorExcS {
           var anonymousFuncS = anonymousFuncS(nlist(), intS(7));
-          var callS = callS(monoizeS(anonymousFuncS));
+          var callS = callS(instantiateS(anonymousFuncS));
           assertEvaluation(callS, intB(7));
         }
 
         @Test
         public void call_anonymous_function_returning_value_from_its_closure()
             throws EvaluatorExcS {
-          var anonymousFunc = monoizeS(anonymousFuncS(nlist(), paramRefS(intTS(), "p")));
+          var anonymousFunc = instantiateS(anonymousFuncS(nlist(), paramRefS(intTS(), "p")));
           var funcS = funcS("myFunc", nlist(itemS(intTS(), "p")), callS(anonymousFunc));
-          var callS = callS(monoizeS(funcS), intS(7));
+          var callS = callS(instantiateS(funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, intB(7));
         }
 
         @Test
         public void call_expression_function() throws EvaluatorExcS {
           var funcS = funcS("n", nlist(), intS(7));
-          var callS = callS(monoizeS(funcS));
+          var callS = callS(instantiateS(funcS));
           assertEvaluation(bindings(funcS), callS, intB(7));
         }
 
@@ -88,14 +88,14 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var orderS = orderS(a, paramRefS(a, "e"));
           var funcS = funcS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
-          var callS = callS(monoizeS(list(intTS()), funcS), intS(7));
+          var callS = callS(instantiateS(list(intTS()), funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, arrayB(intTB(), intB(7)));
         }
 
         @Test
         public void call_constructor() throws EvaluatorExcS {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
-          var callS = callS(monoizeS(constructorS), intS(7));
+          var callS = callS(instantiateS(constructorS), intS(7));
           assertEvaluation(bindings(constructorS), callS,tupleB(intB(7)));
         }
 
@@ -103,7 +103,7 @@ public class EvaluatorSTest extends TestContext {
         public void call_native_argless_func() throws Exception {
           var funcS = annotatedFuncS(
               nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
-          var callS = callS(monoizeS(funcS));
+          var callS = callS(instantiateS(funcS));
           var jarB = blobB(137);
           when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
               .thenReturn(jarB);
@@ -118,7 +118,7 @@ public class EvaluatorSTest extends TestContext {
           var funcS = annotatedFuncS(nativeAnnotationS(1, stringS("class binary name")),
               intTS(), "f", nlist(itemS(intTS(), "p"))
           );
-          var callS = callS(monoizeS(funcS), intS(77));
+          var callS = callS(instantiateS(funcS), intS(77));
           var jarB = blobB(137);
           when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
               .thenReturn(jarB);
@@ -154,7 +154,7 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void param_ref() throws EvaluatorExcS {
           var funcS = funcS("n", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-          var callS = callS(monoizeS(funcS), intS(7));
+          var callS = callS(instantiateS(funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, intB(7));
         }
       }
@@ -165,7 +165,7 @@ public class EvaluatorSTest extends TestContext {
         public void select() throws EvaluatorExcS {
           var structTS = structTS("MyStruct", nlist(sigS(intTS(), "f")));
           var constructorS = constructorS(structTS);
-          var callS = callS(monoizeS(constructorS), intS(7));
+          var callS = callS(instantiateS(constructorS), intS(7));
           assertEvaluation(bindings(constructorS), selectS(callS, "f"), intB(7));
         }
       }
@@ -178,7 +178,7 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void mono_anonymous_function() throws EvaluatorExcS {
           assertEvaluation(
-              monoizeS(anonymousFuncS(intS(7))),
+              instantiateS(anonymousFuncS(intS(7))),
               closureB(intB(7)));
         }
 
@@ -186,7 +186,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_anonymous_function() throws EvaluatorExcS {
           var a = varA();
           var polyAnonymousFuncS = anonymousFuncS(nlist(itemS(a, "a")), paramRefS(a, "a"));
-          var monoAnonymousFuncS = monoizeS(list(intTS()), polyAnonymousFuncS);
+          var monoAnonymousFuncS = instantiateS(list(intTS()), polyAnonymousFuncS);
           assertEvaluation(monoAnonymousFuncS, closureB(list(intTB()), referenceB(intTB(), 0)));
         }
       }
@@ -202,8 +202,8 @@ public class EvaluatorSTest extends TestContext {
         public void poly_expression_function() throws EvaluatorExcS {
           var a = varA();
           var funcS = funcS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
-          var monoizedS = monoizeS(list(intTS()), funcS);
-          assertEvaluation(bindings(funcS), monoizedS, idFuncB());
+          var instantiateS = instantiateS(list(intTS()), funcS);
+          assertEvaluation(bindings(funcS), instantiateS, idFuncB());
         }
 
         @Test
@@ -220,7 +220,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
           assertEvaluation(
-              bindings(bytecodeFuncS), monoizeS(list(intTS()), bytecodeFuncS), funcB);
+              bindings(bytecodeFuncS), instantiateS(list(intTS()), bytecodeFuncS), funcB);
         }
 
         @Test
@@ -235,15 +235,15 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void mono_expression_value() throws EvaluatorExcS {
           var valueS = valueS(1, intTS(), "name", intS(7));
-          assertEvaluation(bindings(valueS), monoizeS(valueS), intB(7));
+          assertEvaluation(bindings(valueS), instantiateS(valueS), intB(7));
         }
 
         @Test
         public void poly_value() throws EvaluatorExcS {
           var a = varA();
           var polyValue = valueS(1, arrayTS(a), "name", orderS(a));
-          var monoizedValue = monoizeS(list(intTS()), polyValue);
-          assertEvaluation(bindings(polyValue), monoizedValue, arrayB(intTB()));
+          var instantiatedValue = instantiateS(list(intTS()), polyValue);
+          assertEvaluation(bindings(polyValue), instantiatedValue, arrayB(intTB()));
         }
       }
 
@@ -260,7 +260,7 @@ public class EvaluatorSTest extends TestContext {
   }
 
   private void assertEvaluation(NamedEvaluableS namedEvaluableS, ExprB exprB) throws EvaluatorExcS {
-    assertThat(evaluate(bindings(namedEvaluableS), monoizeS(namedEvaluableS)))
+    assertThat(evaluate(bindings(namedEvaluableS), instantiateS(namedEvaluableS)))
         .isEqualTo(exprB);
   }
 

@@ -31,10 +31,10 @@ import org.smoothbuild.compile.fs.ps.ast.define.EvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
+import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -171,7 +171,7 @@ public class ExprTypeUnifier {
     // @formatter:off
     return switch (exprP) {
       case CallP          callP          -> unifyAndMemoize(this::unifyCall, callP);
-      case MonoizeP       monoizeP       -> unifyAndMemoize(this::unifyMonoize, monoizeP);
+      case InstantiateP   instantiateP   -> unifyAndMemoize(this::unifyInstantiate, instantiateP);
       case NamedArgP      namedArgP      -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
       case OrderP         orderP         -> unifyAndMemoize(this::unifyOrder, orderP);
       case SelectP        selectP        -> unifyAndMemoize(this::unifySelect, selectP);
@@ -213,12 +213,12 @@ public class ExprTypeUnifier {
     }
   }
 
-  private Optional<TypeS> unifyMonoize(MonoizeP monoizeP) {
-    var monoizableP = monoizeP.monoizable();
+  private Optional<TypeS> unifyInstantiate(InstantiateP instantiateP) {
+    var monoizableP = instantiateP.monoizable();
     if (unifyMonoizable(monoizableP)) {
       var schema = monoizableP.schemaS();
-      monoizeP.setTypeArgs(generate(schema.quantifiedVars().size(), unifier::newTempVar));
-      return Optional.of(schema.monoize(monoizeP.typeArgs()));
+      instantiateP.setTypeArgs(generate(schema.quantifiedVars().size(), unifier::newTempVar));
+      return Optional.of(schema.instantiate(instantiateP.typeArgs()));
     } else {
       return Optional.empty();
     }

@@ -34,10 +34,10 @@ import org.smoothbuild.compile.fs.lang.define.ConstructorS;
 import org.smoothbuild.compile.fs.lang.define.ExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.FuncS;
+import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.MonoizableS;
-import org.smoothbuild.compile.fs.lang.define.MonoizeS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
@@ -139,14 +139,14 @@ public class SbTranslator {
   public ExprB translateExpr(ExprS exprS) {
     // @formatter:off
     return switch (exprS) {
-      case BlobS       blobS       -> saveLocAndReturn(blobS,     translateBlob(blobS));
-      case CallS       callS       -> saveLocAndReturn(callS,     translateCall(callS));
-      case CombineS    combineS    -> saveLocAndReturn(combineS,  translateCombine(combineS));
-      case IntS        intS        -> saveLocAndReturn(intS,      translateInt(intS));
-      case OrderS      orderS      -> saveLocAndReturn(orderS,    translateOrder(orderS));
-      case SelectS     selectS     -> saveLocAndReturn(selectS,   translateSelect(selectS));
-      case StringS     stringS     -> saveLocAndReturn(stringS,   translateString(stringS));
-      case MonoizeS    monoizeS    -> translateMonoize(monoizeS);
+      case BlobS        blobS        -> saveLocAndReturn(blobS,     translateBlob(blobS));
+      case CallS        callS        -> saveLocAndReturn(callS,     translateCall(callS));
+      case CombineS     combineS     -> saveLocAndReturn(combineS,  translateCombine(combineS));
+      case IntS         intS         -> saveLocAndReturn(intS,      translateInt(intS));
+      case OrderS       orderS       -> saveLocAndReturn(orderS,    translateOrder(orderS));
+      case SelectS      selectS      -> saveLocAndReturn(selectS,   translateSelect(selectS));
+      case StringS      stringS      -> saveLocAndReturn(stringS,   translateString(stringS));
+      case InstantiateS instantiateS -> translateInstantiate(instantiateS);
     };
     // @formatter:on
   }
@@ -170,11 +170,11 @@ public class SbTranslator {
     return bytecodeF.int_(intS.bigInteger());
   }
 
-  private ExprB translateMonoize(MonoizeS monoizeS) {
-    var keys = monoizeS.monoizableS().schema().quantifiedVars().asList();
-    var values = map(monoizeS.typeArgs(), typeSbTranslator::translate);
-    var monoizedVarMap = zip(keys, values);
-    var varMap = override(monoizedVarMap, typeSbTranslator.varMap());
+  private ExprB translateInstantiate(InstantiateS instantiateS) {
+    var keys = instantiateS.monoizableS().schema().quantifiedVars().asList();
+    var values = map(instantiateS.typeArgs(), typeSbTranslator::translate);
+    var instantiatedVarMap = zip(keys, values);
+    var varMap = override(instantiatedVarMap, typeSbTranslator.varMap());
     var newTypeSbTranslator = new TypeSbTranslator(bytecodeF, varMap);
     var sbTranslator = new SbTranslator(
         bytecodeF,
@@ -186,7 +186,7 @@ public class SbTranslator {
         cache,
         nameMapping,
         locationMapping);
-    return sbTranslator.translateMonoizable(monoizeS.monoizableS());
+    return sbTranslator.translateMonoizable(instantiateS.monoizableS());
   }
 
   public ExprB translateMonoizable(MonoizableS monoizableS) {

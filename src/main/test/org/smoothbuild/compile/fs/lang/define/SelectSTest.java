@@ -12,11 +12,11 @@ public class SelectSTest extends TestContext {
     var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), location(17));
     var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));
     var structValue = annotatedValueS(11, annotationS, structTS, "structValue");
-    var selectS = selectS(3, monoizeS(12, structValue), "field");
+    var selectS = selectS(3, instantiateS(12, structValue), "field");
     assertThat(selectS.toString())
         .isEqualTo("""
             SelectS(
-              selectable = MonoizeS(
+              selectable = InstantiateS(
                 typeArgs = <>
                 monoizableS = ReferenceS(
                   schema = <>MyStruct

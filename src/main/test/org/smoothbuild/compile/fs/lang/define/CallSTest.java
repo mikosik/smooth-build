@@ -9,12 +9,12 @@ import org.smoothbuild.testing.TestContext;
 public class CallSTest extends TestContext {
   @Test
   public void to_string() {
-    var funcS = monoizeS(4, list(intTS()), idFuncS());
+    var funcS = instantiateS(4, list(intTS()), idFuncS());
     var callS = callS(3, funcS, intS(3, 7));
     assertThat(callS.toString())
         .isEqualTo("""
             CallS(
-              callee = MonoizeS(
+              callee = InstantiateS(
                 typeArgs = <Int>
                 monoizableS = ReferenceS(
                   schema = <A>(A)->A

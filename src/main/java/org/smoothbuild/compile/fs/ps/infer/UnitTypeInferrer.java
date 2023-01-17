@@ -8,9 +8,9 @@ import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
+import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizeP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
@@ -34,7 +34,7 @@ public class UnitTypeInferrer {
     // @formatter:off
     switch (expr) {
       case CallP          call          -> inferCall(call);
-      case MonoizeP       monoizeP      -> inferMonoize(monoizeP);
+      case InstantiateP   instantiateP  -> inferInstantiate(instantiateP);
       case NamedArgP      namedArg      -> inferNamedArg(namedArg);
       case OrderP         order         -> inferOrder(order);
       case SelectP        select        -> inferSelect(select);
@@ -50,13 +50,13 @@ public class UnitTypeInferrer {
     call.args().forEach(this::infer);
   }
 
-  private void inferMonoize(MonoizeP monoizeP) {
-    inferMonoizable(monoizeP.monoizable());
-    inferMonoizeTypeArgs(monoizeP);
+  private void inferInstantiate(InstantiateP instantiateP) {
+    inferMonoizable(instantiateP.monoizable());
+    inferInstantiateTypeArgs(instantiateP);
   }
 
-  private void inferMonoizeTypeArgs(MonoizeP monoizeP) {
-    for (var typeArg : monoizeP.typeArgs()) {
+  private void inferInstantiateTypeArgs(InstantiateP instantiateP) {
+    for (var typeArg : instantiateP.typeArgs()) {
       var resolvedTypeArg = unifier.resolve(typeArg);
       for (var var : resolvedTypeArg.vars()) {
         if (var.isTemporary()) {
