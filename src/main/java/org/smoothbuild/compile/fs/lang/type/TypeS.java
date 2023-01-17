@@ -47,7 +47,7 @@ public abstract sealed class TypeS
     return mapVars(t -> t instanceof TempVarS ? map.apply(t) : t);
   }
 
-  public TypeS mapVars(Map<VarS, VarS> map) {
+  public TypeS mapVars(Map<VarS, TypeS> map) {
     return mapVars(v -> map.getOrDefault(v, v));
   }
 

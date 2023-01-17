@@ -196,7 +196,7 @@ public class TypeInferrer {
   }
 
   private static TypeS replaceVarsWithTempVars(VarSetS vars, TypeS type, Unifier unifier) {
-    var mapping = toMap(vars, v -> unifier.newTempVar());
+    var mapping = toMap(vars, v -> (TypeS) unifier.newTempVar());
     return type.mapVars(mapping);
   }
 
