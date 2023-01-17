@@ -37,13 +37,13 @@ import org.smoothbuild.compile.fs.lang.define.FuncS;
 import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
-import org.smoothbuild.compile.fs.lang.define.MonoizableS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
+import org.smoothbuild.compile.fs.lang.define.PolymorphicS;
 import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
@@ -171,7 +171,7 @@ public class SbTranslator {
   }
 
   private ExprB translateInstantiate(InstantiateS instantiateS) {
-    var keys = instantiateS.monoizableS().schema().quantifiedVars().asList();
+    var keys = instantiateS.polymorphicS().schema().quantifiedVars().asList();
     var values = map(instantiateS.typeArgs(), typeSbTranslator::translate);
     var instantiatedVarMap = zip(keys, values);
     var varMap = override(instantiatedVarMap, typeSbTranslator.varMap());
@@ -186,11 +186,11 @@ public class SbTranslator {
         cache,
         nameMapping,
         locationMapping);
-    return sbTranslator.translateMonoizable(instantiateS.monoizableS());
+    return sbTranslator.translatePolymorphic(instantiateS.polymorphicS());
   }
 
-  public ExprB translateMonoizable(MonoizableS monoizableS) {
-    return switch (monoizableS) {
+  public ExprB translatePolymorphic(PolymorphicS polymorphicS) {
+    return switch (polymorphicS) {
       case AnonymousFuncS anonymousFuncS -> translateAnonymousFunc(anonymousFuncS);
       case ReferenceS referenceS -> translateReference(referenceS);
     };

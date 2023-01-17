@@ -11,7 +11,7 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
  * Reference to ReferenceableS.
  */
 public record ReferenceS(SchemaS schema, String name, Location location)
-    implements MonoizableS, Nal {
+    implements PolymorphicS, Nal {
   @Override
   public String toString() {
     var fields = joinToString("\n",

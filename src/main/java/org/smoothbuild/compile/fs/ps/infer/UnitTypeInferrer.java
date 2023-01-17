@@ -10,9 +10,9 @@ import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
+import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
@@ -51,7 +51,7 @@ public class UnitTypeInferrer {
   }
 
   private void inferInstantiate(InstantiateP instantiateP) {
-    inferMonoizable(instantiateP.monoizable());
+    inferPolymorphic(instantiateP.polymorphic());
     inferInstantiateTypeArgs(instantiateP);
   }
 
@@ -66,8 +66,8 @@ public class UnitTypeInferrer {
     }
   }
 
-  private void inferMonoizable(MonoizableP monoizableP) {
-    switch (monoizableP) {
+  private void inferPolymorphic(PolymorphicP polymorphicP) {
+    switch (polymorphicP) {
       case AnonymousFuncP anonymousFuncP -> inferAnonymousFunc(anonymousFuncP);
       case ReferenceP referenceP -> {}
     }

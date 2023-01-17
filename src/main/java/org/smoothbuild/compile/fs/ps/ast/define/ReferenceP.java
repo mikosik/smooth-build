@@ -8,7 +8,7 @@ import java.util.Objects;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 
-public final class ReferenceP extends MonoizableP {
+public final class ReferenceP extends PolymorphicP {
   private final String name;
   private SchemaS schemaS;
 

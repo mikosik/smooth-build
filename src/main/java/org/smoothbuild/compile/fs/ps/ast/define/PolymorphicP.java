@@ -5,13 +5,13 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 
 /**
- * Entity that can be monomorphized.
+ * Polymorphic entity.
  */
-public abstract sealed class MonoizableP implements Located
+public abstract sealed class PolymorphicP implements Located
     permits AnonymousFuncP, ReferenceP {
   private final Location location;
 
-  public MonoizableP(Location location) {
+  public PolymorphicP(Location location) {
     this.location = location;
   }
 

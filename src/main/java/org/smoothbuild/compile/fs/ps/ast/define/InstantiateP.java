@@ -14,16 +14,16 @@ import com.google.common.collect.ImmutableList;
  * Instantiation of polymorphic entity.
  */
 public final class InstantiateP extends ExprP {
-  private final MonoizableP monoizable;
+  private final PolymorphicP polymorphic;
   private ImmutableList<TypeS> typeArgs;
 
-  public InstantiateP(MonoizableP monoizable, Location location) {
+  public InstantiateP(PolymorphicP polymorphic, Location location) {
     super(location);
-    this.monoizable = monoizable;
+    this.polymorphic = polymorphic;
   }
 
-  public MonoizableP monoizable() {
-    return monoizable;
+  public PolymorphicP polymorphic() {
+    return polymorphic;
   }
 
   public void setTypeArgs(ImmutableList<TypeS> typeArgs) {
@@ -40,19 +40,19 @@ public final class InstantiateP extends ExprP {
       return true;
     }
     return object instanceof InstantiateP that
-        && Objects.equals(this.monoizable, that.monoizable)
+        && Objects.equals(this.polymorphic, that.polymorphic)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(monoizable, location());
+    return Objects.hash(polymorphic, location());
   }
 
   @Override
   public String toString() {
     var fields = joinToString("\n",
-        "monoizable = " + monoizable,
+        "polymorphic = " + polymorphic,
         "location = " + location()
     );
     return "InstantiateP(\n" + indent(fields) + "\n)";

@@ -15,25 +15,25 @@ import com.google.common.collect.ImmutableList;
  */
 public record InstantiateS(
       ImmutableList<TypeS> typeArgs,
-      MonoizableS monoizableS,
+      PolymorphicS polymorphicS,
       TypeS evaluationT,
       Location location)
     implements ExprS {
 
-  public InstantiateS(MonoizableS monoizableS, Location location) {
-    this(list(), monoizableS, location);
-    checkArgument(monoizableS.schema().quantifiedVars().isEmpty());
+  public InstantiateS(PolymorphicS polymorphicS, Location location) {
+    this(list(), polymorphicS, location);
+    checkArgument(polymorphicS.schema().quantifiedVars().isEmpty());
   }
 
-  public InstantiateS(ImmutableList<TypeS> typeArgs, MonoizableS monoizableS, Location location) {
-    this(typeArgs, monoizableS, monoizableS.schema().instantiate(typeArgs), location);
+  public InstantiateS(ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS, Location location) {
+    this(typeArgs, polymorphicS, polymorphicS.schema().instantiate(typeArgs), location);
   }
 
   @Override
   public String toString() {
     var fields = joinToString("\n",
         "typeArgs = " + "<" + joinToString(typeArgs, ",") + ">",
-        "monoizableS = " + monoizableS,
+        "polymorphicS = " + polymorphicS,
         "evaluationT = " + evaluationT,
         "location = " + location
     );

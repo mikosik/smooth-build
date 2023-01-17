@@ -172,7 +172,7 @@ public class EvaluatorSTest extends TestContext {
     }
 
     @Nested
-    class _monoizable {
+    class _polymorphic {
       @Nested
       class _anonymous_function {
         @Test

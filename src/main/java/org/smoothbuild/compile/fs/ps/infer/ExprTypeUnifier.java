@@ -34,11 +34,11 @@ import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
+import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
@@ -214,9 +214,9 @@ public class ExprTypeUnifier {
   }
 
   private Optional<TypeS> unifyInstantiate(InstantiateP instantiateP) {
-    var monoizableP = instantiateP.monoizable();
-    if (unifyMonoizable(monoizableP)) {
-      var schema = monoizableP.schemaS();
+    var polymorphicP = instantiateP.polymorphic();
+    if (unifyPolymorphic(polymorphicP)) {
+      var schema = polymorphicP.schemaS();
       instantiateP.setTypeArgs(generate(schema.quantifiedVars().size(), unifier::newTempVar));
       return Optional.of(schema.instantiate(instantiateP.typeArgs()));
     } else {
@@ -224,8 +224,8 @@ public class ExprTypeUnifier {
     }
   }
 
-  private boolean unifyMonoizable(MonoizableP monoizableP) {
-    return switch (monoizableP) {
+  private boolean unifyPolymorphic(PolymorphicP polymorphicP) {
+    return switch (polymorphicP) {
       case AnonymousFuncP anonymousFuncP -> unifyAnonymousFunc(anonymousFuncP);
       case ReferenceP referenceP -> unifyReference(referenceP);
     };

@@ -158,7 +158,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      var cast = ((AnonymousFuncP) anonymousFuncP.monoizable());
+      var cast = ((AnonymousFuncP) anonymousFuncP.polymorphic());
       assertThat(cast.scope().referencables().get("myValue"))
           .isEqualTo(namedValueP);
     }
@@ -172,7 +172,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      var cast = ((AnonymousFuncP) anonymousFuncP.monoizable());
+      var cast = ((AnonymousFuncP) anonymousFuncP.polymorphic());
       assertThat(cast.scope().referencables().get("myFunc"))
           .isEqualTo(namedValueP);
     }
@@ -185,7 +185,7 @@ public class ScopesInitializerTest extends TestContext {
 
       initializeScopes(moduleP);
 
-      var cast = ((AnonymousFuncP) anonymousFuncP.monoizable());
+      var cast = ((AnonymousFuncP) anonymousFuncP.polymorphic());
       assertThat(cast.scope().referencables().get("param"))
           .isEqualTo(param);
     }

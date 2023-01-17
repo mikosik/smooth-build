@@ -4,9 +4,9 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 
 /**
- * Monomorphizable expression.
+ * Polymorphic entity.
  */
-public sealed interface MonoizableS
+public sealed interface PolymorphicS
     permits AnonymousFuncS, ReferenceS {
   public SchemaS schema();
   public Location location();

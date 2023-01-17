@@ -79,7 +79,7 @@ public class TempVarsNamer {
   }
 
   private VarSetS handleInstantiate(InstantiateP instantiateP) {
-    return switch (instantiateP.monoizable()) {
+    return switch (instantiateP.polymorphic()) {
       case AnonymousFuncP anonymousFuncP -> handleAnonymousFunc(anonymousFuncP);
       case ReferenceP referenceP -> varSetS();
     };

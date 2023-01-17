@@ -163,7 +163,7 @@ public class InferenceTest extends TestContext {
           .evaluables()
           .get("myValue");
       var myValueBody = ((NamedExprValueS) myValue).body();
-      var anonymousFunc = ((InstantiateS) myValueBody).monoizableS();
+      var anonymousFunc = ((InstantiateS) myValueBody).polymorphicS();
       assertThat(anonymousFunc.schema())
           .isEqualTo(expected);
     }
@@ -581,7 +581,7 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _infer_monoization_type_arguments {
+  class _infer_instantiation_type_arguments {
     @Nested
     class _fails_when_var_unifies_two_incompatible_types {
       @Test

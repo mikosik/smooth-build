@@ -25,13 +25,13 @@ import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ModuleS;
-import org.smoothbuild.compile.fs.lang.define.MonoizableS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
+import org.smoothbuild.compile.fs.lang.define.PolymorphicS;
 import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
@@ -51,11 +51,11 @@ import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
+import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
@@ -215,16 +215,16 @@ public class PsConverter {
     return new IntS(INT, int_.bigInteger(), int_.location());
   }
 
-  private MonoizableS convertMonoizable(MonoizableP monoizable) {
-    return switch (monoizable) {
+  private PolymorphicS convertPolymorphic(PolymorphicP polymorphicP) {
+    return switch (polymorphicP) {
       case AnonymousFuncP anonymousFuncP -> convertAnonymousFunc(anonymousFuncP);
       case ReferenceP referenceP -> convertReference(referenceP);
     };
   }
 
   private ExprS convertInstantiate(InstantiateP instantiateP) {
-    var monoizableS = convertMonoizable(instantiateP.monoizable());
-    return new InstantiateS(instantiateP.typeArgs(), monoizableS, instantiateP.location());
+    var polymorphicS = convertPolymorphic(instantiateP.polymorphic());
+    return new InstantiateS(instantiateP.typeArgs(), polymorphicS, instantiateP.location());
   }
 
   private ExprS convertOrder(OrderP order) {

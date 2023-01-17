@@ -21,11 +21,11 @@ import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
+import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
@@ -113,7 +113,8 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveInstantiate(InstantiateP instantiateP) {
-    return resolveMonoizable(instantiateP.monoizable()) && resolveInstantiateTypeArgs(instantiateP);
+    return resolvePolymorphic(instantiateP.polymorphic())
+        && resolveInstantiateTypeArgs(instantiateP);
   }
 
   private boolean resolveInstantiateTypeArgs(InstantiateP instantiateP) {
@@ -126,13 +127,12 @@ public class TypeInferrerResolve {
     return true;
   }
 
-  private boolean resolveMonoizable(MonoizableP monoizableP) {
-    return switch (monoizableP) {
+  private boolean resolvePolymorphic(PolymorphicP polymorphicP) {
+    return switch (polymorphicP) {
       case AnonymousFuncP anonymousFuncP -> resolveAnonymousFunc(anonymousFuncP);
       case ReferenceP referenceP -> true;
     };
   }
-
 
   private boolean resolveAnonymousFunc(AnonymousFuncP anonymousFuncP) {
     return resolveEvaluable(anonymousFuncP);

@@ -53,12 +53,12 @@ import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
-import org.smoothbuild.compile.fs.lang.define.MonoizableS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.define.OrderS;
+import org.smoothbuild.compile.fs.lang.define.PolymorphicS;
 import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
@@ -87,9 +87,9 @@ import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
+import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.BytecodeLoader;
@@ -1211,30 +1211,31 @@ public class TestContext {
     return instantiateS(typeArgs, referenceS, location);
   }
 
-  public static InstantiateS instantiateS(MonoizableS monoizableS) {
-    return instantiateS(monoizableS, monoizableS.location());
+  public static InstantiateS instantiateS(PolymorphicS polymorphicS) {
+    return instantiateS(polymorphicS, polymorphicS.location());
   }
 
-  public static InstantiateS instantiateS(int line, MonoizableS monoizableS) {
-    return instantiateS(monoizableS, location(line));
+  public static InstantiateS instantiateS(int line, PolymorphicS polymorphicS) {
+    return instantiateS(polymorphicS, location(line));
   }
 
-  public static InstantiateS instantiateS(MonoizableS monoizableS, Location location) {
-    return instantiateS(list(), monoizableS, location);
-  }
-
-  public static InstantiateS instantiateS(ImmutableList<TypeS> typeArgs, MonoizableS monoizableS) {
-    return instantiateS(1, typeArgs, monoizableS);
+  public static InstantiateS instantiateS(PolymorphicS polymorphicS, Location location) {
+    return instantiateS(list(), polymorphicS, location);
   }
 
   public static InstantiateS instantiateS(
-      int line, ImmutableList<TypeS> typeArgs, MonoizableS monoizableS) {
-    return instantiateS(typeArgs, monoizableS, location(line));
+      ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS) {
+    return instantiateS(1, typeArgs, polymorphicS);
   }
 
   public static InstantiateS instantiateS(
-      ImmutableList<TypeS> typeArgs, MonoizableS monoizableS, Location location) {
-    return new InstantiateS(typeArgs, monoizableS, location);
+      int line, ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS) {
+    return instantiateS(typeArgs, polymorphicS, location(line));
+  }
+
+  public static InstantiateS instantiateS(
+      ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS, Location location) {
+    return new InstantiateS(typeArgs, polymorphicS, location);
   }
 
   public static OrderS orderS(int line, ExprS headElem, ExprS... tailElems) {
@@ -1559,8 +1560,8 @@ public class TestContext {
     return new CallP(callee, list(), location);
   }
 
-  public static InstantiateP instantiateP(MonoizableP monoizableP) {
-    return new InstantiateP(monoizableP, monoizableP.location());
+  public static InstantiateP instantiateP(PolymorphicP polymorphicP) {
+    return new InstantiateP(polymorphicP, polymorphicP.location());
   }
 
   public static NamedFuncP namedFuncP() {

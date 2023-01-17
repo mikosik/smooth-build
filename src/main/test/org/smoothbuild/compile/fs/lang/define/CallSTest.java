@@ -16,7 +16,7 @@ public class CallSTest extends TestContext {
             CallS(
               callee = InstantiateS(
                 typeArgs = <Int>
-                monoizableS = ReferenceS(
+                polymorphicS = ReferenceS(
                   schema = <A>(A)->A
                   name = myId
                   location = myBuild.smooth:4

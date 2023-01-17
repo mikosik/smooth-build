@@ -12,12 +12,12 @@ import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
-import org.smoothbuild.compile.fs.ps.ast.define.MonoizableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
+import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
@@ -153,15 +153,15 @@ public class ModuleVisitorP {
   public void visitInt(IntP intP) {
   }
 
-  private void visitMonoizableP(MonoizableP monoizableP) {
-    switch (monoizableP) {
+  private void visitPolymorphicP(PolymorphicP polymorphicP) {
+    switch (polymorphicP) {
       case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
       case ReferenceP referenceP -> visitReference(referenceP);
     }
   }
 
   public void visitInstantiateP(InstantiateP instantiateP) {
-    visitMonoizableP(instantiateP.monoizable());
+    visitPolymorphicP(instantiateP.polymorphic());
   }
 
   public void visitNamedArg(NamedArgP namedArgP) {

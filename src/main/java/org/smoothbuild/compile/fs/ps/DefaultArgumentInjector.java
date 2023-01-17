@@ -72,7 +72,7 @@ public class DefaultArgumentInjector {
 
     private ImmutableList<ExprP> inferPositionedArgs(CallP callP) {
       if (callP.callee() instanceof InstantiateP instantiateP
-          && instantiateP.monoizable() instanceof ReferenceP referenceP) {
+          && instantiateP.polymorphic() instanceof ReferenceP referenceP) {
         var name = referenceP.name();
         var optional = referenceables.getOptional(name);
         if (optional.isPresent()) {
@@ -172,7 +172,7 @@ public class DefaultArgumentInjector {
     }
 
     private static String nameOfReferencedCallee(CallP callP) {
-      return ((ReferenceP) ((InstantiateP) callP.callee()).monoizable()).name();
+      return ((ReferenceP) ((InstantiateP) callP.callee()).polymorphic()).name();
     }
 
     private static List<Log> findPositionalArgAfterNamedArgError(CallP callP) {

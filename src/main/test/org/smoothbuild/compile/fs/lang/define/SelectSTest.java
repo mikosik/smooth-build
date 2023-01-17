@@ -18,7 +18,7 @@ public class SelectSTest extends TestContext {
             SelectS(
               selectable = InstantiateS(
                 typeArgs = <>
-                monoizableS = ReferenceS(
+                polymorphicS = ReferenceS(
                   schema = <>MyStruct
                   name = structValue
                   location = myBuild.smooth:12

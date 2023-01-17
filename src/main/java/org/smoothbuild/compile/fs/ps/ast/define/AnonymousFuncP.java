@@ -11,7 +11,7 @@ import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.util.collect.NList;
 
-public final class AnonymousFuncP extends MonoizableP implements FuncP {
+public final class AnonymousFuncP extends PolymorphicP implements FuncP {
   private final ImplicitTP resultT;
   private final NList<ItemP> params;
   private final ExprP body;
