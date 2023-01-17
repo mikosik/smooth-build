@@ -15,13 +15,15 @@ public final class AnonymousFuncP extends PolymorphicP implements FuncP {
   private final ImplicitTP resultT;
   private final NList<ItemP> params;
   private final ExprP body;
+  private final String name;
   private FuncTS typeS;
   private FuncSchemaS schemaS;
   private ScopeP scope;
 
-  public AnonymousFuncP(NList<ItemP> params, ExprP body, Location location) {
+  public AnonymousFuncP(String name, NList<ItemP> params, ExprP body, Location location) {
     super(location);
     this.resultT = new ImplicitTP(location);
+    this.name = name;
     this.params = params;
     this.body = body;
   }
@@ -29,6 +31,10 @@ public final class AnonymousFuncP extends PolymorphicP implements FuncP {
   @Override
   public TypeP resultT() {
     return resultT;
+  }
+
+  public String name() {
+    return name;
   }
 
   @Override
@@ -99,6 +105,7 @@ public final class AnonymousFuncP extends PolymorphicP implements FuncP {
   @Override
   public String toString() {
     var fields = joinToString("\n",
+        "name = " + name,
         "params = [",
         indent(joinToString(params(), "\n")),
         "]",

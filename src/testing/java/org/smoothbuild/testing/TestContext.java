@@ -1549,7 +1549,7 @@ public class TestContext {
   // P - parsed objects
 
   public static InstantiateP anonymousFuncP(NList<ItemP> params, ExprP body) {
-    return instantiateP(new AnonymousFuncP(params, body, location()));
+    return instantiateP(new AnonymousFuncP("^1", params, body, location()));
   }
 
   public static CallP callP(ExprP callee) {
