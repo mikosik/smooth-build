@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.fs.fp;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.concat;
@@ -156,7 +157,7 @@ public class ApTranslator {
 
       private NamedValueP namedValueForDefaultArgument(
           String ownerName, String itemName, ExprP body, Location location) {
-        var name = ownerName + ":" + itemName;
+        var name = fullName(ownerName, itemName);
         var type = new ImplicitTP(location);
         return new NamedValueP(
             type, name, itemName, Optional.of(body), Optional.empty(), location);

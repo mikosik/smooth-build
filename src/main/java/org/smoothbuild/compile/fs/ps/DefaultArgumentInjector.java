@@ -5,6 +5,7 @@ import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.util.Strings.q;
@@ -158,7 +159,7 @@ public class DefaultArgumentInjector {
         if (result.get(i) == null) {
           var param = params.get(i);
           if (param.hasDefaultValue()) {
-            var name = nameOfReferencedCallee(callP) + ":" + param.name();
+            var name = fullName(nameOfReferencedCallee(callP), param.name());
             var location = callP.location();
             var element = new InstantiateP(new ReferenceP(name, location), location);
             result.set(i, element);

@@ -55,4 +55,12 @@ public class TypeNamesS {
   private static String commaSeparatedTypeNames(List<? extends TypeS> elemTs) {
     return joinWithCommaToString(elemTs, TypeS::name);
   }
+
+  public static String fullName(String scopeName, String shortName) {
+    if (scopeName == null) {
+      return shortName;
+    } else {
+      return scopeName + ":" + shortName;
+    }
+  }
 }
