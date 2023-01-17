@@ -8,7 +8,6 @@ import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
-import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.testing.TestContext;
 
 public class DefaultArgumentInjectorTest extends TestContext  {
@@ -19,7 +18,7 @@ public class DefaultArgumentInjectorTest extends TestContext  {
     var callLocation = location(9);
     var callP = callP(referenceP("myFunc"), callLocation);
     var namedValueP = namedValueP("value", callP);
-    var moduleP = new ModuleP(list(), list(namedValueP));
+    var moduleP = moduleP(list(), list(namedValueP));
 
     ScopesInitializer.initializeScopes(moduleP);
     injectDefaultArguments(moduleP, importedS);
@@ -35,7 +34,7 @@ public class DefaultArgumentInjectorTest extends TestContext  {
     var callLocation = location(9);
     var callP = callP(referenceP("myFunc"), callLocation);
     var namedValueP = namedFuncP("value", nlist(itemP("p", callP)));
-    var moduleP = new ModuleP(list(), list(namedValueP));
+    var moduleP = moduleP(list(), list(namedValueP));
 
     ScopesInitializer.initializeScopes(moduleP);
     injectDefaultArguments(moduleP, importedS);

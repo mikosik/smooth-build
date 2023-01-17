@@ -5,4 +5,6 @@ public sealed interface ScopedP
   public void setScope(ScopeP scope);
 
   public ScopeP scope();
+
+  public String name();
 }

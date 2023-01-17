@@ -78,7 +78,8 @@ public class ApTranslator {
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
     new ApTranslatingVisitor(filePath, structs, evaluables, logs).visit(module);
-    var ast = new ModuleP(structs, evaluables);
+    var name = filePath.withExtension("").path().lastPart().toString();
+    var ast = new ModuleP(name, structs, evaluables);
     return maybe(logs.containsAtLeast(Level.ERROR) ? null : ast, logs);
   }
 

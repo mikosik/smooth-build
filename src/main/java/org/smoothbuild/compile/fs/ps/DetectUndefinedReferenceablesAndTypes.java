@@ -24,7 +24,7 @@ import org.smoothbuild.util.Strings;
 public class DetectUndefinedReferenceablesAndTypes {
   public static Logs detectUndefinedReferenceablesAndTypes(ModuleP moduleP, ScopeS imported) {
     var log = new LogBuffer();
-    var emptyScope = new ScopeP(immutableBindings(), immutableBindings());
+    var emptyScope = new ScopeP("", immutableBindings(), immutableBindings());
     new Detector(imported, emptyScope, log)
         .visitModule(moduleP);
     return log;

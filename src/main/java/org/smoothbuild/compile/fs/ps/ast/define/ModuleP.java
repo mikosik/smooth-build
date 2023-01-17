@@ -9,18 +9,29 @@ import java.util.Objects;
 import com.google.common.collect.ImmutableList;
 
 public final class ModuleP implements ScopedP {
+  private final String name;
   private final ImmutableList<StructP> structs;
   private final ImmutableList<NamedEvaluableP> evaluables;
   private ScopeP scope;
 
-  public ModuleP(List<StructP> structs, List<NamedEvaluableP> evaluables) {
-    this(structs, evaluables, null);
+  public ModuleP(String name, List<StructP> structs, List<NamedEvaluableP> evaluables) {
+    this(name, structs, evaluables, null);
   }
 
-  public ModuleP(List<StructP> structs, List<NamedEvaluableP> evaluables, ScopeP scope) {
+  public ModuleP(
+      String name,
+      List<StructP> structs,
+      List<NamedEvaluableP> evaluables,
+      ScopeP scope) {
+    this.name = name;
     this.structs = ImmutableList.copyOf(structs);
     this.evaluables = ImmutableList.copyOf(evaluables);
     this.scope = scope;
+  }
+
+  @Override
+  public String name() {
+    return name;
   }
 
   public ImmutableList<NamedEvaluableP> evaluables() {
@@ -40,6 +51,7 @@ public final class ModuleP implements ScopedP {
   public void setScope(ScopeP scope) {
     this.scope = scope;
   }
+
   @Override
   public boolean equals(Object object) {
     if (this == object) {

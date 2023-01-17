@@ -10,7 +10,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
-import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.testing.TestContext;
 
@@ -20,7 +19,7 @@ public class ScopesInitializerTest extends TestContext {
     @Test
     public void module_scope_has_its_member_function_in_referenceables() {
       var namedFuncP = namedFuncP("myFunc");
-      var moduleP = new ModuleP(list(), list(namedFuncP));
+      var moduleP = moduleP(list(), list(namedFuncP));
 
       initializeScopes(moduleP);
 
@@ -31,7 +30,7 @@ public class ScopesInitializerTest extends TestContext {
     @Test
     public void module_scope_has_its_member_value_in_referenceables() {
       var namedValueP = namedValueP("myValue");
-      var moduleP = new ModuleP(list(), list(namedValueP));
+      var moduleP = moduleP(list(), list(namedValueP));
 
       initializeScopes(moduleP);
 
@@ -44,7 +43,7 @@ public class ScopesInitializerTest extends TestContext {
       var defaultValue = namedValueP("myFunc:param");
       var param = itemP("param", defaultValue);
       var namedFuncP = namedFuncP("myFunc", nlist(param));
-      var moduleP = new ModuleP(list(), list(namedFuncP));
+      var moduleP = moduleP(list(), list(namedFuncP));
 
       initializeScopes(moduleP);
 
@@ -62,7 +61,7 @@ public class ScopesInitializerTest extends TestContext {
         var defaultValue = namedValueP("myFunc:param");
         var param = itemP("param", defaultValue);
         var namedFuncP = namedFuncP("myFunc", nlist(param));
-        var moduleP = new ModuleP(list(), list(namedFuncP));
+        var moduleP = moduleP(list(), list(namedFuncP));
 
         initializeScopes(moduleP);
 
@@ -76,7 +75,7 @@ public class ScopesInitializerTest extends TestContext {
         var param1 = itemP("param1", param1DefaultValue);
         var param2 = itemP("param2");
         var namedFuncP = namedFuncP("myFunc", nlist(param1, param2));
-        var moduleP = new ModuleP(list(), list(namedFuncP));
+        var moduleP = moduleP(list(), list(namedFuncP));
 
         initializeScopes(moduleP);
 
@@ -99,7 +98,7 @@ public class ScopesInitializerTest extends TestContext {
         var defaultValue = namedValueP("myFuncWithParamWithDefaultValue:param");
         var param = itemP("param", defaultValue);
         var namedFuncP = namedFuncP("myFuncWithParamWithDefaultValue", nlist(param));
-        var moduleP = new ModuleP(list(), list(namedFuncP, member));
+        var moduleP = moduleP(list(), list(namedFuncP, member));
 
         initializeScopes(moduleP);
 
@@ -112,7 +111,7 @@ public class ScopesInitializerTest extends TestContext {
     public void named_function_scope_has_its_parameter() {
       var param = itemP("param");
       var namedFuncP = namedFuncP("myFunc", nlist(param));
-      var moduleP = new ModuleP(list(), list(namedFuncP));
+      var moduleP = moduleP(list(), list(namedFuncP));
 
       initializeScopes(moduleP);
 
@@ -125,7 +124,7 @@ public class ScopesInitializerTest extends TestContext {
       var namedValueP = namedValueP("myValue");
       var param = itemP("param");
       var namedFuncP = namedFuncP("myFunc", nlist(param));
-      var moduleP = new ModuleP(list(), list(namedFuncP, namedValueP));
+      var moduleP = moduleP(list(), list(namedFuncP, namedValueP));
 
       initializeScopes(moduleP);
 
@@ -138,7 +137,7 @@ public class ScopesInitializerTest extends TestContext {
       var otherFunc = namedFuncP("otherFunc");
       var param = itemP("param");
       var namedFuncP = namedFuncP("myFunc", nlist(param));
-      var moduleP = new ModuleP(list(), list(namedFuncP, otherFunc));
+      var moduleP = moduleP(list(), list(namedFuncP, otherFunc));
 
       initializeScopes(moduleP);
 
@@ -154,7 +153,7 @@ public class ScopesInitializerTest extends TestContext {
       var param = itemP("param");
       var anonymousFuncP = anonymousFuncP(nlist(param), intP());
       var namedValueP = namedValueP("myValue", anonymousFuncP);
-      var moduleP = new ModuleP(list(), list(namedValueP));
+      var moduleP = moduleP(list(), list(namedValueP));
 
       initializeScopes(moduleP);
 
@@ -168,7 +167,7 @@ public class ScopesInitializerTest extends TestContext {
       var param = itemP("param");
       var anonymousFuncP = anonymousFuncP(nlist(param), intP());
       var namedValueP = namedFuncP("myFunc", anonymousFuncP);
-      var moduleP = new ModuleP(list(), list(namedValueP));
+      var moduleP = moduleP(list(), list(namedValueP));
 
       initializeScopes(moduleP);
 
@@ -181,7 +180,7 @@ public class ScopesInitializerTest extends TestContext {
     public void anonymous_function_scope_has_its_parameter() {
       var param = itemP("param");
       var anonymousFuncP = anonymousFuncP(nlist(param), intP());
-      var moduleP = new ModuleP(list(), list(namedValueP(anonymousFuncP)));
+      var moduleP = moduleP(list(), list(namedValueP(anonymousFuncP)));
 
       initializeScopes(moduleP);
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.fs.ps;
 
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.compile.fs.ps.ast.define.ScopeP.emptyScope;
 import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 
 import org.smoothbuild.compile.fs.lang.base.Nal;
@@ -30,7 +30,7 @@ import org.smoothbuild.util.bindings.MutableBindings;
 public class ScopesInitializer extends ModuleVisitorP {
   public static Logs initializeScopes(ModuleP moduleP) {
     var log = new LogBuffer();
-    new Initializer(new ScopeP(immutableBindings(), immutableBindings()), log)
+    new Initializer(emptyScope(), log)
         .visitModule(moduleP);
     return log;
   }
@@ -73,7 +73,8 @@ public class ScopesInitializer extends ModuleVisitorP {
         case FuncP       funcP       -> initializeScopeFor(funcP);
       }
       // @formatter:on
-      return scope.newInnerScope(referenceables.toFlatImmutable(), types.toFlatImmutable());
+      return scope.newInnerScope(
+          scopedP.name(), referenceables.toFlatImmutable(), types.toFlatImmutable());
     }
 
     private void initializeScopeFor(ModuleP moduleP) {

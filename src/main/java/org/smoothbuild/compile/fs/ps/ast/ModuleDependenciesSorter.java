@@ -41,8 +41,12 @@ public class ModuleDependenciesSorter {
     if (sortedEvaluables.sorted() == null) {
       return maybeLogs(createCycleError("Dependency graph", sortedEvaluables.cycle()));
     }
-    return maybe(
-        new ModuleP(sortedTs.valuesReversed(), sortedEvaluables.valuesReversed(), moduleP.scope()));
+    var sortedModuleP = new ModuleP(
+        moduleP.name(),
+        sortedTs.valuesReversed(),
+        sortedEvaluables.valuesReversed(),
+        moduleP.scope());
+    return maybe(sortedModuleP);
   }
 
   private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(

@@ -87,10 +87,13 @@ import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
+import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
+import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.compile.sb.BytecodeMethodLoader;
@@ -1547,6 +1550,10 @@ public class TestContext {
   }
 
   // P - parsed objects
+
+  public static ModuleP moduleP(List<StructP> structs, List<NamedEvaluableP> evaluables) {
+    return new ModuleP("", structs, evaluables);
+  }
 
   public static InstantiateP anonymousFuncP(NList<ItemP> params, ExprP body) {
     return instantiateP(new AnonymousFuncP("^1", params, body, location()));
