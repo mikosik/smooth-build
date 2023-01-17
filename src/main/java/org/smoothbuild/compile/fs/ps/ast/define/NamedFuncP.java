@@ -23,12 +23,12 @@ public sealed class NamedFuncP
   public NamedFuncP(
       TypeP resultT,
       String fullName,
-      String simpleName,
+      String shortName,
       NList<ItemP> params,
       Optional<ExprP> body,
       Optional<AnnotationP> annotation,
       Location location) {
-    super(fullName, simpleName, body, annotation, location);
+    super(fullName, shortName, body, annotation, location);
     this.resultT = resultT;
     this.params = params;
   }
