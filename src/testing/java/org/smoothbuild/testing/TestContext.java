@@ -5,6 +5,7 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static java.io.OutputStream.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.compile.fs.lang.base.location.Locations.fileLocation;
@@ -34,9 +35,12 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
@@ -115,6 +119,7 @@ import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.util.bindings.ImmutableBindings;
+import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.vm.bytecode.BytecodeF;
@@ -975,6 +980,33 @@ public class TestContext {
   }
 
   // ValS types
+
+  public static List<TypeS> typesToTest() {
+    return concat(TypeFS.baseTs(), new VarS("A"))
+        .stream()
+        .flatMap(t -> compoundTypeSFactories().stream().map(f -> f.apply(t)))
+        .collect(toList());
+  }
+
+  public static List<Function<TypeS, TypeS>> compoundTypeSFactories() {
+    List<Function<TypeS, TypeS>> simpleFactories = List.of(
+        TestContext::arrayTS,
+        TestContext::funcTS,
+        t -> funcTS(t, intTS()),
+        TestContext::tupleTS,
+        TestContext::structTS,
+        TestContext::interfaceTS
+    );
+    List<Function<TypeS, TypeS>> factories = new ArrayList<>();
+    factories.addAll(simpleFactories);
+    for (var simpleFactory : simpleFactories) {
+      for (var simpleFactory2 : simpleFactories) {
+        Function<TypeS, TypeS> compoundFactory = t -> simpleFactory.apply(simpleFactory2.apply(t));
+        factories.add(compoundFactory);
+      }
+    }
+    return factories;
+  }
 
   public static ArrayTS arrayTS(TypeS elemT) {
     return new ArrayTS(elemT);

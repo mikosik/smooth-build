@@ -66,7 +66,7 @@ public class UnifierTest extends TestContext {
       }
 
       @ParameterizedTest
-      @ArgumentsSource(ComposableFactories.class)
+      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
       public void temp_vs_composed_with_that_temp_fails(Function<TypeS, TypeS> composedFactory) {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
@@ -74,7 +74,7 @@ public class UnifierTest extends TestContext {
       }
 
       @ParameterizedTest
-      @ArgumentsSource(ComposableFactories.class)
+      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
       public void temp_vs_composed_with_different_temp_succeeds(
           Function<TypeS, TypeS> composedFactory) throws UnifierExc {
         var unifier = new Unifier();
@@ -89,7 +89,7 @@ public class UnifierTest extends TestContext {
       }
 
       @ParameterizedTest
-      @ArgumentsSource(ComposableFactories.class)
+      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
       public void composed_with_temp_vs_same_composed_with_other_temp_succeeds(
           Function<TypeS, TypeS> composedFactory) throws UnifierExc {
         var unifier = new Unifier();
@@ -106,189 +106,34 @@ public class UnifierTest extends TestContext {
 
     @Nested
     class _temp_vs_non_temp {
-      @Nested
-      class _temp_as_root {
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void temp_vs_base(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var a = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              a,
-              type,
-              a,
-              type);
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void temp_vs_array(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var a = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              a,
-              arrayTS(type),
-              a,
-              arrayTS(type));
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void temp_vs_tuple(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var a = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              a,
-              tupleTS(type),
-              a,
-              tupleTS(type));
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void temp_vs_func_with_res(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var a = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              a,
-              funcTS(type),
-              a,
-              funcTS(type));
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void temp_vs_func_with_param(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var a = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              a,
-              funcTS(type, intTS()),
-              a,
-              funcTS(type, intTS()));
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void temp_vs_struct_with_field(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var a = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              a,
-              structTS("MyStruct", type, intTS()),
-              a,
-              structTS("MyStruct", type, intTS()));
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void temp_vs_interface_with_field(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var a = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              a,
-              interfaceTS(type, intTS()),
-              a,
-              interfaceTS(type, intTS()));
-        }
-
-        public static ImmutableList<TypeS> typesToTest() {
-          return concat(TypeFS.baseTs(), new VarS("A"));
-        }
+      @ParameterizedTest
+      @MethodSource("org.smoothbuild.testing.TestContext#typesToTest")
+      public void temp_vs_concrete_type(TypeS type) throws UnifierExc {
+        var unifier = new Unifier();
+        var a = unifier.newTempVar();
+        assertUnifyInfers(
+            unifier,
+            a,
+            type,
+            a,
+            type);
       }
 
       @Nested
       class _temp_as_component {
         @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void unify_array_of_temp_a_vs_array_of_base(TypeS type) throws UnifierExc {
+        @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+        public void composed_with_temp_vs_same_composed_with_base_type_instead_temp(
+            Function<TypeS, TypeS> factory) throws UnifierExc {
           var unifier = new Unifier();
           var var = unifier.newTempVar();
+          var baseType = intTS();
           assertUnifyInfers(
               unifier,
-              arrayTS(var),
-              arrayTS(type),
+              factory.apply(var),
+              factory.apply(baseType),
               var,
-              type);
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void unify_tuple_of_temp_vs_tuple_of_base(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var var = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              tupleTS(var),
-              tupleTS(type),
-              var,
-              type);
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void unify_func_with_res_temp_vs_func_with_res_base(TypeS type) throws UnifierExc {
-          var unifier = new Unifier();
-          var var = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              funcTS(var),
-              funcTS(type),
-              var,
-              type);
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void unify_func_with_param_temp_vs_func_with_param_base(TypeS type)
-            throws UnifierExc {
-          var unifier = new Unifier();
-          var var = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              funcTS(var, intTS()),
-              funcTS(type, intTS()),
-              var,
-              type);
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void unify_struct_with_field_temp_vs_struct_with_field_base(TypeS type)
-            throws UnifierExc {
-          var unifier = new Unifier();
-          var var = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              structTS("MyStruct", var, intTS()),
-              structTS("MyStruct", type, intTS()),
-              var,
-              type);
-        }
-
-        @ParameterizedTest
-        @MethodSource("typesToTest")
-        public void unify_interface_with_field_temp_vs_interface_with_field_base(TypeS type)
-            throws UnifierExc {
-          var unifier = new Unifier();
-          var var = unifier.newTempVar();
-          assertUnifyInfers(
-              unifier,
-              interfaceTS(var, intTS()),
-              interfaceTS(type, intTS()),
-              var,
-              type);
-        }
-
-        public static ImmutableList<TypeS> typesToTest() {
-          return concat(TypeFS.baseTs(), new VarS("A"));
+              baseType);
         }
       }
     }
@@ -827,14 +672,14 @@ public class UnifierTest extends TestContext {
   @Nested
   class _cycles {
     @ParameterizedTest
-    @ArgumentsSource(ComposableFactories.class)
+    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
     public void one_elem_cycle_through_composed(Function<TypeS, TypeS> composedFactory) {
       var a = unifier.newTempVar();
       assertUnifyFails(a, composedFactory.apply(a));
     }
 
     @ParameterizedTest
-    @ArgumentsSource(ComposableFactories.class)
+    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
     public void two_elem_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
         throws UnifierExc {
       var a = unifier.newTempVar();
@@ -1230,23 +1075,5 @@ public class UnifierTest extends TestContext {
         .throwsException(UnifierExc.class);
     assertCall(() -> unifier.unify(type2, type1))
         .throwsException(UnifierExc.class);
-  }
-
-  private static class ComposableFactories implements ArgumentsProvider {
-    @Override
-    public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-      return Stream.of(
-          composableFactory(t -> arrayTS(t)),
-          composableFactory(t -> funcTS(t)),
-          composableFactory(t -> funcTS(t, intTS())),
-          composableFactory(t -> tupleTS(t)),
-          composableFactory(t -> structTS(t)),
-          composableFactory(t -> interfaceTS(t))
-      );
-    }
-  }
-
-  private static Arguments composableFactory(Function<TypeS, TypeS> composableFactory) {
-    return arguments(composableFactory);
   }
 }
