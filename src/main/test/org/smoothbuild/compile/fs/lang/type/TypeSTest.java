@@ -34,7 +34,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
-import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.testing.EqualsTester;
@@ -358,7 +357,7 @@ public class TypeSTest {
 
     for (TypeS type : types) {
       equalsTester.addEqualityGroup(type, type);
-      equalsTester.addEqualityGroup(TestContext.tupleTS(type), TestContext.tupleTS(type));
+      equalsTester.addEqualityGroup(tupleTS(type), tupleTS(type));
       equalsTester.addEqualityGroup(arrayTS(type), arrayTS(type));
       equalsTester.addEqualityGroup(arrayTS(arrayTS(type)), arrayTS(arrayTS(type)));
     }
