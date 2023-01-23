@@ -7,6 +7,7 @@ import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
@@ -41,6 +42,25 @@ public abstract sealed class TypeS
 
   public VarSetS vars() {
     return vars;
+  }
+
+  public void forEachTempVar(Consumer<TempVarS> consumer) {
+    forEachTempVar(this, consumer);
+  }
+
+  private static void forEachTempVar(TypeS typeS, Consumer<TempVarS> consumer) {
+    switch (typeS) {
+      case ArrayTS arrayTS -> forEachTempVar(arrayTS.elem(), consumer);
+      case FieldSetTS fieldSetTS ->
+          fieldSetTS.fieldSet().values().forEach(f -> forEachTempVar(f.type(), consumer));
+      case FuncTS funcTS -> {
+        forEachTempVar(funcTS.params(), consumer);
+        forEachTempVar(funcTS.result(), consumer);
+      }
+      case TupleTS tupleTS -> tupleTS.elements().forEach(t -> forEachTempVar(t, consumer));
+      case TempVarS temp -> consumer.accept(temp);
+      default -> {}
+    }
   }
 
   public TypeS mapTemps(Function<TypeS, TypeS> map) {

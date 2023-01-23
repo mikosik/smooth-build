@@ -2,7 +2,6 @@ package org.smoothbuild.compile.fs.lang.type.tool;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toCollection;
 import static org.smoothbuild.compile.fs.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 import static org.smoothbuild.util.Strings.q;
 
@@ -16,8 +15,6 @@ import java.util.Set;
 import org.smoothbuild.compile.fs.lang.type.TempVarS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
-
-import com.google.common.collect.Sets;
 
 /**
  * Unifier allows unifying types (`TypeS`s)
@@ -92,6 +89,7 @@ public class Unifier {
     var unified2 = unifiedFor(tempVar2);
     if (unified1 != unified2) {
       unified1.vars.addAll(unified2.vars);
+      unified1.usedIn.addAll(unified2.usedIn);
       unified2.vars.forEach(v -> varToUnified.put(v, unified1));
       if (unified1.type != null && unified2.type != null) {
         unified1.type = unifyAndInferConstraints(unified1.type, unified2.type, constraints);
@@ -110,6 +108,7 @@ public class Unifier {
     } else {
       unified.type = unifyAndInferConstraints(unified.type, type, constraints);
     }
+    type.forEachTempVar(t -> unifiedFor(t).usedIn.add(unified));
     failIfCycleExists(unified);
   }
 
@@ -149,23 +148,12 @@ public class Unifier {
 
   private void failIfCycleExists(HashSet<Unified> visited, Unified unified) throws UnifierExc {
     if (visited.add(unified)) {
-      for (Unified u : referencedBy(unified)) {
+      for (Unified u : unified.usedIn) {
         failIfCycleExists(visited, u);
       }
       visited.remove(unified);
     } else {
       throw new UnifierExc();
-    }
-  }
-
-  private Set<Unified> referencedBy(Unified unified) {
-    if (unified.type != null) {
-      return unified.type.vars().stream()
-          .filter(VarS::isTemporary)
-          .map(varToUnified::get)
-          .collect(toCollection(Sets::newIdentityHashSet));
-    } else {
-      return Set.of();
     }
   }
 
@@ -189,11 +177,13 @@ public class Unifier {
   private static class Unified {
     private final TempVarS mainVar;
     private final Set<TempVarS> vars;
+    private final Set<Unified> usedIn;
     private TypeS type;
 
     public Unified(TempVarS var) {
       this.mainVar = var;
       this.vars = new HashSet<>();
+      this.usedIn = new HashSet<>();
       this.vars.add(var);
       this.type = null;
     }
