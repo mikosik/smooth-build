@@ -673,19 +673,31 @@ public class UnifierTest extends TestContext {
   class _cycles {
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
-    public void one_elem_cycle_through_composed(Function<TypeS, TypeS> composedFactory) {
+    public void one_element_cycle_through_composed(Function<TypeS, TypeS> composedFactory) {
       var a = unifier.newTempVar();
       assertUnifyFails(a, composedFactory.apply(a));
     }
 
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
-    public void two_elem_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
+    public void two_elements_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
         throws UnifierExc {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       unifier.unify(a, composedFactory.apply(b));
       assertUnifyFails(b, composedFactory.apply(a));
+    }
+
+    @ParameterizedTest
+    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+    public void three_elements_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
+        throws UnifierExc {
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      var c = unifier.newTempVar();
+      unifier.unify(a, composedFactory.apply(b));
+      unifier.unify(b, composedFactory.apply(c));
+      assertUnifyFails(c, composedFactory.apply(a));
     }
 
     @Test
