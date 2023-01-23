@@ -57,29 +57,28 @@ public class Unifier {
   }
 
   public void unify(TypeS type1, TypeS type2) throws UnifierExc {
-    Queue<Constraint> constraints = new LinkedList<>();
-    constraints.add(new Constraint(type1, type2));
-    drainQueue(constraints);
-  }
-
-  private void drainQueue(Queue<Constraint> queue) throws UnifierExc {
+    var queue = new LinkedList<Constraint>();
+    queue.add(new Constraint(type1, type2));
     while (!queue.isEmpty()) {
-      var constraint = queue.remove();
-      unify(constraint.type1(), constraint.type2(), queue);
+      unify(queue.remove(), queue);
     }
   }
 
-  public void unify(TypeS type1, TypeS type2, Queue<Constraint> constraints) throws UnifierExc {
+  private void unify(Constraint constraint, Queue<Constraint> queue) throws UnifierExc {
+    var type1 = constraint.type1();
+    var type2 = constraint.type2();
     if (type1 instanceof TempVarS tempVar1) {
       if (type2 instanceof TempVarS tempVar2) {
-        unifyTempVarAndTempVar(tempVar1, tempVar2, constraints);
+        unifyTempVarAndTempVar(tempVar1, tempVar2, queue);
       } else {
-        unifyTempVarAndNonTempVar(tempVar1, type2, constraints);
+        unifyTempVarAndNonTempVar(tempVar1, type2, queue);
       }
-    } else if (type2 instanceof TempVarS tempVar2) {
-      unifyTempVarAndNonTempVar(tempVar2, type1, constraints);
     } else {
-      unifyAndInferConstraints(type1, type2, constraints);
+      if (type2 instanceof TempVarS tempVar2) {
+        unifyTempVarAndNonTempVar(tempVar2, type1, queue);
+      } else {
+        unifyAndInferConstraints(type1, type2, queue);
+      }
     }
   }
 
@@ -112,7 +111,7 @@ public class Unifier {
     failIfCycleExists(unified);
   }
 
-  public VarS newTempVar() {
+  public TempVarS newTempVar() {
     var var = new TempVarS(Integer.toString(tempVarCounter++));
     varToUnified.put(var, new Unified(var));
     return var;
