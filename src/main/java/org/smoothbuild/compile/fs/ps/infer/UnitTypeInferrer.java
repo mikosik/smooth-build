@@ -3,6 +3,7 @@ package org.smoothbuild.compile.fs.ps.infer;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
+import org.smoothbuild.compile.fs.lang.type.tool.Constraint;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
 import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
@@ -60,7 +61,7 @@ public class UnitTypeInferrer {
       var resolvedTypeArg = unifier.resolve(typeArg);
       for (var var : resolvedTypeArg.vars()) {
         if (var.isTemporary()) {
-          unifier.unifyOrFailWithRuntimeException(var, new TupleTS(list()));
+          unifier.unifyOrFailWithRuntimeException(new Constraint(var, new TupleTS(list())));
         }
       }
     }

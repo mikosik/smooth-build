@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.compile.fs.lang.type.VarSetS;
+import org.smoothbuild.compile.fs.lang.type.tool.Constraint;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
 import org.smoothbuild.compile.fs.lang.type.tool.UnusedVarsGenerator;
 import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
@@ -107,7 +108,7 @@ public class TempVarsNamer {
     var innerScopeVars = body.map(b -> handleExpr(varsInScope, b)).orElse(varSetS());
     var reservedVars = varsInScope.withAdded(innerScopeVars);
     var resolvedAndRenamedT = nameVars(resolvedT, reservedVars);
-    unifier.unifyOrFailWithRuntimeException(resolvedAndRenamedT, resolvedT);
+    unifier.unifyOrFailWithRuntimeException(new Constraint(resolvedAndRenamedT, resolvedT));
     return resolvedAndRenamedT.vars().withAdded(innerScopeVars);
   }
 

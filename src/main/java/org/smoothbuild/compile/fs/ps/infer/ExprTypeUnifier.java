@@ -21,6 +21,7 @@ import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.compile.fs.lang.type.TypeFS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarSetS;
+import org.smoothbuild.compile.fs.lang.type.tool.Constraint;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
 import org.smoothbuild.compile.fs.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.fs.ps.CompileError;
@@ -158,7 +159,7 @@ public class ExprTypeUnifier {
 
   private boolean unifyEvaluationTypeWithBodyType(EvaluableP evaluableP, TypeS typeS, TypeS bodyT) {
     try {
-      unifier.unify(typeS, bodyT);
+      unify(typeS, bodyT);
       return true;
     } catch (UnifierExc e) {
       logger.log(compileError(
@@ -205,7 +206,7 @@ public class ExprTypeUnifier {
     var resultT = unifier.newTempVar();
     var funcT = new FuncTS(argTs, resultT);
     try {
-      unifier.unify(funcT, calleeT);
+      unify(funcT, calleeT);
       return Optional.of(resultT);
     } catch (UnifierExc e) {
       logger.log(CompileError.compileError(location, "Illegal call."));
@@ -249,7 +250,7 @@ public class ExprTypeUnifier {
     var elemVar = unifier.newTempVar();
     for (TypeS elemT : elemTs) {
       try {
-        unifier.unify(elemVar, elemT);
+        unify(elemVar, elemT);
       } catch (UnifierExc e) {
         logger.log(CompileError.compileError(location,
             "Cannot infer type for array literal. Its element types are not compatible."));
@@ -285,6 +286,10 @@ public class ExprTypeUnifier {
         return Optional.empty();
       }
     });
+  }
+
+  private void unify(TypeS typeS, TypeS bodyT) throws UnifierExc {
+    unifier.unify(new Constraint(typeS, bodyT));
   }
 
   private Optional<TypeS> translateOrGenerateTempVar(TypeP typeP) {

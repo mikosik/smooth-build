@@ -46,19 +46,19 @@ public class Unifier {
 
   // unification
 
-  public void unifyOrFailWithRuntimeException(TypeS type1, TypeS type2) {
+  public void unifyOrFailWithRuntimeException(Constraint constraint) {
     try {
-      unify(type1, type2);
+      unify(constraint);
     } catch (UnifierExc e) {
       throw new RuntimeException(
           "unifyOrFailWithRuntimeException() caused exception. This means we have bug in code. "
-              + "type1 = " + type1 + ", type2 = " + type2, e);
+              + "constraint = " + constraint + ".", e);
     }
   }
 
-  public void unify(TypeS type1, TypeS type2) throws UnifierExc {
+  public void unify(Constraint constraint) throws UnifierExc {
     var queue = new LinkedList<Constraint>();
-    queue.add(new Constraint(type1, type2));
+    queue.add(constraint);
     while (!queue.isEmpty()) {
       unify(queue.remove(), queue);
     }
