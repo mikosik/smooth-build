@@ -289,7 +289,7 @@ public class ExprTypeUnifier {
   }
 
   private void unify(TypeS typeS, TypeS bodyT) throws UnifierExc {
-    unifier.unify(new EqualityConstraint(typeS, bodyT));
+    unifier.add(new EqualityConstraint(typeS, bodyT));
   }
 
   private Optional<TypeS> translateOrGenerateTempVar(TypeP typeP) {

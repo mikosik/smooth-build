@@ -182,7 +182,7 @@ public class TypeInferrer {
         var defaultValueType = replaceQuantifiedVarsWithTempVars(
             defaultvalue.schemaS(), paramUnifier);
         try {
-          paramUnifier.unify(new EqualityConstraint(paramT, defaultValueType));
+          paramUnifier.add(new EqualityConstraint(paramT, defaultValueType));
         } catch (UnifierExc e) {
           var message = "Parameter %s has type %s so it cannot have default value with type %s."
                   .formatted(param.q(), resolvedParamT.q(), defaultvalue.schemaS().type().q());

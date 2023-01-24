@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
@@ -119,7 +118,6 @@ import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.util.bindings.ImmutableBindings;
-import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.vm.bytecode.BytecodeF;
@@ -982,10 +980,14 @@ public class TestContext {
   // ValS types
 
   public static List<TypeS> typesToTest() {
-    return concat(TypeFS.baseTs(), new VarS("A"))
+    return nonCompoundTypes()
         .stream()
         .flatMap(t -> compoundTypeSFactories().stream().map(f -> f.apply(t)))
         .collect(toList());
+  }
+
+  public static ImmutableList<TypeS> nonCompoundTypes() {
+    return concat(TypeFS.baseTs(), new VarS("A"));
   }
 
   public static List<Function<TypeS, TypeS>> compoundTypeSFactories() {

@@ -4,10 +4,12 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.compile.fs.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -15,6 +17,9 @@ import java.util.Set;
 import org.smoothbuild.compile.fs.lang.type.TempVarS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * Unifier allows unifying types (`TypeS`s)
@@ -37,11 +42,31 @@ import org.smoothbuild.compile.fs.lang.type.VarS;
  */
 public class Unifier {
   private final Map<VarS, Unified> varToUnified;
+  private final Set<InstantiationConstraint> instantiationConstraints;
   private int tempVarCounter;
 
   public Unifier() {
     this.varToUnified = new HashMap<>();
+    this.instantiationConstraints = new HashSet<>();
     this.tempVarCounter = 0;
+  }
+
+  public void add(Constraint constraint) throws UnifierExc {
+    switch (constraint) {
+      case EqualityConstraint equality -> add(equality);
+      case InstantiationConstraint instatiation -> add(instatiation);
+    }
+  }
+
+  // instantiation constraint
+
+  public void add(InstantiationConstraint constraint) throws UnifierExc {
+    instantiationConstraints.add(constraint);
+    add(toEqualityConstraint(constraint));
+  }
+
+  private EqualityConstraint toEqualityConstraint(InstantiationConstraint constraint) {
+    return new EqualityConstraint(constraint.instantiation(), structureOf(constraint.schema()));
   }
 
   public TypeS structureOf(TypeS type) {
@@ -50,21 +75,58 @@ public class Unifier {
         .mapTemps((temp) -> tempMap.computeIfAbsent(temp, t -> newTempVar()));
   }
 
-  // unification
+  // equality constraint
 
-  public void unifyOrFailWithRuntimeException(EqualityConstraint constraint) {
+  public void addOrFailWithRuntimeException(EqualityConstraint constraint) {
     try {
-      unify(constraint);
+      add(constraint);
     } catch (UnifierExc e) {
       throw new RuntimeException(
-          "unifyOrFailWithRuntimeException() caused exception. This means we have bug in code. "
+          "addOrFailWithRuntimeException() caused exception. This means we have bug in code. "
               + "constraint = " + constraint + ".", e);
     }
   }
 
-  public void unify(EqualityConstraint constraint) throws UnifierExc {
+  public void add(EqualityConstraint constraint) throws UnifierExc {
     var queue = new LinkedList<EqualityConstraint>();
     queue.add(constraint);
+    var ordered = ImmutableList.copyOf(instantiationConstraints);
+    while (!queue.isEmpty()) {
+      var resolvedBefore = resolvedInstantiationConstraints(ordered);
+      drainQueue(queue);
+      var resolvedAfter = resolvedInstantiationConstraints(ordered);
+      var updated = findUpdated(resolvedBefore, resolvedAfter, ordered);
+      queue = new LinkedList<>(map(updated, this::toEqualityConstraint));
+    }
+  }
+
+  private static ImmutableList<InstantiationConstraint> findUpdated(
+      List<ResolvedInstantiation> before,
+      List<ResolvedInstantiation> after,
+      List<InstantiationConstraint> ordered) {
+    Builder<InstantiationConstraint> builder = ImmutableList.builder();
+    for (int i = 0; i < before.size(); i++) {
+      if (!before.get(i).equals(after.get(i))) {
+        builder.add(ordered.get(i));
+      }
+    }
+    return builder.build();
+  }
+
+  private static record ResolvedInstantiation(TypeS instantiation, TypeS schema) {}
+
+  private List<ResolvedInstantiation> resolvedInstantiationConstraints(
+      List<InstantiationConstraint> orderedInstantiationConstraints) {
+    return map(orderedInstantiationConstraints, this::resolve);
+  }
+
+  private ResolvedInstantiation resolve(InstantiationConstraint constraint) {
+    return new ResolvedInstantiation(
+        resolve(constraint.instantiation()),
+        resolve(constraint.schema()));
+  }
+
+  private void drainQueue(LinkedList<EqualityConstraint> queue) throws UnifierExc {
     while (!queue.isEmpty()) {
       unify(queue.remove(), queue);
     }
@@ -95,16 +157,26 @@ public class Unifier {
     var unified1 = unifiedFor(tempVar1);
     var unified2 = unifiedFor(tempVar2);
     if (unified1 != unified2) {
-      unified1.vars.addAll(unified2.vars);
-      unified1.usedIn.addAll(unified2.usedIn);
-      unified2.vars.forEach(v -> varToUnified.put(v, unified1));
-      if (unified1.type != null && unified2.type != null) {
-        unified1.type = unifyAndInferConstraints(unified1.type, unified2.type, constraints);
+      if (unified1.mainVar.isOlderThan(unified2.mainVar)) {
+        mergeUnifiedGroups(unified1, unified2, constraints);
       } else {
-        unified1.type = unified1.type != null ? unified1.type : unified2.type;
+        mergeUnifiedGroups(unified2, unified1, constraints);
       }
-      failIfCycleExists(unified1);
     }
+  }
+
+  private void mergeUnifiedGroups(
+      Unified destination, Unified source, Queue<EqualityConstraint> constraints)
+      throws UnifierExc {
+    destination.vars.addAll(source.vars);
+    destination.usedIn.addAll(source.usedIn);
+    source.vars.forEach(v -> varToUnified.put(v, destination));
+    if (destination.type != null && source.type != null) {
+      destination.type = unifyAndInferConstraints(destination.type, source.type, constraints);
+    } else {
+      destination.type = destination.type != null ? destination.type : source.type;
+    }
+    failIfCycleExists(destination);
   }
 
   private void unifyTempVarAndNonTempVar(

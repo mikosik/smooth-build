@@ -27,9 +27,14 @@ public class ConstraintInferrer {
   public static TypeS unifyAndInferConstraints(
       TypeS type1, TypeS type2, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
-    if (type1 instanceof TempVarS) {
+    if (type1 instanceof TempVarS tempVar1) {
       constraints.add(new EqualityConstraint(type1, type2));
-      return type1;
+      // Prefer older Temp so when debugging Unifier data is more stable.
+      if (type2 instanceof TempVarS tempVar2 && !tempVar1.isOlderThan(tempVar2)) {
+        return tempVar2;
+      } else {
+        return tempVar1;
+      }
     }
     if (type2 instanceof TempVarS) {
       constraints.add(new EqualityConstraint(type1, type2));

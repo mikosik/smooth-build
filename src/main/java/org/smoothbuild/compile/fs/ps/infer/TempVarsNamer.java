@@ -108,7 +108,7 @@ public class TempVarsNamer {
     var innerScopeVars = body.map(b -> handleExpr(varsInScope, b)).orElse(varSetS());
     var reservedVars = varsInScope.withAdded(innerScopeVars);
     var resolvedAndRenamedT = nameVars(resolvedT, reservedVars);
-    unifier.unifyOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
+    unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
     return resolvedAndRenamedT.vars().withAdded(innerScopeVars);
   }
 

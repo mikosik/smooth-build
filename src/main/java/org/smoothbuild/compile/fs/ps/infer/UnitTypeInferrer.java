@@ -61,7 +61,7 @@ public class UnitTypeInferrer {
       var resolvedTypeArg = unifier.resolve(typeArg);
       for (var var : resolvedTypeArg.vars()) {
         if (var.isTemporary()) {
-          unifier.unifyOrFailWithRuntimeException(new EqualityConstraint(var, new TupleTS(list())));
+          unifier.addOrFailWithRuntimeException(new EqualityConstraint(var, new TupleTS(list())));
         }
       }
     }

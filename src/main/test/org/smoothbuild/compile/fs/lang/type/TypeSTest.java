@@ -381,4 +381,31 @@ public class TypeSTest {
       );
     }
   }
+
+  @Nested
+  class _temp_var {
+    @Test
+    public void is_older_than_1_1() {
+      assertThat(new TempVarS("1").isOlderThan(new TempVarS("1")))
+          .isFalse();
+    }
+
+    @Test
+    public void is_older_than_1_2() {
+      assertThat(new TempVarS("1").isOlderThan(new TempVarS("2")))
+          .isTrue();
+    }
+
+    @Test
+    public void is_older_than_1_10() {
+      assertThat(new TempVarS("1").isOlderThan(new TempVarS("10")))
+          .isTrue();
+    }
+
+    @Test
+    public void is_older_than_2_1() {
+      assertThat(new TempVarS("2").isOlderThan(new TempVarS("1")))
+          .isFalse();
+    }
+  }
 }
