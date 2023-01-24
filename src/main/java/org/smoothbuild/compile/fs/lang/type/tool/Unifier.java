@@ -46,7 +46,7 @@ public class Unifier {
 
   // unification
 
-  public void unifyOrFailWithRuntimeException(Constraint constraint) {
+  public void unifyOrFailWithRuntimeException(EqualityConstraint constraint) {
     try {
       unify(constraint);
     } catch (UnifierExc e) {
@@ -56,15 +56,16 @@ public class Unifier {
     }
   }
 
-  public void unify(Constraint constraint) throws UnifierExc {
-    var queue = new LinkedList<Constraint>();
+  public void unify(EqualityConstraint constraint) throws UnifierExc {
+    var queue = new LinkedList<EqualityConstraint>();
     queue.add(constraint);
     while (!queue.isEmpty()) {
       unify(queue.remove(), queue);
     }
   }
 
-  private void unify(Constraint constraint, Queue<Constraint> queue) throws UnifierExc {
+  private void unify(EqualityConstraint constraint, Queue<EqualityConstraint> queue)
+      throws UnifierExc {
     var type1 = constraint.type1();
     var type2 = constraint.type2();
     if (type1 instanceof TempVarS tempVar1) {
@@ -83,7 +84,8 @@ public class Unifier {
   }
 
   private void unifyTempVarAndTempVar(
-      TempVarS tempVar1, TempVarS tempVar2, Queue<Constraint> constraints) throws UnifierExc {
+      TempVarS tempVar1, TempVarS tempVar2, Queue<EqualityConstraint> constraints)
+      throws UnifierExc {
     var unified1 = unifiedFor(tempVar1);
     var unified2 = unifiedFor(tempVar2);
     if (unified1 != unified2) {
@@ -99,9 +101,10 @@ public class Unifier {
     }
   }
 
-  private void unifyTempVarAndNonTempVar(TempVarS var, TypeS type, Queue<Constraint> constraints)
+  private void unifyTempVarAndNonTempVar(
+      TempVarS temp, TypeS type, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
-    var unified = unifiedFor(var);
+    var unified = unifiedFor(temp);
     if (unified.type == null) {
       unified.type = type;
     } else {
@@ -112,9 +115,9 @@ public class Unifier {
   }
 
   public TempVarS newTempVar() {
-    var var = new TempVarS(Integer.toString(tempVarCounter++));
-    varToUnified.put(var, new Unified(var));
-    return var;
+    var tempVar = new TempVarS(Integer.toString(tempVarCounter++));
+    varToUnified.put(tempVar, new Unified(tempVar));
+    return tempVar;
   }
 
   // resolving

@@ -17,7 +17,7 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarSetS;
-import org.smoothbuild.compile.fs.lang.type.tool.Constraint;
+import org.smoothbuild.compile.fs.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
 import org.smoothbuild.compile.fs.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
@@ -182,7 +182,7 @@ public class TypeInferrer {
         var defaultValueType = replaceQuantifiedVarsWithTempVars(
             defaultvalue.schemaS(), paramUnifier);
         try {
-          paramUnifier.unify(new Constraint(paramT, defaultValueType));
+          paramUnifier.unify(new EqualityConstraint(paramT, defaultValueType));
         } catch (UnifierExc e) {
           var message = "Parameter %s has type %s so it cannot have default value with type %s."
                   .formatted(param.q(), resolvedParamT.q(), defaultvalue.schemaS().type().q());

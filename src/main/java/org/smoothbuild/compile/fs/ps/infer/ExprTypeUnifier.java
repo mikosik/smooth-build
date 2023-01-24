@@ -21,7 +21,7 @@ import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.compile.fs.lang.type.TypeFS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarSetS;
-import org.smoothbuild.compile.fs.lang.type.tool.Constraint;
+import org.smoothbuild.compile.fs.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
 import org.smoothbuild.compile.fs.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.fs.ps.CompileError;
@@ -289,7 +289,7 @@ public class ExprTypeUnifier {
   }
 
   private void unify(TypeS typeS, TypeS bodyT) throws UnifierExc {
-    unifier.unify(new Constraint(typeS, bodyT));
+    unifier.unify(new EqualityConstraint(typeS, bodyT));
   }
 
   private Optional<TypeS> translateOrGenerateTempVar(TypeP typeP) {

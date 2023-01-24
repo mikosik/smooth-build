@@ -25,14 +25,14 @@ import com.google.common.collect.ImmutableMap;
 
 public class ConstraintInferrer {
   public static TypeS unifyAndInferConstraints(
-      TypeS type1, TypeS type2, Queue<Constraint> constraints)
+      TypeS type1, TypeS type2, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
     if (type1 instanceof TempVarS) {
-      constraints.add(new Constraint(type1, type2));
+      constraints.add(new EqualityConstraint(type1, type2));
       return type1;
     }
     if (type2 instanceof TempVarS) {
-      constraints.add(new Constraint(type1, type2));
+      constraints.add(new EqualityConstraint(type1, type2));
       return type2;
     }
     return switch (type1) {
@@ -56,7 +56,7 @@ public class ConstraintInferrer {
   }
 
   private static ArrayTS unifyArrayAndType(
-      ArrayTS array1, TypeS type2, Queue<Constraint> constraints)
+      ArrayTS array1, TypeS type2, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
     if (type2 instanceof ArrayTS array2) {
       return new ArrayTS(unifyAndInferConstraints(array1.elem(), array2.elem(), constraints));
@@ -66,7 +66,7 @@ public class ConstraintInferrer {
   }
 
   private static FieldSetTS unifyFieldSetAndType(
-      FieldSetTS fieldSet, TypeS type, Queue<Constraint> constraints) throws UnifierExc {
+      FieldSetTS fieldSet, TypeS type, Queue<EqualityConstraint> constraints) throws UnifierExc {
     return switch (type) {
       case InterfaceTS interfaceTS -> unifyFieldSetAndInterface(fieldSet, interfaceTS, constraints);
       case StructTS structTS -> unifyFieldSetAndStruct(fieldSet, structTS, constraints);
@@ -75,7 +75,7 @@ public class ConstraintInferrer {
   }
 
   private static FieldSetTS unifyFieldSetAndInterface(
-      FieldSetTS fieldSet, InterfaceTS interface2, Queue<Constraint> constraints)
+      FieldSetTS fieldSet, InterfaceTS interface2, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
     return switch (fieldSet) {
       case InterfaceTS interface1 -> new InterfaceTS(
@@ -85,7 +85,8 @@ public class ConstraintInferrer {
   }
 
   private static StructTS unifyFieldSetAndStruct(
-      FieldSetTS fieldSet, StructTS struct2, Queue<Constraint> constraints) throws UnifierExc {
+      FieldSetTS fieldSet, StructTS struct2, Queue<EqualityConstraint> constraints)
+      throws UnifierExc {
     return switch (fieldSet) {
       case InterfaceTS interface1 -> unifyStructAndInterface(struct2, interface1, constraints);
       case StructTS struct1 -> unifyStructAndStruct(struct1, struct2, constraints);
@@ -93,7 +94,7 @@ public class ConstraintInferrer {
   }
 
   private static StructTS unifyStructAndInterface(
-      StructTS struct, InterfaceTS interface_, Queue<Constraint> constraints)
+      StructTS struct, InterfaceTS interface_, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
     var unifiedFields = unifyFieldSetAndFieldSet(struct, interface_, constraints);
     if (unifiedFields.size() != struct.fields().size()) {
@@ -104,7 +105,8 @@ public class ConstraintInferrer {
   }
 
   private static ImmutableMap<String, ItemSigS> unifyFieldSetAndFieldSet(
-      FieldSetTS fieldSet1, FieldSetTS fieldSet2, Queue<Constraint> constraints) throws UnifierExc {
+      FieldSetTS fieldSet1, FieldSetTS fieldSet2, Queue<EqualityConstraint> constraints)
+      throws UnifierExc {
     var fields1 = fieldSet1.fieldSet();
     var fields2 = fieldSet2.fieldSet();
     var mergedFields = new HashMap<>(fields1);
@@ -123,7 +125,7 @@ public class ConstraintInferrer {
   }
 
   private static StructTS unifyStructAndStruct(
-      StructTS struct1, StructTS struct2, Queue<Constraint> constraints) throws UnifierExc {
+      StructTS struct1, StructTS struct2, Queue<EqualityConstraint> constraints) throws UnifierExc {
     if (!struct1.name().equals(struct2.name())) {
       throw new UnifierExc();
     }
@@ -135,7 +137,8 @@ public class ConstraintInferrer {
   }
 
   private static ItemSigS unifyItemSigAndItemSig(
-      ItemSigS itemSig1, ItemSigS itemSig2, Queue<Constraint> constraints) throws UnifierExc {
+      ItemSigS itemSig1, ItemSigS itemSig2, Queue<EqualityConstraint> constraints)
+      throws UnifierExc {
     var name1 = itemSig1.name();
     var name2 = itemSig2.name();
     if (!name1.equals(name2)) {
@@ -147,7 +150,7 @@ public class ConstraintInferrer {
   }
 
   private static FuncTS unifyFunctionAndType(
-      FuncTS func1, TypeS type, Queue<Constraint> constraints)
+      FuncTS func1, TypeS type, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
     if (type instanceof FuncTS func2) {
       var result1 = func1.result();
@@ -163,7 +166,7 @@ public class ConstraintInferrer {
   }
 
   private static TupleTS unifyTupleAndType(
-      TupleTS tuple1, TypeS type, Queue<Constraint> constraints)
+      TupleTS tuple1, TypeS type, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
     if (type instanceof TupleTS tuple2) {
       return unifyTupleAndTuple(tuple1, tuple2, constraints);
@@ -173,7 +176,7 @@ public class ConstraintInferrer {
   }
 
   private static TupleTS unifyTupleAndTuple(
-      TupleTS tuple1, TupleTS tuple2, Queue<Constraint> constraints) throws UnifierExc {
+      TupleTS tuple1, TupleTS tuple2, Queue<EqualityConstraint> constraints) throws UnifierExc {
     var elements = zip(
         tuple1.elements(),
         tuple2.elements(),

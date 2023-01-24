@@ -52,7 +52,7 @@ public class UnifierTest extends TestContext {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
-        unifier.unify(new Constraint(a, b));
+        unifier.unify(new EqualityConstraint(a, b));
         assertThat(unifier.resolve(a))
             .isEqualTo(unifier.resolve(b));
       }
@@ -63,8 +63,8 @@ public class UnifierTest extends TestContext {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
-        unifier.unify(new Constraint(a, b));
-        unifier.unify(new Constraint(b, c));
+        unifier.unify(new EqualityConstraint(a, b));
+        unifier.unify(new EqualityConstraint(b, c));
         assertThat(unifier.resolve(a))
             .isEqualTo(unifier.resolve(c));
       }
@@ -148,7 +148,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @MethodSource("typesToTest")
       public void base_vs_itself_succeeds(TypeS type) throws UnifierExc {
-        unifier.unify(new Constraint(type, type));
+        unifier.unify(new EqualityConstraint(type, type));
       }
 
       @Test
@@ -190,7 +190,7 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void var_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(varA(), varA()));
+        unifier.unify(new EqualityConstraint(varA(), varA()));
       }
 
       @Test
@@ -230,7 +230,7 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void array_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             arrayTS(intTS()),
             arrayTS(intTS())));
       }
@@ -238,14 +238,14 @@ public class UnifierTest extends TestContext {
       @Test
       public void array_with_interface_vs_array_with_compatible_interface_succeeds()
           throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             arrayTS(interfaceTS(sigS(intTS(), "myField"))),
             arrayTS(interfaceTS(sigS(stringTS(), "otherField")))));
       }
 
       @Test
       public void array2_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             arrayTS(arrayTS(intTS())),
             arrayTS(arrayTS(intTS()))));
       }
@@ -277,7 +277,7 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void tuple_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             tupleTS(intTS(), blobTS()),
             tupleTS(intTS(), blobTS())));
       }
@@ -285,14 +285,14 @@ public class UnifierTest extends TestContext {
       @Test
       public void tuple_with_interface_vs_tuple_with_compatible_interface_succeeds()
           throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             tupleTS(interfaceTS(sigS(intTS(), "myField"))),
             tupleTS(interfaceTS(sigS(stringTS(), "otherField")))));
       }
 
       @Test
       public void tuple2_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             tupleTS(tupleTS(intTS(), blobTS())),
             tupleTS(tupleTS(intTS(), blobTS()))));
       }
@@ -324,7 +324,7 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void function_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             funcTS(blobTS(), intTS()),
             funcTS(blobTS(), intTS())));
       }
@@ -332,21 +332,21 @@ public class UnifierTest extends TestContext {
       @Test
       public void function_with_interface_vs_function_with_compatible_interface_succeeds()
           throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             funcTS(interfaceTS(sigS(intTS(), "myField"))),
             funcTS(interfaceTS(sigS(stringTS(), "otherField")))));
       }
 
       @Test
       public void function_with_result_being_function_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             funcTS(funcTS(intTS())),
             funcTS(funcTS(intTS()))));
       }
 
       @Test
       public void function_with_parameter_being_function_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             funcTS(funcTS(intTS()), blobTS()),
             funcTS(funcTS(intTS()), blobTS())));
       }
@@ -378,7 +378,7 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void struct_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             structTS("MyStruct", intTS(), blobTS()),
             structTS("MyStruct", intTS(), blobTS())));
       }
@@ -386,7 +386,7 @@ public class UnifierTest extends TestContext {
       @Test
       public void struct_with_interface_vs_struct_with_compatible_interface_succeeds()
           throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             structTS(interfaceTS(sigS(intTS(), "myField"))),
             structTS(interfaceTS(sigS(stringTS(), "otherField")))));
       }
@@ -421,7 +421,7 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void struct_vs_matching_interface_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             structTS("MyStruct", sigS(intTS(), "myField")),
             interfaceTS(sigS(intTS(), "myField"))));
       }
@@ -442,7 +442,7 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void interface_vs_itself_succeeds() throws UnifierExc {
-        unifier.unify(new Constraint(
+        unifier.unify(new EqualityConstraint(
             interfaceTS(intTS(), blobTS()),
             interfaceTS(intTS(), blobTS())));
       }
@@ -674,7 +674,7 @@ public class UnifierTest extends TestContext {
         throws UnifierExc {
       var a = unifier.newTempVar();
       var constraints = list(
-          new Constraint(a, composedFactory.apply(a))
+          new EqualityConstraint(a, composedFactory.apply(a))
       );
       assertExceptionThrownForLastConstraintForEachPermutation(constraints);
     }
@@ -686,8 +686,8 @@ public class UnifierTest extends TestContext {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var constraints = list(
-          new Constraint(a, composedFactory.apply(b)),
-          new Constraint(b, composedFactory.apply(a)));
+          new EqualityConstraint(a, composedFactory.apply(b)),
+          new EqualityConstraint(b, composedFactory.apply(a)));
       assertExceptionThrownForLastConstraintForEachPermutation(constraints);
     }
 
@@ -699,9 +699,9 @@ public class UnifierTest extends TestContext {
       var b = unifier.newTempVar();
       var c = unifier.newTempVar();
       var constraints = list(
-          new Constraint(a, composedFactory.apply(b)),
-          new Constraint(b, composedFactory.apply(c)),
-          new Constraint(c, composedFactory.apply(a))
+          new EqualityConstraint(a, composedFactory.apply(b)),
+          new EqualityConstraint(b, composedFactory.apply(c)),
+          new EqualityConstraint(c, composedFactory.apply(a))
       );
       assertExceptionThrownForLastConstraintForEachPermutation(constraints);
     }
@@ -713,8 +713,8 @@ public class UnifierTest extends TestContext {
       var b = unifier.newTempVar();
       var c = unifier.newTempVar();
       var constraints = list(
-          new Constraint(a, arrayTS(b)),
-          new Constraint(c, funcTS(b, a))
+          new EqualityConstraint(a, arrayTS(b)),
+          new EqualityConstraint(c, funcTS(b, a))
       );
       assertConstraintsUnifiedForEachPermutation(constraints);
     }
@@ -729,8 +729,8 @@ public class UnifierTest extends TestContext {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var constraints = list(
-            new Constraint(a, b),
-            new Constraint(b, intTS()));
+            new EqualityConstraint(a, b),
+            new EqualityConstraint(b, intTS()));
         assertResolvedAreEqualsForEachPermutation(constraints, a, intTS());
       }
 
@@ -740,8 +740,8 @@ public class UnifierTest extends TestContext {
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
         var constraints = list(
-            new Constraint(a, arrayTS(b)),
-            new Constraint(arrayTS(b), c)
+            new EqualityConstraint(a, arrayTS(b)),
+            new EqualityConstraint(arrayTS(b), c)
         );
         assertResolvedAreEqualsForEachPermutation(constraints, a, c);
       }
@@ -752,8 +752,8 @@ public class UnifierTest extends TestContext {
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
         var constraints = list(
-            new Constraint(arrayTS(a), b),
-            new Constraint(b, arrayTS(c))
+            new EqualityConstraint(arrayTS(a), b),
+            new EqualityConstraint(b, arrayTS(c))
         );
         assertResolvedAreEqualsForEachPermutation(constraints, a, c);
       }
@@ -770,9 +770,9 @@ public class UnifierTest extends TestContext {
         var x = unifier.newTempVar();
         var y = unifier.newTempVar();
         var constraints = list(
-            new Constraint(a, composedFactory.apply(x)),
-            new Constraint(b, composedFactory.apply(y)),
-            new Constraint(a, b)
+            new EqualityConstraint(a, composedFactory.apply(x)),
+            new EqualityConstraint(b, composedFactory.apply(y)),
+            new EqualityConstraint(a, b)
         );
         assertResolvedAreEqualsForEachPermutation(constraints, x, y);
       }
@@ -785,9 +785,9 @@ public class UnifierTest extends TestContext {
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
         var constraints = list(
-            new Constraint(a, composedFactory.apply(x)),
-            new Constraint(b, composedFactory.apply(intTS())),
-            new Constraint(a, b)
+            new EqualityConstraint(a, composedFactory.apply(x)),
+            new EqualityConstraint(b, composedFactory.apply(intTS())),
+            new EqualityConstraint(a, b)
         );
         assertResolvedAreEqualsForEachPermutation(constraints, x, intTS());
       }
@@ -799,9 +799,9 @@ public class UnifierTest extends TestContext {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var constraints = list(
-            new Constraint(a, composedFactory.apply(intTS())),
-            new Constraint(b, composedFactory.apply(blobTS())),
-            new Constraint(a, b)
+            new EqualityConstraint(a, composedFactory.apply(intTS())),
+            new EqualityConstraint(b, composedFactory.apply(blobTS())),
+            new EqualityConstraint(a, b)
         );
         assertExceptionThrownForLastConstraintForEachPermutation(constraints);
       }
@@ -811,9 +811,9 @@ public class UnifierTest extends TestContext {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var constraints = list(
-            new Constraint(a, funcTS(intTS(), intTS())),
-            new Constraint(b, funcTS(intTS())),
-            new Constraint(a, b)
+            new EqualityConstraint(a, funcTS(intTS(), intTS())),
+            new EqualityConstraint(b, funcTS(intTS())),
+            new EqualityConstraint(a, b)
         );
         assertExceptionThrownForLastConstraintForEachPermutation(constraints);
       }
@@ -822,9 +822,9 @@ public class UnifierTest extends TestContext {
       public void join_array_vs_tuple_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
-        unifier.unify(new Constraint(a, arrayTS(intTS())));
-        unifier.unify(new Constraint(b, tupleTS(intTS())));
-        assertCall(() -> unifier.unify(new Constraint(a, b)))
+        unifier.unify(new EqualityConstraint(a, arrayTS(intTS())));
+        unifier.unify(new EqualityConstraint(b, tupleTS(intTS())));
+        assertCall(() -> unifier.unify(new EqualityConstraint(a, b)))
             .throwsException(UnifierExc.class);
       }
 
@@ -832,9 +832,9 @@ public class UnifierTest extends TestContext {
       public void join_array_vs_func_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
-        unifier.unify(new Constraint(a, arrayTS(intTS())));
-        unifier.unify(new Constraint(b, funcTS(intTS())));
-        assertCall(() -> unifier.unify(new Constraint(a, b)))
+        unifier.unify(new EqualityConstraint(a, arrayTS(intTS())));
+        unifier.unify(new EqualityConstraint(b, funcTS(intTS())));
+        assertCall(() -> unifier.unify(new EqualityConstraint(a, b)))
             .throwsException(UnifierExc.class);
       }
 
@@ -842,9 +842,9 @@ public class UnifierTest extends TestContext {
       public void join_tuple_vs_func_fails() throws UnifierExc {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
-        unifier.unify(new Constraint(a, tupleTS(intTS())));
-        unifier.unify(new Constraint(b, funcTS(intTS())));
-        assertCall(() -> unifier.unify(new Constraint(a, b)))
+        unifier.unify(new EqualityConstraint(a, tupleTS(intTS())));
+        unifier.unify(new EqualityConstraint(b, funcTS(intTS())));
+        assertCall(() -> unifier.unify(new EqualityConstraint(a, b)))
             .throwsException(UnifierExc.class);
       }
     }
@@ -864,8 +864,8 @@ public class UnifierTest extends TestContext {
       VarS b = unifier.newTempVar();
       VarS x = varX();
       var constraints = list(
-          new Constraint(a, b),
-          new Constraint(b, x)
+          new EqualityConstraint(a, b),
+          new EqualityConstraint(b, x)
       );
       assertResolvedAreEqualsForEachPermutation(constraints, a, x);
       assertResolvedAreEqualsForEachPermutation(constraints, b, x);
@@ -894,8 +894,8 @@ public class UnifierTest extends TestContext {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var constraints = list(
-          new Constraint(a, intTS()),
-          new Constraint(b, composedFactory.apply(a))
+          new EqualityConstraint(a, intTS()),
+          new EqualityConstraint(b, composedFactory.apply(a))
       );
       assertResolvedAreEqualsForEachPermutation(constraints, b, composedFactory.apply(intTS()));
     }
@@ -903,14 +903,14 @@ public class UnifierTest extends TestContext {
 
   private void assertUnifyInfers(Unifier unifier, TypeS type1, TypeS type2,
       TypeS unresolved, TypeS expected) throws UnifierExc {
-    unifier.unify(new Constraint(type1, type2));
+    unifier.unify(new EqualityConstraint(type1, type2));
     assertThat(unifier.resolve(unresolved))
         .isEqualTo(expected);
   }
 
   private void assertUnifyInfersEquality(Unifier unifier, TypeS type1, TypeS type2,
       TypeS unresolved1, TypeS unresolved2) throws UnifierExc {
-    unifier.unify(new Constraint(type1, type2));
+    unifier.unify(new EqualityConstraint(type1, type2));
     assertThat(unifier.resolve(unresolved1))
         .isEqualTo(unifier.resolve(unresolved2));
   }
@@ -919,17 +919,17 @@ public class UnifierTest extends TestContext {
       throws UnifierExc {
     var a = unifier.newTempVar();
     var constraints = list(
-        new Constraint(a, type1),
-        new Constraint(a, type2));
+        new EqualityConstraint(a, type1),
+        new EqualityConstraint(a, type2));
     assertResolvedAreEqualsForEachPermutation(constraints, a, expected);
   }
 
   private void assertUnifyFails(TypeS type1, TypeS type2) throws UnifierExc {
-    assertExceptionThrownForLastConstraintForEachPermutation(list(new Constraint(type1, type2)));
+    assertExceptionThrownForLastConstraintForEachPermutation(list(new EqualityConstraint(type1, type2)));
   }
 
   private static void assertResolvedAreEqualsForEachPermutation(
-      ImmutableList<Constraint> constraints, TypeS type, TypeS expected)
+      ImmutableList<EqualityConstraint> constraints, TypeS type, TypeS expected)
       throws UnifierExc {
     assertForEachPermutation(constraints, unifier -> assertResolved(unifier, type, expected));
   }
@@ -939,15 +939,15 @@ public class UnifierTest extends TestContext {
         .isEqualTo(unifier.resolve(expected));
   }
 
-  private static void assertConstraintsUnifiedForEachPermutation(List<Constraint> constraints)
+  private static void assertConstraintsUnifiedForEachPermutation(List<EqualityConstraint> constraints)
       throws UnifierExc {
     assertForEachPermutation(constraints, (unifier) -> {});
   }
 
   private static void assertForEachPermutation(
-      List<Constraint> constraints, Consumer<Unifier> assertion) throws UnifierExc {
+      List<EqualityConstraint> constraints, Consumer<Unifier> assertion) throws UnifierExc {
     var permutations = permutations(constraints);
-    for (List<Constraint> permutation : permutations) {
+    for (List<EqualityConstraint> permutation : permutations) {
       var unifier = new Unifier();
       for (int i = 0; i < 4; i++) {
         unifier.newTempVar();
@@ -960,9 +960,9 @@ public class UnifierTest extends TestContext {
   }
 
   private static void assertExceptionThrownForLastConstraintForEachPermutation(
-      List<Constraint> constraints) throws UnifierExc {
+      List<EqualityConstraint> constraints) throws UnifierExc {
     var permutations = permutations(constraints);
-    for (List<Constraint> permutation : permutations) {
+    for (List<EqualityConstraint> permutation : permutations) {
       var unifier = new Unifier();
       for (int i = 0; i < 4; i++) {
         unifier.newTempVar();
