@@ -44,6 +44,12 @@ public class Unifier {
     this.tempVarCounter = 0;
   }
 
+  public TypeS structureOf(TypeS type) {
+    var tempMap = new HashMap<TypeS, TypeS>();
+    return resolve(type)
+        .mapTemps((temp) -> tempMap.computeIfAbsent(temp, t -> newTempVar()));
+  }
+
   // unification
 
   public void unifyOrFailWithRuntimeException(EqualityConstraint constraint) {

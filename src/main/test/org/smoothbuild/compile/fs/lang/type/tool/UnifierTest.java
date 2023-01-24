@@ -21,6 +21,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.compile.fs.lang.type.FieldSetTS;
+import org.smoothbuild.compile.fs.lang.type.TempVarS;
 import org.smoothbuild.compile.fs.lang.type.TypeFS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
@@ -30,6 +31,62 @@ import com.google.common.collect.ImmutableList;
 
 public class UnifierTest extends TestContext {
   private final Unifier unifier = new Unifier();
+
+  @Nested
+  class _structure_of {
+    @Test
+    public void array() {
+      var a = unifier.newTempVar();
+      var arrayTS = arrayTS(a);
+      var a2 = new TempVarS("1");
+      assertThat(unifier.structureOf(arrayTS))
+          .isEqualTo(arrayTS(a2));
+    }
+
+    @Test
+    public void function() {
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      var funcTS = funcTS(list(a, b), a);
+      var a2 = new TempVarS("2");
+      var b2 = new TempVarS("3");
+      assertThat(unifier.structureOf(funcTS))
+          .isEqualTo(funcTS(list(a2, b2), a2));
+    }
+
+    @Test
+    public void tuple() {
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      var tupleTS = tupleTS(a, b, a);
+      var a2 = new TempVarS("2");
+      var b2 = new TempVarS("3");
+      assertThat(unifier.structureOf(tupleTS))
+          .isEqualTo(tupleTS(a2, b2, a2));
+    }
+
+    @Test
+    public void interface_() {
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      var interfaceTS = interfaceTS(a, b, a);
+      var a2 = new TempVarS("2");
+      var b2 = new TempVarS("3");
+      assertThat(unifier.structureOf(interfaceTS))
+          .isEqualTo(interfaceTS(a2, b2, a2));
+    }
+
+    @Test
+    public void struct() {
+      var a = unifier.newTempVar();
+      var b = unifier.newTempVar();
+      var structTS = structTS(a, b, a);
+      var a2 = new TempVarS("2");
+      var b2 = new TempVarS("3");
+      assertThat(unifier.structureOf(structTS))
+          .isEqualTo(structTS(a2, b2, a2));
+    }
+  }
 
   @Nested
   class _single_unify_call {
