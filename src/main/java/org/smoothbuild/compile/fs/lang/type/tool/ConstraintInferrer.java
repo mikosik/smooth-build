@@ -83,10 +83,15 @@ public class ConstraintInferrer {
       FieldSetTS fieldSet, InterfaceTS interface2, Queue<EqualityConstraint> constraints)
       throws UnifierExc {
     return switch (fieldSet) {
-      case InterfaceTS interface1 -> new InterfaceTS(
-          unifyFieldSetAndFieldSet(interface1, interface2, constraints));
+      case InterfaceTS interface1 -> unifyInterfaceAndInterface(interface1, interface2, constraints);
       case StructTS struct1 -> unifyStructAndInterface(struct1, interface2, constraints);
     };
+  }
+
+  private static InterfaceTS unifyInterfaceAndInterface(
+      InterfaceTS interface1, InterfaceTS interface2, Queue<EqualityConstraint> constraints)
+      throws UnifierExc {
+    return new InterfaceTS(unifyFieldSetAndFieldSet(interface1, interface2, constraints));
   }
 
   private static StructTS unifyFieldSetAndStruct(
