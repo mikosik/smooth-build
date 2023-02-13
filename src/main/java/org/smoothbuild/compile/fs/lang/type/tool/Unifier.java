@@ -43,12 +43,12 @@ import com.google.common.collect.ImmutableList.Builder;
 public class Unifier {
   private final Map<VarS, Unified> varToUnified;
   private final Set<InstantiationConstraint> instantiationConstraints;
-  private int tempVarCounter;
+  private final TempVarGenerator tempVarGenerator;
 
   public Unifier() {
     this.varToUnified = new HashMap<>();
     this.instantiationConstraints = new HashSet<>();
-    this.tempVarCounter = 0;
+    this.tempVarGenerator = new TempVarGenerator();
   }
 
   public void add(Constraint constraint) throws UnifierExc {
@@ -193,7 +193,7 @@ public class Unifier {
   }
 
   public TempVarS newTempVar() {
-    var tempVar = new TempVarS(Integer.toString(tempVarCounter++));
+    var tempVar = tempVarGenerator.next();
     varToUnified.put(tempVar, new Unified(tempVar));
     return tempVar;
   }
