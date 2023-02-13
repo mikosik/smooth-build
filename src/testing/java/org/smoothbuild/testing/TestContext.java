@@ -1160,7 +1160,7 @@ public class TestContext {
     return tempVar("1");
   }
 
-  private static TempVarS tempVar(String name) {
+  public static TempVarS tempVar(String name) {
     return new TempVarS(name);
   }
 
