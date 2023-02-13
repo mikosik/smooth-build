@@ -1157,7 +1157,7 @@ public class TestContext {
   }
 
   public static VarS tempVarA() {
-    return tempVar("A");
+    return tempVar("1");
   }
 
   private static TempVarS tempVar(String name) {

@@ -913,7 +913,7 @@ public class UnifierTest extends TestContext {
     @Test
     public void resolve_unknown_temp_var_causes_exception() {
       assertCall(() -> unifier.resolve(tempVarA()))
-          .throwsException(new IllegalStateException("Unknown temp var `A`."));
+          .throwsException(new IllegalStateException("Unknown temp var `1`."));
     }
 
     @Test
@@ -943,7 +943,7 @@ public class UnifierTest extends TestContext {
     @Test
     public void unknown_temp_var_cannot_be_resolved() {
       assertCall(() -> unifier.resolve(tempVarA()))
-          .throwsException(new IllegalStateException("Unknown temp var `A`."));
+          .throwsException(new IllegalStateException("Unknown temp var `1`."));
     }
 
     @ParameterizedTest
