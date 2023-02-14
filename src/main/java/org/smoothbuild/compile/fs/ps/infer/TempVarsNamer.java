@@ -6,7 +6,6 @@ import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
@@ -48,11 +47,6 @@ public class TempVarsNamer {
 
   public void nameVarsInNamedFunc(NamedFuncP namedFunc) {
     nameVarsInEvaluable(namedFunc);
-  }
-
-  private VarSetS nameVarsInEvaluable(EvaluableP evaluable) {
-    var resolvedT = unifier.resolve(evaluable.typeS());
-    return nameVars(resolvedT, evaluable.body());
   }
 
   private VarSetS handleExpr(VarSetS varsInScope, ExprP expr) {
@@ -102,7 +96,9 @@ public class TempVarsNamer {
     return varSetS(vars);
   }
 
-  private VarSetS nameVars(TypeS resolvedT, Optional<ExprP> body) {
+  private VarSetS nameVarsInEvaluable(EvaluableP evaluable) {
+    var resolvedT = unifier.resolve(evaluable.typeS());
+    var body = evaluable.body();
     var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
     var varsInScope = outerScopeVars.withAdded(thisScopeVars);
     var innerScopeVars = body.map(b -> handleExpr(varsInScope, b)).orElse(varSetS());
