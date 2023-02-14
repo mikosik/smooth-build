@@ -7,7 +7,7 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 
 public sealed interface EvaluableP
-    extends Located
+    extends Located, ScopedP
     permits FuncP, NamedEvaluableP {
   public TypeS typeS();
 

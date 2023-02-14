@@ -12,6 +12,11 @@ public record ScopeP(
     return new ScopeP("", immutableBindings(), immutableBindings());
   }
 
+  @Override
+  public String name() {
+    return name;
+  }
+
   public ScopeP newInnerScope(
       String name,
       ImmutableBindings<ReferenceableP> innerReferenceables,

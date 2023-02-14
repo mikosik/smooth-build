@@ -33,6 +33,7 @@ public final class AnonymousFuncP extends PolymorphicP implements FuncP {
     return resultT;
   }
 
+  @Override
   public String name() {
     return name;
   }
