@@ -4,7 +4,6 @@ import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Maps.toMap;
 
-import java.util.HashSet;
 import java.util.List;
 
 import org.smoothbuild.compile.fs.lang.type.TypeS;
@@ -49,63 +48,59 @@ public class TempVarsNamer {
     nameVarsInEvaluable(namedFunc);
   }
 
-  private VarSetS handleExpr(VarSetS varsInScope, ExprP expr) {
-    return new TempVarsNamer(unifier, varsInScope)
+  private void handleExpr(VarSetS varsInScope, ExprP expr) {
+    new TempVarsNamer(unifier, varsInScope)
         .handleExpr(expr);
   }
 
-  private VarSetS handleExpr(ExprP expr) {
+  private void handleExpr(ExprP expr) {
     // @formatter:off
-    return switch (expr) {
+    switch (expr) {
       case CallP          callP          -> handleCall(callP);
       case InstantiateP   instantiateP   -> handleInstantiate(instantiateP);
       case NamedArgP      namedArgP      -> handleExpr(namedArgP.expr());
       case OrderP         orderP         -> handleOrder(orderP);
       case SelectP        selectP        -> handleExpr(selectP.selectable());
-      case IntP           intP           -> varSetS();
-      case BlobP          blobP          -> varSetS();
-      case StringP        stringP        -> varSetS();
-    };
+      case IntP           intP           -> {}
+      case BlobP          blobP          -> {}
+      case StringP        stringP        -> {}
+    }
     // @formatter:on
   }
 
-  private VarSetS handleCall(CallP call) {
-    return handleChildren(concat(call.callee(), call.args()));
+  private void handleCall(CallP call) {
+    handleChildren(concat(call.callee(), call.args()));
   }
 
-  private VarSetS handleInstantiate(InstantiateP instantiateP) {
-    return switch (instantiateP.polymorphic()) {
+  private void handleInstantiate(InstantiateP instantiateP) {
+    switch (instantiateP.polymorphic()) {
       case AnonymousFuncP anonymousFuncP -> handleAnonymousFunc(anonymousFuncP);
-      case ReferenceP referenceP -> varSetS();
-    };
-  }
-
-  private VarSetS handleAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    return nameVarsInEvaluable(anonymousFuncP);
-  }
-
-  private VarSetS handleOrder(OrderP order) {
-    return handleChildren(order.elems());
-  }
-
-  private VarSetS handleChildren(List<ExprP> children) {
-    var vars = new HashSet<VarS>();
-    for (var child : children) {
-      vars.addAll(handleExpr(child));
+      case ReferenceP referenceP -> {}
     }
-    return varSetS(vars);
   }
 
-  private VarSetS nameVarsInEvaluable(EvaluableP evaluable) {
+  private void handleAnonymousFunc(AnonymousFuncP anonymousFuncP) {
+    nameVarsInEvaluable(anonymousFuncP);
+  }
+
+  private void handleOrder(OrderP order) {
+    handleChildren(order.elems());
+  }
+
+  private void handleChildren(List<ExprP> children) {
+    for (var child : children) {
+      handleExpr(child);
+    }
+  }
+
+  private void nameVarsInEvaluable(EvaluableP evaluable) {
     var resolvedT = unifier.resolve(evaluable.typeS());
     var body = evaluable.body();
     var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
     var varsInScope = outerScopeVars.withAdded(thisScopeVars);
-    var innerScopeVars = body.map(b -> handleExpr(varsInScope, b)).orElse(varSetS());
-    var reservedVars = varsInScope.withAdded(innerScopeVars);
-    var resolvedAndRenamedT = nameVars(resolvedT, reservedVars);
+    body.ifPresent(b -> handleExpr(varsInScope, b));
+    var resolvedAndRenamedT = nameVars(resolvedT, thisScopeVars);
     unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
-    return resolvedAndRenamedT.vars().withAdded(innerScopeVars);
   }
 
   private static TypeS nameVars(TypeS resolvedT, VarSetS reservedVars) {

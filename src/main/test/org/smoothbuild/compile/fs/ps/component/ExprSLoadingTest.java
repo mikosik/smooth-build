@@ -118,7 +118,7 @@ public class ExprSLoadingTest extends TestContext {
             """;
         var anonymousFunc = anonymousFuncS(
             2, nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
-        var instantiateS = instantiateS(2, list(varB()), anonymousFunc);
+        var instantiateS = instantiateS(2, list(varA()), anonymousFunc);
         var result = valueS(1, "result", instantiateS);
         module(code)
             .loadsWithSuccess()
