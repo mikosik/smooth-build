@@ -1,0 +1,52 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(19)
+    }
+}
+
+jar {
+    archiveBaseName = 'std_lib'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += "--enable-preview"
+}
+tasks.withType(Test).configureEach {
+     jvmArgs += "--enable-preview"
+}
+tasks.withType(JavaExec).configureEach {
+     jvmArgs += "--enable-preview"
+}
+
+dependencies {
+    implementation project(':src:app')
+    implementation libs.guava
+    implementation libs.okio
+    implementation libs.zip4j
+
+    testImplementation testFixtures(project(":src:app"))
+    testRuntimeOnly libs.junit.jupiter.engine
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.params
+    testImplementation libs.mockito
+    testImplementation libs.truth
+}
+
+def zip = tasks.register('zip', Zip) {
+    manifest {
+        attributes = []
+    }
+    archiveBaseName = 'std_lib-all'
+    dependsOn jar
+    from jar
+    from layout.projectDirectory.dir('src/main/smooth')
+}
+tasks.build.dependsOn(zip)
+
+test {
+    useJUnitPlatform()
+}
