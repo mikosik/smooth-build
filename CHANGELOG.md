@@ -2,7 +2,7 @@
 Change Log
 ==========
 
-Version 0.21.0 (??????????)
+Version 0.21.0 (2023.03.07)
 ---------------------------
 
  * changed smooth slib: renamed projectFiles -> files, projectFile -> file
