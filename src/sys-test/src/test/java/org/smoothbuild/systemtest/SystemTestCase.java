@@ -22,8 +22,8 @@ import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.helpCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.listCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
-import static org.smoothbuild.systemtest.SystemTestUtils.GIT_REPO_ROOT;
-import static org.smoothbuild.systemtest.SystemTestUtils.SMOOTH_BINARY;
+import static org.smoothbuild.systemtest.TestMode.FULL_BINARY;
+import static org.smoothbuild.systemtest.TestMode.SINGLE_JVM;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.readAndClose;
@@ -37,6 +37,7 @@ import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +57,11 @@ import okio.BufferedSource;
 import okio.ByteString;
 
 public abstract class SystemTestCase {
+  public static final TestMode TEST_MODE = TestMode.detectTestMode();
+  public static final Path SYS_TEST_PROJECT_ROOT = Paths.get(".").toAbsolutePath();
+  public static final Path SMOOTH_BINARY =
+      Paths.get("./build/installation/smooth/smooth").toAbsolutePath();
+
   private Path projectDir;
   private Integer exitCode;
   private String sysOut;
@@ -100,7 +106,9 @@ public abstract class SystemTestCase {
     try {
       Path destinationDir = absolutePath(dirInsideProject);
       createDirectories(destinationDir);
-      return Files.copy(GIT_REPO_ROOT.resolve("lib/ivy").resolve(jar), destinationDir.resolve(jar));
+      return Files.copy(
+          SYS_TEST_PROJECT_ROOT.resolve("build/junit4files").resolve(jar),
+          destinationDir.resolve(jar));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -142,19 +150,19 @@ public abstract class SystemTestCase {
   }
 
   private void runSmoothInProperJvm(CommandWithArgs command, String... additionalArgs) {
-    switch (SystemTestUtils.TEST_MODE) {
+    switch (TEST_MODE) {
       case SINGLE_JVM -> runSmoothInCurrentJvm(command, additionalArgs);
       case FULL_BINARY -> runSmoothInForkedJvm(command);
-      default -> fail("Unknown mode: " + SystemTestUtils.TEST_MODE);
+      default -> fail("Unknown mode: " + TEST_MODE);
     }
   }
 
-  private void runSmoothInCurrentJvm(CommandWithArgs command, String... additionalArgs) {
+  private void runSmoothInCurrentJvm(CommandWithArgs command, String... args) {
     ByteArrayOutputStream outBytes = new ByteArrayOutputStream();
     ByteArrayOutputStream errBytes = new ByteArrayOutputStream();
     try (PrintWriter outWriter = printWriter(outBytes);
         PrintWriter errWriter = printWriter(errBytes)) {
-      String[] commandAndAllArgs = command.commandPlusArgsPlus(additionalArgs);
+      String[] commandAndAllArgs = command.commandPlusArgsPlus(args);
       exitCode = Main.runSmooth(commandAndAllArgs, outWriter, errWriter);
       outWriter.flush();
       errWriter.flush();
@@ -345,7 +353,7 @@ public abstract class SystemTestCase {
    * It may be "." when current dir is equal to {@link #projectDirAbsolutePath()}.
    */
   public Path projectDirOption() {
-    return switch (SystemTestUtils.TEST_MODE) {
+    return switch (TEST_MODE) {
       case SINGLE_JVM -> projectDir;
       case FULL_BINARY -> Path.of(".");
     };

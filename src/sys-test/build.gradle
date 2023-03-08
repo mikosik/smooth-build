@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'base'
+}
+
+def installation = tasks.register('installation', Copy) {
+    dependsOn project(':src:distr').tasks.zip
+    from project(':src:distr').tasks.zip.outputs.files.collect( { zipTree(it) })
+    into file("${buildDir}/installation")
+}
+tasks.test.dependsOn(installation)
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(19)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += "--enable-preview"
+}
+tasks.withType(Test).configureEach {
+    jvmArgs += "--enable-preview"
+}
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += "--enable-preview"
+}
+
+// JunitTest needs access to junit4 jar and its dependencies.
+// Below separate `junit4` configuration is created that depends
+// on junit4 and `junit4files` resolves dependencies and stores
+// files in `junit4files` directory
+configurations {
+    junit4
+}
+dependencies {
+    junit4 'junit:junit:4.13.2'
+}
+def junit4files = tasks.register('junit4files', Copy) {
+    from configurations.getByName("junit4").resolvedConfiguration.files
+    into file("${buildDir}/junit4files")
+}
+tasks.test.dependsOn(junit4files)
+
+dependencies {
+    implementation project(':src:app')
+    implementation libs.guava
+    implementation libs.okio
+    implementation libs.zip4j
+
+    testImplementation testFixtures(project(":src:app"))
+    testRuntimeOnly libs.junit.jupiter.engine
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.params
+    testImplementation libs.mockito
+    testImplementation libs.truth
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty "fast.system.tests", project.getProperty("fast.system.tests")
+}
