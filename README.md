@@ -9,3 +9,5 @@ no computation happens twice on the same machine
  * [tutorial](doc/tutorial.md)
  * [download / install](doc/install.md)
  * [standard library functions](doc/api.md)
+
+[![CB](https://github.com/mikosik/smooth-build/actions/workflows/gradle.yml/badge.svg)](https://github.com/mikosik/smooth-build/actions/workflows/gradle.yml)
