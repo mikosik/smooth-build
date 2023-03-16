@@ -8,7 +8,7 @@ a description of project's build process.
 One of the simplest non-trivial build files is:
 
 ```
-File release = files("src") > javac() > jar();
+File release = files("src") > javac() > jarFile("release.jar");
 ```
 
 This script defines value `release` which body contains function calls separated by `>`.
@@ -22,24 +22,24 @@ Result returned from [javac](api/javac.md) call is then passed as argument to
 
 You can build `release` (evaluate `release` value) from command line by running:
 
-```
+````
 smooth build release
-```
+````
 
 Above command evaluates `release` value and stores its result 
 in `.smooth/artifacts/` directory as `release` file.
 That location is printed to console at the end of build process:
 
-```
+````
 Saving artifact(s)
   release -> '.smooth/artifacts/release'
-```
+````
 
 Smooth is capable of inferring type of any expression, 
 so we don't have to declare it explicitly.
 Our initial example can be simplified to
 ```
-release = files("src") > javac() > jar();
+release = files("src") > javac() > jarFile("release.jar");
 ```
 For educational reasons we will keep writing types explicitly in our examples.
 
@@ -60,8 +60,8 @@ Note that there's ugly duplicated code in this example.
 We make it clean further in this tutorial for now we just focus on parallelism. 
 
 ```
-File main = files("src-main") > javac() > jar();
-File deps = files("src-deps") > javac() > jar();
+File main = files("src-main") > javac() > jarFile("main.jar");
+File deps = files("src-deps") > javac() > jarFile("deps.jar");
 ```
 
 As both functions (`main` and `deps`) do not depend on each other
@@ -74,7 +74,7 @@ It is enough to ask smooth to build those jars with `smooth build main deps`.
 If you run build command twice for our initial example
 
 ```
-File release = files("src") > javac() > jar();
+File release = files("src") > javac() > jarFile("release.jar");
 ```
 
 you will notice that second evaluation completes almost instantly.
@@ -164,18 +164,15 @@ Blob binaryData = 0x48656C6C6F;
 #### Struct types
 Struct is a compound of named values known as its fields (like in most programming languages).
 Each field may be of different type.
-It is possible to define struct type in following way (comma after last field is not mandatory):
+It is possible to define Person struct type in following way (comma after last field is not 
+mandatory) and obviously it is possible to use struct type as a field type in other struct.
 
 ```
 Person(
   String firstName,
   String lastName,
 )
-```
 
-and obviously it is possible to use struct type as a field type in other struct.
-
-```
 Dog(
   String name,
   Person owner,
@@ -184,11 +181,7 @@ Dog(
 
 Definition of each struct automatically generates constructor for that struct.
 
-```
-Person person = Person("John", "Doe");
-```
-
-As one can guess constructor of given struct is a function that
+Constructor of given struct is a function that
  - returns value of given struct type
  - has the same name as given struct
  - has parameter for each struct's field with the same name and type as that field
@@ -199,6 +192,11 @@ behaves exactly like any other function.
 Accessing specific field of struct value is done using dot `.`.
 
 ```
+Person(
+  String firstName,
+  String lastName,
+)
+Person person = Person("John", "Doe");
 String name = person.lastName;
 ```
 
@@ -225,7 +223,7 @@ Below example of two level deep array (array of arrays of `String`).
 Let's look once again at `release` value that we defined at the beginning of this tutorial.
 
 ```
-File release = files("src") > javac() > jar();
+File release = files("src") > javac() > jarFile("release.jar");
 ```
 
 It uses function chaining (represented by pipe symbol `>`) to pass function call result as
@@ -234,7 +232,7 @@ In fact function chaining is just syntactic sugar for more standard function cal
 We can refactor above function definition to:
 
 ```
-File release = jar(javac(files("src")));
+File release = jarFile(javac(files("src")), "release.jar");
 ```
 
 This version is less readable despite being more familiar to people
@@ -245,7 +243,7 @@ Let's refactor our initial example by splitting it into two functions and adding
 
 ```
 [File] classes(String sourcePath) = files(sourcePath) > javac();
-File release = jar(classes("src"));
+File release = jarFile(classes("src"), "release.jar");
 ```
 
 We defined function `classes` that takes one `String` parameter being path to source file dir
@@ -255,7 +253,7 @@ This way we can build our own set of reusable functions.
 For example:
 
 ```
-File javaJar(String srcPath) = files(srcPath) > javac() > jar();
+File javaJar(String srcPath) = files(srcPath) > javac() > jarFile("release.jar");
 File main = javaJar("src/main");
 File other = javaJar("src/other"); 
 ```
@@ -266,22 +264,14 @@ When we define function we can provide default value for some parameters.
 This way call to such function does not have to provide value for such parameters.
 
 Let's create function that creates text file. 
+We can call it without specifying `name` parameter as it has default value,
+but we can also override default argument by specifying value for `name` parameter.
 
 ```
 File textFile(String text, String name = "file.txt") 
   = File(toBlob(text), name);
-```
-
-We can call it without specifying `name` parameter as it has default value:
-
-```
 File myFile = textFile("I love text files.");
-```
-
-but we can also override default argument by specifying value for `name` parameter:
-
-```
-File myFile = textFile("I love text files.", "secret.txt");
+File otherFile = textFile("I love text files.", "secret.txt");
 ```
 
 So far our example exercised default value of parameter that comes last on
@@ -294,21 +284,21 @@ we have to explicitly provide name of parameter to which it should be assigned.
 
 For example function [javac](api/javac.md) 
 from [standard library](api.md) which signature is:
-```
+````
 [File] javac(
   [File] srcs,
   [File] libs = [],
   String source = "1.8",
   String target = "1.8",
   [String] options = [],
-)
-```
+);
+````
 
 can be invoked as
 
 ```
-[File] files = files("src");
-[File] classes = javac(files, source="1.5");
+[File] sourceFiles = files("src");
+[File] classes = javac(sourceFiles, source="17");
 ```
 
 ### Polymorphism

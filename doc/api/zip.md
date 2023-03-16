@@ -2,9 +2,9 @@
 
 Zips an array of files.
 
- | Name | Type | Default | Description |
- | ---- | ---- | ------- | ----------- |
- | files | [File] |   | Files to be compressed (zipped). |
+| Name  | Type   | Default | Description                      |
+|-------|--------|---------|----------------------------------|
+| files | [File] |         | Files to be compressed (zipped). |
 
 Returns __Blob__ containing compressed files.
 
@@ -12,5 +12,5 @@ Returns __Blob__ containing compressed files.
 
 Zips all files from "src" directory.
 ```
-File files_zip = projectFiles("src") | zip ;
+Blob zippedFiles = files("src") > zip();
 ```

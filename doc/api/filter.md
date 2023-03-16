@@ -31,10 +31,10 @@ Following wildcards in glob pattern are supported
  * `**` matches zero or more characters including path separator characters `/`
 
 
- | Name | Type | Default | Description |
- | ---- | ---- | ------- | ----------- |
- | files | [File] |   | Array of files to be filtered. |
- | pattern | String |   | glob pattern  |
+| Name    | Type   | Default | Description                    |
+|---------|--------|---------|--------------------------------|
+| files   | [File] |         | Array of files to be filtered. |
+| pattern | String |         | glob pattern                   |
 
 Returns __[File]__ matching glob pattern.
 
@@ -43,5 +43,5 @@ Returns __[File]__ matching glob pattern.
 Takes all files (recursively) from "pictures" directory and filters only those that end with "jpg" extension.
 
 ```
-[File] jpgFiles = projectFiles("pictures") | filter("**.jpg");
+[File] jpgFiles = files("pictures") > filter("**.jpg");
 ```

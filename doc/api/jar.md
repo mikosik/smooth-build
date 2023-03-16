@@ -2,10 +2,10 @@
 
 Jars an array of files.
 
- | Name | Type | Default | Description |
- | ---- | ---- | ------- | ----------- |
- | files | [File] |   | Files to be compressed (jared). |
- | manifest | Blob | 0x | Content of manifest file. |
+| Name     | Type   | Default | Description                     |
+|----------|--------|---------|---------------------------------|
+| files    | [File] |         | Files to be compressed (jared). |
+| manifest | Blob   | 0x      | Content of manifest file.       |
 
 Returns __Blob__ containing compressed files.
 
@@ -13,5 +13,5 @@ Returns __Blob__ containing compressed files.
 
 Jars all files from "src" directory.
 ```
-Blob app_jar = projectFiles("src") | jar ;
+Blob app_jar = files("src") > jar();
 ```

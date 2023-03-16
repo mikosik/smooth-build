@@ -12,7 +12,7 @@ Returns __[a]__ containing all elements from array elements concatenated
 
 Returns array of all files from 'src/common' and 'src/main' directory.
 ```
-[File] commonSource = projectFiles("src/common");
-[File] mainSource = projectFiles("src/main");
+[File] commonSource = files("src/common");
+[File] mainSource = files("src/main");
 [File] allSource = concat([commonSource, mainSource]);
 ```

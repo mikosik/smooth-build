@@ -15,5 +15,5 @@ Returns __File__ containing compressed files.
 Creates jar file with all files from "src" directory.
 
 ```
-File app_jar = projectFiles("src") | jarFile("src.jar") ;
+File app_jar = files("src") > jarFile("src.jar") ;
 ```
