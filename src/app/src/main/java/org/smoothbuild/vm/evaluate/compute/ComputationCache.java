@@ -14,16 +14,13 @@ import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
-import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.evaluate.task.Output;
 
@@ -39,65 +36,65 @@ public class ComputationCache {
   private final BytecodeF bytecodeF;
 
   @Inject
-  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, BytecodeDb bytecodeDb,
+  public ComputationCache(
+      @ForSpace(PRJ) FileSystem fileSystem,
+      BytecodeDb bytecodeDb,
       BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;
     this.bytecodeDb = bytecodeDb;
     this.bytecodeF = bytecodeF;
   }
 
-  public synchronized void write(Hash computationHash, Output output)
-      throws ComputationCacheExc {
-    try (BufferedSink sink = fileSystem.sink(toPath(computationHash))) {
-      ArrayB messages = output.messages();
+  public synchronized void write(Hash hash, Output output) throws ComputationCacheExc {
+    try (BufferedSink sink = fileSystem.sink(toPath(hash))) {
+      var messages = output.messages();
       sink.write(messages.hash().toByteString());
-      var instB = output.valueB();
-      if (instB != null) {
-        sink.write(instB.hash().toByteString());
+      var valueB = output.valueB();
+      if (valueB != null) {
+        sink.write(valueB.hash().toByteString());
       }
     } catch (IOException e) {
       throw computationCacheException(e);
     }
   }
 
-  public synchronized boolean contains(Hash taskHash) throws ComputationCacheExc {
-    PathS path = toPath(taskHash);
-    PathState pathState = fileSystem.pathState(path);
-    return switch (pathState) {
+  public synchronized boolean contains(Hash hash) throws ComputationCacheExc {
+    var path = toPath(hash);
+    return switch (fileSystem.pathState(path)) {
       case FILE -> true;
       case NOTHING -> false;
-      case DIR -> throw corruptedValueException(taskHash, path + " is directory not a file.");
+      case DIR -> throw corruptedValueException(hash, path + " is directory not a file.");
     };
   }
 
-  public synchronized Output read(Hash taskHash, TypeB type) throws ComputationCacheExc {
-    try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      ExprB message = bytecodeDb.get(Hash.read(source));
-      ArrayTB messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
-      if (!message.category().equals(messageArrayT)) {
-        throw corruptedValueException(taskHash, "Expected " + messageArrayT.q()
-            + " as first child of its Merkle root, but got " + message.category().q());
+  public synchronized Output read(Hash hash, TypeB type) throws ComputationCacheExc {
+    try (BufferedSource source = fileSystem.source(toPath(hash))) {
+      var messagesHash = Hash.read(source);
+      var messages = bytecodeDb.get(messagesHash);
+      var messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
+      if (!messages.category().equals(messageArrayT)) {
+        throw corruptedValueException(hash, "Expected " + messageArrayT.q()
+            + " as first child of its Merkle root, but got " + messages.category().q());
       }
 
-      ArrayB messages = (ArrayB) message;
-      Iterable<TupleB> tuples = messages.elems(TupleB.class);
-      for (TupleB m : tuples) {
-        String severity = severity(m);
+      var messageArray = (ArrayB) messages;
+      for (var message : messageArray.elems(TupleB.class)) {
+        var severity = severity(message);
         if (!isValidSeverity(severity)) {
-          throw corruptedValueException(taskHash,
+          throw corruptedValueException(hash,
               "One of messages has invalid severity = '" + severity + "'");
         }
       }
-      if (containsErrorOrAbove(messages)) {
-        return new Output(null, messages);
+      if (containsErrorOrAbove(messageArray)) {
+        return new Output(null, messageArray);
       } else {
-        Hash resultObjectHash = Hash.read(source);
-        ExprB expr = bytecodeDb.get(resultObjectHash);
-        if (!type.equals(expr.evaluationT())) {
-          throw corruptedValueException(taskHash, "Expected value of type " + type.q()
-              + " as second child of its Merkle root, but got " + expr.evaluationT().q());
+        var valueHash = Hash.read(source);
+        var value = bytecodeDb.get(valueHash);
+        if (!type.equals(value.evaluationT())) {
+          throw corruptedValueException(hash, "Expected value of type " + type.q()
+              + " as second child of its Merkle root, but got " + value.evaluationT().q());
         } else {
-          return new Output((ValueB) expr, messages);
+          return new Output((ValueB) value, messageArray);
         }
       }
     } catch (IOException e) {
@@ -105,7 +102,7 @@ public class ComputationCache {
     }
   }
 
-  static PathS toPath(Hash computationHash) {
-    return COMPUTATION_CACHE_PATH.appendPart(computationHash.toHexString());
+  static PathS toPath(Hash hash) {
+    return COMPUTATION_CACHE_PATH.appendPart(hash.toHexString());
   }
 }
