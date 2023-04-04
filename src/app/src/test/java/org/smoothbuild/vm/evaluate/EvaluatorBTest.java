@@ -761,28 +761,22 @@ public class EvaluatorBTest extends TestContext {
         int result = 0;
         for (String command : commands.split(",")) {
           char index = command.charAt(command.length() - 1);
+          final String nameAndIndex = name + index;
           var opcode = command.substring(0, command.length() - 1);
           switch (opcode) {
-            case "GET" :
-              result = COUNTERS.get(name + index).get();
-              break;
-            case "INC":
-              result = COUNTERS.get(name + index).incrementAndGet();
-              break;
-            case "COUNT":
-              COUNTDOWNS.get(name + index).countDown();
-              break;
-            case "WAIT":
+            case "GET" -> result = COUNTERS.get(nameAndIndex).get();
+            case "INC" -> result = COUNTERS.get(nameAndIndex).incrementAndGet();
+            case "COUNT" -> COUNTDOWNS.get(nameAndIndex).countDown();
+            case "WAIT" -> {
               try {
-                if (!COUNTDOWNS.get(name + index).await(20, SECONDS)) {
+                if (!COUNTDOWNS.get(nameAndIndex).await(20, SECONDS)) {
                   throw new RuntimeException();
                 }
               } catch (InterruptedException e) {
                 throw new RuntimeException(e);
               }
-              break;
-            default:
-              throw new RuntimeException("Unknown command opcode: " + opcode);
+            }
+            default -> throw new RuntimeException("Unknown command opcode: " + opcode);
           }
         }
         if (result == -1) {
