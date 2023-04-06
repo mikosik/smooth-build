@@ -6,6 +6,8 @@ import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
 import static org.smoothbuild.fs.base.PathS.path;
+import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -157,6 +159,30 @@ public class HashedDbTest extends TestContext {
     assertCall(() -> hashedDb().sink().write(bytes1).close())
         .throwsException(new IOException(
             "Corrupted HashedDb. Cannot store data at '" + hash + "' as it is a directory."));
+  }
+
+  @Test
+  public void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
+    var fileSystem = hashedDbFileSystem();
+    var hashedDb = new HashedDb(fileSystem, HASHED_DB_PATH, tempManager());
+
+    hashedDb.writeString("abc");
+
+    assertThat(fileSystem.files(TEMPORARY_PATH))
+        .isEmpty();
+  }
+
+  @Test
+  public void temporary_file_is_deleted_when_sink_is_closed_even_when_hashed_valued_exists_in_db()
+      throws Exception {
+    var fileSystem = hashedDbFileSystem();
+    var hashedDb = new HashedDb(fileSystem, HASHED_DB_PATH, tempManager());
+
+    hashedDb.writeString("abc");
+    hashedDb.writeString("abc");
+
+    assertThat(fileSystem.files(TEMPORARY_PATH))
+        .isEmpty();
   }
 
   @Nested

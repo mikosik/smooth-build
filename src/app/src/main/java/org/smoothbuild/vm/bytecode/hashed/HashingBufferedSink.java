@@ -64,7 +64,8 @@ public class HashingBufferedSink implements BufferedSink {
         fileSystem.move(tempPath, path);
         return;
       case FILE:
-        // nothing to do, we already stored data with such hash so its content must be equal
+        // Data with such hash is already in db so its content must be equal, just delete temp file.
+        fileSystem.delete(tempPath);
         return;
       case DIR:
         throw new IOException(
