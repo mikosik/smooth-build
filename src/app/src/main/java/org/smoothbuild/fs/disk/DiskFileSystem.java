@@ -1,8 +1,6 @@
 package org.smoothbuild.fs.disk;
 
-import static java.lang.String.join;
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
-import static java.util.Collections.nCopies;
 import static org.smoothbuild.fs.base.AssertPath.assertPathExists;
 import static org.smoothbuild.fs.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.fs.base.AssertPath.assertPathIsFile;
@@ -131,13 +129,8 @@ public class DiskFileSystem implements FileSystem {
 
     createDir(link.parent());
 
-    var escapePath = escapePath(link.parts().size() - 1);
-    Path targetJdkPath = Path.of(escapePath, target.toString());
+    var targetJdkPath = jdkPath(link.parent()).relativize(jdkPath(target));
     Files.createSymbolicLink(jdkPath(link), targetJdkPath);
-  }
-
-  private static String escapePath(int length) {
-    return join("/", nCopies(length, ".."));
   }
 
   private Path jdkPath(PathS path) {
