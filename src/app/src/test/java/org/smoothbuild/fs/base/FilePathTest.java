@@ -3,7 +3,7 @@ package org.smoothbuild.fs.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.fs.space.Space.SLIB;
+import static org.smoothbuild.fs.space.Space.STD_LIB;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.fs.space.FilePath;
@@ -23,8 +23,8 @@ public class FilePathTest {
         new FilePath(PRJ, path("def")),
         new FilePath(PRJ, path("def")));
     tester.addEqualityGroup(
-        new FilePath(SLIB, path(file)),
-        new FilePath(SLIB, path(file)));
+        new FilePath(STD_LIB, path(file)),
+        new FilePath(STD_LIB, path(file)));
 
     tester.testEquals();
   }

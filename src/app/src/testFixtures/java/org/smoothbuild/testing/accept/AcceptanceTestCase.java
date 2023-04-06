@@ -7,7 +7,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.fs.space.Space.SLIB;
+import static org.smoothbuild.fs.space.Space.STD_LIB;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
 import static org.smoothbuild.install.InstallationPaths.SLIB_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
@@ -210,7 +210,7 @@ public class AcceptanceTestCase extends TestContext {
     @Provides
     @Singleton
     public ImmutableMap<Space, FileSystem> provideFileSystems() {
-      return ImmutableMap.of(SLIB, slibFileSystem, PRJ, prjFileSystem);
+      return ImmutableMap.of(STD_LIB, slibFileSystem, PRJ, prjFileSystem);
     }
 
     private static SynchronizedFileSystem newFileSystem(Path path) {
@@ -226,9 +226,9 @@ public class AcceptanceTestCase extends TestContext {
 
     @Provides
     @Singleton
-    @ForSpace(SLIB)
+    @ForSpace(STD_LIB)
     public FileSystem provideSlibFileSystem(ImmutableMap<Space, FileSystem> fileSystems) {
-      return fileSystems.get(SLIB);
+      return fileSystems.get(STD_LIB);
     }
 
     @Provides

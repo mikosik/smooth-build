@@ -1,7 +1,7 @@
 package org.smoothbuild.fs;
 
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.fs.space.Space.SLIB;
+import static org.smoothbuild.fs.space.Space.STD_LIB;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.nio.file.Path;
@@ -51,9 +51,9 @@ public class FileSystemModule extends AbstractModule {
 
   @Provides
   @Singleton
-  @ForSpace(SLIB)
+  @ForSpace(STD_LIB)
   public FileSystem provideSlibFileSystem(ImmutableMap<Space, FileSystem> fileSystems) {
-    return fileSystems.get(SLIB);
+    return fileSystems.get(STD_LIB);
   }
 
   @Provides
@@ -61,9 +61,9 @@ public class FileSystemModule extends AbstractModule {
   public ImmutableMap<Space, Path> provideSpaceToPathMap(InstallationPaths installationPaths) {
     Path slibDir = installationPaths.standardLibraryDir();
     if (projectDir == null) {
-      return ImmutableMap.of(SLIB, slibDir);
+      return ImmutableMap.of(STD_LIB, slibDir);
     } else {
-      return ImmutableMap.of(SLIB, slibDir, PRJ, projectDir);
+      return ImmutableMap.of(STD_LIB, slibDir, PRJ, projectDir);
     }
   }
 }

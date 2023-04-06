@@ -2,7 +2,7 @@ package org.smoothbuild.fs.space;
 
 public enum Space {
   PRJ("prj"),
-  SLIB("slib");
+  STD_LIB("std-lib");
 
   private final String prefix;
 
