@@ -131,12 +131,12 @@ public class DiskFileSystem implements FileSystem {
 
     createDir(link.parent());
 
-    String escape = escapeString(link.parts().size() - 1);
-    Path targetJdkPath = Path.of(escape, target.toString());
+    var escapePath = escapePath(link.parts().size() - 1);
+    Path targetJdkPath = Path.of(escapePath, target.toString());
     Files.createSymbolicLink(jdkPath(link), targetJdkPath);
   }
 
-  private static String escapeString(int length) {
+  private static String escapePath(int length) {
     return join("/", nCopies(length, ".."));
   }
 

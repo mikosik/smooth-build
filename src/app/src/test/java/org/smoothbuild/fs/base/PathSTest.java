@@ -1,7 +1,6 @@
 package org.smoothbuild.fs.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -74,13 +73,13 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("appendArguments")
+  @MethodSource("append_cases")
   public void append(String path, String appendedPath, String expected) {
     assertThat(path(path).append(path(appendedPath)))
         .isEqualTo(path(expected));
   }
 
-  public static Stream<Arguments> appendArguments() {
+  public static Stream<Arguments> append_cases() {
     return Stream.of(
         arguments(".", ".", "."),
         arguments("abc", ".", "abc"),
@@ -105,13 +104,13 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("appendPartArguments")
+  @MethodSource("appendPart_cases")
   public void appendPart(String path, String part, String expected) {
     assertThat(path(path).appendPart(part))
         .isEqualTo(path(expected));
   }
 
-  public static Stream<Arguments> appendPartArguments() {
+  public static Stream<Arguments> appendPart_cases() {
     return Stream.of(
         arguments(".", "abc", "abc"),
         arguments("abc", "xyz", "abc/xyz"),
@@ -123,13 +122,13 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("appendPartIllegalArguments")
+  @MethodSource("appendPart_fails_for_cases")
   public void appendPart_fails_for(String path, String part) {
     assertCall(() -> path(path).appendPart(part))
         .throwsException(IllegalArgumentException.class);
   }
 
-  public static Stream<Arguments> appendPartIllegalArguments() {
+  public static Stream<Arguments> appendPart_fails_for_cases() {
     return Stream.of(
         arguments(".", ""),
         arguments(".", "."),
@@ -169,13 +168,13 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("changeExtensionArguments")
+  @MethodSource("changeExtension_cases")
   public void changeExtension(String path, String extension, String expected) {
     assertThat(path(path).changeExtension(extension))
         .isEqualTo(path(expected));
   }
 
-  public static Stream<Arguments> changeExtensionArguments() {
+  public static Stream<Arguments> changeExtension_cases() {
     return Stream.of(
         arguments("abc", "csv", "abc.csv"),
         arguments("path/abc", "csv", "path/abc.csv"),
@@ -192,13 +191,13 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("changeExtensionIllegalArguments")
+  @MethodSource("changeExtension_fails_for_cases")
   public void changeExtension_fails_for(String path, String part) {
     assertCall(() -> path(path).changeExtension(part))
         .throwsException(IllegalArgumentException.class);
   }
 
-  public static Stream<Arguments> changeExtensionIllegalArguments() {
+  public static Stream<Arguments> changeExtension_fails_for_cases() {
     return Stream.of(
         arguments(".", ""),
         arguments(".", "csv"),
@@ -232,14 +231,14 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("partsArguments")
+  @MethodSource("parts_cases")
   public void parts(String path, List<String> expectedParts) {
     List<PathS> actualParts = path(path).parts();
     assertThat(map(actualParts, PathS::toString))
         .isEqualTo(expectedParts);
   }
 
-  public static Stream<Arguments> partsArguments() {
+  public static Stream<Arguments> parts_cases() {
     return Stream.of(
         arguments(".", list()),
         arguments("abc", list("abc")),
@@ -258,13 +257,13 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("lastPartArguments")
+  @MethodSource("lastPart_cases")
   public void lastPart(String path, String expectedLastPart) {
     assertThat(path(path).lastPart())
         .isEqualTo(path(expectedLastPart));
   }
 
-  public static Stream<Arguments> lastPartArguments() {
+  public static Stream<Arguments> lastPart_cases() {
     return Stream.of(
         arguments(" ", " "),
         arguments(" / ", " "),
@@ -280,13 +279,13 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("firstPartArguments")
+  @MethodSource("firstPart_cases")
   public void firstPart(String path, String expectedfirstPart) {
     assertThat(path(path).firstPart())
         .isEqualTo(path(expectedfirstPart));
   }
 
-  public static Stream<Arguments> firstPartArguments() {
+  public static Stream<Arguments> firstPart_cases() {
     return Stream.of(
         arguments(" ", " "),
         arguments(" / ", " "),
@@ -296,13 +295,13 @@ public class PathSTest {
   }
 
   @ParameterizedTest
-  @MethodSource("startWithArguments")
+  @MethodSource("startWith_cases")
   public void startsWith(String path, String head, boolean expected) {
     assertThat(path(path).startsWith(path(head)))
         .isEqualTo(expected);
   }
 
-  public static Stream<Arguments> startWithArguments() {
+  public static Stream<Arguments> startWith_cases() {
     return Stream.of(
         arguments(".", ".", true),
         arguments("abc", ".", true),
@@ -345,12 +344,6 @@ public class PathSTest {
       assertThat(path(value).toString())
           .isEqualTo(value);
     }
-  }
-
-  public static List<Arguments> validPaths() {
-    return paths().stream()
-        .filter(a -> a.get()[1].equals(Boolean.TRUE))
-        .collect(toList());
   }
 
   public static List<Arguments> paths() {
