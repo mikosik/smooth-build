@@ -9,7 +9,6 @@ import java.nio.charset.Charset;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.util.io.DataWriter;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
 
@@ -56,22 +55,18 @@ public class HashingBufferedSink implements BufferedSink {
   @Override
   public void close() throws IOException {
     bufferedSink.close();
+    moveTempFileToDb();
+  }
 
-    PathS path = HashedDb.dataFullPath(hashedDbRootPath, hash());
-    PathState pathState = fileSystem.pathState(path);
+  private void moveTempFileToDb() throws IOException {
+    var path = HashedDb.dataFullPath(hashedDbRootPath, hash());
+    var pathState = fileSystem.pathState(path);
     switch (pathState) {
-      case NOTHING:
-        fileSystem.move(tempPath, path);
-        return;
-      case FILE:
-        // Data with such hash is already in db so its content must be equal, just delete temp file.
-        fileSystem.delete(tempPath);
-        return;
-      case DIR:
-        throw new IOException(
-            "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory.");
-      default:
-        throw newUnknownPathState(pathState);
+      case NOTHING -> fileSystem.move(tempPath, path);
+      case FILE -> fileSystem.delete(tempPath);
+      case DIR -> throw new IOException(
+          "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory.");
+      default -> throw newUnknownPathState(pathState);
     }
   }
 
