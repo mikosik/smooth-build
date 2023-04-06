@@ -45,7 +45,7 @@ def zip = tasks.register('zip', Zip) {
     from jar
     from layout.projectDirectory.dir('src/main/smooth')
 }
-tasks.build.dependsOn(zip)
+tasks.assemble.dependsOn(zip)
 
 test {
     useJUnitPlatform()

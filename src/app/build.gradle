@@ -68,7 +68,7 @@ def fatJar = tasks.register('fatJar', Jar) {
         }
     }
 }
-tasks.build.dependsOn(fatJar)
+tasks.assemble.dependsOn(fatJar)
 
 test {
     useJUnitPlatform()
