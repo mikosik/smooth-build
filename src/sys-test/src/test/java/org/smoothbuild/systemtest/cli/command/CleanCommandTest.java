@@ -64,11 +64,11 @@ public class CleanCommandTest {
       runSmoothClean("some", "arguments");
       assertFinishedWithError();
       assertSysErrContains("Unmatched arguments from index");
-      assertSysErrContains(
-          "Usage:",
-          "smooth clean [-d=<projectDir>] [-l=<level>]",
-          "Try 'smooth help clean' for more information.",
-          "");
+      assertSysErrContains("""
+          Usage:
+          smooth clean [-d=<projectDir>] [-l=<level>]
+          Try 'smooth help clean' for more information.
+          """);
     }
   }
 

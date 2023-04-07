@@ -12,9 +12,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName()));
     assertFinishedWithError();
-    assertSysErrContains(
-        "Missing required parameter: '<value>'",
-        "");
+    assertSysErrContains("Missing required parameter: '<value>'");
   }
 
   @Test
@@ -25,9 +23,12 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     runSmooth(new CommandWithArgs(commandName(), "unknownValue"));
     assertFinishedWithError();
     assertSysOutContains(
-        "  command line arguments",
-        "   + ERROR: Unknown value `unknownValue`.",
-        "     Try 'smooth list' to see all available values that can be calculated.");
+        """
+              command line arguments
+               + ERROR: Unknown value `unknownValue`.
+                 Try 'smooth list' to see all available values that can be calculated.\
+            """
+    );
   }
 
   @Test
@@ -67,12 +68,12 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
-    assertSysOutContains(
-        "  command line arguments",
-        "   + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.",
-        "Summary",
-        "  1 error",
-        "");
+    assertSysOutContains("""
+          command line arguments
+           + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.
+        Summary
+          1 error
+        """);
   }
 
   @Test
@@ -82,12 +83,12 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
-    assertSysOutContains(
-        "  command line arguments",
-        "   + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.",
-        "Summary",
-        "  1 error",
-        "");
+    assertSysOutContains("""
+          command line arguments
+           + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.
+        Summary
+          1 error
+        """);
   }
 
   protected abstract String commandName();

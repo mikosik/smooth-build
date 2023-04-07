@@ -1,7 +1,5 @@
 package org.smoothbuild.systemtest.cli.command.common;
 
-import static org.smoothbuild.util.Strings.unlines;
-
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
@@ -15,12 +13,11 @@ public abstract class AbstractLogLevelOptionTestSuite extends SystemTestCase {
             """);
     whenSmoothCommandWithOption("--log-level=wrong_value");
     assertFinishedWithError();
-    assertSysErrContains(unlines(
-        "Invalid value for option '--log-level': expected one of " +
-            "{f,fatal,e,error,w,warning,i,info} (case-sensitive) but was 'wrong_value'",
-        "",
-        "Usage:"
-    ));
+    assertSysErrContains("""
+        Invalid value for option '--log-level': expected one of {f,fatal,e,error,w,warning,i,info} (case-sensitive) but was 'wrong_value'
+        
+        Usage:"""
+    );
   }
 
   protected abstract void whenSmoothCommandWithOption(String option);

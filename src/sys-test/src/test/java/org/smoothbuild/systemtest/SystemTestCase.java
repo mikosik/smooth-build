@@ -211,38 +211,33 @@ public abstract class SystemTestCase {
     return exitCode;
   }
 
-  public void assertSysOutContains(String... lines) {
-    String text = unlines(lines);
-    if (!sysOut.contains(text)) {
-      failWithFullOutputs(text, "SysOut doesn't contain expected substring");
-    }
+  public void assertSysOutContains(String text) {
+    assertWithFullOutputs(sysOut, text, "SysOut");
   }
 
-  public void assertSysOutDoesNotContain(String... lines) {
-    String text = unlines(lines);
-    if (sysOut.contains(text)) {
-      failWithFullOutputs(text, "SysOut contains forbidden substring");
-    }
+  public void assertSysErrContains(String text) {
+    assertWithFullOutputs(sysErr, text, "SysErr");
   }
 
-  public void assertSysErrContains(String... lines) {
-    String text = unlines(lines);
-    if (!sysErr.contains(text)) {
-      failWithFullOutputs(text, "SysErr doesn't contain expected substring");
-    }
-  }
+  public void assertSysOutDoesNotContain(String text) {
+    assertWithMessage(unlines(
+        "SysOut contains forbidden substring",
+        "================= SYS-OUT ====================",
+        sysOut,
+        "================= SYS-ERR ====================",
+        sysErr
+    )).that(sysOut)
+        .doesNotContain(text);  }
 
-  private void failWithFullOutputs(String text, String message) {
-    // We use isEqualTo() instead of contains() so generated failure text will contain
-    // as much data as possible and intellij is able to display it via visual diff.
-    assertWithMessage(message)
-        .that(unlines(
-            "================= SYS-OUT ====================",
-            sysOut,
-            "================= SYS-ERR ====================",
-            sysErr
-        ))
-        .isEqualTo(text);
+  private void assertWithFullOutputs(String out, String text, String outName) {
+    assertWithMessage(unlines(
+        outName + " doesn't contain expected substring.",
+        "================= SYS-OUT ====================",
+        sysOut,
+        "================= SYS-ERR ====================",
+        sysErr
+    )).that(out)
+        .contains(text);
   }
 
   public String sysOut() {

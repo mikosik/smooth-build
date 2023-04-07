@@ -6,7 +6,6 @@ import static java.nio.file.Files.exists;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.buildCommand;
-import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.IOException;
 
@@ -102,11 +101,11 @@ public class BuildCommandTest {
                 """);
         runSmooth(buildCommand("--show-tasks=ILLEGAL", "result"));
         assertFinishedWithError();
-        assertSysErrContains(unlines(
-            "Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.",
-            "",
-            "Usage:"
-        ));
+        assertSysErrContains("""
+            Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.
+            
+            Usage:"""
+        );
       }
     }
 
