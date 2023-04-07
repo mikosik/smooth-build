@@ -13,17 +13,13 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
-import static org.smoothbuild.out.report.ConsoleReporter.prefixMultiline;
 import static org.smoothbuild.systemtest.CommandWithArgs.buildCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.helpCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.listCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
-import static org.smoothbuild.systemtest.TestMode.FULL_BINARY;
-import static org.smoothbuild.systemtest.TestMode.SINGLE_JVM;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.readAndClose;
@@ -213,18 +209,6 @@ public abstract class SystemTestCase {
 
   public int exitCode() {
     return exitCode;
-  }
-
-  public void assertSysOutContainsParseError(int lineNumber, String... errorLines) {
-    errorLines[0] = PRJ_MOD_PATH + ":" + lineNumber + ": " + errorLines[0];
-    assertSysOutContainsParseError(errorLines);
-  }
-
-  public void assertSysOutContainsParseError(String... errorLines) {
-    errorLines[0] = "ERROR: " + errorLines[0];
-    assertSysOutContains(
-        "  " + PRJ_MOD_FILE_PATH,
-        prefixMultiline(errorLines));
   }
 
   public void assertSysOutContains(String... lines) {
