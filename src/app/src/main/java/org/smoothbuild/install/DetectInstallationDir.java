@@ -1,8 +1,7 @@
 package org.smoothbuild.install;
 
+import java.net.URISyntaxException;
 import java.nio.file.Path;
-
-import org.smoothbuild.util.reflect.Classes;
 
 public class DetectInstallationDir {
   public static Path detectInstallationDir() {
@@ -10,13 +9,15 @@ public class DetectInstallationDir {
   }
 
   public static Path smoothJarPath() {
-    String resourcePath = DetectInstallationDir.class
-        .getClassLoader()
-        .getResource(Classes.binaryPath(DetectInstallationDir.class))
-        .getPath();
-    String smoothJarPath = resourcePath
-        .substring(0, resourcePath.lastIndexOf('!'))
-        .substring("file:".length());
-    return Path.of(smoothJarPath);
+    try {
+      var path = DetectInstallationDir.class.getProtectionDomain()
+          .getCodeSource()
+          .getLocation()
+          .toURI()
+          .getPath();
+      return Path.of(path);
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
