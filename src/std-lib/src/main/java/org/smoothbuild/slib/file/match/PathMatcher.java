@@ -1,25 +1,31 @@
 package org.smoothbuild.slib.file.match;
 
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
 import org.smoothbuild.fs.base.PathS;
 
-public class PathMatcher {
-  public static Predicate<PathS> pathMatcher(String pattern) {
-    validatePattern(pattern);
-    return path -> jdkPathMatcher(pattern).matches(Path.of(path.value()));
-  }
+public class PathMatcher implements Predicate<PathS> {
+  private final FileSystem fileSystem;
+  private final java.nio.file.PathMatcher pathMatcher;
 
-  private static java.nio.file.PathMatcher jdkPathMatcher(String patternString) {
+  public PathMatcher(String pattern) {
+    validatePattern(pattern);
+    this.fileSystem = FileSystems.getDefault();
     try {
-      return FileSystems.getDefault().getPathMatcher("glob:" + patternString);
+      this.pathMatcher = fileSystem.getPathMatcher("glob:" + pattern);
     } catch (PatternSyntaxException e) {
       throw new IllegalPathPatternExc(e.getMessage(), e);
     }
   }
+
+  @Override
+  public boolean test(PathS pathS) {
+    return pathMatcher.matches(fileSystem.getPath(pathS.value()));
+  }
+
   private static void validatePattern(String pattern) {
     if (pattern.isEmpty()) {
       throw new IllegalPathPatternExc("Empty pattern is not allowed");

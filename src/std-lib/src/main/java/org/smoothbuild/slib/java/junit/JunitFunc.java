@@ -6,7 +6,6 @@ import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.slib.compress.UnzipHelper.filesFromJar;
 import static org.smoothbuild.slib.compress.UnzipHelper.filesFromLibJars;
-import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.junit.JUnitCoreWrapper.newInstance;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
@@ -19,6 +18,7 @@ import java.util.function.Predicate;
 
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
+import org.smoothbuild.slib.file.match.PathMatcher;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -115,7 +115,7 @@ public class JunitFunc {
 
   private static Predicate<PathS> createFilter(StringB includeParam) throws JunitExc {
     try {
-      return pathMatcher(includeParam.toJ());
+      return new PathMatcher(includeParam.toJ());
     } catch (IllegalPathPatternExc e) {
       throw new JunitExc("Parameter 'include' has illegal value. " + e.getMessage());
     }

@@ -15,6 +15,6 @@ public class ConsoleTest {
     console.error("sth bad happened.");
 
     assertThat(outputStream.toString())
-        .isEqualTo("smooth: error: sth bad happened.\n");
+        .isEqualTo("smooth: error: sth bad happened." + System.lineSeparator());
   }
 }

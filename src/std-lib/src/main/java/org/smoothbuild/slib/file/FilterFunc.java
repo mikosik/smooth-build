@@ -2,12 +2,12 @@ package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
-import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
 import java.util.function.Predicate;
 
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
+import org.smoothbuild.slib.file.match.PathMatcher;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
@@ -22,7 +22,7 @@ public class FilterFunc {
 
     Predicate<PathS> filter;
     try {
-      filter = pathMatcher(pattern.toJ());
+      filter = new PathMatcher(pattern.toJ());
     } catch (IllegalPathPatternExc e) {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;

@@ -45,9 +45,9 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     createUserModule("""
             result = "abc";
             """);
-    runSmooth(new CommandWithArgs(commandName(), "illegal^name"));
+    runSmooth(new CommandWithArgs(commandName(), "illegal-name"));
     assertFinishedWithError();
-    assertSysOutContains("ERROR: Unknown value `illegal^name`.\n");
+    assertSysOutContains("ERROR: Unknown value `illegal-name`.\n");
   }
 
   @Test
@@ -55,10 +55,10 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     createUserModule("""
             result = "abc";
             """);
-    runSmooth(new CommandWithArgs(commandName(), "illegal^name", "other^name"));
+    runSmooth(new CommandWithArgs(commandName(), "illegal-name", "other-name"));
     assertFinishedWithError();
-    assertSysOutContains("ERROR: Unknown value `illegal^name`.\n");
-    assertSysOutContains("ERROR: Unknown value `other^name`.\n");
+    assertSysOutContains("ERROR: Unknown value `illegal-name`.\n");
+    assertSysOutContains("ERROR: Unknown value `other-name`.\n");
   }
 
   @Test

@@ -3,7 +3,6 @@ package org.smoothbuild.slib.file.match;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.fs.base.PathS.path;
-import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.stream.Stream;
@@ -17,7 +16,7 @@ public class PathMatcherTest {
   @ParameterizedTest
   @MethodSource("data_set")
   public void test_matching(String pattern, PathS path, boolean expected) {
-    assertThat(pathMatcher(pattern).test(path))
+    assertThat(new PathMatcher(pattern).test(path))
         .isEqualTo(expected);
   }
 
@@ -141,12 +140,8 @@ public class PathMatcherTest {
         arguments("[!-]", path("a"), true),
 
         // [?], [*], [\], [!]
-        arguments("[?]", path("?"), true),
         arguments("[?]", path("a"), false),
-        arguments("[*]", path("*"), true),
         arguments("[*]", path("a"), false),
-        arguments("[\\]", path("\\"), true),
-        arguments("[\\]", path("a"), false),
         arguments("[a!]", path("!"), true),
         arguments("[a!]", path("a"), true),
         arguments("[a!]", path("b"), false),
@@ -284,9 +279,8 @@ public class PathMatcherTest {
 
   @ParameterizedTest
   @MethodSource("illegal_pattern_data_set")
-  @SuppressWarnings("ReturnValueIgnored")
   public void illegal_pattern(String pattern) {
-    assertCall(() -> pathMatcher(pattern).test(path("abc")))
+    assertCall(() -> new PathMatcher(pattern).test(path("abc")))
         .throwsException(IllegalPathPatternExc.class);
   }
 

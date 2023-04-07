@@ -3,7 +3,6 @@ package org.smoothbuild.out.report;
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -106,7 +105,7 @@ public class ConsoleReporter implements Reporter {
   // visible for testing
   static String formatLog(Log log) {
     String[] lines = (log.level() + ": " + log.message()).lines().toArray(String[]::new);
-    return "\n" + prefixMultiline(lines);
+    return System.lineSeparator() + prefixMultiline(lines);
   }
 
   private static String indentHeader(String header) {
@@ -119,7 +118,7 @@ public class ConsoleReporter implements Reporter {
     for (int i = 1; i < lines.length; i++) {
       lines[i] = MESSAGE_OTHER_LINES_PREFIX + lines[i];
     }
-    return unlines(lines);
+    return String.join(System.lineSeparator(), lines);
   }
 
   @Override

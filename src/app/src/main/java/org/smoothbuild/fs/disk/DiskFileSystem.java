@@ -1,6 +1,7 @@
 package org.smoothbuild.fs.disk;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.smoothbuild.fs.base.AssertPath.assertPathExists;
 import static org.smoothbuild.fs.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.fs.base.AssertPath.assertPathIsFile;
@@ -129,8 +130,14 @@ public class DiskFileSystem implements FileSystem {
 
     createDir(link.parent());
 
-    var targetJdkPath = jdkPath(link.parent()).relativize(jdkPath(target));
-    Files.createSymbolicLink(jdkPath(link), targetJdkPath);
+    var jdkTarget = jdkPath(target);
+    var targetJdkPath = jdkPath(link.parent()).relativize(jdkTarget);
+    try {
+      Files.createSymbolicLink(jdkPath(link), targetJdkPath);
+    } catch (UnsupportedOperationException e) {
+      // On Filesystems that do not support symbolic link just copy target file.
+      Files.copy(jdkPath(link), jdkTarget, REPLACE_EXISTING);
+    }
   }
 
   private Path jdkPath(PathS path) {

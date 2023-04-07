@@ -4,6 +4,7 @@ import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.createDirectories;
+import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.toList;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
@@ -49,14 +50,24 @@ import org.smoothbuild.util.CommandExecutor;
 import org.smoothbuild.util.CommandExecutor.CommandResult;
 import org.smoothbuild.util.io.DataReader;
 
+import com.google.common.base.Splitter;
+
 import okio.BufferedSource;
 import okio.ByteString;
 
 public abstract class SystemTestCase {
   public static final TestMode TEST_MODE = TestMode.detectTestMode();
   public static final Path SYS_TEST_PROJECT_ROOT = Paths.get(".").toAbsolutePath();
-  public static final Path SMOOTH_BINARY =
-      Paths.get("./build/installation/smooth/smooth").toAbsolutePath();
+  public static final Path SMOOTH_BINARY = findSmoothBinary();
+
+  private static Path findSmoothBinary() {
+    var osName = System.getProperty("os.name").toUpperCase(ROOT);
+    if (osName.startsWith("LINUX") || osName.startsWith("MAC OS")) {
+      return Paths.get("./build/installation/smooth/smooth").toAbsolutePath();
+    } else {
+      return Paths.get("./build/installation/smooth/smooth.bat").toAbsolutePath();
+    }
+  }
 
   private Path projectDir;
   private Integer exitCode;
@@ -219,25 +230,45 @@ public abstract class SystemTestCase {
     assertWithFullOutputs(sysErr, text, "SysErr");
   }
 
+  private void assertWithFullOutputs(String outParam, String text, String outName) {
+    var sysOut = this.sysOut;
+    var sysErr = this.sysErr;
+    var out = outParam;
+
+    var osSpecific = toOsSpecificLineSeparators(text);
+    if (!out.contains(osSpecific)) {
+      assertWithMessage(unlines(
+          outName + " doesn't contain expected substring.",
+          "================= SYS-OUT START ====================",
+          sysOut,
+          "================= SYS-OUT END   ====================",
+          "================= SYS-ERR START ====================",
+          sysErr,
+          "================= SYS-ERR END   ===================="
+      )).that(out)
+          .isEqualTo(osSpecific);
+    }
+  }
+
   public void assertSysOutDoesNotContain(String text) {
     assertWithMessage(unlines(
         "SysOut contains forbidden substring",
-        "================= SYS-OUT ====================",
+        "================= SYS-OUT START ====================",
         sysOut,
-        "================= SYS-ERR ====================",
-        sysErr
+        "================= SYS-OUT END   ====================",
+        "================= SYS-ERR START ====================",
+        sysErr,
+        "================= SYS-ERR END   ===================="
     )).that(sysOut)
-        .doesNotContain(text);  }
+        .doesNotContain(toOsSpecificLineSeparators(text));
+  }
 
-  private void assertWithFullOutputs(String out, String text, String outName) {
-    assertWithMessage(unlines(
-        outName + " doesn't contain expected substring.",
-        "================= SYS-OUT ====================",
-        sysOut,
-        "================= SYS-ERR ====================",
-        sysErr
-    )).that(out)
-        .contains(text);
+  private static String toOsSpecificLineSeparators(String textBlock) {
+    return String.join(System.lineSeparator(), Splitter.on('\n').split(textBlock));
+  }
+
+  private static String tovisible(String textBlock) {
+    return textBlock.replaceAll("\n", "^N").replaceAll("\t", "^T").replaceAll("\r", "^R");
   }
 
   public String sysOut() {
@@ -355,12 +386,12 @@ public abstract class SystemTestCase {
   private static void addFilesToMap(Path rootDir, Path relativePath, HashMap<String, String> result)
       throws IOException {
     try (Stream<Path> stream = Files.list(rootDir.resolve(relativePath))) {
-      for (Path path : stream.collect(toList())) {
+      for (Path path : stream.toList()) {
         Path relative = relativePath.resolve(path.getFileName());
         if (Files.isDirectory(path)) {
           addFilesToMap(rootDir, relative, result);
         } else {
-          result.put(relative.toString(), fileContentAsString(path));
+          result.put(relative.toString().replace('\\', '/'), fileContentAsString(path));
         }
       }
     }

@@ -8,14 +8,13 @@ public class DetectInstallationDir {
     return smoothJarPath().getParent();
   }
 
-  public static Path smoothJarPath() {
+  private static Path smoothJarPath() {
     try {
-      var path = DetectInstallationDir.class.getProtectionDomain()
+      var uri = DetectInstallationDir.class.getProtectionDomain()
           .getCodeSource()
           .getLocation()
-          .toURI()
-          .getPath();
-      return Path.of(path);
+          .toURI();
+      return Path.of(uri);
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }

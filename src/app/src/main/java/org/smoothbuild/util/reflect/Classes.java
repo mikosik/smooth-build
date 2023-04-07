@@ -1,5 +1,6 @@
 package org.smoothbuild.util.reflect;
 
+import static java.io.File.separatorChar;
 import static okio.Okio.buffer;
 import static okio.Okio.sink;
 import static okio.Okio.source;
@@ -71,7 +72,12 @@ public class Classes {
   }
 
   public static InputStream bytecodeAsInputStream(Class<?> clazz) {
-    return clazz.getClassLoader().getResourceAsStream(binaryPath(clazz));
+    var binaryPath = binaryPath(clazz);
+    var inputStream = clazz.getClassLoader().getResourceAsStream(binaryPath);
+    if (inputStream == null) {
+      throw new RuntimeException("Couldn't find class '" + clazz + "' at '" + binaryPath + "'.");
+    }
+    return inputStream;
   }
 
   public static ByteString bytecode(Class<?> clazz) throws IOException {
