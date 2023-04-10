@@ -9,6 +9,13 @@ public final class ScopedMutableBindings<E>
 
   @Override
   public E add(String name, E elem) {
-    return ((MutableBindings<E>) innerScopeBindings()).add(name, elem);
+    return innerScopeBindings().add(name, elem);
+  }
+
+  public MutableBindings<E> innerScopeBindings() {
+    // Cast is safe because constructor initializes innerScopeBindings with MutableBindings.
+    @SuppressWarnings("unchecked")
+    MutableBindings<E> mutableBindings = (MutableBindings<E>) super.innerScopeBindings();
+    return mutableBindings;
   }
 }
