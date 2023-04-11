@@ -1,328 +1,353 @@
 
 
-### smooth-build tutorial
+## smooth-build tutorial
 
-Smooth uses `build.smooth` file located in project's root directory as
-a description of project's build process.
-`build.smooth` files are written in (statically typed and functional) smooth language.
-One of the simplest non-trivial build files is:
+Smooth build is a build tool that uses statically typed 
+functional language to specify build process.
+All values are immutable 
+and all build process steps are specified explicitly.
+This two features make reasoning about build process trivial
+and discovering how things work under the hood possible.
+
+This tutorial focuses mostly on smooth language,
+so you may get an impression
+that smooth build favours configuration over convention.
+This is far from truth.
+Once all features are implemented it will be possible to declare
+separate smooth modules that can encapsulate functions and structures
+that provides default values for most common settings and
+possibility to alter them according to specific project requirements.
+
+Smooth build tool is still work in progress,
+so it may not match all features of other build tools yet.
+If you miss some feature/function you would love to use
+just create new github issue.
+
+
+### Simplest example
+
+Let's start with the simplest (almost trivial) build - 
+compiling and jarring java code using pipe syntax.
+```
+release = files("src") > javac() > jar();
+```
+
+While pipe syntax is more readable 
+it is just a syntactic sugar for normal function calls.
+In pipe syntax output from one pipe element
+becomes implicit first argument to next function call.
+Let's rewrite code above to more familiar syntax with nested function calls:
 
 ```
-File release = files("src") > javac() > jarFile("release.jar");
+release = jar(javac(files("src")));
 ```
 
-This script defines value `release` which body contains function calls separated by `>`.
-Separator `>` means that expression on the left (of `>`) is passed as the first argument
-to function call on the right. So in our example call to [files](api/files.md) 
-function returns all files from `src` directory located at project's root.
-That result is passed as argument to call to [javac](api/javac.md) function that invokes java 
-compiler and compiles all the files.
-Result returned from [javac](api/javac.md) call is then passed as argument to 
-[jar](api/jar.md) function which compresses those files into a jar file.
+That code calculates `release` value by:
+ - taking files from `src` directory (using [files](api/files.md) function)
+ - compiling them with java compiler (using [javac](api/javac.md) function)
+ - compressing into jar (using [jar](api/jar.md) function)
 
-You can build `release` (evaluate `release` value) from command line by running:
+All functions used in that tutorial come from [smooth standard library](api.md).
 
-````
-smooth build release
-````
+Before we can build jar file specified above, we need first:
+ - [download and install smooth](install.md)
+ - place that code in `build.smooth` file located in your project root directory
+ - create `src` directory (in project root directory) with some java files
 
-Above command evaluates `release` value and stores its result 
-in `.smooth/artifacts/` directory as `release` file.
-That location is printed to console at the end of build process:
+Once everything is in place you can run `smooth build release` 
+(or `smooth.bat build release` on Windows). 
+This command starts build process that builds (evaluates) `release` value
+and prints (among others) following summary:
 
 ````
 Saving artifact(s)
   release -> '.smooth/artifacts/release'
 ````
 
-Smooth is capable of inferring type of any expression, 
-so we don't have to declare it explicitly.
-Our initial example can be simplified to
-```
-release = files("src") > javac() > jarFile("release.jar");
-```
-For educational reasons we will keep writing types explicitly in our examples.
+That output informs that `release` value has been evaluated 
+and stored as `.smooth/artifacts/release` in your project directory.
+Each time you execute build, it first deletes all files in `.smooth/artifacts`
+so after build completes that directory contains only freshly built artifacts.
 
-If you want to try examples yourself then
-[download and install smooth](install.md)
-first.
-You can consult
-[standard library](api.md)
-for a list of all available functions and values.
-Currently, it contains functions related to building java projects but in the future
-it can be easily extended to support other languages.
 
-### Parallel execution
 
-Smooth build evaluates values in parallel unless they depend on each other.
-We can take a look at it using slightly more complicated example below.
-Note that there's ugly duplicated code in this example.
-We make it clean further in this tutorial for now we just focus on parallelism. 
+### Values and Types
+
+Let's rewrite our initial example so result of each expression
+is assigned to separate named value.
+This helps us understand what values are passed as arguments
+and what their types are.
 
 ```
-File main = files("src-main") > javac() > jarFile("main.jar");
-File deps = files("src-deps") > javac() > jarFile("deps.jar");
+String path = "src";
+[File] sources = files(path);
+[File] classes = javac(sources);
+Blob release = jar(classes);
 ```
 
-As both functions (`main` and `deps`) do not depend on each other
-then their bodies are executed in parallel. 
-We do not need to do anything to make it happen.
-It is enough to ask smooth to build those jars with `smooth build main deps`.
+Each value, no matter whether literal (like `"src"`) 
+or named value (like `sources`) is immutable.
+Value names are written with lowerCamelCase.
 
-### Caching
-
-If you run build command twice for our initial example
-
-```
-File release = files("src") > javac() > jarFile("release.jar");
-```
-
-you will notice that second evaluation completes almost instantly.
-That's because result of `release` evaluation has been cached by smooth.
-This is nothing extraordinary as most build tools reuse result
-from previous execution.
-However, smooth is much smarter.
-Its cache system is much fine-grained as it keeps on disk result
-of each function call (function plus its arguments).
-When it has to evaluate given call again it simply takes result from the cache.
-
-You can see how it works by running build for our initial example,
-then changing one of java files in `src` directory by adding empty
-spaces to the end of some line and then running build again.
-When you run build second time, you will notice that javac task
-is re-executed (as content of *.java files has changed)
-but because only formatting of the file changed,
-compilation will produce exactly the same *.class files as before.
-Smooth won't execute `jar` function at all as result of such execution
-is already in its cache.
-Console output will contain "cache" word at the end of the line
-representing `jar` function execution.
-Note that such optimization is not possible with incremental building
-as change to any file at the beginning of the build pipeline will always
-force rebuild of all tasks that depend on it.
-
-Now if you revert changes you introduced to mentioned java file
-and run build once again then result will be instantaneous.
-All function calls (function plus actual argument values) have been already executed
-during previous build runs so they are taken from cache.
-The only exception is `files("src")` call which reads files from disk
-so its result is never cached between builds.
-
-Such solution is powerful as it gives you access to any build result you have ever executed.
-You just need to checkout relevant code version from your repository
-and run build command that will provide results instantly.
-
-### Type system
-
-Smooth language is statically typed which means all types are known at compile time.
-It is also strongly typed, so it is not possible to assign value of one type
-to value of different type.
-First let's discuss all types available in smooth language.
-
-#### Base types
-Base types are predefined by the language (cannot be defined by user).
-Currently, we have following base types: Bool, String, Int, Blob.
-
-##### _Bool_
-Boolean is a type with two values:
-[true](api/true.md)
-and
-[false](api/false.md).
-
-
-##### _String_
-String is a sequence of characters.
-String value can be defined using String literal,
-which is a sequence of characters enclosed in double quotes.
+Types (`String`, `Blob`, etc) are always written with UpperCamelCase.
+Types inside brackets `[]` denotes arrays - more on that later.
+In example above we specified type of each value explicitly
+however we can omit type declarations, and they would be inferred by compiler.
 
 ```
-String welcomeString = "Hello World";
+path = "src";
+sources = files(path);
+classes = javac(sources);
+release = jar(classes);
 ```
 
-##### _Int_
-Int is an integer with arbitrary-precision - its size is not bound.
-You can have Int value as big as you want unless it doesn't fit into memory.
-Int value can be defined using Int literal,
-which is a sequence of decimal digits optionally prefixed with minus sign (`-`).
+For educational reasons we explicitly specify all types in our examples from now on.
+
+Smooth language has four base types:
+ - `String` sequence of characters.
+ - `Blob` sequence of bytes, usually used to represent content of a file
+ - `Int` unbounded signed integers
+ - `Bool` boolean type with two allowed values `true` and `false`
+
+Value of each type can be defined inline using its literal.
+ - `String` - enclose string using double quotes, for example `"Hello, world!"`
+ - `Blob` - prefix hexadecimal digits with `0x`, for example `0xCAFEBABE`
+ - `Int` - provide all digits optionally prefixed with `-`, for example `-378`
+ - `Bool` - use one of predefined values - `true` or `false`
+
+Additionally, special characters in string literals are escaped using backslash.
+
+Apart from base types smooth contains also composite types -
+arrays, structures and functions.
+They work same way as in other languages. 
+Let's explore each one in more detail.
+
+
+#### Arrays
+
+Array is a sequence of elements of the same type.
+Array type is referenced by enclosing its element type inside brackets `[]`.
+Array literal is declared enclosing comma separated elements (expressions) inside brackets `[]`.
+Nth element of an array is accessed using [elem](api/elem.md) function.
+Let's see everything we just explained in code below:
 
 ```
-Int favoriteNumber = 17;
-Int enormousInt = 1234567890000000000;
+[Int] naturalNumbers = [1, 2, 3, 5, 7];
+Int fourthNaturalNumber = elem(naturalNumbers, 4);
 ```
 
-##### _Blob_
-Blob is a sequence of bytes.
-Blob value can be defined using Blob literal,
-which is a sequence of hexadecimal digits prefixed with `0x`.
-Number of digits has to be even.
-It is allowed to use both capital and small letters.
 
-```
-Blob binaryData = 0x48656C6C6F;
-```
+#### Structures
 
-#### Struct types
-Struct is a compound of named values known as its fields (like in most programming languages).
-Each field may be of different type.
-It is possible to define Person struct type in following way (comma after last field is not 
-mandatory) and obviously it is possible to use struct type as a field type in other struct.
+Structure is a composite of named values known as its fields with potentially different types.
+Structures and its values are immutable (like all smooth values).
+Structure type is defined by providing UpperCamelCase name
+and parenthesized comma separated list of fields (named values).
+Structure type is referenced by providing its name.
+Structure field value is accessed using `.` operator.
+Each Structure type has auto-generated constructor 
+which is a function with the same name as a structure 
+and parameter types and names matching structure fields.
+Let's see all that in action.
 
 ```
 Person(
   String firstName,
   String lastName,
 )
-
 Dog(
   String name,
   Person owner,
 )
+Dog rex = Dog("Rex", Person("John", "Doe"));
+String ownerName = rex.owner.lastName;
 ```
 
-Definition of each struct automatically generates constructor for that struct.
-
-Constructor of given struct is a function that
- - returns value of given struct type
- - has the same name as given struct
- - has parameter for each struct's field with the same name and type as that field
-
-Apart from being automatically generated, constructor is an ordinary function and
-behaves exactly like any other function.
-
-Accessing specific field of struct value is done using dot `.`.
+Most common structure is `File` that is defined in standard library:
 
 ```
-Person(
-  String firstName,
-  String lastName,
+File(
+  Blob content,
+  String path,
 )
-Person person = Person("John", "Doe");
-String name = person.lastName;
 ```
 
-#### Array types
-Array is an ordered sequence of elements. Each element has the same type.
-Array value can be defined using array literal,
-which is a comma separated sequence of values enclosed in square brackets `[]`.
-Name of array type is name of its element type enclosed in square brackets.
-Let's create array of `String`s:
+It is just file path and file content.
+It is used by many functions from standard library, most popular are:
+ - [file](api/file.md) - reads single file from project at given path
+ - [files](api/files.md) - reads all files from given directory inside project
+ - [filter](api/filter.md) - filters array of files according to glob pattern
+ - [jar](api/jar.md) - jars array of files
+ - [zip](api/zip.md) - zips array of files
+
+
+#### Functions
+
+Function is a self-contained block
+that takes parameters and returns single result.
+It can be polymorphic - more on that below.
+Functions are first-class citizens and as such they can be:
+ - passed to other functions as argument
+ - returned from function as its result
+ - stored as array elements or structure fields
+ - assigned to named values
+
+Let's refactor our initial example that compiles and jars java code,
+by extracting handy `javaModule` function,
+so it can be used for building different modules.
 
 ```
-[String] friends = [ "John", "Kate", "Alice" ];
+Blob javaModule(String path) = files(path) > javac() > jar();
+commonsJar = javaModule("src/commons");
+pluginsJar = javaModule("src/plugins");
 ```
 
-It is possible to nest arrays without any limit.
-Below example of two level deep array (array of arrays of `String`).
+Function type is constructed arrow syntax.
+`(Int,Bool)->String` is type of function that takes `Int` and `Bool` and returns `String`.
+
+
+#### parameter default value
+
+When we define function we can provide default values for some parameters.
+This way call to such function does not have to provide values for such parameters.
+Consider [javac](api/javac.md) function.
+So far we always called it with single argument.
+However, if you inspect its documentation, you can see that it has multiple parameters.
+Compiler allowed to pass only argument for first parameter
+because all the others have default value.
+Let's try passing values for first and second parameter:
 
 ```
-[[String]] groups = [ [ "circle" ], [ "triangle" ], [ "square", "rectangle" ] ];
+[File] sources = files("src");
+[File] libs = [file("lib/guava-31.0.1-jre.jar")];
+release = javac(sources, libs) > jar();
 ```
 
-### Functions
+We called [javac](api/javac.md) and provided array of third-party libraries that our code uses.
+Note that currently smooth build does not have function that could download
+library from maven repositories. This feature is high on wish list so stay tuned.
 
-Let's look once again at `release` value that we defined at the beginning of this tutorial.
-
-```
-File release = files("src") > javac() > jarFile("release.jar");
-```
-
-It uses function chaining (represented by pipe symbol `>`) to pass function call result as
-argument to other function call.
-In fact function chaining is just syntactic sugar for more standard function calls.
-We can refactor above function definition to:
+We can also simplify that code by using pipes.
+Below call to [javac](api/javac.md) passes two arguments -
+first is result of call to `[files](api/files.md)` piped through `>`,
+second is value of `libs` passed directly.
 
 ```
-File release = jarFile(javac(files("src")), "release.jar");
+[File] libs = [file("lib/guava-31.0.1-jre.jar")];
+release = files("src") > javac(libs) > jar();
 ```
 
-This version is less readable despite being more familiar to people
-coming from imperative languages.
-
-We can define our own functions in `build.smooth` same way we defined values so far.
-Let's refactor our initial example by splitting it into two functions and adding result types:
-
-```
-[File] classes(String sourcePath) = files(sourcePath) > javac();
-File release = jarFile(classes("src"), "release.jar");
-```
-
-We defined function `classes` that takes one `String` parameter being path to source file dir
-and compiles those files and returns as an array of `File`s. 
-
-This way we can build our own set of reusable functions.
-For example:
+How about calling function and providing values for 1st and 4th parameter?
+How compiler would know that 2nd argument should be assigned to 4th parameter?
+It would not, so we need to write it explicitly using named arguments.
+Below code calls [javac](api/javac.md) by providing value for first parameter,
+and explicitly assigning value `"17"` to its 4th parameter - `target`.
 
 ```
-File javaJar(String srcPath) = files(srcPath) > javac() > jarFile("release.jar");
-File main = javaJar("src/main");
-File other = javaJar("src/other"); 
+[File] sources = files("src");
+release = javac(sources, target="17") > jar();
 ```
 
-#### Function parameter default value
 
-When we define function we can provide default value for some parameters.
-This way call to such function does not have to provide value for such parameters.
+#### Polymorphic functions
 
-Let's create function that creates text file. 
-We can call it without specifying `name` parameter as it has default value,
-but we can also override default argument by specifying value for `name` parameter.
-
-```
-File textFile(String text, String name = "file.txt") 
-  = File(toBlob(text), name);
-File myFile = textFile("I love text files.");
-File otherFile = textFile("I love text files.", "secret.txt");
-```
-
-So far our example exercised default value of parameter that comes last on
-parameter list. 
-However, when we skip some argument(s) in the middle of the list
-we need to inform compiler which are missing.
-If argument listed on n-th place in function call should not be assigned
-to parameter that is on n-th place in function signature then
-we have to explicitly provide name of parameter to which it should be assigned.
-
-For example function [javac](api/javac.md) 
-from [standard library](api.md) which signature is:
-````
-[File] javac(
-  [File] srcs,
-  [File] libs = [],
-  String source = "1.8",
-  String target = "1.8",
-  [String] options = [],
-);
-````
-
-can be invoked as
-
-```
-[File] sourceFiles = files("src");
-[File] classes = javac(sourceFiles, source="17");
-```
-
-### Polymorphism
-
-Smooth allows declaring polymorphic functions and values via 
+Smooth allows declaring polymorphic functions and values via
 [parametric polymorphism](https://en.wikipedia.org/wiki/Parametric_polymorphism).
-To define type variable simply use a name which all characters are uppercase.
-Below declaration of [id](api/id.md) function from [standard library](api.md) 
+To define type variable simply use ALLCAPS name.
+Below copy of [id](api/id.md) function declaration from [standard library](api.md)
 that returns its only parameter.
 
 ```
 A id(A a) = a;
 ```
 
-When polymorphic function is invoked actual type are inferred automatically.
+When polymorphic function is invoked its actual type is inferred automatically.
 ```
 Int result = id(7);
 ```
 
-Example of polymorphic value can be empty array:
+
+#### Lambdas
+
+Lambda is unnamed function that can be defined and used inline.
+It uses lambda syntax using arrow `->` similarly to other programming languages.
+In following example we use [map](api/map.md) function
+that takes an array and function to convert elements of that array.
+We call [map](api/map.md) function 
+with an array of Persons and lambda for converting elements.
 
 ```
-[A] emptyArray = [];
+Person(
+  String name,
+  Int age,
+)
+[Person] persons = [Person("John", 23), Person("Kate", 34)];
+[String] names = map(persons, (Person person) -> person.name);
 ```
+
+
+### Caching
+
+If you run build command twice for our initial example
+
+```
+release = files("src") > javac() > jar();
+```
+
+you will notice that second evaluation completes almost instantly.
+That's because result of each operation has been cached by smooth.
+This looks like nothing extraordinary 
+as most build tools reuse result from previous execution.
+However, smooth cache system is more fine-grained
+as it caches on disk result of each bytecode operation on given arguments.
+When it has to evaluate given operation again it simply takes result from the cache.
+We won't delve into details of smooth bytecode and its operations,
+for now it is enough to state that every call to native function
+(function that is implemented in java not in smooth)
+is a bytecode operation.
+
+You can see yourself how cache works by running build for our initial example,
+then changing one of java files in `src` directory by adding empty
+spaces to the end of some line and then running build again.
+When you run build second time, you will notice that javac task
+is re-executed (as content of *.java files has changed)
+but because only formatting of the file changed,
+compilation will produce exactly the same *.class files as before.
+Smooth won't execute [jar](api/jar.md) function at all
+as the result of such execution is already in its cache.
+Console output will contain "cache" word at the end of the line
+representing [jar](api/jar.md) function execution.
+Note that such optimization is not possible with incremental building
+as change to any file at the bottom of the build tree will always
+force rebuild of all tasks that depend on it.
+
+Now if you revert changes you introduced to mentioned java file
+and run build once again then result will be instantaneous.
+All function calls (function plus actual argument values) have been already executed
+during previous build runs, so they are taken from cache.
+The only exception is call to `files("src")` function which is impure
+as it reads files from disk so its result cannot be cached between builds.
+
+Such solution is powerful as it gives you access to any build result you have ever executed.
+You just need to checkout relevant code from your repository
+and run build command that will provide results instantly.
+
+
+### Parallel execution
+
+Smooth build evaluates values in parallel unless they depend on each other.
+Let's take a look at one of our previous examples:
+
+```
+Blob javaModule(String path) = files(path) > javac() > jar();
+commonsJar = javaModule("src/commons");
+pluginsJar = javaModule("src/plugins");
+```
+
+If we build both jars via `smooth build commonsJar pluginsJar`
+then building java jars will be executed in parallel.
+We do not need to do anything to make it happen.
+
 
 ### Trailing commas
 
@@ -351,3 +376,12 @@ elements in array literal.
 If you format your code so each such element is on separate line
 and use trailing comma then it's much easier to reorder such elements.
 Such a change is also more readable in version control.
+
+
+### Things not yet implemented
+
+Basic native functions:
+ - `filter` function (`[A] filter([A] array, (A)->Bool predicate`))
+ - `fold` function (`B fold([A] array, (A,B)->B func, B zero)`)
+ - modules and imports so functions/values do not pollute global namespace
+ - recursion
