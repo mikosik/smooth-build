@@ -980,17 +980,17 @@ public class TestContext {
   // ValS types
 
   public static List<TypeS> typesToTest() {
-    return nonCompoundTypes()
+    return nonCompositeTypes()
         .stream()
-        .flatMap(t -> compoundTypeSFactories().stream().map(f -> f.apply(t)))
+        .flatMap(t -> compositeTypeSFactories().stream().map(f -> f.apply(t)))
         .collect(toList());
   }
 
-  public static ImmutableList<TypeS> nonCompoundTypes() {
+  public static ImmutableList<TypeS> nonCompositeTypes() {
     return concat(TypeFS.baseTs(), new VarS("A"));
   }
 
-  public static List<Function<TypeS, TypeS>> compoundTypeSFactories() {
+  public static List<Function<TypeS, TypeS>> compositeTypeSFactories() {
     List<Function<TypeS, TypeS>> simpleFactories = List.of(
         TestContext::arrayTS,
         TestContext::funcTS,
@@ -1003,8 +1003,8 @@ public class TestContext {
     factories.addAll(simpleFactories);
     for (var simpleFactory : simpleFactories) {
       for (var simpleFactory2 : simpleFactories) {
-        Function<TypeS, TypeS> compoundFactory = t -> simpleFactory.apply(simpleFactory2.apply(t));
-        factories.add(compoundFactory);
+        Function<TypeS, TypeS> compositeFactory = t -> simpleFactory.apply(simpleFactory2.apply(t));
+        factories.add(compositeFactory);
       }
     }
     return factories;

@@ -128,7 +128,7 @@ public class UnifierTest extends TestContext {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+      @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void temp_vs_composed_with_that_temp_fails(Function<TypeS, TypeS> composedFactory)
           throws UnifierExc {
         var unifier = new Unifier();
@@ -137,7 +137,7 @@ public class UnifierTest extends TestContext {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+      @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void temp_vs_composed_with_different_temp_succeeds(
           Function<TypeS, TypeS> composedFactory) throws UnifierExc {
         var unifier = new Unifier();
@@ -152,7 +152,7 @@ public class UnifierTest extends TestContext {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+      @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void composed_with_temp_vs_same_composed_with_other_temp_succeeds(
           Function<TypeS, TypeS> composedFactory) throws UnifierExc {
         var unifier = new Unifier();
@@ -185,7 +185,7 @@ public class UnifierTest extends TestContext {
       @Nested
       class _temp_as_component {
         @ParameterizedTest
-        @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+        @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
         public void composed_with_temp_vs_same_composed_with_base_type_instead_temp(
             Function<TypeS, TypeS> factory) throws UnifierExc {
           var unifier = new Unifier();
@@ -727,7 +727,7 @@ public class UnifierTest extends TestContext {
   @Nested
   class _cycles {
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+    @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void one_element_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
         throws UnifierExc {
       var a = unifier.newTempVar();
@@ -738,7 +738,7 @@ public class UnifierTest extends TestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+    @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void two_elements_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
         throws UnifierExc {
       var a = unifier.newTempVar();
@@ -750,7 +750,7 @@ public class UnifierTest extends TestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+    @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void three_elements_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
         throws UnifierExc {
       var a = unifier.newTempVar();
@@ -820,7 +820,7 @@ public class UnifierTest extends TestContext {
     @Nested
     class _join_separate_unified_groups {
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+      @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void join_composed_of_temp_vs_composed_of_different_temp(
           Function<TypeS, TypeS> composedFactory) throws UnifierExc {
         var a = unifier.newTempVar();
@@ -836,7 +836,7 @@ public class UnifierTest extends TestContext {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+      @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void join_composed_of_temp_vs_composed_of_int(Function<TypeS, TypeS> composedFactory)
           throws UnifierExc {
         var a = unifier.newTempVar();
@@ -851,7 +851,7 @@ public class UnifierTest extends TestContext {
       }
 
       @ParameterizedTest
-      @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+      @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void join_composed_of_int_vs_composed_of_blob_fails(
           Function<TypeS, TypeS> composedFactory) throws UnifierExc {
         var a = unifier.newTempVar();
@@ -947,7 +947,7 @@ public class UnifierTest extends TestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+    @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void composed_type(Function<TypeS, TypeS> composedFactory) throws UnifierExc {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
@@ -1003,7 +1003,7 @@ public class UnifierTest extends TestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+    @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void concrete_composed_type_instantiated_to_composed_with_x_infers_x(
         Function<TypeS, TypeS> factory) throws UnifierExc {
       var x = unifier.newTempVar();
@@ -1018,7 +1018,7 @@ public class UnifierTest extends TestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+    @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void composed_with_temp_instantiated_to_x_infers_x_structure_from_composed(
         Function<TypeS, TypeS> factory) throws UnifierExc {
       var temp = unifier.newTempVar();
@@ -1033,7 +1033,7 @@ public class UnifierTest extends TestContext {
     }
 
     @ParameterizedTest
-    @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+    @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void composed_with_temp_instantiated_many_times_to_same_composed_with_different_concrete_types_succeeds(
         Function<TypeS, TypeS> factory) throws UnifierExc {
       var temp = unifier.newTempVar();

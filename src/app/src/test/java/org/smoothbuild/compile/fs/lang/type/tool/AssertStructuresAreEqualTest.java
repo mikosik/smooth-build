@@ -13,16 +13,16 @@ import org.smoothbuild.testing.TestContext;
 
 public class AssertStructuresAreEqualTest extends TestContext {
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.testing.TestContext#nonCompoundTypes")
-  public void concrete_non_compound_types_have_equal_structure_to_itself(TypeS typeS) {
+  @MethodSource("org.smoothbuild.testing.TestContext#nonCompositeTypes")
+  public void concrete_non_composite_types_have_equal_structure_to_itself(TypeS typeS) {
     structuresAreEqualReturnsTrue(
         typeS,
         typeS);
   }
 
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
-  public void concrete_compound_types_have_equal_structure_to_itself(
+  @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
+  public void concrete_composite_types_have_equal_structure_to_itself(
       Function<TypeS, TypeS> composedFactory) {
     structuresAreEqualReturnsTrue(
         composedFactory.apply(intTS()),
@@ -30,7 +30,7 @@ public class AssertStructuresAreEqualTest extends TestContext {
   }
 
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+  @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
   public void types_have_equal_structure_when_only_temp_var_names_differ(
       Function<TypeS, TypeS> composedFactory) {
     structuresAreEqualReturnsTrue(
@@ -39,7 +39,7 @@ public class AssertStructuresAreEqualTest extends TestContext {
   }
 
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+  @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
   public void types_have_not_equal_structure_when_temp_var_is_replaced_with_concrete_type(
       Function<TypeS, TypeS> composedFactory) {
     structuresAreEqualReturnsFalse(
@@ -48,7 +48,7 @@ public class AssertStructuresAreEqualTest extends TestContext {
   }
 
   @ParameterizedTest
-  @MethodSource("org.smoothbuild.testing.TestContext#compoundTypeSFactories")
+  @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
   public void types_have_not_equal_structure_when_concrete_type_is_replaced_with_other_concrete_type(
       Function<TypeS, TypeS> composedFactory) {
     structuresAreEqualReturnsFalse(

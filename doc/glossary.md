@@ -9,6 +9,7 @@
  - __base type__ - Unstructured type that is built into language.
    Base type cannot be declared by user.
    They include `Blob`, `Bool`, `Int`, `String`.
+  - __composite type__ - type that can be constructed using base types and other composite types
   - __default argument__ - Value assigned to function parameter upon its declaration.
    Function can be called without specifying such parameter in which case default argument is used.
  - __monotype (monomorphic type)__ - Type that does not have free type variables.
