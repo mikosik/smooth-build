@@ -19,7 +19,7 @@ import org.smoothbuild.systemtest.SystemTestCase;
 public class DocumentationTest extends SystemTestCase {
   @ParameterizedTest
   @ArgumentsSource(CodeExampleProvider.class)
-  public void store_bool_artifact(String code) throws Exception {
+  public void example_code_can_be_compiled(String code) throws Exception {
     createUserModule(code);
     runSmoothList();
     assertFinishedWithSuccess();
