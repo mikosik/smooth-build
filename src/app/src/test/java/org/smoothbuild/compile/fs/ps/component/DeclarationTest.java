@@ -935,7 +935,7 @@ public class DeclarationTest extends TestContext {
         }
 
         @Test
-        public void anonymous_function_parameter_names_are_always_stripped() {
+        public void lambda_parameter_names_are_always_stripped() {
           var code = """
             myFunc(String param) = param;
             valueReferencingFunc = myFunc;
@@ -1043,7 +1043,7 @@ public class DeclarationTest extends TestContext {
     }
 
     @Nested
-    class _anonymous_function {
+    class _lambda {
       @Test
       public void with_no_params() {
         var code = """
@@ -1077,7 +1077,7 @@ public class DeclarationTest extends TestContext {
             result = (Int int = 8) -> 7;
             """;
         module(code)
-            .loadsWithError(1, "Parameter `int` of anonymous function cannot have default value.");
+            .loadsWithError(1, "Parameter `int` of lambda cannot have default value.");
       }
 
       @Test
@@ -1118,8 +1118,7 @@ public class DeclarationTest extends TestContext {
               result = (Int int = 7) -> 7;
               """;
           module(code)
-              .loadsWithError(
-                  1, "Parameter `int` of anonymous function cannot have default value.");
+              .loadsWithError(1, "Parameter `int` of lambda cannot have default value.");
         }
       }
 
@@ -1557,7 +1556,7 @@ public class DeclarationTest extends TestContext {
       }
 
       @Test
-      public void not_consumed_by_consuming_expr_inside_anonymous_function_body() {
+      public void not_consumed_by_consuming_expr_inside_lambda_body() {
         var code = """
             result = 7 > () -> [];
             """;

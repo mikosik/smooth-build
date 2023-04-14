@@ -61,17 +61,17 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _call {
         @Test
-        public void call_anonymous_func() throws EvaluatorExcS {
-          var anonymousFuncS = anonymousFuncS(nlist(), intS(7));
-          var callS = callS(instantiateS(anonymousFuncS));
+        public void call_lambda() throws EvaluatorExcS {
+          var LambdaS = lambdaS(nlist(), intS(7));
+          var callS = callS(instantiateS(LambdaS));
           assertEvaluation(callS, intB(7));
         }
 
         @Test
-        public void call_anonymous_function_returning_value_from_its_closure()
+        public void call_lambda_returning_value_from_its_closure()
             throws EvaluatorExcS {
-          var anonymousFunc = instantiateS(anonymousFuncS(nlist(), paramRefS(intTS(), "p")));
-          var funcS = funcS("myFunc", nlist(itemS(intTS(), "p")), callS(anonymousFunc));
+          var lambdaS = instantiateS(lambdaS(nlist(), paramRefS(intTS(), "p")));
+          var funcS = funcS("myFunc", nlist(itemS(intTS(), "p")), callS(lambdaS));
           var callS = callS(instantiateS(funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, intB(7));
         }
@@ -174,20 +174,20 @@ public class EvaluatorSTest extends TestContext {
     @Nested
     class _polymorphic {
       @Nested
-      class _anonymous_function {
+      class _lambda {
         @Test
-        public void mono_anonymous_function() throws EvaluatorExcS {
+        public void mono_lambda() throws EvaluatorExcS {
           assertEvaluation(
-              instantiateS(anonymousFuncS(intS(7))),
+              instantiateS(lambdaS(intS(7))),
               closureB(intB(7)));
         }
 
         @Test
-        public void poly_anonymous_function() throws EvaluatorExcS {
+        public void poly_lambda() throws EvaluatorExcS {
           var a = varA();
-          var polyAnonymousFuncS = anonymousFuncS(nlist(itemS(a, "a")), paramRefS(a, "a"));
-          var monoAnonymousFuncS = instantiateS(list(intTS()), polyAnonymousFuncS);
-          assertEvaluation(monoAnonymousFuncS, closureB(list(intTB()), referenceB(intTB(), 0)));
+          var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
+          var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
+          assertEvaluation(monoLambdaS, closureB(list(intTB()), referenceB(intTB(), 0)));
         }
       }
 

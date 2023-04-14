@@ -13,7 +13,7 @@ item          : type NAME ( '=' expr )? ;
 annotation    : '@' NAME '(' STRING ')' ;
 pipe          : expr ( p+='>' expr )* ;
 expr          : chain
-              | anonymousFunc
+              | lambda
               ;
 chain         : chainHead ( chainPart )* ;
 chainHead     : NAME
@@ -29,7 +29,7 @@ argList       : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg           : ( NAME '=' )? expr ;
 select        : '.' NAME ;
 array         : '[' ( expr (',' expr)* (',')? )?  ']' ;
-anonymousFunc : '(' itemList ')' '->' expr ;
+lambda        : '(' itemList ')' '->' expr ;
 type          : NAME                                          # typeName
               | '[' type ']'                                  # arrayT
               | '(' ( type (',' type)*)? ')' '->' type  # funcT

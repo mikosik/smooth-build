@@ -174,7 +174,7 @@ public class VisibilityTest extends TestContext {
       }
 
       @Nested
-      class _of_anonymous_function {
+      class _of_lambda {
         @Test
         public void is_visible_in_its_body() {
           module("""
@@ -199,7 +199,7 @@ public class VisibilityTest extends TestContext {
       @Nested
       class _eval_cannot_be_used_as {
         @Test
-        public void anonymous_function_argument() {
+        public void lambda_argument() {
           var code = """
               myValue = ((Int int) -> int)(undefined);
               """;
@@ -208,7 +208,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void anonymous_function_body() {
+        public void lambda_body() {
           var code = """
               myValue = () -> undefined;
               """;
@@ -322,7 +322,7 @@ public class VisibilityTest extends TestContext {
         }
 
         @Test
-        public void as_type_of_anonymous_function_parameter() {
+        public void as_type_of_lambda_parameter() {
           var code = """
               myValue = (Undefined param) -> 7;
               """;
@@ -822,7 +822,7 @@ public class VisibilityTest extends TestContext {
     }
 
     @Nested
-    class _anonymous_function_param_shadowing {
+    class _lambda_param_shadowing {
       @Test
       public void other_param_fails() {
         module("""

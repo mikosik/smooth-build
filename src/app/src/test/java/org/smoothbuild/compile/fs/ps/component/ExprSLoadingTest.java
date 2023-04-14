@@ -53,17 +53,16 @@ public class ExprSLoadingTest extends TestContext {
   @Nested
   class _expr {
     @Nested
-    class _anonymous_function {
+    class _lambda {
       @Test
-      public void mono_anonymous_function() {
+      public void mono_lambda() {
         var code = """
             result =
               (Int int)
                 -> int;
             """;
-        var anonymousFunc = anonymousFuncS(
-            2, nlist(itemS(2, INT, "int")), paramRefS(3, INT, "int"));
-        var instantiated = instantiateS(2, anonymousFunc);
+        var lambda = lambdaS(2, nlist(itemS(2, INT, "int")), paramRefS(3, INT, "int"));
+        var instantiated = instantiateS(2, lambda);
         var result = valueS(1, "result", instantiated);
         module(code)
             .loadsWithSuccess()
@@ -71,25 +70,23 @@ public class ExprSLoadingTest extends TestContext {
       }
 
       @Test
-      public void mono_anonymous_func_using_generic_type_of_enclosing_function() {
+      public void mono_lambda_using_generic_type_of_enclosing_function() {
         var code = """
             (A)->A myFunc(A outerA) =
               (A a)
                 -> a;
             """;
         var body = paramRefS(3, varA(), "a");
-        var anonymousFunc = anonymousFuncS(2, varSetS(), nlist(
-            itemS(2, varA(), "a")), body);
-        var instantiated = instantiateS(2, anonymousFunc);
-        var myFunc = funcS(1, "myFunc", nlist(
-            itemS(1, varA(), "outerA")), instantiated);
+        var lambda = lambdaS(2, varSetS(), nlist(itemS(2, varA(), "a")), body);
+        var instantiated = instantiateS(2, lambda);
+        var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "outerA")), instantiated);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
       }
 
       @Test
-      public void mono_anonymous_function_using_generic_type_of_enclosing_func_two_level_deep() {
+      public void mono_lambda_using_generic_type_of_enclosing_func_two_level_deep() {
         var code = """
             () -> (A)->A myFunc(A outerA) =
               ()
@@ -97,28 +94,25 @@ public class ExprSLoadingTest extends TestContext {
                   -> a;
             """;
         var deeperBody = paramRefS(4, varA(), "a");
-        var deeperAnonymousFunc = anonymousFuncS(
-            3, varSetS(), nlist(itemS(3, varA(), "a")), deeperBody);
-        var monoDeeperAnonymousFunc = instantiateS(3, deeperAnonymousFunc);
-        var anonFunc = anonymousFuncS(2, varSetS(), nlist(), monoDeeperAnonymousFunc);
-        var monoAnonymousFunc = instantiateS(2, anonFunc);
-        var myFunc = funcS(1, "myFunc", nlist(
-            itemS(1, varA(), "outerA")), monoAnonymousFunc);
+        var deeperLambda = lambdaS(3, varSetS(), nlist(itemS(3, varA(), "a")), deeperBody);
+        var monoDeeperLambda = instantiateS(3, deeperLambda);
+        var anonFunc = lambdaS(2, varSetS(), nlist(), monoDeeperLambda);
+        var monoLambda = instantiateS(2, anonFunc);
+        var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "outerA")), monoLambda);
         module(code)
             .loadsWithSuccess()
             .containsEvaluable(myFunc);
       }
 
       @Test
-      public void poly_anonymous_function() {
+      public void poly_lambda() {
         var code = """
             result =
               (A a)
                 -> a;
             """;
-        var anonymousFunc = anonymousFuncS(
-            2, nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
-        var instantiateS = instantiateS(2, list(varA()), anonymousFunc);
+        var lambda = lambdaS(2, nlist(itemS(2, varA(), "a")), paramRefS(3, varA(), "a"));
+        var instantiateS = instantiateS(2, list(varA()), lambda);
         var result = valueS(1, "result", instantiateS);
         module(code)
             .loadsWithSuccess()

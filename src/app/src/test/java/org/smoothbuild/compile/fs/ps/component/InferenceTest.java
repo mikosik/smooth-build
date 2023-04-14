@@ -151,7 +151,7 @@ public class InferenceTest extends TestContext {
   }
 
   @Nested
-  class _infer_anonymous_function_result_type extends _abstract_infer_function_result_type_suite {
+  class _infer_lambda_result_type extends _abstract_infer_function_result_type_suite {
     @Override
     public void assertInferredFunctionType(
         String declarations, String params, String body, SchemaS expected) {
@@ -163,8 +163,8 @@ public class InferenceTest extends TestContext {
           .evaluables()
           .get("myValue");
       var myValueBody = ((NamedExprValueS) myValue).body();
-      var anonymousFunc = ((InstantiateS) myValueBody).polymorphicS();
-      assertThat(anonymousFunc.schema())
+      var lambda = ((InstantiateS) myValueBody).polymorphicS();
+      assertThat(lambda.schema())
           .isEqualTo(expected);
     }
   }
@@ -823,14 +823,13 @@ public class InferenceTest extends TestContext {
     }
 
     @Test
-    public void anonymous_function() {
+    public void lambda() {
       var code = """
               result = ((A a) -> 7)([]);
               """;
-      var anonymousFunc = anonymousFuncS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
+      var lambda = lambdaS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(1, tupleTS());
-      var call = callS(
-          1, instantiateS(1, list(arrayTS(tupleTS())), anonymousFunc), emptyArray);
+      var call = callS(1, instantiateS(1, list(arrayTS(tupleTS())), lambda), emptyArray);
       module(code)
           .loadsWithSuccess()
           .containsEvaluable(valueS(1, "result", call));

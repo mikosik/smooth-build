@@ -10,9 +10,9 @@ import static org.smoothbuild.compile.fs.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -34,7 +34,7 @@ public class FindSyntaxErrors {
     detectIllegalNames(logBuffer, moduleP);
     detectIllegalAnnotations(logBuffer, moduleP);
     detectStructFieldWithDefaultValue(logBuffer, moduleP);
-    detectAnonymousFuncParamWithDefaultValue(logBuffer, moduleP);
+    detectLambdaParamWithDefaultValue(logBuffer, moduleP);
     return logBuffer;
   }
 
@@ -143,18 +143,18 @@ public class FindSyntaxErrors {
     }.visitModule(moduleP);
   }
 
-  private static void detectAnonymousFuncParamWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
+  private static void detectLambdaParamWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
     new ModuleVisitorP() {
       @Override
-      public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-        super.visitAnonymousFunc(anonymousFuncP);
-        anonymousFuncP.params().forEach(this::logErrorIfDefaultValuePresent);
+      public void visitLambda(LambdaP lambdaP) {
+        super.visitLambda(lambdaP);
+        lambdaP.params().forEach(this::logErrorIfDefaultValuePresent);
       }
 
       private void logErrorIfDefaultValuePresent(ItemP param) {
         if (param.defaultValue().isPresent()) {
           logger.log(compileError(param.location(),
-              "Parameter " + param.q() + " of anonymous function cannot have default value."));
+              "Parameter " + param.q() + " of lambda cannot have default value."));
         }
       }
     }.visitModule(moduleP);

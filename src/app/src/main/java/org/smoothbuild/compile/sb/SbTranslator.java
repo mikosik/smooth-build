@@ -26,7 +26,6 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.fs.lang.define.AnnotationS;
-import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
 import org.smoothbuild.compile.fs.lang.define.CombineS;
@@ -37,6 +36,7 @@ import org.smoothbuild.compile.fs.lang.define.FuncS;
 import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
+import org.smoothbuild.compile.fs.lang.define.LambdaS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
@@ -191,20 +191,20 @@ public class SbTranslator {
 
   public ExprB translatePolymorphic(PolymorphicS polymorphicS) {
     return switch (polymorphicS) {
-      case AnonymousFuncS anonymousFuncS -> translateAnonymousFunc(anonymousFuncS);
+      case LambdaS lambdaS -> translateLambda(lambdaS);
       case ReferenceS referenceS -> translateReference(referenceS);
     };
   }
 
-  private ExprB translateAnonymousFunc(AnonymousFuncS anonymousFuncS) {
-    var funcB = funcBodySbTranslator(anonymousFuncS)
-        .translateAnonymousFuncImpl(anonymousFuncS);
-    return saveLocAndReturn(anonymousFuncS, funcB);
+  private ExprB translateLambda(LambdaS lambdaS) {
+    var funcB = funcBodySbTranslator(lambdaS)
+        .translateLambdaImpl(lambdaS);
+    return saveLocAndReturn(lambdaS, funcB);
   }
 
-  private ExprB translateAnonymousFuncImpl(AnonymousFuncS anonymousFuncS) {
-    var exprFuncB = translateExprFunc(anonymousFuncS);
-    saveNal(exprFuncB, "<anonymous>", anonymousFuncS);
+  private ExprB translateLambdaImpl(LambdaS lambdaS) {
+    var exprFuncB = translateExprFunc(lambdaS);
+    saveNal(exprFuncB, "<lambda>", lambdaS);
     return bytecodeF.closurize(exprFuncB);
   }
 

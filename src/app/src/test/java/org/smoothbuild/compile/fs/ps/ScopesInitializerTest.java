@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.testing.TestContext;
 
@@ -147,44 +147,44 @@ public class ScopesInitializerTest extends TestContext {
   }
 
   @Nested
-  class _anonymous_function {
+  class _lambda {
     @Test
-    public void anonymous_function_scope_has_value_that_encloses_it() {
+    public void lambda_scope_has_value_that_encloses_it() {
       var param = itemP("param");
-      var anonymousFuncP = anonymousFuncP(nlist(param), intP());
-      var namedValueP = namedValueP("myValue", anonymousFuncP);
+      var lambdaP = lambdaP(nlist(param), intP());
+      var namedValueP = namedValueP("myValue", lambdaP);
       var moduleP = moduleP(list(), list(namedValueP));
 
       initializeScopes(moduleP);
 
-      var cast = ((AnonymousFuncP) anonymousFuncP.polymorphic());
+      var cast = ((LambdaP) lambdaP.polymorphic());
       assertThat(cast.scope().referencables().get("myValue"))
           .isEqualTo(namedValueP);
     }
 
     @Test
-    public void anonymous_function_scope_has_function_that_encloses_it() {
+    public void lambda_scope_has_function_that_encloses_it() {
       var param = itemP("param");
-      var anonymousFuncP = anonymousFuncP(nlist(param), intP());
-      var namedValueP = namedFuncP("myFunc", anonymousFuncP);
+      var lambdaP = lambdaP(nlist(param), intP());
+      var namedValueP = namedFuncP("myFunc", lambdaP);
       var moduleP = moduleP(list(), list(namedValueP));
 
       initializeScopes(moduleP);
 
-      var cast = ((AnonymousFuncP) anonymousFuncP.polymorphic());
+      var cast = ((LambdaP) lambdaP.polymorphic());
       assertThat(cast.scope().referencables().get("myFunc"))
           .isEqualTo(namedValueP);
     }
 
     @Test
-    public void anonymous_function_scope_has_its_parameter() {
+    public void lambda_scope_has_its_parameter() {
       var param = itemP("param");
-      var anonymousFuncP = anonymousFuncP(nlist(param), intP());
-      var moduleP = moduleP(list(), list(namedValueP(anonymousFuncP)));
+      var lambdaP = lambdaP(nlist(param), intP());
+      var moduleP = moduleP(list(), list(namedValueP(lambdaP)));
 
       initializeScopes(moduleP);
 
-      var cast = ((AnonymousFuncP) anonymousFuncP.polymorphic());
+      var cast = ((LambdaP) lambdaP.polymorphic());
       assertThat(cast.scope().referencables().get("param"))
           .isEqualTo(param);
     }

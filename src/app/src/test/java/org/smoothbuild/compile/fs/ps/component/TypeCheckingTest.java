@@ -72,7 +72,7 @@ public class TypeCheckingTest extends TestContext {
   }
 
   @Nested
-  class _anonymous_function {
+  class _lambda {
     @Nested
     class _param_type_and_arg_type extends _abstract_param_type_and_arg_type_suite {
       @Override

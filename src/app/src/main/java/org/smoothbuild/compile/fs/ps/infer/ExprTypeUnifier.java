@@ -25,7 +25,6 @@ import org.smoothbuild.compile.fs.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
 import org.smoothbuild.compile.fs.lang.type.tool.UnifierExc;
 import org.smoothbuild.compile.fs.ps.CompileError;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.EvaluableP;
@@ -35,6 +34,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -227,13 +227,13 @@ public class ExprTypeUnifier {
 
   private boolean unifyPolymorphic(PolymorphicP polymorphicP) {
     return switch (polymorphicP) {
-      case AnonymousFuncP anonymousFuncP -> unifyAnonymousFunc(anonymousFuncP);
+      case LambdaP lambdaP -> unifyLambdaFunc(lambdaP);
       case ReferenceP referenceP -> unifyReference(referenceP);
     };
   }
 
-  private boolean unifyAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    return unifyEvaluableAndSetSchema(anonymousFuncP);
+  private boolean unifyLambdaFunc(LambdaP lambdaP) {
+    return unifyEvaluableAndSetSchema(lambdaP);
   }
 
   private Optional<TypeS> unifyNamedArg(NamedArgP namedArgP) {

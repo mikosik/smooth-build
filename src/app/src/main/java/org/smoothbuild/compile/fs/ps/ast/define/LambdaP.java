@@ -11,7 +11,7 @@ import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.util.collect.NList;
 
-public final class AnonymousFuncP extends PolymorphicP implements FuncP {
+public final class LambdaP extends PolymorphicP implements FuncP {
   private final ImplicitTP resultT;
   private final NList<ItemP> params;
   private final ExprP body;
@@ -20,7 +20,7 @@ public final class AnonymousFuncP extends PolymorphicP implements FuncP {
   private FuncSchemaS schemaS;
   private ScopeP scope;
 
-  public AnonymousFuncP(String name, NList<ItemP> params, ExprP body, Location location) {
+  public LambdaP(String name, NList<ItemP> params, ExprP body, Location location) {
     super(location);
     this.resultT = new ImplicitTP(location);
     this.name = name;
@@ -84,7 +84,7 @@ public final class AnonymousFuncP extends PolymorphicP implements FuncP {
 
   @Override
   public String q() {
-    return "anonymous function";
+    return "lambda";
   }
 
   @Override
@@ -92,7 +92,7 @@ public final class AnonymousFuncP extends PolymorphicP implements FuncP {
     if (this == object) {
       return true;
     }
-    return object instanceof AnonymousFuncP that
+    return object instanceof LambdaP that
         && Objects.equals(this.params, that.params)
         && Objects.equals(this.body, that.body)
         && Objects.equals(this.location(), that.location());
@@ -113,6 +113,6 @@ public final class AnonymousFuncP extends PolymorphicP implements FuncP {
         "body = " + body,
         "location = " + location()
     );
-    return "AnonymousFuncP(\n" + indent(fields) + "\n)";
+    return "LambdaP(\n" + indent(fields) + "\n)";
   }
 }

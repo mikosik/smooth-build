@@ -1,6 +1,5 @@
 package org.smoothbuild.util.reflect;
 
-import static java.io.File.separatorChar;
 import static okio.Okio.buffer;
 import static okio.Okio.sink;
 import static okio.Okio.source;

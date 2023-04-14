@@ -15,7 +15,6 @@ import java.util.Optional;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.fs.lang.define.AnnotationS;
-import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
 import org.smoothbuild.compile.fs.lang.define.CombineS;
@@ -24,6 +23,7 @@ import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
+import org.smoothbuild.compile.fs.lang.define.LambdaS;
 import org.smoothbuild.compile.fs.lang.define.ModuleS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
@@ -41,7 +41,6 @@ import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.ps.ast.define.AnnotationP;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ConstructorP;
@@ -50,6 +49,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
@@ -184,10 +184,10 @@ public class PsConverter {
     // @formatter:on
   }
 
-  private AnonymousFuncS convertAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    var params = convertParams(anonymousFuncP.params());
-    var body = convertFuncBody(anonymousFuncP, anonymousFuncP.bodyGet());
-    return new AnonymousFuncS(anonymousFuncP.schemaS(), params, body, anonymousFuncP.location());
+  private LambdaS convertLambda(LambdaP lambdaP) {
+    var params = convertParams(lambdaP.params());
+    var body = convertFuncBody(lambdaP, lambdaP.bodyGet());
+    return new LambdaS(lambdaP.schemaS(), params, body, lambdaP.location());
   }
 
   private BlobS convertBlob(BlobP blob) {
@@ -217,7 +217,7 @@ public class PsConverter {
 
   private PolymorphicS convertPolymorphic(PolymorphicP polymorphicP) {
     return switch (polymorphicP) {
-      case AnonymousFuncP anonymousFuncP -> convertAnonymousFunc(anonymousFuncP);
+      case LambdaP lambdaP -> convertLambda(lambdaP);
       case ReferenceP referenceP -> convertReference(referenceP);
     };
   }

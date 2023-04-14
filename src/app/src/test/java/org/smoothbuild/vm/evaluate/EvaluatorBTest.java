@@ -380,8 +380,8 @@ public class EvaluatorBTest extends TestContext {
           var returnReturnIntClosure = closurizeB(referenceB(returnIntTB, 0));
           var innerFunc = exprFuncB(list(returnIntTB), returnReturnIntClosure);
 
-          var returnIntAnonymousFunc = closurizeB(referenceB(intTB(), 0));
-          var body = callB(callB(callB(innerFunc, returnIntAnonymousFunc)));
+          var returnIntLambda = closurizeB(referenceB(intTB(), 0));
+          var body = callB(callB(callB(innerFunc, returnIntLambda)));
           var outerFunc = exprFuncB(list(intTB()), body);
 
           var callB = callB(outerFunc, intB(17));

@@ -5,12 +5,12 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.OrderP;
 import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
@@ -69,13 +69,13 @@ public class UnitTypeInferrer {
 
   private void inferPolymorphic(PolymorphicP polymorphicP) {
     switch (polymorphicP) {
-      case AnonymousFuncP anonymousFuncP -> inferAnonymousFunc(anonymousFuncP);
+      case LambdaP lambdaP -> inferLambda(lambdaP);
       case ReferenceP referenceP -> {}
     }
   }
 
-  private void inferAnonymousFunc(AnonymousFuncP anonymousFunc) {
-    infer(anonymousFunc.bodyGet());
+  private void inferLambda(LambdaP lambda) {
+    infer(lambda.bodyGet());
   }
 
   private void inferNamedArg(NamedArgP namedArg) {

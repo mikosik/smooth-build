@@ -8,7 +8,7 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
  * Polymorphic entity.
  */
 public abstract sealed class PolymorphicP implements Located
-    permits AnonymousFuncP, ReferenceP {
+    permits LambdaP, ReferenceP {
   private final Location location;
 
   public PolymorphicP(Location location) {

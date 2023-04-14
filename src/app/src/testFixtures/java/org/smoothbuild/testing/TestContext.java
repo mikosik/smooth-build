@@ -45,7 +45,6 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.fs.lang.define.AnnotationS;
-import org.smoothbuild.compile.fs.lang.define.AnonymousFuncS;
 import org.smoothbuild.compile.fs.lang.define.BlobS;
 import org.smoothbuild.compile.fs.lang.define.CallS;
 import org.smoothbuild.compile.fs.lang.define.CombineS;
@@ -55,6 +54,7 @@ import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
+import org.smoothbuild.compile.fs.lang.define.LambdaS;
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
@@ -82,7 +82,6 @@ import org.smoothbuild.compile.fs.lang.type.TypeFS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.compile.fs.lang.type.VarSetS;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
@@ -90,6 +89,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
@@ -1505,33 +1505,33 @@ public class TestContext {
     return new NamedExprFuncS(schema, name, params, body, location(line));
   }
 
-  public static AnonymousFuncS anonymousFuncS(VarSetS quantifiedVars, ExprS body) {
-    return anonymousFuncS(quantifiedVars, nlist(), body);
+  public static LambdaS lambdaS(VarSetS quantifiedVars, ExprS body) {
+    return lambdaS(quantifiedVars, nlist(), body);
   }
 
-  public static AnonymousFuncS anonymousFuncS(
+  public static LambdaS lambdaS(
       VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
-    return anonymousFuncS(1, quantifiedVars, params, body);
+    return lambdaS(1, quantifiedVars, params, body);
   }
 
-  public static AnonymousFuncS anonymousFuncS(
+  public static LambdaS lambdaS(
       int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
     var funcTS = funcTS(toTypes(params), body.evaluationT());
     var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
-    return new AnonymousFuncS(funcSchemaS, params, body, location(line));
+    return new LambdaS(funcSchemaS, params, body, location(line));
   }
 
-  public static AnonymousFuncS anonymousFuncS(ExprS body) {
-    return anonymousFuncS(1, nlist(), body);
+  public static LambdaS lambdaS(ExprS body) {
+    return lambdaS(1, nlist(), body);
   }
 
-  public static AnonymousFuncS anonymousFuncS(NList<ItemS> params, ExprS body) {
-    return anonymousFuncS(1, params, body);
+  public static LambdaS lambdaS(NList<ItemS> params, ExprS body) {
+    return lambdaS(1, params, body);
   }
 
-  public static AnonymousFuncS anonymousFuncS(int line, NList<ItemS> params, ExprS body) {
+  public static LambdaS lambdaS(int line, NList<ItemS> params, ExprS body) {
     var funcSchemaS = funcSchemaS(toTypes(params), body.evaluationT());
-    return new AnonymousFuncS(funcSchemaS, params, body, location(line));
+    return new LambdaS(funcSchemaS, params, body, location(line));
   }
 
   public static NamedExprFuncS idFuncS() {
@@ -1589,8 +1589,8 @@ public class TestContext {
     return new ModuleP("", structs, evaluables);
   }
 
-  public static InstantiateP anonymousFuncP(NList<ItemP> params, ExprP body) {
-    return instantiateP(new AnonymousFuncP("^1", params, body, location()));
+  public static InstantiateP lambdaP(NList<ItemP> params, ExprP body) {
+    return instantiateP(new LambdaP("^1", params, body, location()));
   }
 
   public static CallP callP(ExprP callee) {

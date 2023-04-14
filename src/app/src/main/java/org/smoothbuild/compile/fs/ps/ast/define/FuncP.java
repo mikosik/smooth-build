@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 
 public sealed interface FuncP
     extends EvaluableP
-    permits AnonymousFuncP, NamedFuncP {
+    permits LambdaP, NamedFuncP {
   public TypeP resultT();
 
   public NList<ItemP> params();

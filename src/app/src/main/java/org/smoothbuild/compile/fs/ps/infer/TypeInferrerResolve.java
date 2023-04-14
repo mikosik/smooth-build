@@ -13,7 +13,6 @@ import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.compile.fs.lang.type.VarSetS;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.EvaluableP;
@@ -21,6 +20,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -129,13 +129,13 @@ public class TypeInferrerResolve {
 
   private boolean resolvePolymorphic(PolymorphicP polymorphicP) {
     return switch (polymorphicP) {
-      case AnonymousFuncP anonymousFuncP -> resolveAnonymousFunc(anonymousFuncP);
+      case LambdaP lambdaP -> resolveLambda(lambdaP);
       case ReferenceP referenceP -> true;
     };
   }
 
-  private boolean resolveAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    return resolveEvaluable(anonymousFuncP);
+  private boolean resolveLambda(LambdaP lambdaP) {
+    return resolveEvaluable(lambdaP);
   }
 
   private boolean resolveNamedArg(NamedArgP namedArgP) {

@@ -3,7 +3,6 @@ package org.smoothbuild.compile.fs.ps.ast;
 import java.util.List;
 
 import org.smoothbuild.compile.fs.ps.ast.define.AnnotationP;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
@@ -11,6 +10,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.FuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
@@ -124,14 +124,14 @@ public class ModuleVisitorP {
     // @formatter:on
   }
 
-  public void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    visitAnonymousFuncSignature(anonymousFuncP);
-    visitFuncBody(anonymousFuncP);
+  public void visitLambda(LambdaP lambdaP) {
+    visitLambdaSignature(lambdaP);
+    visitFuncBody(lambdaP);
   }
 
-  public void visitAnonymousFuncSignature(AnonymousFuncP anonymousFuncP) {
-    visitType(anonymousFuncP.resultT());
-    visitItems(anonymousFuncP.params());
+  public void visitLambdaSignature(LambdaP lambdaP) {
+    visitType(lambdaP.resultT());
+    visitItems(lambdaP.params());
   }
 
   public void visitArgs(List<ExprP> args) {
@@ -155,7 +155,7 @@ public class ModuleVisitorP {
 
   private void visitPolymorphicP(PolymorphicP polymorphicP) {
     switch (polymorphicP) {
-      case AnonymousFuncP anonymousFuncP -> visitAnonymousFunc(anonymousFuncP);
+      case LambdaP lambdaP -> visitLambda(lambdaP);
       case ReferenceP referenceP -> visitReference(referenceP);
     }
   }

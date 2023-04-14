@@ -577,7 +577,7 @@ public class ExprSUsageTest extends TestContext {
   }
 
   @Nested
-  class _anonymous_function_used_as {
+  class _lambda_used_as {
     @Test
     public void func_arg() {
       var code = """

@@ -7,7 +7,7 @@ import org.smoothbuild.compile.fs.lang.type.SchemaS;
  * Polymorphic entity.
  */
 public sealed interface PolymorphicS
-    permits AnonymousFuncS, ReferenceS {
+    permits LambdaS, ReferenceS {
   public SchemaS schema();
   public Location location();
 }

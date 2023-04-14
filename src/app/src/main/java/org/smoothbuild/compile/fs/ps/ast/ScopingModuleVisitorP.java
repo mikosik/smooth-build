@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.ps.ast;
 
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -37,9 +37,9 @@ public abstract class ScopingModuleVisitorP extends ModuleVisitorP {
   }
 
   @Override
-  public final void visitAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    visitAnonymousFuncSignature(anonymousFuncP);
-    createVisitorForScopeOf(anonymousFuncP)
-        .visitFuncBody(anonymousFuncP);
+  public final void visitLambda(LambdaP lambdaP) {
+    visitLambdaSignature(lambdaP);
+    createVisitorForScopeOf(lambdaP)
+        .visitFuncBody(lambdaP);
   }
 }

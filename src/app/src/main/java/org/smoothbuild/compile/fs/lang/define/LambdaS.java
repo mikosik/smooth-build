@@ -9,16 +9,17 @@ import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.util.collect.NList;
 
 /**
- * Anonymous function.
+ * Lambda.
+ *
  * This class is immutable.
  */
-public final class AnonymousFuncS implements ExprFuncS, PolymorphicS {
+public final class LambdaS implements ExprFuncS, PolymorphicS {
   private final FuncSchemaS schema;
   private final NList<ItemS> params;
   private final ExprS body;
   private final Location location;
 
-  public AnonymousFuncS(FuncSchemaS schema, NList<ItemS> params, ExprS body, Location location) {
+  public LambdaS(FuncSchemaS schema, NList<ItemS> params, ExprS body, Location location) {
     this.schema = schema;
     this.params = params;
     this.body = body;
@@ -51,7 +52,7 @@ public final class AnonymousFuncS implements ExprFuncS, PolymorphicS {
     if (this == object) {
       return true;
     }
-    return object instanceof AnonymousFuncS that
+    return object instanceof LambdaS that
         && this.schema.equals(that.schema)
         && this.params.equals(that.params)
         && this.body.equals(that.body)
@@ -66,6 +67,6 @@ public final class AnonymousFuncS implements ExprFuncS, PolymorphicS {
   @Override
   public String toString() {
     var fields = fieldsToString() + "\nbody = " + body;
-    return "AnonymousFuncS(\n" + indent(fields) + "\n)";
+    return "LambdaS(\n" + indent(fields) + "\n)";
   }
 }

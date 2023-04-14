@@ -19,7 +19,6 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothAntlrBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnnotationContext;
-import org.smoothbuild.antlr.lang.SmoothAntlrParser.AnonymousFuncContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ArrayTContext;
@@ -30,6 +29,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.FuncTContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ItemListContext;
+import org.smoothbuild.antlr.lang.SmoothAntlrParser.LambdaContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.NamedFuncContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.NamedValueContext;
@@ -42,7 +42,6 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.base.location.Locations;
 import org.smoothbuild.compile.fs.ps.CompileError;
 import org.smoothbuild.compile.fs.ps.ast.define.AnnotationP;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.ArrayTP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
@@ -53,6 +52,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
@@ -105,7 +105,7 @@ public class ApTranslator {
     private final ArrayList<NamedEvaluableP> evaluables;
     private final LogBuffer logs;
     private final String scopeName;
-    private int anonymousFuncCount;
+    private int lambdaCount;
 
     public ApTranslatingVisitor(FilePath filePath, ArrayList<StructP> structs,
         ArrayList<NamedEvaluableP> evaluables, LogBuffer logs) {
@@ -123,7 +123,7 @@ public class ApTranslator {
       this.evaluables = evaluables;
       this.logs = logs;
       this.scopeName = scopeName;
-      this.anonymousFuncCount = 0;
+      this.lambdaCount = 0;
     }
 
     @Override
@@ -251,8 +251,8 @@ public class ApTranslator {
     private ExprP createExpr(AtomicReference<ExprP> piped, ExprContext expr) {
       if (expr.chain() != null) {
         return createChain(piped, expr.chain());
-      } else if (expr.anonymousFunc() != null) {
-        return createAnonymousFunc(expr.anonymousFunc());
+      } else if (expr.lambda() != null) {
+        return createLambda(expr.lambda());
       } else {
         throw new RuntimeException("shouldn't happen");
       }
@@ -313,13 +313,13 @@ public class ApTranslator {
       return result;
     }
 
-    private InstantiateP createAnonymousFunc(AnonymousFuncContext anonymousFunc) {
-      var fullName = createFullName("^" + (++anonymousFuncCount));
-      var params = createItems(fullName, anonymousFunc.itemList());
-      var body = createExpr(anonymousFunc.expr());
-      var location = fileLocation(filePath, anonymousFunc);
-      var anonymousFuncP = new AnonymousFuncP(fullName, params, body, location);
-      return new InstantiateP(anonymousFuncP, location);
+    private InstantiateP createLambda(LambdaContext lambdaFunc) {
+      var fullName = createFullName("^" + (++lambdaCount));
+      var params = createItems(fullName, lambdaFunc.itemList());
+      var body = createExpr(lambdaFunc.expr());
+      var location = fileLocation(filePath, lambdaFunc);
+      var lambdaFuncP = new LambdaP(fullName, params, body, location);
+      return new InstantiateP(lambdaFuncP, location);
     }
 
     private StringP createStringNode(ParserRuleContext expr, TerminalNode quotedString) {

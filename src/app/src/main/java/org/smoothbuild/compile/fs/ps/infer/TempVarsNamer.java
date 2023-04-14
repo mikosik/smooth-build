@@ -12,13 +12,13 @@ import org.smoothbuild.compile.fs.lang.type.VarSetS;
 import org.smoothbuild.compile.fs.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.fs.lang.type.tool.Unifier;
 import org.smoothbuild.compile.fs.lang.type.tool.UnusedVarsGenerator;
-import org.smoothbuild.compile.fs.ps.ast.define.AnonymousFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.CallP;
 import org.smoothbuild.compile.fs.ps.ast.define.EvaluableP;
 import org.smoothbuild.compile.fs.ps.ast.define.ExprP;
 import org.smoothbuild.compile.fs.ps.ast.define.InstantiateP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
+import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedArgP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedFuncP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
@@ -74,13 +74,13 @@ public class TempVarsNamer {
 
   private void handleInstantiate(InstantiateP instantiateP) {
     switch (instantiateP.polymorphic()) {
-      case AnonymousFuncP anonymousFuncP -> handleAnonymousFunc(anonymousFuncP);
+      case LambdaP lambdaP -> handleLambda(lambdaP);
       case ReferenceP referenceP -> {}
     }
   }
 
-  private void handleAnonymousFunc(AnonymousFuncP anonymousFuncP) {
-    nameVarsInEvaluable(anonymousFuncP);
+  private void handleLambda(LambdaP lambdaP) {
+    nameVarsInEvaluable(lambdaP);
   }
 
   private void handleOrder(OrderP order) {
