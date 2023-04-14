@@ -9,6 +9,7 @@ def installation = tasks.register('installation', Copy) {
     into file("${buildDir}/installation")
 }
 tasks.test.dependsOn(installation)
+tasks.test.getInputs().dir('../../doc')
 
 java {
     toolchain {
