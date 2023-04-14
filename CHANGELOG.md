@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+Version 0.22.0 (????.??.??)
+
+ * changed smooth std-lib: renamed filter -> filterFiles
+
 Version 0.21.0 (2023.03.07)
 ---------------------------
 

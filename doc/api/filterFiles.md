@@ -1,4 +1,4 @@
-## filter
+## filterFiles
 
 Filters files according to given glob pattern.
 
@@ -40,8 +40,9 @@ Returns __[File]__ matching glob pattern.
 
 ### examples
 
-Takes all files (recursively) from "pictures" directory and filters only those that end with "jpg" extension.
+Takes all files (recursively) from "pictures" directory 
+and filters only those that end with "jpg" extension.
 
 ```
-[File] jpgFiles = files("pictures") > filter("**.jpg");
+[File] jpgFiles = files("pictures") > filterFiles("**.jpg");
 ```

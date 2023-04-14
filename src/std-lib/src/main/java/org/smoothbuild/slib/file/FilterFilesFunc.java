@@ -15,7 +15,7 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
-public class FilterFunc {
+public class FilterFilesFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) {
     ArrayB files = (ArrayB) args.get(0);
     StringB pattern = (StringB) args.get(1);

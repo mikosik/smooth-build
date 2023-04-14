@@ -29,8 +29,8 @@ File file(String path);
 @NativeImpure("org.smoothbuild.slib.file.FilesFunc")
 [File] files(String dir);
 
-@Native("org.smoothbuild.slib.file.FilterFunc")
-[File] filter([File] files, String pattern);
+@Native("org.smoothbuild.slib.file.FilterFilesFunc")
+[File] filterFiles([File] files, String pattern);
 
 File jarFile([File] files, String path, Blob manifest = 0x) =
     jar(files, manifest) > File(path);
