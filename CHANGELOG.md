@@ -2,8 +2,10 @@
 Change Log
 ==========
 
-Version 0.22.0 (????.??.??)
+Version 0.22.0 (2023.04.17)
 
+ * added support for Window OS
+ * improved tutorial
  * changed smooth std-lib: renamed filter -> filterFiles
 
 Version 0.21.0 (2023.03.07)
