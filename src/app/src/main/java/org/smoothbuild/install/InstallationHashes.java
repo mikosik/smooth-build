@@ -2,7 +2,7 @@ package org.smoothbuild.install;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
+import static org.smoothbuild.install.InstallationPaths.STD_LIB_MODS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Paths.removeExtension;
 
@@ -69,7 +69,7 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    var modules = moduleResourcesDetector.detect(SLIB_MODS);
+    var modules = moduleResourcesDetector.detect(STD_LIB_MODS);
     for (ModuleResources module : modules) {
       builder.add(modNode(module));
     }
