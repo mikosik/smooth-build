@@ -52,18 +52,18 @@ public class FileSystemModule extends AbstractModule {
   @Provides
   @Singleton
   @ForSpace(STD_LIB)
-  public FileSystem provideSlibFileSystem(ImmutableMap<Space, FileSystem> fileSystems) {
+  public FileSystem provideStdLibFileSystem(ImmutableMap<Space, FileSystem> fileSystems) {
     return fileSystems.get(STD_LIB);
   }
 
   @Provides
   @Singleton
   public ImmutableMap<Space, Path> provideSpaceToPathMap(InstallationPaths installationPaths) {
-    Path slibDir = installationPaths.standardLibraryDir();
+    Path stdLibDir = installationPaths.standardLibraryDir();
     if (projectDir == null) {
-      return ImmutableMap.of(STD_LIB, slibDir);
+      return ImmutableMap.of(STD_LIB, stdLibDir);
     } else {
-      return ImmutableMap.of(STD_LIB, slibDir, PRJ, projectDir);
+      return ImmutableMap.of(STD_LIB, stdLibDir, PRJ, projectDir);
     }
   }
 }

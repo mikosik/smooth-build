@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.install.InstallationPaths.SLIB_MODS;
+import static org.smoothbuild.install.InstallationPaths.STD_LIB_MODS;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
 public class DefinitionsLoader {
   private static final ImmutableList<FilePath> MODULES =
       ImmutableList.<FilePath>builder()
-          .addAll(SLIB_MODS)
+          .addAll(STD_LIB_MODS)
           .add(PRJ_MOD_FILE_PATH)
           .build();
 
