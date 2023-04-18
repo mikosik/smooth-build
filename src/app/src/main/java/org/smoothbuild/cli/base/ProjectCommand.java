@@ -1,7 +1,6 @@
 package org.smoothbuild.cli.base;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.out.report.Console.printErrorToWriter;
@@ -16,25 +15,12 @@ import java.util.concurrent.Callable;
 
 import org.smoothbuild.vm.bytecode.BytecodeExc;
 
-import picocli.CommandLine.Option;
-
 public abstract class ProjectCommand extends LoggingCommand implements Callable<Integer> {
-  @Option(
-      names = { "--project-dir", "-d" },
-      defaultValue = ".",
-      description = "Project directory where '" + PRJ_MOD_FILE_NAME
-          + "' is located. By default equal to current directory.\n"
-  )
-  private Path projectDir;
-
   @Override
   public Integer call() {
-    if (!Files.exists(projectDir)) {
-      printError("Directory '" + projectDir + "' specified via '--project-dir/-d' doesn't exist.");
-      return EXIT_CODE_ERROR;
-    }
+    Path projectDir = Path.of(".");
     if (!Files.exists(projectDir.resolve(PRJ_MOD_PATH.toString()))) {
-      printError("Directory '" + projectDir + "' doesn't have " + PRJ_MOD_PATH.q()
+      printError("Current directory doesn't have " + PRJ_MOD_PATH.q()
           + ". Is it really smooth enabled project?");
       return EXIT_CODE_ERROR;
     }

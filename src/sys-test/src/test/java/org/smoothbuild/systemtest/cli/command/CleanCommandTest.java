@@ -52,7 +52,7 @@ public class CleanCommandTest {
       createDirectories(smoothDirAbsolutePath());
       runSmoothClean();
       assertFinishedWithError();
-      assertSysOutContains("smooth: error: Directory '" + projectDirOption() + "' doesn't have "
+      assertSysOutContains("smooth: error: Current directory doesn't have "
           + PRJ_MOD_PATH.q() + ". Is it really smooth enabled project?");
     }
 
@@ -66,7 +66,7 @@ public class CleanCommandTest {
       assertSysErrContains("Unmatched arguments from index");
       assertSysErrContains("""
           Usage:
-          smooth clean [-d=<projectDir>] [-l=<level>]
+          smooth clean [-l=<level>]
           Try 'smooth help clean' for more information.
           """);
     }

@@ -40,7 +40,7 @@ public class HelpCommandTest extends SystemTestCase {
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
-        smooth build [-d=<projectDir>] [-l=<level>] [-s=<filter>] <value>...
+        smooth build [-l=<level>] [-s=<filter>] <value>...
                    
         Description:
         Evaluate specified value(s) and store them as artifact(s)
@@ -49,10 +49,6 @@ public class HelpCommandTest extends SystemTestCase {
               <value>...            value(s) to evaluate and store as artifact(s)
                    
         Options:
-          -d, --project-dir=<projectDir>
-                                    Project directory where 'build.smooth' is located.
-                                      By default equal to current directory.
-                   
           -l, --log-level=<level>   Show logs with specified level or above.
                    
                                     Available levels:
@@ -108,16 +104,12 @@ public class HelpCommandTest extends SystemTestCase {
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
-        smooth clean [-d=<projectDir>] [-l=<level>] 
-                   
+        smooth clean [-l=<level>]
+
         Description:
         Remove all cached objects and artifacts calculated during all previous builds 
-                   
+
         Options:
-          -d, --project-dir=<projectDir>
-                                    Project directory where 'build.smooth' is located.
-                                      By default equal to current directory.
-                   
           -l, --log-level=<level>   Show logs with specified level or above.
                    
                                     Available levels:
@@ -135,16 +127,12 @@ public class HelpCommandTest extends SystemTestCase {
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
-        smooth list [-d=<projectDir>] [-l=<level>]
+        smooth list [-l=<level>]
                 
         Description:
         Print user defined values that can be evaluated and stored as artifact
                 
         Options:
-          -d, --project-dir=<projectDir>
-                                    Project directory where 'build.smooth' is located.
-                                      By default equal to current directory.
-                
           -l, --log-level=<level>   Show logs with specified level or above.
                 
                                     Available levels:
