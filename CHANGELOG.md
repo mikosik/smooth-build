@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+Version ?.??.? (????.??.??)
+---------------------------
+
+ * removed --project-dir command line option
+
 Version 0.22.0 (2023.04.17)
 
  * added support for Window OS

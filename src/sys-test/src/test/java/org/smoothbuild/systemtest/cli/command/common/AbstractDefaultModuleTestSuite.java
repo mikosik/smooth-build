@@ -14,7 +14,7 @@ public abstract class AbstractDefaultModuleTestSuite extends SystemTestCase {
     runSmooth(commandNameWithArg());
     assertFinishedWithError();
     assertSysOutContains(
-        "smooth: error: Directory '" + projectDirOption() + "' doesn't have 'build.smooth'. " +
+        "smooth: error: Current directory doesn't have 'build.smooth'. " +
         "Is it really smooth enabled project?");
     assertThat(Files.exists(smoothDirAbsolutePath()))
         .isFalse();

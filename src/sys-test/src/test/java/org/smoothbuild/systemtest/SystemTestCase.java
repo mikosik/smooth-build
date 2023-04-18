@@ -25,10 +25,8 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.readAndClose;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -44,7 +42,6 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
-import org.smoothbuild.cli.Main;
 import org.smoothbuild.util.CommandExecutor;
 import org.smoothbuild.util.CommandExecutor.CommandResult;
 import org.smoothbuild.util.io.DataReader;
@@ -55,7 +52,6 @@ import okio.BufferedSource;
 import okio.ByteString;
 
 public abstract class SystemTestCase {
-  public static final TestMode TEST_MODE = TestMode.detectTestMode();
   public static final Path SYS_TEST_PROJECT_ROOT = Paths.get(".").toAbsolutePath();
   public static final Path SMOOTH_BINARY = findSmoothBinary();
 
@@ -141,44 +137,15 @@ public abstract class SystemTestCase {
   }
 
   public void runSmoothWithoutProjectAndInstallationDir(CommandWithArgs command) {
-    runSmoothInProperJvm(command);
+    runSmoothInForkedJvm(command);
   }
 
   public void runSmoothWithoutProjectDir(CommandWithArgs command) {
-    runSmoothInProperJvm(command,
-        "--INTERNAL-installation-dir=" + SMOOTH_BINARY.getParent().toAbsolutePath());
+    runSmoothInForkedJvm(command);
   }
 
   public void runSmooth(CommandWithArgs command) {
-    runSmoothInProperJvm(command,
-        "--project-dir=" + projectDir,
-        "--INTERNAL-installation-dir=" + SMOOTH_BINARY.getParent().toAbsolutePath());
-  }
-
-  private void runSmoothInProperJvm(CommandWithArgs command, String... additionalArgs) {
-    switch (TEST_MODE) {
-      case SINGLE_JVM -> runSmoothInCurrentJvm(command, additionalArgs);
-      case FULL_BINARY -> runSmoothInForkedJvm(command);
-      default -> fail("Unknown mode: " + TEST_MODE);
-    }
-  }
-
-  private void runSmoothInCurrentJvm(CommandWithArgs command, String... args) {
-    ByteArrayOutputStream outBytes = new ByteArrayOutputStream();
-    ByteArrayOutputStream errBytes = new ByteArrayOutputStream();
-    try (PrintWriter outWriter = printWriter(outBytes);
-        PrintWriter errWriter = printWriter(errBytes)) {
-      String[] commandAndAllArgs = command.commandPlusArgsPlus(args);
-      exitCode = Main.runSmooth(commandAndAllArgs, outWriter, errWriter);
-      outWriter.flush();
-      errWriter.flush();
-      this.sysOut = outBytes.toString(UTF_8);
-      this.sysErr = errBytes.toString(UTF_8);
-    }
-  }
-
-  private static PrintWriter printWriter(ByteArrayOutputStream outBytes) {
-    return new PrintWriter(outBytes, true, UTF_8);
+    runSmoothInForkedJvm(command);
   }
 
   private void runSmoothInForkedJvm(CommandWithArgs command) {
@@ -229,10 +196,9 @@ public abstract class SystemTestCase {
     assertWithFullOutputs(sysErr, text, "SysErr");
   }
 
-  private void assertWithFullOutputs(String outParam, String text, String outName) {
+  private void assertWithFullOutputs(String out, String text, String outName) {
     var sysOut = this.sysOut;
     var sysErr = this.sysErr;
-    var out = outParam;
 
     var osSpecific = toOsSpecificLineSeparators(text);
     if (!out.contains(osSpecific)) {
@@ -264,10 +230,6 @@ public abstract class SystemTestCase {
 
   private static String toOsSpecificLineSeparators(String textBlock) {
     return String.join(System.lineSeparator(), Splitter.on('\n').split(textBlock));
-  }
-
-  private static String tovisible(String textBlock) {
-    return textBlock.replaceAll("\n", "^N").replaceAll("\t", "^T").replaceAll("\r", "^R");
   }
 
   public String sysOut() {
@@ -355,17 +317,6 @@ public abstract class SystemTestCase {
       }
       return result;
     }
-  }
-
-  /**
-   * Project dir that has been passed via --project-dir option.
-   * It may be "." when current dir is equal to {@link #projectDirAbsolutePath()}.
-   */
-  public Path projectDirOption() {
-    return switch (TEST_MODE) {
-      case SINGLE_JVM -> projectDir;
-      case FULL_BINARY -> Path.of(".");
-    };
   }
 
   public String artifactAsString(String artifact) throws IOException {

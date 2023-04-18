@@ -22,14 +22,8 @@ public class ACommand {
   @Spec
   protected CommandSpec spec;
 
-  @Option(
-      names = { "--INTERNAL-installation-dir" },
-      hidden = true
-  )
-  Path installationDir = null;
-
   protected Path installationDir() {
-    return installationDir == null ? detectInstallationDir() : installationDir;
+    return detectInstallationDir();
   }
 
   protected PrintWriter out() {
