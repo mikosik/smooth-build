@@ -4,38 +4,38 @@ File(
   String path,
 )
 
-@Native("org.smoothbuild.slib.bool.NotFunc")
+@Native("org.smoothbuild.stdlib.bool.NotFunc")
 Bool not(Bool value);
 
 Bool and(Bool first, Bool second) = if(first, second, false);
 
 Bool or(Bool first, Bool second) = if(first, true, second);
 
-@Native("org.smoothbuild.slib.common.EqualFunc")
+@Native("org.smoothbuild.stdlib.common.EqualFunc")
 Bool equal(A first, A second);
 
-@Bytecode("org.smoothbuild.slib.array.ElemFunc")
+@Bytecode("org.smoothbuild.stdlib.array.ElemFunc")
 A elem([A] array, Int index);
 
-@Native("org.smoothbuild.slib.array.SizeFunc")
+@Native("org.smoothbuild.stdlib.array.SizeFunc")
 Int size([A] array);
 
-@Native("org.smoothbuild.slib.array.ConcatFunc")
+@Native("org.smoothbuild.stdlib.array.ConcatFunc")
 [A] concat([[A]] array);
 
-@NativeImpure("org.smoothbuild.slib.file.FileFunc")
+@NativeImpure("org.smoothbuild.stdlib.file.FileFunc")
 File file(String path);
 
-@NativeImpure("org.smoothbuild.slib.file.FilesFunc")
+@NativeImpure("org.smoothbuild.stdlib.file.FilesFunc")
 [File] files(String dir);
 
-@Native("org.smoothbuild.slib.file.FilterFilesFunc")
+@Native("org.smoothbuild.stdlib.file.FilterFilesFunc")
 [File] filterFiles([File] files, String pattern);
 
 File jarFile([File] files, String path, Blob manifest = 0x) =
     jar(files, manifest) > File(path);
 
-@Native("org.smoothbuild.slib.java.JarFunc")
+@Native("org.smoothbuild.stdlib.java.JarFunc")
 Blob jar([File] files, Blob manifest = 0x);
 
 [File] javac(
@@ -49,37 +49,37 @@ Blob jar([File] files, Blob manifest = 0x);
     libs = libs,
     options = concat([["-source", source, "-target", target], options]));
 
-@Native("org.smoothbuild.slib.java.javac.JavacFunc")
+@Native("org.smoothbuild.stdlib.java.javac.JavacFunc")
 [File] javac_([File] srcs, [File] libs = [], [String] options = []);
 
-@Native("org.smoothbuild.slib.java.junit.JunitFunc")
+@Native("org.smoothbuild.stdlib.java.junit.JunitFunc")
 String junit(File tests, [File] deps = [], String include = "**Test.class");
 
-@Native("org.smoothbuild.slib.string.ToBlobFunc")
+@Native("org.smoothbuild.stdlib.string.ToBlobFunc")
 Blob toBlob(String string);
 
-@Native("org.smoothbuild.slib.blob.ToStringFunc")
+@Native("org.smoothbuild.stdlib.blob.ToStringFunc")
 String toString(Blob blob);
 
-@Native("org.smoothbuild.slib.java.UnjarFunc")
+@Native("org.smoothbuild.stdlib.java.UnjarFunc")
 [File] unjar(Blob jar);
 
-@Native("org.smoothbuild.slib.compress.UnzipFunc")
+@Native("org.smoothbuild.stdlib.compress.UnzipFunc")
 [File] unzip(Blob blob);
 
-@Native("org.smoothbuild.slib.compress.ZipFunc")
+@Native("org.smoothbuild.stdlib.compress.ZipFunc")
 Blob zip([File] files);
 
 A id(A a) = a;
 
-@Bytecode("org.smoothbuild.slib.core.IfFunc")
+@Bytecode("org.smoothbuild.stdlib.core.IfFunc")
 A if(Bool condition, A then, A else);
 
-@Bytecode("org.smoothbuild.slib.core.MapFunc")
+@Bytecode("org.smoothbuild.stdlib.core.MapFunc")
 [R] map([S] array, (S)->R mapper);
 
-@Bytecode("org.smoothbuild.slib.bool.False")
+@Bytecode("org.smoothbuild.stdlib.bool.False")
 Bool false;
 
-@Bytecode("org.smoothbuild.slib.bool.True")
+@Bytecode("org.smoothbuild.stdlib.bool.True")
 Bool true;
