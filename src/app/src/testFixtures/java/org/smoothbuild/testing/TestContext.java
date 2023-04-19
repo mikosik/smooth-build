@@ -2,7 +2,6 @@ package org.smoothbuild.testing;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
-import static java.io.OutputStream.nullOutputStream;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
@@ -32,6 +31,7 @@ import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -205,6 +205,7 @@ public class TestContext {
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
   private TempManager tempManager;
+  private ByteArrayOutputStream systemOut;
 
   public EvaluatorB evaluatorB(Reporter reporter) {
     return evaluatorB(taskExecutor(reporter));
@@ -351,10 +352,14 @@ public class TestContext {
   }
 
   private Console console() {
-    // Use System.out if you want to see smooth logs in junit output
-    // var outputStream = System.out;
-    var outputStream = nullOutputStream();
-    return new Console(new PrintWriter(outputStream, true));
+    return new Console(new PrintWriter(systemOut(), true));
+  }
+
+  public ByteArrayOutputStream systemOut() {
+    if (systemOut == null) {
+      systemOut = new ByteArrayOutputStream();
+    }
+    return systemOut;
   }
 
   public Computer computer() {

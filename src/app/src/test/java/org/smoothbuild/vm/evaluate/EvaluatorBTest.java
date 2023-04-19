@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.evaluate;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Collections.nCopies;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.ArgumentMatchers.any;
@@ -793,7 +794,11 @@ public class EvaluatorBTest extends TestContext {
 
   private ValueB evaluate(EvaluatorB evaluatorB, ExprB expr) {
     try {
-      var results = evaluatorB.evaluate(list(expr)).get();
+      var resultOptional = evaluatorB.evaluate(list(expr));
+      assertWithMessage(" ==== Console logs ==== \n" + systemOut().toString() + "\n ==========\n")
+          .that(resultOptional.isPresent())
+          .isTrue();
+      var results = resultOptional.get();
       assertThat(results.size())
           .isEqualTo(1);
       return results.get(0);
