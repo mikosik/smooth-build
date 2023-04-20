@@ -11,8 +11,8 @@ import org.smoothbuild.vm.evaluate.task.Task;
 public class OperJob<T extends OperB> extends Job {
   private final BiFunction<T, TraceB, Task> taskCreator;
 
-  public OperJob(BiFunction<T, TraceB, Task> taskCreator, T operB, ExecutionContext context) {
-    super(operB, context);
+  public OperJob(BiFunction<T, TraceB, Task> taskCreator, T operB, JobCreator jobCreator) {
+    super(operB, jobCreator);
     this.taskCreator = taskCreator;
   }
 
@@ -23,8 +23,8 @@ public class OperJob<T extends OperB> extends Job {
   }
 
   @Override
-  protected void evaluateImpl(Consumer<ValueB> result) {
-    var task = taskCreator.apply(exprB(), context().trace());
-    evaluateTransitively(task, exprB().dataSeq(), result);
+  protected void evaluateImpl(ExecutionContext context, Consumer<ValueB> result) {
+    var task = taskCreator.apply(exprB(), jobCreator().trace());
+    evaluateTransitively(context, task, exprB().dataSeq(), result);
   }
 }

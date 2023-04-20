@@ -176,7 +176,6 @@ import org.smoothbuild.vm.evaluate.execute.TaskExecutor;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
 import org.smoothbuild.vm.evaluate.job.ExecutionContext;
-import org.smoothbuild.vm.evaluate.job.JobCreator;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 import org.smoothbuild.vm.evaluate.task.CombineTask;
 import org.smoothbuild.vm.evaluate.task.ConstTask;
@@ -223,10 +222,6 @@ public class TestContext {
     return new EvaluatorB(() -> executionContext(nativeMethodLoader));
   }
 
-  public EvaluatorB evaluatorB(JobCreator jobCreator) {
-    return new EvaluatorB(() -> executionContext(jobCreator));
-  }
-
   public EvaluatorB evaluatorB(TaskExecutor taskExecutor) {
     return new EvaluatorB(() -> executionContext(taskExecutor));
   }
@@ -245,7 +240,7 @@ public class TestContext {
 
   public ExecutionContext executionContext(TaskExecutor taskExecutor,
       NativeMethodLoader nativeMethodLoader) {
-    return new ExecutionContext(taskExecutor, bytecodeF(), nativeMethodLoader, new JobCreator());
+    return new ExecutionContext(taskExecutor, bytecodeF(), nativeMethodLoader);
   }
 
   public ExecutionContext executionContext(int threadCount) {
@@ -264,10 +259,6 @@ public class TestContext {
   public ExecutionContext executionContext(
       Computer computer, Reporter reporter, int threadCount) {
     return executionContext(taskExecutor(computer, reporter, threadCount));
-  }
-
-  public ExecutionContext executionContext(JobCreator jobCreator) {
-    return new ExecutionContext(taskExecutor(), bytecodeF(), nativeMethodLoader(), jobCreator);
   }
 
   public NativeMethodLoader nativeMethodLoader() {

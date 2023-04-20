@@ -17,22 +17,22 @@ import com.google.common.collect.ImmutableList;
 public abstract class Job {
   private volatile Promise<ValueB> promise;
   private final ExprB exprB;
-  private final ExecutionContext context;
+  private final JobCreator jobCreator;
 
-  public Job(ExprB exprB, ExecutionContext context) {
+  public Job(ExprB exprB, JobCreator jobCreator) {
     this.exprB = exprB;
-    this.context = context;
+    this.jobCreator = jobCreator;
   }
 
   public ExprB exprB() {
     return exprB;
   }
 
-  protected ExecutionContext context() {
-    return context;
+  protected JobCreator jobCreator() {
+    return jobCreator;
   }
 
-  public final Promise<ValueB> evaluate() {
+  public final Promise<ValueB> evaluate(ExecutionContext context) {
     // Double-checked locking.
     Promise<ValueB> localPromise = promise;
     if (localPromise != null) {
@@ -43,23 +43,23 @@ public abstract class Job {
       if (localPromise == null) {
         var newPromise = new PromisedValue<ValueB>();
         promise = localPromise = newPromise;
-        context().taskExecutor().enqueue(() -> evaluateImpl(newPromise));
+        context.taskExecutor().enqueue(() -> evaluateImpl(context, newPromise));
       }
       return localPromise;
     }
   }
 
-  protected abstract void evaluateImpl(Consumer<ValueB> result);
+  protected abstract void evaluateImpl(ExecutionContext context, Consumer<ValueB> result);
 
-  protected void evaluateTransitively(
+  protected void evaluateTransitively(ExecutionContext context,
       Task task, ImmutableList<ExprB> deps, Consumer<ValueB> result) {
-    var depJs = map(deps, context::jobFor);
-    var depResults = map(depJs, Job::evaluate);
+    var depJs = map(deps, jobCreator::jobFor);
+    var depResults = map(depJs, j -> j.evaluate(context));
     runWhenAllAvailable(depResults,
-        () -> context.taskExecutor().enqueue(task, toInput(depResults), result));
+        () -> context.taskExecutor().enqueue(task, toInput(context, depResults), result));
   }
 
-  private TupleB toInput(ImmutableList<Promise<ValueB>> depResults) {
+  private TupleB toInput(ExecutionContext context, ImmutableList<Promise<ValueB>> depResults) {
     return context.bytecodeF().tuple(map(depResults, Promise::get));
   }
 }
