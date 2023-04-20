@@ -37,17 +37,17 @@ public class JobCreator {
     this.trace = trace;
   }
 
-  public Job jobFor(ExprB expr, ExecutionContext context) {
+  public Job jobFor(ExprB expr) {
     // @formatter:off
     return switch (expr) {
-      case CallB      call      -> new CallJob(call, context);
-      case ClosurizeB closurize -> new ConstJob(newClosure(closurize), context);
-      case CombineB   combine   -> new OperJob<>(CombineTask::new, combine, context);
-      case ValueB     value     -> new ConstJob(value, context);
-      case OrderB     order     -> new OperJob<>(OrderTask::new, order, context);
-      case PickB      pick      -> new OperJob<>(PickTask::new, pick, context);
+      case CallB      call      -> new CallJob(call, this);
+      case ClosurizeB closurize -> new ConstJob(newClosure(closurize), this);
+      case CombineB   combine   -> new OperJob<>(CombineTask::new, combine, this);
+      case ValueB     value     -> new ConstJob(value, this);
+      case OrderB     order     -> new OperJob<>(OrderTask::new, order, this);
+      case PickB      pick      -> new OperJob<>(PickTask::new, pick, this);
       case ReferenceB reference -> jobForReferenced(reference);
-      case SelectB    select    -> new OperJob<>(SelectTask::new, select, context);
+      case SelectB    select    -> new OperJob<>(SelectTask::new, select, this);
       // `default` is needed because ExprB is not sealed because it is in different package
       // than its subclasses and code is not modularized.
       default -> throw new RuntimeException("shouldn't happen");

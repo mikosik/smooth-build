@@ -8,8 +8,8 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.task.ConstTask;
 
 public class ConstJob extends Job {
-  public ConstJob(ValueB valueB, ExecutionContext context) {
-    super(valueB, context);
+  public ConstJob(ValueB valueB, JobCreator jobCreator) {
+    super(valueB, jobCreator);
   }
 
   @Override
@@ -18,8 +18,8 @@ public class ConstJob extends Job {
   }
 
   @Override
-  protected void evaluateImpl(Consumer<ValueB> result) {
-    var task = new ConstTask(exprB(), context().trace());
-    evaluateTransitively(task, list(), result);
+  protected void evaluateImpl(ExecutionContext context, Consumer<ValueB> result) {
+    var task = new ConstTask(exprB(), jobCreator().trace());
+    evaluateTransitively(context, task, list(), result);
   }
 }

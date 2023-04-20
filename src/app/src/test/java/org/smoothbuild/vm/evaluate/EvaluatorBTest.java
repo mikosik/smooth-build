@@ -59,7 +59,6 @@ import org.smoothbuild.vm.evaluate.compute.Computer;
 import org.smoothbuild.vm.evaluate.compute.ResultSource;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
-import org.smoothbuild.vm.evaluate.job.ExecutionContext;
 import org.smoothbuild.vm.evaluate.job.Job;
 import org.smoothbuild.vm.evaluate.job.JobCreator;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
@@ -156,7 +155,7 @@ public class EvaluatorBTest extends TestContext {
 
         var countingJobCreator = new CountingJobCreator(IntB.class);
         var spyingJobCreator = spy(countingJobCreator);
-        assertThat(evaluate(evaluatorB(spyingJobCreator), call))
+        assertThat(evaluate(spyingEvaluatorB(spyingJobCreator), call))
             .isEqualTo(arrayB(intB(7)));
 
         assertThat(countingJobCreator.counter().get())
@@ -170,7 +169,7 @@ public class EvaluatorBTest extends TestContext {
 
         var countingJobCreator = new CountingJobCreator(BoolB.class);
         var spyingJobCreator = spy(countingJobCreator);
-        assertThat(evaluate(evaluatorB(spyingJobCreator), call))
+        assertThat(evaluate(spyingEvaluatorB(spyingJobCreator), call))
             .isEqualTo(intB(7));
 
         assertThat(countingJobCreator.counter().get())
@@ -840,6 +839,15 @@ public class EvaluatorBTest extends TestContext {
     return expected;
   }
 
+  public EvaluatorB spyingEvaluatorB(JobCreator jobCreator) {
+    return new EvaluatorB(this::executionContext) {
+      @Override
+      protected JobCreator jobCreator() {
+        return jobCreator;
+      }
+    };
+  }
+
   private static class CountingJobCreator extends JobCreator {
     private final AtomicInteger counter;
     private final Class<? extends ExprB> classToCount;
@@ -856,11 +864,11 @@ public class EvaluatorBTest extends TestContext {
     }
 
     @Override
-    public Job jobFor(ExprB expr, ExecutionContext context) {
+    public Job jobFor(ExprB expr) {
       if (expr.getClass().equals(classToCount)) {
         counter.incrementAndGet();
       }
-      return super.jobFor(expr, context);
+      return super.jobFor(expr);
     }
 
     @Override
