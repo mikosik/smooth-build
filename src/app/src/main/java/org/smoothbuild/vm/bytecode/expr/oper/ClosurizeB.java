@@ -38,12 +38,6 @@ public final class ClosurizeB extends OperB {
     return (ClosurizeCB) super.category();
   }
 
-  public ClosureB buildClosure(ImmutableList<ExprB> environment) {
-    var bytecodeDb = bytecodeDb();
-    var environmentB = bytecodeDb.combine(environment);
-    return bytecodeDb.closure(environmentB, func());
-  }
-
   public ExprFuncB func() {
     var exprFuncB = readData(ExprFuncB.class);
     var evaluationT = evaluationT();

@@ -3,6 +3,7 @@ package org.smoothbuild.testing;
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static java.lang.ClassLoader.getSystemClassLoader;
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.mock;
@@ -41,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+
+import javax.inject.Provider;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
@@ -179,7 +182,7 @@ import org.smoothbuild.vm.evaluate.execute.ReferenceInlinerB;
 import org.smoothbuild.vm.evaluate.execute.TaskExecutor;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
-import org.smoothbuild.vm.evaluate.job.ExecutionContext;
+import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 import org.smoothbuild.vm.evaluate.task.CombineTask;
 import org.smoothbuild.vm.evaluate.task.ConstTask;
@@ -219,50 +222,57 @@ public class TestContext {
   }
 
   public EvaluatorB evaluatorB() {
-    return new EvaluatorB(this::executionContext);
+    return evaluatorB(() -> schedulerB());
+  }
+
+  public EvaluatorB evaluatorB(Provider<SchedulerB> schedulerB) {
+    return new EvaluatorB(schedulerB);
   }
 
   public EvaluatorB evaluatorB(NativeMethodLoader nativeMethodLoader) {
-    return new EvaluatorB(() -> executionContext(nativeMethodLoader));
+    return evaluatorB(() -> schedulerB(nativeMethodLoader));
   }
 
   public EvaluatorB evaluatorB(TaskExecutor taskExecutor) {
-    return new EvaluatorB(() -> executionContext(taskExecutor));
+    return evaluatorB(() -> schedulerB(taskExecutor));
   }
 
-  public ExecutionContext executionContext() {
-    return executionContext(taskExecutor());
+  public SchedulerB schedulerB() {
+    return schedulerB(taskExecutor());
   }
 
-  public ExecutionContext executionContext(NativeMethodLoader nativeMethodLoader) {
-    return executionContext(taskExecutor(), nativeMethodLoader);
+  public SchedulerB schedulerB(NativeMethodLoader nativeMethodLoader) {
+    return schedulerB(taskExecutor(), nativeMethodLoader);
   }
 
-  public ExecutionContext executionContext(TaskExecutor taskExecutor) {
-    return executionContext(taskExecutor, nativeMethodLoader());
+  public SchedulerB schedulerB(TaskExecutor taskExecutor) {
+    return schedulerB(taskExecutor, nativeMethodLoader());
   }
 
-  public ExecutionContext executionContext(TaskExecutor taskExecutor,
-      NativeMethodLoader nativeMethodLoader) {
-    return new ExecutionContext(taskExecutor, bytecodeF(), nativeMethodLoader);
+  public SchedulerB schedulerB(TaskExecutor taskExecutor, NativeMethodLoader nativeMethodLoader) {
+    return new SchedulerB(taskExecutor, bytecodeF(), nativeMethodLoader, environmentInliner());
   }
 
-  public ExecutionContext executionContext(int threadCount) {
-    return executionContext(computer(), reporter(), threadCount);
+  public ReferenceInlinerB environmentInliner() {
+    return new ReferenceInlinerB(bytecodeF());
   }
 
-  public ExecutionContext executionContext(TaskReporter reporter, int threadCount) {
-    return executionContext(computer(), reporter, threadCount);
+  public SchedulerB schedulerB(int threadCount) {
+    return schedulerB(computer(), reporter(), threadCount);
   }
 
-  public ExecutionContext executionContext(
+  public SchedulerB schedulerB(TaskReporter reporter, int threadCount) {
+    return schedulerB(computer(), reporter, threadCount);
+  }
+
+  public SchedulerB schedulerB(
       Computer computer, TaskReporter reporter, int threadCount) {
-    return executionContext(taskExecutor(computer, reporter, threadCount));
+    return schedulerB(taskExecutor(computer, reporter, threadCount));
   }
 
-  public ExecutionContext executionContext(
+  public SchedulerB schedulerB(
       Computer computer, Reporter reporter, int threadCount) {
-    return executionContext(taskExecutor(computer, reporter, threadCount));
+    return schedulerB(taskExecutor(computer, reporter, threadCount));
   }
 
   public ReferenceInlinerB referenceInlinerB() {
@@ -441,28 +451,15 @@ public class TestContext {
   // Job related
 
   public static Job job(ExprB exprB, ExprB... environment) {
-    return new Job(exprB, jobContext(environment));
+    return new Job(exprB, map(asList(environment), TestContext::job), null);
   }
 
   public static Job job(ExprB exprB, Job... environment) {
-    return new Job(exprB, jobContext(environment));
+    return new Job(exprB, list(environment), null);
   }
 
   public static Job job(ExprB exprB) {
-    return new Job(exprB, jobContext());
-  }
-
-  public static JobContext jobContext(ExprB... environment) {
-    Job[] jobs = map(Arrays.asList(environment), TestContext::job).toArray(new Job[] {});
-    return jobContext(jobs);
-  }
-
-  public static JobContext jobContext(Job... environment) {
-    return new JobContext(list(environment), null);
-  }
-
-  public static JobContext jobContext() {
-    return new JobContext(list(), null);
+    return new Job(exprB, list(), null);
   }
 
   // InstB types

@@ -11,40 +11,24 @@ import javax.inject.Provider;
 
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.evaluate.job.ExecutionContext;
-import org.smoothbuild.vm.evaluate.job.Job;
-import org.smoothbuild.vm.evaluate.job.JobCreator;
+import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 
 import com.google.common.collect.ImmutableList;
 
 public class EvaluatorB {
-  private final Provider<ExecutionContext> contextProv;
+  private final Provider<SchedulerB> schedulerProvider;
 
   @Inject
-  public EvaluatorB(Provider<ExecutionContext> contextProv) {
-    this.contextProv = contextProv;
+  public EvaluatorB(Provider<SchedulerB> schedulerProvider) {
+    this.schedulerProvider = schedulerProvider;
   }
 
   public Optional<ImmutableList<ValueB>> evaluate(ImmutableList<ExprB> exprs)
       throws InterruptedException {
-    var context = contextProv.get();
-    var jobCreator = jobCreator();
-    var jobs = map(exprs, jobCreator::jobFor);
-    return pullUp(evaluate(context, jobs));
-  }
-
-  // Visible for testing
-  protected JobCreator jobCreator() {
-    return new JobCreator();
-  }
-
-  // Visible for testing
-  public static ImmutableList<Optional<ValueB>> evaluate(ExecutionContext context,
-      ImmutableList<Job> jobs) throws InterruptedException {
-    var evaluationResults = map(jobs, j -> j.evaluate(context));
-    var executor = context.taskExecutor();
-    runWhenAllAvailable(evaluationResults, executor::terminate);
-    executor.awaitTermination();
-    return map(evaluationResults, r -> Optional.ofNullable(r.get()));
+    var executorB = schedulerProvider.get();
+    var evaluationResults = map(exprs, executorB::scheduleExprEvaluation);
+    runWhenAllAvailable(evaluationResults, executorB::terminate);
+    executorB.awaitTermination();
+    return pullUp(map(evaluationResults, r -> Optional.ofNullable(r.get())));
   }
 }

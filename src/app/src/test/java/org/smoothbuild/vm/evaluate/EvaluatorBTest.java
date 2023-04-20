@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,6 +45,7 @@ import org.smoothbuild.run.eval.MessageStruct;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.accept.MemoryReporter;
 import org.smoothbuild.util.collect.Try;
+import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
@@ -57,10 +57,12 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.ComputationResult;
 import org.smoothbuild.vm.evaluate.compute.Computer;
 import org.smoothbuild.vm.evaluate.compute.ResultSource;
+import org.smoothbuild.vm.evaluate.execute.Job;
+import org.smoothbuild.vm.evaluate.execute.ReferenceInlinerB;
+import org.smoothbuild.vm.evaluate.execute.SchedulerB;
+import org.smoothbuild.vm.evaluate.execute.TaskExecutor;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
-import org.smoothbuild.vm.evaluate.job.Job;
-import org.smoothbuild.vm.evaluate.job.JobCreator;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 import org.smoothbuild.vm.evaluate.task.InvokeTask;
 import org.smoothbuild.vm.evaluate.task.NativeMethodLoader;
@@ -153,27 +155,25 @@ public class EvaluatorBTest extends TestContext {
         var func = exprFuncB(orderB(intB(7)));
         var call = callB(func);
 
-        var countingJobCreator = new CountingJobCreator(IntB.class);
-        var spyingJobCreator = spy(countingJobCreator);
-        assertThat(evaluate(spyingEvaluatorB(spyingJobCreator), call))
+        var countingScheduler = countingSchedulerB();
+        assertThat(evaluate(evaluatorB(() -> countingScheduler), call))
             .isEqualTo(arrayB(intB(7)));
 
-        assertThat(countingJobCreator.counter().get())
+        assertThat(countingScheduler.counters().get(IntB.class).intValue())
             .isEqualTo(1);
       }
 
       @Test
       public void job_for_unused_func_arg_is_created_but_not_jobs_for_its_dependencies() {
         var func = exprFuncB(list(arrayTB(boolTB())), intB(7));
-        var call = callB(func, orderB(boolTB()));
+        var call = callB(func, orderB(boolB()));
 
-        var countingJobCreator = new CountingJobCreator(BoolB.class);
-        var spyingJobCreator = spy(countingJobCreator);
-        assertThat(evaluate(spyingEvaluatorB(spyingJobCreator), call))
+        var countingScheduler = countingSchedulerB();
+        assertThat(evaluate(evaluatorB(() -> countingScheduler), call))
             .isEqualTo(intB(7));
 
-        assertThat(countingJobCreator.counter().get())
-            .isEqualTo(0);
+        assertThat(countingScheduler.counters().get(BoolB.class))
+            .isNull();
       }
     }
   }
@@ -376,9 +376,12 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void closure_passed_as_argument_and_then_returned_by_another_closure() {
-          var returnIntTB = funcTB(intTB());
-          var returnReturnIntClosure = closurizeB(referenceB(returnIntTB, 0));
-          var innerFunc = exprFuncB(list(returnIntTB), returnReturnIntClosure);
+          // innerFunc(()->Int f) = () -> f;
+          // Int outerFunc(Int i) = innerFunc(() -> i)()();
+          // outerFunc(17);
+          var funcReturningIntTB = funcTB(intTB());
+          var closureReturningFuncReturningInt = closurizeB(referenceB(funcReturningIntTB, 0));
+          var innerFunc = exprFuncB(list(funcReturningIntTB), closureReturningFuncReturningInt);
 
           var returnIntLambda = closurizeB(referenceB(intTB(), 0));
           var body = callB(callB(callB(innerFunc, returnIntLambda)));
@@ -386,6 +389,16 @@ public class EvaluatorBTest extends TestContext {
 
           var callB = callB(outerFunc, intB(17));
           assertThat(evaluate(callB))
+              .isEqualTo(intB(17));
+        }
+
+        @Test
+        public void closure_returning_value_from_environment_that_references_another_environment() {
+          var closurize = closurizeB(referenceB(intTB(), 0));
+          var innerFunc = exprFuncB(list(intTB()), closurize);
+          var outerFunc = exprFuncB(list(intTB()), callB(innerFunc, referenceB(intTB(), 0)));
+          var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
+          assertThat(evaluate(callB(closureReturnedByOuterFunc)))
               .isEqualTo(intB(17));
         }
       }
@@ -509,9 +522,9 @@ public class EvaluatorBTest extends TestContext {
       @Test
       public void task_throwing_runtime_exception_causes_fatal() throws Exception {
         var taskReporter = mock(TaskReporter.class);
-        var context = executionContext(taskReporter, 4);
+        var schedulerB = schedulerB(taskReporter, 4);
         var exprB = throwExceptionCall();
-        evaluateWithFailure(new EvaluatorB(() -> context), exprB);
+        evaluateWithFailure(new EvaluatorB(() -> schedulerB), exprB);
         verify(taskReporter).report(
             any(),
             argThat(this::computationResultWithFatalCausedByRuntimeException));
@@ -549,9 +562,9 @@ public class EvaluatorBTest extends TestContext {
             throw runtimeException;
           }
         };
-        var context = executionContext(computer, reporter, 4);
+        var schedulerB = schedulerB(computer, reporter, 4);
 
-        evaluateWithFailure(new EvaluatorB(() -> context), exprB);
+        evaluateWithFailure(new EvaluatorB(() -> schedulerB), exprB);
         verify(reporter, times(1))
             .report(eq("Internal smooth error"), argThat(isLogListWithFatalM()));
       }
@@ -714,7 +727,7 @@ public class EvaluatorBTest extends TestContext {
       );
 
       var reporter = mock(TaskReporter.class);
-      var vm = new EvaluatorB(() -> executionContext(reporter, 4));
+      var vm = new EvaluatorB(() -> schedulerB(reporter, 4));
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("1"), stringB("1")));
 
@@ -739,7 +752,7 @@ public class EvaluatorBTest extends TestContext {
           commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
           commandCall(testName, "WAIT2,COUNT1,GET2"));
 
-      var vm = new EvaluatorB(() -> executionContext(2));
+      var vm = new EvaluatorB(() -> schedulerB(2));
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
     }
@@ -839,45 +852,31 @@ public class EvaluatorBTest extends TestContext {
     return expected;
   }
 
-  public EvaluatorB spyingEvaluatorB(JobCreator jobCreator) {
-    return new EvaluatorB(this::executionContext) {
-      @Override
-      protected JobCreator jobCreator() {
-        return jobCreator;
-      }
-    };
+  private CountingSchedulerB countingSchedulerB() {
+    return new CountingSchedulerB(
+        taskExecutor(), bytecodeF(), nativeMethodLoader(), environmentInliner());
   }
 
-  private static class CountingJobCreator extends JobCreator {
-    private final AtomicInteger counter;
-    private final Class<? extends ExprB> classToCount;
+  private static class CountingSchedulerB extends SchedulerB {
+    private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
-    public CountingJobCreator(Class<? extends ExprB> classToCount) {
-      this(list(), classToCount, new AtomicInteger());
-    }
-
-    protected CountingJobCreator(ImmutableList<Job> bindings, Class<? extends ExprB> classToCount,
-        AtomicInteger counter) {
-      super(bindings, null);
-      this.classToCount = classToCount;
-      this.counter = counter;
+    public CountingSchedulerB(
+        TaskExecutor taskExecutor,
+        BytecodeF bytecodeF,
+        NativeMethodLoader nativeMethodLoader,
+        ReferenceInlinerB referenceInlinerB) {
+      super(taskExecutor, bytecodeF, nativeMethodLoader, referenceInlinerB);
     }
 
     @Override
-    public Job jobFor(ExprB expr) {
-      if (expr.getClass().equals(classToCount)) {
-        counter.incrementAndGet();
-      }
-      return super.jobFor(expr);
+    protected Job newJob(ExprB exprB, ImmutableList<Job> environment, TraceB trace) {
+      counters.computeIfAbsent(exprB.getClass(), k -> new AtomicInteger())
+          .incrementAndGet();
+      return super.newJob(exprB, environment, trace);
     }
 
-    @Override
-    public JobCreator withEnvironment(ImmutableList<Job> environment, TraceB trace) {
-      return new CountingJobCreator(environment, classToCount, counter);
-    }
-
-    public AtomicInteger counter() {
-      return counter;
+    public ConcurrentHashMap<Class<?>, AtomicInteger> counters() {
+      return counters;
     }
   }
 }

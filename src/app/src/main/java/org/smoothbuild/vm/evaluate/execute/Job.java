@@ -1,37 +1,27 @@
 package org.smoothbuild.vm.evaluate.execute;
 
-import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.util.collect.Lists.list;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
-public final class Job {
-  private final ExprB exprB;
-  private final JobContext context;
-  private final AtomicReference<PromisedValue<ValueB>> promiseReference;
+import com.google.common.collect.ImmutableList;
 
-  public Job(ExprB exprB, JobContext jobContext) {
-    this.exprB = exprB;
-    this.context = jobContext;
-    this.promiseReference = new AtomicReference<>(null);
+public record Job(
+    ExprB exprB,
+    ImmutableList<Job> environment,
+    TraceB trace,
+    AtomicBoolean started,
+    PromisedValue<ValueB> promisedValue) {
+
+  public Job(ExprB exprB) {
+    this(exprB, list(), null, new AtomicBoolean(false), new PromisedValue<>());
   }
 
-  public boolean initializePromise(PromisedValue<ValueB> newPromise) {
-    return promiseReference.compareAndSet(null, requireNonNull(newPromise));
-  }
-
-  public PromisedValue<ValueB> promise() {
-    return promiseReference.get();
-  }
-
-  public ExprB exprB() {
-    return exprB;
-  }
-
-  public JobContext context() {
-    return context;
+  public Job(ExprB exprB, ImmutableList<Job> environment, TraceB trace) {
+    this(exprB, environment, trace, new AtomicBoolean(false), new PromisedValue<>());
   }
 }

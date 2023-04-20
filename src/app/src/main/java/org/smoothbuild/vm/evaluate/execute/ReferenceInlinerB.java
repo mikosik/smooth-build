@@ -33,7 +33,7 @@ public class ReferenceInlinerB {
   }
 
   public ExprB inline(Job job) {
-    return rewriteExpr(job.exprB(), new Resolver(inline(job.context().environment())));
+    return rewriteExpr(job.exprB(), new Resolver(inline(job.environment())));
   }
 
   private ImmutableList<ExprB> rewriteExprs(
