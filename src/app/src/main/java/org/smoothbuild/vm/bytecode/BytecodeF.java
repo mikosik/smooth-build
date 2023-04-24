@@ -140,7 +140,7 @@ public class BytecodeF {
   }
 
   public ReferenceB reference(TypeB evaluationT, BigInteger value) {
-    return bytecodeDb.reference(evaluationT, value);
+    return bytecodeDb.reference(evaluationT, bytecodeDb.int_(value));
   }
 
   public SelectB select(ExprB tuple, IntB index) {

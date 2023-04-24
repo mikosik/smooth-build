@@ -60,7 +60,7 @@ public class JobCreator {
   }
 
   private Job jobForReferenced(ReferenceB reference) {
-    int index = reference.value().intValue();
+    int index = reference.index().toJ().intValue();
     var job = environment.get(index);
     var jobEvaluationT = job.exprB().evaluationT();
     if (jobEvaluationT.equals(reference.evaluationT())) {

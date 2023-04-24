@@ -942,7 +942,7 @@ public class TestContext {
   }
 
   public ReferenceB referenceB(TypeB evaluationT, int index) {
-    return bytecodeDb().reference(evaluationT, BigInteger.valueOf(index));
+    return bytecodeDb().reference(evaluationT, intB(index));
   }
 
   public SelectB selectB() {

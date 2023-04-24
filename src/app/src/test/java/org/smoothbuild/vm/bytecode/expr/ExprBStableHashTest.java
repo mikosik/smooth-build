@@ -293,19 +293,19 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void zero_reference() {
       assertThat(referenceB(intTB(), 0).hash())
-          .isEqualTo(Hash.decode("b4ac839b88e92ebacf9ffe244a452837a2284d57"));
+          .isEqualTo(Hash.decode("db910280133cb507c4a4c6e5c9a03e95c4f9736f"));
     }
 
     @Test
     public void positive_reference() {
       assertThat(referenceB(intTB(), 123).hash())
-          .isEqualTo(Hash.decode("bf6b5c6be0c652b2184bb3df4924f3593a9f3f5e"));
+          .isEqualTo(Hash.decode("b8278fe5cf4d5b5663f4112fd3d423d3bc3ff91a"));
     }
 
     @Test
     public void negative_reference() {
       assertThat(referenceB(intTB(), -123).hash())
-          .isEqualTo(Hash.decode("7732155785f68d3b3677753b0f8fbf2d8ec8deb7"));
+          .isEqualTo(Hash.decode("c69f22e702cbfa4acb0b7755a5d695645ce01841"));
     }
   }
 

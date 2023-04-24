@@ -140,8 +140,8 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newPick(pickable, index));
   }
 
-  public ReferenceB reference(TypeB evaluationT, BigInteger value) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newReference(evaluationT, value));
+  public ReferenceB reference(TypeB evaluationT, IntB index) {
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newReference(evaluationT, index));
   }
 
   public SelectB select(ExprB selectable, IntB index) {
@@ -357,10 +357,9 @@ public class BytecodeDb {
     }
   }
 
-  private ReferenceB newReference(TypeB evaluationT, BigInteger index) throws HashedDbExc {
-    var data = writeReferenceData(index);
+  private ReferenceB newReference(TypeB evaluationT, IntB index) throws HashedDbExc {
     var type = categoryDb.reference(evaluationT);
-    var root = newRoot(type, data);
+    var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
   }
 
@@ -411,10 +410,6 @@ public class BytecodeDb {
 
   private Hash writePickData(ExprB pickable, ExprB index) throws HashedDbExc {
     return hashedDb.writeSeq(pickable.hash(), index.hash());
-  }
-
-  private Hash writeReferenceData(BigInteger value) throws HashedDbExc {
-    return hashedDb.writeBigInteger(value);
   }
 
   private Hash writeSelectData(ExprB selectable, IntB index) throws HashedDbExc {
