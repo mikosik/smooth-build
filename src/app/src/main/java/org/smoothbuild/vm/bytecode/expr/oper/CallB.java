@@ -40,17 +40,17 @@ public class CallB extends OperB {
     return list(func, args);
   }
 
-  private void validate(ExprB func, CombineB argsCombine) {
+  private void validate(ExprB func, CombineB args) {
     if (func.evaluationT() instanceof FuncTB funcTB) {
-      validate(funcTB, argsCombine);
+      validate(funcTB, args);
     } else {
       throw new DecodeExprWrongNodeTypeExc(
           hash(), this.category(), "func", FuncTB.class, func.evaluationT());
     }
   }
 
-  protected void validate(FuncTB funcTB, CombineB argsCombine) {
-    var argsT = argsCombine.evaluationT();
+  protected void validate(FuncTB funcTB, CombineB args) {
+    var argsT = args.evaluationT();
     validateArgs(funcTB, argsT.elements(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resultT = funcTB.result();
     if (!evaluationT().equals(resultT)) {
