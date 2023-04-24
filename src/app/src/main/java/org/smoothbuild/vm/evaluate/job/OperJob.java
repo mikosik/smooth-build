@@ -25,6 +25,6 @@ public class OperJob<T extends OperB> extends Job {
   @Override
   protected void evaluateImpl(ExecutionContext context, Consumer<ValueB> result) {
     var task = taskCreator.apply(exprB(), jobCreator().trace());
-    evaluateTransitively(context, task, exprB().dataSeq(), result);
+    evaluateTransitively(context, task, exprB().subExprs().toList(), result);
   }
 }

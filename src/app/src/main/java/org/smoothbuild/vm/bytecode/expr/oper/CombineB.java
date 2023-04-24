@@ -32,12 +32,12 @@ public class CombineB extends OperB {
     return category().evaluationT();
   }
 
-  public ImmutableList<ExprB> items() {
-    return dataSeq();
+  @Override
+  public CombineSubExprsB subExprs() {
+    return new CombineSubExprsB(items());
   }
 
-  @Override
-  public ImmutableList<ExprB> dataSeq() {
+  public ImmutableList<ExprB> items() {
     var expectedElementsTs = category().evaluationT().elements();
     var items = readDataSeqElems(ExprB.class);
     allMatchOtherwise(

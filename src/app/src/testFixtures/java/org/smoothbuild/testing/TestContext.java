@@ -885,10 +885,10 @@ public class TestContext {
   }
 
   public CallB callB(ExprB func, ExprB... args) {
-    return callBImpl(func, combineB(args));
+    return callB(func, combineB(args));
   }
 
-  public CallB callBImpl(ExprB func, CombineB args) {
+  public CallB callB(ExprB func, CombineB args) {
     return bytecodeDb().call(func, args);
   }
 

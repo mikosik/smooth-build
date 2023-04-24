@@ -31,15 +31,20 @@ public class OrderB extends OperB {
   }
 
   @Override
-  public ImmutableList<ExprB> dataSeq() {
-    var elems = readDataSeqElems(ExprB.class);
-    var expectedElemT = category().evaluationT().elem();
-    for (int i = 0; i < elems.size(); i++) {
-      var actualT = elems.get(i).evaluationT();
-      if (!expectedElemT.equals(actualT)) {
-        throw new DecodeExprWrongNodeTypeExc(hash(), category(), "elems", i, expectedElemT, actualT);
+  public OrderSubExprsB subExprs() {
+    return new OrderSubExprsB(elements());
+  }
+
+  public ImmutableList<ExprB> elements() {
+    var elements = readDataSeqElems(ExprB.class);
+    var expectedElementT = category().evaluationT().elem();
+    for (int i = 0; i < elements.size(); i++) {
+      var actualT = elements.get(i).evaluationT();
+      if (!expectedElementT.equals(actualT)) {
+        throw new DecodeExprWrongNodeTypeExc(
+            hash(), category(), "elements", i, expectedElementT, actualT);
       }
     }
-    return elems;
+    return elements;
   }
 }

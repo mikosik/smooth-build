@@ -14,8 +14,8 @@ import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 public class OrderBTest extends TestContext {
   @Test
   public void category_returns_category() {
-    var orderH = orderB(intTB());
-    assertThat(orderH.category())
+    var orderB = orderB(intTB());
+    assertThat(orderB.category())
         .isEqualTo(orderCB(intTB()));
   }
 
@@ -32,8 +32,8 @@ public class OrderBTest extends TestContext {
   }
 
   @Test
-  public void elems_returns_elems() {
-    assertThat(orderB(intB(2)).dataSeq())
+  public void elements_returns_elements() {
+    assertThat(orderB(intB(2)).elements())
         .isEqualTo(list(intB(2)));
   }
 
@@ -62,22 +62,22 @@ public class OrderBTest extends TestContext {
 
   @Test
   public void array_can_be_read_back_by_hash() {
-    OrderB array = orderB(intB(1));
-    assertThat(bytecodeDbOther().get(array.hash()))
-        .isEqualTo(array);
+    var orderB = orderB(intB(1));
+    assertThat(bytecodeDbOther().get(orderB.hash()))
+        .isEqualTo(orderB);
   }
 
   @Test
-  public void array_read_back_by_hash_has_same_elems() {
-    OrderB array = orderB(intB(1));
-    assertThat(((OrderB) bytecodeDbOther().get(array.hash())).dataSeq())
+  public void array_read_back_by_hash_has_same_elementss() {
+    var orderB = orderB(intB(1));
+    assertThat(((OrderB) bytecodeDbOther().get(orderB.hash())).elements())
         .isEqualTo(list(intB(1)));
   }
 
   @Test
   public void to_string() {
-    OrderB array = orderB(intB(1));
-    assertThat(array.toString())
-        .isEqualTo("ORDER:[Int](???)@" + array.hash());
+    var orderB = orderB(intB(1));
+    assertThat(orderB.toString())
+        .isEqualTo("ORDER:[Int](???)@" + orderB.hash());
   }
 }

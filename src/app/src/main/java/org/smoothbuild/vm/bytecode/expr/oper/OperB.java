@@ -8,8 +8,6 @@ import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.type.oper.OperCB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * Operation.
  * This class is thread-safe.
@@ -20,8 +18,6 @@ public abstract class OperB extends ExprB {
     checkArgument(merkleRoot.category() instanceof OperCB);
   }
 
-  public abstract ImmutableList<ExprB> dataSeq();
-
   @Override
   public OperCB category() {
     return (OperCB) super.category();
@@ -31,6 +27,8 @@ public abstract class OperB extends ExprB {
   public TypeB evaluationT() {
     return category().evaluationT();
   }
+
+  public abstract SubExprsB subExprs();
 
   @Override
   public String exprToString() {

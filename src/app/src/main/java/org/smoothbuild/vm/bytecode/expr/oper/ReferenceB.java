@@ -1,13 +1,8 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
-import static org.smoothbuild.util.collect.Lists.list;
-
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
-import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Reference to environment value.
@@ -19,8 +14,8 @@ public class ReferenceB extends OperB {
   }
 
   @Override
-  public ImmutableList<ExprB> dataSeq() {
-    return list();
+  public ReferenceSubExprsB subExprs() {
+    return new ReferenceSubExprsB();
   }
 
   public IntB index() {

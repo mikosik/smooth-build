@@ -30,8 +30,8 @@ public class PickBTest extends TestContext {
   public void data_returns_array_and_index() {
     var pickable = arrayB(intB(7));
     var index = intB(0);
-    assertThat(pickB(pickable, index).dataSeq())
-        .isEqualTo(list(pickable, index));
+    assertThat(pickB(pickable, index).subExprs())
+        .isEqualTo(new PickSubExprsB(pickable, index));
   }
 
   @Nested
@@ -65,12 +65,12 @@ public class PickBTest extends TestContext {
   }
 
   @Test
-  public void pick_read_back_by_hash_has_same_data() {
+  public void pick_read_back_by_hash_has_same_sub_expressions() {
     var array = arrayB(intB(17), intB(18));
     var index = intB(0);
     var pick = pickB(array, index);
-    assertThat(((PickB) bytecodeDbOther().get(pick.hash())).dataSeq())
-        .isEqualTo(list(array, index));
+    assertThat(((PickB) bytecodeDbOther().get(pick.hash())).subExprs())
+        .isEqualTo(new PickSubExprsB(array, index));
   }
 
   @Test

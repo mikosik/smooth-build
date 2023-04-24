@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class SelectBTest extends TestContext {
   @Test
@@ -22,24 +21,24 @@ public class SelectBTest extends TestContext {
 
   @Test
   public void creating_select_with_too_great_index_causes_exception() {
-    TupleB tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(tuple, intB(2)).category())
+    var tupleB = animalB("rabbit", 7);
+    assertCall(() -> selectB(tupleB, intB(2)).category())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   public void creating_select_with_index_lower_than_zero_causes_exception() {
-    TupleB tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(tuple, intB(-1)).category())
+    var tupleB = animalB("rabbit", 7);
+    assertCall(() -> selectB(tupleB, intB(-1)).category())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
   }
 
   @Test
-  public void data_returns_tuple_and_index() {
+  public void sub_expressions_contains_tuple_and_index() {
     var selectable = tupleB(intB(7));
     var index = intB(0);
-    assertThat(selectB(selectable, index).dataSeq())
-        .isEqualTo(list(selectable, index));
+    assertThat(selectB(selectable, index).subExprs())
+        .isEqualTo(new SelectSubExprsB(selectable, index));
   }
 
   @Nested
@@ -67,25 +66,25 @@ public class SelectBTest extends TestContext {
 
   @Test
   public void select_can_be_read_back_by_hash() {
-    TupleB tuple = animalB("rabbit", 7);
-    SelectB select = selectB(tuple, intB(0));
-    assertThat(bytecodeDbOther().get(select.hash()))
-        .isEqualTo(select);
+    var tupleB = animalB("rabbit", 7);
+    var selectB = selectB(tupleB, intB(0));
+    assertThat(bytecodeDbOther().get(selectB.hash()))
+        .isEqualTo(selectB);
   }
 
   @Test
-  public void select_read_back_by_hash_has_same_data() {
+  public void select_read_back_by_hash_has_same_sub_expressions() {
     var selectable = animalB();
     var index = intB(0);
     var select = selectB(selectable, index);
-    assertThat(((SelectB) bytecodeDbOther().get(select.hash())).dataSeq())
-        .isEqualTo(list(selectable, index));
+    assertThat(((SelectB) bytecodeDbOther().get(select.hash())).subExprs())
+        .isEqualTo(new SelectSubExprsB(selectable, index));
   }
 
   @Test
   public void to_string() {
-    SelectB select = selectB(animalB(), intB(0));
-    assertThat(select.toString())
-        .isEqualTo("SELECT:String(???)@" + select.hash());
+    var selectB = selectB(animalB(), intB(0));
+    assertThat(selectB.toString())
+        .isEqualTo("SELECT:String(???)@" + selectB.hash());
   }
 }
