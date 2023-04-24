@@ -38,7 +38,7 @@ public class CallJob extends Job {
   public void evaluateImpl(ExecutionContext context, Consumer<ValueB> result) {
     evaluateImpl(
         context,
-        exprB().dataSeq().get(0),
+        exprB().subExprs().func(),
         funcB -> onFuncEvaluated(context, exprB(), funcB, result));
   }
 
@@ -149,7 +149,7 @@ public class CallJob extends Job {
   }
 
   private ImmutableList<ExprB> args() {
-    return ((CombineB) exprB().dataSeq().get(1)).dataSeq();
+    return exprB().subExprs().args().items();
   }
 
   private TraceB trace(FuncB funcB) {

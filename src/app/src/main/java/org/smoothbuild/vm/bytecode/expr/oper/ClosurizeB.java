@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -25,8 +24,8 @@ public final class ClosurizeB extends OperB {
   }
 
   @Override
-  public ImmutableList<ExprB> dataSeq() {
-    return list(func());
+  public ClosurizeSubExprsB subExprs() {
+    return new ClosurizeSubExprsB(func());
   }
 
   @Override

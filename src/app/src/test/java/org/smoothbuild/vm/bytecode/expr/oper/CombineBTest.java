@@ -20,7 +20,7 @@ public class CombineBTest extends TestContext {
 
   @Test
   public void items_returns_items() {
-    assertThat(combineB(intB(1), stringB("abc")).dataSeq())
+    assertThat(combineB(intB(1), stringB("abc")).items())
         .isEqualTo(list(intB(1), stringB("abc")));
   }
 
@@ -54,8 +54,8 @@ public class CombineBTest extends TestContext {
 
   @Test
   public void combine_read_back_by_hash_has_same_items() {
-    CombineB combine = combineB(intB(), stringB());
-    assertThat(((CombineB) bytecodeDbOther().get(combine.hash())).dataSeq())
+    var combine = combineB(intB(), stringB());
+    assertThat(((CombineB) bytecodeDbOther().get(combine.hash())).items())
         .isEqualTo(list(intB(), stringB()));
   }
 

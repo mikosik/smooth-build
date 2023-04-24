@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -12,8 +11,6 @@ import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.IntTB;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -34,14 +31,14 @@ public class PickB extends OperB {
   }
 
   @Override
-  public ImmutableList<ExprB> dataSeq() {
-    ExprB pickable = readPickable();
+  public PickSubExprsB subExprs() {
+    var pickable = readPickable();
     if (pickable.evaluationT() instanceof ArrayTB arrayT) {
-      var elemT = arrayT.elem();
-      if (!evaluationT().equals(elemT)) {
-        throw new DecodePickWrongEvaluationTypeExc(hash(), category(), elemT);
+      var elementT = arrayT.elem();
+      if (!evaluationT().equals(elementT)) {
+        throw new DecodePickWrongEvaluationTypeExc(hash(), category(), elementT);
       }
-      return list(pickable, readIndex());
+      return new PickSubExprsB(readPickable(), readIndex());
     } else {
       throw new DecodeExprWrongNodeTypeExc(
           hash(), category(), "array", ArrayTB.class, pickable.evaluationT());
@@ -53,7 +50,7 @@ public class PickB extends OperB {
   }
 
   private ExprB readIndex() {
-    ExprB index = readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
+    var index = readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
     if (!(index.evaluationT() instanceof IntTB)) {
       throw new DecodeExprWrongNodeTypeExc(
           hash(), category(), ExprB.DATA_PATH, IDX_IDX, IntB.class, index.evaluationT());

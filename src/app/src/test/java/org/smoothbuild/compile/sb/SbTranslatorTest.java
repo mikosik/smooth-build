@@ -647,7 +647,7 @@ public class SbTranslatorTest extends TestContext {
       Location expectedLocation) {
     var call = ((CallB) sbTranslator.translateExpr(exprS));
     assertNalMapping(sbTranslator, call, null, expectedCallLocation);
-    var called = call.dataSeq().get(0);
+    var called = call.subExprs().func();
     assertNalMapping(sbTranslator, called, expectedName, expectedLocation);
   }
 

@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -12,8 +11,6 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeExc;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -34,10 +31,10 @@ public class SelectB extends OperB {
   }
 
   @Override
-  public ImmutableList<ExprB> dataSeq() {
-    ExprB selectable = readSelectable();
+  public SelectSubExprsB subExprs() {
+    var selectable = readSelectable();
     if (selectable.evaluationT() instanceof TupleTB tupleT) {
-      IntB index = readIndex();
+      var index = readIndex();
       int i = index.toJ().intValue();
       int size = tupleT.elements().size();
       if (i < 0 || size <= i) {
@@ -47,7 +44,7 @@ public class SelectB extends OperB {
       if (!evaluationT().equals(fieldT)) {
         throw new DecodeSelectWrongEvaluationTypeExc(hash(), category(), fieldT);
       }
-      return list(selectable, index);
+      return new SelectSubExprsB(selectable, index);
     } else {
       throw new DecodeExprWrongNodeClassExc(
           hash(), category(), "tuple", TupleTB.class, selectable.evaluationT().getClass());
