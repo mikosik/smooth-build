@@ -1403,13 +1403,13 @@ public class ExprBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme to save ref
        * in HashedDb.
        */
-      ByteString byteString = ByteString.of((byte) 3, (byte) 2);
+      var index = intB(34);
       var hash =
           hash(
               hash(referenceCB(stringTB())),
-              hash(byteString));
-      assertThat(((ReferenceB) bytecodeDb().get(hash)).value())
-          .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
+              hash(index));
+      assertThat(((ReferenceB) bytecodeDb().get(hash)).index())
+          .isEqualTo(index);
     }
 
     @Test
@@ -1424,15 +1424,15 @@ public class ExprBCorruptedTest extends TestContext {
       obj_root_with_two_data_hashes(
           referenceCB(intTB()),
           dataHash,
-          (Hash hash) -> ((ReferenceB) bytecodeDb().get(hash)).value()
+          (Hash hash) -> ((ReferenceB) bytecodeDb().get(hash)).index()
       );
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+      obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
           referenceCB(intTB()),
-          (Hash hash) -> ((ReferenceB) bytecodeDb().get(hash)).value());
+          (Hash hash) -> ((ReferenceB) bytecodeDb().get(hash)).index());
     }
   }
 

@@ -2,11 +2,10 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
-import java.math.BigInteger;
-
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
+import org.smoothbuild.vm.bytecode.expr.value.IntB;
 
 import com.google.common.collect.ImmutableList;
 
@@ -24,12 +23,12 @@ public class ReferenceB extends OperB {
     return list();
   }
 
-  public BigInteger value() {
-    return readData(() -> hashedDb().readBigInteger(dataHash()));
+  public IntB index() {
+    return readData(IntB.class);
   }
 
   @Override
   public String exprToString() {
-    return category().name() + "(" + value() + ")";
+    return category().name() + "(" + index().toJ() + ")";
   }
 }

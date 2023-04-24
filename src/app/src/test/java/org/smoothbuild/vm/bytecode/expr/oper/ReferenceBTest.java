@@ -3,7 +3,6 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.junit.jupiter.api.Nested;
@@ -20,8 +19,8 @@ public class ReferenceBTest extends TestContext {
 
   @Test
   public void value_returns_stored_value() {
-    assertThat(referenceB(123).value())
-        .isEqualTo(BigInteger.valueOf(123));
+    assertThat(referenceB(123).index())
+        .isEqualTo(intB(123));
   }
 
   @Nested
@@ -54,8 +53,8 @@ public class ReferenceBTest extends TestContext {
   @Test
   public void const_read_back_by_hash_has_same_value() {
     var ref = referenceB(intTB(), 123);
-    assertThat(((ReferenceB) bytecodeDbOther().get(ref.hash())).value())
-        .isEqualTo(BigInteger.valueOf(123));
+    assertThat(((ReferenceB) bytecodeDbOther().get(ref.hash())).index())
+        .isEqualTo(intB(123));
   }
 
   @Test
