@@ -128,10 +128,6 @@ public class CategoryDb {
     return bool;
   }
 
-  public ClosureCB closure(ImmutableList<TypeB> params, TypeB result) {
-    return funcC(CLOSURE, params, result);
-  }
-
   public ClosureCB closure(FuncTB funcTB) {
     return funcC(CLOSURE, funcTB);
   }
