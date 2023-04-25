@@ -83,8 +83,6 @@ public class CategoryBTest extends TestContext {
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.closure(list(), f.string()), "CLOSURE:()->String"),
-        args(f -> f.closure(list(f.string()), f.string()), "CLOSURE:(String)->String"),
         args(f -> f.exprFunc(list(), f.string()), "EXPR_FUNC:()->String"),
         args(f -> f.exprFunc(list(f.string()), f.string()), "EXPR_FUNC:(String)->String"),
         args(f -> f.funcT(list(), f.string()), "()->String"),
