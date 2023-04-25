@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -172,6 +173,9 @@ import org.smoothbuild.vm.evaluate.compute.ComputationResult;
 import org.smoothbuild.vm.evaluate.compute.Computer;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.compute.ResultSource;
+import org.smoothbuild.vm.evaluate.execute.Job;
+import org.smoothbuild.vm.evaluate.execute.JobContext;
+import org.smoothbuild.vm.evaluate.execute.ReferenceInlinerB;
 import org.smoothbuild.vm.evaluate.execute.TaskExecutor;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
@@ -259,6 +263,10 @@ public class TestContext {
   public ExecutionContext executionContext(
       Computer computer, Reporter reporter, int threadCount) {
     return executionContext(taskExecutor(computer, reporter, threadCount));
+  }
+
+  public ReferenceInlinerB referenceInlinerB() {
+    return new ReferenceInlinerB(bytecodeF());
   }
 
   public NativeMethodLoader nativeMethodLoader() {
@@ -428,6 +436,33 @@ public class TestContext {
       fullFileSystem = synchronizedMemoryFileSystem();
     }
     return fullFileSystem;
+  }
+
+  // Job related
+
+  public static Job job(ExprB exprB, ExprB... environment) {
+    return new Job(exprB, jobContext(environment));
+  }
+
+  public static Job job(ExprB exprB, Job... environment) {
+    return new Job(exprB, jobContext(environment));
+  }
+
+  public static Job job(ExprB exprB) {
+    return new Job(exprB, jobContext());
+  }
+
+  public static JobContext jobContext(ExprB... environment) {
+    Job[] jobs = map(Arrays.asList(environment), TestContext::job).toArray(new Job[] {});
+    return jobContext(jobs);
+  }
+
+  public static JobContext jobContext(Job... environment) {
+    return new JobContext(list(environment), null);
+  }
+
+  public static JobContext jobContext() {
+    return new JobContext(list(), null);
   }
 
   // InstB types
@@ -614,7 +649,7 @@ public class TestContext {
     return categoryDb().select(evaluationT);
   }
 
-  // InstB-s
+  // ValueB-s
 
   public TupleB animalB() {
     return animalB("rabbit", 7);

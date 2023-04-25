@@ -135,16 +135,16 @@ public class BytecodeF {
     return bytecodeDb.nativeFunc(funcTB, jar, classBinaryName, isPure);
   }
 
-  public PickB pick(ExprB array, ExprB index) {
-    return bytecodeDb.pick(array, index);
+  public PickB pick(ExprB pickable, ExprB index) {
+    return bytecodeDb.pick(pickable, index);
   }
 
   public ReferenceB reference(TypeB evaluationT, BigInteger value) {
     return bytecodeDb.reference(evaluationT, bytecodeDb.int_(value));
   }
 
-  public SelectB select(ExprB tuple, IntB index) {
-    return bytecodeDb.select(tuple, index);
+  public SelectB select(ExprB selectable, IntB index) {
+    return bytecodeDb.select(selectable, index);
   }
 
   public StringB string(String string) {
@@ -155,8 +155,8 @@ public class BytecodeF {
     return bytecodeDb.tuple(items);
   }
 
-  public OrderB order(ArrayTB arrayTB, ImmutableList<ExprB> elems) {
-    return bytecodeDb.order(arrayTB, elems);
+  public OrderB order(ArrayTB evaluationT, ImmutableList<ExprB> elems) {
+    return bytecodeDb.order(evaluationT, elems);
   }
 
   // Types
