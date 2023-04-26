@@ -13,8 +13,8 @@ import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
+import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 
@@ -49,7 +49,7 @@ public class ReferenceInlinerB {
       case CombineB   combineB   -> rewriteCombine(combineB, resolver);
       case OrderB     orderB     -> rewriteOrder(orderB, resolver);
       case PickB      pickB      -> rewritePick(pickB, resolver);
-      case ReferenceB referenceB -> rewriteReference(referenceB, resolver);
+      case VarB       varB       -> rewriteVar(varB, resolver);
       case SelectB    selectB    -> rewriteSelect(selectB, resolver);
 
       case ClosureB   closureB   -> rewriteClosure(closureB, resolver);
@@ -118,8 +118,8 @@ public class ReferenceInlinerB {
     }
   }
 
-  private ExprB rewriteReference(ReferenceB reference, Resolver resolver) {
-    return resolver.resolve(reference);
+  private ExprB rewriteVar(VarB var, Resolver resolver) {
+    return resolver.resolve(var);
   }
 
   private ExprB rewriteSelect(SelectB selectB, Resolver resolver) {
@@ -174,26 +174,26 @@ public class ReferenceInlinerB {
       return new Resolver(paramCount + delta, environment);
     }
 
-    public ExprB resolve(ReferenceB referenceB) {
-      int index = referenceB.index().toJ().intValue();
+    public ExprB resolve(VarB varB) {
+      int index = varB.index().toJ().intValue();
       if (index < 0) {
-        throw new ReferenceOutOfBoundsExc(index, paramCount + environment.size());
+        throw new VarOutOfBoundsExc(index, paramCount + environment.size());
       }
       if (index < paramCount) {
-        return referenceB;
+        return varB;
       }
       int environmentIndex = index - paramCount;
       if (environmentIndex < environment.size()) {
         var referenced = environment.get(environmentIndex);
         var jobEvaluationT = referenced.evaluationT();
-        if (jobEvaluationT.equals(referenceB.evaluationT())) {
+        if (jobEvaluationT.equals(varB.evaluationT())) {
           return referenced;
         } else {
           throw new RuntimeException("environment(%d) evaluationT is %s but expected %s."
-              .formatted(index, jobEvaluationT.q(), referenceB.evaluationT().q()));
+              .formatted(index, jobEvaluationT.q(), varB.evaluationT().q()));
         }
       }
-      throw new ReferenceOutOfBoundsExc(index, paramCount + environment.size());
+      throw new VarOutOfBoundsExc(index, paramCount + environment.size());
     }
   }
 }

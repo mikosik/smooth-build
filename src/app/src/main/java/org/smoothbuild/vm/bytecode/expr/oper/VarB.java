@@ -5,11 +5,13 @@ import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 
 /**
- * Reference to environment value.
+ * Variable that references bound value using De Bruijn indexing with zero-based numbering.
+ * <a href="https://en.wikipedia.org/wiki/De_Bruijn_index"></a>
+ *
  * This class is thread-safe.
  */
-public class ReferenceB extends OperB {
-  public ReferenceB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+public class VarB extends OperB {
+  public VarB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
   }
 

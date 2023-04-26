@@ -204,16 +204,16 @@ public class ReferenceInlinerBTest extends TestContext {
 
   @Test
   public void reference_with_index_equal_to_environment_size_causes_exception() {
-    var job = job(referenceB(stringTB(), 3), intB(), intB(), intB(17));
+    var job = job(varB(stringTB(), 3), intB(), intB(), intB(17));
     assertCall(() -> referenceInlinerB().inline(job))
-        .throwsException(new ReferenceOutOfBoundsExc(3, 3));
+        .throwsException(new VarOutOfBoundsExc(3, 3));
   }
 
   @Test
   public void reference_with_negative_index_causes_exception() {
-    var job = job(referenceB(stringTB(), -1), intB(), intB(), intB(17));
+    var job = job(varB(stringTB(), -1), intB(), intB(), intB(17));
     assertCall(() -> referenceInlinerB().inline(job))
-        .throwsException(new ReferenceOutOfBoundsExc(-1, 3));
+        .throwsException(new VarOutOfBoundsExc(-1, 3));
   }
 
   private void assertReferenceInliningReplacesReference(Function<ExprB, ExprB> factory) {
@@ -228,7 +228,7 @@ public class ReferenceInlinerBTest extends TestContext {
   private void assertReferenceInliningReplacesReference(
       int referencedIndex, Function<ExprB, ExprB> factory, IntB replacement) {
     assertReferenceInlining(
-        factory.apply(referenceB(intTB(), referencedIndex)),
+        factory.apply(varB(intTB(), referencedIndex)),
         factory.apply(replacement));
   }
 
@@ -238,7 +238,7 @@ public class ReferenceInlinerBTest extends TestContext {
 
   private void assertReferenceInliningDoesNotChangeExpression(
       int referencedIndex, Function<ExprB, ExprB> factory) {
-    var exprB = factory.apply(referenceB(intTB(), referencedIndex));
+    var exprB = factory.apply(varB(intTB(), referencedIndex));
     var job = job(exprB, intB(1), intB(2), intB(3));
     assertThat(referenceInlinerB().inline(job))
         .isSameInstanceAs(exprB);
