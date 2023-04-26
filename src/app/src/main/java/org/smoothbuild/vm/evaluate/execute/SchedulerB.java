@@ -35,7 +35,6 @@ import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.evaluate.task.CombineTask;
 import org.smoothbuild.vm.evaluate.task.ConstTask;
 import org.smoothbuild.vm.evaluate.task.InvokeTask;
-import org.smoothbuild.vm.evaluate.task.NativeMethodLoader;
 import org.smoothbuild.vm.evaluate.task.OrderTask;
 import org.smoothbuild.vm.evaluate.task.PickTask;
 import org.smoothbuild.vm.evaluate.task.SelectTask;
@@ -46,18 +45,15 @@ import com.google.common.collect.ImmutableList;
 public class SchedulerB {
   private final TaskExecutor taskExecutor;
   private final BytecodeF bytecodeF;
-  private final NativeMethodLoader nativeMethodLoader;
   private final ReferenceInlinerB referenceInlinerB;
 
   @Inject
   public SchedulerB(
       TaskExecutor taskExecutor,
       BytecodeF bytecodeF,
-      NativeMethodLoader nativeMethodLoader,
       ReferenceInlinerB referenceInlinerB) {
     this.taskExecutor = taskExecutor;
     this.bytecodeF = bytecodeF;
-    this.nativeMethodLoader = nativeMethodLoader;
     this.referenceInlinerB = referenceInlinerB;
   }
 
@@ -196,7 +192,7 @@ public class SchedulerB {
 
     private void handleNativeFunc(NativeFuncB nativeFuncB) {
       var trace = callTrace(nativeFuncB);
-      var task = new InvokeTask(call, nativeFuncB, nativeMethodLoader, trace);
+      var task = new InvokeTask(call, nativeFuncB, trace);
       var subExprJobs = argJobs();
       subExprJobs.forEach(SchedulerB.this::scheduleJobEvaluation);
       scheduleJobTask(callJob, task, subExprJobs);

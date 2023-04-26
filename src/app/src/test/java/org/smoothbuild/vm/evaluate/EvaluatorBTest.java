@@ -854,7 +854,7 @@ public class EvaluatorBTest extends TestContext {
 
   private CountingSchedulerB countingSchedulerB() {
     return new CountingSchedulerB(
-        taskExecutor(), bytecodeF(), nativeMethodLoader(), environmentInliner());
+        taskExecutor(), bytecodeF(), environmentInliner());
   }
 
   private static class CountingSchedulerB extends SchedulerB {
@@ -863,9 +863,8 @@ public class EvaluatorBTest extends TestContext {
     public CountingSchedulerB(
         TaskExecutor taskExecutor,
         BytecodeF bytecodeF,
-        NativeMethodLoader nativeMethodLoader,
         ReferenceInlinerB referenceInlinerB) {
-      super(taskExecutor, bytecodeF, nativeMethodLoader, referenceInlinerB);
+      super(taskExecutor, bytecodeF, referenceInlinerB);
     }
 
     @Override

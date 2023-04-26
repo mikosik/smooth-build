@@ -2,6 +2,10 @@ package org.smoothbuild.vm.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
+import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.vm.evaluate.compute.ResultSource.MEMORY;
+import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ public class ComputerTest extends TestContext {
       var memory = tupleB(intB(1));
       var disk = tupleB(intB(2));
 
-      assertComputationResult(task, input, memory, disk, TestContext.computationResult(output(memory), ResultSource.DISK));
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
@@ -45,7 +49,7 @@ public class ComputerTest extends TestContext {
       var input = tupleB(value);
       var disk = tupleB(intB(2));
 
-      var expected = TestContext.computationResult(output(disk), ResultSource.DISK);
+      var expected = computationResult(output(disk), DISK);
       assertComputationResult(task, input, null, disk, expected);
     }
 
@@ -55,7 +59,7 @@ public class ComputerTest extends TestContext {
       var task = new CombineTask(combineB(intB()), traceB());
       var input = tupleB(value);
 
-      var expected = TestContext.computationResult(output(tupleB(value)), ResultSource.EXECUTION);
+      var expected = computationResult(output(tupleB(value)), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
@@ -79,7 +83,7 @@ public class ComputerTest extends TestContext {
       var memory = intB(1);
       var disk = intB(2);
 
-      assertComputationResult(task, input, memory, disk, TestContext.computationResult(output(value), ResultSource.NOOP));
+      assertComputationResult(task, input, memory, disk, computationResult(output(value), NOOP));
     }
 
     @Test
@@ -89,7 +93,7 @@ public class ComputerTest extends TestContext {
       var input = tupleB();
       var disk = intB(2);
 
-      assertComputationResult(task, input, null, disk, TestContext.computationResult(output(value), ResultSource.NOOP));
+      assertComputationResult(task, input, null, disk, computationResult(output(value), NOOP));
     }
 
     @Test
@@ -98,7 +102,7 @@ public class ComputerTest extends TestContext {
       var task = new ConstTask(value, traceB());
       var input = tupleB();
 
-      assertComputationResult(task, input, null, null, TestContext.computationResult(output(value), ResultSource.NOOP));
+      assertComputationResult(task, input, null, null, computationResult(output(value), NOOP));
     }
 
     @Test
@@ -117,34 +121,34 @@ public class ComputerTest extends TestContext {
     public void when_cached_in_memory_and_disk() throws ComputationCacheExc, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, nativeFuncB, traceB());
       var input = tupleB();
       var memory = stringB("def");
       var disk = stringB("ghi");
 
-      assertComputationResult(task, input, memory, disk, TestContext.computationResult(output(memory), ResultSource.DISK));
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
     public void when_cached_on_disk() throws ComputationCacheExc, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, nativeFuncB, traceB());
       var input = tupleB();
       var disk = stringB("ghi");
 
-      assertComputationResult(task, input, null, disk, TestContext.computationResult(output(disk)
-          , ResultSource.DISK));
+      assertComputationResult(task, input, null, disk, computationResult(output(disk)
+          , DISK));
     }
 
     @Test
     public void when_not_cached() throws ComputationCacheExc, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, nativeFuncB, traceB());
       var input = tupleB();
 
-      var expected = TestContext.computationResult(output(stringB("abc")), ResultSource.EXECUTION);
+      var expected = computationResult(output(stringB("abc")), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
@@ -152,7 +156,7 @@ public class ComputerTest extends TestContext {
     public void executed_computation_is_cached_on_disk() throws ComputationCacheExc, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, nativeFuncB, traceB());
       var input = tupleB();
 
       assertCachesState(task, input, null, stringB("abc"));
@@ -165,23 +169,23 @@ public class ComputerTest extends TestContext {
     public void when_cached_in_memory_and_disk() throws ComputationCacheExc, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, nativeFuncB, traceB());
       var input = tupleB();
       var memory = stringB("def");
       var disk = stringB("ghi");
 
-      assertComputationResult(task, input, memory, disk, TestContext.computationResult(output(memory), ResultSource.MEMORY));
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), MEMORY));
     }
 
     @Test
     public void when_cached_on_disk() throws ComputationCacheExc, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, nativeFuncB, traceB());
       var input = tupleB();
       var disk = stringB("ghi");
 
-      var computationResult = TestContext.computationResult(output(stringB("abc")), ResultSource.EXECUTION);
+      var computationResult = computationResult(output(stringB("abc")), EXECUTION);
       assertComputationResult(task, input, null, disk, computationResult);
     }
 
@@ -189,10 +193,10 @@ public class ComputerTest extends TestContext {
     public void when_not_cached() throws ComputationCacheExc, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, nativeFuncB, traceB());
       var input = tupleB();
 
-      var expected = TestContext.computationResult(output(stringB("abc")), ResultSource.EXECUTION);
+      var expected = computationResult(output(stringB("abc")), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
@@ -200,10 +204,10 @@ public class ComputerTest extends TestContext {
     public void executed_computation_is_cached_on_disk() throws ComputationCacheExc, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
-      var task = new InvokeTask(callB, nativeFuncB, nativeMethodLoader(), traceB());
+      var task = new InvokeTask(callB, nativeFuncB, traceB());
       var input = tupleB();
 
-      assertCachesState(task, input, computationResult(stringB("abc"), ResultSource.EXECUTION), null);
+      assertCachesState(task, input, computationResult(stringB("abc"), EXECUTION), null);
     }
   }
 
@@ -217,7 +221,7 @@ public class ComputerTest extends TestContext {
       var memory = arrayB(intB(1));
       var disk = arrayB(intB(2));
 
-      assertComputationResult(task, input, memory, disk, TestContext.computationResult(output(memory), ResultSource.DISK));
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
@@ -227,7 +231,7 @@ public class ComputerTest extends TestContext {
       var input = tupleB(value);
       var disk = arrayB(intB(2));
 
-      var expected = TestContext.computationResult(output(disk), ResultSource.DISK);
+      var expected = computationResult(output(disk), DISK);
       assertComputationResult(task, input, null, disk, expected);
     }
 
@@ -237,7 +241,7 @@ public class ComputerTest extends TestContext {
       var task = new OrderTask(orderB(intTB()), traceB());
       var input = tupleB(value);
 
-      var expected = TestContext.computationResult(output(arrayB(value)), ResultSource.EXECUTION);
+      var expected = computationResult(output(arrayB(value)), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
@@ -261,7 +265,7 @@ public class ComputerTest extends TestContext {
       var memory = intB(1);
       var disk = intB(2);
 
-      assertComputationResult(task, input, memory, disk, TestContext.computationResult(output(memory), ResultSource.DISK));
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
@@ -271,7 +275,7 @@ public class ComputerTest extends TestContext {
       var input = tupleB(arrayB(value), intB(0));
       var disk = intB(2);
 
-      var expected = TestContext.computationResult(output(disk), ResultSource.DISK);
+      var expected = computationResult(output(disk), DISK);
       assertComputationResult(task, input, null, disk, expected);
     }
 
@@ -281,7 +285,7 @@ public class ComputerTest extends TestContext {
       var task = new PickTask(pickB(), traceB());
       var input = tupleB(arrayB(value), intB(0));
 
-      var expected = TestContext.computationResult(output(value), ResultSource.EXECUTION);
+      var expected = computationResult(output(value), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
@@ -305,7 +309,7 @@ public class ComputerTest extends TestContext {
       var memory = intB(1);
       var disk = intB(2);
 
-      assertComputationResult(task, input, memory, disk, TestContext.computationResult(output(memory), ResultSource.DISK));
+      assertComputationResult(task, input, memory, disk, computationResult(output(memory), DISK));
     }
 
     @Test
@@ -315,7 +319,7 @@ public class ComputerTest extends TestContext {
       var input = tupleB(tupleB(value), intB(0));
       var disk = intB(2);
 
-      var expected = TestContext.computationResult(output(disk), ResultSource.DISK);
+      var expected = computationResult(output(disk), DISK);
       assertComputationResult(task, input, null, disk, expected);
     }
 
@@ -325,7 +329,7 @@ public class ComputerTest extends TestContext {
       var task = new SelectTask(selectB(), traceB());
       var input = tupleB(tupleB(value), intB(0));
 
-      var expected = TestContext.computationResult(output(value), ResultSource.EXECUTION);
+      var expected = computationResult(output(value), EXECUTION);
       assertComputationResult(task, input, null, null, expected);
     }
 
@@ -356,7 +360,7 @@ public class ComputerTest extends TestContext {
     }
     var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();
     if (memoryValue != null) {
-      var computationResult = computationResult(memoryValue, ResultSource.EXECUTION);
+      var computationResult = computationResult(memoryValue, EXECUTION);
       memoryCache.put(computationHash, new PromisedValue<>(computationResult));
     }
     return new Computer(sandboxHash, () -> container(), computationCache, memoryCache);
