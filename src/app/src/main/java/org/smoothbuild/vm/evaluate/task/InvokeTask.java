@@ -16,18 +16,15 @@ import org.smoothbuild.vm.evaluate.execute.TraceB;
 
 public final class InvokeTask extends Task {
   private final NativeFuncB nativeFuncB;
-  private final NativeMethodLoader nativeMethodLoader;
 
-  public InvokeTask(
-      CallB callB, NativeFuncB nativeFuncB, NativeMethodLoader methodLoader, TraceB trace) {
+  public InvokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace) {
     super(callB, trace, nativeFuncB.isPure().toJ() ? PURE : IMPURE);
-    this.nativeMethodLoader = methodLoader;
     this.nativeFuncB = nativeFuncB;
   }
 
   @Override
   public Output run(TupleB input, Container container) {
-    return nativeMethodLoader.load(nativeFuncB)
+    return container.nativeMethodLoader().load(nativeFuncB)
         .map(m -> invokeMethod(m, input, container))
         .orElse(e -> logFatalAndReturnNullOutput(container, e));
   }

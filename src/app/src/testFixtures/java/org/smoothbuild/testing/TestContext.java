@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -177,12 +176,11 @@ import org.smoothbuild.vm.evaluate.compute.Computer;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.compute.ResultSource;
 import org.smoothbuild.vm.evaluate.execute.Job;
-import org.smoothbuild.vm.evaluate.execute.JobContext;
 import org.smoothbuild.vm.evaluate.execute.ReferenceInlinerB;
+import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 import org.smoothbuild.vm.evaluate.execute.TaskExecutor;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
-import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 import org.smoothbuild.vm.evaluate.task.CombineTask;
 import org.smoothbuild.vm.evaluate.task.ConstTask;
@@ -242,15 +240,11 @@ public class TestContext {
   }
 
   public SchedulerB schedulerB(NativeMethodLoader nativeMethodLoader) {
-    return schedulerB(taskExecutor(), nativeMethodLoader);
+    return new SchedulerB(taskExecutor(nativeMethodLoader), bytecodeF(), environmentInliner());
   }
 
   public SchedulerB schedulerB(TaskExecutor taskExecutor) {
-    return schedulerB(taskExecutor, nativeMethodLoader());
-  }
-
-  public SchedulerB schedulerB(TaskExecutor taskExecutor, NativeMethodLoader nativeMethodLoader) {
-    return new SchedulerB(taskExecutor, bytecodeF(), nativeMethodLoader, environmentInliner());
+    return new SchedulerB(taskExecutor, bytecodeF(), environmentInliner());
   }
 
   public ReferenceInlinerB environmentInliner() {
@@ -287,8 +281,17 @@ public class TestContext {
     return taskExecutor(taskReporter());
   }
 
+  public TaskExecutor taskExecutor(NativeMethodLoader nativeMethodLoader) {
+    return taskExecutor(taskReporter(), nativeMethodLoader);
+  }
+
   public TaskExecutor taskExecutor(TaskReporter taskReporter) {
-    return new TaskExecutor(computer(), reporter(), taskReporter);
+    return taskExecutor(taskReporter, nativeMethodLoader());
+  }
+
+  public TaskExecutor taskExecutor(
+      TaskReporter taskReporter, NativeMethodLoader nativeMethodLoader) {
+    return new TaskExecutor(computer(nativeMethodLoader), reporter(), taskReporter);
   }
 
   public TaskExecutor taskExecutor(Computer computer, TaskReporter taskReporter, int threadCount) {
@@ -375,12 +378,20 @@ public class TestContext {
     return new Computer(Hash.of(123), this::container, computationCache());
   }
 
+  public Computer computer(NativeMethodLoader nativeMethodLoader) {
+    return new Computer(Hash.of(123), () -> container(nativeMethodLoader), computationCache());
+  }
+
   public NativeApi nativeApi() {
     return container();
   }
 
   public Container container() {
-    return new Container(fullFileSystem(), bytecodeF());
+    return container(nativeMethodLoader());
+  }
+
+  public Container container(NativeMethodLoader nativeMethodLoader) {
+    return new Container(fullFileSystem(), bytecodeF(), nativeMethodLoader);
   }
 
   public BytecodeF bytecodeF() {
@@ -1796,7 +1807,7 @@ public class TestContext {
   }
 
   public InvokeTask invokeTask(CallB callB, NativeFuncB nativeFuncB, TraceB trace) {
-    return new InvokeTask(callB, nativeFuncB, null, trace);
+    return new InvokeTask(callB, nativeFuncB, trace);
   }
 
   public CombineTask combineTask() {

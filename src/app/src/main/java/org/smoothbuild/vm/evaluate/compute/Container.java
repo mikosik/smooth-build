@@ -13,6 +13,7 @@ import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.vm.evaluate.task.NativeMethodLoader;
 
 /**
  * This class is NOT thread-safe.
@@ -21,12 +22,21 @@ public class Container implements NativeApi {
   private final FileSystem fileSystem;
   private final BytecodeF bytecodeF;
   private final ContainerMessageLoggerImpl messageLogger;
+  private final NativeMethodLoader nativeMethodLoader;
 
   @Inject
-  public Container(@ForSpace(PRJ) FileSystem fileSystem, BytecodeF bytecodeF) {
+  public Container(
+      @ForSpace(PRJ) FileSystem fileSystem,
+      BytecodeF bytecodeF,
+      NativeMethodLoader nativeMethodLoader) {
     this.fileSystem = fileSystem;
     this.bytecodeF = bytecodeF;
     this.messageLogger = new ContainerMessageLoggerImpl(bytecodeF);
+    this.nativeMethodLoader = nativeMethodLoader;
+  }
+
+  public FileSystem fileSystem() {
+    return fileSystem;
   }
 
   @Override
@@ -34,8 +44,8 @@ public class Container implements NativeApi {
     return bytecodeF;
   }
 
-  public FileSystem fileSystem() {
-    return fileSystem;
+  public NativeMethodLoader nativeMethodLoader() {
+    return nativeMethodLoader;
   }
 
   @Override
