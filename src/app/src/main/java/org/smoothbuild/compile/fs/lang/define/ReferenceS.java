@@ -8,7 +8,7 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 
 /**
- * Reference to ReferenceableS.
+ * Reference to {@link NamedEvaluableS} or {@link ItemS}.
  */
 public record ReferenceS(SchemaS schema, String name, Location location)
     implements PolymorphicS, Nal {
