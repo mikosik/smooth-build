@@ -187,7 +187,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
           var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
-          assertEvaluation(monoLambdaS, closureB(list(intTB()), referenceB(intTB(), 0)));
+          assertEvaluation(monoLambdaS, closureB(list(intTB()), varB(intTB(), 0)));
         }
       }
 
@@ -226,7 +226,7 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void constructor() throws EvaluatorExcS {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-          assertEvaluation(constructorS, exprFuncB(list(intTB()), combineB(referenceB(intTB(), 0))));
+          assertEvaluation(constructorS, exprFuncB(list(intTB()), combineB(varB(intTB(), 0))));
         }
       }
 
@@ -253,7 +253,7 @@ public class EvaluatorSTest extends TestContext {
         public void constructor() throws EvaluatorExcS {
           assertEvaluation(
               constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field")))),
-              exprFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(referenceB(intTB(), 0))));
+              exprFuncB(funcTB(intTB(), tupleTB(intTB())), combineB(varB(intTB(), 0))));
         }
       }
     }

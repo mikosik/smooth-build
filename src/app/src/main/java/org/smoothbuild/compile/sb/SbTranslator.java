@@ -224,7 +224,7 @@ public class SbTranslator {
     } else {
       var index = environment.indexOf(referenceS.name());
       return saveNalAndReturn(
-          referenceS, bytecodeF.reference(translateT(itemS.type()), BigInteger.valueOf(index)));
+          referenceS, bytecodeF.var(translateT(itemS.type()), BigInteger.valueOf(index)));
     }
   }
 
@@ -295,7 +295,7 @@ public class SbTranslator {
     Builder<ExprB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
       var closedT = paramTs.get(i);
-      builder.add(bytecodeF.reference(closedT, BigInteger.valueOf(i)));
+      builder.add(bytecodeF.var(closedT, BigInteger.valueOf(i)));
     }
     return builder.build();
   }

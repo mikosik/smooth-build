@@ -141,7 +141,7 @@ public class SbTranslatorTest extends TestContext {
         public void poly_expression_function() {
           var funcS = idFuncS();
           var instantiateS = instantiateS(list(intTS()), funcS);
-          var funcB = exprFuncB(funcTB(intTB(), intTB()), referenceB(intTB(), 0));
+          var funcB = exprFuncB(funcTB(intTB(), intTB()), varB(intTB(), 0));
           assertTranslation(bindings(funcS), instantiateS, funcB);
         }
 
@@ -156,9 +156,9 @@ public class SbTranslatorTest extends TestContext {
           var wrapFuncS = funcS(b, "wrap", nlist(itemS(b, "p")), bodyS);
           var wrapMonoFuncS = instantiateS(list(intTS()), wrapFuncS);
 
-          var idFuncB = exprFuncB(funcTB(intTB(), intTB()), referenceB(intTB(), 0));
+          var idFuncB = exprFuncB(funcTB(intTB(), intTB()), varB(intTB(), 0));
           var wrapFuncB = exprFuncB(funcTB(intTB(), intTB()),
-              callB(idFuncB, referenceB(intTB(), 0)));
+              callB(idFuncB, varB(intTB(), 0)));
           assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, wrapFuncB);
         }
 
@@ -252,7 +252,7 @@ public class SbTranslatorTest extends TestContext {
       public void lambda() {
         var lambda = lambdaS(varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoLambdaS = instantiateS(list(intTS()), lambda);
-        assertTranslation(monoLambdaS, closurizeB(list(intTB()), referenceB(intTB(), 0)));
+        assertTranslation(monoLambdaS, closurizeB(list(intTB()), varB(intTB(), 0)));
       }
 
       @Test
@@ -260,7 +260,7 @@ public class SbTranslatorTest extends TestContext {
         var monoLambdaS = instantiateS(lambdaS(paramRefS(intTS(), "p")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoLambdaS);
 
-        var bodyB = closurizeB(referenceB(intTB(), 0));
+        var bodyB = closurizeB(varB(intTB(), 0));
         var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
         assertTranslation(monoFuncS, funcB);
@@ -273,7 +273,7 @@ public class SbTranslatorTest extends TestContext {
             nlist(itemS(blobTS(), "a")), paramRefS(intTS(), "p")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoLambdaS);
 
-        var bodyB = closurizeB(list(blobTB()), referenceB(intTB(), 1));
+        var bodyB = closurizeB(list(blobTB()), varB(intTB(), 1));
         var funcB = exprFuncB(list(intTB()), bodyB);
 
         assertTranslation(monoFuncS, funcB);
@@ -319,7 +319,7 @@ public class SbTranslatorTest extends TestContext {
         var callS = callS(instantiateS(constructorS), stringS("abc"));
         var selectS = selectS(callS, "field");
 
-        var ctorB = exprFuncB(list(stringTB()), combineB(referenceB(stringTB(), 0)));
+        var ctorB = exprFuncB(list(stringTB()), combineB(varB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
         assertTranslation(bindings(constructorS), selectS, selectB(callB, intB(0)));
       }
@@ -331,7 +331,7 @@ public class SbTranslatorTest extends TestContext {
         var funcS = funcS("myFunc", nlist(itemS(varA(), "a")), monoLambdaS);
         var instantiateS = instantiateS(list(intTS()), funcS);
 
-        var bodyB = closurizeB(referenceB(intTB(), 0));
+        var bodyB = closurizeB(varB(intTB(), 0));
         var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
         assertTranslation(bindings(funcS), instantiateS, funcB);

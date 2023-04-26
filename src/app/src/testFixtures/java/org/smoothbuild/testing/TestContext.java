@@ -131,8 +131,8 @@ import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
+import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
@@ -154,8 +154,8 @@ import org.smoothbuild.vm.bytecode.type.oper.ClosurizeCB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.oper.OrderCB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
-import org.smoothbuild.vm.bytecode.type.oper.ReferenceCB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
+import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.BlobTB;
 import org.smoothbuild.vm.bytecode.type.value.BoolTB;
@@ -641,12 +641,12 @@ public class TestContext {
     return categoryDb().pick(evaluationT);
   }
 
-  public ReferenceCB referenceCB() {
-    return referenceCB(intTB());
+  public VarCB varCB() {
+    return varCB(intTB());
   }
 
-  public ReferenceCB referenceCB(TypeB evaluationT) {
-    return categoryDb().reference(evaluationT);
+  public VarCB varCB(TypeB evaluationT) {
+    return categoryDb().var(evaluationT);
   }
 
   public SelectCB selectCB() {
@@ -798,7 +798,7 @@ public class TestContext {
   }
 
   public ExprFuncB idFuncB() {
-    return exprFuncB(list(intTB()), referenceB(intTB(), 0));
+    return exprFuncB(list(intTB()), varB(intTB(), 0));
   }
 
   public ExprFuncB returnAbcFuncB() {
@@ -980,12 +980,12 @@ public class TestContext {
     return bytecodeDb().pick(array, index);
   }
 
-  public ReferenceB referenceB(int index) {
-    return referenceB(intTB(), index);
+  public VarB varB(int index) {
+    return varB(intTB(), index);
   }
 
-  public ReferenceB referenceB(TypeB evaluationT, int index) {
-    return bytecodeDb().reference(evaluationT, intB(index));
+  public VarB varB(TypeB evaluationT, int index) {
+    return bytecodeDb().varB(evaluationT, intB(index));
   }
 
   public SelectB selectB() {

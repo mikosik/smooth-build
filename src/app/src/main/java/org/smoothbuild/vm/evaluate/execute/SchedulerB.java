@@ -19,8 +19,8 @@ import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OperB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
-import org.smoothbuild.vm.bytecode.expr.oper.ReferenceB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
+import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
 import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
@@ -93,7 +93,7 @@ public class SchedulerB {
       case ValueB     value     -> scheduleConstTask(job, value);
       case OrderB     order     -> scheduleOperTask(job, order, OrderTask::new);
       case PickB      pick      -> scheduleOperTask(job, pick, PickTask::new);
-      case ReferenceB reference -> scheduleReferenceB(job, reference);
+      case VarB       var       -> scheduleVarB(job, var);
       case SelectB    select    -> scheduleOperTask(job, select, SelectTask::new);
       // `default` is needed because ExprB is not sealed because it is in different package
       // than its subclasses and code is not modularized.
@@ -234,16 +234,15 @@ public class SchedulerB {
     scheduleJobTask(job, operTask, subExprJobs);
   }
 
-  private void scheduleReferenceB(Job job, ReferenceB reference) {
-    // TODO should reuse EnvironmentInliner.inlineReference
-    int index = reference.index().toJ().intValue();
+  private void scheduleVarB(Job job, VarB varB) {
+    int index = varB.index().toJ().intValue();
     var referencedJob = job.environment().get(index);
     var jobEvaluationT = referencedJob.exprB().evaluationT();
-    if (jobEvaluationT.equals(reference.evaluationT())) {
+    if (jobEvaluationT.equals(varB.evaluationT())) {
       scheduleJobEvaluationWithConsumer(referencedJob, job.promisedValue());
     } else {
       throw new RuntimeException("environment(%d) evaluationT is %s but expected %s."
-          .formatted(index, jobEvaluationT.q(), reference.evaluationT().q()));
+          .formatted(index, jobEvaluationT.q(), varB.evaluationT().q()));
     }
   }
 
