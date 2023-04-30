@@ -14,7 +14,7 @@ public class DecodeSelectIndexOutOfBoundsExcTest extends TestContext {
         Hash.of(13), selectCB(intTB()), 13, 10);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT:Int` object "
-            + "at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "
+            + "at 43c66c260828c9839f26474151db105481ff92f5e01377f75389d4ce3d2dd574. "
             + "Its index component is 13 while TUPLE size is 10.");
   }
 }

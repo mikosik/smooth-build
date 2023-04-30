@@ -5,6 +5,7 @@ Change Log
 Version ?.??.? (????.??.??)
 ---------------------------
 
+ * changed cryptographic function used for bytecode content-addressing to SHA-256
  * removed --project-dir command line option
 
 Version 0.22.0 (2023.04.17)

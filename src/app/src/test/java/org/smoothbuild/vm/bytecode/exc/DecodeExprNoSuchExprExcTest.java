@@ -11,7 +11,8 @@ public class DecodeExprNoSuchExprExcTest {
   public void message() {
     var exception = new DecodeExprNoSuchExprExc(Hash.of(123));
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode object at 1959893f68220459cbd800396e1eae7bfc382e97. "
+        .isEqualTo("Cannot decode object at "
+            + "a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea. "
             + "Cannot find it in object db.");
   }
 }
