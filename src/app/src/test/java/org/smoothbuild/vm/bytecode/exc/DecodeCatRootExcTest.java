@@ -11,7 +11,8 @@ public class DecodeCatRootExcTest {
   public void message() {
     var exception = new DecodeCatRootExc(Hash.of(123), 3);
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode category at 1959893f68220459cbd800396e1eae7bfc382e97. "
+        .isEqualTo("Cannot decode category at "
+            + "a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea. "
             + "Its root points to hash sequence with 3 elems when it should point to "
             + "sequence with 1 or 2 elems.");
   }

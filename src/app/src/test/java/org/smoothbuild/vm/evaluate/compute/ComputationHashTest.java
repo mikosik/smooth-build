@@ -51,7 +51,7 @@ public class ComputationHashTest extends TestContext {
     var task = new OrderTask(orderB(stringTB()), traceB());
     var input = tupleB();
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("30604c02da975812b604e4ef6c64a70ebb3f2558"));
+        .isEqualTo(Hash.decode("9f0f79b4df0e66a3c10bf984f87b60e1e16165f53d6bb5921e035ed19de3ce15"));
   }
 
   @Test
@@ -59,7 +59,7 @@ public class ComputationHashTest extends TestContext {
     var task = new OrderTask(orderB(stringTB()), traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("033006f518778bb169b838591f713dec1b6569b3"));
+        .isEqualTo(Hash.decode("768225aee789a5af8d61809fe0b216451dd296f3f86b46ca2787d46dc724d662"));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class ComputationHashTest extends TestContext {
     var task = new InvokeTask(callB(nativeFuncB), nativeFuncB, traceB());
     var input = tupleB();
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("750ee778096a96419b3b8b300669f337f3e60d67"));
+        .isEqualTo(Hash.decode("38c1af6ca8f69718173ff5db0d2f1fe51cbfcb0ccc9185ec3c3daef0199cdf1e"));
   }
 
   @Test
@@ -77,7 +77,7 @@ public class ComputationHashTest extends TestContext {
     var task = new InvokeTask(callB(nativeFuncB), nativeFuncB, traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("bc6ad5c125aadf19a301dd8b6af4300eee643ce5"));
+        .isEqualTo(Hash.decode("8afeb389e75e86790d622a92d4454b484a62f04a624db873f2fc4c9d2d4dd772"));
   }
 
   @Test
@@ -85,7 +85,7 @@ public class ComputationHashTest extends TestContext {
     var task = new CombineTask(combineB(), traceB());
     var input = tupleB();
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("0040e02acc4f1ebbe6648a6f49b78028be764180"));
+        .isEqualTo(Hash.decode("8a8fedb17e870a96e705c91a01279e12d1c33a3ad21edd556ffe28d36fdccd24"));
   }
 
   @Test
@@ -93,7 +93,7 @@ public class ComputationHashTest extends TestContext {
     var task = new CombineTask(combineB(), traceB());
     var input = tupleB(stringB("abc"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("dee3433c1a29da4421a06396d5b0bed371462759"));
+        .isEqualTo(Hash.decode("cbb2f392778e59ec728b8d5bcdae9f07dbe690267ef74e9e6de1bd7ee901e987"));
   }
 
   @Test
@@ -101,7 +101,7 @@ public class ComputationHashTest extends TestContext {
     var task = new CombineTask(combineB(), traceB());
     var input = tupleB(stringB("abc"), stringB("def"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("42cc3a3222c00e5f669a133f8e5989fb11ce91b0"));
+        .isEqualTo(Hash.decode("74398af06050d223f2ae209e8c6ec219536a05a5a1bcf1f8ea75d5adccd8db3a"));
   }
 
   @Test
@@ -109,6 +109,6 @@ public class ComputationHashTest extends TestContext {
     var task = new SelectTask(selectB(), traceB());
     var input = tupleB(stringB("abc"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))
-        .isEqualTo(Hash.decode("4ae0c582dfeccb5a7ed2ce0420a25197e1b070f1"));
+        .isEqualTo(Hash.decode("1715db3630a84de769e55c2dd3062df4c29518c31d010bca09a00c5ff7483dac"));
   }
 }

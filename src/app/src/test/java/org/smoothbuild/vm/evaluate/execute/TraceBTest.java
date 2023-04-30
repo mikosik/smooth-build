@@ -11,7 +11,7 @@ public class TraceBTest {
     var trace = new TraceB(Hash.of(7), Hash.of(9), new TraceB(Hash.of(17), Hash.of(19)));
     assertThat(trace.toString())
         .isEqualTo("""
-            2f086fc767a0dac59a38c67f409b4f74a1eab39f 9db063f3b5e0adfd0d29a03db0a1c207b3740a94
-            498bcbf6cbffcc8dd2623f388d81f44cfad1014d fe5aa6438ae9b661b033b91e9c679ad2898cbfd4""");
+            e8613f5a5bc9f9feeda32a8e7c80b69dd4878e47b6a91723fb15eb84236b6a2b 9f076b7eb7fdc0311cd3208cdbbebbf8014dd3a05e35191c96947b358a362b40
+            84fc05949dc1e486652a4ed316afb6434e9437eb30b714594a1d0b4205776602 eba09f2f48f209cfa2dfbf19fc678d755d05559671eceda0164f3e080cb49765""");
   }
 }

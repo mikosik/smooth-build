@@ -46,11 +46,11 @@ public class Hash {
   }
 
   private static HashingSource hashingSource(Source source) {
-    return HashingSource.sha1(source);
+    return HashingSource.sha256(source);
   }
 
   public static HashingSink hashingSink(Sink sink) {
-    return HashingSink.sha1(sink);
+    return HashingSink.sha256(sink);
   }
 
   public static Hash of(Path path) throws IOException {
@@ -102,9 +102,8 @@ public class Hash {
     return func().bits() / 8;
   }
 
-  @SuppressWarnings("deprecation")
   private static HashFunction func() {
-    return Hashing.sha1();
+    return Hashing.sha256();
   }
 
   @Override

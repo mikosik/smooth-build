@@ -11,6 +11,7 @@ public class DecodeCatExcTest {
   public void message() {
     var exception = new DecodeCatExc(Hash.of(123), new RuntimeException());
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode category at 1959893f68220459cbd800396e1eae7bfc382e97.");
+        .isEqualTo("Cannot decode category at "
+            + "a5dcf5b8418dfafec16079148ec90cf81dfc6276c1cce220017c782ecb7d7aea.");
   }
 }
