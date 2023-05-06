@@ -45,16 +45,16 @@ import com.google.common.collect.ImmutableList;
 public class SchedulerB {
   private final TaskExecutor taskExecutor;
   private final BytecodeF bytecodeF;
-  private final ReferenceInlinerB referenceInlinerB;
+  private final VarReducerB varReducerB;
 
   @Inject
   public SchedulerB(
       TaskExecutor taskExecutor,
       BytecodeF bytecodeF,
-      ReferenceInlinerB referenceInlinerB) {
+      VarReducerB varReducerB) {
     this.taskExecutor = taskExecutor;
     this.bytecodeF = bytecodeF;
-    this.referenceInlinerB = referenceInlinerB;
+    this.varReducerB = varReducerB;
   }
 
   public void terminate() {
@@ -214,7 +214,7 @@ public class SchedulerB {
   }
 
   private void scheduleClosurize(Job job, ClosurizeB closurize) {
-    var environment = referenceInlinerB.inline(job.environment());
+    var environment = varReducerB.inline(job.environment());
     var environmentB = bytecodeF.combine(environment);
     var closureB = bytecodeF.closure(environmentB, closurize.func());
     var closureJob = newJob(closureB, job);
