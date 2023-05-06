@@ -176,11 +176,11 @@ import org.smoothbuild.vm.evaluate.compute.Computer;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.compute.ResultSource;
 import org.smoothbuild.vm.evaluate.execute.Job;
-import org.smoothbuild.vm.evaluate.execute.ReferenceInlinerB;
 import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 import org.smoothbuild.vm.evaluate.execute.TaskExecutor;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
+import org.smoothbuild.vm.evaluate.execute.VarReducerB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 import org.smoothbuild.vm.evaluate.task.CombineTask;
 import org.smoothbuild.vm.evaluate.task.ConstTask;
@@ -240,15 +240,15 @@ public class TestContext {
   }
 
   public SchedulerB schedulerB(NativeMethodLoader nativeMethodLoader) {
-    return new SchedulerB(taskExecutor(nativeMethodLoader), bytecodeF(), environmentInliner());
+    return new SchedulerB(taskExecutor(nativeMethodLoader), bytecodeF(), varReducerB());
   }
 
   public SchedulerB schedulerB(TaskExecutor taskExecutor) {
-    return new SchedulerB(taskExecutor, bytecodeF(), environmentInliner());
+    return new SchedulerB(taskExecutor, bytecodeF(), varReducerB());
   }
 
-  public ReferenceInlinerB environmentInliner() {
-    return new ReferenceInlinerB(bytecodeF());
+  public VarReducerB varReducerB() {
+    return new VarReducerB(bytecodeF());
   }
 
   public SchedulerB schedulerB(int threadCount) {
@@ -267,10 +267,6 @@ public class TestContext {
   public SchedulerB schedulerB(
       Computer computer, Reporter reporter, int threadCount) {
     return schedulerB(taskExecutor(computer, reporter, threadCount));
-  }
-
-  public ReferenceInlinerB referenceInlinerB() {
-    return new ReferenceInlinerB(bytecodeF());
   }
 
   public NativeMethodLoader nativeMethodLoader() {

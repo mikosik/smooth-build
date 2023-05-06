@@ -58,11 +58,11 @@ import org.smoothbuild.vm.evaluate.compute.ComputationResult;
 import org.smoothbuild.vm.evaluate.compute.Computer;
 import org.smoothbuild.vm.evaluate.compute.ResultSource;
 import org.smoothbuild.vm.evaluate.execute.Job;
-import org.smoothbuild.vm.evaluate.execute.ReferenceInlinerB;
 import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 import org.smoothbuild.vm.evaluate.execute.TaskExecutor;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
+import org.smoothbuild.vm.evaluate.execute.VarReducerB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 import org.smoothbuild.vm.evaluate.task.InvokeTask;
 import org.smoothbuild.vm.evaluate.task.NativeMethodLoader;
@@ -854,7 +854,7 @@ public class EvaluatorBTest extends TestContext {
 
   private CountingSchedulerB countingSchedulerB() {
     return new CountingSchedulerB(
-        taskExecutor(), bytecodeF(), environmentInliner());
+        taskExecutor(), bytecodeF(), varReducerB());
   }
 
   private static class CountingSchedulerB extends SchedulerB {
@@ -863,8 +863,8 @@ public class EvaluatorBTest extends TestContext {
     public CountingSchedulerB(
         TaskExecutor taskExecutor,
         BytecodeF bytecodeF,
-        ReferenceInlinerB referenceInlinerB) {
-      super(taskExecutor, bytecodeF, referenceInlinerB);
+        VarReducerB varReducerB) {
+      super(taskExecutor, bytecodeF, varReducerB);
     }
 
     @Override

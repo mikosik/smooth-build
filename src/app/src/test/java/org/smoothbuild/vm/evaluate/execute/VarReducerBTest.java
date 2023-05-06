@@ -13,7 +13,7 @@ import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 
-public class ReferenceInlinerBTest extends TestContext {
+public class VarReducerBTest extends TestContext {
   @Nested
   class _without_references {
 
@@ -178,12 +178,12 @@ public class ReferenceInlinerBTest extends TestContext {
 
     @Test
     public void combine() {
-      assertReferenceInliningReplacesReference(ReferenceInlinerBTest.this::combineB);
+      assertReferenceInliningReplacesReference(VarReducerBTest.this::combineB);
     }
 
     @Test
     public void order() {
-      assertReferenceInliningReplacesReference(ReferenceInlinerBTest.this::orderB);
+      assertReferenceInliningReplacesReference(VarReducerBTest.this::orderB);
     }
 
     @Test
@@ -205,14 +205,14 @@ public class ReferenceInlinerBTest extends TestContext {
   @Test
   public void reference_with_index_equal_to_environment_size_causes_exception() {
     var job = job(varB(stringTB(), 3), intB(), intB(), intB(17));
-    assertCall(() -> referenceInlinerB().inline(job))
+    assertCall(() -> varReducerB().inline(job))
         .throwsException(new VarOutOfBoundsExc(3, 3));
   }
 
   @Test
   public void reference_with_negative_index_causes_exception() {
     var job = job(varB(stringTB(), -1), intB(), intB(), intB(17));
-    assertCall(() -> referenceInlinerB().inline(job))
+    assertCall(() -> varReducerB().inline(job))
         .throwsException(new VarOutOfBoundsExc(-1, 3));
   }
 
@@ -240,13 +240,13 @@ public class ReferenceInlinerBTest extends TestContext {
       int referencedIndex, Function<ExprB, ExprB> factory) {
     var exprB = factory.apply(varB(intTB(), referencedIndex));
     var job = job(exprB, intB(1), intB(2), intB(3));
-    assertThat(referenceInlinerB().inline(job))
+    assertThat(varReducerB().inline(job))
         .isSameInstanceAs(exprB);
   }
 
   private void assertReferenceInlining(ExprB exprB, ExprB expected) {
     var job = job(exprB, intB(1), intB(2), intB(3));
-    assertThat(referenceInlinerB().inline(job))
+    assertThat(varReducerB().inline(job))
         .isEqualTo(expected);
   }
 }

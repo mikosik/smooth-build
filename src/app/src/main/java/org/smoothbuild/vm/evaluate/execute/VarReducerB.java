@@ -20,11 +20,11 @@ import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 
 import com.google.common.collect.ImmutableList;
 
-public class ReferenceInlinerB {
+public class VarReducerB {
   private final BytecodeF bytecodeF;
 
   @Inject
-  public ReferenceInlinerB(BytecodeF bytecodeF) {
+  public VarReducerB(BytecodeF bytecodeF) {
     this.bytecodeF = bytecodeF;
   }
 
