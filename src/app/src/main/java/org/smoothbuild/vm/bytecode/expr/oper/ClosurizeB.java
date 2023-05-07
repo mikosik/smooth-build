@@ -3,15 +3,11 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
-import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.type.oper.ClosurizeCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Closurize - create closure.

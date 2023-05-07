@@ -179,7 +179,7 @@ public class EvaluatorSTest extends TestContext {
         public void mono_lambda() throws EvaluatorExcS {
           assertEvaluation(
               instantiateS(lambdaS(intS(7))),
-              closureB(intB(7)));
+              exprFuncB(intB(7)));
         }
 
         @Test
@@ -187,7 +187,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
           var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
-          assertEvaluation(monoLambdaS, closureB(list(intTB()), varB(intTB(), 0)));
+          assertEvaluation(monoLambdaS, exprFuncB(list(intTB()), varB(intTB(), 0)));
         }
       }
 

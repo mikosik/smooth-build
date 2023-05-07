@@ -197,15 +197,9 @@ public class SbTranslator {
   }
 
   private ExprB translateLambda(LambdaS lambdaS) {
-    var funcB = funcBodySbTranslator(lambdaS)
-        .translateLambdaImpl(lambdaS);
-    return saveLocAndReturn(lambdaS, funcB);
-  }
-
-  private ExprB translateLambdaImpl(LambdaS lambdaS) {
-    var exprFuncB = translateExprFunc(lambdaS);
-    saveNal(exprFuncB, "<lambda>", lambdaS);
-    return bytecodeF.closurize(exprFuncB);
+    var exprFuncB = funcBodySbTranslator(lambdaS)
+        .translateExprFunc(lambdaS);
+    return saveNalAndReturn("<lambda>", lambdaS, exprFuncB);
   }
 
   private ExprB translateReference(ReferenceS referenceS) {
