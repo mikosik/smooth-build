@@ -249,10 +249,10 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void expression_function_passed_as_argument() {
-          var func = exprFuncB(intB(7));
-          var paramT = func.evaluationT();
-          var outerFunc = exprFuncB(list(paramT), callB(varB(paramT, 0)));
-          var call = callB(outerFunc, func);
+          var paramFunc = exprFuncB(intB(7));
+          var paramFuncT = paramFunc.evaluationT();
+          var outerFunc = exprFuncB(list(paramFuncT), callB(varB(paramFuncT, 0)));
+          var call = callB(outerFunc, paramFunc);
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
         }
@@ -446,14 +446,23 @@ public class EvaluatorBTest extends TestContext {
       @Nested
       class _reference {
         @Test
-        public void reference_referencing_func_param() {
+        public void var_referencing_func_param() {
           var exprFuncB = exprFuncB(list(intTB()), varB(intTB(), 0));
-          assertThat(evaluate(callB(exprFuncB, intB(7))))
+          var callB = callB(exprFuncB, intB(7));
+          assertThat(evaluate(callB))
               .isEqualTo(intB(7));
         }
 
         @Test
-        public void reference_referencing_environment() {
+        public void var_inside_inner_func_referencing_param_of_enclosing_func() {
+          var innerFuncB = exprFuncB(list(), varB(intTB(), 0));
+          var outerFuncB = exprFuncB(list(intTB()), callB(innerFuncB));
+          assertThat(evaluate(callB(outerFuncB, intB(7))))
+              .isEqualTo(intB(7));
+        }
+
+        @Test
+        public void var_referencing_closure_environment() {
           var body = varB(intTB(), 1);
           var closureB = closureB(combineB(intB(17)), list(intTB()), body);
           assertThat(evaluate(callB(closureB, intB(7))))
@@ -461,24 +470,12 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void reference_with_index_outside_of_environment_size_causes_fatal()
+        public void var_referencing_closure_environment_with_index_out_of_bounds_causes_fatal()
             throws InterruptedException {
           var closureB = closureB(combineB(intB()), list(intTB()), varB(intTB(), 2));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
           vm.evaluate(list(callB(closureB, intB(7))));
-          verify(reporter, times(1))
-              .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
-        }
-
-        @Test
-        public void reference_inside_inner_func_cannot_access_params_of_func_that_called_inner_func()
-            throws InterruptedException {
-          var innerFuncB = exprFuncB(list(), varB(intTB(), 0));
-          var outerFuncB = exprFuncB(list(intTB()), callB(innerFuncB));
-          var reporter = mock(Reporter.class);
-          var vm = evaluatorB(reporter);
-          vm.evaluate(list(callB(outerFuncB, intB(7))));
           verify(reporter, times(1))
               .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
         }

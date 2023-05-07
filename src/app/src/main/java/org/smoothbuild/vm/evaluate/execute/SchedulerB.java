@@ -142,7 +142,8 @@ public class SchedulerB {
     }
 
     private void handleExprFunc(ExprFuncB exprFuncB) {
-      handleFunc(argJobs(), exprFuncB);
+      var bodyEnvironmentJobs = concat(argJobs(), callJob.environment());
+      handleFunc(bodyEnvironmentJobs, exprFuncB);
     }
 
     private void handleFunc(ImmutableList<Job> bodyEnvironment, ExprFuncB exprFuncB) {
