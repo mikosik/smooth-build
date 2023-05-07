@@ -29,7 +29,6 @@ import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
 import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
-import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 
@@ -252,7 +251,7 @@ public class SbTranslatorTest extends TestContext {
       public void lambda() {
         var lambda = lambdaS(varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoLambdaS = instantiateS(list(intTS()), lambda);
-        assertTranslation(monoLambdaS, closurizeB(list(intTB()), varB(intTB(), 0)));
+        assertTranslation(monoLambdaS, exprFuncB(list(intTB()), varB(intTB(), 0)));
       }
 
       @Test
@@ -260,20 +259,20 @@ public class SbTranslatorTest extends TestContext {
         var monoLambdaS = instantiateS(lambdaS(paramRefS(intTS(), "p")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoLambdaS);
 
-        var bodyB = closurizeB(varB(intTB(), 0));
+        var bodyB = exprFuncB(varB(intTB(), 0));
         var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
         assertTranslation(monoFuncS, funcB);
       }
 
       @Test
-      public void lambda_with_param_referencing_param_of_enclosing_function() {
-        // myFunc(Int p) = (Blob a) -> p;
-        var monoLambdaS = instantiateS(lambdaS(
-            nlist(itemS(blobTS(), "a")), paramRefS(intTS(), "p")));
-        var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoLambdaS);
+      public void lambda_with_body_referencing_param_of_enclosing_function() {
+        // myFunc(Int i) = (Blob b) -> i;
+        var monoLambdaS =
+            instantiateS(lambdaS(nlist(itemS(blobTS(), "b")), paramRefS(intTS(), "i")));
+        var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "i")), monoLambdaS);
 
-        var bodyB = closurizeB(list(blobTB()), varB(intTB(), 1));
+        var bodyB = exprFuncB(list(blobTB()), varB(intTB(), 1));
         var funcB = exprFuncB(list(intTB()), bodyB);
 
         assertTranslation(monoFuncS, funcB);
@@ -331,7 +330,7 @@ public class SbTranslatorTest extends TestContext {
         var funcS = funcS("myFunc", nlist(itemS(varA(), "a")), monoLambdaS);
         var instantiateS = instantiateS(list(intTS()), funcS);
 
-        var bodyB = closurizeB(varB(intTB(), 0));
+        var bodyB = exprFuncB(varB(intTB(), 0));
         var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
         assertTranslation(bindings(funcS), instantiateS, funcB);
@@ -452,14 +451,9 @@ public class SbTranslatorTest extends TestContext {
         var monoLambdaS = instantiateS(lambdaS(7, nlist(), stringS("abc")));
 
         var sbTranslator = newTranslator();
-        var closureB = (ClosurizeB) sbTranslator.translateExpr(monoLambdaS);
+        var exprFuncB = (ExprFuncB) sbTranslator.translateExpr(monoLambdaS);
         var nameMapping = sbTranslator.bsMapping().nameMapping();
         var locationMapping = sbTranslator.bsMapping().locMapping();
-        assertThat(nameMapping.get(closureB.hash()))
-            .isEqualTo(null);
-        assertThat(locationMapping.get(closureB.hash()))
-            .isEqualTo(location(7));
-        var exprFuncB = closureB.func();
         assertThat(nameMapping.get(exprFuncB.hash()))
             .isEqualTo("<lambda>");
         assertThat(locationMapping.get(exprFuncB.hash()))

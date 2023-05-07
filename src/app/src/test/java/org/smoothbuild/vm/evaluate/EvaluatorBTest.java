@@ -224,23 +224,7 @@ public class EvaluatorBTest extends TestContext {
       @Nested
       class _call {
         @Test
-        public void closure() {
-          var closure = closureB(intB(7));
-          var call = callB(closure);
-          assertThat(evaluate(call))
-              .isEqualTo(intB(7));
-        }
-
-        @Test
-        public void closure_with_environment() {
-          var closure = closureB(combineB(intB(7)), varB(intTB(), 0));
-          var call = callB(closure);
-          assertThat(evaluate(call))
-              .isEqualTo(intB(7));
-        }
-
-        @Test
-        public void expression_function() {
+        public void lambda() {
           var func = exprFuncB(intB(7));
           var call = callB(func);
           assertThat(evaluate(call))
@@ -248,7 +232,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void expression_function_passed_as_argument() {
+        public void lambda_passed_as_argument() {
           var paramFunc = exprFuncB(intB(7));
           var paramFuncT = paramFunc.evaluationT();
           var outerFunc = exprFuncB(list(paramFuncT), callB(varB(paramFuncT, 0)));
@@ -258,13 +242,34 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void expression_function_returned_from_call() {
-          var func = exprFuncB(intB(7));
-          var outerFunc = exprFuncB(func);
-          var call = callB(callB(outerFunc));
+        public void lambda_returned_from_call() {
+          var innerLambda = exprFuncB(intB(7));
+          var outerLambda = exprFuncB(innerLambda);
+          var call = callB(callB(outerLambda));
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
         }
+
+        @Test
+        public void lambda_returning_param_of_enclosing_lambda() {
+          var innerLambda = exprFuncB(varB(intTB(), 0));
+          var outerLambda = exprFuncB(list(intTB()), innerLambda);
+          var innerReturnedByOuter = callB(outerLambda, intB(17));
+          var callB = callB(innerReturnedByOuter);
+          assertThat(evaluate(callB))
+              .isEqualTo(intB(17));
+        }
+
+        @Test
+        public void lambda_returning_value_from_environment_that_references_another_environment() {
+          var innerLambda = exprFuncB(varB(intTB(), 0));
+          var middleLambda = exprFuncB(list(intTB()), innerLambda);
+          var outerLambda = exprFuncB(list(intTB()), callB(middleLambda, varB(intTB(), 0)));
+          var middleReturnedByOuter = callB(outerLambda, intB(17));
+          assertThat(evaluate(callB(middleReturnedByOuter)))
+              .isEqualTo(intB(17));
+        }
+
 
         @Test
         public void if_function_with_true_condition() {
@@ -345,64 +350,6 @@ public class EvaluatorBTest extends TestContext {
             .isEqualTo(tupleB(intB(7)));
       }
 
-      @Nested
-      class _closurize {
-        @Test
-        public void const_func() {
-          var closure = closurizeB(intB(17));
-          var call = callB(closure);
-          assertThat(evaluate(call))
-              .isEqualTo(intB(17));
-        }
-
-        @Test
-        public void closure_returning_its_arg() {
-          var closurize = closurizeB(list(intTB()), varB(intTB(), 0));
-          var outerFunc = exprFuncB(list(intTB()), closurize);
-          var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
-          var callB = callB(closureReturnedByOuterFunc, intB(18));
-          assertThat(evaluate(callB))
-              .isEqualTo(intB(18));
-        }
-
-        @Test
-        public void closure_returning_value_from_environment() {
-          var closurize = closurizeB(varB(intTB(), 0));
-          var outerFunc = exprFuncB(list(intTB()), closurize);
-          var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
-          assertThat(evaluate(callB(closureReturnedByOuterFunc)))
-              .isEqualTo(intB(17));
-        }
-
-        @Test
-        public void closure_passed_as_argument_and_then_returned_by_another_closure() {
-          // innerFunc(()->Int f) = () -> f;
-          // Int outerFunc(Int i) = innerFunc(() -> i)()();
-          // outerFunc(17);
-          var funcReturningIntTB = funcTB(intTB());
-          var closureReturningFuncReturningInt = closurizeB(varB(funcReturningIntTB, 0));
-          var innerFunc = exprFuncB(list(funcReturningIntTB), closureReturningFuncReturningInt);
-
-          var returnIntLambda = closurizeB(varB(intTB(), 0));
-          var body = callB(callB(callB(innerFunc, returnIntLambda)));
-          var outerFunc = exprFuncB(list(intTB()), body);
-
-          var callB = callB(outerFunc, intB(17));
-          assertThat(evaluate(callB))
-              .isEqualTo(intB(17));
-        }
-
-        @Test
-        public void closure_returning_value_from_environment_that_references_another_environment() {
-          var closurize = closurizeB(varB(intTB(), 0));
-          var innerFunc = exprFuncB(list(intTB()), closurize);
-          var outerFunc = exprFuncB(list(intTB()), callB(innerFunc, varB(intTB(), 0)));
-          var closureReturnedByOuterFunc = callB(outerFunc, intB(17));
-          assertThat(evaluate(callB(closureReturnedByOuterFunc)))
-              .isEqualTo(intB(17));
-        }
-      }
-
       @Test
       public void order() {
         var order = orderB(intB(7), intB(8));
@@ -464,25 +411,29 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void var_referencing_closure_environment() {
           var body = varB(intTB(), 1);
-          var closureB = closureB(combineB(intB(17)), list(intTB()), body);
-          assertThat(evaluate(callB(closureB, intB(7))))
-              .isEqualTo(intB(17));
+          var innerLambdaB = exprFuncB(list(intTB()), body);
+          var outerLambdaB = exprFuncB(list(intTB()), innerLambdaB);
+          var callOuter = callB(outerLambdaB, intB(7));
+          var callInner = callB(callOuter, intB(8));
+
+          assertThat(evaluate(callInner))
+              .isEqualTo(intB(7));
         }
 
         @Test
         public void var_referencing_closure_environment_with_index_out_of_bounds_causes_fatal()
             throws InterruptedException {
-          var closureB = closureB(combineB(intB()), list(intTB()), varB(intTB(), 2));
+          var lambdaB = exprFuncB(list(intTB()), varB(intTB(), 2));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
-          vm.evaluate(list(callB(closureB, intB(7))));
+          vm.evaluate(list(callB(lambdaB, intB(7))));
           verify(reporter, times(1))
               .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
         }
 
         private ArgumentMatcher<List<Log>> isLogListWithFatalOutOfBounds() {
           return isLogListWithFatalMessageStartingWith(
-              "Computation failed with: java.lang.ArrayIndexOutOfBoundsException");
+              "Computation failed with: org.smoothbuild.vm.evaluate.execute.VarOutOfBoundsExc");
         }
 
         @Test

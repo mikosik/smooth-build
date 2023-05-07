@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
+import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 
 public class VarReducerBTest extends TestContext {
@@ -134,36 +134,23 @@ public class VarReducerBTest extends TestContext {
     }
 
     @Test
-    public void expr_func_body_when_referencing_index_is_outside_arguments_size() {
-      var twoParamFuncTB = funcTB(blobTB(), blobTB(), intTB());
-      assertReferenceInliningReplacesReference(2, r -> exprFuncB(twoParamFuncTB, r), intB(1));
+    public void lambda_body_with_var_referencing_param_of_this_lambda() {
+      assertReferenceInliningDoesNotChangeExpression(0, r -> myLambda(r));
     }
 
     @Test
-    public void expr_func_body_when_referencing_index_is_inside_arguments_size() {
-      var twoParamFuncTB = funcTB(blobTB(), blobTB(), intTB());
-      assertReferenceInliningDoesNotChangeExpression(1, r -> exprFuncB(twoParamFuncTB, r));
+    public void lambda_body_with_var_referencing_param_of_enclosing_lambda() {
+      assertReferenceInliningDoesNotChangeExpression(1, r -> myLambda(r));
     }
 
     @Test
-    public void closure_body_when_referencing_index_is_outside_arguments_size_plus_closure_env_size() {
-      assertReferenceInliningReplacesReference(2, r -> myClosure(r), intB(1));
+    public void lambda_body_with_var_referencing_unbound_param() {
+      assertReferenceInliningReplacesReference(2, r -> myLambda(r), intB(1));
     }
 
-    @Test
-    public void closure_body_when_referencing_index_references_closure_environment() {
-      assertReferenceInliningDoesNotChangeExpression(1, r -> myClosure(r));
-    }
-
-    @Test
-    public void closure_body_when_referencing_index_references_closure_func_argument() {
-      assertReferenceInliningDoesNotChangeExpression(0, r -> myClosure(r));
-    }
-
-    private ClosureB myClosure(ExprB exprB) {
-      var closureEnvironment = intB(33);
-      var exprFuncB = exprFuncB(funcTB(blobTB(), intTB()), exprB);
-      return closureB(combineB(closureEnvironment), exprFuncB);
+    private ExprFuncB myLambda(ExprB exprB) {
+      var inner = exprFuncB(funcTB(blobTB(), intTB()), exprB);
+      return exprFuncB(list(intTB()), inner);
     }
 
     @Test

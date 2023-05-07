@@ -90,6 +90,7 @@ public class SchedulerB {
       case CallB      call      -> new CallScheduler(job, call).scheduleCall();
       case ClosurizeB closurize -> scheduleClosurize(job, closurize);
       case CombineB   combine   -> scheduleOperTask(job, combine, CombineTask::new);
+      case ExprFuncB  lambda    -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
       case ValueB     value     -> scheduleConstTask(job, value);
       case OrderB     order     -> scheduleOperTask(job, order, OrderTask::new);
       case PickB      pick      -> scheduleOperTask(job, pick, PickTask::new);
