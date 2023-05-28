@@ -127,7 +127,6 @@ import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
-import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
@@ -137,7 +136,6 @@ import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
@@ -150,7 +148,6 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.type.CategoryDb;
 import org.smoothbuild.vm.bytecode.type.oper.CallCB;
-import org.smoothbuild.vm.bytecode.type.oper.ClosurizeCB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.oper.OrderCB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
@@ -159,7 +156,6 @@ import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.BlobTB;
 import org.smoothbuild.vm.bytecode.type.value.BoolTB;
-import org.smoothbuild.vm.bytecode.type.value.ClosureCB;
 import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IfFuncCB;
@@ -495,34 +491,6 @@ public class TestContext {
     return tupleTB(stringTB(), blobTB());
   }
 
-  public ClosureCB closureCB() {
-    return closureCB(blobTB(), stringTB(), intTB());
-  }
-
-  public ClosureCB closureCB(TypeB resultT) {
-    return closureB(funcTB(resultT));
-  }
-
-  public ClosureCB closureCB(TypeB param, TypeB resultT) {
-    return closureB(funcTB(param, resultT));
-  }
-
-  public ClosureCB closureCB(TypeB param1, TypeB param2, TypeB resultT) {
-    return closureB(funcTB(param1, param2, resultT));
-  }
-
-  public ClosureCB closureB(FuncTB funcTB) {
-    return categoryDb().closure(funcTB);
-  }
-
-  public ClosurizeCB closurizeCB() {
-    return closurizeCB(funcTB());
-  }
-
-  public ClosurizeCB closurizeCB(FuncTB evaluationT) {
-    return categoryDb().closurize(evaluationT);
-  }
-
   public ExprFuncCB exprFuncCB() {
     return exprFuncCB(blobTB(), stringTB(), intTB());
   }
@@ -769,30 +737,6 @@ public class TestContext {
     return bytecodeDb().exprFunc(type, body);
   }
 
-  public ClosureB closureB(ImmutableList<TypeB> paramTs, ExprB body) {
-    return closureB(combineB(), paramTs, body);
-  }
-
-  public ClosureB closureB(CombineB environment, ImmutableList<TypeB> paramTs, ExprB body) {
-    return closureB(environment, exprFuncB(paramTs, body));
-  }
-
-  public ClosureB closureB(ExprB body) {
-    return closureB(combineB(), body);
-  }
-
-  public ClosureB closureB(ExprFuncB func) {
-    return closureB(combineB(), func);
-  }
-
-  public ClosureB closureB(CombineB environment, ExprB body) {
-    return closureB(environment, exprFuncB(body));
-  }
-
-  public ClosureB closureB(CombineB environment, ExprFuncB func) {
-    return bytecodeDb().closure(environment, func);
-  }
-
   public ExprFuncB idFuncB() {
     return exprFuncB(list(intTB()), varB(intTB(), 0));
   }
@@ -929,18 +873,6 @@ public class TestContext {
 
   public CallB callB(ExprB func, CombineB args) {
     return bytecodeDb().call(func, args);
-  }
-
-  public ClosurizeB closurizeB(ExprB body) {
-    return closurizeB(list(), body);
-  }
-
-  public ClosurizeB closurizeB(ImmutableList<TypeB> paramTs, ExprB body) {
-    return closurizeB(exprFuncB(paramTs, body));
-  }
-
-  public ClosurizeB closurizeB(ExprFuncB exprFuncB) {
-    return bytecodeDb().closurize(exprFuncB);
   }
 
   public CombineB combineB(ExprB... items) {

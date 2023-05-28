@@ -105,59 +105,13 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
-  class _closure {
-    @Test
-    public void with_zero_envs_zero_params() {
-      var closureB = closureB(combineB(), intB(1));
-      assertThat(closureB.hash())
-          .isEqualTo(
-              Hash.decode("e0d85630cf0df448a25ca0ce39e173296288c690825f048d6be1006950834ffc"));
-    }
-
-    @Test
-    public void with_zero_envs_one_param() {
-      var closureB = closureB(combineB(), intB(1));
-      assertThat(closureB.hash())
-          .isEqualTo(
-              Hash.decode("e0d85630cf0df448a25ca0ce39e173296288c690825f048d6be1006950834ffc"));
-    }
-
-    @Test
-    public void with_one_env_zero_params() {
-      var closureB = closureB(combineB(stringB("abc")), intB(1));
-      assertThat(closureB.hash())
-          .isEqualTo(
-              Hash.decode("edfa4870e5543ea76bb2e8f8ccb84ea94710ca487f2afa421fd86ff1e120bbd5"));
-    }
-
-    @Test
-    public void with_one_env_one_params() {
-      var closureB = closureB(combineB(stringB("abc")), intB(1));
-      assertThat(closureB.hash())
-          .isEqualTo(
-              Hash.decode("edfa4870e5543ea76bb2e8f8ccb84ea94710ca487f2afa421fd86ff1e120bbd5"));
-    }
-  }
-
-  @Nested
-  class _closurize {
-    @Test
-    public void closurize() {
-      var closurizeB = closurizeB(exprFuncB(list(intTB()), stringB("abc")));
-      assertThat(closurizeB.hash())
-          .isEqualTo(
-              Hash.decode("c55358a8eca397f9d4bfdf0f646b16132187e003c82ce8576afde0c978455f09"));
-    }
-  }
-
-  @Nested
   class _expr_func {
     @Test
     public void with_zero_params() {
       var exprFuncB = exprFuncB(funcTB(intTB()), intB(1));
       assertThat(exprFuncB.hash())
           .isEqualTo(
-              Hash.decode("faef46528811128130c0e03c968815ca0078f0c5625d57f133adf0df15f59d01"));
+              Hash.decode("ca7332dde14f5b0385f6919dd5a0bb7516b985218cb5b3ab7fe231b02827a615"));
     }
 
     @Test
@@ -165,7 +119,7 @@ public class ExprBStableHashTest extends TestContext {
       var exprFuncB = exprFuncB(funcTB(blobTB(), intTB()), intB(1));
       assertThat(exprFuncB.hash())
           .isEqualTo(
-              Hash.decode("52cbdcec2cc3c7faa0f79c17a74cfb27b3826f7ceb9b38c1e8743bca16674df2"));
+              Hash.decode("b4fe4202b949e583a75d441a2f7654fd94ff5c616f206343f707fc24df25031a"));
     }
   }
 
@@ -248,7 +202,7 @@ public class ExprBStableHashTest extends TestContext {
       var exprFuncB = exprFuncB(type, intB());
       assertThat(callB(exprFuncB).hash())
           .isEqualTo(
-              Hash.decode("b1fcd1d80fdd7dedd2fb319d8ce4d016d5cd5dedbd7f63e0a76fbe71591fd1cf"));
+              Hash.decode("ad58f94040c8d5a6551a1ada94aab077ea710a97b364428ebc07e4c066a5916b"));
     }
 
     @Test
@@ -256,7 +210,7 @@ public class ExprBStableHashTest extends TestContext {
       var exprFuncB = exprFuncB(list(stringTB()), intB());
       assertThat(callB(exprFuncB, stringB("abc")).hash())
           .isEqualTo(
-              Hash.decode("acf47e5b971e5fd421c94eb6d1ca328fa72d107ab7f473e0e8010d2db631b894"));
+              Hash.decode("a09ab8dc2cda31a74cb0f2cde880a272f7e6e5d6e506a744402d4a0afe0c20ba"));
     }
   }
 

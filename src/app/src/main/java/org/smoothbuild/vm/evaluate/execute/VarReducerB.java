@@ -9,13 +9,11 @@ import javax.inject.Inject;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
-import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.oper.VarB;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 
 import com.google.common.collect.ImmutableList;
@@ -45,14 +43,11 @@ public class VarReducerB {
     return switch (exprB) {
       // @formatter:off
       case CallB      callB      -> rewriteCall(callB, resolver);
-      case ClosurizeB closurizeB -> rewriteClosurize(closurizeB, resolver);
       case CombineB   combineB   -> rewriteCombine(combineB, resolver);
       case OrderB     orderB     -> rewriteOrder(orderB, resolver);
       case PickB      pickB      -> rewritePick(pickB, resolver);
       case VarB       varB       -> rewriteVar(varB, resolver);
       case SelectB    selectB    -> rewriteSelect(selectB, resolver);
-
-      case ClosureB   closureB   -> rewriteClosure(closureB, resolver);
       case ExprFuncB  exprFuncB  -> rewriteExprFunc(exprFuncB, resolver);
       default                    -> exprB;
       // @formatter:on
@@ -69,19 +64,6 @@ public class VarReducerB {
       return callB;
     } else {
       return bytecodeF.call(inlinedFunc, inlinedArgs);
-    }
-  }
-
-  private ExprB rewriteClosurize(ClosurizeB closurizeB, Resolver resolver) {
-    var exprFuncB = closurizeB.func();
-    var funcTB = exprFuncB.type();
-    int paramSize = funcTB.params().size();
-    var body = exprFuncB.body();
-    var rewrittenBody = rewriteExpr(body, resolver.withIncreasedParamCount(paramSize));
-    if (body.equals(rewrittenBody)) {
-      return closurizeB;
-    } else {
-      return bytecodeF.closurize(bytecodeF.exprFunc(funcTB, rewrittenBody));
     }
   }
 
@@ -130,18 +112,6 @@ public class VarReducerB {
       return selectB;
     } else {
       return bytecodeF.select(rewrittenSelectable, subExprsB.index());
-    }
-  }
-
-  private ExprB rewriteClosure(ClosureB closureB, Resolver resolver) {
-    var environment = closureB.environment();
-    var func = closureB.func();
-    var rewrittenFunc = rewriteExprFunc(
-        func, resolver.withIncreasedParamCount(environment.items().size()));
-    if (func.equals(rewrittenFunc)) {
-      return closureB;
-    } else {
-      return bytecodeF.closure(environment, rewrittenFunc);
     }
   }
 

@@ -14,7 +14,6 @@ import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
-import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OperB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
@@ -23,7 +22,6 @@ import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.FuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
@@ -88,7 +86,6 @@ public class SchedulerB {
     // @formatter:off
     switch (job.exprB()) {
       case CallB      call      -> new CallScheduler(job, call).scheduleCall();
-      case ClosurizeB closurize -> scheduleClosurize(job, closurize);
       case CombineB   combine   -> scheduleOperTask(job, combine, CombineTask::new);
       case ExprFuncB  lambda    -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
       case ValueB     value     -> scheduleConstTask(job, value);
@@ -125,7 +122,6 @@ public class SchedulerB {
     private void onFuncEvaluated(ValueB funcB) {
       switch ((FuncB) funcB) {
         // @formatter:off
-        case ClosureB     closureB    -> handleClosure(closureB);
         case ExprFuncB    exprFuncB   -> handleExprFunc(exprFuncB);
         case IfFuncB      ifFuncB     -> handleIfFunc();
         case MapFuncB     mapFuncB    -> handleMapFunc();
@@ -136,20 +132,10 @@ public class SchedulerB {
 
     // functions with body
 
-    private void handleClosure(ClosureB closureB) {
-      var closureEnvJobs = map(closureB.environment().items(), SchedulerB.this::newJob);
-      var bodyEnvironmentJobs = concat(argJobs(), closureEnvJobs);
-      handleFunc(bodyEnvironmentJobs, closureB.func());
-    }
-
     private void handleExprFunc(ExprFuncB exprFuncB) {
       var bodyEnvironmentJobs = concat(argJobs(), callJob.environment());
-      handleFunc(bodyEnvironmentJobs, exprFuncB);
-    }
-
-    private void handleFunc(ImmutableList<Job> bodyEnvironment, ExprFuncB exprFuncB) {
       var bodyTrace = callTrace(exprFuncB);
-      var bodyJob = newJob(exprFuncB.body(), bodyEnvironment, bodyTrace);
+      var bodyJob = newJob(exprFuncB.body(), bodyEnvironmentJobs, bodyTrace);
       scheduleJobEvaluationWithConsumer(bodyJob, callJob.promisedValue());
     }
 
@@ -213,14 +199,6 @@ public class SchedulerB {
     private ImmutableList<ExprB> args() {
       return call.subExprs().args().items();
     }
-  }
-
-  private void scheduleClosurize(Job job, ClosurizeB closurize) {
-    var environment = varReducerB.inline(job.environment());
-    var environmentB = bytecodeF.combine(environment);
-    var closureB = bytecodeF.closure(environmentB, closurize.func());
-    var closureJob = newJob(closureB, job);
-    scheduleJobEvaluationWithConsumer(closureJob, job.promisedValue());
   }
 
   private void scheduleConstTask(Job job, ValueB value) {

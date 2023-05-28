@@ -401,7 +401,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void var_inside_inner_func_referencing_param_of_enclosing_func() {
+        public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda() {
           var innerFuncB = exprFuncB(list(), varB(intTB(), 0));
           var outerFuncB = exprFuncB(list(intTB()), callB(innerFuncB));
           assertThat(evaluate(callB(outerFuncB, intB(7))))
@@ -409,9 +409,8 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void var_referencing_closure_environment() {
-          var body = varB(intTB(), 1);
-          var innerLambdaB = exprFuncB(list(intTB()), body);
+        public void var_inside_inner_lambda_referencing_param_of_enclosing_lambda() {
+          var innerLambdaB = exprFuncB(list(intTB()), varB(intTB(), 1));
           var outerLambdaB = exprFuncB(list(intTB()), innerLambdaB);
           var callOuter = callB(outerLambdaB, intB(7));
           var callInner = callB(callOuter, intB(8));
@@ -421,7 +420,7 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void var_referencing_closure_environment_with_index_out_of_bounds_causes_fatal()
+        public void var_referencing_with_index_out_of_bounds_causes_fatal()
             throws InterruptedException {
           var lambdaB = exprFuncB(list(intTB()), varB(intTB(), 2));
           var reporter = mock(Reporter.class);

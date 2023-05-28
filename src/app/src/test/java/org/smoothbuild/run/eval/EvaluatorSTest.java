@@ -68,7 +68,7 @@ public class EvaluatorSTest extends TestContext {
         }
 
         @Test
-        public void call_lambda_returning_value_from_its_closure()
+        public void call_lambda_returning_enclosing_func_param()
             throws EvaluatorExcS {
           var lambdaS = instantiateS(lambdaS(nlist(), paramRefS(intTS(), "p")));
           var funcS = funcS("myFunc", nlist(itemS(intTS(), "p")), callS(lambdaS));

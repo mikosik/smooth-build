@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.bytecode.expr.ExprB.DATA_PATH;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.cannotReadRootException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;
@@ -38,7 +37,6 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeExc;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallSubExprsB;
-import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
@@ -49,7 +47,6 @@ import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
@@ -663,203 +660,6 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   @Nested
-  class _closure {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save Closure
-       * in HashedDb.
-       */
-      var environment = combineB(blobB());
-      var func = idFuncB();
-      var cat = closureCB(intTB(), intTB());
-      var hash =
-          hash(
-              hash(cat),
-              hash(
-                  hash(environment),
-                  hash(func)
-              )
-          );
-      assertThat(((ClosureB) bytecodeDb().get(hash)).environment())
-          .isEqualTo(environment);
-      assertThat(((ClosureB) bytecodeDb().get(hash)).func())
-          .isEqualTo(func);
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(closureCB());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      var bodyExpr = boolB(true);
-      var cat = closureCB(intTB(), stringTB(), boolTB());
-      var dataHash = hash(bodyExpr);
-      obj_root_with_two_data_hashes(
-          cat,
-          dataHash,
-          (Hash hash) -> ((ClosureB) bytecodeDb().get(hash)).func());
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          closureCB(),
-          (Hash hash) -> ((ClosureB) bytecodeDb().get(hash)).func());
-    }
-
-    @Test
-    public void data_is_seq_with_one_elem() throws Exception {
-      var environment = combineB(blobB());
-      var closureCB = closureCB(intTB(), stringTB(), boolTB());
-      var dataHash = hash(
-          hash(environment)
-      );
-      var hash =
-          hash(
-              hash(closureCB),
-              dataHash
-          );
-      assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).environment())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, closureCB, DATA_PATH, 2, 1));
-    }
-
-    @Test
-    public void data_is_seq_with_three_elems() throws Exception {
-      var environment = combineB(blobB());
-      var body = boolB(true);
-      var closureCB = closureCB(intTB(), stringTB(), boolTB());
-      var dataHash = hash(
-          hash(environment),
-          hash(body),
-          hash(body)
-      );
-      var hash =
-          hash(
-              hash(closureCB),
-              dataHash
-          );
-      assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).environment())
-          .throwsException(new DecodeExprWrongSeqSizeExc(hash, closureCB, DATA_PATH, 2, 3));
-    }
-
-    @Test
-    public void expression_function_is_not_function_value_but_expression_evaluating_to_function()
-        throws Exception {
-      var environment = combineB(blobB());
-      var not_a_func_value_but_expr = callB(exprFuncB(idFuncB()));
-      var cat = closureCB(idFuncB().type());
-      var hash =
-          hash(
-              hash(cat),
-              hash(
-                  hash(environment),
-                  hash(not_a_func_value_but_expr)
-              )
-          );
-      assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).func())
-          .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, cat, DATA_PATH, 1, ExprFuncB.class, CallB.class));
-    }
-
-    @Test
-    public void expression_function_is_not_expression_function_but_closure() throws Exception {
-      var environment = combineB(blobB());
-      var not_a_func_value_but_closure = callB(closureB(idFuncB()), intB());
-      var cat = closureCB(idFuncB().type());
-      var hash =
-          hash(
-              hash(cat),
-              hash(
-                  hash(environment),
-                  hash(not_a_func_value_but_closure)
-              )
-          );
-      assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).func())
-          .throwsException(new DecodeExprWrongNodeClassExc(
-              hash, cat, DATA_PATH, 1, ExprFuncB.class, CallB.class));
-    }
-
-    @Test
-    public void expression_function_type_is_not_equal_closure_type() throws Exception {
-      var environment = combineB(blobB());
-      var func = idFuncB();
-      var cat = closureCB(blobTB(), intTB());
-      var hash =
-          hash(
-              hash(cat),
-              hash(
-                  hash(environment),
-                  hash(func)
-              )
-          );
-      assertCall(() -> ((ClosureB) bytecodeDb().get(hash)).func())
-          .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, cat, DATA_PATH, funcTB(blobTB(), intTB()), funcTB(intTB(), intTB())));
-    }
-  }
-
-  @Nested
-  class _closurize {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save
-       * closurize in HashedDb.
-       */
-      var func = exprFuncB(list(intTB()), intB(7));
-      var category = closurizeCB(func.type());
-      var hash =
-          hash(
-              hash(category),
-              hash(func)
-          );
-      assertThat(((ClosurizeB) bytecodeDb().get(hash)).func())
-          .isEqualTo(func);
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(exprFuncCB());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      var func = exprFuncB(list(intTB()), intB(7));
-      var category = closurizeCB(func.type());
-      var dataHash = hash(func);
-      obj_root_with_two_data_hashes(
-          category,
-          dataHash,
-          (Hash hash) -> ((ClosureB) bytecodeDb().get(hash)).func());
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-          closurizeCB(),
-          (Hash hash) -> ((ClosurizeB) bytecodeDb().get(hash)).func());
-    }
-
-    @Test
-    public void func_type_is_not_equal_closurize_evaluation_type() throws Exception {
-      var func = exprFuncB(list(blobTB()), intB(7));
-      var evaluationT = funcTB(blobTB(), stringTB());
-      var category = closurizeCB(evaluationT);
-      var hash =
-          hash(
-              hash(category),
-              hash(func)
-          );
-      assertCall(() -> ((ClosurizeB) bytecodeDb().get(hash)).func())
-          .throwsException(new DecodeExprWrongNodeTypeExc(
-              hash, category, DATA_PATH, evaluationT, func.type()));
-    }
-  }
-
-  @Nested
   class _expression_func {
     @Test
     public void learning_test() throws Exception {
@@ -891,7 +691,7 @@ public class ExprBCorruptedTest extends TestContext {
       obj_root_with_two_data_hashes(
           cat,
           dataHash,
-          (Hash hash) -> ((ClosureB) bytecodeDb().get(hash)).func());
+          (Hash hash) -> ((ExprFuncB) bytecodeDb().get(hash)).body());
     }
 
     @Test
@@ -1795,36 +1595,36 @@ public class ExprBCorruptedTest extends TestContext {
   }
 
   private void obj_root_with_two_data_hashes(
-      CategoryB type, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbExc {
+      CategoryB type, Hash dataHash, Function<Hash, ?> factory) throws HashedDbExc {
     var hash =
         hash(
             hash(type),
             dataHash,
             dataHash);
-    assertCall(() -> readClosure.apply(hash))
+    assertCall(() -> factory.apply(hash))
         .throwsException(wrongSizeOfRootSeqException(hash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-      CategoryB category, Consumer<Hash> readClosure) throws HashedDbExc {
+      CategoryB category, Consumer<Hash> factory) throws HashedDbExc {
     var dataHash = Hash.of(33);
     var hash =
         hash(
             hash(category),
             dataHash);
-    assertCall(() -> readClosure.accept(hash))
+    assertCall(() -> factory.accept(hash))
         .throwsException(new DecodeExprNodeExc(hash, category, DATA_PATH))
         .withCause(new NoSuchDataExc(dataHash));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-      CategoryB category, Consumer<Hash> readClosure) throws HashedDbExc {
+      CategoryB category, Consumer<Hash> factory) throws HashedDbExc {
     var dataHash = Hash.of(33);
     var hash =
         hash(
             hash(category),
             dataHash);
-    assertCall(() -> readClosure.accept(hash))
+    assertCall(() -> factory.accept(hash))
         .throwsException(new DecodeExprNodeExc(hash, category, DATA_PATH))
         .withCause(new DecodeExprNoSuchExprExc(dataHash));
   }

@@ -26,12 +26,6 @@ public class VarReducerBTest extends TestContext {
     }
 
     @Test
-    public void closurize() {
-      assertReferenceInliningDoesNotChangeExpression(
-          r -> closurizeB(intB()));
-    }
-
-    @Test
     public void combine() {
       assertReferenceInliningDoesNotChangeExpression(
           r -> combineB(intB()));
@@ -95,13 +89,7 @@ public class VarReducerBTest extends TestContext {
 
     // callables
 
-    @Test
-    public void closure_without_references() {
-      assertReferenceInliningDoesNotChangeExpression(
-          r -> closureB(intB()));
-    }
-
-    @Test
+     @Test
     public void expr_func_without_references() {
       assertReferenceInliningDoesNotChangeExpression(
           r -> exprFuncB(intB()));
