@@ -172,7 +172,7 @@ public class EvaluatorSTest extends TestContext {
     }
 
     @Nested
-    class _polymorphic {
+    class _instantiate {
       @Nested
       class _lambda {
         @Test
