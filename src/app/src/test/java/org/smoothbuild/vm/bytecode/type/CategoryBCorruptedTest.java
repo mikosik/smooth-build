@@ -9,10 +9,10 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.COMBINE;
-import static org.smoothbuild.vm.bytecode.type.CategoryKinds.EXPR_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.INT;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.LAMBDA;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.MAP_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.NATIVE_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ORDER;
@@ -179,16 +179,16 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save expression function type in HashedDb.
          */
         var specHash = hash(
-            hash(EXPR_FUNC.marker()),
+            hash(LAMBDA.marker()),
             hash(funcTB(stringTB(), boolTB(), intTB()))
         );
         assertThat(specHash)
-            .isEqualTo(exprFuncCB(stringTB(), boolTB(), intTB()).hash());
+            .isEqualTo(lambdaCB(stringTB(), boolTB(), intTB()).hash());
       }
 
       @Override
       protected CategoryKindB categoryKind() {
-        return EXPR_FUNC;
+        return LAMBDA;
       }
     }
 

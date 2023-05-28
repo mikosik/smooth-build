@@ -30,7 +30,7 @@ import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 
 public class SbTranslatorTest extends TestContext {
   @Nested
@@ -42,7 +42,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void mono_expression_value() {
           var valueS = valueS("myValue", intS(7));
-          assertTranslation(valueS, callB(exprFuncB(intB(7))));
+          assertTranslation(valueS, callB(lambdaB(intB(7))));
         }
 
         @Test
@@ -50,7 +50,7 @@ public class SbTranslatorTest extends TestContext {
           var emptyArrayVal = emptyArrayValueS();
           var instantiateS = instantiateS(list(intTS()), emptyArrayVal);
           var orderB = orderB(intTB());
-          assertTranslation(bindings(emptyArrayVal), instantiateS, callB(exprFuncB(orderB)));
+          assertTranslation(bindings(emptyArrayVal), instantiateS, callB(lambdaB(orderB)));
         }
 
         @Test
@@ -60,7 +60,7 @@ public class SbTranslatorTest extends TestContext {
           assertTranslation(
               bindings(otherValue, myValue),
               instantiateS(myValue),
-              callB(exprFuncB(callB(exprFuncB(intB(7))))));
+              callB(lambdaB(callB(lambdaB(intB(7))))));
         }
 
         @Test
@@ -78,7 +78,7 @@ public class SbTranslatorTest extends TestContext {
           assertTranslation(
               bindings(emptyArrayValueS, referencingValueS),
               instantiatedReferencingValueS,
-              callB(exprFuncB(callB(exprFuncB(orderB)))));
+              callB(lambdaB(callB(lambdaB(orderB)))));
         }
 
         @Test
@@ -133,15 +133,15 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void mono_expression_function() {
           var funcS = funcS("myFunc", nlist(), intS(7));
-          assertTranslation(funcS, exprFuncB(intB(7)));
+          assertTranslation(funcS, lambdaB(intB(7)));
         }
 
         @Test
         public void poly_expression_function() {
           var funcS = idFuncS();
           var instantiateS = instantiateS(list(intTS()), funcS);
-          var funcB = exprFuncB(funcTB(intTB(), intTB()), varB(intTB(), 0));
-          assertTranslation(bindings(funcS), instantiateS, funcB);
+          var lambdaB = lambdaB(funcTB(intTB(), intTB()), varB(intTB(), 0));
+          assertTranslation(bindings(funcS), instantiateS, lambdaB);
         }
 
         @Test
@@ -155,8 +155,8 @@ public class SbTranslatorTest extends TestContext {
           var wrapFuncS = funcS(b, "wrap", nlist(itemS(b, "p")), bodyS);
           var wrapMonoFuncS = instantiateS(list(intTS()), wrapFuncS);
 
-          var idFuncB = exprFuncB(funcTB(intTB(), intTB()), varB(intTB(), 0));
-          var wrapFuncB = exprFuncB(funcTB(intTB(), intTB()),
+          var idFuncB = lambdaB(funcTB(intTB(), intTB()), varB(intTB(), 0));
+          var wrapFuncB = lambdaB(funcTB(intTB(), intTB()),
               callB(idFuncB, varB(intTB(), 0)));
           assertTranslation(bindings(idFuncS, wrapFuncS), wrapMonoFuncS, wrapFuncB);
         }
@@ -251,7 +251,7 @@ public class SbTranslatorTest extends TestContext {
       public void lambda() {
         var lambda = lambdaS(varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoLambdaS = instantiateS(list(intTS()), lambda);
-        assertTranslation(monoLambdaS, exprFuncB(list(intTB()), varB(intTB(), 0)));
+        assertTranslation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
       }
 
       @Test
@@ -259,10 +259,10 @@ public class SbTranslatorTest extends TestContext {
         var monoLambdaS = instantiateS(lambdaS(paramRefS(intTS(), "p")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "p")), monoLambdaS);
 
-        var bodyB = exprFuncB(varB(intTB(), 0));
-        var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
+        var bodyB = lambdaB(varB(intTB(), 0));
+        var lambdaB = lambdaB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
-        assertTranslation(monoFuncS, funcB);
+        assertTranslation(monoFuncS, lambdaB);
       }
 
       @Test
@@ -272,17 +272,17 @@ public class SbTranslatorTest extends TestContext {
             instantiateS(lambdaS(nlist(itemS(blobTS(), "b")), paramRefS(intTS(), "i")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "i")), monoLambdaS);
 
-        var bodyB = exprFuncB(list(blobTB()), varB(intTB(), 1));
-        var funcB = exprFuncB(list(intTB()), bodyB);
+        var bodyB = lambdaB(list(blobTB()), varB(intTB(), 1));
+        var lambdaB = lambdaB(list(intTB()), bodyB);
 
-        assertTranslation(monoFuncS, funcB);
+        assertTranslation(monoFuncS, lambdaB);
       }
 
       @Test
       public void call() {
         var funcS = funcS("myFunc", nlist(), stringS("abc"));
         var callS = callS(instantiateS(funcS));
-        assertTranslation(bindings(funcS), callS, callB(exprFuncB(stringB("abc"))));
+        assertTranslation(bindings(funcS), callS, callB(lambdaB(stringB("abc"))));
       }
 
       @Test
@@ -318,7 +318,7 @@ public class SbTranslatorTest extends TestContext {
         var callS = callS(instantiateS(constructorS), stringS("abc"));
         var selectS = selectS(callS, "field");
 
-        var ctorB = exprFuncB(list(stringTB()), combineB(varB(stringTB(), 0)));
+        var ctorB = lambdaB(list(stringTB()), combineB(varB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
         assertTranslation(bindings(constructorS), selectS, selectB(callB, intB(0)));
       }
@@ -330,10 +330,10 @@ public class SbTranslatorTest extends TestContext {
         var funcS = funcS("myFunc", nlist(itemS(varA(), "a")), monoLambdaS);
         var instantiateS = instantiateS(list(intTS()), funcS);
 
-        var bodyB = exprFuncB(varB(intTB(), 0));
-        var funcB = exprFuncB(funcTB(intTB(), funcTB(intTB())), bodyB);
+        var bodyB = lambdaB(varB(intTB(), 0));
+        var lambdaB = lambdaB(funcTB(intTB(), funcTB(intTB())), bodyB);
 
-        assertTranslation(bindings(funcS), instantiateS, funcB);
+        assertTranslation(bindings(funcS), instantiateS, lambdaB);
       }
     }
   }
@@ -391,7 +391,7 @@ public class SbTranslatorTest extends TestContext {
         public void expression_inside_expression_function_body() {
           var funcS = funcS(7, "myFunc", nlist(), intS(8, 37));
           var sbTranslator = newTranslator(bindings(funcS));
-          var funcB = (ExprFuncB) sbTranslator.translateExpr(instantiateS(funcS));
+          var funcB = (LambdaB) sbTranslator.translateExpr(instantiateS(funcS));
           var body = funcB.body();
           assertNalMapping(sbTranslator, body, null, location(8));
         }
@@ -451,12 +451,12 @@ public class SbTranslatorTest extends TestContext {
         var monoLambdaS = instantiateS(lambdaS(7, nlist(), stringS("abc")));
 
         var sbTranslator = newTranslator();
-        var exprFuncB = (ExprFuncB) sbTranslator.translateExpr(monoLambdaS);
+        var lambdaB = (LambdaB) sbTranslator.translateExpr(monoLambdaS);
         var nameMapping = sbTranslator.bsMapping().nameMapping();
         var locationMapping = sbTranslator.bsMapping().locMapping();
-        assertThat(nameMapping.get(exprFuncB.hash()))
+        assertThat(nameMapping.get(lambdaB.hash()))
             .isEqualTo("<lambda>");
-        assertThat(locationMapping.get(exprFuncB.hash()))
+        assertThat(locationMapping.get(lambdaB.hash()))
             .isEqualTo(location(7));
       }
 
@@ -477,7 +477,7 @@ public class SbTranslatorTest extends TestContext {
       public void param_ref() {
         var funcS = funcS(4, "myFunc", nlist(itemS(intTS(), "p")), paramRefS(5, intTS(), "p"));
         var sbTranslator = newTranslator(bindings(funcS));
-        var funcB = (ExprFuncB) sbTranslator.translateExpr(instantiateS(funcS));
+        var funcB = (LambdaB) sbTranslator.translateExpr(instantiateS(funcS));
         var refB = funcB.body();
         assertNalMapping(sbTranslator, refB, "p", location(5));
       }

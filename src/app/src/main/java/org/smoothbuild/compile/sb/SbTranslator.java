@@ -65,8 +65,8 @@ import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -197,9 +197,9 @@ public class SbTranslator {
   }
 
   private ExprB translateLambda(LambdaS lambdaS) {
-    var exprFuncB = funcBodySbTranslator(lambdaS)
+    var lambdaB = funcBodySbTranslator(lambdaS)
         .translateExprFunc(lambdaS);
-    return saveNalAndReturn("<lambda>", lambdaS, exprFuncB);
+    return saveNalAndReturn("<lambda>", lambdaS, lambdaB);
   }
 
   private ExprB translateReference(ReferenceS referenceS) {
@@ -263,8 +263,8 @@ public class SbTranslator {
     };
   }
 
-  private ExprFuncB translateExprFunc(ExprFuncS exprFuncS) {
-    return bytecodeF.exprFunc(
+  private LambdaB translateExprFunc(ExprFuncS exprFuncS) {
+    return bytecodeF.lambda(
         translateT(exprFuncS.schema().type()),
         translateExpr(exprFuncS.body()));
   }
@@ -278,11 +278,11 @@ public class SbTranslator {
     return bytecodeF.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private ExprFuncB translateConstructor(ConstructorS constructorS) {
+  private LambdaB translateConstructor(ConstructorS constructorS) {
     var funcTB = translateT(constructorS.schema().type());
     var bodyB = bytecodeF.combine(createRefsB(funcTB.params()));
     saveLoc(bodyB, constructorS);
-    return bytecodeF.exprFunc(funcTB, bodyB);
+    return bytecodeF.lambda(funcTB, bodyB);
   }
 
   private ImmutableList<ExprB> createRefsB(TupleTB paramTs) {
@@ -338,7 +338,7 @@ public class SbTranslator {
 
   private ExprB translateNamedExprValue(Location refLocation, NamedExprValueS namedExprValueS) {
     var funcTB = bytecodeF.funcT(list(), translateT(namedExprValueS.schema().type()));
-    var funcB = bytecodeF.exprFunc(funcTB, translateExpr(namedExprValueS.body()));
+    var funcB = bytecodeF.lambda(funcTB, translateExpr(namedExprValueS.body()));
     saveNal(funcB, namedExprValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
     saveLoc(call, refLocation);

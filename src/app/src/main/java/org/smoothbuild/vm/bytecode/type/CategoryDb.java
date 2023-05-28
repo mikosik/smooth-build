@@ -10,10 +10,10 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CALL;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.COMBINE;
-import static org.smoothbuild.vm.bytecode.type.CategoryKinds.EXPR_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.IF_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.INT;
+import static org.smoothbuild.vm.bytecode.type.CategoryKinds.LAMBDA;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.MAP_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.NATIVE_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ORDER;
@@ -40,9 +40,9 @@ import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.BaseKindB;
-import org.smoothbuild.vm.bytecode.type.CategoryKindB.ExprFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.IfFuncKindB;
+import org.smoothbuild.vm.bytecode.type.CategoryKindB.LambdaKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.MapFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.NativeFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.OperKindB;
@@ -62,11 +62,11 @@ import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.BlobTB;
 import org.smoothbuild.vm.bytecode.type.value.BoolTB;
-import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IfFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.IntTB;
+import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
 import org.smoothbuild.vm.bytecode.type.value.MapFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.StringTB;
@@ -122,12 +122,12 @@ public class CategoryDb {
     return bool;
   }
 
-  public ExprFuncCB exprFunc(ImmutableList<TypeB> params, TypeB result) {
-    return funcC(EXPR_FUNC, params, result);
+  public LambdaCB lambda(ImmutableList<TypeB> params, TypeB result) {
+    return funcC(LAMBDA, params, result);
   }
 
-  public ExprFuncCB exprFunc(FuncTB funcTB) {
-    return funcC(EXPR_FUNC, funcTB);
+  public LambdaCB lambda(FuncTB funcTB) {
+    return funcC(LAMBDA, funcTB);
   }
 
   private <T extends FuncCB> T funcC(
@@ -220,7 +220,7 @@ public class CategoryDb {
     return switch (kind) {
       case ArrayKindB       array       -> readArrayT(hash, rootSeq, kind);
       case BaseKindB        base        -> handleBaseT(hash, rootSeq, kind);
-      case ExprFuncKindB    exprFunc    -> readFuncCat(hash, rootSeq, exprFunc);
+      case LambdaKindB      lambda      -> readFuncCat(hash, rootSeq, lambda);
       case FuncKindB        func        -> readFuncT(hash, rootSeq);
       case IfFuncKindB      ifFunc      -> readIfFuncCat(hash, rootSeq, ifFunc);
       case MapFuncKindB     mapFunc     -> readMapFuncCat(hash, rootSeq, mapFunc);

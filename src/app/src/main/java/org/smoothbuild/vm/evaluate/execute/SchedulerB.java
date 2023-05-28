@@ -22,9 +22,9 @@ import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.FuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.MapFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -87,7 +87,7 @@ public class SchedulerB {
     switch (job.exprB()) {
       case CallB      call      -> new CallScheduler(job, call).scheduleCall();
       case CombineB   combine   -> scheduleOperTask(job, combine, CombineTask::new);
-      case ExprFuncB  lambda    -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
+      case LambdaB  lambda    -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
       case ValueB     value     -> scheduleConstTask(job, value);
       case OrderB     order     -> scheduleOperTask(job, order, OrderTask::new);
       case PickB      pick      -> scheduleOperTask(job, pick, PickTask::new);
@@ -122,7 +122,7 @@ public class SchedulerB {
     private void onFuncEvaluated(ValueB funcB) {
       switch ((FuncB) funcB) {
         // @formatter:off
-        case ExprFuncB    exprFuncB   -> handleExprFunc(exprFuncB);
+        case LambdaB      lambdaB     -> handleLambda(lambdaB);
         case IfFuncB      ifFuncB     -> handleIfFunc();
         case MapFuncB     mapFuncB    -> handleMapFunc();
         case NativeFuncB  nativeFuncB -> handleNativeFunc(nativeFuncB);
@@ -132,10 +132,10 @@ public class SchedulerB {
 
     // functions with body
 
-    private void handleExprFunc(ExprFuncB exprFuncB) {
+    private void handleLambda(LambdaB lambdaB) {
       var bodyEnvironmentJobs = concat(argJobs(), callJob.environment());
-      var bodyTrace = callTrace(exprFuncB);
-      var bodyJob = newJob(exprFuncB.body(), bodyEnvironmentJobs, bodyTrace);
+      var bodyTrace = callTrace(lambdaB);
+      var bodyJob = newJob(lambdaB.body(), bodyEnvironmentJobs, bodyTrace);
       scheduleJobEvaluationWithConsumer(bodyJob, callJob.promisedValue());
     }
 

@@ -20,6 +20,6 @@ public class ElemFunc {
     var indexParamRef = f.var(indexParamT, BigInteger.ONE);
     var body = f.pick(arrayParamRef, indexParamRef);
     var funcT = f.funcT(paramTs, varA);
-    return f.exprFunc(funcT, body);
+    return f.lambda(funcT, body);
   }
 }

@@ -5,7 +5,7 @@ import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB;
 
 public sealed abstract class FuncCB extends CategoryB
-    permits ExprFuncCB, IfFuncCB, MapFuncCB, NativeFuncCB {
+    permits LambdaCB, IfFuncCB, MapFuncCB, NativeFuncCB {
   private final FuncTB funcTB;
 
   public FuncCB(Hash hash, CategoryKindB kind, FuncTB funcTB) {

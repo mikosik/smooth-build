@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 
 public class VarReducerBTest extends TestContext {
   @Nested
@@ -22,7 +22,7 @@ public class VarReducerBTest extends TestContext {
     @Test
     public void call() {
       assertReferenceInliningDoesNotChangeExpression(
-          r -> callB(exprFuncB(list(intTB()), intB()), intB()));
+          r -> callB(lambdaB(list(intTB()), intB()), intB()));
     }
 
     @Test
@@ -90,9 +90,9 @@ public class VarReducerBTest extends TestContext {
     // callables
 
      @Test
-    public void expr_func_without_references() {
+    public void lambda_without_references() {
       assertReferenceInliningDoesNotChangeExpression(
-          r -> exprFuncB(intB()));
+          r -> lambdaB(intB()));
     }
 
     @Test
@@ -136,9 +136,9 @@ public class VarReducerBTest extends TestContext {
       assertReferenceInliningReplacesReference(2, r -> myLambda(r), intB(1));
     }
 
-    private ExprFuncB myLambda(ExprB exprB) {
-      var inner = exprFuncB(funcTB(blobTB(), intTB()), exprB);
-      return exprFuncB(list(intTB()), inner);
+    private LambdaB myLambda(ExprB exprB) {
+      var inner = lambdaB(funcTB(blobTB(), intTB()), exprB);
+      return lambdaB(list(intTB()), inner);
     }
 
     @Test
@@ -148,7 +148,7 @@ public class VarReducerBTest extends TestContext {
 
     @Test
     public void call_func() {
-      assertReferenceInliningReplacesReference(r -> callB(exprFuncB(r)));
+      assertReferenceInliningReplacesReference(r -> callB(lambdaB(r)));
     }
 
     @Test

@@ -105,19 +105,19 @@ public class ExprBStableHashTest extends TestContext {
   }
 
   @Nested
-  class _expr_func {
+  class _lambda {
     @Test
     public void with_zero_params() {
-      var exprFuncB = exprFuncB(funcTB(intTB()), intB(1));
-      assertThat(exprFuncB.hash())
+      var lambdaB = lambdaB(funcTB(intTB()), intB(1));
+      assertThat(lambdaB.hash())
           .isEqualTo(
               Hash.decode("ca7332dde14f5b0385f6919dd5a0bb7516b985218cb5b3ab7fe231b02827a615"));
     }
 
     @Test
     public void with_one_param() {
-      var exprFuncB = exprFuncB(funcTB(blobTB(), intTB()), intB(1));
-      assertThat(exprFuncB.hash())
+      var lambdaB = lambdaB(funcTB(blobTB(), intTB()), intB(1));
+      assertThat(lambdaB.hash())
           .isEqualTo(
               Hash.decode("b4fe4202b949e583a75d441a2f7654fd94ff5c616f206343f707fc24df25031a"));
     }
@@ -199,16 +199,16 @@ public class ExprBStableHashTest extends TestContext {
     @Test
     public void call_without_args() {
       var type = funcTB(intTB());
-      var exprFuncB = exprFuncB(type, intB());
-      assertThat(callB(exprFuncB).hash())
+      var funcB = lambdaB(type, intB());
+      assertThat(callB(funcB).hash())
           .isEqualTo(
               Hash.decode("ad58f94040c8d5a6551a1ada94aab077ea710a97b364428ebc07e4c066a5916b"));
     }
 
     @Test
     public void call_with_one_arg() {
-      var exprFuncB = exprFuncB(list(stringTB()), intB());
-      assertThat(callB(exprFuncB, stringB("abc")).hash())
+      var lambdaB = lambdaB(list(stringTB()), intB());
+      assertThat(callB(lambdaB, stringB("abc")).hash())
           .isEqualTo(
               Hash.decode("a09ab8dc2cda31a74cb0f2cde880a272f7e6e5d6e506a744402d4a0afe0c20ba"));
     }

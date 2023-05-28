@@ -24,9 +24,9 @@ import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.MapFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
@@ -40,9 +40,9 @@ import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.CategoryDb;
 import org.smoothbuild.vm.bytecode.type.exc.CategoryDbExc;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
-import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IntTB;
+import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
 import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
@@ -75,10 +75,10 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newBool(value));
   }
 
-  public ExprFuncB exprFunc(FuncTB type, ExprB body) {
+  public LambdaB lambda(FuncTB type, ExprB body) {
     validateBodyEvaluationT(type, body);
-    var cat = categoryDb.exprFunc(type);
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newExprFunc(cat, body));
+    var cat = categoryDb.lambda(type);
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newLambda(cat, body));
   }
 
   public NativeFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
@@ -240,7 +240,7 @@ public class BytecodeDb {
     return categoryDb.bool().newExpr(root, this);
   }
 
-  private ExprFuncB newExprFunc(ExprFuncCB type, ExprB body) throws HashedDbExc {
+  private LambdaB newLambda(LambdaCB type, ExprB body) throws HashedDbExc {
     var dataHash = body.hash();
     var root = newRoot(type, dataHash);
     return type.newExpr(root, this);

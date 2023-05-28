@@ -14,7 +14,7 @@ import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.oper.VarB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 
 import com.google.common.collect.ImmutableList;
 
@@ -48,7 +48,7 @@ public class VarReducerB {
       case PickB      pickB      -> rewritePick(pickB, resolver);
       case VarB       varB       -> rewriteVar(varB, resolver);
       case SelectB    selectB    -> rewriteSelect(selectB, resolver);
-      case ExprFuncB  exprFuncB  -> rewriteExprFunc(exprFuncB, resolver);
+      case LambdaB    lambdaB    -> rewriteLambda(lambdaB, resolver);
       default                    -> exprB;
       // @formatter:on
     };
@@ -115,15 +115,15 @@ public class VarReducerB {
     }
   }
 
-  private ExprFuncB rewriteExprFunc(ExprFuncB exprFuncB, Resolver resolver) {
-    var funcTB = exprFuncB.type();
+  private LambdaB rewriteLambda(LambdaB lambdaB, Resolver resolver) {
+    var funcTB = lambdaB.type();
     int paramsSize = funcTB.params().size();
-    var body = exprFuncB.body();
+    var body = lambdaB.body();
     var rewrittenBody = rewriteExpr(body, resolver.withIncreasedParamCount(paramsSize));
     if (body.equals(rewrittenBody)) {
-      return exprFuncB;
+      return lambdaB;
     } else {
-      return bytecodeF.exprFunc(funcTB, rewrittenBody);
+      return bytecodeF.lambda(funcTB, rewrittenBody);
     }
   }
 

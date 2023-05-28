@@ -26,7 +26,7 @@ public class CategoryBStableHashTest extends TestContext {
             "1406e05881e299367766d313e26c05564ec91bf721d31726bd6e46e60689539a"),
         arguments(t.boolTB(),
             "9c12cfdc04c74584d787ac3d23772132c18524bc7ab28dec4219b8fc5b425f70"),
-        arguments(t.exprFuncCB(),
+        arguments(t.lambdaCB(),
             "6bc8397b7832905afad31d92d07c1d21f1302196b142d0b004549aec72962c07"),
         arguments(t.funcTB(),
             "2efc8dc079b8693ac751fc181888b64bb53404b0c1aba4c54f9dafbe2e1ec254"),
