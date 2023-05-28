@@ -8,8 +8,6 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CALL;
-import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CLOSURE;
-import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.COMBINE;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.EXPR_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.FUNC;
@@ -169,28 +167,6 @@ public class CategoryBCorruptedTest extends TestContext {
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
                 hash, ARRAY, DATA_PATH, TypeB.class, VarCB.class));
-      }
-    }
-
-    @Nested
-    class _closure extends _abstract_func_category_test_suite {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save closure type in HashedDb.
-         */
-        var specHash = hash(
-            hash(CLOSURE.marker()),
-            hash(funcTB(stringTB(), boolTB(), intTB()))
-        );
-        assertThat(specHash)
-            .isEqualTo(closureCB(stringTB(), boolTB(), intTB()).hash());
-      }
-
-      @Override
-      protected CategoryKindB categoryKind() {
-        return CLOSURE;
       }
     }
 
@@ -761,41 +737,6 @@ public class CategoryBCorruptedTest extends TestContext {
         protected _oper_cat_tests() {
           super(CALL);
         }
-      }
-    }
-
-    @Nested
-    class _closurize {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save Closurize type in HashedDb.
-         */
-        var hash = hash(
-            hash(CLOSURIZE.marker()),
-            hash(funcTB(intTB(), blobTB()))
-        );
-        assertThat(hash)
-            .isEqualTo(closurizeCB(funcTB(intTB(), blobTB())).hash());
-      }
-
-      @Nested
-      class _oper_cat_tests extends AbstractOperCategoryTestSuite {
-        protected _oper_cat_tests() {
-          super(CLOSURIZE, FuncTB.class);
-        }
-      }
-
-      @Test
-      public void with_evaluation_type_not_being_tuple_type() throws Exception {
-        var hash = hash(
-            hash(COMBINE.marker()),
-            hash(intTB())
-        );
-        assertThatGet(hash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
-                hash, COMBINE, DATA_PATH, TupleTB.class, IntTB.class));
       }
     }
 

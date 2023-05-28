@@ -30,8 +30,8 @@ public class CategoryKindBTest {
     var illegalMarkers = list(
         arguments(-2, null),
         arguments(-1, null),
-        arguments(19, null),
-        arguments(20, null)
+        arguments(17, null),
+        arguments(18, null)
     );
     return concat(marker_to_kind_map(), illegalMarkers);
   }
@@ -44,6 +44,7 @@ public class CategoryKindBTest {
         arguments(3, CategoryKinds.STRING),
         arguments(4, CategoryKinds.ARRAY),
         arguments(5, CategoryKinds.TUPLE),
+        arguments(6, CategoryKinds.EXPR_FUNC),
         arguments(7, CategoryKinds.NATIVE_FUNC),
         arguments(8, CategoryKinds.ORDER),
         arguments(9, CategoryKinds.COMBINE),
@@ -53,9 +54,7 @@ public class CategoryKindBTest {
         arguments(13, CategoryKinds.IF_FUNC),
         arguments(14, CategoryKinds.VAR),
         arguments(15, CategoryKinds.MAP_FUNC),
-        arguments(16, CategoryKinds.FUNC),
-        arguments(17, CategoryKinds.CLOSURIZE),
-        arguments(18, CategoryKinds.EXPR_FUNC)
+        arguments(16, CategoryKinds.FUNC)
     );
   }
 }

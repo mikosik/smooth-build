@@ -33,7 +33,6 @@ import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
-import org.smoothbuild.vm.bytecode.type.value.ClosureCB;
 import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
@@ -97,7 +96,6 @@ public class CategoryBTest extends TestContext {
         args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
 
         args(f -> f.call(f.int_()), "CALL:Int"),
-        args(f -> f.closurize(f.funcT(list(f.string()), f.int_())), "CLOSURIZE:(String)->Int"),
         args(f -> f.combine(f.tuple(f.string(), f.int_())), "COMBINE:{String,Int}"),
         args(f -> f.order(f.array(f.string())), "ORDER:[String]"),
         args(f -> f.pick(f.int_()), "PICK:Int"),
@@ -137,42 +135,6 @@ public class CategoryBTest extends TestContext {
           args(f -> f.funcT(list(), f.int_()), f -> f.tuple()),
           args(f -> f.funcT(list(f.bool()), f.blob()), f -> f.tuple(f.bool())),
           args(f -> f.funcT(list(f.bool(), f.int_()), f.blob()), f -> f.tuple(f.bool(), f.int_()))
-      );
-    }
-  }
-
-  @Nested
-  class _closure {
-    @ParameterizedTest
-    @MethodSource("result_cases")
-    public void result(
-        Function<CategoryDb, ClosureCB> factoryCall,
-        Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().result())
-          .isEqualTo(execute(expected));
-    }
-
-    public static List<Arguments> result_cases() {
-      return asList(
-          args(f -> f.closure(f.funcT(list(), f.int_())), f -> f.int_()),
-          args(f -> f.closure(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
-          args(f -> f.closure(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob())
-      );
-    }
-
-    @ParameterizedTest
-    @MethodSource("params_cases")
-    public void params(Function<CategoryDb, ClosureCB> factoryCall,
-        Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().params())
-          .isEqualTo(execute(expected));
-    }
-
-    public static List<Arguments> params_cases() {
-      return asList(
-          args(f -> f.closure(f.funcT(list(), f.int_())), f -> f.tuple()),
-          args(f -> f.closure(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
-          args(f -> f.closure(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }
@@ -367,13 +329,6 @@ public class CategoryBTest extends TestContext {
           arguments(db.combine(db.tuple(CONTEXT.stringTB())), db.tuple(
               CONTEXT.stringTB()))
       );
-    }
-
-    @ParameterizedTest
-    @MethodSource("types")
-    public void closurize(TypeB typeB) {
-      assertThat(closurizeCB(funcTB(typeB)).evaluationT())
-          .isEqualTo(funcTB(typeB));
     }
 
     @ParameterizedTest

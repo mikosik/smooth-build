@@ -9,8 +9,6 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BOOL;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CALL;
-import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CLOSURE;
-import static org.smoothbuild.vm.bytecode.type.CategoryKinds.CLOSURIZE;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.COMBINE;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.EXPR_FUNC;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.FUNC;
@@ -42,8 +40,6 @@ import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.BaseKindB;
-import org.smoothbuild.vm.bytecode.type.CategoryKindB.ClosureKindB;
-import org.smoothbuild.vm.bytecode.type.CategoryKindB.ClosurizeKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.ExprFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.IfFuncKindB;
@@ -57,7 +53,6 @@ import org.smoothbuild.vm.bytecode.type.exc.DecodeCatRootExc;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.vm.bytecode.type.oper.CallCB;
-import org.smoothbuild.vm.bytecode.type.oper.ClosurizeCB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.oper.OperCB;
 import org.smoothbuild.vm.bytecode.type.oper.OrderCB;
@@ -67,7 +62,6 @@ import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.BlobTB;
 import org.smoothbuild.vm.bytecode.type.value.BoolTB;
-import org.smoothbuild.vm.bytecode.type.value.ClosureCB;
 import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
@@ -126,10 +120,6 @@ public class CategoryDb {
 
   public BoolTB bool() {
     return bool;
-  }
-
-  public ClosureCB closure(FuncTB funcTB) {
-    return funcC(CLOSURE, funcTB);
   }
 
   public ExprFuncCB exprFunc(ImmutableList<TypeB> params, TypeB result) {
@@ -197,10 +187,6 @@ public class CategoryDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(CALL, evaluationT));
   }
 
-  public ClosurizeCB closurize(FuncTB evaluationT) {
-    return wrapHashedDbExcAsBytecodeDbExc(() -> newClosurize(evaluationT));
-  }
-
   public CombineCB combine(TupleTB evaluationT) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOper(COMBINE, evaluationT));
   }
@@ -234,8 +220,6 @@ public class CategoryDb {
     return switch (kind) {
       case ArrayKindB       array       -> readArrayT(hash, rootSeq, kind);
       case BaseKindB        base        -> handleBaseT(hash, rootSeq, kind);
-      case ClosurizeKindB   closurizeB  -> readClosurizeCat(hash, rootSeq, closurizeB);
-      case ClosureKindB     closure     -> readFuncCat(hash, rootSeq, closure);
       case ExprFuncKindB    exprFunc    -> readFuncCat(hash, rootSeq, exprFunc);
       case FuncKindB        func        -> readFuncT(hash, rootSeq);
       case IfFuncKindB      ifFunc      -> readIfFuncCat(hash, rootSeq, ifFunc);
@@ -273,11 +257,6 @@ public class CategoryDb {
     assertCatRootSeqSize(hash, kind, rootSeq, 1);
     throw new RuntimeException(
         "Internal error: Category with kind " + kind + " should be found in cache.");
-  }
-
-  private OperCB readClosurizeCat(Hash hash, List<Hash> rootSeq, ClosurizeKindB closurizeKindB) {
-    var evaluationT = readDataAsType(hash, rootSeq, closurizeKindB, FuncTB.class);
-    return newClosurize(hash, evaluationT);
   }
 
   private OperCB readOperCat(Hash hash, List<Hash> rootSeq, OperKindB<?> operKind) {
@@ -446,15 +425,6 @@ public class CategoryDb {
 
   private TupleTB newTuple(Hash rootHash, ImmutableList<TypeB> items) {
     return cache(new TupleTB(rootHash, items));
-  }
-
-  private ClosurizeCB newClosurize(FuncTB funcTB) throws HashedDbExc {
-    var rootHash = writeRootWithData(CLOSURIZE, funcTB);
-    return newClosurize(rootHash, funcTB);
-  }
-
-  private ClosurizeCB newClosurize(Hash rootHash, FuncTB funcTB) {
-    return cache(new ClosurizeCB(rootHash, funcTB));
   }
 
   private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT) throws HashedDbExc {

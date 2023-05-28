@@ -18,7 +18,6 @@ import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbExc;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
-import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
@@ -28,7 +27,6 @@ import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
@@ -99,10 +97,6 @@ public class BytecodeF {
     return bytecodeDb.call(func, args);
   }
 
-  public ClosurizeB closurize(ExprFuncB exprFuncB) {
-    return bytecodeDb.closurize(exprFuncB);
-  }
-
   public CombineB combine(ImmutableList<ExprB> items) {
     return bytecodeDb.combine(items);
   }
@@ -113,10 +107,6 @@ public class BytecodeF {
 
   public ExprFuncB exprFunc(FuncTB type, ExprB body) {
     return bytecodeDb.exprFunc(type, body);
-  }
-
-  public ClosureB closure(CombineB environment, ExprFuncB func) {
-    return bytecodeDb.closure(environment, func);
   }
 
   public IfFuncB ifFunc(TypeB t) {

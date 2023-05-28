@@ -16,7 +16,6 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.FuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.evaluate.compute.ComputationResult;
@@ -87,18 +86,13 @@ public class TaskReporterImpl implements TaskReporter {
   private String label(ConstTask constTask) {
     var valueB = constTask.valueB();
     return switch (valueB) {
-      case ClosureB closureB -> nameOf(closureB.func());
       case FuncB funcB -> nameOf(funcB);
       default -> valueB.type().name();
     };
   }
 
   private Location locationOf(ExprB exprB) {
-    if (exprB instanceof ClosureB closureB) {
-      return locationOf(closureB.func());
-    } else {
-      return bsMapping.locMapping().get(exprB.hash());
-    }
+    return bsMapping.locMapping().get(exprB.hash());
   }
 
   private String nameOf(FuncB funcB) {

@@ -4,7 +4,6 @@ import java.util.function.BiFunction;
 
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
-import org.smoothbuild.vm.bytecode.expr.oper.ClosurizeB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
@@ -13,7 +12,6 @@ import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ClosureB;
 import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.FuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
@@ -26,7 +24,6 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.BaseKindB;
-import org.smoothbuild.vm.bytecode.type.CategoryKindB.ClosurizeKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.FuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.TupleKindB;
@@ -38,7 +35,6 @@ import org.smoothbuild.vm.bytecode.type.oper.PickCB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
-import org.smoothbuild.vm.bytecode.type.value.ClosureCB;
 import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
@@ -49,7 +45,7 @@ import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public sealed abstract class CategoryKindB
-    permits AbstFuncKindB, ArrayKindB, BaseKindB, ClosurizeKindB, FuncKindB, OperKindB, TupleKindB {
+    permits AbstFuncKindB, ArrayKindB, BaseKindB, FuncKindB, OperKindB, TupleKindB {
   public static sealed class BaseKindB extends CategoryKindB
       permits BlobKindB, BoolKindB, IntKindB, StringKindB {
     private BaseKindB(String name, byte marker, Class<? extends ExprB> typeJ) {
@@ -134,15 +130,9 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class ClosureKindB extends AbstFuncKindB<ClosureCB> {
-    ClosureKindB() {
-      super("CLOSURE", (byte) 6, ClosureB.class, ClosureCB::new);
-    }
-  }
-
   public static final class ExprFuncKindB extends AbstFuncKindB<ExprFuncCB> {
     ExprFuncKindB() {
-      super("EXPR_FUNC", (byte) 18, ExprFuncB.class, ExprFuncCB::new);
+      super("EXPR_FUNC", (byte) 6, ExprFuncB.class, ExprFuncCB::new);
     }
   }
 
@@ -200,12 +190,6 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class ClosurizeKindB extends CategoryKindB {
-    ClosurizeKindB() {
-      super("CLOSURIZE", (byte) 17, ClosurizeB.class);
-    }
-  }
-
   private final String name;
   private final byte marker;
   private final Class<? extends ExprB> typeJ;
@@ -236,7 +220,7 @@ public sealed abstract class CategoryKindB
       case 3 -> CategoryKinds.STRING;
       case 4 -> CategoryKinds.ARRAY;
       case 5 -> CategoryKinds.TUPLE;
-      case 6 -> CategoryKinds.CLOSURE;
+      case 6 -> CategoryKinds.EXPR_FUNC;
       case 7 -> CategoryKinds.NATIVE_FUNC;
       case 8 -> CategoryKinds.ORDER;
       case 9 -> CategoryKinds.COMBINE;
@@ -247,8 +231,6 @@ public sealed abstract class CategoryKindB
       case 14 -> CategoryKinds.VAR;
       case 15 -> CategoryKinds.MAP_FUNC;
       case 16 -> CategoryKinds.FUNC;
-      case 17 -> CategoryKinds.CLOSURIZE;
-      case 18 -> CategoryKinds.EXPR_FUNC;
       default -> null;
     };
   }

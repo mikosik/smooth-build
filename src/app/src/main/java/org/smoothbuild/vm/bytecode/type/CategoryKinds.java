@@ -4,8 +4,6 @@ import org.smoothbuild.vm.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.BlobKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.BoolKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.CallKindB;
-import org.smoothbuild.vm.bytecode.type.CategoryKindB.ClosureKindB;
-import org.smoothbuild.vm.bytecode.type.CategoryKindB.ClosurizeKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.CombineKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.ExprFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.FuncKindB;
@@ -35,7 +33,6 @@ public class CategoryKinds {
   public static final CategoryKindB STRING = new StringKindB();
   public static final CategoryKindB ARRAY = new ArrayKindB();
   public static final CategoryKindB TUPLE = new TupleKindB();
-  public static final ClosureKindB CLOSURE = new ClosureKindB();
   public static final ExprFuncKindB EXPR_FUNC = new ExprFuncKindB();
   public static final IfFuncKindB IF_FUNC = new IfFuncKindB();
   public static final MapFuncKindB MAP_FUNC = new MapFuncKindB();
@@ -47,5 +44,4 @@ public class CategoryKinds {
   public static final OperKindB<PickCB> PICK = new PickKindB();
   public static final OperKindB<VarCB> VAR = new VarKindB();
   public static final OperKindB<SelectCB> SELECT = new SelectKindB();
-  public static final ClosurizeKindB CLOSURIZE = new ClosurizeKindB();
 }
