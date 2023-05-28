@@ -13,7 +13,7 @@ tasks.test.getInputs().dir('../../doc')
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(19)
+        languageVersion = JavaLanguageVersion.of(20)
     }
 }
 
