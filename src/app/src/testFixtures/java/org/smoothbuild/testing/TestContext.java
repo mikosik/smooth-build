@@ -136,9 +136,9 @@ import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.MapFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
@@ -156,10 +156,10 @@ import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.BlobTB;
 import org.smoothbuild.vm.bytecode.type.value.BoolTB;
-import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IfFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.IntTB;
+import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
 import org.smoothbuild.vm.bytecode.type.value.MapFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.StringTB;
@@ -491,20 +491,20 @@ public class TestContext {
     return tupleTB(stringTB(), blobTB());
   }
 
-  public ExprFuncCB exprFuncCB() {
-    return exprFuncCB(blobTB(), stringTB(), intTB());
+  public LambdaCB lambdaCB() {
+    return lambdaCB(blobTB(), stringTB(), intTB());
   }
 
-  public ExprFuncCB exprFuncCB(TypeB resultT) {
-    return categoryDb().exprFunc(funcTB(resultT));
+  public LambdaCB lambdaCB(TypeB resultT) {
+    return categoryDb().lambda(funcTB(resultT));
   }
 
-  public ExprFuncCB exprFuncCB(TypeB param, TypeB resultT) {
-    return categoryDb().exprFunc(funcTB(param, resultT));
+  public LambdaCB lambdaCB(TypeB param, TypeB resultT) {
+    return categoryDb().lambda(funcTB(param, resultT));
   }
 
-  public ExprFuncCB exprFuncCB(TypeB param1, TypeB param2, TypeB resultT) {
-    return categoryDb().exprFunc(funcTB(param1, param2, resultT));
+  public LambdaCB lambdaCB(TypeB param1, TypeB param2, TypeB resultT) {
+    return categoryDb().lambda(funcTB(param1, param2, resultT));
   }
 
   public FuncTB funcTB() {
@@ -720,29 +720,29 @@ public class TestContext {
     return bytecodeF().file(blob, string);
   }
 
-  public ExprFuncB exprFuncB() {
-    return exprFuncB(intB());
+  public LambdaB lambdaB() {
+    return lambdaB(intB());
   }
 
-  public ExprFuncB exprFuncB(ExprB body) {
-    return exprFuncB(list(), body);
+  public LambdaB lambdaB(ExprB body) {
+    return lambdaB(list(), body);
   }
 
-  public ExprFuncB exprFuncB(ImmutableList<TypeB> paramTs, ExprB body) {
+  public LambdaB lambdaB(ImmutableList<TypeB> paramTs, ExprB body) {
     var funcTB = funcTB(paramTs, body.evaluationT());
-    return exprFuncB(funcTB, body);
+    return lambdaB(funcTB, body);
   }
 
-  public ExprFuncB exprFuncB(FuncTB type, ExprB body) {
-    return bytecodeDb().exprFunc(type, body);
+  public LambdaB lambdaB(FuncTB type, ExprB body) {
+    return bytecodeDb().lambda(type, body);
   }
 
-  public ExprFuncB idFuncB() {
-    return exprFuncB(list(intTB()), varB(intTB(), 0));
+  public LambdaB idFuncB() {
+    return lambdaB(list(intTB()), varB(intTB(), 0));
   }
 
-  public ExprFuncB returnAbcFuncB() {
-    return exprFuncB(stringB("abc"));
+  public LambdaB returnAbcFuncB() {
+    return lambdaB(stringB("abc"));
   }
 
   public NativeFuncB returnAbcNativeFuncB() throws IOException {

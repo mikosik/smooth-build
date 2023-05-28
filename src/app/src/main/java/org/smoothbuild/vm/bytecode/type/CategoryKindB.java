@@ -12,10 +12,10 @@ import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.FuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.MapFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
@@ -35,10 +35,10 @@ import org.smoothbuild.vm.bytecode.type.oper.PickCB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
-import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IfFuncCB;
+import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
 import org.smoothbuild.vm.bytecode.type.value.MapFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
@@ -130,9 +130,9 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class ExprFuncKindB extends AbstFuncKindB<ExprFuncCB> {
-    ExprFuncKindB() {
-      super("EXPR_FUNC", (byte) 6, ExprFuncB.class, ExprFuncCB::new);
+  public static final class LambdaKindB extends AbstFuncKindB<LambdaCB> {
+    LambdaKindB() {
+      super("LAMBDA", (byte) 6, LambdaB.class, LambdaCB::new);
     }
   }
 
@@ -220,7 +220,7 @@ public sealed abstract class CategoryKindB
       case 3 -> CategoryKinds.STRING;
       case 4 -> CategoryKinds.ARRAY;
       case 5 -> CategoryKinds.TUPLE;
-      case 6 -> CategoryKinds.EXPR_FUNC;
+      case 6 -> CategoryKinds.LAMBDA;
       case 7 -> CategoryKinds.NATIVE_FUNC;
       case 8 -> CategoryKinds.ORDER;
       case 9 -> CategoryKinds.COMBINE;

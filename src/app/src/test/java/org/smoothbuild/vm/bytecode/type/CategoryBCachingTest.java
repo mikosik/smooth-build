@@ -41,7 +41,7 @@ public class CategoryBCachingTest extends TestContext {
         catDb -> catDb.call(catDb.int_()),
         catDb -> catDb.combine(catDb.tuple()),
         catDb -> catDb.combine(catDb.tuple(catDb.int_())),
-        catDb -> catDb.exprFunc(catDb.funcT(list(), catDb.int_())),
+        catDb -> catDb.lambda(catDb.funcT(list(), catDb.int_())),
         catDb -> catDb.ifFunc(catDb.int_()),
         catDb -> catDb.mapFunc(catDb.int_(), catDb.string()),
         catDb -> catDb.order(catDb.array(catDb.int_())),

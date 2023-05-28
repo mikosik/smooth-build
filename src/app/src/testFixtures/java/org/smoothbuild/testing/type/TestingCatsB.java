@@ -84,10 +84,10 @@ public class TestingCatsB {
         CONTEXT.nativeFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
         CONTEXT.nativeFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
         CONTEXT.nativeFuncCB(CONTEXT.stringTB()),
-        CONTEXT.exprFuncCB(CONTEXT.blobTB()),
-        CONTEXT.exprFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.exprFuncCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.exprFuncCB(CONTEXT.stringTB())
+        CONTEXT.lambdaCB(CONTEXT.blobTB()),
+        CONTEXT.lambdaCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
+        CONTEXT.lambdaCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
+        CONTEXT.lambdaCB(CONTEXT.stringTB())
     );
 
     return concat(valueCs, exprCs);

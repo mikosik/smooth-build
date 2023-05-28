@@ -95,8 +95,8 @@ public class EvaluatorBTest extends TestContext {
 
       @Test
       public void no_task_is_executed_for_func_arg_that_is_not_used() {
-        var func = exprFuncB(list(arrayTB(boolTB())), intB(7));
-        var call = callB(func, orderB(boolTB()));
+        var lambdaB = lambdaB(list(arrayTB(boolTB())), intB(7));
+        var call = callB(lambdaB, orderB(boolTB()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
         assertThat(evaluate(evaluatorB(spyingExecutor), call))
@@ -121,10 +121,10 @@ public class EvaluatorBTest extends TestContext {
 
       @Test
       public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used() {
-        var innerFunc = exprFuncB(list(arrayTB(boolTB())), intB(7));
-        var outerFunc = exprFuncB(list(arrayTB(boolTB())),
-            callB(innerFunc, varB(arrayTB(boolTB()), 0)));
-        var call = callB(outerFunc, orderB(boolTB()));
+        var innerLambda = lambdaB(list(arrayTB(boolTB())), intB(7));
+        var outerLambda = lambdaB(list(arrayTB(boolTB())),
+            callB(innerLambda, varB(arrayTB(boolTB()), 0)));
+        var call = callB(outerLambda, orderB(boolTB()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
         assertThat(evaluate(evaluatorB(spyingExecutor), call))
@@ -136,8 +136,8 @@ public class EvaluatorBTest extends TestContext {
       @Test
       public void task_for_func_arg_that_is_used_twice_is_executed_only_once() {
         var arrayT = arrayTB(intTB());
-        var func = exprFuncB(list(arrayT), combineB(varB(arrayT, 0), varB(arrayT, 0)));
-        var call = callB(func, orderB(intB(7)));
+        var lambdaB = lambdaB(list(arrayT), combineB(varB(arrayT, 0), varB(arrayT, 0)));
+        var call = callB(lambdaB, orderB(intB(7)));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
         assertThat(evaluate(evaluatorB(spyingExecutor), call))
@@ -152,7 +152,7 @@ public class EvaluatorBTest extends TestContext {
       @Test
       public void learning_test() {
         // Learning test verifies that job creation is counted also inside func body.
-        var func = exprFuncB(orderB(intB(7)));
+        var func = lambdaB(orderB(intB(7)));
         var call = callB(func);
 
         var countingScheduler = countingSchedulerB();
@@ -165,8 +165,8 @@ public class EvaluatorBTest extends TestContext {
 
       @Test
       public void job_for_unused_func_arg_is_created_but_not_jobs_for_its_dependencies() {
-        var func = exprFuncB(list(arrayTB(boolTB())), intB(7));
-        var call = callB(func, orderB(boolB()));
+        var lambdaB = lambdaB(list(arrayTB(boolTB())), intB(7));
+        var call = callB(lambdaB, orderB(boolB()));
 
         var countingScheduler = countingSchedulerB();
         assertThat(evaluate(evaluatorB(() -> countingScheduler), call))
@@ -225,7 +225,7 @@ public class EvaluatorBTest extends TestContext {
       class _call {
         @Test
         public void lambda() {
-          var func = exprFuncB(intB(7));
+          var func = lambdaB(intB(7));
           var call = callB(func);
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
@@ -233,18 +233,18 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void lambda_passed_as_argument() {
-          var paramFunc = exprFuncB(intB(7));
+          var paramFunc = lambdaB(intB(7));
           var paramFuncT = paramFunc.evaluationT();
-          var outerFunc = exprFuncB(list(paramFuncT), callB(varB(paramFuncT, 0)));
-          var call = callB(outerFunc, paramFunc);
+          var outerLambda = lambdaB(list(paramFuncT), callB(varB(paramFuncT, 0)));
+          var call = callB(outerLambda, paramFunc);
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
         }
 
         @Test
         public void lambda_returned_from_call() {
-          var innerLambda = exprFuncB(intB(7));
-          var outerLambda = exprFuncB(innerLambda);
+          var innerLambda = lambdaB(intB(7));
+          var outerLambda = lambdaB(innerLambda);
           var call = callB(callB(outerLambda));
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
@@ -252,8 +252,8 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void lambda_returning_param_of_enclosing_lambda() {
-          var innerLambda = exprFuncB(varB(intTB(), 0));
-          var outerLambda = exprFuncB(list(intTB()), innerLambda);
+          var innerLambda = lambdaB(varB(intTB(), 0));
+          var outerLambda = lambdaB(list(intTB()), innerLambda);
           var innerReturnedByOuter = callB(outerLambda, intB(17));
           var callB = callB(innerReturnedByOuter);
           assertThat(evaluate(callB))
@@ -262,9 +262,9 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void lambda_returning_value_from_environment_that_references_another_environment() {
-          var innerLambda = exprFuncB(varB(intTB(), 0));
-          var middleLambda = exprFuncB(list(intTB()), innerLambda);
-          var outerLambda = exprFuncB(list(intTB()), callB(middleLambda, varB(intTB(), 0)));
+          var innerLambda = lambdaB(varB(intTB(), 0));
+          var middleLambda = lambdaB(list(intTB()), innerLambda);
+          var outerLambda = lambdaB(list(intTB()), callB(middleLambda, varB(intTB(), 0)));
           var middleReturnedByOuter = callB(outerLambda, intB(17));
           assertThat(evaluate(callB(middleReturnedByOuter)))
               .isEqualTo(intB(17));
@@ -291,9 +291,9 @@ public class EvaluatorBTest extends TestContext {
         public void map_func() {
           var s = intTB();
           var r = tupleTB(s);
-          var func = exprFuncB(funcTB(s, r), combineB(varB(s, 0)));
+          var lambda = lambdaB(funcTB(s, r), combineB(varB(s, 0)));
           var mapFunc = mapFuncB(r, s);
-          var map = callB(mapFunc, arrayB(intB(1), intB(2)), func);
+          var map = callB(mapFunc, arrayB(intB(1), intB(2)), lambda);
           assertThat(evaluate(map))
               .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
         }
@@ -321,8 +321,8 @@ public class EvaluatorBTest extends TestContext {
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var nativeFuncT = nativeFuncB.evaluationT();
-          var outerFunc = exprFuncB(list(nativeFuncT), callB(varB(nativeFuncT, 0), intB(7)));
-          var call = callB(outerFunc, nativeFuncB);
+          var outerLambda = lambdaB(list(nativeFuncT), callB(varB(nativeFuncT, 0), intB(7)));
+          var call = callB(outerLambda, nativeFuncB);
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(7));
         }
@@ -336,7 +336,7 @@ public class EvaluatorBTest extends TestContext {
               .thenReturn(Try.result(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
-          var outerFunc = exprFuncB(nativeFuncB);
+          var outerFunc = lambdaB(nativeFuncB);
           var call = callB(callB(outerFunc), intB(7));
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(7));
@@ -394,24 +394,24 @@ public class EvaluatorBTest extends TestContext {
       class _reference {
         @Test
         public void var_referencing_func_param() {
-          var exprFuncB = exprFuncB(list(intTB()), varB(intTB(), 0));
-          var callB = callB(exprFuncB, intB(7));
+          var lambdaB = lambdaB(list(intTB()), varB(intTB(), 0));
+          var callB = callB(lambdaB, intB(7));
           assertThat(evaluate(callB))
               .isEqualTo(intB(7));
         }
 
         @Test
         public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda() {
-          var innerFuncB = exprFuncB(list(), varB(intTB(), 0));
-          var outerFuncB = exprFuncB(list(intTB()), callB(innerFuncB));
-          assertThat(evaluate(callB(outerFuncB, intB(7))))
+          var innerLambda = lambdaB(list(), varB(intTB(), 0));
+          var outerLambda = lambdaB(list(intTB()), callB(innerLambda));
+          assertThat(evaluate(callB(outerLambda, intB(7))))
               .isEqualTo(intB(7));
         }
 
         @Test
         public void var_inside_inner_lambda_referencing_param_of_enclosing_lambda() {
-          var innerLambdaB = exprFuncB(list(intTB()), varB(intTB(), 1));
-          var outerLambdaB = exprFuncB(list(intTB()), innerLambdaB);
+          var innerLambdaB = lambdaB(list(intTB()), varB(intTB(), 1));
+          var outerLambdaB = lambdaB(list(intTB()), innerLambdaB);
           var callOuter = callB(outerLambdaB, intB(7));
           var callInner = callB(callOuter, intB(8));
 
@@ -422,7 +422,7 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void var_referencing_with_index_out_of_bounds_causes_fatal()
             throws InterruptedException {
-          var lambdaB = exprFuncB(list(intTB()), varB(intTB(), 2));
+          var lambdaB = lambdaB(list(intTB()), varB(intTB(), 2));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
           vm.evaluate(list(callB(lambdaB, intB(7))));
@@ -438,10 +438,10 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
             throws InterruptedException {
-          var funcB = exprFuncB(list(blobTB()), varB(intTB(), 0));
+          var lambdaB = lambdaB(list(blobTB()), varB(intTB(), 0));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
-          vm.evaluate(list(callB(funcB, blobB())));
+          vm.evaluate(list(callB(lambdaB, blobB())));
           verify(reporter, times(1))
               .report(
                   eq("Internal smooth error"),
@@ -611,8 +611,8 @@ public class EvaluatorBTest extends TestContext {
       @Test
       public void order_inside_func_body() {
         var orderB = orderB(intB(17));
-        var funcB = exprFuncB(orderB);
-        var funcAsExpr = callB(exprFuncB(funcB));
+        var funcB = lambdaB(orderB);
+        var funcAsExpr = callB(lambdaB(funcB));
         var callB = callB(funcAsExpr);
         assertReport(
             callB,
@@ -623,9 +623,9 @@ public class EvaluatorBTest extends TestContext {
       @Test
       public void order_inside_func_body_that_is_called_from_other_func_body() {
         var orderB = orderB(intB(17));
-        var func2 = exprFuncB(orderB);
+        var func2 = lambdaB(orderB);
         var call2 = callB(func2);
-        var func1 = exprFuncB(call2);
+        var func1 = lambdaB(call2);
         var call1 = callB(func1);
         assertReport(
             call1,

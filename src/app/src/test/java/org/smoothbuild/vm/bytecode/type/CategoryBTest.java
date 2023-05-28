@@ -33,8 +33,8 @@ import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
-import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
+import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
 import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
@@ -82,8 +82,8 @@ public class CategoryBTest extends TestContext {
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.exprFunc(list(), f.string()), "EXPR_FUNC:()->String"),
-        args(f -> f.exprFunc(list(f.string()), f.string()), "EXPR_FUNC:(String)->String"),
+        args(f -> f.lambda(list(), f.string()), "LAMBDA:()->String"),
+        args(f -> f.lambda(list(f.string()), f.string()), "LAMBDA:(String)->String"),
         args(f -> f.funcT(list(), f.string()), "()->String"),
         args(f -> f.funcT(list(f.string()), f.string()), "(String)->String"),
         args(f -> f.ifFunc(f.int_()), "IF_FUNC:(Bool,Int,Int)->Int"),
@@ -144,7 +144,7 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
-        Function<CategoryDb, ExprFuncCB> factoryCall,
+        Function<CategoryDb, LambdaCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().result())
           .isEqualTo(execute(expected));
@@ -152,16 +152,16 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.exprFunc(f.funcT(list(), f.int_())), f -> f.int_()),
-          args(f -> f.exprFunc(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
-          args(f -> f.exprFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob())
+          args(f -> f.lambda(f.funcT(list(), f.int_())), f -> f.int_()),
+          args(f -> f.lambda(f.funcT(list(f.bool()), f.blob())), f -> f.blob()),
+          args(f -> f.lambda(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.blob())
       );
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
     public void params(
-        Function<CategoryDb, ExprFuncCB> factoryCall,
+        Function<CategoryDb, LambdaCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
       assertThat(execute(factoryCall).type().params())
           .isEqualTo(execute(expected));
@@ -169,9 +169,9 @@ public class CategoryBTest extends TestContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.exprFunc(f.funcT(list(), f.int_())), f -> f.tuple()),
-          args(f -> f.exprFunc(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
-          args(f -> f.exprFunc(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
+          args(f -> f.lambda(f.funcT(list(), f.int_())), f -> f.tuple()),
+          args(f -> f.lambda(f.funcT(list(f.bool()), f.blob())), f -> f.tuple(f.bool())),
+          args(f -> f.lambda(f.funcT(list(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
       );
     }
   }

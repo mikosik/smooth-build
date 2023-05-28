@@ -47,8 +47,8 @@ import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -367,7 +367,7 @@ public class ExprBCorruptedTest extends TestContext {
        * in HashedDb.
        */
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = exprFuncB(funcT, intB());
+      var func = lambdaB(funcT, intB());
       var args = combineB(stringB(), intB());
       var hash =
           hash(
@@ -390,7 +390,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = exprFuncB(funcT, intB());
+      var func = lambdaB(funcT, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(
           hash(func),
@@ -412,7 +412,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = exprFuncB(funcT, intB());
+      var func = lambdaB(funcT, intB());
       var dataHash = hash(
           hash(func)
       );
@@ -429,7 +429,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void data_is_seq_with_three_elems() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = exprFuncB(funcT, intB());
+      var func = lambdaB(funcT, intB());
       var args = combineB(stringB(), intB());
       var dataHash = hash(
           hash(func),
@@ -467,7 +467,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void args_is_val_instead_of_combine() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = exprFuncB(funcT, intB());
+      var func = lambdaB(funcT, intB());
       var type = callCB(intTB());
       var hash =
           hash(
@@ -485,7 +485,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void args_component_evaluation_type_is_not_combine_but_different_oper() throws Exception {
       var funcT = funcTB(stringTB(), intTB(), intTB());
-      var func = exprFuncB(funcT, intB());
+      var func = lambdaB(funcT, intB());
       var type = callCB(intTB());
       var hash =
           hash(
@@ -503,7 +503,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void evaluation_type_is_different_than_func_evaluation_type_result() throws Exception {
       var funcT = funcTB(stringTB(), intTB());
-      var func = exprFuncB(funcT, intB());
+      var func = lambdaB(funcT, intB());
       var args = combineB(stringB());
       var type = callCB(stringTB());
       var hash =
@@ -522,7 +522,7 @@ public class ExprBCorruptedTest extends TestContext {
     @Test
     public void func_evaluation_type_params_does_not_match_args_evaluation_types() throws Exception {
       var funcT = funcTB(stringTB(), boolTB(), intTB());
-      var func = exprFuncB(funcT, intB());
+      var func = lambdaB(funcT, intB());
       var args = combineB(stringB(), intB());
       var spec = callCB(intTB());
       var hash =
@@ -668,49 +668,49 @@ public class ExprBCorruptedTest extends TestContext {
        * expression function in HashedDb.
        */
       var body = boolB(true);
-      var cat = exprFuncCB(intTB(), stringTB(), boolTB());
+      var cat = lambdaCB(intTB(), stringTB(), boolTB());
       var hash =
           hash(
               hash(cat),
               hash(body)
           );
-      assertThat(((ExprFuncB) bytecodeDb().get(hash)).body())
+      assertThat(((LambdaB) bytecodeDb().get(hash)).body())
           .isEqualTo(body);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(exprFuncCB());
+      obj_root_without_data_hash(lambdaCB());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var bodyExpr = boolB(true);
-      var cat = exprFuncCB(intTB(), stringTB(), boolTB());
+      var cat = lambdaCB(intTB(), stringTB(), boolTB());
       var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           cat,
           dataHash,
-          (Hash hash) -> ((ExprFuncB) bytecodeDb().get(hash)).body());
+          (Hash hash) -> ((LambdaB) bytecodeDb().get(hash)).body());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_expr_but_nowhere(
-          exprFuncCB(),
-          (Hash hash) -> ((ExprFuncB) bytecodeDb().get(hash)).body());
+          lambdaCB(),
+          (Hash hash) -> ((LambdaB) bytecodeDb().get(hash)).body());
     }
 
     @Test
     public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
       var body = intB(17);
-      var cat = exprFuncCB(intTB(), stringTB(), boolTB());
+      var cat = lambdaCB(intTB(), stringTB(), boolTB());
       var hash =
           hash(
               hash(cat),
               hash(body)
           );
-      assertCall(() -> ((ExprFuncB) bytecodeDb().get(hash)).body())
+      assertCall(() -> ((LambdaB) bytecodeDb().get(hash)).body())
           .throwsException(new DecodeExprWrongNodeTypeExc(
               hash, cat, DATA_PATH, boolTB(), intTB()));
     }

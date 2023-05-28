@@ -6,16 +6,16 @@ import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
-import org.smoothbuild.vm.bytecode.type.value.ExprFuncCB;
+import org.smoothbuild.vm.bytecode.type.value.LambdaCB;
 
 /**
  * Named Expression Function.
  * This class is thread-safe.
  */
-public final class ExprFuncB extends FuncB {
-  public ExprFuncB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
+public final class LambdaB extends FuncB {
+  public LambdaB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
-    checkArgument(merkleRoot.category() instanceof ExprFuncCB);
+    checkArgument(merkleRoot.category() instanceof LambdaCB);
   }
 
   public ExprB body() {
@@ -30,6 +30,6 @@ public final class ExprFuncB extends FuncB {
 
   @Override
   public String exprToString() {
-    return "ExprFunc(" + type().name() + ")";
+    return "Lambda(" + type().name() + ")";
   }
 }

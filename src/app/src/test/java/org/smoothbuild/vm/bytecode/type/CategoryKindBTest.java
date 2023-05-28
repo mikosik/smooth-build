@@ -44,7 +44,7 @@ public class CategoryKindBTest {
         arguments(3, CategoryKinds.STRING),
         arguments(4, CategoryKinds.ARRAY),
         arguments(5, CategoryKinds.TUPLE),
-        arguments(6, CategoryKinds.EXPR_FUNC),
+        arguments(6, CategoryKinds.LAMBDA),
         arguments(7, CategoryKinds.NATIVE_FUNC),
         arguments(8, CategoryKinds.ORDER),
         arguments(9, CategoryKinds.COMBINE),

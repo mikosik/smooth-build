@@ -27,9 +27,9 @@ import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BoolB;
-import org.smoothbuild.vm.bytecode.expr.value.ExprFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IfFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
+import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.MapFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
@@ -105,8 +105,8 @@ public class BytecodeF {
     return bytecodeDb.tuple(list(content, path));
   }
 
-  public ExprFuncB exprFunc(FuncTB type, ExprB body) {
-    return bytecodeDb.exprFunc(type, body);
+  public LambdaB lambda(FuncTB type, ExprB body) {
+    return bytecodeDb.lambda(type, body);
   }
 
   public IfFuncB ifFunc(TypeB t) {
