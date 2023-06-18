@@ -5,7 +5,20 @@ import static org.smoothbuild.testing.TestContext.location;
 
 import org.junit.jupiter.api.Test;
 
+import com.google.common.testing.EqualsTester;
+
 public class TraceSTest {
+  @Test
+  public void equals_and_hashCode() {
+    var tester = new EqualsTester();
+    tester.addEqualityGroup(new TraceS(), new TraceS());
+    tester.addEqualityGroup(new TraceS("name1", location(1)), new TraceS("name1", location(1)));
+    tester.addEqualityGroup(new TraceS("name1", location(2)), new TraceS("name1", location(2)));
+    tester.addEqualityGroup(new TraceS("name2", location(1)), new TraceS("name2", location(1)));
+    tester.addEqualityGroup(new TraceS("name2", location(2)), new TraceS("name2", location(2)));
+    tester.testEquals();
+  }
+
   @Test
   public void to_string() {
     var trace = new TraceS(
