@@ -1531,7 +1531,7 @@ public class TestContext {
   }
 
   public static TraceS traceS() {
-    return traceS("trace-tag", location(17));
+    return new TraceS();
   }
 
   public static TraceS traceS(String code, int line) {
@@ -1539,7 +1539,7 @@ public class TestContext {
   }
 
   public static TraceS traceS(String code, Location location) {
-    return traceS(code, location, null);
+    return new TraceS(code, location);
   }
 
   public static TraceS traceS(String code2, int line2, String code1, int line1) {

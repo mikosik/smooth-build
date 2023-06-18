@@ -17,7 +17,7 @@ public class BsTraceTranslator {
 
   public TraceS translate(TraceB traceB) {
     if (traceB == null) {
-      return null;
+      return new TraceS();
     } else {
       var raw = translateRaw(traceB);
       var called = traceB.called();
@@ -27,7 +27,7 @@ public class BsTraceTranslator {
 
   public TraceS translateRaw(TraceB trace) {
     if (trace == null) {
-      return null;
+      return new TraceS();
     } else {
       var tailB = trace.tail();
       var tailS = translateRaw(tailB);

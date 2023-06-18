@@ -24,7 +24,7 @@ public class BsTraceTranslatorTest extends TestContext {
     var bsMapping = new BsMapping();
     var bsTraceTranslator = new BsTraceTranslator(bsMapping);
     assertThat(bsTraceTranslator.translate(null))
-        .isNull();
+        .isEqualTo(traceS());
   }
 
   @Test
