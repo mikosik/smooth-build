@@ -540,7 +540,7 @@ public class EvaluatorBTest extends TestContext {
         var taskReporter = mock(TaskReporter.class);
         evaluate(evaluatorB(taskReporter), valueB);
         verify(taskReporter)
-            .report(constTask(valueB, null), computationResult(valueB, NOOP));
+            .report(constTask(valueB, traceB()), computationResult(valueB, NOOP));
       }
 
       public static List<ValueB> report_const_task_cases() {
@@ -574,7 +574,7 @@ public class EvaluatorBTest extends TestContext {
         var combineB = combineB(intB(17));
         assertReport(
             combineB,
-            combineTask(combineB, null),
+            combineTask(combineB, traceB()),
             computationResult(tupleB(intB(17)), EXECUTION));
       }
 
@@ -583,7 +583,7 @@ public class EvaluatorBTest extends TestContext {
         var orderB = orderB(intB(17));
         assertReport(
             orderB,
-            orderTask(orderB, null),
+            orderTask(orderB, traceB()),
             computationResult(arrayB(intB(17)), EXECUTION));
       }
 
@@ -592,7 +592,7 @@ public class EvaluatorBTest extends TestContext {
         var pickB = pickB(arrayB(intB(17)), intB(0));
         assertReport(
             pickB,
-            pickTask(pickB, null),
+            pickTask(pickB, traceB()),
             computationResult(intB(17), EXECUTION));
       }
 
@@ -601,7 +601,7 @@ public class EvaluatorBTest extends TestContext {
         var selectB = selectB(tupleB(intB(17)), intB(0));
         assertReport(
             selectB,
-            selectTask(selectB, null),
+            selectTask(selectB, traceB()),
             computationResult(intB(17), EXECUTION));
       }
     }

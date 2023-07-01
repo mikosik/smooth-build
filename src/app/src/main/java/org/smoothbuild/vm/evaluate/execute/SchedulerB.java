@@ -63,7 +63,6 @@ public class SchedulerB {
     taskExecutor.awaitTermination();
   }
 
-
   public Promise<ValueB> scheduleExprEvaluation(ExprB exprB) {
     var job = newJob(exprB);
     scheduleJobEvaluation(job);
@@ -87,7 +86,7 @@ public class SchedulerB {
     switch (job.exprB()) {
       case CallB      call      -> new CallScheduler(job, call).scheduleCall();
       case CombineB   combine   -> scheduleOperTask(job, combine, CombineTask::new);
-      case LambdaB  lambda    -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
+      case LambdaB    lambda    -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
       case ValueB     value     -> scheduleConstTask(job, value);
       case OrderB     order     -> scheduleOperTask(job, order, OrderTask::new);
       case PickB      pick      -> scheduleOperTask(job, pick, PickTask::new);
@@ -240,7 +239,7 @@ public class SchedulerB {
   }
 
   private Job newJob(ExprB exprB) {
-    return newJob(exprB, list(), null);
+    return newJob(exprB, list(), new TraceB());
   }
 
   private Job newJob(ExprB exprB, Job parentJob) {

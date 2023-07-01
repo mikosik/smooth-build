@@ -8,6 +8,7 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.vm.evaluate.execute.TraceB;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -20,10 +21,10 @@ public class BsTraceTranslatorTest extends TestContext {
   private static final Hash UNKNOWN_HASH = Hash.of(17);
 
   @Test
-  public void null_trace() {
+  public void empty_trace() {
     var bsMapping = new BsMapping();
     var bsTraceTranslator = new BsTraceTranslator(bsMapping);
-    assertThat(bsTraceTranslator.translate(null))
+    assertThat(bsTraceTranslator.translate(new TraceB()))
         .isEqualTo(traceS());
   }
 

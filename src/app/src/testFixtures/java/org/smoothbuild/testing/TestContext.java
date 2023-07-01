@@ -454,15 +454,15 @@ public class TestContext {
   // Job related
 
   public static Job job(ExprB exprB, ExprB... environment) {
-    return new Job(exprB, map(asList(environment), TestContext::job), null);
+    return new Job(exprB, map(asList(environment), TestContext::job), new TraceB());
   }
 
   public static Job job(ExprB exprB, Job... environment) {
-    return new Job(exprB, list(environment), null);
+    return new Job(exprB, list(environment), new TraceB());
   }
 
   public static Job job(ExprB exprB) {
-    return new Job(exprB, list(), null);
+    return new Job(exprB, list(), new TraceB());
   }
 
   // InstB types
@@ -925,11 +925,11 @@ public class TestContext {
   }
 
   public static TraceB traceB() {
-    return traceB(Hash.of(7), Hash.of(9));
+    return new TraceB();
   }
 
   public static TraceB traceB(ExprB call, ExprB called) {
-    return traceB(call, called, null);
+    return new TraceB(call.hash(), called.hash());
   }
 
   public static TraceB traceB(ExprB call, ExprB called, TraceB tail) {
@@ -1763,7 +1763,7 @@ public class TestContext {
   }
 
   public OrderTask orderTask() {
-    return orderTask(orderB(), traceB());
+    return orderTask(orderB(), traceB(Hash.of(7), Hash.of(9)));
   }
 
   public OrderTask orderTask(OrderB orderB, TraceB trace) {

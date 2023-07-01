@@ -16,24 +16,25 @@ public class BsTraceTranslator {
   }
 
   public TraceS translate(TraceB traceB) {
-    if (traceB == null) {
+    var elements = traceB.elements();
+    if (elements == null) {
       return new TraceS();
     } else {
-      var raw = translateRaw(traceB);
-      var called = traceB.called();
+      var raw = translateRaw(elements);
+      var called = elements.called();
       return new TraceS(nameFor(called), locFor(called), raw);
     }
   }
 
-  public TraceS translateRaw(TraceB trace) {
-    if (trace == null) {
+  public TraceS translateRaw(TraceB.Element elements) {
+    if (elements == null) {
       return new TraceS();
     } else {
-      var tailB = trace.tail();
+      var tailB = elements.tail();
       var tailS = translateRaw(tailB);
-      var tag = tailB == null ? "" : nameFor(tailB.called());
-      var loc = locFor(trace.call());
-      return new TraceS(tag, loc, tailS);
+      var name = tailB == null ? "" : nameFor(tailB.called());
+      var location = locFor(elements.call());
+      return new TraceS(name, location, tailS);
     }
   }
 
