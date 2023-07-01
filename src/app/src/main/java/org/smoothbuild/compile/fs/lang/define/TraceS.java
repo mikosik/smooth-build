@@ -12,10 +12,10 @@ import com.google.common.base.Strings;
  * Smooth stack trace.
  */
 public final class TraceS {
-  private final Element rootElement;
+  private final Element elements;
 
   public TraceS() {
-    this.rootElement = null;
+    this.elements = null;
   }
 
   public TraceS(String name, Location location) {
@@ -23,7 +23,7 @@ public final class TraceS {
   }
 
   public TraceS(String name, Location location, TraceS tail) {
-    this.rootElement = new Element(name, location, tail.rootElement);
+    this.elements = new Element(name, location, tail.elements);
   }
 
   @Override
@@ -31,17 +31,17 @@ public final class TraceS {
     if (this == object) {
       return true;
     }
-    return object instanceof TraceS that && Objects.equals(rootElement, that.rootElement);
+    return object instanceof TraceS that && Objects.equals(elements, that.elements);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(rootElement);
+    return Objects.hash(elements);
   }
 
   @Override
   public String toString() {
-    return rootElement == null ? "" : rootElement.toString();
+    return elements == null ? "" : elements.toString();
   }
 
   private static record Element(String name, Location location, Element tail) {

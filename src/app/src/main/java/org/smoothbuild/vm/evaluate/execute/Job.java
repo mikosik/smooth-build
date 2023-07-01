@@ -18,7 +18,7 @@ public record Job(
     PromisedValue<ValueB> promisedValue) {
 
   public Job(ExprB exprB) {
-    this(exprB, list(), null, new AtomicBoolean(false), new PromisedValue<>());
+    this(exprB, list(), new TraceB(), new AtomicBoolean(false), new PromisedValue<>());
   }
 
   public Job(ExprB exprB, ImmutableList<Job> environment, TraceB trace) {
