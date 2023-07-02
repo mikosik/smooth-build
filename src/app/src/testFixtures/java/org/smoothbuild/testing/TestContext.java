@@ -69,6 +69,7 @@ import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.compile.fs.lang.define.SelectS;
 import org.smoothbuild.compile.fs.lang.define.StringS;
 import org.smoothbuild.compile.fs.lang.define.TraceS;
+import org.smoothbuild.compile.fs.lang.define.TraceS.Element;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.BlobTS;
 import org.smoothbuild.compile.fs.lang.type.BoolTS;
@@ -1534,20 +1535,22 @@ public class TestContext {
     return new TraceS();
   }
 
+  public static TraceS traceS(String name2, int line2, String name1, int line1) {
+    return traceS(name2, location(line2), name1, location(line1));
+  }
+
+  public static TraceS traceS(String name2, Location location2, String name1, Location location1) {
+    var element1 = new Element(name1, location1, null);
+    var element2 = new Element(name2, location2, element1);
+    return new TraceS(element2);
+  }
+
   public static TraceS traceS(String name, int line) {
     return traceS(name, location(line));
   }
 
   public static TraceS traceS(String name, Location location) {
-    return new TraceS(name, location);
-  }
-
-  public static TraceS traceS(String name2, int line2, String name1, int line1) {
-    return traceS(name2, location(line2), new TraceS(name1, location(line1)));
-  }
-
-  public static TraceS traceS(String name, Location location, TraceS tail) {
-    return new TraceS(name, location, tail);
+    return new TraceS(new TraceS.Element(name, location, null));
   }
 
   // P - parsed objects

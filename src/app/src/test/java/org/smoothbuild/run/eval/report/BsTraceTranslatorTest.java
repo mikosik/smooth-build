@@ -41,9 +41,7 @@ public class BsTraceTranslatorTest extends TestContext {
     var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
     var trace = traceB(HASH3, HASH4, traceB(HASH1, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(
-            traceS("name4", location(3),
-            traceS("name2", location(1))));
+        .isEqualTo(traceS("name4", location(3), "name2", location(1)));
   }
 
   @Test
@@ -51,9 +49,7 @@ public class BsTraceTranslatorTest extends TestContext {
     var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
     var trace = traceB(HASH3, HASH4, traceB(HASH1, UNKNOWN_HASH));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(
-            traceS("name4", location(3),
-            traceS("???", location(1))));
+        .isEqualTo(traceS("name4", location(3), "???", location(1)));
   }
 
   @Test
@@ -61,9 +57,7 @@ public class BsTraceTranslatorTest extends TestContext {
         var bsTraceTranslator = new BsTraceTranslator(BS_MAPPING);
     var trace = traceB(HASH3, HASH4, traceB(UNKNOWN_HASH, HASH2));
     assertThat(bsTraceTranslator.translate(trace))
-        .isEqualTo(
-            traceS("name4", location(3),
-            traceS("name2", unknownLocation())));
+        .isEqualTo(traceS("name4", location(3), "name2", unknownLocation()));
 
   }
 

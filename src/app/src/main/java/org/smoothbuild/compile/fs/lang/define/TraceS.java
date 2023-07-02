@@ -18,14 +18,6 @@ public final class TraceS {
     this(null);
   }
 
-  public TraceS(String name, Location location) {
-    this(name, location, new TraceS());
-  }
-
-  public TraceS(String name, Location location, TraceS tail) {
-    this(new Element(name, location, tail.elements));
-  }
-
   public TraceS(Element headElement) {
     this.elements = headElement;
   }
@@ -51,6 +43,7 @@ public final class TraceS {
   public static record Element(String called, Location location, Element tail) {
     public Element {
       Objects.requireNonNull(called);
+      Objects.requireNonNull(location);
     }
 
     @Override
