@@ -1534,20 +1534,20 @@ public class TestContext {
     return new TraceS();
   }
 
-  public static TraceS traceS(String code, int line) {
-    return traceS(code, location(line));
+  public static TraceS traceS(String name, int line) {
+    return traceS(name, location(line));
   }
 
-  public static TraceS traceS(String code, Location location) {
-    return new TraceS(code, location);
+  public static TraceS traceS(String name, Location location) {
+    return new TraceS(name, location);
   }
 
-  public static TraceS traceS(String code2, int line2, String code1, int line1) {
-    return traceS(code2, location(line2), new TraceS(code1, location(line1)));
+  public static TraceS traceS(String name2, int line2, String name1, int line1) {
+    return traceS(name2, location(line2), new TraceS(name1, location(line1)));
   }
 
-  public static TraceS traceS(String code, Location location, TraceS tail) {
-    return new TraceS(code, location, tail);
+  public static TraceS traceS(String name, Location location, TraceS tail) {
+    return new TraceS(name, location, tail);
   }
 
   // P - parsed objects
