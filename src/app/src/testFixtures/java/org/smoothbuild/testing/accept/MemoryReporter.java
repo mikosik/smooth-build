@@ -22,6 +22,7 @@ public class MemoryReporter implements Reporter {
 
   @Override
   public void report(boolean visible, String taskHeader, List<Log> logs) {
+    System.out.println("taskHeader = " + taskHeader);
     buffer.logAll(logs);
   }
 

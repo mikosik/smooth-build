@@ -15,7 +15,7 @@ public final class TraceS {
   private final Element elements;
 
   public TraceS() {
-    this.elements = null;
+    this(null);
   }
 
   public TraceS(String name, Location location) {
@@ -23,7 +23,11 @@ public final class TraceS {
   }
 
   public TraceS(String name, Location location, TraceS tail) {
-    this.elements = new Element(name, location, tail.elements);
+    this(new Element(name, location, tail.elements));
+  }
+
+  public TraceS(Element headElement) {
+    this.elements = headElement;
   }
 
   @Override
@@ -44,15 +48,19 @@ public final class TraceS {
     return elements == null ? "" : elements.toString();
   }
 
-  private static record Element(String name, Location location, Element tail) {
+  public static record Element(String called, Location location, Element tail) {
+    public Element {
+      Objects.requireNonNull(called);
+    }
+
     @Override
     public String toString() {
-      return toString(nameMaxWidth() + 1);
+      return toString(locationMaxWidth() + 1);
     }
 
     private String toString(int padding) {
-      var line = "@ " + Strings.padEnd(Objects.toString(name, ""), padding, ' ')
-          + location.toString();
+      var line =
+          "@ " + Strings.padEnd(location.toString(), padding, ' ') + Objects.toString(called, "");
       if (tail == null) {
         return line;
       } else {
@@ -60,9 +68,9 @@ public final class TraceS {
       }
     }
 
-    private int nameMaxWidth() {
-      int length = requireNonNullElse(name, "").length();
-      return tail == null ? length : Math.max(length, tail.nameMaxWidth());
+    private int locationMaxWidth() {
+      int length = requireNonNullElse(location, "").toString().length();
+      return tail == null ? length : Math.max(length, tail.locationMaxWidth());
     }
   }
 }

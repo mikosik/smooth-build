@@ -1,7 +1,10 @@
 package org.smoothbuild.compile.fs.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.TestContext.filePath;
+import static org.smoothbuild.testing.TestContext.importedFilePath;
 import static org.smoothbuild.testing.TestContext.location;
+import static org.smoothbuild.testing.TestContext.smoothFilePath;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +24,12 @@ public class TraceSTest {
 
   @Test
   public void to_string() {
-    var trace = new TraceS(
-        "first-short", location(17), new TraceS("second-very-long", location(19)));
+    var trace = new TraceS("first-name", location(smoothFilePath(), 17),
+        new TraceS("second-name", location(importedFilePath(), 19)));
     assertThat(trace.toString())
         .isEqualTo("""
-            @ first-short      myBuild.smooth:17
-            @ second-very-long myBuild.smooth:19""");
+            @ myBuild.smooth:17  first-name
+            @ imported.smooth:19 second-name""");
   }
 
   @Test
@@ -34,7 +37,7 @@ public class TraceSTest {
     var trace = new TraceS(null, location(17), new TraceS("second-name", location(19)));
     assertThat(trace.toString())
         .isEqualTo("""
-            @             myBuild.smooth:17
-            @ second-name myBuild.smooth:19""");
+            @ myBuild.smooth:17
+            @ myBuild.smooth:19 second-name""");
   }
 }

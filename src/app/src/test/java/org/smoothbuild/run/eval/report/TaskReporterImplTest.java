@@ -145,8 +145,7 @@ public class TaskReporterImplTest extends TestContext {
     taskReporter.report(task(), computationResultWithMessages(messages));
     var header = """
         [,]                                         unknown                        exec
-          @ ??? ???
-          @     ???""";
+          @ ??? ???""";
     var logs = list(
         fatal("fatal message"),
         error("error message"),

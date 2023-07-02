@@ -16,25 +16,17 @@ public class BsTraceTranslator {
   }
 
   public TraceS translate(TraceB traceB) {
-    var elements = traceB.elements();
-    if (elements == null) {
-      return new TraceS();
-    } else {
-      var raw = translateRaw(elements);
-      var called = elements.called();
-      return new TraceS(nameFor(called), locFor(called), raw);
-    }
+    return new TraceS(translate(traceB.elements()));
   }
 
-  public TraceS translateRaw(TraceB.Element elements) {
-    if (elements == null) {
-      return new TraceS();
+  private TraceS.Element translate(TraceB.Element headElement) {
+    if (headElement == null) {
+      return null;
     } else {
-      var tailB = elements.tail();
-      var tailS = translateRaw(tailB);
-      var name = tailB == null ? "" : nameFor(tailB.called());
-      var location = locFor(elements.call());
-      return new TraceS(name, location, tailS);
+      var name = nameFor(headElement.called());
+      var location = locationFor(headElement.call());
+      var tailS = translate(headElement.tail());
+      return new TraceS.Element(name, location, tailS);
     }
   }
 
@@ -42,7 +34,7 @@ public class BsTraceTranslator {
     return bsMapping.nameMapping().getOrDefault(funcHash, "???");
   }
 
-  private Location locFor(Hash hash) {
+  private Location locationFor(Hash hash) {
     return bsMapping.locMapping().getOrDefault(hash, unknownLocation());
   }
 }
