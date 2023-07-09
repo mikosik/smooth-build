@@ -8,8 +8,6 @@ import static org.smoothbuild.run.eval.MessageStruct.text;
 import static org.smoothbuild.util.Strings.indent;
 import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.out.log.Log;
@@ -28,6 +26,8 @@ import org.smoothbuild.vm.evaluate.task.OrderTask;
 import org.smoothbuild.vm.evaluate.task.PickTask;
 import org.smoothbuild.vm.evaluate.task.SelectTask;
 import org.smoothbuild.vm.evaluate.task.Task;
+
+import jakarta.inject.Inject;
 
 public class TaskReporterImpl implements TaskReporter {
   // visible for testing

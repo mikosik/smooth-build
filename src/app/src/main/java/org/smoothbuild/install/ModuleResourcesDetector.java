@@ -5,13 +5,13 @@ import static org.smoothbuild.util.collect.Lists.map;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 
 import com.google.common.collect.ImmutableList;
+
+import jakarta.inject.Inject;
 
 public class ModuleResourcesDetector {
   private final FileResolver fileResolver;

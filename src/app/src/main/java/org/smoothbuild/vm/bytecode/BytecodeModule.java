@@ -3,8 +3,6 @@ package org.smoothbuild.vm.bytecode;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 
-import javax.inject.Singleton;
-
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.install.TempManager;
@@ -14,6 +12,8 @@ import org.smoothbuild.vm.bytecode.type.CategoryDb;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+
+import jakarta.inject.Singleton;
 
 public class BytecodeModule extends AbstractModule {
   @Override

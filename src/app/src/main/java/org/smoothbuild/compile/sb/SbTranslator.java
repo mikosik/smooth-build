@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.location.FileLocation;
 import org.smoothbuild.compile.fs.lang.base.location.Located;
@@ -78,6 +76,8 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
+
+import jakarta.inject.Inject;
 
 public class SbTranslator {
   private final BytecodeF bytecodeF;

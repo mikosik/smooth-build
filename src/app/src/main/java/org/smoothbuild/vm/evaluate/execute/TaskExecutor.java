@@ -6,8 +6,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.util.function.ThrowingRunnable;
@@ -15,6 +13,8 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Computer;
 import org.smoothbuild.vm.evaluate.task.Task;
+
+import jakarta.inject.Inject;
 
 public class TaskExecutor {
   private final SoftTerminationExecutor executor;

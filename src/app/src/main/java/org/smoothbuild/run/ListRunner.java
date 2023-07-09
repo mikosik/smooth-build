@@ -3,13 +3,13 @@ package org.smoothbuild.run;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
+
+import jakarta.inject.Inject;
 
 public class ListRunner {
   private final Reporter reporter;

@@ -10,12 +10,12 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.out.report.Reporter;
+
+import jakarta.inject.Inject;
 
 public class ArtifactsRemover {
   private final FileSystem fileSystem;

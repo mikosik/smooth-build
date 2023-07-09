@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
@@ -33,6 +31,8 @@ import org.smoothbuild.util.collect.DuplicatesDetector;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+
+import jakarta.inject.Inject;
 
 public class ArtifactSaver {
   private final Reporter reporter;

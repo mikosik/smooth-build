@@ -9,9 +9,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.util.io.DataWriter;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
@@ -46,6 +43,9 @@ import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 import com.google.common.collect.ImmutableList;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * This class is thread-safe.

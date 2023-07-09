@@ -4,13 +4,13 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.vm.bytecode.BytecodeF;
+
+import jakarta.inject.Inject;
 
 public class SbTranslatorFacade {
   private final BytecodeF bytecodeF;

@@ -6,13 +6,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
+
+import jakarta.inject.Inject;
 
 public class BytecodeLoader {
   private final BytecodeMethodLoader methodLoader;

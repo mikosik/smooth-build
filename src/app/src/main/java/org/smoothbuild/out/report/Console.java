@@ -2,8 +2,8 @@ package org.smoothbuild.out.report;
 
 import java.io.PrintWriter;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * This class is thread-save.

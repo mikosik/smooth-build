@@ -6,13 +6,13 @@ import static org.smoothbuild.compile.fs.ps.PsTranslator.translatePs;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.fp.FpTranslator;
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.log.MaybeProcessor;
+
+import jakarta.inject.Inject;
 
 /**
  * F->S Translator.

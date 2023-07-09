@@ -11,11 +11,11 @@ import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.out.report.Console;
+
+import jakarta.inject.Inject;
 
 public class CleanRunner {
   private final FileSystem fileSystem;

@@ -8,8 +8,6 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -39,6 +37,8 @@ import org.smoothbuild.vm.evaluate.task.SelectTask;
 import org.smoothbuild.vm.evaluate.task.Task;
 
 import com.google.common.collect.ImmutableList;
+
+import jakarta.inject.Inject;
 
 public class SchedulerB {
   private final TaskExecutor taskExecutor;

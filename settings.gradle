@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     libs {
       library('antlr4', 'org.antlr:antlr4:4.13.0')
       library('guava', 'com.google.guava:guava:32.1.0-jre')
-      library('guice', 'com.google.inject:guice:5.0.1')
+      library('guice', 'com.google.inject:guice:7.0.0')
       library('okio', 'com.squareup.okio:okio:2.10.0')
       library('picocli', 'info.picocli:picocli:4.7.4')
       library('zip4j', 'net.lingala.zip4j:zip4j:2.11.5')

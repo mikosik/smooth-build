@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 
 import com.google.common.collect.ImmutableMap;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * This class is thread-safe.

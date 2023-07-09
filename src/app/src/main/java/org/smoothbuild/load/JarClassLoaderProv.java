@@ -13,9 +13,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.util.io.DuplicateFileNameExc;
 import org.smoothbuild.util.io.IllegalZipEntryFileNameExc;
@@ -23,6 +20,8 @@ import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import net.lingala.zip4j.exception.ZipException;
 
 /**

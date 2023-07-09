@@ -4,8 +4,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -17,6 +15,8 @@ import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 
 import com.google.common.collect.ImmutableList;
+
+import jakarta.inject.Inject;
 
 public class VarReducerB {
   private final BytecodeF bytecodeF;

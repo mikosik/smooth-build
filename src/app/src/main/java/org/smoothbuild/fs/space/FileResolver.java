@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathState;
@@ -14,6 +11,8 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableMap;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import okio.BufferedSource;
 
 /**

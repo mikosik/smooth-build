@@ -5,8 +5,6 @@ import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.fs.space.FilePath;
@@ -14,6 +12,8 @@ import org.smoothbuild.install.ModuleResourcesDetector;
 import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
+
+import jakarta.inject.Inject;
 
 public class DefinitionsLoader {
   private static final ImmutableList<FilePath> MODULES =
