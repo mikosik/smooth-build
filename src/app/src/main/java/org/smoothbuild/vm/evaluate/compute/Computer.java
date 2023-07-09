@@ -13,15 +13,15 @@ import static org.smoothbuild.vm.evaluate.task.TaskHashes.taskHash;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.SandboxHash;
 import org.smoothbuild.vm.evaluate.task.Output;
 import org.smoothbuild.vm.evaluate.task.Task;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * This class is thread-safe.

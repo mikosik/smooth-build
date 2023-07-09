@@ -11,14 +11,14 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
+
+import jakarta.inject.Inject;
 
 public class InstallationHashes {
   private final InstallationPaths installationPaths;

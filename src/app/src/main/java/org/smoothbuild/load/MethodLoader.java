@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.smoothbuild.util.collect.Try;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * This class is thread-safe.

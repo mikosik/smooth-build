@@ -5,8 +5,6 @@ import static org.smoothbuild.fs.space.Space.PRJ;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.vm.bytecode.BytecodeF;
@@ -14,6 +12,8 @@ import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 import org.smoothbuild.vm.evaluate.task.NativeMethodLoader;
+
+import jakarta.inject.Inject;
 
 /**
  * This class is NOT thread-safe.

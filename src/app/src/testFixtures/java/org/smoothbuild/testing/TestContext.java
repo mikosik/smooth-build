@@ -42,8 +42,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.inject.Provider;
-
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedValueS;
@@ -193,6 +191,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
+import jakarta.inject.Provider;
 import okio.ByteString;
 
 public class TestContext {

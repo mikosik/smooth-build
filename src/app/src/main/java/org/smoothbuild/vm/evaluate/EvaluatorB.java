@@ -6,14 +6,14 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 
 import com.google.common.collect.ImmutableList;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 public class EvaluatorB {
   private final Provider<SchedulerB> schedulerProvider;

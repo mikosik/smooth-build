@@ -6,8 +6,6 @@ import static org.smoothbuild.util.reflect.Methods.isStatic;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.util.collect.Try;
@@ -16,6 +14,8 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+
+import jakarta.inject.Inject;
 
 /**
  * This class is thread-safe.

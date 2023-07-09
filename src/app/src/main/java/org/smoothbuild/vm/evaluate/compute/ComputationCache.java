@@ -10,8 +10,6 @@ import static org.smoothbuild.vm.evaluate.compute.ComputationCacheExc.corruptedV
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
@@ -24,6 +22,7 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.evaluate.task.Output;
 
+import jakarta.inject.Inject;
 import okio.BufferedSink;
 import okio.BufferedSource;
 

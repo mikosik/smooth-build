@@ -9,14 +9,14 @@ import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.log.MaybeProcessor;
+
+import jakarta.inject.Inject;
 
 /**
  * F->P Translator.

@@ -1,7 +1,5 @@
 package org.smoothbuild.run.eval;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.vm.evaluate.EvaluatorB;
@@ -9,6 +7,8 @@ import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+
+import jakarta.inject.Inject;
 
 public class EvaluatorBFactoryImpl implements EvaluatorBFactory {
   private final Injector injector;

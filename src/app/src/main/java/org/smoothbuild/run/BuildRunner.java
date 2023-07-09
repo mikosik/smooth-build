@@ -10,8 +10,6 @@ import static org.smoothbuild.util.collect.Optionals.mapPair;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.compile.fs.lang.define.InstantiateS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
@@ -26,6 +24,8 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+
+import jakarta.inject.Inject;
 
 public class BuildRunner {
   private final ArtifactsRemover artifactsRemover;
