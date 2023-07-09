@@ -17,7 +17,7 @@ import picocli.CommandLine.Parameters;
 
 @Command(
     name = BuildCommand.NAME,
-    description = "Evaluate specified value(s) and store them as artifact(s) "
+    description = "Evaluate specified value(s) and store them as artifact(s)."
 )
 public class BuildCommand extends ProjectCommand {
   public static final String NAME = "build";

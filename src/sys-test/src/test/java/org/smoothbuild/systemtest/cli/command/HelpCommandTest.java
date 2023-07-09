@@ -24,13 +24,13 @@ public class HelpCommandTest extends SystemTestCase {
         More info at https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md
         
         Commands:
-          build    Evaluate specified value(s) and store them as artifact(s)
+          build    Evaluate specified value(s) and store them as artifact(s).
           clean    Remove all cached objects and artifacts calculated during all
-                     previous builds
+                     previous builds.
           help     Display help information about the specified command.
           list     Print user defined values that can be evaluated and stored as
-                     artifact
-          version  Print version information
+                     artifact.
+          version  Print version information.
         """);
   }
 
@@ -43,7 +43,7 @@ public class HelpCommandTest extends SystemTestCase {
         smooth build [-l=<level>] [-s=<filter>] <value>...
                    
         Description:
-        Evaluate specified value(s) and store them as artifact(s)
+        Evaluate specified value(s) and store them as artifact(s).
                    
         Parameters:
               <value>...            value(s) to evaluate and store as artifact(s)
@@ -107,7 +107,7 @@ public class HelpCommandTest extends SystemTestCase {
         smooth clean [-l=<level>]
 
         Description:
-        Remove all cached objects and artifacts calculated during all previous builds 
+        Remove all cached objects and artifacts calculated during all previous builds.
 
         Options:
           -l, --log-level=<level>   Show logs with specified level or above.
@@ -130,7 +130,7 @@ public class HelpCommandTest extends SystemTestCase {
         smooth list [-l=<level>]
                 
         Description:
-        Print user defined values that can be evaluated and stored as artifact
+        Print user defined values that can be evaluated and stored as artifact.
                 
         Options:
           -l, --log-level=<level>   Show logs with specified level or above.
@@ -153,7 +153,7 @@ public class HelpCommandTest extends SystemTestCase {
         smooth version [-l=<level>]
                 
         Description:
-        Print version information
+        Print version information.
                 
         Options:
           -l, --log-level=<level>   Show logs with specified level or above.
