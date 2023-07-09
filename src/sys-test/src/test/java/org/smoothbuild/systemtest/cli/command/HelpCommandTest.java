@@ -27,7 +27,7 @@ public class HelpCommandTest extends SystemTestCase {
           build    Evaluate specified value(s) and store them as artifact(s)
           clean    Remove all cached objects and artifacts calculated during all
                      previous builds
-          help     Displays help information about the specified command
+          help     Display help information about the specified command.
           list     Print user defined values that can be evaluated and stored as
                      artifact
           version  Print version information
