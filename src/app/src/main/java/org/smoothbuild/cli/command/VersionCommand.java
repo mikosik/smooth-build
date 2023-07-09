@@ -11,7 +11,7 @@ import picocli.CommandLine.Command;
 
 @Command(
     name = VersionCommand.NAME,
-    description = "Print version information"
+    description = "Print version information."
 )
 public class VersionCommand extends LoggingCommand implements Callable<Integer> {
   public static final String NAME = "version";

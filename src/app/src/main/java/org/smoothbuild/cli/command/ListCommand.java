@@ -11,7 +11,7 @@ import picocli.CommandLine.Command;
 
 @Command(
     name = ListCommand.NAME,
-    description = "Print user defined values that can be evaluated and stored as artifact"
+    description = "Print user defined values that can be evaluated and stored as artifact."
 )
 public class ListCommand extends ProjectCommand {
   public static final String NAME = "list";
