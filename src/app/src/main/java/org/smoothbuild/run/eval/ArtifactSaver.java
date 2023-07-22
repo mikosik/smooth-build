@@ -7,12 +7,12 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.run.eval.ArtifactPaths.artifactPath;
-import static org.smoothbuild.run.eval.ArtifactPaths.targetPath;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.sort;
+import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -167,5 +167,13 @@ public class ArtifactSaver {
   private void report(String name, String pathOrError, List<Log> logs) {
     String header = name + " -> " + pathOrError;
     reporter.report(header, logs);
+  }
+
+  private static PathS targetPath(ValueB valueB) {
+    return projectPathToHashedFile(valueB.dataHash());
+  }
+
+  private static PathS artifactPath(String name) {
+    return ARTIFACTS_PATH.appendPart(name);
   }
 }
