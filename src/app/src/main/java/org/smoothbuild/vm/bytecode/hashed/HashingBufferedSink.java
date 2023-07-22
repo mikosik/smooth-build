@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.bytecode.hashed;
 
 import static org.smoothbuild.fs.base.AssertPath.newUnknownPathState;
+import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,16 +26,14 @@ public class HashingBufferedSink implements BufferedSink {
   private final BufferedSink bufferedSink;
   private final FileSystem fileSystem;
   private final PathS tempPath;
-  private final PathS hashedDbRootPath;
   private Hash hash;
 
-  public HashingBufferedSink(FileSystem fileSystem, PathS tempPath, PathS hashedDbRootPath)
+  public HashingBufferedSink(FileSystem fileSystem, PathS tempPath)
       throws IOException {
     this.hashingSink = Hash.hashingSink(fileSystem.sinkWithoutBuffer(tempPath));
     this.bufferedSink = Okio.buffer(hashingSink);
     this.fileSystem = fileSystem;
     this.tempPath = tempPath;
-    this.hashedDbRootPath = hashedDbRootPath;
   }
 
   public Hash hash() {
@@ -59,7 +58,7 @@ public class HashingBufferedSink implements BufferedSink {
   }
 
   private void moveTempFileToDb() throws IOException {
-    var path = HashedDb.dataFullPath(hashedDbRootPath, hash());
+    var path = projectPathToHashedFile(hash());
     var pathState = fileSystem.pathState(path);
     switch (pathState) {
       case NOTHING -> fileSystem.move(tempPath, path);

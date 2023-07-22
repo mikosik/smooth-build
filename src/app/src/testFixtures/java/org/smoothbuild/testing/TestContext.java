@@ -17,6 +17,7 @@ import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
+import static org.smoothbuild.install.ProjectPaths.initializeDirs;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
@@ -202,8 +203,7 @@ public class TestContext {
   private BytecodeDb bytecodeDb;
   private CategoryDb categoryDb;
   private HashedDb hashedDb;
-  private FileSystem hashedDbFileSystem;
-  private FileSystem fullFileSystem;
+  private FileSystem projectFileSystem;
   private TempManager tempManager;
   private ByteArrayOutputStream systemOut;
 
@@ -383,7 +383,7 @@ public class TestContext {
   }
 
   public Container container(NativeMethodLoader nativeMethodLoader) {
-    return new Container(fullFileSystem(), bytecodeF(), nativeMethodLoader);
+    return new Container(projectFileSystem(), bytecodeF(), nativeMethodLoader);
   }
 
   public BytecodeF bytecodeF() {
@@ -408,11 +408,19 @@ public class TestContext {
   }
 
   public ComputationCache computationCache() {
-    return new ComputationCache(computationCacheFileSystem(), bytecodeDb(), bytecodeF());
+    return new ComputationCache(projectFileSystem(), bytecodeDb(), bytecodeF());
   }
 
-  public FileSystem computationCacheFileSystem() {
-    return synchronizedMemoryFileSystem();
+  public FileSystem projectFileSystem() {
+    if (projectFileSystem == null) {
+      projectFileSystem = synchronizedMemoryFileSystem();
+      try {
+        initializeDirs(projectFileSystem);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return projectFileSystem;
   }
 
   public BytecodeDb bytecodeDbOther() {
@@ -425,16 +433,9 @@ public class TestContext {
 
   public HashedDb hashedDb() {
     if (hashedDb == null) {
-      hashedDb = new HashedDb(hashedDbFileSystem(), PathS.root(), tempManager());
+      hashedDb = new HashedDb(projectFileSystem(), tempManager());
     }
     return hashedDb;
-  }
-
-  public FileSystem hashedDbFileSystem() {
-    if (hashedDbFileSystem == null) {
-      hashedDbFileSystem = synchronizedMemoryFileSystem();
-    }
-    return hashedDbFileSystem;
   }
 
   public TempManager tempManager() {
@@ -442,13 +443,6 @@ public class TestContext {
       tempManager = new TempManager();
     }
     return tempManager;
-  }
-
-  public FileSystem fullFileSystem() {
-    if (fullFileSystem == null) {
-      fullFileSystem = synchronizedMemoryFileSystem();
-    }
-    return fullFileSystem;
   }
 
   // Job related
@@ -1796,7 +1790,7 @@ public class TestContext {
     return new ComputationResult(output, source);
   }
 
-  public  ComputationResult computationResultWithMessages(ArrayB messages) {
+  public ComputationResult computationResultWithMessages(ArrayB messages) {
     return computationResult(output(intB(), messages), EXECUTION);
   }
 

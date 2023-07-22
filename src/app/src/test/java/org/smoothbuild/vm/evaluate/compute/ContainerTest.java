@@ -12,7 +12,7 @@ public class ContainerTest extends TestContext {
   @Test
   public void file_system() {
     assertThat(container().fileSystem())
-        .isSameInstanceAs(fullFileSystem());
+        .isSameInstanceAs(projectFileSystem());
   }
 
   @Test

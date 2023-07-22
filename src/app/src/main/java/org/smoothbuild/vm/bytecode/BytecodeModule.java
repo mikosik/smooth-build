@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode;
 
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
@@ -34,6 +33,6 @@ public class BytecodeModule extends AbstractModule {
   @Provides
   @Singleton
   private HashedDb provideHashedDb(@ForSpace(PRJ) FileSystem fileSystem, TempManager tempManager) {
-    return new HashedDb(fileSystem, HASHED_DB_PATH, tempManager);
+    return new HashedDb(fileSystem, tempManager);
   }
 }

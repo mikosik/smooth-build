@@ -5,6 +5,7 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -13,7 +14,6 @@ import java.nio.charset.CharsetDecoder;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathS;
-import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBigIntegerExc;
@@ -34,12 +34,10 @@ import okio.BufferedSource;
  */
 public class HashedDb {
   private final FileSystem fileSystem;
-  private final PathS rootPath;
   private final TempManager tempManager;
 
-  public HashedDb(FileSystem fileSystem, PathS rootPath, TempManager tempManager) {
+  public HashedDb(FileSystem fileSystem, TempManager tempManager) {
     this.fileSystem = fileSystem;
-    this.rootPath = rootPath;
     this.tempManager = tempManager;
   }
 
@@ -147,8 +145,8 @@ public class HashedDb {
   }
 
   public long readSeqSize(Hash hash) throws HashedDbExc {
-    PathS path = toPath(hash);
-    PathState pathState = fileSystem.pathState(path);
+    var path = projectPathToHashedFile(hash);
+    var pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> readSeqSize(hash, path);
       case DIR -> throw new CorruptedHashedDbExc(
@@ -188,8 +186,8 @@ public class HashedDb {
   }
 
   public boolean contains(Hash hash) throws CorruptedHashedDbExc {
-    PathS path = toPath(hash);
-    PathState pathState = fileSystem.pathState(path);
+    var path = projectPathToHashedFile(hash);
+    var pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> true;
       case DIR -> throw new CorruptedHashedDbExc(
@@ -199,8 +197,8 @@ public class HashedDb {
   }
 
   public BufferedSource source(Hash hash) throws HashedDbExc {
-    PathS path = toPath(hash);
-    PathState pathState = fileSystem.pathState(path);
+    var path = projectPathToHashedFile(hash);
+    var pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> sourceFile(hash, path);
       case DIR -> throw new CorruptedHashedDbExc(
@@ -219,17 +217,13 @@ public class HashedDb {
 
   public HashingBufferedSink sink() throws HashedDbExc {
     try {
-      return new HashingBufferedSink(fileSystem, tempManager.tempPath(), rootPath);
+      return new HashingBufferedSink(fileSystem, tempManager.tempPath());
     } catch (IOException e) {
       throw new HashedDbExc(e);
     }
   }
 
-  private PathS toPath(Hash hash) {
-    return dataFullPath(rootPath, hash);
-  }
-
-  public static PathS dataFullPath(PathS hashedDbPath, Hash hash) {
-    return hashedDbPath.appendPart(hash.toHexString());
+  public static PathS projectPathToHashedFile(Hash hash) {
+    return HASHED_DB_PATH.appendPart(hash.toHexString());
   }
 }
