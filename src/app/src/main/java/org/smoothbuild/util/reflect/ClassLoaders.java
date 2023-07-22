@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
@@ -20,9 +22,10 @@ public class ClassLoaders {
   public static ClassLoader mapClassLoader(
       ClassLoader parentClassLoader, Function<String, InputStream> filesMap) {
     try {
-      var url = new URL("x-buffer", null, -1, "/", urlStreamHandler(filesMap));
+      var uri = new URI("x-buffer", "ssp", "/", "");
+      var url = URL.of(uri, urlStreamHandler(filesMap));
       return new URLClassLoader(new URL[] {url}, parentClassLoader);
-    } catch (MalformedURLException e) {
+    } catch (MalformedURLException | URISyntaxException e) {
       // shouldn't happen
       throw new RuntimeException(e);
     }
@@ -65,8 +68,8 @@ public class ClassLoaders {
   private static URL toUrl(Path path) {
     String urlString = "file://" + path.toString();
     try {
-      return new URL(urlString);
-    } catch (MalformedURLException e) {
+      return new URI(urlString).toURL();
+    } catch (MalformedURLException | URISyntaxException e) {
       throw new IllegalArgumentException("Cannot convert '" + urlString + "' to URL.");
     }
   }
