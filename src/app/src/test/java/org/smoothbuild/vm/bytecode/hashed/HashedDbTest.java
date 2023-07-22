@@ -5,13 +5,12 @@ import static java.lang.Byte.MAX_VALUE;
 import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
-import static org.smoothbuild.fs.base.PathS.path;
-import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.writeAndClose;
+import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -128,39 +127,42 @@ public class HashedDbTest extends TestContext {
   public void when_hash_points_to_directory_then_contains_causes_corrupted_exception()
       throws Exception {
     var hash = Hash.of(33);
-    hashedDbFileSystem().createDir(path(hash.toString()));
+    var path = projectPathToHashedFile(hash);
+    projectFileSystem().createDir(path);
 
     assertCall(() -> hashedDb().contains(hash))
         .throwsException(new CorruptedHashedDbExc(
-            "Corrupted HashedDb. '" + hash + "' is a directory not a data file."));
+            "Corrupted HashedDb. " + path.q() + " is a directory not a data file."));
   }
 
   @Test
   public void when_hash_points_to_directory_then_source_causes_corrupted_exception()
       throws IOException {
     var hash = Hash.of(33);
-    hashedDbFileSystem().createDir(path(hash.toString()));
+    var path = projectPathToHashedFile(hash);
+    projectFileSystem().createDir(path);
 
     assertCall(() -> hashedDb().source(hash))
-        .throwsException(new CorruptedHashedDbExc(
-            format("Corrupted HashedDb at %s. '%s' is a directory not a data file.", hash, hash)));
+        .throwsException(new CorruptedHashedDbExc(format(
+            "Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q())));
   }
 
   @Test
   public void when_hash_points_to_directory_then_sink_causes_corrupted_exception()
       throws IOException {
     var hash = Hash.of(byteString1);
-    hashedDbFileSystem().createDir(path(hash.toHexString()));
+    var path = projectPathToHashedFile(hash);
+    projectFileSystem().createDir(path);
 
     assertCall(() -> hashedDb().sink().write(byteString1).close())
         .throwsException(new IOException(
-            "Corrupted HashedDb. Cannot store data at '" + hash + "' as it is a directory."));
+            "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory."));
   }
 
   @Test
   public void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
-    var fileSystem = hashedDbFileSystem();
-    var hashedDb = new HashedDb(fileSystem, HASHED_DB_PATH, tempManager());
+    var fileSystem = projectFileSystem();
+    var hashedDb = new HashedDb(fileSystem, tempManager());
 
     hashedDb.writeString("abc");
 
@@ -171,8 +173,8 @@ public class HashedDbTest extends TestContext {
   @Test
   public void temporary_file_is_deleted_when_sink_is_closed_even_when_hashed_valued_exists_in_db()
       throws Exception {
-    var fileSystem = hashedDbFileSystem();
-    var hashedDb = new HashedDb(fileSystem, HASHED_DB_PATH, tempManager());
+    var fileSystem = projectFileSystem();
+    var hashedDb = new HashedDb(fileSystem, tempManager());
 
     hashedDb.writeString("abc");
     hashedDb.writeString("abc");
@@ -252,7 +254,8 @@ public class HashedDbTest extends TestContext {
     @Test
     public void illegal_string_causes_decode_exception() throws Exception {
       var hash = Hash.of("abc");
-      writeAndClose(hashedDbFileSystem().sink(path(hash.toHexString())), s -> s.write(illegalString()));
+      var path = projectPathToHashedFile(hash);
+      writeAndClose(projectFileSystem().sink(path), s -> s.write(illegalString()));
       assertCall(() -> hashedDb().readString(hash))
           .throwsException(new DecodeStringExc(hash, null));
     }

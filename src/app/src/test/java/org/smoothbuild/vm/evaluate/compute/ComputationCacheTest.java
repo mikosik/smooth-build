@@ -3,6 +3,7 @@ package org.smoothbuild.vm.evaluate.compute;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.vm.evaluate.compute.ComputationCacheExc.corruptedValueException;
 
 import java.math.BigInteger;
 
@@ -40,11 +41,10 @@ public class ComputationCacheTest extends TestContext {
   @Test
   public void cache_is_corrupted_when_task_hash_points_to_directory() throws Exception {
     var path = ComputationCache.toPath(hash);
-    var fileSystem = computationCacheFileSystem();
-    fileSystem.sink(path.appendPart("file"));
-    var computationCache = new ComputationCache(fileSystem, bytecodeDb(), bytecodeF());
+    projectFileSystem().sink(path.appendPart("file"));
+    var computationCache = computationCache();
     assertCall(() -> computationCache.contains(hash))
-        .throwsException(ComputationCacheExc.corruptedValueException(hash, path + " is directory not a file."));
+        .throwsException(corruptedValueException(hash, path + " is directory not a file."));
   }
 
   @Test
