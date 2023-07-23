@@ -1,15 +1,12 @@
 package org.smoothbuild.fs.base;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 
 public interface FileSystem {
-  public Path rootDirJPath();
-
   public PathState pathState(PathS path);
 
   public Iterable<PathS> files(PathS dir) throws IOException;
