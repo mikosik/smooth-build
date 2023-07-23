@@ -38,11 +38,6 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public Path rootDirJPath() {
-    return rootDir;
-  }
-
-  @Override
   public PathState pathState(PathS path) {
     Path jdkPath = jdkPath(path);
     if (!Files.exists(jdkPath)) {

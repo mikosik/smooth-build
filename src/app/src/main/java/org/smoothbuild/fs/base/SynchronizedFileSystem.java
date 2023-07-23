@@ -1,7 +1,6 @@
 package org.smoothbuild.fs.base;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -15,11 +14,6 @@ public class SynchronizedFileSystem implements FileSystem {
 
   public SynchronizedFileSystem(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-  }
-
-  @Override
-  public synchronized Path rootDirJPath() {
-    return fileSystem.rootDirJPath();
   }
 
   @Override
