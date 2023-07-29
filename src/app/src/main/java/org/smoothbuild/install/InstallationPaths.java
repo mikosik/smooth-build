@@ -13,7 +13,7 @@ import org.smoothbuild.fs.space.FilePath;
 import com.google.common.collect.ImmutableList;
 
 public class InstallationPaths {
-  private static final String STD_LIB_DIR_NAME = "lib";
+  public static final String STD_LIB_DIR_NAME = "lib";
   public static final PathS STD_LIB_MOD_PATH = path("std_lib.smooth");
   public static final FilePath STD_LIB_MOD_FILE_PATH = filePath(STD_LIB, STD_LIB_MOD_PATH);
   public static final ImmutableList<FilePath> STD_LIB_MODS = list(STD_LIB_MOD_FILE_PATH);
@@ -22,10 +22,6 @@ public class InstallationPaths {
 
   public InstallationPaths(Path installationDir) {
     this.installationDir = installationDir;
-  }
-
-  public Path standardLibraryDir() {
-    return installationDir.resolve(STD_LIB_DIR_NAME);
   }
 
   public Path smoothJar() {
