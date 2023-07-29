@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
-import static org.smoothbuild.util.Strings.escaped;
-import static org.smoothbuild.util.Strings.limitedWithEllipsis;
+import static org.smoothbuild.common.Strings.escaped;
+import static org.smoothbuild.common.Strings.limitedWithEllipsis;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;

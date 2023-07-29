@@ -1,9 +1,9 @@
 package org.smoothbuild.compile.fs.ps.ast.define;
 
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.fs.lang.type.FuncTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 

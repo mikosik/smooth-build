@@ -4,23 +4,23 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.common.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nlist;
-import static org.smoothbuild.util.fs.base.PathS.path;
 
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.bindings.ImmutableBindings;
+import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
 import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
-import org.smoothbuild.util.bindings.ImmutableBindings;
-import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;

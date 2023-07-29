@@ -1,14 +1,14 @@
 package org.smoothbuild.vm.evaluate.execute;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.function.Consumer;
 
+import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
+import org.smoothbuild.common.function.ThrowingRunnable;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
-import org.smoothbuild.util.function.ThrowingRunnable;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Computer;

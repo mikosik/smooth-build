@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.testing.TestContext;
@@ -21,7 +22,6 @@ import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.WithNonValueResult;
 import org.smoothbuild.testing.func.bytecode.WithThreeParams;
 import org.smoothbuild.testing.func.bytecode.WithoutBytecodeF;
-import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;

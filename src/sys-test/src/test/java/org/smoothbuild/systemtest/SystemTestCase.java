@@ -11,6 +11,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.fs.disk.RecursiveDeleter.deleteRecursively;
+import static org.smoothbuild.common.io.Okios.readAndClose;
+import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.fs.project.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_DIR;
@@ -19,11 +24,6 @@ import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.helpCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.listCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
-import static org.smoothbuild.util.Strings.unlines;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.fs.disk.RecursiveDeleter.deleteRecursively;
-import static org.smoothbuild.util.io.Okios.readAndClose;
-import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,9 +42,9 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
-import org.smoothbuild.util.CommandExecutor;
-import org.smoothbuild.util.CommandExecutor.CommandResult;
-import org.smoothbuild.util.io.DataReader;
+import org.smoothbuild.common.CommandExecutor;
+import org.smoothbuild.common.CommandExecutor.CommandResult;
+import org.smoothbuild.common.io.DataReader;
 
 import com.google.common.base.Splitter;
 

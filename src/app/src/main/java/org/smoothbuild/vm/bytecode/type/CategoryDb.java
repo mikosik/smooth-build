@@ -2,7 +2,7 @@ package org.smoothbuild.vm.bytecode.type;
 
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.vm.bytecode.type.CategoryKindB.fromMarker;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import org.smoothbuild.util.collect.Lists;
+import org.smoothbuild.common.collect.Lists;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;

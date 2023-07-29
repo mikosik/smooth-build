@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.fs.ps.ast.define;
 
+import org.smoothbuild.common.DecodeHexExc;
+import org.smoothbuild.common.Hex;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
-import org.smoothbuild.util.DecodeHexExc;
-import org.smoothbuild.util.Hex;
 
 import okio.ByteString;
 

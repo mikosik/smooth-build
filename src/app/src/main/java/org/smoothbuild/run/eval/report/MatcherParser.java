@@ -2,10 +2,10 @@ package org.smoothbuild.run.eval.report;
 
 import static java.lang.String.join;
 import static org.antlr.v4.runtime.CharStreams.fromString;
-import static org.smoothbuild.util.Antlr.errorLine;
-import static org.smoothbuild.util.Antlr.extractSourceCode;
-import static org.smoothbuild.util.Antlr.markingLine;
-import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.common.Antlr.errorLine;
+import static org.smoothbuild.common.Antlr.extractSourceCode;
+import static org.smoothbuild.common.Antlr.markingLine;
+import static org.smoothbuild.common.Strings.unlines;
 
 import java.util.BitSet;
 

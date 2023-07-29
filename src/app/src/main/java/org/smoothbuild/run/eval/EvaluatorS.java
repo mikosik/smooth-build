@@ -2,12 +2,12 @@ package org.smoothbuild.run.eval;
 
 import java.util.Optional;
 
+import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.sb.SbTranslatorExc;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 import com.google.common.collect.ImmutableList;

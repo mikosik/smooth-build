@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
+import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.List;
 

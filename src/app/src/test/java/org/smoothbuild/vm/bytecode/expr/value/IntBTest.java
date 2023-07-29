@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import java.math.BigInteger;
 import java.util.List;

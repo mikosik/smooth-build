@@ -5,11 +5,11 @@ import static java.lang.Byte.MAX_VALUE;
 import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.io.Okios.writeAndClose;
 import static org.smoothbuild.fs.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.io.Okios.writeAndClose;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
 
 import java.io.IOException;

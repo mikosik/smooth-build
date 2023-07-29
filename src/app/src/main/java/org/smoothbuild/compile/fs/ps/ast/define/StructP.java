@@ -1,16 +1,16 @@
 package org.smoothbuild.compile.fs.ps.ast.define;
 
-import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Iterables.joinToString;
-import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
+import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 
 import java.util.List;
 import java.util.Objects;
 
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.base.NalImpl;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.StructTS;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 

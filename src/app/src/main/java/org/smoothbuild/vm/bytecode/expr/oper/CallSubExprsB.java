@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 

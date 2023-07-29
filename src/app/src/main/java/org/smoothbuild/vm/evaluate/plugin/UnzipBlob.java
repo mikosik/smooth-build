@@ -1,14 +1,14 @@
 package org.smoothbuild.vm.evaluate.plugin;
 
 import static okio.Okio.source;
-import static org.smoothbuild.util.io.Unzip.unzip;
+import static org.smoothbuild.common.io.Unzip.unzip;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Predicate;
 
-import org.smoothbuild.util.io.DuplicateFileNameExc;
-import org.smoothbuild.util.io.IllegalZipEntryFileNameExc;
+import org.smoothbuild.common.io.DuplicateFileNameExc;
+import org.smoothbuild.common.io.IllegalZipEntryFileNameExc;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;

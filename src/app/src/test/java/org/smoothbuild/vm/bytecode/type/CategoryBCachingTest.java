@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.List;
 import java.util.function.Function;

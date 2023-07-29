@@ -1,8 +1,8 @@
 package org.smoothbuild.vm.evaluate;
 
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Optionals.pullUp;
-import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.Optionals.pullUp;
+import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.Optional;
 

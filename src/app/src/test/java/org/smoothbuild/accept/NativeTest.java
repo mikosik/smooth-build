@@ -3,10 +3,10 @@ package org.smoothbuild.accept;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.DOTALL;
+import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.util.Strings.q;
 
 import java.util.regex.Pattern;
 

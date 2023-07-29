@@ -1,15 +1,15 @@
 package org.smoothbuild.compile.sb;
 
-import static org.smoothbuild.util.Strings.q;
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.util.collect.Maps.mapKeys;
-import static org.smoothbuild.util.collect.Maps.override;
-import static org.smoothbuild.util.collect.Maps.zip;
-import static org.smoothbuild.util.collect.NList.nlist;
-import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
+import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
+import static org.smoothbuild.common.collect.Maps.mapKeys;
+import static org.smoothbuild.common.collect.Maps.override;
+import static org.smoothbuild.common.collect.Maps.zip;
+import static org.smoothbuild.common.collect.NList.nlist;
+import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.smoothbuild.common.bindings.ImmutableBindings;
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.location.FileLocation;
 import org.smoothbuild.compile.fs.lang.base.location.Located;
@@ -54,8 +56,6 @@ import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.load.FileLoader;
-import org.smoothbuild.util.bindings.ImmutableBindings;
-import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;

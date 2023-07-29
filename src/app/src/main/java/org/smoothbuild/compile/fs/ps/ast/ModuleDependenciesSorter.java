@@ -2,17 +2,21 @@ package org.smoothbuild.compile.fs.ps.ast;
 
 import static java.lang.String.join;
 import static java.util.Collections.rotate;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.smoothbuild.common.collect.Sets;
+import org.smoothbuild.common.graph.GraphEdge;
+import org.smoothbuild.common.graph.GraphNode;
+import org.smoothbuild.common.graph.SortTopologically.TopologicalSortingRes;
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.ps.ast.define.ArrayTP;
@@ -24,10 +28,6 @@ import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.util.collect.Sets;
-import org.smoothbuild.util.graph.GraphEdge;
-import org.smoothbuild.util.graph.GraphNode;
-import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingRes;
 
 import com.google.common.collect.ImmutableList;
 

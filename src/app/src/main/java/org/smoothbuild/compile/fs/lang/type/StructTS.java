@@ -2,8 +2,8 @@ package org.smoothbuild.compile.fs.lang.type;
 
 import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.interfaceTypeName;
 
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableMap;
 

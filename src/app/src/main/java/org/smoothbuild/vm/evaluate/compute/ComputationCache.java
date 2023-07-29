@@ -10,9 +10,9 @@ import static org.smoothbuild.vm.evaluate.compute.ComputationCacheExc.corruptedV
 
 import java.io.IOException;
 
+import org.smoothbuild.common.fs.base.FileSystem;
+import org.smoothbuild.common.fs.base.PathS;
 import org.smoothbuild.fs.space.ForSpace;
-import org.smoothbuild.util.fs.base.FileSystem;
-import org.smoothbuild.util.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;

@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.fs.ps.ast.define;
 
+import org.smoothbuild.common.Strings;
+import org.smoothbuild.common.UnescapingFailedExc;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
-import org.smoothbuild.util.Strings;
-import org.smoothbuild.util.UnescapingFailedExc;
 
 public final class StringP extends LiteralP {
   private String unescaped;

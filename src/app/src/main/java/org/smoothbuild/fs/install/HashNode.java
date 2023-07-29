@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.install;
 
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.map;
 
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 

@@ -2,7 +2,7 @@ package org.smoothbuild.vm.bytecode.type;
 
 import java.util.Objects;
 
-import org.smoothbuild.util.Strings;
+import org.smoothbuild.common.Strings;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;

@@ -2,7 +2,7 @@ package org.smoothbuild.compile.fs.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.util.collect.Maps.zip;
+import static org.smoothbuild.common.collect.Maps.zip;
 
 import java.util.List;
 import java.util.Objects;

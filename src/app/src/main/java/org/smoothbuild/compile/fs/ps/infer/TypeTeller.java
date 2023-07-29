@@ -1,9 +1,9 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.Optionals.mapPair;
+import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Optionals.mapPair;
-import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
 

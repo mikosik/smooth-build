@@ -1,10 +1,10 @@
 package org.smoothbuild.compile.fs.lang.define;
 
-import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Iterables.joinToString;
+import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.collect.Iterables.joinToString;
 
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
-import org.smoothbuild.util.collect.NList;
 
 /**
  * This class and all its subclasses are immutable.

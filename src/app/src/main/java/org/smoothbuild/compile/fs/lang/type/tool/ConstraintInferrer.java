@@ -1,12 +1,14 @@
 package org.smoothbuild.compile.fs.lang.type.tool;
 
-import static org.smoothbuild.util.collect.NList.nlist;
+import static org.smoothbuild.common.collect.NList.nlist;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Queue;
 
+import org.smoothbuild.common.collect.Lists;
+import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.FieldSetTS;
@@ -17,8 +19,6 @@ import org.smoothbuild.compile.fs.lang.type.TempVarS;
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
-import org.smoothbuild.util.collect.Lists;
-import org.smoothbuild.util.function.ThrowingBiFunction;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

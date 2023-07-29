@@ -4,13 +4,13 @@ import static com.google.common.truth.Fact.fact;
 import static com.google.common.truth.Fact.simpleFact;
 import static com.google.common.truth.Truth.assertAbout;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.smoothbuild.util.function.ThrowingRunnable;
+import org.smoothbuild.common.function.ThrowingRunnable;
 
 import com.google.common.truth.Fact;
 import com.google.common.truth.FailureMetadata;

@@ -2,7 +2,7 @@ package org.smoothbuild.stdlib.file;
 
 import java.io.IOException;
 
-import org.smoothbuild.util.fs.base.PathS;
+import org.smoothbuild.common.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;

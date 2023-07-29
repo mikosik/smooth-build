@@ -1,13 +1,13 @@
 package org.smoothbuild.load;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.util.collect.Lists.filter;
+import static org.smoothbuild.common.collect.Lists.filter;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.util.collect.Try;
+import org.smoothbuild.common.collect.Try;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

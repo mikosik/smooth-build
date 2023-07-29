@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.fs.lang.define;
 
-import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Iterables.joinToString;
+import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;

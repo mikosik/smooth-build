@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 public class ResHandlerTest extends TestContext {

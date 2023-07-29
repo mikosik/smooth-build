@@ -1,17 +1,18 @@
 package org.smoothbuild.compile.fs.ps;
 
+import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.Maps.mapValues;
+import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.fs.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.fs.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.fs.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.fs.lang.type.TypeFS.STRING;
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.mapValues;
-import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedFuncS;
 import org.smoothbuild.compile.fs.lang.define.AnnotatedValueS;
 import org.smoothbuild.compile.fs.lang.define.AnnotationS;
@@ -62,7 +63,6 @@ import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.fs.ps.infer.TypeTeller;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 

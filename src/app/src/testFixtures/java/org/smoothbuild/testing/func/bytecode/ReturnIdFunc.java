@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.func.bytecode;
 
 import static java.math.BigInteger.ZERO;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.Map;
 

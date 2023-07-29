@@ -5,8 +5,8 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 
+import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
-import org.smoothbuild.util.collect.Named;
 
 /**
  * Item signature.

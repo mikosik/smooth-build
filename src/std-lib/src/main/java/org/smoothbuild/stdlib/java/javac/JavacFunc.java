@@ -1,9 +1,9 @@
 package org.smoothbuild.stdlib.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
+import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromLibJars;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.isClassFilePredicate;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.io.IOException;
 import java.io.StringWriter;

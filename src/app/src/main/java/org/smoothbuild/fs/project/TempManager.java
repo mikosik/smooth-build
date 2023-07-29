@@ -2,7 +2,7 @@ package org.smoothbuild.fs.project;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.smoothbuild.util.fs.base.PathS;
+import org.smoothbuild.common.fs.base.PathS;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

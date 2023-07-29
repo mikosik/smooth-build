@@ -13,7 +13,7 @@ import static org.smoothbuild.vm.evaluate.task.TaskHashes.taskHash;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-import org.smoothbuild.util.concurrent.PromisedValue;
+import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.SandboxHash;
