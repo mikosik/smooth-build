@@ -1,4 +1,4 @@
-package org.smoothbuild.util.fs.space;
+package org.smoothbuild.fs.space;
 
 import java.io.IOException;
 import java.util.HashMap;

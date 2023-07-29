@@ -1,6 +1,4 @@
-package org.smoothbuild.install;
-
-import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+package org.smoothbuild.fs.project;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,6 +19,6 @@ public class TempManager {
   }
 
   public PathS tempPath() {
-    return TEMPORARY_PATH.appendPart(Integer.toString(id.getAndIncrement()));
+    return ProjectPaths.TEMPORARY_PATH.appendPart(Integer.toString(id.getAndIncrement()));
   }
 }

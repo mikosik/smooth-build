@@ -1,8 +1,8 @@
 package org.smoothbuild.cli.base;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
-import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.out.report.Console.printErrorToWriter;
 import static org.smoothbuild.util.io.LockFile.lockFile;
 

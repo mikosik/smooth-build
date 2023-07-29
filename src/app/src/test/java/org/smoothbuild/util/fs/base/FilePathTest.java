@@ -3,8 +3,8 @@ package org.smoothbuild.util.fs.base;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.util.fs.space.FilePath;
-import org.smoothbuild.util.fs.space.Space;
+import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.fs.space.Space;
 
 import com.google.common.testing.EqualsTester;
 

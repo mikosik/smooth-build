@@ -5,8 +5,8 @@ import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.fs.space.FilePath;
 
 public class VisibilityTest extends TestContext {
   @Nested

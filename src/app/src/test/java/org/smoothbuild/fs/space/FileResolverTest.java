@@ -1,4 +1,4 @@
-package org.smoothbuild.util.fs.space;
+package org.smoothbuild.fs.space;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.io.Okios.writeAndClose;
@@ -14,7 +14,6 @@ import org.smoothbuild.util.fs.mem.MemoryFileSystem;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.truth.Truth;
 
 public class FileResolverTest {
   private MemoryFileSystem fileSystem;
@@ -75,7 +74,7 @@ public class FileResolverTest {
     public void of_file() throws IOException {
       PathS path = PathS.path("file.txt");
       createFile(path, "some string");
-      Truth.assertThat(fileResolver.pathState(FilePath.filePath(Space.PRJ, path)))
+      assertThat(fileResolver.pathState(FilePath.filePath(Space.PRJ, path)))
           .isEqualTo(PathState.FILE);
     }
 
@@ -83,14 +82,14 @@ public class FileResolverTest {
     public void of_directory() throws IOException {
       PathS path = PathS.path("directory");
       fileSystem.createDir(path);
-      Truth.assertThat(fileResolver.pathState(FilePath.filePath(Space.PRJ, path)))
+      assertThat(fileResolver.pathState(FilePath.filePath(Space.PRJ, path)))
           .isEqualTo(PathState.DIR);
     }
 
     @Test
     public void of_nothing() {
       PathS path = PathS.path("file.txt");
-      Truth.assertThat(fileResolver.pathState(FilePath.filePath(Space.PRJ, path)))
+      assertThat(fileResolver.pathState(FilePath.filePath(Space.PRJ, path)))
           .isEqualTo(PathState.NOTHING);
     }
   }

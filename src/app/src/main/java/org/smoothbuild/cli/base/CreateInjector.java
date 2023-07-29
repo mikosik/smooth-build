@@ -6,8 +6,8 @@ import static org.smoothbuild.out.log.Level.INFO;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 
-import org.smoothbuild.install.InstallationFileSystemModule;
-import org.smoothbuild.install.ProjectFileSystemModule;
+import org.smoothbuild.fs.install.InstallationFileSystemModule;
+import org.smoothbuild.fs.project.ProjectFileSystemModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;

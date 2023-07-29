@@ -3,12 +3,12 @@ package org.smoothbuild.systemtest.cli.command;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.file.Files.createDirectories;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
-import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
-import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_LOCK_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 
 import java.io.IOException;
