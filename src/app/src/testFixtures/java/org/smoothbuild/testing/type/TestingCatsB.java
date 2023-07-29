@@ -1,8 +1,8 @@
 package org.smoothbuild.testing.type;
 
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.map;
 
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.type.CategoryB;

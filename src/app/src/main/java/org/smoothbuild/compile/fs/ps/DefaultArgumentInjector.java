@@ -5,16 +5,19 @@ import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.util.Strings.q;
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.smoothbuild.common.bindings.Bindings;
+import org.smoothbuild.common.collect.Lists;
+import org.smoothbuild.common.collect.Sets;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedFuncS;
@@ -35,9 +38,6 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
-import org.smoothbuild.util.bindings.Bindings;
-import org.smoothbuild.util.collect.Lists;
-import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.collect.ImmutableList;
 

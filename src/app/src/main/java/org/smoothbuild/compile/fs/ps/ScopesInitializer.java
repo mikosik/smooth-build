@@ -1,9 +1,10 @@
 package org.smoothbuild.compile.fs.ps;
 
+import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.compile.fs.ps.ast.define.ScopeP.emptyScope;
-import static org.smoothbuild.util.bindings.Bindings.mutableBindings;
 
+import org.smoothbuild.common.bindings.MutableBindings;
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
@@ -21,7 +22,6 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
-import org.smoothbuild.util.bindings.MutableBindings;
 
 /**
  * For each syntactic construct that implements WithScope

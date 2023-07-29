@@ -1,11 +1,11 @@
 package org.smoothbuild.compile.fs.fp;
 
 import static java.lang.String.join;
+import static org.smoothbuild.common.Antlr.errorLine;
+import static org.smoothbuild.common.Antlr.markingLine;
+import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.util.Antlr.errorLine;
-import static org.smoothbuild.util.Antlr.markingLine;
-import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.BitSet;
 

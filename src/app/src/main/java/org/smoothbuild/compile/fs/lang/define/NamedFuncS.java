@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.fs.lang.define;
 
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
-import org.smoothbuild.util.collect.NList;
 
 /**
  * Named function.

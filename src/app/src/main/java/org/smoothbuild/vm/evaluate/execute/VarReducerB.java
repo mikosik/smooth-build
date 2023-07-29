@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.evaluate.execute;
 
-import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.common.collect.Lists.map;
 
 import java.util.List;
 

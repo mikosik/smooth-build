@@ -1,9 +1,9 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.util.fs.base.PathS.path;
+import static org.smoothbuild.common.fs.base.PathS.path;
 
-import org.smoothbuild.util.fs.base.IllegalPathExc;
-import org.smoothbuild.util.fs.base.PathS;
+import org.smoothbuild.common.fs.base.IllegalPathExc;
+import org.smoothbuild.common.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 

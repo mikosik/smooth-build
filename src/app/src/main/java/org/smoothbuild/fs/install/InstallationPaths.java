@@ -1,14 +1,14 @@
 package org.smoothbuild.fs.install;
 
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.FilePath.filePath;
 import static org.smoothbuild.fs.space.Space.STD_LIB;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.fs.base.PathS.path;
 
 import java.nio.file.Path;
 
+import org.smoothbuild.common.fs.base.PathS;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.util.fs.base.PathS;
 
 import com.google.common.collect.ImmutableList;
 

@@ -4,6 +4,7 @@ import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.isVarName;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.compile.fs.ps.ast.define.ScopeP.emptyScope;
 
+import org.smoothbuild.common.Strings;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.ScopingModuleVisitorP;
@@ -19,7 +20,6 @@ import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Logs;
-import org.smoothbuild.util.Strings;
 
 public class DetectUndefinedReferenceablesAndTypes {
   public static Logs detectUndefinedReferenceablesAndTypes(ModuleP moduleP, ScopeS imported) {

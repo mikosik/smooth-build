@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.fs.lang.define;
 
-import static org.smoothbuild.util.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 
-import org.smoothbuild.util.bindings.ImmutableBindings;
+import org.smoothbuild.common.bindings.ImmutableBindings;
 
 public record ScopeS(
   ImmutableBindings<TypeDefinitionS> types,

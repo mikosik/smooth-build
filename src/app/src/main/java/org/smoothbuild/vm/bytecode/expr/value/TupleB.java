@@ -2,8 +2,8 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.base.Suppliers.memoize;
 import static java.util.Objects.checkIndex;
-import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
-import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
+import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateTuple;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;

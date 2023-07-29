@@ -1,10 +1,10 @@
 package org.smoothbuild.out.log;
 
+import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
-import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.ArrayList;
 import java.util.List;

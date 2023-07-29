@@ -1,8 +1,8 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
-import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
+import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.cannotReadRootException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;

@@ -1,14 +1,14 @@
 package org.smoothbuild.vm.evaluate.execute;
 
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import org.smoothbuild.util.concurrent.Promise;
+import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;

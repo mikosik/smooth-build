@@ -3,6 +3,9 @@ package org.smoothbuild.compile.fs.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.fs.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.testing.TestContext.arrayTS;
@@ -20,9 +23,6 @@ import static org.smoothbuild.testing.TestContext.varB;
 import static org.smoothbuild.testing.TestContext.varC;
 import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
 import java.util.function.Function;
@@ -33,8 +33,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.testing.EqualsTester;
 

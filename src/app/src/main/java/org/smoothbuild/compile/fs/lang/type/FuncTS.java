@@ -1,9 +1,9 @@
 package org.smoothbuild.compile.fs.lang.type;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.funcTypeName;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.util.collect.Lists.concat;
 
 import java.util.Objects;
 

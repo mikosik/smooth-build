@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.load.JarClassLoaderProv;
 import org.smoothbuild.load.MethodLoader;
 import org.smoothbuild.load.MethodSpec;
@@ -23,7 +24,6 @@ import org.smoothbuild.testing.func.nativ.TooFewParameters;
 import org.smoothbuild.testing.func.nativ.TooManyParameters;
 import org.smoothbuild.testing.func.nativ.WrongParameterType;
 import org.smoothbuild.testing.func.nativ.WrongReturnType;
-import org.smoothbuild.util.collect.Try;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;

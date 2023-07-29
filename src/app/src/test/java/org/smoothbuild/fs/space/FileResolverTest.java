@@ -1,16 +1,16 @@
 package org.smoothbuild.fs.space;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.io.Okios.writeAndClose;
+import static org.smoothbuild.common.io.Okios.writeAndClose;
 
 import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.util.fs.base.PathS;
-import org.smoothbuild.util.fs.base.PathState;
-import org.smoothbuild.util.fs.mem.MemoryFileSystem;
+import org.smoothbuild.common.fs.base.PathS;
+import org.smoothbuild.common.fs.base.PathState;
+import org.smoothbuild.common.fs.mem.MemoryFileSystem;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableMap;

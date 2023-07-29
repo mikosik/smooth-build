@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.evaluate.execute;
 
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import com.google.common.collect.ImmutableList;
 

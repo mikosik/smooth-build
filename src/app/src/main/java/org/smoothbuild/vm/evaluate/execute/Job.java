@@ -1,10 +1,10 @@
 package org.smoothbuild.vm.evaluate.execute;
 
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.smoothbuild.util.concurrent.PromisedValue;
+import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 

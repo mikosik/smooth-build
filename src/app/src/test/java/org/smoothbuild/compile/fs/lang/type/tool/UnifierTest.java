@@ -3,10 +3,10 @@ package org.smoothbuild.compile.fs.lang.type.tool;
 import static com.google.common.collect.Collections2.permutations;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.compile.fs.lang.type.tool.AssertStructuresAreEqual.assertStructuresAreEqual;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
 import java.util.function.Consumer;

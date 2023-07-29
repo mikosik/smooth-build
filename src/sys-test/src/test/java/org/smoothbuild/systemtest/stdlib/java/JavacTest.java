@@ -3,7 +3,7 @@ package org.smoothbuild.systemtest.stdlib.java;
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.util.io.Okios.readAndClose;
+import static org.smoothbuild.common.io.Okios.readAndClose;
 
 import java.io.File;
 import java.io.IOException;

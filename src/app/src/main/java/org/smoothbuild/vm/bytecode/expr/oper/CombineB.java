@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
+import static org.smoothbuild.common.collect.Lists.allMatchOtherwise;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;

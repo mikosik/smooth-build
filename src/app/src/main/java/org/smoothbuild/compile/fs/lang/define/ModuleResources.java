@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.lang.define;
 
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.Optional;
 

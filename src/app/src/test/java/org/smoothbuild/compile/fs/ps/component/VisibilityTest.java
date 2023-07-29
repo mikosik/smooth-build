@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.fs.ps.component;
 
+import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.testing.TestingModuleLoader.err;
-import static org.smoothbuild.util.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

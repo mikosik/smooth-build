@@ -5,12 +5,12 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 import static org.smoothbuild.out.report.ConsoleReporter.formatLog;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;

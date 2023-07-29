@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.type.value;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.arrayTypeName;
 import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.funcTypeName;
 import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.tupleTypeName;

@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
+import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Optional;
 

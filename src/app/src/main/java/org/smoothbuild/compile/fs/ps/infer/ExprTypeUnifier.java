@@ -1,17 +1,18 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
+import static org.smoothbuild.common.collect.Lists.generate;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.Lists.zip;
+import static org.smoothbuild.common.collect.Optionals.flatMapPair;
+import static org.smoothbuild.common.collect.Optionals.mapPair;
+import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
-import static org.smoothbuild.util.collect.Lists.generate;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Lists.zip;
-import static org.smoothbuild.util.collect.Optionals.flatMapPair;
-import static org.smoothbuild.util.collect.Optionals.mapPair;
-import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.FuncSchemaS;
@@ -45,7 +46,6 @@ import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 

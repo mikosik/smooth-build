@@ -2,8 +2,8 @@ package org.smoothbuild.fs.install;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.io.Paths.removeExtension;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.io.Paths.removeExtension;
 
 import java.io.IOException;
 import java.util.Optional;

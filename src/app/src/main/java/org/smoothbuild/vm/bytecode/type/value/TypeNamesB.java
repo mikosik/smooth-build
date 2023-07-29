@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.type.value;
 
-import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
+import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
 import java.util.List;
 

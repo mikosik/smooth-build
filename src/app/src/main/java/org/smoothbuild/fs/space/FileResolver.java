@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.smoothbuild.SmoothConstants;
-import org.smoothbuild.util.fs.base.FileSystem;
-import org.smoothbuild.util.fs.base.PathState;
+import org.smoothbuild.common.fs.base.FileSystem;
+import org.smoothbuild.common.fs.base.PathState;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import jakarta.inject.Inject;

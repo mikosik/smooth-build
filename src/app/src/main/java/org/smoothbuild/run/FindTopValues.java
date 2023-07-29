@@ -6,11 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.util.bindings.Bindings;
 
 import com.google.common.collect.ImmutableList;
 

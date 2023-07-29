@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.sb;
 
-import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.collect.Lists.map;
 
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.BlobTS;

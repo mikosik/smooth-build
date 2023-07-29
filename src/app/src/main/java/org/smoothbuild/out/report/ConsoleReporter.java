@@ -2,9 +2,9 @@ package org.smoothbuild.out.report;
 
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
-import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.collect.Lists.filter;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.collect.Lists.filter;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.List;
 import java.util.Locale;

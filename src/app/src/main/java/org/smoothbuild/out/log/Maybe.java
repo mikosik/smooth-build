@@ -2,8 +2,8 @@ package org.smoothbuild.out.log;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.util.collect.Iterables.joinWithCommaToString;
 
 import java.util.Objects;
 import java.util.Optional;

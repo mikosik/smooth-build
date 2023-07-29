@@ -1,13 +1,13 @@
 package org.smoothbuild.compile.sb;
 
-import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.common.collect.Lists.map;
 
 import java.util.List;
 
+import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.load.FileLoader;
-import org.smoothbuild.util.bindings.ImmutableBindings;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 
 import jakarta.inject.Inject;

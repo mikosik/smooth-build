@@ -1,10 +1,10 @@
 package org.smoothbuild.compile.fs.ps.component;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.testing.TestingModuleLoader.err;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_TYPES;
-import static org.smoothbuild.util.Strings.unlines;
-import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.stream.Stream;
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.type;
 
-import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
+import static org.smoothbuild.common.collect.Lists.allMatchOtherwise;
 
 import java.util.function.Supplier;
 

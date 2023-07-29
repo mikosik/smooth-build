@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.fs.lang.type;
 
+import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.lang.define;
 
-import static org.smoothbuild.util.Strings.indent;
+import static org.smoothbuild.common.Strings.indent;
 
 import java.util.Objects;
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.stdlib.java.javac;
 
-import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;

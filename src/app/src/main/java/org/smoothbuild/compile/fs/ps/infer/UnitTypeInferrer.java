@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.lang.type.tool.EqualityConstraint;

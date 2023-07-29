@@ -1,17 +1,17 @@
 package org.smoothbuild.compile.fs.lang.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.Maps.mapValues;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.smoothbuild.common.Strings;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
-import org.smoothbuild.util.Strings;
 
 /**
  * Monomorphic type.

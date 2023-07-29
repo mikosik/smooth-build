@@ -1,13 +1,14 @@
 package org.smoothbuild.compile.fs.ps.infer;
 
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.Maps.toMap;
+import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.toMap;
-import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
 
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
@@ -28,7 +29,6 @@ import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.util.collect.NList;
 
 /**
  * Type inferring consists of

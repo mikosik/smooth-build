@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.lang.type;
 
-import static org.smoothbuild.util.collect.Sets.set;
+import static org.smoothbuild.common.collect.Sets.set;
 
 import com.google.common.collect.ImmutableSet;
 

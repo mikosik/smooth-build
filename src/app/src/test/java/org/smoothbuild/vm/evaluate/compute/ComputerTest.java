@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.evaluate.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.MEMORY;
@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;

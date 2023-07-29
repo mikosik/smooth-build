@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.fs.ps.component;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NList.nlist;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.NList.nlist;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

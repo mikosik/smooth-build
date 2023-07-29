@@ -1,14 +1,14 @@
 package org.smoothbuild.fs.project;
 
+import static org.smoothbuild.common.fs.base.PathS.path;
 import static org.smoothbuild.fs.space.FilePath.filePath;
 import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.util.fs.base.PathS.path;
 
 import java.io.IOException;
 
+import org.smoothbuild.common.fs.base.FileSystem;
+import org.smoothbuild.common.fs.base.PathS;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.util.fs.base.FileSystem;
-import org.smoothbuild.util.fs.base.PathS;
 
 import com.google.common.collect.ImmutableList;
 

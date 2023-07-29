@@ -1,12 +1,12 @@
 package org.smoothbuild.compile.sb;
 
-import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.common.Strings.q;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.util.collect.Try;
+import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;

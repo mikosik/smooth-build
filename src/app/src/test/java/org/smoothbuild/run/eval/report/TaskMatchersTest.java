@@ -2,13 +2,13 @@ package org.smoothbuild.run.eval.report;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
 import static org.smoothbuild.run.eval.report.TaskMatchers.and;
 import static org.smoothbuild.run.eval.report.TaskMatchers.or;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
 

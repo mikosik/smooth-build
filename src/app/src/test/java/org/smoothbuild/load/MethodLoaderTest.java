@@ -13,12 +13,12 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.MissingMethod;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.OverloadedMethod;
 import org.smoothbuild.testing.func.nativ.ReturnAbc;
-import org.smoothbuild.util.collect.Try;
 
 public class MethodLoaderTest extends TestContext {
   @Test

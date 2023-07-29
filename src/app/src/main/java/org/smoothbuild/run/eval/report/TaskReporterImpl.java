@@ -2,11 +2,11 @@ package org.smoothbuild.run.eval.report;
 
 import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNullElse;
+import static org.smoothbuild.common.Strings.indent;
+import static org.smoothbuild.common.Strings.limitedWithEllipsis;
 import static org.smoothbuild.out.log.Level.WARNING;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
-import static org.smoothbuild.util.Strings.indent;
-import static org.smoothbuild.util.Strings.limitedWithEllipsis;
 
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.sb.BsMapping;

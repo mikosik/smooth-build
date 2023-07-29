@@ -2,9 +2,9 @@ package org.smoothbuild.compile.fs.lang.type.tool;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.compile.fs.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
-import static org.smoothbuild.util.Strings.q;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.HashMap;
 import java.util.HashSet;

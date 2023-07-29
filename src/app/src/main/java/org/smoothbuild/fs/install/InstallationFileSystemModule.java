@@ -5,12 +5,12 @@ import static org.smoothbuild.fs.space.Space.STD_LIB;
 
 import java.nio.file.Path;
 
+import org.smoothbuild.common.fs.base.FileSystem;
+import org.smoothbuild.common.fs.base.SynchronizedFileSystem;
+import org.smoothbuild.common.fs.disk.DiskFileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.fs.space.ForSpaceImpl;
 import org.smoothbuild.fs.space.Space;
-import org.smoothbuild.util.fs.base.FileSystem;
-import org.smoothbuild.util.fs.base.SynchronizedFileSystem;
-import org.smoothbuild.util.fs.disk.DiskFileSystem;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;

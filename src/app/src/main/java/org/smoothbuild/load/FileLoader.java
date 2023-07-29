@@ -1,8 +1,8 @@
 package org.smoothbuild.load;
 
-import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.util.fs.base.PathState.FILE;
-import static org.smoothbuild.util.io.Okios.copyAllAndClose;
+import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
+import static org.smoothbuild.common.fs.base.PathState.FILE;
+import static org.smoothbuild.common.io.Okios.copyAllAndClose;
 
 import java.io.FileNotFoundException;
 import java.util.concurrent.ConcurrentHashMap;

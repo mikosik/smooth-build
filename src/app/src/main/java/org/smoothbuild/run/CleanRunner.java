@@ -11,9 +11,9 @@ import static org.smoothbuild.fs.space.Space.PRJ;
 
 import java.io.IOException;
 
+import org.smoothbuild.common.fs.base.FileSystem;
 import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.out.report.Console;
-import org.smoothbuild.util.fs.base.FileSystem;
 
 import jakarta.inject.Inject;
 

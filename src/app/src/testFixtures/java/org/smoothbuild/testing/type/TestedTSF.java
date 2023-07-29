@@ -1,6 +1,9 @@
 package org.smoothbuild.testing.type;
 
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.fs.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.testing.TestContext.arrayTS;
 import static org.smoothbuild.testing.TestContext.blobTS;
@@ -10,9 +13,6 @@ import static org.smoothbuild.testing.TestContext.intTS;
 import static org.smoothbuild.testing.TestContext.stringTS;
 import static org.smoothbuild.testing.TestContext.structTS;
 import static org.smoothbuild.testing.TestContext.varS;
-import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NList.nlist;
 
 import java.util.List;
 import java.util.Set;

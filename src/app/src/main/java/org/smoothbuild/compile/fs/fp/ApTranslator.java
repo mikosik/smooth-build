@@ -1,13 +1,13 @@
 package org.smoothbuild.compile.fs.fp;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.collect.Lists.concat;
+import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.Lists.sane;
+import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.util.collect.Lists.concat;
-import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Lists.sane;
-import static org.smoothbuild.util.collect.NList.nlistWithShadowing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +38,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
+import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.base.location.Locations;
 import org.smoothbuild.compile.fs.ps.CompileError;
@@ -68,7 +69,6 @@ import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
-import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 

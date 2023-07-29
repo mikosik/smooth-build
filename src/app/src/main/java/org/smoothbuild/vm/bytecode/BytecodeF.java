@@ -1,16 +1,16 @@
 package org.smoothbuild.vm.bytecode;
 
+import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.math.BigInteger;
 
+import org.smoothbuild.common.io.DataWriter;
 import org.smoothbuild.out.log.Level;
-import org.smoothbuild.util.io.DataWriter;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbExc;
