@@ -1,7 +1,7 @@
 package org.smoothbuild.systemtest.stdlib.file;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_PATH;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;

@@ -1,15 +1,15 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.install.InstallationPaths.STD_LIB_MODS;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
+import static org.smoothbuild.fs.install.InstallationPaths.STD_LIB_MODS;
+import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_FILE_PATH;
 
 import java.util.Optional;
 
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
-import org.smoothbuild.install.ModuleResourcesDetector;
+import org.smoothbuild.fs.install.ModuleResourcesDetector;
+import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.util.fs.space.FilePath;
 
 import com.google.common.collect.ImmutableList;
 

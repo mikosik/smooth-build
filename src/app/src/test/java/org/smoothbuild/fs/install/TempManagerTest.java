@@ -1,8 +1,9 @@
-package org.smoothbuild.install;
+package org.smoothbuild.fs.install;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.fs.project.TempManager;
 
 public class TempManagerTest {
   @Test

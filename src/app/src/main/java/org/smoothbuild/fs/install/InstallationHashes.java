@@ -1,8 +1,7 @@
-package org.smoothbuild.install;
+package org.smoothbuild.fs.install;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.install.InstallationPaths.STD_LIB_MODS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Paths.removeExtension;
 
@@ -12,8 +11,8 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
-import org.smoothbuild.util.fs.space.FilePath;
-import org.smoothbuild.util.fs.space.FileResolver;
+import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
@@ -69,7 +68,7 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    var modules = moduleResourcesDetector.detect(STD_LIB_MODS);
+    var modules = moduleResourcesDetector.detect(InstallationPaths.STD_LIB_MODS);
     for (ModuleResources module : modules) {
       builder.add(modNode(module));
     }

@@ -5,14 +5,14 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.HASHED_DB_PATH;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 
-import org.smoothbuild.install.TempManager;
+import org.smoothbuild.fs.project.TempManager;
 import org.smoothbuild.util.fs.base.FileSystem;
 import org.smoothbuild.util.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbExc;

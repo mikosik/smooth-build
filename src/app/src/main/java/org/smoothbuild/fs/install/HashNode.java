@@ -1,4 +1,4 @@
-package org.smoothbuild.install;
+package org.smoothbuild.fs.install;
 
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;

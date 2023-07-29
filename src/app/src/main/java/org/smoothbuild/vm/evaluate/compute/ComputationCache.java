@@ -1,18 +1,18 @@
 package org.smoothbuild.vm.evaluate.compute;
 
-import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrorOrAbove;
 import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;
 import static org.smoothbuild.run.eval.MessageStruct.severity;
-import static org.smoothbuild.util.fs.space.Space.PRJ;
 import static org.smoothbuild.vm.evaluate.compute.ComputationCacheExc.computationCacheException;
 import static org.smoothbuild.vm.evaluate.compute.ComputationCacheExc.corruptedValueException;
 
 import java.io.IOException;
 
+import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.util.fs.base.FileSystem;
 import org.smoothbuild.util.fs.base.PathS;
-import org.smoothbuild.util.fs.space.ForSpace;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;

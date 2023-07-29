@@ -1,4 +1,4 @@
-package org.smoothbuild.install;
+package org.smoothbuild.fs.install;
 
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
-import org.smoothbuild.util.fs.space.FilePath;
-import org.smoothbuild.util.fs.space.FileResolver;
+import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.fs.space.FileResolver;
 
 import com.google.common.collect.ImmutableList;
 
