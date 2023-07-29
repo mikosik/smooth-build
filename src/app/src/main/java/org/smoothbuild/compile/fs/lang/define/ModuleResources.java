@@ -4,7 +4,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Optional;
 
-import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.util.fs.space.FilePath;
 
 import com.google.common.collect.ImmutableList;
 

@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.util.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class PathArgValidatorTest extends TestContext {

@@ -1,6 +1,6 @@
 package org.smoothbuild.util.io;
 
-import static org.smoothbuild.fs.base.PathS.detectPathError;
+import static org.smoothbuild.util.fs.base.PathS.detectPathError;
 
 import java.io.IOException;
 import java.io.InputStream;

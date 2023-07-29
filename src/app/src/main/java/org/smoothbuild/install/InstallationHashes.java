@@ -12,8 +12,8 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
-import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.fs.space.FileResolver;
+import org.smoothbuild.util.fs.space.FilePath;
+import org.smoothbuild.util.fs.space.FileResolver;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;

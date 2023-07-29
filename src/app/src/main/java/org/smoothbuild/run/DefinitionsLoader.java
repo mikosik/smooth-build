@@ -7,9 +7,9 @@ import java.util.Optional;
 
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
-import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.install.ModuleResourcesDetector;
 import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.util.fs.space.FilePath;
 
 import com.google.common.collect.ImmutableList;
 

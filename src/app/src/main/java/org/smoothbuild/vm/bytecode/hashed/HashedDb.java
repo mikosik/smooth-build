@@ -12,9 +12,9 @@ import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 
-import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.install.TempManager;
+import org.smoothbuild.util.fs.base.FileSystem;
+import org.smoothbuild.util.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBigIntegerExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBooleanExc;
