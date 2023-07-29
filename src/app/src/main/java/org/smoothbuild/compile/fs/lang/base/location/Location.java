@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.lang.base.location;
 
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.util.fs.space.Space.PRJ;
 
 /**
  * Location.

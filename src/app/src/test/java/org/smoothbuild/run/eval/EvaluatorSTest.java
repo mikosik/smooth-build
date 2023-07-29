@@ -4,10 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.fs.base.PathS.path;
-import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nlist;
+import static org.smoothbuild.util.fs.base.PathS.path;
+import static org.smoothbuild.util.fs.space.Space.PRJ;
 
 import java.math.BigInteger;
 

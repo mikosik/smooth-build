@@ -5,8 +5,8 @@ import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 
-import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.PathS;
+import org.smoothbuild.util.fs.base.FileSystem;
+import org.smoothbuild.util.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;

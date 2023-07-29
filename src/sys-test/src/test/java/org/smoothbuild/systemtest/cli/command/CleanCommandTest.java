@@ -16,12 +16,12 @@ import java.nio.file.Files;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
+import org.smoothbuild.util.fs.base.PathS;
 
 public class CleanCommandTest {
   @Nested

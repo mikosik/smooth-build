@@ -1,13 +1,13 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
+import static org.smoothbuild.util.fs.base.PathS.path;
 
 import java.util.function.Predicate;
 
-import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternExc;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
+import org.smoothbuild.util.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;

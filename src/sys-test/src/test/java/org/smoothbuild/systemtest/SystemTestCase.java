@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
@@ -22,6 +21,7 @@ import static org.smoothbuild.systemtest.CommandWithArgs.listCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.io.Okios.readAndClose;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 

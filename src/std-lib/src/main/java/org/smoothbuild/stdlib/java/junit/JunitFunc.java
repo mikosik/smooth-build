@@ -1,7 +1,6 @@
 package org.smoothbuild.stdlib.java.junit;
 
 import static java.lang.ClassLoader.getPlatformClassLoader;
-import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromJar;
@@ -9,6 +8,7 @@ import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromLibJars;
 import static org.smoothbuild.stdlib.java.junit.JUnitCoreWrapper.newInstance;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
+import static org.smoothbuild.util.fs.base.PathS.path;
 import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 
 import java.io.IOException;
@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternExc;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
+import org.smoothbuild.util.fs.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;

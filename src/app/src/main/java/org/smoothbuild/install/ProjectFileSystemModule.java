@@ -1,16 +1,16 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.util.fs.space.Space.PRJ;
 
 import java.nio.file.Path;
 import java.util.Objects;
 
-import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.SynchronizedFileSystem;
-import org.smoothbuild.fs.disk.DiskFileSystem;
-import org.smoothbuild.fs.space.ForSpace;
-import org.smoothbuild.fs.space.ForSpaceImpl;
-import org.smoothbuild.fs.space.Space;
+import org.smoothbuild.util.fs.base.FileSystem;
+import org.smoothbuild.util.fs.base.SynchronizedFileSystem;
+import org.smoothbuild.util.fs.disk.DiskFileSystem;
+import org.smoothbuild.util.fs.space.ForSpace;
+import org.smoothbuild.util.fs.space.ForSpaceImpl;
+import org.smoothbuild.util.fs.space.Space;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;

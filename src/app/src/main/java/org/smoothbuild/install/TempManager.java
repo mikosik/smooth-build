@@ -4,7 +4,7 @@ import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.smoothbuild.fs.base.PathS;
+import org.smoothbuild.util.fs.base.PathS;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
