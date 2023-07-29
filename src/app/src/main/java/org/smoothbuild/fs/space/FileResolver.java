@@ -9,8 +9,6 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
-import com.google.common.collect.ImmutableMap;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import okio.BufferedSource;
@@ -20,11 +18,11 @@ import okio.BufferedSource;
  */
 @Singleton
 public class FileResolver {
-  private final ImmutableMap<Space, FileSystem> fileSystems;
+  private final Map<Space, FileSystem> fileSystems;
   private final Map<FilePath, Hash> cache;
 
   @Inject
-  public FileResolver(ImmutableMap<Space, FileSystem> fileSystems) {
+  public FileResolver(Map<Space, FileSystem> fileSystems) {
     this.fileSystems = fileSystems;
     this.cache = new HashMap<>();
   }

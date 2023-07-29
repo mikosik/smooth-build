@@ -209,7 +209,7 @@ public class AcceptanceTestCase extends TestContext {
 
     @Provides
     @Singleton
-    public ImmutableMap<Space, FileSystem> provideFileSystems() {
+    public Map<Space, FileSystem> provideFileSystems() {
       return ImmutableMap.of(STD_LIB, stdLibFileSystem, PRJ, prjFileSystem);
     }
 
@@ -220,20 +220,20 @@ public class AcceptanceTestCase extends TestContext {
     @Provides
     @Singleton
     @ForSpace(PRJ)
-    public FileSystem providePrjFileSystem(ImmutableMap<Space, FileSystem> fileSystems) {
+    public FileSystem providePrjFileSystem(Map<Space, FileSystem> fileSystems) {
       return fileSystems.get(PRJ);
     }
 
     @Provides
     @Singleton
     @ForSpace(STD_LIB)
-    public FileSystem provideStdLibFileSystem(ImmutableMap<Space, FileSystem> fileSystems) {
+    public FileSystem provideStdLibFileSystem(Map<Space, FileSystem> fileSystems) {
       return fileSystems.get(STD_LIB);
     }
 
     @Provides
     @Singleton
-    public ImmutableMap<Space, Path> provideSpaceToPathMap() {
+    public Map<Space, Path> provideSpaceToPathMap() {
       return ImmutableMap.of();
     }
 

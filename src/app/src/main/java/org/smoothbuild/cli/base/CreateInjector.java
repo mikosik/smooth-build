@@ -6,8 +6,8 @@ import static org.smoothbuild.out.log.Level.INFO;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 
-import org.smoothbuild.fs.FileSystemModule;
-import org.smoothbuild.install.InstallationModule;
+import org.smoothbuild.install.InstallationFileSystemModule;
+import org.smoothbuild.install.ProjectFileSystemModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;
@@ -31,15 +31,14 @@ public class CreateInjector {
         new EvaluatorBModule(),
         new EvaluatorSModule(taskMatcher),
         new BytecodeModule(),
-        new FileSystemModule(projectDir),
-        new InstallationModule(installationDir),
+        new ProjectFileSystemModule(projectDir),
+        new InstallationFileSystemModule(installationDir),
         new ReportModule(out, logLevel));
   }
 
   public static Injector createInjector(Path installationDir, PrintWriter out) {
     return Guice.createInjector(PRODUCTION,
-        new FileSystemModule(),
-        new InstallationModule(installationDir),
+        new InstallationFileSystemModule(installationDir),
         new ReportModule(out, INFO));
   }
 }
