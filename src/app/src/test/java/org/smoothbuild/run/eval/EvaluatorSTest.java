@@ -18,7 +18,7 @@ import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.sb.BytecodeLoader;
-import org.smoothbuild.load.FileLoader;
+import org.smoothbuild.compile.sb.FileLoader;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.vm.bytecode.expr.ExprB;

@@ -7,7 +7,6 @@ import java.util.List;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
-import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 
 import jakarta.inject.Inject;
