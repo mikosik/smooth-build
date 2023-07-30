@@ -4,15 +4,19 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.io.Paths.removeExtension;
+import static org.smoothbuild.fs.install.InstallationPaths.SMOOTH_JAR;
+import static org.smoothbuild.fs.space.Space.BIN;
 
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import org.smoothbuild.common.fs.base.FileSystem;
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.fs.space.FileResolver;
+import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
@@ -20,16 +24,16 @@ import com.google.common.collect.ImmutableList;
 import jakarta.inject.Inject;
 
 public class InstallationHashes {
-  private final InstallationPaths installationPaths;
+  private final FileSystem fileSystem;
   private final FileResolver fileResolver;
   private final ModuleResourcesDetector moduleResourcesDetector;
 
   @Inject
   public InstallationHashes(
-      InstallationPaths installationPaths,
+      @ForSpace(BIN) FileSystem fileSystem,
       FileResolver fileResolver,
       ModuleResourcesDetector moduleResourcesDetector) {
-    this.installationPaths = installationPaths;
+    this.fileSystem = fileSystem;
     this.fileResolver = fileResolver;
     this.moduleResourcesDetector = moduleResourcesDetector;
   }
@@ -43,7 +47,7 @@ public class InstallationHashes {
   }
 
   private HashNode smoothJarNode() throws IOException {
-    return new HashNode("smooth.jar", Hash.of(installationPaths.smoothJar()));
+    return new HashNode("smooth.jar", Hash.of(fileSystem.source(SMOOTH_JAR)));
   }
 
   private static HashNode javaPlatformNode() {

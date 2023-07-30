@@ -7,8 +7,12 @@ def zip = tasks.register('zip', Zip) {
     dependsOn project(':src:app').tasks.fatJar
     dependsOn project(':src:std-lib').tasks.zip
 
-    from (project(':src:app').tasks.fatJar)
-    from layout.projectDirectory.dir('src/main/shell')
+    from (project(':src:app').tasks.fatJar) {
+        into('bin')
+    }
+    from (layout.projectDirectory.dir('src/main/shell')) {
+        into('bin')
+    }
     from (project(':src:std-lib').tasks.zip.outputs.files.collect( { zipTree(it) })) {
         into('lib')
     }
