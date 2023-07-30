@@ -233,12 +233,6 @@ public class AcceptanceTestCase extends TestContext {
 
     @Provides
     @Singleton
-    public Map<Space, Path> provideSpaceToPathMap() {
-      return ImmutableMap.of();
-    }
-
-    @Provides
-    @Singleton
     @SandboxHash
     public Hash provideSandboxHash() {
       return Hash.of(33);

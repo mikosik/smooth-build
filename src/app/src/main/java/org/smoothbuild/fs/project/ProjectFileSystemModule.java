@@ -27,13 +27,7 @@ public class ProjectFileSystemModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    configureSpaceToPathMap();
     configureSpaceToFileSystemMap();
-  }
-
-  private void configureSpaceToPathMap() {
-    var mapBinder = MapBinder.newMapBinder(binder(), Space.class, Path.class);
-    mapBinder.addBinding(PRJ).toInstance(projectDir);
   }
 
   private void configureSpaceToFileSystemMap() {

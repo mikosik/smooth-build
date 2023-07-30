@@ -28,13 +28,7 @@ public class InstallationFileSystemModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(InstallationPaths.class).toInstance(new InstallationPaths(installationDir));
-    configureSpaceToPathMap();
     configureSpaceToFileSystemMap();
-  }
-
-  private void configureSpaceToPathMap() {
-    var mapBinder = MapBinder.newMapBinder(binder(), Space.class, Path.class);
-    mapBinder.addBinding(STD_LIB).toInstance(stdLibDir());
   }
 
   private void configureSpaceToFileSystemMap() {
