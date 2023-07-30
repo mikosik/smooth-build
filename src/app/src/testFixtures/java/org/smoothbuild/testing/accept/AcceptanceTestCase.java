@@ -13,11 +13,11 @@ import static org.smoothbuild.fs.install.InstallationPaths.STD_LIB_MODS;
 import static org.smoothbuild.fs.install.InstallationPaths.STD_LIB_MOD_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.HASHED_DB_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.TEMPORARY_PATH;
-import static org.smoothbuild.fs.space.Space.PRJ;
-import static org.smoothbuild.fs.space.Space.STD_LIB;
+import static org.smoothbuild.fs.space.Space.PROJECT;
+import static org.smoothbuild.fs.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 
@@ -78,7 +78,7 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   public void createUserNativeJar(Class<?>... classes) throws IOException {
-    createJar(prjFileSystem.sink(PRJ_MOD_PATH.changeExtension("jar")), classes);
+    createJar(prjFileSystem.sink(DEFAULT_MODULE_PATH.changeExtension("jar")), classes);
   }
 
   private void createJar(BufferedSink fileSink, Class<?>... classes) throws IOException {
@@ -88,7 +88,7 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   protected void createUserModule(String code) throws IOException {
-    writeFile(prjFileSystem(), PRJ_MOD_PATH, code);
+    writeFile(prjFileSystem(), DEFAULT_MODULE_PATH, code);
   }
 
   protected void evaluate(String... exprs) {
@@ -210,7 +210,7 @@ public class AcceptanceTestCase extends TestContext {
     @Provides
     @Singleton
     public Map<Space, FileSystem> provideFileSystems() {
-      return ImmutableMap.of(STD_LIB, stdLibFileSystem, PRJ, prjFileSystem);
+      return ImmutableMap.of(STANDARD_LIBRARY, stdLibFileSystem, PROJECT, prjFileSystem);
     }
 
     private static SynchronizedFileSystem newFileSystem(Path path) {
@@ -219,16 +219,16 @@ public class AcceptanceTestCase extends TestContext {
 
     @Provides
     @Singleton
-    @ForSpace(PRJ)
+    @ForSpace(PROJECT)
     public FileSystem providePrjFileSystem(Map<Space, FileSystem> fileSystems) {
-      return fileSystems.get(PRJ);
+      return fileSystems.get(PROJECT);
     }
 
     @Provides
     @Singleton
-    @ForSpace(STD_LIB)
+    @ForSpace(STANDARD_LIBRARY)
     public FileSystem provideStdLibFileSystem(Map<Space, FileSystem> fileSystems) {
-      return fileSystems.get(STD_LIB);
+      return fileSystems.get(STANDARD_LIBRARY);
     }
 
     @Provides

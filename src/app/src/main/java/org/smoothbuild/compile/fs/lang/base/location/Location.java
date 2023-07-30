@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.lang.base.location;
 
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 
 /**
  * Location.
@@ -9,7 +9,7 @@ import static org.smoothbuild.fs.space.Space.PRJ;
 public sealed interface Location
     permits InternalLocation, SourceLocation, UnknownLocation {
   public default boolean isInProjectSpace() {
-    return (this instanceof SourceLocation source) && source.space().equals(PRJ);
+    return (this instanceof SourceLocation source) && source.space().equals(PROJECT);
   }
 
   public default String description() {

@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.fs.install.InstallationPaths.STD_LIB_MODS;
-import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_FILE_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.DEFAULT_MODULE_FILE_PATH;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public class DefinitionsLoader {
   private static final ImmutableList<FilePath> MODULES =
       ImmutableList.<FilePath>builder()
           .addAll(STD_LIB_MODS)
-          .add(PRJ_MOD_FILE_PATH)
+          .add(DEFAULT_MODULE_FILE_PATH)
           .build();
 
   private final FsTranslator fsTranslator;

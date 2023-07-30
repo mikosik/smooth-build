@@ -17,7 +17,7 @@ import static org.smoothbuild.common.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.common.io.Okios.readAndClose;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.fs.project.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.systemtest.CommandWithArgs.buildCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
@@ -80,7 +80,7 @@ public abstract class SystemTestCase {
   }
 
   public void createUserModule(String code) throws IOException {
-    createFile(PRJ_MOD_PATH.toString(), code);
+    createFile(DEFAULT_MODULE_PATH.toString(), code);
   }
 
   public void createFile(String path, String content) throws IOException {

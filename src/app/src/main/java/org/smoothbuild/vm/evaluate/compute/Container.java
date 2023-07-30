@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.evaluate.compute;
 
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class Container implements NativeApi {
 
   @Inject
   public Container(
-      @ForSpace(PRJ) FileSystem fileSystem,
+      @ForSpace(PROJECT) FileSystem fileSystem,
       BytecodeF bytecodeF,
       NativeMethodLoader nativeMethodLoader) {
     this.fileSystem = fileSystem;

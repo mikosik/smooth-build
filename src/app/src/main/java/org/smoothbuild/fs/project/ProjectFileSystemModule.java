@@ -1,6 +1,6 @@
 package org.smoothbuild.fs.project;
 
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -32,12 +32,12 @@ public class ProjectFileSystemModule extends AbstractModule {
 
   private void configureSpaceToFileSystemMap() {
     var mapBinder = MapBinder.newMapBinder(binder(), Space.class, FileSystem.class);
-    mapBinder.addBinding(PRJ).to(Key.get(FileSystem.class, new ForSpaceImpl(PRJ)));
+    mapBinder.addBinding(PROJECT).to(Key.get(FileSystem.class, new ForSpaceImpl(PROJECT)));
   }
 
   @Provides
   @Singleton
-  @ForSpace(PRJ)
+  @ForSpace(PROJECT)
   public FileSystem provideProjectFileSystem() {
     return new SynchronizedFileSystem(new DiskFileSystem(Objects.requireNonNull(projectDir)));
   }

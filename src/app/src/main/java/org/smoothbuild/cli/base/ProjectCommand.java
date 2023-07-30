@@ -2,7 +2,7 @@ package org.smoothbuild.cli.base;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.common.io.LockFile.lockFile;
-import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.out.report.Console.printErrorToWriter;
 
@@ -19,8 +19,8 @@ public abstract class ProjectCommand extends LoggingCommand implements Callable<
   @Override
   public Integer call() {
     Path projectDir = Path.of(".");
-    if (!Files.exists(projectDir.resolve(PRJ_MOD_PATH.toString()))) {
-      printError("Current directory doesn't have " + PRJ_MOD_PATH.q()
+    if (!Files.exists(projectDir.resolve(DEFAULT_MODULE_PATH.toString()))) {
+      printError("Current directory doesn't have " + DEFAULT_MODULE_PATH.q()
           + ". Is it really smooth enabled project?");
       return EXIT_CODE_ERROR;
     }
