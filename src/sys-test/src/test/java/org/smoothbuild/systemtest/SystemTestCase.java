@@ -58,9 +58,9 @@ public abstract class SystemTestCase {
   private static Path findSmoothBinary() {
     var osName = System.getProperty("os.name").toUpperCase(ROOT);
     if (osName.startsWith("LINUX") || osName.startsWith("MAC OS")) {
-      return Paths.get("./build/installation/smooth/smooth").toAbsolutePath();
+      return Paths.get("./build/installation/smooth/bin/smooth").toAbsolutePath();
     } else {
-      return Paths.get("./build/installation/smooth/smooth.bat").toAbsolutePath();
+      return Paths.get("./build/installation/smooth/bin/smooth.bat").toAbsolutePath();
     }
   }
 

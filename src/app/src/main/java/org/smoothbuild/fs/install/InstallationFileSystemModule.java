@@ -1,6 +1,6 @@
 package org.smoothbuild.fs.install;
 
-import static org.smoothbuild.fs.install.InstallationPaths.STD_LIB_DIR_NAME;
+import static org.smoothbuild.fs.space.Space.BIN;
 import static org.smoothbuild.fs.space.Space.STD_LIB;
 
 import java.nio.file.Path;
@@ -19,6 +19,9 @@ import com.google.inject.Singleton;
 import com.google.inject.multibindings.MapBinder;
 
 public class InstallationFileSystemModule extends AbstractModule {
+  private static final String BIN_DIR_NAME = "bin";
+  private static final String STD_LIB_DIR_NAME = "lib";
+
   private final Path installationDir;
 
   public InstallationFileSystemModule(Path installationDir) {
@@ -27,13 +30,13 @@ public class InstallationFileSystemModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(InstallationPaths.class).toInstance(new InstallationPaths(installationDir));
-    configureSpaceToFileSystemMap();
+    configureSpaceToFileSystemMap(STD_LIB);
+    configureSpaceToFileSystemMap(BIN);
   }
 
-  private void configureSpaceToFileSystemMap() {
+  private void configureSpaceToFileSystemMap(Space space) {
     var mapBinder = MapBinder.newMapBinder(binder(), Space.class, FileSystem.class);
-    mapBinder.addBinding(STD_LIB).to(Key.get(FileSystem.class, new ForSpaceImpl(STD_LIB)));
+    mapBinder.addBinding(space).to(Key.get(FileSystem.class, new ForSpaceImpl(space)));
   }
 
   @Provides
@@ -45,5 +48,16 @@ public class InstallationFileSystemModule extends AbstractModule {
 
   private Path stdLibDir() {
     return installationDir.resolve(STD_LIB_DIR_NAME);
+  }
+
+  @Provides
+  @Singleton
+  @ForSpace(BIN)
+  public FileSystem provideBinFileSystem() {
+    return new SynchronizedFileSystem(new DiskFileSystem(binDir()));
+  }
+
+  private Path binDir() {
+    return installationDir.resolve(BIN_DIR_NAME);
   }
 }

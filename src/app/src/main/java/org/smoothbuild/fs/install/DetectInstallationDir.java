@@ -14,7 +14,7 @@ public class DetectInstallationDir {
           .getCodeSource()
           .getLocation()
           .toURI();
-      return Path.of(uri);
+      return Path.of(uri).getParent();
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }

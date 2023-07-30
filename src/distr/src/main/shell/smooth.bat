@@ -1,4 +1,4 @@
 @echo off
-set "SMOOTH_HOME=%~dp0"
+set "BIN_DIRECTORY=%~dp0"
 java --enable-preview ^
-     -cp "%SMOOTH_HOME%\smooth.jar" org.smoothbuild.cli.Main %*
+     -cp "%BIN_DIRECTORY%\smooth.jar" org.smoothbuild.cli.Main %*
