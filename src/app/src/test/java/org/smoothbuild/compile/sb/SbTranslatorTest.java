@@ -22,7 +22,6 @@ import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.load.FileLoader;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
