@@ -9,7 +9,7 @@ import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.fs.base.PathS.path;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.FileNotFoundException;
@@ -83,7 +83,7 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void mono_native_value() {
-          var filePath = filePath(PRJ, path("my/path"));
+          var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = "class.binary.name";
           var nativeAnnotation = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
           var nativeValueS = annotatedValueS(
@@ -100,7 +100,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void mono_bytecode_value() throws IOException {
           var clazz = ReturnAbc.class;
-          var filePath = filePath(PRJ, path("my/path"));
+          var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
           var bytecodeValueS = annotatedValueS(ann, stringTS(), "myValue", location(filePath, 2));
@@ -163,7 +163,7 @@ public class SbTranslatorTest extends TestContext {
 
         @Test
         public void mono_native_function() {
-          var filePath = filePath(PRJ, path("my/path"));
+          var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = "class.binary.name";
           var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, intTS(), "myFunc", nlist(itemS(blobTS())));
@@ -179,7 +179,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void poly_native_function() {
           var a = varA();
-          var filePath = filePath(PRJ, path("my/path"));
+          var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = "class.binary.name";
           var annotationS = nativeAnnotationS(location(filePath, 1), stringS(classBinaryName));
           var nativeFuncS = annotatedFuncS(annotationS, a, "myIdentity", nlist(itemS(a, "param")));
@@ -195,7 +195,7 @@ public class SbTranslatorTest extends TestContext {
         @Test
         public void mono_bytecode_function() throws IOException {
           var clazz = ReturnReturnAbcFunc.class;
-          var filePath = filePath(PRJ, path("my/path"));
+          var filePath = filePath(PROJECT, path("my/path"));
           var classBinaryName = clazz.getCanonicalName();
           var annotationS = bytecodeS(stringS(classBinaryName), location(filePath, 1));
           var bytecodeFuncS = annotatedFuncS(
@@ -521,7 +521,7 @@ public class SbTranslatorTest extends TestContext {
     @Test
     public void bytecode_value_translation_result() throws IOException {
       var clazz = ReturnAbc.class;
-      var filePath = filePath(PRJ, path("my/path"));
+      var filePath = filePath(PROJECT, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
       var bytecodeValueS = annotatedValueS(ann, stringTS(), "myFunc", location(filePath, 2));
@@ -546,7 +546,7 @@ public class SbTranslatorTest extends TestContext {
     @Test
     public void bytecode_function_translation_result() throws IOException {
       var clazz = ReturnReturnAbcFunc.class;
-      var filePath = filePath(PRJ, path("my/path"));
+      var filePath = filePath(PROJECT, path("my/path"));
       var classBinaryName = clazz.getCanonicalName();
       var ann = bytecodeS(stringS(classBinaryName), location(filePath, 1));
       var bytecodeFuncS = annotatedFuncS(ann, stringTS(), "myFunc", nlist(), location(filePath, 2));

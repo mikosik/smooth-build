@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.io.Paths.removeExtension;
 import static org.smoothbuild.fs.install.InstallationPaths.SMOOTH_JAR;
-import static org.smoothbuild.fs.space.Space.BIN;
+import static org.smoothbuild.fs.space.Space.BINARY;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -30,7 +30,7 @@ public class InstallationHashes {
 
   @Inject
   public InstallationHashes(
-      @ForSpace(BIN) FileSystem fileSystem,
+      @ForSpace(BINARY) FileSystem fileSystem,
       FileResolver fileResolver,
       ModuleResourcesDetector moduleResourcesDetector) {
     this.fileSystem = fileSystem;

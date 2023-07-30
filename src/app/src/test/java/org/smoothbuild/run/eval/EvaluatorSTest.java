@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.fs.base.PathS.path;
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 
 import java.math.BigInteger;
 
@@ -105,7 +105,7 @@ public class EvaluatorSTest extends TestContext {
               nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
           var callS = callS(instantiateS(funcS));
           var jarB = blobB(137);
-          when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
+          when(fileLoader.load(filePath(PROJECT, path("myBuild.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(Try.result(
@@ -120,7 +120,7 @@ public class EvaluatorSTest extends TestContext {
           );
           var callS = callS(instantiateS(funcS), intS(77));
           var jarB = blobB(137);
-          when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
+          when(fileLoader.load(filePath(PROJECT, path("myBuild.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(Try.result(
@@ -210,7 +210,7 @@ public class EvaluatorSTest extends TestContext {
         public void ann_func() throws Exception {
           var jar = blobB(123);
           var className = ReturnIdFunc.class.getCanonicalName();
-          when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
+          when(fileLoader.load(filePath(PROJECT, path("myBuild.jar"))))
               .thenReturn(jar);
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);

@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.evaluate.compute;
 
 import static org.smoothbuild.fs.project.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrorOrAbove;
 import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;
 import static org.smoothbuild.run.eval.MessageStruct.severity;
@@ -36,7 +36,7 @@ public class ComputationCache {
 
   @Inject
   public ComputationCache(
-      @ForSpace(PRJ) FileSystem fileSystem,
+      @ForSpace(PROJECT) FileSystem fileSystem,
       BytecodeDb bytecodeDb,
       BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;

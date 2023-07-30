@@ -5,7 +5,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.fs.project.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.TEMPORARY_PATH;
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class ArtifactsRemover {
   private final Reporter reporter;
 
   @Inject
-  public ArtifactsRemover(@ForSpace(PRJ) FileSystem fileSystem, Reporter reporter) {
+  public ArtifactsRemover(@ForSpace(PROJECT) FileSystem fileSystem, Reporter reporter) {
     this.fileSystem = fileSystem;
     this.reporter = reporter;
   }

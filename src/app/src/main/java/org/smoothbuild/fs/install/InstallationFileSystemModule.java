@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.install;
 
-import static org.smoothbuild.fs.space.Space.BIN;
-import static org.smoothbuild.fs.space.Space.STD_LIB;
+import static org.smoothbuild.fs.space.Space.BINARY;
+import static org.smoothbuild.fs.space.Space.STANDARD_LIBRARY;
 
 import java.nio.file.Path;
 
@@ -30,8 +30,8 @@ public class InstallationFileSystemModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    configureSpaceToFileSystemMap(STD_LIB);
-    configureSpaceToFileSystemMap(BIN);
+    configureSpaceToFileSystemMap(STANDARD_LIBRARY);
+    configureSpaceToFileSystemMap(BINARY);
   }
 
   private void configureSpaceToFileSystemMap(Space space) {
@@ -41,7 +41,7 @@ public class InstallationFileSystemModule extends AbstractModule {
 
   @Provides
   @Singleton
-  @ForSpace(STD_LIB)
+  @ForSpace(STANDARD_LIBRARY)
   public FileSystem provideStdLibFileSystem() {
     return new SynchronizedFileSystem(new DiskFileSystem(stdLibDir()));
   }
@@ -52,7 +52,7 @@ public class InstallationFileSystemModule extends AbstractModule {
 
   @Provides
   @Singleton
-  @ForSpace(BIN)
+  @ForSpace(BINARY)
   public FileSystem provideBinFileSystem() {
     return new SynchronizedFileSystem(new DiskFileSystem(binDir()));
   }

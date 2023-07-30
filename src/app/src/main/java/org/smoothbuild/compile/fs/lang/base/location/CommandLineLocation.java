@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.lang.base.location;
 
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 
 import org.smoothbuild.fs.space.Space;
 
@@ -16,7 +16,7 @@ public final class CommandLineLocation implements SourceLocation {
 
   @Override
   public Space space() {
-    return PRJ;
+    return PROJECT;
   }
 
   @Override

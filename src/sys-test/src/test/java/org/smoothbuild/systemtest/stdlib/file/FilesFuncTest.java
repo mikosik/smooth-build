@@ -1,7 +1,7 @@
 package org.smoothbuild.systemtest.stdlib.file;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_PATH;
+import static org.smoothbuild.fs.project.ProjectPaths.DEFAULT_MODULE_PATH;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
@@ -78,7 +78,7 @@ public class FilesFuncTest extends SystemTestCase {
     createFile("dir/file.txt", "abc");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    String userModule = PRJ_MOD_PATH.toString();
+    String userModule = DEFAULT_MODULE_PATH.toString();
     assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly(userModule, script, "dir/file.txt", "abc");
   }

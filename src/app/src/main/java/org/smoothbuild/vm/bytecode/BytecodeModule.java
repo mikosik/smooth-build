@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode;
 
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 
 import org.smoothbuild.common.fs.base.FileSystem;
 import org.smoothbuild.fs.project.TempManager;
@@ -32,7 +32,7 @@ public class BytecodeModule extends AbstractModule {
 
   @Provides
   @Singleton
-  private HashedDb provideHashedDb(@ForSpace(PRJ) FileSystem fileSystem, TempManager tempManager) {
+  private HashedDb provideHashedDb(@ForSpace(PROJECT) FileSystem fileSystem, TempManager tempManager) {
     return new HashedDb(fileSystem, tempManager);
   }
 }

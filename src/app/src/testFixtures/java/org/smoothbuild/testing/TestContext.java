@@ -23,9 +23,9 @@ import static org.smoothbuild.compile.fs.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.fs.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.fs.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.fs.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.fs.project.ProjectPaths.PRJ_MOD_FILE_NAME;
+import static org.smoothbuild.fs.project.ProjectPaths.DEFAULT_MODULE_FILE_NAME;
 import static org.smoothbuild.fs.project.ProjectPaths.initializeDirs;
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
@@ -1697,7 +1697,7 @@ public class TestContext {
   }
 
   public static FilePath filePath(String filePath) {
-    return new FilePath(PRJ, path(filePath));
+    return new FilePath(PROJECT, path(filePath));
   }
 
   public static Log userFatal(int line, String message) {
@@ -1709,7 +1709,7 @@ public class TestContext {
   }
 
   private static String userFileMessage(int line, String message) {
-    return PRJ_MOD_FILE_NAME + ":" + line + ": " + message;
+    return DEFAULT_MODULE_FILE_NAME + ":" + line + ": " + message;
   }
 
   public static SynchronizedFileSystem synchronizedMemoryFileSystem() {

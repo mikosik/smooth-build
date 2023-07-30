@@ -9,7 +9,7 @@ import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Maps.sort;
 import static org.smoothbuild.common.fs.base.PathS.path;
 import static org.smoothbuild.fs.project.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
@@ -39,7 +39,7 @@ public class ArtifactSaver {
   private final FileSystem fileSystem;
 
   @Inject
-  public ArtifactSaver(@ForSpace(PRJ) FileSystem fileSystem, Reporter reporter) {
+  public ArtifactSaver(@ForSpace(PROJECT) FileSystem fileSystem, Reporter reporter) {
     this.fileSystem = fileSystem;
     this.reporter = reporter;
   }

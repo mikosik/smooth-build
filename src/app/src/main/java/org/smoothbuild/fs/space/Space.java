@@ -1,9 +1,9 @@
 package org.smoothbuild.fs.space;
 
 public enum Space {
-  PRJ("prj"),
-  STD_LIB("std-lib"),
-  BIN("bin"),
+  PROJECT("prj"),
+  STANDARD_LIBRARY("std-lib"),
+  BINARY("bin"),
   ;
 
   private final String prefix;
