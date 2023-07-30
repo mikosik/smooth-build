@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.sb;
+package org.smoothbuild.vm.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -13,8 +13,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Try;
-import org.smoothbuild.load.MethodLoader;
-import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.testing.func.bytecode.NonStaticMethod;

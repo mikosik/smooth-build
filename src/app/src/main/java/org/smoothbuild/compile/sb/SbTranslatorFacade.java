@@ -8,6 +8,8 @@ import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.vm.bytecode.BytecodeF;
+import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
+import org.smoothbuild.vm.bytecode.load.FileLoader;
 
 import jakarta.inject.Inject;
 

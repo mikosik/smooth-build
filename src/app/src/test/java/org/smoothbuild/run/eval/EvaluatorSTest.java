@@ -17,17 +17,17 @@ import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
-import org.smoothbuild.compile.sb.BytecodeLoader;
-import org.smoothbuild.compile.sb.FileLoader;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
+import org.smoothbuild.vm.bytecode.load.FileLoader;
+import org.smoothbuild.vm.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-import org.smoothbuild.vm.evaluate.task.NativeMethodLoader;
 
 import com.google.common.collect.ImmutableMap;
 

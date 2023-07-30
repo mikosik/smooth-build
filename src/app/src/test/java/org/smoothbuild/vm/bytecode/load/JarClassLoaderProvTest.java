@@ -1,4 +1,4 @@
-package org.smoothbuild.load;
+package org.smoothbuild.vm.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.ClassLoader.getPlatformClassLoader;

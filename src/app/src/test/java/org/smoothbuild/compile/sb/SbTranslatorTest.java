@@ -30,6 +30,7 @@ import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
+import org.smoothbuild.vm.bytecode.load.FileLoader;
 
 public class SbTranslatorTest extends TestContext {
   @Nested

@@ -1,4 +1,4 @@
-package org.smoothbuild.load;
+package org.smoothbuild.vm.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.ClassLoader.getPlatformClassLoader;
@@ -6,13 +6,14 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.vm.evaluate.task.NativeMethodLoader.NATIVE_METHOD_NAME;
+import static org.smoothbuild.vm.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.MissingMethod;
@@ -80,7 +81,7 @@ public class MethodLoaderTest extends TestContext {
       doReturn(clazz)
           .when(classLoader)
           .loadClass(className);
-      var classLoaderProv = mock(JarClassLoaderProv.class);
+      var classLoaderProv = Mockito.mock(JarClassLoaderProv.class);
       doReturn(Try.result(classLoader))
           .when(classLoaderProv)
           .classLoaderFor(jar);

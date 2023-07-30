@@ -10,8 +10,8 @@ import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-import org.smoothbuild.vm.evaluate.task.NativeMethodLoader;
 
 import jakarta.inject.Inject;
 

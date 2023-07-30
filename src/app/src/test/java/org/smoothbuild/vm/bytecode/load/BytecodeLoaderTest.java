@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.sb;
+package org.smoothbuild.vm.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
