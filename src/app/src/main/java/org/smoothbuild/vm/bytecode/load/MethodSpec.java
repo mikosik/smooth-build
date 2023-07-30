@@ -1,4 +1,4 @@
-package org.smoothbuild.load;
+package org.smoothbuild.vm.bytecode.load;
 
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 

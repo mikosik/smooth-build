@@ -67,6 +67,8 @@ import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
+import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
+import org.smoothbuild.vm.bytecode.load.FileLoader;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;

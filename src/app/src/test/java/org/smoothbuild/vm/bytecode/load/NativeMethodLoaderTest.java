@@ -1,4 +1,4 @@
-package org.smoothbuild.vm.evaluate.task;
+package org.smoothbuild.vm.bytecode.load;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.ClassLoader.getSystemClassLoader;
@@ -13,9 +13,6 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Try;
-import org.smoothbuild.load.JarClassLoaderProv;
-import org.smoothbuild.load.MethodLoader;
-import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.NonStaticMethod;

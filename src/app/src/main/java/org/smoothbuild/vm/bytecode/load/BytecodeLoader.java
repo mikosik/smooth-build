@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.sb;
+package org.smoothbuild.vm.bytecode.load;
 
 import static org.smoothbuild.common.Strings.q;
 

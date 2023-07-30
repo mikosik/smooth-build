@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.sb;
+package org.smoothbuild.vm.bytecode.load;
 
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
@@ -7,8 +7,6 @@ import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.smoothbuild.common.collect.Try;
-import org.smoothbuild.load.MethodLoader;
-import org.smoothbuild.load.MethodSpec;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;

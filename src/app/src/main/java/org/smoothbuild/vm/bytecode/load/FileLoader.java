@@ -1,4 +1,4 @@
-package org.smoothbuild.compile.sb;
+package org.smoothbuild.vm.bytecode.load;
 
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.common.fs.base.PathState.FILE;
