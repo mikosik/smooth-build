@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import org.smoothbuild.common.fs.base.FileSystem;
 import org.smoothbuild.common.fs.base.PathS;
@@ -33,7 +34,7 @@ public class DiskFileSystem implements FileSystem {
   private final Path rootDir;
 
   public DiskFileSystem(Path path) {
-    this.rootDir = path;
+    this.rootDir = Objects.requireNonNull(path);
   }
 
   @Override
