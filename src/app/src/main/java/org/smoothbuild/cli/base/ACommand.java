@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.base;
 
-import static org.smoothbuild.fs.install.DetectInstallationDir.detectInstallationDir;
+import static org.smoothbuild.cli.base.DetectInstallationDir.detectInstallationDir;
 
 import java.io.PrintWriter;
 import java.nio.file.Path;

@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.install;
+package org.smoothbuild.cli.base;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
