@@ -2,7 +2,6 @@ package org.smoothbuild.testing.accept;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.io.ByteStreams.nullOutputStream;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -18,42 +17,32 @@ import static org.smoothbuild.fs.project.ProjectPaths.HASHED_DB_PATH;
 import static org.smoothbuild.fs.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.fs.space.Space.PROJECT;
 import static org.smoothbuild.fs.space.Space.STANDARD_LIBRARY;
+import static org.smoothbuild.fs.space.SpaceUtils.forSpace;
 import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.fs.base.FileSystem;
 import org.smoothbuild.common.fs.base.PathS;
-import org.smoothbuild.common.fs.base.SynchronizedFileSystem;
+import org.smoothbuild.common.fs.mem.MemoryFileSystemModule;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
-import org.smoothbuild.fs.space.ForSpace;
-import org.smoothbuild.fs.space.Space;
+import org.smoothbuild.fs.install.StandardLibraryFileSystemModule;
+import org.smoothbuild.fs.project.ProjectFileSystemModule;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.report.Console;
-import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.BuildRunner;
-import org.smoothbuild.run.eval.EvaluatorBFactory;
-import org.smoothbuild.run.eval.EvaluatorBFactoryImpl;
-import org.smoothbuild.run.eval.report.TaskMatcher;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.BytecodeModule;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.bytecode.hashed.Hash;
-import org.smoothbuild.vm.evaluate.SandboxHash;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import com.google.inject.Key;
+import com.google.inject.Module;
 
 import okio.BufferedSink;
 
@@ -66,11 +55,13 @@ public class AcceptanceTestCase extends TestContext {
 
   @BeforeEach
   public void beforeEach() throws IOException {
-    this.stdLibFileSystem = synchronizedMemoryFileSystem();
-    createEmptyStdLibModules(stdLibFileSystem);
-    this.prjFileSystem = synchronizedMemoryFileSystem();
     this.memoryReporter = new MemoryReporter();
-    this.injector = createInjector(stdLibFileSystem, prjFileSystem, memoryReporter);
+    this.injector = createInjector(memoryReporter, new MemoryFileSystemModule());
+
+    this.prjFileSystem = injector.getInstance(Key.get(FileSystem.class, forSpace(PROJECT)));
+    this.stdLibFileSystem =
+        injector.getInstance(Key.get(FileSystem.class, forSpace(STANDARD_LIBRARY)));
+    createEmptyStdLibModules(stdLibFileSystem);
   }
 
   public void createApiNativeJar(Class<?>... classes) throws IOException {
@@ -103,7 +94,8 @@ public class AcceptanceTestCase extends TestContext {
 
   protected void resetMemory() {
     memoryReporter = new MemoryReporter();
-    injector = createInjector(stdLibFileSystem, prjFileSystem, memoryReporter);
+    var fixedFileSystemModule = new FixedFileSystemModule(prjFileSystem, stdLibFileSystem);
+    injector = createInjector(memoryReporter, fixedFileSystemModule);
     artifacts = null;
   }
 
@@ -179,63 +171,12 @@ public class AcceptanceTestCase extends TestContext {
     writeAndClose(fileSystem.sink(path), s -> s.writeUtf8(content));
   }
 
-  public static Injector createInjector(
-      FileSystem stdLibFileSystem, FileSystem prjFileSystem, MemoryReporter memoryReporter) {
+  public static Injector createInjector(MemoryReporter memoryReporter, Module module) {
     return Guice.createInjector(PRODUCTION,
-        new TestModule(stdLibFileSystem, prjFileSystem, memoryReporter),
+        new TestModule(memoryReporter),
+        new ProjectFileSystemModule(),
+        new StandardLibraryFileSystemModule(),
+        module,
         new BytecodeModule());
-  }
-
-  public static class TestModule extends AbstractModule {
-    private final FileSystem stdLibFileSystem;
-    private final FileSystem prjFileSystem;
-    private final MemoryReporter memoryReporter;
-
-    public TestModule(
-        FileSystem stdLibFileSystem, FileSystem prjFileSystem, MemoryReporter memoryReporter) {
-      this.stdLibFileSystem = stdLibFileSystem;
-      this.prjFileSystem = prjFileSystem;
-      this.memoryReporter = memoryReporter;
-    }
-
-    @Override
-    protected void configure() {
-      bind(MemoryReporter.class).toInstance(memoryReporter);
-      bind(Reporter.class).to(MemoryReporter.class);
-      bind(Console.class).toInstance(new Console(new PrintWriter(nullOutputStream(), true)));
-      bind(EvaluatorBFactory.class).to(EvaluatorBFactoryImpl.class);
-      bind(TaskMatcher.class).toInstance(ALL);
-    }
-
-    @Provides
-    @Singleton
-    public Map<Space, FileSystem> provideFileSystems() {
-      return ImmutableMap.of(STANDARD_LIBRARY, stdLibFileSystem, PROJECT, prjFileSystem);
-    }
-
-    private static SynchronizedFileSystem newFileSystem(Path path) {
-      return synchronizedMemoryFileSystem();
-    }
-
-    @Provides
-    @Singleton
-    @ForSpace(PROJECT)
-    public FileSystem providePrjFileSystem(Map<Space, FileSystem> fileSystems) {
-      return fileSystems.get(PROJECT);
-    }
-
-    @Provides
-    @Singleton
-    @ForSpace(STANDARD_LIBRARY)
-    public FileSystem provideStdLibFileSystem(Map<Space, FileSystem> fileSystems) {
-      return fileSystems.get(STANDARD_LIBRARY);
-    }
-
-    @Provides
-    @Singleton
-    @SandboxHash
-    public Hash provideSandboxHash() {
-      return Hash.of(33);
-    }
   }
 }
