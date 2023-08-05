@@ -5,7 +5,7 @@ import static org.smoothbuild.testing.TestingModuleLoader.err;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.testing.TestContext;
 
 public class VisibilityTest extends TestContext {

@@ -1,21 +1,21 @@
 package org.smoothbuild.cli.base;
 
 import static com.google.inject.Stage.PRODUCTION;
-import static org.smoothbuild.fs.install.InstallationPaths.BIN_DIR_NAME;
-import static org.smoothbuild.fs.install.InstallationPaths.STD_LIB_DIR_NAME;
-import static org.smoothbuild.fs.space.Space.BINARY;
-import static org.smoothbuild.fs.space.Space.PROJECT;
-import static org.smoothbuild.fs.space.Space.STANDARD_LIBRARY;
+import static org.smoothbuild.filesystem.install.InstallationPaths.BIN_DIR_NAME;
+import static org.smoothbuild.filesystem.install.InstallationPaths.STD_LIB_DIR_NAME;
+import static org.smoothbuild.filesystem.space.Space.BINARY;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.out.log.Level.INFO;
 
 import java.io.PrintWriter;
 import java.nio.file.Path;
 
-import org.smoothbuild.common.fs.disk.DiskFileSystemModule;
-import org.smoothbuild.fs.install.BinaryFileSystemModule;
-import org.smoothbuild.fs.install.StandardLibraryFileSystemModule;
-import org.smoothbuild.fs.project.ProjectFileSystemModule;
-import org.smoothbuild.fs.space.SpaceModule;
+import org.smoothbuild.common.filesystem.disk.DiskFileSystemModule;
+import org.smoothbuild.filesystem.install.BinaryFileSystemModule;
+import org.smoothbuild.filesystem.install.StandardLibraryFileSystemModule;
+import org.smoothbuild.filesystem.project.ProjectFileSystemModule;
+import org.smoothbuild.filesystem.space.SpaceModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;

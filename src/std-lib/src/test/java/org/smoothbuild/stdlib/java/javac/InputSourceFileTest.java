@@ -1,10 +1,10 @@
 package org.smoothbuild.stdlib.java.javac;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.fs.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.fs.base.PathS;
+import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.stdlib.java.junit;
 
 import static java.lang.ClassLoader.getPlatformClassLoader;
-import static org.smoothbuild.common.fs.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.smoothbuild.common.fs.base.PathS;
+import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternExc;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;

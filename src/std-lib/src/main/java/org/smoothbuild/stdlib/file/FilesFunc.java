@@ -1,16 +1,16 @@
 package org.smoothbuild.stdlib.file;
 
 import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.common.fs.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_DIR;
+import static org.smoothbuild.common.filesystem.base.RecursivePathsIterator.recursivePathsIterator;
+import static org.smoothbuild.filesystem.project.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 
-import org.smoothbuild.common.fs.base.FileSystem;
-import org.smoothbuild.common.fs.base.PathIterator;
-import org.smoothbuild.common.fs.base.PathS;
-import org.smoothbuild.common.fs.base.PathState;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.PathIterator;
+import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;

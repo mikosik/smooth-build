@@ -1,10 +1,10 @@
 package org.smoothbuild.vm.bytecode;
 
-import static org.smoothbuild.fs.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
-import org.smoothbuild.common.fs.base.FileSystem;
-import org.smoothbuild.fs.project.TempManager;
-import org.smoothbuild.fs.space.ForSpace;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.filesystem.project.TempManager;
+import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.type.CategoryDb;

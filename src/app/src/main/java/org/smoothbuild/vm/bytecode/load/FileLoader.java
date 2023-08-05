@@ -1,14 +1,14 @@
 package org.smoothbuild.vm.bytecode.load;
 
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
-import static org.smoothbuild.common.fs.base.PathState.FILE;
+import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.io.Okios.copyAllAndClose;
 
 import java.io.FileNotFoundException;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.fs.space.FileResolver;
+import org.smoothbuild.filesystem.space.FilePath;
+import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;

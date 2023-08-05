@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.fs.lang.base.location;
 
-import static org.smoothbuild.fs.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
-import org.smoothbuild.fs.space.Space;
+import org.smoothbuild.filesystem.space.Space;
 
 public final class CommandLineLocation implements SourceLocation {
   public static final CommandLineLocation INSTANCE = new CommandLineLocation();

@@ -54,7 +54,7 @@ import org.smoothbuild.compile.fs.lang.type.StructTS;
 import org.smoothbuild.compile.fs.lang.type.TupleTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.compile.fs.lang.type.VarS;
-import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;

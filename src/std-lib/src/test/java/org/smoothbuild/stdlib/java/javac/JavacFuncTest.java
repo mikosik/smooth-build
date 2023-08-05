@@ -1,7 +1,7 @@
 package org.smoothbuild.stdlib.java.javac;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.fs.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.stdlib.java.javac.JavacFunc.classesFromJarFiles;
 import static org.smoothbuild.testing.common.JarTester.jarByteString;
 

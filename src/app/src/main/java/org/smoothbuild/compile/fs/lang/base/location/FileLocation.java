@@ -2,8 +2,8 @@ package org.smoothbuild.compile.fs.lang.base.location;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.fs.space.Space;
+import org.smoothbuild.filesystem.space.FilePath;
+import org.smoothbuild.filesystem.space.Space;
 
 public record FileLocation(FilePath file, int line)
     implements SourceLocation {

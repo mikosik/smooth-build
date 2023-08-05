@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.hashed;
 
-import static org.smoothbuild.common.fs.base.AssertPath.newUnknownPathState;
+import static org.smoothbuild.common.filesystem.base.AssertPath.newUnknownPathState;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
 
 import java.io.IOException;
@@ -8,8 +8,8 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-import org.smoothbuild.common.fs.base.FileSystem;
-import org.smoothbuild.common.fs.base.PathS;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.io.DataWriter;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
 

@@ -2,7 +2,7 @@ package org.smoothbuild.vm.evaluate;
 
 import java.io.IOException;
 
-import org.smoothbuild.fs.install.InstallationHashes;
+import org.smoothbuild.filesystem.install.InstallationHashes;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.inject.AbstractModule;

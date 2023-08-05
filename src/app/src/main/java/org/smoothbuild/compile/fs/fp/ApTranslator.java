@@ -65,7 +65,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.SelectP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
-import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;

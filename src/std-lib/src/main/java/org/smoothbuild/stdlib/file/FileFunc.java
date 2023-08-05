@@ -1,12 +1,12 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_DIR;
+import static org.smoothbuild.filesystem.project.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 
-import org.smoothbuild.common.fs.base.FileSystem;
-import org.smoothbuild.common.fs.base.PathS;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;

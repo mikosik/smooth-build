@@ -6,9 +6,9 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 
 import java.io.IOException;
 
-import org.smoothbuild.fs.install.BuildVersion;
-import org.smoothbuild.fs.install.HashNode;
-import org.smoothbuild.fs.install.InstallationHashes;
+import org.smoothbuild.filesystem.install.BuildVersion;
+import org.smoothbuild.filesystem.install.HashNode;
+import org.smoothbuild.filesystem.install.InstallationHashes;
 import org.smoothbuild.out.report.Console;
 
 import jakarta.inject.Inject;

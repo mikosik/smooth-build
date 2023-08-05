@@ -20,7 +20,7 @@ import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
-import org.smoothbuild.fs.space.FileResolver;
+import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 
