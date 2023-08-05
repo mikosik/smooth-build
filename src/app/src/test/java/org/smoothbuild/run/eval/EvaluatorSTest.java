@@ -6,8 +6,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.common.fs.base.PathS.path;
-import static org.smoothbuild.fs.space.Space.PROJECT;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
 import java.math.BigInteger;
 

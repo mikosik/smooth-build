@@ -3,12 +3,12 @@ package org.smoothbuild.systemtest.cli.command;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.file.Files.createDirectories;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.fs.project.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.DEFAULT_MODULE_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.HASHED_DB_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_LOCK_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.DEFAULT_MODULE_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.SMOOTH_LOCK_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.nio.file.Files;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.fs.base.PathS;
+import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
 import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSuite;

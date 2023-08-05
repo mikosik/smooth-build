@@ -11,8 +11,8 @@ import java.nio.file.NoSuchFileException;
 
 import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
-import org.smoothbuild.fs.space.FilePath;
-import org.smoothbuild.fs.space.FileResolver;
+import org.smoothbuild.filesystem.space.FilePath;
+import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.log.MaybeProcessor;
 

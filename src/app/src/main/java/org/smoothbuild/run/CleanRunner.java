@@ -2,17 +2,17 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.fs.project.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.HASHED_DB_PATH;
-import static org.smoothbuild.fs.project.ProjectPaths.SMOOTH_DIR;
-import static org.smoothbuild.fs.project.ProjectPaths.TEMPORARY_PATH;
-import static org.smoothbuild.fs.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.filesystem.project.ProjectPaths.SMOOTH_DIR;
+import static org.smoothbuild.filesystem.project.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
 import java.io.IOException;
 
-import org.smoothbuild.common.fs.base.FileSystem;
-import org.smoothbuild.fs.space.ForSpace;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.out.report.Console;
 
 import jakarta.inject.Inject;

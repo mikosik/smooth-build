@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.fs.lang.base.location;
 
-import static org.smoothbuild.fs.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
 /**
  * Location.

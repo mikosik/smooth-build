@@ -1,14 +1,14 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.fs.install.InstallationPaths.STD_LIB_MODS;
-import static org.smoothbuild.fs.project.ProjectPaths.DEFAULT_MODULE_FILE_PATH;
+import static org.smoothbuild.filesystem.install.InstallationPaths.STD_LIB_MODS;
+import static org.smoothbuild.filesystem.project.ProjectPaths.DEFAULT_MODULE_FILE_PATH;
 
 import java.util.Optional;
 
 import org.smoothbuild.compile.fs.FsTranslator;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
-import org.smoothbuild.fs.install.ModuleResourcesDetector;
-import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.filesystem.install.ModuleResourcesDetector;
+import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;

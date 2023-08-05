@@ -1,12 +1,12 @@
 package org.smoothbuild.vm.evaluate.compute;
 
-import static org.smoothbuild.fs.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.common.fs.base.FileSystem;
-import org.smoothbuild.fs.space.ForSpace;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
