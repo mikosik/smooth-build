@@ -14,7 +14,6 @@ import com.google.common.collect.ImmutableList;
 
 public class ProjectPaths {
   public static final PathS SMOOTH_DIR = path(".smooth");
-  public static final PathS TEMPORARY_PATH = SMOOTH_DIR.appendPart("temporary");
   public static final PathS ARTIFACTS_PATH = SMOOTH_DIR.appendPart("artifacts");
   public static final PathS COMPUTATION_CACHE_PATH = SMOOTH_DIR.appendPart("computations");
   public static final PathS HASHED_DB_PATH = SMOOTH_DIR.appendPart("hashed");
@@ -24,7 +23,7 @@ public class ProjectPaths {
   public static final FilePath DEFAULT_MODULE_FILE_PATH = filePath(PROJECT, DEFAULT_MODULE_PATH);
 
   private static final ImmutableList<PathS> dirsToInitialize =
-      ImmutableList.of(HASHED_DB_PATH, COMPUTATION_CACHE_PATH, TEMPORARY_PATH, ARTIFACTS_PATH);
+      ImmutableList.of(HASHED_DB_PATH, COMPUTATION_CACHE_PATH, ARTIFACTS_PATH);
 
   public static void initializeDirs(FileSystem projectFileSystem) throws IOException {
     for (PathS pathS : dirsToInitialize) {

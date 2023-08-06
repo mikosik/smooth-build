@@ -14,7 +14,6 @@ import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.HASHED_DB_PATH;
-import static org.smoothbuild.filesystem.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
@@ -102,7 +101,6 @@ public class AcceptanceTestCase extends TestContext {
   protected void resetDiskData() {
     try {
       prjFileSystem.delete(ARTIFACTS_PATH);
-      prjFileSystem.delete(TEMPORARY_PATH);
       prjFileSystem.delete(COMPUTATION_CACHE_PATH);
       prjFileSystem.delete(HASHED_DB_PATH);
     } catch (IOException e) {

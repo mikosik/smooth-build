@@ -6,7 +6,6 @@ import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.SMOOTH_DIR;
-import static org.smoothbuild.filesystem.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
 import java.io.IOException;
@@ -32,7 +31,6 @@ public class CleanRunner {
       fileSystem.delete(HASHED_DB_PATH);
       fileSystem.delete(COMPUTATION_CACHE_PATH);
       fileSystem.delete(ARTIFACTS_PATH);
-      fileSystem.delete(TEMPORARY_PATH);
     } catch (IOException e) {
       console.error("Unable to delete " + SMOOTH_DIR + ".");
       return EXIT_CODE_ERROR;
