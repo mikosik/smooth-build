@@ -1,9 +1,6 @@
-package org.smoothbuild.common.filesystem.disk;
+package org.smoothbuild.filesystem.space;
 
 import java.nio.file.Path;
-
-import org.smoothbuild.common.filesystem.base.FileSystemFactory;
-import org.smoothbuild.filesystem.space.Space;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
