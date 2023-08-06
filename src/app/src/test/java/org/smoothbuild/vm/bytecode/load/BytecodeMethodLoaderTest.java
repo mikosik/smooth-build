@@ -40,22 +40,22 @@ public class BytecodeMethodLoaderTest extends TestContext {
     }
 
     private void testCaching(Method method, Try<Method> tryMethod, Try<Method> expected) {
-      var methodProv = mock(MethodLoader.class);
+      var methodLoader = mock(MethodLoader.class);
       BlobB jar = blobB();
       String classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
-      when(methodProv.provide(methodSpec))
+      when(methodLoader.provide(methodSpec))
           .thenReturn(tryMethod);
 
-      var methodLoader = new BytecodeMethodLoader(methodProv);
+      var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
 
-      var resultMethod1 = methodLoader.load(jar, classBinaryName);
-      var resultMethod2 = methodLoader.load(jar, classBinaryName);
+      var resultMethod1 = bytecodeMethodLoader.load(jar, classBinaryName);
+      var resultMethod2 = bytecodeMethodLoader.load(jar, classBinaryName);
       assertThat(resultMethod1)
           .isEqualTo(expected);
       assertThat(resultMethod1)
           .isSameInstanceAs(resultMethod2);
-      verify(methodProv, times(1))
+      verify(methodLoader, times(1))
           .provide(methodSpec);
     }
   }
