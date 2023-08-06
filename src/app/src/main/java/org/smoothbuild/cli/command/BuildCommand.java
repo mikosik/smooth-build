@@ -77,7 +77,7 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    return createInjector(projectDir, installationDir(), out(), logLevel, showTasks)
+    return createInjector(projectDir, out(), logLevel, showTasks)
         .getInstance(BuildRunner.class)
         .run(values);
   }
