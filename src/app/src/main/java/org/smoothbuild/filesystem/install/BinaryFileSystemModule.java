@@ -20,7 +20,7 @@ public class BinaryFileSystemModule extends AbstractModule {
   @Provides
   @Singleton
   @ForSpace(BINARY)
-  public FileSystem provideBinFileSystem(FileSystemFactory fileSystemFactory) {
+  public FileSystem provideFileSystem(FileSystemFactory fileSystemFactory) {
     return fileSystemFactory.create(BINARY);
   }
 }
