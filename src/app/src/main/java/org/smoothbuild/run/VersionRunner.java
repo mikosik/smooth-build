@@ -23,7 +23,7 @@ public class VersionRunner {
     this.installationHashes = installationHashes;
   }
 
-  public Integer run() {
+  public int run() {
     try {
       HashNode hashNode = installationHashes.installationNode();
       console.println("smooth build version " + BuildVersion.VERSION);
