@@ -110,7 +110,6 @@ import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.SbTranslator;
 import org.smoothbuild.compile.sb.SbTranslatorFacade;
-import org.smoothbuild.filesystem.project.TempManager;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.Space;
 import org.smoothbuild.out.log.Log;
@@ -204,7 +203,6 @@ public class TestContext {
   private CategoryDb categoryDb;
   private HashedDb hashedDb;
   private FileSystem projectFileSystem;
-  private TempManager tempManager;
   private ByteArrayOutputStream systemOut;
 
   public EvaluatorB evaluatorB(Reporter reporter) {
@@ -436,13 +434,6 @@ public class TestContext {
       hashedDb = new HashedDb(projectFileSystem());
     }
     return hashedDb;
-  }
-
-  public TempManager tempManager() {
-    if (tempManager == null) {
-      tempManager = new TempManager();
-    }
-    return tempManager;
   }
 
   // Job related
