@@ -8,7 +8,6 @@ import static org.smoothbuild.filesystem.project.ProjectPaths.COMPUTATION_CACHE_
 import static org.smoothbuild.filesystem.project.ProjectPaths.DEFAULT_MODULE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.SMOOTH_LOCK_PATH;
-import static org.smoothbuild.filesystem.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 
 import java.io.IOException;
@@ -34,7 +33,6 @@ public class CleanCommandTest {
       createDirInProject(HASHED_DB_PATH);
       createDirInProject(COMPUTATION_CACHE_PATH);
       createDirInProject(ARTIFACTS_PATH);
-      createDirInProject(TEMPORARY_PATH);
 
       runSmoothClean();
       assertFinishedWithSuccess();

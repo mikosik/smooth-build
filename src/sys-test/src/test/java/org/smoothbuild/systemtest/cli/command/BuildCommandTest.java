@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 import static java.nio.file.Files.exists;
 import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.filesystem.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.buildCommand;
 
 import java.io.IOException;
@@ -29,19 +28,6 @@ public class BuildCommandTest {
     @Test
     public void build_command_clears_artifacts_dir() throws Exception {
       String path = ARTIFACTS_PATH.appendPart("file.txt").toString();
-      createFile(path, "content");
-      createUserModule("""
-              syntactically incorrect script
-              """);
-      runSmoothBuild("result");
-      assertFinishedWithError();
-      assertThat(exists(absolutePath(path)))
-          .isFalse();
-    }
-
-    @Test
-    public void build_command_clears_temporary_dir() throws Exception {
-      String path = TEMPORARY_PATH.appendPart("file.txt").toString();
       createFile(path, "content");
       createUserModule("""
               syntactically incorrect script
