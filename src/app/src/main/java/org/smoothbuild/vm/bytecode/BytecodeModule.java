@@ -3,7 +3,6 @@ package org.smoothbuild.vm.bytecode;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.filesystem.project.TempManager;
 import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
@@ -32,7 +31,7 @@ public class BytecodeModule extends AbstractModule {
 
   @Provides
   @Singleton
-  private HashedDb provideHashedDb(@ForSpace(PROJECT) FileSystem fileSystem, TempManager tempManager) {
-    return new HashedDb(fileSystem, tempManager);
+  private HashedDb provideHashedDb(@ForSpace(PROJECT) FileSystem fileSystem) {
+    return new HashedDb(fileSystem);
   }
 }

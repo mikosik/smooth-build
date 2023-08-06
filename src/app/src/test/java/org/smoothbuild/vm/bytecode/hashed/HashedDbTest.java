@@ -7,9 +7,9 @@ import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.io.Okios.writeAndClose;
-import static org.smoothbuild.filesystem.project.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.vm.bytecode.hashed.HashedDb.TEMP_DIR_PATH;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
 
 import java.io.IOException;
@@ -162,11 +162,11 @@ public class HashedDbTest extends TestContext {
   @Test
   public void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
     var fileSystem = projectFileSystem();
-    var hashedDb = new HashedDb(fileSystem, tempManager());
+    var hashedDb = new HashedDb(fileSystem);
 
     hashedDb.writeString("abc");
 
-    assertThat(fileSystem.files(TEMPORARY_PATH))
+    assertThat(fileSystem.files(TEMP_DIR_PATH))
         .isEmpty();
   }
 
@@ -174,12 +174,12 @@ public class HashedDbTest extends TestContext {
   public void temporary_file_is_deleted_when_sink_is_closed_even_when_hashed_valued_exists_in_db()
       throws Exception {
     var fileSystem = projectFileSystem();
-    var hashedDb = new HashedDb(fileSystem, tempManager());
+    var hashedDb = new HashedDb(fileSystem);
 
     hashedDb.writeString("abc");
     hashedDb.writeString("abc");
 
-    assertThat(fileSystem.files(TEMPORARY_PATH))
+    assertThat(fileSystem.files(TEMP_DIR_PATH))
         .isEmpty();
   }
 

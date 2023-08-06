@@ -12,9 +12,9 @@ import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 
+import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.filesystem.project.TempManager;
 import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBigIntegerExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeBooleanExc;
@@ -33,12 +33,12 @@ import okio.BufferedSource;
  * This class is thread-safe.
  */
 public class HashedDb {
+  static final PathS TEMP_DIR_PATH = HASHED_DB_PATH.appendPart("tmp");
   private final FileSystem fileSystem;
-  private final TempManager tempManager;
+  private final AtomicBigInteger tempFileCounter = new AtomicBigInteger();
 
-  public HashedDb(FileSystem fileSystem, TempManager tempManager) {
+  public HashedDb(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-    this.tempManager = tempManager;
   }
 
   public Hash writeBigInteger(BigInteger value) throws HashedDbExc {
@@ -217,7 +217,7 @@ public class HashedDb {
 
   public HashingBufferedSink sink() throws HashedDbExc {
     try {
-      return new HashingBufferedSink(fileSystem, tempManager.tempPath());
+      return new HashingBufferedSink(fileSystem, newTempFileProjectPath());
     } catch (IOException e) {
       throw new HashedDbExc(e);
     }
@@ -225,5 +225,9 @@ public class HashedDb {
 
   public static PathS projectPathToHashedFile(Hash hash) {
     return HASHED_DB_PATH.appendPart(hash.toHexString());
+  }
+
+  public PathS newTempFileProjectPath() {
+    return TEMP_DIR_PATH.appendPart(tempFileCounter.incrementAndGet().toString());
   }
 }
