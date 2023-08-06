@@ -433,7 +433,7 @@ public class TestContext {
 
   public HashedDb hashedDb() {
     if (hashedDb == null) {
-      hashedDb = new HashedDb(projectFileSystem(), tempManager());
+      hashedDb = new HashedDb(projectFileSystem());
     }
     return hashedDb;
   }
