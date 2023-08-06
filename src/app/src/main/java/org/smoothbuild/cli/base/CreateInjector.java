@@ -15,7 +15,6 @@ import org.smoothbuild.common.filesystem.disk.DiskFileSystemModule;
 import org.smoothbuild.filesystem.install.BinaryFileSystemModule;
 import org.smoothbuild.filesystem.install.StandardLibraryFileSystemModule;
 import org.smoothbuild.filesystem.project.ProjectFileSystemModule;
-import org.smoothbuild.filesystem.space.SpaceModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;
@@ -47,8 +46,7 @@ public class CreateInjector {
         new ProjectFileSystemModule(),
         new StandardLibraryFileSystemModule(),
         new BinaryFileSystemModule(),
-        new DiskFileSystemModule(),
-        new SpaceModule(spaceToPath),
+        new DiskFileSystemModule(spaceToPath),
         new ReportModule(out, logLevel));
   }
 
@@ -59,8 +57,7 @@ public class CreateInjector {
     return Guice.createInjector(PRODUCTION,
         new StandardLibraryFileSystemModule(),
         new BinaryFileSystemModule(),
-        new DiskFileSystemModule(),
-        new SpaceModule(spaceToPath),
+        new DiskFileSystemModule(spaceToPath),
         new ReportModule(out, INFO));
   }
 }
