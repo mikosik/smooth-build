@@ -11,10 +11,10 @@ import static org.smoothbuild.out.log.Level.INFO;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 
-import org.smoothbuild.common.filesystem.disk.DiskFileSystemModule;
-import org.smoothbuild.filesystem.install.BinaryFileSystemModule;
-import org.smoothbuild.filesystem.install.StandardLibraryFileSystemModule;
-import org.smoothbuild.filesystem.project.ProjectFileSystemModule;
+import org.smoothbuild.filesystem.install.BinarySpaceModule;
+import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
+import org.smoothbuild.filesystem.project.ProjectSpaceModule;
+import org.smoothbuild.filesystem.space.DiskFileSystemModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;
@@ -43,9 +43,9 @@ public class CreateInjector {
         new EvaluatorBModule(),
         new EvaluatorSModule(taskMatcher),
         new BytecodeModule(),
-        new ProjectFileSystemModule(),
-        new StandardLibraryFileSystemModule(),
-        new BinaryFileSystemModule(),
+        new ProjectSpaceModule(),
+        new StandardLibrarySpaceModule(),
+        new BinarySpaceModule(),
         new DiskFileSystemModule(spaceToPath),
         new ReportModule(out, logLevel));
   }
@@ -55,8 +55,8 @@ public class CreateInjector {
         STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
         BINARY, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(PRODUCTION,
-        new StandardLibraryFileSystemModule(),
-        new BinaryFileSystemModule(),
+        new StandardLibrarySpaceModule(),
+        new BinarySpaceModule(),
         new DiskFileSystemModule(spaceToPath),
         new ReportModule(out, INFO));
   }

@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.accept;
 
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.FileSystemFactory;
+import org.smoothbuild.filesystem.space.FileSystemFactory;
 
 import com.google.inject.AbstractModule;
 

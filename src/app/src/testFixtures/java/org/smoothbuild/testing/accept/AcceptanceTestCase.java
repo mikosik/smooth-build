@@ -27,10 +27,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.common.filesystem.mem.MemoryFileSystemModule;
 import org.smoothbuild.compile.fs.lang.define.NamedValueS;
-import org.smoothbuild.filesystem.install.StandardLibraryFileSystemModule;
-import org.smoothbuild.filesystem.project.ProjectFileSystemModule;
+import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
+import org.smoothbuild.filesystem.project.ProjectSpaceModule;
+import org.smoothbuild.filesystem.space.MemoryFileSystemModule;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.run.BuildRunner;
 import org.smoothbuild.testing.TestContext;
@@ -174,8 +174,8 @@ public class AcceptanceTestCase extends TestContext {
   public static Injector createInjector(MemoryReporter memoryReporter, Module module) {
     return Guice.createInjector(PRODUCTION,
         new TestModule(memoryReporter),
-        new ProjectFileSystemModule(),
-        new StandardLibraryFileSystemModule(),
+        new ProjectSpaceModule(),
+        new StandardLibrarySpaceModule(),
         module,
         new BytecodeModule());
   }

@@ -1,6 +1,4 @@
-package org.smoothbuild.common.filesystem.mem;
-
-import org.smoothbuild.common.filesystem.base.FileSystemFactory;
+package org.smoothbuild.filesystem.space;
 
 import com.google.inject.AbstractModule;
 
