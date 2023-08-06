@@ -7,12 +7,12 @@ import javax.tools.SimpleJavaFileObject;
 import okio.ForwardingSink;
 import okio.Okio;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
-import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
-import org.smoothbuild.vm.bytecode.expr.value.StringB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobBBuilder;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class OutputClassFile extends SimpleJavaFileObject {
   private final ArrayBBuilder fileArrayBuilder;

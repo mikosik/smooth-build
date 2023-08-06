@@ -3,13 +3,13 @@ package org.smoothbuild.stdlib.java.javac;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.stdlib.java.javac.JavacFunc.classesFromJarFiles;
-import static org.smoothbuild.testing.common.JarTester.jarByteString;
+import static org.smoothbuild.virtualmachine.testing.JarTester.jarByteString;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class JavacFuncTest extends TestContext {
+public class JavacFuncTest extends TestVirtualMachine {
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
     TupleB file1 = fileB(path("my/package/MyKlass.class"));

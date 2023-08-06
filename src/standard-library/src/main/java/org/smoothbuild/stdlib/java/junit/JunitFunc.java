@@ -3,13 +3,13 @@ package org.smoothbuild.stdlib.java.junit;
 import static java.lang.ClassLoader.getPlatformClassLoader;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
-import static org.smoothbuild.run.eval.FileStruct.fileContent;
-import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromJar;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.filesFromLibJars;
 import static org.smoothbuild.stdlib.java.junit.JUnitCoreWrapper.newInstance;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -19,12 +19,12 @@ import java.util.function.Predicate;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
-import org.smoothbuild.vm.bytecode.expr.value.StringB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class JunitFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args)

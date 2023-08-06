@@ -33,12 +33,12 @@ import org.smoothbuild.common.filesystem.space.Space;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.layout.SmoothSpace;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 import picocli.CommandLine.TypeConversionException;
 
-public class MatcherCreatorTest extends TestContext {
+public class MatcherCreatorTest extends TestVirtualMachine {
   @ParameterizedTest
   @MethodSource("provideArguments")
   public void matcher(String expression, TaskMatcher expectedMatcher) throws BytecodeException {

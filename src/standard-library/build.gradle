@@ -8,7 +8,7 @@ jar {
 
 dependencies {
     implementation project(':src:common')
-    implementation project(':src:app')
+    implementation project(':src:virtual-machine')
     implementation libs.guava
     implementation libs.okio
     implementation libs.zip4j

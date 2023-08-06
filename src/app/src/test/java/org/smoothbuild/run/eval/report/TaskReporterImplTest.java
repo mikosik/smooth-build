@@ -11,18 +11,18 @@ import static org.smoothbuild.common.log.Log.warning;
 import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.run.eval.report.TaskMatchers.NONE;
 import static org.smoothbuild.run.eval.report.TaskReporterImpl.NAME_LENGTH_LIMIT;
-import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
-import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.vm.evaluate.compute.ResultSource.MEMORY;
-import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
+import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.DISK;
+import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.MEMORY;
+import static org.smoothbuild.virtualmachine.evaluate.compute.ResultSource.NOOP;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.evaluate.compute.ResultSource;
-import org.smoothbuild.vm.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.evaluate.compute.ResultSource;
+import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TaskReporterImplTest extends TestContext {
   @Test

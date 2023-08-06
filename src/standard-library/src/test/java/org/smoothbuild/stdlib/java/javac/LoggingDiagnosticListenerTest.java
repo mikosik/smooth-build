@@ -11,8 +11,8 @@ import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.vm.evaluate.plugin.MessageLogger;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.evaluate.plugin.MessageLogger;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class LoggingDiagnosticListenerTest {
   private Diagnostic<? extends JavaFileObject> diagnostic;

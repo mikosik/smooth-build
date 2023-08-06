@@ -27,6 +27,7 @@ subprojects { subproject ->
             'common-testing',
             'common',
             'compiler-frontend',
+            'virtual-machine',
             'app',
             'standard-library',
             'system-test']) {

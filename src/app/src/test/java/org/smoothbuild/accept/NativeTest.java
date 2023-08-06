@@ -13,20 +13,21 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.log.Log;
 import org.smoothbuild.testing.accept.AcceptanceTestCase;
-import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
-import org.smoothbuild.testing.func.nativ.AddElementOfWrongTypeToArray;
-import org.smoothbuild.testing.func.nativ.BrokenIdentity;
-import org.smoothbuild.testing.func.nativ.EmptyStringArray;
-import org.smoothbuild.testing.func.nativ.MissingMethod;
-import org.smoothbuild.testing.func.nativ.ReportErrorAndReturnNonNull;
-import org.smoothbuild.testing.func.nativ.ReportFixedError;
-import org.smoothbuild.testing.func.nativ.ReportWarningAndReturnNull;
-import org.smoothbuild.testing.func.nativ.ReturnAbc;
-import org.smoothbuild.testing.func.nativ.ReturnNull;
-import org.smoothbuild.testing.func.nativ.ReturnStringStruct;
-import org.smoothbuild.testing.func.nativ.StringIdentity;
-import org.smoothbuild.testing.func.nativ.ThrowException;
-import org.smoothbuild.testing.func.nativ.ThrowRandomException;
+import org.smoothbuild.virtualmachine.testing.func.bytecode.NonPublicMethod;
+import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
+import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
+import org.smoothbuild.virtualmachine.testing.func.nativ.AddElementOfWrongTypeToArray;
+import org.smoothbuild.virtualmachine.testing.func.nativ.BrokenIdentity;
+import org.smoothbuild.virtualmachine.testing.func.nativ.EmptyStringArray;
+import org.smoothbuild.virtualmachine.testing.func.nativ.MissingMethod;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReportErrorAndReturnNonNull;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReportFixedError;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReportWarningAndReturnNull;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnNull;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnStringStruct;
+import org.smoothbuild.virtualmachine.testing.func.nativ.StringIdentity;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowException;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ThrowRandomException;
 
 public class NativeTest extends AcceptanceTestCase {
   @Nested
@@ -294,7 +295,7 @@ public class NativeTest extends AcceptanceTestCase {
 
     @Test
     public void func_with_illegal_impl_causes_fatal() throws Exception {
-      Class<?> clazz = org.smoothbuild.testing.func.bytecode.NonPublicMethod.class;
+      Class<?> clazz = NonPublicMethod.class;
       createUserNativeJar(clazz);
       createUserModule(format(
           """
@@ -306,14 +307,13 @@ public class NativeTest extends AcceptanceTestCase {
       evaluate("result");
       assertThat(logs())
           .containsExactly(fatal("{prj}/build.smooth:1: Error loading bytecode for `brokenFunc`"
-              + " using provider specified as "
-              + "`org.smoothbuild.testing.func.bytecode.NonPublicMethod`: "
-              + "Providing method is not public."));
+              + " using provider specified as `" + clazz.getCanonicalName()
+              + "`: Providing method is not public."));
     }
 
     @Test
     public void value_can_be_evaluated() throws Exception {
-      Class<?> clazz = org.smoothbuild.testing.func.bytecode.ReturnAbc.class;
+      Class<?> clazz = ReturnAbc.class;
       createUserNativeJar(clazz);
       createUserModule(format(
           """
@@ -327,7 +327,7 @@ public class NativeTest extends AcceptanceTestCase {
 
     @Test
     public void value_with_illegal_impl_causes_fatal() throws Exception {
-      Class<?> clazz = org.smoothbuild.testing.func.bytecode.NonPublicMethod.class;
+      Class<?> clazz = NonPublicMethod.class;
       createUserNativeJar(clazz);
       createUserModule(format(
           """
@@ -338,8 +338,8 @@ public class NativeTest extends AcceptanceTestCase {
       evaluate("result");
       assertThat(logs())
           .containsExactly(fatal("{prj}/build.smooth:1: Error loading bytecode for `result` using "
-              + "provider specified as `org.smoothbuild.testing.func.bytecode.NonPublicMethod`: "
-              + "Providing method is not public."));
+              + "provider specified as `" + NonPublicMethod.class.getCanonicalName()
+              + "`: Providing method is not public."));
     }
   }
 

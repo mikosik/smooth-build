@@ -6,13 +6,13 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.log.Level;
-import org.smoothbuild.vm.evaluate.task.CombineTask;
-import org.smoothbuild.vm.evaluate.task.ConstTask;
-import org.smoothbuild.vm.evaluate.task.InvokeTask;
-import org.smoothbuild.vm.evaluate.task.OrderTask;
-import org.smoothbuild.vm.evaluate.task.PickTask;
-import org.smoothbuild.vm.evaluate.task.SelectTask;
-import org.smoothbuild.vm.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
+import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
+import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
+import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
+import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
+import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
+import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TaskMatchers {
   public static final TaskMatcher ALL = (task, logs) -> true;

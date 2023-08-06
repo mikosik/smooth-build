@@ -15,11 +15,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class TaskMatchersTest extends TestContext {
+public class TaskMatchersTest extends TestVirtualMachine {
   @ParameterizedTest
   @MethodSource("matcher_matches_cases")
   public void matcher_matches(TaskMatcher matcher, Task task, List<Log> logs, boolean expected) {
@@ -27,7 +27,7 @@ public class TaskMatchersTest extends TestContext {
   }
 
   public static List<Arguments> matcher_matches_cases() throws BytecodeException {
-    var t = new TestContext();
+    var t = new TestVirtualMachine();
     return list(
         arguments(matcher("all"), null, null, true),
         arguments(matcher("none"), null, null, false),

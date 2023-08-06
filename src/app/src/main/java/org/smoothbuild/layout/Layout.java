@@ -5,9 +5,7 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.filesystem.space.FilePath.filePath;
 
-import java.io.IOException;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.filesystem.space.FilePath;
 
@@ -31,22 +29,4 @@ public class Layout {
       filePath(SmoothSpace.BINARY, path("smooth.jar"));
   public static final String STANDARD_LIBRARY_DIR_NAME = "lib";
   public static final String BIN_DIR_NAME = "bin";
-
-  private static final List<PathS> dirsToInitialize =
-      list(HASHED_DB_PATH, COMPUTATION_CACHE_PATH, ARTIFACTS_PATH);
-
-  public static void initializeDirs(FileSystem projectFileSystem) throws IOException {
-    for (PathS pathS : dirsToInitialize) {
-      initializeDir(projectFileSystem, pathS);
-    }
-  }
-
-  public static void initializeDir(FileSystem fileSystem, PathS dir) throws IOException {
-    switch (fileSystem.pathState(dir)) {
-      case DIR -> {}
-      case FILE -> throw new IOException(
-          "Cannot create directory at " + dir.q() + " because it is a file.");
-      case NOTHING -> fileSystem.createDir(dir);
-    }
-  }
 }

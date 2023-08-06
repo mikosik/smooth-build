@@ -12,9 +12,9 @@ import static org.smoothbuild.common.log.Try.failure;
 import static org.smoothbuild.layout.Layout.ARTIFACTS_PATH;
 import static org.smoothbuild.layout.Layout.HASHED_DB_PATH;
 import static org.smoothbuild.layout.SmoothSpace.PROJECT;
-import static org.smoothbuild.run.eval.FileStruct.fileContent;
-import static org.smoothbuild.run.eval.FileStruct.filePath;
-import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
+import static org.smoothbuild.virtualmachine.bytecode.hashed.HashedDb.dbPathTo;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
 
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -34,10 +34,11 @@ import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.layout.ForSpace;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.helper.FileStruct;
 
 public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<String>> {
   private final FileSystem fileSystem;

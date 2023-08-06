@@ -14,6 +14,8 @@ import com.google.inject.Injector;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import org.smoothbuild.SandboxHashModule;
+import org.smoothbuild.VirtualMachineConfigurationModule;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.common.filesystem.space.DiskFileSystemModule;
 import org.smoothbuild.common.filesystem.space.Space;
@@ -25,8 +27,7 @@ import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.run.eval.EvaluatorSModule;
 import org.smoothbuild.run.eval.report.TaskMatcher;
 import org.smoothbuild.run.eval.report.TaskMatchers;
-import org.smoothbuild.vm.bytecode.BytecodeModule;
-import org.smoothbuild.vm.evaluate.EvaluatorBModule;
+import org.smoothbuild.virtualmachine.VirtualMachineModule;
 
 public class CreateInjector {
   public static Injector createInjector(Path projectDir, PrintWriter out, Level logLevel) {
@@ -41,9 +42,10 @@ public class CreateInjector {
         BINARY, installationDir().resolve(BIN_DIR_NAME));
     return Guice.createInjector(
         PRODUCTION,
-        new EvaluatorBModule(),
+        new VirtualMachineConfigurationModule(),
+        new SandboxHashModule(),
         new EvaluatorSModule(taskMatcher),
-        new BytecodeModule(),
+        new VirtualMachineModule(),
         new ProjectSpaceModule(),
         new StandardLibrarySpaceModule(),
         new BinarySpaceModule(),

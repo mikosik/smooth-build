@@ -4,9 +4,9 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 
 import org.smoothbuild.common.filesystem.base.IllegalPathException;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.StringB;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class PathArgValidator {
   public static PathS validatedProjectPath(NativeApi nativeApi, String name, StringB path)

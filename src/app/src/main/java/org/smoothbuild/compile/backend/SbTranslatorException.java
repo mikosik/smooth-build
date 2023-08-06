@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.backend;
 
-import org.smoothbuild.vm.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
 
 public class SbTranslatorException extends Exception {
   public SbTranslatorException(BytecodeException bytecodeException) {

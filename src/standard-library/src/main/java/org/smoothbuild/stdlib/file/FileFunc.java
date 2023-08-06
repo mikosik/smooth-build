@@ -1,18 +1,20 @@
 package org.smoothbuild.stdlib.file;
 
-import static org.smoothbuild.layout.Layout.SMOOTH_DIR;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.StringB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.evaluate.compute.Container;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FileFunc {
+  private static final PathS SMOOTH_DIR = path(".smooth");
+
   public static ValueB func(Container container, TupleB args)
       throws IOException, BytecodeException {
     StringB path = (StringB) args.get(0);

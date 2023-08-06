@@ -2,7 +2,7 @@ package org.smoothbuild.run.eval.report;
 
 import java.util.List;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.vm.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 @FunctionalInterface
 public interface TaskMatcher {

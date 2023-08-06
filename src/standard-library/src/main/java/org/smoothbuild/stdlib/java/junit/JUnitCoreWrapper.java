@@ -2,7 +2,7 @@ package org.smoothbuild.stdlib.java.junit;
 
 import static org.smoothbuild.stdlib.java.junit.ReflectionUtil.runReflexively;
 
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class JUnitCoreWrapper {
   private final NativeApi nativeApi;

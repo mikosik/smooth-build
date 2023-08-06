@@ -1,15 +1,15 @@
 package org.smoothbuild.stdlib.java.javac;
 
 import static org.smoothbuild.common.Constants.CHARSET;
-import static org.smoothbuild.run.eval.FileStruct.fileContent;
-import static org.smoothbuild.run.eval.FileStruct.filePath;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Scanner;
 import javax.tools.SimpleJavaFileObject;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 
 public class InputSourceFile extends SimpleJavaFileObject {
   private final TupleB file;
