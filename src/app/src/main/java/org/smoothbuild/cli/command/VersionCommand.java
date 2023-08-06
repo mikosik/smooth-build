@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.base.CreateInjector.createInjector;
+import static org.smoothbuild.run.CreateInjector.createInjector;
 
 import java.util.concurrent.Callable;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.base;
+package org.smoothbuild.run;
 
 import static com.google.inject.Stage.PRODUCTION;
 import static org.smoothbuild.filesystem.install.InstallationLayout.BIN_DIR_NAME;
