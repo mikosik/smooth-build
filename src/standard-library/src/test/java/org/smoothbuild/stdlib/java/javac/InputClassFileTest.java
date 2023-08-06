@@ -10,11 +10,11 @@ import java.net.URI;
 import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class InputClassFileTest extends TestContext {
+public class InputClassFileTest extends TestVirtualMachine {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private final PathS path = path("a/b/MyClass.class");
 

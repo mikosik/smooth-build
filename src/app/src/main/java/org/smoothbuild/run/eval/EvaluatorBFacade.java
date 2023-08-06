@@ -9,10 +9,10 @@ import org.smoothbuild.common.step.MaybeFunction;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
-import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.evaluate.EvaluatorB;
-import org.smoothbuild.vm.evaluate.execute.TaskReporter;
+import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.evaluate.EvaluatorB;
+import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
 
 public class EvaluatorBFacade
     implements MaybeFunction<Tuple2<List<ExprB>, BsMapping>, List<ValueB>> {

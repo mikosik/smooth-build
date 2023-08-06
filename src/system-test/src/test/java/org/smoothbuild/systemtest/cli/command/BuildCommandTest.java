@@ -16,10 +16,10 @@ import org.smoothbuild.systemtest.cli.command.common.AbstractDefaultModuleTestSu
 import org.smoothbuild.systemtest.cli.command.common.AbstractLockFileTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractLogLevelOptionTestSuite;
 import org.smoothbuild.systemtest.cli.command.common.AbstractValuesArgTestSuite;
-import org.smoothbuild.testing.func.nativ.ReportError;
-import org.smoothbuild.testing.func.nativ.ReportInfo;
-import org.smoothbuild.testing.func.nativ.ReportWarning;
-import org.smoothbuild.testing.func.nativ.ReturnAbc;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReportError;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReportInfo;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReportWarning;
+import org.smoothbuild.virtualmachine.testing.func.nativ.ReturnAbc;
 
 public class BuildCommandTest {
   @Nested

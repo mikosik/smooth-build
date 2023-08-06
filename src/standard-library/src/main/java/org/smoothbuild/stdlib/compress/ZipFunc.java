@@ -2,8 +2,8 @@ package org.smoothbuild.stdlib.compress;
 
 import static okio.Okio.buffer;
 import static okio.Okio.sink;
-import static org.smoothbuild.run.eval.FileStruct.fileContent;
-import static org.smoothbuild.run.eval.FileStruct.filePath;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
 
 import java.io.IOException;
 import java.nio.file.attribute.FileTime;
@@ -11,12 +11,12 @@ import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import okio.BufferedSource;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.exc.IoBytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.exc.IoBytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class ZipFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {

@@ -20,15 +20,15 @@ import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.testing.func.bytecode.ReturnAbc;
-import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
-import org.smoothbuild.testing.func.bytecode.ReturnReturnAbcFunc;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.oper.CallB;
-import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
-import org.smoothbuild.vm.bytecode.load.FilePersister;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
+import org.smoothbuild.virtualmachine.bytecode.expr.oper.CallB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.LambdaB;
+import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
+import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnAbc;
+import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnIdFunc;
+import org.smoothbuild.virtualmachine.testing.func.bytecode.ReturnReturnAbcFunc;
 
 public class SbTranslatorTest extends TestContext {
   @Nested

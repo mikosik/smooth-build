@@ -1,17 +1,17 @@
 package org.smoothbuild.stdlib.java.javac;
 
-import static org.smoothbuild.run.eval.FileStruct.fileContent;
-import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Objects;
 import javax.tools.SimpleJavaFileObject;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final TupleB file;

@@ -15,10 +15,10 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
-import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayBBuilder;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final NativeApi nativeApi;

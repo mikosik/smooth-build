@@ -15,7 +15,7 @@ import org.smoothbuild.compile.backend.BackendCompile;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.run.eval.EvaluatorBFacade;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
 
 public class EvaluateStepFactory
     implements StepFactory<Tuple2<ScopeS, List<String>>, List<Tuple2<ExprS, ValueB>>> {

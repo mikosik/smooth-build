@@ -13,10 +13,10 @@ import org.smoothbuild.common.log.Try;
 import org.smoothbuild.common.tuple.Tuple2;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
-import org.smoothbuild.vm.bytecode.BytecodeF;
-import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
-import org.smoothbuild.vm.bytecode.load.FilePersister;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
+import org.smoothbuild.virtualmachine.bytecode.load.BytecodeLoader;
+import org.smoothbuild.virtualmachine.bytecode.load.FilePersister;
 
 public class BackendCompile
     implements Function<

@@ -29,9 +29,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.log.Level;
 import org.smoothbuild.common.log.Log;
-import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class SystemOutReporterTest extends TestContext {
+public class SystemOutReporterTest extends TestVirtualMachine {
   private static final String HEADER = "TASK NAME";
 
   @ParameterizedTest

@@ -1,18 +1,18 @@
 package org.smoothbuild.stdlib.compress;
 
-import static org.smoothbuild.run.eval.FileStruct.fileContent;
-import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.stdlib.java.UnjarFunc.JAR_MANIFEST_PATH;
-import static org.smoothbuild.vm.evaluate.plugin.UnzipBlob.unzipBlob;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.fileContent;
+import static org.smoothbuild.virtualmachine.bytecode.helper.FileStruct.filePath;
+import static org.smoothbuild.virtualmachine.evaluate.plugin.UnzipBlob.unzipBlob;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
-import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ArrayB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class UnzipHelper {
   private static final Predicate<String> NOT_MANIFEST_PREDICATE = f -> !f.equals(JAR_MANIFEST_PATH);

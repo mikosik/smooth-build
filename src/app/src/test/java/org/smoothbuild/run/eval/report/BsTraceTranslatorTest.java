@@ -9,10 +9,10 @@ import org.smoothbuild.common.Hash;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class BsTraceTranslatorTest extends TestContext {
+public class BsTraceTranslatorTest extends TestVirtualMachine {
   private static final Hash HASH1 = Hash.of(1);
   private static final Hash HASH2 = Hash.of(2);
   private static final Hash HASH3 = Hash.of(3);

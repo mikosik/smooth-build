@@ -2,18 +2,18 @@ package org.smoothbuild.stdlib.file;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.log.Level.ERROR;
-import static org.smoothbuild.run.eval.MessageStruct.messageSeverity;
-import static org.smoothbuild.run.eval.MessageStruct.messageText;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
+import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.messageSeverity;
+import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.messageText;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class PathArgValidatorTest extends TestContext {
+public class PathArgValidatorTest extends TestVirtualMachine {
   @ParameterizedTest
   @MethodSource("listOfCorrectProjectPaths")
   public void valid_project_paths_are_accepted(String path) throws Exception {

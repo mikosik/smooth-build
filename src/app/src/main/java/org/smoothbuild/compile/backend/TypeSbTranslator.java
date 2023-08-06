@@ -15,10 +15,10 @@ import org.smoothbuild.compile.frontend.lang.type.StructTS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
-import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
-import org.smoothbuild.vm.bytecode.type.value.FuncTB;
-import org.smoothbuild.vm.bytecode.type.value.TupleTB;
-import org.smoothbuild.vm.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.ArrayTB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.FuncTB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.TupleTB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 
 class TypeSbTranslator {
   private final ChainingBytecodeFactory bytecodeF;

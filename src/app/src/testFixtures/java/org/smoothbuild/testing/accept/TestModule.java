@@ -8,7 +8,7 @@ import com.google.inject.Singleton;
 import org.smoothbuild.common.Hash;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.eval.report.TaskMatcher;
-import org.smoothbuild.vm.evaluate.SandboxHash;
+import org.smoothbuild.virtualmachine.evaluate.SandboxHash;
 
 public class TestModule extends AbstractModule {
   @Override

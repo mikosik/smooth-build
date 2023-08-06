@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.Map;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class TypeSbTranslatorTest extends TestContext {
+public class TypeSbTranslatorTest extends TestVirtualMachine {
   @Nested
   class _mono {
     @Test

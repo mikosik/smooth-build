@@ -3,9 +3,9 @@ package org.smoothbuild.stdlib.java;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class JarFuncTest extends TestContext {
+public class JarFuncTest extends TestVirtualMachine {
   @Test
   public void jar_produces_bit_level_equal_file_independent_of_its_creation_time()
       throws Exception {

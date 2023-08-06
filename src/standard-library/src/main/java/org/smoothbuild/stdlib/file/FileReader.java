@@ -3,11 +3,11 @@ package org.smoothbuild.stdlib.file;
 import java.io.IOException;
 import okio.BufferedSource;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.expr.value.StringB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.evaluate.compute.Container;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.BlobB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.StringB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.evaluate.compute.Container;
 
 public class FileReader {
   private final Container container;

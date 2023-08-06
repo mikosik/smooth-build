@@ -5,8 +5,8 @@ import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
   private final NativeApi nativeApi;

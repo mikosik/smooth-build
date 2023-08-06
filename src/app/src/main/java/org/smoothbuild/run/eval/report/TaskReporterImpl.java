@@ -1,12 +1,15 @@
 package org.smoothbuild.run.eval.report;
 
 import static com.google.common.base.Strings.padEnd;
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.Strings.limitedWithEllipsis;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.log.Log.containsAnyFailure;
-import static org.smoothbuild.run.eval.MessageStruct.level;
-import static org.smoothbuild.run.eval.MessageStruct.text;
+import static org.smoothbuild.common.log.Log.fatal;
+import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.level;
+import static org.smoothbuild.virtualmachine.bytecode.helper.MessageStruct.text;
 
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
@@ -14,20 +17,20 @@ import org.smoothbuild.common.log.Log;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.value.FuncB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.evaluate.compute.ComputationResult;
-import org.smoothbuild.vm.evaluate.compute.ResultSource;
-import org.smoothbuild.vm.evaluate.execute.TaskReporter;
-import org.smoothbuild.vm.evaluate.task.CombineTask;
-import org.smoothbuild.vm.evaluate.task.ConstTask;
-import org.smoothbuild.vm.evaluate.task.InvokeTask;
-import org.smoothbuild.vm.evaluate.task.OrderTask;
-import org.smoothbuild.vm.evaluate.task.PickTask;
-import org.smoothbuild.vm.evaluate.task.SelectTask;
-import org.smoothbuild.vm.evaluate.task.Task;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.ExprB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.FuncB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.evaluate.compute.ComputationResult;
+import org.smoothbuild.virtualmachine.evaluate.compute.ResultSource;
+import org.smoothbuild.virtualmachine.evaluate.execute.TaskReporter;
+import org.smoothbuild.virtualmachine.evaluate.task.CombineTask;
+import org.smoothbuild.virtualmachine.evaluate.task.ConstTask;
+import org.smoothbuild.virtualmachine.evaluate.task.InvokeTask;
+import org.smoothbuild.virtualmachine.evaluate.task.OrderTask;
+import org.smoothbuild.virtualmachine.evaluate.task.PickTask;
+import org.smoothbuild.virtualmachine.evaluate.task.SelectTask;
+import org.smoothbuild.virtualmachine.evaluate.task.Task;
 
 public class TaskReporterImpl implements TaskReporter {
   // visible for testing
@@ -50,6 +53,13 @@ public class TaskReporterImpl implements TaskReporter {
     var source = result.source();
     var logs = logsFrom(result);
     report(task, header(task, source), logs);
+  }
+
+  @Override
+  public void reportEvaluationException(Throwable throwable) {
+    reporter.report(
+        "Internal smooth error",
+        list(fatal("Evaluation failed with: " + getStackTraceAsString(throwable))));
   }
 
   private static List<Log> logsFrom(ComputationResult result) throws BytecodeException {

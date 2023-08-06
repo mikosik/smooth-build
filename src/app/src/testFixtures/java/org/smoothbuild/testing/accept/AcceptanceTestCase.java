@@ -23,6 +23,7 @@ import com.google.inject.Key;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.junit.jupiter.api.BeforeEach;
+import org.smoothbuild.VirtualMachineConfigurationModule;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.filesystem.base.FileSystem;
@@ -37,11 +38,11 @@ import org.smoothbuild.layout.SmoothSpace;
 import org.smoothbuild.layout.StandardLibrarySpaceModule;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.EvaluateStepFactory;
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.BytecodeModule;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.VirtualMachineModule;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.testing.TestVirtualMachine;
 
-public class AcceptanceTestCase extends TestContext {
+public class AcceptanceTestCase extends TestVirtualMachine {
   private Injector injector;
   private Maybe<List<Tuple2<ExprS, ValueB>>> artifacts;
 
@@ -159,6 +160,7 @@ public class AcceptanceTestCase extends TestContext {
         new ProjectSpaceModule(),
         new StandardLibrarySpaceModule(),
         fileSystemModule,
-        new BytecodeModule());
+        new VirtualMachineConfigurationModule(),
+        new VirtualMachineModule());
   }
 }

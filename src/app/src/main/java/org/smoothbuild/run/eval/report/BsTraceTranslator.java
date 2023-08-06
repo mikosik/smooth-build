@@ -6,7 +6,7 @@ import org.smoothbuild.common.Hash;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.define.TraceS;
-import org.smoothbuild.vm.evaluate.execute.TraceB;
+import org.smoothbuild.virtualmachine.evaluate.execute.TraceB;
 
 public class BsTraceTranslator {
   private final BsMapping bsMapping;

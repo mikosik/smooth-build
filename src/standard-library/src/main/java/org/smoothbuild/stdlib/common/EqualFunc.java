@@ -1,9 +1,9 @@
 package org.smoothbuild.stdlib.common;
 
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.evaluate.plugin.NativeApi;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.TupleB;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.evaluate.plugin.NativeApi;
 
 public class EqualFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws BytecodeException {

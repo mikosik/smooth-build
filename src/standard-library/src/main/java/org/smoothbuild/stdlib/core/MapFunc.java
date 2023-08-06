@@ -1,10 +1,10 @@
 package org.smoothbuild.stdlib.core;
 
 import java.util.Map;
-import org.smoothbuild.vm.bytecode.BytecodeException;
-import org.smoothbuild.vm.bytecode.BytecodeF;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.bytecode.type.value.TypeB;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeException;
+import org.smoothbuild.virtualmachine.bytecode.BytecodeF;
+import org.smoothbuild.virtualmachine.bytecode.expr.value.ValueB;
+import org.smoothbuild.virtualmachine.bytecode.type.value.TypeB;
 
 /**
  * [R] map([S] array, S->R mapper)
