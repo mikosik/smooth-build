@@ -22,7 +22,7 @@ import okio.Sink;
  * This class is NOT thread-safe.
  */
 public class MemoryFileSystem implements FileSystem {
-  private final MemoryDir root = new MemoryDir(null, PathS.root());
+  private MemoryDir root = null;
 
   public MemoryFileSystem() {
   }
@@ -124,6 +124,9 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   private MemoryDir createDirImpl(PathS dir) throws IOException {
+    if (root == null) {
+      root = new MemoryDir(null, PathS.root());
+    }
     Iterator<PathS> it = dir.parts().iterator();
     MemoryDir currentDir = root;
     while (it.hasNext()) {
@@ -172,16 +175,20 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   private MemoryElement findElement(PathS path) {
-    Iterator<PathS> it = path.parts().iterator();
-    MemoryElement current = root;
-    while (it.hasNext()) {
-      PathS name = it.next();
-      if (current.hasChild(name)) {
-        current = current.child(name);
-      } else {
-        return null;
+    if (root == null) {
+      return null;
+    } else {
+      Iterator<PathS> it = path.parts().iterator();
+      MemoryElement current = root;
+      while (it.hasNext()) {
+        PathS name = it.next();
+        if (current.hasChild(name)) {
+          current = current.child(name);
+        } else {
+          return null;
+        }
       }
+      return current;
     }
-    return current;
   }
 }

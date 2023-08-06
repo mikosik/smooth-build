@@ -23,4 +23,9 @@ public class MemoryFileSystemTest extends AbstractFileSystemTestSuite {
       sink.write(content);
     }
   }
+
+  @Override
+  protected String resolve(PathS path) {
+    return path.q();
+  }
 }

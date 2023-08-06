@@ -20,8 +20,8 @@ public class DiskFileSystemTest extends AbstractFileSystemTestSuite {
 
   @BeforeEach
   public void before(@TempDir Path tempDir) {
-    this.tempDir = tempDir;
-    fileSystem = new DiskFileSystem(tempDir);
+    this.tempDir = tempDir.resolve("dir");
+    fileSystem = new DiskFileSystem(this.tempDir);
   }
 
   @Override
@@ -31,5 +31,10 @@ public class DiskFileSystemTest extends AbstractFileSystemTestSuite {
     try (BufferedSink sink = buffer(sink(filePath))) {
       sink.write(content);
     }
+  }
+
+  @Override
+  protected String resolve(PathS path) {
+    return path.q();
   }
 }
