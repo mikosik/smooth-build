@@ -18,7 +18,7 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
 
   @Override
   public Integer call() {
-    return createInjector(installationDir(), out())
+    return createInjector(out())
         .getInstance(VersionRunner.class)
         .run();
   }

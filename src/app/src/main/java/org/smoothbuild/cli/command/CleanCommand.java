@@ -18,7 +18,7 @@ public class CleanCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    return createInjector(projectDir, installationDir(), out(), logLevel)
+    return createInjector(projectDir, out(), logLevel)
         .getInstance(CleanRunner.class)
         .run();
   }

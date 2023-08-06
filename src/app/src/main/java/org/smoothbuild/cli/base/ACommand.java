@@ -1,9 +1,6 @@
 package org.smoothbuild.cli.base;
 
-import static org.smoothbuild.cli.base.DetectInstallationDir.detectInstallationDir;
-
 import java.io.PrintWriter;
-import java.nio.file.Path;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
@@ -20,10 +17,6 @@ import picocli.CommandLine.Spec;
 public class ACommand {
   @Spec
   protected CommandSpec spec;
-
-  protected Path installationDir() {
-    return detectInstallationDir();
-  }
 
   protected PrintWriter out() {
     return spec.commandLine().getOut();

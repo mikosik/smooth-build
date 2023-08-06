@@ -9,6 +9,7 @@ import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.out.log.Level.INFO;
 
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 import org.smoothbuild.filesystem.install.BinarySpaceModule;
@@ -28,13 +29,14 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class CreateInjector {
-  public static Injector createInjector(Path projectDir, Path installationDir, PrintWriter out,
+  public static Injector createInjector(Path projectDir, PrintWriter out,
       Level logLevel) {
-    return createInjector(projectDir, installationDir, out, logLevel, TaskMatchers.ALL);
+    return createInjector(projectDir, out, logLevel, TaskMatchers.ALL);
   }
 
-  public static Injector createInjector(Path projectDir, Path installationDir, PrintWriter out,
+  public static Injector createInjector(Path projectDir, PrintWriter out,
       Level logLevel, TaskMatcher taskMatcher) {
+    var installationDir = installationDir();
     var spaceToPath = ImmutableMap.of(
         PROJECT, projectDir,
         STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
@@ -50,7 +52,8 @@ public class CreateInjector {
         new ReportModule(out, logLevel));
   }
 
-  public static Injector createInjector(Path installationDir, PrintWriter out) {
+  public static Injector createInjector(PrintWriter out) {
+    var installationDir = installationDir();
     var spaceToPath = ImmutableMap.of(
         STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
         BINARY, installationDir.resolve(BIN_DIR_NAME));
@@ -59,5 +62,21 @@ public class CreateInjector {
         new BinarySpaceModule(),
         new DiskFileSystemModule(spaceToPath),
         new ReportModule(out, INFO));
+  }
+
+  private static Path installationDir() {
+    return smoothJarPath().getParent();
+  }
+
+  private static Path smoothJarPath() {
+    try {
+      var uri = CreateInjector.class.getProtectionDomain()
+          .getCodeSource()
+          .getLocation()
+          .toURI();
+      return Path.of(uri).getParent();
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

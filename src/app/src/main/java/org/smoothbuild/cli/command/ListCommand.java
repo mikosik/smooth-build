@@ -18,7 +18,7 @@ public class ListCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    return createInjector(projectDir, installationDir(), out(), logLevel)
+    return createInjector(projectDir, out(), logLevel)
         .getInstance(ListRunner.class)
         .run();
   }
