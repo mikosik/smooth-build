@@ -33,7 +33,8 @@ public class AssertPath {
   public static void assertPathIsUnused(FileSystem fileSystem, PathS path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
-      case FILE, DIR -> throw new IOException("Cannot use " + path + " path. It is already taken.");
+      case FILE, DIR -> throw new IOException(
+          "Cannot use " + path.q() + " path. It is already taken.");
       case NOTHING -> {}
     }
   }

@@ -21,9 +21,9 @@ public abstract class AbstractFileSystemTestSuite {
   // pathState()
 
   @Test
-  public void root_path_is_a_dir() {
+  public void root_path_is_a_nothing() {
     assertThat(fileSystem.pathState(PathS.root()))
-        .isEqualTo(DIR);
+        .isEqualTo(NOTHING);
   }
 
   @Test
@@ -73,8 +73,9 @@ public abstract class AbstractFileSystemTestSuite {
 
   @Test
   public void files_throws_exception_when_dir_does_not_exist() {
-    assertCall(() -> fileSystem.files(path("abc")))
-        .throwsException(new IOException("Dir 'abc' doesn't exist."));
+    var dir = path("abc");
+    assertCall(() -> fileSystem.files(dir))
+        .throwsException(new IOException("Dir " + resolve(dir) + " doesn't exist."));
   }
 
   @Test
@@ -82,7 +83,7 @@ public abstract class AbstractFileSystemTestSuite {
     var file = path("some/dir/myFile");
     createEmptyFile(file);
     assertCall(() -> fileSystem.files(file))
-        .throwsException(new IOException("Dir " + file.q() + " doesn't exist. It is a file."));
+        .throwsException(new IOException("Dir " + resolve(file) + " doesn't exist. It is a file."));
   }
 
   @Test
@@ -124,14 +125,14 @@ public abstract class AbstractFileSystemTestSuite {
     var file = dir.append(path("some/dir/myFile"));
     createEmptyFile(file);
     assertCall(() -> fileSystem.size(dir))
-        .throwsException(new IOException("File 'my/dir' doesn't exist. It is a dir."));
+        .throwsException(new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
   }
 
   @Test
   public void reading_size_of_nothing_causes_exception() {
     var dir = path("my/dir");
     assertCall(() -> fileSystem.size(dir))
-        .throwsException(new IOException("File 'my/dir' doesn't exist."));
+        .throwsException(new IOException("File " + resolve(dir) + " doesn't exist."));
   }
 
   @Test
@@ -156,7 +157,7 @@ public abstract class AbstractFileSystemTestSuite {
     fileSystem.createLink(link, dir);
 
     assertCall(() -> fileSystem.size(dir))
-        .throwsException(new IOException("File 'my/dir' doesn't exist. It is a dir."));
+        .throwsException(new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
   }
 
   // source()
@@ -173,21 +174,23 @@ public abstract class AbstractFileSystemTestSuite {
   public void source_throws_exception_when_file_does_not_exist() {
     var file = path("dir/file");
     assertCall(() -> fileSystem.source(file))
-        .throwsException(new IOException("File 'dir/file' doesn't exist."));
+        .throwsException(new IOException("File " + resolve(file) + " doesn't exist."));
   }
 
   @Test
   public void source_throws_exception_when_path_is_dir() throws Exception {
     var file = path("some/dir/myFile");
+    var dir = file.parent();
     createEmptyFile(file);
-    assertCall(() -> fileSystem.source(file.parent()))
-        .throwsException(new IOException("File 'some/dir' doesn't exist. It is a dir."));
+    assertCall(() -> fileSystem.source(dir))
+        .throwsException(new IOException("File " + resolve(dir) + " doesn't exist. It is a dir."));
   }
 
   @Test
   public void source_throws_exception_when_path_is_root_dir() {
     assertCall(() -> fileSystem.source(PathS.root()))
-        .throwsException(new IOException("File '.' doesn't exist. It is a dir."));
+        .throwsException(new IOException(
+            "File " + resolve(PathS.root()) + " doesn't exist."));
   }
 
   // sink()
@@ -231,17 +234,18 @@ public abstract class AbstractFileSystemTestSuite {
     var source = path("source");
     var target = path("target");
     assertCall(() -> fileSystem.move(source, target))
-        .throwsException(new IOException("Cannot move 'source'. It doesn't exist."));
+        .throwsException(new IOException("Cannot move " + resolve(source)
+            + ". It doesn't exist."));
   }
 
   @Test
   public void moving_directory_fails() throws Exception {
-    var dir = path("source");
+    var dir = path("dir");
     var source = dir.appendPart("file");
     var target = path("target");
     createEmptyFile(source);
     assertCall(() -> fileSystem.move(dir, target))
-        .throwsException(new IOException("Cannot move 'source'. It is directory."));
+        .throwsException(new IOException("Cannot move " + resolve(dir) + ". It is directory."));
   }
 
   @Test
@@ -251,8 +255,7 @@ public abstract class AbstractFileSystemTestSuite {
     createEmptyFile(source);
     createEmptyFile(path("dir/file"));
     assertCall(() -> fileSystem.move(source, dir))
-        .throwsException(new IOException(
-            "Cannot move to 'dir'. It is directory."));
+        .throwsException(new IOException("Cannot move to " + resolve(dir) + ". It is directory."));
   }
 
   @Test
@@ -444,7 +447,8 @@ public abstract class AbstractFileSystemTestSuite {
     createEmptyFile(link);
 
     assertCall(() -> fileSystem.createLink(link, file))
-        .throwsException(new IOException("Cannot use " + link + " path. It is already taken."));
+        .throwsException(
+            new IOException("Cannot use " + resolve(link) + " path. It is already taken."));
   }
 
   @Test
@@ -456,7 +460,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     assertCall(() -> fileSystem.createLink(link.parent(), file))
         .throwsException(new IOException(
-            "Cannot use " + link.parent() + " path. It is already taken."));
+            "Cannot use " + resolve(link.parent()) + " path. It is already taken."));
   }
 
   // createDir()
@@ -497,4 +501,6 @@ public abstract class AbstractFileSystemTestSuite {
   }
 
   protected abstract void createFile(PathS path, ByteString content) throws IOException;
+
+  protected abstract String resolve(PathS path);
 }

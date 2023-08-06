@@ -77,14 +77,14 @@ public class AssertPathTest {
   public void assert_path_is_unused_throws_exception_for_file_path() {
     FileSystem fileSystem = fileSystemWith(path, FILE);
     assertCall(() -> AssertPath.assertPathIsUnused(fileSystem, path))
-        .throwsException(new IOException("Cannot use " + path + " path. It is already taken."));
+        .throwsException(new IOException("Cannot use " + path.q() + " path. It is already taken."));
   }
 
   @Test
   public void assert_path_is_unused_throws_exception_for_dir_path() {
     FileSystem fileSystem = fileSystemWith(path, DIR);
     assertCall(() -> AssertPath.assertPathIsUnused(fileSystem, path))
-        .throwsException(new IOException("Cannot use " + path + " path. It is already taken."));
+        .throwsException(new IOException("Cannot use " + path.q() + " path. It is already taken."));
   }
 
   @Test
