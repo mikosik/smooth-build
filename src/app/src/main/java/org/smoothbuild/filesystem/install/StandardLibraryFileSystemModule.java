@@ -20,7 +20,7 @@ public class StandardLibraryFileSystemModule extends AbstractModule {
   @Provides
   @Singleton
   @ForSpace(STANDARD_LIBRARY)
-  public FileSystem provideStdLibFileSystem(FileSystemFactory fileSystemFactory) {
+  public FileSystem provideFileSystem(FileSystemFactory fileSystemFactory) {
     return fileSystemFactory.create(STANDARD_LIBRARY);
   }
 }
