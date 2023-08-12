@@ -1,6 +1,5 @@
 package org.smoothbuild.stdlib.java.junit;
 
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.stdlib.java.junit.ReflectionUtil.runReflexivelyAndCast;
 
 import java.util.List;
@@ -21,6 +20,6 @@ public class ResWrapper {
     return failures
         .stream()
         .map(FailureWrapper::new)
-        .collect(toList());
+        .toList();
   }
 }

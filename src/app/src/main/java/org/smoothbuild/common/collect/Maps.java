@@ -3,7 +3,6 @@ package org.smoothbuild.common.collect;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Maps.filterKeys;
 import static com.google.common.collect.Streams.stream;
-import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
 import java.util.List;
@@ -61,7 +60,7 @@ public class Maps {
     var mappedEntrySet = map.entrySet()
         .stream()
         .map(entryFunction)
-        .collect(toList());
+        .toList();
     return ImmutableMap.copyOf(mappedEntrySet);
   }
 

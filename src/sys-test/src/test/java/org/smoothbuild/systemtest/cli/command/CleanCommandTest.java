@@ -2,7 +2,6 @@ package org.smoothbuild.systemtest.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.file.Files.createDirectories;
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectPaths.DEFAULT_MODULE_PATH;
@@ -36,7 +35,7 @@ public class CleanCommandTest {
 
       runSmoothClean();
       assertFinishedWithSuccess();
-      assertThat(Files.list(smoothDirAbsolutePath()).collect(toList()))
+      assertThat(Files.list(smoothDirAbsolutePath()).toList())
           .containsExactly(absolutePath(SMOOTH_LOCK_PATH.toString()));
     }
 

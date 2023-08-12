@@ -5,7 +5,6 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
-import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
@@ -935,7 +934,7 @@ public class TestContext {
     return nonCompositeTypes()
         .stream()
         .flatMap(t -> compositeTypeSFactories().stream().map(f -> f.apply(t)))
-        .collect(toList());
+        .toList();
   }
 
   public static ImmutableList<TypeS> nonCompositeTypes() {

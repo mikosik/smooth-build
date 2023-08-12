@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.truth.Truth.assertThat;
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.expr.ExprB.DATA_PATH;
@@ -144,7 +143,7 @@ public class ExprBCorruptedTest extends TestContext {
           .elems(StringB.class)
           .stream()
           .map(StringB::toJ)
-          .collect(toList());
+          .toList();
       assertThat(strings)
           .containsExactly("aaa", "bbb")
           .inOrder();
