@@ -1,6 +1,5 @@
 package org.smoothbuild.testing.type;
 
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.NList.nlist;
@@ -118,13 +117,13 @@ public class TestedTSF {
         .addAll(resultT.allDeclarations())
         .addAll(paramTestedTs.stream()
             .flatMap(t -> t.allDeclarations().stream())
-            .collect(toList()))
+            .toList())
         .build();
     Set<String> typeDeclarations = ImmutableSet.<String>builder()
         .addAll(resultT.typeDeclarations())
         .addAll(paramTestedTs.stream()
             .flatMap(t -> t.typeDeclarations().stream())
-            .collect(toList()))
+            .toList())
         .build();
     return new TestedFuncTS(
         resultT,

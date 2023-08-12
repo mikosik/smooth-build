@@ -3,7 +3,6 @@ package org.smoothbuild.compile.fs.ps;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
@@ -182,7 +181,7 @@ public class DefaultArgumentInjector {
           .dropWhile(a -> !(a instanceof NamedArgP))
           .dropWhile(a -> a instanceof NamedArgP)
           .map(Visitor::positionalArgumentsMustBePlacedBeforeNamedArguments)
-          .collect(toList());
+          .toList();
     }
 
     private static List<Log> findUnknownParamNameErrors(CallP callP, List<Param> params) {
@@ -193,7 +192,7 @@ public class DefaultArgumentInjector {
           .map(a -> (NamedArgP) a)
           .filter(a -> !names.contains(a.name()))
           .map(Visitor::unknownParameterError)
-          .collect(toList());
+          .toList();
     }
 
     private static List<Log> findDuplicateAssignmentErrors(
@@ -205,7 +204,7 @@ public class DefaultArgumentInjector {
           .map(a -> (NamedArgP) a)
           .filter(a -> !names.add(a.name()))
           .map(Visitor::paramIsAlreadyAssignedError)
-          .collect(toList());
+          .toList();
     }
 
     private static Set<String> positionalArgNames(List<ExprP> positionalArgs, List<Param> params) {

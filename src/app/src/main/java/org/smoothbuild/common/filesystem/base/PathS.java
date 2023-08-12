@@ -3,7 +3,6 @@ package org.smoothbuild.common.filesystem.base;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.quote;
-import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,7 +152,7 @@ public class PathS {
     if (isRoot()) {
       return new ArrayList<>();
     } else {
-      return stream(value.split(quote(SEPARATOR))).map(PathS::path).collect(toList());
+      return stream(value.split(quote(SEPARATOR))).map(PathS::path).toList();
     }
   }
 
