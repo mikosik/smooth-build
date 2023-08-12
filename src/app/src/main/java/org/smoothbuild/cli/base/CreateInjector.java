@@ -1,8 +1,8 @@
 package org.smoothbuild.cli.base;
 
 import static com.google.inject.Stage.PRODUCTION;
-import static org.smoothbuild.filesystem.install.InstallationPaths.BIN_DIR_NAME;
-import static org.smoothbuild.filesystem.install.InstallationPaths.STD_LIB_DIR_NAME;
+import static org.smoothbuild.filesystem.install.InstallationLayout.BIN_DIR_NAME;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_DIR_NAME;
 import static org.smoothbuild.filesystem.space.Space.BINARY;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;

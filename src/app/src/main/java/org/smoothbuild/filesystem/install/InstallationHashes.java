@@ -4,7 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.io.Paths.removeExtension;
-import static org.smoothbuild.filesystem.install.InstallationPaths.SMOOTH_JAR;
+import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR;
 import static org.smoothbuild.filesystem.space.Space.BINARY;
 
 import java.io.IOException;
@@ -72,7 +72,7 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    var modules = moduleResourcesDetector.detect(InstallationPaths.STD_LIB_MODS);
+    var modules = moduleResourcesDetector.detect(InstallationLayout.STD_LIB_MODS);
     for (ModuleResources module : modules) {
       builder.add(modNode(module));
     }

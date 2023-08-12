@@ -8,7 +8,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Maps.sort;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
-import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
