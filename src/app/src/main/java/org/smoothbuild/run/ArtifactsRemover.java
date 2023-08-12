@@ -3,7 +3,7 @@ package org.smoothbuild.run;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.common.collect.Lists.list;
-import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
 

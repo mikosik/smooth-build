@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.filesystem.install.InstallationPaths.STD_LIB_MODS;
-import static org.smoothbuild.filesystem.project.ProjectPaths.DEFAULT_MODULE_FILE_PATH;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
 
 import java.util.Optional;
 

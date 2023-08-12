@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.evaluate.compute;
 
-import static org.smoothbuild.filesystem.project.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrorOrAbove;
 import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;

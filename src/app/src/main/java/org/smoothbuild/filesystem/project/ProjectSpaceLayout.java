@@ -12,7 +12,7 @@ import org.smoothbuild.filesystem.space.FilePath;
 
 import com.google.common.collect.ImmutableList;
 
-public class ProjectPaths {
+public class ProjectSpaceLayout {
   public static final PathS SMOOTH_DIR = path(".smooth");
   public static final PathS ARTIFACTS_PATH = SMOOTH_DIR.appendPart("artifacts");
   public static final PathS COMPUTATION_CACHE_PATH = SMOOTH_DIR.appendPart("computations");

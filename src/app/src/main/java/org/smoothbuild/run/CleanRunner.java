@@ -2,10 +2,10 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.filesystem.project.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.filesystem.project.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.filesystem.project.ProjectPaths.HASHED_DB_PATH;
-import static org.smoothbuild.filesystem.project.ProjectPaths.SMOOTH_DIR;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.SMOOTH_DIR;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
 import java.io.IOException;
