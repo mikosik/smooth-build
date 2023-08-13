@@ -5,7 +5,7 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -33,7 +33,7 @@ import okio.BufferedSource;
  * This class is thread-safe.
  */
 public class HashedDb {
-  static final PathS TEMP_DIR_PATH = HASHED_DB_PATH.appendPart("tmp");
+  static final PathS TEMP_DIR_PATH = path("tmp");
   private final FileSystem fileSystem;
   private final AtomicBigInteger tempFileCounter = new AtomicBigInteger();
 
@@ -145,7 +145,7 @@ public class HashedDb {
   }
 
   public long readSeqSize(Hash hash) throws HashedDbExc {
-    var path = projectPathToHashedFile(hash);
+    var path = dbPathTo(hash);
     var pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> readSeqSize(hash, path);
@@ -186,7 +186,7 @@ public class HashedDb {
   }
 
   public boolean contains(Hash hash) throws CorruptedHashedDbExc {
-    var path = projectPathToHashedFile(hash);
+    var path = dbPathTo(hash);
     var pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> true;
@@ -197,7 +197,7 @@ public class HashedDb {
   }
 
   public BufferedSource source(Hash hash) throws HashedDbExc {
-    var path = projectPathToHashedFile(hash);
+    var path = dbPathTo(hash);
     var pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> sourceFile(hash, path);
@@ -223,11 +223,11 @@ public class HashedDb {
     }
   }
 
-  public static PathS projectPathToHashedFile(Hash hash) {
-    return HASHED_DB_PATH.appendPart(hash.toHexString());
+  public static PathS dbPathTo(Hash hash) {
+    return path(hash.toHexString());
   }
 
-  public PathS newTempFileProjectPath() {
+  private PathS newTempFileProjectPath() {
     return TEMP_DIR_PATH.appendPart(tempFileCounter.incrementAndGet().toString());
   }
 }

@@ -10,7 +10,7 @@ import static org.smoothbuild.common.io.Okios.writeAndClose;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.TEMP_DIR_PATH;
-import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
+import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -127,8 +127,8 @@ public class HashedDbTest extends TestContext {
   public void when_hash_points_to_directory_then_contains_causes_corrupted_exception()
       throws Exception {
     var hash = Hash.of(33);
-    var path = projectPathToHashedFile(hash);
-    projectFileSystem().createDir(path);
+    var path = dbPathTo(hash);
+    hashedDbFileSystem().createDir(path);
 
     assertCall(() -> hashedDb().contains(hash))
         .throwsException(new CorruptedHashedDbExc(
@@ -139,8 +139,8 @@ public class HashedDbTest extends TestContext {
   public void when_hash_points_to_directory_then_source_causes_corrupted_exception()
       throws IOException {
     var hash = Hash.of(33);
-    var path = projectPathToHashedFile(hash);
-    projectFileSystem().createDir(path);
+    var path = dbPathTo(hash);
+    hashedDbFileSystem().createDir(path);
 
     assertCall(() -> hashedDb().source(hash))
         .throwsException(new CorruptedHashedDbExc(format(
@@ -151,8 +151,8 @@ public class HashedDbTest extends TestContext {
   public void when_hash_points_to_directory_then_sink_causes_corrupted_exception()
       throws IOException {
     var hash = Hash.of(byteString1);
-    var path = projectPathToHashedFile(hash);
-    projectFileSystem().createDir(path);
+    var path = dbPathTo(hash);
+    hashedDbFileSystem().createDir(path);
 
     assertCall(() -> hashedDb().sink().write(byteString1).close())
         .throwsException(new IOException(
@@ -161,7 +161,7 @@ public class HashedDbTest extends TestContext {
 
   @Test
   public void temporary_file_is_deleted_when_sink_is_closed() throws Exception {
-    var fileSystem = projectFileSystem();
+    var fileSystem = hashedDbFileSystem();
     var hashedDb = new HashedDb(fileSystem);
 
     hashedDb.writeString("abc");
@@ -173,7 +173,7 @@ public class HashedDbTest extends TestContext {
   @Test
   public void temporary_file_is_deleted_when_sink_is_closed_even_when_hashed_valued_exists_in_db()
       throws Exception {
-    var fileSystem = projectFileSystem();
+    var fileSystem = hashedDbFileSystem();
     var hashedDb = new HashedDb(fileSystem);
 
     hashedDb.writeString("abc");
@@ -254,8 +254,8 @@ public class HashedDbTest extends TestContext {
     @Test
     public void illegal_string_causes_decode_exception() throws Exception {
       var hash = Hash.of("abc");
-      var path = projectPathToHashedFile(hash);
-      writeAndClose(projectFileSystem().sink(path), s -> s.write(illegalString()));
+      var path = dbPathTo(hash);
+      writeAndClose(hashedDbFileSystem().sink(path), s -> s.write(illegalString()));
       assertCall(() -> hashedDb().readString(hash))
           .throwsException(new DecodeStringExc(hash, null));
     }

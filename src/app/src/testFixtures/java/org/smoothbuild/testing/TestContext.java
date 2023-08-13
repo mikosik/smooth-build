@@ -202,6 +202,7 @@ public class TestContext {
   private CategoryDb categoryDb;
   private HashedDb hashedDb;
   private FileSystem projectFileSystem;
+  private FileSystem hashedDbFileSystem;
   private ByteArrayOutputStream systemOut;
 
   public EvaluatorB evaluatorB(Reporter reporter) {
@@ -380,7 +381,7 @@ public class TestContext {
   }
 
   public Container container(NativeMethodLoader nativeMethodLoader) {
-    return new Container(projectFileSystem(), bytecodeF(), nativeMethodLoader);
+    return new Container(hashedDbFileSystem(), bytecodeF(), nativeMethodLoader);
   }
 
   public BytecodeF bytecodeF() {
@@ -430,9 +431,16 @@ public class TestContext {
 
   public HashedDb hashedDb() {
     if (hashedDb == null) {
-      hashedDb = new HashedDb(projectFileSystem());
+      hashedDb = new HashedDb(hashedDbFileSystem());
     }
     return hashedDb;
+  }
+
+  public FileSystem hashedDbFileSystem() {
+    if (hashedDbFileSystem == null) {
+      hashedDbFileSystem = projectFileSystem();
+    }
+    return hashedDbFileSystem;
   }
 
   // Job related
