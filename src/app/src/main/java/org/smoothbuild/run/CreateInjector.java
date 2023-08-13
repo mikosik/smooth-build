@@ -1,11 +1,6 @@
 package org.smoothbuild.run;
 
 import static com.google.inject.Stage.PRODUCTION;
-import static org.smoothbuild.filesystem.install.InstallationLayout.BIN_DIR_NAME;
-import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_DIR_NAME;
-import static org.smoothbuild.filesystem.space.Space.BINARY;
-import static org.smoothbuild.filesystem.space.Space.PROJECT;
-import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.out.log.Level.INFO;
 
 import java.io.PrintWriter;
@@ -24,7 +19,6 @@ import org.smoothbuild.run.eval.report.TaskMatchers;
 import org.smoothbuild.vm.bytecode.BytecodeModule;
 import org.smoothbuild.vm.evaluate.EvaluatorBModule;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -36,11 +30,6 @@ public class CreateInjector {
 
   public static Injector createInjector(Path projectDir, PrintWriter out,
       Level logLevel, TaskMatcher taskMatcher) {
-    var installationDir = installationDir();
-    var spaceToPath = ImmutableMap.of(
-        PROJECT, projectDir,
-        STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
-        BINARY, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(PRODUCTION,
         new EvaluatorBModule(),
         new EvaluatorSModule(taskMatcher),
@@ -48,19 +37,15 @@ public class CreateInjector {
         new ProjectSpaceModule(),
         new StandardLibrarySpaceModule(),
         new BinarySpaceModule(),
-        new DiskFileSystemModule(spaceToPath),
+        new DiskFileSystemModule(installationDir(), projectDir),
         new ReportModule(out, logLevel));
   }
 
   public static Injector createInjector(PrintWriter out) {
-    var installationDir = installationDir();
-    var spaceToPath = ImmutableMap.of(
-        STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
-        BINARY, installationDir.resolve(BIN_DIR_NAME));
     return Guice.createInjector(PRODUCTION,
         new StandardLibrarySpaceModule(),
         new BinarySpaceModule(),
-        new DiskFileSystemModule(spaceToPath),
+        new DiskFileSystemModule(installationDir()),
         new ReportModule(out, INFO));
   }
 

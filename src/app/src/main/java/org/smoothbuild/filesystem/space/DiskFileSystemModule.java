@@ -1,5 +1,11 @@
 package org.smoothbuild.filesystem.space;
 
+import static org.smoothbuild.filesystem.install.InstallationLayout.BIN_DIR_NAME;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_DIR_NAME;
+import static org.smoothbuild.filesystem.space.Space.BINARY;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
+
 import java.nio.file.Path;
 
 import com.google.common.collect.ImmutableMap;
@@ -9,8 +15,17 @@ import com.google.inject.multibindings.MapBinder;
 public class DiskFileSystemModule extends AbstractModule {
   private final ImmutableMap<Space, Path> spaceToPath;
 
-  public DiskFileSystemModule(ImmutableMap<Space, Path> spaceToPath) {
-    this.spaceToPath = spaceToPath;
+  public DiskFileSystemModule(Path installationDir, Path projectDir) {
+    this.spaceToPath = ImmutableMap.of(
+        PROJECT, projectDir,
+        STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
+        BINARY, installationDir.resolve(BIN_DIR_NAME));
+  }
+
+  public DiskFileSystemModule(Path installationDir) {
+    this.spaceToPath = ImmutableMap.of(
+        STANDARD_LIBRARY, installationDir.resolve(STD_LIB_DIR_NAME),
+        BINARY, installationDir.resolve(BIN_DIR_NAME));
   }
 
   @Override
