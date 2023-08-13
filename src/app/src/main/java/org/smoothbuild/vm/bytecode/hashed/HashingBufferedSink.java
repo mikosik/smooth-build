@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.bytecode.hashed;
 
 import static org.smoothbuild.common.filesystem.base.AssertPath.newUnknownPathState;
-import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
+import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,7 +58,7 @@ public class HashingBufferedSink implements BufferedSink {
   }
 
   private void moveTempFileToDb() throws IOException {
-    var path = projectPathToHashedFile(hash());
+    var path = dbPathTo(hash());
     var pathState = fileSystem.pathState(path);
     switch (pathState) {
       case NOTHING -> fileSystem.move(tempPath, path);

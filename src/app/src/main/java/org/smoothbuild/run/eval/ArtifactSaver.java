@@ -9,10 +9,11 @@ import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Maps.sort;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
+import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
-import static org.smoothbuild.vm.bytecode.hashed.HashedDb.projectPathToHashedFile;
+import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import java.io.IOException;
 import java.util.List;
@@ -170,7 +171,7 @@ public class ArtifactSaver {
   }
 
   private static PathS targetPath(ValueB valueB) {
-    return projectPathToHashedFile(valueB.dataHash());
+    return HASHED_DB_PATH.append(dbPathTo(valueB.dataHash()));
   }
 
   private static PathS artifactPath(String name) {
