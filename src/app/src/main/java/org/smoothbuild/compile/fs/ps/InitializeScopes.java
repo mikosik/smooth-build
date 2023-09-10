@@ -27,7 +27,7 @@ import org.smoothbuild.out.log.Logs;
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class ScopesInitializer extends ModuleVisitorP {
+public class InitializeScopes extends ModuleVisitorP {
   public static Logs initializeScopes(ModuleP moduleP) {
     var log = new LogBuffer();
     new Initializer(emptyScope(), log)

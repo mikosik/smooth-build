@@ -3,7 +3,7 @@ package org.smoothbuild.compile.fs.ps;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compile.fs.ps.ScopesInitializer.initializeScopes;
+import static org.smoothbuild.compile.fs.ps.InitializeScopes.initializeScopes;
 
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.LambdaP;
 import org.smoothbuild.compile.fs.ps.ast.define.NamedEvaluableP;
 import org.smoothbuild.testing.TestContext;
 
-public class ScopesInitializerTest extends TestContext {
+public class InitializeScopesTest extends TestContext {
   @Nested
   class _module {
     @Test

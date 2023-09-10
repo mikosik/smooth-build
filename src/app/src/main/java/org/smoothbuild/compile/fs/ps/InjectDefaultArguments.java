@@ -40,7 +40,7 @@ import org.smoothbuild.out.log.Logs;
 
 import com.google.common.collect.ImmutableList;
 
-public class DefaultArgumentInjector {
+public class InjectDefaultArguments {
   public static Logs injectDefaultArguments(ModuleP moduleP, ScopeS imported) {
     var logger = new LogBuffer();
     new Visitor(imported, immutableBindings(), logger)
