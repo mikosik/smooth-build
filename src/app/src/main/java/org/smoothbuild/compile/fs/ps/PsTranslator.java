@@ -1,10 +1,10 @@
 package org.smoothbuild.compile.fs.ps;
 
 import static org.smoothbuild.compile.fs.ps.DecodeLiterals.decodeLiterals;
-import static org.smoothbuild.compile.fs.ps.DefaultArgumentInjector.injectDefaultArguments;
 import static org.smoothbuild.compile.fs.ps.DetectUndefinedReferenceablesAndTypes.detectUndefinedReferenceablesAndTypes;
+import static org.smoothbuild.compile.fs.ps.InitializeScopes.initializeScopes;
+import static org.smoothbuild.compile.fs.ps.InjectDefaultArguments.injectDefaultArguments;
 import static org.smoothbuild.compile.fs.ps.PsConverter.convertPs;
-import static org.smoothbuild.compile.fs.ps.ScopesInitializer.initializeScopes;
 import static org.smoothbuild.compile.fs.ps.ast.ModuleDependenciesSorter.sortByDependencies;
 import static org.smoothbuild.compile.fs.ps.infer.TypeInferrer.inferTypes;
 

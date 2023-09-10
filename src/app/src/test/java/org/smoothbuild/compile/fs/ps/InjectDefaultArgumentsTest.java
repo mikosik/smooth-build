@@ -4,13 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compile.fs.ps.DefaultArgumentInjector.injectDefaultArguments;
+import static org.smoothbuild.compile.fs.ps.InjectDefaultArguments.injectDefaultArguments;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.testing.TestContext;
 
-public class DefaultArgumentInjectorTest extends TestContext  {
+public class InjectDefaultArgumentsTest extends TestContext  {
   @Test
   public void missing_call_argument_is_filled_with_reference_to_default_argument() {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
@@ -20,7 +20,7 @@ public class DefaultArgumentInjectorTest extends TestContext  {
     var namedValueP = namedValueP("value", callP);
     var moduleP = moduleP(list(), list(namedValueP));
 
-    ScopesInitializer.initializeScopes(moduleP);
+    InitializeScopes.initializeScopes(moduleP);
     injectDefaultArguments(moduleP, importedS);
 
     assertThat(callP.positionedArgs())
@@ -36,7 +36,7 @@ public class DefaultArgumentInjectorTest extends TestContext  {
     var namedValueP = namedFuncP("value", nlist(itemP("p", callP)));
     var moduleP = moduleP(list(), list(namedValueP));
 
-    ScopesInitializer.initializeScopes(moduleP);
+    InitializeScopes.initializeScopes(moduleP);
     injectDefaultArguments(moduleP, importedS);
 
     assertThat(callP.positionedArgs())
