@@ -16,41 +16,45 @@ import org.smoothbuild.out.log.Logger;
 public class DecodeLiterals {
   public static ImmutableLogs decodeLiterals(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
-    decodeLiterals(moduleP, logBuffer);
+    new DecodeLiteralModuleVisitor(logBuffer).visitModule(moduleP);
     return logBuffer.toImmutableLogs();
   }
 
-  private static void decodeLiterals(ModuleP moduleP, Logger logger) {
-    new ModuleVisitorP() {
-      @Override
-      public void visitBlob(BlobP blobP) {
-        super.visitBlob(blobP);
-        try {
-          blobP.decodeByteString();
-        } catch (DecodeHexExc e) {
-          logger.log(compileError(blobP, "Illegal Blob literal: " + e.getMessage()));
-        }
-      }
+  private static class DecodeLiteralModuleVisitor extends ModuleVisitorP {
+    private final Logger logger;
 
-      @Override
-      public void visitInt(IntP intP) {
-        super.visitInt(intP);
-        try {
-          intP.decodeBigInteger();
-        } catch (NumberFormatException e) {
-          logger.log(compileError(intP, "Illegal Int literal: `" + intP.literal() + "`."));
-        }
-      }
+    public DecodeLiteralModuleVisitor(Logger logger) {
+      this.logger = logger;
+    }
 
-      @Override
-      public void visitString(StringP stringP) {
-        super.visitString(stringP);
-        try {
-          stringP.calculateUnescaped();
-        } catch (UnescapingFailedExc e) {
-          logger.log(compileError(stringP, "Illegal String literal: " + e.getMessage()));
-        }
+    @Override
+    public void visitBlob(BlobP blobP) {
+      super.visitBlob(blobP);
+      try {
+        blobP.decodeByteString();
+      } catch (DecodeHexExc e) {
+        logger.log(compileError(blobP, "Illegal Blob literal: " + e.getMessage()));
       }
-    }.visitModule(moduleP);
+    }
+
+    @Override
+    public void visitInt(IntP intP) {
+      super.visitInt(intP);
+      try {
+        intP.decodeBigInteger();
+      } catch (NumberFormatException e) {
+        logger.log(compileError(intP, "Illegal Int literal: `" + intP.literal() + "`."));
+      }
+    }
+
+    @Override
+    public void visitString(StringP stringP) {
+      super.visitString(stringP);
+      try {
+        stringP.calculateUnescaped();
+      } catch (UnescapingFailedExc e) {
+        logger.log(compileError(stringP, "Illegal String literal: " + e.getMessage()));
+      }
+    }
   }
 }
