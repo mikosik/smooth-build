@@ -190,7 +190,7 @@ public class SbTranslator {
     return sbTranslator.translatePolymorphic(instantiateS.polymorphicS());
   }
 
-  public ExprB translatePolymorphic(PolymorphicS polymorphicS) {
+  private ExprB translatePolymorphic(PolymorphicS polymorphicS) {
     return switch (polymorphicS) {
       case LambdaS lambdaS -> translateLambda(lambdaS);
       case ReferenceS referenceS -> translateReference(referenceS);
