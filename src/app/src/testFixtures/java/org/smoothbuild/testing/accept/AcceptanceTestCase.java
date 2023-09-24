@@ -136,7 +136,7 @@ public class AcceptanceTestCase extends TestContext {
       fail("Expected artifact but problems have been reported:\n" + memoryReporter.logs());
     }
     if (artifacts.isEmpty()) {
-      fail("Expected artifact but evaluate() return null.");
+      fail("Expected artifact but evaluate() returned null.");
     }
     return artifacts.get();
   }
