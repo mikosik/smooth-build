@@ -6,7 +6,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.Lists.list;
-import static org.smoothbuild.common.io.Okios.writeAndClose;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MOD_PATH;
@@ -162,11 +161,6 @@ public class AcceptanceTestCase extends TestContext {
       PathS path = filePath.path();
       writeFile(stdLibFileSystem, path, "");
     }
-  }
-
-  private static void writeFile(FileSystem fileSystem, PathS path, String content)
-      throws IOException {
-    writeAndClose(fileSystem.sink(path), s -> s.writeUtf8(content));
   }
 
   public static Injector createInjector(MemoryReporter memoryReporter, Module module) {

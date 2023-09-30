@@ -15,6 +15,7 @@ import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.io.Okios.intToByteString;
+import static org.smoothbuild.common.io.Okios.writeAndClose;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.compile.fs.lang.base.location.Locations.fileLocation;
 import static org.smoothbuild.compile.fs.lang.define.ItemS.toTypes;
@@ -1819,5 +1820,10 @@ public class TestContext {
 
   private static String shortName(String fullName) {
     return fullName.substring(Math.max(0, fullName.lastIndexOf(':')));
+  }
+
+  public static void writeFile(FileSystem fileSystem, PathS path, String content)
+      throws IOException {
+    writeAndClose(fileSystem.sink(path), s -> s.writeUtf8(content));
   }
 }
