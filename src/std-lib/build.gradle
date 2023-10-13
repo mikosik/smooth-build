@@ -16,6 +16,7 @@ dependencies {
     implementation project(':src:app')
     implementation libs.guava
     implementation libs.okio
+    implementation libs.vavr
     implementation libs.zip4j
 
     testImplementation testFixtures(project(":src:app"))
