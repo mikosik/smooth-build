@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
+import java.util.ArrayList;
 
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.FileSystem;
@@ -24,9 +25,7 @@ import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataExc;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-
+import io.vavr.collection.Array;
 import okio.BufferedSource;
 
 /**
@@ -169,8 +168,8 @@ public class HashedDb {
     }
   }
 
-  public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbExc {
-    Builder<Hash> builder = ImmutableList.builder();
+  public Array<Hash> readSeq(Hash hash) throws HashedDbExc {
+    var builder = new ArrayList<Hash>();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {
         if (source.request(Hash.lengthInBytes())) {
@@ -182,7 +181,7 @@ public class HashedDb {
     } catch (IOException e) {
       throw new HashedDbExc(hash, e);
     }
-    return builder.build();
+    return Array.ofAll(builder);
   }
 
   public boolean contains(Hash hash) throws CorruptedHashedDbExc {

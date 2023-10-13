@@ -49,6 +49,8 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 import com.google.common.collect.ImmutableList;
 
+import io.vavr.collection.Array;
+
 /**
  * This class is thread-safe.
  */
@@ -211,7 +213,7 @@ public class BytecodeDb {
     }
   }
 
-  private List<Hash> decodeRootSeq(Hash rootHash) {
+  private Array<Hash> decodeRootSeq(Hash rootHash) {
     try {
       return hashedDb.readSeq(rootHash);
     } catch (NoSuchDataExc e) {
