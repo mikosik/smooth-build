@@ -1,6 +1,5 @@
 package org.smoothbuild.vm.bytecode;
 
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
@@ -42,8 +41,7 @@ import org.smoothbuild.vm.bytecode.type.value.StringTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
-
+import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -97,12 +95,12 @@ public class BytecodeF {
     return bytecodeDb.call(func, args);
   }
 
-  public CombineB combine(ImmutableList<ExprB> items) {
+  public CombineB combine(Array<ExprB> items) {
     return bytecodeDb.combine(items);
   }
 
   public TupleB file(BlobB content, StringB path) {
-    return bytecodeDb.tuple(list(content, path));
+    return bytecodeDb.tuple(Array.of(content, path));
   }
 
   public LambdaB lambda(FuncTB type, ExprB body) {
@@ -141,11 +139,11 @@ public class BytecodeF {
     return bytecodeDb.string(string);
   }
 
-  public TupleB tuple(ImmutableList<ValueB> items) {
+  public TupleB tuple(Array<ValueB> items) {
     return bytecodeDb.tuple(items);
   }
 
-  public OrderB order(ArrayTB evaluationT, ImmutableList<ExprB> elems) {
+  public OrderB order(ArrayTB evaluationT, Array<ExprB> elems) {
     return bytecodeDb.order(evaluationT, elems);
   }
 
@@ -163,8 +161,8 @@ public class BytecodeF {
     return categoryDb.bool();
   }
 
-  public FuncTB funcT(ImmutableList<TypeB> paramTs, TypeB resultT) {
-    return categoryDb.funcT(paramTs, resultT);
+  public FuncTB funcT(Iterable<TypeB> paramTs, TypeB resultT) {
+    return categoryDb.funcT(Array.ofAll(paramTs), resultT);
   }
 
   public FuncTB funcT(TupleTB paramTs, TypeB resultT) {
@@ -187,7 +185,7 @@ public class BytecodeF {
     return categoryDb.tuple(itemTs);
   }
 
-  public TupleTB tupleT(ImmutableList<TypeB> itemTs) {
+  public TupleTB tupleT(Array<TypeB> itemTs) {
     return categoryDb.tuple(itemTs);
   }
 
@@ -216,7 +214,7 @@ public class BytecodeF {
   private TupleB message(Level level, String text) {
     ValueB textValue = bytecodeDb.string(text);
     ValueB severityValue = bytecodeDb.string(level.name());
-    return bytecodeDb.tuple(list(textValue, severityValue));
+    return bytecodeDb.tuple(Array.of(textValue, severityValue));
   }
 
   private static TupleTB createMessageT(CategoryDb categoryDb) {

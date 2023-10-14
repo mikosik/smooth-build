@@ -2,11 +2,11 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
-public record CombineSubExprsB(ImmutableList<ExprB> items) implements SubExprsB {
+public record CombineSubExprsB(Array<ExprB> items) implements SubExprsB {
   @Override
-  public ImmutableList<ExprB> toList() {
+  public Array<ExprB> toList() {
     return items;
   }
 }

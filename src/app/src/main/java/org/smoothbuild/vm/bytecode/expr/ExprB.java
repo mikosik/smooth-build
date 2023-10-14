@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
 import java.util.Objects;
 
@@ -15,8 +14,7 @@ import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
+import io.vavr.collection.Array;
 
 /**
  * Bytecode expression.
@@ -79,40 +77,35 @@ public abstract class ExprB {
         () -> bytecodeDb.hashedDb().readSeqSize(dataHash()));
   }
 
-  protected ImmutableList<ValueB> readDataSeqElems(int expectedSize) {
+  protected Array<ValueB> readDataSeqElems(int expectedSize) {
     var seqHashes = readDataSeqHashes(expectedSize);
     var exprs = readDataSeqElems(seqHashes);
     return castDataSeqElements(exprs, ValueB.class);
   }
 
-  protected <T extends ExprB> ImmutableList<T> readDataSeqElems(Class<T> clazz) {
+  protected <T extends ExprB> Array<T> readDataSeqElems(Class<T> clazz) {
     var exprs = readDataSeqElems();
     return castDataSeqElements(exprs, clazz);
   }
 
-  protected ImmutableList<ExprB> readDataSeqElems() {
+  protected Array<ExprB> readDataSeqElems() {
     var seqHashes = readDataSeqHashes();
     return readDataSeqElems(seqHashes);
   }
 
-  private ImmutableList<ExprB> readDataSeqElems(ImmutableList<Hash> seq) {
-    Builder<ExprB> builder = ImmutableList.builder();
-    for (int i = 0; i < seq.size(); i++) {
-      var expr = readNode(indexOfDataNode(i), seq.get(i));
-      builder.add(expr);
-    }
-    return builder.build();
+  private Array<ExprB> readDataSeqElems(Array<Hash> seq) {
+    return seq.zipWithIndex((hash, i) -> readNode(indexOfDataNode(i), seq.get(i)));
   }
 
-  private ImmutableList<Hash> readDataSeqHashes(int expectedSize) {
-    ImmutableList<Hash> data = readDataSeqHashes();
+  private Array<Hash> readDataSeqHashes(int expectedSize) {
+    Array<Hash> data = readDataSeqHashes();
     if (data.size() != expectedSize) {
       throw new DecodeExprWrongSeqSizeExc(hash(), category(), DATA_PATH, expectedSize, data.size());
     }
     return data;
   }
 
-  private ImmutableList<Hash> readDataSeqHashes() {
+  private Array<Hash> readDataSeqHashes() {
     return Helpers.wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH,
         () -> bytecodeDb.hashedDb().readSeq(dataHash()));
   }
@@ -137,16 +130,16 @@ public abstract class ExprB {
     return readDataSeqHashes(expectedSize).get(i);
   }
 
-  protected static String exprsToString(ImmutableList<? extends ExprB> exprs) {
-    return joinWithCommaToString(exprs, ExprB::valToStringSafe);
+  protected static String exprsToString(Array<? extends ExprB> exprs) {
+    return exprs.map(ExprB::valToStringSafe).mkString(",");
   }
 
-  private <T> ImmutableList<T> castDataSeqElements(ImmutableList<ExprB> elems, Class<T> clazz) {
+  private <T> Array<T> castDataSeqElements(Array<ExprB> elems, Class<T> clazz) {
     for (int i = 0; i < elems.size(); i++) {
       castNode(indexOfDataNode(i), elems.get(i), clazz);
     }
     @SuppressWarnings("unchecked")
-    ImmutableList<T> result = (ImmutableList<T>) elems;
+    Array<T> result = (Array<T>) elems;
     return result;
   }
 

@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.type.CategoryDb.DATA_PATH;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
@@ -50,6 +49,7 @@ import org.smoothbuild.vm.bytecode.type.value.StringTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
+import io.vavr.collection.Array;
 import okio.ByteString;
 
 public class CategoryBCorruptedTest extends TestContext {
@@ -202,7 +202,7 @@ public class CategoryBCorruptedTest extends TestContext {
          */
         var specHash = hash(
             hash(IF_FUNC.marker()),
-            hash(funcTB(list(boolTB(), intTB(), intTB()), intTB()))
+            hash(funcTB(Array.of(boolTB(), intTB(), intTB()), intTB()))
         );
         assertThat(specHash)
             .isEqualTo(ifFuncCB(intTB()).hash());
@@ -210,7 +210,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
-        var illegalIfType = funcTB(list(boolTB(), intTB(), intTB()), blobTB());
+        var illegalIfType = funcTB(Array.of(boolTB(), intTB(), intTB()), blobTB());
         var categoryHash = hash(
             hash(IF_FUNC.marker()),
             hash(illegalIfType)

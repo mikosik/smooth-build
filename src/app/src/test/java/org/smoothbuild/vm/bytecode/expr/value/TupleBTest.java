@@ -11,10 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
+import io.vavr.collection.Array;
+
 public class TupleBTest extends TestContext {
   @Test
   public void setting_element_to_null_throws_exception() {
-    assertCall(() -> bytecodeDb().tuple(list(stringB("John"), null)))
+    assertCall(() -> bytecodeDb().tuple(Array.of(stringB("John"), null)))
         .throwsException(NullPointerException.class);
   }
 

@@ -2,8 +2,8 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 public interface SubExprsB {
-  public ImmutableList<ExprB> toList();
+  public Array<ExprB> toList();
 }

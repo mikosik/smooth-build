@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.evaluate.execute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.function.Function;
@@ -13,6 +12,8 @@ import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 
+import io.vavr.collection.Array;
+
 public class VarReducerBTest extends TestContext {
   @Nested
   class _without_references {
@@ -22,7 +23,7 @@ public class VarReducerBTest extends TestContext {
     @Test
     public void call() {
       assertReferenceInliningDoesNotChangeExpression(
-          r -> callB(lambdaB(list(intTB()), intB()), intB()));
+          r -> callB(lambdaB(Array.of(intTB()), intB()), intB()));
     }
 
     @Test
@@ -138,7 +139,7 @@ public class VarReducerBTest extends TestContext {
 
     private LambdaB myLambda(ExprB exprB) {
       var inner = lambdaB(funcTB(blobTB(), intTB()), exprB);
-      return lambdaB(list(intTB()), inner);
+      return lambdaB(Array.of(intTB()), inner);
     }
 
     @Test

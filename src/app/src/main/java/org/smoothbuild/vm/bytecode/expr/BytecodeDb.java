@@ -2,14 +2,12 @@ package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
-import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.cannotReadRootException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprExc;
@@ -47,9 +45,8 @@ import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
-
 import io.vavr.collection.Array;
+import io.vavr.collection.Traversable;
 
 /**
  * This class is thread-safe.
@@ -97,7 +94,7 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newString(value));
   }
 
-  public TupleB tuple(ImmutableList<ValueB> items) {
+  public TupleB tuple(Array<ValueB> items) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(items));
   }
 
@@ -109,7 +106,7 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newCall(funcTB, func, args));
   }
 
-  public CombineB combine(ImmutableList<ExprB> items) {
+  public CombineB combine(Array<ExprB> items) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newCombine(items));
   }
 
@@ -121,7 +118,7 @@ public class BytecodeDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newMapFunc(r, s));
   }
 
-  public OrderB order(ArrayTB evaluationT, ImmutableList<ExprB> elems) {
+  public OrderB order(ArrayTB evaluationT, Array<ExprB> elems) {
     validateOrderElems(evaluationT.elem(), elems);
     return wrapHashedDbExcAsBytecodeDbExc(() -> newOrder(evaluationT, elems));
   }
@@ -148,7 +145,7 @@ public class BytecodeDb {
     }
   }
 
-  private void validateOrderElems(TypeB elemT, ImmutableList<ExprB> elems) {
+  private void validateOrderElems(TypeB elemT, Array<ExprB> elems) {
     for (int i = 0; i < elems.size(); i++) {
       var iElemT = elems.get(i).evaluationT();
       if (!elemT.equals(iElemT)) {
@@ -225,7 +222,7 @@ public class BytecodeDb {
 
   // methods for creating InstBs
 
-  public ArrayB newArray(ArrayTB type, List<ValueB> elems) throws HashedDbExc {
+  public ArrayB newArray(ArrayTB type, Traversable<ValueB> elems) throws HashedDbExc {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -268,8 +265,8 @@ public class BytecodeDb {
     return categoryDb.string().newExpr(root, this);
   }
 
-  private TupleB newTuple(ImmutableList<ValueB> items) throws HashedDbExc {
-    var type = categoryDb.tuple(map(items, ValueB::type));
+  private TupleB newTuple(Array<ValueB> items) throws HashedDbExc {
+    var type = categoryDb.tuple(items.map(ValueB::type));
     var data = writeTupleData(items);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
@@ -284,8 +281,8 @@ public class BytecodeDb {
     return callCB.newExpr(root, this);
   }
 
-  private CombineB newCombine(ImmutableList<ExprB> items) throws HashedDbExc {
-    var evaluationT = categoryDb.tuple(map(items, ExprB::evaluationT));
+  private CombineB newCombine(Array<ExprB> items) throws HashedDbExc {
+    var evaluationT = categoryDb.tuple(items.map(ExprB::evaluationT));
     var combineCB = categoryDb.combine(evaluationT);
     var data = writeCombineData(items);
     var root = newRoot(combineCB, data);
@@ -304,7 +301,7 @@ public class BytecodeDb {
     return mapFuncCB.newExpr(root, this);
   }
 
-  private OrderB newOrder(ArrayTB evaluationT, ImmutableList<ExprB> elems) throws HashedDbExc {
+  private OrderB newOrder(ArrayTB evaluationT, Array<ExprB> elems) throws HashedDbExc {
     var orderCB = categoryDb.order(evaluationT);
     var data = writeOrderData(elems);
     var root = newRoot(orderCB, data);
@@ -376,11 +373,11 @@ public class BytecodeDb {
     return hashedDb.writeSeq(func.hash(), args.hash());
   }
 
-  private Hash writeCombineData(ImmutableList<ExprB> items) throws HashedDbExc {
+  private Hash writeCombineData(Array<ExprB> items) throws HashedDbExc {
     return writeSeq(items);
   }
 
-  private Hash writeOrderData(ImmutableList<ExprB> elems) throws HashedDbExc {
+  private Hash writeOrderData(Array<ExprB> elems) throws HashedDbExc {
     return writeSeq(elems);
   }
 
@@ -394,7 +391,7 @@ public class BytecodeDb {
 
   // methods for writing data of InstB-s
 
-  private Hash writeArrayData(List<ValueB> elems) throws HashedDbExc {
+  private Hash writeArrayData(Traversable<ValueB> elems) throws HashedDbExc {
     return writeSeq(elems);
   }
 
@@ -415,14 +412,14 @@ public class BytecodeDb {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeTupleData(ImmutableList<ValueB> items) throws HashedDbExc {
+  private Hash writeTupleData(Array<ValueB> items) throws HashedDbExc {
     return writeSeq(items);
   }
 
   // helpers
 
-  private Hash writeSeq(List<? extends ExprB> exprs) throws HashedDbExc {
-    var hashes = map(exprs, ExprB::hash);
+  private Hash writeSeq(Traversable<? extends ExprB> exprs) throws HashedDbExc {
+    var hashes = exprs.map(ExprB::hash);
     return hashedDb.writeSeq(hashes);
   }
 

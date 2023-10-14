@@ -1,15 +1,13 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
-import static org.smoothbuild.common.collect.Lists.list;
-
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 public record SelectSubExprsB(ExprB selectable, IntB index) implements SubExprsB {
   @Override
-  public ImmutableList<ExprB> toList() {
-    return list(selectable, index);
+  public Array<ExprB> toList() {
+    return Array.of(selectable, index);
   }
 }

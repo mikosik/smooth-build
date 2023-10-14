@@ -2,8 +2,6 @@ package org.smoothbuild.vm.evaluate.execute;
 
 import static org.smoothbuild.common.collect.Lists.map;
 
-import java.util.List;
-
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -16,6 +14,7 @@ import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 
 import com.google.common.collect.ImmutableList;
 
+import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 
 public class VarReducerB {
@@ -34,9 +33,8 @@ public class VarReducerB {
     return rewriteExpr(job.exprB(), new Resolver(inline(job.environment())));
   }
 
-  private ImmutableList<ExprB> rewriteExprs(
-      Resolver resolver, List<ExprB> elements) {
-    return map(elements, e -> rewriteExpr(e, resolver));
+  private Array<ExprB> rewriteExprs(Resolver resolver, Array<ExprB> elements) {
+    return elements.map(e -> rewriteExpr(e, resolver));
   }
 
   private ExprB rewriteExpr(ExprB exprB, Resolver resolver) {

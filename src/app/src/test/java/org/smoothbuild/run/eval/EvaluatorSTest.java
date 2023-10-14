@@ -31,6 +31,8 @@ import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableMap;
 
+import io.vavr.collection.Array;
+
 public class EvaluatorSTest extends TestContext {
   private final FileLoader fileLoader = mock(FileLoader.class);
   private final NativeMethodLoader nativeMethodLoader = mock(NativeMethodLoader.class);
@@ -187,7 +189,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
           var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
-          assertEvaluation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
+          assertEvaluation(monoLambdaS, lambdaB(Array.of(intTB()), varB(intTB(), 0)));
         }
       }
 
@@ -226,7 +228,7 @@ public class EvaluatorSTest extends TestContext {
         @Test
         public void constructor() throws EvaluatorExcS {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-          assertEvaluation(constructorS, lambdaB(list(intTB()), combineB(varB(intTB(), 0))));
+          assertEvaluation(constructorS, lambdaB(Array.of(intTB()), combineB(varB(intTB(), 0))));
         }
       }
 

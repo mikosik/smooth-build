@@ -2,8 +2,6 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.base.Suppliers.memoize;
 import static java.util.Objects.checkIndex;
-import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
-import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateTuple;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
@@ -13,13 +11,14 @@ import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
+
+import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.
  */
 public final class TupleB extends ValueB {
-  private final Supplier<ImmutableList<ValueB>> elementsSupplier;
+  private final Supplier<Array<ValueB>> elementsSupplier;
 
   public TupleB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
@@ -37,27 +36,27 @@ public final class TupleB extends ValueB {
   }
 
   public ValueB get(int index) {
-    ImmutableList<ValueB> elements = elements();
+    Array<ValueB> elements = elements();
     checkIndex(index, elements.size());
     return elements.get(index);
   }
 
-  public ImmutableList<ValueB> elements() {
+  public Array<ValueB> elements() {
     return elementsSupplier.get();
   }
 
-  private ImmutableList<ValueB> instantiateItems() {
+  private Array<ValueB> instantiateItems() {
     var type = type();
     var expectedElementTs = type.elements();
     var elements = readDataSeqElems(expectedElementTs.size());
-    var elementTs = map(elements, ValueB::type);
+    var elementTs = elements.map(ValueB::type);
     validateTuple(type, elementTs, () -> {throw new DecodeExprWrongNodeTypeExc(hash(),
         category(), DATA_PATH, type, asTupleToString(elementTs));});
     return elements;
   }
 
-  private static String asTupleToString(ImmutableList<TypeB> elementTs) {
-    return "`{" + joinWithCommaToString(elementTs) + "}`";
+  private static String asTupleToString(Array<TypeB> elementTs) {
+    return elementTs.mkString("`{", ",", "}`");
   }
 
   @Override

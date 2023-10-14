@@ -191,6 +191,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
+import io.vavr.collection.Array;
 import jakarta.inject.Provider;
 import okio.ByteString;
 
@@ -505,18 +506,18 @@ public class TestContext {
   }
 
   public FuncTB funcTB(TypeB resultT) {
-    return funcTB(list(), resultT);
+    return funcTB(Array.empty(), resultT);
   }
 
   public FuncTB funcTB(TypeB param1, TypeB resultT) {
-    return funcTB(list(param1), resultT);
+    return funcTB(Array.of(param1), resultT);
   }
 
   public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resultT) {
-    return funcTB(list(param1, param2), resultT);
+    return funcTB(Array.of(param1, param2), resultT);
   }
 
-  public FuncTB funcTB(ImmutableList<TypeB> paramTs, TypeB resultT) {
+  public FuncTB funcTB(Array<TypeB> paramTs, TypeB resultT) {
     return categoryDb().funcT(paramTs, resultT);
   }
 
@@ -718,10 +719,10 @@ public class TestContext {
   }
 
   public LambdaB lambdaB(ExprB body) {
-    return lambdaB(list(), body);
+    return lambdaB(Array.empty(), body);
   }
 
-  public LambdaB lambdaB(ImmutableList<TypeB> paramTs, ExprB body) {
+  public LambdaB lambdaB(Array<TypeB> paramTs, ExprB body) {
     var funcTB = funcTB(paramTs, body.evaluationT());
     return lambdaB(funcTB, body);
   }
@@ -731,7 +732,7 @@ public class TestContext {
   }
 
   public LambdaB idFuncB() {
-    return lambdaB(list(intTB()), varB(intTB(), 0));
+    return lambdaB(Array.of(intTB()), varB(intTB(), 0));
   }
 
   public LambdaB returnAbcFuncB() {
@@ -811,7 +812,7 @@ public class TestContext {
   }
 
   public TupleB tupleB(ValueB... items) {
-    return bytecodeDb().tuple(list(items));
+    return bytecodeDb().tuple(Array.of(items));
   }
 
   public ArrayB messageArrayWithOneError() {
@@ -869,7 +870,7 @@ public class TestContext {
   }
 
   public CombineB combineB(ExprB... items) {
-    return bytecodeDb().combine(list(items));
+    return bytecodeDb().combine(Array.of(items));
   }
 
   public IfFuncB ifFuncB(TypeB t) {
@@ -889,7 +890,7 @@ public class TestContext {
   }
 
   public OrderB orderB(TypeB elemT, ExprB... elems) {
-    var elemList = list(elems);
+    var elemList = Array.of(elems);
     return bytecodeDb().order(arrayTB(elemT), elemList);
   }
 

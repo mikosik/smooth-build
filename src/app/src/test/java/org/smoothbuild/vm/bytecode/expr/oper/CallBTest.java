@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
+import io.vavr.collection.Array;
+
 public class CallBTest extends TestContext {
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
@@ -21,19 +23,19 @@ public class CallBTest extends TestContext {
 
   @Test
   public void creating_call_with_too_few_args_causes_exception() {
-    assertCall(() -> callB(lambdaB(list(stringTB()), intB())))
+    assertCall(() -> callB(lambdaB(Array.of(stringTB()), intB())))
         .throwsException(argsNotMatchingParamsException("", "String"));
   }
 
   @Test
   public void creating_call_with_too_many_args_causes_exception() {
-    assertCall(() -> callB(lambdaB(list(stringTB()), intB()), intB(), intB()))
+    assertCall(() -> callB(lambdaB(Array.of(stringTB()), intB()), intB(), intB()))
         .throwsException(argsNotMatchingParamsException("Int,Int", "String"));
   }
 
   @Test
   public void creating_call_with_arg_not_matching_param_type_causes_exception() {
-    assertCall(() -> callB(lambdaB(list(stringTB()), intB()), intB(3)))
+    assertCall(() -> callB(lambdaB(Array.of(stringTB()), intB()), intB(3)))
         .throwsException(argsNotMatchingParamsException("Int", "String"));
   }
 
@@ -45,7 +47,7 @@ public class CallBTest extends TestContext {
 
   @Test
   public void sub_exprs_returns_sub_exprs() {
-    var func = lambdaB(list(stringTB()), intB());
+    var func = lambdaB(Array.of(stringTB()), intB());
     var args = combineB(stringB());
     assertThat(callB(func, args).subExprs())
         .isEqualTo(new CallSubExprsB(func, args));
@@ -56,31 +58,31 @@ public class CallBTest extends TestContext {
     @Override
     protected List<CallB> equalExprs() {
       return list(
-          callB(lambdaB(list(blobTB()), intB()), blobB()),
-          callB(lambdaB(list(blobTB()), intB()), blobB())
+          callB(lambdaB(Array.of(blobTB()), intB()), blobB()),
+          callB(lambdaB(Array.of(blobTB()), intB()), blobB())
       );
     }
 
     @Override
     protected List<CallB> nonEqualExprs() {
       return list(
-          callB(lambdaB(list(blobTB()), intB()), blobB()),
-          callB(lambdaB(list(stringTB()), intB()), stringB()),
-          callB(lambdaB(list(blobTB()), stringB()), blobB())
+          callB(lambdaB(Array.of(blobTB()), intB()), blobB()),
+          callB(lambdaB(Array.of(stringTB()), intB()), stringB()),
+          callB(lambdaB(Array.of(blobTB()), stringB()), blobB())
       );
     }
   }
 
   @Test
   public void call_can_be_read_back_by_hash() {
-    var call = callB(lambdaB(list(stringTB()), intB()), stringB());
+    var call = callB(lambdaB(Array.of(stringTB()), intB()), stringB());
     assertThat(bytecodeDbOther().get(call.hash()))
         .isEqualTo(call);
   }
 
   @Test
   public void call_read_back_by_hash_has_same_data() {
-    var func = lambdaB(list(stringTB()), intB());
+    var func = lambdaB(Array.of(stringTB()), intB());
     var args = combineB(stringB());
     var call = callB(func, args);
     assertThat(((CallB) bytecodeDbOther().get(call.hash())).subExprs())
@@ -89,7 +91,7 @@ public class CallBTest extends TestContext {
 
   @Test
   public void to_string() {
-    var func = lambdaB(list(stringTB()), intB());
+    var func = lambdaB(Array.of(stringTB()), intB());
     var call = callB(func, stringB());
     assertThat(call.toString())
         .isEqualTo("CALL:Int(???)@" + call.hash());

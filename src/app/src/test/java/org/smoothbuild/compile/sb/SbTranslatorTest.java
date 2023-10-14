@@ -32,6 +32,8 @@ import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
 import org.smoothbuild.vm.bytecode.load.FileLoader;
 
+import io.vavr.collection.Array;
+
 public class SbTranslatorTest extends TestContext {
   @Nested
   class _translate {
@@ -251,7 +253,7 @@ public class SbTranslatorTest extends TestContext {
       public void lambda() {
         var lambda = lambdaS(varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoLambdaS = instantiateS(list(intTS()), lambda);
-        assertTranslation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
+        assertTranslation(monoLambdaS, lambdaB(Array.of(intTB()), varB(intTB(), 0)));
       }
 
       @Test
@@ -272,8 +274,8 @@ public class SbTranslatorTest extends TestContext {
             instantiateS(lambdaS(nlist(itemS(blobTS(), "b")), paramRefS(intTS(), "i")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "i")), monoLambdaS);
 
-        var bodyB = lambdaB(list(blobTB()), varB(intTB(), 1));
-        var lambdaB = lambdaB(list(intTB()), bodyB);
+        var bodyB = lambdaB(Array.of(blobTB()), varB(intTB(), 1));
+        var lambdaB = lambdaB(Array.of(intTB()), bodyB);
 
         assertTranslation(monoFuncS, lambdaB);
       }
@@ -318,7 +320,7 @@ public class SbTranslatorTest extends TestContext {
         var callS = callS(instantiateS(constructorS), stringS("abc"));
         var selectS = selectS(callS, "field");
 
-        var ctorB = lambdaB(list(stringTB()), combineB(varB(stringTB(), 0)));
+        var ctorB = lambdaB(Array.of(stringTB()), combineB(varB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
         assertTranslation(bindings(constructorS), selectS, selectB(callB, intB(0)));
       }

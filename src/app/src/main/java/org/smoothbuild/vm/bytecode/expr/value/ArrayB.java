@@ -9,13 +9,13 @@ import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.
  */
 public final class ArrayB extends ValueB {
-  private final Supplier<ImmutableList<ValueB>> elemsSupplier;
+  private final Supplier<Array<ValueB>> elemsSupplier;
 
   public ArrayB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
@@ -36,10 +36,10 @@ public final class ArrayB extends ValueB {
     return readDataSeqSize();
   }
 
-  public <T extends ValueB> ImmutableList<T> elems(Class<T> elemTJ) {
+  public <T extends ValueB> Array<T> elems(Class<T> elemTJ) {
     assertIsIterableAs(elemTJ);
     @SuppressWarnings("unchecked")
-    ImmutableList<T> result = (ImmutableList<T>) elemsSupplier.get();
+    Array<T> result = (Array<T>) elemsSupplier.get();
     return result;
   }
 
@@ -51,7 +51,7 @@ public final class ArrayB extends ValueB {
     }
   }
 
-  private ImmutableList<ValueB> instantiateElems() {
+  private Array<ValueB> instantiateElems() {
     var elems = readElems();
     var expectedElemT = type().elem();
     for (int i = 0; i < elems.size(); i++) {
@@ -64,7 +64,7 @@ public final class ArrayB extends ValueB {
     return elems;
   }
 
-  private ImmutableList<ValueB> readElems() {
+  private Array<ValueB> readElems() {
     return readDataSeqElems(ValueB.class);
   }
 

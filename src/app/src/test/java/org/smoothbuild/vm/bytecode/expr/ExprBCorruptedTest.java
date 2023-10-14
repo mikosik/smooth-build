@@ -9,7 +9,6 @@ import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOf
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -67,6 +66,7 @@ import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IntTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 
+import io.vavr.collection.Array;
 import okio.ByteString;
 
 public class ExprBCorruptedTest extends TestContext {
@@ -139,11 +139,9 @@ public class ExprBCorruptedTest extends TestContext {
                       hash("bbb")
                   )
               ));
-      List<String> strings = ((ArrayB) bytecodeDb().get(hash))
+      Array<String> strings = ((ArrayB) bytecodeDb().get(hash))
           .elems(StringB.class)
-          .stream()
-          .map(StringB::toJ)
-          .toList();
+          .map(StringB::toJ);
       assertThat(strings)
           .containsExactly("aaa", "bbb")
           .inOrder();

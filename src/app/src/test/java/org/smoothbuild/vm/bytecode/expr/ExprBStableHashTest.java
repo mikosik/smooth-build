@@ -1,13 +1,13 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
+import io.vavr.collection.Array;
 import okio.ByteString;
 
 public class ExprBStableHashTest extends TestContext {
@@ -207,7 +207,7 @@ public class ExprBStableHashTest extends TestContext {
 
     @Test
     public void call_with_one_arg() {
-      var lambdaB = lambdaB(list(stringTB()), intB());
+      var lambdaB = lambdaB(Array.of(stringTB()), intB());
       assertThat(callB(lambdaB, stringB("abc")).hash())
           .isEqualTo(
               Hash.decode("a09ab8dc2cda31a74cb0f2cde880a272f7e6e5d6e506a744402d4a0afe0c20ba"));

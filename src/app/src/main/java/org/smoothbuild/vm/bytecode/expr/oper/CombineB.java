@@ -10,8 +10,9 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeExc;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
+import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.
@@ -37,9 +38,9 @@ public class CombineB extends OperB {
     return new CombineSubExprsB(items());
   }
 
-  public ImmutableList<ExprB> items() {
-    var expectedElementsTs = category().evaluationT().elements();
-    var items = readDataSeqElems(ExprB.class);
+  public Array<ExprB> items() {
+    Array<TypeB> expectedElementsTs = category().evaluationT().elements();
+    Array<ExprB> items = readDataSeqElems(ExprB.class);
     allMatchOtherwise(
         expectedElementsTs,
         items,

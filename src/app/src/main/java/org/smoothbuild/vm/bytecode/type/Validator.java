@@ -8,15 +8,15 @@ import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 public class Validator {
-  public static void validateArgs(FuncTB funcTB, ImmutableList<TypeB> items,
+  public static void validateArgs(FuncTB funcTB, Array<TypeB> items,
       Supplier<RuntimeException> exceptionThrower) {
     validateTuple(funcTB.params(), items, exceptionThrower);
   }
 
-  public static void validateTuple(TupleTB tupleTB, ImmutableList<TypeB> itemTs,
+  public static void validateTuple(TupleTB tupleTB, Array<TypeB> itemTs,
       Supplier<RuntimeException> exceptionThrower) {
     allMatchOtherwise(
         tupleTB.elements(),

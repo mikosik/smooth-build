@@ -1,13 +1,15 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
-import org.smoothbuild.vm.bytecode.expr.Helpers;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
+
+import io.vavr.collection.Array;
 
 public class ArrayBBuilder {
   private final ArrayTB type;
@@ -41,6 +43,6 @@ public class ArrayBBuilder {
   }
 
   public ArrayB build() {
-    return Helpers.wrapHashedDbExcAsBytecodeDbExc(() -> bytecodeDb.newArray(type, elems));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> bytecodeDb.newArray(type, Array.ofAll(elems)));
   }
 }
