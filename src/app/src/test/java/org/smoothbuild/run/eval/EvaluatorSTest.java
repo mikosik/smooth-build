@@ -14,7 +14,6 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
-import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.testing.TestContext;
@@ -32,6 +31,7 @@ import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 import com.google.common.collect.ImmutableMap;
 
 import io.vavr.collection.Array;
+import io.vavr.control.Either;
 
 public class EvaluatorSTest extends TestContext {
   private final FileLoader fileLoader = mock(FileLoader.class);
@@ -110,7 +110,7 @@ public class EvaluatorSTest extends TestContext {
           when(fileLoader.load(filePath(PROJECT, path("myBuild.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
-              .thenReturn(Try.result(
+              .thenReturn(Either.right(
                   EvaluatorSTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
           assertEvaluation(bindings(funcS), callS, intB(173));
         }
@@ -125,7 +125,7 @@ public class EvaluatorSTest extends TestContext {
           when(fileLoader.load(filePath(PROJECT, path("myBuild.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
-              .thenReturn(Try.result(
+              .thenReturn(Either.right(
                   EvaluatorSTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
           assertEvaluation(bindings(funcS), callS, intB(77));
         }
@@ -217,7 +217,7 @@ public class EvaluatorSTest extends TestContext {
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
           when(bytecodeLoader.load("myFunc", jar, className, varMap))
-              .thenReturn(Try.result(funcB));
+              .thenReturn(Either.right(funcB));
 
           var a = varA();
           var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));

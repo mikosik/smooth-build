@@ -37,7 +37,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
-import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.Reporter;
@@ -72,6 +71,7 @@ import org.smoothbuild.vm.evaluate.task.Task;
 import com.google.common.collect.ImmutableList;
 
 import io.vavr.collection.Array;
+import io.vavr.control.Either;
 
 public class EvaluatorBTest extends TestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
@@ -306,7 +306,7 @@ public class EvaluatorBTest extends TestContext {
           var call = callB(nativeFuncB, intB(33));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
-              .thenReturn(Try.result(
+              .thenReturn(Either.right(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(33));
@@ -318,7 +318,7 @@ public class EvaluatorBTest extends TestContext {
               funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
-              .thenReturn(Try.result(
+              .thenReturn(Either.right(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var nativeFuncT = nativeFuncB.evaluationT();
@@ -334,7 +334,7 @@ public class EvaluatorBTest extends TestContext {
               funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
-              .thenReturn(Try.result(
+              .thenReturn(Either.right(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var outerFunc = lambdaB(nativeFuncB);

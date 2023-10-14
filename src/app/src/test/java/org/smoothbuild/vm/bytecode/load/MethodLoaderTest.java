@@ -14,12 +14,13 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.MissingMethod;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.OverloadedMethod;
 import org.smoothbuild.testing.func.nativ.ReturnAbc;
+
+import io.vavr.control.Either;
 
 public class MethodLoaderTest extends TestContext {
   @Test
@@ -27,7 +28,7 @@ public class MethodLoaderTest extends TestContext {
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var methodSpec = new MethodSpec(blobBJarWithJavaByteCode(), "com.missing.Class", "methodName");
     assertThat(methodLoader.provide(methodSpec))
-        .isEqualTo(Try.error("Class not found in jar."));
+        .isEqualTo(Either.left("Class not found in jar."));
   }
 
   @Test
@@ -53,8 +54,8 @@ public class MethodLoaderTest extends TestContext {
     return new MethodSpec(jar, clazz.getCanonicalName(), NATIVE_METHOD_NAME);
   }
 
-  private Try<Object> loadingError(Class<?> clazz, String message) {
-    return Try.error("Class '" + clazz.getCanonicalName() + "' " + message);
+  private Either<String, Object> loadingError(Class<?> clazz, String message) {
+    return Either.left("Class '" + clazz.getCanonicalName() + "' " + message);
   }
 
   private MethodLoader methodLoaderWithPlatformClassLoader() {
@@ -82,16 +83,16 @@ public class MethodLoaderTest extends TestContext {
           .when(classLoader)
           .loadClass(className);
       var classLoaderProv = Mockito.mock(JarClassLoaderProv.class);
-      doReturn(Try.result(classLoader))
+      doReturn(Either.right(classLoader))
           .when(classLoaderProv)
           .classLoaderFor(jar);
 
       var methodLoader = new MethodLoader(classLoaderProv);
       var methodSpec = new MethodSpec(jar, className, "func");
-      Try<Method> methodTry1 = methodLoader.provide(methodSpec);
-      Try<Method> methodTry2 = methodLoader.provide(methodSpec);
-      assertThat(methodTry1)
-          .isSameInstanceAs(methodTry2);
+      Either<String, Method> methodEither1 = methodLoader.provide(methodSpec);
+      Either<String, Method> methodEither2 = methodLoader.provide(methodSpec);
+      assertThat(methodEither1)
+          .isSameInstanceAs(methodEither2);
       verify(classLoader, times(1))
           .loadClass(className);
     }

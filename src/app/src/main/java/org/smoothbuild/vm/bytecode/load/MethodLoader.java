@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.common.collect.Try;
-
+import io.vavr.control.Either;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -18,7 +17,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class MethodLoader {
   private final JarClassLoaderProv jarClassLoaderProv;
-  private final ConcurrentHashMap<MethodSpec, Try<Method>> cache;
+  private final ConcurrentHashMap<MethodSpec, Either<String, Method>> cache;
 
   @Inject
   public MethodLoader(JarClassLoaderProv jarClassLoaderProv) {
@@ -26,16 +25,16 @@ public class MethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Try<Method> provide(MethodSpec methodSpec) {
+  public Either<String, Method> provide(MethodSpec methodSpec) {
     return cache.computeIfAbsent(methodSpec, this::findMethod);
   }
 
-  private Try<Method> findMethod(MethodSpec methodSpec) {
+  private Either<String, Method> findMethod(MethodSpec methodSpec) {
     return findClass(methodSpec)
         .flatMap(c -> findMethod(methodSpec, c));
   }
 
-  private Try<Class<?>> findClass(MethodSpec methodSpec) {
+  private Either<String, Class<?>> findClass(MethodSpec methodSpec) {
     try {
       return jarClassLoaderProv.classLoaderFor(methodSpec.jar())
           .flatMap(classLoader -> loadClass(classLoader, methodSpec));
@@ -44,31 +43,31 @@ public class MethodLoader {
     }
   }
 
-  private Try<Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
+  private Either<String, Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
     try {
-      return Try.result(classLoader.loadClass(methodSpec.classBinaryName()));
+      return Either.right(classLoader.loadClass(methodSpec.classBinaryName()));
     } catch (ClassNotFoundException e) {
-      return Try.error("Class not found in jar.");
+      return Either.left("Class not found in jar.");
     }
   }
 
-  private static Try<Method> findMethod(MethodSpec methodSpec, Class<?> clazz) {
+  private static Either<String, Method> findMethod(MethodSpec methodSpec, Class<?> clazz) {
     var declaredMethods = asList(clazz.getDeclaredMethods());
     var methods = filter(declaredMethods, m -> m.getName().equals(methodSpec.methodName()));
     return switch (methods.size()) {
-      case 0 -> missingMethodError(methodSpec);
-      case 1 -> Try.result(methods.get(0));
-      default -> overloadedMethodError(methodSpec);
+      case 0 -> Either.left(missingMethodError(methodSpec));
+      case 1 -> Either.right(methods.get(0));
+      default -> Either.left(overloadedMethodError(methodSpec));
     };
   }
 
-  private static Try<Method> missingMethodError(MethodSpec methodSpec) {
-    return Try.error("Class '%s' does not have '%s' method."
-        .formatted(methodSpec.classBinaryName(), methodSpec.methodName()));
+  private static String missingMethodError(MethodSpec methodSpec) {
+    return "Class '%s' does not have '%s' method."
+        .formatted(methodSpec.classBinaryName(), methodSpec.methodName());
   }
 
-  private static Try<Method> overloadedMethodError(MethodSpec methodSpec) {
-    return Try.error("Class '%s' has more than one '%s' method."
-        .formatted(methodSpec.classBinaryName(), methodSpec.methodName()));
+  private static String overloadedMethodError(MethodSpec methodSpec) {
+    return "Class '%s' has more than one '%s' method."
+        .formatted(methodSpec.classBinaryName(), methodSpec.methodName());
   }
 }

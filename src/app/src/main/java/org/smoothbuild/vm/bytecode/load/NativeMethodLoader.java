@@ -6,13 +6,13 @@ import static org.smoothbuild.common.reflect.Methods.isStatic;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
+import io.vavr.control.Either;
 import jakarta.inject.Inject;
 
 /**
@@ -21,7 +21,7 @@ import jakarta.inject.Inject;
 public class NativeMethodLoader {
   public static final String NATIVE_METHOD_NAME = "func";
   private final MethodLoader methodLoader;
-  private final ConcurrentHashMap<NativeFuncB, Try<Method>> cache;
+  private final ConcurrentHashMap<NativeFuncB, Either<String, Method>> cache;
 
   @Inject
   public NativeMethodLoader(MethodLoader methodLoader) {
@@ -29,43 +29,43 @@ public class NativeMethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Try<Method> load(NativeFuncB nativeFuncB) {
+  public Either<String, Method> load(NativeFuncB nativeFuncB) {
     return cache.computeIfAbsent(nativeFuncB, this::loadImpl);
   }
 
-  private Try<Method> loadImpl(NativeFuncB nativeFuncB) {
+  private Either<String, Method> loadImpl(NativeFuncB nativeFuncB) {
     var classBinaryName = nativeFuncB.classBinaryName().toJ();
     var methodSpec = new MethodSpec(nativeFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader.provide(methodSpec)
-        .validate(this::validateMethodSignature)
-        .mapError(e -> loadingError(classBinaryName, e));
+        .flatMap(this::validateMethodSignature)
+        .mapLeft(e -> loadingError(classBinaryName, e));
   }
 
-  private String validateMethodSignature(Method method) {
+  private Either<String, Method> validateMethodSignature(Method method) {
     if (!isPublic(method)) {
-      return "Providing method is not public.";
+      return Either.left("Providing method is not public.");
     } else if (!isStatic(method)) {
-      return "Providing method is not static.";
+      return Either.left("Providing method is not static.");
     } else {
       return validateMethodParams(method);
     }
   }
 
-  private String validateMethodParams(Method method) {
+  private Either<String, Method> validateMethodParams(Method method) {
     Class<?> returnType = method.getReturnType();
     if (!returnType.equals(ValueB.class)) {
-      return "Providing method should declare return type as " + ValueB.class.getCanonicalName()
-          + " but is " + returnType.getCanonicalName() + ".";
+      return Either.left("Providing method should declare return type as "
+          + ValueB.class.getCanonicalName() + " but is " + returnType.getCanonicalName() + ".");
     }
     Class<?>[] types = method.getParameterTypes();
     boolean valid = types.length == 2
         && (types[0].equals(NativeApi.class) || types[0].equals(Container.class))
         && (types[1].equals(TupleB.class));
     if (valid) {
-      return null;
+      return Either.right(method);
     } else {
-      return "Providing method should have two parameters " + NativeApi.class.getCanonicalName()
-          + " and " + TupleB.class.getCanonicalName() + ".";
+      return Either.left("Providing method should have two parameters "
+          + NativeApi.class.getCanonicalName() + " and " + TupleB.class.getCanonicalName() + ".");
     }
   }
 

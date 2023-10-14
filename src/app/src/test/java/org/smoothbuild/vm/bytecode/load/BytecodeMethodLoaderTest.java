@@ -12,7 +12,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.testing.func.bytecode.NonStaticMethod;
@@ -24,28 +23,31 @@ import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
+import io.vavr.control.Either;
+
 public class BytecodeMethodLoaderTest extends TestContext {
   @Nested
   class _caching {
     @Test
     public void method_is_cached() throws Exception {
       var method = fetchJMethod(ReturnAbc.class);
-      testCaching(method, Try.result(method), Try.result(method));
+      testCaching(method, Either.right(method), Either.right(method));
     }
 
     @Test
     public void error_when_loading_method_is_cached() throws Exception {
       var method = fetchJMethod(NonPublicMethod.class);
-      testCaching(method, Try.error("error message"), Try.error("error message"));
+      testCaching(method, Either.left("error message"), Either.left("error message"));
     }
 
-    private void testCaching(Method method, Try<Method> tryMethod, Try<Method> expected) {
+    private void testCaching(Method method, Either<String, Method> eitherMethod,
+        Either<String, Method> expected) {
       var methodLoader = mock(MethodLoader.class);
       BlobB jar = blobB();
       String classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
       when(methodLoader.provide(methodSpec))
-          .thenReturn(tryMethod);
+          .thenReturn(eitherMethod);
 
       var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
 
@@ -72,7 +74,8 @@ public class BytecodeMethodLoaderTest extends TestContext {
 
   @Test
   public void loading_method_without_native_api_param_causes_error() throws Exception {
-    var method = WithoutBytecodeF.class.getDeclaredMethod(BytecodeMethodLoader.BYTECODE_METHOD_NAME);
+    var method =
+        WithoutBytecodeF.class.getDeclaredMethod(BytecodeMethodLoader.BYTECODE_METHOD_NAME);
     assertLoadingCausesError(method,
         "Providing method parameter is not of type " + BytecodeF.class.getCanonicalName() + ".");
   }
@@ -95,14 +98,15 @@ public class BytecodeMethodLoaderTest extends TestContext {
   }
 
   private void assertLoadingCausesError(Method method, String message) {
-    var methodSpec = new MethodSpec(blobB(), "class.binary.name", BytecodeMethodLoader.BYTECODE_METHOD_NAME);
+    var methodSpec =
+        new MethodSpec(blobB(), "class.binary.name", BytecodeMethodLoader.BYTECODE_METHOD_NAME);
     assertThat(load(methodSpec, method))
-        .isEqualTo(Try.error(message));
+        .isEqualTo(Either.left(message));
   }
 
-  private Try<Method> load(MethodSpec methodSpec, Method method) {
+  private Either<String, Method> load(MethodSpec methodSpec, Method method) {
     var methodLoader = mock(MethodLoader.class);
-    doReturn(Try.result(method))
+    doReturn(Either.right(method))
         .when(methodLoader)
         .provide(methodSpec);
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
@@ -110,6 +114,7 @@ public class BytecodeMethodLoaderTest extends TestContext {
   }
 
   private static Method fetchJMethod(Class<?> clazz) throws NoSuchMethodException {
-    return clazz.getDeclaredMethod(BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeF.class, Map.class);
+    return clazz.getDeclaredMethod(
+        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeF.class, Map.class);
   }
 }
