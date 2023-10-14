@@ -26,7 +26,7 @@ public final class InvokeTask extends Task {
   public Output run(TupleB input, Container container) {
     return container.nativeMethodLoader().load(nativeFuncB)
         .map(m -> invokeMethod(m, input, container))
-        .orElse(e -> logFatalAndReturnNullOutput(container, e));
+        .getOrElseGet(message -> logFatalAndReturnNullOutput(container, message));
   }
 
   private Output invokeMethod(Method method, TupleB args, Container container) {

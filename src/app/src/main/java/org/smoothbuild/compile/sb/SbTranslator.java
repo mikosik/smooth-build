@@ -356,11 +356,11 @@ public class SbTranslator {
   private ExprB fetchBytecode(AnnotationS annotation, TypeB typeB, String name) {
     var varNameToTypeMap = mapKeys(typeSbTranslator.varMap(), VarS::name);
     var jar = loadNativeJar(annotation.location());
-    var bytecodeTry = bytecodeLoader.load(name, jar, annotation.path().string(), varNameToTypeMap);
-    if (!bytecodeTry.isPresent()) {
-      throw new SbTranslatorExc(annotation.location() + ": " + bytecodeTry.error());
+    var bytecode = bytecodeLoader.load(name, jar, annotation.path().string(), varNameToTypeMap);
+    if (!bytecode.isRight()) {
+      throw new SbTranslatorExc(annotation.location() + ": " + bytecode.getLeft());
     }
-    var bytecodeB = bytecodeTry.result();
+    var bytecodeB = bytecode.get();
     if (!bytecodeB.evaluationT().equals(typeB)) {
       throw new SbTranslatorExc(annotation.location()
           + ": Bytecode provider returned object of wrong type " + bytecodeB.evaluationT().q()

@@ -13,13 +13,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.common.io.DuplicateFileNameExc;
 import org.smoothbuild.common.io.IllegalZipEntryFileNameExc;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
+import io.vavr.control.Either;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import net.lingala.zip4j.exception.ZipException;
@@ -31,7 +31,7 @@ import net.lingala.zip4j.exception.ZipException;
 public class JarClassLoaderProv {
   private final BytecodeF bytecodeF;
   private final ClassLoader parentClassLoader;
-  private final ConcurrentHashMap<BlobB, Try<ClassLoader>> cache;
+  private final ConcurrentHashMap<BlobB, Either<String, ClassLoader>> cache;
 
   @Inject
   public JarClassLoaderProv(BytecodeF bytecodeF) {
@@ -44,18 +44,18 @@ public class JarClassLoaderProv {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Try<ClassLoader> classLoaderFor(BlobB jar) throws IOException {
+  public Either<String, ClassLoader> classLoaderFor(BlobB jar) throws IOException {
     return computeIfAbsent(cache, jar, j -> newClassLoader(parentClassLoader, j));
   }
 
-  private Try<ClassLoader> newClassLoader(ClassLoader parentClassLoader, BlobB jar)
+  private Either<String, ClassLoader> newClassLoader(ClassLoader parentClassLoader, BlobB jar)
       throws IOException {
     try {
       var files = unzipBlob(bytecodeF, jar, s -> true);
       var filesMap = toMap(files.elems(TupleB.class), f -> filePath(f).toJ(), identity());
-      return Try.result(classLoader(parentClassLoader, filesMap));
+      return Either.right(classLoader(parentClassLoader, filesMap));
     } catch (DuplicateFileNameExc | IllegalZipEntryFileNameExc | ZipException e) {
-      return Try.error("Error unpacking jar with native code: " + e.getMessage());
+      return Either.left("Error unpacking jar with native code: " + e.getMessage());
     }
   }
 

@@ -6,12 +6,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.common.collect.Try;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
+import io.vavr.control.Either;
 import jakarta.inject.Inject;
 
 public class BytecodeLoader {
@@ -24,19 +24,20 @@ public class BytecodeLoader {
     this.bytecodeF = bytecodeF;
   }
 
-  public Try<ExprB> load(String name, BlobB jar, String classBinaryName, Map<String, TypeB> varMap) {
+  public Either<String, ExprB> load(
+      String name, BlobB jar, String classBinaryName, Map<String, TypeB> varMap) {
     return methodLoader.load(jar, classBinaryName)
         .flatMap(method -> invoke(method, varMap))
-        .mapError(e -> loadingError(name, classBinaryName, e));
+        .mapLeft(e -> loadingError(name, classBinaryName, e));
   }
 
-  private Try<ExprB> invoke(Method method, Map<String, TypeB> varMap) {
+  private Either<String, ExprB> invoke(Method method, Map<String, TypeB> varMap) {
     try {
-      return Try.result((ExprB) method.invoke(null, bytecodeF, varMap));
+      return Either.right((ExprB) method.invoke(null, bytecodeF, varMap));
     } catch (IllegalAccessException e) {
-      return Try.error("Cannot access provider method: " + e);
+      return Either.left("Cannot access provider method: " + e);
     } catch (InvocationTargetException e) {
-      return Try.error("Providing method thrown exception: " + e.getCause());
+      return Either.left("Providing method thrown exception: " + e.getCause());
     }
   }
 
