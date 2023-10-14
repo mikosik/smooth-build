@@ -13,6 +13,8 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 import com.google.common.collect.ImmutableList;
 
+import io.vavr.collection.Array;
+
 public class TestingCatsB {
   public static final TestContext CONTEXT = new TestContext();
 
@@ -98,7 +100,7 @@ public class TestingCatsB {
   }
 
   private static FuncTB func(TypeB res, TypeB... params) {
-    return CONTEXT.funcTB(list(params), res);
+    return CONTEXT.funcTB(Array.of(params), res);
   }
 
   private static TupleTB tuple(TypeB... params) {

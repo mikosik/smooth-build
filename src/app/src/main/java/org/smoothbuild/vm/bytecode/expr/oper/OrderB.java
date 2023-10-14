@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
 import org.smoothbuild.vm.bytecode.type.oper.OrderCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.
@@ -35,7 +35,7 @@ public class OrderB extends OperB {
     return new OrderSubExprsB(elements());
   }
 
-  public ImmutableList<ExprB> elements() {
+  public Array<ExprB> elements() {
     var elements = readDataSeqElems(ExprB.class);
     var expectedElementT = category().evaluationT().elem();
     for (int i = 0; i < elements.size(); i++) {

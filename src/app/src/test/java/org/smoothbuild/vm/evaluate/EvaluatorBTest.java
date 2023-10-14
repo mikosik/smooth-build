@@ -13,7 +13,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Level.FATAL;
@@ -72,6 +71,8 @@ import org.smoothbuild.vm.evaluate.task.Task;
 
 import com.google.common.collect.ImmutableList;
 
+import io.vavr.collection.Array;
+
 public class EvaluatorBTest extends TestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
   public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS
@@ -95,7 +96,7 @@ public class EvaluatorBTest extends TestContext {
 
       @Test
       public void no_task_is_executed_for_func_arg_that_is_not_used() {
-        var lambdaB = lambdaB(list(arrayTB(boolTB())), intB(7));
+        var lambdaB = lambdaB(Array.of(arrayTB(boolTB())), intB(7));
         var call = callB(lambdaB, orderB(boolTB()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
@@ -121,8 +122,8 @@ public class EvaluatorBTest extends TestContext {
 
       @Test
       public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used() {
-        var innerLambda = lambdaB(list(arrayTB(boolTB())), intB(7));
-        var outerLambda = lambdaB(list(arrayTB(boolTB())),
+        var innerLambda = lambdaB(Array.of(arrayTB(boolTB())), intB(7));
+        var outerLambda = lambdaB(Array.of(arrayTB(boolTB())),
             callB(innerLambda, varB(arrayTB(boolTB()), 0)));
         var call = callB(outerLambda, orderB(boolTB()));
 
@@ -136,7 +137,7 @@ public class EvaluatorBTest extends TestContext {
       @Test
       public void task_for_func_arg_that_is_used_twice_is_executed_only_once() {
         var arrayT = arrayTB(intTB());
-        var lambdaB = lambdaB(list(arrayT), combineB(varB(arrayT, 0), varB(arrayT, 0)));
+        var lambdaB = lambdaB(Array.of(arrayT), combineB(varB(arrayT, 0), varB(arrayT, 0)));
         var call = callB(lambdaB, orderB(intB(7)));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
@@ -165,7 +166,7 @@ public class EvaluatorBTest extends TestContext {
 
       @Test
       public void job_for_unused_func_arg_is_created_but_not_jobs_for_its_dependencies() {
-        var lambdaB = lambdaB(list(arrayTB(boolTB())), intB(7));
+        var lambdaB = lambdaB(Array.of(arrayTB(boolTB())), intB(7));
         var call = callB(lambdaB, orderB(boolB()));
 
         var countingScheduler = countingSchedulerB();
@@ -235,7 +236,7 @@ public class EvaluatorBTest extends TestContext {
         public void lambda_passed_as_argument() {
           var paramFunc = lambdaB(intB(7));
           var paramFuncT = paramFunc.evaluationT();
-          var outerLambda = lambdaB(list(paramFuncT), callB(varB(paramFuncT, 0)));
+          var outerLambda = lambdaB(Array.of(paramFuncT), callB(varB(paramFuncT, 0)));
           var call = callB(outerLambda, paramFunc);
           assertThat(evaluate(call))
               .isEqualTo(intB(7));
@@ -253,7 +254,7 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void lambda_returning_param_of_enclosing_lambda() {
           var innerLambda = lambdaB(varB(intTB(), 0));
-          var outerLambda = lambdaB(list(intTB()), innerLambda);
+          var outerLambda = lambdaB(Array.of(intTB()), innerLambda);
           var innerReturnedByOuter = callB(outerLambda, intB(17));
           var callB = callB(innerReturnedByOuter);
           assertThat(evaluate(callB))
@@ -263,8 +264,8 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void lambda_returning_value_from_environment_that_references_another_environment() {
           var innerLambda = lambdaB(varB(intTB(), 0));
-          var middleLambda = lambdaB(list(intTB()), innerLambda);
-          var outerLambda = lambdaB(list(intTB()), callB(middleLambda, varB(intTB(), 0)));
+          var middleLambda = lambdaB(Array.of(intTB()), innerLambda);
+          var outerLambda = lambdaB(Array.of(intTB()), callB(middleLambda, varB(intTB(), 0)));
           var middleReturnedByOuter = callB(outerLambda, intB(17));
           assertThat(evaluate(callB(middleReturnedByOuter)))
               .isEqualTo(intB(17));
@@ -321,7 +322,7 @@ public class EvaluatorBTest extends TestContext {
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var nativeFuncT = nativeFuncB.evaluationT();
-          var outerLambda = lambdaB(list(nativeFuncT), callB(varB(nativeFuncT, 0), intB(7)));
+          var outerLambda = lambdaB(Array.of(nativeFuncT), callB(varB(nativeFuncT, 0), intB(7)));
           var call = callB(outerLambda, nativeFuncB);
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
               .isEqualTo(intB(7));
@@ -394,7 +395,7 @@ public class EvaluatorBTest extends TestContext {
       class _reference {
         @Test
         public void var_referencing_func_param() {
-          var lambdaB = lambdaB(list(intTB()), varB(intTB(), 0));
+          var lambdaB = lambdaB(Array.of(intTB()), varB(intTB(), 0));
           var callB = callB(lambdaB, intB(7));
           assertThat(evaluate(callB))
               .isEqualTo(intB(7));
@@ -402,16 +403,16 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda() {
-          var innerLambda = lambdaB(list(), varB(intTB(), 0));
-          var outerLambda = lambdaB(list(intTB()), callB(innerLambda));
+          var innerLambda = lambdaB(Array.of(), varB(intTB(), 0));
+          var outerLambda = lambdaB(Array.of(intTB()), callB(innerLambda));
           assertThat(evaluate(callB(outerLambda, intB(7))))
               .isEqualTo(intB(7));
         }
 
         @Test
         public void var_inside_inner_lambda_referencing_param_of_enclosing_lambda() {
-          var innerLambdaB = lambdaB(list(intTB()), varB(intTB(), 1));
-          var outerLambdaB = lambdaB(list(intTB()), innerLambdaB);
+          var innerLambdaB = lambdaB(Array.of(intTB()), varB(intTB(), 1));
+          var outerLambdaB = lambdaB(Array.of(intTB()), innerLambdaB);
           var callOuter = callB(outerLambdaB, intB(7));
           var callInner = callB(callOuter, intB(8));
 
@@ -422,10 +423,10 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void var_referencing_with_index_out_of_bounds_causes_fatal()
             throws InterruptedException {
-          var lambdaB = lambdaB(list(intTB()), varB(intTB(), 2));
+          var lambdaB = lambdaB(Array.of(intTB()), varB(intTB(), 2));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
-          vm.evaluate(list(callB(lambdaB, intB(7))));
+          vm.evaluate(Array.of(callB(lambdaB, intB(7))));
           verify(reporter, times(1))
               .report(eq("Internal smooth error"), argThat(isLogListWithFatalOutOfBounds()));
         }
@@ -438,10 +439,10 @@ public class EvaluatorBTest extends TestContext {
         @Test
         public void reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
             throws InterruptedException {
-          var lambdaB = lambdaB(list(blobTB()), varB(intTB(), 0));
+          var lambdaB = lambdaB(Array.of(blobTB()), varB(intTB(), 0));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
-          vm.evaluate(list(callB(lambdaB, blobB())));
+          vm.evaluate(Array.of(callB(lambdaB, blobB())));
           verify(reporter, times(1))
               .report(
                   eq("Internal smooth error"),
@@ -753,7 +754,7 @@ public class EvaluatorBTest extends TestContext {
 
   private ValueB evaluate(EvaluatorB evaluatorB, ExprB expr) {
     try {
-      var resultOptional = evaluatorB.evaluate(list(expr));
+      var resultOptional = evaluatorB.evaluate(Array.of(expr));
       assertWithMessage(" ==== Console logs ==== \n" + systemOut().toString() + "\n ==========\n")
           .that(resultOptional.isPresent())
           .isTrue();
@@ -768,7 +769,7 @@ public class EvaluatorBTest extends TestContext {
 
   private void evaluateWithFailure(EvaluatorB evaluatorB, ExprB expr) {
     try {
-      var results = evaluatorB.evaluate(list(expr));
+      var results = evaluatorB.evaluate(Array.of(expr));
       assertThat(results)
           .isEqualTo(Optional.empty());
     } catch (InterruptedException e) {

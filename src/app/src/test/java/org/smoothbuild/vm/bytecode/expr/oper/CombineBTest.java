@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
+import io.vavr.collection.Array;
+
 public class CombineBTest extends TestContext {
   @Test
   public void category_returns_category() {
@@ -21,7 +23,7 @@ public class CombineBTest extends TestContext {
   @Test
   public void items_returns_items() {
     assertThat(combineB(intB(1), stringB("abc")).items())
-        .isEqualTo(list(intB(1), stringB("abc")));
+        .isEqualTo(Array.of(intB(1), stringB("abc")));
   }
 
   @Nested
@@ -56,7 +58,7 @@ public class CombineBTest extends TestContext {
   public void combine_read_back_by_hash_has_same_items() {
     var combine = combineB(intB(), stringB());
     assertThat(((CombineB) bytecodeDbOther().get(combine.hash())).items())
-        .isEqualTo(list(intB(), stringB()));
+        .isEqualTo(Array.of(intB(), stringB()));
   }
 
   @Test

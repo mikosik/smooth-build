@@ -2,7 +2,6 @@ package org.smoothbuild.vm.bytecode.type;
 
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.vm.bytecode.type.CategoryKindB.fromMarker;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
@@ -28,7 +27,7 @@ import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCa
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc;
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -73,7 +72,7 @@ import org.smoothbuild.vm.bytecode.type.value.StringTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.
@@ -122,7 +121,7 @@ public class CategoryDb {
     return bool;
   }
 
-  public LambdaCB lambda(ImmutableList<TypeB> params, TypeB result) {
+  public LambdaCB lambda(Array<TypeB> params, TypeB result) {
     return funcC(LAMBDA, params, result);
   }
 
@@ -131,7 +130,7 @@ public class CategoryDb {
   }
 
   private <T extends FuncCB> T funcC(
-      AbstFuncKindB<T> funcKind, ImmutableList<TypeB> params, TypeB result) {
+      AbstFuncKindB<T> funcKind, Array<TypeB> params, TypeB result) {
     return funcC(funcKind, funcT(params, result));
   }
 
@@ -139,7 +138,7 @@ public class CategoryDb {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newFuncC(funcKind, funcTB));
   }
 
-  public FuncTB funcT(ImmutableList<TypeB> params, TypeB result) {
+  public FuncTB funcT(Array<TypeB> params, TypeB result) {
     return funcT(tuple(params), result);
   }
 
@@ -148,7 +147,7 @@ public class CategoryDb {
   }
 
   public IfFuncCB ifFunc(TypeB t) {
-    var funcT = funcT(list(bool(), t, t), t);
+    var funcT = funcT(Array.of(bool(), t, t), t);
     return wrapHashedDbExcAsBytecodeDbExc(() -> funcC(IF_FUNC, funcT));
   }
 
@@ -157,11 +156,11 @@ public class CategoryDb {
   }
 
   public MapFuncCB mapFunc(TypeB r, TypeB s) {
-    var funcT = funcT(list(array(s), funcT(list(s), r)), array(r));
+    var funcT = funcT(Array.of(array(s), funcT(Array.of(s), r)), array(r));
     return wrapHashedDbExcAsBytecodeDbExc(() -> funcC(MAP_FUNC, funcT));
   }
 
-  public NativeFuncCB nativeFunc(ImmutableList<TypeB> params, TypeB result) {
+  public NativeFuncCB nativeFunc(Array<TypeB> params, TypeB result) {
     return funcC(NATIVE_FUNC, params, result);
   }
 
@@ -170,10 +169,10 @@ public class CategoryDb {
   }
 
   public TupleTB tuple(TypeB... items) {
-    return tuple(list(items));
+    return tuple(Array.of(items));
   }
 
-  public TupleTB tuple(ImmutableList<TypeB> items) {
+  public TupleTB tuple(Array<TypeB> items) {
     return wrapHashedDbExcAsBytecodeDbExc(() -> newTuple(items));
   }
 
@@ -214,7 +213,7 @@ public class CategoryDb {
   }
 
   private CategoryB read(Hash hash) {
-    List<Hash> rootSeq = readCatRootSeq(hash);
+    Array<Hash> rootSeq = readCatRootSeq(hash);
     CategoryKindB kind = decodeCatMarker(hash, rootSeq.get(0));
     // @formatter:off
     return switch (kind) {
@@ -231,7 +230,7 @@ public class CategoryDb {
     // @formatter:on
   }
 
-  private List<Hash> readCatRootSeq(Hash hash) {
+  private Array<Hash> readCatRootSeq(Hash hash) {
     var hashes = wrapHashedDbExcAsDecodeCatExc(hash, () -> hashedDb.readSeq(hash));
     int seqSize = hashes.size();
     if (seqSize != 1 && seqSize != 2) {
@@ -249,22 +248,22 @@ public class CategoryDb {
     return kind;
   }
 
-  private ArrayTB readArrayT(Hash hash, List<Hash> rootSeq, CategoryKindB kind) {
+  private ArrayTB readArrayT(Hash hash, Array<Hash> rootSeq, CategoryKindB kind) {
     return newArray(hash, readDataAsType(hash, rootSeq, kind, TypeB.class));
   }
 
-  private static CategoryB handleBaseT(Hash hash, List<Hash> rootSeq, CategoryKindB kind) {
+  private static CategoryB handleBaseT(Hash hash, Array<Hash> rootSeq, CategoryKindB kind) {
     assertCatRootSeqSize(hash, kind, rootSeq, 1);
     throw new RuntimeException(
         "Internal error: Category with kind " + kind + " should be found in cache.");
   }
 
-  private OperCB readOperCat(Hash hash, List<Hash> rootSeq, OperKindB<?> operKind) {
+  private OperCB readOperCat(Hash hash, Array<Hash> rootSeq, OperKindB<?> operKind) {
     var evaluationT = readDataAsType(hash, rootSeq, operKind, operKind.dataClass());
     return newOper(operKind.constructor(), hash, evaluationT);
   }
 
-  private FuncTB readFuncT(Hash rootHash, List<Hash> rootSeq) {
+  private FuncTB readFuncT(Hash rootHash, Array<Hash> rootSeq) {
     assertCatRootSeqSize(rootHash, FUNC, rootSeq, 2);
     var nodes = readDataSeqAsTypes(rootHash, FUNC, rootSeq);
     if (nodes.size() != 2) {
@@ -280,7 +279,7 @@ public class CategoryDb {
     }
   }
 
-  private CategoryB readIfFuncCat(Hash hash, List<Hash> rootSeq, IfFuncKindB ifFuncKind) {
+  private CategoryB readIfFuncCat(Hash hash, Array<Hash> rootSeq, IfFuncKindB ifFuncKind) {
     return readFuncCat(hash, rootSeq, ifFuncKind, (FuncTB funcTB) -> {
       var params = funcTB.params();
       if (params.size() != 3) {
@@ -296,7 +295,7 @@ public class CategoryDb {
     });
   }
 
-  private CategoryB readMapFuncCat(Hash hash, List<Hash> rootSeq, MapFuncKindB mapFuncKind) {
+  private CategoryB readMapFuncCat(Hash hash, Array<Hash> rootSeq, MapFuncKindB mapFuncKind) {
     return readFuncCat(hash, rootSeq, mapFuncKind, (FuncTB funcTB) -> {
       var params = funcTB.params();
       if (!(funcTB.result() instanceof ArrayTB outputArrayT)) {
@@ -323,12 +322,12 @@ public class CategoryDb {
     });
   }
 
-  private <T extends FuncCB> CategoryB readFuncCat(Hash rootHash, List<Hash> rootSeq,
+  private <T extends FuncCB> CategoryB readFuncCat(Hash rootHash, Array<Hash> rootSeq,
       AbstFuncKindB<T> kind) {
     return readFuncCat(rootHash, rootSeq, kind, t -> {});
   }
 
-  private <T extends FuncCB> CategoryB readFuncCat(Hash rootHash, List<Hash> rootSeq,
+  private <T extends FuncCB> CategoryB readFuncCat(Hash rootHash, Array<Hash> rootSeq,
       AbstFuncKindB<T> kind, Consumer<FuncTB> typeVerifier) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var dataHash = rootSeq.get(DATA_IDX);
@@ -343,7 +342,7 @@ public class CategoryDb {
     }
   }
 
-  private TupleTB readTupleT(Hash rootHash, List<Hash> rootSeq) {
+  private TupleTB readTupleT(Hash rootHash, Array<Hash> rootSeq) {
     assertCatRootSeqSize(rootHash, TUPLE, rootSeq, 2);
     var items = readDataSeqAsTypes(rootHash, TUPLE, rootSeq);
     return newTuple(rootHash, items);
@@ -351,7 +350,7 @@ public class CategoryDb {
 
   // helper methods for reading
 
-  private <T extends TypeB> T readDataAsType(Hash rootHash, List<Hash> rootSeq, CategoryKindB kind,
+  private <T extends TypeB> T readDataAsType(Hash rootHash, Array<Hash> rootSeq, CategoryKindB kind,
       Class<T> typeClass) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var hash = rootSeq.get(DATA_IDX);
@@ -366,15 +365,15 @@ public class CategoryDb {
     }
   }
 
-  private ImmutableList<TypeB> readDataSeqAsTypes(
-      Hash rootHash, CategoryKindB kind, List<Hash> rootSeq) {
+  private Array<TypeB> readDataSeqAsTypes(
+      Hash rootHash, CategoryKindB kind, Array<Hash> rootSeq) {
     var elemHashes = wrapHashedDbExcAsDecodeCatNodeExc(
         rootHash, kind, DATA_PATH, () -> hashedDb.readSeq(rootSeq.get(DATA_IDX)));
-    var builder = ImmutableList.<TypeB>builder();
+    var builder = new ArrayList<TypeB>();
     for (int i = 0; i < elemHashes.size(); i++) {
       builder.add(readDataSeqElemAsType(kind, rootHash, elemHashes.get(i), i));
     }
-    return builder.build();
+    return Array.ofAll(builder);
   }
 
   private TypeB readDataSeqElemAsType(CategoryKindB kind, Hash rootHash, Hash hash, int index) {
@@ -389,7 +388,7 @@ public class CategoryDb {
   }
 
   private static void assertCatRootSeqSize(
-      Hash rootHash, CategoryKindB kind, List<Hash> hashes, int expectedSize) {
+      Hash rootHash, CategoryKindB kind, Array<Hash> hashes, int expectedSize) {
     if (hashes.size() != expectedSize) {
       throw new DecodeCatRootExc(rootHash, kind, hashes.size(), expectedSize);
     }
@@ -418,12 +417,12 @@ public class CategoryDb {
     return cache(instantiator.apply(rootHash, funcTB));
   }
 
-  private TupleTB newTuple(ImmutableList<TypeB> items) throws HashedDbExc {
+  private TupleTB newTuple(Array<TypeB> items) throws HashedDbExc {
     var hash = writeTupleRoot(items);
     return newTuple(hash, items);
   }
 
-  private TupleTB newTuple(Hash rootHash, ImmutableList<TypeB> items) {
+  private TupleTB newTuple(Hash rootHash, Array<TypeB> items) {
     return cache(new TupleTB(rootHash, items));
   }
 
@@ -458,7 +457,7 @@ public class CategoryDb {
     return writeRootWithData(kind, funcTB);
   }
 
-  private Hash writeTupleRoot(ImmutableList<TypeB> items) throws HashedDbExc {
+  private Hash writeTupleRoot(Array<TypeB> items) throws HashedDbExc {
     var dataHash = hashedDb.writeSeq(Lists.map(items, CategoryB::hash));
     return writeRootWithData(TUPLE, dataHash);
   }

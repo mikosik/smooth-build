@@ -12,6 +12,8 @@ import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 
+import io.vavr.collection.Array;
+
 public class CategoryBCachingTest extends TestContext {
   @ParameterizedTest
   @MethodSource("factories")
@@ -41,7 +43,7 @@ public class CategoryBCachingTest extends TestContext {
         catDb -> catDb.call(catDb.int_()),
         catDb -> catDb.combine(catDb.tuple()),
         catDb -> catDb.combine(catDb.tuple(catDb.int_())),
-        catDb -> catDb.lambda(catDb.funcT(list(), catDb.int_())),
+        catDb -> catDb.lambda(catDb.funcT(Array.of(), catDb.int_())),
         catDb -> catDb.ifFunc(catDb.int_()),
         catDb -> catDb.mapFunc(catDb.int_(), catDb.string()),
         catDb -> catDb.order(catDb.array(catDb.int_())),
@@ -70,6 +72,6 @@ public class CategoryBCachingTest extends TestContext {
   }
 
   private static FuncTB funcT(CategoryDb categoryDb) {
-    return categoryDb.funcT(list(categoryDb.bool(), categoryDb.blob()), categoryDb.string());
+    return categoryDb.funcT(Array.of(categoryDb.bool(), categoryDb.blob()), categoryDb.string());
   }
 }

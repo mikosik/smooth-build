@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 public final class SelectTask extends Task {
   public SelectTask(SelectB selectB, TraceB trace) {
@@ -25,11 +25,11 @@ public final class SelectTask extends Task {
     return new Output(tuple.get(index.toJ().intValue()), container.messages());
   }
 
-  private TupleB selectable(ImmutableList<ValueB> components) {
+  private TupleB selectable(Array<ValueB> components) {
     return (TupleB) components.get(0);
   }
 
-  private IntB index(ImmutableList<ValueB> components) {
+  private IntB index(Array<ValueB> components) {
     return (IntB) components.get(1);
   }
 }

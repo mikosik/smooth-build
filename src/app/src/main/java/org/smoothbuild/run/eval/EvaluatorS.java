@@ -12,6 +12,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 import com.google.common.collect.ImmutableList;
 
+import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 
 public class EvaluatorS {
@@ -35,7 +36,7 @@ public class EvaluatorS {
       var sbTranslation = sbTranslatorFacade.translate(evaluables, exprs);
       reporter.startNewPhase("Evaluating");
       var vm = evaluatorBFactory.newEvaluatorB(sbTranslation.bsMapping());
-      return vm.evaluate(sbTranslation.exprBs());
+      return vm.evaluate(Array.ofAll(sbTranslation.exprBs()));
     } catch (SbTranslatorExc e) {
       throw new EvaluatorExcS(e.getMessage());
     } catch (InterruptedException e) {

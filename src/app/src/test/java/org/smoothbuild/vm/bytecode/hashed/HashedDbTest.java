@@ -5,7 +5,6 @@ import static java.lang.Byte.MAX_VALUE;
 import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.io.Okios.writeAndClose;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -29,6 +28,7 @@ import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringExc;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataExc;
 
+import io.vavr.collection.Array;
 import okio.ByteString;
 
 public class HashedDbTest extends TestContext {
@@ -267,21 +267,21 @@ public class HashedDbTest extends TestContext {
     public void with_no_elems_can_be_read_back() throws Exception {
       var hash = hashedDb().writeSeq();
       assertThat(hashedDb().readSeq(hash))
-          .isEqualTo(list());
+          .isEqualTo(Array.of());
     }
 
     @Test
     public void with_one_elem_can_be_read_back() throws Exception {
       var hash = hashedDb().writeSeq(Hash.of("abc"));
       assertThat(hashedDb().readSeq(hash))
-          .isEqualTo(list(Hash.of("abc")));
+          .isEqualTo(Array.of(Hash.of("abc")));
     }
 
     @Test
     public void with_two_elems_can_be_read_back() throws Exception {
       var hash = hashedDb().writeSeq(Hash.of("abc"), Hash.of("def"));
       assertThat(hashedDb().readSeq(hash))
-          .isEqualTo(list(Hash.of("abc"), Hash.of("def")));
+          .isEqualTo(Array.of(Hash.of("abc"), Hash.of("def")));
     }
 
     @Test

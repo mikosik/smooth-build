@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
+import io.vavr.collection.Array;
+
 public class OrderBTest extends TestContext {
   @Test
   public void category_returns_category() {
@@ -34,7 +36,7 @@ public class OrderBTest extends TestContext {
   @Test
   public void elements_returns_elements() {
     assertThat(orderB(intB(2)).elements())
-        .isEqualTo(list(intB(2)));
+        .isEqualTo(Array.of(intB(2)));
   }
 
   @Nested
@@ -71,7 +73,7 @@ public class OrderBTest extends TestContext {
   public void array_read_back_by_hash_has_same_elementss() {
     var orderB = orderB(intB(1));
     assertThat(((OrderB) bytecodeDbOther().get(orderB.hash())).elements())
-        .isEqualTo(list(intB(1)));
+        .isEqualTo(Array.of(intB(1)));
   }
 
   @Test

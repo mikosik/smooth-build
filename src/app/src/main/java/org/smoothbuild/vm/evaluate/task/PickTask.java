@@ -10,7 +10,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
 
-import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 
 public final class PickTask extends Task {
   public PickTask(PickB pickB, TraceB trace) {
@@ -32,11 +32,11 @@ public final class PickTask extends Task {
     }
   }
 
-  private ArrayB array(ImmutableList<ValueB> components) {
+  private ArrayB array(Array<ValueB> components) {
     return (ArrayB) components.get(0);
   }
 
-  private IntB index(ImmutableList<ValueB> components) {
+  private IntB index(Array<ValueB> components) {
     return (IntB) components.get(1);
   }
 }

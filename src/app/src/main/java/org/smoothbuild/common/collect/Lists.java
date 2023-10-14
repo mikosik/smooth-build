@@ -20,6 +20,8 @@ import org.smoothbuild.common.function.ThrowingBiFunction;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
+import io.vavr.collection.Array;
+
 public class Lists {
   @SafeVarargs
   public static <E> ImmutableList<E> list(E... elems) {
@@ -106,6 +108,24 @@ public class Lists {
   public static <T, U> void allMatchOtherwise(
       List<T> listA,
       List<U> listB,
+      BiFunction<T, U, Boolean> comparator,
+      BiConsumer<Integer, Integer> differentSizeHandler,
+      Consumer<Integer> elemsDontMatchHandler) {
+    int sizeA = listA.size();
+    int sizeB = listB.size();
+    if (sizeA != sizeB) {
+      differentSizeHandler.accept(sizeA, sizeB);
+    }
+    for (int i = 0; i < listA.size(); i++) {
+      if (!comparator.apply(listA.get(i), listB.get(i))) {
+        elemsDontMatchHandler.accept(i);
+      }
+    }
+  }
+
+  public static <T, U> void allMatchOtherwise(
+      Array<T> listA,
+      Array<U> listB,
       BiFunction<T, U, Boolean> comparator,
       BiConsumer<Integer, Integer> differentSizeHandler,
       Consumer<Integer> elemsDontMatchHandler) {
