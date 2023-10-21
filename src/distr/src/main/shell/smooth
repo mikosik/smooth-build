@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BIN_DIRECTORY=$(readlink -f "$(dirname "${0}")")
+BIN_DIRECTORY=$(dirname "$(readlink -f "${0}")")
 java --enable-preview \
      -cp "${BIN_DIRECTORY}"/smooth.jar org.smoothbuild.cli.Main ${*}
 
