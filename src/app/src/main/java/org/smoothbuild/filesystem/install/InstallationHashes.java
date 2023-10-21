@@ -39,7 +39,7 @@ public class InstallationHashes {
   }
 
   public HashNode installationNode() throws IOException {
-    return new HashNode("installation", list(sandboxNode(), standardLibsNode()));
+    return new HashNode("installation", list(smoothJarNode(), standardLibsNode()));
   }
 
   public HashNode sandboxNode() throws IOException {
