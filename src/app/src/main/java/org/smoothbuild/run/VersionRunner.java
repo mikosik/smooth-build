@@ -1,6 +1,5 @@
 package org.smoothbuild.run;
 
-import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 
@@ -39,7 +38,7 @@ public class VersionRunner {
   private void printHashNode(String indent, HashNode hashNode) {
     String name = indent + hashNode.name();
     String hash = hashNode.hash().toString();
-    console.println(name + padStart(hash, 80 - name.length(), ' '));
+    console.println(name + " " + hash);
     hashNode.children().forEach(ch -> printHashNode(indent + "  ", ch));
   }
 }

@@ -24,10 +24,10 @@ public class VersionCommandTest {
       runSmoothVersion();
       assertFinishedWithSuccess();
       String hexNumberPattern = "[a-f0-9]+";
-      assertThat(sysOut()).containsMatch("installation *" + hexNumberPattern);
-      assertThat(sysOut()).containsMatch("  smooth.jar *" + hexNumberPattern);
-      assertThat(sysOut()).containsMatch("  standard libraries *" + hexNumberPattern);
-      assertThat(sysOut()).containsMatch("    \\{std-lib}/std_lib.smooth *" + hexNumberPattern);
+      assertThat(sysOut()).containsMatch("installation +" + hexNumberPattern);
+      assertThat(sysOut()).containsMatch("  smooth.jar +" + hexNumberPattern);
+      assertThat(sysOut()).containsMatch("  standard libraries +" + hexNumberPattern);
+      assertThat(sysOut()).containsMatch("    \\{std-lib}/std_lib.smooth +" + hexNumberPattern);
       assertSysOutContains("smooth build version " + BuildVersion.VERSION + "\n");
     }
   }
