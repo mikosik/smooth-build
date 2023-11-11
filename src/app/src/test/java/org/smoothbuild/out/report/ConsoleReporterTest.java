@@ -10,7 +10,12 @@ import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
-import static org.smoothbuild.out.report.ConsoleReporter.formatLog;
+import static org.smoothbuild.out.log.TestingLog.ERROR_LOG;
+import static org.smoothbuild.out.log.TestingLog.FATAL_LOG;
+import static org.smoothbuild.out.log.TestingLog.INFO_LOG;
+import static org.smoothbuild.out.log.TestingLog.WARNING_LOG;
+import static org.smoothbuild.out.report.FormatLog.formatLog;
+import static org.smoothbuild.out.report.FormatLog.formatLogs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +27,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.log.TestingLog;
 import org.smoothbuild.testing.TestContext;
 
 public class ConsoleReporterTest extends TestContext {
   private static final String HEADER = "TASK NAME";
-  private static final Log FATAL_LOG = Log.fatal("fatal message");
-  private static final Log ERROR_LOG = Log.error("error message");
-  private static final Log WARNING_LOG = Log.warning("warning message");
-  private static final Log INFO_LOG = Log.info("info message");
 
   @ParameterizedTest
   @MethodSource(value = "single_log_cases")
@@ -70,9 +72,9 @@ public class ConsoleReporterTest extends TestContext {
   public void prints_logs_which_exceeds_threshold(Level level, List<Log> loggedLogs) {
     var console = mock(Console.class);
     var reporter = new ConsoleReporter(console, level);
-    reporter.report(true, "header", logsWithAllLevels());
+    reporter.report(true, "header", TestingLog.logsWithAllLevels());
     verify(console, times(1))
-        .println(ConsoleReporter.toText("header", loggedLogs));
+        .println(formatLogs("header", loggedLogs));
   }
 
   public static List<Arguments> filtered_logs_cases() {
@@ -101,15 +103,15 @@ public class ConsoleReporterTest extends TestContext {
       var reporter = new ConsoleReporter(console, logLevel);
 
       List<Log> logs = new ArrayList<>();
-      logs.add(Log.fatal("fatal string"));
+      logs.add(FATAL_LOG);
       for (int i = 0; i < 2; i++) {
-        logs.add(Log.error("error string"));
+        logs.add(ERROR_LOG);
       }
       for (int i = 0; i < 3; i++) {
-        logs.add(Log.warning("warning string"));
+        logs.add(WARNING_LOG);
       }
       for (int i = 0; i < 4; i++) {
-        logs.add(Log.info("info string"));
+        logs.add(INFO_LOG);
       }
 
       reporter.report(true, HEADER, logs);
@@ -129,9 +131,9 @@ public class ConsoleReporterTest extends TestContext {
       var reporter = new ConsoleReporter(console, INFO);
 
       List<Log> logs = new ArrayList<>();
-      logs.add(Log.fatal("fatal string"));
+      logs.add(FATAL_LOG);
       for (int i = 0; i < 4; i++) {
-        logs.add(Log.info("info string"));
+        logs.add(INFO_LOG);
       }
 
       reporter.report(true, HEADER, logs);
@@ -142,9 +144,5 @@ public class ConsoleReporterTest extends TestContext {
       inOrder.verify(console).println("  1 fatal");
       inOrder.verify(console).println("  4 infos");
     }
-  }
-
-  private static List<Log> logsWithAllLevels() {
-    return list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG);
   }
 }
