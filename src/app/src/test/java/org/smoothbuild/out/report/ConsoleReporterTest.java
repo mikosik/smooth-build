@@ -38,13 +38,7 @@ public class ConsoleReporterTest extends TestContext {
     var console = mock(Console.class);
     var reporter = new ConsoleReporter(console, level);
     reporter.report(log);
-    if (logged) {
-      verify(console, times(1))
-          .println(formatLog(log));
-    } else {
-      verify(console, times(0))
-          .println(formatLog(log));
-    }
+    verify(console, times(logged ? 1 : 0)).println(formatLog(log));
   }
 
   private static List<Arguments> single_log_cases() {
