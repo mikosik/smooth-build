@@ -97,6 +97,7 @@ public class ConsoleReporter implements Reporter {
   public static String toText(String header, List<Log> logs) {
     var builder = new StringBuilder(indentHeader(header));
     for (Log log : logs) {
+      builder.append(System.lineSeparator());
       builder.append(formatLog(log));
     }
     return builder.toString();
@@ -105,7 +106,7 @@ public class ConsoleReporter implements Reporter {
   // visible for testing
   static String formatLog(Log log) {
     String[] lines = (log.level() + ": " + log.message()).lines().toArray(String[]::new);
-    return System.lineSeparator() + prefixMultiline(lines);
+    return prefixMultiline(lines);
   }
 
   private static String indentHeader(String header) {
