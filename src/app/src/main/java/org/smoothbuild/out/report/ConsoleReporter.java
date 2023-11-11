@@ -5,6 +5,8 @@ import static java.util.Arrays.stream;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Lists.filter;
 import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.out.report.FormatLog.formatLog;
+import static org.smoothbuild.out.report.FormatLog.formatLogs;
 
 import java.util.List;
 import java.util.Locale;
@@ -23,9 +25,6 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 public class ConsoleReporter implements Reporter {
-  private static final String MESSAGE_FIRST_LINE_PREFIX = "   + ";
-  private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
-
   private final Console console;
   private final Level logLevel;
   private final ImmutableMap<Level, AtomicInteger> counters = createCounters();
@@ -90,36 +89,7 @@ public class ConsoleReporter implements Reporter {
   }
 
   private void print(String header, List<Log> logs) {
-    console.println(toText(header, logs));
-  }
-
-  // visible for testing
-  public static String toText(String header, List<Log> logs) {
-    var builder = new StringBuilder(indentHeader(header));
-    for (Log log : logs) {
-      builder.append(System.lineSeparator());
-      builder.append(formatLog(log));
-    }
-    return builder.toString();
-  }
-
-  // visible for testing
-  static String formatLog(Log log) {
-    String[] lines = (log.level() + ": " + log.message()).lines().toArray(String[]::new);
-    return prefixMultiline(lines);
-  }
-
-  private static String indentHeader(String header) {
-    return indent(header);
-  }
-
-  // visible for testing
-  public static String prefixMultiline(String[] lines) {
-    lines[0] = MESSAGE_FIRST_LINE_PREFIX + lines[0];
-    for (int i = 1; i < lines.length; i++) {
-      lines[i] = MESSAGE_OTHER_LINES_PREFIX + lines[i];
-    }
-    return String.join(System.lineSeparator(), lines);
+    console.println(formatLogs(header, logs));
   }
 
   @Override
@@ -130,7 +100,7 @@ public class ConsoleReporter implements Reporter {
       int count = counters.get(level).get();
       if (count != 0) {
         int value = counters.get(level).get();
-        console.println(indentHeader(statText(level, value)));
+        console.println(indent(statText(level, value)));
       }
       total += count;
     }
