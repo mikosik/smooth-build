@@ -1,8 +1,8 @@
 package org.smoothbuild.out.report;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
 import org.junit.jupiter.api.Test;
@@ -10,11 +10,21 @@ import org.junit.jupiter.api.Test;
 public class ConsoleTest {
   @Test
   public void error() {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    var console = new Console(new PrintWriter(outputStream, true));
+    var printWriter = mock(PrintWriter.class);
+    var console = new Console(printWriter);
+
     console.error("sth bad happened.");
 
-    assertThat(outputStream.toString())
-        .isEqualTo("smooth: error: sth bad happened." + System.lineSeparator());
+    verify(printWriter).println("smooth: error: sth bad happened.");
+  }
+
+  @Test
+  void println() {
+    var printWriter = mock(PrintWriter.class);
+    var console = new Console(printWriter);
+
+    console.println("output message");
+
+    verify(printWriter).println("output message");
   }
 }

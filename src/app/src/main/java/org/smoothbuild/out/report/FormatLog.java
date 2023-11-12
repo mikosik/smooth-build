@@ -13,7 +13,7 @@ public class FormatLog {
   public static String formatLogs(String header, List<Log> logs) {
     var builder = new StringBuilder(indentHeader(header));
     for (Log log : logs) {
-      builder.append(System.lineSeparator());
+      builder.append("\n");
       builder.append(formatLog(log));
     }
     return builder.toString();
@@ -33,6 +33,6 @@ public class FormatLog {
     for (int i = 1; i < lines.length; i++) {
       lines[i] = MESSAGE_OTHER_LINES_PREFIX + lines[i];
     }
-    return String.join(System.lineSeparator(), lines);
+    return String.join("\n", lines);
   }
 }

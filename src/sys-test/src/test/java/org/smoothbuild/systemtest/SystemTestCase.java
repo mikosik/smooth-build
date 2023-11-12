@@ -197,11 +197,8 @@ public abstract class SystemTestCase {
   }
 
   private void assertWithFullOutputs(String out, String text, String outName) {
-    var sysOut = this.sysOut;
-    var sysErr = this.sysErr;
-
-    var osSpecific = toOsSpecificLineSeparators(text);
-    if (!out.contains(osSpecific)) {
+    var convertedOut = convertOsLineSeparatorsToNewLine(out);
+    if (!convertedOut.contains(text)) {
       assertWithMessage(unlines(
           outName + " doesn't contain expected substring.",
           "================= SYS-OUT START ====================",
@@ -210,8 +207,8 @@ public abstract class SystemTestCase {
           "================= SYS-ERR START ====================",
           sysErr,
           "================= SYS-ERR END   ===================="
-      )).that(out)
-          .isEqualTo(osSpecific);
+      )).that(convertedOut)
+          .isEqualTo(text);
     }
   }
 
@@ -224,12 +221,18 @@ public abstract class SystemTestCase {
         "================= SYS-ERR START ====================",
         sysErr,
         "================= SYS-ERR END   ===================="
-    )).that(sysOut)
-        .doesNotContain(toOsSpecificLineSeparators(text));
+    )).that(convertOsLineSeparatorsToNewLine(sysOut))
+        .doesNotContain(text);
   }
 
-  private static String toOsSpecificLineSeparators(String textBlock) {
-    return String.join(System.lineSeparator(), Splitter.on('\n').split(textBlock));
+  /**
+   * On window OS call to `System.out.println("abc\n");` will produce two line separators. One
+   * is "\n" from string itself that won't be converted and the other ("\r\n") added by print_ln_
+   * method. To make it possible to write assertions in unit test using only "\n" we need to
+   * convert sysOut to use only "\n".
+   */
+  private static String convertOsLineSeparatorsToNewLine(String string) {
+    return String.join("\n", Splitter.on(System.lineSeparator()).split(string));
   }
 
   public String sysOut() {

@@ -137,7 +137,7 @@ public class ArtifactSaver {
   }
 
   private DuplicatedPathsExc duplicatedPathsMessage(Set<PathS> duplicates) {
-    String delimiter = System.lineSeparator() + "  ";
+    String delimiter = "\n  ";
     String list = duplicates.stream()
         .map(PathS::q)
         .collect(joining(delimiter));
