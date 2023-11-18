@@ -1,6 +1,6 @@
 package org.smoothbuild.run.eval;
 
-import org.smoothbuild.compile.sb.BsMapping;
+import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.run.step.OptionFunction;
 import org.smoothbuild.vm.bytecode.expr.ExprB;

@@ -1,16 +1,16 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.compile.fs.lang.base.location.Locations.commandLineLocation;
+import static org.smoothbuild.compile.frontend.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.out.log.Level.ERROR;
 
 import java.util.ArrayList;
 import java.util.function.Function;
 
-import org.smoothbuild.compile.fs.lang.define.ExprS;
-import org.smoothbuild.compile.fs.lang.define.InstantiateS;
-import org.smoothbuild.compile.fs.lang.define.NamedValueS;
-import org.smoothbuild.compile.fs.lang.define.ReferenceS;
-import org.smoothbuild.compile.fs.lang.define.ScopeS;
+import org.smoothbuild.compile.frontend.lang.define.ExprS;
+import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
+import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
+import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
+import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 
