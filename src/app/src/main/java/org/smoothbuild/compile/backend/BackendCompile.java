@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.backend;
 
 import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.failure;
+import static org.smoothbuild.out.log.Maybe.success;
 
 import java.util.function.Function;
 
@@ -44,9 +44,9 @@ public class BackendCompile implements
     try {
       var exprBs = exprs.map(sbTranslator::translateExpr);
       var bsMapping = sbTranslator.bsMapping();
-      return maybe(Tuple.of(exprBs, bsMapping));
+      return success(Tuple.of(exprBs, bsMapping));
     } catch (SbTranslatorExc e) {
-      return maybeLogs(fatal(e.getMessage()));
+      return failure(fatal(e.getMessage()));
     }
   }
 }

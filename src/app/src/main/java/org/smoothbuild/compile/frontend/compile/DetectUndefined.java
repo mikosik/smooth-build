@@ -3,6 +3,7 @@ package org.smoothbuild.compile.frontend.compile;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptyScope;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.isVarName;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
 
@@ -35,7 +36,7 @@ public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Maybe<
     var moduleP = context._1();
     new Detector(context._2(), emptyScope(), logBuffer)
         .visitModule(moduleP);
-    return Maybe.of(moduleP, logBuffer);
+    return maybe(moduleP, logBuffer);
   }
 
   private static class Detector extends ScopingModuleVisitorP {

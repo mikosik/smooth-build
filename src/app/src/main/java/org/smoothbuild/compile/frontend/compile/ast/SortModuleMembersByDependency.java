@@ -5,6 +5,7 @@ import static java.util.Collections.rotate;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,19 +43,19 @@ public class SortModuleMembersByDependency
     var sortedTs = sortStructsByDeps(moduleP.structs());
     if (sortedTs.sorted() == null) {
       logBuffer.log(createCycleError("Type hierarchy", sortedTs.cycle()));
-      return Maybe.of(null, logBuffer);
+      return maybe(null, logBuffer);
     }
     var sortedEvaluables = sortEvaluablesByDeps(moduleP.evaluables());
     if (sortedEvaluables.sorted() == null) {
       logBuffer.log(createCycleError("Dependency graph", sortedEvaluables.cycle()));
-      return Maybe.of(null, logBuffer);
+      return maybe(null, logBuffer);
     }
     ModuleP result = new ModuleP(
         moduleP.name(),
         sortedTs.valuesReversed(),
         sortedEvaluables.valuesReversed(),
         moduleP.scope());
-    return Maybe.of(result, logBuffer);
+    return maybe(result, logBuffer);
   }
 
   private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(

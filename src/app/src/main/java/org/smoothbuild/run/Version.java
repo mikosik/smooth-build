@@ -1,8 +1,8 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.failure;
+import static org.smoothbuild.out.log.Maybe.success;
 
 import java.io.IOException;
 import java.util.function.Function;
@@ -27,9 +27,9 @@ public class Version implements Function<Tuple0, Maybe<String>> {
   @Override
   public Maybe<String> apply(Tuple0 tuple0) {
     try {
-      return maybe(createVersionText(installationHashes.installationNode()));
+      return success(createVersionText(installationHashes.installationNode()));
     } catch (IOException e) {
-      return maybeLogs(error(
+      return failure(error(
           "ERROR: IO error when calculating installation hash: " + e.getMessage()));
     }
   }

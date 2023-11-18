@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.frontend;
 
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.failure;
+import static org.smoothbuild.out.log.Maybe.success;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -25,11 +25,11 @@ public class ReadFileContent implements Function<FilePath, Maybe<String>> {
   @Override
   public Maybe<String> apply(FilePath filePath) {
     try {
-      return maybe(fileResolver.readFileContentAndCacheHash(filePath));
+      return success(fileResolver.readFileContentAndCacheHash(filePath));
     } catch (NoSuchFileException e) {
-      return maybeLogs(error(filePath.q() + " doesn't exist."));
+      return failure(error(filePath.q() + " doesn't exist."));
     } catch (IOException e) {
-      return maybeLogs(error("Cannot read build script file " + filePath.q() + "."));
+      return failure(error("Cannot read build script file " + filePath.q() + "."));
     }
   }
 }

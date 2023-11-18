@@ -11,7 +11,7 @@ import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Maybe.success;
 import static org.smoothbuild.testing.TestContext.writeFile;
 
 import java.io.IOException;
@@ -132,7 +132,7 @@ public class TestingModuleLoader {
     var steps = frontendCompilerStep();
     var memoryReporter = new MemoryReporter();
     var module = injector.getInstance(StepExecutor.class).execute(steps, null, memoryReporter);
-    return maybe(module.getOrNull(), memoryReporter.logs());
+    return success(module.getOrNull(), memoryReporter.logs());
   }
 
   private void writeModuleFilesToFileSystems(Injector injector) {

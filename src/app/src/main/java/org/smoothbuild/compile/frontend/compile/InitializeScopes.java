@@ -3,6 +3,7 @@ package org.smoothbuild.compile.frontend.compile;
 import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptyScope;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
 
@@ -36,7 +37,7 @@ public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP
   public Maybe<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     initializeScopes(moduleP, logBuffer);
-    return Maybe.of(moduleP, logBuffer);
+    return maybe(moduleP, logBuffer);
   }
 
   @VisibleForTesting

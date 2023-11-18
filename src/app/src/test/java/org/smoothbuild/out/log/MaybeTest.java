@@ -6,8 +6,12 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
+import static org.smoothbuild.out.log.Maybe.failure;
 import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.TestingLog.ERROR_LOG;
+import static org.smoothbuild.out.log.TestingLog.INFO_LOG;
+import static org.smoothbuild.out.log.TestingLog.WARNING_LOG;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.Optional;
@@ -19,50 +23,81 @@ import com.google.common.testing.EqualsTester;
 
 public class MaybeTest {
   @Nested
-  class _creating_fails_when {
+  class _maybe {
     @Test
-    public void no_value_is_passed_and_logs_have_no_problem() {
-      ImmutableLogs logs = logs(info("message"));
-      assertCall(() -> maybeLogs(logs))
-          .throwsException(IllegalArgumentException.class);
+    void creation_with_value_and_non_problem() {
+      var maybe = maybe("abc", WARNING_LOG);
+      assertThat(maybe.value())
+          .isEqualTo("abc");
+      assertThat(maybe.logs())
+          .isEqualTo(logs(WARNING_LOG));
     }
 
     @Test
-    public void null_value_is_passed_and_logs_have_no_problem() {
-      assertCall(() -> maybe(null, info("message")))
-          .throwsException(IllegalArgumentException.class);
+    void creation_with_value_and_problem() {
+      var maybe = maybe("abc", ERROR_LOG);
+      assertThat(maybe.valueOptional())
+          .isEqualTo(Optional.empty());
+      assertThat(maybe.logs())
+          .isEqualTo(logs(ERROR_LOG));
     }
   }
 
   @Nested
-  class _value {
+  class _success {
     @Test
-    public void returns_stored_value() {
-      var maybe = maybe("abc");
+    public void has_value() {
+      var maybe = success("abc");
       assertThat(maybe.value())
           .isEqualTo("abc");
     }
 
     @Test
-    public void throws_exception_when_no_value_is_stored() {
-      var maybe = maybeLogs(error("message"));
-      assertCall(maybe::value)
-          .throwsException(IllegalStateException.class);
-    }
-  }
-
-  @Nested
-  class _value_optional {
-    @Test
-    public void returns_stored_value() {
-      var maybe = maybe("abc");
+    public void has_value_optional() {
+      var maybe = success("abc");
       assertThat(maybe.valueOptional())
           .isEqualTo(Optional.of("abc"));
     }
 
     @Test
-    public void returns_empty_when_no_value_is_stored() {
-      var maybe = maybeLogs(error("message"));
+    public void creation_with_non_problem_log_is_allowed() {
+      var maybe = success("abc", WARNING_LOG);
+      assertThat(maybe.value())
+          .isEqualTo("abc");
+    }
+
+    @Test
+    public void creation_with_problem_fails() {
+      assertCall(() -> success("abc", ERROR_LOG))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void creation_with_null_value_fails() {
+      assertCall(() -> success(null))
+          .throwsException(IllegalArgumentException.class);
+    }
+  }
+
+  @Nested
+  class _failure {
+    @Test
+    public void creation_with_no_failure_fails() {
+      ImmutableLogs logs = logs(INFO_LOG);
+      assertCall(() -> failure(logs))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void has_no_value() {
+      var maybe = failure(ERROR_LOG);
+      assertCall(maybe::value)
+          .throwsException(IllegalStateException.class);
+    }
+
+    @Test
+    public void has_no_value_optional() {
+      var maybe = failure(ERROR_LOG);
       assertThat(maybe.valueOptional())
           .isEqualTo(Optional.empty());
     }
@@ -72,36 +107,36 @@ public class MaybeTest {
   public void test_equals_and_hashcode() {
     new EqualsTester()
         .addEqualityGroup(
-            maybe("abc"),
-            maybe("abc"))
+            success("abc"),
+            success("abc"))
         .addEqualityGroup(
-            maybe("def"),
-            maybe("def"))
+            success("def"),
+            success("def"))
         .addEqualityGroup(
-            maybeLogs(fatal("abc")),
-            maybeLogs(fatal("abc")),
-            maybeLogs(logs(fatal("abc"))))
+            failure(fatal("abc")),
+            failure(fatal("abc")),
+            failure(logs(fatal("abc"))))
         .addEqualityGroup(
-            maybeLogs(error("abc")),
-            maybeLogs(error("abc")),
-            maybeLogs(logs(error("abc"))))
+            failure(error("abc")),
+            failure(error("abc")),
+            failure(logs(error("abc"))))
         .addEqualityGroup(
-            maybeLogs(error("def")),
-            maybeLogs(error("def")),
-            maybeLogs(logs(error("def"))))
+            failure(error("def")),
+            failure(error("def")),
+            failure(logs(error("def"))))
         .addEqualityGroup(
-            maybe("abc", warning("abc")),
-            maybe("abc", warning("abc")),
-            maybe("abc", logs(warning("abc"))))
+            success("abc", warning("abc")),
+            success("abc", warning("abc")),
+            success("abc", logs(warning("abc"))))
         .addEqualityGroup(
-            maybe("abc", info("abc")),
-            maybe("abc", info("abc")),
-            maybe("abc", logs(info("abc"))));
+            success("abc", info("abc")),
+            success("abc", info("abc")),
+            success("abc", logs(info("abc"))));
   }
 
   @Test
   public void to_string() {
-    var maybe = maybe("abc", info("message"));
+    var maybe = success("abc", info("message"));
     assertThat(maybe.toString())
         .isEqualTo("Maybe{abc, [Log{INFO, 'message'}]}");
   }

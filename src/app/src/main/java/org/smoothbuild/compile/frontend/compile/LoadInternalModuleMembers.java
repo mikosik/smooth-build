@@ -3,6 +3,7 @@ package org.smoothbuild.compile.frontend.compile;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.internalLocation;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
 
@@ -20,7 +21,7 @@ public class LoadInternalModuleMembers implements Function<Tuple0, Maybe<ScopeS>
   public Maybe<ScopeS> apply(Tuple0 unused) {
     var logBuffer = new LogBuffer();
     var types = immutableBindings(toMap(TypeFS.baseTs(), TypeS::name, t -> baseTypeDefinitions(t)));
-    return Maybe.of(new ScopeS(types, immutableBindings()), logBuffer);
+    return maybe(new ScopeS(types, immutableBindings()), logBuffer);
   }
 
   private static TypeDefinitionS baseTypeDefinitions(TypeS baseTypeS) {

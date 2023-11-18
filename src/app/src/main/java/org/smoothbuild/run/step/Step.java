@@ -1,7 +1,7 @@
 package org.smoothbuild.run.step;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Maybe.success;
 
 import java.util.function.Function;
 
@@ -36,7 +36,7 @@ public sealed interface Step<T, R>
 
   public static <T> Step<Tuple0, T> constStep(T value) {
     var sanitizedValue = requireNonNull(value);
-    return step((Tuple0 t) -> maybe(sanitizedValue));
+    return step((Tuple0 t) -> success(sanitizedValue));
   }
 
   public static <T, R> Step<T, R> step(Function<T, Maybe<R>> function) {
@@ -58,7 +58,7 @@ public sealed interface Step<T, R>
   record OptionFunctionKeyStep<T, R>(Key<? extends OptionFunction<T, R>> key) implements Step<T, R> {}
 
   public default <S> Step<T, Tuple2<R, S>> append(S value) {
-    return new ComposedStep<>(this, step((R r) -> maybe(Tuple.of(r, value))));
+    return new ComposedStep<>(this, step((R r) -> success(Tuple.of(r, value))));
   }
 
   public default <S> Step<T, S> then(Step<? super R, S> nextStep) {

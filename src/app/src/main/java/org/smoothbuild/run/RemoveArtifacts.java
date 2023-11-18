@@ -3,8 +3,8 @@ package org.smoothbuild.run;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.failure;
+import static org.smoothbuild.out.log.Maybe.success;
 
 import java.io.IOException;
 import java.util.function.Function;
@@ -29,9 +29,9 @@ public class RemoveArtifacts implements Function<Tuple0, Maybe<Tuple0>> {
   public Maybe<Tuple0> apply(Tuple0 unused) {
     try {
       fileSystem.delete(ARTIFACTS_PATH);
-      return maybe(Tuple.empty());
+      return success(Tuple.empty());
     } catch (IOException e) {
-      return maybeLogs(error(e.getMessage()));
+      return failure(error(e.getMessage()));
     }
   }
 }

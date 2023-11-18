@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.base;
 
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Maybe.success;
 
 import java.util.function.Function;
 
@@ -22,6 +22,6 @@ public class PrintResult implements Function<String, Maybe<Tuple0>> {
   @Override
   public Maybe<Tuple0> apply(String string) {
     console.println(string);
-    return maybe(Tuple.empty());
+    return success(Tuple.empty());
   }
 }

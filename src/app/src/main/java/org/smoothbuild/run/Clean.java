@@ -4,7 +4,7 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PA
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Maybe.success;
 
 import java.io.IOException;
 import java.util.function.Function;
@@ -33,7 +33,7 @@ public class Clean implements Function<Tuple0, Maybe<String>> {
     deleteDir(logBuffer, HASHED_DB_PATH);
     deleteDir(logBuffer, COMPUTATION_CACHE_PATH);
     deleteDir(logBuffer, ARTIFACTS_PATH);
-    return maybe("Cache and artifacts removed.");
+    return success("Cache and artifacts removed.");
   }
 
   private void deleteDir(Logger logger, PathS path) {

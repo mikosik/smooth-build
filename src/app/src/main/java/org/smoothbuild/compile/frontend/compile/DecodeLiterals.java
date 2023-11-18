@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.frontend.compile;
 
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
 
@@ -20,7 +21,7 @@ public class DecodeLiterals implements Function<ModuleP, Maybe<ModuleP>> {
   public Maybe<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     new DecodeLiteralModuleVisitor(logBuffer).visitModule(moduleP);
-    return Maybe.of(moduleP, logBuffer);
+    return maybe(moduleP, logBuffer);
   }
 
   private static class DecodeLiteralModuleVisitor extends ModuleVisitorP {
