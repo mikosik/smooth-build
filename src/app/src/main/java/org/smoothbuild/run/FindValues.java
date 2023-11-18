@@ -2,6 +2,8 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Maybe.failure;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -40,11 +42,11 @@ public class FindValues implements Function<Tuple2<ScopeS, Array<String>>, Maybe
       }
     }
     if (logBuffer.containsAtLeast(ERROR)) {
-      return Maybe.maybeLogs(logBuffer);
+      return failure(logBuffer);
     }
     Array<ExprS> exprs = Array.ofAll(namedEvaluables)
         .map(v -> new InstantiateS(referenceTo(v), commandLineLocation()));
-    return Maybe.of(exprs, logBuffer);
+    return maybe(exprs, logBuffer);
   }
 
   private static ReferenceS referenceTo(NamedValueS namedValueS) {

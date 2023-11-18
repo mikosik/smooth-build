@@ -8,6 +8,7 @@ import static org.smoothbuild.common.collect.Lists.sane;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +87,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
     apTranslatingVisitor.visit(module);
     var name = filePath.withExtension("").path().lastPart().toString();
     var moduleP = new ModuleP(name, structs, evaluables);
-    return Maybe.of(moduleP, logBuffer);
+    return maybe(moduleP, logBuffer);
   }
 
   private static String unquote(String quotedString) {

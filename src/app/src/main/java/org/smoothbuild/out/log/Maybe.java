@@ -12,29 +12,29 @@ public class Maybe<V> {
   private final V value;
   private final ImmutableLogs logs;
 
-  public static <T> Maybe<T> of(T value, Log... logs) {
+  public static <T> Maybe<T> maybe(T value, Log... logs) {
     var immutableLogs = ImmutableLogs.logs(logs);
-    return of(value, immutableLogs);
+    return maybe(value, immutableLogs);
   }
 
-  public static <T> Maybe<T> of(T value, Logs logs) {
+  public static <T> Maybe<T> maybe(T value, Logs logs) {
     var valueOrNull = logs.containsAtLeast(ERROR) ? null : value;
     return new Maybe<>(valueOrNull, logs);
   }
 
-  public static <T> Maybe<T> maybe(T value, Log... logs) {
-    return maybe(value, ImmutableLogs.logs(logs));
+  public static <T> Maybe<T> success(T value, Log... logs) {
+    return success(value, ImmutableLogs.logs(logs));
   }
 
-  public static <T> Maybe<T> maybe(T value, Logs logs) {
+  public static <T> Maybe<T> success(T value, Logs logs) {
     return new Maybe<>(value, logs);
   }
 
-  public static <T> Maybe<T> maybeLogs(Log... logs) {
-    return maybeLogs(ImmutableLogs.logs(logs));
+  public static <T> Maybe<T> failure(Log... logs) {
+    return failure(ImmutableLogs.logs(logs));
   }
 
-  public static <T> Maybe<T> maybeLogs(Logs logs) {
+  public static <T> Maybe<T> failure(Logs logs) {
     return new Maybe<>(null, logs);
   }
 

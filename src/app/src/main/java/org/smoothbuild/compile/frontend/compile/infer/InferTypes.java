@@ -5,6 +5,7 @@ import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -49,7 +50,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Modul
     var environment = context._2();
     var typeTeller = new TypeTeller(environment, moduleP.scope());
     new Worker(typeTeller, logBuffer).visitModule(moduleP);
-    return Maybe.of(moduleP, logBuffer);
+    return maybe(moduleP, logBuffer);
   }
 
   public static class Worker {

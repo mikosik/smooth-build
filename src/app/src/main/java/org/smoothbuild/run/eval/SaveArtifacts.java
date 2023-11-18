@@ -8,7 +8,8 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PA
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.failure;
+import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
@@ -51,7 +52,7 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
     try {
       fileSystem.createDir(ARTIFACTS_PATH);
     } catch (IOException e) {
-      return maybeLogs(error(e.getMessage()));
+      return failure(error(e.getMessage()));
     }
     var loggerBuffer = new LogBuffer();
     var sortedArtifacts = artifacts.sortBy(artifact -> artifact._1().name());
@@ -60,7 +61,7 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
     var messages = savedArtifacts
         .map(t -> t._1().name() + " -> " + t._2().map(PathS::q).getOrElse("?"))
         .mkString("\n");
-    return Maybe.of(messages, loggerBuffer);
+    return maybe(messages, loggerBuffer);
   }
 
   private ReferenceS toReferenceS(ExprS e) {

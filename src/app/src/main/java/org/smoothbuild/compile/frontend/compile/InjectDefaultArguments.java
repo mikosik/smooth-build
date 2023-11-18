@@ -9,6 +9,7 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
     var moduleP = context._1();
     new Visitor(environment, immutableBindings(), logBuffer)
         .visitModule(moduleP);
-    return Maybe.of(moduleP, logBuffer);
+    return maybe(moduleP, logBuffer);
   }
 
   private static class Visitor extends ScopingModuleVisitorP {

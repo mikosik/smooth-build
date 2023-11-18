@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Maybe.success;
 import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.optionStep;
 import static org.smoothbuild.run.step.Step.step;
@@ -28,7 +28,7 @@ public class EvaluateStepFactory
         .then(stepFactory(arg -> constStep(arg)
             .then(step(BackendCompile.class))
             .then(optionStep(EvaluatorBFacade.class))
-            .then(step(valueBs -> maybe(arg._1().zip(valueBs))))))
+            .then(step(valueBs -> success(arg._1().zip(valueBs))))))
         .named("Evaluating");
   }
 }

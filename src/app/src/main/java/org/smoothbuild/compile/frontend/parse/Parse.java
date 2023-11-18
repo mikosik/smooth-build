@@ -4,6 +4,7 @@ import static java.lang.String.join;
 import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.Strings.unlines;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.BitSet;
 import java.util.function.Function;
@@ -45,7 +46,7 @@ public class Parse implements Function<Tuple2<String, FilePath>, Maybe<ModuleCon
     smoothAntlrParser.removeErrorListeners();
     smoothAntlrParser.addErrorListener(errorListener);
 
-    return Maybe.of(smoothAntlrParser.module(), logBuffer);
+    return maybe(smoothAntlrParser.module(), logBuffer);
   }
 
   public static class ErrorListener implements ANTLRErrorListener {

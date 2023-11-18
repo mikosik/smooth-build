@@ -13,8 +13,9 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
+import static org.smoothbuild.out.log.Maybe.failure;
 import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.success;
 import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.optionStep;
 import static org.smoothbuild.run.step.Step.step;
@@ -68,7 +69,7 @@ class StepExecutorTest {
     void that_returns_success(Logs logs) {
       var reporter = mock(Reporter.class);
 
-      var result = stepExecutor().execute(step(s -> maybe(s + "b", logs)), "a", reporter);
+      var result = stepExecutor().execute(step(s -> success(s + "b", logs)), "a", reporter);
 
       assertThat(result).isEqualTo(some("ab"));
       verifyReported(reporter, logs.toList());
@@ -87,7 +88,7 @@ class StepExecutorTest {
     @MethodSource
     void that_returns_failure(Logs logs) {
       var reporter = mock(Reporter.class);
-      var step = step(s -> maybeLogs(logs));
+      var step = step(s -> failure(logs));
 
       var result = stepExecutor().execute(step, "a", reporter);
 
@@ -159,7 +160,7 @@ class StepExecutorTest {
 
       @Override
       public Maybe<String> apply(String arg) {
-        return maybe(arg + string);
+        return success(arg + string);
       }
     }
 
@@ -173,7 +174,7 @@ class StepExecutorTest {
 
       @Override
       public Maybe<String> apply(Tuple0 tuple0) {
-        return maybeLogs(log);
+        return failure(log);
       }
     }
 
@@ -191,7 +192,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.out.log.Level#values")
     void unnamed_step_that_logged_something_uses_empty_string_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> Maybe.of("value", log));
+      var step = step(t -> maybe("value", log));
 
       assertStepExecutionReports(step, log);
     }
@@ -200,7 +201,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.out.log.Level#values")
     void named_step_that_logged_something_uses_name_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> Maybe.of("value", log)).named("name");
+      var step = step(t -> maybe("value", log)).named("name");
 
       var reporter = mock(Reporter.class);
 
@@ -216,7 +217,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.out.log.Level#values")
     void named_inner_step_that_logged_something_uses_full_name_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> Maybe.of("value", log)).named("name").named("outer");
+      var step = step(t -> maybe("value", log)).named("name").named("outer");
 
       var reporter = mock(Reporter.class);
 
@@ -236,7 +237,7 @@ class StepExecutorTest {
     void result_from_first_step_is_passed_to_second_step() {
       var reporter = mock(Reporter.class);
       var step = constStep("abc")
-          .then(step(s -> maybe(s + "def")));
+          .then(step(s -> success(s + "def")));
 
       var result = stepExecutor().execute(step, Tuple.empty(), reporter);
 
@@ -246,8 +247,8 @@ class StepExecutorTest {
     @Test
     void non_failure_logs_from_each_steps_are_logged() {
       var reporter = mock(Reporter.class);
-      var step = step(v -> maybe("abc", info("info")))
-          .then(step(s -> maybe(s + "def", warning("warning"))));
+      var step = step(v -> success("abc", info("info")))
+          .then(step(s -> success(s + "def", warning("warning"))));
 
       var result = stepExecutor().execute(step, Tuple.empty(), reporter);
 
@@ -259,7 +260,7 @@ class StepExecutorTest {
     void second_step_is_not_executed_when_first_fails() {
       var reporter = mock(Reporter.class);
       Function<Object, Maybe<String>> function = mock();
-      var step = step(v -> maybeLogs(error("error")))
+      var step = step(v -> failure(error("error")))
           .then(step(function));
 
       var result = stepExecutor().execute(step, Tuple.empty(), reporter);
@@ -286,7 +287,7 @@ class StepExecutorTest {
     @Test
     void failures_created_by_step_factory_are_reported() {
       var reporter = mock(Reporter.class);
-      var step = stepFactory((String s) -> step((Tuple0 t) -> maybeLogs(error("error"))));
+      var step = stepFactory((String s) -> step((Tuple0 t) -> failure(error("error"))));
 
       var result = stepExecutor().execute(step, "abc", reporter);
 

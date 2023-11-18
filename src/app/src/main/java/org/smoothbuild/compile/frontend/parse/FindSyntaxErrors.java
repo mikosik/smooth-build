@@ -8,6 +8,7 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.ANNOTAT
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
+import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
 
@@ -39,7 +40,7 @@ public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
     detectIllegalAnnotations(moduleP, logBuffer);
     detectStructFieldWithDefaultValue(moduleP, logBuffer);
     detectLambdaParamWithDefaultValue(moduleP, logBuffer);
-    return Maybe.of(moduleP, logBuffer);
+    return maybe(moduleP, logBuffer);
   }
 
   private static void detectIllegalNames(ModuleP moduleP, Logger logger) {

@@ -8,7 +8,7 @@ import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.STRING;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Maybe.success;
 
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +77,7 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Module
     var moduleP = context._1();
     var environment = context._2();
     var typeTeller = new TypeTeller(environment, moduleP.scope());
-    return maybe(new Worker(typeTeller, environment).convertModule(moduleP));
+    return success(new Worker(typeTeller, environment).convertModule(moduleP));
   }
 
   public static class Worker {

@@ -2,7 +2,7 @@ package org.smoothbuild.run;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Maybe.success;
 import static org.smoothbuild.run.step.Step.step;
 
 import org.smoothbuild.compile.frontend.lang.base.Nal;
@@ -32,7 +32,7 @@ public class ListStepFactory implements StepFactory<Tuple0, String> {
         .map(Nal::name)
         .sorted()
         .collect(joining("\n"));
-    return maybe("Values that can be evaluated:\n" + oneValuePerLineString);
+    return success("Values that can be evaluated:\n" + oneValuePerLineString);
   }
 
   private static boolean isNoArgNotGenericValue(NamedEvaluableS evaluable) {

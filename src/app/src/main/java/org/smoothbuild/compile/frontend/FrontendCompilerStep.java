@@ -3,7 +3,7 @@ package org.smoothbuild.compile.frontend;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Maybe.success;
 import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
@@ -72,7 +72,7 @@ public class FrontendCompilerStep {
           .then(step(InferTypes.class))
           .append(scopeS)
           .then(step(ConvertPs.class))
-          .then(step((ModuleS m) -> maybe(scopeS(scopeS, m.members()))));
+          .then(step((ModuleS m) -> success(scopeS(scopeS, m.members()))));
     }
   }
 }
