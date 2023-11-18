@@ -1,34 +1,39 @@
 package org.smoothbuild.vm.evaluate;
 
-import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.out.log.Log.fatal;
 
-import java.util.Optional;
-
+import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 
-import com.google.common.collect.ImmutableList;
-
 import io.vavr.collection.Array;
+import io.vavr.control.Option;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 public class EvaluatorB {
   private final Provider<SchedulerB> schedulerProvider;
+  private final Reporter reporter;
 
   @Inject
-  public EvaluatorB(Provider<SchedulerB> schedulerProvider) {
+  public EvaluatorB(Provider<SchedulerB> schedulerProvider, Reporter reporter) {
     this.schedulerProvider = schedulerProvider;
+    this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<ValueB>> evaluate(Array<ExprB> exprs)
-      throws InterruptedException {
-    var executorB = schedulerProvider.get();
-    var evaluationResults = exprs.map(executorB::scheduleExprEvaluation);
-    runWhenAllAvailable(evaluationResults, executorB::terminate);
-    executorB.awaitTermination();
-    return pullUp(evaluationResults.map(r -> Optional.ofNullable(r.get())).toJavaList());
+  public Option<Array<ValueB>> evaluate(Array<ExprB> exprs) {
+    var schedulerB = schedulerProvider.get();
+    var evaluationResults = exprs.map(schedulerB::scheduleExprEvaluation);
+    runWhenAllAvailable(evaluationResults, schedulerB::terminate);
+    try {
+      schedulerB.awaitTermination();
+    } catch (InterruptedException e) {
+      reporter.report(fatal("Evaluation process has been interrupted."));
+      return Option.none();
+    }
+    Array<Option<ValueB>> map = evaluationResults.map(r -> Option.of(r.get()));
+    return Option.sequence(map).map(Array::ofAll);
   }
 }

@@ -24,7 +24,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     assertFinishedWithError();
     assertSysOutContains(
         """
-              command line arguments
+            ::Evaluating
                + ERROR: Unknown value `unknownValue`.
                  Try 'smooth list' to see all available values that can be calculated.\
             """
@@ -69,7 +69,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
     assertSysOutContains("""
-          command line arguments
+        ::Evaluating
            + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.
         Summary
           1 error
@@ -84,7 +84,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
     assertSysOutContains("""
-          command line arguments
+        ::Evaluating
            + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.
         Summary
           1 error

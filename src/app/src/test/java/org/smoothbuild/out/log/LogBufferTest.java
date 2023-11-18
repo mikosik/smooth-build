@@ -57,7 +57,7 @@ public class LogBufferTest {
 
     @Test
     public void after_adding_logs_from_other_logger_with_logs_contains_at_least_error_returns_true() {
-      value.logAll(loggerWith(error("message")));
+      value.logAll(logBufferWith(error("message")));
       assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
@@ -65,7 +65,7 @@ public class LogBufferTest {
     @Test
     public void after_logging_fatal_and_adding_logs_from_other_logger_contains_at_least_error_returns_true() {
       value.log(fatal("message"));
-      value.logAll(loggerWith(info("message")));
+      value.logAll(logBufferWith(info("message")));
       assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
@@ -73,7 +73,7 @@ public class LogBufferTest {
     @Test
     public void after_logging_error_and_adding_logs_from_other_logger_without_problems_returns_true() {
       value.log(error("message"));
-      value.logAll(loggerWith(info("message")));
+      value.logAll(logBufferWith(info("message")));
       assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
@@ -81,7 +81,7 @@ public class LogBufferTest {
     @Test
     public void after_logging_warning_and_adding_logs_from_other_logger_with_error_returns_true() {
       value.log(warning("message"));
-      value.logAll(loggerWith(error("message")));
+      value.logAll(logBufferWith(error("message")));
       assertThat(value.containsAtLeast(ERROR))
           .isTrue();
     }
@@ -99,16 +99,16 @@ public class LogBufferTest {
     value.log(error);
     value.log(warning);
     value.log(info);
-    value.logAll(loggerWith(other));
+    value.logAll(logBufferWith(other));
 
     assertThat(value.toList())
         .containsExactly(fatal, error, warning, info, other)
         .inOrder();
   }
 
-  private static LogBuffer loggerWith(Log log) {
-    LogBuffer otherValue = new LogBuffer();
-    otherValue.log(log);
-    return otherValue;
+  private static LogBuffer logBufferWith(Log log) {
+    LogBuffer logBuffer = new LogBuffer();
+    logBuffer.log(log);
+    return logBuffer;
   }
 }

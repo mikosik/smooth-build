@@ -4,11 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.NList.nlist;
-import static org.smoothbuild.compile.fs.ps.InjectDefaultArguments.injectDefaultArguments;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
+import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.testing.TestContext;
+
+import io.vavr.Tuple;
 
 public class InjectDefaultArgumentsTest extends TestContext  {
   @Test
@@ -20,8 +22,7 @@ public class InjectDefaultArgumentsTest extends TestContext  {
     var namedValueP = namedValueP("value", callP);
     var moduleP = moduleP(list(), list(namedValueP));
 
-    InitializeScopes.initializeScopes(moduleP);
-    injectDefaultArguments(moduleP, importedS);
+    callInjectDefaultArguments(importedS, moduleP);
 
     assertThat(callP.positionedArgs())
         .isEqualTo(list(referenceP("myFunc:param", callLocation)));
@@ -36,10 +37,14 @@ public class InjectDefaultArgumentsTest extends TestContext  {
     var namedValueP = namedFuncP("value", nlist(itemP("p", callP)));
     var moduleP = moduleP(list(), list(namedValueP));
 
-    InitializeScopes.initializeScopes(moduleP);
-    injectDefaultArguments(moduleP, importedS);
+    callInjectDefaultArguments(importedS, moduleP);
 
     assertThat(callP.positionedArgs())
         .isEqualTo(list(referenceP("myFunc:param", callLocation)));
+  }
+
+  private static void callInjectDefaultArguments(ScopeS importedS, ModuleP moduleP) {
+    new InitializeScopes().apply(moduleP);
+    new InjectDefaultArguments().apply(Tuple.of(moduleP, importedS));
   }
 }

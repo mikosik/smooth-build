@@ -14,6 +14,5 @@ public class EvaluatorSModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(TaskMatcher.class).toInstance(taskMatcher);
-    bind(EvaluatorBFactory.class).to(EvaluatorBFactoryImpl.class);
   }
 }

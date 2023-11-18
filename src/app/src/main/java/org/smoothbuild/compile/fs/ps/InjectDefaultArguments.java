@@ -13,6 +13,7 @@ import static org.smoothbuild.out.log.Level.ERROR;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.smoothbuild.common.bindings.Bindings;
 import org.smoothbuild.common.collect.Lists;
@@ -36,24 +37,29 @@ import org.smoothbuild.compile.fs.ps.ast.define.ScopedP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Logs;
+import org.smoothbuild.out.log.Maybe;
 
 import com.google.common.collect.ImmutableList;
 
-public class InjectDefaultArguments {
-  public static Logs injectDefaultArguments(ModuleP moduleP, ScopeS imported) {
-    var logger = new LogBuffer();
-    new Visitor(imported, immutableBindings(), logger)
+import io.vavr.Tuple2;
+
+public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>, Maybe<ModuleP>> {
+  @Override
+  public Maybe<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
+    var logBuffer = new LogBuffer();
+    var environment = context._2();
+    var moduleP = context._1();
+    new Visitor(environment, immutableBindings(), logBuffer)
         .visitModule(moduleP);
-    return logger;
+    return Maybe.of(moduleP, logBuffer);
   }
 
   private static class Visitor extends ScopingModuleVisitorP {
     private final ScopeS imported;
     private final Bindings<ReferenceableP> referenceables;
-    private final LogBuffer logger;
+    private final Logger logger;
 
-    public Visitor(ScopeS imported, Bindings<ReferenceableP> referenceables, LogBuffer logger) {
+    public Visitor(ScopeS imported, Bindings<ReferenceableP> referenceables, Logger logger) {
       this.imported = imported;
       this.referenceables = referenceables;
       this.logger = logger;

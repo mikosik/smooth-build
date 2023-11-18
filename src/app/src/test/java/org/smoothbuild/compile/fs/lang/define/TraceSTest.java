@@ -28,7 +28,7 @@ public class TraceSTest {
         "second-name", location(importedFilePath(), 19));
     assertThat(trace.toString())
         .isEqualTo("""
-            @ myBuild.smooth:17  first-name
+            @ build.smooth:17    first-name
             @ imported.smooth:19 second-name""");
   }
 }

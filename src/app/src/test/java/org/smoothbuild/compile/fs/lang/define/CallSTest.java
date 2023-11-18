@@ -19,19 +19,19 @@ public class CallSTest extends TestContext {
                 polymorphicS = ReferenceS(
                   schema = <A>(A)->A
                   name = myId
-                  location = myBuild.smooth:4
+                  location = build.smooth:4
                 )
                 evaluationT = (Int)->Int
-                location = myBuild.smooth:4
+                location = build.smooth:4
               )
               args = CombineS(
                 evaluationT = (Int)
                 elems = [
-                  IntS(Int, 7, myBuild.smooth:3)
+                  IntS(Int, 7, build.smooth:3)
                 ]
-                location = myBuild.smooth:3
+                location = build.smooth:3
               )
-              location = myBuild.smooth:3
+              location = build.smooth:3
             )""");
   }
 }

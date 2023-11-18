@@ -4,29 +4,31 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.inject.Guice.createInjector;
 import static com.google.inject.Stage.PRODUCTION;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.compile.fs.FrontendCompilerStep.frontendCompilerStep;
+import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.testing.TestContext.BUILD_FILE_PATH;
-import static org.smoothbuild.testing.TestContext.importedModuleResources;
-import static org.smoothbuild.testing.TestContext.moduleResources;
+import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.testing.TestContext.writeFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.compile.fs.FsTranslator;
-import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.lang.type.SchemaS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
+import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
+import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.MemoryFileSystemModule;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.run.step.StepExecutor;
+import org.smoothbuild.testing.accept.MemoryReporter;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -122,30 +124,25 @@ public class TestingModuleLoader {
 
   private Maybe<ScopeS> load() {
     var injector =
-        createInjector(PRODUCTION, new ProjectSpaceModule(), new MemoryFileSystemModule());
-    var modules = createModules(injector);
-    return injector.getInstance(FsTranslator.class).translateFs(modules);
+        createInjector(PRODUCTION,
+            new StandardLibrarySpaceModule(),
+            new ProjectSpaceModule(),
+            new MemoryFileSystemModule());
+    writeModuleFilesToFileSystems(injector);
+    var steps = frontendCompilerStep();
+    var memoryReporter = new MemoryReporter();
+    var module = injector.getInstance(StepExecutor.class).execute(steps, null, memoryReporter);
+    return maybe(module.getOrNull(), memoryReporter.logs());
   }
 
-  private List<ModuleResources> createModules(Injector injector) {
-    var modules = new ArrayList<ModuleResources>();
-    if (importedSourceCode != null) {
-      createModule(injector, modules, importedModuleResources(), importedSourceCode);
-    }
-    createModule(injector, modules, moduleResources(), sourceCode);
-    return modules;
+  private void writeModuleFilesToFileSystems(Injector injector) {
+    writeModuleFile(injector, new FilePath(STANDARD_LIBRARY, path("std_lib.smooth")),
+        importedSourceCode == null ? "" : importedSourceCode);
+    writeModuleFile(injector, new FilePath(PROJECT, path("build.smooth")), sourceCode);
   }
 
-  private static void createModule(
-      Injector injector, List<ModuleResources> modules, ModuleResources module, String content) {
-    modules.add(module);
-    writeModuleFile(injector, module, content);
-  }
-
-  private static void writeModuleFile(
-      Injector injector, ModuleResources moduleResources, String content) {
+  private static void writeModuleFile(Injector injector, FilePath filePath, String content) {
     try {
-      var filePath = moduleResources.smoothFile();
       var space = filePath.space();
       var fileSystem = injector.getInstance(Key.get(FileSystem.class, forSpace(space)));
       writeFile(fileSystem, filePath.path(), content);
@@ -155,6 +152,6 @@ public class TestingModuleLoader {
   }
 
   public static Log err(int line, String message) {
-    return error(BUILD_FILE_PATH + ":" + line + ": " + message);
+    return error("build.smooth:" + line + ": " + message);
   }
 }

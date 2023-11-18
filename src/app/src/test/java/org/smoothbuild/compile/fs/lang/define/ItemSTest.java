@@ -48,7 +48,7 @@ public class ItemSTest {
               type = String
               name = name
               defaultValue = Optional.empty
-              location = myBuild.smooth:11
+              location = build.smooth:11
             )""");
   }
 }

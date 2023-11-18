@@ -1,18 +1,20 @@
 package org.smoothbuild.cli.command;
 
+import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
 import static org.smoothbuild.run.CreateInjector.createInjector;
 import static org.smoothbuild.run.eval.report.MatcherCreator.createMatcher;
+import static org.smoothbuild.run.step.Step.stepFactory;
 
 import java.nio.file.Path;
 import java.util.List;
 
 import org.smoothbuild.cli.base.ProjectCommand;
-import org.smoothbuild.run.BuildRunner;
+import org.smoothbuild.run.BuildStepFactory;
 import org.smoothbuild.run.eval.report.TaskMatcher;
 
+import io.vavr.collection.Array;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @Command(
@@ -22,7 +24,7 @@ import picocli.CommandLine.Parameters;
 public class BuildCommand extends ProjectCommand {
   public static final String NAME = "build";
 
-  @Option(
+  @picocli.CommandLine.Option(
       names = {"--show-tasks", "-s"},
       defaultValue = "default",
       paramLabel = "<filter>",
@@ -77,8 +79,9 @@ public class BuildCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    return createInjector(projectDir, out(), logLevel, showTasks)
-        .getInstance(BuildRunner.class)
-        .run(values);
+    var injector = createInjector(projectDir, out(), logLevel, showTasks);
+    var step = stepFactory(new BuildStepFactory());
+    var argument = Array.ofAll(values);
+    return runStepExecutor(injector, step, argument);
   }
 }

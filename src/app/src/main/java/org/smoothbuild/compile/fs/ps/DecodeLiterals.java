@@ -2,6 +2,8 @@ package org.smoothbuild.compile.fs.ps;
 
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 
+import java.util.function.Function;
+
 import org.smoothbuild.common.DecodeHexExc;
 import org.smoothbuild.common.UnescapingFailedExc;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
@@ -9,15 +11,16 @@ import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
 import org.smoothbuild.compile.fs.ps.ast.define.IntP;
 import org.smoothbuild.compile.fs.ps.ast.define.ModuleP;
 import org.smoothbuild.compile.fs.ps.ast.define.StringP;
-import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
+import org.smoothbuild.out.log.Maybe;
 
-public class DecodeLiterals {
-  public static ImmutableLogs decodeLiterals(ModuleP moduleP) {
+public class DecodeLiterals implements Function<ModuleP, Maybe<ModuleP>> {
+  @Override
+  public Maybe<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     new DecodeLiteralModuleVisitor(logBuffer).visitModule(moduleP);
-    return logBuffer.toImmutableLogs();
+    return Maybe.of(moduleP, logBuffer);
   }
 
   private static class DecodeLiteralModuleVisitor extends ModuleVisitorP {

@@ -9,6 +9,8 @@ import static org.smoothbuild.compile.fs.lang.type.AnnotationNames.NATIVE_IMPURE
 import static org.smoothbuild.compile.fs.lang.type.AnnotationNames.NATIVE_PURE;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 
+import java.util.function.Function;
+
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
 import org.smoothbuild.compile.fs.ps.ast.define.ImplicitTP;
 import org.smoothbuild.compile.fs.ps.ast.define.ItemP;
@@ -20,6 +22,7 @@ import org.smoothbuild.compile.fs.ps.ast.define.ReferenceableP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
+import org.smoothbuild.out.log.Maybe;
 
 /**
  * Detect syntax errors that are not caught by Antlr.
@@ -28,17 +31,18 @@ import org.smoothbuild.out.log.Logger;
  * Catching those errors here makes it easier
  * to provide more detailed error message.
  */
-public class FindSyntaxErrors {
-  public static LogBuffer findSyntaxErrors(ModuleP moduleP) {
+public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
+  @Override
+  public Maybe<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
-    detectIllegalNames(logBuffer, moduleP);
-    detectIllegalAnnotations(logBuffer, moduleP);
-    detectStructFieldWithDefaultValue(logBuffer, moduleP);
-    detectLambdaParamWithDefaultValue(logBuffer, moduleP);
-    return logBuffer;
+    detectIllegalNames(moduleP, logBuffer);
+    detectIllegalAnnotations(moduleP, logBuffer);
+    detectStructFieldWithDefaultValue(moduleP, logBuffer);
+    detectLambdaParamWithDefaultValue(moduleP, logBuffer);
+    return Maybe.of(moduleP, logBuffer);
   }
 
-  private static void detectIllegalNames(Logger logger, ModuleP moduleP) {
+  private static void detectIllegalNames(ModuleP moduleP, Logger logger) {
     new ModuleVisitorP() {
       @Override
       public void visitNameOf(ReferenceableP referenceableP) {
@@ -70,7 +74,7 @@ public class FindSyntaxErrors {
     }.visitModule(moduleP);
   }
 
-  private static void detectIllegalAnnotations(Logger logger, ModuleP moduleP) {
+  private static void detectIllegalAnnotations(ModuleP moduleP, Logger logger) {
     new ModuleVisitorP() {
       @Override
       public void visitNamedFunc(NamedFuncP namedFuncP) {
@@ -126,7 +130,7 @@ public class FindSyntaxErrors {
     }.visitModule(moduleP);
   }
 
-  private static void detectStructFieldWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
+  private static void detectStructFieldWithDefaultValue(ModuleP moduleP, Logger logger) {
     new ModuleVisitorP() {
       @Override
       public void visitStruct(StructP structP) {
@@ -143,7 +147,7 @@ public class FindSyntaxErrors {
     }.visitModule(moduleP);
   }
 
-  private static void detectLambdaParamWithDefaultValue(LogBuffer logger, ModuleP moduleP) {
+  private static void detectLambdaParamWithDefaultValue(ModuleP moduleP, Logger logger) {
     new ModuleVisitorP() {
       @Override
       public void visitLambda(LambdaP lambdaP) {

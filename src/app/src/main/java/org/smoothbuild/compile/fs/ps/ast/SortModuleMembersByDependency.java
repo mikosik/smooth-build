@@ -5,13 +5,12 @@ import static java.util.Collections.rotate;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.maybeLogs;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.smoothbuild.common.collect.Sets;
 import org.smoothbuild.common.graph.GraphEdge;
@@ -27,26 +26,35 @@ import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 
 import com.google.common.collect.ImmutableList;
 
-public class ModuleDependenciesSorter {
-  public static Maybe<ModuleP> sortByDependencies(ModuleP moduleP) {
+/**
+ * Sort module Evaluables and Structs based on dependencies between them.
+ */
+public class SortModuleMembersByDependency
+    implements Function<ModuleP, Maybe<ModuleP>> {
+  @Override
+  public Maybe<ModuleP> apply(ModuleP moduleP) {
+    var logBuffer = new LogBuffer();
     var sortedTs = sortStructsByDeps(moduleP.structs());
     if (sortedTs.sorted() == null) {
-      return maybeLogs(createCycleError("Type hierarchy", sortedTs.cycle()));
+      logBuffer.log(createCycleError("Type hierarchy", sortedTs.cycle()));
+      return Maybe.of(null, logBuffer);
     }
     var sortedEvaluables = sortEvaluablesByDeps(moduleP.evaluables());
     if (sortedEvaluables.sorted() == null) {
-      return maybeLogs(createCycleError("Dependency graph", sortedEvaluables.cycle()));
+      logBuffer.log(createCycleError("Dependency graph", sortedEvaluables.cycle()));
+      return Maybe.of(null, logBuffer);
     }
-    var sortedModuleP = new ModuleP(
+    ModuleP result = new ModuleP(
         moduleP.name(),
         sortedTs.valuesReversed(),
         sortedEvaluables.valuesReversed(),
         moduleP.scope());
-    return maybe(sortedModuleP);
+    return Maybe.of(result, logBuffer);
   }
 
   private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(
@@ -137,5 +145,4 @@ public class ModuleDependenciesSorter {
     }
     return result;
   }
-
 }

@@ -4,10 +4,9 @@ import static java.lang.String.join;
 import static org.smoothbuild.common.Antlr.errorLine;
 import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.Strings.unlines;
-import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.BitSet;
+import java.util.function.Function;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStreams;
@@ -29,9 +28,14 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 
-public class AntlrParser {
-  public static Maybe<ModuleContext> antlrParse(FilePath filePath, String sourceCode) {
+import io.vavr.Tuple2;
+
+public class Parse implements Function<Tuple2<String, FilePath>, Maybe<ModuleContext>> {
+  @Override
+  public Maybe<ModuleContext> apply(Tuple2<String, FilePath> argument) {
     var logBuffer = new LogBuffer();
+    String sourceCode = argument._1();
+    FilePath filePath = argument._2();
     var errorListener = new ErrorListener(filePath, logBuffer);
     var smoothAntlrLexer = new SmoothAntlrLexer(CharStreams.fromString(sourceCode));
     smoothAntlrLexer.removeErrorListeners();
@@ -40,9 +44,8 @@ public class AntlrParser {
     var smoothAntlrParser = new SmoothAntlrParser(new CommonTokenStream(smoothAntlrLexer));
     smoothAntlrParser.removeErrorListeners();
     smoothAntlrParser.addErrorListener(errorListener);
-    var moduleC = smoothAntlrParser.module();
-    var result = logBuffer.containsAtLeast(ERROR) ? null : moduleC;
-    return maybe(result, logBuffer);
+
+    return Maybe.of(smoothAntlrParser.module(), logBuffer);
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
@@ -89,7 +92,7 @@ public class AntlrParser {
 
     @Override
     public void reportAttemptingFullContext(Parser recognizer, DFA dfa,
-        int startIndex, int stopIndex,  BitSet conflictingAlts,
+        int startIndex, int stopIndex, BitSet conflictingAlts,
         ATNConfigSet configs) {
       var message = join("\n",
           "Attempting full context.",

@@ -4,6 +4,8 @@ import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.compile.fs.ps.ast.define.ScopeP.emptyScope;
 
+import java.util.function.Function;
+
 import org.smoothbuild.common.bindings.MutableBindings;
 import org.smoothbuild.compile.fs.lang.base.Nal;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
@@ -21,35 +23,43 @@ import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Logs;
+import org.smoothbuild.out.log.Maybe;
+
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class InitializeScopes extends ModuleVisitorP {
-  public static Logs initializeScopes(ModuleP moduleP) {
-    var log = new LogBuffer();
-    new Initializer(emptyScope(), log)
+public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP, Maybe<ModuleP>> {
+  @Override
+  public Maybe<ModuleP> apply(ModuleP moduleP) {
+    var logBuffer = new LogBuffer();
+    initializeScopes(moduleP, logBuffer);
+    return Maybe.of(moduleP, logBuffer);
+  }
+
+  @VisibleForTesting
+  static void initializeScopes(ModuleP moduleP, Logger logger) {
+    new Initializer(emptyScope(), logger)
         .visitModule(moduleP);
-    return log;
   }
 
   private static class Initializer extends ScopingModuleVisitorP {
     private final ScopeP scope;
-    private final Logger log;
+    private final Logger logger;
 
-    private Initializer(ScopeP scope, Logger log) {
+    private Initializer(ScopeP scope, Logger logger) {
       this.scope = scope;
-      this.log = log;
+      this.logger = logger;
     }
 
     @Override
     protected ModuleVisitorP createVisitorForScopeOf(ScopedP scopedP) {
-      var scopeFiller = new ScopeCreator(scope, log);
+      var scopeFiller = new ScopeCreator(scope, logger);
       var newScope = scopeFiller.createScopeFor(scopedP);
       scopedP.setScope(newScope);
-      return new Initializer(newScope, log);
+      return new Initializer(newScope, logger);
     }
   }
 

@@ -64,7 +64,6 @@ import org.smoothbuild.compile.fs.lang.define.IntS;
 import org.smoothbuild.compile.fs.lang.define.ItemS;
 import org.smoothbuild.compile.fs.lang.define.ItemSigS;
 import org.smoothbuild.compile.fs.lang.define.LambdaS;
-import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprFuncS;
 import org.smoothbuild.compile.fs.lang.define.NamedExprValueS;
@@ -107,9 +106,9 @@ import org.smoothbuild.compile.fs.ps.ast.define.NamedValueP;
 import org.smoothbuild.compile.fs.ps.ast.define.PolymorphicP;
 import org.smoothbuild.compile.fs.ps.ast.define.ReferenceP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
+import org.smoothbuild.compile.sb.BackendCompile;
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.compile.sb.SbTranslator;
-import org.smoothbuild.compile.sb.SbTranslatorFacade;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.Space;
 import org.smoothbuild.out.log.Log;
@@ -196,7 +195,7 @@ import jakarta.inject.Provider;
 import okio.ByteString;
 
 public class TestContext {
-  public static final String BUILD_FILE_PATH = "myBuild.smooth";
+  public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
 
   private BytecodeF bytecodeF;
@@ -220,7 +219,7 @@ public class TestContext {
   }
 
   public EvaluatorB evaluatorB(Provider<SchedulerB> schedulerB) {
-    return new EvaluatorB(schedulerB);
+    return new EvaluatorB(schedulerB, reporter());
   }
 
   public EvaluatorB evaluatorB(NativeMethodLoader nativeMethodLoader) {
@@ -298,9 +297,9 @@ public class TestContext {
     return new TaskExecutor(computer, reporter, taskReporter(reporter), threadCount);
   }
 
-  public SbTranslatorFacade sbTranslatorFacade(
+  public BackendCompile sbTranslatorFacade(
       FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
-    return new SbTranslatorFacade(bytecodeF(), fileLoader, bytecodeLoader);
+    return new BackendCompile(bytecodeF(), fileLoader, bytecodeLoader);
   }
 
   public SbTranslator sbTranslator(ImmutableBindings<NamedEvaluableS> evaluables) {
@@ -1510,18 +1509,6 @@ public class TestContext {
 
   public static ItemSigS sigS(TypeS type, String name) {
     return new ItemSigS(type, name);
-  }
-
-  public static ModuleResources moduleResources() {
-    return moduleResources(smoothFilePath());
-  }
-
-  public static ModuleResources importedModuleResources() {
-    return moduleResources(importedFilePath());
-  }
-
-  private static ModuleResources moduleResources(FilePath filePath) {
-    return new ModuleResources(filePath, empty());
   }
 
   public static TraceS traceS() {

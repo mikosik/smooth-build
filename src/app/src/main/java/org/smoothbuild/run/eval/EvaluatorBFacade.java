@@ -2,24 +2,33 @@ package org.smoothbuild.run.eval;
 
 import org.smoothbuild.compile.sb.BsMapping;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
+import org.smoothbuild.run.step.OptionFunction;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.EvaluatorB;
 import org.smoothbuild.vm.evaluate.execute.TaskReporter;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.Array;
+import io.vavr.control.Option;
 import jakarta.inject.Inject;
 
-public class EvaluatorBFactoryImpl implements EvaluatorBFactory {
+public class EvaluatorBFacade
+    implements OptionFunction<Tuple2<Array<ExprB>, BsMapping>, Array<ValueB>> {
   private final Injector injector;
 
   @Inject
-  public EvaluatorBFactoryImpl(Injector injector) {
+  public EvaluatorBFacade(Injector injector) {
     this.injector = injector;
   }
 
   @Override
-  public EvaluatorB newEvaluatorB(BsMapping bsMapping) {
+  public Option<Array<ValueB>> apply(Tuple2<Array<ExprB>, BsMapping> argument) {
+    var bsMapping = argument._2();
+    var exprs = argument._1();
     var childInjector = injector.createChildInjector(new AbstractModule() {
       @Override
       protected void configure() {
@@ -27,6 +36,7 @@ public class EvaluatorBFactoryImpl implements EvaluatorBFactory {
         bind(BsMapping.class).toInstance(bsMapping);
       }
     });
-    return childInjector.getInstance(EvaluatorB.class);
+    var evaluatorB = childInjector.getInstance(EvaluatorB.class);
+    return evaluatorB.evaluate(exprs);
   }
 }

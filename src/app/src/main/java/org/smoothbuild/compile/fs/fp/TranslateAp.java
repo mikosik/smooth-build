@@ -7,12 +7,13 @@ import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Lists.sane;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.fullName;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -41,7 +42,6 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.fs.lang.base.location.Location;
 import org.smoothbuild.compile.fs.lang.base.location.Locations;
-import org.smoothbuild.compile.fs.ps.CompileError;
 import org.smoothbuild.compile.fs.ps.ast.define.AnnotationP;
 import org.smoothbuild.compile.fs.ps.ast.define.ArrayTP;
 import org.smoothbuild.compile.fs.ps.ast.define.BlobP;
@@ -66,21 +66,27 @@ import org.smoothbuild.compile.fs.ps.ast.define.StringP;
 import org.smoothbuild.compile.fs.ps.ast.define.StructP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.filesystem.space.FilePath;
-import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 
 import com.google.common.collect.ImmutableList;
 
-public class ApTranslator {
-  public static Maybe<ModuleP> translateAp(FilePath filePath, ModuleContext module) {
-    var logs = new LogBuffer();
+import io.vavr.Tuple2;
+
+public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Maybe<ModuleP>> {
+  @Override
+  public Maybe<ModuleP> apply(Tuple2<ModuleContext, FilePath> context) {
+    var logBuffer = new LogBuffer();
+    var module = context._1();
+    var filePath = context._2();
     var structs = new ArrayList<StructP>();
     var evaluables = new ArrayList<NamedEvaluableP>();
-    new ApTranslatingVisitor(filePath, structs, evaluables, logs).visit(module);
+    var apTranslatingVisitor = new ApTranslatingVisitor(filePath, structs, evaluables, logBuffer);
+    apTranslatingVisitor.visit(module);
     var name = filePath.withExtension("").path().lastPart().toString();
-    var ast = new ModuleP(name, structs, evaluables);
-    return maybe(logs.containsAtLeast(Level.ERROR) ? null : ast, logs);
+    var moduleP = new ModuleP(name, structs, evaluables);
+    return Maybe.of(moduleP, logBuffer);
   }
 
   private static String unquote(String quotedString) {
@@ -103,25 +109,25 @@ public class ApTranslator {
     private final FilePath filePath;
     private final ArrayList<StructP> structs;
     private final ArrayList<NamedEvaluableP> evaluables;
-    private final LogBuffer logs;
+    private final Logger logger;
     private final String scopeName;
     private int lambdaCount;
 
     public ApTranslatingVisitor(FilePath filePath, ArrayList<StructP> structs,
-        ArrayList<NamedEvaluableP> evaluables, LogBuffer logs) {
-      this(filePath, structs, evaluables, logs, null);
+        ArrayList<NamedEvaluableP> evaluables, Logger logger) {
+      this(filePath, structs, evaluables, logger, null);
     }
 
     public ApTranslatingVisitor(
         FilePath filePath,
         ArrayList<StructP> structs,
         ArrayList<NamedEvaluableP> evaluables,
-        LogBuffer logs,
+        Logger logger,
         String scopeName) {
       this.filePath = filePath;
       this.structs = structs;
       this.evaluables = evaluables;
-      this.logs = logs;
+      this.logger = logger;
       this.scopeName = scopeName;
       this.lambdaCount = 0;
     }
@@ -237,7 +243,7 @@ public class ApTranslator {
 
     private void logPipedValueNotConsumedError(ExprContext parserRuleContext) {
       var location = fileLocation(filePath, parserRuleContext);
-      logs.log(CompileError.compileError(location, "Piped value is not consumed."));
+      logger.log(compileError(location, "Piped value is not consumed."));
     }
 
     private Optional<ExprP> createExprSane(ExprContext expr) {

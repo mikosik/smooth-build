@@ -14,7 +14,7 @@ public class ReferenceSTest extends TestContext {
             ReferenceS(
               schema = <>Int
               name = referenced
-              location = myBuild.smooth:7
+              location = build.smooth:7
             )""");
   }
 }

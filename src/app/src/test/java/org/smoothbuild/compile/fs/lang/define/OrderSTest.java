@@ -14,10 +14,10 @@ public class OrderSTest extends TestContext {
             OrderS(
               evaluationT = [Int]
               elems = [
-                IntS(Int, 44, myBuild.smooth:4)
-                IntS(Int, 55, myBuild.smooth:5)
+                IntS(Int, 44, build.smooth:4)
+                IntS(Int, 55, build.smooth:5)
               ]
-              location = myBuild.smooth:3
+              location = build.smooth:3
             )""");
   }
 }

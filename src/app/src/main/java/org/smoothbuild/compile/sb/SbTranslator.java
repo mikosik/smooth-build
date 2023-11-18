@@ -107,7 +107,7 @@ public class SbTranslator {
         new HashMap<>());
   }
 
-  public SbTranslator(
+  private SbTranslator(
       BytecodeF bytecodeF,
       TypeSbTranslator typeSbTranslator,
       FileLoader fileLoader,
