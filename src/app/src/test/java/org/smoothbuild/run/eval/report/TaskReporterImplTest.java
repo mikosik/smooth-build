@@ -71,7 +71,7 @@ public class TaskReporterImplTest extends TestContext {
     var task = selectTask();
     var exprHash = task.exprB().hash();
     testHeader(bsMapping(exprHash, location(7)), task,
-        padEnd("{}.", NAME_LENGTH_LIMIT + 1, ' ') + "myBuild.smooth:7               exec"
+        padEnd("{}.", NAME_LENGTH_LIMIT + 1, ' ') + "build.smooth:7                 exec"
     );
   }
 

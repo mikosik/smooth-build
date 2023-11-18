@@ -1,12 +1,15 @@
 package org.smoothbuild.cli.command;
 
+import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
 import static org.smoothbuild.run.CreateInjector.createInjector;
+import static org.smoothbuild.run.step.Step.stepFactory;
 
 import java.nio.file.Path;
 
 import org.smoothbuild.cli.base.ProjectCommand;
-import org.smoothbuild.run.ListRunner;
+import org.smoothbuild.run.ListStepFactory;
 
+import io.vavr.Tuple;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -18,8 +21,9 @@ public class ListCommand extends ProjectCommand {
 
   @Override
   protected Integer executeCommand(Path projectDir) {
-    return createInjector(projectDir, out(), logLevel)
-        .getInstance(ListRunner.class)
-        .run();
+    var injector = createInjector(projectDir, out(), logLevel);
+    var step = stepFactory(new ListStepFactory());
+    var argument = Tuple.empty();
+    return runStepExecutor(injector, step, argument);
   }
 }

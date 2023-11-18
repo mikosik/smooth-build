@@ -13,8 +13,8 @@ public class AnnotationSTest extends TestContext {
         .isEqualTo("""
             AnnotationS(
               name = myAnnotation
-              path = StringS(String, "myPath", myBuild.smooth:7)
-              location = myBuild.smooth:17
+              path = StringS(String, "myPath", build.smooth:7)
+              location = build.smooth:17
             )""");
   }
 }

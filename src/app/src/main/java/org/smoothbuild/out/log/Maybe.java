@@ -12,6 +12,16 @@ public class Maybe<V> {
   private final V value;
   private final ImmutableLogs logs;
 
+  public static <T> Maybe<T> of(T value, Log... logs) {
+    var immutableLogs = ImmutableLogs.logs(logs);
+    return of(value, immutableLogs);
+  }
+
+  public static <T> Maybe<T> of(T value, Logs logs) {
+    var valueOrNull = logs.containsAtLeast(ERROR) ? null : value;
+    return new Maybe<>(valueOrNull, logs);
+  }
+
   public static <T> Maybe<T> maybe(T value, Log... logs) {
     return maybe(value, ImmutableLogs.logs(logs));
   }

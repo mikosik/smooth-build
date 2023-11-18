@@ -24,7 +24,6 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -72,6 +71,7 @@ import com.google.common.collect.ImmutableList;
 
 import io.vavr.collection.Array;
 import io.vavr.control.Either;
+import io.vavr.control.Option;
 
 public class EvaluatorBTest extends TestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
@@ -472,7 +472,7 @@ public class EvaluatorBTest extends TestContext {
         var taskReporter = mock(TaskReporter.class);
         var schedulerB = schedulerB(taskReporter, 4);
         var exprB = throwExceptionCall();
-        evaluateWithFailure(new EvaluatorB(() -> schedulerB), exprB);
+        evaluateWithFailure(new EvaluatorB(() -> schedulerB, reporter()), exprB);
         verify(taskReporter).report(
             any(),
             argThat(this::computationResultWithFatalCausedByRuntimeException));
@@ -512,7 +512,7 @@ public class EvaluatorBTest extends TestContext {
         };
         var schedulerB = schedulerB(computer, reporter, 4);
 
-        evaluateWithFailure(new EvaluatorB(() -> schedulerB), exprB);
+        evaluateWithFailure(new EvaluatorB(() -> schedulerB, reporter), exprB);
         verify(reporter, times(1))
             .report(eq("Internal smooth error"), argThat(isLogListWithFatalM()));
       }
@@ -675,7 +675,7 @@ public class EvaluatorBTest extends TestContext {
       );
 
       var reporter = mock(TaskReporter.class);
-      var vm = new EvaluatorB(() -> schedulerB(reporter, 4));
+      var vm = new EvaluatorB(() -> schedulerB(reporter, 4), reporter());
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("1"), stringB("1")));
 
@@ -700,7 +700,7 @@ public class EvaluatorBTest extends TestContext {
           commandCall(testName, "INC1,COUNT2,WAIT1,GET1"),
           commandCall(testName, "WAIT2,COUNT1,GET2"));
 
-      var vm = new EvaluatorB(() -> schedulerB(2));
+      var vm = new EvaluatorB(() -> schedulerB(2), reporter());
       assertThat(evaluate(vm, exprB))
           .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
     }
@@ -753,28 +753,20 @@ public class EvaluatorBTest extends TestContext {
   }
 
   private ValueB evaluate(EvaluatorB evaluatorB, ExprB expr) {
-    try {
-      var resultOptional = evaluatorB.evaluate(Array.of(expr));
-      assertWithMessage(" ==== Console logs ==== \n" + systemOut().toString() + "\n ==========\n")
-          .that(resultOptional.isPresent())
-          .isTrue();
-      var results = resultOptional.get();
-      assertThat(results.size())
-          .isEqualTo(1);
-      return results.get(0);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+    var resultOptional = evaluatorB.evaluate(Array.of(expr));
+    assertWithMessage(" ==== Console logs ==== \n" + systemOut().toString() + "\n ==========\n")
+        .that(resultOptional.isDefined())
+        .isTrue();
+    var results = resultOptional.get();
+    assertThat(results.size())
+        .isEqualTo(1);
+    return results.get(0);
   }
 
   private void evaluateWithFailure(EvaluatorB evaluatorB, ExprB expr) {
-    try {
-      var results = evaluatorB.evaluate(Array.of(expr));
-      assertThat(results)
-          .isEqualTo(Optional.empty());
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+    var results = evaluatorB.evaluate(Array.of(expr));
+    assertThat(results)
+        .isEqualTo(Option.none());
   }
 
   public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {

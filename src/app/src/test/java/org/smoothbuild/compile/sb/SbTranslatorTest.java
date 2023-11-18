@@ -310,7 +310,7 @@ public class SbTranslatorTest extends TestContext {
         var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(instantiateS(funcS)))
             .throwsException(
-                new SbTranslatorExc("Cannot resolve `p2` at myBuild.smooth:1."));
+                new SbTranslatorExc("Cannot resolve `p2` at build.smooth:1."));
       }
 
       @Test

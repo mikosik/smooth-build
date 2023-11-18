@@ -1,53 +1,41 @@
 package org.smoothbuild.filesystem.install;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.io.Paths.removeExtension;
-import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR;
-import static org.smoothbuild.filesystem.space.Space.BINARY;
+import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR_FILE_PATH;
+import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.stream.Stream;
 
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.compile.fs.lang.define.ModuleResources;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
-import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 import com.google.common.collect.ImmutableList;
 
+import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 
 public class InstallationHashes {
-  private final FileSystem fileSystem;
   private final FileResolver fileResolver;
-  private final ModuleResourcesDetector moduleResourcesDetector;
 
   @Inject
-  public InstallationHashes(
-      @ForSpace(BINARY) FileSystem fileSystem,
-      FileResolver fileResolver,
-      ModuleResourcesDetector moduleResourcesDetector) {
-    this.fileSystem = fileSystem;
+  public InstallationHashes(FileResolver fileResolver) {
     this.fileResolver = fileResolver;
-    this.moduleResourcesDetector = moduleResourcesDetector;
   }
 
   public HashNode installationNode() throws IOException {
-    return new HashNode("installation", list(smoothJarNode(), standardLibsNode()));
+    return new HashNode("installation", Array.of(smoothJarNode(), standardLibsNode()));
   }
 
   public HashNode sandboxNode() throws IOException {
-    return new HashNode("sandbox", list(smoothJarNode(), javaPlatformNode()));
+    return new HashNode("sandbox", Array.of(smoothJarNode(), javaPlatformNode()));
   }
 
   private HashNode smoothJarNode() throws IOException {
-    return new HashNode("smooth.jar", Hash.of(fileSystem.source(SMOOTH_JAR)));
+    return new HashNode("smooth.jar", fileResolver.hashOf(SMOOTH_JAR_FILE_PATH));
   }
 
   private static HashNode javaPlatformNode() {
@@ -72,30 +60,30 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    var modules = moduleResourcesDetector.detect(InstallationLayout.STD_LIB_MODS);
-    for (ModuleResources module : modules) {
-      builder.add(modNode(module));
+    for (var filePath : STD_LIB_MODS) {
+      builder.add(moduleNode(filePath));
     }
-    return new HashNode("standard libraries", builder.build());
+    return new HashNode("standard libraries", Array.ofAll(builder.build()));
   }
 
-  private HashNode modNode(ModuleResources module) throws IOException {
-    FilePath smoothFile = module.smoothFile();
-    Optional<HashNode> smoothNode = nodeFor(Optional.of(smoothFile));
-    Optional<HashNode> nativeNode = nodeFor(module.nativeFile());
-    var nodes = Stream.of(smoothNode, nativeNode)
-        .flatMap(Optional::stream)
-        .collect(toImmutableList());
-    var moduleName = removeExtension(smoothFile.toString());
+  private HashNode moduleNode(FilePath filePath) throws IOException {
+    var smoothNode = nodeFor(filePath);
+    var nativeNode = nodeForNativeJarFor(filePath);
+    var nodes =
+        nativeNode.isPresent() ? Array.of(smoothNode, nativeNode.get()) : Array.of(smoothNode);
+    var moduleName = removeExtension(filePath.toString());
     return new HashNode(moduleName + " module", nodes);
   }
 
-  private Optional<HashNode> nodeFor(Optional<FilePath> file) throws IOException {
-    if (file.isPresent()) {
-      FilePath filePath = file.get();
-      return Optional.of(new HashNode(filePath.toString(), fileResolver.hashOf(filePath)));
-    } else {
-      return Optional.empty();
-    }
+  private Optional<HashNode> nodeForNativeJarFor(FilePath filePath) throws IOException {
+    FilePath nativeFilePath = filePath.withExtension("jar");
+    return switch (fileResolver.pathState(nativeFilePath)) {
+      case FILE -> Optional.of(nodeFor(nativeFilePath));
+      case DIR, NOTHING -> Optional.empty();
+    };
+  }
+
+  private HashNode nodeFor(FilePath filePath) throws IOException {
+    return new HashNode(filePath.toString(), fileResolver.hashOf(filePath));
   }
 }

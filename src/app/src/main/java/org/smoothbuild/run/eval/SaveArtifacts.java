@@ -1,84 +1,93 @@
 package org.smoothbuild.run.eval;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.common.collect.Lists.list;
-import static org.smoothbuild.common.collect.Maps.sort;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Maybe.maybeLogs;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.compile.fs.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.define.ExprS;
+import org.smoothbuild.compile.fs.lang.define.InstantiateS;
+import org.smoothbuild.compile.fs.lang.define.ReferenceS;
 import org.smoothbuild.compile.fs.lang.type.ArrayTS;
 import org.smoothbuild.compile.fs.lang.type.TypeS;
 import org.smoothbuild.filesystem.space.ForSpace;
-import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logger;
+import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.Array;
+import io.vavr.control.Option;
 import jakarta.inject.Inject;
 
-public class ArtifactSaver {
-  private final Reporter reporter;
+public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, Maybe<String>> {
   private final FileSystem fileSystem;
 
   @Inject
-  public ArtifactSaver(@ForSpace(PROJECT) FileSystem fileSystem, Reporter reporter) {
+  public SaveArtifacts(@ForSpace(PROJECT) FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-    this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<NamedValueS, ValueB> artifacts) {
-    reporter.startNewPhase("Saving artifact(s)");
-    var sortedPairs = sort(artifacts, comparing(e -> e.getKey().name()));
-    for (var pair : sortedPairs.entrySet()) {
-      if (!save(pair.getKey(), pair.getValue())) {
-        return EXIT_CODE_ERROR;
-      }
+  @Override
+  public Maybe<String> apply(Array<Tuple2<ExprS, ValueB>> argument) {
+    Array<Tuple2<ReferenceS, ValueB>> artifacts = argument.map(t -> t.map1(this::toReferenceS));
+    try {
+      fileSystem.createDir(ARTIFACTS_PATH);
+    } catch (IOException e) {
+      return maybeLogs(error(e.getMessage()));
     }
-    return EXIT_CODE_SUCCESS;
+    var loggerBuffer = new LogBuffer();
+    var sortedArtifacts = artifacts.sortBy(artifact -> artifact._1().name());
+    var savedArtifacts = sortedArtifacts
+        .map(t -> t.map2(valueB -> save(t._1(), valueB, loggerBuffer)));
+    var messages = savedArtifacts
+        .map(t -> t._1().name() + " -> " + t._2().map(PathS::q).getOrElse("?"))
+        .mkString("\n");
+    return Maybe.of(messages, loggerBuffer);
   }
 
-  private boolean save(NamedValueS valueS, ValueB valueB) {
+  private ReferenceS toReferenceS(ExprS e) {
+    return (ReferenceS) ((InstantiateS) e).polymorphicS();
+  }
+
+  private Option<PathS> save(ReferenceS valueS, ValueB valueB, Logger logger) {
     String name = valueS.name();
     try {
       var path = write(valueS, valueB);
-      reportSuccess(name, path);
-      return true;
+      return Option.of(path);
     } catch (IOException e) {
-      reportError(name,
-          "Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
-              + getStackTraceAsString(e));
-      return false;
+      logger.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
+          + getStackTraceAsString(e));
+      return Option.none();
     } catch (DuplicatedPathsExc e) {
-      reportError(name, e.getMessage());
-      return false;
+      logger.error(e.getMessage());
+      return Option.none();
     }
   }
 
-  private PathS write(NamedValueS valueS, ValueB valueB)
+  private PathS write(ReferenceS referenceS, ValueB valueB)
       throws IOException, DuplicatedPathsExc {
-    PathS artifactPath = artifactPath(valueS.name());
-    if (valueS.schema().type() instanceof ArrayTS arrayTS) {
+    PathS artifactPath = artifactPath(referenceS.name());
+    if (referenceS.schema().type() instanceof ArrayTS arrayTS) {
       return saveArray(arrayTS, artifactPath, (ArrayB) valueB);
-    } else if (valueS.schema().type().name().equals(FileStruct.NAME)) {
+    } else if (referenceS.schema().type().name().equals(FileStruct.NAME)) {
       return saveFile(artifactPath, (TupleB) valueB);
     } else {
       return saveBaseValue(artifactPath, valueB);
@@ -155,19 +164,6 @@ public class ArtifactSaver {
 
   private static PathS fileValuePath(TupleB file) {
     return path(FileStruct.filePath(file).toJ());
-  }
-
-  private void reportSuccess(String name, PathS path) {
-    report(name, path.q(), list());
-  }
-
-  private void reportError(String name, String errorMessage) {
-    report(name, "???", list(error(errorMessage)));
-  }
-
-  private void report(String name, String pathOrError, List<Log> logs) {
-    String header = name + " -> " + pathOrError;
-    reporter.report(header, logs);
   }
 
   private static PathS targetPath(ValueB valueB) {

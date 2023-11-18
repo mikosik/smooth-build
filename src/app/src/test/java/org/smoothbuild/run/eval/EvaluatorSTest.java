@@ -1,6 +1,7 @@
 package org.smoothbuild.run.eval;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.inject.Guice.createInjector;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -8,6 +9,8 @@ import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
+import static org.smoothbuild.run.step.Step.optionStep;
+import static org.smoothbuild.run.step.Step.step;
 
 import java.math.BigInteger;
 
@@ -16,22 +19,30 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.compile.fs.lang.define.NamedEvaluableS;
+import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.run.eval.report.TaskReporterImpl;
+import org.smoothbuild.run.step.StepExecutor;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnIdFunc;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
 import org.smoothbuild.vm.bytecode.load.FileLoader;
 import org.smoothbuild.vm.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
+import org.smoothbuild.vm.evaluate.EvaluatorB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.AbstractModule;
 
+import io.vavr.Tuple;
 import io.vavr.collection.Array;
 import io.vavr.control.Either;
+import io.vavr.control.Option;
 
 public class EvaluatorSTest extends TestContext {
   private final FileLoader fileLoader = mock(FileLoader.class);
@@ -48,7 +59,7 @@ public class EvaluatorSTest extends TestContext {
       }
 
       @Test
-      public void int_() throws EvaluatorExcS {
+      public void int_() {
         assertEvaluation(intS(8), intB(8));
       }
 
@@ -63,15 +74,14 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _call {
         @Test
-        public void call_lambda() throws EvaluatorExcS {
+        public void call_lambda() {
           var LambdaS = lambdaS(nlist(), intS(7));
           var callS = callS(instantiateS(LambdaS));
           assertEvaluation(callS, intB(7));
         }
 
         @Test
-        public void call_lambda_returning_enclosing_func_param()
-            throws EvaluatorExcS {
+        public void call_lambda_returning_enclosing_func_param() {
           var lambdaS = instantiateS(lambdaS(nlist(), paramRefS(intTS(), "p")));
           var funcS = funcS("myFunc", nlist(itemS(intTS(), "p")), callS(lambdaS));
           var callS = callS(instantiateS(funcS), intS(7));
@@ -79,14 +89,14 @@ public class EvaluatorSTest extends TestContext {
         }
 
         @Test
-        public void call_expression_function() throws EvaluatorExcS {
+        public void call_expression_function() {
           var funcS = funcS("n", nlist(), intS(7));
           var callS = callS(instantiateS(funcS));
           assertEvaluation(bindings(funcS), callS, intB(7));
         }
 
         @Test
-        public void call_poly_expression_function() throws EvaluatorExcS {
+        public void call_poly_expression_function() {
           var a = varA();
           var orderS = orderS(a, paramRefS(a, "e"));
           var funcS = funcS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
@@ -95,7 +105,7 @@ public class EvaluatorSTest extends TestContext {
         }
 
         @Test
-        public void call_constructor() throws EvaluatorExcS {
+        public void call_constructor() {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
           var callS = callS(instantiateS(constructorS), intS(7));
           assertEvaluation(bindings(constructorS), callS,tupleB(intB(7)));
@@ -107,7 +117,7 @@ public class EvaluatorSTest extends TestContext {
               nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
           var callS = callS(instantiateS(funcS));
           var jarB = blobB(137);
-          when(fileLoader.load(filePath(PROJECT, path("myBuild.jar"))))
+          when(fileLoader.load(filePath(PROJECT, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(Either.right(
@@ -122,7 +132,7 @@ public class EvaluatorSTest extends TestContext {
           );
           var callS = callS(instantiateS(funcS), intS(77));
           var jarB = blobB(137);
-          when(fileLoader.load(filePath(PROJECT, path("myBuild.jar"))))
+          when(fileLoader.load(filePath(PROJECT, path("build.jar"))))
               .thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(Either.right(
@@ -154,7 +164,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _param_ref {
         @Test
-        public void param_ref() throws EvaluatorExcS {
+        public void param_ref() {
           var funcS = funcS("n", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
           var callS = callS(instantiateS(funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, intB(7));
@@ -178,14 +188,14 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _lambda {
         @Test
-        public void mono_lambda() throws EvaluatorExcS {
+        public void mono_lambda() {
           assertEvaluation(
               instantiateS(lambdaS(intS(7))),
               lambdaB(intB(7)));
         }
 
         @Test
-        public void poly_lambda() throws EvaluatorExcS {
+        public void poly_lambda() {
           var a = varA();
           var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
           var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
@@ -196,12 +206,12 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _named_func {
         @Test
-        public void mono_expression_func() throws EvaluatorExcS {
+        public void mono_expression_func() {
           assertEvaluation(intIdFuncS(), idFuncB());
         }
 
         @Test
-        public void poly_expression_function() throws EvaluatorExcS {
+        public void poly_expression_function() {
           var a = varA();
           var funcS = funcS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
           var instantiateS = instantiateS(list(intTS()), funcS);
@@ -212,7 +222,7 @@ public class EvaluatorSTest extends TestContext {
         public void ann_func() throws Exception {
           var jar = blobB(123);
           var className = ReturnIdFunc.class.getCanonicalName();
-          when(fileLoader.load(filePath(PROJECT, path("myBuild.jar"))))
+          when(fileLoader.load(filePath(PROJECT, path("build.jar"))))
               .thenReturn(jar);
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
@@ -226,7 +236,7 @@ public class EvaluatorSTest extends TestContext {
         }
 
         @Test
-        public void constructor() throws EvaluatorExcS {
+        public void constructor() {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
           assertEvaluation(constructorS, lambdaB(Array.of(intTB()), combineB(varB(intTB(), 0))));
         }
@@ -235,13 +245,13 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _named_value {
         @Test
-        public void mono_expression_value() throws EvaluatorExcS {
+        public void mono_expression_value() {
           var valueS = valueS(1, intTS(), "name", intS(7));
           assertEvaluation(bindings(valueS), instantiateS(valueS), intB(7));
         }
 
         @Test
-        public void poly_value() throws EvaluatorExcS {
+        public void poly_value() {
           var a = varA();
           var polyValue = valueS(1, arrayTS(a), "name", orderS(a));
           var instantiatedValue = instantiateS(list(intTS()), polyValue);
@@ -252,7 +262,7 @@ public class EvaluatorSTest extends TestContext {
       @Nested
       class _constructor {
         @Test
-        public void constructor() throws EvaluatorExcS {
+        public void constructor() {
           assertEvaluation(
               constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field")))),
               lambdaB(funcTB(intTB(), tupleTB(intTB())), combineB(varB(intTB(), 0))));
@@ -261,34 +271,47 @@ public class EvaluatorSTest extends TestContext {
     }
   }
 
-  private void assertEvaluation(NamedEvaluableS namedEvaluableS, ExprB exprB) throws EvaluatorExcS {
+  private void assertEvaluation(NamedEvaluableS namedEvaluableS, ExprB exprB) {
     assertThat(evaluate(bindings(namedEvaluableS), instantiateS(namedEvaluableS)))
         .isEqualTo(exprB);
   }
 
-  private void assertEvaluation(ExprS exprS, ExprB exprB) throws EvaluatorExcS {
+  private void assertEvaluation(ExprS exprS, ExprB exprB) {
     assertEvaluation(bindings(), exprS, exprB);
   }
 
   private void assertEvaluation(
-      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB exprB)
-      throws EvaluatorExcS {
+      ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB exprB) {
     assertThat(evaluate(evaluables, exprS))
         .isEqualTo(exprB);
   }
 
-  private ExprB evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS)
-      throws EvaluatorExcS {
-    var resultMap = newEvaluator().evaluate(evaluables, list(exprS)).get();
+  private ExprB evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
+    var resultMap = evaluate(evaluables, Array.of(exprS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
     return resultMap.get(0);
   }
 
-  private EvaluatorS newEvaluator() {
+  private Option<Array<ValueB>> evaluate(
+      ImmutableBindings<NamedEvaluableS> evaluables, Array<ExprS> exprs) {
     var sbTranslatorFacade = sbTranslatorFacade(fileLoader, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
-    return new EvaluatorS(sbTranslatorFacade, (bsMapping) -> evaluatorB, reporter());
+    var reporter = reporter();
+
+    var injector = createInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        bind(EvaluatorB.class).toInstance(evaluatorB);
+        bind(Reporter.class).toInstance(reporter);
+        bind(TaskReporterImpl.class).toInstance(taskReporter());
+      }
+    });
+    var step = step(sbTranslatorFacade)
+        .then(optionStep(EvaluatorBFacade.class));
+    var argument = Tuple.of(exprs, evaluables);
+
+    return new StepExecutor(injector).execute(step, argument, reporter);
   }
 
   public static IntB returnInt(NativeApi nativeApi, TupleB args) {

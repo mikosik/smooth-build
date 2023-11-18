@@ -21,13 +21,13 @@ public class SelectSTest extends TestContext {
                 polymorphicS = ReferenceS(
                   schema = <>MyStruct
                   name = structValue
-                  location = myBuild.smooth:12
+                  location = build.smooth:12
                 )
                 evaluationT = MyStruct(Int field)
-                location = myBuild.smooth:12
+                location = build.smooth:12
               )
               field = field
-              location = myBuild.smooth:3
+              location = build.smooth:3
             )""");
   }
 }

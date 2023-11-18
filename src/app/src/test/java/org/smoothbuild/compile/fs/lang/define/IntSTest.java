@@ -9,6 +9,6 @@ public class IntSTest extends TestContext {
   @Test
   public void to_string() {
     assertThat(intS(7, 16).toString())
-        .isEqualTo("IntS(Int, 16, myBuild.smooth:7)");
+        .isEqualTo("IntS(Int, 16, build.smooth:7)");
   }
 }

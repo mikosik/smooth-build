@@ -16,12 +16,12 @@ public class AnnotatedValueSTest extends TestContext {
             AnnotatedValue(
               AnnotationS(
                 name = myAnnotation
-                path = StringS(String, "myPath", myBuild.smooth:7)
-                location = myBuild.smooth:17
+                path = StringS(String, "myPath", build.smooth:7)
+                location = build.smooth:17
               )
               schema = <>String
               name = myVal
-              location = myBuild.smooth:7
+              location = build.smooth:7
             )""");
   }
 }

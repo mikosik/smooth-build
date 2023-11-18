@@ -204,8 +204,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("""
-        Saving artifact(s)
-          result -> ???
+        ::Saving artifact(s)
            + ERROR: Can't store array of Files as it contains files with duplicated paths:
                'file.txt'
             """);
@@ -224,10 +223,10 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result2", "result3", "result1");
     assertFinishedWithSuccess();
     assertSysOutContains("""
-        Saving artifact(s)
-          result1 -> '.smooth/artifacts/result1'
-          result2 -> '.smooth/artifacts/result2'
-          result3 -> '.smooth/artifacts/result3'
-            """);
+        ::Saving artifact(s)
+        result1 -> '.smooth/artifacts/result1'
+        result2 -> '.smooth/artifacts/result2'
+        result3 -> '.smooth/artifacts/result3'
+        """);
   }
 }

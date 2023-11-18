@@ -25,10 +25,10 @@ public class ListCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
         Values that can be evaluated:
-          aValue
-          bValue
-          cValue
-          dValue""");
+        aValue
+        bValue
+        cValue
+        dValue""");
     }
   }
 

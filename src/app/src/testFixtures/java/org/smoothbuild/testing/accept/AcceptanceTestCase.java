@@ -1,12 +1,12 @@
 package org.smoothbuild.testing.accept;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
+import static org.smoothbuild.compile.fs.FrontendCompilerStep.frontendCompilerStep;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MOD_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
@@ -17,31 +17,34 @@ import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
 import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.run.step.Step.stepFactory;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.compile.fs.lang.define.NamedValueS;
+import org.smoothbuild.compile.fs.lang.define.ExprS;
 import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
 import org.smoothbuild.filesystem.space.MemoryFileSystemModule;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.run.BuildRunner;
+import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.run.EvaluateStepFactory;
+import org.smoothbuild.run.step.StepExecutor;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.BytecodeModule;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.Array;
+import io.vavr.control.Option;
 import okio.BufferedSink;
 
 public class AcceptanceTestCase extends TestContext {
@@ -49,7 +52,7 @@ public class AcceptanceTestCase extends TestContext {
   private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
-  private Optional<ImmutableMap<NamedValueS, ValueB>> artifacts;
+  private Option<Array<Tuple2<ExprS, ValueB>>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
@@ -80,9 +83,12 @@ public class AcceptanceTestCase extends TestContext {
     writeFile(prjFileSystem(), DEFAULT_MODULE_PATH, code);
   }
 
-  protected void evaluate(String... exprs) {
-    var buildRunner = injector.getInstance(BuildRunner.class);
-    this.artifacts = buildRunner.evaluate(list(exprs));
+  protected void evaluate(String... names) {
+    var steps = frontendCompilerStep()
+        .append(Array.of(names))
+        .then(stepFactory(new EvaluateStepFactory()));
+    var reporter = injector.getInstance(Reporter.class);
+    this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
   }
 
   protected void resetState() {
@@ -108,26 +114,26 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   protected ValueB artifact() {
-    var artifactsMap = artifactsMap();
-    int size = artifactsMap.size();
+    var artifactsArray = artifactsArray();
+    int size = artifactsArray.size();
     return switch (size) {
       case 0 -> fail("Expected artifact but evaluate returned empty list of artifacts.");
-      case 1 -> artifactsMap.values().iterator().next();
+      case 1 -> artifactsArray.get(0)._2();
       default -> fail("Expected single artifact but evaluate returned " + size + " artifacts.");
     };
   }
 
   protected ValueB artifact(int index) {
     checkArgument(0 <= index);
-    var artifactsMap = artifactsMap();
-    int size = artifactsMap.size();
+    var artifactsArray = artifactsArray();
+    int size = artifactsArray.size();
     if (size <= index) {
       fail("Expected at least " + index + " artifacts but evaluation returned only " + size + ".");
     }
-    return newArrayList(artifactsMap.values()).get(index);
+    return artifactsArray.get(index)._2();
   }
 
-  private Map<NamedValueS, ValueB> artifactsMap() {
+  private Array<Tuple2<ExprS, ValueB>> artifactsArray() {
     if (artifacts == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }

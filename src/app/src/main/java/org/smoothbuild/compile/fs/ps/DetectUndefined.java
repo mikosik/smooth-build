@@ -4,6 +4,8 @@ import static org.smoothbuild.compile.fs.lang.base.TypeNamesS.isVarName;
 import static org.smoothbuild.compile.fs.ps.CompileError.compileError;
 import static org.smoothbuild.compile.fs.ps.ast.define.ScopeP.emptyScope;
 
+import java.util.function.Function;
+
 import org.smoothbuild.common.Strings;
 import org.smoothbuild.compile.fs.lang.define.ScopeS;
 import org.smoothbuild.compile.fs.ps.ast.ModuleVisitorP;
@@ -19,14 +21,21 @@ import org.smoothbuild.compile.fs.ps.ast.define.ScopedP;
 import org.smoothbuild.compile.fs.ps.ast.define.TypeP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Logs;
+import org.smoothbuild.out.log.Maybe;
 
-public class DetectUndefinedReferenceablesAndTypes {
-  public static Logs detectUndefinedReferenceablesAndTypes(ModuleP moduleP, ScopeS imported) {
-    var log = new LogBuffer();
-    new Detector(imported, emptyScope(), log)
+import io.vavr.Tuple2;
+
+/**
+ * Detect undefined referencables and types.
+ */
+public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Maybe<ModuleP>> {
+  @Override
+  public Maybe<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
+    var logBuffer = new LogBuffer();
+    var moduleP = context._1();
+    new Detector(context._2(), emptyScope(), logBuffer)
         .visitModule(moduleP);
-    return log;
+    return Maybe.of(moduleP, logBuffer);
   }
 
   private static class Detector extends ScopingModuleVisitorP {
