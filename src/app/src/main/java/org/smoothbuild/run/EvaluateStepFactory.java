@@ -6,9 +6,9 @@ import static org.smoothbuild.run.step.Step.optionStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
-import org.smoothbuild.compile.fs.lang.define.ExprS;
-import org.smoothbuild.compile.fs.lang.define.ScopeS;
-import org.smoothbuild.compile.sb.BackendCompile;
+import org.smoothbuild.compile.backend.BackendCompile;
+import org.smoothbuild.compile.frontend.lang.define.ExprS;
+import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.run.eval.EvaluatorBFacade;
 import org.smoothbuild.run.step.Step;
 import org.smoothbuild.run.step.StepFactory;

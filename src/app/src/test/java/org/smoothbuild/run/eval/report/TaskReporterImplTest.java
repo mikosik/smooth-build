@@ -17,7 +17,7 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.MEMORY;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.compile.sb.BsMapping;
+import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.evaluate.compute.ResultSource;

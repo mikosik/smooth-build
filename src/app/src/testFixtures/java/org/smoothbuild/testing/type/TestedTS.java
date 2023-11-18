@@ -6,8 +6,8 @@ import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import java.util.Objects;
 import java.util.Set;
 
-import org.smoothbuild.compile.fs.lang.type.FuncTS;
-import org.smoothbuild.compile.fs.lang.type.TypeS;
+import org.smoothbuild.compile.frontend.lang.type.FuncTS;
+import org.smoothbuild.compile.frontend.lang.type.TypeS;
 
 import com.google.common.collect.ImmutableList;
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.compile.fs.FrontendCompilerStep.frontendCompilerStep;
+import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 

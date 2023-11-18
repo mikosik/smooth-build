@@ -8,8 +8,8 @@ import static org.smoothbuild.out.log.Level.WARNING;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
 
-import org.smoothbuild.compile.fs.lang.base.location.Location;
-import org.smoothbuild.compile.sb.BsMapping;
+import org.smoothbuild.compile.backend.BsMapping;
+import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.report.Reporter;
