@@ -4,7 +4,6 @@ import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
-
 import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 

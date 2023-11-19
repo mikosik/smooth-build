@@ -1,7 +1,6 @@
 package org.smoothbuild.stdlib.java.util;
 
 import java.util.function.Predicate;
-
 import javax.tools.JavaFileObject.Kind;
 
 public class JavaNaming {

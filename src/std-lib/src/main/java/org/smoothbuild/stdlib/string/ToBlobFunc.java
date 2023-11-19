@@ -3,7 +3,6 @@ package org.smoothbuild.stdlib.string;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
-
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;

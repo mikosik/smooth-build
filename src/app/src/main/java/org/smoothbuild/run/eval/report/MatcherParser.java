@@ -8,7 +8,6 @@ import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.Strings.unlines;
 
 import java.util.BitSet;
-
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Parser;
@@ -20,7 +19,6 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherLexer;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherContext;
-
 import picocli.CommandLine.TypeConversionException;
 
 public class MatcherParser {
@@ -40,8 +38,13 @@ public class MatcherParser {
 
   public static class ErrorListener implements ANTLRErrorListener {
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int lineNumber,
-        int charNumber, String message, RecognitionException e) {
+    public void syntaxError(
+        Recognizer<?, ?> recognizer,
+        Object offendingSymbol,
+        int lineNumber,
+        int charNumber,
+        String message,
+        RecognitionException e) {
       String detailedMessage = unlines(
           message,
           errorLine(recognizer, lineNumber),
@@ -49,11 +52,17 @@ public class MatcherParser {
       throw new TypeConversionException(detailedMessage);
     }
 
-
     @Override
-    public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
-        boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
-      String message = join("\n",
+    public void reportAmbiguity(
+        Parser recognizer,
+        DFA dfa,
+        int startIndex,
+        int stopIndex,
+        boolean exact,
+        BitSet ambigAlts,
+        ATNConfigSet configs) {
+      String message = join(
+          "\n",
           "Found ambiguity in grammar.",
           "Report this as a bug together with show-tasks=': " + extractSourceCode(recognizer)
               + "', details:",
@@ -66,14 +75,24 @@ public class MatcherParser {
     }
 
     @Override
-    public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex,
-        int stopIndex, BitSet conflictingAlts, ATNConfigSet configs) {
+    public void reportAttemptingFullContext(
+        Parser recognizer,
+        DFA dfa,
+        int startIndex,
+        int stopIndex,
+        BitSet conflictingAlts,
+        ATNConfigSet configs) {
       reportError("Attempting full context");
     }
 
     @Override
-    public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
-        int prediction, ATNConfigSet configs) {
+    public void reportContextSensitivity(
+        Parser recognizer,
+        DFA dfa,
+        int startIndex,
+        int stopIndex,
+        int prediction,
+        ATNConfigSet configs) {
       reportError("Context sensitivity");
     }
 

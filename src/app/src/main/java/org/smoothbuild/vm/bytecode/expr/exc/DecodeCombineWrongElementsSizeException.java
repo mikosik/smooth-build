@@ -10,11 +10,7 @@ public class DecodeCombineWrongElementsSizeException extends DecodeExprException
 
   private static String buildMessage(Hash hash, CombineCB cat, int actual) {
     return ("Cannot decode %s object at %s. Evaluation type elements size (%s)"
-        + " is not equal to actual elements size (%s).")
-        .formatted(
-            cat.q(),
-            hash,
-            cat.evaluationT().elements().size(),
-            actual);
+            + " is not equal to actual elements size (%s).")
+        .formatted(cat.q(), hash, cat.evaluationT().elements().size(), actual);
   }
 }

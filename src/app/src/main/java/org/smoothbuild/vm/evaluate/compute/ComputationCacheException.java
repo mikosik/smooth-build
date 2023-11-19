@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.evaluate.compute;
 
 import java.io.IOException;
-
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public class ComputationCacheException extends Exception {

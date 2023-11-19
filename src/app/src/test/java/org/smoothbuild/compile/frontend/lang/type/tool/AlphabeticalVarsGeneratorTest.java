@@ -32,8 +32,7 @@ public class AlphabeticalVarsGeneratorTest {
   }
 
   private static void checkNameAtIndex(int index, String name) {
-    assertThat(find(index))
-        .isEqualTo(new VarS(name));
+    assertThat(find(index)).isEqualTo(new VarS(name));
   }
 
   private static VarS find(int index) {

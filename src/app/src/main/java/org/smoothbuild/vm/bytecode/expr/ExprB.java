@@ -2,8 +2,8 @@ package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 
+import io.vavr.collection.Array;
 import java.util.Objects;
-
 import org.smoothbuild.vm.bytecode.expr.Helpers.HashedDbCallable;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
@@ -13,8 +13,6 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
-
-import io.vavr.collection.Array;
 
 /**
  * Bytecode expression.
@@ -73,8 +71,8 @@ public abstract class ExprB {
   }
 
   protected long readDataSeqSize() {
-    return Helpers.wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH,
-        () -> bytecodeDb.hashedDb().readSeqSize(dataHash()));
+    return Helpers.wrapHashedDbExcAsDecodeExprNodeException(
+        hash(), category(), DATA_PATH, () -> bytecodeDb.hashedDb().readSeqSize(dataHash()));
   }
 
   protected Array<ValueB> readDataSeqElems(int expectedSize) {
@@ -107,8 +105,8 @@ public abstract class ExprB {
   }
 
   private Array<Hash> readDataSeqHashes() {
-    return Helpers.wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH,
-        () -> bytecodeDb.hashedDb().readSeq(dataHash()));
+    return Helpers.wrapHashedDbExcAsDecodeExprNodeException(
+        hash(), category(), DATA_PATH, () -> bytecodeDb.hashedDb().readSeq(dataHash()));
   }
 
   protected <T> T readDataSeqElem(int i, int expectedSize, Class<T> clazz) {

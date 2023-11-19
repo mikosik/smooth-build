@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -43,8 +42,7 @@ public class CommandExecutorTest {
     // linux command testing whether length of string "abc" is zero.
     // As it is not zero it will return non zero return code.
     String[] command = new String[] {"test", "-z", "abc"};
-    assertThat(CommandExecutor.execute(Path.of("."), command).exitCode())
-        .isEqualTo(1);
+    assertThat(CommandExecutor.execute(Path.of("."), command).exitCode()).isEqualTo(1);
   }
 
   @Test
@@ -52,7 +50,6 @@ public class CommandExecutorTest {
     // linux command testing whether length of string "abc" is not zero.
     // As it is not zero it will return zero return code.
     String[] command = new String[] {"test", "-n", "abc"};
-    assertThat(CommandExecutor.execute(Path.of("."), command).exitCode())
-        .isEqualTo(0);
+    assertThat(CommandExecutor.execute(Path.of("."), command).exitCode()).isEqualTo(0);
   }
 }

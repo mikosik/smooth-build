@@ -14,8 +14,9 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.success;
 import static org.smoothbuild.testing.TestContext.writeFile;
 
+import com.google.inject.Injector;
+import com.google.inject.Key;
 import java.io.IOException;
-
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
@@ -29,9 +30,6 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.run.step.StepExecutor;
 import org.smoothbuild.testing.accept.MemoryReporter;
-
-import com.google.inject.Injector;
-import com.google.inject.Key;
 
 public class TestingModuleLoader {
   private final String sourceCode;
@@ -49,23 +47,19 @@ public class TestingModuleLoader {
 
   public TestingModuleLoader loadsWithSuccess() {
     definitions = load();
-    assertWithMessage(messageWithSourceCode())
-        .that(definitions.logs().toList())
-        .isEmpty();
+    assertWithMessage(messageWithSourceCode()).that(definitions.logs().toList()).isEmpty();
     return this;
   }
 
   public void containsEvaluable(NamedEvaluableS expected) {
     String name = expected.name();
     var actual = assertContainsEvaluable(name);
-    assertThat(actual)
-        .isEqualTo(expected);
+    assertThat(actual).isEqualTo(expected);
   }
 
   public void containsEvaluableWithSchema(String name, SchemaS expectedT) {
     var referenceable = assertContainsEvaluable(name);
-    assertThat(referenceable.schema())
-        .isEqualTo(expectedT);
+    assertThat(referenceable.schema()).isEqualTo(expectedT);
   }
 
   private NamedEvaluableS assertContainsEvaluable(String name) {
@@ -83,10 +77,7 @@ public class TestingModuleLoader {
         .that(types.contains(name))
         .isTrue();
     TypeS actual = types.get(name).type();
-    assertWithMessage(
-        "Module contains type '" + name + "', but")
-        .that(actual)
-        .isEqualTo(expected);
+    assertWithMessage("Module contains type '" + name + "', but").that(actual).isEqualTo(expected);
   }
 
   public ScopeS getLoadedDefinitions() {
@@ -123,11 +114,11 @@ public class TestingModuleLoader {
   }
 
   private Maybe<ScopeS> load() {
-    var injector =
-        createInjector(PRODUCTION,
-            new StandardLibrarySpaceModule(),
-            new ProjectSpaceModule(),
-            new MemoryFileSystemModule());
+    var injector = createInjector(
+        PRODUCTION,
+        new StandardLibrarySpaceModule(),
+        new ProjectSpaceModule(),
+        new MemoryFileSystemModule());
     writeModuleFilesToFileSystems(injector);
     var steps = frontendCompilerStep();
     var memoryReporter = new MemoryReporter();
@@ -136,7 +127,9 @@ public class TestingModuleLoader {
   }
 
   private void writeModuleFilesToFileSystems(Injector injector) {
-    writeModuleFile(injector, new FilePath(STANDARD_LIBRARY, path("std_lib.smooth")),
+    writeModuleFile(
+        injector,
+        new FilePath(STANDARD_LIBRARY, path("std_lib.smooth")),
         importedSourceCode == null ? "" : importedSourceCode);
     writeModuleFile(injector, new FilePath(PROJECT, path("build.smooth")), sourceCode);
   }

@@ -3,7 +3,6 @@ package org.smoothbuild.filesystem.install;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.util.Properties;
-
 import org.junit.jupiter.api.Test;
 
 public class InstallationHashesTest {

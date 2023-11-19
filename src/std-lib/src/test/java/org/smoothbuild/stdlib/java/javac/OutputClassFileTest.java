@@ -5,15 +5,13 @@ import static okio.Okio.buffer;
 import static okio.Okio.sink;
 
 import java.io.IOException;
-
+import okio.BufferedSink;
+import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-
-import okio.BufferedSink;
-import okio.ByteString;
 
 public class OutputClassFileTest extends TestContext {
   private final PathS path = PathS.path("my/path");
@@ -28,8 +26,7 @@ public class OutputClassFileTest extends TestContext {
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().elems(TupleB.class))
-        .containsExactly(fileB(path, bytes));
+    assertThat(fileArrayBuilder.build().elems(TupleB.class)).containsExactly(fileB(path, bytes));
   }
 
   @Test
@@ -37,7 +34,6 @@ public class OutputClassFileTest extends TestContext {
     var arrayTH = arrayTB(fileTB());
     OutputClassFile outputClassFile =
         new OutputClassFile(bytecodeDb().arrayBuilder(arrayTH), path, nativeApi());
-    assertThat(outputClassFile.getName())
-        .isEqualTo("/" + path);
+    assertThat(outputClassFile.getName()).isEqualTo("/" + path);
   }
 }

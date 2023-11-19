@@ -9,7 +9,6 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 
 import java.util.regex.Pattern;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.out.log.Log;
@@ -37,25 +36,27 @@ public class NativeTest extends AcceptanceTestCase {
       @Test
       public void without_body_is_not_legal() throws Exception {
         createUserNativeJar(ReturnAbc.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
           @Native("%s")
           String illegalValue;
-          """, ReturnAbc.class.getCanonicalName()));
+          """,
+            ReturnAbc.class.getCanonicalName()));
         evaluate("result");
-        assertThat(logs())
-            .contains(userError(1, "Value cannot have @Native annotation."));
+        assertThat(logs()).contains(userError(1, "Value cannot have @Native annotation."));
       }
 
       @Test
       public void with_body_is_not_legal() throws Exception {
         createUserNativeJar(ReturnAbc.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
           @Native("%s")
           String illegalValue = "abc";
-          """, ReturnAbc.class.getCanonicalName()));
+          """,
+            ReturnAbc.class.getCanonicalName()));
         evaluate("result");
-        assertThat(logs())
-            .contains(userError(1, "Value cannot have @Native annotation."));
+        assertThat(logs()).contains(userError(1, "Value cannot have @Native annotation."));
       }
     }
 
@@ -64,19 +65,21 @@ public class NativeTest extends AcceptanceTestCase {
       @Test
       public void can_return_passed_arg() throws Exception {
         createUserNativeJar(StringIdentity.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String stringIdentity(String string);
             result = stringIdentity("abc");
-            """, StringIdentity.class.getCanonicalName()));
+            """,
+            StringIdentity.class.getCanonicalName()));
         evaluate("result");
-        assertThat(artifact())
-            .isEqualTo(stringB("abc"));
+        assertThat(artifact()).isEqualTo(stringB("abc"));
       }
 
       @Test
       public void without_native_jar_file_causes_fatal() throws Exception {
-        createUserModule("""
+        createUserModule(
+            """
             @Native("MissingClass")
             String myFunc();
             result = myFunc();
@@ -90,30 +93,32 @@ public class NativeTest extends AcceptanceTestCase {
       @Test
       public void exception_from_native_is_reported_as_fatal() throws Exception {
         createUserNativeJar(ThrowException.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             A throwException();
             Int result = throwException();
-            """, ThrowException.class.getCanonicalName()));
+            """,
+            ThrowException.class.getCanonicalName()));
         evaluate("result");
-        assertThat(logs().size())
-            .isEqualTo(1);
+        assertThat(logs().size()).isEqualTo(1);
         var log = logs().get(0);
-        assertThat(log.level())
-            .isEqualTo(FATAL);
+        assertThat(log.level()).isEqualTo(FATAL);
         assertThat(log.message())
-            .startsWith("Native code thrown exception:\n"
-                + "java.lang.UnsupportedOperationException");
+            .startsWith(
+                "Native code thrown exception:\n" + "java.lang.UnsupportedOperationException");
       }
 
       @Test
       public void fatal_wrapping_exception_from_native_is_not_cached_on_disk() throws Exception {
         createUserNativeJar(ThrowRandomException.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String throwRandomException();
             result = throwRandomException();
-            """, ThrowRandomException.class.getCanonicalName()));
+            """,
+            ThrowRandomException.class.getCanonicalName()));
 
         evaluate("result");
         assertLogsContainProblem();
@@ -124,21 +129,21 @@ public class NativeTest extends AcceptanceTestCase {
         assertLogsContainProblem();
         String timestamp2 = fetchTimestamp(logs().get(0).message());
 
-        assertThat(timestamp1)
-            .isNotEqualTo(timestamp2);
+        assertThat(timestamp1).isNotEqualTo(timestamp2);
       }
 
       @Test
       public void error_reported_is_logged() throws Exception {
         createUserNativeJar(ReportFixedError.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             A reportFixedError();
             Int result = reportFixedError();
-            """, ReportFixedError.class.getCanonicalName()));
+            """,
+            ReportFixedError.class.getCanonicalName()));
         evaluate("result");
-        assertThat(logs())
-            .containsExactly(error("some error message"));
+        assertThat(logs()).containsExactly(error("some error message"));
       }
 
       @Test
@@ -146,15 +151,17 @@ public class NativeTest extends AcceptanceTestCase {
         var clazz = MissingMethod.class;
         createUserNativeJar(clazz);
         String className = clazz.getCanonicalName();
-        createUserModule(format("""
+        createUserModule(format(
+            """
               @Native("%s")
               String wrongMethodName();
               result = wrongMethodName();
-              """, className));
+              """,
+            className));
         evaluate("result");
         assertThat(logs())
-            .containsExactly(methodLoadingFatal(className,
-                "Class '" + className + "' does not have 'func' method."));
+            .containsExactly(methodLoadingFatal(
+                className, "Class '" + className + "' does not have 'func' method."));
       }
 
       @Nested
@@ -163,59 +170,64 @@ public class NativeTest extends AcceptanceTestCase {
         public void null_without_logging_error() throws Exception {
           createUserNativeJar(ReturnNull.class);
           String className = ReturnNull.class.getCanonicalName();
-          createUserModule(format("""
+          createUserModule(format(
+              """
             @Native("%s")
             String returnNull();
             result = returnNull();
-            """, className));
+            """,
+              className));
           evaluate("result");
-          assertThat(logs())
-              .containsExactly(faultyNullReturnedFatal());
+          assertThat(logs()).containsExactly(faultyNullReturnedFatal());
         }
 
         @Test
         public void null_and_logs_only_warning() throws Exception {
           createUserNativeJar(ReportWarningAndReturnNull.class);
-          createUserModule(format("""
+          createUserModule(format(
+              """
             @Native("%s")
             String reportWarning();
             result = reportWarning();
-            """, ReportWarningAndReturnNull.class.getCanonicalName()));
+            """,
+              ReportWarningAndReturnNull.class.getCanonicalName()));
           evaluate("result");
-          assertThat(logs())
-              .contains(faultyNullReturnedFatal());
+          assertThat(logs()).contains(faultyNullReturnedFatal());
         }
 
         @Test
         public void non_null_and_logs_error() throws Exception {
           createUserNativeJar(ReportErrorAndReturnNonNull.class);
-          createUserModule(format("""
+          createUserModule(format(
+              """
             @Native("%s")
             String reportErrorAndReturnValue();
             result = reportErrorAndReturnValue();
-            """, ReportErrorAndReturnNonNull.class.getCanonicalName()));
+            """,
+              ReportErrorAndReturnNonNull.class.getCanonicalName()));
           evaluate("result");
-          assertThat(logs())
-              .contains(nonNullValueAndError());
+          assertThat(logs()).contains(nonNullValueAndError());
         }
 
         @Test
         public void object_of_wrong_type() throws Exception {
           createUserNativeJar(BrokenIdentity.class);
-          createUserModule(format("""
+          createUserModule(format(
+              """
             @Native("%s")
             A brokenIdentity(A value);
             Int result = brokenIdentity(7);
-            """, BrokenIdentity.class.getCanonicalName()));
+            """,
+              BrokenIdentity.class.getCanonicalName()));
           evaluate("result");
-          assertThat(logs())
-              .containsExactly(faultyTypeOfReturnedObject("Int", "String"));
+          assertThat(logs()).containsExactly(faultyTypeOfReturnedObject("Int", "String"));
         }
 
         @Test
         public void struct_of_wrong_type() throws Exception {
           createUserNativeJar(ReturnStringStruct.class);
-          createUserModule(format("""
+          createUserModule(format(
+              """
             Person(
               String firstName,
               String lastName,
@@ -223,43 +235,44 @@ public class NativeTest extends AcceptanceTestCase {
             @Native("%s")
             Person returnStringStruct();
             result = returnStringStruct();
-            """, ReturnStringStruct.class.getCanonicalName()));
+            """,
+              ReturnStringStruct.class.getCanonicalName()));
           evaluate("result");
           assertThat(logs())
-              .containsExactly(
-                  faultyTypeOfReturnedObject("{String,String}", "{String}"));
+              .containsExactly(faultyTypeOfReturnedObject("{String,String}", "{String}"));
         }
 
         @Test
         public void array_of_wrong_type() throws Exception {
           createUserNativeJar(EmptyStringArray.class);
-          createUserModule(format("""
+          createUserModule(format(
+              """
             @Native("%s")
             [Blob] emptyStringArray();
             result = emptyStringArray();
-            """, EmptyStringArray.class.getCanonicalName()));
+            """,
+              EmptyStringArray.class.getCanonicalName()));
           evaluate("result");
-          assertThat(logs())
-              .containsExactly(
-                  faultyTypeOfReturnedObject("[Blob]", "[String]"));
+          assertThat(logs()).containsExactly(faultyTypeOfReturnedObject("[Blob]", "[String]"));
         }
 
         @Test
         public void array_with_added_elem_of_wrong_type() throws Exception {
           createUserNativeJar(AddElementOfWrongTypeToArray.class);
-          createUserModule(format("""
+          createUserModule(format(
+              """
             @Native("%s")
             [Blob] addElementOfWrongTypeToArray();
             result = addElementOfWrongTypeToArray();
-            """, AddElementOfWrongTypeToArray.class.getCanonicalName()));
+            """,
+              AddElementOfWrongTypeToArray.class.getCanonicalName()));
           evaluate("result");
           String message = logs().get(0).message();
           assertThat(message)
               .startsWith("Native code thrown exception:\n"
                   + "java.lang.IllegalArgumentException: Element type must be `Blob` but was "
                   + "`String`.");
-          assertThat(message)
-              .contains("Element type must be `Blob` but was `String`.");
+          assertThat(message).contains("Element type must be `Blob` but was `String`.");
         }
       }
     }
@@ -270,25 +283,28 @@ public class NativeTest extends AcceptanceTestCase {
     @Test
     public void func_call_can_be_evaluated() throws Exception {
       createUserNativeJar(ReturnIdFunc.class);
-      createUserModule(format("""
+      createUserModule(format(
+          """
             @Bytecode("%s")
             A myId(A a);
             result = myId(77);
-            """, ReturnIdFunc.class.getCanonicalName()));
+            """,
+          ReturnIdFunc.class.getCanonicalName()));
       evaluate("result");
-      assertThat(artifact())
-          .isEqualTo(intB(77));
+      assertThat(artifact()).isEqualTo(intB(77));
     }
 
     @Test
     public void func_with_illegal_impl_causes_fatal() throws Exception {
       Class<?> clazz = org.smoothbuild.testing.func.bytecode.NonPublicMethod.class;
       createUserNativeJar(clazz);
-      createUserModule(format("""
+      createUserModule(format(
+          """
             @Bytecode("%s")
             Int brokenFunc();
             result = brokenFunc();
-            """, clazz.getCanonicalName()));
+            """,
+          clazz.getCanonicalName()));
       evaluate("result");
       assertThat(logs())
           .containsExactly(fatal("build.smooth:1: Error loading bytecode for `brokenFunc` using "
@@ -300,23 +316,26 @@ public class NativeTest extends AcceptanceTestCase {
     public void value_can_be_evaluated() throws Exception {
       Class<?> clazz = org.smoothbuild.testing.func.bytecode.ReturnAbc.class;
       createUserNativeJar(clazz);
-      createUserModule(format("""
+      createUserModule(format(
+          """
             @Bytecode("%s")
             String result;
-            """, clazz.getCanonicalName()));
+            """,
+          clazz.getCanonicalName()));
       evaluate("result");
-      assertThat(artifact())
-          .isEqualTo(stringB("abc"));
+      assertThat(artifact()).isEqualTo(stringB("abc"));
     }
 
     @Test
     public void value_with_illegal_impl_causes_fatal() throws Exception {
       Class<?> clazz = org.smoothbuild.testing.func.bytecode.NonPublicMethod.class;
       createUserNativeJar(clazz);
-      createUserModule(format("""
+      createUserModule(format(
+          """
             @Bytecode("%s")
             Int result;
-            """, clazz.getCanonicalName()));
+            """,
+          clazz.getCanonicalName()));
       evaluate("result");
       assertThat(logs())
           .containsExactly(fatal("build.smooth:1: Error loading bytecode for `result` using "

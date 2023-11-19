@@ -1,10 +1,9 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
+import okio.ByteString;
 import org.smoothbuild.common.DecodeHexException;
 import org.smoothbuild.common.Hex;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
-
-import okio.ByteString;
 
 public final class BlobP extends LiteralP {
   private ByteString byteString;

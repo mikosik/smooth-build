@@ -13,7 +13,8 @@ public class AnnotatedFuncSTest extends TestContext {
     var funcTS = funcSchemaS(params, stringTS());
     var func = new AnnotatedFuncS(nativeAnnotationS(), funcTS, "myFunc", params, location(1));
     assertThat(func.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             AnnotatedFuncS(
               AnnotationS(
                 name = Native

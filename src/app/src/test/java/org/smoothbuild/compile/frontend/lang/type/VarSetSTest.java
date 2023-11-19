@@ -4,11 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
+import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-
-import com.google.common.testing.EqualsTester;
 
 public class VarSetSTest extends TestContext {
   @Nested
@@ -16,15 +15,13 @@ public class VarSetSTest extends TestContext {
     @Test
     public void filter_empty() {
       var varSet = varSetS();
-      assertThat(varSet.filter(v -> !v.equals(varC())))
-          .isEqualTo(varSetS());
+      assertThat(varSet.filter(v -> !v.equals(varC()))).isEqualTo(varSetS());
     }
 
     @Test
     public void filter() {
       var varSet = varSetS(varB(), varC(), varA());
-      assertThat(varSet.filter(v -> !v.equals(varC())))
-          .isEqualTo(varSetS(varA(), varB()));
+      assertThat(varSet.filter(v -> !v.equals(varC()))).isEqualTo(varSetS(varA(), varB()));
     }
   }
 
@@ -33,22 +30,19 @@ public class VarSetSTest extends TestContext {
     @Test
     public void empty_set_is_not_changed() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAdded(varSetS()))
-          .isEqualTo(varSetS(varA()));
+      assertThat(varSet.withAdded(varSetS())).isEqualTo(varSetS(varA()));
     }
 
     @Test
     public void itself() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAdded(varSet))
-          .isEqualTo(varSetS(varA()));
+      assertThat(varSet.withAdded(varSet)).isEqualTo(varSetS(varA()));
     }
 
     @Test
     public void other_varset() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withAdded(varSetS(varB())))
-          .isEqualTo(varSetS(varA(), varB()));
+      assertThat(varSet.withAdded(varSetS(varB()))).isEqualTo(varSetS(varA(), varB()));
     }
   }
 
@@ -57,44 +51,34 @@ public class VarSetSTest extends TestContext {
     @Test
     public void empty_set() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withRemoved(varSetS()))
-          .isEqualTo(varSetS(varA()));
+      assertThat(varSet.withRemoved(varSetS())).isEqualTo(varSetS(varA()));
     }
 
     @Test
     public void other_non_overlapping_set() {
       var varSet = varSetS(varA());
-      assertThat(varSet.withRemoved(varSetS(varB())))
-          .isEqualTo(varSetS(varA()));
+      assertThat(varSet.withRemoved(varSetS(varB()))).isEqualTo(varSetS(varA()));
     }
 
     @Test
     public void other_overlapping_set() {
       var varSet = varSetS(varA(), varB(), varC());
-      assertThat(varSet.withRemoved(varSetS(varB())))
-          .isEqualTo(varSetS(varA(), varC()));
+      assertThat(varSet.withRemoved(varSetS(varB()))).isEqualTo(varSetS(varA(), varC()));
     }
   }
 
   @Test
   public void as_list() {
     var varSet = varSetS(varB(), varC(), varA());
-    assertThat(varSet.asList())
-        .isEqualTo(list(varA(), varB(), varC()));
+    assertThat(varSet.asList()).isEqualTo(list(varA(), varB(), varC()));
   }
 
   @Test
   public void equals_and_hash_code() {
     new EqualsTester()
-        .addEqualityGroup(
-            varSetS(),
-            varSetS())
-        .addEqualityGroup(
-            varSetS(varA()),
-            varSetS(varA()))
-        .addEqualityGroup(
-            varSetS(varA(), varB()),
-            varSetS(varA(), varB()))
+        .addEqualityGroup(varSetS(), varSetS())
+        .addEqualityGroup(varSetS(varA()), varSetS(varA()))
+        .addEqualityGroup(varSetS(varA(), varB()), varSetS(varA(), varB()))
         .addEqualityGroup(
             varSetS(varC(), varA(), varB()),
             varSetS(varA(), varB(), varC()),
@@ -105,7 +89,6 @@ public class VarSetSTest extends TestContext {
   @Test
   public void to_string() {
     var varSet = varSetS(varC(), varA(), varB());
-    assertThat(varSet.toString())
-        .isEqualTo("<A,B,C>");
+    assertThat(varSet.toString()).isEqualTo("<A,B,C>");
   }
 }

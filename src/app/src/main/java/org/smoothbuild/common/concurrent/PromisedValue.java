@@ -40,10 +40,8 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
 
   private void assertValueIsNotSetYet(T value) {
     if (this.value != null) {
-      throw new IllegalStateException(unlines(
-          "Cannot set 'value' to: " + value,
-          "as it is already set to: " + this.value
-      ));
+      throw new IllegalStateException(
+          unlines("Cannot set 'value' to: " + value, "as it is already set to: " + this.value));
     }
   }
 

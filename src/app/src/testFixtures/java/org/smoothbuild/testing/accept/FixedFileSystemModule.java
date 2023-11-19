@@ -1,9 +1,8 @@
 package org.smoothbuild.testing.accept;
 
+import com.google.inject.AbstractModule;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.filesystem.space.FileSystemFactory;
-
-import com.google.inject.AbstractModule;
 
 public class FixedFileSystemModule extends AbstractModule {
   private final FileSystem prjFileSystem;

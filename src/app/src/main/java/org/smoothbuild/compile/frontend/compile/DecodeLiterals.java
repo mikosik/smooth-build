@@ -4,7 +4,6 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
-
 import org.smoothbuild.common.DecodeHexException;
 import org.smoothbuild.common.UnescapeFailedException;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;

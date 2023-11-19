@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.evaluate.execute;
 
 import java.util.function.Consumer;
-
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.ComputationResult;
@@ -13,7 +12,10 @@ public class ResHandler implements Consumer<ComputationResult> {
   private final Consumer<ValueB> consumer;
   private final Task task;
 
-  public ResHandler(Task task, SoftTerminationExecutor executor, TaskReporter reporter,
+  public ResHandler(
+      Task task,
+      SoftTerminationExecutor executor,
+      TaskReporter reporter,
       Consumer<ValueB> consumer) {
     this.task = task;
     this.executor = executor;

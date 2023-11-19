@@ -7,7 +7,7 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
 /**
  * Expression in smooth language.
  */
-public sealed abstract class ExprP implements Located
+public abstract sealed class ExprP implements Located
     permits CallP, InstantiateP, LiteralP, NamedArgP, OrderP, SelectP {
   private TypeS type;
   private final Location location;

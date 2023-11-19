@@ -3,10 +3,9 @@ package org.smoothbuild.compile.frontend.lang.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
+import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-
-import com.google.common.testing.EqualsTester;
 
 public class SchemaSTest extends TestContext {
   @Test
@@ -26,7 +25,6 @@ public class SchemaSTest extends TestContext {
   @Test
   public void to_string() {
     var schemaS = new SchemaS(varSetS(varA()), funcTS(intTS(), varA()));
-    assertThat(schemaS.toString())
-        .isEqualTo("<A>(Int)->A");
+    assertThat(schemaS.toString()).isEqualTo("<A>(Int)->A");
   }
 }

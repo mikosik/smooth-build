@@ -6,7 +6,6 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.SMOOTH_DIR;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
-
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathIterator;
 import org.smoothbuild.common.filesystem.base.PathS;
@@ -47,7 +46,8 @@ public class FilesFunc {
 
   private static ArrayB readFiles(Container container, FileSystem fileSystem, PathS dir)
       throws IOException {
-    var fileArrayBuilder = container.factory().arrayBuilderWithElems(container.factory().fileT());
+    var fileArrayBuilder =
+        container.factory().arrayBuilderWithElems(container.factory().fileT());
     var reader = new FileReader(container);
     if (dir.isRoot()) {
       for (PathS path : fileSystem.files(PathS.root())) {

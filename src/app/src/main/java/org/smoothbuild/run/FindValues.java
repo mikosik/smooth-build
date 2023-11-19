@@ -5,9 +5,10 @@ import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.failure;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.Array;
 import java.util.ArrayList;
 import java.util.function.Function;
-
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
 import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
@@ -15,9 +16,6 @@ import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
-
-import io.vavr.Tuple2;
-import io.vavr.collection.Array;
 
 public class FindValues implements Function<Tuple2<ScopeS, Array<String>>, Maybe<Array<ExprS>>> {
 

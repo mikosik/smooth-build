@@ -21,7 +21,8 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hashes_of_computations_with_different_task_but_same_runtime_and_input_are_not_equal() {
+  public void
+      hashes_of_computations_with_different_task_but_same_runtime_and_input_are_not_equal() {
     var task1 = new ConstTask(intB(7), traceB());
     var task2 = new ConstTask(intB(9), traceB());
     var input = tupleB(stringB("input"));
@@ -30,7 +31,8 @@ public class ComputationHashTest extends TestContext {
   }
 
   @Test
-  public void hashes_of_computations_with_same_task_and_input_but_different_runtime_are_not_equal() {
+  public void
+      hashes_of_computations_with_same_task_and_input_but_different_runtime_are_not_equal() {
     var task = new ConstTask(intB(7), traceB());
     var input = tupleB(stringB("input"));
     assertThat(Computer.computationHash(Hash.of(13), task, input))

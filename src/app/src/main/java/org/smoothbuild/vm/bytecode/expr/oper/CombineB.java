@@ -3,6 +3,7 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.Lists.allMatchOtherwise;
 
+import io.vavr.collection.Array;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -11,8 +12,6 @@ import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
-
-import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.
@@ -49,10 +48,14 @@ public class CombineB extends OperB {
           throw new DecodeCombineWrongElementsSizeException(hash(), category(), item);
         },
         (index) -> {
-          throw new DecodeExprWrongNodeTypeException(hash(), category(), "elements", index,
-              expectedElementsTs.get(index), items.get(index).evaluationT());
-        }
-    );
+          throw new DecodeExprWrongNodeTypeException(
+              hash(),
+              category(),
+              "elements",
+              index,
+              expectedElementsTs.get(index),
+              items.get(index).evaluationT());
+        });
     return items;
   }
 }

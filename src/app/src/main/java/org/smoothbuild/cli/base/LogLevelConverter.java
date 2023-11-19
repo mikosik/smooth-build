@@ -5,10 +5,8 @@ import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 
-import org.smoothbuild.out.log.Level;
-
 import com.google.common.collect.ImmutableMap;
-
+import org.smoothbuild.out.log.Level;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.TypeConversionException;
 
@@ -16,17 +14,16 @@ import picocli.CommandLine.TypeConversionException;
  * Log level converter.
  */
 public class LogLevelConverter implements ITypeConverter<Level> {
-  private static final ImmutableMap<String, Level> MAP =
-      ImmutableMap.<String, Level>builder()
-          .put("f", FATAL)
-          .put("fatal", FATAL)
-          .put("e", ERROR)
-          .put("error", ERROR)
-          .put("w", WARNING)
-          .put("warning", WARNING)
-          .put("i", INFO)
-          .put("info", INFO)
-          .build();
+  private static final ImmutableMap<String, Level> MAP = ImmutableMap.<String, Level>builder()
+      .put("f", FATAL)
+      .put("fatal", FATAL)
+      .put("e", ERROR)
+      .put("error", ERROR)
+      .put("w", WARNING)
+      .put("warning", WARNING)
+      .put("i", INFO)
+      .put("info", INFO)
+      .build();
 
   @Override
   public Level convert(String value) {

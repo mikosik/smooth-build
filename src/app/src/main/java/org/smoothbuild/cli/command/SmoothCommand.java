@@ -1,7 +1,6 @@
 package org.smoothbuild.cli.command;
 
 import org.smoothbuild.cli.base.ACommand;
-
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;
@@ -17,15 +16,15 @@ import picocli.CommandLine.HelpCommand;
         More info at https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md\
         """,
     subcommands = {
-        BuildCommand.class,
-        CleanCommand.class,
-        HelpCommand.class,
-        ListCommand.class,
-        VersionCommand.class
+      BuildCommand.class,
+      CleanCommand.class,
+      HelpCommand.class,
+      ListCommand.class,
+      VersionCommand.class
     },
     synopsisSubcommandLabel = "COMMAND" // to avoid default [COMMAND] because COMMAND is mandatory
-)
-public class SmoothCommand extends ACommand implements Runnable  {
+    )
+public class SmoothCommand extends ACommand implements Runnable {
   @Override
   public void run() {
     CommandLine commandLine = spec.commandLine();

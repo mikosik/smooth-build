@@ -13,12 +13,15 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECOD
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import io.vavr.collection.Array;
+import jakarta.inject.Inject;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
@@ -49,7 +52,6 @@ import org.smoothbuild.compile.frontend.lang.define.PolymorphicS;
 import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
 import org.smoothbuild.compile.frontend.lang.define.SelectS;
 import org.smoothbuild.compile.frontend.lang.define.StringS;
-import org.smoothbuild.compile.frontend.lang.type.AnnotationNames;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.FuncTS;
 import org.smoothbuild.compile.frontend.lang.type.StructTS;
@@ -76,12 +78,6 @@ import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
-import io.vavr.collection.Array;
-import jakarta.inject.Inject;
-
 public class SbTranslator {
   private final BytecodeF bytecodeF;
   private final TypeSbTranslator typeSbTranslator;
@@ -99,7 +95,8 @@ public class SbTranslator {
       FileLoader fileLoader,
       BytecodeLoader bytecodeLoader,
       ImmutableBindings<NamedEvaluableS> evaluables) {
-    this(bytecodeF,
+    this(
+        bytecodeF,
         new TypeSbTranslator(bytecodeF, ImmutableMap.of()),
         fileLoader,
         bytecodeLoader,
@@ -142,13 +139,13 @@ public class SbTranslator {
   public ExprB translateExpr(ExprS exprS) {
     // @formatter:off
     return switch (exprS) {
-      case BlobS        blobS        -> saveLocAndReturn(blobS,     translateBlob(blobS));
-      case CallS        callS        -> saveLocAndReturn(callS,     translateCall(callS));
-      case CombineS     combineS     -> saveLocAndReturn(combineS,  translateCombine(combineS));
-      case IntS         intS         -> saveLocAndReturn(intS,      translateInt(intS));
-      case OrderS       orderS       -> saveLocAndReturn(orderS,    translateOrder(orderS));
-      case SelectS      selectS      -> saveLocAndReturn(selectS,   translateSelect(selectS));
-      case StringS      stringS      -> saveLocAndReturn(stringS,   translateString(stringS));
+      case BlobS blobS -> saveLocAndReturn(blobS, translateBlob(blobS));
+      case CallS callS -> saveLocAndReturn(callS, translateCall(callS));
+      case CombineS combineS -> saveLocAndReturn(combineS, translateCombine(combineS));
+      case IntS intS -> saveLocAndReturn(intS, translateInt(intS));
+      case OrderS orderS -> saveLocAndReturn(orderS, translateOrder(orderS));
+      case SelectS selectS -> saveLocAndReturn(selectS, translateSelect(selectS));
+      case StringS stringS -> saveLocAndReturn(stringS, translateString(stringS));
       case InstantiateS instantiateS -> translateInstantiate(instantiateS);
     };
     // @formatter:on
@@ -200,8 +197,7 @@ public class SbTranslator {
   }
 
   private ExprB translateLambda(LambdaS lambdaS) {
-    var lambdaB = funcBodySbTranslator(lambdaS)
-        .translateExprFunc(lambdaS);
+    var lambdaB = funcBodySbTranslator(lambdaS).translateExprFunc(lambdaS);
     return saveNalAndReturn("<lambda>", lambdaS, lambdaB);
   }
 
@@ -262,15 +258,13 @@ public class SbTranslator {
     return switch (annotationName) {
       case BYTECODE -> fetchFuncBytecode(annotatedFuncS);
       case NATIVE_PURE, NATIVE_IMPURE -> translateNativeFunc(annotatedFuncS);
-      default ->
-          throw new SbTranslatorException("Illegal function annotation: " + annotationName + ".");
+      default -> throw new SbTranslatorException(
+          "Illegal function annotation: " + annotationName + ".");
     };
   }
 
   private LambdaB translateExprFunc(ExprFuncS exprFuncS) {
-    return bytecodeF.lambda(
-        translateT(exprFuncS.schema().type()),
-        translateExpr(exprFuncS.body()));
+    return bytecodeF.lambda(translateT(exprFuncS.schema().type()), translateExpr(exprFuncS.body()));
   }
 
   private NativeFuncB translateNativeFunc(AnnotatedFuncS nativeFuncS) {
@@ -290,7 +284,8 @@ public class SbTranslator {
   }
 
   private Array<ExprB> createRefsB(TupleTB paramTs) {
-    return paramTs.elements()
+    return paramTs
+        .elements()
         .zipWithIndex((typeB, i) -> bytecodeF.var(typeB, BigInteger.valueOf(i)));
   }
 
@@ -337,7 +332,8 @@ public class SbTranslator {
   }
 
   private ExprB translateNamedExprValue(Location refLocation, NamedExprValueS namedExprValueS) {
-    var funcTB = bytecodeF.funcT(Array.empty(), translateT(namedExprValueS.schema().type()));
+    var funcTB =
+        bytecodeF.funcT(Array.empty(), translateT(namedExprValueS.schema().type()));
     var funcB = bytecodeF.lambda(funcTB, translateExpr(namedExprValueS.body()));
     saveNal(funcB, namedExprValueS);
     var call = bytecodeF.call(funcB, bytecodeF.combine(Array.empty()));
@@ -367,7 +363,8 @@ public class SbTranslator {
     var bytecodeB = bytecode.get();
     if (!bytecodeB.evaluationT().equals(typeB)) {
       throw new SbTranslatorException(annotation.location()
-          + ": Bytecode provider returned object of wrong type " + bytecodeB.evaluationT().q()
+          + ": Bytecode provider returned object of wrong type "
+          + bytecodeB.evaluationT().q()
           + " when " + q(name) + " is declared as " + typeB.q() + ".");
     }
     return bytecodeB;
@@ -378,8 +375,8 @@ public class SbTranslator {
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {
-      var message = location + ": Error loading native jar: File %s doesn't exist."
-          .formatted(filePath.q());
+      var message =
+          location + ": Error loading native jar: File %s doesn't exist.".formatted(filePath.q());
       throw new SbTranslatorException(message);
     }
   }

@@ -3,10 +3,9 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Objects;
-
-import com.google.common.collect.ImmutableList;
 
 public final class ModuleP implements ScopedP {
   private final String name;
@@ -19,10 +18,7 @@ public final class ModuleP implements ScopedP {
   }
 
   public ModuleP(
-      String name,
-      List<StructP> structs,
-      List<NamedEvaluableP> evaluables,
-      ScopeP scope) {
+      String name, List<StructP> structs, List<NamedEvaluableP> evaluables, ScopeP scope) {
     this.name = name;
     this.structs = ImmutableList.copyOf(structs);
     this.evaluables = ImmutableList.copyOf(evaluables);
@@ -69,14 +65,14 @@ public final class ModuleP implements ScopedP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
+    var fields = joinToString(
+        "\n",
         "structs = [",
         indent(joinToString(structs(), "\n")),
         "]",
         "evaluables = [",
         indent(joinToString(evaluables(), "\n")),
-        "]"
-    );
+        "]");
     return "ModuleP(\n" + indent(fields) + "\n)";
   }
 }

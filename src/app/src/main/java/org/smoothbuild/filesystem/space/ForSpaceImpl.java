@@ -28,12 +28,11 @@ public class ForSpaceImpl implements ForSpace {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof ForSpace that
-        && Objects.equals(this.value(), that.value());
+    return object instanceof ForSpace that && Objects.equals(this.value(), that.value());
   }
 
   @Override
   public String toString() {
-    return '@' + ForSpace.class.getName() + "(value="+ space + ')';
+    return '@' + ForSpace.class.getName() + "(value=" + space + ')';
   }
 }

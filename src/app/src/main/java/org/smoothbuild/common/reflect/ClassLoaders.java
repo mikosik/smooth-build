@@ -43,8 +43,7 @@ public class ClassLoaders {
         }
         return new URLConnection(url) {
           @Override
-          public void connect() {
-          }
+          public void connect() {}
 
           @Override
           public InputStream getInputStream() {

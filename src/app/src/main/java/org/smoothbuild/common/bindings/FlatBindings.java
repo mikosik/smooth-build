@@ -4,12 +4,11 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.Maps.mapValues;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-
-import com.google.common.collect.ImmutableMap;
 
 public sealed class FlatBindings<E> extends AbstractBindings<E>
     permits FlatImmutableBindings, FlatMutableBindings {
@@ -39,8 +38,7 @@ public sealed class FlatBindings<E> extends AbstractBindings<E>
     if (this == object) {
       return true;
     }
-    return object instanceof FlatBindings<?> that
-        && Objects.equals(this.map, that.map);
+    return object instanceof FlatBindings<?> that && Objects.equals(this.map, that.map);
   }
 
   @Override

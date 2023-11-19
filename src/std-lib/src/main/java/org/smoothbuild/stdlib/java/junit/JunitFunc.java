@@ -11,11 +11,11 @@ import static org.smoothbuild.stdlib.java.junit.JUnitCoreWrapper.newInstance;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
 
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
@@ -24,8 +24,6 @@ import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-
-import com.google.common.collect.ImmutableMap;
 
 public class JunitFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
@@ -55,8 +53,10 @@ public class JunitFunc {
           var resWrapper = jUnitCore.run(testClass);
           if (!resWrapper.wasSuccessful()) {
             for (var failureWrapper : resWrapper.getFailures()) {
-              nativeApi.log().error(
-                  "test failed: " + failureWrapper.toString() + "\n" + failureWrapper.getTrace());
+              nativeApi
+                  .log()
+                  .error("test failed: " + failureWrapper.toString() + "\n"
+                      + failureWrapper.getTrace());
             }
             return nativeApi.factory().string("FAILURE");
           }
@@ -79,8 +79,8 @@ public class JunitFunc {
     });
   }
 
-  private static ImmutableMap<String, TupleB> concatMaps(Map<String, TupleB> testClasses,
-      Map<String, TupleB> libClasses) throws JunitException {
+  private static ImmutableMap<String, TupleB> concatMaps(
+      Map<String, TupleB> testClasses, Map<String, TupleB> libClasses) throws JunitException {
     var allFiles = new HashMap<>(libClasses);
     for (var entry : testClasses.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {

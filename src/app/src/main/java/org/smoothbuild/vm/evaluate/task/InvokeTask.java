@@ -6,7 +6,6 @@ import static org.smoothbuild.vm.evaluate.task.Purity.PURE;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -24,7 +23,9 @@ public final class InvokeTask extends Task {
 
   @Override
   public Output run(TupleB input, Container container) {
-    return container.nativeMethodLoader().load(nativeFuncB)
+    return container
+        .nativeMethodLoader()
+        .load(nativeFuncB)
         .map(m -> invokeMethod(m, input, container))
         .getOrElseGet(message -> logFatalAndReturnNullOutput(container, message));
   }
@@ -43,8 +44,8 @@ public final class InvokeTask extends Task {
     return buildOutput(container, result);
   }
 
-  private static void reportExceptionAsFatal(Container container, String message,
-      Throwable throwable) {
+  private static void reportExceptionAsFatal(
+      Container container, String message, Throwable throwable) {
     container.log().fatal(message + ":\n" + getStackTraceAsString(throwable));
   }
 
@@ -57,8 +58,10 @@ public final class InvokeTask extends Task {
       return new Output(null, container.messages());
     }
     if (!outputT().equals(result.evaluationT())) {
-      logFaultyImplementation(container, "Its declared result type == "
-          + outputT().q() + " but it returned object with type == " + result.category().q() + ".");
+      logFaultyImplementation(
+          container,
+          "Its declared result type == " + outputT().q() + " but it returned object with type == "
+              + result.category().q() + ".");
       return new Output(null, container.messages());
     }
     if (hasErrors) {

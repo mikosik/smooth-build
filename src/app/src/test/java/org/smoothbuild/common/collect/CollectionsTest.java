@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.List;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +18,7 @@ public class CollectionsTest {
 
     @Test
     public void empty_collection() {
-      assertThat(Collections.toMap(list(), String::length))
-          .isEmpty();
+      assertThat(Collections.toMap(list(), String::length)).isEmpty();
     }
   }
 
@@ -28,7 +26,8 @@ public class CollectionsTest {
   class toMapWithValueMapper {
     @Test
     public void non_empty_collection() {
-      assertThat(Collections.toMap(list("abc", "defg", "hijkl"), String::toUpperCase, String::length))
+      assertThat(
+              Collections.toMap(list("abc", "defg", "hijkl"), String::toUpperCase, String::length))
           .containsExactly("ABC", 3, "DEFG", 4, "HIJKL", 5);
     }
 
@@ -41,8 +40,7 @@ public class CollectionsTest {
 
     @Test
     public void empty_collection() {
-      assertThat(Collections.toMap(list(), String::toUpperCase, String::length))
-          .isEmpty();
+      assertThat(Collections.toMap(list(), String::toUpperCase, String::length)).isEmpty();
     }
   }
 }

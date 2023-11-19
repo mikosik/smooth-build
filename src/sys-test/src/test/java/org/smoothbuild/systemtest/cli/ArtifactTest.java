@@ -7,7 +7,6 @@ import static org.smoothbuild.testing.BooleanCreators.falseByteString;
 import static org.smoothbuild.testing.BooleanCreators.trueByteString;
 
 import java.nio.file.Files;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
@@ -20,8 +19,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactAsByteStrings("result"))
-        .isEqualTo(trueByteString());
+    assertThat(artifactAsByteStrings("result")).isEqualTo(trueByteString());
   }
 
   @Test
@@ -33,8 +31,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactAsByteStrings("result"))
-        .isEqualTo(intToByteString(-12345678));
+    assertThat(artifactAsByteStrings("result")).isEqualTo(intToByteString(-12345678));
   }
 
   @Test
@@ -45,8 +42,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactAsString("result"))
-        .isEqualTo("abc");
+    assertThat(artifactAsString("result")).isEqualTo("abc");
   }
 
   @Test
@@ -57,8 +53,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactAsString("result"))
-        .isEqualTo("A");
+    assertThat(artifactAsString("result")).isEqualTo("A");
   }
 
   @Test
@@ -69,19 +64,19 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result/file.txt'");
-    assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file.txt", "A");
+    assertThat(artifactTreeContentAsStrings("result")).containsExactly("file.txt", "A");
   }
 
   @Test
   public void storing_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name()
       throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             NotAFile(
               Blob content,
               String path,
             )
-            
+
             result = NotAFile(0x41, "file.txt");
             """);
     runSmoothBuild("result");
@@ -97,8 +92,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list());
+    assertThat(artifactStringified("result")).isEqualTo(list());
   }
 
   @Test
@@ -121,8 +115,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list());
+    assertThat(artifactStringified("result")).isEqualTo(list());
   }
 
   @Test
@@ -133,8 +126,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("abc", "def"));
+    assertThat(artifactStringified("result")).isEqualTo(list("abc", "def"));
   }
 
   @Test
@@ -155,8 +147,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list());
+    assertThat(artifactStringified("result")).isEqualTo(list());
   }
 
   @Test
@@ -167,8 +158,7 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("A", "B"));
+    assertThat(artifactStringified("result")).isEqualTo(list("A", "B"));
   }
 
   @Test
@@ -179,13 +169,13 @@ public class ArtifactTest extends SystemTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list());
+    assertThat(artifactStringified("result")).isEqualTo(list());
   }
 
   @Test
   public void store_array_of_files_artifact() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             result = [File(0x41, "file1.txt"), File(0x42, "file2.txt")];
             """);
     runSmoothBuild("result");
@@ -197,32 +187,35 @@ public class ArtifactTest extends SystemTestCase {
 
   @Test
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             myFile = File(0x41, "file.txt");
             result = [myFile, myFile];
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("""
+    assertSysOutContains(
+        """
         ::Saving artifact(s)
            + ERROR: Can't store array of Files as it contains files with duplicated paths:
                'file.txt'
             """);
-    assertThat(Files.exists(artifactAbsolutePath("result")))
-        .isFalse();
+    assertThat(Files.exists(artifactAbsolutePath("result"))).isFalse();
   }
 
   @Test
   public void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order()
       throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
         result1 = "abc";
         result2 = "abc";
         result3 = "abc";
             """);
     runSmoothBuild("result2", "result3", "result1");
     assertFinishedWithSuccess();
-    assertSysOutContains("""
+    assertSysOutContains(
+        """
         ::Saving artifact(s)
         result1 -> '.smooth/artifacts/result1'
         result2 -> '.smooth/artifacts/result2'

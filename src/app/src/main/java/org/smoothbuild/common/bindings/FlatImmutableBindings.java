@@ -1,14 +1,14 @@
 package org.smoothbuild.common.bindings;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Immutable bindings with single scope.
  */
-public final class FlatImmutableBindings<E> extends FlatBindings<E> implements ImmutableBindings<E> {
+public final class FlatImmutableBindings<E> extends FlatBindings<E>
+    implements ImmutableBindings<E> {
   FlatImmutableBindings(Map<String, E> map) {
     super(ImmutableMap.copyOf(map));
   }

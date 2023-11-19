@@ -8,6 +8,9 @@ import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
+import com.google.common.collect.ImmutableList;
+import io.vavr.Tuple0;
+import io.vavr.Tuple2;
 import org.smoothbuild.compile.frontend.compile.ConvertPs;
 import org.smoothbuild.compile.frontend.compile.DecodeLiterals;
 import org.smoothbuild.compile.frontend.compile.DetectUndefined;
@@ -25,25 +28,17 @@ import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.run.step.Step;
 import org.smoothbuild.run.step.StepFactory;
 
-import com.google.common.collect.ImmutableList;
-
-import io.vavr.Tuple0;
-import io.vavr.Tuple2;
-
 public class FrontendCompilerStep {
-  private static final ImmutableList<FilePath> MODULES =
-      ImmutableList.<FilePath>builder()
-          .addAll(STD_LIB_MODS)
-          .add(DEFAULT_MODULE_FILE_PATH)
-          .build();
+  private static final ImmutableList<FilePath> MODULES = ImmutableList.<FilePath>builder()
+      .addAll(STD_LIB_MODS)
+      .add(DEFAULT_MODULE_FILE_PATH)
+      .build();
 
   public static Step<Tuple0, ScopeS> frontendCompilerStep() {
     var step = step(LoadInternalModuleMembers.class);
     for (var filePath : MODULES) {
-      step = step
-          .append(filePath)
-          .then(stepFactory(new FrontendCompilerStepFactory())
-              .named(filePath.toString()));
+      step = step.append(filePath)
+          .then(stepFactory(new FrontendCompilerStepFactory()).named(filePath.toString()));
     }
     return step.named("Parsing");
   }

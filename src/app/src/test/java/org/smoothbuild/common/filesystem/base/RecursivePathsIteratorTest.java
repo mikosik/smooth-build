@@ -5,27 +5,23 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.truth.Truth;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
-
-import com.google.common.truth.Truth;
-
 import okio.BufferedSink;
 import okio.ByteString;
+import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 
 public class RecursivePathsIteratorTest {
   @Test
   public void test() throws IOException {
-    doTestIterable("abc",
-        list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
-    doTestIterable("abc/xyz",
-        list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
-    doTestIterable("abc/xyz/prs",
-        list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
+    doTestIterable("abc", list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
+    doTestIterable(
+        "abc/xyz", list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
+    doTestIterable(
+        "abc/xyz/prs", list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
   }
 
   private void doTestIterable(String rootDir, List<String> names) throws IOException {
@@ -43,7 +39,8 @@ public class RecursivePathsIteratorTest {
   public void is_empty_when_dir_doesnt_exist() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
     var path = PathS.path("my/file");
-    Truth.assertThat(RecursivePathsIterator.recursivePathsIterator(fileSystem, path).hasNext())
+    Truth.assertThat(
+            RecursivePathsIterator.recursivePathsIterator(fileSystem, path).hasNext())
         .isFalse();
   }
 
@@ -66,30 +63,34 @@ public class RecursivePathsIteratorTest {
     FileSystem fileSystem = new MemoryFileSystem();
     createFiles(fileSystem, "dir", list("1.txt", "2.txt", "subdir/somefile"));
 
-    PathIterator iterator = RecursivePathsIterator.recursivePathsIterator(fileSystem, PathS.path("dir"));
+    PathIterator iterator =
+        RecursivePathsIterator.recursivePathsIterator(fileSystem, PathS.path("dir"));
     iterator.next();
     fileSystem.delete(PathS.path("dir/subdir"));
 
-    assertCall(iterator::next).throwsException(new IOException(
-        "FileSystem changed when iterating tree of directory 'dir'. Cannot find 'dir/subdir'."));
+    assertCall(iterator::next)
+        .throwsException(
+            new IOException(
+                "FileSystem changed when iterating tree of directory 'dir'. Cannot find 'dir/subdir'."));
   }
 
-  private void doTestIterable(String rootDir, List<String> names, String expectedRootDir,
-      List<String> expectedNames) throws IOException {
+  private void doTestIterable(
+      String rootDir, List<String> names, String expectedRootDir, List<String> expectedNames)
+      throws IOException {
     FileSystem fileSystem = new MemoryFileSystem();
     createFiles(fileSystem, rootDir, names);
 
-    PathIterator iterator = RecursivePathsIterator.recursivePathsIterator(fileSystem, PathS.path(expectedRootDir));
+    PathIterator iterator =
+        RecursivePathsIterator.recursivePathsIterator(fileSystem, PathS.path(expectedRootDir));
     List<String> created = new ArrayList<>();
     while (iterator.hasNext()) {
       created.add(iterator.next().toString());
     }
-    assertThat(created)
-        .containsExactlyElementsIn(expectedNames);
+    assertThat(created).containsExactlyElementsIn(expectedNames);
   }
 
-  private void createFiles(FileSystem fileSystem, String rootDir, List<String> names) throws
-      IOException {
+  private void createFiles(FileSystem fileSystem, String rootDir, List<String> names)
+      throws IOException {
     for (String name : names) {
       PathS path = PathS.path(rootDir).append(PathS.path(name));
       fileSystem.sink(path).close();

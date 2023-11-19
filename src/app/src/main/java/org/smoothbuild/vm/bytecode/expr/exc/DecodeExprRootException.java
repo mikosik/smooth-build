@@ -9,15 +9,19 @@ public class DecodeExprRootException extends DecodeExprException {
   }
 
   public static DecodeExprRootException wrongSizeOfRootSeqException(Hash hash, int actualSize) {
-    return new DecodeExprRootException(hash, "Its root points to hash sequence with " + actualSize
-        + " elems when it should point to sequence with 1 or 2 elems.");
+    return new DecodeExprRootException(
+        hash,
+        "Its root points to hash sequence with " + actualSize
+            + " elems when it should point to sequence with 1 or 2 elems.");
   }
 
   public static DecodeExprRootException wrongSizeOfRootSeqException(
       Hash hash, CategoryB category, int actualSize) {
-    return new DecodeExprRootException(hash, "Its root points to hash sequence with " + actualSize
-        + " elements. First element is " + category.name() + " category which means "
-        + rootShouldPointToSequence(category));
+    return new DecodeExprRootException(
+        hash,
+        "Its root points to hash sequence with " + actualSize
+            + " elements. First element is " + category.name() + " category which means "
+            + rootShouldPointToSequence(category));
   }
 
   private static String rootShouldPointToSequence(CategoryB category) {

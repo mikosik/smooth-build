@@ -3,8 +3,11 @@ package org.smoothbuild.run.step;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.out.log.Maybe.success;
 
+import com.google.inject.Key;
+import io.vavr.Tuple;
+import io.vavr.Tuple0;
+import io.vavr.Tuple2;
 import java.util.function.Function;
-
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.run.step.Step.ComposedStep;
 import org.smoothbuild.run.step.Step.FactoryStep;
@@ -13,15 +16,13 @@ import org.smoothbuild.run.step.Step.FunctionStep;
 import org.smoothbuild.run.step.Step.NamedStep;
 import org.smoothbuild.run.step.Step.OptionFunctionKeyStep;
 
-import com.google.inject.Key;
-
-import io.vavr.Tuple;
-import io.vavr.Tuple0;
-import io.vavr.Tuple2;
-
 public sealed interface Step<T, R>
-    permits ComposedStep, FactoryStep, FunctionKeyStep, FunctionStep, NamedStep,
-    OptionFunctionKeyStep {
+    permits ComposedStep,
+        FactoryStep,
+        FunctionKeyStep,
+        FunctionStep,
+        NamedStep,
+        OptionFunctionKeyStep {
   public default Step<T, R> named(String name) {
     return new NamedStep<>(name, this);
   }
@@ -55,7 +56,8 @@ public sealed interface Step<T, R>
     return new OptionFunctionKeyStep<>(Key.get(clazz));
   }
 
-  record OptionFunctionKeyStep<T, R>(Key<? extends OptionFunction<T, R>> key) implements Step<T, R> {}
+  record OptionFunctionKeyStep<T, R>(Key<? extends OptionFunction<T, R>> key)
+      implements Step<T, R> {}
 
   public default <S> Step<T, Tuple2<R, S>> append(S value) {
     return new ComposedStep<>(this, step((R r) -> success(Tuple.of(r, value))));

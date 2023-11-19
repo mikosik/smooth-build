@@ -2,17 +2,15 @@ package org.smoothbuild.vm.bytecode.load;
 
 import static org.smoothbuild.common.Strings.q;
 
+import io.vavr.control.Either;
+import jakarta.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
-
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
-
-import io.vavr.control.Either;
-import jakarta.inject.Inject;
 
 public class BytecodeLoader {
   private final BytecodeMethodLoader methodLoader;
@@ -26,7 +24,8 @@ public class BytecodeLoader {
 
   public Either<String, ExprB> load(
       String name, BlobB jar, String classBinaryName, Map<String, TypeB> varMap) {
-    return methodLoader.load(jar, classBinaryName)
+    return methodLoader
+        .load(jar, classBinaryName)
         .flatMap(method -> invoke(method, varMap))
         .mapLeft(e -> loadingError(name, classBinaryName, e));
   }

@@ -2,6 +2,7 @@ package org.smoothbuild.out.log;
 
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -9,8 +10,6 @@ import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-
-import com.google.common.collect.ImmutableList;
 
 public class ImmutableLogs implements Logs {
   private final ImmutableList<Log> logs;
@@ -59,8 +58,7 @@ public class ImmutableLogs implements Logs {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof ImmutableLogs that
-        && logs.equals(that.logs);
+    return object instanceof ImmutableLogs that && logs.equals(that.logs);
   }
 
   @Override

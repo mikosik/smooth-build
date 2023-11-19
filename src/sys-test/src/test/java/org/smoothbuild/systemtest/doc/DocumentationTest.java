@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,8 +43,7 @@ public class DocumentationTest extends SystemTestCase {
   private static List<Path> mdFiles() throws IOException {
     Path documentationDir = Path.of("../../doc").toAbsolutePath();
     try (Stream<Path> stream = Files.walk(documentationDir)) {
-      return stream.filter(Files::isRegularFile)
-          .collect(Collectors.toList());
+      return stream.filter(Files::isRegularFile).collect(Collectors.toList());
     }
   }
 

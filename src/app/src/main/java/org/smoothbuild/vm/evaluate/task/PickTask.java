@@ -2,6 +2,7 @@ package org.smoothbuild.vm.evaluate.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import io.vavr.collection.Array;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
@@ -9,8 +10,6 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
-
-import io.vavr.collection.Array;
 
 public final class PickTask extends Task {
   public PickTask(PickB pickB, TraceB trace) {
@@ -24,8 +23,9 @@ public final class PickTask extends Task {
     int index = index(components).toJ().intValue();
     var elems = array(components).elems(ValueB.class);
     if (index < 0 || elems.size() <= index) {
-      container.log().error(
-          "Index (" + index + ") out of bounds. Array size = " + elems.size() + ".");
+      container
+          .log()
+          .error("Index (" + index + ") out of bounds. Array size = " + elems.size() + ".");
       return new Output(null, container.messages());
     } else {
       return new Output(elems.get(index), container.messages());

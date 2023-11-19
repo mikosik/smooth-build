@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.List;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -18,8 +17,7 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    assertThat(nativeFuncB.evaluationT())
-        .isEqualTo(funcT);
+    assertThat(nativeFuncB.evaluationT()).isEqualTo(funcT);
   }
 
   @Test
@@ -30,12 +28,9 @@ public class NativeFuncBTest extends TestContext {
     var type = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(type, jar, classBinaryName, isPure);
 
-    assertThat(nativeFuncB.jar())
-        .isEqualTo(jar);
-    assertThat(nativeFuncB.classBinaryName())
-        .isEqualTo(classBinaryName);
-    assertThat(nativeFuncB.isPure())
-        .isEqualTo(isPure);
+    assertThat(nativeFuncB.jar()).isEqualTo(jar);
+    assertThat(nativeFuncB.classBinaryName()).isEqualTo(classBinaryName);
+    assertThat(nativeFuncB.isPure()).isEqualTo(isPure);
   }
 
   @Nested
@@ -44,8 +39,7 @@ public class NativeFuncBTest extends TestContext {
     protected List<NativeFuncB> equalExprs() {
       return list(
           nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true)),
-          nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true))
-      );
+          nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(true)));
     }
 
     @Override
@@ -55,8 +49,7 @@ public class NativeFuncBTest extends TestContext {
           nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("a"), boolB(false)),
           nativeFuncB(funcTB(intTB(), stringTB()), blobB(7), stringB("b"), boolB(true)),
           nativeFuncB(funcTB(intTB(), stringTB()), blobB(9), stringB("a"), boolB(true)),
-          nativeFuncB(funcTB(stringTB(), stringTB()), blobB(7), stringB("a"), boolB(true))
-      );
+          nativeFuncB(funcTB(stringTB(), stringTB()), blobB(7), stringB("a"), boolB(true)));
     }
   }
 
@@ -67,8 +60,7 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    assertThat(bytecodeDbOther().get(nativeFuncB.hash()))
-        .isEqualTo(nativeFuncB);
+    assertThat(bytecodeDbOther().get(nativeFuncB.hash())).isEqualTo(nativeFuncB);
   }
 
   @Test
@@ -79,12 +71,9 @@ public class NativeFuncBTest extends TestContext {
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
     var readNativeFuncB = (NativeFuncB) bytecodeDbOther().get(nativeFuncB.hash());
-    assertThat(readNativeFuncB.classBinaryName())
-        .isEqualTo(classBinaryName);
-    assertThat(readNativeFuncB.jar())
-        .isEqualTo(jar);
-    assertThat(readNativeFuncB.isPure())
-        .isEqualTo(isPure);
+    assertThat(readNativeFuncB.classBinaryName()).isEqualTo(classBinaryName);
+    assertThat(readNativeFuncB.jar()).isEqualTo(jar);
+    assertThat(readNativeFuncB.isPure()).isEqualTo(isPure);
   }
 
   @Test
@@ -94,7 +83,6 @@ public class NativeFuncBTest extends TestContext {
     var isPure = boolB(true);
     var funcT = funcTB(intTB(), stringTB());
     var nativeFuncB = nativeFuncB(funcT, jar, classBinaryName, isPure);
-    assertThat(nativeFuncB.toString())
-        .isEqualTo("NativeFunc((Int)->String)@" + nativeFuncB.hash());
+    assertThat(nativeFuncB.toString()).isEqualTo("NativeFunc((Int)->String)@" + nativeFuncB.hash());
   }
 }

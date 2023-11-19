@@ -2,10 +2,9 @@ package org.smoothbuild.compile.frontend.lang.type;
 
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.interfaceTypeName;
 
-import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
+import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 
 /**
  * This class is immutable.
@@ -28,7 +27,6 @@ public final class InterfaceTS extends FieldSetTS {
     if (this == object) {
       return true;
     }
-    return object instanceof InterfaceTS that
-        && this.fields.equals(that.fields);
+    return object instanceof InterfaceTS that && this.fields.equals(that.fields);
   }
 }

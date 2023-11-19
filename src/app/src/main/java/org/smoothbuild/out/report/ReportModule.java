@@ -1,10 +1,8 @@
 package org.smoothbuild.out.report;
 
-import java.io.PrintWriter;
-
-import org.smoothbuild.out.log.Level;
-
 import com.google.inject.AbstractModule;
+import java.io.PrintWriter;
+import org.smoothbuild.out.log.Level;
 
 public class ReportModule extends AbstractModule {
   private final PrintWriter out;

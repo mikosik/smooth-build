@@ -4,15 +4,13 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.Lists.map;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.NalImpl;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-
-import com.google.common.collect.ImmutableList;
 
 public final class ItemP extends NalImpl implements ReferenceableP {
   private final TypeP type;
@@ -38,7 +36,7 @@ public final class ItemP extends NalImpl implements ReferenceableP {
     return defaultValue;
   }
 
-  public TypeS typeS(){
+  public TypeS typeS() {
     return typeS;
   }
 
@@ -70,12 +68,12 @@ public final class ItemP extends NalImpl implements ReferenceableP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
+    var fields = joinToString(
+        "\n",
         "type = " + type,
         "name = " + name(),
         "defaultValue = " + defaultValue,
-        "location = " + location()
-    );
+        "location = " + location());
     return "ItemP(\n" + indent(fields) + "\n)";
   }
 }

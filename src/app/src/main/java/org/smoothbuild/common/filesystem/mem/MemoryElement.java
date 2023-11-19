@@ -2,12 +2,10 @@ package org.smoothbuild.common.filesystem.mem;
 
 import java.io.IOException;
 import java.util.List;
-
-import org.smoothbuild.common.filesystem.base.PathS;
-
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
+import org.smoothbuild.common.filesystem.base.PathS;
 
 public interface MemoryElement {
   public PathS name();

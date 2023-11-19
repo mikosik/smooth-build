@@ -2,7 +2,6 @@ package org.smoothbuild.common.io;
 
 import java.io.IOException;
 import java.math.BigInteger;
-
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ByteString;
@@ -10,7 +9,8 @@ import okio.Sink;
 
 public class Okios {
   public static void copyAllAndClose(BufferedSource source, Sink sink) throws IOException {
-    try (source; sink) {
+    try (source;
+        sink) {
       source.readAll(sink);
     }
   }

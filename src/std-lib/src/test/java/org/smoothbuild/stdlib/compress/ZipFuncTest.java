@@ -3,7 +3,6 @@ package org.smoothbuild.stdlib.compress;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
@@ -15,8 +14,7 @@ public class ZipFuncTest extends TestContext {
     var zip1 = ZipFunc.func(nativeApi(), fileArray);
     sleepMillis(2000);
     var zip2 = ZipFunc.func(nativeApi(), fileArray);
-    assertThat(zip1.hash())
-        .isEqualTo(zip2.hash());
+    assertThat(zip1.hash()).isEqualTo(zip2.hash());
   }
 
   private static void sleepMillis(int millis) {

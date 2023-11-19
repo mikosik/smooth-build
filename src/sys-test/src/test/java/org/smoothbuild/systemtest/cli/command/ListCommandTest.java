@@ -15,7 +15,8 @@ public class ListCommandTest {
   class basic extends SystemTestCase {
     @Test
     public void list_command_lists_all_available_values() throws Exception {
-      createUserModule("""
+      createUserModule(
+          """
             bValue = "abc";
             aValue = "abc";
             dValue = "abc";
@@ -23,7 +24,8 @@ public class ListCommandTest {
             """);
       runSmoothList();
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
         Values that can be evaluated:
         aValue
         bValue

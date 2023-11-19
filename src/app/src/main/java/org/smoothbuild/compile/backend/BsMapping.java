@@ -1,15 +1,12 @@
 package org.smoothbuild.compile.backend;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
-import com.google.common.collect.ImmutableMap;
-
 public record BsMapping(
-    ImmutableMap<Hash, String> nameMapping,
-    ImmutableMap<Hash, Location> locMapping) {
+    ImmutableMap<Hash, String> nameMapping, ImmutableMap<Hash, Location> locMapping) {
   public BsMapping() {
     this(ImmutableMap.of(), ImmutableMap.of());
   }

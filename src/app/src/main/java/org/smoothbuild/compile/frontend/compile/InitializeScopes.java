@@ -5,8 +5,8 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptyScope;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.util.function.Function;
-
 import org.smoothbuild.common.bindings.MutableBindings;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
@@ -26,8 +26,6 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 
-import com.google.common.annotations.VisibleForTesting;
-
 /**
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
@@ -42,8 +40,7 @@ public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP
 
   @VisibleForTesting
   static void initializeScopes(ModuleP moduleP, Logger logger) {
-    new Initializer(emptyScope(), logger)
-        .visitModule(moduleP);
+    new Initializer(emptyScope(), logger).visitModule(moduleP);
   }
 
   private static class Initializer extends ScopingModuleVisitorP {
@@ -78,10 +75,10 @@ public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP
     private ScopeP createScopeFor(ScopedP scopedP) {
       // @formatter:off
       switch (scopedP) {
-        case ModuleP     moduleP     -> initializeScopeFor(moduleP);
-        case StructP     structP     -> initializeScopeFor(structP);
+        case ModuleP moduleP -> initializeScopeFor(moduleP);
+        case StructP structP -> initializeScopeFor(structP);
         case NamedValueP namedValueP -> initializeScopeFor(namedValueP);
-        case FuncP       funcP       -> initializeScopeFor(funcP);
+        case FuncP funcP -> initializeScopeFor(funcP);
       }
       // @formatter:on
       return scope.newInnerScope(
@@ -119,8 +116,7 @@ public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP
       structP.fields().forEach(this::addReferenceable);
     }
 
-    private void initializeScopeFor(NamedValueP namedValueP) {
-    }
+    private void initializeScopeFor(NamedValueP namedValueP) {}
 
     private void initializeScopeFor(FuncP funcP) {
       funcP.params().forEach(this::addReferenceable);
@@ -142,7 +138,8 @@ public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP
     }
 
     private static Log alreadyDefinedError(Nal nal, Location location) {
-      return compileError(nal.location(),
+      return compileError(
+          nal.location(),
           "`" + nal.name() + "` is already defined at " + location.description() + ".");
     }
   }

@@ -4,15 +4,13 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Objects;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.NalImpl;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.StructTS;
-
-import com.google.common.collect.ImmutableList;
 
 public final class StructP extends NalImpl implements ScopedP {
   private final NList<ItemP> fields;
@@ -74,11 +72,8 @@ public final class StructP extends NalImpl implements ScopedP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "name = " + name(),
-        "fields = " + this.fields,
-        "location = " + location()
-    );
+    var fields = joinToString(
+        "\n", "name = " + name(), "fields = " + this.fields, "location = " + location());
     return "StructP(\n" + indent(fields) + "\n)";
   }
 }

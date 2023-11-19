@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.vm.evaluate.plugin.MessageLogger;
@@ -45,15 +44,13 @@ public class LoggingDiagnosticListenerTest {
   @Test
   public void initially_no_error_is_reported() {
     LoggingDiagnosticListener listener = new LoggingDiagnosticListener(nativeApi);
-    assertThat(listener.errorReported())
-        .isFalse();
+    assertThat(listener.errorReported()).isFalse();
   }
 
   @Test
   public void error_reported_returns_true_when_diagnostic_has_been_reported() {
     LoggingDiagnosticListener listener = new LoggingDiagnosticListener(nativeApi);
     listener.report(diagnostic);
-    assertThat(listener.errorReported())
-        .isTrue();
+    assertThat(listener.errorReported()).isTrue();
   }
 }

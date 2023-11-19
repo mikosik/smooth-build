@@ -1,8 +1,7 @@
 package org.smoothbuild.run.eval;
 
-import org.smoothbuild.run.eval.report.TaskMatcher;
-
 import com.google.inject.AbstractModule;
+import org.smoothbuild.run.eval.report.TaskMatcher;
 
 public class EvaluatorSModule extends AbstractModule {
   private final TaskMatcher taskMatcher;

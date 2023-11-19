@@ -4,31 +4,26 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.io.Files;
+import com.google.common.testing.EqualsTester;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
-
-import org.junit.jupiter.api.Test;
-
-import com.google.common.io.Files;
-import com.google.common.testing.EqualsTester;
-
 import okio.Buffer;
 import okio.ByteString;
+import org.junit.jupiter.api.Test;
 
 public class HashTest {
   @Test
   public void read_from_empty_source_throws_eof_exception() {
-    assertCall(() -> Hash.read(new Buffer()))
-        .throwsException(EOFException.class);
+    assertCall(() -> Hash.read(new Buffer())).throwsException(EOFException.class);
   }
 
   @Test
   public void read_from_source_having_less_bytes_than_needed_throws_eof_exception() {
     Buffer buffer = new Buffer();
     buffer.write(new byte[Hash.lengthInBytes() - 1]);
-    assertCall(() -> Hash.read(buffer))
-        .throwsException(EOFException.class);
+    assertCall(() -> Hash.read(buffer)).throwsException(EOFException.class);
   }
 
   @Test
@@ -36,22 +31,19 @@ public class HashTest {
     Buffer buffer = new Buffer();
     Hash hash = Hash.of("abc");
     buffer.write(hash.toByteString());
-    assertThat(Hash.read(buffer))
-        .isEqualTo(hash);
+    assertThat(Hash.read(buffer)).isEqualTo(hash);
   }
 
   @Test
   public void hash_of_file_is_equal_to_hash_of_its_bytes() throws Exception {
     File file = File.createTempFile("tmp", ".tmp");
     Files.write(someByteString().toByteArray(), file);
-    assertThat(Hash.of(file.toPath()))
-        .isEqualTo(Hash.of(someByteString()));
+    assertThat(Hash.of(file.toPath())).isEqualTo(Hash.of(someByteString()));
   }
 
   @Test
   public void hash_of_source_is_equal_to_hash_of_its_bytes() throws IOException {
-    assertThat(Hash.of(new Buffer().write(someByteString())))
-        .isEqualTo(Hash.of(someByteString()));
+    assertThat(Hash.of(new Buffer().write(someByteString()))).isEqualTo(Hash.of(someByteString()));
   }
 
   @Test
@@ -68,45 +60,38 @@ public class HashTest {
 
   @Test
   public void hash_of_given_string_is_always_the_same() {
-    assertThat(Hash.of("some string"))
-        .isEqualTo(Hash.of("some string"));
+    assertThat(Hash.of("some string")).isEqualTo(Hash.of("some string"));
   }
 
   @Test
   public void hashes_of_different_strings_are_different() {
     String string2 = "some other string";
-    assertThat(Hash.of("some string"))
-        .isNotEqualTo(Hash.of(string2));
+    assertThat(Hash.of("some string")).isNotEqualTo(Hash.of(string2));
   }
 
   @Test
   public void hash_of_given_integer_is_always_the_same() {
-    assertThat(Hash.of(33))
-        .isEqualTo(Hash.of(33));
+    assertThat(Hash.of(33)).isEqualTo(Hash.of(33));
   }
 
   @Test
   public void hashes_of_different_integers_are_different() {
-    assertThat(Hash.of(33))
-        .isNotEqualTo(Hash.of(34));
+    assertThat(Hash.of(33)).isNotEqualTo(Hash.of(34));
   }
 
   @Test
   public void hash_of_given_bytestring_is_always_the_same() {
-    assertThat(Hash.of(someByteString()))
-        .isEqualTo(Hash.of(someByteString()));
+    assertThat(Hash.of(someByteString())).isEqualTo(Hash.of(someByteString()));
   }
 
   @Test
   public void hashes_of_different_bytes_are_different() {
-    assertThat(Hash.of(someByteString()))
-        .isNotEqualTo(someByteString().substring(1));
+    assertThat(Hash.of(someByteString())).isNotEqualTo(someByteString().substring(1));
   }
 
   @Test
   public void decode_from_string() {
-    assertThat(Hash.decode("010A"))
-        .isEqualTo(new Hash(ByteString.of(new byte[] {1, 10})));
+    assertThat(Hash.decode("010A")).isEqualTo(new Hash(ByteString.of(new byte[] {1, 10})));
   }
 
   @Test

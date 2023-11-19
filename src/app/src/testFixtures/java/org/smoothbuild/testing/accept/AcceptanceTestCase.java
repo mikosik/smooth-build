@@ -19,8 +19,16 @@ import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.Module;
+import io.vavr.Tuple2;
+import io.vavr.collection.Array;
+import io.vavr.control.Option;
 import java.io.IOException;
-
+import okio.BufferedSink;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
@@ -35,17 +43,6 @@ import org.smoothbuild.run.step.StepExecutor;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.BytecodeModule;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-
-import com.google.common.collect.ImmutableList;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.Module;
-
-import io.vavr.Tuple2;
-import io.vavr.collection.Array;
-import io.vavr.control.Option;
-import okio.BufferedSink;
 
 public class AcceptanceTestCase extends TestContext {
   private FileSystem stdLibFileSystem;
@@ -84,9 +81,8 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   protected void evaluate(String... names) {
-    var steps = frontendCompilerStep()
-        .append(Array.of(names))
-        .then(stepFactory(new EvaluateStepFactory()));
+    var steps =
+        frontendCompilerStep().append(Array.of(names)).then(stepFactory(new EvaluateStepFactory()));
     var reporter = injector.getInstance(Reporter.class);
     this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
   }
@@ -151,8 +147,7 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   protected void assertLogsContainProblem() {
-    assertThat(memoryReporter.logs().containsAtLeast(ERROR))
-        .isTrue();
+    assertThat(memoryReporter.logs().containsAtLeast(ERROR)).isTrue();
   }
 
   private FileSystem prjFileSystem() {
@@ -170,7 +165,8 @@ public class AcceptanceTestCase extends TestContext {
   }
 
   public static Injector createInjector(MemoryReporter memoryReporter, Module module) {
-    return Guice.createInjector(PRODUCTION,
+    return Guice.createInjector(
+        PRODUCTION,
         new TestModule(memoryReporter),
         new ProjectSpaceModule(),
         new StandardLibrarySpaceModule(),

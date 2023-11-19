@@ -11,20 +11,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
-
+import okio.Buffer;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-
-import okio.Buffer;
 
 public class UnzipTest extends TestContext {
   @Test
   public void files_are_unzipped() throws Exception {
     var files = Map.of("file1", "content1", "file2", "content2");
     var jarBlob = blobB(jarFiles(files).readByteString());
-    assertThat(unzipIntoMap(jarBlob))
-        .isEqualTo(files);
+    assertThat(unzipIntoMap(jarBlob)).isEqualTo(files);
   }
 
   private static Map<String, String> unzipIntoMap(BlobB jarBlob)

@@ -3,17 +3,15 @@ package org.smoothbuild.vm.bytecode.load;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
+import io.vavr.control.Either;
+import jakarta.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-
-import io.vavr.control.Either;
-import jakarta.inject.Inject;
 
 /**
  * This class is thread-safe.
@@ -36,7 +34,8 @@ public class NativeMethodLoader {
   private Either<String, Method> loadImpl(NativeFuncB nativeFuncB) {
     var classBinaryName = nativeFuncB.classBinaryName().toJ();
     var methodSpec = new MethodSpec(nativeFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
-    return methodLoader.provide(methodSpec)
+    return methodLoader
+        .provide(methodSpec)
         .flatMap(this::validateMethodSignature)
         .mapLeft(e -> loadingError(classBinaryName, e));
   }

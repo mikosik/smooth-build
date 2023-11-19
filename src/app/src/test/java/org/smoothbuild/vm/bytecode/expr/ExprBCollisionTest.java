@@ -4,13 +4,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.HashMap;
 import java.util.List;
-
+import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-
-import okio.ByteString;
 
 public class ExprBCollisionTest extends TestContext {
   @Test
@@ -45,8 +43,8 @@ public class ExprBCollisionTest extends TestContext {
         lambdaB(funcTB(intTB()), intB(0)),
         lambdaB(funcTB(intTB()), intB(1)),
         lambdaB(funcTB(stringTB()), stringB("abc")),
-        lambdaB(funcTB(intTB(),intTB() ), intB(0)),
-        lambdaB(funcTB(stringTB(),intTB() ), intB(0)),
+        lambdaB(funcTB(intTB(), intTB()), intB(0)),
+        lambdaB(funcTB(stringTB(), intTB()), intB(0)),
         intB(0),
         intB(1),
         nativeFuncB(funcTB(intTB()), blob1, stringB("binary name"), boolB(true)),
@@ -62,12 +60,12 @@ public class ExprBCollisionTest extends TestContext {
         tupleB(stringB("abc")),
         tupleB(stringB("def")),
         // expressions
-        callB(lambdaB(funcTB(intTB(),stringTB() ), stringB("a")), intB(1)),
-        callB(lambdaB(funcTB(intTB(),stringTB() ), stringB("a")), intB(2)),
-        callB(lambdaB(funcTB(intTB(),stringTB() ), stringB("b")), intB(1)),
-        callB(nativeFuncB(funcTB(intTB(),intTB() )), intB(1)),
-        callB(nativeFuncB(funcTB(intTB(),intTB() )), intB(2)),
-        callB(nativeFuncB(funcTB(intTB(),stringTB() )), intB(1)),
+        callB(lambdaB(funcTB(intTB(), stringTB()), stringB("a")), intB(1)),
+        callB(lambdaB(funcTB(intTB(), stringTB()), stringB("a")), intB(2)),
+        callB(lambdaB(funcTB(intTB(), stringTB()), stringB("b")), intB(1)),
+        callB(nativeFuncB(funcTB(intTB(), intTB())), intB(1)),
+        callB(nativeFuncB(funcTB(intTB(), intTB())), intB(2)),
+        callB(nativeFuncB(funcTB(intTB(), stringTB())), intB(1)),
         combineB(),
         combineB(intB(0)),
         combineB(intB(1)),
@@ -88,8 +86,7 @@ public class ExprBCollisionTest extends TestContext {
         varB(stringTB(), 0),
         selectB(tupleB(intB(1), stringB("a")), intB(0)),
         selectB(tupleB(intB(1), stringB("a")), intB(1)),
-        selectB(tupleB(intB(1), stringB("b")), intB(0))
-    );
+        selectB(tupleB(intB(1), stringB("b")), intB(0)));
     // @formatter:on
   }
 }

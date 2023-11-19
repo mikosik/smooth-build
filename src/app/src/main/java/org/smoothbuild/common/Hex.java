@@ -4,7 +4,6 @@ import static com.google.common.base.CharMatcher.noneOf;
 import static okio.ByteString.decodeHex;
 
 import com.google.common.base.CharMatcher;
-
 import okio.ByteString;
 
 public class Hex {

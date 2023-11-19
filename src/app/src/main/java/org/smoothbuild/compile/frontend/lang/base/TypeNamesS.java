@@ -2,13 +2,11 @@ package org.smoothbuild.compile.frontend.lang.base;
 
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.List;
-
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-
-import com.google.common.collect.ImmutableMap;
 
 public class TypeNamesS {
   public static final String BLOB = "Blob";

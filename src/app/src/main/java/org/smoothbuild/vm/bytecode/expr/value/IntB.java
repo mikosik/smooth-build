@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
 import java.math.BigInteger;
-
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 

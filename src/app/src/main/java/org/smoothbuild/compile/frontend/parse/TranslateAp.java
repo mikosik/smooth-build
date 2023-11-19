@@ -10,12 +10,13 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
+import com.google.common.collect.ImmutableList;
+import io.vavr.Tuple2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -71,10 +72,6 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 
-import com.google.common.collect.ImmutableList;
-
-import io.vavr.Tuple2;
-
 public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Maybe<ModuleP>> {
   @Override
   public Maybe<ModuleP> apply(Tuple2<ModuleContext, FilePath> context) {
@@ -114,8 +111,11 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
     private final String scopeName;
     private int lambdaCount;
 
-    public ApTranslatingVisitor(FilePath filePath, ArrayList<StructP> structs,
-        ArrayList<NamedEvaluableP> evaluables, Logger logger) {
+    public ApTranslatingVisitor(
+        FilePath filePath,
+        ArrayList<StructP> structs,
+        ArrayList<NamedEvaluableP> evaluables,
+        Logger logger) {
       this(filePath, structs, evaluables, logger, null);
     }
 
@@ -188,8 +188,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
 
     private ImmutableList<ItemP> createItemsList(String ownerName, ItemListContext itemList) {
       if (itemList != null) {
-        return sane(itemList.item())
-            .stream()
+        return sane(itemList.item()).stream()
             .map(item -> createItem(ownerName, item))
             .collect(toImmutableList());
       }
@@ -215,8 +214,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
         String ownerName, String itemName, ExprP body, Location location) {
       var name = ownerName + ":" + itemName;
       var type = new ImplicitTP(location);
-      return new NamedValueP(
-          type, name, itemName, Optional.of(body), Optional.empty(), location);
+      return new NamedValueP(type, name, itemName, Optional.of(body), Optional.empty(), location);
     }
 
     private Optional<ExprP> createPipeSane(PipeContext pipe) {
@@ -285,7 +283,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
         return new OrderP(elems, location);
       }
       if (chainHead.parens() != null) {
-         return createPipe(pipedArg, chainHead.parens().pipe());
+        return createPipe(pipedArg, chainHead.parens().pipe());
       }
       if (chainHead.BLOB() != null) {
         return new BlobP(chainHead.BLOB().getText().substring(2), location);
@@ -299,8 +297,8 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
       throw newRuntimeException(ChainHeadContext.class);
     }
 
-    private ExprP createChain(AtomicReference<ExprP> pipedArg, ExprP chainHead,
-        List<ChainPartContext> chainParts) {
+    private ExprP createChain(
+        AtomicReference<ExprP> pipedArg, ExprP chainHead, List<ChainPartContext> chainParts) {
       var result = chainHead;
       for (var chainPart : chainParts) {
         var argList = chainPart.argList();
@@ -395,8 +393,8 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
     }
 
     private RuntimeException newRuntimeException(Class<?> clazz) {
-      return new RuntimeException("Illegal parse tree: " + clazz.getSimpleName()
-          + " without children.");
+      return new RuntimeException(
+          "Illegal parse tree: " + clazz.getSimpleName() + " without children.");
     }
   }
 }

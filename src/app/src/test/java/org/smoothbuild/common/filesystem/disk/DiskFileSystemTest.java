@@ -6,14 +6,12 @@ import static okio.Okio.sink;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
+import okio.BufferedSink;
+import okio.ByteString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.common.filesystem.base.AbstractFileSystemTestSuite;
 import org.smoothbuild.common.filesystem.base.PathS;
-
-import okio.BufferedSink;
-import okio.ByteString;
 
 public class DiskFileSystemTest extends AbstractFileSystemTestSuite {
   private Path tempDir;

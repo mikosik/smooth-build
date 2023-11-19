@@ -25,6 +25,7 @@ import static org.smoothbuild.systemtest.CommandWithArgs.helpCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.listCommand;
 import static org.smoothbuild.systemtest.CommandWithArgs.versionCommand;
 
+import com.google.common.base.Splitter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -38,18 +39,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
-
+import okio.BufferedSource;
+import okio.ByteString;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.common.CommandExecutor;
 import org.smoothbuild.common.CommandExecutor.CommandResult;
 import org.smoothbuild.common.io.DataReader;
-
-import com.google.common.base.Splitter;
-
-import okio.BufferedSource;
-import okio.ByteString;
 
 public abstract class SystemTestCase {
   public static final Path SYS_TEST_PROJECT_ROOT = Paths.get(".").toAbsolutePath();
@@ -200,28 +197,28 @@ public abstract class SystemTestCase {
     var convertedOut = convertOsLineSeparatorsToNewLine(out);
     if (!convertedOut.contains(text)) {
       assertWithMessage(unlines(
-          outName + " doesn't contain expected substring.",
-          "================= SYS-OUT START ====================",
-          sysOut,
-          "================= SYS-OUT END   ====================",
-          "================= SYS-ERR START ====================",
-          sysErr,
-          "================= SYS-ERR END   ===================="
-      )).that(convertedOut)
+              outName + " doesn't contain expected substring.",
+              "================= SYS-OUT START ====================",
+              sysOut,
+              "================= SYS-OUT END   ====================",
+              "================= SYS-ERR START ====================",
+              sysErr,
+              "================= SYS-ERR END   ===================="))
+          .that(convertedOut)
           .isEqualTo(text);
     }
   }
 
   public void assertSysOutDoesNotContain(String text) {
     assertWithMessage(unlines(
-        "SysOut contains forbidden substring",
-        "================= SYS-OUT START ====================",
-        sysOut,
-        "================= SYS-OUT END   ====================",
-        "================= SYS-ERR START ====================",
-        sysErr,
-        "================= SYS-ERR END   ===================="
-    )).that(convertOsLineSeparatorsToNewLine(sysOut))
+            "SysOut contains forbidden substring",
+            "================= SYS-OUT START ====================",
+            sysOut,
+            "================= SYS-OUT END   ====================",
+            "================= SYS-ERR START ====================",
+            sysErr,
+            "================= SYS-ERR END   ===================="))
+        .that(convertOsLineSeparatorsToNewLine(sysOut))
         .doesNotContain(text);
   }
 
@@ -278,8 +275,8 @@ public abstract class SystemTestCase {
       return readAndClose(buffer(source(artifactAbsolutePath(name))), s -> {
         ByteString value = s.readByteString();
         if (4 < value.size()) {
-          throw new RuntimeException("Expected int artifact but got too many bytes: "
-              + value.size() + " .");
+          throw new RuntimeException(
+              "Expected int artifact but got too many bytes: " + value.size() + " .");
         }
         return new BigInteger(value.toByteArray()).intValue();
       });

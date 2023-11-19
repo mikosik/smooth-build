@@ -5,6 +5,7 @@ import static okio.Okio.sink;
 import static okio.Okio.source;
 import static org.smoothbuild.common.io.Okios.readAndClose;
 
+import com.google.common.io.ByteStreams;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +14,6 @@ import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
-
-import com.google.common.io.ByteStreams;
-
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.Sink;
@@ -56,8 +54,7 @@ public class Classes {
     }
   }
 
-  public static void saveBytecodeInJar(Sink sink, List<Class<?>> classes)
-      throws IOException {
+  public static void saveBytecodeInJar(Sink sink, List<Class<?>> classes) throws IOException {
     try (var jarOutputStream = new JarOutputStream(buffer(sink).outputStream())) {
       for (Class<?> clazz : classes) {
         var zipEntry = new ZipEntry(binaryPath(clazz));
@@ -80,7 +77,7 @@ public class Classes {
   }
 
   public static ByteString bytecode(Class<?> clazz) throws IOException {
-    return readAndClose(buffer(source(bytecodeAsInputStream(clazz))),
-        BufferedSource::readByteString);
+    return readAndClose(
+        buffer(source(bytecodeAsInputStream(clazz))), BufferedSource::readByteString);
   }
 }

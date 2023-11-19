@@ -3,7 +3,6 @@ package org.smoothbuild.compile.frontend.lang.define;
 import static org.smoothbuild.common.Strings.indent;
 
 import java.util.Objects;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 
@@ -40,12 +39,9 @@ public final class AnnotatedValueS extends NamedValueS {
     return Objects.hash(annotation(), schema(), name(), location());
   }
 
-
   @Override
   public String toString() {
     var fieldsString = annotation().toString() + "\n" + fieldsToString();
     return "AnnotatedValue(\n" + indent(fieldsString) + "\n)";
   }
 }
-
-

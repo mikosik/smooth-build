@@ -11,11 +11,12 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.TEMP_DIR_PATH;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
+import io.vavr.collection.Array;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
+import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,17 +29,13 @@ import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
 
-import io.vavr.collection.Array;
-import okio.ByteString;
-
 public class HashedDbTest extends TestContext {
   private final ByteString byteString1 = ByteString.encodeUtf8("aaa");
   private final ByteString byteString2 = ByteString.encodeUtf8("bbb");
 
   @Test
   public void db_doesnt_contain_not_written_data() throws CorruptedHashedDbException {
-    assertThat(hashedDb().contains(Hash.of(33)))
-        .isFalse();
+    assertThat(hashedDb().contains(Hash.of(33))).isFalse();
   }
 
   @Test
@@ -46,15 +43,13 @@ public class HashedDbTest extends TestContext {
     var sink = hashedDb().sink();
     sink.close();
 
-    assertThat(hashedDb().contains(sink.hash()))
-        .isTrue();
+    assertThat(hashedDb().contains(sink.hash())).isTrue();
   }
 
   @Test
   public void reading_not_written_value_fails() {
     var hash = Hash.of("abc");
-    assertCall(() -> hashedDb().source(hash))
-        .throwsException(new NoSuchDataException(hash));
+    assertCall(() -> hashedDb().source(hash)).throwsException(new NoSuchDataException(hash));
   }
 
   @Test
@@ -63,8 +58,7 @@ public class HashedDbTest extends TestContext {
     sink.write(encodeUtf8("abc"));
     sink.close();
 
-    assertThat(hashedDb().source(sink.hash()).readUtf8())
-        .isEqualTo("abc");
+    assertThat(hashedDb().source(sink.hash()).readUtf8()).isEqualTo("abc");
   }
 
   @Test
@@ -72,8 +66,7 @@ public class HashedDbTest extends TestContext {
     var sink = hashedDb().sink();
     sink.close();
 
-    assertThat(hashedDb().source(sink.hash()).readByteString())
-        .isEqualTo(ByteString.of());
+    assertThat(hashedDb().source(sink.hash()).readByteString()).isEqualTo(ByteString.of());
   }
 
   @Test
@@ -85,8 +78,7 @@ public class HashedDbTest extends TestContext {
     sink.write(byteString1);
     sink.close();
 
-    assertThat(hashedDb().source(sink.hash()).readByteString())
-        .isEqualTo(byteString1);
+    assertThat(hashedDb().source(sink.hash()).readByteString()).isEqualTo(byteString1);
   }
 
   @Test
@@ -99,8 +91,7 @@ public class HashedDbTest extends TestContext {
     sink.write(byteString2);
     sink.close();
 
-    assertThat(sink.hash())
-        .isNotEqualTo(hash);
+    assertThat(sink.hash()).isNotEqualTo(hash);
   }
 
   @Test
@@ -110,15 +101,13 @@ public class HashedDbTest extends TestContext {
     var sink = hashedDb().sink();
     sink.write(byteString);
 
-    assertCall(() -> hashedDb().source(hash))
-        .throwsException(new NoSuchDataException(hash));
+    assertCall(() -> hashedDb().source(hash)).throwsException(new NoSuchDataException(hash));
   }
 
   @Test
   public void getting_hash_when_sink_is_not_closed_causes_exception() throws Exception {
     var sink = hashedDb().sink();
-    assertCall(() -> sink.hash())
-        .throwsException(IllegalStateException.class);
+    assertCall(() -> sink.hash()).throwsException(IllegalStateException.class);
   }
 
   // tests for corrupted db
@@ -166,8 +155,7 @@ public class HashedDbTest extends TestContext {
 
     hashedDb.writeString("abc");
 
-    assertThat(fileSystem.files(TEMP_DIR_PATH))
-        .isEmpty();
+    assertThat(fileSystem.files(TEMP_DIR_PATH)).isEmpty();
   }
 
   @Test
@@ -179,8 +167,7 @@ public class HashedDbTest extends TestContext {
     hashedDb.writeString("abc");
     hashedDb.writeString("abc");
 
-    assertThat(fileSystem.files(TEMP_DIR_PATH))
-        .isEmpty();
+    assertThat(fileSystem.files(TEMP_DIR_PATH)).isEmpty();
   }
 
   @Nested
@@ -189,8 +176,7 @@ public class HashedDbTest extends TestContext {
     @MethodSource("allByteValues")
     public void with_single_byte_value_can_be_read_back(int value) throws Exception {
       var hash = hashedDb().writeByte((byte) value);
-      assertThat(hashedDb().readBigInteger(hash))
-          .isEqualTo(BigInteger.valueOf(value));
+      assertThat(hashedDb().readBigInteger(hash)).isEqualTo(BigInteger.valueOf(value));
     }
 
     @ParameterizedTest
@@ -198,13 +184,11 @@ public class HashedDbTest extends TestContext {
     public void with_given_value_can_be_read_back(int value) throws Exception {
       var bigInteger = BigInteger.valueOf(value);
       var hash = hashedDb().writeBigInteger(bigInteger);
-      assertThat(hashedDb().readBigInteger(hash))
-          .isEqualTo(bigInteger);
+      assertThat(hashedDb().readBigInteger(hash)).isEqualTo(bigInteger);
     }
 
     private static Stream<Arguments> allByteValues() {
-      return IntStream.rangeClosed(Byte.MIN_VALUE, Byte.MAX_VALUE)
-          .mapToObj(Arguments::of);
+      return IntStream.rangeClosed(Byte.MIN_VALUE, Byte.MAX_VALUE).mapToObj(Arguments::of);
     }
   }
 
@@ -213,15 +197,13 @@ public class HashedDbTest extends TestContext {
     @Test
     public void with_true_value_can_be_read_back() throws Exception {
       var hash = hashedDb().writeBoolean(true);
-      assertThat(hashedDb().readBoolean(hash))
-          .isTrue();
+      assertThat(hashedDb().readBoolean(hash)).isTrue();
     }
 
     @Test
     public void with_false_value_can_be_read_back() throws Exception {
       var hash = hashedDb().writeBoolean(false);
-      assertThat(hashedDb().readBoolean(hash))
-          .isFalse();
+      assertThat(hashedDb().readBoolean(hash)).isFalse();
     }
   }
 
@@ -231,13 +213,11 @@ public class HashedDbTest extends TestContext {
     @MethodSource("allByteValues")
     public void with_given_value_can_be_read_back(int value) throws Exception {
       var hash = hashedDb().writeByte((byte) value);
-      assertThat(hashedDb().readByte(hash))
-          .isEqualTo(value);
+      assertThat(hashedDb().readByte(hash)).isEqualTo(value);
     }
 
     private static Stream<Arguments> allByteValues() {
-      return IntStream.rangeClosed(MIN_VALUE, MAX_VALUE)
-          .mapToObj(Arguments::of);
+      return IntStream.rangeClosed(MIN_VALUE, MAX_VALUE).mapToObj(Arguments::of);
     }
   }
 
@@ -247,8 +227,7 @@ public class HashedDbTest extends TestContext {
     @ValueSource(strings = {"", "a", "abc", "!@#$"})
     public void with_given_value_can_be_read_back() throws Exception {
       var hash = hashedDb().writeString("abc");
-      assertThat(hashedDb().readString(hash))
-          .isEqualTo("abc");
+      assertThat(hashedDb().readString(hash)).isEqualTo("abc");
     }
 
     @Test
@@ -266,29 +245,25 @@ public class HashedDbTest extends TestContext {
     @Test
     public void with_no_elems_can_be_read_back() throws Exception {
       var hash = hashedDb().writeSeq();
-      assertThat(hashedDb().readSeq(hash))
-          .isEqualTo(Array.of());
+      assertThat(hashedDb().readSeq(hash)).isEqualTo(Array.of());
     }
 
     @Test
     public void with_one_elem_can_be_read_back() throws Exception {
       var hash = hashedDb().writeSeq(Hash.of("abc"));
-      assertThat(hashedDb().readSeq(hash))
-          .isEqualTo(Array.of(Hash.of("abc")));
+      assertThat(hashedDb().readSeq(hash)).isEqualTo(Array.of(Hash.of("abc")));
     }
 
     @Test
     public void with_two_elems_can_be_read_back() throws Exception {
       var hash = hashedDb().writeSeq(Hash.of("abc"), Hash.of("def"));
-      assertThat(hashedDb().readSeq(hash))
-          .isEqualTo(Array.of(Hash.of("abc"), Hash.of("def")));
+      assertThat(hashedDb().readSeq(hash)).isEqualTo(Array.of(Hash.of("abc"), Hash.of("def")));
     }
 
     @Test
     public void not_written_seq_of_hashes_cannot_be_read_back() {
       var hash = Hash.of("abc");
-      assertCall(() -> hashedDb().readSeq(hash))
-          .throwsException(new NoSuchDataException(hash));
+      assertCall(() -> hashedDb().readSeq(hash)).throwsException(new NoSuchDataException(hash));
     }
 
     @Test
@@ -304,29 +279,25 @@ public class HashedDbTest extends TestContext {
     @Test
     public void with_no_elems_has_zero_size() throws Exception {
       var hash = hashedDb().writeSeq();
-      assertThat(hashedDb().readSeqSize(hash))
-          .isEqualTo(0);
+      assertThat(hashedDb().readSeqSize(hash)).isEqualTo(0);
     }
 
     @Test
     public void with_one_elem_has_size_one() throws Exception {
       var hash = hashedDb().writeSeq(Hash.of("1"));
-      assertThat(hashedDb().readSeqSize(hash))
-          .isEqualTo(1);
+      assertThat(hashedDb().readSeqSize(hash)).isEqualTo(1);
     }
 
     @Test
     public void with_three_elem_has_size_three() throws Exception {
       var hash = hashedDb().writeSeq(Hash.of("1"), Hash.of("2"), Hash.of("3"));
-      assertThat(hashedDb().readSeqSize(hash))
-          .isEqualTo(3);
+      assertThat(hashedDb().readSeqSize(hash)).isEqualTo(3);
     }
 
     @Test
     public void reading_size_of_not_written_seq_of_hashes_causes_exception() {
       var hash = Hash.of("abc");
-      assertCall(() -> hashedDb().readSeqSize(hash))
-          .throwsException(new NoSuchDataException(hash));
+      assertCall(() -> hashedDb().readSeqSize(hash)).throwsException(new NoSuchDataException(hash));
     }
 
     @Test

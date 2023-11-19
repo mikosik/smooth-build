@@ -1,17 +1,15 @@
 package org.smoothbuild.filesystem.space;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+import okio.BufferedSource;
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import okio.BufferedSource;
 
 /**
  * This class is thread-safe.

@@ -70,9 +70,10 @@ public class TaskReporterImplTest extends TestContext {
   public void header_with_location() {
     var task = selectTask();
     var exprHash = task.exprB().hash();
-    testHeader(bsMapping(exprHash, location(7)), task,
-        padEnd("{}.", NAME_LENGTH_LIMIT + 1, ' ') + "build.smooth:7                 exec"
-    );
+    testHeader(
+        bsMapping(exprHash, location(7)),
+        task,
+        padEnd("{}.", NAME_LENGTH_LIMIT + 1, ' ') + "build.smooth:7                 exec");
   }
 
   @Test
@@ -120,8 +121,7 @@ public class TaskReporterImplTest extends TestContext {
     var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(ALL, reporter, bsMapping);
     taskReporter.report(task, computationResult(intB(), source));
-    verify(reporter)
-        .report(true, header, list());
+    verify(reporter).report(true, header, list());
   }
 
   @Test
@@ -137,13 +137,10 @@ public class TaskReporterImplTest extends TestContext {
   private void testVisibility(TaskMatcher taskMatcher, boolean visible) {
     var reporter = mock(Reporter.class);
     var taskReporter = new TaskReporterImpl(taskMatcher, reporter, bsMapping());
-    var messages = arrayB(
-        fatalMessage(),
-        errorMessage(),
-        warningMessage(),
-        infoMessage());
+    var messages = arrayB(fatalMessage(), errorMessage(), warningMessage(), infoMessage());
     taskReporter.report(task(), computationResultWithMessages(messages));
-    var header = """
+    var header =
+        """
         [,]                                         unknown                        exec
           @ ??? ???""";
     var logs = list(
@@ -151,7 +148,6 @@ public class TaskReporterImplTest extends TestContext {
         error("error message"),
         warning("warning message"),
         info("info message"));
-    verify(reporter)
-        .report(visible, header, logs);
+    verify(reporter).report(visible, header, logs);
   }
 }

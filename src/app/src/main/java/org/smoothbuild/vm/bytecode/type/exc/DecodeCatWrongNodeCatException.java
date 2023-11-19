@@ -5,7 +5,11 @@ import org.smoothbuild.vm.bytecode.type.CategoryKindB;
 
 public class DecodeCatWrongNodeCatException extends DecodeCatNodeException {
   public DecodeCatWrongNodeCatException(
-      Hash hash, CategoryKindB kind, String memberPath, int pathIndex, Class<?> expected,
+      Hash hash,
+      CategoryKindB kind,
+      String memberPath,
+      int pathIndex,
+      Class<?> expected,
       Class<?> actual) {
     this(hash, kind, indexedPath(memberPath, pathIndex), expected, actual);
   }

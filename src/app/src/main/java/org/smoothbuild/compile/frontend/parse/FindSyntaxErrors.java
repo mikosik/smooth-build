@@ -11,7 +11,6 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_
 import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
-
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ImplicitTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
@@ -49,11 +48,14 @@ public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
       public void visitNameOf(ReferenceableP referenceableP) {
         var name = referenceableP.shortName();
         if (name.equals("_")) {
-          logger.log(compileError(referenceableP.location(), "`" + name
-              + "` is illegal identifier name. `_` is reserved for future use."));
+          logger.log(compileError(
+              referenceableP.location(),
+              "`" + name + "` is illegal identifier name. `_` is reserved for future use."));
         } else if (!startsWithLowerCase(name)) {
-          logger.log(compileError(referenceableP.location(), "`" + name
-              + "` is illegal identifier name. Identifiers should start with lowercase."));
+          logger.log(compileError(
+              referenceableP.location(),
+              "`" + name
+                  + "` is illegal identifier name. Identifiers should start with lowercase."));
         }
       }
 
@@ -62,14 +64,19 @@ public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
         super.visitStruct(structP);
         var name = structP.name();
         if (name.equals("_")) {
-          logger.log(compileError(structP.location(), "`" + name + "` is illegal struct name. "
-              + "`_` is reserved for future use."));
+          logger.log(compileError(
+              structP.location(),
+              "`" + name + "` is illegal struct name. " + "`_` is reserved for future use."));
         } else if (isVarName(name)) {
-          logger.log(compileError(structP.location(), "`" + name + "` is illegal struct name."
-              + " All-uppercase names are reserved for type variables in generic types."));
+          logger.log(compileError(
+              structP.location(),
+              "`" + name + "` is illegal struct name."
+                  + " All-uppercase names are reserved for type variables in generic types."));
         } else if (!startsWithUpperCase(name)) {
-          logger.log(compileError(structP.location(), "`" + name + "` is illegal struct name."
-              + " Struct name must start with uppercase letter."));
+          logger.log(compileError(
+              structP.location(),
+              "`" + name + "` is illegal struct name."
+                  + " Struct name must start with uppercase letter."));
         }
       }
     }.visitModule(moduleP);
@@ -85,12 +92,16 @@ public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
           var annName = ann.name();
           if (ANNOTATION_NAMES.contains(annName)) {
             if (namedFuncP.body().isPresent()) {
-              logger.log(compileError(namedFuncP, "Function " + namedFuncP.q() + " with @" + annName
-                  + " annotation cannot have body."));
+              logger.log(compileError(
+                  namedFuncP,
+                  "Function " + namedFuncP.q() + " with @" + annName
+                      + " annotation cannot have body."));
             }
             if (namedFuncP.resultT() instanceof ImplicitTP) {
-              logger.log(compileError(namedFuncP, "Function " + namedFuncP.q() + " with @" + annName
-                  + " annotation must declare result type."));
+              logger.log(compileError(
+                  namedFuncP,
+                  "Function " + namedFuncP.q() + " with @" + annName
+                      + " annotation must declare result type."));
             }
           } else {
             logger.log(compileError(ann.location(), "Unknown annotation " + ann.q() + "."));
@@ -113,20 +124,19 @@ public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
                     namedValueP, "Value with @" + annName + " annotation cannot have body."));
               }
               if (namedValueP.type() instanceof ImplicitTP) {
-                logger.log(compileError(namedValueP, "Value " + namedValueP.q() + " with @"
-                    + annName + " annotation must declare type."));
+                logger.log(compileError(
+                    namedValueP,
+                    "Value " + namedValueP.q() + " with @" + annName
+                        + " annotation must declare type."));
               }
             }
-            case NATIVE_PURE, NATIVE_IMPURE -> logger.log(
-                compileError(
-                    namedValueP.annotation().get(),
-                    "Value cannot have @" + annName + " annotation."));
+            case NATIVE_PURE, NATIVE_IMPURE -> logger.log(compileError(
+                namedValueP.annotation().get(), "Value cannot have @" + annName + " annotation."));
             default -> logger.log(compileError(ann, "Unknown annotation " + ann.q() + "."));
           }
         } else if (namedValueP.body().isEmpty()) {
           logger.log(compileError(namedValueP, "Value cannot have empty body."));
         }
-
       }
     }.visitModule(moduleP);
   }
@@ -141,8 +151,10 @@ public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
 
       private void logErrorIfDefaultValuePresent(ItemP param) {
         if (param.defaultValue().isPresent()) {
-          logger.log(compileError(param.location(), "Struct field `" + param.name()
-              + "` has default value. Only function parameters can have default value."));
+          logger.log(compileError(
+              param.location(),
+              "Struct field `" + param.name()
+                  + "` has default value. Only function parameters can have default value."));
         }
       }
     }.visitModule(moduleP);
@@ -158,7 +170,8 @@ public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
 
       private void logErrorIfDefaultValuePresent(ItemP param) {
         if (param.defaultValue().isPresent()) {
-          logger.log(compileError(param.location(),
+          logger.log(compileError(
+              param.location(),
               "Parameter " + param.q() + " of lambda cannot have default value."));
         }
       }

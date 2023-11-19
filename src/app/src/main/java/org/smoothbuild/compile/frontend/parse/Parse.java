@@ -6,9 +6,9 @@ import static org.smoothbuild.common.Antlr.markingLine;
 import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
+import io.vavr.Tuple2;
 import java.util.BitSet;
 import java.util.function.Function;
-
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -28,8 +28,6 @@ import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
-
-import io.vavr.Tuple2;
 
 public class Parse implements Function<Tuple2<String, FilePath>, Maybe<ModuleContext>> {
   @Override
@@ -59,8 +57,13 @@ public class Parse implements Function<Tuple2<String, FilePath>, Maybe<ModuleCon
     }
 
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int lineNumber,
-        int charNumber, String message, RecognitionException e) {
+    public void syntaxError(
+        Recognizer<?, ?> recognizer,
+        Object offendingSymbol,
+        int lineNumber,
+        int charNumber,
+        String message,
+        RecognitionException e) {
       var location = createLoc(offendingSymbol, lineNumber);
       String text = unlines(
           message,
@@ -78,9 +81,16 @@ public class Parse implements Function<Tuple2<String, FilePath>, Maybe<ModuleCon
     }
 
     @Override
-    public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex,
-        int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
-      String message = join("\n",
+    public void reportAmbiguity(
+        Parser recognizer,
+        DFA dfa,
+        int startIndex,
+        int stopIndex,
+        boolean exact,
+        BitSet ambigAlts,
+        ATNConfigSet configs) {
+      String message = join(
+          "\n",
           "Found ambiguity in grammar.",
           "Report this as a bug together with file: " + filePath.path() + ", details:",
           "startIndex=" + startIndex,
@@ -92,10 +102,15 @@ public class Parse implements Function<Tuple2<String, FilePath>, Maybe<ModuleCon
     }
 
     @Override
-    public void reportAttemptingFullContext(Parser recognizer, DFA dfa,
-        int startIndex, int stopIndex, BitSet conflictingAlts,
+    public void reportAttemptingFullContext(
+        Parser recognizer,
+        DFA dfa,
+        int startIndex,
+        int stopIndex,
+        BitSet conflictingAlts,
         ATNConfigSet configs) {
-      var message = join("\n",
+      var message = join(
+          "\n",
           "Attempting full context.",
           "Report this as a bug together with file: " + filePath.path() + ", details:",
           "startIndex=" + startIndex,
@@ -107,9 +122,15 @@ public class Parse implements Function<Tuple2<String, FilePath>, Maybe<ModuleCon
     }
 
     @Override
-    public void reportContextSensitivity(Parser recognizer, DFA dfa,
-        int startIndex, int stopIndex, int prediction, ATNConfigSet configs) {
-      var message = join("\n",
+    public void reportContextSensitivity(
+        Parser recognizer,
+        DFA dfa,
+        int startIndex,
+        int stopIndex,
+        int prediction,
+        ATNConfigSet configs) {
+      var message = join(
+          "\n",
           "Context sensitivity.",
           "Report this as a bug together with file: " + filePath.path() + ", details:",
           "startIndex=" + startIndex,

@@ -2,6 +2,9 @@ package org.smoothbuild.vm.evaluate.execute;
 
 import static org.smoothbuild.common.collect.Lists.map;
 
+import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
+import jakarta.inject.Inject;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -11,11 +14,6 @@ import org.smoothbuild.vm.bytecode.expr.oper.PickB;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.oper.VarB;
 import org.smoothbuild.vm.bytecode.expr.value.LambdaB;
-
-import com.google.common.collect.ImmutableList;
-
-import io.vavr.collection.Array;
-import jakarta.inject.Inject;
 
 public class VarReducerB {
   private final BytecodeF bytecodeF;
@@ -39,16 +37,16 @@ public class VarReducerB {
 
   private ExprB rewriteExpr(ExprB exprB, Resolver resolver) {
     return switch (exprB) {
-      // @formatter:off
-      case CallB      callB      -> rewriteCall(callB, resolver);
-      case CombineB   combineB   -> rewriteCombine(combineB, resolver);
-      case OrderB     orderB     -> rewriteOrder(orderB, resolver);
-      case PickB      pickB      -> rewritePick(pickB, resolver);
-      case VarB       varB       -> rewriteVar(varB, resolver);
-      case SelectB    selectB    -> rewriteSelect(selectB, resolver);
-      case LambdaB    lambdaB    -> rewriteLambda(lambdaB, resolver);
-      default                    -> exprB;
-      // @formatter:on
+        // @formatter:off
+      case CallB callB -> rewriteCall(callB, resolver);
+      case CombineB combineB -> rewriteCombine(combineB, resolver);
+      case OrderB orderB -> rewriteOrder(orderB, resolver);
+      case PickB pickB -> rewritePick(pickB, resolver);
+      case VarB varB -> rewriteVar(varB, resolver);
+      case SelectB selectB -> rewriteSelect(selectB, resolver);
+      case LambdaB lambdaB -> rewriteLambda(lambdaB, resolver);
+      default -> exprB;
+        // @formatter:on
     };
   }
 

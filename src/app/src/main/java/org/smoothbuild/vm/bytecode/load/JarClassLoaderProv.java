@@ -9,20 +9,18 @@ import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.vm.evaluate.plugin.UnzipBlob.unzipBlob;
 
+import io.vavr.control.Either;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import net.lingala.zip4j.exception.ZipException;
 import org.smoothbuild.common.io.DuplicateFileNameException;
 import org.smoothbuild.common.io.IllegalZipEntryFileNameException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-
-import io.vavr.control.Either;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import net.lingala.zip4j.exception.ZipException;
 
 /**
  * This class is thread-safe.

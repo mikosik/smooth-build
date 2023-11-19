@@ -12,11 +12,6 @@ public class TypeFS {
    * Base types that are legal in smooth language.
    */
   public static ImmutableList<TypeS> baseTs() {
-    return ImmutableList.of(
-        BLOB,
-        BOOL,
-        INT,
-        STRING
-    );
+    return ImmutableList.of(BLOB, BOOL, INT, STRING);
   }
 }

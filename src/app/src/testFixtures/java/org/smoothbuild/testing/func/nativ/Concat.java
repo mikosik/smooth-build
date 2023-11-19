@@ -11,7 +11,8 @@ public class Concat {
     ArrayB second = (ArrayB) args.get(1);
 
     var elementT = first.evaluationT().elem();
-    return nativeApi.factory()
+    return nativeApi
+        .factory()
         .arrayBuilderWithElems(elementT)
         .addAll(first.elems(ValueB.class))
         .addAll(second.elems(ValueB.class))

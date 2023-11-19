@@ -14,8 +14,7 @@ public class ConcatTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list());
+    assertThat(artifactStringified("result")).isEqualTo(list());
   }
 
   @Test
@@ -25,18 +24,17 @@ public class ConcatTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("a", "b", "c"));
+    assertThat(artifactStringified("result")).isEqualTo(list("a", "b", "c"));
   }
 
   @Test
   public void concat_array_with_two_elems() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             result = concat([["a", "b", "c"], ["d", "e", "f"]]);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("a", "b", "c", "d", "e", "f"));
+    assertThat(artifactStringified("result")).isEqualTo(list("a", "b", "c", "d", "e", "f"));
   }
 }

@@ -1,14 +1,13 @@
 package org.smoothbuild.cli.base;
 
 import org.smoothbuild.out.log.Level;
-
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Command
 public class LoggingCommand extends ACommand {
   @Option(
-      names = { "--log-level", "-l" },
+      names = {"--log-level", "-l"},
       defaultValue = "info",
       paramLabel = "<level>",
       converter = LogLevelConverter.class,
@@ -21,7 +20,6 @@ public class LoggingCommand extends ACommand {
                 e, error   - show FATAL, ERROR logs
                 w, warning - show FATAL, ERROR, WARNING logs
                 i, info    - show FATAL, ERROR, WARNING, INFO logs
-              """
-  )
+              """)
   public Level logLevel;
 }

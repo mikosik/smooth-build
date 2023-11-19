@@ -4,8 +4,8 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.out.log.Log.fatal;
 
+import jakarta.inject.Inject;
 import java.util.function.Consumer;
-
 import org.smoothbuild.common.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.common.function.ThrowingRunnable;
 import org.smoothbuild.out.report.Reporter;
@@ -13,8 +13,6 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Computer;
 import org.smoothbuild.vm.evaluate.task.Task;
-
-import jakarta.inject.Inject;
 
 public class TaskExecutor {
   private final SoftTerminationExecutor executor;
@@ -27,8 +25,8 @@ public class TaskExecutor {
     this(computer, reporter, taskReporter, Runtime.getRuntime().availableProcessors());
   }
 
-  public TaskExecutor(Computer computer, Reporter reporter, TaskReporter taskReporter,
-      int threadCount) {
+  public TaskExecutor(
+      Computer computer, Reporter reporter, TaskReporter taskReporter, int threadCount) {
     this.executor = new SoftTerminationExecutor(threadCount);
     this.computer = computer;
     this.reporter = reporter;
@@ -54,7 +52,8 @@ public class TaskExecutor {
   }
 
   private void reportComputerException(Throwable throwable) {
-    reporter.report("Internal smooth error",
+    reporter.report(
+        "Internal smooth error",
         list(fatal("Computation failed with: " + getStackTraceAsString(throwable))));
   }
 

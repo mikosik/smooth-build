@@ -11,10 +11,7 @@ import org.smoothbuild.compile.frontend.lang.base.location.Location;
 public record AnnotationS(String name, StringS path, Location location) {
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "name = " + name,
-        "path = " + path,
-        "location = " + location);
+    var fields = joinToString("\n", "name = " + name, "path = " + path, "location = " + location);
     return "AnnotationS(\n" + indent(fields) + "\n)";
   }
 }

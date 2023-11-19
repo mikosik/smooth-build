@@ -10,7 +10,8 @@ public class OrderSTest extends TestContext {
   public void to_string() {
     var orderS = orderS(3, intS(4, 44), intS(5, 55));
     assertThat(orderS.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             OrderS(
               evaluationT = [Int]
               elems = [

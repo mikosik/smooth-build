@@ -2,13 +2,11 @@ package org.smoothbuild.vm.evaluate.execute;
 
 import static org.smoothbuild.common.collect.Lists.list;
 
+import com.google.common.collect.ImmutableList;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-
-import com.google.common.collect.ImmutableList;
 
 public record Job(
     ExprB exprB,

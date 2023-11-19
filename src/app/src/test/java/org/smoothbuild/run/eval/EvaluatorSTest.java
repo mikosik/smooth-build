@@ -12,8 +12,13 @@ import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.run.step.Step.optionStep;
 import static org.smoothbuild.run.step.Step.step;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.AbstractModule;
+import io.vavr.Tuple;
+import io.vavr.collection.Array;
+import io.vavr.control.Either;
+import io.vavr.control.Option;
 import java.math.BigInteger;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
@@ -35,14 +40,6 @@ import org.smoothbuild.vm.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.evaluate.EvaluatorB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.inject.AbstractModule;
-
-import io.vavr.Tuple;
-import io.vavr.collection.Array;
-import io.vavr.control.Either;
-import io.vavr.control.Option;
 
 public class EvaluatorSTest extends TestContext {
   private final FileLoader fileLoader = mock(FileLoader.class);
@@ -108,7 +105,7 @@ public class EvaluatorSTest extends TestContext {
         public void call_constructor() {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "field"))));
           var callS = callS(instantiateS(constructorS), intS(7));
-          assertEvaluation(bindings(constructorS), callS,tupleB(intB(7)));
+          assertEvaluation(bindings(constructorS), callS, tupleB(intB(7)));
         }
 
         @Test
@@ -117,8 +114,7 @@ public class EvaluatorSTest extends TestContext {
               nativeAnnotationS(1, stringS("class binary name")), intTS(), "f", nlist());
           var callS = callS(instantiateS(funcS));
           var jarB = blobB(137);
-          when(fileLoader.load(filePath(PROJECT, path("build.jar"))))
-              .thenReturn(jarB);
+          when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(Either.right(
                   EvaluatorSTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
@@ -127,13 +123,14 @@ public class EvaluatorSTest extends TestContext {
 
         @Test
         public void call_native_func_with_param() throws Exception {
-          var funcS = annotatedFuncS(nativeAnnotationS(1, stringS("class binary name")),
-              intTS(), "f", nlist(itemS(intTS(), "p"))
-          );
+          var funcS = annotatedFuncS(
+              nativeAnnotationS(1, stringS("class binary name")),
+              intTS(),
+              "f",
+              nlist(itemS(intTS(), "p")));
           var callS = callS(instantiateS(funcS), intS(77));
           var jarB = blobB(137);
-          when(fileLoader.load(filePath(PROJECT, path("build.jar"))))
-              .thenReturn(jarB);
+          when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
               .thenReturn(Either.right(
                   EvaluatorSTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
@@ -145,9 +142,7 @@ public class EvaluatorSTest extends TestContext {
       class _combine {
         @Test
         public void combine() throws EvaluatorSException {
-          assertEvaluation(
-              combineS(intS(7), stringS("abc")),
-              tupleB(intB(7), stringB("abc")));
+          assertEvaluation(combineS(intS(7), stringS("abc")), tupleB(intB(7), stringB("abc")));
         }
       }
 
@@ -155,9 +150,7 @@ public class EvaluatorSTest extends TestContext {
       class _order {
         @Test
         public void order() throws EvaluatorSException {
-          assertEvaluation(
-              orderS(intTS(), intS(7), intS(8)),
-              arrayB(intTB(), intB(7), intB(8)));
+          assertEvaluation(orderS(intTS(), intS(7), intS(8)), arrayB(intTB(), intB(7), intB(8)));
         }
       }
 
@@ -189,9 +182,7 @@ public class EvaluatorSTest extends TestContext {
       class _lambda {
         @Test
         public void mono_lambda() {
-          assertEvaluation(
-              instantiateS(lambdaS(intS(7))),
-              lambdaB(intB(7)));
+          assertEvaluation(instantiateS(lambdaS(intS(7))), lambdaB(intB(7)));
         }
 
         @Test
@@ -222,8 +213,7 @@ public class EvaluatorSTest extends TestContext {
         public void ann_func() throws Exception {
           var jar = blobB(123);
           var className = ReturnIdFunc.class.getCanonicalName();
-          when(fileLoader.load(filePath(PROJECT, path("build.jar"))))
-              .thenReturn(jar);
+          when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jar);
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
           when(bytecodeLoader.load("myFunc", jar, className, varMap))
@@ -282,14 +272,12 @@ public class EvaluatorSTest extends TestContext {
 
   private void assertEvaluation(
       ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS, ExprB exprB) {
-    assertThat(evaluate(evaluables, exprS))
-        .isEqualTo(exprB);
+    assertThat(evaluate(evaluables, exprS)).isEqualTo(exprB);
   }
 
   private ExprB evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
     var resultMap = evaluate(evaluables, Array.of(exprS)).get();
-    assertThat(resultMap.size())
-        .isEqualTo(1);
+    assertThat(resultMap.size()).isEqualTo(1);
     return resultMap.get(0);
   }
 
@@ -307,8 +295,7 @@ public class EvaluatorSTest extends TestContext {
         bind(TaskReporterImpl.class).toInstance(taskReporter());
       }
     });
-    var step = step(sbTranslatorFacade)
-        .then(optionStep(EvaluatorBFacade.class));
+    var step = step(sbTranslatorFacade).then(optionStep(EvaluatorBFacade.class));
     var argument = Tuple.of(exprs, evaluables);
 
     return new StepExecutor(injector).execute(step, argument, reporter);

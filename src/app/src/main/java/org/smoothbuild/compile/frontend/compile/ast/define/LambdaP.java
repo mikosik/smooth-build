@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
 import java.util.Optional;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.FuncSchemaS;
@@ -105,14 +104,14 @@ public final class LambdaP extends PolymorphicP implements FuncP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
+    var fields = joinToString(
+        "\n",
         "name = " + name,
         "params = [",
         indent(joinToString(params(), "\n")),
         "]",
         "body = " + body,
-        "location = " + location()
-    );
+        "location = " + location());
     return "LambdaP(\n" + indent(fields) + "\n)";
   }
 }

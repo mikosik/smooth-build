@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.type;
 
 import java.util.function.BiFunction;
-
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
@@ -44,7 +43,7 @@ import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-public sealed abstract class CategoryKindB
+public abstract sealed class CategoryKindB
     permits AbstFuncKindB, ArrayKindB, BaseKindB, FuncKindB, OperKindB, TupleKindB {
   public static sealed class BaseKindB extends CategoryKindB
       permits BlobKindB, BoolKindB, IntKindB, StringKindB {
@@ -58,8 +57,12 @@ public sealed abstract class CategoryKindB
     private final BiFunction<Hash, TypeB, T> constructor;
     private final Class<? extends TypeB> dataClass;
 
-    private OperKindB(String name, byte marker, BiFunction<Hash, TypeB, T> constructor,
-        Class<? extends TypeB> dataClass, Class<? extends ExprB> typeJ) {
+    private OperKindB(
+        String name,
+        byte marker,
+        BiFunction<Hash, TypeB, T> constructor,
+        Class<? extends TypeB> dataClass,
+        Class<? extends ExprB> typeJ) {
       super(name, marker, typeJ);
       this.constructor = constructor;
       this.dataClass = dataClass;
@@ -116,10 +119,13 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static sealed abstract class AbstFuncKindB<T extends FuncCB> extends CategoryKindB {
+  public abstract static sealed class AbstFuncKindB<T extends FuncCB> extends CategoryKindB {
     private final BiFunction<Hash, FuncTB, T> instantiator;
 
-    private AbstFuncKindB(String name, byte marker, Class<? extends ExprB> typeJ,
+    private AbstFuncKindB(
+        String name,
+        byte marker,
+        Class<? extends ExprB> typeJ,
         BiFunction<Hash, FuncTB, T> instantiator) {
       super(name, marker, typeJ);
       this.instantiator = instantiator;
@@ -172,7 +178,7 @@ public sealed abstract class CategoryKindB
     }
   }
 
-  public static final class IfFuncKindB extends AbstFuncKindB<IfFuncCB>  {
+  public static final class IfFuncKindB extends AbstFuncKindB<IfFuncCB> {
     IfFuncKindB() {
       super("IF_FUNC", (byte) 13, IfFuncB.class, IfFuncCB::new);
     }

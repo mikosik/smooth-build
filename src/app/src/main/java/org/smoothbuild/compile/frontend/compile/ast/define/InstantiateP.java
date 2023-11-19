@@ -3,12 +3,10 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Objects;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Instantiation of polymorphic entity.
@@ -51,10 +49,7 @@ public final class InstantiateP extends ExprP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "polymorphic = " + polymorphic,
-        "location = " + location()
-    );
+    var fields = joinToString("\n", "polymorphic = " + polymorphic, "location = " + location());
     return "InstantiateP(\n" + indent(fields) + "\n)";
   }
 }

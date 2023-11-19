@@ -23,67 +23,61 @@ public class LogBufferTest {
   class _contains_at_least {
     @Test
     public void when_nothing_has_been_logged_returns_false() {
-      assertThat(value.containsAtLeast(ERROR))
-          .isFalse();
+      assertThat(value.containsAtLeast(ERROR)).isFalse();
     }
 
     @Test
     public void after_logging_fatal_returns_true() {
       value.log(fatal("message"));
-      assertThat(value.containsAtLeast(ERROR))
-          .isTrue();
+      assertThat(value.containsAtLeast(ERROR)).isTrue();
     }
 
     @Test
     public void after_logging_error_returns_true() {
       value.log(error("message"));
-      assertThat(value.containsAtLeast(ERROR))
-          .isTrue();
+      assertThat(value.containsAtLeast(ERROR)).isTrue();
     }
 
     @Test
     public void after_logging_warning_returns_false() {
       value.log(warning("message"));
-      assertThat(value.containsAtLeast(ERROR))
-          .isFalse();
+      assertThat(value.containsAtLeast(ERROR)).isFalse();
     }
 
     @Test
     public void after_logging_info_returns_false() {
       value.log(info("message"));
-      assertThat(value.containsAtLeast(ERROR))
-          .isFalse();
+      assertThat(value.containsAtLeast(ERROR)).isFalse();
     }
 
     @Test
-    public void after_adding_logs_from_other_logger_with_logs_contains_at_least_error_returns_true() {
+    public void
+        after_adding_logs_from_other_logger_with_logs_contains_at_least_error_returns_true() {
       value.logAll(logBufferWith(error("message")));
-      assertThat(value.containsAtLeast(ERROR))
-          .isTrue();
+      assertThat(value.containsAtLeast(ERROR)).isTrue();
     }
 
     @Test
-    public void after_logging_fatal_and_adding_logs_from_other_logger_contains_at_least_error_returns_true() {
+    public void
+        after_logging_fatal_and_adding_logs_from_other_logger_contains_at_least_error_returns_true() {
       value.log(fatal("message"));
       value.logAll(logBufferWith(info("message")));
-      assertThat(value.containsAtLeast(ERROR))
-          .isTrue();
+      assertThat(value.containsAtLeast(ERROR)).isTrue();
     }
 
     @Test
-    public void after_logging_error_and_adding_logs_from_other_logger_without_problems_returns_true() {
+    public void
+        after_logging_error_and_adding_logs_from_other_logger_without_problems_returns_true() {
       value.log(error("message"));
       value.logAll(logBufferWith(info("message")));
-      assertThat(value.containsAtLeast(ERROR))
-          .isTrue();
+      assertThat(value.containsAtLeast(ERROR)).isTrue();
     }
 
     @Test
     public void after_logging_warning_and_adding_logs_from_other_logger_with_error_returns_true() {
       value.log(warning("message"));
       value.logAll(logBufferWith(error("message")));
-      assertThat(value.containsAtLeast(ERROR))
-          .isTrue();
+      assertThat(value.containsAtLeast(ERROR)).isTrue();
     }
   }
 

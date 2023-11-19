@@ -5,19 +5,15 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.Lists.list;
 
+import com.google.common.collect.ImmutableList;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Instantiation of polymorphic entity.
  */
 public record InstantiateS(
-      ImmutableList<TypeS> typeArgs,
-      PolymorphicS polymorphicS,
-      TypeS evaluationT,
-      Location location)
+    ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS, TypeS evaluationT, Location location)
     implements ExprS {
 
   public InstantiateS(PolymorphicS polymorphicS, Location location) {
@@ -31,12 +27,12 @@ public record InstantiateS(
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
+    var fields = joinToString(
+        "\n",
         "typeArgs = " + "<" + joinToString(typeArgs, ",") + ">",
         "polymorphicS = " + polymorphicS,
         "evaluationT = " + evaluationT,
-        "location = " + location
-    );
+        "location = " + location);
     return "InstantiateS(\n" + indent(fields) + "\n)";
   }
 }

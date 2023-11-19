@@ -17,10 +17,7 @@ public class TypeDefinitionS extends Tanal {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "type = " + type(),
-        "location = " + location()
-    );
+    var fields = joinToString("\n", "type = " + type(), "location = " + location());
     return "TypeDefinitionS(\n" + indent(fields) + "\n)";
   }
 }

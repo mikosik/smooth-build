@@ -1,8 +1,7 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
-import org.smoothbuild.vm.bytecode.expr.ExprB;
-
 import io.vavr.collection.Array;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
 
 public record CombineSubExprsB(Array<ExprB> items) implements SubExprsB {
   @Override

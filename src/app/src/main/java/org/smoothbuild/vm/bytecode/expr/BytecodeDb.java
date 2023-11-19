@@ -7,8 +7,9 @@ import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.canno
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootSeqException;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
+import io.vavr.collection.Array;
+import io.vavr.collection.Traversable;
 import java.math.BigInteger;
-
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
@@ -45,9 +46,6 @@ import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import io.vavr.collection.Array;
-import io.vavr.collection.Traversable;
-
 /**
  * This class is thread-safe.
  */
@@ -82,8 +80,7 @@ public class BytecodeDb {
 
   public NativeFuncB nativeFunc(FuncTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
     var cat = categoryDb.nativeFunc(type);
-    return wrapHashedDbExcAsBytecodeDbExc(
-        () -> newNativeFunc(cat, jar, classBinaryName, isPure));
+    return wrapHashedDbExcAsBytecodeDbExc(() -> newNativeFunc(cat, jar, classBinaryName, isPure));
   }
 
   public IntB int_(BigInteger value) {

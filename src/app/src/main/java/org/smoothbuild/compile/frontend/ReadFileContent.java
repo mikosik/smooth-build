@@ -4,15 +4,13 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.failure;
 import static org.smoothbuild.out.log.Maybe.success;
 
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.function.Function;
-
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.out.log.Maybe;
-
-import jakarta.inject.Inject;
 
 public class ReadFileContent implements Function<FilePath, Maybe<String>> {
   private final FileResolver fileResolver;

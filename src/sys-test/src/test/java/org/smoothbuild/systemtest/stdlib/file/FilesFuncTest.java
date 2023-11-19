@@ -95,7 +95,6 @@ public class FilesFuncTest extends SystemTestCase {
     createFile("dir/file.txt", "def");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file.txt", "def");
+    assertThat(artifactTreeContentAsStrings("result")).containsExactly("file.txt", "def");
   }
 }

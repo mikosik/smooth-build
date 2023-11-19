@@ -5,4 +5,3 @@ public class IllegalZipEntryFileNameException extends Exception {
     super(message);
   }
 }
-

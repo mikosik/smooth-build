@@ -6,11 +6,10 @@ import static org.smoothbuild.filesystem.space.Space.BINARY;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 
-import java.nio.file.Path;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
+import java.nio.file.Path;
 
 public class DiskFileSystemModule extends AbstractModule {
   private final ImmutableMap<Space, Path> spaceToPath;

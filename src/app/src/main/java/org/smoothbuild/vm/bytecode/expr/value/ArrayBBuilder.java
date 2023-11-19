@@ -3,13 +3,11 @@ package org.smoothbuild.vm.bytecode.expr.value;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 
+import io.vavr.collection.Array;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
-
-import io.vavr.collection.Array;
 
 public class ArrayBBuilder {
   private final ArrayTB type;
@@ -29,8 +27,8 @@ public class ArrayBBuilder {
 
   public ArrayBBuilder add(ValueB elem) {
     if (!type.elem().equals(elem.type())) {
-      throw new IllegalArgumentException("Element type must be " + type.elem().q()
-          + " but was " + elem.type().q() + ".");
+      throw new IllegalArgumentException(
+          "Element type must be " + type.elem().q() + " but was " + elem.type().q() + ".");
     }
     Class<?> required = type.elem().typeJ();
     if (!required.isInstance(elem)) {

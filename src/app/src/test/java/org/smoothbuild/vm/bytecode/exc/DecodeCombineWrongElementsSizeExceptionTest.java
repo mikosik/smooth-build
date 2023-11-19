@@ -10,8 +10,8 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 public class DecodeCombineWrongElementsSizeExceptionTest extends TestContext {
   @Test
   public void message() {
-    var exception = new DecodeCombineWrongElementsSizeException(
-        Hash.of(13), combineCB(intTB(), stringTB()), 3);
+    var exception =
+        new DecodeCombineWrongElementsSizeException(Hash.of(13), combineCB(intTB(), stringTB()), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `COMBINE:{Int,String}` object at "
             + "43c66c260828c9839f26474151db105481ff92f5e01377f75389d4ce3d2dd574. "

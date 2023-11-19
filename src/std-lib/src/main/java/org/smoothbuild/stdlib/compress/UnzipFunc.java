@@ -3,7 +3,6 @@ package org.smoothbuild.stdlib.compress;
 import static org.smoothbuild.stdlib.compress.UnzipHelper.unzipToArrayB;
 
 import java.io.IOException;
-
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;

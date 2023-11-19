@@ -8,9 +8,7 @@ import static org.smoothbuild.stdlib.java.util.JavaNaming.toBinaryName;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Objects;
-
 import javax.tools.SimpleJavaFileObject;
-
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class InputClassFile extends SimpleJavaFileObject {

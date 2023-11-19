@@ -8,7 +8,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.MalformedInputException;
-
 import org.junit.jupiter.api.Test;
 
 public class StringCreatorsTest {

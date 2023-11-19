@@ -10,7 +10,8 @@ public class ReferenceSTest extends TestContext {
   public void to_string() {
     var refS = new ReferenceS(schemaS(intTS()), "referenced", location(7));
     assertThat(refS.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             ReferenceS(
               schema = <>Int
               name = referenced

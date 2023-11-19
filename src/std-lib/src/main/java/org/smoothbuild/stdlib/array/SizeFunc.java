@@ -1,7 +1,6 @@
 package org.smoothbuild.stdlib.array;
 
 import java.math.BigInteger;
-
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;

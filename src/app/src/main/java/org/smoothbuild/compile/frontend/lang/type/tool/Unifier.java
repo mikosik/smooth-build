@@ -6,6 +6,8 @@ import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.compile.frontend.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,13 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-
 import org.smoothbuild.compile.frontend.lang.type.TempVarS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * Unifier allows unifying types (`TypeS`s)
@@ -71,8 +69,7 @@ public class Unifier {
 
   public TypeS structureOf(TypeS type) {
     var tempMap = new HashMap<TypeS, TypeS>();
-    return resolve(type)
-        .mapTemps((temp) -> tempMap.computeIfAbsent(temp, t -> newTempVar()));
+    return resolve(type).mapTemps((temp) -> tempMap.computeIfAbsent(temp, t -> newTempVar()));
   }
 
   // equality constraint
@@ -83,7 +80,8 @@ public class Unifier {
     } catch (UnifierException e) {
       throw new RuntimeException(
           "addOrFailWithRuntimeException() caused exception. This means we have bug in code. "
-              + "constraint = " + constraint + ".", e);
+              + "constraint = " + constraint + ".",
+          e);
     }
   }
 
@@ -122,8 +120,7 @@ public class Unifier {
 
   private ResolvedInstantiation resolve(InstantiationConstraint constraint) {
     return new ResolvedInstantiation(
-        resolve(constraint.instantiation()),
-        resolve(constraint.schema()));
+        resolve(constraint.instantiation()), resolve(constraint.schema()));
   }
 
   private void drainQueue(LinkedList<EqualityConstraint> queue) throws UnifierException {
@@ -180,8 +177,7 @@ public class Unifier {
   }
 
   private void unifyTempVarAndNonTempVar(
-      TempVarS temp, TypeS type, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      TempVarS temp, TypeS type, Queue<EqualityConstraint> constraints) throws UnifierException {
     var unified = unifiedFor(temp);
     if (unified.type == null) {
       unified.type = type;
@@ -226,8 +222,8 @@ public class Unifier {
     failIfCycleExists(new HashSet<>(), unified);
   }
 
-  private void failIfCycleExists(HashSet<Unified> visited, Unified unified) throws
-      UnifierException {
+  private void failIfCycleExists(HashSet<Unified> visited, Unified unified)
+      throws UnifierException {
     if (visited.add(unified)) {
       for (Unified u : unified.usedIn) {
         failIfCycleExists(visited, u);
@@ -250,9 +246,9 @@ public class Unifier {
   public String toString() {
     return new HashSet<>(varToUnified.values())
         .stream()
-        .sorted(comparing(u -> u.mainVar.name()))
-        .map(Object::toString)
-        .collect(joining("\n"));
+            .sorted(comparing(u -> u.mainVar.name()))
+            .map(Object::toString)
+            .collect(joining("\n"));
   }
 
   private static class Unified {

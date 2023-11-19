@@ -4,7 +4,6 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.FuncSchemaS;
@@ -17,11 +16,7 @@ public final class NamedExprFuncS extends NamedFuncS implements ExprFuncS {
   private final ExprS body;
 
   public NamedExprFuncS(
-      FuncSchemaS schema,
-      String name,
-      NList<ItemS> params,
-      ExprS body,
-      Location location) {
+      FuncSchemaS schema, String name, NList<ItemS> params, ExprS body, Location location) {
     super(schema, name, params, location);
     this.body = body;
   }
@@ -51,10 +46,7 @@ public final class NamedExprFuncS extends NamedFuncS implements ExprFuncS {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "name = " + name(),
-        fieldsToString(),
-        "body = " + body);
+    var fields = joinToString("\n", "name = " + name(), fieldsToString(), "body = " + body);
     return "NamedExprFuncS(\n" + indent(fields) + "\n)";
   }
 }

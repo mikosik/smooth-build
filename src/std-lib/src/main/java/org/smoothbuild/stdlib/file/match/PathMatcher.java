@@ -4,7 +4,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
-
 import org.smoothbuild.common.filesystem.base.PathS;
 
 public class PathMatcher implements Predicate<PathS> {
@@ -40,11 +39,15 @@ public class PathMatcher implements Predicate<PathS> {
     if (pattern.contains("//")) {
       throw new IllegalPathPatternException("Pattern can't contain two slashes (//) in a row");
     }
-    if (pattern.equals(".") || pattern.startsWith("./") || pattern.contains("/./")
+    if (pattern.equals(".")
+        || pattern.startsWith("./")
+        || pattern.contains("/./")
         || pattern.endsWith("/.")) {
       throw new IllegalPathPatternException("Pattern can't contain '.' elem.");
     }
-    if (pattern.equals("..") || pattern.startsWith("../") || pattern.contains("/../")
+    if (pattern.equals("..")
+        || pattern.startsWith("../")
+        || pattern.contains("/../")
         || pattern.endsWith("/..")) {
       throw new IllegalPathPatternException("Pattern can't contain '..' elem.");
     }

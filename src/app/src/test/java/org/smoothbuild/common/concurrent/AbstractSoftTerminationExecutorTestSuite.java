@@ -3,7 +3,6 @@ package org.smoothbuild.common.concurrent;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,13 +18,12 @@ public abstract class AbstractSoftTerminationExecutorTestSuite {
 
   @Test
   public void submitted_runnable_gets_executed() throws Exception {
-    Completable completable = new Completable() ;
+    Completable completable = new Completable();
     executor.enqueue(completable);
     executor.terminate();
     executor.awaitTermination();
 
-    assertThat(completable.isCompleted())
-        .isTrue();
+    assertThat(completable.isCompleted()).isTrue();
   }
 
   @Test
@@ -65,8 +63,7 @@ public abstract class AbstractSoftTerminationExecutorTestSuite {
     executor.terminate();
     executor.enqueue(completable);
     executor.awaitTermination();
-    assertThat(completable.isCompleted())
-        .isFalse();
+    assertThat(completable.isCompleted()).isFalse();
   }
 
   private static class Completable implements Runnable {

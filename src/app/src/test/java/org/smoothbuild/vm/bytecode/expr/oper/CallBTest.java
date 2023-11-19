@@ -4,21 +4,19 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import io.vavr.collection.Array;
 import java.util.List;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 
-import io.vavr.collection.Array;
-
 public class CallBTest extends TestContext {
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
     assertCall(() -> callB(intB()))
-        .throwsException(new IllegalArgumentException(
-            "`func` component doesn't evaluate to FuncB."));
+        .throwsException(
+            new IllegalArgumentException("`func` component doesn't evaluate to FuncB."));
   }
 
   @Test
@@ -49,8 +47,7 @@ public class CallBTest extends TestContext {
   public void sub_exprs_returns_sub_exprs() {
     var func = lambdaB(Array.of(stringTB()), intB());
     var args = combineB(stringB());
-    assertThat(callB(func, args).subExprs())
-        .isEqualTo(new CallSubExprsB(func, args));
+    assertThat(callB(func, args).subExprs()).isEqualTo(new CallSubExprsB(func, args));
   }
 
   @Nested
@@ -59,8 +56,7 @@ public class CallBTest extends TestContext {
     protected List<CallB> equalExprs() {
       return list(
           callB(lambdaB(Array.of(blobTB()), intB()), blobB()),
-          callB(lambdaB(Array.of(blobTB()), intB()), blobB())
-      );
+          callB(lambdaB(Array.of(blobTB()), intB()), blobB()));
     }
 
     @Override
@@ -68,16 +64,14 @@ public class CallBTest extends TestContext {
       return list(
           callB(lambdaB(Array.of(blobTB()), intB()), blobB()),
           callB(lambdaB(Array.of(stringTB()), intB()), stringB()),
-          callB(lambdaB(Array.of(blobTB()), stringB()), blobB())
-      );
+          callB(lambdaB(Array.of(blobTB()), stringB()), blobB()));
     }
   }
 
   @Test
   public void call_can_be_read_back_by_hash() {
     var call = callB(lambdaB(Array.of(stringTB()), intB()), stringB());
-    assertThat(bytecodeDbOther().get(call.hash()))
-        .isEqualTo(call);
+    assertThat(bytecodeDbOther().get(call.hash())).isEqualTo(call);
   }
 
   @Test
@@ -93,7 +87,6 @@ public class CallBTest extends TestContext {
   public void to_string() {
     var func = lambdaB(Array.of(stringTB()), intB());
     var call = callB(func, stringB());
-    assertThat(call.toString())
-        .isEqualTo("CALL:Int(???)@" + call.hash());
+    assertThat(call.toString()).isEqualTo("CALL:Int(???)@" + call.hash());
   }
 }

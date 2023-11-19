@@ -14,12 +14,10 @@ import static org.smoothbuild.out.log.TestingLog.INFO_LOG;
 import static org.smoothbuild.out.log.TestingLog.WARNING_LOG;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.testing.EqualsTester;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import com.google.common.testing.EqualsTester;
 
 public class MaybeTest {
   @Nested
@@ -27,19 +25,15 @@ public class MaybeTest {
     @Test
     void creation_with_value_and_non_problem() {
       var maybe = maybe("abc", WARNING_LOG);
-      assertThat(maybe.value())
-          .isEqualTo("abc");
-      assertThat(maybe.logs())
-          .isEqualTo(logs(WARNING_LOG));
+      assertThat(maybe.value()).isEqualTo("abc");
+      assertThat(maybe.logs()).isEqualTo(logs(WARNING_LOG));
     }
 
     @Test
     void creation_with_value_and_problem() {
       var maybe = maybe("abc", ERROR_LOG);
-      assertThat(maybe.valueOptional())
-          .isEqualTo(Optional.empty());
-      assertThat(maybe.logs())
-          .isEqualTo(logs(ERROR_LOG));
+      assertThat(maybe.valueOptional()).isEqualTo(Optional.empty());
+      assertThat(maybe.logs()).isEqualTo(logs(ERROR_LOG));
     }
   }
 
@@ -48,34 +42,29 @@ public class MaybeTest {
     @Test
     public void has_value() {
       var maybe = success("abc");
-      assertThat(maybe.value())
-          .isEqualTo("abc");
+      assertThat(maybe.value()).isEqualTo("abc");
     }
 
     @Test
     public void has_value_optional() {
       var maybe = success("abc");
-      assertThat(maybe.valueOptional())
-          .isEqualTo(Optional.of("abc"));
+      assertThat(maybe.valueOptional()).isEqualTo(Optional.of("abc"));
     }
 
     @Test
     public void creation_with_non_problem_log_is_allowed() {
       var maybe = success("abc", WARNING_LOG);
-      assertThat(maybe.value())
-          .isEqualTo("abc");
+      assertThat(maybe.value()).isEqualTo("abc");
     }
 
     @Test
     public void creation_with_problem_fails() {
-      assertCall(() -> success("abc", ERROR_LOG))
-          .throwsException(IllegalArgumentException.class);
+      assertCall(() -> success("abc", ERROR_LOG)).throwsException(IllegalArgumentException.class);
     }
 
     @Test
     public void creation_with_null_value_fails() {
-      assertCall(() -> success(null))
-          .throwsException(IllegalArgumentException.class);
+      assertCall(() -> success(null)).throwsException(IllegalArgumentException.class);
     }
   }
 
@@ -84,46 +73,30 @@ public class MaybeTest {
     @Test
     public void creation_with_no_failure_fails() {
       ImmutableLogs logs = logs(INFO_LOG);
-      assertCall(() -> failure(logs))
-          .throwsException(IllegalArgumentException.class);
+      assertCall(() -> failure(logs)).throwsException(IllegalArgumentException.class);
     }
 
     @Test
     public void has_no_value() {
       var maybe = failure(ERROR_LOG);
-      assertCall(maybe::value)
-          .throwsException(IllegalStateException.class);
+      assertCall(maybe::value).throwsException(IllegalStateException.class);
     }
 
     @Test
     public void has_no_value_optional() {
       var maybe = failure(ERROR_LOG);
-      assertThat(maybe.valueOptional())
-          .isEqualTo(Optional.empty());
+      assertThat(maybe.valueOptional()).isEqualTo(Optional.empty());
     }
   }
 
   @Test
   public void test_equals_and_hashcode() {
     new EqualsTester()
-        .addEqualityGroup(
-            success("abc"),
-            success("abc"))
-        .addEqualityGroup(
-            success("def"),
-            success("def"))
-        .addEqualityGroup(
-            failure(fatal("abc")),
-            failure(fatal("abc")),
-            failure(logs(fatal("abc"))))
-        .addEqualityGroup(
-            failure(error("abc")),
-            failure(error("abc")),
-            failure(logs(error("abc"))))
-        .addEqualityGroup(
-            failure(error("def")),
-            failure(error("def")),
-            failure(logs(error("def"))))
+        .addEqualityGroup(success("abc"), success("abc"))
+        .addEqualityGroup(success("def"), success("def"))
+        .addEqualityGroup(failure(fatal("abc")), failure(fatal("abc")), failure(logs(fatal("abc"))))
+        .addEqualityGroup(failure(error("abc")), failure(error("abc")), failure(logs(error("abc"))))
+        .addEqualityGroup(failure(error("def")), failure(error("def")), failure(logs(error("def"))))
         .addEqualityGroup(
             success("abc", warning("abc")),
             success("abc", warning("abc")),
@@ -137,7 +110,6 @@ public class MaybeTest {
   @Test
   public void to_string() {
     var maybe = success("abc", info("message"));
-    assertThat(maybe.toString())
-        .isEqualTo("Maybe{abc, [Log{INFO, 'message'}]}");
+    assertThat(maybe.toString()).isEqualTo("Maybe{abc, [Log{INFO, 'message'}]}");
   }
 }

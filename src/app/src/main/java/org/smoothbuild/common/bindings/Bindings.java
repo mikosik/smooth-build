@@ -1,13 +1,11 @@
 package org.smoothbuild.common.bindings;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.google.common.collect.ImmutableMap;
-
-public sealed interface Bindings<E>
-    permits AbstractBindings, ImmutableBindings, MutableBindings {
+public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings, MutableBindings {
   public static <E> FlatImmutableBindings<E> immutableBindings() {
     return new FlatImmutableBindings<>(ImmutableMap.of());
   }

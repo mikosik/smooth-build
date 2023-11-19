@@ -7,9 +7,9 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
+import io.vavr.Tuple2;
 import java.util.Optional;
 import java.util.function.Function;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
@@ -32,8 +32,6 @@ import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
-
-import io.vavr.Tuple2;
 
 /**
  * Type inferring consists of
@@ -77,8 +75,10 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Modul
     private void visitConstructor(StructP structP, StructTS structT) {
       var constructorP = structP.constructor();
       var fieldSigs = structT.fields();
-      var params = structP.fields().map(
-          f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.location()));
+      var params = structP
+          .fields()
+          .map(f ->
+              new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.location()));
       var funcTS = new FuncTS(ItemS.toTypes(params), structT);
       var schema = new FuncSchemaS(varSetS(), funcTS);
       constructorP.setSchemaS(schema);
@@ -110,18 +110,17 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Modul
     }
 
     private Optional<ItemSigS> inferFieldSig(ItemP field) {
-      return typeTeller.translate(field.type())
-          .flatMap(t -> {
-            if (t.vars().isEmpty()) {
-              field.setTypeS(t);
-              return Optional.of(new ItemSigS(t, field.name()));
-            } else {
-              var message = "Field type cannot be polymorphic. Found field %s with type %s."
-                  .formatted(field.q(), t.q());
-              logger.log(compileError(field.type(), message));
-              return Optional.empty();
-            }
-          });
+      return typeTeller.translate(field.type()).flatMap(t -> {
+        if (t.vars().isEmpty()) {
+          field.setTypeS(t);
+          return Optional.of(new ItemSigS(t, field.name()));
+        } else {
+          var message = "Field type cannot be polymorphic. Found field %s with type %s."
+              .formatted(field.q(), t.q());
+          logger.log(compileError(field.type(), message));
+          return Optional.empty();
+        }
+      });
     }
 
     // value
@@ -136,18 +135,15 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Modul
     }
 
     private boolean unifyNamedValue(NamedValueP namedValue) {
-      return new ExprTypeUnifier(unifier, typeTeller, logger)
-          .unifyNamedValue(namedValue);
+      return new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedValue(namedValue);
     }
 
     private void nameImplicitVars(NamedValueP namedValue) {
-      new TempVarsNamer(unifier)
-          .nameVarsInNamedValue(namedValue);
+      new TempVarsNamer(unifier).nameVarsInNamedValue(namedValue);
     }
 
     private boolean resolveValueSchema(NamedValueP namedValueP) {
-      return new TypeInferrerResolve(unifier, logger)
-          .resolveNamedValue(namedValueP);
+      return new TypeInferrerResolve(unifier, logger).resolveNamedValue(namedValueP);
     }
 
     // func
@@ -163,18 +159,15 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Modul
     }
 
     private boolean unifyNamedFunc(NamedFuncP namedFunc) {
-      return new ExprTypeUnifier(unifier, typeTeller, logger)
-          .unifyNamedFunc(namedFunc);
+      return new ExprTypeUnifier(unifier, typeTeller, logger).unifyNamedFunc(namedFunc);
     }
 
     private void nameImplicitVars(NamedFuncP namedFunc) {
-      new TempVarsNamer(unifier)
-          .nameVarsInNamedFunc(namedFunc);
+      new TempVarsNamer(unifier).nameVarsInNamedFunc(namedFunc);
     }
 
     private boolean resolveNamedFunc(NamedFuncP namedFunc) {
-      return new TypeInferrerResolve(unifier, logger)
-          .resolveNamedFunc(namedFunc);
+      return new TypeInferrerResolve(unifier, logger).resolveNamedFunc(namedFunc);
     }
 
     private void detectTypeErrorsBetweenParamAndItsDefaultValue(NamedFuncP namedFunc) {
@@ -186,14 +179,16 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Modul
           var schema = namedFunc.schemaS();
           var paramUnifier = new Unifier();
           var resolvedParamT = schema.type().params().elements().get(index);
-          var paramT = replaceVarsWithTempVars(schema.quantifiedVars(), resolvedParamT, paramUnifier);
-          var defaultValueType = replaceQuantifiedVarsWithTempVars(
-              defaultvalue.schemaS(), paramUnifier);
+          var paramT =
+              replaceVarsWithTempVars(schema.quantifiedVars(), resolvedParamT, paramUnifier);
+          var defaultValueType =
+              replaceQuantifiedVarsWithTempVars(defaultvalue.schemaS(), paramUnifier);
           try {
             paramUnifier.add(new EqualityConstraint(paramT, defaultValueType));
           } catch (UnifierException e) {
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
-                .formatted(param.q(), resolvedParamT.q(), defaultvalue.schemaS().type().q());
+                .formatted(
+                    param.q(), resolvedParamT.q(), defaultvalue.schemaS().type().q());
             this.logger.log(compileError(defaultvalue.location(), message));
           }
         });

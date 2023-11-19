@@ -9,14 +9,14 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
 public class JavacTest extends SystemTestCase {
   @Test
   public void error_is_logged_when_compilation_error_occurs() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             result = [File(toBlob("public private class MyClass {}"), "MyClass.java")]
               > javac();
             """);
@@ -49,7 +49,9 @@ public class JavacTest extends SystemTestCase {
 
   @Test
   public void one_file_with_library_dependency_can_be_compiled() throws Exception {
-    createFile("src/MyClass.java", """
+    createFile(
+        "src/MyClass.java",
+        """
         import library.LibraryClass;
         public class MyClass {
           public static String myMethod() {
@@ -57,7 +59,9 @@ public class JavacTest extends SystemTestCase {
           }
         }
         """);
-    createFile("srclib/library/LibraryClass.java", """
+    createFile(
+        "srclib/library/LibraryClass.java",
+        """
         package library;
         public class LibraryClass {
           public static int add(int a, int b) {
@@ -65,7 +69,8 @@ public class JavacTest extends SystemTestCase {
           }
         }
         """);
-    createUserModule("""
+    createUserModule(
+        """
             libraryJar = files("srclib") > javac() > jar() > File("library.jar");
             result = concat([(files("src") > javac(libs = [libraryJar])), javac(files("srclib"))]);
             """);
@@ -76,13 +81,13 @@ public class JavacTest extends SystemTestCase {
     Path classFile = artifactAbsolutePath("result").resolve("MyClass.class");
     MyClassLoader classLoader = new MyClassLoader();
     loadClass(classLoader, bytecode(libraryClassFile.toFile()));
-    assertThat(invoke(classLoader, classFile.toFile(), "myMethod"))
-        .isEqualTo("5");
+    assertThat(invoke(classLoader, classFile.toFile(), "myMethod")).isEqualTo("5");
   }
 
   @Test
   public void duplicate_java_files_cause_error() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             classFile = File(toBlob("public class MyClass {}"), "MyClass.java");
             result = [classFile, classFile] > javac();
             """);
@@ -93,7 +98,8 @@ public class JavacTest extends SystemTestCase {
 
   @Test
   public void illegal_source_param_causes_error() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             result = [File(toBlob("public class MyClass {}"), "MyClass.java")]
               > javac(source="0.9");
             """);
@@ -104,7 +110,8 @@ public class JavacTest extends SystemTestCase {
 
   @Test
   public void illegal_target_param_causes_error() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             result = [File(toBlob("public class MyClass {}"), "MyClass.java")]
               > javac(target="0.9");
             """);
@@ -116,7 +123,8 @@ public class JavacTest extends SystemTestCase {
   @Test
   public void compiling_enum_with_source_param_set_to_too_old_java_version_causes_error()
       throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             result = [File(toBlob("public enum MyClass { VALUE }"), "MyClass.java")]
               > javac(source="1.4", target="1.4");
             """);
@@ -125,8 +133,8 @@ public class JavacTest extends SystemTestCase {
     assertSysOutContains("Source option 1.4 is no longer supported.");
   }
 
-  private Object invoke(Path appClassFile, String method) throws IOException,
-      IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+  private Object invoke(Path appClassFile, String method)
+      throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
     return invoke(new MyClassLoader(), appClassFile.toFile(), method);
   }
 

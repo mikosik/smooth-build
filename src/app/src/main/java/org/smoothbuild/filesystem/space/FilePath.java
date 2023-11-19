@@ -28,9 +28,6 @@ public record FilePath(Space space, PathS path) {
   }
 
   public Hash hash() {
-    return Hash.of(asList(
-        Hash.of(path.toString()),
-        Hash.of(space().name())
-    ));
+    return Hash.of(asList(Hash.of(path.toString()), Hash.of(space().name())));
   }
 }

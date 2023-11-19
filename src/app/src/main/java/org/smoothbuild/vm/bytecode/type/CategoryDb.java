@@ -27,11 +27,11 @@ import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCa
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalIfFuncTypeExc;
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalMapFuncTypeExc;
 
+import io.vavr.collection.Array;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-
 import org.smoothbuild.common.collect.Lists;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
@@ -71,8 +71,6 @@ import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.StringTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
-
-import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.
@@ -129,8 +127,7 @@ public class CategoryDb {
     return funcC(LAMBDA, funcTB);
   }
 
-  private <T extends FuncCB> T funcC(
-      AbstFuncKindB<T> funcKind, Array<TypeB> params, TypeB result) {
+  private <T extends FuncCB> T funcC(AbstFuncKindB<T> funcKind, Array<TypeB> params, TypeB result) {
     return funcC(funcKind, funcT(params, result));
   }
 
@@ -217,15 +214,15 @@ public class CategoryDb {
     CategoryKindB kind = decodeCatMarker(hash, rootSeq.get(0));
     // @formatter:off
     return switch (kind) {
-      case ArrayKindB       array       -> readArrayT(hash, rootSeq, kind);
-      case BaseKindB        base        -> handleBaseT(hash, rootSeq, kind);
-      case LambdaKindB      lambda      -> readFuncCat(hash, rootSeq, lambda);
-      case FuncKindB        func        -> readFuncT(hash, rootSeq);
-      case IfFuncKindB      ifFunc      -> readIfFuncCat(hash, rootSeq, ifFunc);
-      case MapFuncKindB     mapFunc     -> readMapFuncCat(hash, rootSeq, mapFunc);
-      case NativeFuncKindB  nativeFunc  -> readFuncCat(hash, rootSeq, nativeFunc);
-      case OperKindB<?>     oper        -> readOperCat(hash, rootSeq, oper);
-      case TupleKindB       tuple       -> readTupleT(hash, rootSeq);
+      case ArrayKindB array -> readArrayT(hash, rootSeq, kind);
+      case BaseKindB base -> handleBaseT(hash, rootSeq, kind);
+      case LambdaKindB lambda -> readFuncCat(hash, rootSeq, lambda);
+      case FuncKindB func -> readFuncT(hash, rootSeq);
+      case IfFuncKindB ifFunc -> readIfFuncCat(hash, rootSeq, ifFunc);
+      case MapFuncKindB mapFunc -> readMapFuncCat(hash, rootSeq, mapFunc);
+      case NativeFuncKindB nativeFunc -> readFuncCat(hash, rootSeq, nativeFunc);
+      case OperKindB<?> oper -> readOperCat(hash, rootSeq, oper);
+      case TupleKindB tuple -> readTupleT(hash, rootSeq);
     };
     // @formatter:on
   }
@@ -322,17 +319,17 @@ public class CategoryDb {
     });
   }
 
-  private <T extends FuncCB> CategoryB readFuncCat(Hash rootHash, Array<Hash> rootSeq,
-      AbstFuncKindB<T> kind) {
+  private <T extends FuncCB> CategoryB readFuncCat(
+      Hash rootHash, Array<Hash> rootSeq, AbstFuncKindB<T> kind) {
     return readFuncCat(rootHash, rootSeq, kind, t -> {});
   }
 
-  private <T extends FuncCB> CategoryB readFuncCat(Hash rootHash, Array<Hash> rootSeq,
-      AbstFuncKindB<T> kind, Consumer<FuncTB> typeVerifier) {
+  private <T extends FuncCB> CategoryB readFuncCat(
+      Hash rootHash, Array<Hash> rootSeq, AbstFuncKindB<T> kind, Consumer<FuncTB> typeVerifier) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var dataHash = rootSeq.get(DATA_IDX);
-    var typeComponent = wrapCatDbExcAsDecodeCatNodeExc(
-        kind, rootHash, DATA_PATH, () -> read(dataHash));
+    var typeComponent =
+        wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, DATA_PATH, () -> read(dataHash));
     if (typeComponent instanceof FuncTB funcTB) {
       typeVerifier.accept(funcTB);
       return cache(kind.instantiator().apply(rootHash, funcTB));
@@ -350,8 +347,8 @@ public class CategoryDb {
 
   // helper methods for reading
 
-  private <T extends TypeB> T readDataAsType(Hash rootHash, Array<Hash> rootSeq, CategoryKindB kind,
-      Class<T> typeClass) {
+  private <T extends TypeB> T readDataAsType(
+      Hash rootHash, Array<Hash> rootSeq, CategoryKindB kind, Class<T> typeClass) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var hash = rootSeq.get(DATA_IDX);
     var categoryB = wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, DATA_PATH, () -> get(hash));
@@ -365,8 +362,7 @@ public class CategoryDb {
     }
   }
 
-  private Array<TypeB> readDataSeqAsTypes(
-      Hash rootHash, CategoryKindB kind, Array<Hash> rootSeq) {
+  private Array<TypeB> readDataSeqAsTypes(Hash rootHash, CategoryKindB kind, Array<Hash> rootSeq) {
     var elemHashes = wrapHashedDbExcAsDecodeCatNodeExc(
         rootHash, kind, DATA_PATH, () -> hashedDb.readSeq(rootSeq.get(DATA_IDX)));
     var builder = new ArrayList<TypeB>();
@@ -377,8 +373,8 @@ public class CategoryDb {
   }
 
   private TypeB readDataSeqElemAsType(CategoryKindB kind, Hash rootHash, Hash hash, int index) {
-    var categoryB = wrapCatDbExcAsDecodeCatNodeExc(
-        kind, rootHash, DATA_PATH, index, () -> get(hash));
+    var categoryB =
+        wrapCatDbExcAsDecodeCatNodeExc(kind, rootHash, DATA_PATH, index, () -> get(hash));
     if (categoryB instanceof TypeB typeB) {
       return typeB;
     } else {
@@ -426,8 +422,8 @@ public class CategoryDb {
     return cache(new TupleTB(rootHash, items));
   }
 
-  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT) throws
-      HashedDbException {
+  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT)
+      throws HashedDbException {
     var rootHash = writeRootWithData(kind, evaluationT);
     return newOper(kind.constructor(), rootHash, evaluationT);
   }

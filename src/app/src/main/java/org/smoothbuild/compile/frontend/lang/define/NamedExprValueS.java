@@ -3,7 +3,6 @@ package org.smoothbuild.compile.frontend.lang.define;
 import static org.smoothbuild.common.Strings.indent;
 
 import java.util.Objects;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 
@@ -46,5 +45,3 @@ public final class NamedExprValueS extends NamedValueS {
     return "NamedExprValue(\n" + indent(fieldsString) + "\n)";
   }
 }
-
-

@@ -4,18 +4,13 @@ import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
 import static org.smoothbuild.run.CreateInjector.createInjector;
 import static org.smoothbuild.run.step.Step.step;
 
+import io.vavr.Tuple;
 import java.util.concurrent.Callable;
-
 import org.smoothbuild.cli.base.LoggingCommand;
 import org.smoothbuild.run.Version;
-
-import io.vavr.Tuple;
 import picocli.CommandLine.Command;
 
-@Command(
-    name = VersionCommand.NAME,
-    description = "Print version information."
-)
+@Command(name = VersionCommand.NAME, description = "Print version information.")
 public class VersionCommand extends LoggingCommand implements Callable<Integer> {
   public static final String NAME = "version";
 

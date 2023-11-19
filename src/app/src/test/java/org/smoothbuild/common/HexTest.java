@@ -6,27 +6,23 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.ArrayList;
-
+import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import okio.ByteString;
-
 public class HexTest {
   @Test
   public void empty_string_is_decoded() throws DecodeHexException {
-    assertThat(Hex.decode(""))
-        .isEqualTo(ByteString.of());
+    assertThat(Hex.decode("")).isEqualTo(ByteString.of());
   }
 
   @ParameterizedTest
   @MethodSource("one_byte_values")
   public void one_byte_value_is_decoded(byte value, String encoded) throws DecodeHexException {
-    assertThat(Hex.decode(encoded))
-        .isEqualTo(ByteString.of(value));
+    assertThat(Hex.decode(encoded)).isEqualTo(ByteString.of(value));
   }
 
   private static Iterable<Arguments> one_byte_values() {
@@ -47,8 +43,7 @@ public class HexTest {
 
   @Test
   public void two_bytes_value_is_decoded() throws DecodeHexException {
-    assertThat(Hex.decode("0102"))
-        .isEqualTo(ByteString.of((byte) 1, (byte) 2));
+    assertThat(Hex.decode("0102")).isEqualTo(ByteString.of((byte) 1, (byte) 2));
   }
 
   @ParameterizedTest
@@ -60,7 +55,6 @@ public class HexTest {
 
   @Test
   public void invalid_hex_digit_causes_error() {
-    assertCall(() -> Hex.decode("1M"))
-        .throwsException(DecodeHexException.invalidHexDigits("M"));
+    assertCall(() -> Hex.decode("1M")).throwsException(DecodeHexException.invalidHexDigits("M"));
   }
 }

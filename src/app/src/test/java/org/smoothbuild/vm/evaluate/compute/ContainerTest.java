@@ -11,8 +11,7 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 public class ContainerTest extends TestContext {
   @Test
   public void file_system() {
-    assertThat(container().fileSystem())
-        .isSameInstanceAs(projectFileSystem());
+    assertThat(container().fileSystem()).isSameInstanceAs(projectFileSystem());
   }
 
   @Test
@@ -20,12 +19,9 @@ public class ContainerTest extends TestContext {
     var container = container();
     container.log().error("message");
     Iterable<TupleB> iterable = container.messages().elems(TupleB.class);
-    assertThat(iterable)
-        .hasSize(1);
+    assertThat(iterable).hasSize(1);
     TupleB tuple = iterable.iterator().next();
-    assertThat(text(tuple))
-        .isEqualTo("message");
-    assertThat(severity(tuple))
-        .isEqualTo("ERROR");
+    assertThat(text(tuple)).isEqualTo("message");
+    assertThat(severity(tuple)).isEqualTo("ERROR");
   }
 }

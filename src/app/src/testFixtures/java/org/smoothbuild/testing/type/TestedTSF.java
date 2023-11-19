@@ -13,25 +13,22 @@ import static org.smoothbuild.testing.TestContext.stringTS;
 import static org.smoothbuild.testing.TestContext.structTS;
 import static org.smoothbuild.testing.TestContext.varS;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
-import org.smoothbuild.testing.type.TestedTS.TestedArrayTS;
-import org.smoothbuild.testing.type.TestedTS.TestedFuncTS;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
+import org.smoothbuild.testing.type.TestedTS.TestedArrayTS;
+import org.smoothbuild.testing.type.TestedTS.TestedFuncTS;
 
 public class TestedTSF {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
   public static final TestedTS A = new TestedTS(varS("A"));
   public static final TestedTS B = new TestedTS(varS("B"));
-  public static final TestedTS BLOB = new TestedTS(blobTS()
-  );
+  public static final TestedTS BLOB = new TestedTS(blobTS());
   public static final TestedTS BOOL = new TestedTS(boolTS());
 
   public static final TestedTS INT = new TestedTS(intTS());
@@ -39,8 +36,7 @@ public class TestedTSF {
   public static final TestedTS STRUCT = new TestedTS(
       structTS("Person", nlist(itemSigS(stringTS(), "name"))),
       Set.of("Person(String name)"),
-      Set.of("Person(String name)")
-  );
+      Set.of("Person(String name)"));
   public static final List<TestedTS> TESTED_TYPES = list(
       BLOB,
       BOOL,
@@ -53,8 +49,7 @@ public class TestedTSF {
       f(BLOB),
       f(f(BLOB)),
       f(BLOB, BOOL),
-      f(BLOB, f(BOOL))
-  );
+      f(BLOB, f(BOOL)));
 
   public TestedTS blob() {
     return BLOB;
@@ -90,11 +85,7 @@ public class TestedTSF {
 
   private static TestedTS a(TestedTS type) {
     return new TestedArrayTS(
-        type,
-        arrayTS(type.type()),
-        type.typeDeclarations(),
-        type.allDeclarations()
-    );
+        type, arrayTS(type.type()), type.typeDeclarations(), type.allDeclarations());
   }
 
   public TestedTS func(TestedTS resultT, ImmutableList<TestedTS> paramTs) {
@@ -108,30 +99,25 @@ public class TestedTSF {
   public static TestedFuncTS f(TestedTS resultT, ImmutableList<TestedTS> paramTestedTs) {
     var paramSigs = toSigs(paramTestedTs);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
-    String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
-        resultT.name(),
-        name,
-        toParamDeclarationString(paramTestedTs));
+    String declaration = "@Native(\"impl\") %s %s(%s);"
+        .formatted(resultT.name(), name, toParamDeclarationString(paramTestedTs));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
         .addAll(resultT.allDeclarations())
-        .addAll(paramTestedTs.stream()
-            .flatMap(t -> t.allDeclarations().stream())
-            .toList())
+        .addAll(
+            paramTestedTs.stream().flatMap(t -> t.allDeclarations().stream()).toList())
         .build();
     Set<String> typeDeclarations = ImmutableSet.<String>builder()
         .addAll(resultT.typeDeclarations())
-        .addAll(paramTestedTs.stream()
-            .flatMap(t -> t.typeDeclarations().stream())
-            .toList())
+        .addAll(
+            paramTestedTs.stream().flatMap(t -> t.typeDeclarations().stream()).toList())
         .build();
     return new TestedFuncTS(
         resultT,
         paramTestedTs,
         funcTS(map(paramSigs, ItemSigS::type), resultT.type()),
         typeDeclarations,
-        declarations
-    );
+        declarations);
   }
 
   private static String toParamDeclarationString(ImmutableList<TestedTS> paramTestedTs) {

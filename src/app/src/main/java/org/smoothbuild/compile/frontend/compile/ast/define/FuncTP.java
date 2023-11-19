@@ -1,8 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
-import org.smoothbuild.compile.frontend.lang.base.location.Location;
-
 import com.google.common.collect.ImmutableList;
+import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
 public final class FuncTP extends ExplicitTP {
   private final TypeP result;

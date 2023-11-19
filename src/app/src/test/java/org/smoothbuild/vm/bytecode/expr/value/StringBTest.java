@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.List;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -16,63 +15,48 @@ public class StringBTest extends TestContext {
 
   @Test
   public void type_of_string_is_string_type() {
-    assertThat(stringB(string).category())
-        .isEqualTo(stringTB());
+    assertThat(stringB(string).category()).isEqualTo(stringTB());
   }
 
   @Test
   public void to_j_returns_java_string() {
-    assertThat(stringB(string).toJ())
-        .isEqualTo(string);
+    assertThat(stringB(string).toJ()).isEqualTo(string);
   }
 
   @Test
   public void to_j_returns_empty_java_string_for_empty_str() {
-    assertThat(stringB("").toJ())
-        .isEqualTo("");
+    assertThat(stringB("").toJ()).isEqualTo("");
   }
 
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<StringB> {
     @Override
     protected List<StringB> equalExprs() {
-      return list(
-          stringB("abc"),
-          stringB("abc")
-      );
+      return list(stringB("abc"), stringB("abc"));
     }
 
     @Override
     protected List<StringB> nonEqualExprs() {
-      return list(
-          stringB(""),
-          stringB("abc"),
-          stringB("ABC"),
-          stringB(" abc"),
-          stringB("abc ")
-      );
+      return list(stringB(""), stringB("abc"), stringB("ABC"), stringB(" abc"), stringB("abc "));
     }
   }
 
   @Test
   public void str_can_be_read_back_by_hash() {
     var stringB = stringB(string);
-    assertThat(bytecodeDbOther().get(stringB.hash()))
-        .isEqualTo(stringB);
+    assertThat(bytecodeDbOther().get(stringB.hash())).isEqualTo(stringB);
   }
 
   @Test
   public void str_read_back_by_hash_has_same_to_j() {
     StringB str = stringB(string);
-    assertThat(((StringB) bytecodeDbOther().get(str.hash())).toJ())
-        .isEqualTo(string);
+    assertThat(((StringB) bytecodeDbOther().get(str.hash())).toJ()).isEqualTo(string);
   }
 
   @Test
   public void to_string_contains_string_value() {
     StringB str = stringB(string);
-    assertThat(str.toString())
-        .isEqualTo("""
+    assertThat(str.toString()).isEqualTo("""
             "my string"@""" + str.hash());
   }
 

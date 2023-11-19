@@ -9,20 +9,14 @@ import org.smoothbuild.compile.frontend.lang.type.SchemaS;
  * Named value.
  * This class is immutable.
  */
-public sealed abstract class NamedValueS
-    extends NamedEvaluableS
+public abstract sealed class NamedValueS extends NamedEvaluableS
     permits AnnotatedValueS, NamedExprValueS {
   public NamedValueS(SchemaS schema, String name, Location location) {
     super(schema, name, location);
   }
 
   protected String fieldsToString() {
-    return joinToString("\n",
-        "schema = " + schema(),
-        "name = " + name(),
-        "location = " + location()
-    );
+    return joinToString(
+        "\n", "schema = " + schema(), "name = " + name(), "location = " + location());
   }
 }
-
-

@@ -19,7 +19,6 @@ import static org.smoothbuild.out.report.FormatLog.formatLogs;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,8 +34,8 @@ public class ConsoleReporterTest extends TestContext {
 
   @ParameterizedTest
   @MethodSource(value = "single_log_cases")
-  public void report_single_log_logs_log_when_it_exceeds_threshold(Log log, Level level,
-      boolean logged) {
+  public void report_single_log_logs_log_when_it_exceeds_threshold(
+      Log log, Level level, boolean logged) {
     var console = mock(Console.class);
     var reporter = new ConsoleReporter(console, level);
     reporter.report(log);
@@ -49,22 +48,18 @@ public class ConsoleReporterTest extends TestContext {
         arguments(FATAL_LOG, ERROR, true),
         arguments(FATAL_LOG, WARNING, true),
         arguments(FATAL_LOG, INFO, true),
-
         arguments(ERROR_LOG, FATAL, false),
         arguments(ERROR_LOG, ERROR, true),
         arguments(ERROR_LOG, WARNING, true),
         arguments(ERROR_LOG, INFO, true),
-
         arguments(WARNING_LOG, FATAL, false),
         arguments(WARNING_LOG, ERROR, false),
         arguments(WARNING_LOG, WARNING, true),
         arguments(WARNING_LOG, INFO, true),
-
         arguments(INFO_LOG, FATAL, false),
         arguments(INFO_LOG, ERROR, false),
         arguments(INFO_LOG, WARNING, false),
-        arguments(INFO_LOG, INFO, true)
-    );
+        arguments(INFO_LOG, INFO, true));
   }
 
   @ParameterizedTest
@@ -73,8 +68,7 @@ public class ConsoleReporterTest extends TestContext {
     var console = mock(Console.class);
     var reporter = new ConsoleReporter(console, level);
     reporter.report(true, "header", TestingLog.logsWithAllLevels());
-    verify(console, times(1))
-        .println(formatLogs("header", loggedLogs));
+    verify(console, times(1)).println(formatLogs("header", loggedLogs));
   }
 
   public static List<Arguments> filtered_logs_cases() {
@@ -82,8 +76,7 @@ public class ConsoleReporterTest extends TestContext {
         arguments(FATAL, list(FATAL_LOG)),
         arguments(ERROR, list(FATAL_LOG, ERROR_LOG)),
         arguments(WARNING, list(FATAL_LOG, ERROR_LOG, WARNING_LOG)),
-        arguments(INFO, list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG))
-    );
+        arguments(INFO, list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG)));
   }
 
   @Nested

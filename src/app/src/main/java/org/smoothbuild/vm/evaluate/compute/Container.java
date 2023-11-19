@@ -2,9 +2,9 @@ package org.smoothbuild.vm.evaluate.compute;
 
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.vm.bytecode.BytecodeF;
@@ -12,8 +12,6 @@ import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.load.NativeMethodLoader;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-
-import jakarta.inject.Inject;
 
 /**
  * This class is NOT thread-safe.
@@ -55,7 +53,8 @@ public class Container implements NativeApi {
 
   @Override
   public ArrayB messages() {
-    return bytecodeF.arrayBuilderWithElems(bytecodeF.messageT())
+    return bytecodeF
+        .arrayBuilderWithElems(bytecodeF.messageT())
         .addAll(messageLogger.messages)
         .build();
   }

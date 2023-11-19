@@ -8,17 +8,14 @@ import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
 
+import com.google.common.collect.ImmutableMap;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
-
-import com.google.common.collect.ImmutableMap;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * This class is thread-safe.
@@ -118,7 +115,6 @@ public class ConsoleReporter implements Reporter {
   }
 
   private static ImmutableMap<Level, AtomicInteger> createCounters() {
-    return stream(Level.values())
-        .collect(toImmutableEnumMap(v -> v, v -> new AtomicInteger()));
+    return stream(Level.values()).collect(toImmutableEnumMap(v -> v, v -> new AtomicInteger()));
   }
 }

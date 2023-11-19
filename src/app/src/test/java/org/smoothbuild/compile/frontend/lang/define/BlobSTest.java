@@ -8,7 +8,6 @@ import org.smoothbuild.testing.TestContext;
 public class BlobSTest extends TestContext {
   @Test
   public void to_string() {
-    assertThat(blobS(7, 16).toString())
-        .isEqualTo("BlobS(Blob, 0x10, build.smooth:7)");
+    assertThat(blobS(7, 16).toString()).isEqualTo("BlobS(Blob, 0x10, build.smooth:7)");
   }
 }

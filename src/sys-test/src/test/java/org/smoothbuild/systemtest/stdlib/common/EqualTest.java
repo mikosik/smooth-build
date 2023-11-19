@@ -16,8 +16,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
 
     @Test
@@ -27,8 +26,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(false);
+      assertThat(artifactAsBoolean("result")).isEqualTo(false);
     }
   }
 
@@ -41,8 +39,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
 
     @Test
@@ -52,8 +49,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(false);
+      assertThat(artifactAsBoolean("result")).isEqualTo(false);
     }
 
     @Test
@@ -63,8 +59,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
 
     @Test
@@ -74,8 +69,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(false);
+      assertThat(artifactAsBoolean("result")).isEqualTo(false);
     }
   }
 
@@ -88,8 +82,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
 
     @Test
@@ -99,8 +92,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
 
     @Test
@@ -110,8 +102,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(false);
+      assertThat(artifactAsBoolean("result")).isEqualTo(false);
     }
 
     @Test
@@ -121,8 +112,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(false);
+      assertThat(artifactAsBoolean("result")).isEqualTo(false);
     }
   }
 
@@ -130,7 +120,8 @@ public class EqualTest extends SystemTestCase {
   class _struct {
     @Test
     public void struct_is_equal_to_itself() throws Exception {
-      createUserModule("""
+      createUserModule(
+          """
           Person(
             String firstName,
             String secondName,
@@ -139,14 +130,14 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
 
     @Test
-    public void struct_is_not_equal_to_the_same_struct_with_different_field_value() throws
-        Exception {
-      createUserModule("""
+    public void struct_is_not_equal_to_the_same_struct_with_different_field_value()
+        throws Exception {
+      createUserModule(
+          """
           Person(
             String firstName,
             String secondName,
@@ -155,8 +146,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(false);
+      assertThat(artifactAsBoolean("result")).isEqualTo(false);
     }
   }
 
@@ -169,8 +159,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
 
     @Test
@@ -180,8 +169,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
 
     @Test
@@ -191,8 +179,7 @@ public class EqualTest extends SystemTestCase {
           """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
+      assertThat(artifactAsBoolean("result")).isEqualTo(true);
     }
   }
 }

@@ -9,21 +9,20 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
+import okio.BufferedSource;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
-import okio.BufferedSource;
-
 public class ZipFunc {
   public static ValueB func(NativeApi nativeApi, TupleB args) throws IOException {
     ArrayB files = (ArrayB) args.get(0);
     var duplicatesDetector = new HashSet<String>();
     BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
+    try (ZipOutputStream zipOutputStream =
+        new ZipOutputStream(blobBuilder.sink().outputStream())) {
       for (TupleB file : files.elems(TupleB.class)) {
         String path = filePath(file).toJ();
         if (!duplicatesDetector.add(path)) {

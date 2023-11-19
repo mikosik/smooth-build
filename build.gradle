@@ -1,5 +1,40 @@
+plugins {
+    id 'com.diffplug.spotless' version '6.22.0' apply false
+}
+
 subprojects {
+    apply plugin: 'com.diffplug.spotless'
+    spotless {
+        format 'misc', {
+            target '*.gradle', '.gitattributes', '.gitignore', "*.g4"
+            trimTrailingWhitespace()
+            indentWithSpaces()
+            endWithNewline()
+        }
+        antlr4 {
+            target '**/*.g4'
+            antlr4Formatter()
+        }
+    }
+
     tasks.withType(Test) {
         maxParallelForks = Runtime.runtime.availableProcessors()
+    }
+}
+
+subprojects { subproject ->
+    if (subproject.name in ['app', 'std-lib', "sys-test"]) {
+        apply plugin: 'com.diffplug.spotless'
+        spotless {
+            java {
+                // Targets are listed explicitly to avoid running spotless for java files generated
+                // by antlr. The other option would be to separate antlr into separate subproject
+                // which doesn't have spotless java configured.
+                target 'src/main/java/**/*.java', 'src/main/test/**/*.java',
+                        'src/main/testFixtures/**/*.java'
+                removeUnusedImports()
+                palantirJavaFormat('2.38.0').style("GOOGLE")
+            }
+        }
     }
 }

@@ -5,14 +5,13 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 
+import io.vavr.Tuple;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.testing.TestContext;
 
-import io.vavr.Tuple;
-
-public class InjectDefaultArgumentsTest extends TestContext  {
+public class InjectDefaultArgumentsTest extends TestContext {
   @Test
   public void missing_call_argument_is_filled_with_reference_to_default_argument() {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
@@ -24,12 +23,12 @@ public class InjectDefaultArgumentsTest extends TestContext  {
 
     callInjectDefaultArguments(importedS, moduleP);
 
-    assertThat(callP.positionedArgs())
-        .isEqualTo(list(referenceP("myFunc:param", callLocation)));
+    assertThat(callP.positionedArgs()).isEqualTo(list(referenceP("myFunc:param", callLocation)));
   }
 
   @Test
-  public void missing_call_argument_in_call_within_default_body_is_filled_with_reference_to_default_argument() {
+  public void
+      missing_call_argument_in_call_within_default_body_is_filled_with_reference_to_default_argument() {
     var myFuncS = funcS("myFunc", nlist(itemS("param", intS(7))), paramRefS(intTS(), "param"));
     var importedS = new ScopeS(immutableBindings(), bindings(myFuncS));
     var callLocation = location(9);
@@ -39,8 +38,7 @@ public class InjectDefaultArgumentsTest extends TestContext  {
 
     callInjectDefaultArguments(importedS, moduleP);
 
-    assertThat(callP.positionedArgs())
-        .isEqualTo(list(referenceP("myFunc:param", callLocation)));
+    assertThat(callP.positionedArgs()).isEqualTo(list(referenceP("myFunc:param", callLocation)));
   }
 
   private static void callInjectDefaultArguments(ScopeS importedS, ModuleP moduleP) {

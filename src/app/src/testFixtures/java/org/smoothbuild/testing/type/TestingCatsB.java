@@ -4,16 +4,14 @@ import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Lists.map;
 
+import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
-
-import com.google.common.collect.ImmutableList;
-
-import io.vavr.collection.Array;
 
 public class TestingCatsB {
   public static final TestContext CONTEXT = new TestContext();
@@ -24,8 +22,7 @@ public class TestingCatsB {
       func(CONTEXT.blobTB(), CONTEXT.boolTB()),
       CONTEXT.intTB(),
       CONTEXT.stringTB(),
-      CONTEXT.personTB()
-  );
+      CONTEXT.personTB());
 
   public static final ImmutableList<CategoryB> ARRAY_CATS_TO_TEST = list(
       array(CONTEXT.blobTB()),
@@ -34,14 +31,12 @@ public class TestingCatsB {
       array(CONTEXT.intTB()),
       array(CONTEXT.stringTB()),
       array(CONTEXT.personTB()),
-
       array(array(CONTEXT.blobTB())),
       array(array(CONTEXT.boolTB())),
       array(array(func(CONTEXT.blobTB(), CONTEXT.boolTB()))),
       array(array(CONTEXT.intTB())),
       array(array(CONTEXT.stringTB())),
-      array(array(CONTEXT.personTB()))
-  );
+      array(array(CONTEXT.personTB())));
 
   public static final ImmutableList<CategoryB> CATS_TO_TEST =
       concat(BASE_CATS_TO_TEST, ARRAY_CATS_TO_TEST);
@@ -61,8 +56,7 @@ public class TestingCatsB {
         tuple(),
         tuple(CONTEXT.blobTB()),
         tuple(CONTEXT.blobTB(), CONTEXT.blobTB()),
-        tuple(CONTEXT.stringTB())
-    );
+        tuple(CONTEXT.stringTB()));
     var arrayCs = map(baseCs, CONTEXT::arrayTB);
     var valueCs = concat(baseCs, arrayCs);
     var exprCs = list(
@@ -89,8 +83,7 @@ public class TestingCatsB {
         CONTEXT.lambdaCB(CONTEXT.blobTB()),
         CONTEXT.lambdaCB(CONTEXT.blobTB(), CONTEXT.blobTB()),
         CONTEXT.lambdaCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
-        CONTEXT.lambdaCB(CONTEXT.stringTB())
-    );
+        CONTEXT.lambdaCB(CONTEXT.stringTB()));
 
     return concat(valueCs, exprCs);
   }

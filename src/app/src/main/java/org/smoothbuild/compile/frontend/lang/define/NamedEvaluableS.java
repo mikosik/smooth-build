@@ -8,10 +8,8 @@ import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 /**
  * Evaluable that has fully qualified name.
  */
-public sealed abstract class NamedEvaluableS
-    extends Sanal
-    implements EvaluableS, ReferenceableS, Nal
-    permits NamedFuncS, NamedValueS {
+public abstract sealed class NamedEvaluableS extends Sanal
+    implements EvaluableS, ReferenceableS, Nal permits NamedFuncS, NamedValueS {
   public NamedEvaluableS(SchemaS schema, String name, Location location) {
     super(schema, name, location);
   }

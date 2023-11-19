@@ -1,16 +1,13 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import java.util.Optional;
-
 import org.smoothbuild.compile.frontend.lang.base.NalImpl;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
 /**
  * Evaluable that has fully qualified name.
  */
-public sealed abstract class NamedEvaluableP
-    extends NalImpl
-    implements ReferenceableP, EvaluableP
+public abstract sealed class NamedEvaluableP extends NalImpl implements ReferenceableP, EvaluableP
     permits NamedFuncP, NamedValueP {
   private final String shortName;
   private final Optional<ExprP> body;

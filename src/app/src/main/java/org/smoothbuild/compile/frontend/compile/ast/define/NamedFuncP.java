@@ -5,16 +5,12 @@ import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
 import java.util.Optional;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.frontend.lang.type.FuncTS;
 
-public sealed class NamedFuncP
-    extends NamedEvaluableP
-    implements FuncP
-    permits ConstructorP {
+public sealed class NamedFuncP extends NamedEvaluableP implements FuncP permits ConstructorP {
   private final TypeP resultT;
   private final NList<ItemP> params;
   private FuncTS typeS;
@@ -89,7 +85,8 @@ public sealed class NamedFuncP
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
+    var fields = joinToString(
+        "\n",
         "resulT = " + resultT,
         "name = " + name(),
         "params = [",
@@ -97,8 +94,7 @@ public sealed class NamedFuncP
         "]",
         "body = " + body(),
         "annotation = " + annotation(),
-        "location = " + location()
-    );
+        "location = " + location());
     return "NamedFuncP(\n" + indent(fields) + "\n)";
   }
 }

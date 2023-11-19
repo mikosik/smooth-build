@@ -1,16 +1,13 @@
 package org.smoothbuild.common.filesystem.mem;
 
+import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.smoothbuild.common.filesystem.base.PathS;
-
-import com.google.common.collect.ImmutableList;
-
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
+import org.smoothbuild.common.filesystem.base.PathS;
 
 public class MemoryDir implements MemoryElement {
   private final MemoryDir parent;

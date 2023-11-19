@@ -4,9 +4,11 @@ import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 
+import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
+import jakarta.inject.Inject;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -35,21 +37,13 @@ import org.smoothbuild.vm.evaluate.task.PickTask;
 import org.smoothbuild.vm.evaluate.task.SelectTask;
 import org.smoothbuild.vm.evaluate.task.Task;
 
-import com.google.common.collect.ImmutableList;
-
-import io.vavr.collection.Array;
-import jakarta.inject.Inject;
-
 public class SchedulerB {
   private final TaskExecutor taskExecutor;
   private final BytecodeF bytecodeF;
   private final VarReducerB varReducerB;
 
   @Inject
-  public SchedulerB(
-      TaskExecutor taskExecutor,
-      BytecodeF bytecodeF,
-      VarReducerB varReducerB) {
+  public SchedulerB(TaskExecutor taskExecutor, BytecodeF bytecodeF, VarReducerB varReducerB) {
     this.taskExecutor = taskExecutor;
     this.bytecodeF = bytecodeF;
     this.varReducerB = varReducerB;
@@ -84,16 +78,16 @@ public class SchedulerB {
   private void scheduleJobTasksEvaluation(Job job) {
     // @formatter:off
     switch (job.exprB()) {
-      case CallB      call      -> new CallScheduler(job, call).scheduleCall();
-      case CombineB   combine   -> scheduleOperTask(job, combine, CombineTask::new);
-      case LambdaB    lambda    -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
-      case ValueB     value     -> scheduleConstTask(job, value);
-      case OrderB     order     -> scheduleOperTask(job, order, OrderTask::new);
-      case PickB      pick      -> scheduleOperTask(job, pick, PickTask::new);
-      case VarB       var       -> scheduleVarB(job, var);
-      case SelectB    select    -> scheduleOperTask(job, select, SelectTask::new);
-      // `default` is needed because ExprB is not sealed because it is in different package
-      // than its subclasses and code is not modularized.
+      case CallB call -> new CallScheduler(job, call).scheduleCall();
+      case CombineB combine -> scheduleOperTask(job, combine, CombineTask::new);
+      case LambdaB lambda -> scheduleConstTask(job, (ValueB) varReducerB.inline(job));
+      case ValueB value -> scheduleConstTask(job, value);
+      case OrderB order -> scheduleOperTask(job, order, OrderTask::new);
+      case PickB pick -> scheduleOperTask(job, pick, PickTask::new);
+      case VarB var -> scheduleVarB(job, var);
+      case SelectB select -> scheduleOperTask(job, select, SelectTask::new);
+        // `default` is needed because ExprB is not sealed because it is in different package
+        // than its subclasses and code is not modularized.
       default -> throw new RuntimeException("shouldn't happen");
     }
     // @formatter:on
@@ -120,12 +114,12 @@ public class SchedulerB {
 
     private void onFuncEvaluated(ValueB funcB) {
       switch ((FuncB) funcB) {
-        // @formatter:off
-        case LambdaB      lambdaB     -> handleLambda(lambdaB);
-        case IfFuncB      ifFuncB     -> handleIfFunc();
-        case MapFuncB     mapFuncB    -> handleMapFunc();
-        case NativeFuncB  nativeFuncB -> handleNativeFunc(nativeFuncB);
-        // @formatter:on
+          // @formatter:off
+        case LambdaB lambdaB -> handleLambda(lambdaB);
+        case IfFuncB ifFuncB -> handleIfFunc();
+        case MapFuncB mapFuncB -> handleMapFunc();
+        case NativeFuncB nativeFuncB -> handleNativeFunc(nativeFuncB);
+          // @formatter:on
       }
     }
 

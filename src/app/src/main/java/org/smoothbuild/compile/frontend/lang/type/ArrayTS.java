@@ -24,7 +24,6 @@ public final class ArrayTS extends TypeS {
     if (this == object) {
       return true;
     }
-    return object instanceof ArrayTS thatArray
-        && this.elem().equals(thatArray.elem());
+    return object instanceof ArrayTS thatArray && this.elem().equals(thatArray.elem());
   }
 }

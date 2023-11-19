@@ -9,9 +9,9 @@ import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import java.util.function.Function;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.compile.CompileError;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
@@ -47,8 +47,6 @@ import org.smoothbuild.compile.frontend.lang.type.tool.Unifier;
 import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
 import org.smoothbuild.out.log.Logger;
 
-import com.google.common.collect.ImmutableList;
-
 public class ExprTypeUnifier {
   private final Unifier unifier;
   private final TypeTeller typeTeller;
@@ -60,10 +58,7 @@ public class ExprTypeUnifier {
   }
 
   private ExprTypeUnifier(
-      Unifier unifier,
-      TypeTeller typeTeller,
-      VarSetS outerScopeVars,
-      Logger logger) {
+      Unifier unifier, TypeTeller typeTeller, VarSetS outerScopeVars, Logger logger) {
     this.unifier = unifier;
     this.typeTeller = typeTeller;
     this.outerScopeVars = outerScopeVars;
@@ -95,7 +90,7 @@ public class ExprTypeUnifier {
     // @formatter:off
     switch (evaluableP) {
       case NamedValueP valueP -> valueP.setSchemaS(new SchemaS(vars, resolvedT));
-      case FuncP       funcP  -> funcP.setSchemaS(new FuncSchemaS(vars, (FuncTS) resolvedT));
+      case FuncP funcP -> funcP.setSchemaS(new FuncSchemaS(vars, (FuncTS) resolvedT));
     }
     // @formatter:on
     return true;
@@ -121,8 +116,7 @@ public class ExprTypeUnifier {
   private boolean unifyFunc(FuncP funcP) {
     var paramTs = inferParamTs(funcP.params());
     var resultT = translateOrGenerateTempVar(funcP.resultT());
-    return mapPair(paramTs, resultT, (p, r) -> unifyFunc(funcP, p, r))
-        .orElse(false);
+    return mapPair(paramTs, resultT, (p, r) -> unifyFunc(funcP, p, r)).orElse(false);
   }
 
   private boolean unifyFunc(FuncP funcP, ImmutableList<TypeS> paramTs, TypeS resultT) {
@@ -146,7 +140,8 @@ public class ExprTypeUnifier {
   }
 
   private Boolean unifyEvaluableBody(EvaluableP evaluableP, TypeS evaluationT) {
-    return evaluableP.body()
+    return evaluableP
+        .body()
         .map(body -> unifyBodyExprAndEvaluationType(evaluableP, evaluationT, body))
         .orElse(true);
   }
@@ -171,14 +166,14 @@ public class ExprTypeUnifier {
   private Optional<TypeS> unifyExpr(ExprP exprP) {
     // @formatter:off
     return switch (exprP) {
-      case CallP          callP          -> unifyAndMemoize(this::unifyCall, callP);
-      case InstantiateP   instantiateP   -> unifyAndMemoize(this::unifyInstantiate, instantiateP);
-      case NamedArgP      namedArgP      -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
-      case OrderP         orderP         -> unifyAndMemoize(this::unifyOrder, orderP);
-      case SelectP        selectP        -> unifyAndMemoize(this::unifySelect, selectP);
-      case StringP        stringP        -> setAndMemoize(TypeFS.STRING, stringP);
-      case IntP           intP           -> setAndMemoize(TypeFS.INT, intP);
-      case BlobP          blobP          -> setAndMemoize(TypeFS.BLOB, blobP);
+      case CallP callP -> unifyAndMemoize(this::unifyCall, callP);
+      case InstantiateP instantiateP -> unifyAndMemoize(this::unifyInstantiate, instantiateP);
+      case NamedArgP namedArgP -> unifyAndMemoize(this::unifyNamedArg, namedArgP);
+      case OrderP orderP -> unifyAndMemoize(this::unifyOrder, orderP);
+      case SelectP selectP -> unifyAndMemoize(this::unifySelect, selectP);
+      case StringP stringP -> setAndMemoize(TypeFS.STRING, stringP);
+      case IntP intP -> setAndMemoize(TypeFS.INT, intP);
+      case BlobP blobP -> setAndMemoize(TypeFS.BLOB, blobP);
     };
     // @formatter:on
   }
@@ -252,7 +247,8 @@ public class ExprTypeUnifier {
       try {
         unify(elemVar, elemT);
       } catch (UnifierException e) {
-        logger.log(CompileError.compileError(location,
+        logger.log(CompileError.compileError(
+            location,
             "Cannot infer type for array literal. Its element types are not compatible."));
         return Optional.empty();
       }

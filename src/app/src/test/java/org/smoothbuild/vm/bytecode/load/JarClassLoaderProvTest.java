@@ -14,10 +14,8 @@ public class JarClassLoaderProvTest extends TestContext {
     var classLoaderProv = new JarClassLoaderProv(bytecodeF(), getPlatformClassLoader());
     var classLoaderTry = classLoaderProv.classLoaderFor(jar);
     var clazz = classLoaderTry.get().loadClass(MyClass.class.getName());
-    assertThat(clazz)
-        .isNotSameInstanceAs(MyClass.class);
-    assertThat(clazz.getMethod("method").invoke(null))
-        .isEqualTo("MyClass result");
+    assertThat(clazz).isNotSameInstanceAs(MyClass.class);
+    assertThat(clazz.getMethod("method").invoke(null)).isEqualTo("MyClass result");
   }
 
   public static class MyClass {
@@ -32,7 +30,6 @@ public class JarClassLoaderProvTest extends TestContext {
     var classLoaderProv = new JarClassLoaderProv(bytecodeF(), getPlatformClassLoader());
     var classLoader1 = classLoaderProv.classLoaderFor(jar);
     var classLoader2 = classLoaderProv.classLoaderFor(jar);
-    assertThat(classLoader1)
-        .isSameInstanceAs(classLoader2);
+    assertThat(classLoader1).isSameInstanceAs(classLoader2);
   }
 }

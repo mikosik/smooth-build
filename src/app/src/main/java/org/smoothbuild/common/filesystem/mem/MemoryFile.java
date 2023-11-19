@@ -4,14 +4,12 @@ import static okio.Okio.buffer;
 
 import java.io.IOException;
 import java.util.List;
-
-import org.smoothbuild.common.filesystem.base.PathS;
-
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.ForwardingSink;
+import org.smoothbuild.common.filesystem.base.PathS;
 
 public class MemoryFile implements MemoryElement {
   private final MemoryDir parent;

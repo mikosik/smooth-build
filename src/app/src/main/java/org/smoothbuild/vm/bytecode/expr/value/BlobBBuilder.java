@@ -2,14 +2,12 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import java.io.Closeable;
 import java.io.IOException;
-
+import okio.BufferedSink;
 import org.smoothbuild.common.io.DataWriter;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.Helpers;
 import org.smoothbuild.vm.bytecode.hashed.HashingBufferedSink;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
-
-import okio.BufferedSink;
 
 public class BlobBBuilder implements Closeable {
   private final BytecodeDb bytecodeDb;

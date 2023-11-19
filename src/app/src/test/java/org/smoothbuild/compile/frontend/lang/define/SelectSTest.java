@@ -14,7 +14,8 @@ public class SelectSTest extends TestContext {
     var structValue = annotatedValueS(11, annotationS, structTS, "structValue");
     var selectS = selectS(3, instantiateS(12, structValue), "field");
     assertThat(selectS.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             SelectS(
               selectable = InstantiateS(
                 typeArgs = <>

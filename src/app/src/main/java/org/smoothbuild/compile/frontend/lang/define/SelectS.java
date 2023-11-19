@@ -21,11 +21,8 @@ public record SelectS(ExprS selectable, String field, Location location) impleme
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "selectable = " + selectable,
-        "field = " + field,
-        "location = " + location
-    );
+    var fields = joinToString(
+        "\n", "selectable = " + selectable, "field = " + field, "location = " + location);
     return "SelectS(\n" + indent(fields) + "\n)";
   }
 }

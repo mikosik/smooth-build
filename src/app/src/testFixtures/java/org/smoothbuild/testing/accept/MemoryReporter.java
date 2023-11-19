@@ -1,7 +1,6 @@
 package org.smoothbuild.testing.accept;
 
 import java.util.List;
-
 import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
@@ -12,8 +11,7 @@ public class MemoryReporter implements Reporter {
   private final LogBuffer buffer = new LogBuffer();
 
   @Override
-  public void startNewPhase(String name) {
-  }
+  public void startNewPhase(String name) {}
 
   @Override
   public void report(Log log) {
@@ -27,8 +25,7 @@ public class MemoryReporter implements Reporter {
   }
 
   @Override
-  public void printSummary() {
-  }
+  public void printSummary() {}
 
   public boolean containsAtLeast(Level level) {
     return buffer.containsAtLeast(level);

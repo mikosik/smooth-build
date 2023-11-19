@@ -14,11 +14,8 @@ public record ReferenceS(SchemaS schema, String name, Location location)
     implements PolymorphicS, Nal {
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "schema = " + schema,
-        "name = " + name,
-        "location = " + location
-    );
+    var fields =
+        joinToString("\n", "schema = " + schema, "name = " + name, "location = " + location);
     return "ReferenceS(\n" + indent(fields) + "\n)";
   }
 }

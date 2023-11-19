@@ -4,6 +4,10 @@ import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import java.util.AbstractList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -15,11 +19,6 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
-
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 
 /**
  * List of Named.
@@ -47,10 +46,7 @@ public class NList<T extends Named> extends AbstractList<T> {
 
   public static <E extends Named> NList<E> nlist(ImmutableList<E> list) {
     checkContainsNoDuplicatedNames(list);
-    return new NList<>(
-        () -> list,
-        () -> calculateMap(list),
-        () -> calculateIndexMap(list));
+    return new NList<>(() -> list, () -> calculateMap(list), () -> calculateIndexMap(list));
   }
 
   private static <E extends Named> void checkContainsNoDuplicatedNames(ImmutableList<E> list) {
@@ -68,9 +64,7 @@ public class NList<T extends Named> extends AbstractList<T> {
 
   public static <E extends Named> NList<E> nlist(ImmutableMap<String, E> map) {
     return new NList<>(
-        () -> map.values().asList(),
-        () -> map,
-        () -> calculateIndexMap(map.values()));
+        () -> map.values().asList(), () -> map, () -> calculateIndexMap(map.values()));
   }
 
   /**
@@ -78,10 +72,7 @@ public class NList<T extends Named> extends AbstractList<T> {
    * is called and more than one element has given name then the first one is returned.
    */
   public static <E extends Named> NList<E> nlistWithShadowing(ImmutableList<E> list) {
-    return new NList<>(
-        () -> list,
-        () -> calculateMap(list),
-        () -> calculateIndexMap(list));
+    return new NList<>(() -> list, () -> calculateMap(list), () -> calculateIndexMap(list));
   }
 
   // visible for testing
@@ -124,7 +115,7 @@ public class NList<T extends Named> extends AbstractList<T> {
     return builder.build();
   }
 
-  public <R  extends Named> NList<R> map(Function<T, R> mapping) {
+  public <R extends Named> NList<R> map(Function<T, R> mapping) {
     return nlist(Lists.map(list(), mapping));
   }
 
@@ -146,8 +137,7 @@ public class NList<T extends Named> extends AbstractList<T> {
     if (this == object) {
       return true;
     }
-    return object instanceof NList<?> that
-        && list().equals(that.list());
+    return object instanceof NList<?> that && list().equals(that.list());
   }
 
   @Override

@@ -4,13 +4,11 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.filesystem.space.FilePath.filePath;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 
+import com.google.common.collect.ImmutableList;
 import java.io.IOException;
-
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.filesystem.space.FilePath;
-
-import com.google.common.collect.ImmutableList;
 
 public class ProjectSpaceLayout {
   public static final PathS SMOOTH_DIR = path(".smooth");
@@ -31,8 +29,7 @@ public class ProjectSpaceLayout {
     }
   }
 
-  public static void initializeDir(
-      FileSystem fileSystem, PathS dir) throws IOException {
+  public static void initializeDir(FileSystem fileSystem, PathS dir) throws IOException {
     switch (fileSystem.pathState(dir)) {
       case DIR -> {}
       case FILE -> throw new IOException(

@@ -16,44 +16,36 @@ import static org.smoothbuild.common.collect.Lists.sort;
 import static org.smoothbuild.common.collect.Lists.zip;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class ListsTest {
   @Nested
   class _list {
     @Test
     public void with_no_elems() {
-      assertThat(list())
-          .isEmpty();
+      assertThat(list()).isEmpty();
     }
 
     @Test
     public void with_one_elem() {
-      assertThat(list("abc"))
-          .containsExactly("abc");
+      assertThat(list("abc")).containsExactly("abc");
     }
 
     @Test
     public void with_two_elems() {
-      assertThat(list("abc", "def"))
-          .containsExactly("abc", "def")
-          .inOrder();
+      assertThat(list("abc", "def")).containsExactly("abc", "def").inOrder();
     }
 
     @Test
     public void with_three_elems() {
-      assertThat(list("abc", "def", "ghi"))
-          .containsExactly("abc", "def", "ghi")
-          .inOrder();
+      assertThat(list("abc", "def", "ghi")).containsExactly("abc", "def", "ghi").inOrder();
     }
   }
 
@@ -61,14 +53,12 @@ public class ListsTest {
   class _generate {
     @Test
     public void with_no_elems() {
-      assertThat(generate(0, () -> 7))
-          .isEmpty();
+      assertThat(generate(0, () -> 7)).isEmpty();
     }
 
     @Test
     public void with_one_elem() {
-      assertThat(generate(1, () -> 7))
-          .containsExactly(7);
+      assertThat(generate(1, () -> 7)).containsExactly(7);
     }
 
     @Test
@@ -86,8 +76,7 @@ public class ListsTest {
     class _single_first {
       @Test
       public void with_empty() {
-        assertThat(concat("elem", new ArrayList<>()))
-            .containsExactly("elem");
+        assertThat(concat("elem", new ArrayList<>())).containsExactly("elem");
       }
 
       @Test
@@ -101,8 +90,7 @@ public class ListsTest {
       public void concat_doesnt_modify_list() {
         List<String> list = asList("second");
         concat("first", list);
-        assertThat(list)
-            .containsExactly("second");
+        assertThat(list).containsExactly("second");
       }
 
       @Test
@@ -110,8 +98,7 @@ public class ListsTest {
         Integer one = 1;
         Integer two = 2;
         List<Number> list = asList(two);
-        assertThat(concat(one, list))
-            .containsExactly(one, two);
+        assertThat(concat(one, list)).containsExactly(one, two);
       }
 
       @Test
@@ -119,8 +106,7 @@ public class ListsTest {
         Integer one = 1;
         Integer two = 2;
         List<Integer> list = asList(two);
-        assertThat(concat((Number) one, list))
-            .containsExactly(one, two);
+        assertThat(concat((Number) one, list)).containsExactly(one, two);
       }
     }
 
@@ -128,8 +114,7 @@ public class ListsTest {
     class _single_last {
       @Test
       public void with_empty() {
-        assertThat(concat(new ArrayList<>(), "elem"))
-            .containsExactly("elem");
+        assertThat(concat(new ArrayList<>(), "elem")).containsExactly("elem");
       }
 
       @Test
@@ -143,8 +128,7 @@ public class ListsTest {
       public void concat_doesnt_modify_list() {
         List<String> list = asList("first");
         concat(list, "second");
-        assertThat(list)
-            .containsExactly("first");
+        assertThat(list).containsExactly("first");
       }
 
       @Test
@@ -152,8 +136,7 @@ public class ListsTest {
         Integer one = 1;
         Integer two = 2;
         List<Number> list = asList(one);
-        assertThat(concat(list, two))
-            .containsExactly(one, two);
+        assertThat(concat(list, two)).containsExactly(one, two);
       }
 
       @Test
@@ -161,8 +144,7 @@ public class ListsTest {
         Integer one = 1;
         Integer two = 2;
         List<Integer> list = asList(one);
-        assertThat(concat(list, (Number) two))
-            .containsExactly(one, two);
+        assertThat(concat(list, (Number) two)).containsExactly(one, two);
       }
     }
 
@@ -170,8 +152,7 @@ public class ListsTest {
     class _two_iterables {
       @Test
       public void both_empty() {
-        assertThat(concat(new ArrayList<>(), new ArrayList<>()))
-            .isEmpty();
+        assertThat(concat(new ArrayList<>(), new ArrayList<>())).isEmpty();
       }
 
       @Test
@@ -193,10 +174,8 @@ public class ListsTest {
         List<String> first = asList("first");
         List<String> second = asList("second");
         concat(first, second);
-        assertThat(first)
-            .containsExactly("first");
-        assertThat(second)
-            .containsExactly("second");
+        assertThat(first).containsExactly("first");
+        assertThat(second).containsExactly("second");
       }
 
       @Test
@@ -206,8 +185,7 @@ public class ListsTest {
         List<Number> first = asList(one);
         List<Integer> second = asList(two);
         ImmutableList<Number> result = concat(first, second);
-        assertThat(result)
-            .containsExactly(one, two);
+        assertThat(result).containsExactly(one, two);
       }
 
       @Test
@@ -217,8 +195,7 @@ public class ListsTest {
         List<Integer> first = asList(one);
         List<Number> second = asList(two);
         ImmutableList<Number> result = concat(first, second);
-        assertThat(result)
-            .containsExactly(one, two);
+        assertThat(result).containsExactly(one, two);
       }
     }
   }
@@ -233,14 +210,12 @@ public class ListsTest {
 
     @Test
     public void returns_without_first_elem_when_skipping_one() {
-      assertThat(skip(1, list("first", "second", "third")))
-          .isEqualTo(list("second", "third"));
+      assertThat(skip(1, list("first", "second", "third"))).isEqualTo(list("second", "third"));
     }
 
     @Test
     public void returns_empty_when_all_are_skipped() {
-      assertThat(skip(3, list("first", "second", "third")))
-          .isEqualTo(list());
+      assertThat(skip(3, list("first", "second", "third"))).isEqualTo(list());
     }
 
     @Test
@@ -254,8 +229,7 @@ public class ListsTest {
   class _filter {
     @Test
     public void returns_empty_for_empty_list() {
-      assertThat(filter(new ArrayList<>(), x -> true))
-          .isEmpty();
+      assertThat(filter(new ArrayList<>(), x -> true)).isEmpty();
     }
 
     @Test
@@ -267,8 +241,7 @@ public class ListsTest {
 
     @Test
     public void returns_empty_list_when_predicate_is_always_false() {
-      assertThat(filter(asList("first", "second", "third"), x -> false))
-          .isEmpty();
+      assertThat(filter(asList("first", "second", "third"), x -> false)).isEmpty();
     }
 
     @Test
@@ -283,20 +256,17 @@ public class ListsTest {
   class _map {
     @Test
     public void returns_empty_list_for_empty_arg() {
-      assertThat(map(new ArrayList<String>(), String::toUpperCase))
-          .isEmpty();
+      assertThat(map(new ArrayList<String>(), String::toUpperCase)).isEmpty();
     }
 
     @Test
     public void returns_mapped_one_elem() {
-      assertThat(map(asList("abc"), String::toUpperCase))
-          .containsExactly("ABC");
+      assertThat(map(asList("abc"), String::toUpperCase)).containsExactly("ABC");
     }
 
     @Test
     public void mapping_with_two_elems() {
-      assertThat(map(asList("abc", "def"), String::toUpperCase))
-          .containsExactly("ABC", "DEF");
+      assertThat(map(asList("abc", "def"), String::toUpperCase)).containsExactly("ABC", "DEF");
     }
   }
 
@@ -304,8 +274,7 @@ public class ListsTest {
   class _zip {
     @Test
     public void empty_lists_zip_to_empty_list() {
-      assertThat(zip(list(), list(), (String a, String b) -> a))
-          .isEqualTo(list());
+      assertThat(zip(list(), list(), (String a, String b) -> a)).isEqualTo(list());
     }
 
     @Test
@@ -337,32 +306,27 @@ public class ListsTest {
   class _allMatch {
     @Test
     public void empty_lists_match() {
-      assertThat(allMatch(list(), list(), alwaysFalsePredicate()))
-          .isTrue();
+      assertThat(allMatch(list(), list(), alwaysFalsePredicate())).isTrue();
     }
 
     @Test
     public void same_size_lists_with_same_content_matches() {
-      assertThat(allMatch(list("aaa"), list("aaa"), String::equals))
-          .isTrue();
+      assertThat(allMatch(list("aaa"), list("aaa"), String::equals)).isTrue();
     }
 
     @Test
     public void list_which_beginning_is_equal_to_other_list_does_not_match_it() {
-      assertThat(allMatch(list("aaa"), list("aaa", "bbb"), String::equals))
-          .isFalse();
+      assertThat(allMatch(list("aaa"), list("aaa", "bbb"), String::equals)).isFalse();
     }
 
     @Test
     public void non_empty_list_does_not_match_empty() {
-      assertThat(allMatch(list("aaa"), list(), alwaysTruePredicate()))
-          .isFalse();
+      assertThat(allMatch(list("aaa"), list(), alwaysTruePredicate())).isFalse();
     }
 
     @Test
     public void empty_list_does_not_match_non_empty() {
-      assertThat(allMatch(list(), list("aaa"), alwaysTruePredicate()))
-          .isFalse();
+      assertThat(allMatch(list(), list("aaa"), alwaysTruePredicate())).isFalse();
     }
   }
 
@@ -374,45 +338,57 @@ public class ListsTest {
           list("aaa"),
           list("aaa"),
           String::equals,
-          (i, j) -> { throw new IllegalArgumentException(); },
-          i -> { throw new IllegalStateException(); }
-      );
+          (i, j) -> {
+            throw new IllegalArgumentException();
+          },
+          i -> {
+            throw new IllegalStateException();
+          });
     }
 
     @Test
     public void different_size_handler_is_called_when_listA_size_is_greater() {
-      assertCall(() ->
-          allMatchOtherwise(
+      assertCall(() -> allMatchOtherwise(
               list("aaa", "bbb"),
               list("aaa"),
               String::equals,
-              (i, j) -> { throw new IllegalArgumentException("" + i + ", " + j); },
-              i -> { throw new IllegalStateException(); }
-          )).throwsException(new IllegalArgumentException("2, 1"));
+              (i, j) -> {
+                throw new IllegalArgumentException("" + i + ", " + j);
+              },
+              i -> {
+                throw new IllegalStateException();
+              }))
+          .throwsException(new IllegalArgumentException("2, 1"));
     }
 
     @Test
     public void different_size_handler_is_called_when_listB_size_is_greater() {
-      assertCall(() ->
-          allMatchOtherwise(
+      assertCall(() -> allMatchOtherwise(
               list("aaa"),
               list("aaa", "bbb"),
               String::equals,
-              (i, j) -> { throw new IllegalArgumentException("" + i + ", " + j); },
-              i -> { throw new IllegalStateException(); }
-          )).throwsException(new IllegalArgumentException("1, 2"));
+              (i, j) -> {
+                throw new IllegalArgumentException("" + i + ", " + j);
+              },
+              i -> {
+                throw new IllegalStateException();
+              }))
+          .throwsException(new IllegalArgumentException("1, 2"));
     }
 
     @Test
     public void elems_dont_match_handler_is_called_when_elems_differ() {
-      assertCall(() ->
-          allMatchOtherwise(
+      assertCall(() -> allMatchOtherwise(
               list("aaa", "bbb"),
               list("aaa", "ccc"),
               String::equals,
-              (i, j) -> { throw new IllegalArgumentException(); },
-              i -> { throw new IllegalStateException(Integer.toString(i)); }
-          )).throwsException(new IllegalStateException("1"));
+              (i, j) -> {
+                throw new IllegalArgumentException();
+              },
+              i -> {
+                throw new IllegalStateException(Integer.toString(i));
+              }))
+          .throwsException(new IllegalStateException("1"));
     }
   }
 
@@ -420,21 +396,17 @@ public class ListsTest {
   class _sane {
     @Test
     public void converts_null_to_empty_list() {
-      assertThat(sane(null))
-          .isEmpty();
+      assertThat(sane(null)).isEmpty();
     }
 
     @Test
     public void returns_empty_list_for_empty_list_arg() {
-      assertThat(sane(new ArrayList<>()))
-          .isEmpty();
+      assertThat(sane(new ArrayList<>())).isEmpty();
     }
 
     @Test
     public void returns_unchanged_list_when_it_has_elems() {
-      assertThat(sane(asList("abc", "def")))
-          .containsExactly("abc", "def")
-          .inOrder();
+      assertThat(sane(asList("abc", "def"))).containsExactly("abc", "def").inOrder();
     }
   }
 
@@ -450,20 +422,17 @@ public class ListsTest {
   class _sort {
     @Test
     public void empty_list() {
-      assertThat(sort(list(), comparing(Object::toString)))
-          .isEqualTo(list());
+      assertThat(sort(list(), comparing(Object::toString))).isEqualTo(list());
     }
 
     @Test
     public void single_element_list() {
-      assertThat(sort(list("a"), comparing(Object::toString)))
-          .isEqualTo(list("a"));
+      assertThat(sort(list("a"), comparing(Object::toString))).isEqualTo(list("a"));
     }
 
     @Test
     public void two_elements_list() {
-      assertThat(sort(list("b", "a"), comparing(Object::toString)))
-          .isEqualTo(list("a", "b"));
+      assertThat(sort(list("b", "a"), comparing(Object::toString))).isEqualTo(list("a", "b"));
     }
 
     @Test
@@ -473,4 +442,3 @@ public class ListsTest {
     }
   }
 }
-
