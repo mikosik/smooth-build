@@ -51,7 +51,7 @@ public class Unifier {
     this.tempVarGenerator = new TempVarGenerator();
   }
 
-  public void add(Constraint constraint) throws UnifierExc {
+  public void add(Constraint constraint) throws UnifierException {
     switch (constraint) {
       case EqualityConstraint equality -> add(equality);
       case InstantiationConstraint instatiation -> add(instatiation);
@@ -60,7 +60,7 @@ public class Unifier {
 
   // instantiation constraint
 
-  public void add(InstantiationConstraint constraint) throws UnifierExc {
+  public void add(InstantiationConstraint constraint) throws UnifierException {
     instantiationConstraints.add(constraint);
     add(toEqualityConstraint(constraint));
   }
@@ -80,14 +80,14 @@ public class Unifier {
   public void addOrFailWithRuntimeException(EqualityConstraint constraint) {
     try {
       add(constraint);
-    } catch (UnifierExc e) {
+    } catch (UnifierException e) {
       throw new RuntimeException(
           "addOrFailWithRuntimeException() caused exception. This means we have bug in code. "
               + "constraint = " + constraint + ".", e);
     }
   }
 
-  public void add(EqualityConstraint constraint) throws UnifierExc {
+  public void add(EqualityConstraint constraint) throws UnifierException {
     var queue = new LinkedList<EqualityConstraint>();
     queue.add(constraint);
     var ordered = ImmutableList.copyOf(instantiationConstraints);
@@ -126,14 +126,14 @@ public class Unifier {
         resolve(constraint.schema()));
   }
 
-  private void drainQueue(LinkedList<EqualityConstraint> queue) throws UnifierExc {
+  private void drainQueue(LinkedList<EqualityConstraint> queue) throws UnifierException {
     while (!queue.isEmpty()) {
       unify(queue.remove(), queue);
     }
   }
 
   private void unify(EqualityConstraint constraint, Queue<EqualityConstraint> queue)
-      throws UnifierExc {
+      throws UnifierException {
     var type1 = constraint.type1();
     var type2 = constraint.type2();
     if (type1 instanceof TempVarS tempVar1) {
@@ -153,7 +153,7 @@ public class Unifier {
 
   private void unifyTempVarAndTempVar(
       TempVarS tempVar1, TempVarS tempVar2, Queue<EqualityConstraint> constraints)
-      throws UnifierExc {
+      throws UnifierException {
     var unified1 = unifiedFor(tempVar1);
     var unified2 = unifiedFor(tempVar2);
     if (unified1 != unified2) {
@@ -167,7 +167,7 @@ public class Unifier {
 
   private void mergeUnifiedGroups(
       Unified destination, Unified source, Queue<EqualityConstraint> constraints)
-      throws UnifierExc {
+      throws UnifierException {
     destination.vars.addAll(source.vars);
     destination.usedIn.addAll(source.usedIn);
     source.vars.forEach(v -> varToUnified.put(v, destination));
@@ -181,7 +181,7 @@ public class Unifier {
 
   private void unifyTempVarAndNonTempVar(
       TempVarS temp, TypeS type, Queue<EqualityConstraint> constraints)
-      throws UnifierExc {
+      throws UnifierException {
     var unified = unifiedFor(temp);
     if (unified.type == null) {
       unified.type = type;
@@ -222,18 +222,19 @@ public class Unifier {
 
   // Unified helpers
 
-  private void failIfCycleExists(Unified unified) throws UnifierExc {
+  private void failIfCycleExists(Unified unified) throws UnifierException {
     failIfCycleExists(new HashSet<>(), unified);
   }
 
-  private void failIfCycleExists(HashSet<Unified> visited, Unified unified) throws UnifierExc {
+  private void failIfCycleExists(HashSet<Unified> visited, Unified unified) throws
+      UnifierException {
     if (visited.add(unified)) {
       for (Unified u : unified.usedIn) {
         failIfCycleExists(visited, u);
       }
       visited.remove(unified);
     } else {
-      throw new UnifierExc();
+      throw new UnifierException();
     }
   }
 

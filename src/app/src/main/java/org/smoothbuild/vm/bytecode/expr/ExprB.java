@@ -5,9 +5,9 @@ import static com.google.common.base.Preconditions.checkElementIndex;
 import java.util.Objects;
 
 import org.smoothbuild.vm.bytecode.expr.Helpers.HashedDbCallable;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongSeqSizeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongSeqSizeException;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
@@ -100,7 +100,8 @@ public abstract class ExprB {
   private Array<Hash> readDataSeqHashes(int expectedSize) {
     Array<Hash> data = readDataSeqHashes();
     if (data.size() != expectedSize) {
-      throw new DecodeExprWrongSeqSizeExc(hash(), category(), DATA_PATH, expectedSize, data.size());
+      throw new DecodeExprWrongSeqSizeException(
+          hash(), category(), DATA_PATH, expectedSize, data.size());
     }
     return data;
   }
@@ -149,7 +150,7 @@ public abstract class ExprB {
       T result = (T) nodeExpr;
       return result;
     } else {
-      throw new DecodeExprWrongNodeClassExc(
+      throw new DecodeExprWrongNodeClassException(
           hash(), category(), nodePath, clazz, nodeExpr.getClass());
     }
   }
@@ -176,7 +177,7 @@ public abstract class ExprB {
   private String valToStringSafe() {
     try {
       return exprToString();
-    } catch (DecodeExprNodeExc e) {
+    } catch (DecodeExprNodeException e) {
       return "!Exception!@" + hash();
     }
   }

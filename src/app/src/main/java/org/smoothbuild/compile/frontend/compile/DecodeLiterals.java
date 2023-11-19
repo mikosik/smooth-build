@@ -5,8 +5,8 @@ import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
 
-import org.smoothbuild.common.DecodeHexExc;
-import org.smoothbuild.common.UnescapingFailedExc;
+import org.smoothbuild.common.DecodeHexException;
+import org.smoothbuild.common.UnescapeFailedException;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.IntP;
@@ -36,7 +36,7 @@ public class DecodeLiterals implements Function<ModuleP, Maybe<ModuleP>> {
       super.visitBlob(blobP);
       try {
         blobP.decodeByteString();
-      } catch (DecodeHexExc e) {
+      } catch (DecodeHexException e) {
         logger.log(compileError(blobP, "Illegal Blob literal: " + e.getMessage()));
       }
     }
@@ -56,7 +56,7 @@ public class DecodeLiterals implements Function<ModuleP, Maybe<ModuleP>> {
       super.visitString(stringP);
       try {
         stringP.calculateUnescaped();
-      } catch (UnescapingFailedExc e) {
+      } catch (UnescapeFailedException e) {
         logger.log(compileError(stringP, "Illegal String literal: " + e.getMessage()));
       }
     }

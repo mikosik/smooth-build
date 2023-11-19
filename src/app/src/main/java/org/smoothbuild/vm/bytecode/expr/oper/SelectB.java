@@ -5,9 +5,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectIndexOutOfBoundsException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.type.oper.SelectCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
@@ -38,15 +38,15 @@ public class SelectB extends OperB {
       int i = index.toJ().intValue();
       int size = tupleT.elements().size();
       if (i < 0 || size <= i) {
-        throw new DecodeSelectIndexOutOfBoundsExc(hash(), category(), i, size);
+        throw new DecodeSelectIndexOutOfBoundsException(hash(), category(), i, size);
       }
       var fieldT = tupleT.elements().get(i);
       if (!evaluationT().equals(fieldT)) {
-        throw new DecodeSelectWrongEvaluationTypeExc(hash(), category(), fieldT);
+        throw new DecodeSelectWrongEvaluationTypeException(hash(), category(), fieldT);
       }
       return new SelectSubExprsB(selectable, index);
     } else {
-      throw new DecodeExprWrongNodeClassExc(
+      throw new DecodeExprWrongNodeClassException(
           hash(), category(), "tuple", TupleTB.class, selectable.evaluationT().getClass());
     }
   }

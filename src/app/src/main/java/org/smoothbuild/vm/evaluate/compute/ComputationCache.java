@@ -5,8 +5,8 @@ import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.run.eval.MessageStruct.containsErrorOrAbove;
 import static org.smoothbuild.run.eval.MessageStruct.isValidSeverity;
 import static org.smoothbuild.run.eval.MessageStruct.severity;
-import static org.smoothbuild.vm.evaluate.compute.ComputationCacheExc.computationCacheException;
-import static org.smoothbuild.vm.evaluate.compute.ComputationCacheExc.corruptedValueException;
+import static org.smoothbuild.vm.evaluate.compute.ComputationCacheException.computationCacheException;
+import static org.smoothbuild.vm.evaluate.compute.ComputationCacheException.corruptedValueException;
 
 import java.io.IOException;
 
@@ -44,7 +44,7 @@ public class ComputationCache {
     this.bytecodeF = bytecodeF;
   }
 
-  public synchronized void write(Hash hash, Output output) throws ComputationCacheExc {
+  public synchronized void write(Hash hash, Output output) throws ComputationCacheException {
     try (BufferedSink sink = fileSystem.sink(toPath(hash))) {
       var messages = output.messages();
       sink.write(messages.hash().toByteString());
@@ -57,7 +57,7 @@ public class ComputationCache {
     }
   }
 
-  public synchronized boolean contains(Hash hash) throws ComputationCacheExc {
+  public synchronized boolean contains(Hash hash) throws ComputationCacheException {
     var path = toPath(hash);
     return switch (fileSystem.pathState(path)) {
       case FILE -> true;
@@ -66,7 +66,7 @@ public class ComputationCache {
     };
   }
 
-  public synchronized Output read(Hash hash, TypeB type) throws ComputationCacheExc {
+  public synchronized Output read(Hash hash, TypeB type) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(hash))) {
       var messagesHash = Hash.read(source);
       var messages = bytecodeDb.get(messagesHash);

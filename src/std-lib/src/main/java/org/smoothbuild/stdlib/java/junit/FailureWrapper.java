@@ -9,7 +9,7 @@ public class FailureWrapper {
     this.failure = failure;
   }
 
-  public String getTrace() throws JunitExc {
+  public String getTrace() throws JunitException {
     return runReflexivelyAndCast(String.class, failure, "getTrace");
   }
 

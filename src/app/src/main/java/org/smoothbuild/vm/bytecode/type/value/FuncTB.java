@@ -6,7 +6,7 @@ import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.funcTypeName;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeFuncIsIllegalCatExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeFuncIsIllegalCatException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public final class FuncTB extends TypeB {
@@ -29,6 +29,6 @@ public final class FuncTB extends TypeB {
 
   @Override
   public ExprB newExpr(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
-    throw new DecodeFuncIsIllegalCatExc(merkleRoot.hash(), this);
+    throw new DecodeFuncIsIllegalCatException(merkleRoot.hash(), this);
   }
 }

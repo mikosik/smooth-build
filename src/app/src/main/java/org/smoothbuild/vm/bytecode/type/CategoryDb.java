@@ -24,8 +24,8 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.VAR;
 import static org.smoothbuild.vm.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
 import static org.smoothbuild.vm.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
-import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc;
-import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc;
+import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalIfFuncTypeExc;
+import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalMapFuncTypeExc;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 import org.smoothbuild.common.collect.Lists;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.AbstFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.ArrayKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.BaseKindB;
@@ -46,11 +46,11 @@ import org.smoothbuild.vm.bytecode.type.CategoryKindB.MapFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.NativeFuncKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.OperKindB;
 import org.smoothbuild.vm.bytecode.type.CategoryKindB.TupleKindB;
-import org.smoothbuild.vm.bytecode.type.exc.CategoryDbExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatIllegalKindExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatRootExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongNodeCatExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
+import org.smoothbuild.vm.bytecode.type.exc.CategoryDbException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatIllegalKindException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatRootException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongNodeCatException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongSeqSizeException;
 import org.smoothbuild.vm.bytecode.type.oper.CallCB;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.oper.OperCB;
@@ -102,8 +102,8 @@ public class CategoryDb {
       this.bool = cache(new BoolTB(writeBaseRoot(BOOL)));
       this.int_ = cache(new IntTB(writeBaseRoot(INT)));
       this.string = cache(new StringTB(writeBaseRoot(STRING)));
-    } catch (HashedDbExc e) {
-      throw new CategoryDbExc(e);
+    } catch (HashedDbException e) {
+      throw new CategoryDbException(e);
     }
   }
 
@@ -234,7 +234,7 @@ public class CategoryDb {
     var hashes = wrapHashedDbExcAsDecodeCatExc(hash, () -> hashedDb.readSeq(hash));
     int seqSize = hashes.size();
     if (seqSize != 1 && seqSize != 2) {
-      throw new DecodeCatRootExc(hash, seqSize);
+      throw new DecodeCatRootException(hash, seqSize);
     }
     return hashes;
   }
@@ -243,7 +243,7 @@ public class CategoryDb {
     byte marker = wrapHashedDbExcAsDecodeCatExc(hash, () -> hashedDb.readByte(markerHash));
     CategoryKindB kind = fromMarker(marker);
     if (kind == null) {
-      throw new DecodeCatIllegalKindExc(hash, marker);
+      throw new DecodeCatIllegalKindException(hash, marker);
     }
     return kind;
   }
@@ -267,14 +267,14 @@ public class CategoryDb {
     assertCatRootSeqSize(rootHash, FUNC, rootSeq, 2);
     var nodes = readDataSeqAsTypes(rootHash, FUNC, rootSeq);
     if (nodes.size() != 2) {
-      throw new DecodeCatWrongSeqSizeExc(rootHash, FUNC, DATA_PATH, 2, nodes.size());
+      throw new DecodeCatWrongSeqSizeException(rootHash, FUNC, DATA_PATH, 2, nodes.size());
     }
     var result = nodes.get(FUNC_RESULT_IDX);
     var params = nodes.get(FUNC_PARAMS_IDX);
     if (params instanceof TupleTB paramsTuple) {
       return cache(new FuncTB(rootHash, paramsTuple, result));
     } else {
-      throw new DecodeCatWrongNodeCatExc(
+      throw new DecodeCatWrongNodeCatException(
           rootHash, FUNC, FUNC_PARAMS_PATH, TupleTB.class, params.getClass());
     }
   }
@@ -337,7 +337,7 @@ public class CategoryDb {
       typeVerifier.accept(funcTB);
       return cache(kind.instantiator().apply(rootHash, funcTB));
     } else {
-      throw new DecodeCatWrongNodeCatExc(
+      throw new DecodeCatWrongNodeCatException(
           rootHash, kind, DATA_PATH, FuncTB.class, typeComponent.getClass());
     }
   }
@@ -360,7 +360,7 @@ public class CategoryDb {
       T result = (T) categoryB;
       return result;
     } else {
-      throw new DecodeCatWrongNodeCatExc(
+      throw new DecodeCatWrongNodeCatException(
           rootHash, kind, DATA_PATH, typeClass, categoryB.getClass());
     }
   }
@@ -382,7 +382,7 @@ public class CategoryDb {
     if (categoryB instanceof TypeB typeB) {
       return typeB;
     } else {
-      throw new DecodeCatWrongNodeCatExc(
+      throw new DecodeCatWrongNodeCatException(
           rootHash, kind, DATA_PATH, index, TypeB.class, categoryB.getClass());
     }
   }
@@ -390,13 +390,13 @@ public class CategoryDb {
   private static void assertCatRootSeqSize(
       Hash rootHash, CategoryKindB kind, Array<Hash> hashes, int expectedSize) {
     if (hashes.size() != expectedSize) {
-      throw new DecodeCatRootExc(rootHash, kind, hashes.size(), expectedSize);
+      throw new DecodeCatRootException(rootHash, kind, hashes.size(), expectedSize);
     }
   }
 
   // methods for creating java instances of CategoryB
 
-  private ArrayTB newArray(TypeB elem) throws HashedDbExc {
+  private ArrayTB newArray(TypeB elem) throws HashedDbException {
     var rootHash = writeArrayRoot(elem);
     return newArray(rootHash, elem);
   }
@@ -405,19 +405,19 @@ public class CategoryDb {
     return cache(new ArrayTB(rootHash, elem));
   }
 
-  private FuncTB newFuncT(TupleTB params, TypeB result) throws HashedDbExc {
+  private FuncTB newFuncT(TupleTB params, TypeB result) throws HashedDbException {
     var rootHash = writeFuncTypeRoot(params, result);
     return cache(new FuncTB(rootHash, params, result));
   }
 
   private <T extends FuncCB> T newFuncC(AbstFuncKindB<T> funcKind, FuncTB funcTB)
-      throws HashedDbExc {
+      throws HashedDbException {
     var rootHash = writeFuncCategoryRoot(funcKind, funcTB);
     var instantiator = funcKind.instantiator();
     return cache(instantiator.apply(rootHash, funcTB));
   }
 
-  private TupleTB newTuple(Array<TypeB> items) throws HashedDbExc {
+  private TupleTB newTuple(Array<TypeB> items) throws HashedDbException {
     var hash = writeTupleRoot(items);
     return newTuple(hash, items);
   }
@@ -426,7 +426,8 @@ public class CategoryDb {
     return cache(new TupleTB(rootHash, items));
   }
 
-  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT) throws HashedDbExc {
+  private <T extends OperCB> T newOper(OperKindB<T> kind, TypeB evaluationT) throws
+      HashedDbException {
     var rootHash = writeRootWithData(kind, evaluationT);
     return newOper(kind.constructor(), rootHash, evaluationT);
   }
@@ -444,35 +445,35 @@ public class CategoryDb {
 
   // Methods for writing category root
 
-  private Hash writeArrayRoot(CategoryB elem) throws HashedDbExc {
+  private Hash writeArrayRoot(CategoryB elem) throws HashedDbException {
     return writeRootWithData(ARRAY, elem);
   }
 
-  private Hash writeFuncTypeRoot(TupleTB params, TypeB result) throws HashedDbExc {
+  private Hash writeFuncTypeRoot(TupleTB params, TypeB result) throws HashedDbException {
     var dataHash = hashedDb.writeSeq(params.hash(), result.hash());
     return writeRootWithData(FUNC, dataHash);
   }
 
-  private Hash writeFuncCategoryRoot(CategoryKindB kind, FuncTB funcTB) throws HashedDbExc {
+  private Hash writeFuncCategoryRoot(CategoryKindB kind, FuncTB funcTB) throws HashedDbException {
     return writeRootWithData(kind, funcTB);
   }
 
-  private Hash writeTupleRoot(Array<TypeB> items) throws HashedDbExc {
+  private Hash writeTupleRoot(Array<TypeB> items) throws HashedDbException {
     var dataHash = hashedDb.writeSeq(Lists.map(items, CategoryB::hash));
     return writeRootWithData(TUPLE, dataHash);
   }
 
   // Helper methods for writing roots
 
-  private Hash writeRootWithData(CategoryKindB kind, CategoryB categoryB) throws HashedDbExc {
+  private Hash writeRootWithData(CategoryKindB kind, CategoryB categoryB) throws HashedDbException {
     return writeRootWithData(kind, categoryB.hash());
   }
 
-  private Hash writeRootWithData(CategoryKindB kind, Hash dataHash) throws HashedDbExc {
+  private Hash writeRootWithData(CategoryKindB kind, Hash dataHash) throws HashedDbException {
     return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()), dataHash);
   }
 
-  private Hash writeBaseRoot(CategoryKindB kind) throws HashedDbExc {
+  private Hash writeBaseRoot(CategoryKindB kind) throws HashedDbException {
     return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()));
   }
 }

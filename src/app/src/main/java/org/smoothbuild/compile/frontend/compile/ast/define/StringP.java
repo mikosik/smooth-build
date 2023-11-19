@@ -1,7 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import org.smoothbuild.common.Strings;
-import org.smoothbuild.common.UnescapingFailedExc;
+import org.smoothbuild.common.UnescapeFailedException;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
 public final class StringP extends LiteralP {
@@ -15,7 +15,7 @@ public final class StringP extends LiteralP {
     return unescaped;
   }
 
-  public void calculateUnescaped() throws UnescapingFailedExc {
+  public void calculateUnescaped() throws UnescapeFailedException {
     unescaped = Strings.unescaped(literal());
   }
 }

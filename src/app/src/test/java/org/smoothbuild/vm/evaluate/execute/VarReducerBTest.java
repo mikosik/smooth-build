@@ -182,14 +182,14 @@ public class VarReducerBTest extends TestContext {
   public void reference_with_index_equal_to_environment_size_causes_exception() {
     var job = job(varB(stringTB(), 3), intB(), intB(), intB(17));
     assertCall(() -> varReducerB().inline(job))
-        .throwsException(new VarOutOfBoundsExc(3, 3));
+        .throwsException(new VarOutOfBoundsException(3, 3));
   }
 
   @Test
   public void reference_with_negative_index_causes_exception() {
     var job = job(varB(stringTB(), -1), intB(), intB(), intB(17));
     assertCall(() -> varReducerB().inline(job))
-        .throwsException(new VarOutOfBoundsExc(-1, 3));
+        .throwsException(new VarOutOfBoundsException(-1, 3));
   }
 
   private void assertReferenceInliningReplacesReference(Function<ExprB, ExprB> factory) {

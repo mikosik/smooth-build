@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 
 import io.vavr.collection.Array;
@@ -57,7 +57,7 @@ public final class ArrayB extends ValueB {
     for (int i = 0; i < elems.size(); i++) {
       var elemT = elems.get(i).type();
       if (!expectedElemT.equals(elemT)) {
-        throw new DecodeExprWrongNodeTypeExc(
+        throw new DecodeExprWrongNodeTypeException(
             hash(), category(), DATA_PATH, i, expectedElemT, elemT);
       }
     }

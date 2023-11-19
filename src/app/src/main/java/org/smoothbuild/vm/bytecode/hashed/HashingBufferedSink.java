@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.io.DataWriter;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 
 import okio.Buffer;
 import okio.BufferedSink;
@@ -47,7 +47,7 @@ public class HashingBufferedSink implements BufferedSink {
     return hash;
   }
 
-  public void write(DataWriter dataWriter) throws HashedDbExc {
+  public void write(DataWriter dataWriter) throws HashedDbException {
     Helpers.wrapIOExceptionAsHashedDbException(() -> dataWriter.writeTo(this));
   }
 

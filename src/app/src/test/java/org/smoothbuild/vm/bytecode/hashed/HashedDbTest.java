@@ -23,10 +23,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbExc;
-import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqExc;
-import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringExc;
-import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataExc;
+import org.smoothbuild.vm.bytecode.hashed.exc.CorruptedHashedDbException;
+import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
+import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringException;
+import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
 
 import io.vavr.collection.Array;
 import okio.ByteString;
@@ -36,7 +36,7 @@ public class HashedDbTest extends TestContext {
   private final ByteString byteString2 = ByteString.encodeUtf8("bbb");
 
   @Test
-  public void db_doesnt_contain_not_written_data() throws CorruptedHashedDbExc {
+  public void db_doesnt_contain_not_written_data() throws CorruptedHashedDbException {
     assertThat(hashedDb().contains(Hash.of(33)))
         .isFalse();
   }
@@ -54,7 +54,7 @@ public class HashedDbTest extends TestContext {
   public void reading_not_written_value_fails() {
     var hash = Hash.of("abc");
     assertCall(() -> hashedDb().source(hash))
-        .throwsException(new NoSuchDataExc(hash));
+        .throwsException(new NoSuchDataException(hash));
   }
 
   @Test
@@ -111,7 +111,7 @@ public class HashedDbTest extends TestContext {
     sink.write(byteString);
 
     assertCall(() -> hashedDb().source(hash))
-        .throwsException(new NoSuchDataExc(hash));
+        .throwsException(new NoSuchDataException(hash));
   }
 
   @Test
@@ -131,7 +131,7 @@ public class HashedDbTest extends TestContext {
     hashedDbFileSystem().createDir(path);
 
     assertCall(() -> hashedDb().contains(hash))
-        .throwsException(new CorruptedHashedDbExc(
+        .throwsException(new CorruptedHashedDbException(
             "Corrupted HashedDb. " + path.q() + " is a directory not a data file."));
   }
 
@@ -143,7 +143,7 @@ public class HashedDbTest extends TestContext {
     hashedDbFileSystem().createDir(path);
 
     assertCall(() -> hashedDb().source(hash))
-        .throwsException(new CorruptedHashedDbExc(format(
+        .throwsException(new CorruptedHashedDbException(format(
             "Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q())));
   }
 
@@ -257,7 +257,7 @@ public class HashedDbTest extends TestContext {
       var path = dbPathTo(hash);
       writeAndClose(hashedDbFileSystem().sink(path), s -> s.write(illegalString()));
       assertCall(() -> hashedDb().readString(hash))
-          .throwsException(new DecodeStringExc(hash, null));
+          .throwsException(new DecodeStringException(hash, null));
     }
   }
 
@@ -288,14 +288,14 @@ public class HashedDbTest extends TestContext {
     public void not_written_seq_of_hashes_cannot_be_read_back() {
       var hash = Hash.of("abc");
       assertCall(() -> hashedDb().readSeq(hash))
-          .throwsException(new NoSuchDataExc(hash));
+          .throwsException(new NoSuchDataException(hash));
     }
 
     @Test
     public void corrupted_seq_of_hashes_cannot_be_read_back() throws Exception {
       var hash = hashedDb().writeString("12345");
       assertCall(() -> hashedDb().readSeq(hash))
-          .throwsException(new DecodeHashSeqExc(hash, 5));
+          .throwsException(new DecodeHashSeqException(hash, 5));
     }
   }
 
@@ -326,14 +326,14 @@ public class HashedDbTest extends TestContext {
     public void reading_size_of_not_written_seq_of_hashes_causes_exception() {
       var hash = Hash.of("abc");
       assertCall(() -> hashedDb().readSeqSize(hash))
-          .throwsException(new NoSuchDataExc(hash));
+          .throwsException(new NoSuchDataException(hash));
     }
 
     @Test
     public void reading_size_of_corrupted_seq_of_hashes_causes_exception() throws Exception {
       var hash = hashedDb().writeString("12345");
       assertCall(() -> hashedDb().readSeqSize(hash))
-          .throwsException(new DecodeHashSeqExc(hash, 5));
+          .throwsException(new DecodeHashSeqException(hash, 5));
     }
   }
 }

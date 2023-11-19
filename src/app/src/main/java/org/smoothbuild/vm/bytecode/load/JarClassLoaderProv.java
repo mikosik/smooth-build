@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.common.io.DuplicateFileNameExc;
-import org.smoothbuild.common.io.IllegalZipEntryFileNameExc;
+import org.smoothbuild.common.io.DuplicateFileNameException;
+import org.smoothbuild.common.io.IllegalZipEntryFileNameException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -54,7 +54,7 @@ public class JarClassLoaderProv {
       var files = unzipBlob(bytecodeF, jar, s -> true);
       var filesMap = toMap(files.elems(TupleB.class), f -> filePath(f).toJ(), identity());
       return Either.right(classLoader(parentClassLoader, filesMap));
-    } catch (DuplicateFileNameExc | IllegalZipEntryFileNameExc | ZipException e) {
+    } catch (DuplicateFileNameException | IllegalZipEntryFileNameException | ZipException e) {
       return Either.left("Error unpacking jar with native code: " + e.getMessage());
     }
   }

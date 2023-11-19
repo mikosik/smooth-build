@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.stdlib.file.match.IllegalPathPatternExc;
+import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
@@ -66,7 +66,7 @@ public class JunitFunc {
         nativeApi.log().warning("No junit tests found.");
       }
       return nativeApi.factory().string("SUCCESS");
-    } catch (JunitExc e) {
+    } catch (JunitException e) {
       nativeApi.log().error(e.getMessage());
       return null;
     }
@@ -80,11 +80,11 @@ public class JunitFunc {
   }
 
   private static ImmutableMap<String, TupleB> concatMaps(Map<String, TupleB> testClasses,
-      Map<String, TupleB> libClasses) throws JunitExc {
+      Map<String, TupleB> libClasses) throws JunitException {
     var allFiles = new HashMap<>(libClasses);
     for (var entry : testClasses.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
-        throw new JunitExc("Both 'tests' and 'deps' contains class " + entry.getValue());
+        throw new JunitException("Both 'tests' and 'deps' contains class " + entry.getValue());
       } else {
         allFiles.put(entry.getKey(), entry.getValue());
       }
@@ -93,31 +93,31 @@ public class JunitFunc {
   }
 
   private static JUnitCoreWrapper createJUnitCore(NativeApi nativeApi, ClassLoader classLoader)
-      throws JunitExc {
+      throws JunitException {
     return newInstance(nativeApi, loadClass(classLoader, "org.junit.runner.JUnitCore"));
   }
 
-  private static void assertJunitCoreIsPresent(Map<String, TupleB> files) throws JunitExc {
+  private static void assertJunitCoreIsPresent(Map<String, TupleB> files) throws JunitException {
     if (!files.containsKey("org/junit/runner/JUnitCore.class")) {
-      throw new JunitExc(
+      throw new JunitException(
           "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
     }
   }
 
   private static Class<?> loadClass(ClassLoader classLoader, String binaryName)
-      throws JunitExc {
+      throws JunitException {
     try {
       return classLoader.loadClass(binaryName);
     } catch (ClassNotFoundException e) {
-      throw new JunitExc("Couldn't find class for binaryName = " + binaryName);
+      throw new JunitException("Couldn't find class for binaryName = " + binaryName);
     }
   }
 
-  private static Predicate<PathS> createFilter(StringB includeParam) throws JunitExc {
+  private static Predicate<PathS> createFilter(StringB includeParam) throws JunitException {
     try {
       return new PathMatcher(includeParam.toJ());
-    } catch (IllegalPathPatternExc e) {
-      throw new JunitExc("Parameter 'include' has illegal value. " + e.getMessage());
+    } catch (IllegalPathPatternException e) {
+      throw new JunitException("Parameter 'include' has illegal value. " + e.getMessage());
     }
   }
 }

@@ -2,7 +2,7 @@ package org.smoothbuild.stdlib.file;
 
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 
-import org.smoothbuild.common.filesystem.base.IllegalPathExc;
+import org.smoothbuild.common.filesystem.base.IllegalPathException;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
@@ -19,7 +19,7 @@ public class PathArgValidator {
       default:
         try {
           return path(value);
-        } catch (IllegalPathExc e) {
+        } catch (IllegalPathException e) {
           nativeApi.log().error("Param `" + name + "` has illegal value. " + e.getMessage());
           return null;
         }

@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
-import org.smoothbuild.common.DecodeHexExc;
+import org.smoothbuild.common.DecodeHexException;
 import org.smoothbuild.common.Hex;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
@@ -13,7 +13,7 @@ public final class BlobP extends LiteralP {
     super(literal, location);
   }
 
-  public void decodeByteString() throws DecodeHexExc {
+  public void decodeByteString() throws DecodeHexException {
     byteString = Hex.decode(literal());
   }
 

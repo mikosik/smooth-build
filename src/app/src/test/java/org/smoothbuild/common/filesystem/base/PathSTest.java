@@ -25,7 +25,7 @@ public class PathSTest {
       PathS.path(value);
     } else {
       assertCall(() -> PathS.path(value))
-          .throwsException(IllegalPathExc.class);
+          .throwsException(IllegalPathException.class);
     }
   }
 
@@ -34,7 +34,7 @@ public class PathSTest {
   public void fail_if_not_legal_path(String value, boolean isValid) {
     if (!isValid) {
       assertCall(() -> PathS.failIfNotLegalPath(value))
-          .throwsException(IllegalPathExc.class);
+          .throwsException(IllegalPathException.class);
     }
   }
 

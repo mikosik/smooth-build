@@ -281,7 +281,7 @@ public class PathMatcherTest {
   @MethodSource("illegal_pattern_data_set")
   public void illegal_pattern(String pattern) {
     assertCall(() -> new PathMatcher(pattern).test(path("abc")))
-        .throwsException(IllegalPathPatternExc.class);
+        .throwsException(IllegalPathPatternException.class);
   }
 
   public static Stream<Arguments> illegal_pattern_data_set() {

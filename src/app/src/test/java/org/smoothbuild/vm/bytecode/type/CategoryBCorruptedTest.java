@@ -3,6 +3,7 @@ package org.smoothbuild.vm.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.type.CategoryDb.DATA_PATH;
+import static org.smoothbuild.vm.bytecode.type.CategoryDb.FUNC_PARAMS_PATH;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BLOB;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.BOOL;
@@ -20,6 +21,8 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.SELECT;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.STRING;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.VAR;
+import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalIfFuncTypeExc;
+import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalMapFuncTypeExc;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,16 +34,16 @@ import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.IllegalArrayByteSizesProvider;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashingBufferedSink;
-import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqExc;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
-import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatIllegalKindExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatNodeExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatRootExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongNodeCatExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeExc;
+import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
+import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatIllegalKindException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatNodeException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatRootException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongNodeCatException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongSeqSizeException;
+import org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException;
 import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
@@ -116,7 +119,7 @@ public class CategoryBCorruptedTest extends TestContext {
           hash("abc")
       );
       assertThatGet(hash)
-          .throwsException(new DecodeCatRootExc(hash, kind, 2, 1));
+          .throwsException(new DecodeCatRootException(hash, kind, 2, 1));
     }
   }
 
@@ -165,7 +168,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(varCB())
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
+            .throwsException(new DecodeCatWrongNodeCatException(
                 hash, ARRAY, DATA_PATH, TypeB.class, VarCB.class));
       }
     }
@@ -216,8 +219,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(illegalIfType)
         );
         assertCall(() -> categoryDb().get(categoryHash))
-            .throwsException(
-                DecodeFuncCatWrongFuncTypeExc.illegalIfFuncTypeExc(categoryHash, illegalIfType));
+            .throwsException(illegalIfFuncTypeExc(categoryHash, illegalIfType));
       }
 
       @Override
@@ -250,8 +252,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(illegalType)
         );
         assertCall(() -> categoryDb().get(categoryHash))
-            .throwsException(
-                DecodeFuncCatWrongFuncTypeExc.illegalMapFuncTypeExc(categoryHash, illegalType));
+            .throwsException(illegalMapFuncTypeExc(categoryHash, illegalType));
       }
 
       @Override
@@ -303,8 +304,8 @@ public class CategoryBCorruptedTest extends TestContext {
             dataHash
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, categoryKind(), DATA_PATH))
-            .withCause(new DecodeCatExc(dataHash));
+            .throwsException(new DecodeCatNodeException(typeHash, categoryKind(), DATA_PATH))
+            .withCause(new DecodeCatException(dataHash));
       }
 
       @Test
@@ -315,7 +316,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(notFuncTB)
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatWrongNodeCatExc(
+            .throwsException(new DecodeCatWrongNodeCatException(
                 typeHash, categoryKind(), DATA_PATH, FuncTB.class, VarCB.class));
       }
     }
@@ -363,7 +364,7 @@ public class CategoryBCorruptedTest extends TestContext {
                 notHashOfSeq
             );
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, FUNC, DATA_PATH));
+            .throwsException(new DecodeCatNodeException(hash, FUNC, DATA_PATH));
       }
 
       @Test
@@ -379,7 +380,7 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 3));
+            .throwsException(new DecodeCatWrongSeqSizeException(hash, FUNC, DATA_PATH, 2, 3));
       }
 
       @Test
@@ -392,7 +393,7 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 1));
+            .throwsException(new DecodeCatWrongSeqSizeException(hash, FUNC, DATA_PATH, 2, 1));
       }
 
       @ParameterizedTest
@@ -405,8 +406,8 @@ public class CategoryBCorruptedTest extends TestContext {
             notHashOfSeq
         );
         assertCall(() -> ((FuncTB) categoryDb().get(typeHash)).result())
-            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, DATA_PATH))
-            .withCause(new DecodeHashSeqExc(
+            .throwsException(new DecodeCatNodeException(typeHash, FUNC, DATA_PATH))
+            .withCause(new DecodeHashSeqException(
                 notHashOfSeq, byteCount % Hash.lengthInBytes()));
       }
 
@@ -422,8 +423,8 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, CategoryDb.FUNC_RES_PATH))
-            .withCause(new DecodeCatExc(nowhere));
+            .throwsException(new DecodeCatNodeException(typeHash, FUNC, CategoryDb.FUNC_RES_PATH))
+            .withCause(new DecodeCatException(nowhere));
       }
 
       @Test
@@ -437,7 +438,7 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatWrongNodeCatExc(
+            .throwsException(new DecodeCatWrongNodeCatException(
                 typeHash, FUNC, CategoryDb.FUNC_RES_PATH, TypeB.class, VarCB.class));
       }
 
@@ -452,7 +453,7 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, CategoryDb.FUNC_RES_PATH))
+            .throwsException(new DecodeCatNodeException(typeHash, FUNC, CategoryDb.FUNC_RES_PATH))
             .withCause(corruptedArrayTypeExc());
       }
 
@@ -467,8 +468,8 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, CategoryDb.FUNC_PARAMS_PATH))
-            .withCause(new DecodeCatExc(nowhere));
+            .throwsException(new DecodeCatNodeException(typeHash, FUNC, FUNC_PARAMS_PATH))
+            .withCause(new DecodeCatException(nowhere));
       }
 
       @Test
@@ -481,8 +482,8 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertThatGet(typeHash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, FUNC, CategoryDb.FUNC_PARAMS_PATH, TupleTB.class, StringTB.class));
+            .throwsException(new DecodeCatWrongNodeCatException(
+                typeHash, FUNC, FUNC_PARAMS_PATH, TupleTB.class, StringTB.class));
       }
 
       @Test
@@ -495,8 +496,8 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatWrongNodeCatExc(
-                typeHash, FUNC, CategoryDb.FUNC_PARAMS_PATH, TypeB.class, VarCB.class));
+            .throwsException(new DecodeCatWrongNodeCatException(
+                typeHash, FUNC, FUNC_PARAMS_PATH, TypeB.class, VarCB.class));
       }
 
       @Test
@@ -509,7 +510,7 @@ public class CategoryBCorruptedTest extends TestContext {
             )
         );
         assertCall(() -> categoryDb().get(typeHash))
-            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, CategoryDb.FUNC_PARAMS_PATH))
+            .throwsException(new DecodeCatNodeException(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(corruptedArrayTypeExc());
       }
     }
@@ -558,7 +559,7 @@ public class CategoryBCorruptedTest extends TestContext {
                 notHashOfSeq
             );
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, TUPLE, DATA_PATH));
+            .throwsException(new DecodeCatNodeException(hash, TUPLE, DATA_PATH));
       }
 
       @Test
@@ -572,8 +573,8 @@ public class CategoryBCorruptedTest extends TestContext {
                 )
             );
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, TUPLE, "data[0]"))
-            .withCause(new DecodeCatExc(stringHash));
+            .throwsException(new DecodeCatNodeException(hash, TUPLE, "data[0]"))
+            .withCause(new DecodeCatException(stringHash));
       }
 
       @Test
@@ -586,7 +587,7 @@ public class CategoryBCorruptedTest extends TestContext {
                 )
             );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
+            .throwsException(new DecodeCatWrongNodeCatException(
                 hash, TUPLE, "data", 0, TypeB.class, VarCB.class));
       }
 
@@ -599,29 +600,31 @@ public class CategoryBCorruptedTest extends TestContext {
                     corruptedArrayTHash(),
                     hash(stringTB())));
         assertThatGet(hash)
-            .throwsException(new DecodeCatNodeExc(hash, TUPLE, "data[0]"))
+            .throwsException(new DecodeCatNodeException(hash, TUPLE, "data[0]"))
             .withCause(corruptedArrayTypeExc());
       }
     }
   }
 
-  private void assert_reading_cat_without_data_causes_exc(CategoryKindB speckKind) throws Exception {
+  private void assert_reading_cat_without_data_causes_exc(CategoryKindB speckKind)
+      throws Exception {
     Hash hash =
         hash(
             hash(speckKind.marker())
         );
     assertThatGet(hash)
-        .throwsException(new DecodeCatRootExc(hash, speckKind, 1, 2));
+        .throwsException(new DecodeCatRootException(hash, speckKind, 1, 2));
   }
 
-  private void assert_reading_cat_with_additional_data_causes_exc(CategoryKindB kind) throws Exception {
+  private void assert_reading_cat_with_additional_data_causes_exc(CategoryKindB kind)
+      throws Exception {
     var hash = hash(
         hash(kind.marker()),
         hash(stringTB()),
         hash("corrupted")
     );
     assertThatGet(hash)
-        .throwsException(new DecodeCatRootExc(hash, 3));
+        .throwsException(new DecodeCatRootException(hash, 3));
   }
 
   private void assert_reading_cat_with_data_pointing_nowhere_causes_exc(CategoryKindB kind)
@@ -632,8 +635,8 @@ public class CategoryBCorruptedTest extends TestContext {
         dataHash
     );
     assertCall(() -> categoryDb().get(typeHash))
-        .throwsException(new DecodeCatNodeExc(typeHash, kind, DATA_PATH))
-        .withCause(new DecodeCatExc(dataHash));
+        .throwsException(new DecodeCatNodeException(typeHash, kind, DATA_PATH))
+        .withCause(new DecodeCatException(dataHash));
   }
 
   private void assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
@@ -644,8 +647,8 @@ public class CategoryBCorruptedTest extends TestContext {
         dataHash
     );
     assertCall(() -> categoryDb().get(typeHash))
-        .throwsException(new DecodeCatNodeExc(typeHash, kind, DATA_PATH))
-        .withCause(new NoSuchDataExc(dataHash));
+        .throwsException(new DecodeCatNodeException(typeHash, kind, DATA_PATH))
+        .withCause(new NoSuchDataException(dataHash));
   }
 
   private void assert_reading_cat_with_corrupted_type_as_data_causes_exc(CategoryKindB kind)
@@ -655,7 +658,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(kind.marker()),
             corruptedArrayTHash());
     assertThatGet(hash)
-        .throwsException(new DecodeCatNodeExc(hash, kind, DATA_PATH))
+        .throwsException(new DecodeCatNodeException(hash, kind, DATA_PATH))
         .withCause(corruptedArrayTypeExc());
   }
 
@@ -663,12 +666,12 @@ public class CategoryBCorruptedTest extends TestContext {
       return assertCall(() -> categoryDb().get(hash));
   }
 
-  private DecodeCatExc illegalTypeMarkerException(Hash hash, int marker) {
-    return new DecodeCatIllegalKindExc(hash, (byte) marker);
+  private DecodeCatException illegalTypeMarkerException(Hash hash, int marker) {
+    return new DecodeCatIllegalKindException(hash, (byte) marker);
   }
 
-  private DecodeCatNodeExc corruptedArrayTypeExc() throws Exception {
-    return new DecodeCatNodeExc(corruptedArrayTHash(), ARRAY, DATA_PATH);
+  private DecodeCatNodeException corruptedArrayTypeExc() throws Exception {
+    return new DecodeCatNodeException(corruptedArrayTHash(), ARRAY, DATA_PATH);
   }
 
   private Hash corruptedArrayTHash() throws Exception {
@@ -678,7 +681,7 @@ public class CategoryBCorruptedTest extends TestContext {
     );
   }
 
-  protected Hash hash(String string) throws HashedDbExc {
+  protected Hash hash(String string) throws HashedDbException {
     return hashedDb().writeString(string);
   }
 
@@ -710,7 +713,7 @@ public class CategoryBCorruptedTest extends TestContext {
     return type.hash();
   }
 
-  protected Hash hash(Hash... hashes) throws HashedDbExc {
+  protected Hash hash(Hash... hashes) throws HashedDbException {
     return hashedDb().writeSeq(hashes);
   }
 
@@ -770,7 +773,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(intTB())
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
+            .throwsException(new DecodeCatWrongNodeCatException(
                 hash, COMBINE, DATA_PATH, TupleTB.class, IntTB.class));
       }
     }
@@ -805,7 +808,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(intTB())
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
+            .throwsException(new DecodeCatWrongNodeCatException(
                 hash, ORDER, DATA_PATH, ArrayTB.class, IntTB.class));
       }
     }
@@ -922,7 +925,7 @@ public class CategoryBCorruptedTest extends TestContext {
             hash(varCB())
         );
         assertThatGet(hash)
-            .throwsException(new DecodeCatWrongNodeCatExc(
+            .throwsException(new DecodeCatWrongNodeCatException(
                 hash, categoryKindB, DATA_PATH, type, VarCB.class));
       }
     }

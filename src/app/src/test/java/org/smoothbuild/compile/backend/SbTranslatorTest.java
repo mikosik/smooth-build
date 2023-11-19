@@ -96,7 +96,7 @@ public class SbTranslatorTest extends TestContext {
           var translator = sbTranslator(fileLoader, bindings(nativeValueS));
 
           assertCall(() -> translator.translateExpr(instantiateS(nativeValueS)))
-              .throwsException(new SbTranslatorExc("Illegal value annotation: `@Native`."));
+              .throwsException(new SbTranslatorException("Illegal value annotation: `@Native`."));
         }
 
         @Test
@@ -310,7 +310,7 @@ public class SbTranslatorTest extends TestContext {
         var funcS = funcS("f", nlist(itemS(intTS(), "p")), paramRefS(intTS(), "p2"));
         assertCall(() -> newTranslator(bindings(funcS)).translateExpr(instantiateS(funcS)))
             .throwsException(
-                new SbTranslatorExc("Cannot resolve `p2` at build.smooth:1."));
+                new SbTranslatorException("Cannot resolve `p2` at build.smooth:1."));
       }
 
       @Test

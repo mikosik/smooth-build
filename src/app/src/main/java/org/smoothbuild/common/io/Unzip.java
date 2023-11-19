@@ -17,7 +17,8 @@ import net.lingala.zip4j.model.LocalFileHeader;
 public class Unzip {
   public static void unzip(BlobB blob, Predicate<String> includePredicate,
       ThrowingBiConsumer<String, InputStream, IOException> entryConsumer)
-      throws IOException, ZipException, IllegalZipEntryFileNameExc, DuplicateFileNameExc {
+      throws IOException, ZipException, IllegalZipEntryFileNameException,
+      DuplicateFileNameException {
     HashSet<String> fileNames = new HashSet<>();
     try (var s = blob.source(); var zipInputStream = new ZipInputStream(s.inputStream())) {
       LocalFileHeader header;
@@ -26,7 +27,7 @@ public class Unzip {
         if (!fileName.endsWith("/") && includePredicate.test(fileName)) {
           throwExcIfIllegalFileName(fileName);
           if (!fileNames.add(fileName)) {
-            throw new DuplicateFileNameExc(
+            throw new DuplicateFileNameException(
                 "Archive contains more than one file with name '" + fileName + "'.");
           }
           entryConsumer.accept(fileName, zipInputStream);
@@ -35,10 +36,11 @@ public class Unzip {
     }
   }
 
-  private static void throwExcIfIllegalFileName(String fileName) throws IllegalZipEntryFileNameExc {
+  private static void throwExcIfIllegalFileName(String fileName) throws
+      IllegalZipEntryFileNameException {
     String pathError = detectPathError(fileName);
     if (pathError != null) {
-      throw new IllegalZipEntryFileNameExc(
+      throw new IllegalZipEntryFileNameException(
           "File in archive has illegal name = '" + fileName + "'. " + pathError);
     }
   }

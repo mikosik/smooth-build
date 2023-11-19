@@ -1,25 +1,25 @@
 package org.smoothbuild.vm.bytecode.expr;
 
-import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 
 public class Helpers {
   public static void wrapHashedDbExcAsBytecodeDbExc(HashedDbRunnable runnable) {
     try {
       runnable.run();
-    } catch (HashedDbExc e) {
-      throw new BytecodeDbExc(e);
+    } catch (HashedDbException e) {
+      throw new BytecodeDbException(e);
     }
   }
 
   public static <T> T wrapHashedDbExcAsBytecodeDbExc(HashedDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (HashedDbExc e) {
-      throw new BytecodeDbExc(e);
+    } catch (HashedDbException e) {
+      throw new BytecodeDbException(e);
     }
   }
 
@@ -27,8 +27,8 @@ public class Helpers {
       Hash hash, CategoryB cat, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (HashedDbExc e) {
-      throw new DecodeExprNodeExc(hash, cat, path, e);
+    } catch (HashedDbException e) {
+      throw new DecodeExprNodeException(hash, cat, path, e);
     }
   }
 
@@ -36,8 +36,8 @@ public class Helpers {
       Hash hash, CategoryB cat, String path, BytecodeDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (BytecodeDbExc e) {
-      throw new DecodeExprNodeExc(hash, cat, path, e);
+    } catch (BytecodeDbException e) {
+      throw new DecodeExprNodeException(hash, cat, path, e);
     }
   }
 
@@ -45,23 +45,23 @@ public class Helpers {
       Hash hash, CategoryB cat, String path, int pathIndex, BytecodeDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (BytecodeDbExc e) {
-      throw new DecodeExprNodeExc(hash, cat, path + "[" + pathIndex + "]", e);
+    } catch (BytecodeDbException e) {
+      throw new DecodeExprNodeException(hash, cat, path + "[" + pathIndex + "]", e);
     }
   }
 
   @FunctionalInterface
   public static interface BytecodeDbCallable<T> {
-    public T call() throws BytecodeDbExc;
+    public T call() throws BytecodeDbException;
   }
 
   @FunctionalInterface
   public static interface HashedDbCallable<T> {
-    public T call() throws HashedDbExc;
+    public T call() throws HashedDbException;
   }
 
   @FunctionalInterface
   public static interface HashedDbRunnable {
-    public void run() throws HashedDbExc;
+    public void run() throws HashedDbException;
   }
 }
