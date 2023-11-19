@@ -24,6 +24,12 @@ subprojects {
 
 subprojects { subproject ->
     if (subproject.name in ['app', 'std-lib', "sys-test"]) {
+        apply plugin: 'java'
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+        }
         apply plugin: 'com.diffplug.spotless'
         spotless {
             java {

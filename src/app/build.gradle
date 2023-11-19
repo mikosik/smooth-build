@@ -8,12 +8,6 @@ application {
     mainClass = 'org.smoothbuild.cli.Main'
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
 generateGrammarSource {
     arguments += ["-visitor"]
 }

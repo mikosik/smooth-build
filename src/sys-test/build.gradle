@@ -11,12 +11,6 @@ def installation = tasks.register('installation', Copy) {
 tasks.test.dependsOn(installation)
 tasks.test.getInputs().dir('../../doc')
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
 // JunitTest needs access to junit4 jar and its dependencies.
 // Below separate `junit4` configuration is created that depends
 // on junit4 and `junit4files` resolves dependencies and stores
