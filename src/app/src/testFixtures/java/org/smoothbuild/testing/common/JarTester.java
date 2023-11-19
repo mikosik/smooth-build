@@ -7,14 +7,12 @@ import static org.smoothbuild.run.eval.FileStruct.filePath;
 import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
-
-import org.smoothbuild.testing.TestContext;
-import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.expr.value.TupleB;
-
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.ByteString;
+import org.smoothbuild.testing.TestContext;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class JarTester {
   public static BlobB jar(TupleB... files) throws IOException {

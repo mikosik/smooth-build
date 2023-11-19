@@ -2,14 +2,13 @@ package org.smoothbuild.vm.evaluate.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import io.vavr.collection.Array;
 import org.smoothbuild.vm.bytecode.expr.oper.SelectB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
-
-import io.vavr.collection.Array;
 
 public final class SelectTask extends Task {
   public SelectTask(SelectB selectB, TraceB trace) {

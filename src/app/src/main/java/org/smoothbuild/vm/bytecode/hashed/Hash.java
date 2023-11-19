@@ -5,15 +5,13 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.HashingSink;
@@ -111,8 +109,7 @@ public class Hash {
     if (this == o) {
       return true;
     }
-    return o instanceof Hash that
-        && this.byteString.equals(that.byteString);
+    return o instanceof Hash that && this.byteString.equals(that.byteString);
   }
 
   @Override

@@ -10,7 +10,6 @@ import static org.smoothbuild.common.collect.Optionals.pullUp;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -24,20 +23,17 @@ public class OptionalsTest {
   class _map_pair {
     @Test
     public void both_empty() {
-      assertThat(mapPair(empty(), empty(), concatBoolAndInt))
-          .isEqualTo(empty());
+      assertThat(mapPair(empty(), empty(), concatBoolAndInt)).isEqualTo(empty());
     }
 
     @Test
     public void first_empty() {
-      assertThat(mapPair(empty(), Optional.of(7), concatBoolAndInt))
-          .isEqualTo(empty());
+      assertThat(mapPair(empty(), Optional.of(7), concatBoolAndInt)).isEqualTo(empty());
     }
 
     @Test
     public void second_empty() {
-      assertThat(mapPair(Optional.of(true), empty(), concatBoolAndInt))
-          .isEqualTo(empty());
+      assertThat(mapPair(Optional.of(true), empty(), concatBoolAndInt)).isEqualTo(empty());
     }
 
     @Test
@@ -51,20 +47,17 @@ public class OptionalsTest {
   class _flat_map_pair {
     @Test
     public void both_empty() {
-      assertThat(flatMapPair(empty(), empty(), concatBoolAndIntOpt))
-          .isEqualTo(empty());
+      assertThat(flatMapPair(empty(), empty(), concatBoolAndIntOpt)).isEqualTo(empty());
     }
 
     @Test
     public void first_empty() {
-      assertThat(flatMapPair(empty(), Optional.of(7), concatBoolAndIntOpt))
-          .isEqualTo(empty());
+      assertThat(flatMapPair(empty(), Optional.of(7), concatBoolAndIntOpt)).isEqualTo(empty());
     }
 
     @Test
     public void second_empty() {
-      assertThat(flatMapPair(Optional.of(true), empty(), concatBoolAndIntOpt))
-          .isEqualTo(empty());
+      assertThat(flatMapPair(Optional.of(true), empty(), concatBoolAndIntOpt)).isEqualTo(empty());
     }
 
     @Test
@@ -78,14 +71,12 @@ public class OptionalsTest {
   class _pull_up_iterable {
     @Test
     public void iterable_with_zero_elems() {
-      assertThat(pullUp(list()))
-          .isEqualTo(Optional.of(list()));
+      assertThat(pullUp(list())).isEqualTo(Optional.of(list()));
     }
 
     @Test
     public void iterable_with_empty_optional() {
-      assertThat(pullUp(list(Optional.of("abc"), empty())))
-          .isEqualTo(empty());
+      assertThat(pullUp(list(Optional.of("abc"), empty()))).isEqualTo(empty());
     }
 
     @Test
@@ -99,14 +90,12 @@ public class OptionalsTest {
   class _pull_up_map {
     @Test
     public void map_with_zero_elems() {
-      assertThat(pullUp(Map.of()))
-          .isEqualTo(Optional.of(Map.of()));
+      assertThat(pullUp(Map.of())).isEqualTo(Optional.of(Map.of()));
     }
 
     @Test
     public void map_with_empty_optional() {
-      assertThat(pullUp(Map.of("key1", Optional.of("abc"), "key2", empty())))
-          .isEqualTo(empty());
+      assertThat(pullUp(Map.of("key1", Optional.of("abc"), "key2", empty()))).isEqualTo(empty());
     }
 
     @Test

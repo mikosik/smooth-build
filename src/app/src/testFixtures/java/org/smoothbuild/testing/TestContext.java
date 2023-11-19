@@ -33,6 +33,11 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableMap;
+import io.vavr.collection.Array;
+import jakarta.inject.Provider;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-
+import okio.ByteString;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.collect.Named;
@@ -186,14 +191,6 @@ import org.smoothbuild.vm.evaluate.task.PickTask;
 import org.smoothbuild.vm.evaluate.task.SelectTask;
 import org.smoothbuild.vm.evaluate.task.Task;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
-
-import io.vavr.collection.Array;
-import jakarta.inject.Provider;
-import okio.ByteString;
-
 public class TestContext {
   public static final String BUILD_FILE_PATH = "build.smooth";
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
@@ -254,13 +251,11 @@ public class TestContext {
     return schedulerB(computer(), reporter, threadCount);
   }
 
-  public SchedulerB schedulerB(
-      Computer computer, TaskReporter reporter, int threadCount) {
+  public SchedulerB schedulerB(Computer computer, TaskReporter reporter, int threadCount) {
     return schedulerB(taskExecutor(computer, reporter, threadCount));
   }
 
-  public SchedulerB schedulerB(
-      Computer computer, Reporter reporter, int threadCount) {
+  public SchedulerB schedulerB(Computer computer, Reporter reporter, int threadCount) {
     return schedulerB(taskExecutor(computer, reporter, threadCount));
   }
 
@@ -297,8 +292,7 @@ public class TestContext {
     return new TaskExecutor(computer, reporter, taskReporter(reporter), threadCount);
   }
 
-  public BackendCompile sbTranslatorFacade(
-      FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
+  public BackendCompile sbTranslatorFacade(FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
     return new BackendCompile(bytecodeF(), fileLoader, bytecodeLoader);
   }
 
@@ -633,23 +627,19 @@ public class TestContext {
   }
 
   public ArrayB arrayB(TypeB elemT, ValueB... elems) {
-    return bytecodeDb()
-        .arrayBuilder(arrayTB(elemT))
-        .addAll(list(elems))
-        .build();
+    return bytecodeDb().arrayBuilder(arrayTB(elemT)).addAll(list(elems)).build();
   }
 
   public BlobB blobBJarWithPluginApi(Class<?>... classes) throws IOException {
-    return blobBWith(
-        ImmutableList.<Class<?>>builder()
-            .addAll(list(classes))
-            .add(BlobB.class)
-            .add(NativeApi.class)
-            .add(ExprB.class)
-            .add(StringB.class)
-            .add(TupleB.class)
-            .add(ValueB.class)
-            .build());
+    return blobBWith(ImmutableList.<Class<?>>builder()
+        .addAll(list(classes))
+        .add(BlobB.class)
+        .add(NativeApi.class)
+        .add(ExprB.class)
+        .add(StringB.class)
+        .add(TupleB.class)
+        .add(ValueB.class)
+        .build());
   }
 
   public BlobB blobBJarWithJavaByteCode(Class<?>... classes) throws IOException {
@@ -940,8 +930,7 @@ public class TestContext {
   // ValS types
 
   public static List<TypeS> typesToTest() {
-    return nonCompositeTypes()
-        .stream()
+    return nonCompositeTypes().stream()
         .flatMap(t -> compositeTypeSFactories().stream().map(f -> f.apply(t)))
         .toList();
   }
@@ -957,8 +946,7 @@ public class TestContext {
         t -> funcTS(t, intTS()),
         TestContext::tupleTS,
         TestContext::structTS,
-        TestContext::interfaceTS
-    );
+        TestContext::interfaceTS);
     List<Function<TypeS, TypeS>> factories = new ArrayList<>();
     factories.addAll(simpleFactories);
     for (var simpleFactory : simpleFactories) {
@@ -1055,13 +1043,11 @@ public class TestContext {
   }
 
   public static StructTS personTS() {
-    return structTS("Person",
-        nlist(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
+    return structTS("Person", nlist(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
   }
 
   public static StructTS animalTS() {
-    return structTS("Animal",
-        nlist(sigS(stringTS(), "name"), sigS(intTS(), "size")));
+    return structTS("Animal", nlist(sigS(stringTS(), "name"), sigS(intTS(), "size")));
   }
 
   public static StringTS stringTS() {
@@ -1237,8 +1223,7 @@ public class TestContext {
 
   public static OrderS orderS(int line, ExprS headElem, ExprS... tailElems) {
     return new OrderS(
-        arrayTS(headElem.evaluationT()),
-        concat(headElem, list(tailElems)), location(line));
+        arrayTS(headElem.evaluationT()), concat(headElem, list(tailElems)), location(line));
   }
 
   public static OrderS orderS(TypeS elemT, ExprS... exprs) {
@@ -1469,13 +1454,11 @@ public class TestContext {
     return lambdaS(quantifiedVars, nlist(), body);
   }
 
-  public static LambdaS lambdaS(
-      VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
+  public static LambdaS lambdaS(VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
     return lambdaS(1, quantifiedVars, params, body);
   }
 
-  public static LambdaS lambdaS(
-      int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
+  public static LambdaS lambdaS(int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
     var funcTS = funcTS(toTypes(params), body.evaluationT());
     var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
     return new LambdaS(funcSchemaS, params, body, location(line));
@@ -1586,8 +1569,7 @@ public class TestContext {
   public static NamedFuncP namedFuncP(
       String name, NList<ItemP> params, Optional<ExprP> body, Location location) {
     var resultT = new ImplicitTP(location);
-    return new NamedFuncP(
-        resultT, name, shortName(name), params, body, Optional.empty(), location);
+    return new NamedFuncP(resultT, name, shortName(name), params, body, Optional.empty(), location);
   }
 
   public static NamedValueP namedValueP() {

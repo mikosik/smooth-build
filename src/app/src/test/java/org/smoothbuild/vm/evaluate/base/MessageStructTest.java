@@ -13,35 +13,30 @@ public class MessageStructTest extends TestContext {
   @Test
   public void empty_list_contains_no_errors() {
     messages = messageArrayEmpty();
-    assertThat(containsErrorOrAbove(messages))
-        .isFalse();
+    assertThat(containsErrorOrAbove(messages)).isFalse();
   }
 
   @Test
   public void list_with_info_message_contains_no_errors() {
     messages = arrayB(infoMessage("info message"));
-    assertThat(containsErrorOrAbove(messages))
-        .isFalse();
+    assertThat(containsErrorOrAbove(messages)).isFalse();
   }
 
   @Test
   public void list_with_warning_message_contains_no_errors() {
     messages = arrayB(warningMessage("warning message"));
-    assertThat(containsErrorOrAbove(messages))
-        .isFalse();
+    assertThat(containsErrorOrAbove(messages)).isFalse();
   }
 
   @Test
   public void list_with_error_message_contains_error_or_above() {
     messages = arrayB(errorMessage("error message"));
-    assertThat(containsErrorOrAbove(messages))
-        .isTrue();
+    assertThat(containsErrorOrAbove(messages)).isTrue();
   }
 
   @Test
   public void list_with_fatal_message_contains_error_or_above() {
     messages = arrayB(fatalMessage("error message"));
-    assertThat(containsErrorOrAbove(messages))
-        .isTrue();
+    assertThat(containsErrorOrAbove(messages)).isTrue();
   }
 }

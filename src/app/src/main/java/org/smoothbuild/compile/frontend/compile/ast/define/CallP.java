@@ -3,12 +3,10 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Objects;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
-
-import com.google.common.collect.ImmutableList;
 
 public final class CallP extends ExprP {
   private final ExprP callee;
@@ -68,11 +66,8 @@ public final class CallP extends ExprP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "callee = " + callee,
-        "args = " + args,
-        "location = " + location()
-    );
+    var fields =
+        joinToString("\n", "callee = " + callee, "args = " + args, "location = " + location());
     return "CallP(\n" + indent(fields) + "\n)";
   }
 }

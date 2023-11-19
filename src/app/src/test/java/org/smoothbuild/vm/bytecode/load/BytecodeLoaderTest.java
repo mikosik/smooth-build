@@ -4,10 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableMap;
+import io.vavr.control.Either;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.ReturnAbc;
@@ -16,10 +17,6 @@ import org.smoothbuild.testing.func.bytecode.ThrowException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
-
-import com.google.common.collect.ImmutableMap;
-
-import io.vavr.control.Either;
 
 public class BytecodeLoaderTest extends TestContext {
   @Test
@@ -46,8 +43,7 @@ public class BytecodeLoaderTest extends TestContext {
     var jar = blobB();
     var classBinaryName = "binary.name";
     var bytecodeMethodLoader = mock(BytecodeMethodLoader.class);
-    when(bytecodeMethodLoader.load(jar, classBinaryName))
-        .thenReturn(fetchMethod(clazz));
+    when(bytecodeMethodLoader.load(jar, classBinaryName)).thenReturn(fetchMethod(clazz));
 
     return new BytecodeLoader(bytecodeMethodLoader, bytecodeF())
         .load("name", jar, classBinaryName, varMap);

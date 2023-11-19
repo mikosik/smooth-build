@@ -5,8 +5,8 @@ import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptySc
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.isVarName;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
+import io.vavr.Tuple2;
 import java.util.function.Function;
-
 import org.smoothbuild.common.Strings;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
 import org.smoothbuild.compile.frontend.compile.ast.ScopingModuleVisitorP;
@@ -24,8 +24,6 @@ import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
 
-import io.vavr.Tuple2;
-
 /**
  * Detect undefined referencables and types.
  */
@@ -34,8 +32,7 @@ public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Maybe<
   public Maybe<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logBuffer = new LogBuffer();
     var moduleP = context._1();
-    new Detector(context._2(), emptyScope(), logBuffer)
-        .visitModule(moduleP);
+    new Detector(context._2(), emptyScope(), logBuffer).visitModule(moduleP);
     return maybe(moduleP, logBuffer);
   }
 
@@ -85,9 +82,7 @@ public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Maybe<
     }
 
     private boolean isKnownTypeName(String name) {
-      return isVarName(name)
-             || scope.types().contains(name)
-             || imported.types().contains(name);
+      return isVarName(name) || scope.types().contains(name) || imported.types().contains(name);
     }
   }
 }

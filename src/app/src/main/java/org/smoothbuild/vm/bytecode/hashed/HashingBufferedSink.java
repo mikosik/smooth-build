@@ -7,12 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.common.io.DataWriter;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
-
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.ByteString;
@@ -20,6 +14,10 @@ import okio.HashingSink;
 import okio.Okio;
 import okio.Source;
 import okio.Timeout;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.io.DataWriter;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 
 public class HashingBufferedSink implements BufferedSink {
   private final HashingSink hashingSink;
@@ -28,8 +26,7 @@ public class HashingBufferedSink implements BufferedSink {
   private final PathS tempPath;
   private Hash hash;
 
-  public HashingBufferedSink(FileSystem fileSystem, PathS tempPath)
-      throws IOException {
+  public HashingBufferedSink(FileSystem fileSystem, PathS tempPath) throws IOException {
     this.hashingSink = Hash.hashingSink(fileSystem.sinkWithoutBuffer(tempPath));
     this.bufferedSink = Okio.buffer(hashingSink);
     this.fileSystem = fileSystem;
@@ -100,8 +97,8 @@ public class HashingBufferedSink implements BufferedSink {
 
   @Override
   public BufferedSink write(byte[] source, int offset, int byteCount) throws IOException {
-     bufferedSink.write(source, offset, byteCount);
-     return this;
+    bufferedSink.write(source, offset, byteCount);
+    return this;
   }
 
   @Override
@@ -140,8 +137,8 @@ public class HashingBufferedSink implements BufferedSink {
   }
 
   @Override
-  public BufferedSink writeString(String string, int beginIndex, int endIndex,
-      Charset charset) throws IOException {
+  public BufferedSink writeString(String string, int beginIndex, int endIndex, Charset charset)
+      throws IOException {
     bufferedSink.writeString(string, beginIndex, endIndex, charset);
     return this;
   }
@@ -172,8 +169,8 @@ public class HashingBufferedSink implements BufferedSink {
 
   @Override
   public BufferedSink writeIntLe(int i) throws IOException {
-     bufferedSink.writeIntLe(i);
-     return this;
+    bufferedSink.writeIntLe(i);
+    return this;
   }
 
   @Override

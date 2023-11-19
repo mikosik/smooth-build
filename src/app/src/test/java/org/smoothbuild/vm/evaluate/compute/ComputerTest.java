@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.concurrent.PromisedValue;
@@ -137,8 +136,7 @@ public class ComputerTest extends TestContext {
       var input = tupleB();
       var disk = stringB("ghi");
 
-      assertComputationResult(task, input, null, disk, computationResult(output(disk)
-          , DISK));
+      assertComputationResult(task, input, null, disk, computationResult(output(disk), DISK));
     }
 
     @Test
@@ -368,14 +366,14 @@ public class ComputerTest extends TestContext {
     return new Computer(sandboxHash, () -> container(), computationCache, memoryCache);
   }
 
-  private void assertComputationResult(Computer computer, Task task, TupleB input,
-      ComputationResult expected) throws ComputationCacheException {
+  private void assertComputationResult(
+      Computer computer, Task task, TupleB input, ComputationResult expected)
+      throws ComputationCacheException {
     var consumer = new MemoizingConsumer<ComputationResult>();
 
     computer.compute(task, input, consumer);
 
-    assertThat(consumer.values())
-        .isEqualTo(list(expected));
+    assertThat(consumer.values()).isEqualTo(list(expected));
   }
 
   private void assertCachesState(
@@ -390,18 +388,14 @@ public class ComputerTest extends TestContext {
     var taskHash = Computer.computationHash(sandboxHash, task, input);
 
     if (memoryValue == null) {
-      assertThat(memoryCache.containsKey(taskHash))
-          .isFalse();
+      assertThat(memoryCache.containsKey(taskHash)).isFalse();
     } else {
-      assertThat(memoryCache.get(taskHash).get())
-          .isEqualTo(memoryValue);
+      assertThat(memoryCache.get(taskHash).get()).isEqualTo(memoryValue);
     }
     if (diskValue == null) {
-      assertThat(computationCache.contains(taskHash))
-          .isFalse();
+      assertThat(computationCache.contains(taskHash)).isFalse();
     } else {
-      assertThat(computationCache.read(taskHash, diskValue.type()))
-          .isEqualTo(output(diskValue));
+      assertThat(computationCache.read(taskHash, diskValue.type())).isEqualTo(output(diskValue));
     }
   }
 

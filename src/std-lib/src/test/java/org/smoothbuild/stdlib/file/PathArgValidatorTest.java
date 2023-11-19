@@ -7,7 +7,6 @@ import static org.smoothbuild.run.eval.MessageStruct.messageText;
 import static org.smoothbuild.stdlib.file.PathArgValidator.validatedProjectPath;
 
 import java.util.stream.Stream;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.common.filesystem.base.PathS;
@@ -24,7 +23,6 @@ public class PathArgValidatorTest extends TestContext {
   public static Stream<String> listOfCorrectProjectPaths() {
     return Stream.of(
         ".",
-
         "abc",
         "abc/def",
         "abc/def/ghi",
@@ -43,34 +41,25 @@ public class PathArgValidatorTest extends TestContext {
   @MethodSource("listOfInvalidProjectPaths")
   public void illegal_project_paths_are_reported(String path) {
     PathS name = validatedProjectPath(container(), "name", stringB(path));
-    assertThat(name)
-        .isNull();
-    container().messages()
-        .elems(TupleB.class)
-        .forEach(s -> {
-          assertThat(messageText(s).toJ())
-              .startsWith("Param `name` has illegal value.");
-          assertThat(messageSeverity(s).toJ())
-              .isEqualTo(ERROR.name());
-        });
+    assertThat(name).isNull();
+    container().messages().elems(TupleB.class).forEach(s -> {
+      assertThat(messageText(s).toJ()).startsWith("Param `name` has illegal value.");
+      assertThat(messageSeverity(s).toJ()).isEqualTo(ERROR.name());
+    });
   }
 
   public static Stream<String> listOfInvalidProjectPaths() {
     return Stream.of(
         "",
-
         "./",
         "./.",
         "././",
-
         "abc/",
         "abc/def/",
         "abc/def/ghi/",
-
         "./abc",
         "./abc/def",
         "./abc/def/ghi",
-
         "..",
         "../",
         "./../",
@@ -78,16 +67,12 @@ public class PathArgValidatorTest extends TestContext {
         "abc/..",
         "abc/../def",
         "../..",
-
         "/",
         "///",
-
         "/abc",
         "///abc",
-
         "abc//",
         "abc///",
-
         "abc//def",
         "abc///def");
   }

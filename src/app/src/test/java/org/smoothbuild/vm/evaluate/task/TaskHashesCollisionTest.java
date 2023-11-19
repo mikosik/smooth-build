@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -20,16 +19,31 @@ public class TaskHashesCollisionTest extends TestContext {
     addHash(list, set, new CombineTask(combineB(), traceB()));
     addHash(list, set, new ConstTask(intB(7), traceB()));
     addHash(list, set, new ConstTask(intB(9), traceB()));
-    addHash(list, set, new InvokeTask(callB(),
-        nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true)), traceB()));
-    addHash(list, set, new InvokeTask(callB(),
-        nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false)), traceB()));
-    addHash(list, set, new InvokeTask(callB(),
-        nativeFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true)), traceB()));
-    addHash(list, set, new InvokeTask(callB(),
-        nativeFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true)), traceB()));
-    addHash(list, set, new InvokeTask(callB(),
-        nativeFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true)), traceB()));
+    addHash(
+        list,
+        set,
+        new InvokeTask(
+            callB(), nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(true)), traceB()));
+    addHash(
+        list,
+        set,
+        new InvokeTask(
+            callB(), nativeFuncB(funcTB(intTB()), blobB(1), stringB("1"), boolB(false)), traceB()));
+    addHash(
+        list,
+        set,
+        new InvokeTask(
+            callB(), nativeFuncB(funcTB(intTB()), blobB(1), stringB("2"), boolB(true)), traceB()));
+    addHash(
+        list,
+        set,
+        new InvokeTask(
+            callB(), nativeFuncB(funcTB(intTB()), blobB(2), stringB("1"), boolB(true)), traceB()));
+    addHash(
+        list,
+        set,
+        new InvokeTask(
+            callB(), nativeFuncB(funcTB(boolTB()), blobB(1), stringB("1"), boolB(true)), traceB()));
     addHash(list, set, new OrderTask(orderB(intTB()), traceB()));
     addHash(list, set, new OrderTask(orderB(blobTB()), traceB()));
     addHash(list, set, new PickTask(pickB(), traceB()));

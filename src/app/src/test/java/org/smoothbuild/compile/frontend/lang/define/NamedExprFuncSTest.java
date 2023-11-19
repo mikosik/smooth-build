@@ -13,7 +13,8 @@ public class NamedExprFuncSTest extends TestContext {
     var schema = funcSchemaS(params, stringTS());
     var func = new NamedExprFuncS(schema, "myFunc", params, intS(17), location(1));
     assertThat(func.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             NamedExprFuncS(
               name = myFunc
               schema = <>(Int)->String

@@ -2,10 +2,9 @@ package org.smoothbuild.compile.frontend.lang.type;
 
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.interfaceTypeName;
 
+import com.google.common.collect.ImmutableMap;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * This class is immutable.

@@ -4,7 +4,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.io.PrintWriter;
-
 import org.junit.jupiter.api.Test;
 
 public class ConsoleTest {

@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.Collection;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -15,24 +14,18 @@ public class CategoryKindBTest {
   @ParameterizedTest
   @MethodSource("marker_to_kind_map")
   public void marker(int marker, CategoryKindB kind) {
-    assertThat(kind.marker())
-        .isEqualTo(marker);
+    assertThat(kind.marker()).isEqualTo(marker);
   }
 
   @ParameterizedTest
   @MethodSource("from_marker_cases")
   public void from_marker(int marker, CategoryKindB kind) {
-    assertThat(CategoryKindB.fromMarker((byte) marker))
-        .isEqualTo(kind);
+    assertThat(CategoryKindB.fromMarker((byte) marker)).isEqualTo(kind);
   }
 
   private static Collection<Arguments> from_marker_cases() {
-    var illegalMarkers = list(
-        arguments(-2, null),
-        arguments(-1, null),
-        arguments(17, null),
-        arguments(18, null)
-    );
+    var illegalMarkers =
+        list(arguments(-2, null), arguments(-1, null), arguments(17, null), arguments(18, null));
     return concat(marker_to_kind_map(), illegalMarkers);
   }
 
@@ -54,7 +47,6 @@ public class CategoryKindBTest {
         arguments(13, CategoryKinds.IF_FUNC),
         arguments(14, CategoryKinds.VAR),
         arguments(15, CategoryKinds.MAP_FUNC),
-        arguments(16, CategoryKinds.FUNC)
-    );
+        arguments(16, CategoryKinds.FUNC));
   }
 }

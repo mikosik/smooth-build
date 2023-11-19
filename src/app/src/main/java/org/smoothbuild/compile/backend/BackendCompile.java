@@ -4,8 +4,11 @@ import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Maybe.failure;
 import static org.smoothbuild.out.log.Maybe.success;
 
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+import io.vavr.collection.Array;
+import jakarta.inject.Inject;
 import java.util.function.Function;
-
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
@@ -15,21 +18,16 @@ import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
 import org.smoothbuild.vm.bytecode.load.FileLoader;
 
-import io.vavr.Tuple;
-import io.vavr.Tuple2;
-import io.vavr.collection.Array;
-import jakarta.inject.Inject;
-
-public class BackendCompile implements
-    Function<Tuple2<Array<ExprS>, ImmutableBindings<NamedEvaluableS>>,
-            Maybe<Tuple2<Array<ExprB>, BsMapping>>> {
+public class BackendCompile
+    implements Function<
+        Tuple2<Array<ExprS>, ImmutableBindings<NamedEvaluableS>>,
+        Maybe<Tuple2<Array<ExprB>, BsMapping>>> {
   private final BytecodeF bytecodeF;
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
 
   @Inject
-  public BackendCompile(BytecodeF bytecodeF, FileLoader fileLoader,
-      BytecodeLoader bytecodeLoader) {
+  public BackendCompile(BytecodeF bytecodeF, FileLoader fileLoader, BytecodeLoader bytecodeLoader) {
     this.bytecodeF = bytecodeF;
     this.fileLoader = fileLoader;
     this.bytecodeLoader = bytecodeLoader;

@@ -3,8 +3,8 @@ package org.smoothbuild.filesystem.space;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.io.Okios.writeAndClose;
 
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,6 @@ import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.common.filesystem.base.PathState;
 import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-
-import com.google.common.collect.ImmutableMap;
 
 public class FileResolverTest {
   private MemoryFileSystem fileSystem;
@@ -35,8 +33,7 @@ public class FileResolverTest {
 
       Hash hash = fileResolver.hashOf(FilePath.filePath(Space.PROJECT, path));
 
-      assertThat(hash)
-          .isEqualTo(Hash.of(content));
+      assertThat(hash).isEqualTo(Hash.of(content));
     }
 
     @Test
@@ -49,8 +46,7 @@ public class FileResolverTest {
       createFile(path, content + "something more");
       Hash hash2 = fileResolver.hashOf(filePath);
 
-      assertThat(hash2)
-          .isEqualTo(hash1);
+      assertThat(hash2).isEqualTo(hash1);
     }
 
     @Test
@@ -63,8 +59,7 @@ public class FileResolverTest {
       createFile(path, content + "something more");
       Hash hash = fileResolver.hashOf(filePath);
 
-      assertThat(hash)
-          .isEqualTo(Hash.of(content));
+      assertThat(hash).isEqualTo(Hash.of(content));
     }
   }
 

@@ -6,8 +6,8 @@ import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 /**
  * Polymorphic entity.
  */
-public sealed interface PolymorphicS
-    permits LambdaS, ReferenceS {
+public sealed interface PolymorphicS permits LambdaS, ReferenceS {
   public SchemaS schema();
+
   public Location location();
 }

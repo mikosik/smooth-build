@@ -3,6 +3,9 @@ package org.smoothbuild.common.collect;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import io.vavr.collection.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -14,13 +17,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
 import org.smoothbuild.common.function.ThrowingBiFunction;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-
-import io.vavr.collection.Array;
 
 public class Lists {
   @SafeVarargs
@@ -29,31 +26,20 @@ public class Lists {
   }
 
   public static <E> ImmutableList<E> generate(int size, Supplier<E> supplier) {
-    return Stream.generate(supplier)
-        .limit(size)
-        .collect(toImmutableList());
+    return Stream.generate(supplier).limit(size).collect(toImmutableList());
   }
 
   public static <R, S extends R, T extends R> ImmutableList<R> concat(S elem, Iterable<T> list) {
-    return ImmutableList.<R>builder()
-        .add(elem)
-        .addAll(list)
-        .build();
+    return ImmutableList.<R>builder().add(elem).addAll(list).build();
   }
 
   public static <R, S extends R, T extends R> ImmutableList<R> concat(Iterable<S> list, T elem) {
-    return ImmutableList.<R>builder()
-        .addAll(list)
-        .add(elem)
-        .build();
+    return ImmutableList.<R>builder().addAll(list).add(elem).build();
   }
 
   public static <R, S extends R, T extends R> ImmutableList<R> concat(
       Iterable<S> list1, Iterable<T> list2) {
-    return ImmutableList.<R>builder()
-        .addAll(list1)
-        .addAll(list2)
-        .build();
+    return ImmutableList.<R>builder().addAll(list1).addAll(list2).build();
   }
 
   public static <E> ImmutableList<E> skip(int toSkip, Iterable<E> iterable) {
@@ -62,16 +48,12 @@ public class Lists {
   }
 
   public static <E> ImmutableList<E> filter(Iterable<E> iterable, Predicate<? super E> predicate) {
-    return stream(iterable)
-        .filter(predicate)
-        .collect(toImmutableList());
+    return stream(iterable).filter(predicate).collect(toImmutableList());
   }
 
   public static <E, R> ImmutableList<R> map(
       Iterable<E> iterable, Function<? super E, ? extends R> func) {
-    return stream(iterable)
-        .map(func)
-        .collect(toImmutableList());
+    return stream(iterable).map(func).collect(toImmutableList());
   }
 
   public static <T, S, R, E extends Throwable> ImmutableList<R> zip(
@@ -92,8 +74,8 @@ public class Lists {
     return builder.build();
   }
 
-  public static <T, S> boolean allMatch(List<T> listA, List<S> listB,
-      BiFunction<T, S, Boolean> predicate) {
+  public static <T, S> boolean allMatch(
+      List<T> listA, List<S> listB, BiFunction<T, S, Boolean> predicate) {
     if (listA.size() != listB.size()) {
       return false;
     }
@@ -146,8 +128,6 @@ public class Lists {
   }
 
   public static <E> ImmutableList<E> sort(List<E> list, Comparator<? super E> comparator) {
-    return list.stream()
-        .sorted(comparator)
-        .collect(toImmutableList());
+    return list.stream().sorted(comparator).collect(toImmutableList());
   }
 }

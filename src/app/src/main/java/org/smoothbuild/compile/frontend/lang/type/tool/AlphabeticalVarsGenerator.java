@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.lang.type.tool;
 
 import java.util.Arrays;
-
 import org.smoothbuild.compile.frontend.lang.type.VarS;
 
 public class AlphabeticalVarsGenerator {

@@ -5,7 +5,6 @@ import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
-
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
 
 public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObject> {

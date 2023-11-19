@@ -10,10 +10,11 @@ import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.STRING;
 import static org.smoothbuild.out.log.Maybe.success;
 
+import com.google.common.collect.ImmutableList;
+import io.vavr.Tuple2;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
@@ -66,10 +67,6 @@ import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.out.log.Maybe;
-
-import com.google.common.collect.ImmutableList;
-
-import io.vavr.Tuple2;
 
 public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Maybe<ModuleS>> {
   @Override
@@ -160,7 +157,7 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Module
       if (namedFuncP.annotation().isPresent()) {
         var annotationS = convertAnnotation(namedFuncP.annotation().get());
         return new AnnotatedFuncS(annotationS, schema, name, params, loc);
-      } else if (namedFuncP.body().isPresent()){
+      } else if (namedFuncP.body().isPresent()) {
         var body = convertFuncBody(namedFuncP, namedFuncP.body().get());
         return new NamedExprFuncS(schema, name, params, body, loc);
       } else {
@@ -180,14 +177,14 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Module
     private ExprS convertExpr(ExprP expr) {
       // @formatter:off
       return switch (expr) {
-        case BlobP          blobP          -> convertBlob(blobP);
-        case CallP          callP          -> convertCall(callP);
-        case IntP           intP           -> convertInt(intP);
-        case InstantiateP   instantiateP   -> convertInstantiate(instantiateP);
-        case NamedArgP      namedArgP      -> convertExpr(namedArgP.expr());
-        case OrderP         orderP         -> convertOrder(orderP);
-        case SelectP        selectP        -> convertSelect(selectP);
-        case StringP        stringP        -> convertString(stringP);
+        case BlobP blobP -> convertBlob(blobP);
+        case CallP callP -> convertCall(callP);
+        case IntP intP -> convertInt(intP);
+        case InstantiateP instantiateP -> convertInstantiate(instantiateP);
+        case NamedArgP namedArgP -> convertExpr(namedArgP.expr());
+        case OrderP orderP -> convertOrder(orderP);
+        case SelectP selectP -> convertSelect(selectP);
+        case StringP stringP -> convertString(stringP);
       };
       // @formatter:on
     }
@@ -241,7 +238,8 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Module
     }
 
     private ReferenceS convertReference(ReferenceP referenceP) {
-      return convertReference(referenceP, typeTeller.schemaFor(referenceP.name()).get());
+      return convertReference(
+          referenceP, typeTeller.schemaFor(referenceP.name()).get());
     }
 
     private ReferenceS convertReference(ReferenceP referenceP, SchemaS schemaS) {

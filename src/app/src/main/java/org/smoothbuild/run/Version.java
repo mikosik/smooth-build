@@ -4,17 +4,15 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.failure;
 import static org.smoothbuild.out.log.Maybe.success;
 
+import io.vavr.Tuple0;
+import io.vavr.collection.Array;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.function.Function;
-
 import org.smoothbuild.filesystem.install.BuildVersion;
 import org.smoothbuild.filesystem.install.HashNode;
 import org.smoothbuild.filesystem.install.InstallationHashes;
 import org.smoothbuild.out.log.Maybe;
-
-import io.vavr.Tuple0;
-import io.vavr.collection.Array;
-import jakarta.inject.Inject;
 
 public class Version implements Function<Tuple0, Maybe<String>> {
   private final InstallationHashes installationHashes;
@@ -29,8 +27,8 @@ public class Version implements Function<Tuple0, Maybe<String>> {
     try {
       return success(createVersionText(installationHashes.installationNode()));
     } catch (IOException e) {
-      return failure(error(
-          "ERROR: IO error when calculating installation hash: " + e.getMessage()));
+      return failure(
+          error("ERROR: IO error when calculating installation hash: " + e.getMessage()));
     }
   }
 

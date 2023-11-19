@@ -7,9 +7,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.vavr.control.Either;
 import java.lang.reflect.Method;
 import java.util.Map;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -22,8 +22,6 @@ import org.smoothbuild.testing.func.bytecode.WithoutBytecodeF;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-
-import io.vavr.control.Either;
 
 public class BytecodeMethodLoaderTest extends TestContext {
   @Nested
@@ -40,25 +38,21 @@ public class BytecodeMethodLoaderTest extends TestContext {
       testCaching(method, Either.left("error message"), Either.left("error message"));
     }
 
-    private void testCaching(Method method, Either<String, Method> eitherMethod,
-        Either<String, Method> expected) {
+    private void testCaching(
+        Method method, Either<String, Method> eitherMethod, Either<String, Method> expected) {
       var methodLoader = mock(MethodLoader.class);
       BlobB jar = blobB();
       String classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
-      when(methodLoader.provide(methodSpec))
-          .thenReturn(eitherMethod);
+      when(methodLoader.provide(methodSpec)).thenReturn(eitherMethod);
 
       var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
 
       var resultMethod1 = bytecodeMethodLoader.load(jar, classBinaryName);
       var resultMethod2 = bytecodeMethodLoader.load(jar, classBinaryName);
-      assertThat(resultMethod1)
-          .isEqualTo(expected);
-      assertThat(resultMethod1)
-          .isSameInstanceAs(resultMethod2);
-      verify(methodLoader, times(1))
-          .provide(methodSpec);
+      assertThat(resultMethod1).isEqualTo(expected);
+      assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
+      verify(methodLoader, times(1)).provide(methodSpec);
     }
   }
 
@@ -76,20 +70,22 @@ public class BytecodeMethodLoaderTest extends TestContext {
   public void loading_method_without_native_api_param_causes_error() throws Exception {
     var method =
         WithoutBytecodeF.class.getDeclaredMethod(BytecodeMethodLoader.BYTECODE_METHOD_NAME);
-    assertLoadingCausesError(method,
+    assertLoadingCausesError(
+        method,
         "Providing method parameter is not of type " + BytecodeF.class.getCanonicalName() + ".");
   }
 
   @Test
   public void loading_method_with_three_params_causes_error() throws Exception {
-    var method = WithThreeParams.class.getDeclaredMethod(BytecodeMethodLoader.BYTECODE_METHOD_NAME,
-        BytecodeF.class, Map.class, Map.class);
+    var method = WithThreeParams.class.getDeclaredMethod(
+        BytecodeMethodLoader.BYTECODE_METHOD_NAME, BytecodeF.class, Map.class, Map.class);
     assertLoadingCausesError(method, "Providing method parameter count is different than 2.");
   }
 
   @Test
   public void loading_method_with_non_val_result_causes_error() throws Exception {
-    assertLoadingCausesError(WithNonValueResult.class,
+    assertLoadingCausesError(
+        WithNonValueResult.class,
         "Providing method result type is not " + ValueB.class.getCanonicalName() + ".");
   }
 
@@ -100,15 +96,12 @@ public class BytecodeMethodLoaderTest extends TestContext {
   private void assertLoadingCausesError(Method method, String message) {
     var methodSpec =
         new MethodSpec(blobB(), "class.binary.name", BytecodeMethodLoader.BYTECODE_METHOD_NAME);
-    assertThat(load(methodSpec, method))
-        .isEqualTo(Either.left(message));
+    assertThat(load(methodSpec, method)).isEqualTo(Either.left(message));
   }
 
   private Either<String, Method> load(MethodSpec methodSpec, Method method) {
     var methodLoader = mock(MethodLoader.class);
-    doReturn(Either.right(method))
-        .when(methodLoader)
-        .provide(methodSpec);
+    doReturn(Either.right(method)).when(methodLoader).provide(methodSpec);
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
     return bytecodeMethodLoader.load(methodSpec.jar(), methodSpec.classBinaryName());
   }

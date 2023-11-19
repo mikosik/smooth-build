@@ -7,4 +7,3 @@ public class DecodeByteException extends HashedDbException {
     super("Value at " + hash + " cannot be decoded as byte.");
   }
 }
-

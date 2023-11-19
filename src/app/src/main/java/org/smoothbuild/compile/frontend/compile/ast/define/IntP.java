@@ -3,7 +3,6 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 import static java.lang.Character.isDigit;
 
 import java.math.BigInteger;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
 public final class IntP extends LiteralP {

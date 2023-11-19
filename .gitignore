@@ -2,6 +2,7 @@
 # gradle files
 /.gradle/
 /src/*/build/
+/build
 
 # intellij - user specific stuff
 .idea/**/workspace.xml

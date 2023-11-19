@@ -5,8 +5,8 @@ import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
 public class DecodeExprWrongNodeTypeException extends DecodeExprNodeException {
-  public DecodeExprWrongNodeTypeException(Hash hash, CategoryB cat, String path, int pathIndex,
-      TypeB expected, TypeB actual) {
+  public DecodeExprWrongNodeTypeException(
+      Hash hash, CategoryB cat, String path, int pathIndex, TypeB expected, TypeB actual) {
     this(hash, cat, indexedPath(path, pathIndex), expected, actual);
   }
 

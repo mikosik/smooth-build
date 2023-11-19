@@ -4,7 +4,6 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 
@@ -47,10 +46,7 @@ public final class ReferenceP extends PolymorphicP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "name = " + name,
-        "location = " + location()
-    );
+    var fields = joinToString("\n", "name = " + name, "location = " + location());
     return "ReferenceP(\n" + indent(fields) + "\n)";
   }
 }

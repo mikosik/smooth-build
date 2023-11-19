@@ -15,7 +15,8 @@ public class VisibilityTest extends TestContext {
     class _local {
       @Test
       public void value_declared_above_is_visible() {
-        module("""
+        module(
+                """
              String myValue = "abc";
              result = myValue;
              """)
@@ -24,7 +25,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void value_declared_below_is_visible() {
-        module("""
+        module(
+                """
              result = myValue;
              String myValue = "abc";
              """)
@@ -33,7 +35,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void func_declared_above_is_visible() {
-        module("""
+        module(
+                """
              String myFunc() = "abc";
              result = myFunc;
              """)
@@ -42,7 +45,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void func_declared_below_is_visible() {
-        module("""
+        module(
+                """
              result = myFunc;
              String myFunc() = "abc";
              """)
@@ -69,7 +73,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_declared_above_is_visible() {
-        module("""
+        module(
+                """
              MyStruct()
              @Native("impl.met")
              MyStruct myFunc();
@@ -79,7 +84,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_declared_below_is_visible() {
-        module("""
+        module(
+                """
              @Native("impl.met")
              MyStruct myFunc();
              MyStruct()
@@ -113,13 +119,12 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_is_visible() {
-        var code = """
+        var code =
+            """
             @Native("impl.met")
             OtherModuleStruct myFunc();
             """;
-        module(code)
-            .withImported("OtherModuleStruct()")
-            .loadsWithSuccess();
+        module(code).withImported("OtherModuleStruct()").loadsWithSuccess();
       }
     }
 
@@ -132,12 +137,12 @@ public class VisibilityTest extends TestContext {
           // Despite internally CallsPreprocessor creates references to parameter default values
           // that are further in processing handled correctly, for now it is not available
           // in the language to simplify it.
-          var code = """
+          var code =
+              """
               myFunc(Int param = 7) = 8;
               myResult = myFunc:param;
               """;
-          module(code)
-              .loadsWithProblems();
+          module(code).loadsWithProblems();
         }
       }
 
@@ -153,7 +158,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void is_not_visible_outside_its_body() {
-          module("""
+          module(
+                  """
              myFunc(String param) = "abc";
              result = param;
              """)
@@ -185,7 +191,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void is_not_visible_outside_its_body() {
-          module("""
+          module(
+                  """
              myValue = (String param) -> "abc";
              result = param;
              """)
@@ -203,8 +210,7 @@ public class VisibilityTest extends TestContext {
           var code = """
               myValue = ((Int int) -> int)(undefined);
               """;
-          module(code)
-              .loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "`undefined` is undefined.");
         }
 
         @Test
@@ -212,18 +218,17 @@ public class VisibilityTest extends TestContext {
           var code = """
               myValue = () -> undefined;
               """;
-          module(code)
-              .loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "`undefined` is undefined.");
         }
 
         @Test
         public void expression_function_argument() {
-          var code = """
+          var code =
+              """
               String myFunc(Blob b) = "abc";
               result = myFunc(undefined);
               """;
-          module(code)
-              .loadsWithError(2, "`undefined` is undefined.");
+          module(code).loadsWithError(2, "`undefined` is undefined.");
         }
 
         @Test
@@ -231,8 +236,7 @@ public class VisibilityTest extends TestContext {
           var code = """
               result() = undefined;
               """;
-          module(code)
-              .loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "`undefined` is undefined.");
         }
 
         @Test
@@ -240,8 +244,7 @@ public class VisibilityTest extends TestContext {
           var code = """
               result = undefined();
               """;
-          module(code)
-              .loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "`undefined` is undefined.");
         }
 
         @Test
@@ -249,8 +252,7 @@ public class VisibilityTest extends TestContext {
           var code = """
               result = undefined;
               """;
-          module(code)
-              .loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "`undefined` is undefined.");
         }
 
         @Test
@@ -258,8 +260,7 @@ public class VisibilityTest extends TestContext {
           var code = """
               result = [undefined];
               """;
-          module(code)
-              .loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "`undefined` is undefined.");
         }
 
         @Test
@@ -267,8 +268,7 @@ public class VisibilityTest extends TestContext {
           var code = """
               String myFunc(Blob b = undefined) = "abc";
               """;
-          module(code)
-              .loadsWithError(1, "`undefined` is undefined.");
+          module(code).loadsWithError(1, "`undefined` is undefined.");
         }
       }
 
@@ -276,22 +276,22 @@ public class VisibilityTest extends TestContext {
       class _type_cannot_be_used {
         @Test
         public void as_type_of_named_value() {
-          var code = """
+          var code =
+              """
               @Bytecode("Impl.met")
               Undefined myValue;
               """;
-          module(code)
-              .loadsWithError(2, "`Undefined` type is undefined.");
+          module(code).loadsWithError(2, "`Undefined` type is undefined.");
         }
 
         @Test
         public void as_type_of_native_function_result() {
-          var code = """
+          var code =
+              """
               @Native("Impl.met")
               Undefined myFunc();
               """;
-          module(code)
-              .loadsWithError(2, "`Undefined` type is undefined.");
+          module(code).loadsWithError(2, "`Undefined` type is undefined.");
         }
 
         @Test
@@ -299,8 +299,7 @@ public class VisibilityTest extends TestContext {
           var code = """
               [Undefined] myFunc() = [];
               """;
-          module(code)
-              .loadsWithError(1, "`Undefined` type is undefined.");
+          module(code).loadsWithError(1, "`Undefined` type is undefined.");
         }
 
         @Test
@@ -308,17 +307,16 @@ public class VisibilityTest extends TestContext {
           var code = """
               String myFunc(Undefined param) = "abc";
               """;
-          module(code)
-              .loadsWithError(1, "`Undefined` type is undefined.");
+          module(code).loadsWithError(1, "`Undefined` type is undefined.");
         }
 
         @Test
         public void inside_param_default_value() {
-          var code = """
+          var code =
+              """
               Int myFunc((A)->Int param = (Undefined x) -> 7) = 7;
               """;
-          module(code)
-              .loadsWithError(1, "`Undefined` type is undefined.");
+          module(code).loadsWithError(1, "`Undefined` type is undefined.");
         }
 
         @Test
@@ -326,19 +324,18 @@ public class VisibilityTest extends TestContext {
           var code = """
               myValue = (Undefined param) -> 7;
               """;
-          module(code)
-              .loadsWithError(1, "`Undefined` type is undefined.");
+          module(code).loadsWithError(1, "`Undefined` type is undefined.");
         }
 
         @Test
         public void as_type_of_struct_field() {
-          var code = """
+          var code =
+              """
               MyStruct(
                 UndefinedType field
               )
               """;
-          module(code)
-              .loadsWithError(2, "`UndefinedType` type is undefined.");
+          module(code).loadsWithError(2, "`UndefinedType` type is undefined.");
         }
       }
     }
@@ -353,7 +350,8 @@ public class VisibilityTest extends TestContext {
         module("""
              myValue = myValue;
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myValue ~> myValue""");
       }
@@ -363,55 +361,64 @@ public class VisibilityTest extends TestContext {
         module("""
              myFunc1() = myFunc1();
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myFunc1 ~> myFunc1""");
       }
 
       @Test
       public void struct() {
-        module("""
+        module(
+                """
              MyStruct(
                MyStruct myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct ~> MyStruct""");
       }
 
       @Test
       public void struct_through_array() {
-        module("""
+        module(
+                """
              MyStruct(
                [MyStruct] myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct ~> MyStruct""");
       }
 
       @Test
       public void struct_through_func_result() {
-        module("""
+        module(
+                """
              MyStruct(
                ()->MyStruct myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct ~> MyStruct""");
       }
 
       @Test
       public void struct_through_func_param() {
-        module("""
+        module(
+                """
              MyStruct(
                (MyStruct)->Blob myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct ~> MyStruct""");
       }
@@ -421,11 +428,13 @@ public class VisibilityTest extends TestContext {
     class two_elems_cycle {
       @Test
       public void value_value() {
-        module("""
+        module(
+                """
              myValue1 = myValue2;
              myValue2 = myValue1;
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myValue1 ~> myValue2
               build.smooth:2: myValue2 ~> myValue1""");
@@ -433,11 +442,13 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void func_func() {
-        module("""
+        module(
+                """
              myFunc1() = myFunc2();
              myFunc2() = myFunc1();
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myFunc1 ~> myFunc2
               build.smooth:2: myFunc2 ~> myFunc1""");
@@ -445,29 +456,34 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void func_func_through_arg() {
-        module("""
+        module(
+                """
              String myFunc() = myIdentity(myFunc());
              String myIdentity(String s) = s;
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myFunc ~> myFunc""");
       }
 
       @Test
       public void value_value_through_arg() {
-        module("""
+        module(
+                """
              String myIdentity(String s) = s;
              String myValue = myIdentity(myValue);
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:2: myValue ~> myValue""");
       }
 
       @Test
       public void struct_struct() {
-        module("""
+        module(
+                """
              MyStruct1(
                MyStruct2 myField
              )
@@ -475,7 +491,8 @@ public class VisibilityTest extends TestContext {
                MyStruct1 myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct1 ~> MyStruct2
               build.smooth:5: MyStruct2 ~> MyStruct1""");
@@ -483,7 +500,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_struct_through_array() {
-        module("""
+        module(
+                """
              MyStruct1(
                MyStruct2 myField
              )
@@ -491,7 +509,8 @@ public class VisibilityTest extends TestContext {
                [MyStruct1] myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct1 ~> MyStruct2
               build.smooth:5: MyStruct2 ~> MyStruct1""");
@@ -499,7 +518,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_struct_through_func_result() {
-        module("""
+        module(
+                """
              MyStruct1(
                MyStruct2 myField
              )
@@ -507,7 +527,8 @@ public class VisibilityTest extends TestContext {
                ()->MyStruct1 myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct1 ~> MyStruct2
               build.smooth:5: MyStruct2 ~> MyStruct1""");
@@ -515,7 +536,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_struct_through_func_param() {
-        module("""
+        module(
+                """
              MyStruct1(
                MyStruct2 myField
              )
@@ -523,7 +545,8 @@ public class VisibilityTest extends TestContext {
                (MyStruct1)->Blob myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct1 ~> MyStruct2
               build.smooth:5: MyStruct2 ~> MyStruct1""");
@@ -534,12 +557,14 @@ public class VisibilityTest extends TestContext {
     class three_elem_cycle {
       @Test
       public void value_value_value() {
-        module("""
+        module(
+                """
              myValue1 = myValue2;
              myValue2 = myValue3;
              myValue3 = myValue1;
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myValue1 ~> myValue2
               build.smooth:2: myValue2 ~> myValue3
@@ -548,12 +573,14 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void func_func_func() {
-        module("""
+        module(
+                """
              myFunc1() = myFunc2();
              myFunc2() = myFunc3();
              myFunc3() = myFunc1();
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myFunc1 ~> myFunc2
               build.smooth:2: myFunc2 ~> myFunc3
@@ -562,12 +589,14 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void value_func_value() {
-        module("""
+        module(
+                """
              myValue1 = myFunc();
              myFunc() = myValue2;
              myValue2 = myValue1;
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myValue1 ~> myFunc
               build.smooth:2: myFunc ~> myValue2
@@ -576,12 +605,14 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void func_value_func() {
-        module("""
+        module(
+                """
              myFunc1() = myValue;
              myValue = myFunc2();
              myFunc2() = myFunc1();
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Dependency graph contains cycle:
               build.smooth:1: myFunc1 ~> myValue
               build.smooth:2: myValue ~> myFunc2
@@ -590,7 +621,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_struct_struct_through_array() {
-        module("""
+        module(
+                """
              MyStruct1(
                MyStruct2 myField
              )
@@ -601,7 +633,8 @@ public class VisibilityTest extends TestContext {
                [MyStruct1] myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct1 ~> MyStruct2
               build.smooth:5: MyStruct2 ~> MyStruct3
@@ -610,7 +643,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_struct_struct_through_func_result() {
-        module("""
+        module(
+                """
              MyStruct1(
                [MyStruct2] myField
              )
@@ -621,7 +655,8 @@ public class VisibilityTest extends TestContext {
                ()->MyStruct1 myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct1 ~> MyStruct2
               build.smooth:5: MyStruct2 ~> MyStruct3
@@ -630,7 +665,8 @@ public class VisibilityTest extends TestContext {
 
       @Test
       public void struct_struct_struct_through_func_param() {
-        module("""
+        module(
+                """
              MyStruct1(
                [MyStruct2] myField
              )
@@ -641,7 +677,8 @@ public class VisibilityTest extends TestContext {
                (MyStruct1)->Blob myField
              )
              """)
-            .loadsWithError("""
+            .loadsWithError(
+                """
               Type hierarchy contains cycle:
               build.smooth:2: MyStruct1 ~> MyStruct2
               build.smooth:5: MyStruct2 ~> MyStruct3
@@ -685,7 +722,8 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void value_fails() {
-          module("""
+          module(
+                  """
                myValue = "abc";
                myValue = "def";
                """)
@@ -694,7 +732,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void func_fails() {
-          module("""
+          module(
+                  """
                myFunc() = "abc";
                myFunc = "def";
                """)
@@ -736,7 +775,8 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void named_value_fails() {
-          module("""
+          module(
+                  """
                myValue = "abc";
                myValue() = "def";
                """)
@@ -745,7 +785,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void named_function_fails() {
-          module("""
+          module(
+                  """
                myFunc() = "abc";
                myFunc() = "def";
                """)
@@ -758,7 +799,8 @@ public class VisibilityTest extends TestContext {
     class _named_function_param_shadowing {
       @Test
       public void other_param_fails() {
-        module("""
+        module(
+                """
              String myFunc(
                String param,
                String param) = "abc";
@@ -794,7 +836,8 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void named_value_succeeds() {
-          module("""
+          module(
+                  """
               myValue = "abc";
               String myFunc(String myValue) = "abc";
               """)
@@ -803,7 +846,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void named_function_succeeds() {
-          module("""
+          module(
+                  """
               myFunc() = "abc";
               String myOtherFunc(String myFunc) = "abc";
               """)
@@ -812,7 +856,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void constructor_succeeds() {
-          module("""
+          module(
+                  """
              MyStruct()
              String myFunc(String myStruct) = "abc";
              """)
@@ -825,7 +870,8 @@ public class VisibilityTest extends TestContext {
     class _lambda_param_shadowing {
       @Test
       public void other_param_fails() {
-        module("""
+        module(
+                """
              myValue = (
                String param,
                String param) -> 7;
@@ -861,7 +907,8 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void named_value_succeeds() {
-          module("""
+          module(
+                  """
               myValue = "abc";
               otherValue = (String myValue) -> 7;
               """)
@@ -870,7 +917,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void named_function_succeeds() {
-          module("""
+          module(
+                  """
               myFunc() = "abc";
               myValue = (String myFunc) -> 7;
               """)
@@ -879,7 +927,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void constructor_succeeds() {
-          module("""
+          module(
+                  """
              MyStruct()
              myValue = (String myStruct) -> 7;
              """)
@@ -895,9 +944,7 @@ public class VisibilityTest extends TestContext {
         @Test
         public void base_type_succeeds() {
           var code = "String()";
-          module(code)
-              .loadsWithSuccess()
-              .containsType(structTS("String", nlist()));
+          module(code).loadsWithSuccess().containsType(structTS("String", nlist()));
         }
 
         @Test
@@ -913,13 +960,12 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void struct_fails() {
-          module("""
+          module(
+                  """
                OtherModuleStruct()
                OtherModuleStruct()
                """)
-              .loadsWith(
-                  err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct"))
-              );
+              .loadsWith(err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")));
         }
       }
     }
@@ -928,7 +974,8 @@ public class VisibilityTest extends TestContext {
     class _field_shadowing {
       @Test
       public void other_field_fails() {
-        module("""
+        module(
+                """
              MyStruct(
                String field,
                String field
@@ -936,7 +983,6 @@ public class VisibilityTest extends TestContext {
              """)
             .loadsWithError(3, alreadyDefinedIn(filePath(), 2, "field"));
       }
-
 
       @Nested
       class _imported {
@@ -966,7 +1012,8 @@ public class VisibilityTest extends TestContext {
       class _local {
         @Test
         public void value_succeeds() {
-          module("""
+          module(
+                  """
               myValue = "abc";
               MyStruct(
                 String myValue,
@@ -977,7 +1024,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void func_succeeds() {
-          module("""
+          module(
+                  """
               myFunc() = "abc";
               MyStruct(
                 String myFunc,
@@ -988,7 +1036,8 @@ public class VisibilityTest extends TestContext {
 
         @Test
         public void ctor_succeeds() {
-          module("""
+          module(
+                  """
              MyStruct()
              MyOtherStruct(
                 String myStruct,

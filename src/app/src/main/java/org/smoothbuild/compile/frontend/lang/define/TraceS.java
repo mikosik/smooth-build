@@ -2,11 +2,9 @@ package org.smoothbuild.compile.frontend.lang.define;
 
 import static java.util.Objects.requireNonNullElse;
 
-import java.util.Objects;
-
-import org.smoothbuild.compile.frontend.lang.base.location.Location;
-
 import com.google.common.base.Strings;
+import java.util.Objects;
+import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
 /**
  * Smooth stack trace.

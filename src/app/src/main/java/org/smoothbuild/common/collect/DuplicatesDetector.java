@@ -1,11 +1,10 @@
 package org.smoothbuild.common.collect;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multiset;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DuplicatesDetector<T> {
   private final Multiset<T> set = HashMultiset.create();

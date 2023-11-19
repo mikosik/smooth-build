@@ -10,20 +10,17 @@ import org.junit.jupiter.api.Test;
 public class ClassesTest {
   @Test
   public void binary_path_of_top_level_class() {
-    assertThat(binaryPath(String.class))
-        .isEqualTo("java/lang/String.class");
+    assertThat(binaryPath(String.class)).isEqualTo("java/lang/String.class");
   }
 
   @Test
   public void binary_path_of_inner_class() {
-    assertThat(binaryPath(Character.Subset.class))
-        .isEqualTo("java/lang/Character$Subset.class");
+    assertThat(binaryPath(Character.Subset.class)).isEqualTo("java/lang/Character$Subset.class");
   }
 
   @Test
   public void binary_path_to_binary_name_for_top_level_class() {
-    assertThat(binaryPathToBinaryName("java/lang/String.class"))
-        .isEqualTo("java.lang.String");
+    assertThat(binaryPathToBinaryName("java/lang/String.class")).isEqualTo("java.lang.String");
   }
 
   @Test

@@ -3,16 +3,14 @@ package org.smoothbuild.vm.bytecode.load;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
-import java.lang.reflect.Method;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.smoothbuild.vm.bytecode.BytecodeF;
-import org.smoothbuild.vm.bytecode.expr.value.BlobB;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-
 import io.vavr.control.Either;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
+import org.smoothbuild.vm.bytecode.BytecodeF;
+import org.smoothbuild.vm.bytecode.expr.value.BlobB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 /**
  * This class is thread-safe.
@@ -35,8 +33,7 @@ public class BytecodeMethodLoader {
   }
 
   private Either<String, Method> loadImpl(MethodSpec methodSpec) {
-    return methodLoader.provide(methodSpec)
-        .flatMap(this::validateSignature);
+    return methodLoader.provide(methodSpec).flatMap(this::validateSignature);
   }
 
   private Either<String, Method> validateSignature(Method method) {
@@ -45,8 +42,8 @@ public class BytecodeMethodLoader {
     } else if (!isStatic(method)) {
       return Either.left("Providing method is not static.");
     } else if (!hasBytecodeFactoryParam(method)) {
-      return Either.left("Providing method parameter is not of type "
-          + BytecodeF.class.getCanonicalName() + ".");
+      return Either.left(
+          "Providing method parameter is not of type " + BytecodeF.class.getCanonicalName() + ".");
     } else if (method.getParameterTypes().length != 2) {
       return Either.left("Providing method parameter count is different than 2.");
     } else if (!method.getReturnType().equals(ValueB.class)) {

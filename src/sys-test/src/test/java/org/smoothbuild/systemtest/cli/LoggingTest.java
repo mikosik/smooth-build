@@ -5,7 +5,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.io.IOException;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -43,35 +42,40 @@ public class LoggingTest extends SystemTestCase {
         arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "fatal", false),
         arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "error", false),
         arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "warning", false),
-        arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "info", true)
-    );
+        arguments((TestCaseInitializer) LoggingTest::createModuleWithInfo, "info", true));
   }
 
   private static void createModuleWithError(SystemTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportError.class);
-    testCase.createUserModule(format("""
+    testCase.createUserModule(format(
+        """
             @Native("%s")
             A reportError(String message);
             Int result = reportError("%s");
-            """, ReportError.class.getCanonicalName(), LOG_MESSAGE));
+            """,
+        ReportError.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   private static void createModuleWithWarning(SystemTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportWarning.class);
-    testCase.createUserModule(format("""
+    testCase.createUserModule(format(
+        """
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("%s");
-            """, ReportWarning.class.getCanonicalName(), LOG_MESSAGE));
+            """,
+        ReportWarning.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   private static void createModuleWithInfo(SystemTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportInfo.class);
-    testCase.createUserModule(format("""
+    testCase.createUserModule(format(
+        """
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("%s");
-            """, ReportInfo.class.getCanonicalName(), LOG_MESSAGE));
+            """,
+        ReportInfo.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   @FunctionalInterface

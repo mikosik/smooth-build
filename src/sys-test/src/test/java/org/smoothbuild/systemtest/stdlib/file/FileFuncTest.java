@@ -67,8 +67,7 @@ public class FileFuncTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+    assertThat(artifactTreeContentAsStrings("result")).containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -83,7 +82,6 @@ public class FileFuncTest extends SystemTestCase {
     createFile("dir/file.txt", "def");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "def");
+    assertThat(artifactTreeContentAsStrings("result")).containsExactly("dir/file.txt", "def");
   }
 }

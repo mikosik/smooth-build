@@ -1,7 +1,6 @@
 package org.smoothbuild.vm.bytecode.hashed;
 
 import java.io.IOException;
-
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 
 public class Helpers {

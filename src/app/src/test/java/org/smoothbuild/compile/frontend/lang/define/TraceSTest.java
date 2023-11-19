@@ -6,9 +6,8 @@ import static org.smoothbuild.testing.TestContext.location;
 import static org.smoothbuild.testing.TestContext.smoothFilePath;
 import static org.smoothbuild.testing.TestContext.traceS;
 
-import org.junit.jupiter.api.Test;
-
 import com.google.common.testing.EqualsTester;
+import org.junit.jupiter.api.Test;
 
 public class TraceSTest {
   @Test
@@ -24,10 +23,14 @@ public class TraceSTest {
 
   @Test
   public void to_string() {
-    var trace = traceS("first-name", location(smoothFilePath(), 17),
-        "second-name", location(importedFilePath(), 19));
+    var trace = traceS(
+        "first-name",
+        location(smoothFilePath(), 17),
+        "second-name",
+        location(importedFilePath(), 19));
     assertThat(trace.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             @ build.smooth:17    first-name
             @ imported.smooth:19 second-name""");
   }

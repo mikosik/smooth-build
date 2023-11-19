@@ -24,7 +24,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,7 +34,6 @@ import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.evaluate.task.Task;
-
 import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreatorTest extends TestContext {
@@ -45,8 +43,8 @@ public class MatcherCreatorTest extends TestContext {
     TaskMatcher matcher = MatcherCreator.createMatcher(expression);
 
     StringBuilder builder = new StringBuilder();
-    var tasks = list(
-        combineTask(), constTask(), invokeTask(), orderTask(), pickTask(), selectTask());
+    var tasks =
+        list(combineTask(), constTask(), invokeTask(), orderTask(), pickTask(), selectTask());
     for (Task task : tasks) {
       for (Space space : Space.values()) {
         for (Level level : levels()) {
@@ -72,7 +70,7 @@ public class MatcherCreatorTest extends TestContext {
     String failures = builder.toString();
     if (!failures.isEmpty()) {
       fail("Matcher built from parsed expression '" + expression + "' doesn't work as expected:\n"
-              + failures);
+          + failures);
     }
   }
 
@@ -90,7 +88,6 @@ public class MatcherCreatorTest extends TestContext {
         arguments("d", or(CALL, INFO)),
         arguments("none", NONE),
         arguments("n", NONE),
-
         arguments("fatal", FATAL),
         arguments("lf", FATAL),
         arguments("error", ERROR),
@@ -99,7 +96,6 @@ public class MatcherCreatorTest extends TestContext {
         arguments("lw", WARNING),
         arguments("info", INFO),
         arguments("li", INFO),
-
         arguments("call", CALL),
         arguments("c", CALL),
         arguments("tuple", COMBINE),
@@ -112,11 +108,9 @@ public class MatcherCreatorTest extends TestContext {
         arguments("p", PICK),
         arguments("select", SELECT),
         arguments("s", SELECT),
-
         arguments("   array", ORDER),
         arguments("array   ", ORDER),
         arguments("   array   ", ORDER),
-
         arguments("call & error", and(CALL, ERROR)),
         arguments("call | error", or(CALL, ERROR)),
         arguments("call | select | warning", or(CALL, or(SELECT, WARNING))),
@@ -124,8 +118,7 @@ public class MatcherCreatorTest extends TestContext {
         arguments("select | call & warning", or(and(CALL, WARNING), SELECT)),
         arguments("(call)", CALL),
         arguments("call & (select | warning)", and(CALL, or(SELECT, WARNING))),
-        arguments("(select | warning) & call", and(CALL, or(SELECT, WARNING)))
-    );
+        arguments("(select | warning) & call", and(CALL, or(SELECT, WARNING))));
   }
 
   @Nested
@@ -139,31 +132,22 @@ public class MatcherCreatorTest extends TestContext {
     @Test
     public void missing_closing_bracket() {
       assertCall(() -> MatcherCreator.createMatcher("(user"))
-          .throwsException(new TypeConversionException(unlines(
-              "missing ')' at '<EOF>'",
-              "(user",
-              "     ^"
-          )));
+          .throwsException(
+              new TypeConversionException(unlines("missing ')' at '<EOF>'", "(user", "     ^")));
     }
 
     @Test
     public void additional_closing_bracket() {
       assertCall(() -> MatcherCreator.createMatcher("(user))"))
-          .throwsException(new TypeConversionException(unlines(
-              "extraneous input ')' expecting <EOF>",
-              "(user))",
-              "      ^"
-          )));
+          .throwsException(new TypeConversionException(
+              unlines("extraneous input ')' expecting <EOF>", "(user))", "      ^")));
     }
 
     @Test
     public void missing_operator() {
       assertCall(() -> MatcherCreator.createMatcher("user warning"))
           .throwsException(new TypeConversionException(unlines(
-              "extraneous input 'warning' expecting <EOF>",
-              "user warning",
-              "     ^^^^^^^"
-          )));
+              "extraneous input 'warning' expecting <EOF>", "user warning", "     ^^^^^^^")));
     }
   }
 }

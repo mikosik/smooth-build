@@ -4,13 +4,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.TUPLE;
 import static org.smoothbuild.vm.bytecode.type.value.TypeNamesB.tupleTypeName;
 
+import io.vavr.collection.Array;
+import io.vavr.collection.Traversable;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-
-import io.vavr.collection.Array;
-import io.vavr.collection.Traversable;
 
 /**
  * This class is immutable.

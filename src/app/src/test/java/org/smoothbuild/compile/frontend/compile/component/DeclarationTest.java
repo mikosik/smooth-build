@@ -7,7 +7,6 @@ import static org.smoothbuild.testing.TestingModuleLoader.err;
 import static org.smoothbuild.testing.type.TestedTSF.TESTED_TYPES;
 
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -26,7 +25,8 @@ public class DeclarationTest extends TestContext {
     class _annotation {
       @Test
       public void with_unknown_name_causes_error() {
-        module("""
+        module(
+                """
             @UnknownAnnotation("value")
             Int myFunc() = 3;
             """)
@@ -38,34 +38,34 @@ public class DeclarationTest extends TestContext {
     class _struct {
       @Test
       public void declaring_empty_struct_is_allowed() {
-        module("MyStruct()")
-            .loadsWithSuccess();
+        module("MyStruct()").loadsWithSuccess();
       }
 
       @Test
       public void declaring_non_empty_struct_is_allowed() {
-        var code = """
+        var code =
+            """
             MyStruct(
               String fieldA,
               String fieldB
             )
             """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
 
       @Nested
       class _name {
         @Test
         public void that_is_normal_name() {
-          module("MyStruct()")
-              .loadsWithSuccess();
+          module("MyStruct()").loadsWithSuccess();
         }
 
         @Test
         public void that_is_illegal_fails() {
           module("MyStruct^()")
-              .loadsWithError(1, """
+              .loadsWithError(
+                  1,
+                  """
             token recognition error at: '^'
             MyStruct^()
                     ^""");
@@ -74,15 +74,19 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_starts_with_small_letter_fails() {
           module("myStruct()")
-              .loadsWithError(1, "`myStruct` is illegal struct name. "
-                  + "Struct name must start with uppercase letter.");
+              .loadsWithError(
+                  1,
+                  "`myStruct` is illegal struct name. "
+                      + "Struct name must start with uppercase letter.");
         }
 
         @Test
         public void that_is_single_capital_letter_fails() {
           module("A()")
-              .loadsWithError(1, "`A` is illegal struct name. "
-                  + "All-uppercase names are reserved for type variables in generic types.");
+              .loadsWithError(
+                  1,
+                  "`A` is illegal struct name. "
+                      + "All-uppercase names are reserved for type variables in generic types.");
         }
 
         @Test
@@ -94,8 +98,10 @@ public class DeclarationTest extends TestContext {
         @Test
         public void that_is_multiple_capital_letters_fails() {
           module("ABC()")
-              .loadsWithError(1, "`ABC` is illegal struct name. "
-                  + "All-uppercase names are reserved for type variables in generic types.");
+              .loadsWithError(
+                  1,
+                  "`ABC` is illegal struct name. "
+                      + "All-uppercase names are reserved for type variables in generic types.");
         }
       }
 
@@ -107,16 +113,17 @@ public class DeclarationTest extends TestContext {
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS testedT) {
             module(unlines(
-                testedT.typeDeclarationsAsString(),
-                "MyStruct(",
-                "  " + testedT.name() + " field,",
-                ")"))
+                    testedT.typeDeclarationsAsString(),
+                    "MyStruct(",
+                    "  " + testedT.name() + " field,",
+                    ")"))
                 .loadsWithSuccess();
           }
 
           @Test
           public void cannot_be_polytype() {
-            var code = """
+            var code =
+                """
                 MyStruct(
                  (B)->A field
                 )
@@ -130,7 +137,8 @@ public class DeclarationTest extends TestContext {
           public void cannot_be_polytype_regression_test() {
             // Verify that illegal field type does not cause error during processing of code that
             // references field's struct.
-            var code = """
+            var code =
+                """
                 MyStruct(
                   (B)->A field
                 )
@@ -144,7 +152,8 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void cannot_be_polytype_array() {
-            var code = """
+            var code =
+                """
                 MyStruct(
                   [A] field
                 )
@@ -156,53 +165,61 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void cannot_be_type_which_encloses_it() {
-            var code = """
+            var code =
+                """
                 MyStruct(
                   MyStruct field
                 )
                 """;
             module(code)
-                .loadsWithError("""
+                .loadsWithError(
+                    """
                   Type hierarchy contains cycle:
                   build.smooth:2: MyStruct ~> MyStruct""");
           }
 
           @Test
           public void cannot_be_array_type_which_elem_type_encloses_it() {
-            var code = """
+            var code =
+                """
                 MyStruct(
                   String firstField,
                   [MyStruct] field
                 )
                 """;
             module(code)
-                .loadsWithError("""
+                .loadsWithError(
+                    """
                   Type hierarchy contains cycle:
                   build.smooth:3: MyStruct ~> MyStruct""");
           }
 
           @Test
           public void cannot_declare_func_which_result_type_encloses_it() {
-            var code = """
+            var code =
+                """
                 MyStruct(
                   ()->MyStruct field
                 )
                 """;
             module(code)
-                .loadsWithError("""
+                .loadsWithError(
+                    """
                   Type hierarchy contains cycle:
                   build.smooth:2: MyStruct ~> MyStruct""");
           }
 
           @Test
           public void cannot_declare_func_which_param_type_encloses_it() {
-            var code = """
+            var code =
+                """
                 MyStruct(
                   (MyStruct)->Blob field
                 )
                 """;
             module(code)
-                .loadsWithError("""
+                .loadsWithError(
+                    """
                   Type hierarchy contains cycle:
                   build.smooth:2: MyStruct ~> MyStruct""");
           }
@@ -212,7 +229,8 @@ public class DeclarationTest extends TestContext {
         class _name {
           @Test
           public void that_is_legal() {
-            module("""
+            module(
+                    """
              MyStruct(
                String field
              )
@@ -222,12 +240,15 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void that_is_illegal_fails() {
-            module("""
+            module(
+                    """
              MyStruct(
                String field^
              )
              """)
-                .loadsWithError(2, """
+                .loadsWithError(
+                    2,
+                    """
               token recognition error at: '^'
                 String field^
                             ^""");
@@ -235,35 +256,39 @@ public class DeclarationTest extends TestContext {
 
           @Test
           public void that_starts_with_large_letter_fails() {
-            module("""
+            module(
+                    """
              MyStruct(
                String Field
              )
              """)
-                .loadsWithError(2,
+                .loadsWithError(
+                    2,
                     "`Field` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
           @Test
           public void that_is_single_large_letter_fails() {
-            module("""
+            module(
+                    """
              MyStruct(
                String A
              )
              """)
-                .loadsWithError(2,
-                    "`A` is illegal identifier name. Identifiers should start with lowercase.");
+                .loadsWithError(
+                    2, "`A` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
           @Test
           public void that_is_single_underscore_fails() {
-            module("""
+            module(
+                    """
              MyStruct(
                String _
              )
              """)
-                .loadsWithError(2,
-                    "`_` is illegal identifier name. `_` is reserved for future use.");
+                .loadsWithError(
+                    2, "`_` is illegal identifier name. `_` is reserved for future use.");
           }
         }
 
@@ -271,13 +296,16 @@ public class DeclarationTest extends TestContext {
         class _default_value {
           @Test
           public void is_illegal() {
-            module("""
+            module(
+                    """
              MyStruct(
                Int myField = 7
              )
              """)
-                .loadsWithError(2, "Struct field `myField` has default value. "
-                    + "Only function parameters can have default value.");
+                .loadsWithError(
+                    2,
+                    "Struct field `myField` has default value. "
+                        + "Only function parameters can have default value.");
           }
         }
       }
@@ -293,26 +321,24 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void cannot_have_only_comma() {
-          module(structDeclaration(","))
-              .loadsWithProblems();
+          module(structDeclaration(",")).loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          module(structDeclaration(", String field"))
-              .loadsWithProblems();
+          module(structDeclaration(", String field")).loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          module(structDeclaration("String field,,"))
-              .loadsWithProblems();
+          module(structDeclaration("String field,,")).loadsWithProblems();
         }
 
         private String structDeclaration(String string) {
           return """
               MyStruct( PLACEHOLDER )
-              """.replace("PLACEHOLDER", string);
+              """
+              .replace("PLACEHOLDER", string);
         }
       }
     }
@@ -325,18 +351,17 @@ public class DeclarationTest extends TestContext {
         public void can_be_omitted() {
           module("""
             myValue = "abc";
-            """)
-              .loadsWithSuccess();
+            """).loadsWithSuccess();
         }
 
         @ParameterizedTest
         @ArgumentsSource(TestedTypes.class)
         public void can_be_monotype(TestedTS type) {
           module(unlines(
-              "@Native(\"Impl.met\")",
-              type.name() + " myFunc();",
-              type.name() + " myValue = myFunc();",
-              type.typeDeclarationsAsString()))
+                  "@Native(\"Impl.met\")",
+                  type.name() + " myFunc();",
+                  type.name() + " myValue = myFunc();",
+                  type.typeDeclarationsAsString()))
               .loadsWithSuccess();
         }
 
@@ -345,29 +370,28 @@ public class DeclarationTest extends TestContext {
           var code = """
               [A] myValue = [];
           """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void can_be_polytype_assigned_from_func() {
-          var code = """
+          var code =
+              """
               A myId(A a) = a;
               (A)->A myValue = myId;
           """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void can_be_monotype_function_assigned_from_polytype_func() {
-          var code = """
+          var code =
+              """
               @Native("Impl.met")
               A myId(A param);
               (Int)->Int myValue = myId;
           """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
       }
 
@@ -377,8 +401,7 @@ public class DeclarationTest extends TestContext {
         public void that_is_legal() {
           module("""
              myValue = "abc";
-             """)
-              .loadsWithSuccess();
+             """).loadsWithSuccess();
         }
 
         @Test
@@ -386,7 +409,9 @@ public class DeclarationTest extends TestContext {
           module("""
              myValue^ = "abc";
              """)
-              .loadsWithError(1, """
+              .loadsWithError(
+                  1,
+                  """
             token recognition error at: '^'
             myValue^ = "abc";
                    ^""");
@@ -397,7 +422,8 @@ public class DeclarationTest extends TestContext {
           module("""
              MyValue = "abc";
              """)
-              .loadsWithError(1,
+              .loadsWithError(
+                  1,
                   "`MyValue` is illegal identifier name. Identifiers should start with lowercase.");
         }
 
@@ -406,8 +432,8 @@ public class DeclarationTest extends TestContext {
           module("""
              A = "abc";
              """)
-              .loadsWithError(1,
-                  "`A` is illegal identifier name. Identifiers should start with lowercase.");
+              .loadsWithError(
+                  1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
         }
 
         @Test
@@ -429,7 +455,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_bytecode_ann_and_body_fails() {
-        module("""
+        module(
+                """
             @Bytecode("implementation")
             String result = "abc";
             """)
@@ -447,7 +474,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_ann_and_body_fails() {
-        module("""
+        module(
+                """
             @Native("implementation")
             String result = "abc";
             """)
@@ -465,7 +493,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_impure_ann_and_body_fails() {
-        module("""
+        module(
+                """
             @NativeImpure("implementation")
             String result = "abc";
             """)
@@ -474,7 +503,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_native_impure_ann_and_without_body_fails() {
-        module("""
+        module(
+                """
             @NativeImpure("implementation")
             String result;
             """)
@@ -483,7 +513,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_unknown_ann_and_body_fails() {
-        module("""
+        module(
+                """
             @Unknown("implementation")
             String result = "abc";
             """)
@@ -492,7 +523,8 @@ public class DeclarationTest extends TestContext {
 
       @Test
       public void with_unknown_ann_and_without_body_fails() {
-        module("""
+        module(
+                """
             @Unknown("implementation")
             String result;
             """)
@@ -543,8 +575,8 @@ public class DeclarationTest extends TestContext {
           @Native("Impl.met")
           myFunc();
           """)
-            .loadsWithError(2,
-                "Function `myFunc` with @Native annotation must declare result type.");
+            .loadsWithError(
+                2, "Function `myFunc` with @Native annotation must declare result type.");
       }
 
       @Test
@@ -562,8 +594,8 @@ public class DeclarationTest extends TestContext {
           @Bytecode("Impl.met")
           myFunc();
           """)
-            .loadsWithError(2,
-                "Function `myFunc` with @Bytecode annotation must declare result type.");
+            .loadsWithError(
+                2, "Function `myFunc` with @Bytecode annotation must declare result type.");
       }
 
       @Nested
@@ -574,38 +606,35 @@ public class DeclarationTest extends TestContext {
           public void result_type_can_be_omitted() {
             module("""
             myFunc() = "abc";
-            """)
-                .loadsWithSuccess();
+            """).loadsWithSuccess();
           }
 
           @ParameterizedTest
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS type) {
             module(unlines(
-                "@Native(\"impl\")",
-                type.name() + " myFunc();",
-                type.declarationsAsString()))
+                    "@Native(\"impl\")", type.name() + " myFunc();", type.declarationsAsString()))
                 .loadsWithSuccess();
           }
 
           @Test
           public void can_contain_var_not_present_in_any_param_type() {
-            var code = """
+            var code =
+                """
                 @Native("Impl.met")
                 A myFunc(B b, C c);
                 """;
-            module(code)
-                .loadsWithSuccess();
+            module(code).loadsWithSuccess();
           }
 
           @Test
           public void can_contain_var_that_is_present_in_some_param_type() {
-            var code = """
+            var code =
+                """
                 @Native("Impl.met")
                 A myFunc(A a);
                 """;
-            module(code)
-                .loadsWithSuccess();
+            module(code).loadsWithSuccess();
           }
         }
       }
@@ -616,8 +645,7 @@ public class DeclarationTest extends TestContext {
         public void that_is_legal() {
           module("""
              myFunc() = "abc";
-             """)
-              .loadsWithSuccess();
+             """).loadsWithSuccess();
         }
 
         @Test
@@ -625,7 +653,9 @@ public class DeclarationTest extends TestContext {
           module("""
              myFunc^() = "abc";
              """)
-              .loadsWithError(1, """
+              .loadsWithError(
+                  1,
+                  """
             token recognition error at: '^'
             myFunc^() = "abc";
                   ^""");
@@ -636,7 +666,8 @@ public class DeclarationTest extends TestContext {
           module("""
              MyFunc() = "abc";
              """)
-              .loadsWithError(1,
+              .loadsWithError(
+                  1,
                   "`MyFunc` is illegal identifier name. Identifiers should start with lowercase.");
         }
 
@@ -645,8 +676,8 @@ public class DeclarationTest extends TestContext {
           module("""
              A() = "abc";
              """)
-              .loadsWithError(1,
-                  "`A` is illegal identifier name. Identifiers should start with lowercase.");
+              .loadsWithError(
+                  1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
         }
 
         @Test
@@ -666,30 +697,30 @@ public class DeclarationTest extends TestContext {
           @ArgumentsSource(TestedTypes.class)
           public void can_be_monotype(TestedTS type) {
             module(unlines(
-                "@Native(\"Impl.met\")",
-                "String myFunc(" + type.name() + " param);",
-                type.typeDeclarationsAsString()))
+                    "@Native(\"Impl.met\")",
+                    "String myFunc(" + type.name() + " param);",
+                    type.typeDeclarationsAsString()))
                 .loadsWithSuccess();
           }
 
           @Test
           public void can_be_polytype() {
-            var code = """
+            var code =
+                """
                 @Native("Impl.met")
                 String myFunc((A)->A f);
                 """;
-            module(code)
-                .loadsWithSuccess();
+            module(code).loadsWithSuccess();
           }
 
           @Test
           public void can_be_single_var_polytype() {
-            var code = """
+            var code =
+                """
                 @Native("Impl.met")
                 String myFunc((A)->Int f);
                 """;
-            module(code)
-                .loadsWithSuccess();
+            module(code).loadsWithSuccess();
           }
         }
 
@@ -708,7 +739,9 @@ public class DeclarationTest extends TestContext {
             module("""
              String myFunc(String name^);
              """)
-                .loadsWithError(1, """
+                .loadsWithError(
+                    1,
+                    """
               token recognition error at: '^'
               String myFunc(String name^);
                                        ^""");
@@ -719,7 +752,8 @@ public class DeclarationTest extends TestContext {
             module("""
              Int myFunc(Int Name) = 7;
              """)
-                .loadsWithError(1,
+                .loadsWithError(
+                    1,
                     "`Name` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
@@ -728,8 +762,8 @@ public class DeclarationTest extends TestContext {
             module("""
              Int myFunc(Int A) = 7;
              """)
-                .loadsWithError(1,
-                    "`A` is illegal identifier name. Identifiers should start with lowercase.");
+                .loadsWithError(
+                    1, "`A` is illegal identifier name. Identifiers should start with lowercase.");
           }
 
           @Test
@@ -744,7 +778,8 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void default_param_before_non_default_is_allowed() {
-          var code = """
+          var code =
+              """
               @Native("Impl.met")
               String myFunc(
                 String default = "value",
@@ -755,9 +790,7 @@ public class DeclarationTest extends TestContext {
               itemS(4, stringTS(), "nonDefault"));
           var ann = nativeAnnotationS(1, stringS(1, "Impl.met"));
           var myFunc = annotatedFuncS(2, ann, stringTS(), "myFunc", myFuncParams);
-          module(code)
-              .loadsWithSuccess()
-              .containsEvaluable(myFunc);
+          module(code).loadsWithSuccess().containsEvaluable(myFunc);
         }
 
         @Test
@@ -770,7 +803,8 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void default_arg_gets_converted_to_param_type() {
-          module("""
+          module(
+                  """
               [String] myFunc(String param1, [String] param2 = []) = param2;
               [String] result = myFunc("abc");
               """)
@@ -784,33 +818,34 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcDeclaration("String param1,"))
               .loadsWithSuccess()
-              .containsEvaluable(
-                  funcS(1, stringTS(), "myFunc", nlist(itemS(1, stringTS(), "param1")),
-                      stringS(1, "abc")));
+              .containsEvaluable(funcS(
+                  1,
+                  stringTS(),
+                  "myFunc",
+                  nlist(itemS(1, stringTS(), "param1")),
+                  stringS(1, "abc")));
         }
 
         @Test
         public void cannot_have_only_comma() {
-          module(funcDeclaration(","))
-              .loadsWithProblems();
+          module(funcDeclaration(",")).loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          module(funcDeclaration(",String string"))
-              .loadsWithProblems();
+          module(funcDeclaration(",String string")).loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          module(funcDeclaration("String string,,"))
-              .loadsWithProblems();
+          module(funcDeclaration("String string,,")).loadsWithProblems();
         }
 
         private String funcDeclaration(String string) {
           return """
               String myFunc(PLACEHOLDER) = "abc";
-              """.replace("PLACEHOLDER", string);
+              """
+              .replace("PLACEHOLDER", string);
         }
       }
     }
@@ -824,69 +859,70 @@ public class DeclarationTest extends TestContext {
       class _func {
         @Test
         public void passing_more_positional_args_than_params_causes_error() {
-          var code = """
+          var code =
+              """
               myIdentity(String param) = param;
               result = myIdentity("abc", "def");
               """;
-          module(code)
-              .loadsWithError(2, "Illegal call.");
+          module(code).loadsWithError(2, "Illegal call.");
         }
 
         @Test
         public void passing_less_positional_args_than_params_causes_error() {
-          var code = """
+          var code =
+              """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst("abc");
               """;
-          module(code)
-              .loadsWithError(2, "Parameter `param2` must be specified.");
+          module(code).loadsWithError(2, "Parameter `param2` must be specified.");
         }
 
         @Test
         public void passing_less_positional_args_than_params_causes_error_version_without_name() {
-          var code = """
+          var code =
+              """
               returnFirst(String param1, String param2) = param1;
               funcValue = returnFirst;
               result = funcValue("abc");
               """;
-          module(code)
-              .loadsWithError(3, "Illegal call.");
-//              .loadsWithError(3, "Too few parameters. Expected 2 found 1.");
+          module(code).loadsWithError(3, "Illegal call.");
+          //              .loadsWithError(3, "Too few parameters. Expected 2 found 1.");
         }
 
         @Test
         public void named_arg_which_doesnt_exist_causes_error() {
-          var code = """
+          var code =
+              """
               myIdentity(String param) = param;
               result = myIdentity(wrongName="abc");
               """;
-          module(code)
-              .loadsWithError(2, "Unknown parameter `wrongName`.");
+          module(code).loadsWithError(2, "Unknown parameter `wrongName`.");
         }
 
         @Test
         public void named_args_can_be_passed_in_the_same_order_as_params() {
-          var code = """
+          var code =
+              """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param1="abc", param2="def");
               """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void named_args_can_be_passed_in_different_order_than_params() {
-          var code = """
+          var code =
+              """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param2="def", param1="abc");
               """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void all_named_args_must_come_after_positional() {
-          var code = """
+          var code =
+              """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param2="def", "abc");
               """;
@@ -896,75 +932,75 @@ public class DeclarationTest extends TestContext {
 
         @Test
         public void assigning_arg_by_name_twice_causes_error() {
-          var code = """
+          var code =
+              """
               myIdentity(String param) = param;
               result = myIdentity(param="abc", param="abc");
               """;
-          module(code)
-              .loadsWithError(2, "`param` is already assigned.");
+          module(code).loadsWithError(2, "`param` is already assigned.");
         }
 
         @Test
         public void assigning_by_name_arg_that_is_assigned_by_position_causes_error() {
-          var code = """
+          var code =
+              """
               myIdentity(String param) = param;
               result = myIdentity("abc", param="abc");
               """;
-          module(code)
-              .loadsWithError(2, "`param` is already assigned.");
+          module(code).loadsWithError(2, "`param` is already assigned.");
         }
 
         @Test
         public void param_with_default_value_can_be_assigned_positionally() {
-          var code = """
+          var code =
+              """
               myIdentity(String param1="abc", String param2="def") = param1;
               result = myIdentity("abc", "def");
               """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void param_with_default_value_can_be_assigned_by_name() {
-          var code = """
+          var code =
+              """
             myIdentity(String param1="abc", String param2="def") = param1;
             result = myIdentity(param1="abc", param2="def");
             """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void lambda_parameter_names_are_always_stripped() {
-          var code = """
+          var code =
+              """
             myFunc(String param) = param;
             valueReferencingFunc = myFunc;
             result = ((Int int) -> int)(param=7);
             """;
-          module(code)
-              .loadsWithError(3, "Unknown parameter `param`.");
+          module(code).loadsWithError(3, "Unknown parameter `param`.");
         }
 
         @Test
         public void named_function_parameter_names_are_stripped_during_assignment() {
-          var code = """
+          var code =
+              """
             myFunc(String param) = param;
             valueReferencingFunc = myFunc;
             result = valueReferencingFunc(param="abc");
             """;
-          module(code)
-              .loadsWithError(3, "Unknown parameter `param`.");
+          module(code).loadsWithError(3, "Unknown parameter `param`.");
         }
 
         @Test
         public void named_function_parameter_default_values_are_stripped_during_assignment() {
-          var code = """
+          var code =
+              """
             myFunc(String param = "abc") = param;
             valueReferencingFunc = myFunc;
             result = valueReferencingFunc();
             """;
-          module(code)
-              .loadsWithError(3, "Illegal call.");
+          module(code).loadsWithError(3, "Illegal call.");
         }
       }
 
@@ -972,36 +1008,36 @@ public class DeclarationTest extends TestContext {
       class _ctor {
         @Test
         public void creating_empty_struct_instance_is_allowed() {
-          var code = """
+          var code =
+              """
               MyStruct()
               result = MyStruct();
               """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void creating_non_empty_struct_is_allowed() {
-          var code = """
+          var code =
+              """
               MyStruct(
                 String field,
               )
               result = MyStruct("abc");
               """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
         public void calling_ctor_without_all_params_causes_error() {
-          var code = """
+          var code =
+              """
               MyStruct(
                 String field,
               )
               result = MyStruct();
               """;
-          module(code)
-              .loadsWithError(4, "Parameter `field` must be specified.");
+          module(code).loadsWithError(4, "Parameter `field` must be specified.");
         }
       }
 
@@ -1011,33 +1047,31 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(funcCall("7,"))
               .loadsWithSuccess()
-              .containsEvaluable(valueS(2, intTS(), "result",
-                  callS(2, instantiateS(2, intIdFuncS()), intS(2, 7))));
+              .containsEvaluable(valueS(
+                  2, intTS(), "result", callS(2, instantiateS(2, intIdFuncS()), intS(2, 7))));
         }
 
         @Test
         public void cannot_have_only_comma() {
-          module(funcCall(","))
-              .loadsWithProblems();
+          module(funcCall(",")).loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          module(funcCall(",7"))
-              .loadsWithProblems();
+          module(funcCall(",7")).loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          module(funcCall("1,,"))
-              .loadsWithProblems();
+          module(funcCall("1,,")).loadsWithProblems();
         }
 
         private String funcCall(String string) {
           return """
               Int myIntId(Int i) = i;
               result = myIntId(PLACEHOLDER);
-              """.replace("PLACEHOLDER", string);
+              """
+              .replace("PLACEHOLDER", string);
         }
       }
     }
@@ -1049,8 +1083,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = () -> 7;
             """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
 
       @Test
@@ -1058,8 +1091,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = (Int int) -> 7;
             """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
 
       @Test
@@ -1067,8 +1099,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = (Int int, String string) -> 7;
             """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
 
       @Test
@@ -1076,8 +1107,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = (Int int = 8) -> 7;
             """;
-        module(code)
-            .loadsWithError(1, "Parameter `int` of lambda cannot have default value.");
+        module(code).loadsWithError(1, "Parameter `int` of lambda cannot have default value.");
       }
 
       @Test
@@ -1085,8 +1115,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = () -> (7 > []);
             """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
 
       @Test
@@ -1095,7 +1124,9 @@ public class DeclarationTest extends TestContext {
             result = () -> ;
             """;
         module(code)
-            .loadsWithError(1, """
+            .loadsWithError(
+                1,
+                """
                 mismatched input ';' expecting {'(', '[', NAME, INT, BLOB, STRING}
                 result = () -> ;
                                ^""");
@@ -1108,8 +1139,7 @@ public class DeclarationTest extends TestContext {
           var code = """
               result = (A a) -> 7;
               """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
@@ -1117,8 +1147,7 @@ public class DeclarationTest extends TestContext {
           var code = """
               result = (Int int = 7) -> 7;
               """;
-          module(code)
-              .loadsWithError(1, "Parameter `int` of lambda cannot have default value.");
+          module(code).loadsWithError(1, "Parameter `int` of lambda cannot have default value.");
         }
       }
 
@@ -1129,8 +1158,7 @@ public class DeclarationTest extends TestContext {
           var code = """
             result = (Int x,) -> 7;
             """;
-          module(code)
-              .loadsWithSuccess();
+          module(code).loadsWithSuccess();
         }
 
         @Test
@@ -1138,8 +1166,7 @@ public class DeclarationTest extends TestContext {
           var code = """
               result = (,) -> 7;
               """;
-          module(code)
-              .loadsWithProblems();
+          module(code).loadsWithProblems();
         }
 
         @Test
@@ -1147,8 +1174,7 @@ public class DeclarationTest extends TestContext {
           var code = """
               result = (,Int x) -> 7;
               """;
-          module(code)
-              .loadsWithProblems();
+          module(code).loadsWithProblems();
         }
 
         @Test
@@ -1156,8 +1182,7 @@ public class DeclarationTest extends TestContext {
           var code = """
               result = (Int x,,) -> 7;
               """;
-          module(code)
-              .loadsWithProblems();
+          module(code).loadsWithProblems();
         }
       }
     }
@@ -1167,36 +1192,31 @@ public class DeclarationTest extends TestContext {
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
       public void with_one_elem(String literal) {
-        module("result = [" + literal + "];")
-            .loadsWithSuccess();
+        module("result = [" + literal + "];").loadsWithSuccess();
       }
 
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
       public void with_two_elems(String literal) {
-        module("result = [" + literal + ", " + literal + "];")
-            .loadsWithSuccess();
+        module("result = [" + literal + ", " + literal + "];").loadsWithSuccess();
       }
 
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
       public void with_array_containing_one_elem(String literal) {
-        module("result = [[" + literal + "]];")
-            .loadsWithSuccess();
+        module("result = [[" + literal + "]];").loadsWithSuccess();
       }
 
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
       public void with_array_and_empty_array_elems(String literal) {
-        module("result = [[" + literal + "], []];")
-            .loadsWithSuccess();
+        module("result = [[" + literal + "], []];").loadsWithSuccess();
       }
 
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
       public void with_array_containing_two_elems(String literal) {
-        module("result = [[" + literal + ", " + literal + "]];")
-            .loadsWithSuccess();
+        module("result = [[" + literal + ", " + literal + "]];").loadsWithSuccess();
       }
 
       @Nested
@@ -1205,39 +1225,37 @@ public class DeclarationTest extends TestContext {
         public void can_have_trailing_comma() {
           module(arrayLiteral("0x07,"))
               .loadsWithSuccess()
-              .containsEvaluable(valueS(1, arrayTS(blobTS()), "result",
-                  orderS(1, blobTS(), blobS(1, 7))));
+              .containsEvaluable(
+                  valueS(1, arrayTS(blobTS()), "result", orderS(1, blobTS(), blobS(1, 7))));
         }
 
         @Test
         public void cannot_have_only_comma() {
-          module(arrayLiteral(","))
-              .loadsWithProblems();
+          module(arrayLiteral(",")).loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          module(arrayLiteral(",0x01"))
-              .loadsWithProblems();
+          module(arrayLiteral(",0x01")).loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          module(arrayLiteral("0x01,,"))
-              .loadsWithProblems();
+          module(arrayLiteral("0x01,,")).loadsWithProblems();
         }
 
         private String arrayLiteral(String string) {
           return """
               result = [PLACEHOLDER];
-              """.replace("PLACEHOLDER", string);
+              """
+              .replace("PLACEHOLDER", string);
         }
       }
 
-
       @Test
       public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
-        module("""
+        module(
+                """
             myFunc() = "abc";
             result = [
               myFunc(unknown1=""),
@@ -1245,9 +1263,7 @@ public class DeclarationTest extends TestContext {
             ];
             """)
             .loadsWith(
-                err(3, "Unknown parameter `unknown1`."),
-                err(4, "Unknown parameter `unknown2`.")
-            );
+                err(3, "Unknown parameter `unknown1`."), err(4, "Unknown parameter `unknown2`."));
       }
     }
 
@@ -1255,26 +1271,26 @@ public class DeclarationTest extends TestContext {
     class _select {
       @Test
       public void reading_field() {
-        var code = """
+        var code =
+            """
             MyStruct(
               String field,
             )
             String result = MyStruct("abc").field;
             """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
 
       @Test
       public void reading_field_that_does_not_exist_causes_error() {
-        var code = """
+        var code =
+            """
             MyStruct(
               String field,
             )
             result = MyStruct("abc").otherField;
             """;
-        module(code)
-            .loadsWithError(4, "Unknown field `otherField`.");
+        module(code).loadsWithError(4, "Unknown field `otherField`.");
       }
     }
 
@@ -1283,25 +1299,25 @@ public class DeclarationTest extends TestContext {
       @Nested
       class _declaring_blob_literal {
         @ParameterizedTest
-        @ValueSource(strings = {
-            "0x",
-            "0x12",
-            "0x1234",
-            "0x12345678",
-            "0xabcdef",
-            "0xABCDEF",
-            "0xabcdefABCDEF"})
+        @ValueSource(
+            strings = {
+              "0x",
+              "0x12",
+              "0x1234",
+              "0x12345678",
+              "0xabcdef",
+              "0xABCDEF",
+              "0xabcdefABCDEF"
+            })
         public void is_legal(String literal) {
-          module("result = " + literal + ";")
-              .loadsWithSuccess();
+          module("result = " + literal + ";").loadsWithSuccess();
         }
 
         @Nested
         class _causes_error_when {
           @Test
           public void has_only_one_digit() {
-            module("result = 0x1;")
-                .loadsWithError(1, "Illegal Blob literal: Digits count is odd.");
+            module("result = 0x1;").loadsWithError(1, "Illegal Blob literal: Digits count is odd.");
           }
 
           @Test
@@ -1313,7 +1329,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void has_non_digit_character() {
             module("result = 0xGG;")
-                .loadsWithError(1, """
+                .loadsWithError(
+                    1,
+                    """
               extraneous input 'GG' expecting ';'
               result = 0xGG;
                          ^^""");
@@ -1324,35 +1342,29 @@ public class DeclarationTest extends TestContext {
       @Nested
       class _declaring_int_literal {
         @ParameterizedTest
-        @ValueSource(strings = {
-            "0",
-            "12",
-            "123",
-            "1234",
-            "123456789",
-            "-1",
-            "-2",
-            "-10",
-            "-123456789",
-        })
+        @ValueSource(
+            strings = {
+              "0",
+              "12",
+              "123",
+              "1234",
+              "123456789",
+              "-1",
+              "-2",
+              "-10",
+              "-123456789",
+            })
         public void is_legal(String literal) {
-          module("result = " + literal + ";")
-              .loadsWithSuccess();
+          module("result = " + literal + ";").loadsWithSuccess();
         }
-
 
         @Nested
         class _causes_error_when {
           @ParameterizedTest
-          @ValueSource(strings = {
-              "00",
-              "01",
-              "001",
-              "-0",
-              "-00",
-              "-01",
-              "-001",
-          })
+          @ValueSource(
+              strings = {
+                "00", "01", "001", "-0", "-00", "-01", "-001",
+              })
           public void has_leading_zeros(String literal) {
             module("result = " + literal + ";")
                 .loadsWithError(1, "Illegal Int literal: `" + literal + "`.");
@@ -1361,7 +1373,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void has_two_minus_signs() {
             module("result = --1;")
-                .loadsWithError(1, """
+                .loadsWithError(
+                    1,
+                    """
                     token recognition error at: '--'
                     result = --1;
                              ^""");
@@ -1370,7 +1384,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void has_space_inside() {
             module("result = 12 3;")
-                .loadsWithError(1, """
+                .loadsWithError(
+                    1,
+                    """
                   extraneous input '3' expecting ';'
                   result = 12 3;
                               ^""");
@@ -1379,7 +1395,9 @@ public class DeclarationTest extends TestContext {
           @Test
           public void has_space_after_minus_sign() {
             module("result = - 123;")
-                .loadsWithError(1, """
+                .loadsWithError(
+                    1,
+                    """
                   token recognition error at: '- '
                   result = - 123;
                            ^""");
@@ -1390,26 +1408,26 @@ public class DeclarationTest extends TestContext {
       @Nested
       class _declaring_string_literal {
         @ParameterizedTest
-        @ValueSource(strings = {
-            "",
-            "abc",
-            "abcdefghijklmnopqrstuvwxyz",
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            "0123456789",  // digits
-            "abc←",        // unicode character
-            "#",           // smooth language comment opening character
-            "'",           // single quote
-            "\\\\",        // escaped backslash
-            "\\t",         // escaped tab
-            "\\b",         // escaped backspace
-            "\\n",         // escaped new line
-            "\\r",         // escaped carriage return
-            "\\f",         // escaped form feed
-            "\\\""         // escaped double quotes
-        })
+        @ValueSource(
+            strings = {
+              "",
+              "abc",
+              "abcdefghijklmnopqrstuvwxyz",
+              "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+              "0123456789", // digits
+              "abc←", // unicode character
+              "#", // smooth language comment opening character
+              "'", // single quote
+              "\\\\", // escaped backslash
+              "\\t", // escaped tab
+              "\\b", // escaped backspace
+              "\\n", // escaped new line
+              "\\r", // escaped carriage return
+              "\\f", // escaped form feed
+              "\\\"" // escaped double quotes
+            })
         public void is_legal(String literal) {
-          module("result = \"" + literal + "\";")
-              .loadsWithSuccess();
+          module("result = \"" + literal + "\";").loadsWithSuccess();
         }
 
         @Nested
@@ -1418,8 +1436,7 @@ public class DeclarationTest extends TestContext {
           public void has_no_closing_quote() {
             module("""
              result = "abc;
-             """)
-                .loadsWithProblems();
+             """).loadsWithProblems();
           }
 
           @Test
@@ -1436,9 +1453,11 @@ public class DeclarationTest extends TestContext {
             module("""
              result = "\\A";
              """)
-                .loadsWithError(1, "Illegal String literal: "
-                    + "Illegal escape sequence at char index = 1. "
-                    + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
+                .loadsWithError(
+                    1,
+                    "Illegal String literal: "
+                        + "Illegal escape sequence at char index = 1. "
+                        + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
           }
 
           @Test
@@ -1447,8 +1466,10 @@ public class DeclarationTest extends TestContext {
                 result = "\\";
                 """;
             module(code)
-                .loadsWithError(1, "Illegal String literal: "
-                    + "Missing escape code after backslash \\ at char index = 0.");
+                .loadsWithError(
+                    1,
+                    "Illegal String literal: "
+                        + "Missing escape code after backslash \\ at char index = 0.");
           }
         }
       }
@@ -1459,13 +1480,16 @@ public class DeclarationTest extends TestContext {
         class _causes_error_when {
           @Test
           public void path_has_illegal_escape_seq() {
-            var module = """
+            var module =
+                """
                 @Native("\\A")
                 String myFunc();
                 """;
-            var error = err(1, "Illegal String literal: "
-                + "Illegal escape sequence at char index = 1. "
-                + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
+            var error = err(
+                1,
+                "Illegal String literal: "
+                    + "Illegal escape sequence at char index = 1. "
+                    + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
 
             module(module).loadsWith(error);
           }
@@ -1475,8 +1499,10 @@ public class DeclarationTest extends TestContext {
             var module = """
                 @Native("\\")
                 String myFunc();""";
-            var error = err(1, "Illegal String literal:"
-                + " Missing escape code after backslash \\ at char index = 0.");
+            var error = err(
+                1,
+                "Illegal String literal:"
+                    + " Missing escape code after backslash \\ at char index = 0.");
 
             module(module).loadsWith(error);
           }
@@ -1489,14 +1515,15 @@ public class DeclarationTest extends TestContext {
       @ParameterizedTest
       @ArgumentsSource(Literals.class)
       public void with_literal(String literal) {
-        module("result = (" + literal + ");")
-            .loadsWithSuccess();
+        module("result = (" + literal + ");").loadsWithSuccess();
       }
 
       @Test
       public void with_additional_comma() {
         module("result = (7, );")
-            .loadsWithError(1, """
+            .loadsWithError(
+                1,
+                """
                 extraneous input ',' expecting ')'
                 result = (7, );
                            ^""");
@@ -1507,15 +1534,15 @@ public class DeclarationTest extends TestContext {
     class _piped_value_consumption {
       @Test
       public void not_consumed_by_select() {
-        var code = """
+        var code =
+            """
             MyStruct(
               String myField
             )
             myValue = myStruct("def");
             result = "abc" > myValue.myField;
             """;
-        module(code)
-            .loadsWithError(5, "Piped value is not consumed.");
+        module(code).loadsWithError(5, "Piped value is not consumed.");
       }
 
       @Test
@@ -1523,8 +1550,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = "abc" > 7;
             """;
-        module(code)
-            .loadsWithError(1, "Piped value is not consumed.");
+        module(code).loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
@@ -1532,8 +1558,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = "abc" > "def";
             """;
-        module(code)
-            .loadsWithError(1, "Piped value is not consumed.");
+        module(code).loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
@@ -1541,18 +1566,17 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = "abc" > 0xAA;
             """;
-        module(code)
-            .loadsWithError(1, "Piped value is not consumed.");
+        module(code).loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
       public void not_consumed_by_value_ref() {
-        var code = """
+        var code =
+            """
             myValue = 7;
             result = "abc" > myValue;
             """;
-        module(code)
-            .loadsWithError(2, "Piped value is not consumed.");
+        module(code).loadsWithError(2, "Piped value is not consumed.");
       }
 
       @Test
@@ -1560,8 +1584,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = 7 > () -> [];
             """;
-        module(code)
-            .loadsWithError(1, "Piped value is not consumed.");
+        module(code).loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
@@ -1569,8 +1592,7 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = "abc" > (7);
             """;
-        module(code)
-            .loadsWithError(1, "Piped value is not consumed.");
+        module(code).loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
@@ -1578,24 +1600,24 @@ public class DeclarationTest extends TestContext {
         var code = """
             result = "abc" > (7 > []);
             """;
-        module(code)
-            .loadsWithError(1, "Piped value is not consumed.");
+        module(code).loadsWithError(1, "Piped value is not consumed.");
       }
 
       @Test
       public void consumed_by_expression_after_parens_containing_inner_pipe() {
-        var code = """
+        var code =
+            """
             String stringId(String string) = string;
             A id(A a) = a;
             result = "abc" > (stringId > id())();
             """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
 
       @Test
       public void not_consumed_by_expression_after_parens_containing_inner_pipe() {
-        var code = """
+        var code =
+            """
             MyStruct(
               Int myField
             )
@@ -1603,8 +1625,7 @@ public class DeclarationTest extends TestContext {
             A id(A a) = a;
             result = "abc" > (v > id()).myField;
             """;
-        module(code)
-            .loadsWithError(6, "Piped value is not consumed.");
+        module(code).loadsWithError(6, "Piped value is not consumed.");
       }
     }
   }
@@ -1632,52 +1653,45 @@ public class DeclarationTest extends TestContext {
   private static class TestedTypes implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return TESTED_TYPES.stream()
-          .map(Arguments::of);
+      return TESTED_TYPES.stream().map(Arguments::of);
     }
   }
+
   private static class Literals implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return Stream.of(
-          arguments("[]"),
-          arguments("0x01"),
-          arguments("\"abc\""),
-          arguments("7")
-      );
+      return Stream.of(arguments("[]"), arguments("0x01"), arguments("\"abc\""), arguments("7"));
     }
   }
+
   @Nested
   class _func_type_literal {
     @Test
     public void cannot_have_trailing_comma() {
-      module(funcTDeclaration("String,"))
-          .loadsWithProblems();
+      module(funcTDeclaration("String,")).loadsWithProblems();
     }
 
     @Test
     public void cannot_have_only_comma() {
-      module(funcTDeclaration(","))
-          .loadsWithProblems();
+      module(funcTDeclaration(",")).loadsWithProblems();
     }
 
     @Test
     public void cannot_have_leading_comma() {
-      module(funcTDeclaration(",String"))
-          .loadsWithProblems();
+      module(funcTDeclaration(",String")).loadsWithProblems();
     }
 
     @Test
     public void cannot_have_two_trailing_commas() {
-      module(funcTDeclaration("String,,"))
-          .loadsWithProblems();
+      module(funcTDeclaration("String,,")).loadsWithProblems();
     }
 
     private String funcTDeclaration(String string) {
       return """
               @Native("Impl.met")
               (PLACEHOLDER)->Blob myFunc();
-              """.replace("PLACEHOLDER", string);
+              """
+          .replace("PLACEHOLDER", string);
     }
   }
 }

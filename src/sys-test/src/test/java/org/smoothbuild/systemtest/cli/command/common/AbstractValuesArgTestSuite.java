@@ -27,8 +27,7 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
             ::Evaluating
                + ERROR: Unknown value `unknownValue`.
                  Try 'smooth list' to see all available values that can be calculated.\
-            """
-    );
+            """);
   }
 
   @Test
@@ -63,12 +62,14 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
 
   @Test
   public void func_that_requires_args_prints_error() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             String testStringIdentity(String value) = value;
             """);
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
-    assertSysOutContains("""
+    assertSysOutContains(
+        """
         ::Evaluating
            + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.
         Summary
@@ -78,12 +79,14 @@ public abstract class AbstractValuesArgTestSuite extends SystemTestCase {
 
   @Test
   public void func_which_all_params_are_optional_prints_error() throws Exception {
-    createUserModule("""
+    createUserModule(
+        """
             String testStringIdentity(String value = "default") = value;
             """);
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
-    assertSysOutContains("""
+    assertSysOutContains(
+        """
         ::Evaluating
            + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.
         Summary

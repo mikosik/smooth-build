@@ -8,10 +8,9 @@ import static org.smoothbuild.compile.frontend.lang.base.location.Locations.unkn
 import static org.smoothbuild.testing.TestContext.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import com.google.common.testing.EqualsTester;
 
 public class LocationTest {
   @Nested
@@ -19,8 +18,7 @@ public class LocationTest {
     @Test
     public void line_returns_value_passed_during_construction() {
       var location = fileLocation(filePath("abc"), 13);
-      assertThat(location.line())
-          .isEqualTo(13);
+      assertThat(location.line()).isEqualTo(13);
     }
 
     @Test
@@ -38,8 +36,7 @@ public class LocationTest {
     @Test
     public void to_string() {
       var location = fileLocation(filePath("abc"), 2);
-      assertThat(location.toString())
-          .isEqualTo("abc:2");
+      assertThat(location.toString()).isEqualTo("abc:2");
     }
   }
 
@@ -59,8 +56,7 @@ public class LocationTest {
   class command_line {
     @Test
     public void to_string() {
-      assertThat(commandLineLocation().toString())
-          .isEqualTo("command line");
+      assertThat(commandLineLocation().toString()).isEqualTo("command line");
     }
   }
 
@@ -69,8 +65,7 @@ public class LocationTest {
     @Test
     public void to_string() {
       var location = internalLocation();
-      assertThat(location.toString())
-          .isEqualTo("internal");
+      assertThat(location.toString()).isEqualTo("internal");
     }
   }
 
@@ -79,8 +74,7 @@ public class LocationTest {
     @Test
     public void to_string() {
       var location = unknownLocation();
-      assertThat(location.toString())
-          .isEqualTo("???");
+      assertThat(location.toString()).isEqualTo("???");
     }
   }
 }

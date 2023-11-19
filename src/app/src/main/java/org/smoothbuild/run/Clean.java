@@ -6,18 +6,16 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PA
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Maybe.success;
 
+import io.vavr.Tuple0;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.function.Function;
-
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
-
-import io.vavr.Tuple0;
-import jakarta.inject.Inject;
 
 public class Clean implements Function<Tuple0, Maybe<String>> {
   private final FileSystem fileSystem;

@@ -4,6 +4,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Collections.synchronizedSet;
 
+import com.google.common.collect.ImmutableSet;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,10 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
-
 import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.ImmutableSet;
 
 public class AtomicBigIntegerTest {
   @Test
@@ -50,13 +48,14 @@ public class AtomicBigIntegerTest {
   }
 
   private static ImmutableSet<BigInteger> setOfIntegersFromOneTo(int max) {
-    return IntStream.rangeClosed(1, max)
-        .mapToObj(BigInteger::valueOf)
-        .collect(toImmutableSet());
+    return IntStream.rangeClosed(1, max).mapToObj(BigInteger::valueOf).collect(toImmutableSet());
   }
 
-  private static void fetchNumbers(CountDownLatch startThreadLatch, AtomicBigInteger atomicBigInteger,
-      Set<BigInteger> allNumbers, int size) {
+  private static void fetchNumbers(
+      CountDownLatch startThreadLatch,
+      AtomicBigInteger atomicBigInteger,
+      Set<BigInteger> allNumbers,
+      int size) {
     try {
       startThreadLatch.await();
     } catch (InterruptedException e) {

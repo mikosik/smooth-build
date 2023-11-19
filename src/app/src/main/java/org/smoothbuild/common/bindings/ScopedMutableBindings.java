@@ -1,7 +1,6 @@
 package org.smoothbuild.common.bindings;
 
-public final class ScopedMutableBindings<E>
-    extends ScopedBindings<E>
+public final class ScopedMutableBindings<E> extends ScopedBindings<E>
     implements MutableBindings<E> {
   ScopedMutableBindings(Bindings<? extends E> outerScopeBindings) {
     super(outerScopeBindings, new FlatMutableBindings<>());

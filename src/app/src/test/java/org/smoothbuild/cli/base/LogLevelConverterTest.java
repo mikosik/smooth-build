@@ -8,7 +8,6 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 
 import java.util.stream.Stream;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,8 +18,7 @@ public class LogLevelConverterTest {
   @MethodSource("conversions")
   public void converter(String value, Level expectedLevel) {
     LogLevelConverter converter = new LogLevelConverter();
-    assertThat(converter.convert(value))
-        .isEqualTo(expectedLevel);
+    assertThat(converter.convert(value)).isEqualTo(expectedLevel);
   }
 
   public static Stream<Arguments> conversions() {
@@ -32,7 +30,6 @@ public class LogLevelConverterTest {
         arguments("w", WARNING),
         arguments("warning", WARNING),
         arguments("i", INFO),
-        arguments("info", INFO)
-    );
+        arguments("info", INFO));
   }
 }

@@ -7,6 +7,8 @@ import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.common.collect.Sets.union;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,11 +18,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
-
 import org.smoothbuild.common.collect.Sets;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
 
 public final class VarSetS implements Set<VarS> {
   private final ImmutableSortedSet<VarS> elements;
@@ -30,9 +28,7 @@ public final class VarSetS implements Set<VarS> {
   }
 
   public static VarSetS varSetS(Collection<? extends TypeS> types) {
-    return types.stream()
-        .flatMap(t -> t.vars().stream())
-        .collect(toVarSetS());
+    return types.stream().flatMap(t -> t.vars().stream()).collect(toVarSetS());
   }
 
   private VarSetS(Set<VarS> elements) {
@@ -44,15 +40,11 @@ public final class VarSetS implements Set<VarS> {
   }
 
   public <T> Set<T> map(Function<? super VarS, T> filter) {
-    return stream()
-        .map(filter)
-        .collect(toImmutableSet());
+    return stream().map(filter).collect(toImmutableSet());
   }
 
   public VarSetS filter(Predicate<? super VarS> predicate) {
-    return stream()
-        .filter(predicate)
-        .collect(toVarSetS());
+    return stream().filter(predicate).collect(toVarSetS());
   }
 
   public ImmutableList<VarS> asList() {
@@ -148,8 +140,7 @@ public final class VarSetS implements Set<VarS> {
 
   @Override
   public boolean equals(Object obj) {
-    return obj instanceof VarSetS that
-        && this.elements.equals(that.elements);
+    return obj instanceof VarSetS that && this.elements.equals(that.elements);
   }
 
   @Override
@@ -162,4 +153,3 @@ public final class VarSetS implements Set<VarS> {
     return "<" + joinWithCommaToString(elements, VarS::name) + ">";
   }
 }
-

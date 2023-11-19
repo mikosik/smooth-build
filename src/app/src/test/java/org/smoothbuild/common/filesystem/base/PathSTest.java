@@ -6,16 +6,14 @@ import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.testing.EqualsTester;
+import com.google.common.truth.Truth;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import com.google.common.testing.EqualsTester;
-import com.google.common.truth.Truth;
 
 public class PathSTest {
   @ParameterizedTest
@@ -24,8 +22,7 @@ public class PathSTest {
     if (isValid) {
       PathS.path(value);
     } else {
-      assertCall(() -> PathS.path(value))
-          .throwsException(IllegalPathException.class);
+      assertCall(() -> PathS.path(value)).throwsException(IllegalPathException.class);
     }
   }
 
@@ -33,34 +30,29 @@ public class PathSTest {
   @MethodSource("paths")
   public void fail_if_not_legal_path(String value, boolean isValid) {
     if (!isValid) {
-      assertCall(() -> PathS.failIfNotLegalPath(value))
-          .throwsException(IllegalPathException.class);
+      assertCall(() -> PathS.failIfNotLegalPath(value)).throwsException(IllegalPathException.class);
     }
   }
 
   @Test
   public void single_dot_string_path_is_root() {
-    Truth.assertThat(PathS.path(".").isRoot())
-        .isTrue();
+    Truth.assertThat(PathS.path(".").isRoot()).isTrue();
   }
 
   @Test
   public void simple_path_is_not_root() {
-    Truth.assertThat(PathS.path("file.txt").isRoot())
-        .isFalse();
+    Truth.assertThat(PathS.path("file.txt").isRoot()).isFalse();
   }
 
   @Test
   public void parent_of_root_dir_throws_exception() {
-    assertCall(() -> PathS.root().parent())
-        .throwsException(IllegalArgumentException.class);
+    assertCall(() -> PathS.root().parent()).throwsException(IllegalArgumentException.class);
   }
 
   @ParameterizedTest
   @MethodSource("parentArguments")
   public void parent_of_normal_path(PathS path, PathS expectedParent) {
-    assertThat(path.parent())
-        .isEqualTo(expectedParent);
+    assertThat(path.parent()).isEqualTo(expectedParent);
   }
 
   public static Stream<Arguments> parentArguments() {
@@ -106,8 +98,7 @@ public class PathSTest {
   @ParameterizedTest
   @MethodSource("appendPart_cases")
   public void appendPart(String path, String part, String expected) {
-    Truth.assertThat(PathS.path(path).appendPart(part))
-        .isEqualTo(PathS.path(expected));
+    Truth.assertThat(PathS.path(path).appendPart(part)).isEqualTo(PathS.path(expected));
   }
 
   public static Stream<Arguments> appendPart_cases() {
@@ -117,8 +108,7 @@ public class PathSTest {
         arguments("abc/def", "xyz", "abc/def/xyz"),
         arguments("abc/def/ghi", "xyz", "abc/def/ghi/xyz"),
         arguments(" ", " ", " / "),
-        arguments(" / ", " ", " / / ")
-    );
+        arguments(" / ", " ", " / / "));
   }
 
   @ParameterizedTest
@@ -163,15 +153,13 @@ public class PathSTest {
         arguments(" / ", "."),
         arguments(" / ", ".."),
         arguments(" / ", " / "),
-        arguments(" / ", "abc/def")
-    );
+        arguments(" / ", "abc/def"));
   }
 
   @ParameterizedTest
   @MethodSource("changeExtension_cases")
   public void changeExtension(String path, String extension, String expected) {
-    Truth.assertThat(PathS.path(path).changeExtension(extension))
-        .isEqualTo(PathS.path(expected));
+    Truth.assertThat(PathS.path(path).changeExtension(extension)).isEqualTo(PathS.path(expected));
   }
 
   public static Stream<Arguments> changeExtension_cases() {
@@ -179,15 +167,12 @@ public class PathSTest {
         arguments("abc", "csv", "abc.csv"),
         arguments("path/abc", "csv", "path/abc.csv"),
         arguments("long/path/abc", "csv", "long/path/abc.csv"),
-
         arguments("abc.txt", "csv", "abc.csv"),
         arguments("path/abc.txt", "csv", "path/abc.csv"),
         arguments("long/path/abc.txt", "csv", "long/path/abc.csv"),
-
         arguments("abc.txt", "", "abc"),
         arguments("path/abc.txt", "", "path/abc"),
-        arguments("long/path/abc.txt", "", "long/path/abc")
-    );
+        arguments("long/path/abc.txt", "", "long/path/abc"));
   }
 
   @ParameterizedTest
@@ -201,7 +186,6 @@ public class PathSTest {
     return Stream.of(
         arguments(".", ""),
         arguments(".", "csv"),
-
         arguments(".", "."),
         arguments(".", ".."),
         arguments(".", "/"),
@@ -210,7 +194,6 @@ public class PathSTest {
         arguments(".", "xyz/uvw"),
         arguments(".", " / "),
         arguments(".", "xyz/uvw/rst"),
-
         arguments("abc", "."),
         arguments("abc", ".."),
         arguments("abc", "/"),
@@ -226,16 +209,14 @@ public class PathSTest {
         arguments("abc/def", "/xyz"),
         arguments("abc/def", "xyz/uvw"),
         arguments("abc/def", " / "),
-        arguments("abc/def", "xyz/uvw/rst")
-    );
+        arguments("abc/def", "xyz/uvw/rst"));
   }
 
   @ParameterizedTest
   @MethodSource("parts_cases")
   public void parts(String path, List<String> expectedParts) {
     List<PathS> actualParts = PathS.path(path).parts();
-    assertThat(map(actualParts, PathS::toString))
-        .isEqualTo(expectedParts);
+    assertThat(map(actualParts, PathS::toString)).isEqualTo(expectedParts);
   }
 
   public static Stream<Arguments> parts_cases() {
@@ -246,21 +227,18 @@ public class PathSTest {
         arguments("abc/def/ghi", list("abc", "def", "ghi")),
         arguments(" ", list(" ")),
         arguments(" / ", list(" ", " ")),
-        arguments(" / / ", list(" ", " ", " "))
-    );
+        arguments(" / / ", list(" ", " ", " ")));
   }
 
   @Test
   public void last_part_of_root_dir_throws_exception() {
-    assertCall(() -> PathS.root().lastPart())
-        .throwsException(IllegalArgumentException.class);
+    assertCall(() -> PathS.root().lastPart()).throwsException(IllegalArgumentException.class);
   }
 
   @ParameterizedTest
   @MethodSource("lastPart_cases")
   public void lastPart(String path, String expectedLastPart) {
-    Truth.assertThat(PathS.path(path).lastPart())
-        .isEqualTo(PathS.path(expectedLastPart));
+    Truth.assertThat(PathS.path(path).lastPart()).isEqualTo(PathS.path(expectedLastPart));
   }
 
   public static Stream<Arguments> lastPart_cases() {
@@ -274,15 +252,13 @@ public class PathSTest {
 
   @Test
   public void first_part_of_root_dir_throws_exception() {
-    assertCall(() -> PathS.root().firstPart())
-        .throwsException(IllegalArgumentException.class);
+    assertCall(() -> PathS.root().firstPart()).throwsException(IllegalArgumentException.class);
   }
 
   @ParameterizedTest
   @MethodSource("firstPart_cases")
   public void firstPart(String path, String expectedfirstPart) {
-    Truth.assertThat(PathS.path(path).firstPart())
-        .isEqualTo(PathS.path(expectedfirstPart));
+    Truth.assertThat(PathS.path(path).firstPart()).isEqualTo(PathS.path(expectedfirstPart));
   }
 
   public static Stream<Arguments> firstPart_cases() {
@@ -297,8 +273,7 @@ public class PathSTest {
   @ParameterizedTest
   @MethodSource("startWith_cases")
   public void startsWith(String path, String head, boolean expected) {
-    Truth.assertThat(PathS.path(path).startsWith(PathS.path(head)))
-        .isEqualTo(expected);
+    Truth.assertThat(PathS.path(path).startsWith(PathS.path(head))).isEqualTo(expected);
   }
 
   public static Stream<Arguments> startWith_cases() {
@@ -341,8 +316,7 @@ public class PathSTest {
   @MethodSource("paths")
   public void test_to_string(String value, boolean isValid) {
     if (isValid) {
-      Truth.assertThat(PathS.path(value).toString())
-          .isEqualTo(value);
+      Truth.assertThat(PathS.path(value).toString()).isEqualTo(value);
     }
   }
 
@@ -372,144 +346,110 @@ public class PathSTest {
         arguments("...", true),
         arguments("../", false),
         arguments("..a", true),
-
         arguments("./.", false),
         arguments(".//", false),
         arguments("./a", false),
-
         arguments(".a.", true),
         arguments(".a/", false),
         arguments(".aa", true),
-
         arguments("/..", false),
         arguments("/./", false),
         arguments("/.a", false),
-
         arguments("//.", false),
         arguments("///", false),
         arguments("//a", false),
-
         arguments("/a.", false),
         arguments("/a/", false),
         arguments("/aa", false),
-
         arguments("a..", true),
         arguments("a./", false),
         arguments("a.a", true),
-
         arguments("a/.", false),
         arguments("a//", false),
         arguments("a/a", true),
-
         arguments("aa.", true),
         arguments("aa/", false),
         arguments("aaa", true),
 
-//     four characters long
+        //     four characters long
         arguments("....", true),
         arguments(".../", false),
         arguments("...a", true),
-
         arguments("../.", false),
         arguments("..//", false),
         arguments("../a", false),
-
         arguments("..a.", true),
         arguments("..a/", false),
         arguments("..aa", true),
-
         arguments("./..", false),
         arguments("././", false),
         arguments("./.a", false),
-
         arguments(".//.", false),
         arguments(".///", false),
         arguments(".//a", false),
-
         arguments("./a.", false),
         arguments("./a/", false),
         arguments("./aa", false),
-
         arguments(".a..", true),
         arguments(".a./", false),
         arguments(".a.a", true),
-
         arguments(".a/.", false),
         arguments(".a//", false),
         arguments(".a/a", true),
-
         arguments(".aa.", true),
         arguments(".aa/", false),
         arguments(".aaa", true),
-
         arguments("/...", false),
         arguments("/../", false),
         arguments("/..a", false),
-
         arguments("/./.", false),
         arguments("/.//", false),
         arguments("/./a", false),
-
         arguments("/.a.", false),
         arguments("/.a/", false),
         arguments("/.aa", false),
-
         arguments("//./", false),
         arguments("//./", false),
         arguments("//.a", false),
-
         arguments("///.", false),
         arguments("////", false),
         arguments("///a", false),
-
         arguments("//a.", false),
         arguments("//a/", false),
         arguments("//aa", false),
-
         arguments("/a..", false),
         arguments("/a./", false),
         arguments("/a.a", false),
-
         arguments("/a/.", false),
         arguments("/a//", false),
         arguments("/a/a", false),
-
         arguments("/aa.", false),
         arguments("/aa/", false),
         arguments("/aaa", false),
-
         arguments("a...", true),
         arguments("a../", false),
         arguments("a..a", true),
-
         arguments("a./.", false),
         arguments("a.//", false),
         arguments("a./a", true),
-
         arguments("a.a.", true),
         arguments("a.a/", false),
         arguments("a.aa", true),
-
         arguments("a/..", false),
         arguments("a/./", false),
         arguments("a/.a", true),
-
         arguments("a//.", false),
         arguments("a///", false),
         arguments("a//a", false),
-
         arguments("a/a.", true),
         arguments("a/a/", false),
         arguments("a/aa", true),
-
         arguments("aa..", true),
         arguments("aa./", false),
         arguments("aa.a", true),
-
         arguments("aa/.", false),
         arguments("aa//", false),
         arguments("aa/a", true),
-
         arguments("aaa.", true),
         arguments("aaa/", false),
         arguments("aaaa", true),
@@ -524,7 +464,6 @@ public class PathSTest {
         // I cannot see any good reason for forbidding them.
         arguments(".../abc", true),
         arguments("abc/...", true),
-        arguments("abc/.../def", true)
-    );
+        arguments("abc/.../def", true));
   }
 }

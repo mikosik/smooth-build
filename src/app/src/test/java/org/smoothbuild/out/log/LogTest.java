@@ -2,9 +2,8 @@ package org.smoothbuild.out.log;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import org.junit.jupiter.api.Test;
-
 import com.google.common.testing.EqualsTester;
+import org.junit.jupiter.api.Test;
 
 public class LogTest {
   @Test
@@ -23,7 +22,6 @@ public class LogTest {
 
   @Test
   void to_string() {
-    assertThat(new Log(Level.ERROR, "my message").toString())
-        .isEqualTo("Log{ERROR, 'my message'}");
+    assertThat(new Log(Level.ERROR, "my message").toString()).isEqualTo("Log{ERROR, 'my message'}");
   }
 }

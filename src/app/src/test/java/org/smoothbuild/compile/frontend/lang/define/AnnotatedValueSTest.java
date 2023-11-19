@@ -9,10 +9,11 @@ public class AnnotatedValueSTest extends TestContext {
   @Test
   public void to_string() {
     var annotationS = new AnnotationS("myAnnotation", stringS(7, "myPath"), location(17));
-    var annotatedValueS = new AnnotatedValueS(
-        annotationS, schemaS(stringTS()), "myVal", location(7));
+    var annotatedValueS =
+        new AnnotatedValueS(annotationS, schemaS(stringTS()), "myVal", location(7));
     assertThat(annotatedValueS.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             AnnotatedValue(
               AnnotationS(
                 name = myAnnotation

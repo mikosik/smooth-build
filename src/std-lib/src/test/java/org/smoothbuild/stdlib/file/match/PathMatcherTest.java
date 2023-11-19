@@ -6,7 +6,6 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.stream.Stream;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,8 +15,7 @@ public class PathMatcherTest {
   @ParameterizedTest
   @MethodSource("data_set")
   public void test_matching(String pattern, PathS path, boolean expected) {
-    assertThat(new PathMatcher(pattern).test(path))
-        .isEqualTo(expected);
+    assertThat(new PathMatcher(pattern).test(path)).isEqualTo(expected);
   }
 
   public static Stream<Arguments> data_set() {
@@ -27,7 +25,6 @@ public class PathMatcherTest {
         arguments("abc", path("abcabc"), false),
         arguments("abc", path("abbc"), false),
         arguments("abc", path("abc/abc"), false),
-
         arguments("abc/def/ghi", path("abc/def/ghi"), true),
         arguments("abc/def/ghi", path("abcdefghi"), false),
         arguments("abc/def/ghi", path("abcdef/ghi"), false),
@@ -62,7 +59,6 @@ public class PathMatcherTest {
         arguments("[a]", path("a"), true),
         arguments("[a]", path("b"), false),
         arguments("[a]", path("aa"), false),
-
         arguments("[ab]", path("a"), true),
         arguments("[ab]", path("b"), true),
         arguments("[ab]", path("c"), false),
@@ -78,7 +74,6 @@ public class PathMatcherTest {
         arguments("[!a]", path("a"), false),
         arguments("[!a]", path("b"), true),
         arguments("[!a]", path("aa"), false),
-
         arguments("[!ab]", path("a"), false),
         arguments("[!ab]", path("b"), false),
         arguments("[!ab]", path("c"), true),
@@ -161,23 +156,15 @@ public class PathMatcherTest {
         // *
         arguments("*", path("abc"), true),
         arguments("*", path("abcghi"), true),
-
         arguments("*", path("abc/def"), false),
         arguments("*", path("abc/def/ghi"), false),
-
         arguments("*/abc/def", path("xxx/abc/def"), true),
-
         arguments("abc/def/*", path("abc/def/xxx"), true),
-
         arguments("*/abc/*", path("xxx/abc/yyy"), true),
-
         arguments("abc/*/def", path("abc/xxx/def"), true),
-
         arguments("*/*", path("abc/def"), true),
-
         arguments("abc*def", path("abcdef"), true),
         arguments("abc*def", path("abcxxxdef"), true),
-
         arguments("abc*def*ghi", path("abcdefghi"), true),
         arguments("abc*def*ghi", path("abcxxxdefghi"), true),
         arguments("abc*def*ghi", path("abcdefyyyghi"), true),
@@ -187,15 +174,11 @@ public class PathMatcherTest {
         arguments("**", path("abc"), true),
         arguments("**", path("abc/def"), true),
         arguments("**", path("abc/def/ghi"), true),
-
         arguments("**/abc", path("xxx/abc"), true),
         arguments("**/abc", path("xxx/yyy/abc"), true),
-
         arguments("**abc", path("abc"), true),
-
         arguments("abc/**", path("abc/xxx"), true),
         arguments("abc/**", path("abc/xxx/yyy"), true),
-
         arguments("**abc**", path("abc"), true),
         arguments("**abc**", path("xxxabc"), true),
         arguments("**abc**", path("xxx/abc"), true),
@@ -205,70 +188,52 @@ public class PathMatcherTest {
         arguments("**abc**", path("xxx/abcyyy"), true),
         arguments("**abc**", path("xxxabc/yyy"), true),
         arguments("**abc**", path("xxx/abc/yyy"), true),
-
         arguments("**/abc/**", path("xxx/abc/yyy"), true),
         arguments("**/abc/**", path("xxx/zzz/abc/yyy"), true),
-
         arguments("abc**def", path("abcdef"), true),
         arguments("abc**def", path("abcxxxdef"), true),
         arguments("abc**def", path("abc/def"), true),
         arguments("abc**def", path("abc/xxx/def"), true),
         arguments("abc**def", path("abc/xxx/yyy/def"), true),
-
         arguments("abc/**/def", path("abc/xxx/def"), true),
         arguments("abc/**/def", path("abc/xxx/yyy/def"), true),
         arguments("abc/**/def", path("abc/xxx/yyy/zzz/def"), true),
-
         arguments("abc/**/def", path("abc/abc/def"), true),
         arguments("abc/**/def", path("abc/def/def"), true),
         arguments("abc/**/def", path("abc/abc/def/def"), true),
         arguments("abc/**/def", path("abc/def/abc/def"), true),
-
-
         arguments("*/abc/def", path("abc/def"), false),
         arguments("*/abc/def", path("xxx/yyy/abc/def"), false),
         arguments("*/abc/def", path("abc/xxx/def"), false),
-
         arguments("abc/def/*", path("abc/def"), false),
         arguments("abc/def/*", path("abc/def/xxx/yyy"), false),
         arguments("abc/def/*", path("abc/xxx/def"), false),
-
         arguments("*/abc/*", path("abc"), false),
         arguments("*/abc/*", path("abc/yyy"), false),
         arguments("*/abc/*", path("xxx/abc"), false),
-
         arguments("*/abc/*", path("xxx/zzz/abc/yyy"), false),
         arguments("*/abc/*", path("xxx/abc/yyy/zzz"), false),
-
         arguments("*/abc/*", path("xxx/abcabc/yyy"), false),
         arguments("*/abc/*", path("xxx/abc/abc/yyy"), false),
-
         arguments("abc/*/def", path("abcdef"), false),
         arguments("abc/*/def", path("abc/def"), false),
         arguments("abc/*/def", path("abc/xxx/yyy/def"), false),
-
         arguments("*/*", path("abc"), false),
         arguments("*/*", path("abc/def/ghi"), false),
-
         arguments("abc*def", path("abc/def"), false),
         arguments("abc*def", path("abdef"), false),
         arguments("abc/xxx/def", path("abc/def"), false),
-
         arguments("abc*def*ghi", path("abc/def/ghi"), false),
         arguments("abc*def*ghi", path("abcdefgh"), false),
-
         arguments("**/abc", path("xxx/yyyabc"), false),
         arguments("**/abc", path("xxx/abc/xxx"), false),
-
         arguments("abc/**", path("abc"), false),
         arguments("abc/**", path("abcxxx/yyy"), false),
         arguments("abc/**", path("xxx/abc/xxx"), false),
-
         arguments("**/abc/**", path("abc/xxx"), false),
         arguments("**/abc/**", path("xxx/abc"), false),
         arguments("**/abc/**", path("xxx/yyy/abc"), false),
         arguments("**/abc/**", path("abc"), false),
-
         arguments("abc/**/def", path("abcdef"), false),
         arguments("abc/**/def", path("abc/def"), false),
         arguments("abc/**/def", path("abc/xxx/zzz"), false),
@@ -290,29 +255,23 @@ public class PathMatcherTest {
         arguments("a[/]b"),
         // groups cannot be nested
         arguments("{abc{d,f,g}}"),
-
         arguments(""),
-
         arguments("."),
         arguments("./"),
         arguments("/."),
         arguments("./."),
         arguments("././"),
-
         arguments("abc/"),
         arguments("abc/def/"),
         arguments("abc/def/ghi/"),
-
         arguments("./abc"),
         arguments("./abc/def"),
         arguments("./abc/def/ghi"),
         arguments("./abc/def/ghi/ijk"),
-
         arguments("abc/."),
         arguments("abc/def/."),
         arguments("abc/def/ghi/."),
         arguments("abc/def/ghi/ijk/."),
-
         arguments(".."),
         arguments("../"),
         arguments("./../"),
@@ -320,31 +279,25 @@ public class PathMatcherTest {
         arguments("abc/.."),
         arguments("abc/../def"),
         arguments("../.."),
-
         arguments("/"),
         arguments("//"),
         arguments("///"),
-
         arguments("/abc"),
         arguments("//abc"),
         arguments("///abc"),
-
         arguments("abc//"),
         arguments("abc///"),
-
         arguments("abc//def"),
         arguments("abc///def"),
-
         arguments("*/"),
         arguments("/*"),
-
         arguments("**/"),
         arguments("/**"));
 
-        // should be illegal but JDK implementation allows them
-        // double -
-        // arguments("a--b"),
-        // trailing -
-        // arguments("a-"),
+    // should be illegal but JDK implementation allows them
+    // double -
+    // arguments("a--b"),
+    // trailing -
+    // arguments("a-"),
   }
 }

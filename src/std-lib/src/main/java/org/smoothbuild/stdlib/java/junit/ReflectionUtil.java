@@ -9,14 +9,16 @@ public class ReflectionUtil {
   public static Object newInstance(Class<?> clazz) throws JunitException {
     try {
       return clazz.getDeclaredConstructor().newInstance();
-    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
+    } catch (InstantiationException
+        | IllegalAccessException
+        | NoSuchMethodException
         | InvocationTargetException e) {
       throw brokenJunitImplementation("Cannot instantiate " + clazz.getCanonicalName());
     }
   }
 
-  public static <T> T runReflexivelyAndCast(Class<T> resultType, Object object,
-      String method, Object... args) throws JunitException {
+  public static <T> T runReflexivelyAndCast(
+      Class<T> resultType, Object object, String method, Object... args) throws JunitException {
     Object result = runReflexively(object, method, args);
     if (resultType.isInstance(result)) {
       @SuppressWarnings("unchecked")
@@ -28,16 +30,11 @@ public class ReflectionUtil {
         + result.getClass().getCanonicalName());
   }
 
-  public static Object runReflexively(Object object, String method,
-      Object... args) throws JunitException {
+  public static Object runReflexively(Object object, String method, Object... args)
+      throws JunitException {
     try {
-      Class<?>[] paramTs = Arrays.stream(args)
-          .map(Object::getClass)
-          .toArray(Class<?>[]::new);
-      return object
-          .getClass()
-          .getMethod(method, paramTs)
-          .invoke(object, args);
+      Class<?>[] paramTs = Arrays.stream(args).map(Object::getClass).toArray(Class<?>[]::new);
+      return object.getClass().getMethod(method, paramTs).invoke(object, args);
     } catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
       throw brokenJunitImplementation(
           "Cannot invoke " + fullMethodName(object, method) + ": " + className(e) + " ", e);

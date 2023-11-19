@@ -24,9 +24,9 @@ import static org.smoothbuild.testing.TestContext.varC;
 import static org.smoothbuild.testing.TestContext.varS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.testing.EqualsTester;
 import java.util.List;
 import java.util.function.Function;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,50 +36,45 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 
-import com.google.common.testing.EqualsTester;
-
 public class TypeSTest {
   @Test
   public void verify_all_base_types_are_tested() {
-    assertThat(TypeFS.baseTs())
-        .hasSize(4);
+    assertThat(TypeFS.baseTs()).hasSize(4);
   }
 
   @ParameterizedTest
   @MethodSource("names")
   public void name(TypeS type, String name) {
-    assertThat(type.name())
-        .isEqualTo(name);
+    assertThat(type.name()).isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
   public void quoted_name(TypeS type, String name) {
-    assertThat(type.q())
-        .isEqualTo("`" + name + "`");
+    assertThat(type.q()).isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("to_string")
   public void to_string(TypeS type, String name) {
-    assertThat(type.toString())
-        .isEqualTo(name);
+    assertThat(type.toString()).isEqualTo(name);
   }
 
   public static List<Arguments> names() {
-    return concat(name_or_to_string(),
+    return concat(
+        name_or_to_string(),
         list(
             arguments(structTS("MyStruct", nlist()), "MyStruct"),
-            arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct")
-        ));
+            arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct")));
   }
 
   public static List<Arguments> to_string() {
-    return concat(name_or_to_string(),
+    return concat(
+        name_or_to_string(),
         list(
             arguments(structTS("MyStruct", nlist()), "MyStruct()"),
-            arguments(structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct(Int field)")
-        ));
+            arguments(
+                structTS("MyStruct", nlist(itemSigS(intTS(), "field"))), "MyStruct(Int field)")));
   }
 
   public static List<Arguments> name_or_to_string() {
@@ -89,13 +84,11 @@ public class TypeSTest {
         arguments(intTS(), "Int"),
         arguments(stringTS(), "String"),
         arguments(varA(), "A"),
-
         arguments(tupleTS(), "()"),
         arguments(tupleTS(intTS()), "(Int)"),
         arguments(tupleTS(intTS(), boolTS()), "(Int,Bool)"),
         arguments(tupleTS(varA()), "(A)"),
         arguments(tupleTS(varA(), varB()), "(A,B)"),
-
         arguments(arrayTS(blobTS()), "[Blob]"),
         arguments(arrayTS(boolTS()), "[Bool]"),
         arguments(arrayTS(intTS()), "[Int]"),
@@ -108,8 +101,6 @@ public class TypeSTest {
         arguments(arrayTS(structTS("MyStruct", nlist())), "[MyStruct]"),
         arguments(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS(), "field")))), "[MyStruct]"),
         arguments(arrayTS(varA()), "[A]"),
-
-
         arguments(arrayTS(arrayTS(varA())), "[[A]]"),
         arguments(arrayTS(arrayTS(blobTS())), "[[Blob]]"),
         arguments(arrayTS(arrayTS(boolTS())), "[[Bool]]"),
@@ -124,28 +115,23 @@ public class TypeSTest {
             arrayTS(arrayTS(structTS("MyStruct", nlist(itemSigS(intTS(), "filed"))))),
             "[[MyStruct]]"),
         arguments(arrayTS(arrayTS(stringTS())), "[[String]]"),
-
         arguments(funcTS(arrayTS(varA()), varA()), "([A])->A"),
         arguments(funcTS(arrayTS(varA()), stringTS()), "([A])->String"),
         arguments(funcTS(varA(), varA()), "(A)->A"),
         arguments(funcTS(stringTS()), "()->String"),
         arguments(funcTS(stringTS(), stringTS()), "(String)->String"),
         arguments(funcTS(tupleTS(intTS()), stringTS()), "((Int))->String"),
-
-
         arguments(interfaceTS(), "()"),
         arguments(interfaceTS(sigS(intTS(), "field1")), "(Int field1)"),
         arguments(
             interfaceTS(sigS(intTS(), "field1"), sigS(blobTS(), "field2")),
-            "(Int field1,Blob field2)")
-    );
+            "(Int field1,Blob field2)"));
   }
 
   @ParameterizedTest
   @MethodSource("vars_test_data")
   public void vars(TypeS type, VarSetS expected) {
-    assertThat(type.vars())
-        .isEqualTo(expected);
+    assertThat(type.vars()).isEqualTo(expected);
   }
 
   public static List<Arguments> vars_test_data() {
@@ -154,33 +140,27 @@ public class TypeSTest {
         arguments(boolTS(), varSetS()),
         arguments(intTS(), varSetS()),
         arguments(stringTS(), varSetS()),
-
         arguments(tupleTS(intTS()), varSetS()),
         arguments(tupleTS(varA(), varB()), varSetS(varA(), varB())),
         arguments(arrayTS(intTS()), varSetS()),
         arguments(arrayTS(varA()), varSetS(varA())),
-
         arguments(funcTS(boolTS(), blobTS()), varSetS()),
         arguments(funcTS(boolTS(), varA()), varSetS(varA())),
         arguments(funcTS(varA(), blobTS()), varSetS(varA())),
         arguments(funcTS(varB(), varA()), varSetS(varA(), varB())),
-
         arguments(structTS(intTS()), varSetS()),
         arguments(structTS(intTS(), varA()), varSetS(varA())),
         arguments(structTS(varB(), varA()), varSetS(varA(), varB())),
-
         arguments(interfaceTS(intTS()), varSetS()),
         arguments(interfaceTS(intTS(), varA()), varSetS(varA())),
-        arguments(interfaceTS(varB(), varA()), varSetS(varA(), varB()))
-    );
+        arguments(interfaceTS(varB(), varA()), varSetS(varA(), varB())));
   }
 
   @ParameterizedTest
   @MethodSource("map_vars")
   public void map_vars(TypeS type, TypeS expected) {
     Function<VarS, TypeS> addPrefix = (VarS v) -> new VarS("prefix." + v.name());
-    assertThat(type.mapVars(addPrefix))
-        .isEqualTo(expected);
+    assertThat(type.mapVars(addPrefix)).isEqualTo(expected);
   }
 
   public static List<Arguments> map_vars() {
@@ -189,19 +169,15 @@ public class TypeSTest {
         arguments(boolTS(), boolTS()),
         arguments(intTS(), intTS()),
         arguments(stringTS(), stringTS()),
-
         arguments(varS("A"), varS("prefix.A")),
         arguments(varS("pre.A"), varS("prefix.pre.A")),
-
         arguments(tupleTS(intTS()), tupleTS(intTS())),
         arguments(tupleTS(varA(), varB()), tupleTS(varS("prefix.A"), varS("prefix.B"))),
         arguments(tupleTS(tupleTS(varA())), tupleTS(tupleTS(varS("prefix.A")))),
-
         arguments(arrayTS(intTS()), arrayTS(intTS())),
         arguments(arrayTS(varS("A")), arrayTS(varS("prefix.A"))),
         arguments(arrayTS(varS("p.A")), arrayTS(varS("prefix.p.A"))),
         arguments(arrayTS(arrayTS(varS("A"))), arrayTS(arrayTS(varS("prefix.A")))),
-
         arguments(funcTS(boolTS(), blobTS()), funcTS(boolTS(), blobTS())),
         arguments(funcTS(boolTS(), varS("A")), funcTS(boolTS(), varS("prefix.A"))),
         arguments(funcTS(varS("A"), blobTS()), funcTS(varS("prefix.A"), blobTS())),
@@ -211,23 +187,14 @@ public class TypeSTest {
         arguments(
             funcTS(funcTS(varS("A"), intTS()), intTS()),
             funcTS(funcTS(varS("prefix.A"), intTS()), intTS())),
-
         arguments(structTS("MyStruct", intTS()), structTS("MyStruct", intTS())),
-        arguments(
-            structTS(varA(), varB()),
-            structTS(varS("prefix.A"), varS("prefix.B"))),
+        arguments(structTS(varA(), varB()), structTS(varS("prefix.A"), varS("prefix.B"))),
         arguments(
             structTS("S1", structTS("S2", varS("A"))),
             structTS("S1", structTS("S2", varS("prefix.A")))),
-
         arguments(interfaceTS(intTS()), interfaceTS(intTS())),
-        arguments(
-            interfaceTS(varA(), varB()),
-            interfaceTS(varS("prefix.A"), varS("prefix.B"))),
-        arguments(
-            interfaceTS(interfaceTS(varS("A"))),
-            interfaceTS(interfaceTS(varS("prefix.A"))))
-    );
+        arguments(interfaceTS(varA(), varB()), interfaceTS(varS("prefix.A"), varS("prefix.B"))),
+        arguments(interfaceTS(interfaceTS(varS("A"))), interfaceTS(interfaceTS(varS("prefix.A")))));
   }
 
   @Nested
@@ -236,8 +203,7 @@ public class TypeSTest {
     @MethodSource("elemType_test_data")
     public void elemType(TypeS type) {
       var array = arrayTS(type);
-      assertThat(array.elem())
-          .isEqualTo(type);
+      assertThat(array.elem()).isEqualTo(type);
     }
 
     public static List<Arguments> elemType_test_data() {
@@ -249,14 +215,12 @@ public class TypeSTest {
           arguments(stringTS()),
           arguments(structTS("MyStruct", nlist())),
           arguments(varA()),
-
           arguments(arrayTS(blobTS())),
           arguments(arrayTS(boolTS())),
           arguments(arrayTS(funcTS(stringTS()))),
           arguments(arrayTS(intTS())),
           arguments(arrayTS(stringTS())),
-          arguments(arrayTS(varA()))
-      );
+          arguments(arrayTS(varA())));
     }
   }
 
@@ -265,31 +229,27 @@ public class TypeSTest {
     @ParameterizedTest
     @MethodSource("func_result_cases")
     public void func_result(FuncTS type, TypeS expected) {
-      assertThat(type.result())
-          .isEqualTo(expected);
+      assertThat(type.result()).isEqualTo(expected);
     }
 
     public static List<Arguments> func_result_cases() {
       return asList(
           arguments(funcTS(intTS()), intTS()),
           arguments(funcTS(boolTS(), blobTS()), blobTS()),
-          arguments(funcTS(boolTS(), intTS(), blobTS()), blobTS())
-      );
+          arguments(funcTS(boolTS(), intTS(), blobTS()), blobTS()));
     }
 
     @ParameterizedTest
     @MethodSource("func_params_cases")
     public void func_params(FuncTS type, Object expected) {
-      assertThat(type.params())
-          .isEqualTo(expected);
+      assertThat(type.params()).isEqualTo(expected);
     }
 
     public static List<Arguments> func_params_cases() {
       return asList(
           arguments(funcTS(intTS()), tupleTS()),
           arguments(funcTS(boolTS(), blobTS()), tupleTS(boolTS())),
-          arguments(funcTS(boolTS(), intTS(), blobTS()), tupleTS(boolTS(), intTS()))
-      );
+          arguments(funcTS(boolTS(), intTS(), blobTS()), tupleTS(boolTS(), intTS())));
     }
   }
 
@@ -303,33 +263,30 @@ public class TypeSTest {
     @Test
     public void struct_name() {
       var struct = structTS("MyStruct", nlist());
-      assertThat(struct.name())
-          .isEqualTo("MyStruct");
+      assertThat(struct.name()).isEqualTo("MyStruct");
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  "})
     public void illegal_struct_name(String name) {
-      assertCall(() -> structTS(name, nlist()))
-          .throwsException(IllegalArgumentException.class);
+      assertCall(() -> structTS(name, nlist())).throwsException(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
     @MethodSource("struct_fields_cases")
     public void struct_fields(StructTS struct, NList<ItemSigS> expected) {
-      assertThat(struct.fields())
-          .isEqualTo(expected);
+      assertThat(struct.fields()).isEqualTo(expected);
     }
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
           arguments(structTS("Person", nlist()), nlist()),
-          arguments(structTS("Person", nlist(itemSigS(stringTS(), "field"))),
+          arguments(
+              structTS("Person", nlist(itemSigS(stringTS(), "field"))),
               nlist(itemSigS(stringTS(), "field"))),
           arguments(
               structTS("Person", nlist(itemSigS(stringTS(), "field"), itemSigS(intTS(), "field2"))),
-              nlist(itemSigS(stringTS(), "field"), itemSigS(intTS(), "field2")))
-      );
+              nlist(itemSigS(stringTS(), "field"), itemSigS(intTS(), "field2"))));
     }
   }
 
@@ -348,12 +305,10 @@ public class TypeSTest {
         varA(),
         varB(),
         varC(),
-
         funcTS(blobTS()),
         funcTS(stringTS()),
         funcTS(stringTS(), blobTS()),
-        funcTS(blobTS(), blobTS())
-    );
+        funcTS(blobTS(), blobTS()));
 
     for (TypeS type : types) {
       equalsTester.addEqualityGroup(type, type);
@@ -369,16 +324,14 @@ public class TypeSTest {
     @ParameterizedTest
     @MethodSource("tuple_items_cases")
     public void func_params(TupleTS type, Object expected) {
-      assertThat(type.elements())
-          .isEqualTo(expected);
+      assertThat(type.elements()).isEqualTo(expected);
     }
 
     public static List<Arguments> tuple_items_cases() {
       return asList(
           arguments(tupleTS(), list()),
           arguments(tupleTS(boolTS()), list(boolTS())),
-          arguments(tupleTS(boolTS(), intTS()), list(boolTS(), intTS()))
-      );
+          arguments(tupleTS(boolTS(), intTS()), list(boolTS(), intTS())));
     }
   }
 
@@ -386,26 +339,22 @@ public class TypeSTest {
   class _temp_var {
     @Test
     public void is_older_than_1_1() {
-      assertThat(new TempVarS("1").isOlderThan(new TempVarS("1")))
-          .isFalse();
+      assertThat(new TempVarS("1").isOlderThan(new TempVarS("1"))).isFalse();
     }
 
     @Test
     public void is_older_than_1_2() {
-      assertThat(new TempVarS("1").isOlderThan(new TempVarS("2")))
-          .isTrue();
+      assertThat(new TempVarS("1").isOlderThan(new TempVarS("2"))).isTrue();
     }
 
     @Test
     public void is_older_than_1_10() {
-      assertThat(new TempVarS("1").isOlderThan(new TempVarS("10")))
-          .isTrue();
+      assertThat(new TempVarS("1").isOlderThan(new TempVarS("10"))).isTrue();
     }
 
     @Test
     public void is_older_than_2_1() {
-      assertThat(new TempVarS("2").isOlderThan(new TempVarS("1")))
-          .isFalse();
+      assertThat(new TempVarS("2").isOlderThan(new TempVarS("1"))).isFalse();
     }
   }
 }

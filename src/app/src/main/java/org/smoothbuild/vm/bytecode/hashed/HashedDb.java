@@ -7,12 +7,13 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 
+import io.vavr.collection.Array;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
-
+import okio.BufferedSource;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
@@ -24,9 +25,6 @@ import org.smoothbuild.vm.bytecode.hashed.exc.DecodeHashSeqException;
 import org.smoothbuild.vm.bytecode.hashed.exc.DecodeStringException;
 import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
-
-import io.vavr.collection.Array;
-import okio.BufferedSource;
 
 /**
  * This class is thread-safe.

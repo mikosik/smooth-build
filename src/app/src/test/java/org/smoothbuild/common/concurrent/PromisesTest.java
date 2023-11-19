@@ -6,10 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 
+import io.vavr.collection.Array;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import io.vavr.collection.Array;
 
 public class PromisesTest {
   @Nested

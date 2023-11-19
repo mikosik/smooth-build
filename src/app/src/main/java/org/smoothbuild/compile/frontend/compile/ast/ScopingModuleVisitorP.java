@@ -12,8 +12,7 @@ public abstract class ScopingModuleVisitorP extends ModuleVisitorP {
 
   @Override
   public final void visitModule(ModuleP moduleP) {
-    createVisitorForScopeOf(moduleP)
-        .visitModuleChildren(moduleP);
+    createVisitorForScopeOf(moduleP).visitModuleChildren(moduleP);
   }
 
   @Override
@@ -25,21 +24,18 @@ public abstract class ScopingModuleVisitorP extends ModuleVisitorP {
   @Override
   public final void visitNamedValue(NamedValueP namedValueP) {
     visitNamedValueSignature(namedValueP);
-    createVisitorForScopeOf(namedValueP)
-        .visitNamedValueBody(namedValueP);
+    createVisitorForScopeOf(namedValueP).visitNamedValueBody(namedValueP);
   }
 
   @Override
   public final void visitNamedFunc(NamedFuncP namedFuncP) {
     visitNamedFuncSignature(namedFuncP);
-    createVisitorForScopeOf(namedFuncP)
-        .visitFuncBody(namedFuncP);
+    createVisitorForScopeOf(namedFuncP).visitFuncBody(namedFuncP);
   }
 
   @Override
   public final void visitLambda(LambdaP lambdaP) {
     visitLambdaSignature(lambdaP);
-    createVisitorForScopeOf(lambdaP)
-        .visitFuncBody(lambdaP);
+    createVisitorForScopeOf(lambdaP).visitFuncBody(lambdaP);
   }
 }

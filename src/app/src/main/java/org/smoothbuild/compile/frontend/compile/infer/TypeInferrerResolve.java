@@ -5,7 +5,6 @@ import static org.smoothbuild.compile.frontend.compile.CompileError.compileError
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
 import java.util.Optional;
-
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
 import org.smoothbuild.compile.frontend.compile.ast.define.EvaluableP;
@@ -56,7 +55,7 @@ public class TypeInferrerResolve {
     // @formatter:off
     switch (evaluableP) {
       case NamedValueP valueP -> valueP.setSchemaS(resolveSchema(valueP.schemaS()));
-      case FuncP       funcP  -> funcP.setSchemaS(resolveSchema(funcP.schemaS()));
+      case FuncP funcP -> funcP.setSchemaS(resolveSchema(funcP.schemaS()));
     }
     // @formatter:off
     return true;
@@ -71,7 +70,8 @@ public class TypeInferrerResolve {
   }
 
   private VarSetS resolveQuantifiedVars(SchemaS schemaS) {
-    return varSetS(schemaS.quantifiedVars().stream().map(v -> (VarS) unifier.resolve(v)).toList());
+    return varSetS(
+        schemaS.quantifiedVars().stream().map(v -> (VarS) unifier.resolve(v)).toList());
   }
 
   private TypeS resolveType(SchemaS schemaS) {
@@ -94,14 +94,14 @@ public class TypeInferrerResolve {
   private boolean resolveExpr(ExprP expr) {
     // @formatter:off
     return switch (expr) {
-      case CallP          callP          -> resolveCall(callP);
-      case InstantiateP   instantiateP   -> resolveInstantiate(instantiateP);
-      case NamedArgP      namedArgP      -> resolveNamedArg(namedArgP);
-      case OrderP         orderP         -> resolveOrder(orderP);
-      case SelectP        selectP        -> resolveSelect(selectP);
-      case StringP        stringP        -> resolveExprType(stringP);
-      case IntP           intP           -> resolveExprType(intP);
-      case BlobP          blobP          -> resolveExprType(blobP);
+      case CallP callP -> resolveCall(callP);
+      case InstantiateP instantiateP -> resolveInstantiate(instantiateP);
+      case NamedArgP namedArgP -> resolveNamedArg(namedArgP);
+      case OrderP orderP -> resolveOrder(orderP);
+      case SelectP selectP -> resolveSelect(selectP);
+      case StringP stringP -> resolveExprType(stringP);
+      case IntP intP -> resolveExprType(intP);
+      case BlobP blobP -> resolveExprType(blobP);
     };
     // @formatter:on
   }
@@ -139,18 +139,15 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveNamedArg(NamedArgP namedArgP) {
-    return resolveExpr(namedArgP.expr())
-        && resolveExprType(namedArgP);
+    return resolveExpr(namedArgP.expr()) && resolveExprType(namedArgP);
   }
 
   private boolean resolveOrder(OrderP orderP) {
-    return orderP.elems().stream().allMatch(this::resolveExpr)
-        && resolveExprType(orderP);
+    return orderP.elems().stream().allMatch(this::resolveExpr) && resolveExprType(orderP);
   }
 
   private boolean resolveSelect(SelectP selectP) {
-    return resolveExpr(selectP.selectable())
-        && resolveExprType(selectP);
+    return resolveExpr(selectP.selectable()) && resolveExprType(selectP);
   }
 
   private boolean resolveExprType(ExprP exprP) {

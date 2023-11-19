@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.compile.InitializeScopes.initializeScopes;
 
 import java.util.Optional;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.frontend.compile.ast.define.LambdaP;
@@ -24,8 +23,7 @@ public class InitializeScopesTest extends TestContext {
 
       initializeScopes(moduleP, new LogBuffer());
 
-      assertThat(moduleP.scope().referencables().get("myFunc"))
-          .isEqualTo(namedFuncP);
+      assertThat(moduleP.scope().referencables().get("myFunc")).isEqualTo(namedFuncP);
     }
 
     @Test
@@ -35,8 +33,7 @@ public class InitializeScopesTest extends TestContext {
 
       initializeScopes(moduleP, new LogBuffer());
 
-      assertThat(moduleP.scope().referencables().get("myValue"))
-          .isEqualTo(namedValueP);
+      assertThat(moduleP.scope().referencables().get("myValue")).isEqualTo(namedValueP);
     }
 
     @Test
@@ -48,8 +45,7 @@ public class InitializeScopesTest extends TestContext {
 
       initializeScopes(moduleP, new LogBuffer());
 
-      assertThat(moduleP.scope().referencables().get("myFunc:param"))
-          .isEqualTo(defaultValue);
+      assertThat(moduleP.scope().referencables().get("myFunc:param")).isEqualTo(defaultValue);
     }
   }
 
@@ -103,8 +99,7 @@ public class InitializeScopesTest extends TestContext {
 
         initializeScopes(moduleP, new LogBuffer());
 
-        assertThat(defaultValue.scope().referencables().get(member.name()))
-            .isEqualTo(member);
+        assertThat(defaultValue.scope().referencables().get(member.name())).isEqualTo(member);
       }
     }
 
@@ -116,8 +111,7 @@ public class InitializeScopesTest extends TestContext {
 
       initializeScopes(moduleP, new LogBuffer());
 
-      assertThat(namedFuncP.scope().referencables().get("param"))
-          .isEqualTo(param);
+      assertThat(namedFuncP.scope().referencables().get("param")).isEqualTo(param);
     }
 
     @Test
@@ -129,8 +123,7 @@ public class InitializeScopesTest extends TestContext {
 
       initializeScopes(moduleP, new LogBuffer());
 
-      assertThat(namedFuncP.scope().referencables().get("myValue"))
-          .isEqualTo(namedValueP);
+      assertThat(namedFuncP.scope().referencables().get("myValue")).isEqualTo(namedValueP);
     }
 
     @Test
@@ -142,8 +135,7 @@ public class InitializeScopesTest extends TestContext {
 
       initializeScopes(moduleP, new LogBuffer());
 
-      assertThat(namedFuncP.scope().referencables().get("otherFunc"))
-          .isEqualTo(otherFunc);
+      assertThat(namedFuncP.scope().referencables().get("otherFunc")).isEqualTo(otherFunc);
     }
   }
 
@@ -159,8 +151,7 @@ public class InitializeScopesTest extends TestContext {
       initializeScopes(moduleP, new LogBuffer());
 
       var cast = ((LambdaP) lambdaP.polymorphic());
-      assertThat(cast.scope().referencables().get("myValue"))
-          .isEqualTo(namedValueP);
+      assertThat(cast.scope().referencables().get("myValue")).isEqualTo(namedValueP);
     }
 
     @Test
@@ -173,8 +164,7 @@ public class InitializeScopesTest extends TestContext {
       initializeScopes(moduleP, new LogBuffer());
 
       var cast = ((LambdaP) lambdaP.polymorphic());
-      assertThat(cast.scope().referencables().get("myFunc"))
-          .isEqualTo(namedValueP);
+      assertThat(cast.scope().referencables().get("myFunc")).isEqualTo(namedValueP);
     }
 
     @Test
@@ -186,8 +176,7 @@ public class InitializeScopesTest extends TestContext {
       initializeScopes(moduleP, new LogBuffer());
 
       var cast = ((LambdaP) lambdaP.polymorphic());
-      assertThat(cast.scope().referencables().get("param"))
-          .isEqualTo(param);
+      assertThat(cast.scope().referencables().get("param")).isEqualTo(param);
     }
   }
 }

@@ -1,9 +1,8 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
+import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-
-import com.google.common.testing.EqualsTester;
 
 public class NamedFuncPTest extends TestContext {
   @Test

@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 public class ConstructorsTest {
   @Test
   public void private_ctor() throws NoSuchMethodException {
-    assertThat(isPublic(MyPrivateCtorClass.class.getDeclaredConstructor()))
-        .isFalse();
+    assertThat(isPublic(MyPrivateCtorClass.class.getDeclaredConstructor())).isFalse();
   }
 
   public static class MyPrivateCtorClass {
@@ -18,8 +17,7 @@ public class ConstructorsTest {
 
   @Test
   public void protected_ctor() throws NoSuchMethodException {
-    assertThat(isPublic(MyProtectedCtorClass.class.getDeclaredConstructor()))
-        .isFalse();
+    assertThat(isPublic(MyProtectedCtorClass.class.getDeclaredConstructor())).isFalse();
   }
 
   public static class MyProtectedCtorClass {
@@ -28,8 +26,7 @@ public class ConstructorsTest {
 
   @Test
   public void package_private_ctor() throws NoSuchMethodException {
-    assertThat(isPublic(MyPackageCtorClass.class.getDeclaredConstructor()))
-        .isFalse();
+    assertThat(isPublic(MyPackageCtorClass.class.getDeclaredConstructor())).isFalse();
   }
 
   public static class MyPackageCtorClass {
@@ -38,8 +35,7 @@ public class ConstructorsTest {
 
   @Test
   public void public_ctor() throws NoSuchMethodException {
-    assertThat(isPublic(MyPublicCtorClass.class.getDeclaredConstructor()))
-        .isTrue();
+    assertThat(isPublic(MyPublicCtorClass.class.getDeclaredConstructor())).isTrue();
   }
 
   public static class MyPublicCtorClass {

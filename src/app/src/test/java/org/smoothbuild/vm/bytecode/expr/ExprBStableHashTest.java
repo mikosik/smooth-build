@@ -2,13 +2,12 @@ package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import io.vavr.collection.Array;
+import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-
-import io.vavr.collection.Array;
-import okio.ByteString;
 
 public class ExprBStableHashTest extends TestContext {
   @Nested
@@ -151,8 +150,8 @@ public class ExprBStableHashTest extends TestContext {
   class _native_func {
     @Test
     public void native_func() {
-      assertThat(
-          nativeFuncB(funcTB(boolTB(), intTB()), blobB(1), stringB("cbn"), boolB(true)).hash())
+      assertThat(nativeFuncB(funcTB(boolTB(), intTB()), blobB(1), stringB("cbn"), boolB(true))
+              .hash())
           .isEqualTo(
               Hash.decode("a86b59d69a244eeb96c059bc97ac7212445c45d37cb6346b27af19b78ecb0e98"));
     }

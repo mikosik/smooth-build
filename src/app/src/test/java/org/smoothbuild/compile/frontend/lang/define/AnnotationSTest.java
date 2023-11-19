@@ -10,7 +10,8 @@ public class AnnotationSTest extends TestContext {
   public void to_string() {
     var annS = new AnnotationS("myAnnotation", stringS(7, "myPath"), location(17));
     assertThat(annS.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             AnnotationS(
               name = myAnnotation
               path = StringS(String, "myPath", build.smooth:7)

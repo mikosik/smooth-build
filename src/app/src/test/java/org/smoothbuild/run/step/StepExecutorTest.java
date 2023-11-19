@@ -22,9 +22,14 @@ import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import io.vavr.Tuple;
+import io.vavr.Tuple0;
+import io.vavr.control.Option;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.function.Function;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,14 +41,6 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Logs;
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.report.Reporter;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-
-import io.vavr.Tuple;
-import io.vavr.Tuple0;
-import io.vavr.control.Option;
-import jakarta.inject.Inject;
 
 class StepExecutorTest {
   @Nested
@@ -57,8 +54,7 @@ class StepExecutorTest {
 
     @Test
     void creating_constant_step_with_null_fails() {
-      assertCall(() -> constStep(null))
-          .throwsException(NullPointerException.class);
+      assertCall(() -> constStep(null)).throwsException(NullPointerException.class);
     }
   }
 
@@ -79,10 +75,8 @@ class StepExecutorTest {
       return List.of(
           arguments(ImmutableLogs.logs(warning("warning"))),
           arguments(ImmutableLogs.logs(info("info"))),
-          arguments(ImmutableLogs.logs())
-      );
+          arguments(ImmutableLogs.logs()));
     }
-
 
     @ParameterizedTest
     @MethodSource
@@ -99,8 +93,7 @@ class StepExecutorTest {
     static List<Arguments> that_returns_failure() {
       return List.of(
           arguments(ImmutableLogs.logs(error("error"))),
-          arguments(ImmutableLogs.logs(fatal("fatal")))
-      );
+          arguments(ImmutableLogs.logs(fatal("fatal"))));
     }
 
     @Test
@@ -118,8 +111,7 @@ class StepExecutorTest {
     void that_returns_success() {
       var reporter = mock(Reporter.class);
 
-      var result =
-          stepExecutor("def").execute(step(SuffixWithInjected.class), "abc", reporter);
+      var result = stepExecutor("def").execute(step(SuffixWithInjected.class), "abc", reporter);
 
       assertThat(result).isEqualTo(some("abcdef"));
     }
@@ -129,18 +121,14 @@ class StepExecutorTest {
     void that_returns_failure(Log log) {
       var reporter = mock(Reporter.class);
 
-      var result = stepExecutor(log)
-          .execute(step(LogInjectedLog.class), Tuple.empty(), reporter);
+      var result = stepExecutor(log).execute(step(LogInjectedLog.class), Tuple.empty(), reporter);
 
       assertThat(result).isEqualTo(none());
       verifyReported(reporter, List.of(log));
     }
 
     static List<Arguments> that_returns_failure() {
-      return List.of(
-          arguments(error("error")),
-          arguments(fatal("fatal"))
-      );
+      return List.of(arguments(error("error")), arguments(fatal("fatal")));
     }
 
     @Test
@@ -236,8 +224,7 @@ class StepExecutorTest {
     @Test
     void result_from_first_step_is_passed_to_second_step() {
       var reporter = mock(Reporter.class);
-      var step = constStep("abc")
-          .then(step(s -> success(s + "def")));
+      var step = constStep("abc").then(step(s -> success(s + "def")));
 
       var result = stepExecutor().execute(step, Tuple.empty(), reporter);
 
@@ -260,8 +247,7 @@ class StepExecutorTest {
     void second_step_is_not_executed_when_first_fails() {
       var reporter = mock(Reporter.class);
       Function<Object, Maybe<String>> function = mock();
-      var step = step(v -> failure(error("error")))
-          .then(step(function));
+      var step = step(v -> failure(error("error"))).then(step(function));
 
       var result = stepExecutor().execute(step, Tuple.empty(), reporter);
 
@@ -339,8 +325,7 @@ class StepExecutorTest {
   class _append {
     @Test
     void adds_another_argument() {
-      var step = constStep("abc")
-          .append("def");
+      var step = constStep("abc").append("def");
       var result = stepExecutor().execute(step, Tuple.empty(), mock());
       assertThat(result).isEqualTo(some(Tuple.of("abc", "def")));
     }

@@ -168,6 +168,6 @@ public class Strings {
   }
 
   public static Optional<String> stringToOptionalString(String string) {
-    return string.isEmpty() ?  Optional.empty() : Optional.of(string);
+    return string.isEmpty() ? Optional.empty() : Optional.of(string);
   }
 }

@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
 import org.smoothbuild.common.Strings;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 
@@ -51,8 +50,10 @@ public abstract sealed class TypeS
   private static void forEachTempVar(TypeS typeS, Consumer<TempVarS> consumer) {
     switch (typeS) {
       case ArrayTS arrayTS -> forEachTempVar(arrayTS.elem(), consumer);
-      case FieldSetTS fieldSetTS ->
-          fieldSetTS.fieldSet().values().forEach(f -> forEachTempVar(f.type(), consumer));
+      case FieldSetTS fieldSetTS -> fieldSetTS
+          .fieldSet()
+          .values()
+          .forEach(f -> forEachTempVar(f.type(), consumer));
       case FuncTS funcTS -> {
         forEachTempVar(funcTS.params(), consumer);
         forEachTempVar(funcTS.result(), consumer);
@@ -76,15 +77,15 @@ public abstract sealed class TypeS
       return this;
     } else {
       return switch (this) {
-        // @formatter:off
-        case ArrayTS     a -> mapVarsInArray(a, map);
-        case FuncTS      f -> mapVarsInFunc(f, map);
+          // @formatter:off
+        case ArrayTS a -> mapVarsInArray(a, map);
+        case FuncTS f -> mapVarsInFunc(f, map);
         case InterfaceTS i -> mapVarsInInterface(i, map);
-        case StructTS    s -> mapVarsInStruct(s, map);
-        case TupleTS     t -> mapVarsInTuple(t, map);
-        case VarS        v -> map.apply(v);
-        default            -> this;
-        // @formatter:on
+        case StructTS s -> mapVarsInStruct(s, map);
+        case TupleTS t -> mapVarsInTuple(t, map);
+        case VarS v -> map.apply(v);
+        default -> this;
+          // @formatter:on
       };
     }
   }
@@ -106,8 +107,7 @@ public abstract sealed class TypeS
     return new InterfaceTS(fields);
   }
 
-  private static StructTS mapVarsInStruct(
-      StructTS structTS, Function<? super VarS, TypeS> map) {
+  private static StructTS mapVarsInStruct(StructTS structTS, Function<? super VarS, TypeS> map) {
     var fields = structTS.fields().map(f -> mapItemSigComponents(f, map));
     return new StructTS(structTS.name(), fields);
   }

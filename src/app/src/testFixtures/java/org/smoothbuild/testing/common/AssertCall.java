@@ -6,16 +6,14 @@ import static com.google.common.truth.Truth.assertAbout;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.Lists.list;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import org.smoothbuild.common.function.ThrowingRunnable;
-
 import com.google.common.truth.Fact;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Subject.Factory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import org.smoothbuild.common.function.ThrowingRunnable;
 
 public class AssertCall {
   public static ThrownExceptionSubject assertCall(ThrowingRunnable throwingRunnable) {
@@ -47,8 +45,7 @@ public class AssertCall {
       String expectedClassName = expected.getClass().getCanonicalName();
       if (actual == null) {
         failWithoutActual(
-            fact("expected call to throw", expectedClassName),
-            fact("but was", "nothing thrown"));
+            fact("expected call to throw", expectedClassName), fact("but was", "nothing thrown"));
       } else if (actual.getClass() != expected.getClass()) {
         failWithoutActual(
             fact("expected call to throw", expectedClassName),
@@ -75,8 +72,8 @@ public class AssertCall {
       } else if (actual.getClass() != expected) {
         failWithActual(fact("expected call to throw", expected.getCanonicalName()));
       }
-      return new ExceptionCauseSubject(list(
-          fact("expected call to throw", expected.getCanonicalName())));
+      return new ExceptionCauseSubject(
+          list(fact("expected call to throw", expected.getCanonicalName())));
     }
 
     public class ExceptionCauseSubject {
@@ -134,5 +131,3 @@ public class AssertCall {
     }
   }
 }
-
-

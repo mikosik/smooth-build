@@ -13,7 +13,6 @@ public class NoCommandTest extends SystemTestCase {
     String helpOutput = sysOut();
     runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(""));
     assertFinishedWithSuccess();
-    assertThat(sysOut())
-        .isEqualTo(helpOutput);
+    assertThat(sysOut()).isEqualTo(helpOutput);
   }
 }

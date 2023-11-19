@@ -6,7 +6,6 @@ import static org.smoothbuild.testing.TestContext.stringTS;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 
 public class ItemSTest {
@@ -28,22 +27,21 @@ public class ItemSTest {
   @Test
   public void type_getter() {
     param = new ItemS(stringTS(), name, Optional.empty(), location());
-    assertThat(param.type())
-        .isEqualTo(stringTS());
+    assertThat(param.type()).isEqualTo(stringTS());
   }
 
   @Test
   public void name_getter() {
     param = new ItemS(stringTS(), name, Optional.empty(), location());
-    assertThat(param.name())
-        .isEqualTo(name);
+    assertThat(param.name()).isEqualTo(name);
   }
 
   @Test
   public void to_string() {
     param = new ItemS(stringTS(), name, Optional.empty(), location());
     assertThat(param.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             ItemS(
               type = String
               name = name

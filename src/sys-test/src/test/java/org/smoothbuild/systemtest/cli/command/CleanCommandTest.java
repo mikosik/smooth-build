@@ -11,7 +11,6 @@ import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
 
 import java.io.IOException;
 import java.nio.file.Files;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.filesystem.base.PathS;
@@ -44,8 +43,8 @@ public class CleanCommandTest {
     }
 
     @Test
-    public void reports_error_when_user_module_is_missing_and_smooth_dir_exists() throws
-        IOException {
+    public void reports_error_when_user_module_is_missing_and_smooth_dir_exists()
+        throws IOException {
       createDirectories(smoothDirAbsolutePath());
       runSmoothClean();
       assertFinishedWithError();
@@ -61,7 +60,8 @@ public class CleanCommandTest {
       runSmoothClean("some", "arguments");
       assertFinishedWithError();
       assertSysErrContains("Unmatched arguments from index");
-      assertSysErrContains("""
+      assertSysErrContains(
+          """
           Usage:
           smooth clean [-l=<level>]
           Try 'smooth help clean' for more information.

@@ -1,13 +1,11 @@
 package org.smoothbuild.filesystem.space;
 
+import jakarta.inject.Inject;
 import java.nio.file.Path;
 import java.util.Map;
-
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.SynchronizedFileSystem;
 import org.smoothbuild.common.filesystem.disk.DiskFileSystem;
-
-import jakarta.inject.Inject;
 
 public class DiskFileSystemFactory implements FileSystemFactory {
   private final Map<Space, Path> spacePathMap;

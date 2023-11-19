@@ -3,7 +3,6 @@ package org.smoothbuild.out.report;
 import static org.smoothbuild.common.Strings.indent;
 
 import java.util.List;
-
 import org.smoothbuild.out.log.Log;
 
 public class FormatLog {

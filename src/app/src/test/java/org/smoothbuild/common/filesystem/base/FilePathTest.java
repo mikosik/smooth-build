@@ -2,11 +2,10 @@ package org.smoothbuild.common.filesystem.base;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.Space;
-
-import com.google.common.testing.EqualsTester;
 
 public class FilePathTest {
   @Test
@@ -30,8 +29,7 @@ public class FilePathTest {
   @Test
   void prefixed_path() {
     FilePath filePath = new FilePath(Space.PROJECT, PathS.path("full/path.smooth"));
-    assertThat((Object) filePath.toString())
-        .isEqualTo("{prj}/full/path.smooth");
+    assertThat((Object) filePath.toString()).isEqualTo("{prj}/full/path.smooth");
   }
 
   @Test
@@ -44,7 +42,6 @@ public class FilePathTest {
   @Test
   public void to_string() {
     FilePath loc = new FilePath(Space.PROJECT, PathS.path("abc"));
-    assertThat(loc.toString())
-        .isEqualTo("{prj}/abc");
+    assertThat(loc.toString()).isEqualTo("{prj}/abc");
   }
 }

@@ -2,9 +2,8 @@ package org.smoothbuild.filesystem.install;
 
 import static org.smoothbuild.common.collect.Lists.map;
 
-import org.smoothbuild.vm.bytecode.hashed.Hash;
-
 import io.vavr.collection.Array;
+import org.smoothbuild.vm.bytecode.hashed.Hash;
 
 public record HashNode(String name, Hash hash, Array<HashNode> children) {
   public HashNode(String name, Hash hash) {

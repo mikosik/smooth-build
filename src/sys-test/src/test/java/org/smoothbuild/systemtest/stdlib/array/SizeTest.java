@@ -13,8 +13,7 @@ public class SizeTest extends SystemTestCase {
         """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactAsInt("result"))
-        .isEqualTo(0);
+    assertThat(artifactAsInt("result")).isEqualTo(0);
   }
 
   @Test
@@ -24,8 +23,7 @@ public class SizeTest extends SystemTestCase {
         """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactAsInt("result"))
-        .isEqualTo(1);
+    assertThat(artifactAsInt("result")).isEqualTo(1);
   }
 
   @Test
@@ -35,8 +33,7 @@ public class SizeTest extends SystemTestCase {
         """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactAsInt("result"))
-        .isEqualTo(2);
+    assertThat(artifactAsInt("result")).isEqualTo(2);
   }
 
   @Test
@@ -46,7 +43,6 @@ public class SizeTest extends SystemTestCase {
         """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactAsInt("result"))
-        .isEqualTo(3);
+    assertThat(artifactAsInt("result")).isEqualTo(3);
   }
 }

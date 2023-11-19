@@ -104,13 +104,12 @@ public class PathS {
   }
 
   public PathS appendPart(String part) {
-    if (part.contains(SEPARATOR) ) {
+    if (part.contains(SEPARATOR)) {
       throw new IllegalArgumentException(
           "Part cannot contain '" + SEPARATOR + "' (part='" + part + "').");
     }
     if (part.equals("") || part.equals(".") || part.equals("..")) {
-      throw new IllegalArgumentException(
-          "Part cannot be equal to '" + part + "'.");
+      throw new IllegalArgumentException("Part cannot be equal to '" + part + "'.");
     }
     if (isRoot()) {
       return new PathS(part);
@@ -181,7 +180,7 @@ public class PathS {
   }
 
   public String q() {
-    return "'" + value +"'";
+    return "'" + value + "'";
   }
 
   @Override
@@ -189,8 +188,7 @@ public class PathS {
     if (this == object) {
       return true;
     }
-    return object instanceof PathS that
-        && this.value.equals(that.value);
+    return object instanceof PathS that && this.value.equals(that.value);
   }
 
   @Override

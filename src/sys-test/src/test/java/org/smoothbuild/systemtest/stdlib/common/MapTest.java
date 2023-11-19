@@ -21,7 +21,8 @@ public class MapTest extends SystemTestCase {
 
   @Test
   public void mapping_files_to_path() throws Exception {
-    String code = """
+    String code =
+        """
         files = [File(0x01, "test01.txt"), File(0x02, "test02.txt")];
         pathOf(File file) = file.path;
         result = map(files, pathOf);
@@ -29,7 +30,6 @@ public class MapTest extends SystemTestCase {
     createUserModule(code);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("test01.txt", "test02.txt"));
+    assertThat(artifactStringified("result")).isEqualTo(list("test01.txt", "test02.txt"));
   }
 }

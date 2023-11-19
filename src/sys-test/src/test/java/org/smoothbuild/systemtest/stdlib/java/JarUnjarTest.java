@@ -3,14 +3,14 @@ package org.smoothbuild.systemtest.stdlib.java;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
 public class JarUnjarTest extends SystemTestCase {
   @Test
   public void jar_unjar() throws IOException {
-    createUserModule("""
+    createUserModule(
+        """
             result = [File(0x41, "dir/file1.txt"), File(0x42, "file2.txt")]
               > jar() > unjar();
             """);
@@ -22,7 +22,8 @@ public class JarUnjarTest extends SystemTestCase {
 
   @Test
   public void corrupted_archive_causes_error() throws IOException {
-    createUserModule("""
+    createUserModule(
+        """
             randomJunk = 0x123456;
             result =  unjar(randomJunk);
             """);

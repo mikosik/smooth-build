@@ -3,15 +3,14 @@ package org.smoothbuild.vm.evaluate;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.out.log.Log.fatal;
 
-import org.smoothbuild.out.report.Reporter;
-import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-import org.smoothbuild.vm.evaluate.execute.SchedulerB;
-
 import io.vavr.collection.Array;
 import io.vavr.control.Option;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.smoothbuild.out.report.Reporter;
+import org.smoothbuild.vm.bytecode.expr.ExprB;
+import org.smoothbuild.vm.bytecode.expr.value.ValueB;
+import org.smoothbuild.vm.evaluate.execute.SchedulerB;
 
 public class EvaluatorB {
   private final Provider<SchedulerB> schedulerProvider;

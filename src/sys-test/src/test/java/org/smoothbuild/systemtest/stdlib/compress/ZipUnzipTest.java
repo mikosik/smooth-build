@@ -3,7 +3,6 @@ package org.smoothbuild.systemtest.stdlib.compress;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
@@ -12,7 +11,8 @@ public class ZipUnzipTest extends SystemTestCase {
   public void zip_unzip() throws IOException {
     createFile("dir/file1.txt", "abc");
     createFile("file2.txt", "def");
-    createUserModule("""
+    createUserModule(
+        """
             result = [file("dir/file1.txt"), file("file2.txt")] > zip() > unzip();
             """);
     runSmoothBuild("result");
@@ -23,7 +23,8 @@ public class ZipUnzipTest extends SystemTestCase {
 
   @Test
   public void corrupted_archive_causes_error() throws IOException {
-    createUserModule("""
+    createUserModule(
+        """
             randomJunk = 0x123456;
             result = unzip(randomJunk);
             """);

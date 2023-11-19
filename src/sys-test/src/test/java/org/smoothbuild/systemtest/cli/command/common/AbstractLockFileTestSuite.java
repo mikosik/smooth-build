@@ -7,7 +7,6 @@ import static org.smoothbuild.common.Strings.unlines;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
@@ -15,14 +14,16 @@ import org.smoothbuild.testing.func.nativ.Sleep3s;
 
 public abstract class AbstractLockFileTestSuite extends SystemTestCase {
   @Test
-  public void command_fails_when_lock_file_is_already_acquired() throws IOException,
-      InterruptedException {
+  public void command_fails_when_lock_file_is_already_acquired()
+      throws IOException, InterruptedException {
     createNativeJar(Sleep3s.class);
-    createUserModule(format("""
+    createUserModule(format(
+        """
             @Native("%s")
             String sleep3s();
             result = sleep3s();
-            """, Sleep3s.class.getCanonicalName()));
+            """,
+        Sleep3s.class.getCanonicalName()));
 
     SystemTestCase otherTest = new SystemTestCase() {};
     otherTest.init(projectDirAbsolutePath());
@@ -46,8 +47,7 @@ public abstract class AbstractLockFileTestSuite extends SystemTestCase {
     String otherSysOut = savedSysOut.get();
 
     String expectedError = "smooth: error: Another instance of smooth is running for this project.";
-    boolean sysOutsMatch =
-        sysOut().contains(expectedError) || otherSysOut.contains(expectedError);
+    boolean sysOutsMatch = sysOut().contains(expectedError) || otherSysOut.contains(expectedError);
     boolean errorCodesMatch =
         (exitCode() == 0 && otherErrorCode == 2) || (exitCode() == 2 && otherErrorCode == 0);
 
@@ -64,8 +64,7 @@ public abstract class AbstractLockFileTestSuite extends SystemTestCase {
           "sysOut:",
           otherSysOut,
           "sysErr:",
-          savedSysErr.get()
-      ));
+          savedSysErr.get()));
     }
   }
 

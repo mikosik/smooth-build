@@ -11,15 +11,13 @@ import static org.smoothbuild.common.graph.SortTopologically.Node.State.BEING_PR
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.NOT_VISITED;
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.PROCESSED;
 
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import org.smoothbuild.common.collect.Sets;
-
-import com.google.common.collect.ImmutableList;
 
 public class SortTopologically {
   public static <K, N, E> TopologicalSortingRes<K, N, E> sortTopologically(
@@ -27,9 +25,8 @@ public class SortTopologically {
     if (nodes.isEmpty()) {
       return new TopologicalSortingRes<>(list(), null);
     }
-    ImmutableList<Node<K, N, E>> wrappedNodes = nodes.stream()
-        .map(Node::new)
-        .collect(toImmutableList());
+    ImmutableList<Node<K, N, E>> wrappedNodes =
+        nodes.stream().map(Node::new).collect(toImmutableList());
     assertAllEdgesPointToExistingNodes(wrappedNodes);
     return sortTopologicallyImpl(wrappedNodes);
   }
@@ -40,8 +37,8 @@ public class SortTopologically {
     for (var node : nodes) {
       for (var edge : node.edges()) {
         if (!keys.contains(edge.targetKey())) {
-          throw new IllegalArgumentException("Node '" + node.key()
-              + "' has edge pointing to node '" + edge.targetKey() + "' which does not exist.");
+          throw new IllegalArgumentException("Node '" + node.key() + "' has edge pointing to node '"
+              + edge.targetKey() + "' which does not exist.");
         }
       }
     }
@@ -129,17 +126,15 @@ public class SortTopologically {
     return result;
   }
 
-  private static <K, N, E> void addToPath(LinkedList<PathElem<K, N, E>> currentPath,
-      Node<K, N, E> node) {
+  private static <K, N, E> void addToPath(
+      LinkedList<PathElem<K, N, E>> currentPath, Node<K, N, E> node) {
     node.setState(BEING_PROCESSED);
     currentPath.addLast(new PathElem<>(node));
   }
 
   private static <K, N, E> TopologicalSortingRes<K, N, E> createSortedRes(
       ArrayDeque<Node<K, N, E>> resultSeq) {
-    var graphNodes = resultSeq.stream()
-        .map(Node::node)
-        .collect(toImmutableList());
+    var graphNodes = resultSeq.stream().map(Node::node).collect(toImmutableList());
     return new TopologicalSortingRes<>(graphNodes, null);
   }
 
@@ -181,7 +176,11 @@ public class SortTopologically {
   }
 
   public static class Node<K, N, E> {
-    public enum State { NOT_VISITED, BEING_PROCESSED, PROCESSED }
+    public enum State {
+      NOT_VISITED,
+      BEING_PROCESSED,
+      PROCESSED
+    }
 
     private final GraphNode<K, N, E> node;
     private State state;
@@ -221,14 +220,12 @@ public class SortTopologically {
       if (this == object) {
         return true;
       }
-      return object instanceof Node<?, ?, ?> that
-          && this.node.equals(that.node);
+      return object instanceof Node<?, ?, ?> that && this.node.equals(that.node);
     }
   }
 
   public static record TopologicalSortingRes<K, N, E>(
-      List<GraphNode<K, N, E>>sorted,
-      List<GraphEdge<E, K>> cycle) {
+      List<GraphNode<K, N, E>> sorted, List<GraphEdge<E, K>> cycle) {
     public ImmutableList<N> valuesReversed() {
       return map(sorted(), GraphNode::value).reverse();
     }

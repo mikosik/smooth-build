@@ -13,10 +13,13 @@ import static org.smoothbuild.out.log.Maybe.maybe;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.Array;
+import io.vavr.control.Option;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
 import java.util.function.Function;
-
 import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
@@ -32,11 +35,6 @@ import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
-
-import io.vavr.Tuple2;
-import io.vavr.collection.Array;
-import io.vavr.control.Option;
-import jakarta.inject.Inject;
 
 public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, Maybe<String>> {
   private final FileSystem fileSystem;
@@ -56,8 +54,8 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
     }
     var loggerBuffer = new LogBuffer();
     var sortedArtifacts = artifacts.sortBy(artifact -> artifact._1().name());
-    var savedArtifacts = sortedArtifacts
-        .map(t -> t.map2(valueB -> save(t._1(), valueB, loggerBuffer)));
+    var savedArtifacts =
+        sortedArtifacts.map(t -> t.map2(valueB -> save(t._1(), valueB, loggerBuffer)));
     var messages = savedArtifacts
         .map(t -> t._1().name() + " -> " + t._2().map(PathS::q).getOrElse("?"))
         .mkString("\n");
@@ -95,8 +93,8 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
     }
   }
 
-  private PathS saveFile(PathS artifactPath, TupleB file) throws IOException,
-      DuplicatedPathsException {
+  private PathS saveFile(PathS artifactPath, TupleB file)
+      throws IOException, DuplicatedPathsException {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileValuePath(file));
   }
@@ -129,8 +127,8 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
     }
   }
 
-  private void saveFileArray(PathS artifactPath, Iterable<TupleB> files) throws IOException,
-      DuplicatedPathsException {
+  private void saveFileArray(PathS artifactPath, Iterable<TupleB> files)
+      throws IOException, DuplicatedPathsException {
     DuplicatesDetector<PathS> duplicatesDetector = new DuplicatesDetector<>();
     for (TupleB file : files) {
       PathS filePath = fileValuePath(file);
@@ -149,12 +147,10 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
 
   private DuplicatedPathsException duplicatedPathsMessage(Set<PathS> duplicates) {
     String delimiter = "\n  ";
-    String list = duplicates.stream()
-        .map(PathS::q)
-        .collect(joining(delimiter));
+    String list = duplicates.stream().map(PathS::q).collect(joining(delimiter));
     return new DuplicatedPathsException(
-        "Can't store array of Files as it contains files with duplicated paths:"
-            + delimiter + list);
+        "Can't store array of Files as it contains files with duplicated paths:" + delimiter
+            + list);
   }
 
   private PathS saveBaseValue(PathS artifactPath, ValueB valueB) throws IOException {

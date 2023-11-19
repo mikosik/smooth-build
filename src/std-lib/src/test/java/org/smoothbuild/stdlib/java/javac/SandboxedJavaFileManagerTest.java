@@ -5,10 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.util.ArrayList;
-
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 

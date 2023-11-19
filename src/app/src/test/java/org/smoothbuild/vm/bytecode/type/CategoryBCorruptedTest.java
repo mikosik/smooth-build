@@ -24,6 +24,8 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.VAR;
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalIfFuncTypeExc;
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalMapFuncTypeExc;
 
+import io.vavr.collection.Array;
+import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,7 +45,6 @@ import org.smoothbuild.vm.bytecode.type.exc.DecodeCatNodeException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatRootException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongNodeCatException;
 import org.smoothbuild.vm.bytecode.type.exc.DecodeCatWrongSeqSizeException;
-import org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException;
 import org.smoothbuild.vm.bytecode.type.oper.VarCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
@@ -52,29 +53,19 @@ import org.smoothbuild.vm.bytecode.type.value.StringTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import io.vavr.collection.Array;
-import okio.ByteString;
-
 public class CategoryBCorruptedTest extends TestContext {
   @Nested
   class _illegal_type_marker {
     @Test
     public void causes_exception() throws Exception {
-      var hash = hash(
-          hash((byte) 99)
-      );
-      assertThatGet(hash)
-          .throwsException(illegalTypeMarkerException(hash, 99));
+      var hash = hash(hash((byte) 99));
+      assertThatGet(hash).throwsException(illegalTypeMarkerException(hash, 99));
     }
 
     @Test
     public void with_additional_child() throws Exception {
-      var hash = hash(
-          hash((byte) 99),
-          hash("corrupted")
-      );
-      assertThatGet(hash)
-          .throwsException(illegalTypeMarkerException(hash, 99));
+      var hash = hash(hash((byte) 99), hash("corrupted"));
+      assertThatGet(hash).throwsException(illegalTypeMarkerException(hash, 99));
     }
   }
 
@@ -86,11 +77,8 @@ public class CategoryBCorruptedTest extends TestContext {
        * This test makes sure that other tests in this class use proper scheme
        * to save base type in HashedDb.
        */
-      var hash = hash(
-          hash(STRING.marker())
-      );
-      assertThat(hash)
-          .isEqualTo(stringTB().hash());
+      var hash = hash(hash(STRING.marker()));
+      assertThat(hash).isEqualTo(stringTB().hash());
     }
 
     @Test
@@ -114,12 +102,8 @@ public class CategoryBCorruptedTest extends TestContext {
     }
 
     private void test_base_type_with_additional_child(CategoryKindB kind) throws Exception {
-      var hash = hash(
-          hash(kind.marker()),
-          hash("abc")
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatRootException(hash, kind, 2, 1));
+      var hash = hash(hash(kind.marker()), hash("abc"));
+      assertThatGet(hash).throwsException(new DecodeCatRootException(hash, kind, 2, 1));
     }
   }
 
@@ -133,12 +117,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save array type in HashedDb.
          */
-        var hash = hash(
-            hash(ARRAY.marker()),
-            hash(stringTB())
-        );
-        assertThat(hash)
-            .isEqualTo(arrayTB(stringTB()).hash());
+        var hash = hash(hash(ARRAY.marker()), hash(stringTB()));
+        assertThat(hash).isEqualTo(arrayTB(stringTB()).hash());
       }
 
       @Test
@@ -163,10 +143,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_type_being_oper_type() throws Exception {
-        var hash = hash(
-            hash(ARRAY.marker()),
-            hash(varCB())
-        );
+        var hash = hash(hash(ARRAY.marker()), hash(varCB()));
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatException(
                 hash, ARRAY, DATA_PATH, TypeB.class, VarCB.class));
@@ -181,12 +158,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save expression function type in HashedDb.
          */
-        var specHash = hash(
-            hash(LAMBDA.marker()),
-            hash(funcTB(stringTB(), boolTB(), intTB()))
-        );
-        assertThat(specHash)
-            .isEqualTo(lambdaCB(stringTB(), boolTB(), intTB()).hash());
+        var specHash = hash(hash(LAMBDA.marker()), hash(funcTB(stringTB(), boolTB(), intTB())));
+        assertThat(specHash).isEqualTo(lambdaCB(stringTB(), boolTB(), intTB()).hash());
       }
 
       @Override
@@ -204,20 +177,14 @@ public class CategoryBCorruptedTest extends TestContext {
          * to save if func category in HashedDb.
          */
         var specHash = hash(
-            hash(IF_FUNC.marker()),
-            hash(funcTB(Array.of(boolTB(), intTB(), intTB()), intTB()))
-        );
-        assertThat(specHash)
-            .isEqualTo(ifFuncCB(intTB()).hash());
+            hash(IF_FUNC.marker()), hash(funcTB(Array.of(boolTB(), intTB(), intTB()), intTB())));
+        assertThat(specHash).isEqualTo(ifFuncCB(intTB()).hash());
       }
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
         var illegalIfType = funcTB(Array.of(boolTB(), intTB(), intTB()), blobTB());
-        var categoryHash = hash(
-            hash(IF_FUNC.marker()),
-            hash(illegalIfType)
-        );
+        var categoryHash = hash(hash(IF_FUNC.marker()), hash(illegalIfType));
         assertCall(() -> categoryDb().get(categoryHash))
             .throwsException(illegalIfFuncTypeExc(categoryHash, illegalIfType));
       }
@@ -238,19 +205,14 @@ public class CategoryBCorruptedTest extends TestContext {
          */
         var specHash = hash(
             hash(MAP_FUNC.marker()),
-            hash(funcTB(arrayTB(blobTB()), funcTB(blobTB(), intTB()), arrayTB(intTB())))
-        );
-        assertThat(specHash)
-            .isEqualTo(mapFuncCB(intTB(), blobTB()).hash());
+            hash(funcTB(arrayTB(blobTB()), funcTB(blobTB(), intTB()), arrayTB(intTB()))));
+        assertThat(specHash).isEqualTo(mapFuncCB(intTB(), blobTB()).hash());
       }
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
         var illegalType = funcTB(arrayTB(blobTB()), funcTB(stringTB(), intTB()), arrayTB(intTB()));
-        var categoryHash = hash(
-            hash(MAP_FUNC.marker()),
-            hash(illegalType)
-        );
+        var categoryHash = hash(hash(MAP_FUNC.marker()), hash(illegalType));
         assertCall(() -> categoryDb().get(categoryHash))
             .throwsException(illegalMapFuncTypeExc(categoryHash, illegalType));
       }
@@ -269,10 +231,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save func type in HashedDb.
          */
-        var specHash = hash(
-            hash(NATIVE_FUNC.marker()),
-            hash(funcTB(stringTB(), boolTB(), intTB()))
-        );
+        var specHash =
+            hash(hash(NATIVE_FUNC.marker()), hash(funcTB(stringTB(), boolTB(), intTB())));
         assertThat(specHash)
             .isEqualTo(nativeFuncCB(stringTB(), boolTB(), intTB()).hash());
       }
@@ -299,10 +259,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Test
       public void with_func_type_hash_pointing_nowhere() throws Exception {
         var dataHash = Hash.of(33);
-        var typeHash = hash(
-            hash(categoryKind().marker()),
-            dataHash
-        );
+        var typeHash = hash(hash(categoryKind().marker()), dataHash);
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeException(typeHash, categoryKind(), DATA_PATH))
             .withCause(new DecodeCatException(dataHash));
@@ -311,10 +268,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Test
       public void with_func_type_being_oper_type() throws Exception {
         var notFuncTB = varCB(intTB());
-        var typeHash = hash(
-            hash(categoryKind().marker()),
-            hash(notFuncTB)
-        );
+        var typeHash = hash(hash(categoryKind().marker()), hash(notFuncTB));
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatException(
                 typeHash, categoryKind(), DATA_PATH, FuncTB.class, VarCB.class));
@@ -329,14 +283,9 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save func type in HashedDb.
          */
-        var specHash = hash(
-            hash(FUNC.marker()),
-            hash(
-                hash(tupleTB(stringTB(), boolTB())),
-                hash(intTB()))
-        );
-        assertThat(specHash)
-            .isEqualTo(funcTB(stringTB(), boolTB(), intTB()).hash());
+        var specHash =
+            hash(hash(FUNC.marker()), hash(hash(tupleTB(stringTB(), boolTB())), hash(intTB())));
+        assertThat(specHash).isEqualTo(funcTB(stringTB(), boolTB(), intTB()).hash());
       }
 
       @Test
@@ -351,34 +300,21 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
-        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
-            FUNC);
+        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(FUNC);
       }
 
       @Test
       public void with_data_not_being_seq_of_hashes() throws Exception {
         var notHashOfSeq = hash("abc");
-        var hash =
-            hash(
-                hash(FUNC.marker()),
-                notHashOfSeq
-            );
-        assertThatGet(hash)
-            .throwsException(new DecodeCatNodeException(hash, FUNC, DATA_PATH));
+        var hash = hash(hash(FUNC.marker()), notHashOfSeq);
+        assertThatGet(hash).throwsException(new DecodeCatNodeException(hash, FUNC, DATA_PATH));
       }
 
       @Test
       public void with_data_having_three_elems() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var resultT = intTB();
-        var hash = hash(
-            hash(FUNC.marker()),
-            hash(
-                hash(paramTs),
-                hash(resultT),
-                hash(resultT)
-            )
-        );
+        var hash = hash(hash(FUNC.marker()), hash(hash(paramTs), hash(resultT), hash(resultT)));
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongSeqSizeException(hash, FUNC, DATA_PATH, 2, 3));
       }
@@ -386,12 +322,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Test
       public void with_data_having_one_elems() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
-        var hash = hash(
-            hash(FUNC.marker()),
-            hash(
-                hash(paramTs)
-            )
-        );
+        var hash = hash(hash(FUNC.marker()), hash(hash(paramTs)));
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongSeqSizeException(hash, FUNC, DATA_PATH, 2, 1));
       }
@@ -401,27 +332,17 @@ public class CategoryBCorruptedTest extends TestContext {
       public void with_data_seq_size_different_than_multiple_of_hash_size(int byteCount)
           throws Exception {
         var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
-        var typeHash = hash(
-            hash(FUNC.marker()),
-            notHashOfSeq
-        );
+        var typeHash = hash(hash(FUNC.marker()), notHashOfSeq);
         assertCall(() -> ((FuncTB) categoryDb().get(typeHash)).result())
             .throwsException(new DecodeCatNodeException(typeHash, FUNC, DATA_PATH))
-            .withCause(new DecodeHashSeqException(
-                notHashOfSeq, byteCount % Hash.lengthInBytes()));
+            .withCause(new DecodeHashSeqException(notHashOfSeq, byteCount % Hash.lengthInBytes()));
       }
 
       @Test
       public void with_result_pointing_nowhere() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
         var nowhere = Hash.of(33);
-        var typeHash = hash(
-            hash(FUNC.marker()),
-            hash(
-                hash(paramTs),
-                nowhere
-            )
-        );
+        var typeHash = hash(hash(FUNC.marker()), hash(hash(paramTs), nowhere));
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeException(typeHash, FUNC, CategoryDb.FUNC_RES_PATH))
             .withCause(new DecodeCatException(nowhere));
@@ -430,13 +351,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Test
       public void with_result_being_oper_type() throws Exception {
         var paramT = tupleTB(stringTB(), boolTB());
-        var typeHash = hash(
-            hash(FUNC.marker()),
-            hash(
-                hash(paramT),
-                hash(varCB())
-            )
-        );
+        var typeHash = hash(hash(FUNC.marker()), hash(hash(paramT), hash(varCB())));
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatException(
                 typeHash, FUNC, CategoryDb.FUNC_RES_PATH, TypeB.class, VarCB.class));
@@ -445,13 +360,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Test
       public void with_result_type_corrupted() throws Exception {
         var paramTs = tupleTB(stringTB(), boolTB());
-        var typeHash = hash(
-            hash(FUNC.marker()),
-            hash(
-                hash(paramTs),
-                corruptedArrayTHash()
-            )
-        );
+        var typeHash = hash(hash(FUNC.marker()), hash(hash(paramTs), corruptedArrayTHash()));
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeException(typeHash, FUNC, CategoryDb.FUNC_RES_PATH))
             .withCause(corruptedArrayTypeExc());
@@ -460,13 +369,7 @@ public class CategoryBCorruptedTest extends TestContext {
       @Test
       public void with_params_pointing_nowhere() throws Exception {
         var nowhere = Hash.of(33);
-        var typeHash = hash(
-            hash(FUNC.marker()),
-            hash(
-                nowhere,
-                hash(intTB())
-            )
-        );
+        var typeHash = hash(hash(FUNC.marker()), hash(nowhere, hash(intTB())));
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeException(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(new DecodeCatException(nowhere));
@@ -474,13 +377,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_params_not_being_tuple() throws Exception {
-        var typeHash = hash(
-            hash(FUNC.marker()),
-            hash(
-                hash(stringTB()),
-                hash(intTB())
-            )
-        );
+        var typeHash = hash(hash(FUNC.marker()), hash(hash(stringTB()), hash(intTB())));
         assertThatGet(typeHash)
             .throwsException(new DecodeCatWrongNodeCatException(
                 typeHash, FUNC, FUNC_PARAMS_PATH, TupleTB.class, StringTB.class));
@@ -488,13 +385,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_params_being_oper_type() throws Exception {
-        var typeHash = hash(
-            hash(FUNC.marker()),
-            hash(
-                hash(varCB()),
-                hash(intTB())
-            )
-        );
+        var typeHash = hash(hash(FUNC.marker()), hash(hash(varCB()), hash(intTB())));
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatWrongNodeCatException(
                 typeHash, FUNC, FUNC_PARAMS_PATH, TypeB.class, VarCB.class));
@@ -502,13 +393,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_params_type_corrupted() throws Exception {
-        var typeHash = hash(
-            hash(FUNC.marker()),
-            hash(
-                corruptedArrayTHash(),
-                hash(intTB())
-            )
-        );
+        var typeHash = hash(hash(FUNC.marker()), hash(corruptedArrayTHash(), hash(intTB())));
         assertCall(() -> categoryDb().get(typeHash))
             .throwsException(new DecodeCatNodeException(typeHash, FUNC, FUNC_PARAMS_PATH))
             .withCause(corruptedArrayTypeExc());
@@ -523,15 +408,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Tuple type in HashedDb.
          */
-        var hash = hash(
-            hash(TUPLE.marker()),
-            hash(
-                hash(stringTB()),
-                hash(stringTB())
-            )
-        );
-        assertThat(hash)
-            .isEqualTo(personTB().hash());
+        var hash = hash(hash(TUPLE.marker()), hash(hash(stringTB()), hash(stringTB())));
+        assertThat(hash).isEqualTo(personTB().hash());
       }
 
       @Test
@@ -546,32 +424,20 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_data_hash_pointing_nowhere() throws Exception {
-        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
-            TUPLE);
+        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(TUPLE);
       }
 
       @Test
       public void with_elements_not_being_seq_of_hashes() throws Exception {
         Hash notHashOfSeq = hash("abc");
-        Hash hash =
-            hash(
-                hash(TUPLE.marker()),
-                notHashOfSeq
-            );
-        assertThatGet(hash)
-            .throwsException(new DecodeCatNodeException(hash, TUPLE, DATA_PATH));
+        Hash hash = hash(hash(TUPLE.marker()), notHashOfSeq);
+        assertThatGet(hash).throwsException(new DecodeCatNodeException(hash, TUPLE, DATA_PATH));
       }
 
       @Test
       public void with_elements_being_array_of_non_type() throws Exception {
         Hash stringHash = hash(stringB("abc"));
-        Hash hash =
-            hash(
-                hash(TUPLE.marker()),
-                hash(
-                    stringHash
-                )
-            );
+        Hash hash = hash(hash(TUPLE.marker()), hash(stringHash));
         assertThatGet(hash)
             .throwsException(new DecodeCatNodeException(hash, TUPLE, "data[0]"))
             .withCause(new DecodeCatException(stringHash));
@@ -579,13 +445,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_elements_being_seq_of_oper_types() throws Exception {
-        Hash hash =
-            hash(
-                hash(TUPLE.marker()),
-                hash(
-                    hash(varCB())
-                )
-            );
+        Hash hash = hash(hash(TUPLE.marker()), hash(hash(varCB())));
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatException(
                 hash, TUPLE, "data", 0, TypeB.class, VarCB.class));
@@ -593,12 +453,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_corrupted_element_type() throws Exception {
-        Hash hash =
-            hash(
-                hash(TUPLE.marker()),
-                hash(
-                    corruptedArrayTHash(),
-                    hash(stringTB())));
+        Hash hash = hash(hash(TUPLE.marker()), hash(corruptedArrayTHash(), hash(stringTB())));
         assertThatGet(hash)
             .throwsException(new DecodeCatNodeException(hash, TUPLE, "data[0]"))
             .withCause(corruptedArrayTypeExc());
@@ -608,32 +463,20 @@ public class CategoryBCorruptedTest extends TestContext {
 
   private void assert_reading_cat_without_data_causes_exc(CategoryKindB speckKind)
       throws Exception {
-    Hash hash =
-        hash(
-            hash(speckKind.marker())
-        );
-    assertThatGet(hash)
-        .throwsException(new DecodeCatRootException(hash, speckKind, 1, 2));
+    Hash hash = hash(hash(speckKind.marker()));
+    assertThatGet(hash).throwsException(new DecodeCatRootException(hash, speckKind, 1, 2));
   }
 
   private void assert_reading_cat_with_additional_data_causes_exc(CategoryKindB kind)
       throws Exception {
-    var hash = hash(
-        hash(kind.marker()),
-        hash(stringTB()),
-        hash("corrupted")
-    );
-    assertThatGet(hash)
-        .throwsException(new DecodeCatRootException(hash, 3));
+    var hash = hash(hash(kind.marker()), hash(stringTB()), hash("corrupted"));
+    assertThatGet(hash).throwsException(new DecodeCatRootException(hash, 3));
   }
 
   private void assert_reading_cat_with_data_pointing_nowhere_causes_exc(CategoryKindB kind)
       throws Exception {
     Hash dataHash = Hash.of(33);
-    Hash typeHash = hash(
-        hash(kind.marker()),
-        dataHash
-    );
+    Hash typeHash = hash(hash(kind.marker()), dataHash);
     assertCall(() -> categoryDb().get(typeHash))
         .throwsException(new DecodeCatNodeException(typeHash, kind, DATA_PATH))
         .withCause(new DecodeCatException(dataHash));
@@ -642,10 +485,7 @@ public class CategoryBCorruptedTest extends TestContext {
   private void assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
       CategoryKindB kind) throws Exception {
     Hash dataHash = Hash.of(33);
-    Hash typeHash = hash(
-        hash(kind.marker()),
-        dataHash
-    );
+    Hash typeHash = hash(hash(kind.marker()), dataHash);
     assertCall(() -> categoryDb().get(typeHash))
         .throwsException(new DecodeCatNodeException(typeHash, kind, DATA_PATH))
         .withCause(new NoSuchDataException(dataHash));
@@ -653,17 +493,14 @@ public class CategoryBCorruptedTest extends TestContext {
 
   private void assert_reading_cat_with_corrupted_type_as_data_causes_exc(CategoryKindB kind)
       throws Exception {
-    Hash hash =
-        hash(
-            hash(kind.marker()),
-            corruptedArrayTHash());
+    Hash hash = hash(hash(kind.marker()), corruptedArrayTHash());
     assertThatGet(hash)
         .throwsException(new DecodeCatNodeException(hash, kind, DATA_PATH))
         .withCause(corruptedArrayTypeExc());
   }
 
   private ThrownExceptionSubject assertThatGet(Hash hash) {
-      return assertCall(() -> categoryDb().get(hash));
+    return assertCall(() -> categoryDb().get(hash));
   }
 
   private DecodeCatException illegalTypeMarkerException(Hash hash, int marker) {
@@ -675,10 +512,7 @@ public class CategoryBCorruptedTest extends TestContext {
   }
 
   private Hash corruptedArrayTHash() throws Exception {
-    return hash(
-        hash(ARRAY.marker()),
-        Hash.of(33)
-    );
+    return hash(hash(ARRAY.marker()), Hash.of(33));
   }
 
   protected Hash hash(String string) throws HashedDbException {
@@ -727,12 +561,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save call type in HashedDb.
          */
-        var hash = hash(
-            hash(CALL.marker()),
-            hash(intTB())
-        );
-        assertThat(hash)
-            .isEqualTo(callCB(intTB()).hash());
+        var hash = hash(hash(CALL.marker()), hash(intTB()));
+        assertThat(hash).isEqualTo(callCB(intTB()).hash());
       }
 
       @Nested
@@ -751,12 +581,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Combine type in HashedDb.
          */
-        var hash = hash(
-            hash(COMBINE.marker()),
-            hash(tupleTB(intTB(), stringTB()))
-        );
-        assertThat(hash)
-            .isEqualTo(combineCB(intTB(), stringTB()).hash());
+        var hash = hash(hash(COMBINE.marker()), hash(tupleTB(intTB(), stringTB())));
+        assertThat(hash).isEqualTo(combineCB(intTB(), stringTB()).hash());
       }
 
       @Nested
@@ -768,10 +594,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_evaluation_type_not_being_tuple_type() throws Exception {
-        var hash = hash(
-            hash(COMBINE.marker()),
-            hash(intTB())
-        );
+        var hash = hash(hash(COMBINE.marker()), hash(intTB()));
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatException(
                 hash, COMBINE, DATA_PATH, TupleTB.class, IntTB.class));
@@ -786,12 +609,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Order type in HashedDb.
          */
-        var hash = hash(
-            hash(ORDER.marker()),
-            hash(arrayTB(intTB()))
-        );
-        assertThat(hash)
-            .isEqualTo(orderCB(intTB()).hash());
+        var hash = hash(hash(ORDER.marker()), hash(arrayTB(intTB())));
+        assertThat(hash).isEqualTo(orderCB(intTB()).hash());
       }
 
       @Nested
@@ -803,10 +622,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_evaluation_type_not_being_array_type() throws Exception {
-        var hash = hash(
-            hash(ORDER.marker()),
-            hash(intTB())
-        );
+        var hash = hash(hash(ORDER.marker()), hash(intTB()));
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatException(
                 hash, ORDER, DATA_PATH, ArrayTB.class, IntTB.class));
@@ -821,12 +637,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Pick type in HashedDb.
          */
-        var hash = hash(
-            hash(PICK.marker()),
-            hash(intTB())
-        );
-        assertThat(hash)
-            .isEqualTo(pickCB(intTB()).hash());
+        var hash = hash(hash(PICK.marker()), hash(intTB()));
+        assertThat(hash).isEqualTo(pickCB(intTB()).hash());
       }
 
       @Nested
@@ -845,12 +657,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save variable in HashedDb.
          */
-        var hash = hash(
-            hash(VAR.marker()),
-            hash(intTB())
-        );
-        assertThat(hash)
-            .isEqualTo(varCB(intTB()).hash());
+        var hash = hash(hash(VAR.marker()), hash(intTB()));
+        assertThat(hash).isEqualTo(varCB(intTB()).hash());
       }
 
       @Nested
@@ -869,12 +677,8 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save Select type in HashedDb.
          */
-        var hash = hash(
-            hash(SELECT.marker()),
-            hash(intTB())
-        );
-        assertThat(hash)
-            .isEqualTo(selectCB(intTB()).hash());
+        var hash = hash(hash(SELECT.marker()), hash(intTB()));
+        assertThat(hash).isEqualTo(selectCB(intTB()).hash());
       }
 
       @Nested
@@ -893,7 +697,8 @@ public class CategoryBCorruptedTest extends TestContext {
         this(categoryKindB, TypeB.class);
       }
 
-      protected AbstractOperCategoryTestSuite(CategoryKindB categoryKindB, Class<? extends CategoryB> type) {
+      protected AbstractOperCategoryTestSuite(
+          CategoryKindB categoryKindB, Class<? extends CategoryB> type) {
         this.categoryKindB = categoryKindB;
         this.type = type;
       }
@@ -920,10 +725,7 @@ public class CategoryBCorruptedTest extends TestContext {
 
       @Test
       public void with_evaluation_type_being_oper_type() throws Exception {
-        var hash = hash(
-            hash(categoryKindB.marker()),
-            hash(varCB())
-        );
+        var hash = hash(hash(categoryKindB.marker()), hash(varCB()));
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatException(
                 hash, categoryKindB, DATA_PATH, type, VarCB.class));

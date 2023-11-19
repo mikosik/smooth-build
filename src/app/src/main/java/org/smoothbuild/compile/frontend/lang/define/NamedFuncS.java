@@ -7,9 +7,7 @@ import org.smoothbuild.compile.frontend.lang.type.FuncSchemaS;
 /**
  * Named function.
  */
-public sealed abstract class NamedFuncS
-    extends NamedEvaluableS
-    implements FuncS
+public abstract sealed class NamedFuncS extends NamedEvaluableS implements FuncS
     permits AnnotatedFuncS, NamedExprFuncS, ConstructorS {
   private final NList<ItemS> params;
 

@@ -10,14 +10,14 @@ import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 
 public class DecodeFuncCatWrongFuncTypeException extends DecodeCatNodeException {
   public static DecodeFuncCatWrongFuncTypeException illegalIfFuncTypeExc(Hash hash, FuncTB funcTB) {
-    return new DecodeFuncCatWrongFuncTypeException(hash, IF_FUNC,
-        "Function type " + funcTB.q() + " doesn't match type of `if` function.");
+    return new DecodeFuncCatWrongFuncTypeException(
+        hash, IF_FUNC, "Function type " + funcTB.q() + " doesn't match type of `if` function.");
   }
 
   public static DecodeFuncCatWrongFuncTypeException illegalMapFuncTypeExc(
       Hash hash, FuncTB funcTB) {
-    return new DecodeFuncCatWrongFuncTypeException(hash, MAP_FUNC,
-        "Function type " + funcTB.q() + " doesn't match type of `map` function.");
+    return new DecodeFuncCatWrongFuncTypeException(
+        hash, MAP_FUNC, "Function type " + funcTB.q() + " doesn't match type of `map` function.");
   }
 
   public DecodeFuncCatWrongFuncTypeException(Hash hash, CategoryKindB kind, String message) {

@@ -1,7 +1,6 @@
 package org.smoothbuild.common.io;
 
 import java.io.IOException;
-
 import okio.BufferedSource;
 
 @FunctionalInterface

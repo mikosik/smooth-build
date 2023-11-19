@@ -6,16 +6,14 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.failure;
 import static org.smoothbuild.out.log.Maybe.success;
 
-import java.io.IOException;
-import java.util.function.Function;
-
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.filesystem.space.ForSpace;
-import org.smoothbuild.out.log.Maybe;
-
 import io.vavr.Tuple;
 import io.vavr.Tuple0;
 import jakarta.inject.Inject;
+import java.io.IOException;
+import java.util.function.Function;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.filesystem.space.ForSpace;
+import org.smoothbuild.out.log.Maybe;
 
 public class RemoveArtifacts implements Function<Tuple0, Maybe<Tuple0>> {
   private final FileSystem fileSystem;

@@ -5,9 +5,8 @@ import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.funcTypeName;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import java.util.Objects;
-
 import com.google.common.collect.ImmutableList;
+import java.util.Objects;
 
 /**
  * This class is immutable.

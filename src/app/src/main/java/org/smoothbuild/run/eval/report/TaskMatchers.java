@@ -1,8 +1,8 @@
 package org.smoothbuild.run.eval.report;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.evaluate.task.CombineTask;
 import org.smoothbuild.vm.evaluate.task.ConstTask;
@@ -11,8 +11,6 @@ import org.smoothbuild.vm.evaluate.task.OrderTask;
 import org.smoothbuild.vm.evaluate.task.PickTask;
 import org.smoothbuild.vm.evaluate.task.SelectTask;
 import org.smoothbuild.vm.evaluate.task.Task;
-
-import com.google.common.collect.ImmutableMap;
 
 public class TaskMatchers {
   public static final TaskMatcher ALL = (task, logs) -> true;
@@ -40,7 +38,6 @@ public class TaskMatchers {
           .put("d", DEFAULT)
           .put("none", NONE)
           .put("n", NONE)
-
           .put("fatal", FATAL)
           .put("lf", FATAL)
           .put("error", ERROR)
@@ -49,7 +46,6 @@ public class TaskMatchers {
           .put("lw", WARNING)
           .put("info", INFO)
           .put("li", INFO)
-
           .put("call", CALL)
           .put("c", CALL)
           .put("tuple", COMBINE)
@@ -62,7 +58,6 @@ public class TaskMatchers {
           .put("p", PICK)
           .put("select", SELECT)
           .put("s", SELECT)
-
           .build();
 
   public static Optional<TaskMatcher> findMatcher(String name) {
@@ -78,9 +73,7 @@ public class TaskMatchers {
   }
 
   private static TaskMatcher logLevelMatcher(Level level) {
-    return (task, logs) -> logs
-        .stream()
-        .anyMatch(l -> l.level().hasPriorityAtLeast(level));
+    return (task, logs) -> logs.stream().anyMatch(l -> l.level().hasPriorityAtLeast(level));
   }
 
   private static TaskMatcher kindMatcher(Class<? extends Task> taskClass) {

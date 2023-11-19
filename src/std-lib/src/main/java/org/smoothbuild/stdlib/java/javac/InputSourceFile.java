@@ -6,9 +6,7 @@ import static org.smoothbuild.run.eval.FileStruct.filePath;
 
 import java.net.URI;
 import java.util.Scanner;
-
 import javax.tools.SimpleJavaFileObject;
-
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class InputSourceFile extends SimpleJavaFileObject {

@@ -4,8 +4,7 @@ public enum ResultSource {
   DISK("cache"),
   EXECUTION("exec"),
   MEMORY("mem"),
-  NOOP("")
-  ;
+  NOOP("");
 
   private final String name;
 

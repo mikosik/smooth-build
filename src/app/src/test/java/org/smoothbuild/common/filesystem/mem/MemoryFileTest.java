@@ -3,16 +3,13 @@ package org.smoothbuild.common.filesystem.mem;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import com.google.common.truth.Truth;
 import java.io.IOException;
-
+import okio.BufferedSink;
+import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.common.filesystem.base.PathS;
-
-import com.google.common.truth.Truth;
-
-import okio.BufferedSink;
-import okio.ByteString;
 
 public class MemoryFileTest {
   private final MemoryDir parent = Mockito.mock(MemoryDir.class);
@@ -25,50 +22,43 @@ public class MemoryFileTest {
   @Test
   public void name() {
     file = new MemoryFile(parent, name);
-    Truth.assertThat(file.name())
-        .isEqualTo(name);
+    Truth.assertThat(file.name()).isEqualTo(name);
   }
 
   @Test
   public void parent() {
     file = new MemoryFile(parent, name);
-    assertThat(file.parent())
-        .isSameInstanceAs(parent);
+    assertThat(file.parent()).isSameInstanceAs(parent);
   }
 
   @Test
   public void memory_file_is_file() {
     file = new MemoryFile(parent, name);
-    assertThat(file.isFile())
-        .isTrue();
+    assertThat(file.isFile()).isTrue();
   }
 
   @Test
   public void memory_file_is_not_dir() {
     file = new MemoryFile(parent, name);
-    assertThat(file.isDir())
-        .isFalse();
+    assertThat(file.isDir()).isFalse();
   }
 
   @Test
   public void does_not_have_any_children() {
     file = new MemoryFile(parent, name);
-    assertThat(file.hasChild(otherName))
-        .isFalse();
+    assertThat(file.hasChild(otherName)).isFalse();
   }
 
   @Test
   public void accessing_children_causes_exception() {
     file = new MemoryFile(parent, name);
-    assertCall(() -> file.child(otherName))
-        .throwsException(UnsupportedOperationException.class);
+    assertCall(() -> file.child(otherName)).throwsException(UnsupportedOperationException.class);
   }
 
   @Test
   public void child_names_throws_exception() {
     file = new MemoryFile(parent, name);
-    assertCall(() -> file.childNames())
-        .throwsException(UnsupportedOperationException.class);
+    assertCall(() -> file.childNames()).throwsException(UnsupportedOperationException.class);
   }
 
   @Test
@@ -81,8 +71,7 @@ public class MemoryFileTest {
   @Test
   public void opening_input_stream_for_non_existent_file_fails() {
     file = new MemoryFile(parent, name);
-    assertCall(() -> file.source())
-        .throwsException(IOException.class);
+    assertCall(() -> file.source()).throwsException(IOException.class);
   }
 
   @Test
@@ -91,7 +80,6 @@ public class MemoryFileTest {
     sink = file.sink();
     sink.write(bytes);
     sink.close();
-    assertThat(file.source().readByteString())
-        .isEqualTo(bytes);
+    assertThat(file.source().readByteString()).isEqualTo(bytes);
   }
 }

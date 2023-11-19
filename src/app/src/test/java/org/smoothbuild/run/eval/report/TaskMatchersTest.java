@@ -11,7 +11,6 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.and;
 import static org.smoothbuild.run.eval.report.TaskMatchers.or;
 
 import java.util.List;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,8 +22,7 @@ public class TaskMatchersTest extends TestContext {
   @ParameterizedTest
   @MethodSource("matcher_matches_cases")
   public void matcher_matches(TaskMatcher matcher, Task task, List<Log> logs, boolean expected) {
-    assertThat(matcher.matches(task, logs))
-        .isEqualTo(expected);
+    assertThat(matcher.matches(task, logs)).isEqualTo(expected);
   }
 
   public static List<Arguments> matcher_matches_cases() {
@@ -32,37 +30,30 @@ public class TaskMatchersTest extends TestContext {
     return List.of(
         arguments(matcher("all"), null, null, true),
         arguments(matcher("none"), null, null, false),
-
         arguments(matcher("fatal"), null, list(fatal("fatal")), true),
         arguments(matcher("fatal"), null, list(error("error")), false),
         arguments(matcher("fatal"), null, list(warning("warning")), false),
         arguments(matcher("fatal"), null, list(info("info")), false),
-
         arguments(matcher("error"), null, list(fatal("fatal")), true),
         arguments(matcher("error"), null, list(error("error")), true),
         arguments(matcher("error"), null, list(warning("warning")), false),
         arguments(matcher("error"), null, list(info("info")), false),
-
         arguments(matcher("warning"), null, list(fatal("fatal")), true),
         arguments(matcher("warning"), null, list(error("error")), true),
         arguments(matcher("warning"), null, list(warning("warning")), true),
         arguments(matcher("warning"), null, list(info("info")), false),
-
         arguments(matcher("info"), null, list(fatal("fatal")), true),
         arguments(matcher("info"), null, list(error("error")), true),
         arguments(matcher("info"), null, list(warning("warning")), true),
         arguments(matcher("info"), null, list(info("info")), true),
-
         arguments(and(matcher("all"), matcher("all")), null, null, true),
         arguments(and(matcher("all"), matcher("none")), null, null, false),
         arguments(and(matcher("none"), matcher("all")), null, null, false),
         arguments(and(matcher("none"), matcher("none")), null, null, false),
-
         arguments(or(matcher("all"), matcher("all")), null, null, true),
         arguments(or(matcher("all"), matcher("none")), null, null, true),
         arguments(or(matcher("none"), matcher("all")), null, null, true),
         arguments(or(matcher("none"), matcher("none")), null, null, false),
-
         arguments(matcher("call"), t.invokeTask(), null, true),
         arguments(matcher("call"), t.orderTask(), null, false),
         arguments(matcher("tuple"), t.combineTask(), null, true),
@@ -74,8 +65,7 @@ public class TaskMatchersTest extends TestContext {
         arguments(matcher("pick"), t.pickTask(), null, true),
         arguments(matcher("pick"), t.orderTask(), null, false),
         arguments(matcher("select"), t.selectTask(), null, true),
-        arguments(matcher("select"), t.orderTask(), null, false)
-    );
+        arguments(matcher("select"), t.orderTask(), null, false));
   }
 
   private static TaskMatcher matcher(String name) {

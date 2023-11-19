@@ -4,7 +4,6 @@ import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 
 import java.util.function.Predicate;
-
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
@@ -27,7 +26,8 @@ public class FilterFilesFunc {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;
     }
-    ArrayBBuilder builder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
+    ArrayBBuilder builder =
+        nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
 
     for (TupleB file : files.elems(TupleB.class)) {
       if (filter.test(path(filePath(file).toJ()))) {

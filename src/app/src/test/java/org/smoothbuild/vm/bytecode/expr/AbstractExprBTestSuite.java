@@ -3,12 +3,10 @@ package org.smoothbuild.vm.bytecode.expr;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 
+import com.google.common.testing.EqualsTester;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
-
-import com.google.common.testing.EqualsTester;
 
 public abstract class AbstractExprBTestSuite<T extends ExprB> extends TestContext {
   protected abstract List<T> equalExprs();
@@ -17,9 +15,7 @@ public abstract class AbstractExprBTestSuite<T extends ExprB> extends TestContex
 
   @Test
   public void test_equals_and_hashcode_of_equal_exprs() {
-    new EqualsTester()
-        .addEqualityGroup(equalExprs().toArray())
-        .testEquals();
+    new EqualsTester().addEqualityGroup(equalExprs().toArray()).testEquals();
   }
 
   @Test
@@ -34,8 +30,7 @@ public abstract class AbstractExprBTestSuite<T extends ExprB> extends TestContex
   @Test
   public void test_hash_of_equal_exprs() {
     var values = equalExprs();
-    assertThat(values.get(0).hash())
-        .isEqualTo(values.get(1).hash());
+    assertThat(values.get(0).hash()).isEqualTo(values.get(1).hash());
   }
 
   @Test

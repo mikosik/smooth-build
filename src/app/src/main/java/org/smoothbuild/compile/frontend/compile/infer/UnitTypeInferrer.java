@@ -34,14 +34,14 @@ public class UnitTypeInferrer {
   public void infer(ExprP expr) {
     // @formatter:off
     switch (expr) {
-      case CallP          call          -> inferCall(call);
-      case InstantiateP   instantiateP  -> inferInstantiate(instantiateP);
-      case NamedArgP      namedArg      -> inferNamedArg(namedArg);
-      case OrderP         order         -> inferOrder(order);
-      case SelectP        select        -> inferSelect(select);
-      case StringP        string        -> {}
-      case IntP           int_          -> {}
-      case BlobP          blob          -> {}
+      case CallP call -> inferCall(call);
+      case InstantiateP instantiateP -> inferInstantiate(instantiateP);
+      case NamedArgP namedArg -> inferNamedArg(namedArg);
+      case OrderP order -> inferOrder(order);
+      case SelectP select -> inferSelect(select);
+      case StringP string -> {}
+      case IntP int_ -> {}
+      case BlobP blob -> {}
     }
     // @formatter:on
   }

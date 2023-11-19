@@ -6,16 +6,14 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.Iterator;
 import java.util.List;
-
-import org.smoothbuild.common.filesystem.base.AssertPath;
-import org.smoothbuild.common.filesystem.base.FileSystem;
-import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.common.filesystem.base.PathState;
-
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;
+import org.smoothbuild.common.filesystem.base.AssertPath;
+import org.smoothbuild.common.filesystem.base.FileSystem;
+import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.filesystem.base.PathState;
 
 /**
  * In memory implementation of FileSystem.
@@ -24,8 +22,7 @@ import okio.Sink;
 public class MemoryFileSystem implements FileSystem {
   private MemoryDir root = null;
 
-  public MemoryFileSystem() {
-  }
+  public MemoryFileSystem() {}
 
   @Override
   public PathState pathState(PathS path) {

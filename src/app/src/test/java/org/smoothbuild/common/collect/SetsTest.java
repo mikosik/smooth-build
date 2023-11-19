@@ -9,7 +9,6 @@ import static org.smoothbuild.common.collect.Sets.sort;
 import static org.smoothbuild.common.collect.Sets.union;
 
 import java.util.HashSet;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -18,26 +17,22 @@ public class SetsTest {
   class _create {
     @Test
     public void set_with_no_elems() {
-      assertThat(set())
-          .isEmpty();
+      assertThat(set()).isEmpty();
     }
 
     @Test
     public void set_with_one_elem() {
-      assertThat(set("abc"))
-          .containsExactly("abc");
+      assertThat(set("abc")).containsExactly("abc");
     }
 
     @Test
     public void set_with_two_elems() {
-      assertThat(set("abc", "def"))
-          .containsExactly("abc", "def");
+      assertThat(set("abc", "def")).containsExactly("abc", "def");
     }
 
     @Test
     public void set_with_three_elems() {
-      assertThat(set("abc", "def", "ghi"))
-          .containsExactly("abc", "def", "ghi");
+      assertThat(set("abc", "def", "ghi")).containsExactly("abc", "def", "ghi");
     }
   }
 
@@ -45,14 +40,12 @@ public class SetsTest {
   class _union_with_set {
     @Test
     public void of_empty_sets_is_empty_set() {
-      assertThat(union(new HashSet<>(), new HashSet<>()))
-          .isEmpty();
+      assertThat(union(new HashSet<>(), new HashSet<>())).isEmpty();
     }
 
     @Test
     public void of_two_sets_contains_value_from_each_one() {
-      assertThat(union(set("abc"), set("def")))
-          .containsExactly("abc", "def");
+      assertThat(union(set("abc"), set("def"))).containsExactly("abc", "def");
     }
   }
 
@@ -60,14 +53,12 @@ public class SetsTest {
   class _union_with_elem {
     @Test
     public void of_empty_sets_is_added_elem() {
-      assertThat(union(new HashSet<>(), "abc"))
-          .containsExactly("abc");
+      assertThat(union(new HashSet<>(), "abc")).containsExactly("abc");
     }
 
     @Test
     public void of_set_and_value_contains_set_elements_and_added_element() {
-      assertThat(union(set("abc"), "def"))
-          .containsExactly("abc", "def");
+      assertThat(union(set("abc"), "def")).containsExactly("abc", "def");
     }
   }
 
@@ -75,20 +66,17 @@ public class SetsTest {
   class _map {
     @Test
     public void returns_empty_for_empty_arg() {
-      assertThat(map(new HashSet<String>(), String::toUpperCase))
-          .isEmpty();
+      assertThat(map(new HashSet<String>(), String::toUpperCase)).isEmpty();
     }
 
     @Test
     public void one_elem() {
-      assertThat(map(set("abc"), String::toUpperCase))
-          .containsExactly("ABC");
+      assertThat(map(set("abc"), String::toUpperCase)).containsExactly("ABC");
     }
 
     @Test
     public void two_elems() {
-      assertThat(map(set("abc", "def"), String::toUpperCase))
-          .containsExactly("ABC", "DEF");
+      assertThat(map(set("abc", "def"), String::toUpperCase)).containsExactly("ABC", "DEF");
     }
   }
 
@@ -96,8 +84,7 @@ public class SetsTest {
   class _filter {
     @Test
     public void returns_empty_for_empty_arg() {
-      assertThat(filter(new HashSet<>(), e -> true))
-          .isEmpty();
+      assertThat(filter(new HashSet<>(), e -> true)).isEmpty();
     }
 
     @Test
@@ -108,8 +95,7 @@ public class SetsTest {
 
     @Test
     public void with_always_false_predicate_returns_empty_list() {
-      assertThat(filter(set("first", "second", "third"), s -> false))
-          .isEmpty();
+      assertThat(filter(set("first", "second", "third"), s -> false)).isEmpty();
     }
 
     @Test
@@ -123,14 +109,12 @@ public class SetsTest {
   class _sort {
     @Test
     public void returns_empty_for_empty_arg() {
-      assertThat(sort(new HashSet<>(), comparing(Object::toString)))
-          .isEmpty();
+      assertThat(sort(new HashSet<>(), comparing(Object::toString))).isEmpty();
     }
 
     @Test
     public void sorts_elements() {
-      assertThat(sort(set(4, 2, 3, 1), Integer::compareTo))
-          .isEqualTo(set(1, 2, 3, 4));
+      assertThat(sort(set(4, 2, 3, 1), Integer::compareTo)).isEqualTo(set(1, 2, 3, 4));
     }
   }
 }

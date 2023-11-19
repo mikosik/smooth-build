@@ -3,7 +3,6 @@ package org.smoothbuild.compile.frontend.lang.define;
 import static org.smoothbuild.common.Strings.indent;
 
 import java.util.Objects;
-
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.FuncSchemaS;

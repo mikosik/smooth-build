@@ -1,19 +1,17 @@
- package org.smoothbuild.common.filesystem.base;
+package org.smoothbuild.common.filesystem.base;
 
- import static com.google.common.truth.Truth.assertThat;
- import static org.smoothbuild.common.filesystem.base.PathS.path;
- import static org.smoothbuild.common.filesystem.base.PathState.DIR;
- import static org.smoothbuild.common.filesystem.base.PathState.FILE;
- import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
- import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.filesystem.base.PathState.DIR;
+import static org.smoothbuild.common.filesystem.base.PathState.FILE;
+import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
- import java.io.IOException;
- import java.nio.file.FileAlreadyExistsException;
-
- import org.junit.jupiter.api.Test;
-
- import okio.BufferedSink;
- import okio.ByteString;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import okio.BufferedSink;
+import okio.ByteString;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractFileSystemTestSuite {
   protected FileSystem fileSystem;
@@ -22,38 +20,33 @@ public abstract class AbstractFileSystemTestSuite {
 
   @Test
   public void root_path_is_a_nothing() {
-    assertThat(fileSystem.pathState(PathS.root()))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(PathS.root())).isEqualTo(NOTHING);
   }
 
   @Test
   public void non_root_path_are_initially_nothing_state() {
-    assertThat(fileSystem.pathState(path("abc")))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(path("abc"))).isEqualTo(NOTHING);
   }
 
   @Test
   public void file_path_has_file_state() throws Exception {
     var path = path("some/dir/myFile");
     createEmptyFile(path);
-    assertThat(fileSystem.pathState(path))
-        .isEqualTo(FILE);
+    assertThat(fileSystem.pathState(path)).isEqualTo(FILE);
   }
 
   @Test
   public void dir_path_has_dir_state() throws Exception {
     var dir = path("my/dir");
     createEmptyFile(dir.append(path("some/dir/myFile")));
-    assertThat(fileSystem.pathState(dir))
-        .isEqualTo(DIR);
+    assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
   }
 
   @Test
   public void path_state_is_nothing_even_when_its_first_part_is_a_file() throws Exception {
     var file = path("some/dir/myFile");
     createEmptyFile(file);
-    assertThat(fileSystem.pathState(file.appendPart("something")))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(file.appendPart("something"))).isEqualTo(NOTHING);
   }
 
   @Test
@@ -65,8 +58,7 @@ public abstract class AbstractFileSystemTestSuite {
     try (BufferedSink sink = fileSystem.sink(file)) {
       sink.write(ByteString.of());
     }
-    assertThat(fileSystem.pathState(file))
-        .isEqualTo(FILE);
+    assertThat(fileSystem.pathState(file)).isEqualTo(FILE);
   }
 
   // files()
@@ -97,8 +89,7 @@ public abstract class AbstractFileSystemTestSuite {
 
   @Test
   public void files_throws_exception_when_path_does_not_exist() {
-    assertCall(() -> fileSystem.files(path("abc")))
-        .throwsException(IOException.class);
+    assertCall(() -> fileSystem.files(path("abc"))).throwsException(IOException.class);
   }
 
   // size
@@ -107,16 +98,14 @@ public abstract class AbstractFileSystemTestSuite {
   public void empty_file_has_zero_size() throws Exception {
     var file = path("some/dir/myFile");
     createEmptyFile(file);
-    assertThat(fileSystem.size(file))
-        .isEqualTo(0);
+    assertThat(fileSystem.size(file)).isEqualTo(0);
   }
 
   @Test
   public void file_with_non_zero_size() throws Exception {
     var file = path("some/dir/myFile");
     createFile(file, byteString());
-    assertThat(fileSystem.size(file))
-        .isEqualTo(3);
+    assertThat(fileSystem.size(file)).isEqualTo(3);
   }
 
   @Test
@@ -143,8 +132,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.createLink(link, file);
 
-    assertThat(fileSystem.size(link))
-        .isEqualTo(byteString().size());
+    assertThat(fileSystem.size(link)).isEqualTo(byteString().size());
   }
 
   @Test
@@ -166,8 +154,7 @@ public abstract class AbstractFileSystemTestSuite {
   public void source_reads_file_content() throws Exception {
     var file = path("some/dir/myFile");
     createFile(file, byteString());
-    assertThat(fileSystem.source(file).readByteString())
-        .isEqualTo(byteString());
+    assertThat(fileSystem.source(file).readByteString()).isEqualTo(byteString());
   }
 
   @Test
@@ -189,8 +176,7 @@ public abstract class AbstractFileSystemTestSuite {
   @Test
   public void source_throws_exception_when_path_is_root_dir() {
     assertCall(() -> fileSystem.source(PathS.root()))
-        .throwsException(new IOException(
-            "File " + resolve(PathS.root()) + " doesn't exist."));
+        .throwsException(new IOException("File " + resolve(PathS.root()) + " doesn't exist."));
   }
 
   // sink()
@@ -201,8 +187,7 @@ public abstract class AbstractFileSystemTestSuite {
     try (BufferedSink sink = fileSystem.sink(file)) {
       sink.write(byteString());
     }
-    assertThat(fileSystem.source(file).readByteString())
-        .isEqualTo(byteString());
+    assertThat(fileSystem.source(file).readByteString()).isEqualTo(byteString());
   }
 
   @Test
@@ -214,8 +199,7 @@ public abstract class AbstractFileSystemTestSuite {
     try (BufferedSink sink = fileSystem.sink(file)) {
       sink.write(ByteString.encodeUtf8("def"));
     }
-    assertThat(fileSystem.source(file).readByteString())
-        .isEqualTo(ByteString.encodeUtf8("def"));
+    assertThat(fileSystem.source(file).readByteString()).isEqualTo(ByteString.encodeUtf8("def"));
   }
 
   @Test
@@ -223,8 +207,7 @@ public abstract class AbstractFileSystemTestSuite {
     var dir = path("my/dir");
     var file = dir.append(path("some/dir/myFile"));
     createEmptyFile(file);
-    assertCall(() -> fileSystem.sink(dir))
-        .throwsException(IOException.class);
+    assertCall(() -> fileSystem.sink(dir)).throwsException(IOException.class);
   }
 
   // move()
@@ -234,8 +217,7 @@ public abstract class AbstractFileSystemTestSuite {
     var source = path("source");
     var target = path("target");
     assertCall(() -> fileSystem.move(source, target))
-        .throwsException(new IOException("Cannot move " + resolve(source)
-            + ". It doesn't exist."));
+        .throwsException(new IOException("Cannot move " + resolve(source) + ". It doesn't exist."));
   }
 
   @Test
@@ -266,8 +248,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.move(source, target);
 
-    assertThat(fileSystem.pathState(source))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(source)).isEqualTo(NOTHING);
   }
 
   @Test
@@ -278,10 +259,8 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.move(source, target);
 
-    assertThat(fileSystem.pathState(source))
-        .isEqualTo(NOTHING);
-    assertThat(fileSystem.source(target).readByteString())
-        .isEqualTo(byteString());
+    assertThat(fileSystem.pathState(source)).isEqualTo(NOTHING);
+    assertThat(fileSystem.source(target).readByteString()).isEqualTo(byteString());
   }
 
   @Test
@@ -293,10 +272,8 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.move(source, target);
 
-    assertThat(fileSystem.pathState(source))
-        .isEqualTo(NOTHING);
-    assertThat(fileSystem.source(target).readByteString())
-        .isEqualTo(byteString());
+    assertThat(fileSystem.pathState(source)).isEqualTo(NOTHING);
+    assertThat(fileSystem.source(target).readByteString()).isEqualTo(byteString());
   }
 
   @Test
@@ -307,8 +284,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.move(source, target);
 
-    assertThat(fileSystem.source(target).readByteString())
-        .isEqualTo(byteString());
+    assertThat(fileSystem.source(target).readByteString()).isEqualTo(byteString());
   }
 
   // delete()
@@ -320,8 +296,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.delete(file.parent());
 
-    assertThat(fileSystem.pathState(file))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
   }
 
   @Test
@@ -331,8 +306,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.delete(file);
 
-    assertThat(fileSystem.pathState(file))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
   }
 
   @Test
@@ -341,8 +315,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.delete(path);
 
-    assertThat(fileSystem.pathState(path))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(path)).isEqualTo(NOTHING);
   }
 
   @Test
@@ -354,10 +327,8 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.delete(PathS.root());
 
-    assertThat(fileSystem.pathState(file))
-        .isEqualTo(NOTHING);
-    assertThat(fileSystem.pathState(file2))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(file2)).isEqualTo(NOTHING);
   }
 
   // links
@@ -370,8 +341,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.createLink(link, file);
 
-    assertThat(fileSystem.source(link).readByteString())
-        .isEqualTo(byteString());
+    assertThat(fileSystem.source(link).readByteString()).isEqualTo(byteString());
   }
 
   @Test
@@ -382,8 +352,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.createLink(link, file);
 
-    assertThat(fileSystem.pathState(link))
-        .isEqualTo(FILE);
+    assertThat(fileSystem.pathState(link)).isEqualTo(FILE);
   }
 
   @Test
@@ -395,8 +364,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.delete(link);
 
-    assertThat(fileSystem.pathState(link))
-        .isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(link)).isEqualTo(NOTHING);
   }
 
   @Test
@@ -408,8 +376,7 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.delete(link);
 
-    assertThat(fileSystem.pathState(file))
-        .isEqualTo(FILE);
+    assertThat(fileSystem.pathState(file)).isEqualTo(FILE);
   }
 
   @Test
@@ -433,10 +400,8 @@ public abstract class AbstractFileSystemTestSuite {
 
     fileSystem.delete(link);
 
-    assertThat(fileSystem.pathState(link))
-        .isEqualTo(NOTHING);
-    assertThat(fileSystem.pathState(dir))
-        .isEqualTo(DIR);
+    assertThat(fileSystem.pathState(link)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
   }
 
   @Test
@@ -469,8 +434,7 @@ public abstract class AbstractFileSystemTestSuite {
   public void created_dir_exists() throws Exception {
     var file = path("some/dir/myFile");
     fileSystem.createDir(file);
-    assertThat(fileSystem.pathState(file))
-        .isEqualTo(DIR);
+    assertThat(fileSystem.pathState(file)).isEqualTo(DIR);
   }
 
   @Test
@@ -478,16 +442,14 @@ public abstract class AbstractFileSystemTestSuite {
     var file = path("some/dir/myFile");
     fileSystem.createDir(file);
     fileSystem.createDir(file);
-    assertThat(fileSystem.pathState(file))
-        .isEqualTo(DIR);
+    assertThat(fileSystem.pathState(file)).isEqualTo(DIR);
   }
 
   @Test
   public void cannot_create_dir_if_such_file_already_exists() throws Exception {
     var file = path("some/dir/myFile");
     createEmptyFile(file);
-    assertCall(() -> fileSystem.createDir(file))
-        .throwsException(FileAlreadyExistsException.class);
+    assertCall(() -> fileSystem.createDir(file)).throwsException(FileAlreadyExistsException.class);
   }
 
   // helpers

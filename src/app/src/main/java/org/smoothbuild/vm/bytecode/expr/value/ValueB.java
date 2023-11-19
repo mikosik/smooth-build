@@ -9,7 +9,7 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
  * Instance of a value.
  * This class is thread-safe.
  */
-public sealed abstract class ValueB extends ExprB
+public abstract sealed class ValueB extends ExprB
     permits FuncB, ArrayB, BlobB, BoolB, IntB, StringB, TupleB {
   public ValueB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);

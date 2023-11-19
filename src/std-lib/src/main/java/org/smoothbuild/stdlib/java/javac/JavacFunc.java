@@ -10,10 +10,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipException;
-
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -36,11 +34,7 @@ public class JavacFunc {
     private final ArrayB libs;
     private final ArrayB options;
 
-    public Worker(
-        NativeApi nativeApi,
-        ArrayB srcs,
-        ArrayB libs,
-        ArrayB options) {
+    public Worker(NativeApi nativeApi, ArrayB srcs, ArrayB libs, ArrayB options) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.srcs = srcs;
@@ -50,8 +44,11 @@ public class JavacFunc {
 
     public ArrayB execute() throws IOException {
       if (compiler == null) {
-        nativeApi.log().error("Couldn't find JavaCompiler implementation. "
-            + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
+        nativeApi
+            .log()
+            .error(
+                "Couldn't find JavaCompiler implementation. "
+                    + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
         return null;
       }
       return compile(srcs);
@@ -76,7 +73,10 @@ public class JavacFunc {
          */
         if (!inputSourceFiles.iterator().hasNext()) {
           nativeApi.log().warning("Param 'srcs' is empty list.");
-          return nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT()).build();
+          return nativeApi
+              .factory()
+              .arrayBuilderWithElems(nativeApi.factory().fileT())
+              .build();
         }
 
         // run compilation task
@@ -86,8 +86,10 @@ public class JavacFunc {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          nativeApi.log().error(
-              "Internal error: Compilation failed but JavaCompiler reported no error message.");
+          nativeApi
+              .log()
+              .error(
+                  "Internal error: Compilation failed but JavaCompiler reported no error message.");
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
@@ -99,8 +101,9 @@ public class JavacFunc {
           return null;
         }
       } catch (ZipException e) {
-        nativeApi.log().error(
-            "Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
+        nativeApi
+            .log()
+            .error("Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
         return null;
       }
     }

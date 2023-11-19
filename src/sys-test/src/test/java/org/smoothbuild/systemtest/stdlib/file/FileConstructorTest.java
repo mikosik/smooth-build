@@ -13,7 +13,6 @@ public class FileConstructorTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("name.txt", "A");
+    assertThat(artifactTreeContentAsStrings("result")).containsExactly("name.txt", "A");
   }
 }

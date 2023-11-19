@@ -11,7 +11,6 @@ import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.BracketsContext;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherContext;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.MatcherNameContext;
 import org.smoothbuild.antlr.taskmatcher.TaskMatcherParser.OrContext;
-
 import picocli.CommandLine.TypeConversionException;
 
 public class MatcherCreator {
@@ -28,7 +27,8 @@ public class MatcherCreator {
 
       @Override
       public TaskMatcher visitAnd(AndContext andContext) {
-        return and(andContext.expression(0).accept(this), andContext.expression(1).accept(this));
+        return and(
+            andContext.expression(0).accept(this), andContext.expression(1).accept(this));
       }
 
       @Override

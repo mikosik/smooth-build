@@ -1,9 +1,8 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
+import okio.BufferedSource;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-
-import okio.BufferedSource;
 
 /**
  * This class is thread-safe.
@@ -22,4 +21,3 @@ public final class BlobB extends ValueB {
     return "0x??";
   }
 }
-

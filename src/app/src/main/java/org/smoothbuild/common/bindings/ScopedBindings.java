@@ -4,21 +4,18 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Maps.override;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.google.common.collect.ImmutableMap;
-
-public sealed class ScopedBindings<E>
-    extends AbstractBindings<E>
+public sealed class ScopedBindings<E> extends AbstractBindings<E>
     permits ScopedImmutableBindings, ScopedMutableBindings {
   private final Bindings<? extends E> outerScopeBindings;
   private final Bindings<? extends E> innerScopeBindings;
 
   protected ScopedBindings(
-      Bindings<? extends E> outerScopeBindings,
-      Bindings<? extends E> innerScopeBindings) {
+      Bindings<? extends E> outerScopeBindings, Bindings<? extends E> innerScopeBindings) {
     this.outerScopeBindings = requireNonNull(outerScopeBindings);
     this.innerScopeBindings = requireNonNull(innerScopeBindings);
   }
@@ -35,10 +32,7 @@ public sealed class ScopedBindings<E>
 
   @Override
   public <T> ScopedBindings<T> map(Function<? super E, T> mapper) {
-    return new ScopedBindings<>(
-        outerScopeBindings.map(mapper),
-        innerScopeBindings.map(mapper)
-    );
+    return new ScopedBindings<>(outerScopeBindings.map(mapper), innerScopeBindings.map(mapper));
   }
 
   @Override

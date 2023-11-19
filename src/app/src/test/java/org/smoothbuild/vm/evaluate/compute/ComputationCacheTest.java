@@ -6,7 +6,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.evaluate.compute.ComputationCacheException.corruptedValueException;
 
 import java.math.BigInteger;
-
+import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
@@ -18,24 +18,20 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.task.Output;
 
-import okio.ByteString;
-
 public class ComputationCacheTest extends TestContext {
   private final Hash hash = Hash.of("abc");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   @Test
   public void cache_does_not_contain_not_written_result() throws Exception {
-    assertThat(computationCache().contains(hash))
-        .isFalse();
+    assertThat(computationCache().contains(hash)).isFalse();
   }
 
   @Test
   public void cache_contains_written_result() throws Exception {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(stringB("result"), messageArrayEmpty()));
-    assertThat(computationCache.contains(hash))
-        .isTrue();
+    assertThat(computationCache.contains(hash)).isTrue();
   }
 
   @Test
@@ -61,8 +57,7 @@ public class ComputationCacheTest extends TestContext {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(strV, messages));
 
-    assertThat(computationCache.read(hash, stringTB()).messages())
-        .isEqualTo(messages);
+    assertThat(computationCache.read(hash, stringTB()).messages()).isEqualTo(messages);
   }
 
   @Test
@@ -127,8 +122,7 @@ public class ComputationCacheTest extends TestContext {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(file, messageArrayEmpty()));
 
-    assertThat(computationCache.read(hash, bytecodeF().fileT()).valueB())
-        .isEqualTo(file);
+    assertThat(computationCache.read(hash, bytecodeF().fileT()).valueB()).isEqualTo(file);
   }
 
   @Test
@@ -137,8 +131,7 @@ public class ComputationCacheTest extends TestContext {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(blob, messageArrayEmpty()));
 
-    assertThat(computationCache.read(hash, blobTB()).valueB())
-        .isEqualTo(blob);
+    assertThat(computationCache.read(hash, blobTB()).valueB()).isEqualTo(blob);
   }
 
   @Test
@@ -147,8 +140,7 @@ public class ComputationCacheTest extends TestContext {
     var computationCache = computationCache();
     computationCache.write(hash, new Output(boolV, messageArrayEmpty()));
 
-    assertThat(((BoolB) computationCache.read(hash, boolTB()).valueB()).toJ())
-        .isTrue();
+    assertThat(((BoolB) computationCache.read(hash, boolTB()).valueB()).toJ()).isTrue();
   }
 
   @Test

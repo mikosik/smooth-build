@@ -4,7 +4,6 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-
 import org.smoothbuild.common.Strings;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
@@ -48,11 +47,7 @@ public final class NamedArgP extends ExprP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "name = " + name,
-        "expr = " + expr,
-        "location = " + location()
-    );
+    var fields = joinToString("\n", "name = " + name, "expr = " + expr, "location = " + location());
     return "NamedArgP(\n" + indent(fields) + "\n)";
   }
 }

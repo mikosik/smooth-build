@@ -1,18 +1,25 @@
 grammar TaskMatcher;
 
-@header {
+@ header
+{
 package org.smoothbuild.antlr.taskmatcher;
 }
+matcher
+   : expression EOF
+   ;
 
-matcher : expression EOF ;
+expression
+   : < assoc = right > expression '&' expression # And
+   | < assoc = right > expression '|' expression # Or
+   | '(' expression ')' # Brackets
+   | MATCHER_NAME # MatcherName
+   ;
 
-expression : <assoc=right> expression '&' expression # And
-           | <assoc=right> expression '|' expression # Or
-           | '(' expression ')'                      # Brackets
-           | MATCHER_NAME                            # MatcherName
-           ;
+MATCHER_NAME
+   : [a-zA-Z]+
+   ;
 
-MATCHER_NAME : [a-zA-Z]+ ;
-
-WS : [ \t\n\r]+ -> skip ;
+WS
+   : [ \t\n\r]+ -> skip
+   ;
 

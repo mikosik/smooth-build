@@ -8,6 +8,7 @@ import static org.smoothbuild.out.log.Level.WARNING;
 import static org.smoothbuild.run.eval.MessageStruct.level;
 import static org.smoothbuild.run.eval.MessageStruct.text;
 
+import jakarta.inject.Inject;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.out.log.Log;
@@ -26,8 +27,6 @@ import org.smoothbuild.vm.evaluate.task.OrderTask;
 import org.smoothbuild.vm.evaluate.task.PickTask;
 import org.smoothbuild.vm.evaluate.task.SelectTask;
 import org.smoothbuild.vm.evaluate.task.Task;
-
-import jakarta.inject.Inject;
 
 public class TaskReporterImpl implements TaskReporter {
   // visible for testing
@@ -54,7 +53,10 @@ public class TaskReporterImpl implements TaskReporter {
 
   private static LogBuffer logsFrom(ComputationResult result) {
     var logBuffer = new LogBuffer();
-    result.output().messages().elems(TupleB.class)
+    result
+        .output()
+        .messages()
+        .elems(TupleB.class)
         .forEach(message -> logBuffer.log(new Log(level(message), text(message))));
     return logBuffer;
   }
@@ -66,9 +68,7 @@ public class TaskReporterImpl implements TaskReporter {
     var trimmedLabel = limitedWithEllipsis(tag, NAME_LENGTH_LIMIT);
     var labelColumn = padEnd(trimmedLabel, NAME_LENGTH_LIMIT + 1, ' ');
     var sourceString = resultSource.toString();
-    var locColumn = sourceString.isEmpty()
-        ? locString
-        : padEnd(locString, 30, ' ') + " ";
+    var locColumn = sourceString.isEmpty() ? locString : padEnd(locString, 30, ' ') + " ";
     return labelColumn + locColumn + sourceString;
   }
 

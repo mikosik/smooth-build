@@ -7,30 +7,26 @@ import org.junit.jupiter.api.Test;
 public class DuplicatesDetectorTest {
   @Test
   public void initially_has_no_duplicates() {
-    assertThat(new DuplicatesDetector<>().hasDuplicates())
-        .isFalse();
+    assertThat(new DuplicatesDetector<>().hasDuplicates()).isFalse();
   }
 
   @Test
   public void adding_first_elem_returns_false() {
-    assertThat(new DuplicatesDetector<>().addValue("string1"))
-        .isFalse();
+    assertThat(new DuplicatesDetector<>().addValue("string1")).isFalse();
   }
 
   @Test
   public void has_no_duplicates_after_adding_first_elem() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
-    assertThat(duplicatesDetector.hasDuplicates())
-        .isFalse();
+    assertThat(duplicatesDetector.hasDuplicates()).isFalse();
   }
 
   @Test
   public void adding_elem_for_the_second_time_returns_true() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
-    assertThat(duplicatesDetector.addValue("string1"))
-        .isTrue();
+    assertThat(duplicatesDetector.addValue("string1")).isTrue();
   }
 
   @Test
@@ -38,16 +34,14 @@ public class DuplicatesDetectorTest {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");
-    assertThat(duplicatesDetector.hasDuplicates())
-        .isTrue();
+    assertThat(duplicatesDetector.hasDuplicates()).isTrue();
   }
 
   @Test
   public void adding_second_but_different_elem_returns_false() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
-    assertThat(duplicatesDetector.addValue("string2"))
-        .isFalse();
+    assertThat(duplicatesDetector.addValue("string2")).isFalse();
   }
 
   @Test
@@ -55,24 +49,21 @@ public class DuplicatesDetectorTest {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");
-    assertThat(duplicatesDetector.hasDuplicates())
-        .isFalse();
+    assertThat(duplicatesDetector.hasDuplicates()).isFalse();
   }
 
   // getDuplicateValues()
 
   @Test
   public void get_duplicate_values_returns_empty_set_initially() {
-    assertThat(new DuplicatesDetector<>().getDuplicateValues())
-        .isEmpty();
+    assertThat(new DuplicatesDetector<>().getDuplicateValues()).isEmpty();
   }
 
   @Test
   public void get_duplicate_values_returns_empty_set_when_one_elem_has_been_added() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
-    assertThat(duplicatesDetector.getDuplicateValues())
-        .isEmpty();
+    assertThat(duplicatesDetector.getDuplicateValues()).isEmpty();
   }
 
   @Test
@@ -80,8 +71,7 @@ public class DuplicatesDetectorTest {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");
-    assertThat(duplicatesDetector.getDuplicateValues())
-        .isEmpty();
+    assertThat(duplicatesDetector.getDuplicateValues()).isEmpty();
   }
 
   @Test
@@ -89,12 +79,12 @@ public class DuplicatesDetectorTest {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");
-    assertThat(duplicatesDetector.getDuplicateValues())
-        .containsExactly("string1");
+    assertThat(duplicatesDetector.getDuplicateValues()).containsExactly("string1");
   }
 
   @Test
-  public void get_duplicate_values_returns_set_with_elems_that_have_been_added_twice_without_those_added_once() {
+  public void
+      get_duplicate_values_returns_set_with_elems_that_have_been_added_twice_without_those_added_once() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");
@@ -102,8 +92,7 @@ public class DuplicatesDetectorTest {
     duplicatesDetector.addValue("string3");
     duplicatesDetector.addValue("string3");
     duplicatesDetector.addValue("string4");
-    assertThat(duplicatesDetector.getDuplicateValues())
-        .containsExactly("string1", "string3");
+    assertThat(duplicatesDetector.getDuplicateValues()).containsExactly("string1", "string3");
   }
 
   // getUniqueValues()
@@ -111,16 +100,14 @@ public class DuplicatesDetectorTest {
   @Test
   public void initially_get_unique_values_is_empty() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    assertThat(duplicatesDetector.getUniqueValues())
-        .isEmpty();
+    assertThat(duplicatesDetector.getUniqueValues()).isEmpty();
   }
 
   @Test
   public void get_unique_values_returns_elem_that_has_been_added() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
-    assertThat(duplicatesDetector.getUniqueValues())
-        .containsExactly("string1");
+    assertThat(duplicatesDetector.getUniqueValues()).containsExactly("string1");
   }
 
   @Test
@@ -128,8 +115,7 @@ public class DuplicatesDetectorTest {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");
-    assertThat(duplicatesDetector.getUniqueValues())
-        .containsExactly("string1", "string2");
+    assertThat(duplicatesDetector.getUniqueValues()).containsExactly("string1", "string2");
   }
 
   @Test
@@ -137,8 +123,7 @@ public class DuplicatesDetectorTest {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");
-    assertThat(duplicatesDetector.getUniqueValues())
-        .containsExactly("string1");
+    assertThat(duplicatesDetector.getUniqueValues()).containsExactly("string1");
   }
 
   @Test

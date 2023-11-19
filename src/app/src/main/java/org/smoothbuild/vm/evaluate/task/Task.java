@@ -1,14 +1,13 @@
 package org.smoothbuild.vm.evaluate.task;
 
 import java.util.Objects;
-
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.evaluate.compute.Container;
 import org.smoothbuild.vm.evaluate.execute.TraceB;
 
-public sealed abstract class Task
+public abstract sealed class Task
     permits CombineTask, ConstTask, InvokeTask, OrderTask, PickTask, SelectTask {
   private final ExprB exprB;
   private final Purity purity;

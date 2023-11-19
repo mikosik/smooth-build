@@ -17,9 +17,6 @@ public class ResWrapper {
 
   public List<FailureWrapper> getFailures() throws JunitException {
     List<?> failures = runReflexivelyAndCast(List.class, result, "getFailures");
-    return failures
-        .stream()
-        .map(FailureWrapper::new)
-        .toList();
+    return failures.stream().map(FailureWrapper::new).toList();
   }
 }

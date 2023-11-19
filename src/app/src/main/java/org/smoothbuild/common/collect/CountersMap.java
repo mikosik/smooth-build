@@ -3,11 +3,10 @@ package org.smoothbuild.common.collect;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Collections.unmodifiableMap;
 
+import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.common.collect.ImmutableList;
 
 public class CountersMap<K> {
   private final Map<K, Integer> counters = new HashMap<>();
@@ -26,8 +25,7 @@ public class CountersMap<K> {
   }
 
   public ImmutableList<K> keysWithCounter(int value) {
-    return counters.entrySet()
-        .stream()
+    return counters.entrySet().stream()
         .filter(e -> e.getValue() == value)
         .map(Entry::getKey)
         .collect(toImmutableList());

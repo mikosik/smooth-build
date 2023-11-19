@@ -10,18 +10,16 @@ import static org.smoothbuild.vm.evaluate.task.Purity.FAST;
 import static org.smoothbuild.vm.evaluate.task.Purity.PURE;
 import static org.smoothbuild.vm.evaluate.task.TaskHashes.taskHash;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.evaluate.SandboxHash;
 import org.smoothbuild.vm.evaluate.task.Output;
 import org.smoothbuild.vm.evaluate.task.Task;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 /**
  * This class is thread-safe.
@@ -33,12 +31,16 @@ public class Computer {
   private final ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> memoryCache;
 
   @Inject
-  public Computer(@SandboxHash Hash sandboxHash, Provider<Container> containerProvider,
+  public Computer(
+      @SandboxHash Hash sandboxHash,
+      Provider<Container> containerProvider,
       ComputationCache diskCache) {
     this(sandboxHash, containerProvider, diskCache, new ConcurrentHashMap<>());
   }
 
-  public Computer(@SandboxHash Hash sandboxHash, Provider<Container> containerProvider,
+  public Computer(
+      @SandboxHash Hash sandboxHash,
+      Provider<Container> containerProvider,
       ComputationCache diskCache,
       ConcurrentHashMap<Hash, PromisedValue<ComputationResult>> memoryCache) {
     this.diskCache = diskCache;
@@ -67,9 +69,7 @@ public class Computer {
     PromisedValue<ComputationResult> newPromised = new PromisedValue<>();
     PromisedValue<ComputationResult> prevPromised = memoryCache.putIfAbsent(hash, newPromised);
     if (prevPromised != null) {
-      prevPromised
-          .chain(c -> computationResultFromPromise(c, task))
-          .addConsumer(consumer);
+      prevPromised.chain(c -> computationResultFromPromise(c, task)).addConsumer(consumer);
     } else {
       newPromised.addConsumer(consumer);
       var isPure = task.purity() == PURE;
@@ -92,11 +92,12 @@ public class Computer {
 
   private static ComputationResult computationResultFromPromise(
       ComputationResult computationResult, Task task) {
-    var resultSource = switch (task.purity()) {
-      case PURE -> DISK;
-      case IMPURE -> MEMORY;
-      case FAST -> throw new RuntimeException("shouldn't happen");
-    };
+    var resultSource =
+        switch (task.purity()) {
+          case PURE -> DISK;
+          case IMPURE -> MEMORY;
+          case FAST -> throw new RuntimeException("shouldn't happen");
+        };
     return new ComputationResult(computationResult.output(), resultSource);
   }
 

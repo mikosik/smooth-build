@@ -12,7 +12,8 @@ public class CallSTest extends TestContext {
     var funcS = instantiateS(4, list(intTS()), idFuncS());
     var callS = callS(3, funcS, intS(3, 7));
     assertThat(callS.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             CallS(
               callee = InstantiateS(
                 typeArgs = <Int>

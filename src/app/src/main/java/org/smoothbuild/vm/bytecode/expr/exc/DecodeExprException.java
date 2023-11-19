@@ -1,6 +1,5 @@
 package org.smoothbuild.vm.bytecode.expr.exc;
 
-
 public class DecodeExprException extends BytecodeDbException {
   public DecodeExprException(String message, Throwable cause) {
     super(message, cause);

@@ -4,14 +4,12 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Lists.list;
 
 import java.util.List;
-
+import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-
-import okio.ByteString;
 
 public class BlobBTest extends TestContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
@@ -19,38 +17,31 @@ public class BlobBTest extends TestContext {
   @Test
   public void creating_blob_without_content_creates_empty_blob() throws Exception {
     BlobB blob = blobBBuilder().build();
-    assertThat(blob.source().readByteString())
-        .isEqualTo(ByteString.of());
+    assertThat(blob.source().readByteString()).isEqualTo(ByteString.of());
   }
 
   @Test
   public void type_of_blob_is_blob_type() {
-    assertThat(blobB(bytes).category())
-        .isEqualTo(blobTB());
+    assertThat(blobB(bytes).category()).isEqualTo(blobTB());
   }
 
   @Test
   public void empty_blob_is_empty() throws Exception {
     BlobB blob = blobBBuilder().build();
-    assertThat(blob.source().readByteString())
-        .isEqualTo(ByteString.of());
+    assertThat(blob.source().readByteString()).isEqualTo(ByteString.of());
   }
 
   @Test
   public void blob_has_content_passed_to_builder() throws Exception {
     BlobB blob = blobB(bytes);
-    assertThat(blob.source().readByteString())
-        .isEqualTo(bytes);
+    assertThat(blob.source().readByteString()).isEqualTo(bytes);
   }
 
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<BlobB> {
     @Override
     protected List<BlobB> equalExprs() {
-      return list(
-          blobB(ByteString.encodeUtf8("aaa")),
-          blobB(ByteString.encodeUtf8("aaa"))
-      );
+      return list(blobB(ByteString.encodeUtf8("aaa")), blobB(ByteString.encodeUtf8("aaa")));
     }
 
     @Override
@@ -58,8 +49,7 @@ public class BlobBTest extends TestContext {
       return list(
           blobB(ByteString.encodeUtf8("")),
           blobB(ByteString.encodeUtf8("aaa")),
-          blobB(ByteString.encodeUtf8("bbb"))
-      );
+          blobB(ByteString.encodeUtf8("bbb")));
     }
   }
 
@@ -67,8 +57,7 @@ public class BlobBTest extends TestContext {
   public void blob_can_be_read_by_hash() {
     BlobB blob = blobB(bytes);
     Hash hash = blob.hash();
-    assertThat(bytecodeDbOther().get(hash))
-        .isEqualTo(blob);
+    assertThat(bytecodeDbOther().get(hash)).isEqualTo(blob);
   }
 
   @Test
@@ -82,7 +71,6 @@ public class BlobBTest extends TestContext {
   @Test
   public void to_string() {
     BlobB blob = blobB(bytes);
-    assertThat(blob.toString())
-        .isEqualTo("0x??@" + blob.hash());
+    assertThat(blob.toString()).isEqualTo("0x??@" + blob.hash());
   }
 }

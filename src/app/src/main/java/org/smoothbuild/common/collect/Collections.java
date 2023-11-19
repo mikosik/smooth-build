@@ -8,9 +8,7 @@ import java.util.stream.Collectors;
 
 public class Collections {
   public static <T, V> Map<T, V> toMap(Collection<V> collection, Function<V, T> keyMapper) {
-    return collection
-        .stream()
-        .collect(Collectors.toMap(keyMapper, Function.identity()));
+    return collection.stream().collect(Collectors.toMap(keyMapper, Function.identity()));
   }
 
   /**

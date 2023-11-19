@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
 import java.util.Optional;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
@@ -73,13 +72,13 @@ public final class NamedValueP extends NamedEvaluableP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
+    var fields = joinToString(
+        "\n",
         "type = " + type,
         "name = " + name(),
         "body = " + body(),
         "annotation = " + annotation(),
-        "location = " + location()
-    );
+        "location = " + location());
     return "NamedValueP(\n" + indent(fields) + "\n)";
   }
 }

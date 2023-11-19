@@ -8,8 +8,10 @@ import static org.smoothbuild.run.eval.MessageStruct.severity;
 import static org.smoothbuild.vm.evaluate.compute.ComputationCacheException.computationCacheException;
 import static org.smoothbuild.vm.evaluate.compute.ComputationCacheException.corruptedValueException;
 
+import jakarta.inject.Inject;
 import java.io.IOException;
-
+import okio.BufferedSink;
+import okio.BufferedSource;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.filesystem.space.ForSpace;
@@ -22,10 +24,6 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 import org.smoothbuild.vm.evaluate.task.Output;
 
-import jakarta.inject.Inject;
-import okio.BufferedSink;
-import okio.BufferedSource;
-
 /**
  * This class is thread-safe.
  */
@@ -36,9 +34,7 @@ public class ComputationCache {
 
   @Inject
   public ComputationCache(
-      @ForSpace(PROJECT) FileSystem fileSystem,
-      BytecodeDb bytecodeDb,
-      BytecodeF bytecodeF) {
+      @ForSpace(PROJECT) FileSystem fileSystem, BytecodeDb bytecodeDb, BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;
     this.bytecodeDb = bytecodeDb;
     this.bytecodeF = bytecodeF;
@@ -72,16 +68,18 @@ public class ComputationCache {
       var messages = bytecodeDb.get(messagesHash);
       var messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
       if (!messages.category().equals(messageArrayT)) {
-        throw corruptedValueException(hash, "Expected " + messageArrayT.q()
-            + " as first child of its Merkle root, but got " + messages.category().q());
+        throw corruptedValueException(
+            hash,
+            "Expected " + messageArrayT.q() + " as first child of its Merkle root, but got "
+                + messages.category().q());
       }
 
       var messageArray = (ArrayB) messages;
       for (var message : messageArray.elems(TupleB.class)) {
         var severity = severity(message);
         if (!isValidSeverity(severity)) {
-          throw corruptedValueException(hash,
-              "One of messages has invalid severity = '" + severity + "'");
+          throw corruptedValueException(
+              hash, "One of messages has invalid severity = '" + severity + "'");
         }
       }
       if (containsErrorOrAbove(messageArray)) {
@@ -90,8 +88,10 @@ public class ComputationCache {
         var valueHash = Hash.read(source);
         var value = bytecodeDb.get(valueHash);
         if (!type.equals(value.evaluationT())) {
-          throw corruptedValueException(hash, "Expected value of type " + type.q()
-              + " as second child of its Merkle root, but got " + value.evaluationT().q());
+          throw corruptedValueException(
+              hash,
+              "Expected value of type " + type.q() + " as second child of its Merkle root, but got "
+                  + value.evaluationT().q());
         } else {
           return new Output((ValueB) value, messageArray);
         }

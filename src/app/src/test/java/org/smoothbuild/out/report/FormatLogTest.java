@@ -11,7 +11,6 @@ import static org.smoothbuild.out.report.FormatLog.formatLog;
 import static org.smoothbuild.out.report.FormatLog.formatLogs;
 
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,7 +21,8 @@ public class FormatLogTest {
   @Test
   void test_format_logs() {
     assertThat(formatLogs("header", logsWithAllLevels()) + "\n")
-        .isEqualTo("""
+        .isEqualTo(
+            """
             header
              + FATAL: fatal message
              + ERROR: error message
@@ -34,8 +34,7 @@ public class FormatLogTest {
   @ParameterizedTest
   @MethodSource
   void test_format_log(Log log, String string) {
-    assertThat(formatLog(log))
-        .isEqualTo(string);
+    assertThat(formatLog(log)).isEqualTo(string);
   }
 
   public static List<Arguments> test_format_log() {
@@ -43,7 +42,6 @@ public class FormatLogTest {
         arguments(fatal("message"), "   + FATAL: message"),
         arguments(error("message"), "   + ERROR: message"),
         arguments(warning("message"), "   + WARNING: message"),
-        arguments(info("message"), "   + INFO: message")
-    );
+        arguments(info("message"), "   + INFO: message"));
   }
 }

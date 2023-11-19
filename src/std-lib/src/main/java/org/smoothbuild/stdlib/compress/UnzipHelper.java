@@ -7,21 +7,18 @@ import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.stdlib.java.UnjarFunc.JAR_MANIFEST_PATH;
 import static org.smoothbuild.vm.evaluate.plugin.UnzipBlob.unzipBlob;
 
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-
+import net.lingala.zip4j.exception.ZipException;
 import org.smoothbuild.common.io.DuplicateFileNameException;
 import org.smoothbuild.common.io.IllegalZipEntryFileNameException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-
-import com.google.common.collect.ImmutableMap;
-
-import net.lingala.zip4j.exception.ZipException;
 
 public class UnzipHelper {
   private static final Predicate<String> NOT_MANIFEST_PREDICATE = f -> !f.equals(JAR_MANIFEST_PATH);
@@ -31,8 +28,8 @@ public class UnzipHelper {
     return filesFromLibJars(nativeApi, libJars, NOT_MANIFEST_PREDICATE);
   }
 
-  public static HashMap<String, TupleB> filesFromLibJars(NativeApi nativeApi, ArrayB libJars,
-      Predicate<String> filter) throws IOException {
+  public static HashMap<String, TupleB> filesFromLibJars(
+      NativeApi nativeApi, ArrayB libJars, Predicate<String> filter) throws IOException {
     var result = new HashMap<String, TupleB>();
     var jars = libJars.elems(TupleB.class);
     for (int i = 0; i < jars.size(); i++) {
@@ -44,8 +41,9 @@ public class UnzipHelper {
       for (var entry : classes.entrySet()) {
         var path = entry.getKey();
         if (result.put(path, entry.getValue()) != null) {
-          nativeApi.log().error(
-              "File " + path + " is contained by two different library jar files.");
+          nativeApi
+              .log()
+              .error("File " + path + " is contained by two different library jar files.");
           return null;
         }
       }
@@ -58,8 +56,8 @@ public class UnzipHelper {
     return filesFromJar(nativeApi, jarFile, NOT_MANIFEST_PREDICATE);
   }
 
-  private static ImmutableMap<String, TupleB> filesFromJar(NativeApi nativeApi,
-      TupleB jarFile, Predicate<String> filter) throws IOException {
+  private static ImmutableMap<String, TupleB> filesFromJar(
+      NativeApi nativeApi, TupleB jarFile, Predicate<String> filter) throws IOException {
     var files = unzipToArrayB(nativeApi, fileContent(jarFile), filter);
     if (files == null) {
       return null;
@@ -68,13 +66,13 @@ public class UnzipHelper {
   }
 
   public static ArrayB unzipToArrayB(
-      NativeApi nativeApi, BlobB blob, Predicate<String> includePredicate)
-      throws IOException {
+      NativeApi nativeApi, BlobB blob, Predicate<String> includePredicate) throws IOException {
     try {
       return unzipBlob(nativeApi.factory(), blob, includePredicate);
     } catch (ZipException e) {
-      nativeApi.log().error(
-          "Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
+      nativeApi
+          .log()
+          .error("Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
       return null;
     } catch (DuplicateFileNameException e) {
       nativeApi.log().error("Archive contains two files with the same path = " + e.getMessage());

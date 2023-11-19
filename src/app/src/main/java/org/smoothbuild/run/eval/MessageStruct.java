@@ -6,7 +6,6 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
 
 import java.util.Set;
-
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
@@ -14,8 +13,8 @@ import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 
 public class MessageStruct {
-  private static final Set<String> SEVERITIES = Set.of(
-      FATAL.name(), ERROR.name(), WARNING.name(), INFO.name());
+  private static final Set<String> SEVERITIES =
+      Set.of(FATAL.name(), ERROR.name(), WARNING.name(), INFO.name());
   private static final int TEXT_IDX = 0;
   private static final int SEVERITY_IDX = 1;
 

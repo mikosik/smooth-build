@@ -1,7 +1,10 @@
 package org.smoothbuild.run.step;
 
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import io.vavr.control.Option;
+import jakarta.inject.Inject;
 import java.util.function.Function;
-
 import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.step.Step.ComposedStep;
@@ -10,12 +13,6 @@ import org.smoothbuild.run.step.Step.FunctionKeyStep;
 import org.smoothbuild.run.step.Step.FunctionStep;
 import org.smoothbuild.run.step.Step.NamedStep;
 import org.smoothbuild.run.step.Step.OptionFunctionKeyStep;
-
-import com.google.inject.Injector;
-import com.google.inject.Key;
-
-import io.vavr.control.Option;
-import jakarta.inject.Inject;
 
 public class StepExecutor {
   public static final String NAMES_SEPARATOR = "::";
@@ -52,8 +49,7 @@ public class StepExecutor {
   private <R, T> Option<R> namedStep(NamedStep<T, R> namedStep, T argument, Reporter reporter) {
     var name = fullName + NAMES_SEPARATOR + namedStep.name();
     reporter.startNewPhase(name);
-    return new StepExecutor(injector, name)
-        .execute(namedStep.step(), argument, reporter);
+    return new StepExecutor(injector, name).execute(namedStep.step(), argument, reporter);
   }
 
   private <T, R> Option<R> functionKey(

@@ -21,6 +21,10 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 
+import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
+import io.vavr.control.Either;
+import io.vavr.control.Option;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +32,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -67,16 +70,10 @@ import org.smoothbuild.vm.evaluate.task.OrderTask;
 import org.smoothbuild.vm.evaluate.task.PickTask;
 import org.smoothbuild.vm.evaluate.task.Task;
 
-import com.google.common.collect.ImmutableList;
-
-import io.vavr.collection.Array;
-import io.vavr.control.Either;
-import io.vavr.control.Option;
-
 public class EvaluatorBTest extends TestContext {
   public static final ConcurrentHashMap<String, AtomicInteger> COUNTERS = new ConcurrentHashMap<>();
-  public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS
-      = new ConcurrentHashMap<>();
+  public static final ConcurrentHashMap<String, CountDownLatch> COUNTDOWNS =
+      new ConcurrentHashMap<>();
 
   @Nested
   class _laziness {
@@ -88,8 +85,7 @@ public class EvaluatorBTest extends TestContext {
         var order = orderB(intB(7));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(evaluatorB(spyingExecutor), order))
-            .isEqualTo(arrayB(intB(7)));
+        assertThat(evaluate(evaluatorB(spyingExecutor), order)).isEqualTo(arrayB(intB(7)));
 
         verify(spyingExecutor, times(1)).enqueue(isA(OrderTask.class), any(), any());
       }
@@ -100,8 +96,7 @@ public class EvaluatorBTest extends TestContext {
         var call = callB(lambdaB, orderB(boolTB()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(evaluatorB(spyingExecutor), call))
-            .isEqualTo(intB(7));
+        assertThat(evaluate(evaluatorB(spyingExecutor), call)).isEqualTo(intB(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
       }
@@ -114,8 +109,7 @@ public class EvaluatorBTest extends TestContext {
         var callB = callB(mapFuncB, emptyIntArray, mappingFunc);
 
         var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(evaluatorB(spyingExecutor), callB))
-            .isEqualTo(arrayB(intTB()));
+        assertThat(evaluate(evaluatorB(spyingExecutor), callB)).isEqualTo(arrayB(intTB()));
 
         verify(spyingExecutor, never()).enqueue(isA(PickTask.class), any(), any());
       }
@@ -123,13 +117,12 @@ public class EvaluatorBTest extends TestContext {
       @Test
       public void no_task_is_executed_for_func_arg_that_is_passed_to_func_where_it_is_not_used() {
         var innerLambda = lambdaB(Array.of(arrayTB(boolTB())), intB(7));
-        var outerLambda = lambdaB(Array.of(arrayTB(boolTB())),
-            callB(innerLambda, varB(arrayTB(boolTB()), 0)));
+        var outerLambda =
+            lambdaB(Array.of(arrayTB(boolTB())), callB(innerLambda, varB(arrayTB(boolTB()), 0)));
         var call = callB(outerLambda, orderB(boolTB()));
 
         var spyingExecutor = Mockito.spy(taskExecutor());
-        assertThat(evaluate(evaluatorB(spyingExecutor), call))
-            .isEqualTo(intB(7));
+        assertThat(evaluate(evaluatorB(spyingExecutor), call)).isEqualTo(intB(7));
 
         verify(spyingExecutor, never()).enqueue(isA(OrderTask.class), any(), any());
       }
@@ -157,11 +150,9 @@ public class EvaluatorBTest extends TestContext {
         var call = callB(func);
 
         var countingScheduler = countingSchedulerB();
-        assertThat(evaluate(evaluatorB(() -> countingScheduler), call))
-            .isEqualTo(arrayB(intB(7)));
+        assertThat(evaluate(evaluatorB(() -> countingScheduler), call)).isEqualTo(arrayB(intB(7)));
 
-        assertThat(countingScheduler.counters().get(IntB.class).intValue())
-            .isEqualTo(1);
+        assertThat(countingScheduler.counters().get(IntB.class).intValue()).isEqualTo(1);
       }
 
       @Test
@@ -170,11 +161,9 @@ public class EvaluatorBTest extends TestContext {
         var call = callB(lambdaB, orderB(boolB()));
 
         var countingScheduler = countingSchedulerB();
-        assertThat(evaluate(evaluatorB(() -> countingScheduler), call))
-            .isEqualTo(intB(7));
+        assertThat(evaluate(evaluatorB(() -> countingScheduler), call)).isEqualTo(intB(7));
 
-        assertThat(countingScheduler.counters().get(BoolB.class))
-            .isNull();
+        assertThat(countingScheduler.counters().get(BoolB.class)).isNull();
       }
     }
   }
@@ -185,38 +174,32 @@ public class EvaluatorBTest extends TestContext {
     class _values {
       @Test
       public void array() {
-        assertThat(evaluate(arrayB(intB(7))))
-            .isEqualTo(arrayB(intB(7)));
+        assertThat(evaluate(arrayB(intB(7)))).isEqualTo(arrayB(intB(7)));
       }
 
       @Test
       public void blob() {
-        assertThat(evaluate(blobB(7)))
-            .isEqualTo(blobB(7));
+        assertThat(evaluate(blobB(7))).isEqualTo(blobB(7));
       }
 
       @Test
       public void bool() {
-        assertThat(evaluate(boolB(true)))
-            .isEqualTo(boolB(true));
+        assertThat(evaluate(boolB(true))).isEqualTo(boolB(true));
       }
 
       @Test
       public void int_() {
-        assertThat(evaluate(intB(8)))
-            .isEqualTo(intB(8));
+        assertThat(evaluate(intB(8))).isEqualTo(intB(8));
       }
 
       @Test
       public void string() {
-        assertThat(evaluate(stringB("abc")))
-            .isEqualTo(stringB("abc"));
+        assertThat(evaluate(stringB("abc"))).isEqualTo(stringB("abc"));
       }
 
       @Test
       public void tuple() {
-        assertThat(evaluate(tupleB(intB(7))))
-            .isEqualTo(tupleB(intB(7)));
+        assertThat(evaluate(tupleB(intB(7)))).isEqualTo(tupleB(intB(7)));
       }
     }
 
@@ -228,8 +211,7 @@ public class EvaluatorBTest extends TestContext {
         public void lambda() {
           var func = lambdaB(intB(7));
           var call = callB(func);
-          assertThat(evaluate(call))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(call)).isEqualTo(intB(7));
         }
 
         @Test
@@ -238,8 +220,7 @@ public class EvaluatorBTest extends TestContext {
           var paramFuncT = paramFunc.evaluationT();
           var outerLambda = lambdaB(Array.of(paramFuncT), callB(varB(paramFuncT, 0)));
           var call = callB(outerLambda, paramFunc);
-          assertThat(evaluate(call))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(call)).isEqualTo(intB(7));
         }
 
         @Test
@@ -247,8 +228,7 @@ public class EvaluatorBTest extends TestContext {
           var innerLambda = lambdaB(intB(7));
           var outerLambda = lambdaB(innerLambda);
           var call = callB(callB(outerLambda));
-          assertThat(evaluate(call))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(call)).isEqualTo(intB(7));
         }
 
         @Test
@@ -257,8 +237,7 @@ public class EvaluatorBTest extends TestContext {
           var outerLambda = lambdaB(Array.of(intTB()), innerLambda);
           var innerReturnedByOuter = callB(outerLambda, intB(17));
           var callB = callB(innerReturnedByOuter);
-          assertThat(evaluate(callB))
-              .isEqualTo(intB(17));
+          assertThat(evaluate(callB)).isEqualTo(intB(17));
         }
 
         @Test
@@ -267,25 +246,21 @@ public class EvaluatorBTest extends TestContext {
           var middleLambda = lambdaB(Array.of(intTB()), innerLambda);
           var outerLambda = lambdaB(Array.of(intTB()), callB(middleLambda, varB(intTB(), 0)));
           var middleReturnedByOuter = callB(outerLambda, intB(17));
-          assertThat(evaluate(callB(middleReturnedByOuter)))
-              .isEqualTo(intB(17));
+          assertThat(evaluate(callB(middleReturnedByOuter))).isEqualTo(intB(17));
         }
-
 
         @Test
         public void if_function_with_true_condition() {
           var ifFunc = ifFuncB(intTB());
           var call = callB(ifFunc, boolB(true), intB(7), intB(0));
-          assertThat(evaluate(call))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(call)).isEqualTo(intB(7));
         }
 
         @Test
         public void if_func_with_false_condition() {
           var ifFunc = ifFuncB(intTB());
           var call = callB(ifFunc, boolB(false), intB(7), intB(0));
-          assertThat(evaluate(call))
-              .isEqualTo(intB(0));
+          assertThat(evaluate(call)).isEqualTo(intB(0));
         }
 
         @Test
@@ -295,27 +270,25 @@ public class EvaluatorBTest extends TestContext {
           var lambda = lambdaB(funcTB(s, r), combineB(varB(s, 0)));
           var mapFunc = mapFuncB(r, s);
           var map = callB(mapFunc, arrayB(intB(1), intB(2)), lambda);
-          assertThat(evaluate(map))
-              .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
+          assertThat(evaluate(map)).isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
         }
 
         @Test
         public void native_func() throws Exception {
-          var nativeFuncB = nativeFuncB(
-              funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+          var nativeFuncB =
+              nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var call = callB(nativeFuncB, intB(33));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
               .thenReturn(Either.right(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
-          assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
-              .isEqualTo(intB(33));
+          assertThat(evaluate(evaluatorB(nativeMethodLoader), call)).isEqualTo(intB(33));
         }
 
         @Test
         public void native_func_passed_as_arg() throws NoSuchMethodException {
-          var nativeFuncB = nativeFuncB(
-              funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+          var nativeFuncB =
+              nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
               .thenReturn(Either.right(
@@ -324,14 +297,13 @@ public class EvaluatorBTest extends TestContext {
           var nativeFuncT = nativeFuncB.evaluationT();
           var outerLambda = lambdaB(Array.of(nativeFuncT), callB(varB(nativeFuncT, 0), intB(7)));
           var call = callB(outerLambda, nativeFuncB);
-          assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(evaluatorB(nativeMethodLoader), call)).isEqualTo(intB(7));
         }
 
         @Test
         public void native_func_returned_from_call() throws NoSuchMethodException {
-          var nativeFuncB = nativeFuncB(
-              funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
+          var nativeFuncB =
+              nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
               .thenReturn(Either.right(
@@ -339,23 +311,20 @@ public class EvaluatorBTest extends TestContext {
 
           var outerFunc = lambdaB(nativeFuncB);
           var call = callB(callB(outerFunc), intB(7));
-          assertThat(evaluate(evaluatorB(nativeMethodLoader), call))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(evaluatorB(nativeMethodLoader), call)).isEqualTo(intB(7));
         }
       }
 
       @Test
       public void combine() {
         var combine = combineB(intB(7));
-        assertThat(evaluate(combine))
-            .isEqualTo(tupleB(intB(7)));
+        assertThat(evaluate(combine)).isEqualTo(tupleB(intB(7)));
       }
 
       @Test
       public void order() {
         var order = orderB(intB(7), intB(8));
-        assertThat(evaluate(order))
-            .isEqualTo(arrayB(intB(7), intB(8)));
+        assertThat(evaluate(order)).isEqualTo(arrayB(intB(7), intB(8)));
       }
 
       @Nested
@@ -364,15 +333,12 @@ public class EvaluatorBTest extends TestContext {
         public void pick() {
           var tuple = arrayB(intB(10), intB(11), intB(12), intB(13));
           var pick = pickB(tuple, intB(2));
-          assertThat(evaluate(pick))
-              .isEqualTo(intB(12));
+          assertThat(evaluate(pick)).isEqualTo(intB(12));
         }
 
         @Test
         public void pick_with_index_outside_of_bounds() {
-          var pick = pickB(
-              arrayB(intB(10), intB(11), intB(12), intB(13)),
-              intB(4));
+          var pick = pickB(arrayB(intB(10), intB(11), intB(12), intB(13)), intB(4));
           var memoryReporter = new MemoryReporter();
           evaluateWithFailure(evaluatorB(memoryReporter), pick);
           assertThat(memoryReporter.logs())
@@ -381,9 +347,7 @@ public class EvaluatorBTest extends TestContext {
 
         @Test
         public void pick_with_index_negative() {
-          var pick = pickB(
-              arrayB(intB(10), intB(11), intB(12), intB(13)),
-              intB(-1));
+          var pick = pickB(arrayB(intB(10), intB(11), intB(12), intB(13)), intB(-1));
           var memoryReporter = new MemoryReporter();
           evaluateWithFailure(evaluatorB(memoryReporter), pick);
           assertThat(memoryReporter.logs())
@@ -397,16 +361,14 @@ public class EvaluatorBTest extends TestContext {
         public void var_referencing_func_param() {
           var lambdaB = lambdaB(Array.of(intTB()), varB(intTB(), 0));
           var callB = callB(lambdaB, intB(7));
-          assertThat(evaluate(callB))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(callB)).isEqualTo(intB(7));
         }
 
         @Test
         public void var_inside_call_to_inner_lambda_referencing_param_of_enclosing_lambda() {
           var innerLambda = lambdaB(Array.of(), varB(intTB(), 0));
           var outerLambda = lambdaB(Array.of(intTB()), callB(innerLambda));
-          assertThat(evaluate(callB(outerLambda, intB(7))))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(callB(outerLambda, intB(7)))).isEqualTo(intB(7));
         }
 
         @Test
@@ -416,8 +378,7 @@ public class EvaluatorBTest extends TestContext {
           var callOuter = callB(outerLambdaB, intB(7));
           var callInner = callB(callOuter, intB(8));
 
-          assertThat(evaluate(callInner))
-              .isEqualTo(intB(7));
+          assertThat(evaluate(callInner)).isEqualTo(intB(7));
         }
 
         @Test
@@ -437,16 +398,16 @@ public class EvaluatorBTest extends TestContext {
         }
 
         @Test
-        public void reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
-            throws InterruptedException {
+        public void
+            reference_with_eval_type_different_than_actual_environment_value_eval_type_causes_fatal()
+                throws InterruptedException {
           var lambdaB = lambdaB(Array.of(blobTB()), varB(intTB(), 0));
           var reporter = mock(Reporter.class);
           var vm = evaluatorB(reporter);
           vm.evaluate(Array.of(callB(lambdaB, blobB())));
           verify(reporter, times(1))
               .report(
-                  eq("Internal smooth error"),
-                  argThat(isLogListWithFatalWrongEnvironmentType()));
+                  eq("Internal smooth error"), argThat(isLogListWithFatalWrongEnvironmentType()));
         }
 
         private ArgumentMatcher<List<Log>> isLogListWithFatalWrongEnvironmentType() {
@@ -460,8 +421,7 @@ public class EvaluatorBTest extends TestContext {
       public void select() {
         var tuple = tupleB(intB(7));
         var select = selectB(tuple, intB(0));
-        assertThat(evaluate(select))
-            .isEqualTo(intB(7));
+        assertThat(evaluate(select)).isEqualTo(intB(7));
       }
     }
 
@@ -473,18 +433,16 @@ public class EvaluatorBTest extends TestContext {
         var schedulerB = schedulerB(taskReporter, 4);
         var exprB = throwExceptionCall();
         evaluateWithFailure(new EvaluatorB(() -> schedulerB, reporter()), exprB);
-        verify(taskReporter).report(
-            any(),
-            argThat(this::computationResultWithFatalCausedByRuntimeException));
+        verify(taskReporter)
+            .report(any(), argThat(this::computationResultWithFatalCausedByRuntimeException));
       }
 
       private boolean computationResultWithFatalCausedByRuntimeException(ComputationResult result) {
         ArrayB messages = result.output().messages();
         return messages.size() == 1
             && MessageStruct.level(messages.elems(TupleB.class).get(0)) == FATAL
-            && MessageStruct.text(messages.elems(TupleB.class).get(0)).startsWith(
-            "Native code thrown exception:\njava.lang.ArithmeticException");
-
+            && MessageStruct.text(messages.elems(TupleB.class).get(0))
+                .startsWith("Native code thrown exception:\njava.lang.ArithmeticException");
       }
 
       private CallB throwExceptionCall() throws IOException {
@@ -540,8 +498,7 @@ public class EvaluatorBTest extends TestContext {
       public void report_value_as_const_task(ValueB valueB) {
         var taskReporter = mock(TaskReporter.class);
         evaluate(evaluatorB(taskReporter), valueB);
-        verify(taskReporter)
-            .report(constTask(valueB, traceB()), computationResult(valueB, NOOP));
+        verify(taskReporter).report(constTask(valueB, traceB()), computationResult(valueB, NOOP));
       }
 
       public static List<ValueB> report_const_task_cases() {
@@ -556,8 +513,7 @@ public class EvaluatorBTest extends TestContext {
             t.nativeFuncB(),
             t.intB(17),
             t.stringB("abc"),
-            t.tupleB(t.intB(17))
-        );
+            t.tupleB(t.intB(17)));
       }
 
       @Test
@@ -583,27 +539,20 @@ public class EvaluatorBTest extends TestContext {
       public void report_order_as_order_task() {
         var orderB = orderB(intB(17));
         assertReport(
-            orderB,
-            orderTask(orderB, traceB()),
-            computationResult(arrayB(intB(17)), EXECUTION));
+            orderB, orderTask(orderB, traceB()), computationResult(arrayB(intB(17)), EXECUTION));
       }
 
       @Test
       public void report_pick_as_pick_task() {
         var pickB = pickB(arrayB(intB(17)), intB(0));
-        assertReport(
-            pickB,
-            pickTask(pickB, traceB()),
-            computationResult(intB(17), EXECUTION));
+        assertReport(pickB, pickTask(pickB, traceB()), computationResult(intB(17), EXECUTION));
       }
 
       @Test
       public void report_select_as_select_task() {
         var selectB = selectB(tupleB(intB(17)), intB(0));
         assertReport(
-            selectB,
-            selectTask(selectB, traceB()),
-            computationResult(intB(17), EXECUTION));
+            selectB, selectTask(selectB, traceB()), computationResult(intB(17), EXECUTION));
       }
     }
 
@@ -638,8 +587,7 @@ public class EvaluatorBTest extends TestContext {
     private void assertReport(ExprB exprB, Task task, ComputationResult result) {
       var taskReporter = mock(TaskReporter.class);
       evaluate(evaluatorB(taskReporter), exprB);
-      verify(taskReporter)
-          .report(task, result);
+      verify(taskReporter).report(task, result);
     }
   }
 
@@ -657,8 +605,7 @@ public class EvaluatorBTest extends TestContext {
       var expr = orderB(
           commandCall(testName, "INC2,COUNT1,WAIT1,GET1"),
           commandCall(testName, "INC1,COUNT1,WAIT1,GET2"));
-      assertThat(evaluate(expr))
-          .isEqualTo(arrayB(stringB("11"), stringB("21")));
+      assertThat(evaluate(expr)).isEqualTo(arrayB(stringB("11"), stringB("21")));
     }
 
     @Test
@@ -671,8 +618,7 @@ public class EvaluatorBTest extends TestContext {
           commandCall(testName, "INC1"),
           commandCall(testName, "INC1"),
           commandCall(testName, "INC1"),
-          commandCall(testName, "INC1")
-      );
+          commandCall(testName, "INC1"));
 
       var reporter = mock(TaskReporter.class);
       var vm = new EvaluatorB(() -> schedulerB(reporter, 4), reporter());
@@ -701,8 +647,7 @@ public class EvaluatorBTest extends TestContext {
           commandCall(testName, "WAIT2,COUNT1,GET2"));
 
       var vm = new EvaluatorB(() -> schedulerB(2), reporter());
-      assertThat(evaluate(vm, exprB))
-          .isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
+      assertThat(evaluate(vm, exprB)).isEqualTo(arrayB(stringB("1"), stringB("1"), stringB("0")));
     }
 
     private CallB commandCall(String testName, String commands) throws IOException {
@@ -710,8 +655,8 @@ public class EvaluatorBTest extends TestContext {
     }
 
     private CallB commandCall(String testName, String commands, boolean isPure) throws IOException {
-      var nativeFuncB = nativeFuncB(
-          funcTB(stringTB(), stringTB(), stringTB()), ExecuteCommands.class, isPure);
+      var nativeFuncB =
+          nativeFuncB(funcTB(stringTB(), stringTB(), stringTB()), ExecuteCommands.class, isPure);
       return callB(nativeFuncB, stringB(testName), stringB(commands));
     }
 
@@ -758,15 +703,13 @@ public class EvaluatorBTest extends TestContext {
         .that(resultOptional.isDefined())
         .isTrue();
     var results = resultOptional.get();
-    assertThat(results.size())
-        .isEqualTo(1);
+    assertThat(results.size()).isEqualTo(1);
     return results.get(0);
   }
 
   private void evaluateWithFailure(EvaluatorB evaluatorB, ExprB expr) {
     var results = evaluatorB.evaluate(Array.of(expr));
-    assertThat(results)
-        .isEqualTo(Option.none());
+    assertThat(results).isEqualTo(Option.none());
   }
 
   public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {
@@ -778,8 +721,7 @@ public class EvaluatorBTest extends TestContext {
     var argCaptor = ArgumentCaptor.forClass(ComputationResult.class);
     verify(reporter, times(size)).report(taskMatcher(), argCaptor.capture());
     var resSources = map(argCaptor.getAllValues(), ComputationResult::source);
-    assertThat(resSources)
-        .containsExactlyElementsIn(resSourceList(size, expectedSource));
+    assertThat(resSources).containsExactlyElementsIn(resSourceList(size, expectedSource));
   }
 
   private static Task taskMatcher() {
@@ -793,24 +735,20 @@ public class EvaluatorBTest extends TestContext {
   }
 
   private CountingSchedulerB countingSchedulerB() {
-    return new CountingSchedulerB(
-        taskExecutor(), bytecodeF(), varReducerB());
+    return new CountingSchedulerB(taskExecutor(), bytecodeF(), varReducerB());
   }
 
   private static class CountingSchedulerB extends SchedulerB {
     private final ConcurrentHashMap<Class<?>, AtomicInteger> counters = new ConcurrentHashMap<>();
 
     public CountingSchedulerB(
-        TaskExecutor taskExecutor,
-        BytecodeF bytecodeF,
-        VarReducerB varReducerB) {
+        TaskExecutor taskExecutor, BytecodeF bytecodeF, VarReducerB varReducerB) {
       super(taskExecutor, bytecodeF, varReducerB);
     }
 
     @Override
     protected Job newJob(ExprB exprB, ImmutableList<Job> environment, TraceB trace) {
-      counters.computeIfAbsent(exprB.getClass(), k -> new AtomicInteger())
-          .incrementAndGet();
+      counters.computeIfAbsent(exprB.getClass(), k -> new AtomicInteger()).incrementAndGet();
       return super.newJob(exprB, environment, trace);
     }
 

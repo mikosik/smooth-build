@@ -1,10 +1,9 @@
 package org.smoothbuild.filesystem.space;
 
-import org.smoothbuild.common.filesystem.base.FileSystem;
-
 import com.google.inject.Binder;
 import com.google.inject.Key;
 import com.google.inject.multibindings.MapBinder;
+import org.smoothbuild.common.filesystem.base.FileSystem;
 
 public class SpaceUtils {
   public static void addMapBindingForSpaceFileSystem(Binder binder, Space space) {

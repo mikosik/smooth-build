@@ -24,4 +24,3 @@ public final class IfFuncCB extends FuncCB {
     return false;
   }
 }
-

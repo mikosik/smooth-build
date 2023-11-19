@@ -5,18 +5,15 @@ import static org.smoothbuild.common.io.Paths.removeExtension;
 import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR_FILE_PATH;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 
+import com.google.common.collect.ImmutableList;
+import io.vavr.collection.Array;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
-
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
-
-import com.google.common.collect.ImmutableList;
-
-import io.vavr.collection.Array;
-import jakarta.inject.Inject;
 
 public class InstallationHashes {
   private final FileResolver fileResolver;
@@ -50,8 +47,7 @@ public class InstallationHashes {
         hash(properties, "java.runtime.name"),
         hash(properties, "java.runtime.version"),
         hash(properties, "java.vm.name"),
-        hash(properties, "java.vm.version")
-    ));
+        hash(properties, "java.vm.version")));
   }
 
   private static Hash hash(Properties properties, String name) {

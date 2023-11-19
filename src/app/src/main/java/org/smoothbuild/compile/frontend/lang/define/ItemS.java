@@ -4,15 +4,13 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.Lists.map;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.smoothbuild.compile.frontend.lang.base.Tanal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Item is a func param or a struct field.
@@ -36,12 +34,12 @@ public final class ItemS extends Tanal implements ReferenceableS {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
+    var fields = joinToString(
+        "\n",
         "type = " + type().name(),
         "name = " + name(),
         "defaultValue = " + defaultValue,
-        "location = " + location()
-    );
+        "location = " + location());
     return "ItemS(\n" + indent(fields) + "\n)";
   }
 

@@ -5,9 +5,11 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.Lists.list;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.testing.EqualsTester;
+import io.vavr.collection.Array;
 import java.util.List;
 import java.util.function.Function;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,32 +41,24 @@ import org.smoothbuild.vm.bytecode.type.value.NativeFuncCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.testing.EqualsTester;
-
-import io.vavr.collection.Array;
-
 public class CategoryBTest extends TestContext {
   @ParameterizedTest
   @MethodSource("names")
   public void name(Function<CategoryDb, CategoryB> factoryCall, String name) {
-    assertThat(execute(factoryCall).name())
-        .isEqualTo(name);
+    assertThat(execute(factoryCall).name()).isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
   public void quoted_name(Function<CategoryDb, CategoryB> factoryCall, String name) {
-    assertThat(execute(factoryCall).q())
-        .isEqualTo("`" + name + "`");
+    assertThat(execute(factoryCall).q()).isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
   public void to_string(Function<CategoryDb, CategoryB> factoryCall, String name) {
     var catH = execute(factoryCall);
-    assertThat(catH.toString())
-        .isEqualTo(name);
+    assertThat(catH.toString()).isEqualTo(name);
   }
 
   public static List<Arguments> names() {
@@ -73,17 +67,14 @@ public class CategoryBTest extends TestContext {
         args(f -> f.bool(), "Bool"),
         args(f -> f.int_(), "Int"),
         args(f -> f.string(), "String"),
-
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
         args(f -> f.array(f.int_()), "[Int]"),
         args(f -> f.array(f.string()), "[String]"),
-
         args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
-
         args(f -> f.lambda(Array.of(), f.string()), "LAMBDA:()->String"),
         args(f -> f.lambda(Array.of(f.string()), f.string()), "LAMBDA:(String)->String"),
         args(f -> f.funcT(Array.of(), f.string()), "()->String"),
@@ -92,52 +83,47 @@ public class CategoryBTest extends TestContext {
         args(f -> f.mapFunc(f.int_(), f.string()), "MAP_FUNC:([String],(String)->Int)->[Int]"),
         args(f -> f.nativeFunc(Array.of(), f.string()), "NATIVE_FUNC:()->String"),
         args(f -> f.nativeFunc(Array.of(f.string()), f.string()), "NATIVE_FUNC:(String)->String"),
-
         args(f -> f.tuple(), "{}"),
         args(f -> f.tuple(f.string(), f.bool()), "{String,Bool}"),
         args(f -> f.tuple(f.tuple(f.int_())), "{{Int}}"),
-
         args(f -> f.call(f.int_()), "CALL:Int"),
         args(f -> f.combine(f.tuple(f.string(), f.int_())), "COMBINE:{String,Int}"),
         args(f -> f.order(f.array(f.string())), "ORDER:[String]"),
         args(f -> f.pick(f.int_()), "PICK:Int"),
         args(f -> f.select(f.int_()), "SELECT:Int"),
-        args(f -> f.var(f.int_()), "VAR:Int")
-    );
+        args(f -> f.var(f.int_()), "VAR:Int"));
   }
 
   @Nested
   class _func {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<CategoryDb, FuncTB> factoryCall,
-        Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).result())
-          .isEqualTo(execute(expected));
+    public void result(
+        Function<CategoryDb, FuncTB> factoryCall, Function<CategoryDb, List<TypeB>> expected) {
+      assertThat(execute(factoryCall).result()).isEqualTo(execute(expected));
     }
 
     public static List<Arguments> result_cases() {
       return asList(
           args(f -> f.funcT(Array.of(), f.int_()), f -> f.int_()),
           args(f -> f.funcT(Array.of(f.bool()), f.blob()), f -> f.blob()),
-          args(f -> f.funcT(Array.of(f.bool(), f.int_()), f.blob()), f -> f.blob())
-      );
+          args(f -> f.funcT(Array.of(f.bool(), f.int_()), f.blob()), f -> f.blob()));
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CategoryDb, FuncTB> factoryCall,
-        Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).params())
-          .isEqualTo(execute(expected));
+    public void params(
+        Function<CategoryDb, FuncTB> factoryCall, Function<CategoryDb, List<TypeB>> expected) {
+      assertThat(execute(factoryCall).params()).isEqualTo(execute(expected));
     }
 
     public static List<Arguments> params_cases() {
       return asList(
           args(f -> f.funcT(Array.of(), f.int_()), f -> f.tuple()),
           args(f -> f.funcT(Array.of(f.bool()), f.blob()), f -> f.tuple(f.bool())),
-          args(f -> f.funcT(Array.of(f.bool(), f.int_()), f.blob()), f -> f.tuple(f.bool(), f.int_()))
-      );
+          args(
+              f -> f.funcT(Array.of(f.bool(), f.int_()), f.blob()),
+              f -> f.tuple(f.bool(), f.int_())));
     }
   }
 
@@ -146,35 +132,31 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("result_cases")
     public void result(
-        Function<CategoryDb, LambdaCB> factoryCall,
-        Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().result())
-          .isEqualTo(execute(expected));
+        Function<CategoryDb, LambdaCB> factoryCall, Function<CategoryDb, List<TypeB>> expected) {
+      assertThat(execute(factoryCall).type().result()).isEqualTo(execute(expected));
     }
 
     public static List<Arguments> result_cases() {
       return asList(
           args(f -> f.lambda(f.funcT(Array.of(), f.int_())), f -> f.int_()),
           args(f -> f.lambda(f.funcT(Array.of(f.bool()), f.blob())), f -> f.blob()),
-          args(f -> f.lambda(f.funcT(Array.of(f.bool(), f.int_()), f.blob())), f -> f.blob())
-      );
+          args(f -> f.lambda(f.funcT(Array.of(f.bool(), f.int_()), f.blob())), f -> f.blob()));
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
     public void params(
-        Function<CategoryDb, LambdaCB> factoryCall,
-        Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().params())
-          .isEqualTo(execute(expected));
+        Function<CategoryDb, LambdaCB> factoryCall, Function<CategoryDb, List<TypeB>> expected) {
+      assertThat(execute(factoryCall).type().params()).isEqualTo(execute(expected));
     }
 
     public static List<Arguments> params_cases() {
       return asList(
           args(f -> f.lambda(f.funcT(Array.of(), f.int_())), f -> f.tuple()),
           args(f -> f.lambda(f.funcT(Array.of(f.bool()), f.blob())), f -> f.tuple(f.bool())),
-          args(f -> f.lambda(f.funcT(Array.of(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
-      );
+          args(
+              f -> f.lambda(f.funcT(Array.of(f.bool(), f.int_()), f.blob())),
+              f -> f.tuple(f.bool(), f.int_())));
     }
   }
 
@@ -185,32 +167,31 @@ public class CategoryBTest extends TestContext {
     public void result(
         Function<CategoryDb, NativeFuncCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().result())
-          .isEqualTo(execute(expected));
+      assertThat(execute(factoryCall).type().result()).isEqualTo(execute(expected));
     }
 
     public static List<Arguments> result_cases() {
       return asList(
           args(f -> f.nativeFunc(f.funcT(Array.of(), f.int_())), f -> f.int_()),
           args(f -> f.nativeFunc(f.funcT(Array.of(f.bool()), f.blob())), f -> f.blob()),
-          args(f -> f.nativeFunc(f.funcT(Array.of(f.bool(), f.int_()), f.blob())), f -> f.blob())
-      );
+          args(f -> f.nativeFunc(f.funcT(Array.of(f.bool(), f.int_()), f.blob())), f -> f.blob()));
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<CategoryDb, NativeFuncCB> factoryCall,
+    public void params(
+        Function<CategoryDb, NativeFuncCB> factoryCall,
         Function<CategoryDb, List<TypeB>> expected) {
-      assertThat(execute(factoryCall).type().params())
-          .isEqualTo(execute(expected));
+      assertThat(execute(factoryCall).type().params()).isEqualTo(execute(expected));
     }
 
     public static List<Arguments> params_cases() {
       return asList(
           args(f -> f.nativeFunc(f.funcT(Array.of(), f.int_())), f -> f.tuple()),
           args(f -> f.nativeFunc(f.funcT(Array.of(f.bool()), f.blob())), f -> f.tuple(f.bool())),
-          args(f -> f.nativeFunc(f.funcT(Array.of(f.bool(), f.int_()), f.blob())), f -> f.tuple(f.bool(), f.int_()))
-      );
+          args(
+              f -> f.nativeFunc(f.funcT(Array.of(f.bool(), f.int_()), f.blob())),
+              f -> f.tuple(f.bool(), f.int_())));
     }
   }
 
@@ -221,8 +202,7 @@ public class CategoryBTest extends TestContext {
     public void elemType(Function<CategoryDb, TypeB> factoryCall) {
       TypeB elem = execute(factoryCall);
       ArrayTB array = categoryDb().array(elem);
-      assertThat(array.elem())
-          .isEqualTo(elem);
+      assertThat(array.elem()).isEqualTo(elem);
     }
 
     public static List<Arguments> elemType_test_data() {
@@ -233,13 +213,11 @@ public class CategoryBTest extends TestContext {
           args(f -> f.int_()),
           args(f -> f.string()),
           args(f -> f.tuple(f.int_())),
-
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
           args(f -> f.array(f.funcT(Array.of(), f.string()))),
           args(f -> f.array(f.int_())),
-          args(f -> f.array(f.string()))
-      );
+          args(f -> f.array(f.string())));
     }
   }
 
@@ -253,26 +231,22 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("tuple_items_cases")
     public void tuple_items(
-        Function<CategoryDb, TupleTB> factoryCall,
-        Function<CategoryDb, Array<TypeB>> expected) {
-      assertThat(execute(factoryCall).elements())
-          .isEqualTo(execute(expected));
+        Function<CategoryDb, TupleTB> factoryCall, Function<CategoryDb, Array<TypeB>> expected) {
+      assertThat(execute(factoryCall).elements()).isEqualTo(execute(expected));
     }
 
     public static List<Arguments> tuple_items_cases() {
       return asList(
           args(f -> f.tuple(), f -> Array.of()),
           args(f -> f.tuple(f.string()), f -> Array.of(f.string())),
-          args(f -> f.tuple(f.string(), f.int_()), f -> Array.of(f.string(), f.int_()))
-      );
+          args(f -> f.tuple(f.string(), f.int_()), f -> Array.of(f.string(), f.int_())));
     }
   }
 
   @ParameterizedTest
   @MethodSource("typeJ_test_data")
   public void typeJ(CategoryB type, Class<?> expected) {
-    assertThat(type.typeJ())
-        .isEqualTo(expected);
+    assertThat(type.typeJ()).isEqualTo(expected);
   }
 
   public static List<Arguments> typeJ_test_data() {
@@ -284,11 +258,9 @@ public class CategoryBTest extends TestContext {
         arguments(CONTEXT.ifFuncCB(), IfFuncB.class),
         arguments(CONTEXT.mapFuncCB(), MapFuncB.class),
         arguments(CONTEXT.intTB(), IntB.class),
-        arguments(
-            CONTEXT.nativeFuncCB(CONTEXT.boolTB(), CONTEXT.blobTB()), NativeFuncB.class),
+        arguments(CONTEXT.nativeFuncCB(CONTEXT.boolTB(), CONTEXT.blobTB()), NativeFuncB.class),
         arguments(CONTEXT.personTB(), TupleB.class),
         arguments(CONTEXT.stringTB(), StringB.class),
-
         arguments(CONTEXT.arrayTB(CONTEXT.blobTB()), ArrayB.class),
         arguments(CONTEXT.arrayTB(CONTEXT.boolTB()), ArrayB.class),
         arguments(
@@ -296,15 +268,12 @@ public class CategoryBTest extends TestContext {
         arguments(CONTEXT.arrayTB(CONTEXT.intTB()), ArrayB.class),
         arguments(CONTEXT.arrayTB(CONTEXT.personTB()), ArrayB.class),
         arguments(CONTEXT.arrayTB(CONTEXT.stringTB()), ArrayB.class),
-
         arguments(CONTEXT.callCB(), CallB.class),
         arguments(CONTEXT.orderCB(), OrderB.class),
-        arguments(
-            CONTEXT.combineCB(CONTEXT.intTB(), CONTEXT.stringTB()), CombineB.class),
+        arguments(CONTEXT.combineCB(CONTEXT.intTB(), CONTEXT.stringTB()), CombineB.class),
         arguments(CONTEXT.pickCB(), PickB.class),
         arguments(CONTEXT.varCB(CONTEXT.intTB()), VarB.class),
-        arguments(CONTEXT.selectCB(CONTEXT.intTB()), SelectB.class)
-    );
+        arguments(CONTEXT.selectCB(CONTEXT.intTB()), SelectB.class));
   }
 
   @Nested
@@ -312,15 +281,13 @@ public class CategoryBTest extends TestContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
-      assertThat(categoryDb().call(type).evaluationT())
-          .isEqualTo(type);
+      assertThat(categoryDb().call(type).evaluationT()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("combine_cases")
     public void combine(CombineCB type, TupleTB expected) {
-      assertThat(type.evaluationT())
-          .isEqualTo(expected);
+      assertThat(type.evaluationT()).isEqualTo(expected);
     }
 
     public static List<Arguments> combine_cases() {
@@ -328,38 +295,32 @@ public class CategoryBTest extends TestContext {
       CategoryDb db = CONTEXT.categoryDb();
       return list(
           arguments(db.combine(db.tuple()), db.tuple()),
-          arguments(db.combine(db.tuple(CONTEXT.stringTB())), db.tuple(
-              CONTEXT.stringTB()))
-      );
+          arguments(db.combine(db.tuple(CONTEXT.stringTB())), db.tuple(CONTEXT.stringTB())));
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void order(TypeB type) {
       var array = arrayTB(type);
-      assertThat(orderCB(type).evaluationT())
-          .isEqualTo(array);
+      assertThat(orderCB(type).evaluationT()).isEqualTo(array);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void pick(TypeB type) {
-      assertThat(pickCB(type).evaluationT())
-          .isEqualTo(type);
+      assertThat(pickCB(type).evaluationT()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void reference(TypeB type) {
-      assertThat(varCB(type).evaluationT())
-          .isEqualTo(type);
+      assertThat(varCB(type).evaluationT()).isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeB type) {
-      assertThat(selectCB(type).evaluationT())
-          .isEqualTo(type);
+      assertThat(selectCB(type).evaluationT()).isEqualTo(type);
     }
 
     public static ImmutableList<CategoryB> types() {
@@ -372,9 +333,7 @@ public class CategoryBTest extends TestContext {
     var tester = new EqualsTester();
     tester.addEqualityGroup(blobTB(), blobTB());
     tester.addEqualityGroup(boolTB(), boolTB());
-    tester.addEqualityGroup(
-        funcTB(boolTB(), blobTB()),
-        funcTB(boolTB(), blobTB()));
+    tester.addEqualityGroup(funcTB(boolTB(), blobTB()), funcTB(boolTB(), blobTB()));
     tester.addEqualityGroup(intTB(), intTB());
     tester.addEqualityGroup(stringTB(), stringTB());
     tester.addEqualityGroup(personTB(), personTB());
@@ -382,8 +341,7 @@ public class CategoryBTest extends TestContext {
     tester.addEqualityGroup(arrayTB(blobTB()), arrayTB(blobTB()));
     tester.addEqualityGroup(arrayTB(boolTB()), arrayTB(boolTB()));
     tester.addEqualityGroup(
-        arrayTB(funcTB(boolTB(), blobTB())),
-        arrayTB(funcTB(boolTB(), blobTB())));
+        arrayTB(funcTB(boolTB(), blobTB())), arrayTB(funcTB(boolTB(), blobTB())));
     tester.addEqualityGroup(arrayTB(intTB()), arrayTB(intTB()));
     tester.addEqualityGroup(arrayTB(stringTB()), arrayTB(stringTB()));
     tester.addEqualityGroup(arrayTB(personTB()), arrayTB(personTB()));
@@ -393,12 +351,11 @@ public class CategoryBTest extends TestContext {
     tester.addEqualityGroup(arrayTB(arrayTB(funcTB(intTB()))), arrayTB(arrayTB(funcTB(intTB()))));
     tester.addEqualityGroup(arrayTB(arrayTB(intTB())), arrayTB(arrayTB(intTB())));
     tester.addEqualityGroup(arrayTB(arrayTB(stringTB())), arrayTB(arrayTB(stringTB())));
-    tester.addEqualityGroup(arrayTB(arrayTB(tupleTB(animalTB()))), arrayTB(arrayTB(tupleTB(animalTB()))));
+    tester.addEqualityGroup(
+        arrayTB(arrayTB(tupleTB(animalTB()))), arrayTB(arrayTB(tupleTB(animalTB()))));
 
     tester.addEqualityGroup(callCB(), callCB());
-    tester.addEqualityGroup(
-        combineCB(intTB(), stringTB()),
-        combineCB(intTB(), stringTB()));
+    tester.addEqualityGroup(combineCB(intTB(), stringTB()), combineCB(intTB(), stringTB()));
     tester.addEqualityGroup(ifFuncCB(), ifFuncCB());
     tester.addEqualityGroup(mapFuncCB(), mapFuncCB());
     tester.addEqualityGroup(orderCB(), orderCB());
@@ -418,8 +375,7 @@ public class CategoryBTest extends TestContext {
    * exact type of lambda expression passed to factoryCall.
    */
   private static <R> Arguments args(
-      Function<CategoryDb, R> factoryCall1,
-      Function<CategoryDb, R> factoryCall2) {
+      Function<CategoryDb, R> factoryCall1, Function<CategoryDb, R> factoryCall2) {
     return arguments(factoryCall1, factoryCall2);
   }
 

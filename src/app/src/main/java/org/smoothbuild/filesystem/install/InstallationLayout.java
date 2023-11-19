@@ -6,10 +6,9 @@ import static org.smoothbuild.filesystem.space.FilePath.filePath;
 import static org.smoothbuild.filesystem.space.Space.BINARY;
 import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 
+import com.google.common.collect.ImmutableList;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.filesystem.space.FilePath;
-
-import com.google.common.collect.ImmutableList;
 
 public class InstallationLayout {
   public static final PathS STD_LIB_MOD_PATH = path("std_lib.smooth");

@@ -13,8 +13,7 @@ public abstract sealed class TypeP extends NalImpl permits ExplicitTP, ImplicitT
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof TypeP that
-        && this.name().equals(that.name());
+    return object instanceof TypeP that && this.name().equals(that.name());
   }
 
   @Override
@@ -24,10 +23,7 @@ public abstract sealed class TypeP extends NalImpl permits ExplicitTP, ImplicitT
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "name = " + name(),
-        "location = " + location()
-    );
+    var fields = joinToString("\n", "name = " + name(), "location = " + location());
     return "TypeP(\n" + indent(fields) + "\n)";
   }
 }

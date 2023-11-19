@@ -7,12 +7,12 @@ import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-
 import org.smoothbuild.common.collect.Sets;
 import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
@@ -30,13 +30,10 @@ import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Maybe;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * Sort module Evaluables and Structs based on dependencies between them.
  */
-public class SortModuleMembersByDependency
-    implements Function<ModuleP, Maybe<ModuleP>> {
+public class SortModuleMembersByDependency implements Function<ModuleP, Maybe<ModuleP>> {
   @Override
   public Maybe<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();

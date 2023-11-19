@@ -3,13 +3,11 @@ package org.smoothbuild.testing.type;
 import static java.lang.String.join;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Objects;
 import java.util.Set;
-
 import org.smoothbuild.compile.frontend.lang.type.FuncTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
-
-import com.google.common.collect.ImmutableList;
 
 public class TestedTS {
   private final TypeS type;
@@ -104,12 +102,11 @@ public class TestedTS {
   public static class TestedArrayTS extends TestedTS {
     public final TestedTS elemT;
 
-    public TestedArrayTS(TestedTS elemT, TypeS type,
-        Set<String> typeDeclarations, Set<String> allDeclarations) {
+    public TestedArrayTS(
+        TestedTS elemT, TypeS type, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, typeDeclarations, allDeclarations);
       this.elemT = elemT;
     }
-
 
     @Override
     public boolean isArray() {

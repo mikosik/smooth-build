@@ -3,18 +3,15 @@ package org.smoothbuild.stdlib.java.javac;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
-
 import javax.tools.SimpleJavaFileObject;
-
+import okio.ForwardingSink;
+import okio.Okio;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.BlobBBuilder;
 import org.smoothbuild.vm.bytecode.expr.value.StringB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-
-import okio.ForwardingSink;
-import okio.Okio;
 
 public class OutputClassFile extends SimpleJavaFileObject {
   private final ArrayBBuilder fileArrayBuilder;
@@ -33,13 +30,14 @@ public class OutputClassFile extends SimpleJavaFileObject {
   @Override
   public OutputStream openOutputStream() {
     return Okio.buffer(new ForwardingSink(contentBuilder.sink()) {
-      @Override
-      public void close() throws IOException {
-        super.close();
-        StringB pathString = nativeApi.factory().string(path.toString());
-        TupleB file = nativeApi.factory().file(contentBuilder.build(), pathString);
-        fileArrayBuilder.add(file);
-      }
-    }).outputStream();
+          @Override
+          public void close() throws IOException {
+            super.close();
+            StringB pathString = nativeApi.factory().string(path.toString());
+            TupleB file = nativeApi.factory().file(contentBuilder.build(), pathString);
+            fileArrayBuilder.add(file);
+          }
+        })
+        .outputStream();
   }
 }

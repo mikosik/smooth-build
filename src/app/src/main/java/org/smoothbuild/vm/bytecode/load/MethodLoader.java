@@ -3,13 +3,12 @@ package org.smoothbuild.vm.bytecode.load;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.Lists.filter;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.concurrent.ConcurrentHashMap;
-
 import io.vavr.control.Either;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class is thread-safe.
@@ -30,13 +29,13 @@ public class MethodLoader {
   }
 
   private Either<String, Method> findMethod(MethodSpec methodSpec) {
-    return findClass(methodSpec)
-        .flatMap(c -> findMethod(methodSpec, c));
+    return findClass(methodSpec).flatMap(c -> findMethod(methodSpec, c));
   }
 
   private Either<String, Class<?>> findClass(MethodSpec methodSpec) {
     try {
-      return jarClassLoaderProv.classLoaderFor(methodSpec.jar())
+      return jarClassLoaderProv
+          .classLoaderFor(methodSpec.jar())
           .flatMap(classLoader -> loadClass(classLoader, methodSpec));
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);

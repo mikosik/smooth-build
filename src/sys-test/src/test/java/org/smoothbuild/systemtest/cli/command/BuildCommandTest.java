@@ -7,7 +7,6 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PA
 import static org.smoothbuild.systemtest.CommandWithArgs.buildCommand;
 
 import java.io.IOException;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.cli.command.BuildCommand;
@@ -34,8 +33,7 @@ public class BuildCommandTest {
               """);
       runSmoothBuild("result");
       assertFinishedWithError();
-      assertThat(exists(absolutePath(path)))
-          .isFalse();
+      assertThat(exists(absolutePath(path))).isFalse();
     }
   }
 
@@ -87,20 +85,22 @@ public class BuildCommandTest {
                 """);
         runSmooth(buildCommand("--show-tasks=ILLEGAL", "result"));
         assertFinishedWithError();
-        assertSysErrContains("""
+        assertSysErrContains(
+            """
             Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.
-            
-            Usage:"""
-        );
+
+            Usage:""");
       }
     }
 
     @Nested
     class _call_matcher extends SystemTestCase {
-      private static final String NATIVE_FUNCTION_CALL = """
+      private static final String NATIVE_FUNCTION_CALL =
+          """
           result = concat([["a"], ["b"]]);
           """;
-      private static final String NATIVE_CALL_TASK_HEADER = """
+      private static final String NATIVE_CALL_TASK_HEADER =
+          """
           concat()                                    build.smooth:1                 exec
           """;
 
@@ -115,16 +115,16 @@ public class BuildCommandTest {
             NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }
 
-      private void testThatTaskHeaderShownWhenCallIsEnabled(String callDeclaration,
-          String expectedHeaderToBeShown) throws IOException {
+      private void testThatTaskHeaderShownWhenCallIsEnabled(
+          String callDeclaration, String expectedHeaderToBeShown) throws IOException {
         createUserModule(callDeclaration);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains(expectedHeaderToBeShown);
       }
 
-      private void testThatTaskHeaderIsNotShownWhenCallIsDisabled(String callDeclaration,
-          String headerThatShouldNotBeShows) throws IOException {
+      private void testThatTaskHeaderIsNotShownWhenCallIsDisabled(
+          String callDeclaration, String headerThatShouldNotBeShows) throws IOException {
         createUserModule(callDeclaration);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -134,13 +134,15 @@ public class BuildCommandTest {
 
     @Nested
     class _combine_matcher extends SystemTestCase {
-      private static final String COMBINE = """
+      private static final String COMBINE =
+          """
           MyStruct(
             String myField
           )
           result = MyStruct("abc");
           """;
-      private static final String COMBINE_TASK_HEADER = """
+      private static final String COMBINE_TASK_HEADER =
+          """
           (,)                                         build.smooth:1                 exec
           """;
 
@@ -166,19 +168,22 @@ public class BuildCommandTest {
       private static final String BLOB_CONST = """
           result = 0xABCD;
           """;
-      private static final String BLOB_CONST_TASK_HEADER = """
+      private static final String BLOB_CONST_TASK_HEADER =
+          """
           Blob                                        build.smooth:1
           """;
       private static final String INT_CONST = """
           result = 123;
           """;
-      private static final String INT_CONST_TASK_HEADER = """
+      private static final String INT_CONST_TASK_HEADER =
+          """
           Int                                         build.smooth:1
           """;
       private static final String STRING_CONST = """
           result = "myLiteral";
           """;
-      private static final String STRING_CONST_TASK_HEADER = """
+      private static final String STRING_CONST_TASK_HEADER =
+          """
           String                                      build.smooth:1
           """;
 
@@ -212,16 +217,16 @@ public class BuildCommandTest {
         testThatTaskHeaderIsNotShownWhenConstAreDisabled(STRING_CONST, STRING_CONST_TASK_HEADER);
       }
 
-      private void testThatTaskHeaderShownWhenConstAreEnabled(String constDeclaration,
-          String expectedTaskHeader) throws IOException {
+      private void testThatTaskHeaderShownWhenConstAreEnabled(
+          String constDeclaration, String expectedTaskHeader) throws IOException {
         createUserModule(constDeclaration);
         runSmooth(buildCommand("--show-tasks=const", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains(expectedTaskHeader);
       }
 
-      private void testThatTaskHeaderIsNotShownWhenConstAreDisabled(String constDeclaration,
-          String headerThatShouldNotBeShown) throws IOException {
+      private void testThatTaskHeaderIsNotShownWhenConstAreDisabled(
+          String constDeclaration, String headerThatShouldNotBeShown) throws IOException {
         createUserModule(constDeclaration);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -231,10 +236,12 @@ public class BuildCommandTest {
 
     @Nested
     class _pick_matcher extends SystemTestCase {
-      private static final String PICK = """
+      private static final String PICK =
+          """
             result = elem([1, 2, 3], 0);
             """;
-      private static final String PICK_TASK_HEADER = """
+      private static final String PICK_TASK_HEADER =
+          """
           [].                                         unknown                        exec
           """;
 
@@ -257,13 +264,15 @@ public class BuildCommandTest {
 
     @Nested
     class _order_matcher extends SystemTestCase {
-      private static final String ORDER = """
+      private static final String ORDER =
+          """
           result = [
             123,
             456,
           ];
           """;
-      private static final String ORDER_TASK_HEADER = """
+      private static final String ORDER_TASK_HEADER =
+          """
           [,]                                         build.smooth:1                 exec
           """;
 
@@ -286,14 +295,16 @@ public class BuildCommandTest {
 
     @Nested
     class _select_matcher extends SystemTestCase {
-      private static final String SELECT = """
+      private static final String SELECT =
+          """
             MyStruct(
               String myField
             )
             aStruct = MyStruct("abc");
             result = aStruct.myField;
             """;
-      private static final String SELECT_TASK_HEADER = """
+      private static final String SELECT_TASK_HEADER =
+          """
           {}.                                         build.smooth:5                 exec
           """;
 
@@ -322,7 +333,8 @@ public class BuildCommandTest {
       @Test
       public void then_error_log_is_not_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule("""
+        createUserModule(
+            """
                 Nothing reportError(String message);
                 result = reportError("my-error-message");
                 """);
@@ -334,11 +346,13 @@ public class BuildCommandTest {
       @Test
       public void then_warning_log_is_not_shown() throws IOException {
         createNativeJar(ReportWarning.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
-            """, ReportWarning.class.getCanonicalName()));
+            """,
+            ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=fatal", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain("WARNING: my-warning-message");
@@ -347,11 +361,13 @@ public class BuildCommandTest {
       @Test
       public void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
-            """, ReportInfo.class.getCanonicalName()));
+            """,
+            ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=fatal", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain("INFO: my-info-message");
@@ -363,11 +379,13 @@ public class BuildCommandTest {
       @Test
       public void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             A reportError(String message);
             Int result = reportError("my-error-message");
-            """, ReportError.class.getCanonicalName()));
+            """,
+            ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=error", "result"));
         assertFinishedWithError();
         assertSysOutContains("ERROR: my-error-message");
@@ -376,11 +394,13 @@ public class BuildCommandTest {
       @Test
       public void then_warning_log_is_not_shown() throws IOException {
         createNativeJar(ReportWarning.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
-            """, ReportWarning.class.getCanonicalName()));
+            """,
+            ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=error", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain("my-warning-message");
@@ -389,11 +409,13 @@ public class BuildCommandTest {
       @Test
       public void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
-            """, ReportInfo.class.getCanonicalName()));
+            """,
+            ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=error", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain("my-info-message");
@@ -405,11 +427,13 @@ public class BuildCommandTest {
       @Test
       public void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             A reportError(String message);
             Int result = reportError("my-error-message");
-            """, ReportError.class.getCanonicalName()));
+            """,
+            ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithError();
         assertSysOutContains("ERROR: my-error-message");
@@ -418,11 +442,13 @@ public class BuildCommandTest {
       @Test
       public void then_warning_log_is_shown() throws IOException {
         createNativeJar(ReportWarning.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
-            """, ReportWarning.class.getCanonicalName()));
+            """,
+            ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains("WARNING: my-warning-message");
@@ -431,11 +457,13 @@ public class BuildCommandTest {
       @Test
       public void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
-            """, ReportInfo.class.getCanonicalName()));
+            """,
+            ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=warning", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain("my-info-message");
@@ -447,11 +475,13 @@ public class BuildCommandTest {
       @Test
       public void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             A reportError(String message);
             Int result = reportError("my-error-message");
-            """, ReportError.class.getCanonicalName()));
+            """,
+            ReportError.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithError();
         assertSysOutContains("ERROR: my-error-message");
@@ -460,11 +490,13 @@ public class BuildCommandTest {
       @Test
       public void then_warning_log_is_shown() throws IOException {
         createNativeJar(ReportWarning.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
-            """, ReportWarning.class.getCanonicalName()));
+            """,
+            ReportWarning.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains("WARNING: my-warning-message");
@@ -473,11 +505,13 @@ public class BuildCommandTest {
       @Test
       public void then_info_log_is_shown() throws IOException {
         createNativeJar(ReportInfo.class);
-        createUserModule(format("""
+        createUserModule(format(
+            """
             @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
-            """, ReportInfo.class.getCanonicalName()));
+            """,
+            ReportInfo.class.getCanonicalName()));
         runSmooth(buildCommand("--log-level=info", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains("INFO: my-info-message");
@@ -490,21 +524,25 @@ public class BuildCommandTest {
     @Test
     public void native_call() throws IOException {
       createNativeJar(ReturnAbc.class);
-      createUserModule(format("""
+      createUserModule(format(
+          """
           @Native("%s")
           String myFunc();
           result = myFunc();
-          """, ReturnAbc.class.getCanonicalName()));
+          """,
+          ReturnAbc.class.getCanonicalName()));
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
           myFunc()                                    build.smooth:3                 exec
           """);
     }
 
     @Test
     public void select() throws IOException {
-      createUserModule("""
+      createUserModule(
+          """
           MyStruct(
             String myField
           )
@@ -512,7 +550,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
           {}.                                         build.smooth:4                 exec
           """);
     }
@@ -525,7 +564,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
           myFunc                                      build.smooth:1
           """);
     }
@@ -538,7 +578,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
           myValue                                     build.smooth:1
           """);
     }
@@ -550,7 +591,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
           [,]                                         build.smooth:1                 exec
           """);
     }
@@ -562,7 +604,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
           Blob                                        build.smooth:1
           """);
     }
@@ -574,7 +617,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
           String                                      build.smooth:1
           """);
     }
@@ -586,7 +630,8 @@ public class BuildCommandTest {
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
-      assertSysOutContains("""
+      assertSysOutContains(
+          """
           Int                                         build.smooth:1
           """);
     }

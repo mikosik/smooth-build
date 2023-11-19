@@ -2,14 +2,12 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.base.Suppliers.memoize;
 
+import io.vavr.collection.Array;
 import java.util.function.Supplier;
-
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
-
-import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.
@@ -46,8 +44,8 @@ public final class ArrayB extends ValueB {
   private <T extends ValueB> void assertIsIterableAs(Class<T> clazz) {
     var elemT = type().elem();
     if (!clazz.isAssignableFrom(elemT.typeJ())) {
-      throw new IllegalArgumentException(category().name() + " cannot be viewed as Iterable of "
-          + clazz.getCanonicalName() + ".");
+      throw new IllegalArgumentException(
+          category().name() + " cannot be viewed as Iterable of " + clazz.getCanonicalName() + ".");
     }
   }
 

@@ -2,10 +2,9 @@ package org.smoothbuild.systemtest.stdlib.common;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import okio.ByteString;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
-
-import okio.ByteString;
 
 public class IdTest extends SystemTestCase {
   @Test
@@ -15,8 +14,7 @@ public class IdTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactAsString("result"))
-        .isEqualTo("abc");
+    assertThat(artifactAsString("result")).isEqualTo("abc");
   }
 
   @Test

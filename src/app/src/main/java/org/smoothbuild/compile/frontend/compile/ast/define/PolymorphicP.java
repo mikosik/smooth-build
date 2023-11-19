@@ -7,8 +7,7 @@ import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 /**
  * Polymorphic entity.
  */
-public abstract sealed class PolymorphicP implements Located
-    permits LambdaP, ReferenceP {
+public abstract sealed class PolymorphicP implements Located permits LambdaP, ReferenceP {
   private final Location location;
 
   public PolymorphicP(Location location) {

@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.ast;
 
 import java.util.List;
-
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
@@ -112,14 +111,14 @@ public class ModuleVisitorP {
   public void visitExpr(ExprP exprP) {
     // @formatter:off
     switch (exprP) {
-      case BlobP          blobP          -> visitBlob(blobP);
-      case CallP          callP          -> visitCall(callP);
-      case IntP           intP           -> visitInt(intP);
-      case InstantiateP   instantiateP   -> visitInstantiateP(instantiateP);
-      case NamedArgP      namedArgP      -> visitNamedArg(namedArgP);
-      case OrderP         orderP         -> visitOrder(orderP);
-      case SelectP        selectP        -> visitSelect(selectP);
-      case StringP        stringP        -> visitString(stringP);
+      case BlobP blobP -> visitBlob(blobP);
+      case CallP callP -> visitCall(callP);
+      case IntP intP -> visitInt(intP);
+      case InstantiateP instantiateP -> visitInstantiateP(instantiateP);
+      case NamedArgP namedArgP -> visitNamedArg(namedArgP);
+      case OrderP orderP -> visitOrder(orderP);
+      case SelectP selectP -> visitSelect(selectP);
+      case StringP stringP -> visitString(stringP);
     }
     // @formatter:on
   }
@@ -142,16 +141,14 @@ public class ModuleVisitorP {
     visitExpr(arg);
   }
 
-  public void visitBlob(BlobP blobP) {
-  }
+  public void visitBlob(BlobP blobP) {}
 
   public void visitCall(CallP callP) {
     visitExpr(callP.callee());
     visitArgs(callP.args());
   }
 
-  public void visitInt(IntP intP) {
-  }
+  public void visitInt(IntP intP) {}
 
   private void visitPolymorphicP(PolymorphicP polymorphicP) {
     switch (polymorphicP) {

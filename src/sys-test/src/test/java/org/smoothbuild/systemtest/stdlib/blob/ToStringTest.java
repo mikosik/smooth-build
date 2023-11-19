@@ -3,7 +3,6 @@ package org.smoothbuild.systemtest.stdlib.blob;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
 
@@ -15,7 +14,6 @@ public class ToStringTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactAsString("result"))
-        .isEqualTo("A");
+    assertThat(artifactAsString("result")).isEqualTo("A");
   }
 }

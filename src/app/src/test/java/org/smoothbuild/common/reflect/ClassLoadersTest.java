@@ -7,7 +7,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.InputStream;
 import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
 
@@ -18,8 +17,7 @@ public class ClassLoadersTest extends TestContext {
     String binaryName = clazz.getName();
     String binaryPath = binaryPath(clazz);
     try (var inputStream = clazz.getClassLoader().getResourceAsStream(binaryPath)) {
-      assertThat(inputStream)
-          .isNotNull();
+      assertThat(inputStream).isNotNull();
       // `null` forces JDK to use boot class loader which doesn't have access to MyClass
       // so when mapClassLoader asks its parent loader (boot class loader) for loading MyClass it
       // will receive nothing and then will be forced to load it by itself.
@@ -27,10 +25,8 @@ public class ClassLoadersTest extends TestContext {
       var mapClassLoader = mapClassLoader(parentClassLoader, Map.of(binaryPath, inputStream)::get);
 
       Class<?> loadedClass = mapClassLoader.loadClass(binaryName);
-      assertThat(loadedClass.getClassLoader())
-          .isSameInstanceAs(mapClassLoader);
-      assertThat(loadedClass.getMethod("myMethod").invoke(null))
-          .isEqualTo("myResult");
+      assertThat(loadedClass.getClassLoader()).isSameInstanceAs(mapClassLoader);
+      assertThat(loadedClass.getMethod("myMethod").invoke(null)).isEqualTo("myResult");
     }
   }
 

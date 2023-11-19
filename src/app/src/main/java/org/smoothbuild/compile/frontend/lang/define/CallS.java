@@ -10,8 +10,7 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
 /**
  * This class is immutable.
  */
-public record CallS(ExprS callee, CombineS args, Location location)
-    implements ExprS {
+public record CallS(ExprS callee, CombineS args, Location location) implements ExprS {
   public CallS {
     if (callee.evaluationT() instanceof FuncTS funcTS) {
       validateArgsSize(funcTS, args);
@@ -36,11 +35,8 @@ public record CallS(ExprS callee, CombineS args, Location location)
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "callee = " + callee,
-        "args = " + args,
-        "location = " + location
-    );
+    var fields =
+        joinToString("\n", "callee = " + callee, "args = " + args, "location = " + location);
     return "CallS(\n" + indent(fields) + "\n)";
   }
 }

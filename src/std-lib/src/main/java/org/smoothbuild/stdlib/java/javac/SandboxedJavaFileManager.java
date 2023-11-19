@@ -7,14 +7,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
-
 import org.smoothbuild.common.collect.Lists;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
@@ -26,12 +24,13 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
   private final Map<String, Set<JavaFileObject>> packageToJavaFileObjects;
   private final ArrayBBuilder resClassFiles;
 
-  SandboxedJavaFileManager(StandardJavaFileManager fileManager, NativeApi nativeApi,
-      Iterable<InputClassFile> objects) {
+  SandboxedJavaFileManager(
+      StandardJavaFileManager fileManager, NativeApi nativeApi, Iterable<InputClassFile> objects) {
     super(fileManager);
     this.nativeApi = nativeApi;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
-    this.resClassFiles = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
+    this.resClassFiles =
+        nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
   }
 
   private static Map<String, Set<JavaFileObject>> groupIntoPackages(
@@ -50,8 +49,8 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
   }
 
   @Override
-  public JavaFileObject getJavaFileForOutput(Location location, String className, Kind kind,
-      FileObject sibling) throws IOException {
+  public JavaFileObject getJavaFileForOutput(
+      Location location, String className, Kind kind, FileObject sibling) throws IOException {
     if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
       PathS classFilePath = path(className.replace('.', '/') + ".class");
       return new OutputClassFile(resClassFiles, classFilePath, nativeApi);
@@ -70,8 +69,8 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
   }
 
   @Override
-  public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds,
-      boolean recurse) throws IOException {
+  public Iterable<JavaFileObject> list(
+      Location location, String packageName, Set<Kind> kinds, boolean recurse) throws IOException {
     if (location == StandardLocation.CLASS_PATH) {
       if (recurse) {
         throw new UnsupportedOperationException(

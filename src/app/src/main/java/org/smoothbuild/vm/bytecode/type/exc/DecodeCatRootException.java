@@ -6,7 +6,7 @@ import org.smoothbuild.vm.bytecode.type.CategoryKindB;
 public class DecodeCatRootException extends DecodeCatException {
   public DecodeCatRootException(Hash hash, int actualSize) {
     super(("Cannot decode category at %s. Its root points to hash sequence with %d elems when it "
-        + "should point to sequence with 1 or 2 elems.")
+            + "should point to sequence with 1 or 2 elems.")
         .formatted(hash, actualSize));
   }
 

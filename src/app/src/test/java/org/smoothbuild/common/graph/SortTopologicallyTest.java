@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -23,29 +22,20 @@ public class SortTopologicallyTest {
   class sort {
     @Test
     public void empty() {
-      assertSortTopologically(
-          list(),
-          list(
-              list()));
+      assertSortTopologically(list(), list(list()));
     }
 
     @Test
     public void single_node() {
       var n1 = node(1);
-      assertSortTopologically(
-          list(n1),
-          list(
-              list(n1)));
+      assertSortTopologically(list(n1), list(list(n1)));
     }
 
     @Test
     public void two_single_nodes() {
       var n1 = node(1);
       var n2 = node(2);
-      assertSortTopologically(
-          list(n1, n2),
-          list(
-              list(n1)));
+      assertSortTopologically(list(n1, n2), list(list(n1)));
     }
 
     @Test
@@ -53,10 +43,7 @@ public class SortTopologicallyTest {
       var n1 = node(1);
       var n2 = node(2);
       var n3 = node(3);
-      assertSortTopologically(
-          list(n1, n2, n3),
-          list(
-              list(n1)));
+      assertSortTopologically(list(n1, n2, n3), list(list(n1)));
     }
 
     @Test
@@ -64,10 +51,7 @@ public class SortTopologicallyTest {
       var n1 = node(1, list(2));
       var n2 = node(2, list(3));
       var n3 = node(3);
-      assertSortTopologically(
-          list(n1, n2, n3),
-          list(
-              list(n1, n2, n3)));
+      assertSortTopologically(list(n1, n2, n3), list(list(n1, n2, n3)));
     }
 
     @Test
@@ -76,10 +60,7 @@ public class SortTopologicallyTest {
       var n2 = node(2, list(3));
       var n3 = node(3);
       var n4 = node(4);
-      assertSortTopologically(
-          list(n1, n2, n3, n4),
-          list(
-              list(n1, n2, n3)));
+      assertSortTopologically(list(n1, n2, n3, n4), list(list(n1, n2, n3)));
     }
 
     @Test
@@ -91,10 +72,7 @@ public class SortTopologicallyTest {
       var n5 = node(5, list(6));
       var n6 = node(6);
       assertSortTopologically(
-          list(n1, n2, n3, n4, n5, n6),
-          list(
-              list(n1, n2, n3),
-              list(n4, n5, n6)));
+          list(n1, n2, n3, n4, n5, n6), list(list(n1, n2, n3), list(n4, n5, n6)));
     }
 
     @Test
@@ -107,10 +85,7 @@ public class SortTopologicallyTest {
       var n6 = node(6);
       var n7 = node(7);
       assertSortTopologically(
-          list(n1, n2, n3, n4, n5, n6, n7),
-          list(
-              list(n1, n2, n3),
-              list(n4, n5, n6)));
+          list(n1, n2, n3, n4, n5, n6, n7), list(list(n1, n2, n3), list(n4, n5, n6)));
     }
 
     @Test
@@ -118,11 +93,7 @@ public class SortTopologicallyTest {
       var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
-      assertSortTopologically(
-          list(n1, n2, n3),
-          list(
-              list(n1, n2),
-              list(n1, n3)));
+      assertSortTopologically(list(n1, n2, n3), list(list(n1, n2), list(n1, n3)));
     }
 
     @Test
@@ -135,11 +106,7 @@ public class SortTopologicallyTest {
       var n6 = node(6);
       assertSortTopologically(
           list(n1, n2, n3, n4, n5, n6),
-          list(
-              list(n1, n2),
-              list(n1, n3),
-              list(n4, n5),
-              list(n4, n6)));
+          list(list(n1, n2), list(n1, n3), list(n4, n5), list(n4, n6)));
     }
 
     @Test
@@ -148,11 +115,7 @@ public class SortTopologicallyTest {
       var n2 = node(2);
       var n3 = node(3);
       var n4 = node(4);
-      assertSortTopologically(
-          list(n1, n2, n3, n4),
-          list(
-              list(n1, n2),
-              list(n1, n3)));
+      assertSortTopologically(list(n1, n2, n3, n4), list(list(n1, n2), list(n1, n3)));
     }
 
     @Test
@@ -162,22 +125,14 @@ public class SortTopologicallyTest {
       var n3 = node(3);
       var n4 = node(4, list(2, 3));
       assertSortTopologically(
-          list(n1, n2, n3, n4),
-          list(
-              list(n1, n2),
-              list(n1, n3),
-              list(n4, n2),
-              list(n4, n3)));
+          list(n1, n2, n3, n4), list(list(n1, n2), list(n1, n3), list(n4, n2), list(n4, n3)));
     }
 
     @Test
     public void parallel_edges() {
       var n1 = node(1, list(2, 2));
       var n2 = node(2);
-      assertSortTopologically(
-          list(n1, n2),
-          list(
-              list(n1, n2)));
+      assertSortTopologically(list(n1, n2), list(list(n1, n2)));
     }
 
     @Test
@@ -186,11 +141,7 @@ public class SortTopologicallyTest {
       var n2 = node(2, list(4));
       var n3 = node(3, list(4));
       var n4 = node(4);
-      assertSortTopologically(
-          list(n1, n2, n3, n4),
-          list(
-              list(n1, n2, n4),
-              list(n1, n3, n4)));
+      assertSortTopologically(list(n1, n2, n3, n4), list(list(n1, n2, n4), list(n1, n3, n4)));
     }
   }
 
@@ -199,9 +150,7 @@ public class SortTopologicallyTest {
     @Test
     public void to_itself() {
       var n1 = node(1, list(1));
-      assertCycleDetected(
-          list(n1),
-          list(n1));
+      assertCycleDetected(list(n1), list(n1));
     }
 
     @Test
@@ -209,19 +158,14 @@ public class SortTopologicallyTest {
       var n1 = node(1);
       var n2 = node(2, list(1, 2));
 
-      assertCycleDetected(
-          list(n1, n2),
-          list(n2)
-      );
+      assertCycleDetected(list(n1, n2), list(n2));
     }
 
     @Test
     public void between_two_nodes_when_no_root_exists() {
       var n1 = node(1, list(2));
       var n2 = node(2, list(1));
-      assertCycleDetected(
-          list(n1, n2),
-          list(n1, n2));
+      assertCycleDetected(list(n1, n2), list(n1, n2));
     }
 
     @Test
@@ -229,10 +173,7 @@ public class SortTopologicallyTest {
       var n1 = node(1);
       var n2 = node(2, list(3));
       var n3 = node(3, list(2));
-      assertCycleDetected(
-          list(n1, n2, n3),
-          list(n2, n3)
-      );
+      assertCycleDetected(list(n1, n2, n3), list(n2, n3));
     }
 
     @Test
@@ -241,13 +182,11 @@ public class SortTopologicallyTest {
       var n2 = node(2, list(3));
       var n3 = node(3, list(2));
       var nodes = list(n1, n2, n3);
-      assertCycleDetected(
-          nodes,
-          list(n2, n3)
-      );
+      assertCycleDetected(nodes, list(n2, n3));
     }
 
-    private void assertCycleDetected(List<GraphNode<Integer, String, String>> nodes,
+    private void assertCycleDetected(
+        List<GraphNode<Integer, String, String>> nodes,
         List<GraphNode<Integer, String, String>> expectedCycle) {
       var permutations = permutations(nodes);
       for (List<GraphNode<Integer, String, String>> permutation : permutations) {
@@ -300,8 +239,7 @@ public class SortTopologicallyTest {
       var n1b = node(1);
       var nodes = list(n1, n1b);
 
-      assertCall(() -> sortTopologically(nodes))
-          .throwsException(IllegalArgumentException.class);
+      assertCall(() -> sortTopologically(nodes)).throwsException(IllegalArgumentException.class);
     }
   }
 
@@ -318,8 +256,8 @@ public class SortTopologicallyTest {
     assertTimeoutPreemptively(Duration.ofSeconds(5), () -> sortTopologically(nodes));
   }
 
-  private ArrayList<GraphNode<Integer, String, String>> createLayer(AtomicInteger key,
-      List<Integer> edges) {
+  private ArrayList<GraphNode<Integer, String, String>> createLayer(
+      AtomicInteger key, List<Integer> edges) {
     var layer = new ArrayList<GraphNode<Integer, String, String>>();
     for (int j = 0; j < 10; j++) {
       layer.add(node(key.getAndIncrement(), edges));
@@ -327,7 +265,8 @@ public class SortTopologicallyTest {
     return layer;
   }
 
-  private static void assertSortTopologically(List<GraphNode<Integer, String, String>> nodes,
+  private static void assertSortTopologically(
+      List<GraphNode<Integer, String, String>> nodes,
       List<List<GraphNode<Integer, String, String>>> expectedOrders) {
     var permutations = permutations(nodes);
     for (List<GraphNode<Integer, String, String>> permutation : permutations) {

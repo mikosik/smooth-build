@@ -10,8 +10,8 @@ import org.smoothbuild.vm.bytecode.hashed.Hash;
 public class DecodeSelectIndexOutOfBoundsExceptionTest extends TestContext {
   @Test
   public void message() {
-    var exception = new DecodeSelectIndexOutOfBoundsException(
-        Hash.of(13), selectCB(intTB()), 13, 10);
+    var exception =
+        new DecodeSelectIndexOutOfBoundsException(Hash.of(13), selectCB(intTB()), 13, 10);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT:Int` object "
             + "at 43c66c260828c9839f26474151db105481ff92f5e01377f75389d4ce3d2dd574. "

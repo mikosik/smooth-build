@@ -3,7 +3,6 @@ package org.smoothbuild.compile.frontend.lang.type.tool;
 import static com.google.common.truth.Truth.assertWithMessage;
 
 import java.util.HashMap;
-
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 
 public class AssertStructuresAreEqual {

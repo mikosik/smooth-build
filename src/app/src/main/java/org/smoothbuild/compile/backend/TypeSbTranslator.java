@@ -2,6 +2,8 @@ package org.smoothbuild.compile.backend;
 
 import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
 
+import com.google.common.collect.ImmutableMap;
+import io.vavr.collection.Array;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.BlobTS;
 import org.smoothbuild.compile.frontend.lang.type.BoolTS;
@@ -18,10 +20,6 @@ import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
-
-import com.google.common.collect.ImmutableMap;
-
-import io.vavr.collection.Array;
 
 public class TypeSbTranslator {
   private final BytecodeF bytecodeF;
@@ -43,7 +41,7 @@ public class TypeSbTranslator {
       case BoolTS boolTS -> bytecodeF.boolT();
       case FuncTS funcTS -> translate(funcTS);
       case IntTS intTS -> bytecodeF.intT();
-      case VarS varS ->  translate(varS);
+      case VarS varS -> translate(varS);
       case StringTS stringTS -> bytecodeF.stringT();
       case StructTS structTS -> translate(structTS);
       case TupleTS tupleTS -> translate(tupleTS);

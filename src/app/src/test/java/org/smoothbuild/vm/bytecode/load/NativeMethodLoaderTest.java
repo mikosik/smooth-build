@@ -7,9 +7,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.vavr.control.Either;
 import java.io.IOException;
 import java.lang.reflect.Method;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -24,8 +24,6 @@ import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-
-import io.vavr.control.Either;
 
 public class NativeMethodLoaderTest extends TestContext {
   @Test
@@ -60,8 +58,7 @@ public class NativeMethodLoaderTest extends TestContext {
 
   private void assertLoadingCausesError(Class<?> clazz, String message) throws IOException {
     var nativeMethodLoader = nativeMethodLoaderWithPlatformClassLoader();
-    assertThat(nativeMethodLoader.load(nativeFuncB(clazz)))
-        .isEqualTo(loadingError(clazz, message));
+    assertThat(nativeMethodLoader.load(nativeFuncB(clazz))).isEqualTo(loadingError(clazz, message));
   }
 
   private String wrongReturnTypeErrorMessage() {
@@ -75,8 +72,8 @@ public class NativeMethodLoaderTest extends TestContext {
   }
 
   private NativeMethodLoader nativeMethodLoaderWithPlatformClassLoader() {
-    return new NativeMethodLoader(new MethodLoader(
-        new JarClassLoaderProv(bytecodeF(), getSystemClassLoader())));
+    return new NativeMethodLoader(
+        new MethodLoader(new JarClassLoaderProv(bytecodeF(), getSystemClassLoader())));
   }
 
   private Either<String, Object> loadingError(Class<?> clazz, String message) {
@@ -103,26 +100,22 @@ public class NativeMethodLoaderTest extends TestContext {
           Either.left("Error loading native implementation specified as `binary.name`: xx"));
     }
 
-    private void testCaching(Method method, Either<String, Method> eitherMethod,
-        Either<String, Method> expected) {
+    private void testCaching(
+        Method method, Either<String, Method> eitherMethod, Either<String, Method> expected) {
       var methodLoader = mock(MethodLoader.class);
       var jar = blobB();
       var classBinaryName = "binary.name";
       var methodSpec = new MethodSpec(jar, classBinaryName, method.getName());
-      when(methodLoader.provide(methodSpec))
-          .thenReturn(eitherMethod);
+      when(methodLoader.provide(methodSpec)).thenReturn(eitherMethod);
 
       var nativeMethodLoader = new NativeMethodLoader(methodLoader);
 
       var nativeFuncB = nativeFuncB(funcTB(stringTB()), jar, stringB(classBinaryName));
       var resultMethod1 = nativeMethodLoader.load(nativeFuncB);
       var resultMethod2 = nativeMethodLoader.load(nativeFuncB);
-      assertThat(resultMethod1)
-          .isEqualTo(expected);
-      assertThat(resultMethod1)
-          .isSameInstanceAs(resultMethod2);
-      verify(methodLoader, times(1))
-          .provide(methodSpec);
+      assertThat(resultMethod1).isEqualTo(expected);
+      assertThat(resultMethod1).isSameInstanceAs(resultMethod2);
+      verify(methodLoader, times(1)).provide(methodSpec);
     }
   }
 }

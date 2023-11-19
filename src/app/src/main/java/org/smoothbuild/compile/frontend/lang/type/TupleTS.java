@@ -3,10 +3,9 @@ package org.smoothbuild.compile.frontend.lang.type;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.tupleTypeName;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Objects;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
@@ -36,8 +35,7 @@ public final class TupleTS extends TypeS {
     if (this == object) {
       return true;
     }
-    return object instanceof TupleTS that
-        && elements.equals(that.elements);
+    return object instanceof TupleTS that && elements.equals(that.elements);
   }
 
   @Override

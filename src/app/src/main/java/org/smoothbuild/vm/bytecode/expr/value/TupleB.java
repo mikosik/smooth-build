@@ -4,15 +4,13 @@ import static com.google.common.base.Suppliers.memoize;
 import static java.util.Objects.checkIndex;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateTuple;
 
+import com.google.common.base.Supplier;
+import io.vavr.collection.Array;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
-
-import com.google.common.base.Supplier;
-
-import io.vavr.collection.Array;
 
 /**
  * This class is thread-safe.

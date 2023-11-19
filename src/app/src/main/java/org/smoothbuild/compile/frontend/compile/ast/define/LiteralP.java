@@ -4,11 +4,11 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
-public sealed abstract class LiteralP extends ExprP permits BlobP, IntP, StringP {
+public abstract sealed class LiteralP extends ExprP permits BlobP, IntP, StringP {
   private final String literal;
+
   public LiteralP(String literal, Location location) {
     super(location);
     this.literal = literal;
@@ -36,10 +36,7 @@ public sealed abstract class LiteralP extends ExprP permits BlobP, IntP, StringP
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "literal = " + literal,
-        "location = " + location()
-    );
+    var fields = joinToString("\n", "literal = " + literal, "location = " + location());
     return getClass().getName() + "(\n" + indent(fields) + "\n)";
   }
 }

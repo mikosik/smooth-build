@@ -2,11 +2,12 @@ package org.smoothbuild.compile.frontend.lang.type.tool;
 
 import static org.smoothbuild.common.collect.NList.nlist;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Queue;
-
 import org.smoothbuild.common.collect.Lists;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
@@ -20,13 +21,9 @@ import org.smoothbuild.compile.frontend.lang.type.TupleTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
 public class ConstraintInferrer {
   public static TypeS unifyAndInferConstraints(
-      TypeS type1, TypeS type2, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      TypeS type1, TypeS type2, Queue<EqualityConstraint> constraints) throws UnifierException {
     if (type1 instanceof TempVarS tempVar1) {
       constraints.add(new EqualityConstraint(type1, type2));
       // Prefer older Temp so when debugging Unifier data is more stable.
@@ -41,14 +38,14 @@ public class ConstraintInferrer {
       return type2;
     }
     return switch (type1) {
-      // @formatter:off
-      case ArrayTS     array1     -> unifyArrayAndType(array1, type2, constraints);
-      case FieldSetTS  fieldSet1  -> unifyFieldSetAndType(fieldSet1, type2, constraints);
-      case FuncTS      func1      -> unifyFunctionAndType(func1, type2, constraints);
-      case TupleTS     tuple1     -> unifyTupleAndType(tuple1, type2, constraints);
-      case VarS        varS       -> assertTypesAreEqual(varS, type2);
-      default                     -> assertTypesAreEqual(type1, type2);
-      // @formatter:on
+        // @formatter:off
+      case ArrayTS array1 -> unifyArrayAndType(array1, type2, constraints);
+      case FieldSetTS fieldSet1 -> unifyFieldSetAndType(fieldSet1, type2, constraints);
+      case FuncTS func1 -> unifyFunctionAndType(func1, type2, constraints);
+      case TupleTS tuple1 -> unifyTupleAndType(tuple1, type2, constraints);
+      case VarS varS -> assertTypesAreEqual(varS, type2);
+      default -> assertTypesAreEqual(type1, type2);
+        // @formatter:on
     };
   }
 
@@ -61,8 +58,7 @@ public class ConstraintInferrer {
   }
 
   private static ArrayTS unifyArrayAndType(
-      ArrayTS array1, TypeS type2, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      ArrayTS array1, TypeS type2, Queue<EqualityConstraint> constraints) throws UnifierException {
     if (type2 instanceof ArrayTS array2) {
       return new ArrayTS(unifyAndInferConstraints(array1.elem(), array2.elem(), constraints));
     } else {
@@ -71,8 +67,8 @@ public class ConstraintInferrer {
   }
 
   private static FieldSetTS unifyFieldSetAndType(
-      FieldSetTS fieldSet, TypeS type, Queue<EqualityConstraint> constraints) throws
-      UnifierException {
+      FieldSetTS fieldSet, TypeS type, Queue<EqualityConstraint> constraints)
+      throws UnifierException {
     return switch (type) {
       case InterfaceTS interfaceTS -> unifyFieldSetAndInterface(fieldSet, interfaceTS, constraints);
       case StructTS structTS -> unifyFieldSetAndStruct(fieldSet, structTS, constraints);
@@ -84,7 +80,8 @@ public class ConstraintInferrer {
       FieldSetTS fieldSet, InterfaceTS interface2, Queue<EqualityConstraint> constraints)
       throws UnifierException {
     return switch (fieldSet) {
-      case InterfaceTS interface1 -> unifyInterfaceAndInterface(interface1, interface2, constraints);
+      case InterfaceTS interface1 -> unifyInterfaceAndInterface(
+          interface1, interface2, constraints);
       case StructTS struct1 -> unifyStructAndInterface(struct1, interface2, constraints);
     };
   }
@@ -127,8 +124,8 @@ public class ConstraintInferrer {
       if (field1 == null) {
         mergedFields.put(name, field2.getValue());
       } else {
-        var unifiedType = unifyAndInferConstraints(
-            field1.type(), field2.getValue().type(), constraints);
+        var unifiedType =
+            unifyAndInferConstraints(field1.type(), field2.getValue().type(), constraints);
         mergedFields.put(name, new ItemSigS(unifiedType, name));
       }
     }
@@ -162,8 +159,7 @@ public class ConstraintInferrer {
   }
 
   private static FuncTS unifyFunctionAndType(
-      FuncTS func1, TypeS type, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      FuncTS func1, TypeS type, Queue<EqualityConstraint> constraints) throws UnifierException {
     if (type instanceof FuncTS func2) {
       var result1 = func1.result();
       var result2 = func2.result();
@@ -178,8 +174,7 @@ public class ConstraintInferrer {
   }
 
   private static TupleTS unifyTupleAndType(
-      TupleTS tuple1, TypeS type, Queue<EqualityConstraint> constraints)
-      throws UnifierException {
+      TupleTS tuple1, TypeS type, Queue<EqualityConstraint> constraints) throws UnifierException {
     if (type instanceof TupleTS tuple2) {
       return unifyTupleAndTuple(tuple1, tuple2, constraints);
     } else {
@@ -188,8 +183,8 @@ public class ConstraintInferrer {
   }
 
   private static TupleTS unifyTupleAndTuple(
-      TupleTS tuple1, TupleTS tuple2, Queue<EqualityConstraint> constraints) throws
-      UnifierException {
+      TupleTS tuple1, TupleTS tuple2, Queue<EqualityConstraint> constraints)
+      throws UnifierException {
     var elements = zip(
         tuple1.elements(),
         tuple2.elements(),

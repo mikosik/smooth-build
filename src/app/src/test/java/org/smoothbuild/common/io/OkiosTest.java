@@ -10,18 +10,16 @@ import static org.smoothbuild.common.io.Okios.readAndClose;
 import static org.smoothbuild.common.io.Okios.writeAndClose;
 
 import java.util.List;
-
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.Sink;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class OkiosTest {
   private static final ByteString bytes = ByteString.encodeUtf8("test string");
@@ -32,16 +30,14 @@ public class OkiosTest {
     public void copies_bytes() throws Exception {
       Buffer buffer = new Buffer();
       copyAllAndClose(bufferWith(bytes), buffer);
-      assertThat(buffer.readByteString())
-          .isEqualTo(bytes);
+      assertThat(buffer.readByteString()).isEqualTo(bytes);
     }
 
     @Test
     public void works_for_empty_source() throws Exception {
       Buffer buffer = new Buffer();
       copyAllAndClose(bufferWith(ByteString.of()), buffer);
-      assertThat(buffer.readByteString())
-          .isEqualTo(ByteString.of());
+      assertThat(buffer.readByteString()).isEqualTo(ByteString.of());
     }
 
     @Test
@@ -65,16 +61,14 @@ public class OkiosTest {
     @Test
     public void copies_bytes() throws Exception {
       ByteString byteString = readAndClose(bufferWith(bytes), BufferedSource::readByteString);
-      assertThat(byteString)
-          .isEqualTo(bytes);
+      assertThat(byteString).isEqualTo(bytes);
     }
 
     @Test
     public void works_for_empty_source() throws Exception {
       ByteString byteString =
           readAndClose(bufferWith(ByteString.of()), BufferedSource::readByteString);
-      assertThat(byteString)
-          .isEqualTo(ByteString.of());
+      assertThat(byteString).isEqualTo(ByteString.of());
     }
 
     @Test
@@ -91,16 +85,14 @@ public class OkiosTest {
     public void copies_bytes() throws Exception {
       Buffer buffer = new Buffer();
       writeAndClose(buffer, s -> s.write(bytes));
-      assertThat(buffer.readByteString())
-          .isEqualTo(bytes);
+      assertThat(buffer.readByteString()).isEqualTo(bytes);
     }
 
     @Test
     public void works_for_empty_sink() throws Exception {
       Buffer buffer = new Buffer();
       writeAndClose(buffer, s -> s.write(ByteString.of()));
-      assertThat(buffer.readByteString())
-          .isEqualTo(ByteString.of());
+      assertThat(buffer.readByteString()).isEqualTo(ByteString.of());
     }
 
     @Test
@@ -122,8 +114,7 @@ public class OkiosTest {
     @ParameterizedTest
     @MethodSource("int_to_bytestring_cases")
     public void name(int anInt, ByteString byteString) {
-      assertThat(intToByteString(anInt))
-          .isEqualTo(byteString);
+      assertThat(intToByteString(anInt)).isEqualTo(byteString);
     }
 
     private static List<Arguments> int_to_bytestring_cases() {
@@ -136,8 +127,7 @@ public class OkiosTest {
           arguments(0x00000013, ByteString.of((byte) 0x13)),
           arguments(0xFFFFFF13, ByteString.of((byte) 0xFF, (byte) 0x13)),
           arguments(0xFFFFFFFF, ByteString.of((byte) 0xFF)),
-          arguments(0x12345678, ByteString.of((byte) 0x12, (byte) 0x34, (byte) 0x56, (byte) 0x78))
-      );
+          arguments(0x12345678, ByteString.of((byte) 0x12, (byte) 0x34, (byte) 0x56, (byte) 0x78)));
     }
   }
 }

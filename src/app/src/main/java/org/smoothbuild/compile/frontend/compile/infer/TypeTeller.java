@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
 import java.util.Optional;
-
 import org.smoothbuild.compile.frontend.compile.ast.define.ArrayTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.FuncTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
@@ -36,11 +35,13 @@ public class TypeTeller {
   }
 
   public Optional<SchemaS> schemaFor(String name) {
-    return scopeP.referencables().getOptional(name)
+    return scopeP
+        .referencables()
+        .getOptional(name)
         .map(r -> switch (r) {
           case NamedEvaluableP namedEvaluableP -> Optional.ofNullable(namedEvaluableP.schemaS());
-          case ItemP itemP ->
-              Optional.ofNullable(itemP.typeS()).map(t -> new SchemaS(varSetS(), t));
+          case ItemP itemP -> Optional.ofNullable(itemP.typeS())
+              .map(t -> new SchemaS(varSetS(), t));
         })
         .orElseGet(() -> Optional.of(imported.evaluables().get(name).schema()));
   }

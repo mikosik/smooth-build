@@ -10,15 +10,13 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
-
+import okio.BufferedSink;
+import okio.BufferedSource;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.evaluate.plugin.NativeApi;
-
-import okio.BufferedSink;
-import okio.BufferedSource;
 
 public class JarFunc {
   private static final String MANIFEST_FILE_PATH = "META-INF/MANIFEST.MF";

@@ -21,9 +21,7 @@ public class InferenceTest extends TestContext {
         var code = """
           myValue = "abc";
           """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
       }
 
       @Test
@@ -31,9 +29,7 @@ public class InferenceTest extends TestContext {
         var code = """
           myValue = 0x07;
           """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(blobTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(blobTS()));
       }
 
       @Test
@@ -41,9 +37,7 @@ public class InferenceTest extends TestContext {
         var code = """
           myValue = 123;
           """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(intTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(intTS()));
       }
 
       @Test
@@ -58,18 +52,18 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void mono_value_ref() {
-        var code = """
+        var code =
+            """
           String stringValue = "abc";
           myValue = stringValue;
           """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
       }
 
       @Test
       public void mono_func_ref() {
-        var code = """
+        var code =
+            """
           String myFunc(Blob param) = "abc";
           myValue = myFunc;
           """;
@@ -80,13 +74,12 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void mono_func_ref_call() {
-        var code = """
+        var code =
+            """
           String myFunc() = "abc";
           myValue = myFunc();
           """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
       }
 
       @Test
@@ -95,9 +88,7 @@ public class InferenceTest extends TestContext {
           A myId(A a) = a;
           myValue = myId(7);
           """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(intTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(intTS()));
       }
     }
 
@@ -142,11 +133,8 @@ public class InferenceTest extends TestContext {
     @Override
     public void assertInferredFunctionType(
         String declarations, String params, String body, SchemaS expected) {
-      var code = declarations + "\n"
-          + "myFunc(" + params + ") = " + body + ";";
-      module(code)
-          .loadsWithSuccess()
-          .containsEvaluableWithSchema("myFunc", expected);
+      var code = declarations + "\n" + "myFunc(" + params + ") = " + body + ";";
+      module(code).loadsWithSuccess().containsEvaluableWithSchema("myFunc", expected);
     }
   }
 
@@ -155,21 +143,16 @@ public class InferenceTest extends TestContext {
     @Override
     public void assertInferredFunctionType(
         String declarations, String params, String body, SchemaS expected) {
-      var code = declarations + "\n"
-          + "myValue = (" + params + ") -> " + body + ";";
-      var myValue = module(code)
-          .loadsWithSuccess()
-          .getLoadedDefinitions()
-          .evaluables()
-          .get("myValue");
+      var code = declarations + "\n" + "myValue = (" + params + ") -> " + body + ";";
+      var myValue =
+          module(code).loadsWithSuccess().getLoadedDefinitions().evaluables().get("myValue");
       var myValueBody = ((NamedExprValueS) myValue).body();
       var lambda = ((InstantiateS) myValueBody).polymorphicS();
-      assertThat(lambda.schema())
-          .isEqualTo(expected);
+      assertThat(lambda.schema()).isEqualTo(expected);
     }
   }
 
-  static abstract class _abstract_infer_function_result_type_suite {
+  abstract static class _abstract_infer_function_result_type_suite {
     public void assertInferredFunctionType(String params, String body, SchemaS expected) {
       assertInferredFunctionType("", params, body, expected);
     }
@@ -222,20 +205,21 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void mono_function_ref() {
-        assertInferredFunctionType("Int otherFunc(Blob param) = 7;",
-            "", "otherFunc", funcSchemaS(funcTS(blobTS(), intTS())));
+        assertInferredFunctionType(
+            "Int otherFunc(Blob param) = 7;",
+            "",
+            "otherFunc",
+            funcSchemaS(funcTS(blobTS(), intTS())));
       }
 
       @Test
       public void mono_function_call() {
-        assertInferredFunctionType("Int otherFunc() = 7;",
-            "", "otherFunc()", funcSchemaS(intTS()));
+        assertInferredFunctionType("Int otherFunc() = 7;", "", "otherFunc()", funcSchemaS(intTS()));
       }
 
       @Test
       public void poly_function_call() {
-        assertInferredFunctionType("A myId(A a) = a;",
-            "", "myId(7)", funcSchemaS(intTS()));
+        assertInferredFunctionType("A myId(A a) = a;", "", "myId(7)", funcSchemaS(intTS()));
       }
 
       @Test
@@ -286,20 +270,19 @@ public class InferenceTest extends TestContext {
       class _value {
         @Test
         public void mono_value_ref() {
-          assertInferredFunctionType("Int intValue = 7;",
-              "", "intValue", funcSchemaS(intTS()));
+          assertInferredFunctionType("Int intValue = 7;", "", "intValue", funcSchemaS(intTS()));
         }
 
         @Test
         public void poly_value_ref() {
-          assertInferredFunctionType("[A] emptyArray = [];",
-              "", "emptyArray", funcSchemaS(arrayTS(varA())));
+          assertInferredFunctionType(
+              "[A] emptyArray = [];", "", "emptyArray", funcSchemaS(arrayTS(varA())));
         }
 
         @Test
         public void poly_value_ref_when_param_list_already_uses_A_as_var_name() {
-          assertInferredFunctionType("[A] emptyArray = [];",
-              "A a", "emptyArray", funcSchemaS(varA(), arrayTS(varB())));
+          assertInferredFunctionType(
+              "[A] emptyArray = [];", "A a", "emptyArray", funcSchemaS(varA(), arrayTS(varB())));
         }
       }
 
@@ -365,7 +348,8 @@ public class InferenceTest extends TestContext {
         public void mono_function_ref() {
           assertInferredFunctionType(
               "Int otherFunc(Blob param) = 7;",
-              "", "otherFunc",
+              "",
+              "otherFunc",
               funcSchemaS(funcTS(blobTS(), intTS())));
         }
 
@@ -376,7 +360,8 @@ public class InferenceTest extends TestContext {
         }
 
         @Test
-        public void poly_function_ref_when_function_type_param_shadows_referenced_function_res_type() {
+        public void
+            poly_function_ref_when_function_type_param_shadows_referenced_function_res_type() {
           assertInferredFunctionType(
               "A myId(A a) = a;", "A a", "myId", funcSchemaS(varA(), funcTS(varB(), varB())));
         }
@@ -454,7 +439,8 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void with_mono_function_ref() {
-        var code = """
+        var code =
+            """
           Int myIntId(Int i) = i;
           result = [myIntId];
           """;
@@ -489,20 +475,22 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void with_different_base_types_fails() {
-        var code = """
+        var code =
+            """
           result = [
             "abc",
             0x01,
           ];
           """;
         module(code)
-            .loadsWithError(1,
-                "Cannot infer type for array literal. Its element types are not compatible.");
+            .loadsWithError(
+                1, "Cannot infer type for array literal. Its element types are not compatible.");
       }
 
       @Test
       public void with_same_mono_function_types() {
-        var code = """
+        var code =
+            """
           Int firstFunc() = 7;
           Int secondFunc() = 3;
           result = [
@@ -517,7 +505,8 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void with_different_mono_function_types_fails() {
-        var code = """
+        var code =
+            """
           String firstFunc() = "abc";
           Blob secondFunc() = 0x01;
           result = [
@@ -526,37 +515,41 @@ public class InferenceTest extends TestContext {
           ];
           """;
         module(code)
-            .loadsWithError(3,
-                "Cannot infer type for array literal. Its element types are not compatible.");
+            .loadsWithError(
+                3, "Cannot infer type for array literal. Its element types are not compatible.");
       }
 
       @Test
       public void with_same_poly_function_types() {
-        var code = """
+        var code =
+            """
           A myId(A a) = a;
           B myOtherId(B b) = b;
           result = [myId, myOtherId];
           """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("result", schemaS(arrayTS(idFuncS().schema().type())));
+            .containsEvaluableWithSchema(
+                "result", schemaS(arrayTS(idFuncS().schema().type())));
       }
 
       @Test
       public void with_different_poly_function_types_fails() {
-        var code = """
+        var code =
+            """
           A myId(A a) = a;
           B otherFunc(B b, C c) = b;
           result = [myId, otherFunc];
           """;
         module(code)
-            .loadsWithError(3,
-                "Cannot infer type for array literal. Its element types are not compatible.");
+            .loadsWithError(
+                3, "Cannot infer type for array literal. Its element types are not compatible.");
       }
 
       @Test
       public void one_with_mono_type_one_with_poly_type_convertible_to_mono_one() {
-        var code = """
+        var code =
+            """
           Int myIntId(Int i) = i;
           A myId(A a) = a;
           result = [myIntId, myId];
@@ -568,14 +561,15 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void one_with_mono_type_one_with_poly_type_not_convertible_to_mono_one_fails() {
-        var code = """
+        var code =
+            """
           Int myIntId(Int i) = i;
           A myId(A a, A b) = a;
           result = [myIntId, myId];
           """;
         module(code)
-            .loadsWithError(3,
-                "Cannot infer type for array literal. Its element types are not compatible.");
+            .loadsWithError(
+                3, "Cannot infer type for array literal. Its element types are not compatible.");
       }
     }
   }
@@ -586,37 +580,38 @@ public class InferenceTest extends TestContext {
     class _fails_when_var_unifies_two_incompatible_types {
       @Test
       public void base_types() {
-        var code = """
+        var code =
+            """
             String myEqual(A p1, A p2) = "true";
             result = myEqual("def", 0x01);
             """;
-        module(code)
-            .loadsWithError(2, "Illegal call.");
+        module(code).loadsWithError(2, "Illegal call.");
       }
 
       @Test
       public void base_type_and_array_of_that_base_type() {
-        var code = """
+        var code =
+            """
             String myEqual(A p1, A p2) = "true";
             result = myEqual(7, [7]);
             """;
-        module(code)
-            .loadsWithError(2, "Illegal call.");
+        module(code).loadsWithError(2, "Illegal call.");
       }
 
       @Test
       public void arrays() {
-        var code = """
+        var code =
+            """
             String myEqual(A p1, A p2) = "true";
             result = myEqual(["def"], [0x01]);
             """;
-        module(code)
-            .loadsWithError(2, "Illegal call.");
+        module(code).loadsWithError(2, "Illegal call.");
       }
 
       @Test
       public void structs_with_the_same_object_db_representation() {
-        var code = """
+        var code =
+            """
             MyStruct1(
               String x,
               String y,
@@ -628,8 +623,7 @@ public class InferenceTest extends TestContext {
             A myEqual(A a1, A a2) = a1;
             result = myEqual(MyStruct1("aaa", "bbb"), MyStruct2("aaa", "bbb"));
             """;
-        module(code)
-            .loadsWithError(10, "Illegal call.");
+        module(code).loadsWithError(10, "Illegal call.");
       }
     }
 
@@ -637,18 +631,18 @@ public class InferenceTest extends TestContext {
     class _identity_function_applied_to {
       @Test
       public void arg_of_base_type() {
-        var code = """
+        var code =
+            """
             A myIdentity(A a) = a;
             myValue = myIdentity("abc");
             """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
       }
 
       @Test
       public void array() {
-        var code = """
+        var code =
+            """
             A myIdentity(A a) = a;
             myValue = myIdentity(["abc"]);
             """;
@@ -659,7 +653,8 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void func() {
-        var code = """
+        var code =
+            """
             A myIdentity(A a) = a;
             String myFunc(Blob param) = "abc";
             myValue = myIdentity(myFunc);
@@ -674,19 +669,19 @@ public class InferenceTest extends TestContext {
     class _first_elem_function_applied_to {
       @Test
       public void array() {
-        var code = """
+        var code =
+            """
             @Native("impl.met")
             A firstElement([A] array);
             myValue = firstElement(["abc"]);
             """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(stringTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(stringTS()));
       }
 
       @Test
       public void array2() {
-        var code = """
+        var code =
+            """
             @Native("impl.met")
             A firstElement([A] array);
             myValue = firstElement([["abc"]]);
@@ -701,7 +696,8 @@ public class InferenceTest extends TestContext {
     class _single_elem_array_function_applied_to {
       @Test
       public void arg_of_base_type() {
-        var code = """
+        var code =
+            """
             [A] singleElement(A a) = [a];
             myValue = singleElement("abc");
             """;
@@ -712,7 +708,8 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void array() {
-        var code = """
+        var code =
+            """
             [A] singleElement(A a) = [a];
             myValue = singleElement(["abc"]);
             """;
@@ -723,15 +720,15 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void function() {
-        var code = """
+        var code =
+            """
             [A] singleElement(A a) = [a];
             String myFunc(Blob param) = "abc";
             myValue = singleElement(myFunc);
             """;
         module(code)
             .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue",
-                schemaS(arrayTS(funcTS(blobTS(), stringTS()))));
+            .containsEvaluableWithSchema("myValue", schemaS(arrayTS(funcTS(blobTS(), stringTS()))));
       }
     }
 
@@ -739,18 +736,18 @@ public class InferenceTest extends TestContext {
     class _from_default_arg {
       @Test
       public void generic_param_with_default_value_with_concrete_type() {
-        var code = """
+        var code =
+            """
               A myFunc(A a = 7) = a;
               myValue = myFunc();
               """;
-        module(code)
-            .loadsWithSuccess()
-            .containsEvaluableWithSchema("myValue", schemaS(intTS()));
+        module(code).loadsWithSuccess().containsEvaluableWithSchema("myValue", schemaS(intTS()));
       }
 
       @Test
       public void generic_param_with_default_value_with_polymorphic_type() {
-        var code = """
+        var code =
+            """
               A myId(A a) = a;
               (B)->A myFunc(A a, (B)->A f = myId) = f;
               myValue = myFunc(7);
@@ -762,40 +759,42 @@ public class InferenceTest extends TestContext {
 
       @Test
       public void generic_param_with_default_value_with_concrete_type_error_case() {
-        var code = """
+        var code =
+            """
               A myFunc(A a, A other = 7) = a;
               myValue = myFunc("abc");
               """;
-        module(code)
-            .loadsWithError(2, "Illegal call.");
+        module(code).loadsWithError(2, "Illegal call.");
       }
 
       @Test
-      public void two_differently_instantitaed_calls_to_poly_function_with_poly_default_value_within_one_expr() {
-        var code = """
+      public void
+          two_differently_instantitaed_calls_to_poly_function_with_poly_default_value_within_one_expr() {
+        var code =
+            """
           [A] empty([A] array = []) = array;
           myFunc([String] s, [Int] i) = 7;
           myValue = myFunc(empty(), empty());
           """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
 
       @Test
       public void two_param_default_values_with_different_vars_referencing_same_poly_function() {
-        var code = """
+        var code =
+            """
           A myId(A a) = a;
           myFunc(A a, B b, (A)->A f1 = myId, (B)->B f2 = myId) = 0x33;
           myValue = myFunc(7, "abc");
           """;
-        module(code)
-            .loadsWithSuccess();
+        module(code).loadsWithSuccess();
       }
     }
 
     @Test
     public void converter_applier() {
-      var code = """
+      var code =
+          """
           B converterApplier(A item, (A)->B convert) = convert(item);
           [C] single(C elem) = [elem];
           result = converterApplier("abc", single);
@@ -810,16 +809,15 @@ public class InferenceTest extends TestContext {
   class _infer_unit_type {
     @Test
     public void expression_function() {
-      var code = """
+      var code =
+          """
               Int myFunc(A a) = 7;
               result = myFunc([]);
               """;
       var myFunc = funcS(1, "myFunc", nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(2, tupleTS());
       var call = callS(2, instantiateS(2, list(arrayTS(tupleTS())), myFunc), emptyArray);
-      module(code)
-          .loadsWithSuccess()
-          .containsEvaluable(valueS(2, "result", call));
+      module(code).loadsWithSuccess().containsEvaluable(valueS(2, "result", call));
     }
 
     @Test
@@ -830,9 +828,7 @@ public class InferenceTest extends TestContext {
       var lambda = lambdaS(1, nlist(itemS(1, varA(), "a")), intS(1, 7));
       var emptyArray = orderS(1, tupleTS());
       var call = callS(1, instantiateS(1, list(arrayTS(tupleTS())), lambda), emptyArray);
-      module(code)
-          .loadsWithSuccess()
-          .containsEvaluable(valueS(1, "result", call));
+      module(code).loadsWithSuccess().containsEvaluable(valueS(1, "result", call));
     }
   }
 
@@ -844,60 +840,60 @@ public class InferenceTest extends TestContext {
   class _regression {
     @Test
     public void select_with_selectable_with_infer_type_error() {
-      var code = """
+      var code =
+          """
           @Native("impl")
           A firstElem([A] array);
           valueWithNoninferableType = firstElem(7);
           Int myValue = valueWithNoninferableType.field;
           """;
-      module(code)
-          .loadsWithProblems();
+      module(code).loadsWithProblems();
     }
 
     @Test
     public void order_with_element_with_infer_type_error() {
-      var code = """
+      var code =
+          """
           @Native("impl")
           A firstElem([A] array);
           valueWithNonInferableType = firstElem(7);
           [Int] myValue = [valueWithNonInferableType];
           """;
-      module(code)
-          .loadsWithProblems();
+      module(code).loadsWithProblems();
     }
 
     @Test
     public void call_with_callee_with_infer_type_error() {
-      var code = """
+      var code =
+          """
           @Native("impl")
           A firstElem([A] array);
           valueWithNonInferableType = firstElem(7);
           Int myValue = valueWithNonInferableType(7);
           """;
-      module(code)
-          .loadsWithProblems();
+      module(code).loadsWithProblems();
     }
 
     @Test
     public void mono_func_call_with_illegal_params() {
-      var code = """
+      var code =
+          """
           @Native("impl")
           Int myFunc(String string);
           Int myValue = myFunc(7);
           """;
-      module(code)
-          .loadsWithProblems();
+      module(code).loadsWithProblems();
     }
 
     @Test
     public void poly_function_call_with_illegal_params() {
-      var code = """
+      var code =
+          """
           @Native("impl")
           A myId(A a, String string);
           Int myValue = myId(7, 7);
           """;
-      module(code)
-          .loadsWithProblems();
+      module(code).loadsWithProblems();
     }
   }
 }

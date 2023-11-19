@@ -3,7 +3,6 @@ package org.smoothbuild.common.io;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.nio.file.Path;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -27,14 +26,12 @@ public class PathsTest {
   class remove_extension {
     @Test
     public void from_path_with_extension() {
-      assertThat((Object) Paths.removeExtension("abc/def.txt"))
-          .isEqualTo("abc/def");
+      assertThat((Object) Paths.removeExtension("abc/def.txt")).isEqualTo("abc/def");
     }
 
     @Test
     public void from_path_without_extension() {
-      assertThat((Object) Paths.removeExtension("abc/def"))
-          .isEqualTo("abc/def");
+      assertThat((Object) Paths.removeExtension("abc/def")).isEqualTo("abc/def");
     }
   }
 

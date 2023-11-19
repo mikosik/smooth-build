@@ -23,7 +23,8 @@ public sealed class SchemaS permits FuncSchemaS {
   }
 
   private static void assertQuantifiedVarsArePresentInType(VarSetS quantifiedVars, TypeS type) {
-    checkArgument(type.vars().containsAll(quantifiedVars),
+    checkArgument(
+        type.vars().containsAll(quantifiedVars),
         "Quantified variable(s) " + quantifiedVars + " are not present in type " + type.q() + ".");
   }
 

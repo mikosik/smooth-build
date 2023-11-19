@@ -10,7 +10,7 @@ import org.smoothbuild.cli.command.VersionCommand;
 
 public class CommandWithArgs {
   private final String command;
-  private final String [] args;
+  private final String[] args;
 
   public CommandWithArgs(String command, String... args) {
     this.command = requireNonNull(command);
@@ -42,10 +42,7 @@ public class CommandWithArgs {
   }
 
   public String[] commandPlusArgsPlus(String... additionalArgs) {
-    String[] allArgs = concat(
-        additionalArgs,
-        args,
-        String.class);
+    String[] allArgs = concat(additionalArgs, args, String.class);
     return commandPlus(allArgs);
   }
 

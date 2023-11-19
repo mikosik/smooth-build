@@ -10,7 +10,8 @@ public class NamedExprValueSTest extends TestContext {
   public void to_string() {
     var namedExprValueS = new NamedExprValueS(schemaS(stringTS()), "myVal", intS(9), location(7));
     assertThat(namedExprValueS.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             NamedExprValue(
               schema = <>String
               name = myVal

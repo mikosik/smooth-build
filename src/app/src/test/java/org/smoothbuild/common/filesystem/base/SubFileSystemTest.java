@@ -1,12 +1,10 @@
 package org.smoothbuild.common.filesystem.base;
 
 import java.io.IOException;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
-
 import okio.BufferedSink;
 import okio.ByteString;
+import org.junit.jupiter.api.BeforeEach;
+import org.smoothbuild.common.filesystem.mem.MemoryFileSystem;
 
 public class SubFileSystemTest extends AbstractFileSystemTestSuite {
   private static final PathS ROOT = PathS.path("some/dir");

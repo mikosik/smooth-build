@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.List;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -47,8 +46,7 @@ public class SelectBTest extends TestContext {
     protected List<SelectB> equalExprs() {
       return list(
           selectB(tupleB(intB(7), stringB("abc")), intB(0)),
-          selectB(tupleB(intB(7), stringB("abc")), intB(0))
-      );
+          selectB(tupleB(intB(7), stringB("abc")), intB(0)));
     }
 
     @Override
@@ -59,8 +57,7 @@ public class SelectBTest extends TestContext {
           selectB(tupleB(intB(2), intB(2)), intB(0)),
           selectB(tupleB(intB(2), intB(2)), intB(1)),
           selectB(tupleB(intB(2), intB(7)), intB(0)),
-          selectB(tupleB(intB(7), intB(2)), intB(0))
-      );
+          selectB(tupleB(intB(7), intB(2)), intB(0)));
     }
   }
 
@@ -68,8 +65,7 @@ public class SelectBTest extends TestContext {
   public void select_can_be_read_back_by_hash() {
     var tupleB = animalB("rabbit", 7);
     var selectB = selectB(tupleB, intB(0));
-    assertThat(bytecodeDbOther().get(selectB.hash()))
-        .isEqualTo(selectB);
+    assertThat(bytecodeDbOther().get(selectB.hash())).isEqualTo(selectB);
   }
 
   @Test
@@ -84,7 +80,6 @@ public class SelectBTest extends TestContext {
   @Test
   public void to_string() {
     var selectB = selectB(animalB(), intB(0));
-    assertThat(selectB.toString())
-        .isEqualTo("SELECT:String(???)@" + selectB.hash());
+    assertThat(selectB.toString()).isEqualTo("SELECT:String(???)@" + selectB.hash());
   }
 }

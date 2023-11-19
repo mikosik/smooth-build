@@ -12,7 +12,8 @@ public class ConstructorSTest extends TestContext {
     var structTS = structTS("MyStruct", nlist(sigS(intTS(), "field")));
     var constructorS = constructorS(17, structTS, "constructorName");
     assertThat(constructorS.toString())
-        .isEqualTo("""
+        .isEqualTo(
+            """
             ConstructorS(
               name = constructorName
               schema = <>(Int)->MyStruct

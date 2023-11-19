@@ -12,7 +12,9 @@ public class ParseErrorsTest extends AcceptanceTestCase {
     evaluate("result");
     assertThat(logs())
         .containsExactly(
-            userError(1, """
+            userError(
+                1,
+                """
                 mismatched input '<EOF>' expecting {'(', '[', NAME, INT, BLOB, STRING}
                 result =
                         ^"""));
@@ -24,7 +26,9 @@ public class ParseErrorsTest extends AcceptanceTestCase {
     evaluate("result");
     assertThat(logs())
         .containsExactly(
-            userError(1, """
+            userError(
+                1,
+                """
                 mismatched input '<EOF>' expecting {'(', '[', NAME, INT, BLOB, STRING}
                 result =
                         ^"""));
@@ -38,7 +42,10 @@ public class ParseErrorsTest extends AcceptanceTestCase {
             """);
     evaluate("result");
     assertThat(logs())
-        .containsExactly(userError(1, """
+        .containsExactly(
+            userError(
+                1,
+                """
             token recognition error at: '*'
             func* = "abc";
                 ^"""));

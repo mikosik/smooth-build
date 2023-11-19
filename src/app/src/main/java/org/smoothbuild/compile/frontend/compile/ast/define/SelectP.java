@@ -4,7 +4,6 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
 public final class SelectP extends ExprP {
@@ -43,11 +42,8 @@ public final class SelectP extends ExprP {
 
   @Override
   public String toString() {
-    var fields = joinToString("\n",
-        "selectable = " + selectable,
-        "field = " + field,
-        "location = " + location()
-    );
+    var fields = joinToString(
+        "\n", "selectable = " + selectable, "field = " + field, "location = " + location());
     return "SelectP(\n" + indent(fields) + "\n)";
   }
 }
