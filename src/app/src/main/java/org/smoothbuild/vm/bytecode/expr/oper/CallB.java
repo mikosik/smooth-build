@@ -6,7 +6,7 @@ import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.oper.CallCB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
@@ -41,7 +41,7 @@ public class CallB extends OperB {
     if (func.evaluationT() instanceof FuncTB funcTB) {
       validate(funcTB, args);
     } else {
-      throw new DecodeExprWrongNodeTypeExc(
+      throw new DecodeExprWrongNodeTypeException(
           hash(), this.category(), "func", FuncTB.class, func.evaluationT());
     }
   }
@@ -51,13 +51,13 @@ public class CallB extends OperB {
     validateArgs(funcTB, argsT.elements(), () -> illegalArgsExc(funcTB.params(), argsT));
     var resultT = funcTB.result();
     if (!evaluationT().equals(resultT)) {
-      throw new DecodeExprWrongNodeTypeExc(
+      throw new DecodeExprWrongNodeTypeException(
           hash(), this.category(), "call.result", evaluationT(), resultT);
     }
   }
 
   private RuntimeException illegalArgsExc(TupleTB params, TupleTB argsType) {
-    return new DecodeExprWrongNodeTypeExc(hash(), this.category(), "args", params, argsType);
+    return new DecodeExprWrongNodeTypeException(hash(), this.category(), "args", params, argsType);
   }
 
   private ExprB readFunc() {

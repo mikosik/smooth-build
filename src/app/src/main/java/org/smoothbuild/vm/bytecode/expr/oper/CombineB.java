@@ -6,8 +6,8 @@ import static org.smoothbuild.common.collect.Lists.allMatchOtherwise;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.oper.CombineCB;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
@@ -45,9 +45,11 @@ public class CombineB extends OperB {
         expectedElementsTs,
         items,
         (type, item) -> type.equals(item.evaluationT()),
-        (type, item) -> { throw new DecodeCombineWrongElementsSizeExc(hash(), category(), item); },
+        (type, item) -> {
+          throw new DecodeCombineWrongElementsSizeException(hash(), category(), item);
+        },
         (index) -> {
-          throw new DecodeExprWrongNodeTypeExc(hash(), category(), "elements", index,
+          throw new DecodeExprWrongNodeTypeException(hash(), category(), "elements", index,
               expectedElementsTs.get(index), items.get(index).evaluationT());
         }
     );

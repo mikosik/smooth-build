@@ -6,7 +6,7 @@ import static org.smoothbuild.run.eval.FileStruct.filePath;
 import java.util.function.Predicate;
 
 import org.smoothbuild.common.filesystem.base.PathS;
-import org.smoothbuild.stdlib.file.match.IllegalPathPatternExc;
+import org.smoothbuild.stdlib.file.match.IllegalPathPatternException;
 import org.smoothbuild.stdlib.file.match.PathMatcher;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
@@ -23,7 +23,7 @@ public class FilterFilesFunc {
     Predicate<PathS> filter;
     try {
       filter = new PathMatcher(pattern.toJ());
-    } catch (IllegalPathPatternExc e) {
+    } catch (IllegalPathPatternException e) {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;
     }

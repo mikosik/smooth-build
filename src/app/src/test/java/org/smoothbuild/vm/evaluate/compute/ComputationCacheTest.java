@@ -3,7 +3,7 @@ package org.smoothbuild.vm.evaluate.compute;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.vm.evaluate.compute.ComputationCacheExc.corruptedValueException;
+import static org.smoothbuild.vm.evaluate.compute.ComputationCacheException.corruptedValueException;
 
 import java.math.BigInteger;
 
@@ -50,7 +50,7 @@ public class ComputationCacheTest extends TestContext {
   @Test
   public void reading_not_written_value_fails() {
     assertCall(() -> computationCache().read(hash, stringTB()))
-        .throwsException(ComputationCacheExc.class);
+        .throwsException(ComputationCacheException.class);
   }
 
   @Test

@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import org.smoothbuild.common.io.DuplicateFileNameExc;
-import org.smoothbuild.common.io.IllegalZipEntryFileNameExc;
+import org.smoothbuild.common.io.DuplicateFileNameException;
+import org.smoothbuild.common.io.IllegalZipEntryFileNameException;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
@@ -76,10 +76,10 @@ public class UnzipHelper {
       nativeApi.log().error(
           "Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
       return null;
-    } catch (DuplicateFileNameExc e) {
+    } catch (DuplicateFileNameException e) {
       nativeApi.log().error("Archive contains two files with the same path = " + e.getMessage());
       return null;
-    } catch (IllegalZipEntryFileNameExc e) {
+    } catch (IllegalZipEntryFileNameException e) {
       nativeApi.log().error(e.getMessage());
       return null;
     }

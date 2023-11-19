@@ -12,7 +12,7 @@ import org.smoothbuild.common.io.DataWriter;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
-import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbExc;
+import org.smoothbuild.vm.bytecode.expr.exc.BytecodeDbException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
@@ -79,7 +79,7 @@ public class BytecodeF {
       builder.write(dataWriter);
       return builder.build();
     } catch (IOException e) {
-      throw new BytecodeDbExc(e);
+      throw new BytecodeDbException(e);
     }
   }
 

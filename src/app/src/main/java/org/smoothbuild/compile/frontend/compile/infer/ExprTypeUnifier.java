@@ -44,7 +44,7 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarSetS;
 import org.smoothbuild.compile.frontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.frontend.lang.type.tool.Unifier;
-import org.smoothbuild.compile.frontend.lang.type.tool.UnifierExc;
+import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
 import org.smoothbuild.out.log.Logger;
 
 import com.google.common.collect.ImmutableList;
@@ -161,7 +161,7 @@ public class ExprTypeUnifier {
     try {
       unify(typeS, bodyT);
       return true;
-    } catch (UnifierExc e) {
+    } catch (UnifierException e) {
       logger.log(compileError(
           evaluableP.location(), evaluableP.q() + " body type is not equal to declared type."));
       return false;
@@ -208,7 +208,7 @@ public class ExprTypeUnifier {
     try {
       unify(funcT, calleeT);
       return Optional.of(resultT);
-    } catch (UnifierExc e) {
+    } catch (UnifierException e) {
       logger.log(CompileError.compileError(location, "Illegal call."));
       return Optional.empty();
     }
@@ -251,7 +251,7 @@ public class ExprTypeUnifier {
     for (TypeS elemT : elemTs) {
       try {
         unify(elemVar, elemT);
-      } catch (UnifierExc e) {
+      } catch (UnifierException e) {
         logger.log(CompileError.compileError(location,
             "Cannot infer type for array literal. Its element types are not compatible."));
         return Optional.empty();
@@ -288,7 +288,7 @@ public class ExprTypeUnifier {
     });
   }
 
-  private void unify(TypeS typeS, TypeS bodyT) throws UnifierExc {
+  private void unify(TypeS typeS, TypeS bodyT) throws UnifierException {
     unifier.add(new EqualityConstraint(typeS, bodyT));
   }
 

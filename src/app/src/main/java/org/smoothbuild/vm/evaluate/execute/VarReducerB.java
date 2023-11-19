@@ -145,7 +145,7 @@ public class VarReducerB {
     public ExprB resolve(VarB varB) {
       int index = varB.index().toJ().intValue();
       if (index < 0) {
-        throw new VarOutOfBoundsExc(index, paramCount + environment.size());
+        throw new VarOutOfBoundsException(index, paramCount + environment.size());
       }
       if (index < paramCount) {
         return varB;
@@ -161,7 +161,7 @@ public class VarReducerB {
               .formatted(index, jobEvaluationT.q(), varB.evaluationT().q()));
         }
       }
-      throw new VarOutOfBoundsExc(index, paramCount + environment.size());
+      throw new VarOutOfBoundsException(index, paramCount + environment.size());
     }
   }
 }

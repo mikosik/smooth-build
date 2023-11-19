@@ -9,6 +9,9 @@ import static org.smoothbuild.common.collect.Maps.override;
 import static org.smoothbuild.common.collect.Maps.zip;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
+import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECODE;
+import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
+import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -212,7 +215,7 @@ public class SbTranslator {
           case NamedValueS namedValueS -> translateNamedValueWithCache(referenceS, namedValueS);
         };
       } else {
-        throw new SbTranslatorExc(
+        throw new SbTranslatorException(
             "Cannot resolve `" + referenceS.name() + "` at " + referenceS.location() + ".");
       }
     } else {
@@ -257,9 +260,10 @@ public class SbTranslator {
   private ExprB translateAnnotatedFunc(AnnotatedFuncS annotatedFuncS) {
     var annotationName = annotatedFuncS.annotation().name();
     return switch (annotationName) {
-      case AnnotationNames.BYTECODE -> fetchFuncBytecode(annotatedFuncS);
-      case AnnotationNames.NATIVE_PURE, AnnotationNames.NATIVE_IMPURE -> translateNativeFunc(annotatedFuncS);
-      default -> throw new SbTranslatorExc("Illegal function annotation: " + annotationName + ".");
+      case BYTECODE -> fetchFuncBytecode(annotatedFuncS);
+      case NATIVE_PURE, NATIVE_IMPURE -> translateNativeFunc(annotatedFuncS);
+      default ->
+          throw new SbTranslatorException("Illegal function annotation: " + annotationName + ".");
     };
   }
 
@@ -274,7 +278,7 @@ public class SbTranslator {
     var annS = nativeFuncS.annotation();
     var jarB = loadNativeJar(annS.location());
     var classBinaryNameB = bytecodeF.string(annS.path().string());
-    var isPureB = bytecodeF.bool(annS.name().equals(AnnotationNames.NATIVE_PURE));
+    var isPureB = bytecodeF.bool(annS.name().equals(NATIVE_PURE));
     return bytecodeF.nativeFunc(funcTB, jarB, classBinaryNameB, isPureB);
   }
 
@@ -325,10 +329,10 @@ public class SbTranslator {
 
   private ExprB translateAnnotatedValue(AnnotatedValueS annotatedValueS) {
     var annName = annotatedValueS.annotation().name();
-    if (annName.equals(AnnotationNames.BYTECODE)) {
+    if (annName.equals(BYTECODE)) {
       return saveNalAndReturn(annotatedValueS, fetchValBytecode(annotatedValueS));
     } else {
-      throw new SbTranslatorExc("Illegal value annotation: " + q("@" + annName) + ".");
+      throw new SbTranslatorException("Illegal value annotation: " + q("@" + annName) + ".");
     }
   }
 
@@ -358,11 +362,11 @@ public class SbTranslator {
     var jar = loadNativeJar(annotation.location());
     var bytecode = bytecodeLoader.load(name, jar, annotation.path().string(), varNameToTypeMap);
     if (!bytecode.isRight()) {
-      throw new SbTranslatorExc(annotation.location() + ": " + bytecode.getLeft());
+      throw new SbTranslatorException(annotation.location() + ": " + bytecode.getLeft());
     }
     var bytecodeB = bytecode.get();
     if (!bytecodeB.evaluationT().equals(typeB)) {
-      throw new SbTranslatorExc(annotation.location()
+      throw new SbTranslatorException(annotation.location()
           + ": Bytecode provider returned object of wrong type " + bytecodeB.evaluationT().q()
           + " when " + q(name) + " is declared as " + typeB.q() + ".");
     }
@@ -376,7 +380,7 @@ public class SbTranslator {
     } catch (FileNotFoundException e) {
       var message = location + ": Error loading native jar: File %s doesn't exist."
           .formatted(filePath.q());
-      throw new SbTranslatorExc(message);
+      throw new SbTranslatorException(message);
     }
   }
 
@@ -384,7 +388,7 @@ public class SbTranslator {
     if (location instanceof FileLocation sourceLocation) {
       return sourceLocation.file();
     } else {
-      throw new SbTranslatorExc(location
+      throw new SbTranslatorException(location
           + ": Error loading native jar: Impossible to infer native file name for location "
           + location + ".");
     }

@@ -17,7 +17,7 @@ public class PathMatcher implements Predicate<PathS> {
     try {
       this.pathMatcher = fileSystem.getPathMatcher("glob:" + pattern);
     } catch (PatternSyntaxException e) {
-      throw new IllegalPathPatternExc(e.getMessage(), e);
+      throw new IllegalPathPatternException(e.getMessage(), e);
     }
   }
 
@@ -28,25 +28,25 @@ public class PathMatcher implements Predicate<PathS> {
 
   private static void validatePattern(String pattern) {
     if (pattern.isEmpty()) {
-      throw new IllegalPathPatternExc("Empty pattern is not allowed");
+      throw new IllegalPathPatternException("Empty pattern is not allowed");
     }
     if (pattern.startsWith("/")) {
-      throw new IllegalPathPatternExc("Pattern can't start with slash character '/'.");
+      throw new IllegalPathPatternException("Pattern can't start with slash character '/'.");
     }
     if (pattern.endsWith("/")) {
-      throw new IllegalPathPatternExc("Pattern can't end with slash character '/'.");
+      throw new IllegalPathPatternException("Pattern can't end with slash character '/'.");
     }
 
     if (pattern.contains("//")) {
-      throw new IllegalPathPatternExc("Pattern can't contain two slashes (//) in a row");
+      throw new IllegalPathPatternException("Pattern can't contain two slashes (//) in a row");
     }
     if (pattern.equals(".") || pattern.startsWith("./") || pattern.contains("/./")
         || pattern.endsWith("/.")) {
-      throw new IllegalPathPatternExc("Pattern can't contain '.' elem.");
+      throw new IllegalPathPatternException("Pattern can't contain '.' elem.");
     }
     if (pattern.equals("..") || pattern.startsWith("../") || pattern.contains("/../")
         || pattern.endsWith("/..")) {
-      throw new IllegalPathPatternExc("Pattern can't contain '..' elem.");
+      throw new IllegalPathPatternException("Pattern can't contain '..' elem.");
     }
   }
 }

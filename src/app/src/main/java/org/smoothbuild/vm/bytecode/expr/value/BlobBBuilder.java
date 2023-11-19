@@ -7,7 +7,7 @@ import org.smoothbuild.common.io.DataWriter;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.Helpers;
 import org.smoothbuild.vm.bytecode.hashed.HashingBufferedSink;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
 
 import okio.BufferedSink;
 
@@ -37,12 +37,12 @@ public class BlobBBuilder implements Closeable {
     return Helpers.wrapHashedDbExcAsBytecodeDbExc(this::buildImpl);
   }
 
-  private BlobB buildImpl() throws HashedDbExc {
+  private BlobB buildImpl() throws HashedDbException {
     try {
       sink.close();
       return bytecodeDb.newBlob(sink.hash());
     } catch (IOException e) {
-      throw new HashedDbExc(e);
+      throw new HashedDbException(e);
     }
   }
 }

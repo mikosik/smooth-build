@@ -94,7 +94,7 @@ public class UnifierTest extends TestContext {
     @Nested
     class _temp_vs_temp {
       @Test
-      public void temp_vs_itself() throws UnifierExc {
+      public void temp_vs_itself() throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         assertUnifyInfers(
@@ -106,7 +106,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void temp_vs_other_temp() throws UnifierExc {
+      public void temp_vs_other_temp() throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
@@ -116,7 +116,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void temp_vs_other_temp_vs_yet_another_temp() throws UnifierExc {
+      public void temp_vs_other_temp_vs_yet_another_temp() throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
@@ -130,7 +130,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void temp_vs_composed_with_that_temp_fails(Function<TypeS, TypeS> composedFactory)
-          throws UnifierExc {
+          throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         assertUnifyFails(a, composedFactory.apply(a));
@@ -139,7 +139,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void temp_vs_composed_with_different_temp_succeeds(
-          Function<TypeS, TypeS> composedFactory) throws UnifierExc {
+          Function<TypeS, TypeS> composedFactory) throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
@@ -154,7 +154,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void composed_with_temp_vs_same_composed_with_other_temp_succeeds(
-          Function<TypeS, TypeS> composedFactory) throws UnifierExc {
+          Function<TypeS, TypeS> composedFactory) throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
@@ -171,7 +171,7 @@ public class UnifierTest extends TestContext {
     class _temp_vs_non_temp {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.testing.TestContext#typesToTest")
-      public void temp_vs_concrete_type(TypeS type) throws UnifierExc {
+      public void temp_vs_concrete_type(TypeS type) throws UnifierException {
         var unifier = new Unifier();
         var a = unifier.newTempVar();
         assertUnifyInfers(
@@ -187,7 +187,7 @@ public class UnifierTest extends TestContext {
         @ParameterizedTest
         @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
         public void composed_with_temp_vs_same_composed_with_base_type_instead_temp(
-            Function<TypeS, TypeS> factory) throws UnifierExc {
+            Function<TypeS, TypeS> factory) throws UnifierException {
           var unifier = new Unifier();
           var var = unifier.newTempVar();
           var baseType = intTS();
@@ -205,89 +205,89 @@ public class UnifierTest extends TestContext {
     class _non_temp_vs_non_temp_var {
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void base_vs_itself_succeeds(TypeS type) throws UnifierExc {
+      public void base_vs_itself_succeeds(TypeS type) throws UnifierException {
         unifier.add(new EqualityConstraint(type, type));
       }
 
       @Test
-      public void base_vs_different_base_fails() throws UnifierExc {
+      public void base_vs_different_base_fails() throws UnifierException {
         assertUnifyFails(intTS(), blobTS());
       }
 
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void base_vs_var_fails() throws UnifierExc {
+      public void base_vs_var_fails() throws UnifierException {
         assertUnifyFails(varB(), blobTS());
       }
 
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void base_vs_array_fails(TypeS type) throws UnifierExc {
+      public void base_vs_array_fails(TypeS type) throws UnifierException {
         assertUnifyFails(type, arrayTS(type));
       }
 
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void base_vs_tuple_fails(TypeS type) throws UnifierExc {
+      public void base_vs_tuple_fails(TypeS type) throws UnifierException {
         assertUnifyFails(type, tupleTS(type));
       }
 
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void base_vs_function_fails(TypeS type) throws UnifierExc {
+      public void base_vs_function_fails(TypeS type) throws UnifierException {
         assertUnifyFails(type, funcTS(type));
         assertUnifyFails(type, funcTS(type, type));
       }
 
       @ParameterizedTest
       @MethodSource("typesToTest")
-      public void base_vs_struct_fails(TypeS type) throws UnifierExc {
+      public void base_vs_struct_fails(TypeS type) throws UnifierException {
         assertUnifyFails(type, structTS("MyFunc"));
         assertUnifyFails(type, structTS("MyFunc", intTS()));
       }
 
       @Test
-      public void var_vs_itself_succeeds() throws UnifierExc {
+      public void var_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(varA(), varA()));
       }
 
       @Test
-      public void var_vs_array_fails() throws UnifierExc {
+      public void var_vs_array_fails() throws UnifierException {
         assertUnifyFails(
             varA(),
             arrayTS(varA()));
       }
 
       @Test
-      public void var_vs_tuple_fails() throws UnifierExc {
+      public void var_vs_tuple_fails() throws UnifierException {
         assertUnifyFails(
             varA(),
             tupleTS(varA()));
       }
 
       @Test
-      public void var_vs_function_fails() throws UnifierExc {
+      public void var_vs_function_fails() throws UnifierException {
         assertUnifyFails(
             varA(),
             funcTS(varA()));
       }
 
       @Test
-      public void var_vs_struct_fails() throws UnifierExc {
+      public void var_vs_struct_fails() throws UnifierException {
         assertUnifyFails(
             varA(),
             structTS("MyStruct", varA()));
       }
 
       @Test
-      public void var_vs_interface_fails() throws UnifierExc {
+      public void var_vs_interface_fails() throws UnifierException {
         assertUnifyFails(
             varA(),
             interfaceTS(varA()));
       }
 
       @Test
-      public void array_vs_itself_succeeds() throws UnifierExc {
+      public void array_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             arrayTS(intTS()),
             arrayTS(intTS())));
@@ -295,46 +295,46 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void array_with_interface_vs_array_with_compatible_interface_succeeds()
-          throws UnifierExc {
+          throws UnifierException {
         unifier.add(new EqualityConstraint(
             arrayTS(interfaceTS(sigS(intTS(), "myField"))),
             arrayTS(interfaceTS(sigS(stringTS(), "otherField")))));
       }
 
       @Test
-      public void array2_vs_itself_succeeds() throws UnifierExc {
+      public void array2_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             arrayTS(arrayTS(intTS())),
             arrayTS(arrayTS(intTS()))));
       }
 
       @Test
-      public void array_vs_array_with_different_element_fails() throws UnifierExc {
+      public void array_vs_array_with_different_element_fails() throws UnifierException {
         assertUnifyFails(arrayTS(intTS()), arrayTS(blobTS()));
       }
 
       @Test
-      public void array_vs_tuple_fails() throws UnifierExc {
+      public void array_vs_tuple_fails() throws UnifierException {
         assertUnifyFails(arrayTS(intTS()), tupleTS(intTS()));
       }
 
       @Test
-      public void array_vs_function_fails() throws UnifierExc {
+      public void array_vs_function_fails() throws UnifierException {
         assertUnifyFails(arrayTS(intTS()), funcTS(intTS()));
       }
 
       @Test
-      public void array_vs_struct_fails() throws UnifierExc {
+      public void array_vs_struct_fails() throws UnifierException {
         assertUnifyFails(arrayTS(intTS()), structTS("MyStruct", intTS()));
       }
 
       @Test
-      public void array_vs_interface_fails() throws UnifierExc {
+      public void array_vs_interface_fails() throws UnifierException {
         assertUnifyFails(arrayTS(intTS()), interfaceTS(intTS()));
       }
 
       @Test
-      public void tuple_vs_itself_succeeds() throws UnifierExc {
+      public void tuple_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             tupleTS(intTS(), blobTS()),
             tupleTS(intTS(), blobTS())));
@@ -342,46 +342,46 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void tuple_with_interface_vs_tuple_with_compatible_interface_succeeds()
-          throws UnifierExc {
+          throws UnifierException {
         unifier.add(new EqualityConstraint(
             tupleTS(interfaceTS(sigS(intTS(), "myField"))),
             tupleTS(interfaceTS(sigS(stringTS(), "otherField")))));
       }
 
       @Test
-      public void tuple2_vs_itself_succeeds() throws UnifierExc {
+      public void tuple2_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             tupleTS(tupleTS(intTS(), blobTS())),
             tupleTS(tupleTS(intTS(), blobTS()))));
       }
 
       @Test
-      public void tuple_vs_tuple_with_different_elements_fails() throws UnifierExc {
+      public void tuple_vs_tuple_with_different_elements_fails() throws UnifierException {
         assertUnifyFails(tupleTS(intTS(), blobTS()), tupleTS(intTS(), stringTS()));
       }
 
       @Test
-      public void tuple_vs_tuple_with_one_element_missing_fails() throws UnifierExc {
+      public void tuple_vs_tuple_with_one_element_missing_fails() throws UnifierException {
         assertUnifyFails(tupleTS(intTS(), blobTS()), tupleTS(intTS()));
       }
 
       @Test
-      public void tuple_vs_function_fails() throws UnifierExc {
+      public void tuple_vs_function_fails() throws UnifierException {
         assertUnifyFails(tupleTS(intTS()), funcTS(intTS()));
       }
 
       @Test
-      public void tuple_vs_struct_fails() throws UnifierExc {
+      public void tuple_vs_struct_fails() throws UnifierException {
         assertUnifyFails(tupleTS(intTS()), structTS("MyStruct", intTS()));
       }
 
       @Test
-      public void tuple_vs_interface_fails() throws UnifierExc {
+      public void tuple_vs_interface_fails() throws UnifierException {
         assertUnifyFails(tupleTS(intTS()), interfaceTS(intTS()));
       }
 
       @Test
-      public void function_vs_itself_succeeds() throws UnifierExc {
+      public void function_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             funcTS(blobTS(), intTS()),
             funcTS(blobTS(), intTS())));
@@ -389,53 +389,54 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void function_with_interface_vs_function_with_compatible_interface_succeeds()
-          throws UnifierExc {
+          throws UnifierException {
         unifier.add(new EqualityConstraint(
             funcTS(interfaceTS(sigS(intTS(), "myField"))),
             funcTS(interfaceTS(sigS(stringTS(), "otherField")))));
       }
 
       @Test
-      public void function_with_result_being_function_vs_itself_succeeds() throws UnifierExc {
+      public void function_with_result_being_function_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             funcTS(funcTS(intTS())),
             funcTS(funcTS(intTS()))));
       }
 
       @Test
-      public void function_with_parameter_being_function_vs_itself_succeeds() throws UnifierExc {
+      public void function_with_parameter_being_function_vs_itself_succeeds() throws
+          UnifierException {
         unifier.add(new EqualityConstraint(
             funcTS(funcTS(intTS()), blobTS()),
             funcTS(funcTS(intTS()), blobTS())));
       }
 
       @Test
-      public void function_vs_function_with_different_result_type_fails() throws UnifierExc {
+      public void function_vs_function_with_different_result_type_fails() throws UnifierException {
         assertUnifyFails(funcTS(intTS()), funcTS(blobTS()));
       }
 
       @Test
-      public void function_vs_function_with_different_parameter_fails() throws UnifierExc {
+      public void function_vs_function_with_different_parameter_fails() throws UnifierException {
         assertUnifyFails(funcTS(blobTS(), intTS()), funcTS(stringTS(), intTS()));
       }
 
       @Test
-      public void function_vs_function_with_one_parameter_missing_fails() throws UnifierExc {
+      public void function_vs_function_with_one_parameter_missing_fails() throws UnifierException {
         assertUnifyFails(funcTS(blobTS(), intTS()), funcTS(intTS()));
       }
 
       @Test
-      public void function_vs_struct_fails() throws UnifierExc {
+      public void function_vs_struct_fails() throws UnifierException {
         assertUnifyFails(funcTS(intTS()), structTS("MyStruct", intTS()));
       }
 
       @Test
-      public void function_vs_interface_fails() throws UnifierExc {
+      public void function_vs_interface_fails() throws UnifierException {
         assertUnifyFails(funcTS(intTS()), interfaceTS(intTS()));
       }
 
       @Test
-      public void struct_vs_itself_succeeds() throws UnifierExc {
+      public void struct_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             structTS("MyStruct", intTS(), blobTS()),
             structTS("MyStruct", intTS(), blobTS())));
@@ -443,77 +444,80 @@ public class UnifierTest extends TestContext {
 
       @Test
       public void struct_with_interface_vs_struct_with_compatible_interface_succeeds()
-          throws UnifierExc {
+          throws UnifierException {
         unifier.add(new EqualityConstraint(
             structTS(interfaceTS(sigS(intTS(), "myField"))),
             structTS(interfaceTS(sigS(stringTS(), "otherField")))));
       }
 
       @Test
-      public void struct_vs_itself_with_fields_reordered_fails() throws UnifierExc {
+      public void struct_vs_itself_with_fields_reordered_fails() throws UnifierException {
         assertUnifyFails(
             structTS("MyStruct", sigS(intTS(), "myIntField"), sigS(blobTS(), "myBlobField")),
             structTS("MyStruct", sigS(blobTS(), "myBlobField"), sigS(intTS(), "myIntField")));
       }
 
       @Test
-      public void struct_vs_struct_with_different_name_fails() throws UnifierExc {
+      public void struct_vs_struct_with_different_name_fails() throws UnifierException {
         assertUnifyFails(
             structTS("MyStruct", intTS(), blobTS()),
             structTS("MyStruct2", intTS(), blobTS()));
       }
 
       @Test
-      public void struct_vs_struct_with_different_field_type_fails() throws UnifierExc {
+      public void struct_vs_struct_with_different_field_type_fails() throws UnifierException {
         assertUnifyFails(
             structTS("MyStruct", intTS(), blobTS()),
             structTS("MyStruct", intTS(), stringTS()));
       }
 
       @Test
-      public void struct_vs_struct_with_different_field_name_fails() throws UnifierExc {
+      public void struct_vs_struct_with_different_field_name_fails() throws UnifierException {
         assertUnifyFails(
             structTS("MyStruct", sigS(intTS(), "myField")),
             structTS("MyStruct", sigS(intTS(), "otherField")));
       }
 
       @Test
-      public void struct_vs_matching_interface_succeeds() throws UnifierExc {
+      public void struct_vs_matching_interface_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             structTS("MyStruct", sigS(intTS(), "myField")),
             interfaceTS(sigS(intTS(), "myField"))));
       }
 
       @Test
-      public void struct_vs_matching_interface_with_changed_field_type_fails() throws UnifierExc {
+      public void struct_vs_matching_interface_with_changed_field_type_fails() throws
+          UnifierException {
         assertUnifyFails(
             structTS("MyStruct", sigS(intTS(), "myField")),
             interfaceTS(sigS(blobTS(), "myField")));
       }
 
       @Test
-      public void struct_vs_matching_interface_with_changed_field_name_fails() throws UnifierExc {
+      public void struct_vs_matching_interface_with_changed_field_name_fails() throws
+          UnifierException {
         assertUnifyFails(
             structTS("MyStruct", sigS(intTS(), "myField")),
             interfaceTS(sigS(intTS(), "otherField")));
       }
 
       @Test
-      public void interface_vs_itself_succeeds() throws UnifierExc {
+      public void interface_vs_itself_succeeds() throws UnifierException {
         unifier.add(new EqualityConstraint(
             interfaceTS(intTS(), blobTS()),
             interfaceTS(intTS(), blobTS())));
       }
 
       @Test
-      public void interface_vs_interface_with_different_field_type_fails() throws UnifierExc {
+      public void interface_vs_interface_with_different_field_type_fails() throws UnifierException {
         assertUnifyFails(
             interfaceTS(sigS(intTS(), "myField")),
             interfaceTS(sigS(blobTS(), "myField")));
       }
 
       @Test
-      public void interface_vs_interface_with_different_field_name_succeeds() throws UnifierExc {
+      public void interface_vs_interface_with_different_field_name_succeeds() throws
+          UnifierException {
         TypeS type1 = interfaceTS(sigS(intTS(), "myField"));
         TypeS type2 = interfaceTS(sigS(intTS(), "otherField"));
         assertUnifyThroughTempImpl(type1, type2,
@@ -533,7 +537,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @ArgumentsSource(LegalFieldSetMergesProvider.class)
       public void array_element(FieldSetTS type1, FieldSetTS type2, TypeS expected)
-          throws UnifierExc {
+          throws UnifierException {
         assertUnifyThroughTempImpl(
             arrayTS(type1),
             arrayTS(type2),
@@ -543,7 +547,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @ArgumentsSource(LegalFieldSetMergesProvider.class)
       public void tuple_element(FieldSetTS type1, FieldSetTS type2, TypeS expected)
-          throws UnifierExc {
+          throws UnifierException {
         assertUnifyThroughTempImpl(
             tupleTS(type1),
             tupleTS(type2),
@@ -553,7 +557,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @ArgumentsSource(LegalFieldSetMergesProvider.class)
       public void func_result(FieldSetTS type1, FieldSetTS type2, TypeS expected)
-          throws UnifierExc {
+          throws UnifierException {
         assertUnifyThroughTempImpl(
             funcTS(type1),
             funcTS(type2),
@@ -563,7 +567,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @ArgumentsSource(LegalFieldSetMergesProvider.class)
       public void func_param(FieldSetTS type1, FieldSetTS type2, TypeS expected)
-          throws UnifierExc {
+          throws UnifierException {
         assertUnifyThroughTempImpl(
             funcTS(type1, intTS()),
             funcTS(type2, intTS()),
@@ -573,7 +577,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @ArgumentsSource(LegalFieldSetMergesProvider.class)
       public void struct_field(FieldSetTS type1, FieldSetTS type2, TypeS expected)
-          throws UnifierExc {
+          throws UnifierException {
         assertUnifyThroughTempImpl(
             structTS(type1),
             structTS(type2),
@@ -583,7 +587,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @ArgumentsSource(LegalFieldSetMergesProvider.class)
       public void interface_field(FieldSetTS type1, FieldSetTS type2, TypeS expected)
-          throws UnifierExc {
+          throws UnifierException {
         assertUnifyThroughTempImpl(
             interfaceTS(type1),
             interfaceTS(type2),
@@ -595,7 +599,7 @@ public class UnifierTest extends TestContext {
     class _illegal_field_set_merges {
       @ParameterizedTest
       @ArgumentsSource(IllegalFieldSetMergesProvider.class)
-      public void array_element(FieldSetTS type1, FieldSetTS type2) throws UnifierExc {
+      public void array_element(FieldSetTS type1, FieldSetTS type2) throws UnifierException {
         assertUnifyFails(
             arrayTS(type1),
             arrayTS(type2)
@@ -604,7 +608,7 @@ public class UnifierTest extends TestContext {
 
       @ParameterizedTest
       @ArgumentsSource(IllegalFieldSetMergesProvider.class)
-      public void tuple_element(FieldSetTS type1, FieldSetTS type2) throws UnifierExc {
+      public void tuple_element(FieldSetTS type1, FieldSetTS type2) throws UnifierException {
         assertUnifyFails(
             tupleTS(type1),
             tupleTS(type2)
@@ -613,7 +617,7 @@ public class UnifierTest extends TestContext {
 
       @ParameterizedTest
       @ArgumentsSource(IllegalFieldSetMergesProvider.class)
-      public void func_result(FieldSetTS type1, FieldSetTS type2) throws UnifierExc {
+      public void func_result(FieldSetTS type1, FieldSetTS type2) throws UnifierException {
         assertUnifyFails(
             funcTS(type1),
             funcTS(type2)
@@ -622,7 +626,7 @@ public class UnifierTest extends TestContext {
 
       @ParameterizedTest
       @ArgumentsSource(IllegalFieldSetMergesProvider.class)
-      public void func_param(FieldSetTS type1, FieldSetTS type2) throws UnifierExc {
+      public void func_param(FieldSetTS type1, FieldSetTS type2) throws UnifierException {
         assertUnifyFails(
             funcTS(type1, intTS()),
             funcTS(type2, intTS())
@@ -631,7 +635,7 @@ public class UnifierTest extends TestContext {
 
       @ParameterizedTest
       @ArgumentsSource(IllegalFieldSetMergesProvider.class)
-      public void struct_field(FieldSetTS type1, FieldSetTS type2) throws UnifierExc {
+      public void struct_field(FieldSetTS type1, FieldSetTS type2) throws UnifierException {
         assertUnifyFails(
             structTS(type1),
             structTS(type2)
@@ -640,7 +644,7 @@ public class UnifierTest extends TestContext {
 
       @ParameterizedTest
       @ArgumentsSource(IllegalFieldSetMergesProvider.class)
-      public void interface_field(FieldSetTS type1, FieldSetTS type2) throws UnifierExc {
+      public void interface_field(FieldSetTS type1, FieldSetTS type2) throws UnifierException {
         assertUnifyFails(
             interfaceTS(type1),
             interfaceTS(type2)
@@ -729,7 +733,7 @@ public class UnifierTest extends TestContext {
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void one_element_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
-        throws UnifierExc {
+        throws UnifierException {
       var a = unifier.newTempVar();
       var constraints = list(
           new EqualityConstraint(a, composedFactory.apply(a))
@@ -740,7 +744,7 @@ public class UnifierTest extends TestContext {
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void two_elements_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
-        throws UnifierExc {
+        throws UnifierException {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var constraints = list(
@@ -752,7 +756,7 @@ public class UnifierTest extends TestContext {
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void three_elements_cycle_through_composed(Function<TypeS, TypeS> composedFactory)
-        throws UnifierExc {
+        throws UnifierException {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var c = unifier.newTempVar();
@@ -765,7 +769,7 @@ public class UnifierTest extends TestContext {
     }
 
     @Test
-    public void regression_test() throws UnifierExc {
+    public void regression_test() throws UnifierException {
       // Cycle detection algorithm had a bug which is detected by this test.
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
@@ -783,7 +787,7 @@ public class UnifierTest extends TestContext {
     @Nested
     class _transitive_cases {
       @Test
-      public void unify_a_vs_b_vs_concrete_type() throws UnifierExc {
+      public void unify_a_vs_b_vs_concrete_type() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var constraints = list(
@@ -793,7 +797,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void unify_a_vs_array_b_vs_c() throws UnifierExc {
+      public void unify_a_vs_array_b_vs_c() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
@@ -805,7 +809,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void unify_array_a_vs_b_vs_array_c() throws UnifierExc {
+      public void unify_array_a_vs_b_vs_array_c() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var c = unifier.newTempVar();
@@ -822,7 +826,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void join_composed_of_temp_vs_composed_of_different_temp(
-          Function<TypeS, TypeS> composedFactory) throws UnifierExc {
+          Function<TypeS, TypeS> composedFactory) throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -838,7 +842,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void join_composed_of_temp_vs_composed_of_int(Function<TypeS, TypeS> composedFactory)
-          throws UnifierExc {
+          throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var x = unifier.newTempVar();
@@ -853,7 +857,7 @@ public class UnifierTest extends TestContext {
       @ParameterizedTest
       @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
       public void join_composed_of_int_vs_composed_of_blob_fails(
-          Function<TypeS, TypeS> composedFactory) throws UnifierExc {
+          Function<TypeS, TypeS> composedFactory) throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var constraints = list(
@@ -865,7 +869,7 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_func_vs_func_with_different_param_count_fails() throws UnifierExc {
+      public void join_func_vs_func_with_different_param_count_fails() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         var constraints = list(
@@ -877,33 +881,33 @@ public class UnifierTest extends TestContext {
       }
 
       @Test
-      public void join_array_vs_tuple_fails() throws UnifierExc {
+      public void join_array_vs_tuple_fails() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.add(new EqualityConstraint(a, arrayTS(intTS())));
         unifier.add(new EqualityConstraint(b, tupleTS(intTS())));
         assertCall(() -> unifier.add(new EqualityConstraint(a, b)))
-            .throwsException(UnifierExc.class);
+            .throwsException(UnifierException.class);
       }
 
       @Test
-      public void join_array_vs_func_fails() throws UnifierExc {
+      public void join_array_vs_func_fails() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.add(new EqualityConstraint(a, arrayTS(intTS())));
         unifier.add(new EqualityConstraint(b, funcTS(intTS())));
         assertCall(() -> unifier.add(new EqualityConstraint(a, b)))
-            .throwsException(UnifierExc.class);
+            .throwsException(UnifierException.class);
       }
 
       @Test
-      public void join_tuple_vs_func_fails() throws UnifierExc {
+      public void join_tuple_vs_func_fails() throws UnifierException {
         var a = unifier.newTempVar();
         var b = unifier.newTempVar();
         unifier.add(new EqualityConstraint(a, tupleTS(intTS())));
         unifier.add(new EqualityConstraint(b, funcTS(intTS())));
         assertCall(() -> unifier.add(new EqualityConstraint(a, b)))
-            .throwsException(UnifierExc.class);
+            .throwsException(UnifierException.class);
       }
     }
   }
@@ -917,7 +921,7 @@ public class UnifierTest extends TestContext {
     }
 
     @Test
-    public void non_temporary_var_has_priority_over_temporary() throws UnifierExc {
+    public void non_temporary_var_has_priority_over_temporary() throws UnifierException {
       VarS a = unifier.newTempVar();
       VarS b = unifier.newTempVar();
       VarS x = varX();
@@ -948,7 +952,7 @@ public class UnifierTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
-    public void composed_type(Function<TypeS, TypeS> composedFactory) throws UnifierExc {
+    public void composed_type(Function<TypeS, TypeS> composedFactory) throws UnifierException {
       var a = unifier.newTempVar();
       var b = unifier.newTempVar();
       var constraints = list(
@@ -963,7 +967,7 @@ public class UnifierTest extends TestContext {
   class _schema_instantiation {
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#typesToTest")
-    public void concrete_type_instantiated_to_itself_succeeds(TypeS type) throws UnifierExc {
+    public void concrete_type_instantiated_to_itself_succeeds(TypeS type) throws UnifierException {
       var schema = unifier.newTempVar();
       var instantiation = unifier.newTempVar();
       var constraints = list(
@@ -976,7 +980,8 @@ public class UnifierTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#typesToTest")
-    public void concrete_type_instantiated_to_different_type_fails(TypeS type) throws UnifierExc {
+    public void concrete_type_instantiated_to_different_type_fails(TypeS type) throws
+        UnifierException {
       var differentType = type.equals(intTS()) ? blobTS() : intTS();
       var schema = unifier.newTempVar();
       var instantiation = unifier.newTempVar();
@@ -990,7 +995,7 @@ public class UnifierTest extends TestContext {
 
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#typesToTest")
-    public void concrete_type_instantiated_to_x_infers_x(TypeS type) throws UnifierExc {
+    public void concrete_type_instantiated_to_x_infers_x(TypeS type) throws UnifierException {
       var x = unifier.newTempVar();
       var schema = unifier.newTempVar();
       var instantiation = unifier.newTempVar();
@@ -1005,7 +1010,7 @@ public class UnifierTest extends TestContext {
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void concrete_composed_type_instantiated_to_composed_with_x_infers_x(
-        Function<TypeS, TypeS> factory) throws UnifierExc {
+        Function<TypeS, TypeS> factory) throws UnifierException {
       var x = unifier.newTempVar();
       var schema = unifier.newTempVar();
       var instantiation = unifier.newTempVar();
@@ -1020,7 +1025,7 @@ public class UnifierTest extends TestContext {
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void composed_with_temp_instantiated_to_x_infers_x_structure_from_composed(
-        Function<TypeS, TypeS> factory) throws UnifierExc {
+        Function<TypeS, TypeS> factory) throws UnifierException {
       var temp = unifier.newTempVar();
       var schema = unifier.newTempVar();
       var instantiation = unifier.newTempVar();
@@ -1035,7 +1040,7 @@ public class UnifierTest extends TestContext {
     @ParameterizedTest
     @MethodSource("org.smoothbuild.testing.TestContext#compositeTypeSFactories")
     public void composed_with_temp_instantiated_many_times_to_same_composed_with_different_concrete_types_succeeds(
-        Function<TypeS, TypeS> factory) throws UnifierExc {
+        Function<TypeS, TypeS> factory) throws UnifierException {
       var temp = unifier.newTempVar();
       var schema = unifier.newTempVar();
       var instantiation1 = unifier.newTempVar();
@@ -1052,21 +1057,21 @@ public class UnifierTest extends TestContext {
   }
 
   private void assertUnifyInfers(Unifier unifier, TypeS type1, TypeS type2,
-      TypeS unresolved, TypeS expected) throws UnifierExc {
+      TypeS unresolved, TypeS expected) throws UnifierException {
     unifier.add(new EqualityConstraint(type1, type2));
     assertThat(unifier.resolve(unresolved))
         .isEqualTo(expected);
   }
 
   private void assertUnifyInfersEquality(Unifier unifier, TypeS type1, TypeS type2,
-      TypeS unresolved1, TypeS unresolved2) throws UnifierExc {
+      TypeS unresolved1, TypeS unresolved2) throws UnifierException {
     unifier.add(new EqualityConstraint(type1, type2));
     assertThat(unifier.resolve(unresolved1))
         .isEqualTo(unifier.resolve(unresolved2));
   }
 
   private void assertUnifyThroughTempImpl(TypeS type1, TypeS type2, TypeS expected)
-      throws UnifierExc {
+      throws UnifierException {
     var a = unifier.newTempVar();
     var constraints = list(
         new EqualityConstraint(a, type1),
@@ -1074,13 +1079,14 @@ public class UnifierTest extends TestContext {
     assertResolvedAreEqualForEachPermutation(constraints, a, expected);
   }
 
-  private void assertUnifyFails(TypeS type1, TypeS type2) throws UnifierExc {
-    assertExceptionThrownForLastConstraintForEachPermutation(list(new EqualityConstraint(type1, type2)));
+  private void assertUnifyFails(TypeS type1, TypeS type2) throws UnifierException {
+    assertExceptionThrownForLastConstraintForEachPermutation(
+        list(new EqualityConstraint(type1, type2)));
   }
 
   private static void assertResolvedStructuresAreEqualForEachPermutation(
       List<? extends Constraint> constraints, TypeS type, TypeS expected)
-      throws UnifierExc {
+      throws UnifierException {
     assertForEachPermutation(
         constraints, unifier -> assertResolvedStructuresAreEqual(unifier, type, expected));
   }
@@ -1092,7 +1098,7 @@ public class UnifierTest extends TestContext {
 
   private static void assertResolvedAreEqualForEachPermutation(
       List<? extends Constraint> constraints, TypeS type, TypeS expected)
-      throws UnifierExc {
+      throws UnifierException {
     assertForEachPermutation(
         constraints, unifier -> assertResolvedAreEquals(unifier, type, expected));
   }
@@ -1103,12 +1109,12 @@ public class UnifierTest extends TestContext {
   }
 
   private static void assertConstraintsAreSolvableForEachPermutation(
-      List<? extends Constraint> constraints) throws UnifierExc {
+      List<? extends Constraint> constraints) throws UnifierException {
     assertForEachPermutation(constraints, (unifier) -> {});
   }
 
   private static void assertForEachPermutation(
-      List<? extends Constraint> constraints, Consumer<Unifier> assertion) throws UnifierExc {
+      List<? extends Constraint> constraints, Consumer<Unifier> assertion) throws UnifierException {
     var permutations = permutations(constraints);
     for (List<? extends Constraint> permutation : permutations) {
       assertPermutation(permutation, assertion);
@@ -1117,7 +1123,7 @@ public class UnifierTest extends TestContext {
 
   private static void assertPermutation(
       List<? extends Constraint> permutation, Consumer<Unifier> assertion)
-      throws UnifierExc {
+      throws UnifierException {
     var unifier = new Unifier();
     for (int i = 0; i < 4; i++) {
       unifier.newTempVar();
@@ -1129,14 +1135,15 @@ public class UnifierTest extends TestContext {
   }
 
   private static void assertExceptionThrownForLastConstraintForEachPermutation(
-      List<? extends Constraint> constraints) throws UnifierExc {
+      List<? extends Constraint> constraints) throws UnifierException {
     var permutations = permutations(constraints);
     for (List<? extends Constraint> permutation : permutations) {
       assertExceptionThrownForPermutation(permutation);
     }
   }
 
-  private static void assertExceptionThrownForPermutation(List<? extends Constraint> permutation) throws UnifierExc {
+  private static void assertExceptionThrownForPermutation(List<? extends Constraint> permutation)
+      throws UnifierException {
     var unifier = new Unifier();
     for (int i = 0; i < 4; i++) {
       unifier.newTempVar();
@@ -1145,6 +1152,6 @@ public class UnifierTest extends TestContext {
       unifier.add(permutation.get(i));
     }
     assertCall(() -> unifier.add(permutation.get(permutation.size() - 1)))
-        .throwsException(UnifierExc.class);
+        .throwsException(UnifierException.class);
   }
 }

@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvaluationTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodePickWrongEvaluationTypeException;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
 import org.smoothbuild.vm.bytecode.type.oper.PickCB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
@@ -36,11 +36,11 @@ public class PickB extends OperB {
     if (pickable.evaluationT() instanceof ArrayTB arrayT) {
       var elementT = arrayT.elem();
       if (!evaluationT().equals(elementT)) {
-        throw new DecodePickWrongEvaluationTypeExc(hash(), category(), elementT);
+        throw new DecodePickWrongEvaluationTypeException(hash(), category(), elementT);
       }
       return new PickSubExprsB(readPickable(), readIndex());
     } else {
-      throw new DecodeExprWrongNodeTypeExc(
+      throw new DecodeExprWrongNodeTypeException(
           hash(), category(), "array", ArrayTB.class, pickable.evaluationT());
     }
   }
@@ -52,7 +52,7 @@ public class PickB extends OperB {
   private ExprB readIndex() {
     var index = readDataSeqElem(IDX_IDX, DATA_SEQ_SIZE, ExprB.class);
     if (!(index.evaluationT() instanceof IntTB)) {
-      throw new DecodeExprWrongNodeTypeExc(
+      throw new DecodeExprWrongNodeTypeException(
           hash(), category(), ExprB.DATA_PATH, IDX_IDX, IntB.class, index.evaluationT());
     }
     return index;

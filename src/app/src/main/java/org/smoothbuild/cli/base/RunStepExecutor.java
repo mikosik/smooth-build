@@ -8,7 +8,7 @@ import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.step.Step;
 import org.smoothbuild.run.step.StepExecutor;
-import org.smoothbuild.vm.bytecode.BytecodeExc;
+import org.smoothbuild.vm.bytecode.BytecodeException;
 
 import com.google.inject.Injector;
 
@@ -24,7 +24,7 @@ public class RunStepExecutor {
           .execute(step.then(step(PrintResult.class)), argument, reporter);
       reporter.printSummary();
       return message.map(v -> EXIT_CODE_SUCCESS).getOrElse(EXIT_CODE_ERROR);
-    } catch (BytecodeExc e) {
+    } catch (BytecodeException e) {
       console.error(e.getMessage());
       return EXIT_CODE_ERROR;
     }

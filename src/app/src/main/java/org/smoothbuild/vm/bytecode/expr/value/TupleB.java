@@ -6,7 +6,7 @@ import static org.smoothbuild.vm.bytecode.type.Validator.validateTuple;
 
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
 import org.smoothbuild.vm.bytecode.type.value.TupleTB;
 import org.smoothbuild.vm.bytecode.type.value.TypeB;
 
@@ -50,8 +50,10 @@ public final class TupleB extends ValueB {
     var expectedElementTs = type.elements();
     var elements = readDataSeqElems(expectedElementTs.size());
     var elementTs = elements.map(ValueB::type);
-    validateTuple(type, elementTs, () -> {throw new DecodeExprWrongNodeTypeExc(hash(),
-        category(), DATA_PATH, type, asTupleToString(elementTs));});
+    validateTuple(type, elementTs, () -> {
+      throw new DecodeExprWrongNodeTypeException(
+          hash(), category(), DATA_PATH, type, asTupleToString(elementTs));
+    });
     return elements;
   }
 

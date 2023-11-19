@@ -3,14 +3,14 @@ package org.smoothbuild.vm.bytecode.expr;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
-import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.cannotReadRootException;
-import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootExc.wrongSizeOfRootSeqException;
+import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
+import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootSeqException;
 import static org.smoothbuild.vm.bytecode.type.Validator.validateArgs;
 
 import java.math.BigInteger;
 
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatExc;
-import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprExc;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
+import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNoSuchExprException;
 import org.smoothbuild.vm.bytecode.expr.oper.CallB;
 import org.smoothbuild.vm.bytecode.expr.oper.CombineB;
 import org.smoothbuild.vm.bytecode.expr.oper.OrderB;
@@ -32,11 +32,11 @@ import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
 import org.smoothbuild.vm.bytecode.hashed.HashedDb;
-import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbExc;
-import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataExc;
+import org.smoothbuild.vm.bytecode.hashed.exc.HashedDbException;
+import org.smoothbuild.vm.bytecode.hashed.exc.NoSuchDataException;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.CategoryDb;
-import org.smoothbuild.vm.bytecode.type.exc.CategoryDbExc;
+import org.smoothbuild.vm.bytecode.type.exc.CategoryDbException;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
 import org.smoothbuild.vm.bytecode.type.value.FuncTB;
 import org.smoothbuild.vm.bytecode.type.value.IntTB;
@@ -205,47 +205,47 @@ public class BytecodeDb {
   private CategoryB getCatOrChainException(Hash rootHash, Hash typeHash) {
     try {
       return categoryDb.get(typeHash);
-    } catch (CategoryDbExc e) {
-      throw new DecodeExprCatExc(rootHash, e);
+    } catch (CategoryDbException e) {
+      throw new DecodeExprCatException(rootHash, e);
     }
   }
 
   private Array<Hash> decodeRootSeq(Hash rootHash) {
     try {
       return hashedDb.readSeq(rootHash);
-    } catch (NoSuchDataExc e) {
-      throw new DecodeExprNoSuchExprExc(rootHash, e);
-    } catch (HashedDbExc e) {
+    } catch (NoSuchDataException e) {
+      throw new DecodeExprNoSuchExprException(rootHash, e);
+    } catch (HashedDbException e) {
       throw cannotReadRootException(rootHash, e);
     }
   }
 
   // methods for creating InstBs
 
-  public ArrayB newArray(ArrayTB type, Traversable<ValueB> elems) throws HashedDbExc {
+  public ArrayB newArray(ArrayTB type, Traversable<ValueB> elems) throws HashedDbException {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
-  public BlobB newBlob(Hash dataHash) throws HashedDbExc {
+  public BlobB newBlob(Hash dataHash) throws HashedDbException {
     var root = newRoot(categoryDb.blob(), dataHash);
     return categoryDb.blob().newExpr(root, this);
   }
 
-  private BoolB newBool(boolean value) throws HashedDbExc {
+  private BoolB newBool(boolean value) throws HashedDbException {
     var data = writeBoolData(value);
     var root = newRoot(categoryDb.bool(), data);
     return categoryDb.bool().newExpr(root, this);
   }
 
-  private LambdaB newLambda(LambdaCB type, ExprB body) throws HashedDbExc {
+  private LambdaB newLambda(LambdaCB type, ExprB body) throws HashedDbException {
     var dataHash = body.hash();
     var root = newRoot(type, dataHash);
     return type.newExpr(root, this);
   }
 
-  private IntB newInt(BigInteger value) throws HashedDbExc {
+  private IntB newInt(BigInteger value) throws HashedDbException {
     var data = writeIntData(value);
     var root = newRoot(categoryDb.int_(), data);
     return categoryDb.int_().newExpr(root, this);
@@ -253,19 +253,19 @@ public class BytecodeDb {
 
   private NativeFuncB newNativeFunc(
       NativeFuncCB type, BlobB jar, StringB classBinaryName, BoolB isPure)
-      throws HashedDbExc {
+      throws HashedDbException {
     var data = writeNativeFuncData(jar, classBinaryName, isPure);
     var root = newRoot(type, data);
     return type.newExpr(root, this);
   }
 
-  private StringB newString(String string) throws HashedDbExc {
+  private StringB newString(String string) throws HashedDbException {
     var data = writeStringData(string);
     var root = newRoot(categoryDb.string(), data);
     return categoryDb.string().newExpr(root, this);
   }
 
-  private TupleB newTuple(Array<ValueB> items) throws HashedDbExc {
+  private TupleB newTuple(Array<ValueB> items) throws HashedDbException {
     var type = categoryDb.tuple(items.map(ValueB::type));
     var data = writeTupleData(items);
     var root = newRoot(type, data);
@@ -274,14 +274,14 @@ public class BytecodeDb {
 
   // methods for creating Expr-s
 
-  private CallB newCall(FuncTB funcTB, ExprB func, CombineB args) throws HashedDbExc {
+  private CallB newCall(FuncTB funcTB, ExprB func, CombineB args) throws HashedDbException {
     var callCB = categoryDb.call(funcTB.result());
     var data = writeCallData(func, args);
     var root = newRoot(callCB, data);
     return callCB.newExpr(root, this);
   }
 
-  private CombineB newCombine(Array<ExprB> items) throws HashedDbExc {
+  private CombineB newCombine(Array<ExprB> items) throws HashedDbException {
     var evaluationT = categoryDb.tuple(items.map(ExprB::evaluationT));
     var combineCB = categoryDb.combine(evaluationT);
     var data = writeCombineData(items);
@@ -289,26 +289,26 @@ public class BytecodeDb {
     return combineCB.newExpr(root, this);
   }
 
-  private IfFuncB newIfFunc(TypeB t) throws HashedDbExc {
+  private IfFuncB newIfFunc(TypeB t) throws HashedDbException {
     var ifFuncCB = categoryDb.ifFunc(t);
     var root = newRoot(ifFuncCB);
     return ifFuncCB.newExpr(root, this);
   }
 
-  private MapFuncB newMapFunc(TypeB r, TypeB s) throws HashedDbExc {
+  private MapFuncB newMapFunc(TypeB r, TypeB s) throws HashedDbException {
     var mapFuncCB = categoryDb.mapFunc(r, s);
     var root = newRoot(mapFuncCB);
     return mapFuncCB.newExpr(root, this);
   }
 
-  private OrderB newOrder(ArrayTB evaluationT, Array<ExprB> elems) throws HashedDbExc {
+  private OrderB newOrder(ArrayTB evaluationT, Array<ExprB> elems) throws HashedDbException {
     var orderCB = categoryDb.order(evaluationT);
     var data = writeOrderData(elems);
     var root = newRoot(orderCB, data);
     return orderCB.newExpr(root, this);
   }
 
-  private PickB newPick(ExprB pickable, ExprB index) throws HashedDbExc {
+  private PickB newPick(ExprB pickable, ExprB index) throws HashedDbException {
     var evaluationT = pickEvaluationT(pickable);
     if (!(index.evaluationT() instanceof IntTB)) {
       throw new IllegalArgumentException(
@@ -330,13 +330,13 @@ public class BytecodeDb {
     }
   }
 
-  private VarB newVar(TypeB evaluationT, IntB index) throws HashedDbExc {
+  private VarB newVar(TypeB evaluationT, IntB index) throws HashedDbException {
     var type = categoryDb.var(evaluationT);
     var root = newRoot(type, index.hash());
     return type.newExpr(root, this);
   }
 
-  private SelectB newSelect(ExprB selectable, IntB index) throws HashedDbExc {
+  private SelectB newSelect(ExprB selectable, IntB index) throws HashedDbException {
     var evaluationT = selectEvaluationT(selectable, index);
     var data = writeSelectData(selectable, index);
     var category = categoryDb.select(evaluationT);
@@ -357,68 +357,68 @@ public class BytecodeDb {
     }
   }
 
-  private MerkleRoot newRoot(CategoryB cat, Hash dataHash) throws HashedDbExc {
+  private MerkleRoot newRoot(CategoryB cat, Hash dataHash) throws HashedDbException {
     Hash rootHash = hashedDb.writeSeq(cat.hash(), dataHash);
     return new MerkleRoot(rootHash, cat, dataHash);
   }
 
-  private MerkleRoot newRoot(CategoryB cat) throws HashedDbExc {
+  private MerkleRoot newRoot(CategoryB cat) throws HashedDbException {
     Hash rootHash = hashedDb.writeSeq(cat.hash());
     return new MerkleRoot(rootHash, cat, null);
   }
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ExprB func, CombineB args) throws HashedDbExc {
+  private Hash writeCallData(ExprB func, CombineB args) throws HashedDbException {
     return hashedDb.writeSeq(func.hash(), args.hash());
   }
 
-  private Hash writeCombineData(Array<ExprB> items) throws HashedDbExc {
+  private Hash writeCombineData(Array<ExprB> items) throws HashedDbException {
     return writeSeq(items);
   }
 
-  private Hash writeOrderData(Array<ExprB> elems) throws HashedDbExc {
+  private Hash writeOrderData(Array<ExprB> elems) throws HashedDbException {
     return writeSeq(elems);
   }
 
-  private Hash writePickData(ExprB pickable, ExprB index) throws HashedDbExc {
+  private Hash writePickData(ExprB pickable, ExprB index) throws HashedDbException {
     return hashedDb.writeSeq(pickable.hash(), index.hash());
   }
 
-  private Hash writeSelectData(ExprB selectable, IntB index) throws HashedDbExc {
+  private Hash writeSelectData(ExprB selectable, IntB index) throws HashedDbException {
     return hashedDb.writeSeq(selectable.hash(), index.hash());
   }
 
   // methods for writing data of InstB-s
 
-  private Hash writeArrayData(Traversable<ValueB> elems) throws HashedDbExc {
+  private Hash writeArrayData(Traversable<ValueB> elems) throws HashedDbException {
     return writeSeq(elems);
   }
 
-  private Hash writeBoolData(boolean value) throws HashedDbExc {
+  private Hash writeBoolData(boolean value) throws HashedDbException {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeIntData(BigInteger value) throws HashedDbExc {
+  private Hash writeIntData(BigInteger value) throws HashedDbException {
     return hashedDb.writeBigInteger(value);
   }
 
   private Hash writeNativeFuncData(BlobB jar, StringB classBinaryName, BoolB isPure)
-      throws HashedDbExc {
+      throws HashedDbException {
     return hashedDb.writeSeq(jar.hash(), classBinaryName.hash(), isPure.hash());
   }
 
-  private Hash writeStringData(String string) throws HashedDbExc {
+  private Hash writeStringData(String string) throws HashedDbException {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeTupleData(Array<ValueB> items) throws HashedDbExc {
+  private Hash writeTupleData(Array<ValueB> items) throws HashedDbException {
     return writeSeq(items);
   }
 
   // helpers
 
-  private Hash writeSeq(Traversable<? extends ExprB> exprs) throws HashedDbExc {
+  private Hash writeSeq(Traversable<? extends ExprB> exprs) throws HashedDbException {
     var hashes = exprs.map(ExprB::hash);
     return hashedDb.writeSeq(hashes);
   }

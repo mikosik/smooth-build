@@ -28,7 +28,7 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarSetS;
 import org.smoothbuild.compile.frontend.lang.type.tool.EqualityConstraint;
 import org.smoothbuild.compile.frontend.lang.type.tool.Unifier;
-import org.smoothbuild.compile.frontend.lang.type.tool.UnifierExc;
+import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.out.log.Maybe;
@@ -191,7 +191,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Modul
               defaultvalue.schemaS(), paramUnifier);
           try {
             paramUnifier.add(new EqualityConstraint(paramT, defaultValueType));
-          } catch (UnifierExc e) {
+          } catch (UnifierException e) {
             var message = "Parameter %s has type %s so it cannot have default value with type %s."
                 .formatted(param.q(), resolvedParamT.q(), defaultvalue.schemaS().type().q());
             this.logger.log(compileError(defaultvalue.location(), message));

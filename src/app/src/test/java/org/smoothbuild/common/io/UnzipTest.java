@@ -28,7 +28,7 @@ public class UnzipTest extends TestContext {
   }
 
   private static Map<String, String> unzipIntoMap(BlobB jarBlob)
-      throws IOException, IllegalZipEntryFileNameExc, DuplicateFileNameExc {
+      throws IOException, IllegalZipEntryFileNameException, DuplicateFileNameException {
     Map<String, String> result = new HashMap<>();
     unzip(jarBlob, s -> true, (s, is) -> result.put(s, new String(is.readAllBytes(), UTF_8)));
     return result;

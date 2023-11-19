@@ -45,7 +45,7 @@ public class BackendCompile implements
       var exprBs = exprs.map(sbTranslator::translateExpr);
       var bsMapping = sbTranslator.bsMapping();
       return success(Tuple.of(exprBs, bsMapping));
-    } catch (SbTranslatorExc e) {
+    } catch (SbTranslatorException e) {
       return failure(fatal(e.getMessage()));
     }
   }

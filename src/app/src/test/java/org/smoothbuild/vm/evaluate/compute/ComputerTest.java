@@ -32,7 +32,7 @@ public class ComputerTest extends TestContext {
   @Nested
   class _combine_task {
     @Test
-    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
+    public void when_cached_in_memory_and_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new CombineTask(combineB(intB()), traceB());
       var input = tupleB(value);
@@ -43,7 +43,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_cached_on_disk() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new CombineTask(combineB(intB()), traceB());
       var input = tupleB(value);
@@ -54,7 +54,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_not_cached() throws ComputationCacheExc {
+    public void when_not_cached() throws ComputationCacheException {
       var value = intB(17);
       var task = new CombineTask(combineB(intB()), traceB());
       var input = tupleB(value);
@@ -64,7 +64,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc {
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new CombineTask(combineB(intB()), traceB());
       var input = tupleB(value);
@@ -76,7 +76,7 @@ public class ComputerTest extends TestContext {
   @Nested
   class _const_task {
     @Test
-    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
+    public void when_cached_in_memory_and_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new ConstTask(value, traceB());
       var input = tupleB();
@@ -87,7 +87,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_cached_on_disk() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new ConstTask(value, traceB());
       var input = tupleB();
@@ -97,7 +97,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_not_cached() throws ComputationCacheExc {
+    public void when_not_cached() throws ComputationCacheException {
       var value = intB(17);
       var task = new ConstTask(value, traceB());
       var input = tupleB();
@@ -106,7 +106,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_not_cached() throws ComputationCacheExc {
+    public void executed_computation_is_not_cached() throws ComputationCacheException {
       var value = intB(17);
       var task = new ConstTask(value, traceB());
       var input = tupleB();
@@ -118,7 +118,7 @@ public class ComputerTest extends TestContext {
   @Nested
   class _invoke_task_with_pure_func {
     @Test
-    public void when_cached_in_memory_and_disk() throws ComputationCacheExc, IOException {
+    public void when_cached_in_memory_and_disk() throws ComputationCacheException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -130,7 +130,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_cached_on_disk() throws ComputationCacheExc, IOException {
+    public void when_cached_on_disk() throws ComputationCacheException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -142,7 +142,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_not_cached() throws ComputationCacheExc, IOException {
+    public void when_not_cached() throws ComputationCacheException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -153,7 +153,8 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc, IOException {
+    public void executed_computation_is_cached_on_disk()
+        throws ComputationCacheException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(true);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -166,7 +167,7 @@ public class ComputerTest extends TestContext {
   @Nested
   class _invoke_task_with_impure_func {
     @Test
-    public void when_cached_in_memory_and_disk() throws ComputationCacheExc, IOException {
+    public void when_cached_in_memory_and_disk() throws ComputationCacheException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -178,7 +179,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_cached_on_disk() throws ComputationCacheExc, IOException {
+    public void when_cached_on_disk() throws ComputationCacheException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -190,7 +191,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_not_cached() throws ComputationCacheExc, IOException {
+    public void when_not_cached() throws ComputationCacheException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -201,7 +202,8 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc, IOException {
+    public void executed_computation_is_cached_on_disk()
+        throws ComputationCacheException, IOException {
       var nativeFuncB = returnAbcNativeFuncB(false);
       var callB = callB(nativeFuncB);
       var task = new InvokeTask(callB, nativeFuncB, traceB());
@@ -214,7 +216,7 @@ public class ComputerTest extends TestContext {
   @Nested
   class _order_task {
     @Test
-    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
+    public void when_cached_in_memory_and_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new OrderTask(orderB(intTB()), traceB());
       var input = tupleB(value);
@@ -225,7 +227,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_cached_on_disk() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new OrderTask(orderB(intTB()), traceB());
       var input = tupleB(value);
@@ -236,7 +238,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_not_cached() throws ComputationCacheExc {
+    public void when_not_cached() throws ComputationCacheException {
       var value = intB(17);
       var task = new OrderTask(orderB(intTB()), traceB());
       var input = tupleB(value);
@@ -246,7 +248,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc {
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new OrderTask(orderB(intTB()), traceB());
       var input = tupleB(value);
@@ -258,7 +260,7 @@ public class ComputerTest extends TestContext {
   @Nested
   class _pick_task {
     @Test
-    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
+    public void when_cached_in_memory_and_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new PickTask(pickB(), traceB());
       var input = tupleB(arrayB(value), intB(0));
@@ -269,7 +271,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_cached_on_disk() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new PickTask(pickB(), traceB());
       var input = tupleB(arrayB(value), intB(0));
@@ -280,7 +282,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_not_cached() throws ComputationCacheExc {
+    public void when_not_cached() throws ComputationCacheException {
       var value = intB(17);
       var task = new PickTask(pickB(), traceB());
       var input = tupleB(arrayB(value), intB(0));
@@ -290,7 +292,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc {
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new PickTask(pickB(), traceB());
       var input = tupleB(arrayB(value), intB(0));
@@ -302,7 +304,7 @@ public class ComputerTest extends TestContext {
   @Nested
   class _select_task {
     @Test
-    public void when_cached_in_memory_and_disk() throws ComputationCacheExc {
+    public void when_cached_in_memory_and_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new SelectTask(selectB(), traceB());
       var input = tupleB(tupleB(value), intB(0));
@@ -313,7 +315,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_cached_on_disk() throws ComputationCacheExc {
+    public void when_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new SelectTask(selectB(), traceB());
       var input = tupleB(tupleB(value), intB(0));
@@ -324,7 +326,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void when_not_cached() throws ComputationCacheExc {
+    public void when_not_cached() throws ComputationCacheException {
       var value = intB(17);
       var task = new SelectTask(selectB(), traceB());
       var input = tupleB(tupleB(value), intB(0));
@@ -334,7 +336,7 @@ public class ComputerTest extends TestContext {
     }
 
     @Test
-    public void executed_computation_is_cached_on_disk() throws ComputationCacheExc {
+    public void executed_computation_is_cached_on_disk() throws ComputationCacheException {
       var value = intB(17);
       var task = new SelectTask(selectB(), traceB());
       var input = tupleB(tupleB(value), intB(0));
@@ -345,13 +347,13 @@ public class ComputerTest extends TestContext {
 
   private void assertComputationResult(
       Task task, TupleB input, ValueB memoryValue, ValueB diskValue, ComputationResult expected)
-      throws ComputationCacheExc {
+      throws ComputationCacheException {
     var computer = computerWithCaches(task, input, memoryValue, diskValue);
     assertComputationResult(computer, task, input, expected);
   }
 
   private Computer computerWithCaches(Task task, TupleB input, ValueB memoryValue, ValueB diskValue)
-      throws ComputationCacheExc {
+      throws ComputationCacheException {
     var computationCache = computationCache();
     var sandboxHash = Hash.of(123);
     var computationHash = Computer.computationHash(sandboxHash, task, input);
@@ -367,7 +369,7 @@ public class ComputerTest extends TestContext {
   }
 
   private void assertComputationResult(Computer computer, Task task, TupleB input,
-      ComputationResult expected) throws ComputationCacheExc {
+      ComputationResult expected) throws ComputationCacheException {
     var consumer = new MemoizingConsumer<ComputationResult>();
 
     computer.compute(task, input, consumer);
@@ -378,7 +380,7 @@ public class ComputerTest extends TestContext {
 
   private void assertCachesState(
       Task task, TupleB input, ComputationResult memoryValue, ValueB diskValue)
-      throws ComputationCacheExc {
+      throws ComputationCacheException {
     var sandboxHash = Hash.of(123);
     var computationCache = computationCache();
     var memoryCache = new ConcurrentHashMap<Hash, PromisedValue<ComputationResult>>();

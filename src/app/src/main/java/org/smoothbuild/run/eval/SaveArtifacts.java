@@ -77,14 +77,14 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
       logger.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
       return Option.none();
-    } catch (DuplicatedPathsExc e) {
+    } catch (DuplicatedPathsException e) {
       logger.error(e.getMessage());
       return Option.none();
     }
   }
 
   private PathS write(ReferenceS referenceS, ValueB valueB)
-      throws IOException, DuplicatedPathsExc {
+      throws IOException, DuplicatedPathsException {
     PathS artifactPath = artifactPath(referenceS.name());
     if (referenceS.schema().type() instanceof ArrayTS arrayTS) {
       return saveArray(arrayTS, artifactPath, (ArrayB) valueB);
@@ -95,13 +95,14 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
     }
   }
 
-  private PathS saveFile(PathS artifactPath, TupleB file) throws IOException, DuplicatedPathsExc {
+  private PathS saveFile(PathS artifactPath, TupleB file) throws IOException,
+      DuplicatedPathsException {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileValuePath(file));
   }
 
   private PathS saveArray(ArrayTS arrayTS, PathS artifactPath, ArrayB arrayB)
-      throws IOException, DuplicatedPathsExc {
+      throws IOException, DuplicatedPathsException {
     fileSystem.createDir(artifactPath);
     TypeS elemTS = arrayTS.elem();
     if (elemTS instanceof ArrayTS elemArrayTS) {
@@ -129,7 +130,7 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
   }
 
   private void saveFileArray(PathS artifactPath, Iterable<TupleB> files) throws IOException,
-      DuplicatedPathsExc {
+      DuplicatedPathsException {
     DuplicatesDetector<PathS> duplicatesDetector = new DuplicatesDetector<>();
     for (TupleB file : files) {
       PathS filePath = fileValuePath(file);
@@ -146,12 +147,12 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
     }
   }
 
-  private DuplicatedPathsExc duplicatedPathsMessage(Set<PathS> duplicates) {
+  private DuplicatedPathsException duplicatedPathsMessage(Set<PathS> duplicates) {
     String delimiter = "\n  ";
     String list = duplicates.stream()
         .map(PathS::q)
         .collect(joining(delimiter));
-    return new DuplicatedPathsExc(
+    return new DuplicatedPathsException(
         "Can't store array of Files as it contains files with duplicated paths:"
             + delimiter + list);
   }

@@ -24,7 +24,7 @@ public class PathS {
   public static void failIfNotLegalPath(String value) {
     String error = detectPathError(value);
     if (error != null) {
-      throw new IllegalPathExc(error);
+      throw new IllegalPathException(error);
     }
   }
 
