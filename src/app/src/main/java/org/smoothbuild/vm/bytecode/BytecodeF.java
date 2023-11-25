@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.bytecode;
 
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
@@ -161,7 +162,7 @@ public class BytecodeF {
   }
 
   public FuncTB funcT(List<TypeB> paramTs, TypeB resultT) {
-    return categoryDb.funcT(list(paramTs), resultT);
+    return categoryDb.funcT(listOfAll(paramTs), resultT);
   }
 
   public FuncTB funcT(TupleTB paramTs, TypeB resultT) {

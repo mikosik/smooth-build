@@ -3,6 +3,7 @@ package org.smoothbuild.vm.bytecode.type;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsBytecodeDbExc;
 import static org.smoothbuild.vm.bytecode.type.CategoryKindB.fromMarker;
 import static org.smoothbuild.vm.bytecode.type.CategoryKinds.ARRAY;
@@ -369,7 +370,7 @@ public class CategoryDb {
     for (int i = 0; i < elemHashes.size(); i++) {
       builder.add(readDataSeqElemAsType(kind, rootHash, elemHashes.get(i), i));
     }
-    return list(builder);
+    return listOfAll(builder);
   }
 
   private TypeB readDataSeqElemAsType(CategoryKindB kind, Hash rootHash, Hash hash, int index) {

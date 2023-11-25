@@ -47,7 +47,9 @@ public class NList<T extends Named> extends AbstractList<T> {
   public static <E extends Named> NList<E> nlist(Collection<E> elements) {
     checkContainsNoDuplicatedNames(elements);
     return new NList<>(
-        () -> List.list(elements), () -> calculateMap(elements), () -> calculateIndexMap(elements));
+        () -> List.listOfAll(elements),
+        () -> calculateMap(elements),
+        () -> calculateIndexMap(elements));
   }
 
   private static <E extends Named> void checkContainsNoDuplicatedNames(
@@ -66,7 +68,7 @@ public class NList<T extends Named> extends AbstractList<T> {
 
   public static <E extends Named> NList<E> nlist(ImmutableMap<String, E> map) {
     return new NList<>(
-        () -> List.list(map.values()), () -> map, () -> calculateIndexMap(map.values()));
+        () -> List.listOfAll(map.values()), () -> map, () -> calculateIndexMap(map.values()));
   }
 
   /**
@@ -75,7 +77,7 @@ public class NList<T extends Named> extends AbstractList<T> {
    */
   public static <E extends Named> NList<E> nlistWithShadowing(Collection<E> list) {
     return new NList<>(
-        () -> List.list(list), () -> calculateMap(list), () -> calculateIndexMap(list));
+        () -> List.listOfAll(list), () -> calculateMap(list), () -> calculateIndexMap(list));
   }
 
   // visible for testing

@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.failure;
@@ -43,8 +43,8 @@ public class FindValues implements Function<Tuple2<ScopeS, List<String>>, Maybe<
     if (logBuffer.containsAtLeast(ERROR)) {
       return failure(logBuffer);
     }
-    List<ExprS> exprs =
-        list(namedEvaluables).map(v -> new InstantiateS(referenceTo(v), commandLineLocation()));
+    List<ExprS> exprs = listOfAll(namedEvaluables)
+        .map(v -> new InstantiateS(referenceTo(v), commandLineLocation()));
     return maybe(exprs, logBuffer);
   }
 

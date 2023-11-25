@@ -6,6 +6,7 @@ import static io.vavr.control.Option.some;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.pullUpOption;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -17,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 public class ListTest {
   @Nested
-  class _creating_list {
+  class _list {
     @Test
     public void with_no_elements() {
       assertThat(list()).isEmpty();
@@ -37,17 +38,22 @@ public class ListTest {
     public void with_three_elements() {
       assertThat(list("abc", "def", "ghi")).containsExactly("abc", "def", "ghi").inOrder();
     }
+  }
 
+  @Nested
+  class _listOfAll {
     @Test
     void as_copy_of_other_list() {
       var list = asList("a", "b", "c");
-      assertThat(list(list)).isNotSameInstanceAs(list);
+      var copy = listOfAll(list);
+      assertThat(copy).isEqualTo(list);
+      assertThat(copy).isNotSameInstanceAs(list);
     }
 
     @Test
     void as_copy_returns_argument_when_it_is_instance_of_this_class() {
       var list = list("a", "b", "c");
-      assertThat(list(list)).isSameInstanceAs(list);
+      assertThat(listOfAll(list)).isSameInstanceAs(list);
     }
   }
 
@@ -67,7 +73,7 @@ public class ListTest {
     void as_copy_of_other_list_makes_defensive_copy() {
       var original = asList("a", "b", "c");
 
-      var copy = list(original);
+      var copy = listOfAll(original);
       original.set(0, "x");
 
       assertThat(copy).containsExactly("a", "b", "c").inOrder();
@@ -76,7 +82,7 @@ public class ListTest {
     @Test
     void as_copy_of_other_list_creates_different_instance() {
       var list = asList("a", "b", "c");
-      assertThat(list(list)).isNotSameInstanceAs(list);
+      assertThat(listOfAll(list)).isNotSameInstanceAs(list);
     }
 
     @Test
