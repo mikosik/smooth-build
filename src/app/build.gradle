@@ -1,26 +1,22 @@
 plugins {
     id 'application'
     id 'java-test-fixtures'
-    id 'antlr'
 }
 
 application {
     mainClass = 'org.smoothbuild.cli.Main'
 }
 
-generateGrammarSource {
-    arguments += ["-visitor"]
-}
-
 dependencies {
+    implementation project(':src:antlr-smooth')
+    implementation project(':src:antlr-task-matcher')
+
     implementation libs.guava
     implementation libs.guice
     implementation libs.okio
     implementation libs.picocli
     implementation libs.vavr
     implementation libs.zip4j
-
-    antlr libs.antlr4
 
     testFixturesApi libs.guava
     testFixturesApi libs.guice

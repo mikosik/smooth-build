@@ -1,8 +1,10 @@
 rootProject.name = 'smooth-build'
 
+include 'src:antlr-smooth'
+include 'src:antlr-task-matcher'
 include 'src:app'
-include 'src:std-lib'
 include 'src:distr'
+include 'src:std-lib'
 include 'src:sys-test'
 
 dependencyResolutionManagement {
