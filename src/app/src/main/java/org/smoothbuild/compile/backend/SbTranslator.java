@@ -3,7 +3,6 @@ package org.smoothbuild.compile.backend;
 import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.collect.Iterables.intIterable;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.common.collect.Maps.mapKeys;
@@ -234,7 +233,7 @@ public class SbTranslator {
   }
 
   private SbTranslator funcBodySbTranslator(FuncS funcS) {
-    var newEnvironment = nlistWithShadowing(concat(funcS.params(), environment));
+    var newEnvironment = nlistWithShadowing(funcS.params().list().append(environment));
     return new SbTranslator(
         bytecodeF,
         typeSbTranslator,
