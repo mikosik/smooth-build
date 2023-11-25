@@ -13,8 +13,10 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import com.google.common.testing.EqualsTester;
 import io.vavr.control.Option;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.function.ThrowingSupplier;
 
 public class ListTest {
   @Nested
@@ -37,6 +39,34 @@ public class ListTest {
     @Test
     public void with_three_elements() {
       assertThat(list("abc", "def", "ghi")).containsExactly("abc", "def", "ghi").inOrder();
+    }
+  }
+
+  @Nested
+  class _list_with_supplier {
+    @Test
+    public void with_no_elements() {
+      assertThat(list(0, () -> "a")).isEmpty();
+    }
+
+    @Test
+    public void with_one_element() {
+      assertThat(list(1, () -> "a")).isEqualTo(list("a"));
+    }
+
+    @Test
+    public void with_many_elements() {
+      var index = new AtomicInteger(0);
+      assertThat(list(5, index::getAndIncrement)).isEqualTo(list(0, 1, 2, 3, 4));
+    }
+
+    @Test
+    public void exception_from_supplier_is_propagated() {
+      var exception = new Exception("message");
+      ThrowingSupplier<String, Exception> supplier = () -> {
+        throw exception;
+      };
+      assertCall(() -> list(5, supplier)).throwsException(exception);
     }
   }
 
