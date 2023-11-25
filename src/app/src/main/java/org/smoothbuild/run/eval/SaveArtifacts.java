@@ -1,6 +1,7 @@
 package org.smoothbuild.run.eval;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
@@ -14,13 +15,13 @@ import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import io.vavr.Tuple2;
-import io.vavr.collection.Array;
 import io.vavr.control.Option;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.DuplicatesDetector;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
@@ -36,7 +37,7 @@ import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
-public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, Maybe<String>> {
+public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Maybe<String>> {
   private final FileSystem fileSystem;
 
   @Inject
@@ -45,20 +46,20 @@ public class SaveArtifacts implements Function<Array<Tuple2<ExprS, ValueB>>, May
   }
 
   @Override
-  public Maybe<String> apply(Array<Tuple2<ExprS, ValueB>> argument) {
-    Array<Tuple2<ReferenceS, ValueB>> artifacts = argument.map(t -> t.map1(this::toReferenceS));
+  public Maybe<String> apply(List<Tuple2<ExprS, ValueB>> argument) {
+    List<Tuple2<ReferenceS, ValueB>> artifacts = argument.map(t -> t.map1(this::toReferenceS));
     try {
       fileSystem.createDir(ARTIFACTS_PATH);
     } catch (IOException e) {
       return failure(error(e.getMessage()));
     }
     var loggerBuffer = new LogBuffer();
-    var sortedArtifacts = artifacts.sortBy(artifact -> artifact._1().name());
+    var sortedArtifacts = artifacts.sortUsing(comparing(a -> a._1().name()));
     var savedArtifacts =
         sortedArtifacts.map(t -> t.map2(valueB -> save(t._1(), valueB, loggerBuffer)));
     var messages = savedArtifacts
         .map(t -> t._1().name() + " -> " + t._2().map(PathS::q).getOrElse("?"))
-        .mkString("\n");
+        .toString("\n");
     return maybe(messages, loggerBuffer);
   }
 

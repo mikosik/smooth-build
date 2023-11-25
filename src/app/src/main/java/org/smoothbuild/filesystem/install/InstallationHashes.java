@@ -1,12 +1,12 @@
 package org.smoothbuild.filesystem.install;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.io.Paths.removeExtension;
 import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR_FILE_PATH;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 
 import com.google.common.collect.ImmutableList;
-import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Optional;
@@ -24,11 +24,11 @@ public class InstallationHashes {
   }
 
   public HashNode installationNode() throws IOException {
-    return new HashNode("installation", Array.of(smoothJarNode(), standardLibsNode()));
+    return new HashNode("installation", list(smoothJarNode(), standardLibsNode()));
   }
 
   public HashNode sandboxNode() throws IOException {
-    return new HashNode("sandbox", Array.of(smoothJarNode(), javaPlatformNode()));
+    return new HashNode("sandbox", list(smoothJarNode(), javaPlatformNode()));
   }
 
   private HashNode smoothJarNode() throws IOException {
@@ -59,14 +59,13 @@ public class InstallationHashes {
     for (var filePath : STD_LIB_MODS) {
       builder.add(moduleNode(filePath));
     }
-    return new HashNode("standard libraries", Array.ofAll(builder.build()));
+    return new HashNode("standard libraries", list(builder.build()));
   }
 
   private HashNode moduleNode(FilePath filePath) throws IOException {
     var smoothNode = nodeFor(filePath);
     var nativeNode = nodeForNativeJarFor(filePath);
-    var nodes =
-        nativeNode.isPresent() ? Array.of(smoothNode, nativeNode.get()) : Array.of(smoothNode);
+    var nodes = nativeNode.isPresent() ? list(smoothNode, nativeNode.get()) : list(smoothNode);
     var moduleName = removeExtension(filePath.toString());
     return new HashNode(moduleName + " module", nodes);
   }

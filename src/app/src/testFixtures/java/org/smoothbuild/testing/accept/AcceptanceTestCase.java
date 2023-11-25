@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.inject.Stage.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.reflect.Classes.saveBytecodeInJar;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
@@ -25,11 +25,11 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import io.vavr.Tuple2;
-import io.vavr.collection.Array;
 import io.vavr.control.Option;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.junit.jupiter.api.BeforeEach;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
@@ -49,7 +49,7 @@ public class AcceptanceTestCase extends TestContext {
   private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
-  private Option<Array<Tuple2<ExprS, ValueB>>> artifacts;
+  private Option<List<Tuple2<ExprS, ValueB>>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
@@ -82,7 +82,7 @@ public class AcceptanceTestCase extends TestContext {
 
   protected void evaluate(String... names) {
     var steps =
-        frontendCompilerStep().append(Array.of(names)).then(stepFactory(new EvaluateStepFactory()));
+        frontendCompilerStep().append(list(names)).then(stepFactory(new EvaluateStepFactory()));
     var reporter = injector.getInstance(Reporter.class);
     this.artifacts = injector.getInstance(StepExecutor.class).execute(steps, null, reporter);
   }
@@ -129,7 +129,7 @@ public class AcceptanceTestCase extends TestContext {
     return artifactsArray.get(index)._2();
   }
 
-  private Array<Tuple2<ExprS, ValueB>> artifactsArray() {
+  private List<Tuple2<ExprS, ValueB>> artifactsArray() {
     if (artifacts == null) {
       throw new IllegalStateException("Cannot verify any artifact before you execute build.");
     }

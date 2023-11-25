@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.func.bytecode;
 
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.Map;
 import org.smoothbuild.vm.bytecode.BytecodeF;

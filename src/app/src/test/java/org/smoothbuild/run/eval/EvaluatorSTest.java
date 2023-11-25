@@ -5,23 +5,24 @@ import static com.google.inject.Guice.createInjector;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.run.step.Step.optionStep;
 import static org.smoothbuild.run.step.Step.step;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import io.vavr.Tuple;
-import io.vavr.collection.Array;
 import io.vavr.control.Either;
 import io.vavr.control.Option;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.out.report.Reporter;
@@ -97,7 +98,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var orderS = orderS(a, paramRefS(a, "e"));
           var funcS = funcS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
-          var callS = callS(instantiateS(list(intTS()), funcS), intS(7));
+          var callS = callS(instantiateS(ImmutableList.of(intTS()), funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, arrayB(intTB(), intB(7)));
         }
 
@@ -189,8 +190,8 @@ public class EvaluatorSTest extends TestContext {
         public void poly_lambda() {
           var a = varA();
           var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
-          var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
-          assertEvaluation(monoLambdaS, lambdaB(Array.of(intTB()), varB(intTB(), 0)));
+          var monoLambdaS = instantiateS(ImmutableList.of(intTS()), polyLambdaS);
+          assertEvaluation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
         }
       }
 
@@ -205,7 +206,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_expression_function() {
           var a = varA();
           var funcS = funcS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
-          var instantiateS = instantiateS(list(intTS()), funcS);
+          var instantiateS = instantiateS(ImmutableList.of(intTS()), funcS);
           assertEvaluation(bindings(funcS), instantiateS, idFuncB());
         }
 
@@ -222,13 +223,15 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
           assertEvaluation(
-              bindings(bytecodeFuncS), instantiateS(list(intTS()), bytecodeFuncS), funcB);
+              bindings(bytecodeFuncS),
+              instantiateS(ImmutableList.of(intTS()), bytecodeFuncS),
+              funcB);
         }
 
         @Test
         public void constructor() {
           var constructorS = constructorS(structTS("MyStruct", nlist(sigS(intTS(), "myField"))));
-          assertEvaluation(constructorS, lambdaB(Array.of(intTB()), combineB(varB(intTB(), 0))));
+          assertEvaluation(constructorS, lambdaB(list(intTB()), combineB(varB(intTB(), 0))));
         }
       }
 
@@ -244,7 +247,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_value() {
           var a = varA();
           var polyValue = valueS(1, arrayTS(a), "name", orderS(a));
-          var instantiatedValue = instantiateS(list(intTS()), polyValue);
+          var instantiatedValue = instantiateS(ImmutableList.of(intTS()), polyValue);
           assertEvaluation(bindings(polyValue), instantiatedValue, arrayB(intTB()));
         }
       }
@@ -276,13 +279,13 @@ public class EvaluatorSTest extends TestContext {
   }
 
   private ExprB evaluate(ImmutableBindings<NamedEvaluableS> evaluables, ExprS exprS) {
-    var resultMap = evaluate(evaluables, Array.of(exprS)).get();
+    var resultMap = evaluate(evaluables, list(exprS)).get();
     assertThat(resultMap.size()).isEqualTo(1);
     return resultMap.get(0);
   }
 
-  private Option<Array<ValueB>> evaluate(
-      ImmutableBindings<NamedEvaluableS> evaluables, Array<ExprS> exprs) {
+  private Option<List<ValueB>> evaluate(
+      ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
     var sbTranslatorFacade = sbTranslatorFacade(fileLoader, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
     var reporter = reporter();

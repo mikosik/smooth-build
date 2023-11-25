@@ -19,7 +19,7 @@ public class MessageStruct {
   private static final int SEVERITY_IDX = 1;
 
   public static boolean containsErrorOrAbove(ArrayB messages) {
-    return messages.elems(TupleB.class).exists(MessageStruct::isErrorOrAbove);
+    return messages.elems(TupleB.class).anyMatches(MessageStruct::isErrorOrAbove);
   }
 
   private static boolean isErrorOrAbove(TupleB message) {
@@ -28,7 +28,7 @@ public class MessageStruct {
   }
 
   public static boolean containsFatal(ArrayB messages) {
-    return messages.elems(TupleB.class).exists(m -> severity(m).equals(FATAL.name()));
+    return messages.elems(TupleB.class).anyMatches(m -> severity(m).equals(FATAL.name()));
   }
 
   public static boolean isValidSeverity(String severity) {

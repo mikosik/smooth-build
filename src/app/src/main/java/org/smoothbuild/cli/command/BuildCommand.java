@@ -1,13 +1,12 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.run.CreateInjector.createInjector;
 import static org.smoothbuild.run.eval.report.MatcherCreator.createMatcher;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
-import io.vavr.collection.Array;
 import java.nio.file.Path;
-import java.util.List;
 import org.smoothbuild.cli.base.ProjectCommand;
 import org.smoothbuild.run.BuildStepFactory;
 import org.smoothbuild.run.eval.report.TaskMatcher;
@@ -71,13 +70,13 @@ public class BuildCommand extends ProjectCommand {
       paramLabel = "<value>",
       arity = "1..*",
       description = "value(s) to evaluate and store as artifact(s)")
-  List<String> values;
+  java.util.List<String> values;
 
   @Override
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), logLevel, showTasks);
     var step = stepFactory(new BuildStepFactory());
-    var argument = Array.ofAll(values);
+    var argument = list(values);
     return runStepExecutor(injector, step, argument);
   }
 }

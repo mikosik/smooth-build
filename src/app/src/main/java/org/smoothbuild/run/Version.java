@@ -5,10 +5,10 @@ import static org.smoothbuild.out.log.Maybe.failure;
 import static org.smoothbuild.out.log.Maybe.success;
 
 import io.vavr.Tuple0;
-import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.filesystem.install.BuildVersion;
 import org.smoothbuild.filesystem.install.HashNode;
 import org.smoothbuild.filesystem.install.InstallationHashes;
@@ -42,7 +42,7 @@ public class Version implements Function<Tuple0, Maybe<String>> {
         + hashNodeTreeToString(indent + "  ", hashNode.children());
   }
 
-  private static String hashNodeTreeToString(String indent, Array<HashNode> hashNodes) {
-    return hashNodes.map(n -> hashNodeTreeToString(indent, n)).mkString("\n");
+  private static String hashNodeTreeToString(String indent, List<HashNode> hashNodes) {
+    return hashNodes.map(n -> hashNodeTreeToString(indent, n)).toString("\n");
   }
 }

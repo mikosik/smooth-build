@@ -1,6 +1,8 @@
 package org.smoothbuild.compile.backend;
 
 import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.collect.Iterables.intIterable;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
@@ -15,7 +17,6 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.smoothbuild.common.bindings.ImmutableBindings;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.base.location.FileLocation;
@@ -132,8 +134,8 @@ public class SbTranslator {
     return new BsMapping(nameMapping, locationMapping);
   }
 
-  private Array<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
-    return Array.ofAll(exprs).map(this::translateExpr);
+  private List<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
+    return list(exprs).map(this::translateExpr);
   }
 
   public ExprB translateExpr(ExprS exprS) {
@@ -283,10 +285,10 @@ public class SbTranslator {
     return bytecodeF.lambda(funcTB, bodyB);
   }
 
-  private Array<ExprB> createRefsB(TupleTB paramTs) {
+  private List<ExprB> createRefsB(TupleTB paramTs) {
     return paramTs
         .elements()
-        .zipWithIndex((typeB, i) -> bytecodeF.var(typeB, BigInteger.valueOf(i)));
+        .zip(intIterable(0), (typeB, i) -> bytecodeF.var(typeB, BigInteger.valueOf(i)));
   }
 
   private OrderB translateOrder(OrderS orderS) {
@@ -332,11 +334,10 @@ public class SbTranslator {
   }
 
   private ExprB translateNamedExprValue(Location refLocation, NamedExprValueS namedExprValueS) {
-    var funcTB =
-        bytecodeF.funcT(Array.empty(), translateT(namedExprValueS.schema().type()));
+    var funcTB = bytecodeF.funcT(list(), translateT(namedExprValueS.schema().type()));
     var funcB = bytecodeF.lambda(funcTB, translateExpr(namedExprValueS.body()));
     saveNal(funcB, namedExprValueS);
-    var call = bytecodeF.call(funcB, bytecodeF.combine(Array.empty()));
+    var call = bytecodeF.call(funcB, bytecodeF.combine(list()));
     saveLoc(call, refLocation);
     return call;
   }

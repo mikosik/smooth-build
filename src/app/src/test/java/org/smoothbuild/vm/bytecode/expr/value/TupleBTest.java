@@ -1,11 +1,9 @@
 package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import io.vavr.collection.Array;
-import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -14,7 +12,7 @@ import org.smoothbuild.vm.bytecode.expr.AbstractExprBTestSuite;
 public class TupleBTest extends TestContext {
   @Test
   public void setting_element_to_null_throws_exception() {
-    assertCall(() -> bytecodeDb().tuple(Array.of(stringB("John"), null)))
+    assertCall(() -> bytecodeDb().tuple(list(stringB("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
@@ -52,12 +50,12 @@ public class TupleBTest extends TestContext {
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<TupleB> {
     @Override
-    protected List<TupleB> equalExprs() {
+    protected java.util.List<TupleB> equalExprs() {
       return list(tupleB(intB(7), stringB("abc")), tupleB(intB(7), stringB("abc")));
     }
 
     @Override
-    protected List<TupleB> nonEqualExprs() {
+    protected java.util.List<TupleB> nonEqualExprs() {
       return list(
           tupleB(),
           tupleB(intB(0)),

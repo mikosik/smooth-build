@@ -1,11 +1,11 @@
 package org.smoothbuild.testing.type;
 
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Lists.concat;
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Lists.map;
 
 import com.google.common.collect.ImmutableList;
-import io.vavr.collection.Array;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
 import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
@@ -16,7 +16,7 @@ import org.smoothbuild.vm.bytecode.type.value.TypeB;
 public class TestingCatsB {
   public static final TestContext CONTEXT = new TestContext();
 
-  public static final ImmutableList<TypeB> BASE_CATS_TO_TEST = list(
+  public static final List<TypeB> BASE_CATS_TO_TEST = list(
       CONTEXT.blobTB(),
       CONTEXT.boolTB(),
       func(CONTEXT.blobTB(), CONTEXT.boolTB()),
@@ -24,7 +24,7 @@ public class TestingCatsB {
       CONTEXT.stringTB(),
       CONTEXT.personTB());
 
-  public static final ImmutableList<CategoryB> ARRAY_CATS_TO_TEST = list(
+  public static final List<CategoryB> ARRAY_CATS_TO_TEST = list(
       array(CONTEXT.blobTB()),
       array(func(CONTEXT.blobTB(), CONTEXT.boolTB())),
       array(CONTEXT.boolTB()),
@@ -93,7 +93,7 @@ public class TestingCatsB {
   }
 
   private static FuncTB func(TypeB res, TypeB... params) {
-    return CONTEXT.funcTB(Array.of(params), res);
+    return CONTEXT.funcTB(list(params), res);
   }
 
   private static TupleTB tuple(TypeB... params) {

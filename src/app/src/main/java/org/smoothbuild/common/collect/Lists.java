@@ -5,11 +5,9 @@ import static com.google.common.collect.Streams.stream;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import io.vavr.collection.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -75,7 +73,7 @@ public class Lists {
   }
 
   public static <T, S> boolean allMatch(
-      List<T> listA, List<S> listB, BiFunction<T, S, Boolean> predicate) {
+      java.util.List<T> listA, java.util.List<S> listB, BiFunction<T, S, Boolean> predicate) {
     if (listA.size() != listB.size()) {
       return false;
     }
@@ -85,6 +83,24 @@ public class Lists {
       }
     }
     return true;
+  }
+
+  public static <T, U> void allMatchOtherwise(
+      java.util.List<T> listA,
+      java.util.List<U> listB,
+      BiFunction<T, U, Boolean> comparator,
+      BiConsumer<Integer, Integer> differentSizeHandler,
+      Consumer<Integer> elemsDontMatchHandler) {
+    int sizeA = listA.size();
+    int sizeB = listB.size();
+    if (sizeA != sizeB) {
+      differentSizeHandler.accept(sizeA, sizeB);
+    }
+    for (int i = 0; i < listA.size(); i++) {
+      if (!comparator.apply(listA.get(i), listB.get(i))) {
+        elemsDontMatchHandler.accept(i);
+      }
+    }
   }
 
   public static <T, U> void allMatchOtherwise(
@@ -105,29 +121,12 @@ public class Lists {
     }
   }
 
-  public static <T, U> void allMatchOtherwise(
-      Array<T> listA,
-      Array<U> listB,
-      BiFunction<T, U, Boolean> comparator,
-      BiConsumer<Integer, Integer> differentSizeHandler,
-      Consumer<Integer> elemsDontMatchHandler) {
-    int sizeA = listA.size();
-    int sizeB = listB.size();
-    if (sizeA != sizeB) {
-      differentSizeHandler.accept(sizeA, sizeB);
-    }
-    for (int i = 0; i < listA.size(); i++) {
-      if (!comparator.apply(listA.get(i), listB.get(i))) {
-        elemsDontMatchHandler.accept(i);
-      }
-    }
-  }
-
-  public static <E> List<E> sane(List<E> list) {
+  public static <E> java.util.List<E> sane(java.util.List<E> list) {
     return list == null ? new ArrayList<>() : list;
   }
 
-  public static <E> ImmutableList<E> sort(List<E> list, Comparator<? super E> comparator) {
+  public static <E> ImmutableList<E> sort(
+      java.util.List<E> list, Comparator<? super E> comparator) {
     return list.stream().sorted(comparator).collect(toImmutableList());
   }
 }

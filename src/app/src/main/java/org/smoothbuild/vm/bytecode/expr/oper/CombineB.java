@@ -3,7 +3,7 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.collect.Lists.allMatchOtherwise;
 
-import io.vavr.collection.Array;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -37,9 +37,9 @@ public class CombineB extends OperB {
     return new CombineSubExprsB(items());
   }
 
-  public Array<ExprB> items() {
-    Array<TypeB> expectedElementsTs = category().evaluationT().elements();
-    Array<ExprB> items = readDataSeqElems(ExprB.class);
+  public List<ExprB> items() {
+    List<TypeB> expectedElementsTs = category().evaluationT().elements();
+    List<ExprB> items = readDataSeqElems(ExprB.class);
     allMatchOtherwise(
         expectedElementsTs,
         items,
