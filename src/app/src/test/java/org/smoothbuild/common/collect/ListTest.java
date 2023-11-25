@@ -297,6 +297,88 @@ public class ListTest {
   }
 
   @Nested
+  class _drop_while {
+    @Test
+    void for_empty_list_returns_empty_list() {
+      assertThat(list().dropWhile(s -> true)).isEmpty();
+    }
+
+    @Test
+    void for_list_with_all_elements_matching_returns_empty_list() {
+      var list = list("a", "b", "c");
+      assertThat(list.dropWhile(s -> true)).isEqualTo(list());
+    }
+
+    @Test
+    void for_list_with_none_elements_matching_returns_copy_of_that_list() {
+      var list = list("a", "b", "c");
+      assertThat(list.dropWhile(s -> false)).isEqualTo(list);
+    }
+
+    @Test
+    void removes_leading_matches() {
+      var list = list("a", "a", "b", "c");
+      assertThat(list.dropWhile(s -> s.equals("a"))).isEqualTo(list("b", "c"));
+    }
+
+    @Test
+    void not_removes_non_leading_matches() {
+      var list = list("a", "b", "c");
+      assertThat(list.dropWhile(s -> s.equals("b"))).isEqualTo(list);
+    }
+
+    @Test
+    void exception_from_predicate_is_propagated() {
+      var exception = new Exception("message");
+      assertCall(() -> list("a").dropWhile(e -> {
+            throw exception;
+          }))
+          .throwsException(exception);
+    }
+  }
+
+  @Nested
+  class _take_while {
+    @Test
+    void for_empty_list_returns_empty_list() {
+      assertThat(list().takeWhile(s -> true)).isEmpty();
+    }
+
+    @Test
+    void for_list_with_all_elements_matching_returns_copy_of_that_list() {
+      var list = list("a", "b", "c");
+      assertThat(list.takeWhile(s -> true)).isEqualTo(list("a", "b", "c"));
+    }
+
+    @Test
+    void for_list_with_none_elements_matching_returns_empty_list() {
+      var list = list("a", "b", "c");
+      assertThat(list.takeWhile(s -> false)).isEqualTo(list());
+    }
+
+    @Test
+    void takes_leading_matches() {
+      var list = list("a", "a", "b", "c");
+      assertThat(list.takeWhile(s -> s.equals("a"))).isEqualTo(list("a", "a"));
+    }
+
+    @Test
+    void not_takes_non_leading_matches() {
+      var list = list("a", "b", "c");
+      assertThat(list.takeWhile(s -> s.equals("a"))).isEqualTo(list("a"));
+    }
+
+    @Test
+    void exception_from_predicate_is_propagated() {
+      var exception = new Exception("message");
+      assertCall(() -> list("a").takeWhile(e -> {
+            throw exception;
+          }))
+          .throwsException(exception);
+    }
+  }
+
+  @Nested
   class _zip {
     @Test
     void with_empty_iterable_returns_empty_list() {

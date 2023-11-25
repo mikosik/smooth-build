@@ -57,21 +57,46 @@ public class List<E> extends AbstractList<E> {
     return new List<>(copy);
   }
 
-  public <R, T extends Throwable> List<R> map(ThrowingFunction<? super E, R, T> func) throws T {
+  public <R, T extends Throwable> List<R> map(ThrowingFunction<? super E, R, T> mapper) throws T {
     @SuppressWarnings("unchecked")
     var mapped = (R[]) new Object[array.length];
     for (int i = 0; i < array.length; i++) {
-      mapped[i] = func.apply(array[i]);
+      mapped[i] = mapper.apply(array[i]);
     }
     return new List<>(mapped);
   }
 
-  public <T extends Throwable> List<E> filter(ThrowingFunction<E, Boolean, T> function) throws T {
+  public <T extends Throwable> List<E> filter(ThrowingFunction<E, Boolean, T> predicate) throws T {
     var builder = new ArrayList<E>();
     for (E element : array) {
-      if (function.apply(element)) {
+      if (predicate.apply(element)) {
         builder.add(element);
       }
+    }
+    return list(builder);
+  }
+
+  public <T extends Throwable> List<E> dropWhile(ThrowingFunction<E, Boolean, T> predicate)
+      throws T {
+    int i = 0;
+    while (i < array.length && predicate.apply(array[i])) {
+      i++;
+    }
+    var builder = new ArrayList<E>();
+    while (i < array.length) {
+      builder.add(array[i]);
+      i++;
+    }
+    return list(builder);
+  }
+
+  public <T extends Throwable> List<E> takeWhile(ThrowingFunction<E, Boolean, T> predicate)
+      throws T {
+    int i = 0;
+    var builder = new ArrayList<E>();
+    while (i < array.length && predicate.apply(array[i])) {
+      builder.add(array[i]);
+      i++;
     }
     return list(builder);
   }
