@@ -4,7 +4,6 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.common.collect.Lists.map;
 
-import com.google.common.collect.ImmutableList;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.type.CategoryB;
@@ -38,12 +37,12 @@ public class TestingCatsB {
       array(array(CONTEXT.stringTB())),
       array(array(CONTEXT.personTB())));
 
-  public static final ImmutableList<CategoryB> CATS_TO_TEST =
-      concat(BASE_CATS_TO_TEST, ARRAY_CATS_TO_TEST);
+  public static final List<CategoryB> CATS_TO_TEST =
+      ARRAY_CATS_TO_TEST.appendAll(BASE_CATS_TO_TEST);
 
-  public static final ImmutableList<CategoryB> ALL_CATS_TO_TEST = createAllCats();
+  public static final List<CategoryB> ALL_CATS_TO_TEST = createAllCats();
 
-  private static ImmutableList<CategoryB> createAllCats() {
+  private static List<CategoryB> createAllCats() {
     var baseCs = list(
         CONTEXT.blobTB(),
         CONTEXT.boolTB(),
@@ -85,7 +84,7 @@ public class TestingCatsB {
         CONTEXT.lambdaCB(CONTEXT.blobTB(), CONTEXT.blobTB(), CONTEXT.blobTB()),
         CONTEXT.lambdaCB(CONTEXT.stringTB()));
 
-    return concat(valueCs, exprCs);
+    return exprCs.appendAll(valueCs);
   }
 
   private static ArrayTB array(TypeB elemT) {

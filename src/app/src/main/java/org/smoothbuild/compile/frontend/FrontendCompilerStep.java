@@ -1,5 +1,6 @@
 package org.smoothbuild.compile.frontend;
 
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.DEFAULT_MODULE_FILE_PATH;
@@ -8,9 +9,9 @@ import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
-import com.google.common.collect.ImmutableList;
 import io.vavr.Tuple0;
 import io.vavr.Tuple2;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.compile.ConvertPs;
 import org.smoothbuild.compile.frontend.compile.DecodeLiterals;
 import org.smoothbuild.compile.frontend.compile.DetectUndefined;
@@ -29,10 +30,8 @@ import org.smoothbuild.run.step.Step;
 import org.smoothbuild.run.step.StepFactory;
 
 public class FrontendCompilerStep {
-  private static final ImmutableList<FilePath> MODULES = ImmutableList.<FilePath>builder()
-      .addAll(STD_LIB_MODS)
-      .add(DEFAULT_MODULE_FILE_PATH)
-      .build();
+  private static final List<FilePath> MODULES =
+      listOfAll(STD_LIB_MODS).append(DEFAULT_MODULE_FILE_PATH);
 
   public static Step<Tuple0, ScopeS> frontendCompilerStep() {
     var step = step(LoadInternalModuleMembers.class);

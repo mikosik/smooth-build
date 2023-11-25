@@ -1,22 +1,18 @@
 package org.smoothbuild.common.graph;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.common.collect.Lists.filter;
-import static org.smoothbuild.common.collect.Lists.list;
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.BEING_PROCESSED;
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.NOT_VISITED;
 import static org.smoothbuild.common.graph.SortTopologically.Node.State.PROCESSED;
 
-import com.google.common.collect.ImmutableList;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Sets;
 
 public class SortTopologically {
@@ -25,14 +21,12 @@ public class SortTopologically {
     if (nodes.isEmpty()) {
       return new TopologicalSortingRes<>(list(), null);
     }
-    ImmutableList<Node<K, N, E>> wrappedNodes =
-        nodes.stream().map(Node::new).collect(toImmutableList());
+    List<Node<K, N, E>> wrappedNodes = listOfAll(nodes).map(Node::new);
     assertAllEdgesPointToExistingNodes(wrappedNodes);
     return sortTopologicallyImpl(wrappedNodes);
   }
 
-  private static <K, N, E> void assertAllEdgesPointToExistingNodes(
-      ImmutableList<Node<K, N, E>> nodes) {
+  private static <K, N, E> void assertAllEdgesPointToExistingNodes(List<Node<K, N, E>> nodes) {
     var keys = Sets.map(nodes, Node::key);
     for (var node : nodes) {
       for (var edge : node.edges()) {
@@ -45,7 +39,7 @@ public class SortTopologically {
   }
 
   public static <K, N, E> TopologicalSortingRes<K, N, E> sortTopologicallyImpl(
-      ImmutableList<Node<K, N, E>> nodes) {
+      List<Node<K, N, E>> nodes) {
 
     // For each root node (node without incoming edges) algorithm processes it with the following
     // VISITING sub-algorithm.
@@ -134,22 +128,21 @@ public class SortTopologically {
 
   private static <K, N, E> TopologicalSortingRes<K, N, E> createSortedRes(
       ArrayDeque<Node<K, N, E>> resultSeq) {
-    var graphNodes = resultSeq.stream().map(Node::node).collect(toImmutableList());
+    var graphNodes = listOfAll(resultSeq).map(Node::node);
     return new TopologicalSortingRes<>(graphNodes, null);
   }
 
   private static <K, N, E> TopologicalSortingRes<K, N, E> createCycleRes(
       LinkedList<PathElem<K, N, E>> currentPath, K key) {
-    var cycle = currentPath.stream()
+    var cycle = listOfAll(currentPath)
         .dropWhile(e -> !e.node().key().equals(key))
-        .map(elem -> elem.node().edges().get(elem.edgeIndex()))
-        .collect(toList());
+        .map(elem -> elem.node().edges().get(elem.edgeIndex()));
     return new TopologicalSortingRes<>(null, cycle);
   }
 
   private static <K, N, E> TopologicalSortingRes<K, N, E> findCycleInUnprocessedNodes(
-      ImmutableList<Node<K, N, E>> nodes) {
-    var notVisited = filter(nodes, n -> n.state() == NOT_VISITED);
+      List<Node<K, N, E>> nodes) {
+    var notVisited = nodes.filter(n -> n.state() == NOT_VISITED);
     return sortTopologicallyImpl(notVisited);
   }
 
@@ -206,7 +199,7 @@ public class SortTopologically {
       return node.key();
     }
 
-    public ImmutableList<GraphEdge<E, K>> edges() {
+    public List<GraphEdge<E, K>> edges() {
       return node.edges();
     }
 
@@ -226,8 +219,8 @@ public class SortTopologically {
 
   public static record TopologicalSortingRes<K, N, E>(
       List<GraphNode<K, N, E>> sorted, List<GraphEdge<E, K>> cycle) {
-    public ImmutableList<N> valuesReversed() {
-      return map(sorted(), GraphNode::value).reverse();
+    public List<N> valuesReversed() {
+      return sorted().map(GraphNode::value).reverse();
     }
   }
 }

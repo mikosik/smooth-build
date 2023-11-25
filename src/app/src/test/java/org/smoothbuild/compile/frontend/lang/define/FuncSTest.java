@@ -1,12 +1,12 @@
 package org.smoothbuild.compile.frontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.testing.TestContext;
 
@@ -37,7 +37,7 @@ public class FuncSTest extends TestContext {
     return itemS(intTS(), name, Optional.empty());
   }
 
-  private FuncS myFunc(TypeS resultT, ImmutableList<ItemS> params) {
+  private FuncS myFunc(TypeS resultT, List<ItemS> params) {
     var schema = funcSchemaS(ItemS.toTypes(params), resultT);
     return new NamedExprFuncS(schema, "name", nlist(params), stringS(), location(1));
   }

@@ -2,12 +2,10 @@ package org.smoothbuild.compile.frontend.lang.define;
 
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
-import static org.smoothbuild.common.collect.Lists.map;
 
-import com.google.common.collect.ImmutableList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.base.Tanal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
@@ -28,8 +26,8 @@ public final class ItemS extends Tanal implements ReferenceableS {
     return defaultValue;
   }
 
-  public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
-    return map(items, ItemS::type);
+  public static List<TypeS> toTypes(List<? extends ItemS> items) {
+    return items.map(ItemS::type);
   }
 
   @Override

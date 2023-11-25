@@ -2,10 +2,10 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.List.listOfAll;
 
-import com.google.common.collect.ImmutableList;
-import java.util.List;
 import java.util.Objects;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
 public final class OrderP extends ExprP {
@@ -13,7 +13,7 @@ public final class OrderP extends ExprP {
 
   public OrderP(List<ExprP> elems, Location location) {
     super(location);
-    this.elems = ImmutableList.copyOf(elems);
+    this.elems = listOfAll(elems);
   }
 
   public List<ExprP> elems() {

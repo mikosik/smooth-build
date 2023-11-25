@@ -3,9 +3,9 @@ package org.smoothbuild.testing.type;
 import static java.lang.String.join;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Objects;
 import java.util.Set;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.type.FuncTS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 
@@ -80,11 +80,11 @@ public class TestedTS {
 
   public static class TestedFuncTS extends TestedTS {
     public final TestedTS resultT;
-    public final ImmutableList<TestedTS> paramTs;
+    public final List<TestedTS> paramTs;
 
     public TestedFuncTS(
         TestedTS resultT,
-        ImmutableList<TestedTS> paramTs,
+        List<TestedTS> paramTs,
         FuncTS type,
         Set<String> typeDeclarations,
         Set<String> allDeclarations) {

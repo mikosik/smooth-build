@@ -2,11 +2,10 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
-import static org.smoothbuild.common.collect.Lists.map;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Objects;
 import java.util.Optional;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.NalImpl;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
@@ -45,8 +44,8 @@ public final class ItemP extends NalImpl implements ReferenceableP {
     return type;
   }
 
-  public static ImmutableList<TypeS> toTypeS(NList<ItemP> params) {
-    return map(params, ItemP::typeS);
+  public static List<TypeS> toTypeS(NList<ItemP> params) {
+    return params.list().map(ItemP::typeS);
   }
 
   @Override

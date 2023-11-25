@@ -1,9 +1,8 @@
 package org.smoothbuild.common.collect;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Collections.unmodifiableMap;
+import static org.smoothbuild.common.collect.List.listOfAll;
 
-import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,10 +23,7 @@ public class CountersMap<K> {
     return unmodifiableMap(counters);
   }
 
-  public ImmutableList<K> keysWithCounter(int value) {
-    return counters.entrySet().stream()
-        .filter(e -> e.getValue() == value)
-        .map(Entry::getKey)
-        .collect(toImmutableList());
+  public List<K> keysWithCounter(int value) {
+    return listOfAll(counters.entrySet()).filter(e -> e.getValue() == value).map(Entry::getKey);
   }
 }

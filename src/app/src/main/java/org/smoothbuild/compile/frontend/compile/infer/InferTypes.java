@@ -77,6 +77,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Modul
       var fieldSigs = structT.fields();
       var params = structP
           .fields()
+          .list()
           .map(f ->
               new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.location()));
       var funcTS = new FuncTS(ItemS.toTypes(params), structT);

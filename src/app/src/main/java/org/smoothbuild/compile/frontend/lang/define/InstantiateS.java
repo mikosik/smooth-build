@@ -3,9 +3,9 @@ package org.smoothbuild.compile.frontend.lang.define;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 
@@ -13,7 +13,7 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
  * Instantiation of polymorphic entity.
  */
 public record InstantiateS(
-    ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS, TypeS evaluationT, Location location)
+    List<TypeS> typeArgs, PolymorphicS polymorphicS, TypeS evaluationT, Location location)
     implements ExprS {
 
   public InstantiateS(PolymorphicS polymorphicS, Location location) {
@@ -21,7 +21,7 @@ public record InstantiateS(
     checkArgument(polymorphicS.schema().quantifiedVars().isEmpty());
   }
 
-  public InstantiateS(ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS, Location location) {
+  public InstantiateS(List<TypeS> typeArgs, PolymorphicS polymorphicS, Location location) {
     this(typeArgs, polymorphicS, polymorphicS.schema().instantiate(typeArgs), location);
   }
 

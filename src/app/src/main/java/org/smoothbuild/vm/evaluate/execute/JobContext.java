@@ -1,10 +1,10 @@
 package org.smoothbuild.vm.evaluate.execute;
 
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.common.collect.List;
 
-public record JobContext(ImmutableList<Job> environment, TraceB trace) {
+public record JobContext(List<Job> environment, TraceB trace) {
   public JobContext() {
     this(list(), null);
   }

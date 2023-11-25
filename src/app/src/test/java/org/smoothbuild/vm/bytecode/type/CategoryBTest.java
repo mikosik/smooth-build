@@ -5,7 +5,6 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.common.collect.List.list;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 import java.util.function.Function;
 import org.junit.jupiter.api.Nested;
@@ -324,7 +323,7 @@ public class CategoryBTest extends TestContext {
       assertThat(selectCB(type).evaluationT()).isEqualTo(type);
     }
 
-    public static ImmutableList<CategoryB> types() {
+    public static List<CategoryB> types() {
       return TestingCatsB.CATS_TO_TEST;
     }
   }

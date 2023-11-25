@@ -1,19 +1,15 @@
 package org.smoothbuild.compile.frontend.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
-import static org.smoothbuild.common.collect.Lists.concat;
-import static org.smoothbuild.common.collect.Lists.map;
-import static org.smoothbuild.common.collect.Lists.sane;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
-import com.google.common.collect.ImmutableList;
 import io.vavr.Tuple2;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -41,6 +37,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ArrayTP;
@@ -83,7 +80,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
     var apTranslatingVisitor = new ApTranslatingVisitor(filePath, structs, evaluables, logBuffer);
     apTranslatingVisitor.visit(module);
     var name = filePath.withExtension("").path().lastPart().toString();
-    var moduleP = new ModuleP(name, structs, evaluables);
+    var moduleP = new ModuleP(name, listOfAll(structs), listOfAll(evaluables));
     return maybe(moduleP, logBuffer);
   }
 
@@ -188,11 +185,11 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
 
     private List<ItemP> createItemsList(String ownerName, ItemListContext itemList) {
       if (itemList != null) {
-        return sane(itemList.item()).stream()
-            .map(item -> createItem(ownerName, item))
-            .collect(toImmutableList());
+        var items = itemList.item();
+        List<ItemContext> saneItems = items == null ? list() : listOfAll(items);
+        return saneItems.map(i -> createItem(ownerName, i));
       }
-      return ImmutableList.of();
+      return list();
     }
 
     private ItemP createItem(String ownerName, ItemContext item) {
@@ -265,7 +262,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
 
     private ExprP createChain(AtomicReference<ExprP> piped, ChainContext chain) {
       var chainHead = createChainHead(piped, chain.chainHead());
-      return createChain(piped, chainHead, chain.chainPart());
+      return createChain(piped, chainHead, listOfAll(chain.chainPart()));
     }
 
     private ExprP createChainHead(AtomicReference<ExprP> pipedArg, ChainHeadContext chainHead) {
@@ -275,9 +272,9 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
         return new InstantiateP(referenceP, location);
       }
       if (chainHead.array() != null) {
-        var elems = map(chainHead.array().expr(), this::createExpr);
+        var elems = listOfAll(chainHead.array().expr()).map(this::createExpr);
         if (pipedArg.get() != null) {
-          elems = concat(pipedArg.get(), elems);
+          elems = list(pipedArg.get()).appendAll(elems);
           pipedArg.set(null);
         }
         return new OrderP(elems, location);
@@ -305,7 +302,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
         if (argList != null) {
           var args = createArgList(argList);
           if (pipedArg.get() != null) {
-            args = concat(pipedArg.get(), args);
+            args = list(pipedArg.get()).appendAll(args);
             pipedArg.set(null);
           }
           result = createCall(result, args, argList);
@@ -340,7 +337,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
     }
 
     private List<ExprP> createArgList(ArgListContext argList) {
-      List<ExprP> result = new ArrayList<>();
+      ArrayList<ExprP> result = new ArrayList<>();
       for (ArgContext arg : argList.arg()) {
         ExprContext expr = arg.expr();
         TerminalNode nameNode = arg.NAME();
@@ -351,7 +348,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
           result.add(new NamedArgP(nameNode.getText(), exprP, fileLocation(filePath, arg)));
         }
       }
-      return result;
+      return listOfAll(result);
     }
 
     private ExprP createCall(ExprP callable, List<ExprP> args, ArgListContext argListContext) {
@@ -382,7 +379,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
     }
 
     private TypeP createFuncT(FuncTContext funcT) {
-      var types = map(funcT.type(), this::createT);
+      var types = listOfAll(funcT.type()).map(this::createT);
       var resultType = types.get(types.size() - 1);
       var paramTypesS = types.subList(0, types.size() - 1);
       return new FuncTP(resultType, paramTypesS, fileLocation(filePath, funcT));

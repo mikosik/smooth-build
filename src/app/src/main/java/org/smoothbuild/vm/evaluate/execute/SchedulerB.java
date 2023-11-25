@@ -1,10 +1,8 @@
 package org.smoothbuild.vm.evaluate.execute;
 
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 
-import com.google.common.collect.ImmutableList;
 import jakarta.inject.Inject;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -126,7 +124,7 @@ public class SchedulerB {
     // functions with body
 
     private void handleLambda(LambdaB lambdaB) {
-      var bodyEnvironmentJobs = concat(argJobs(), callJob.environment());
+      var bodyEnvironmentJobs = argJobs().appendAll(callJob.environment());
       var bodyTrace = callTrace(lambdaB);
       var bodyJob = newJob(lambdaB.body(), bodyEnvironmentJobs, bodyTrace);
       scheduleJobEvaluationWithConsumer(bodyJob, callJob.promisedValue());
@@ -233,7 +231,7 @@ public class SchedulerB {
   }
 
   private Job newJob(ExprB exprB) {
-    return newJob(exprB, ImmutableList.of(), new TraceB());
+    return newJob(exprB, List.list(), new TraceB());
   }
 
   private Job newJob(ExprB exprB, Job parentJob) {
@@ -241,7 +239,7 @@ public class SchedulerB {
   }
 
   // Visible for testing
-  protected Job newJob(ExprB exprB, ImmutableList<Job> environment, TraceB trace) {
+  protected Job newJob(ExprB exprB, List<Job> environment, TraceB trace) {
     return new Job(exprB, environment, trace);
   }
 }

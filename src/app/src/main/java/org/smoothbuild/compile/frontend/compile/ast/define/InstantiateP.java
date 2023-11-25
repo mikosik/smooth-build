@@ -3,8 +3,8 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Objects;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 
@@ -13,7 +13,7 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
  */
 public final class InstantiateP extends ExprP {
   private final PolymorphicP polymorphic;
-  private ImmutableList<TypeS> typeArgs;
+  private List<TypeS> typeArgs;
 
   public InstantiateP(PolymorphicP polymorphic, Location location) {
     super(location);
@@ -24,11 +24,11 @@ public final class InstantiateP extends ExprP {
     return polymorphic;
   }
 
-  public void setTypeArgs(ImmutableList<TypeS> typeArgs) {
+  public void setTypeArgs(List<TypeS> typeArgs) {
     this.typeArgs = typeArgs;
   }
 
-  public ImmutableList<TypeS> typeArgs() {
+  public List<TypeS> typeArgs() {
     return typeArgs;
   }
 

@@ -3,14 +3,13 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
-import com.google.common.collect.ImmutableList;
-import java.util.List;
 import java.util.Objects;
+import org.smoothbuild.common.collect.List;
 
 public final class ModuleP implements ScopedP {
   private final String name;
-  private final ImmutableList<StructP> structs;
-  private final ImmutableList<NamedEvaluableP> evaluables;
+  private final List<StructP> structs;
+  private final List<NamedEvaluableP> evaluables;
   private ScopeP scope;
 
   public ModuleP(String name, List<StructP> structs, List<NamedEvaluableP> evaluables) {
@@ -20,8 +19,8 @@ public final class ModuleP implements ScopedP {
   public ModuleP(
       String name, List<StructP> structs, List<NamedEvaluableP> evaluables, ScopeP scope) {
     this.name = name;
-    this.structs = ImmutableList.copyOf(structs);
-    this.evaluables = ImmutableList.copyOf(evaluables);
+    this.structs = structs;
+    this.evaluables = evaluables;
     this.scope = scope;
   }
 
@@ -30,11 +29,11 @@ public final class ModuleP implements ScopedP {
     return name;
   }
 
-  public ImmutableList<NamedEvaluableP> evaluables() {
+  public List<NamedEvaluableP> evaluables() {
     return evaluables;
   }
 
-  public ImmutableList<StructP> structs() {
+  public List<StructP> structs() {
     return structs;
   }
 

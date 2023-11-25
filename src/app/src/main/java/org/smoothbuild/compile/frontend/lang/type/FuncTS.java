@@ -5,8 +5,8 @@ import static org.smoothbuild.common.collect.Lists.concat;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.funcTypeName;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Objects;
+import org.smoothbuild.common.collect.List;
 
 /**
  * This class is immutable.
@@ -15,7 +15,7 @@ public final class FuncTS extends TypeS {
   private final TypeS result;
   private final TupleTS params;
 
-  public FuncTS(ImmutableList<TypeS> paramTs, TypeS resultT) {
+  public FuncTS(List<TypeS> paramTs, TypeS resultT) {
     this(new TupleTS(paramTs), resultT);
   }
 

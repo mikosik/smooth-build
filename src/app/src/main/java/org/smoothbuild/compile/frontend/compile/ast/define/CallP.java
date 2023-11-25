@@ -3,31 +3,30 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
-import com.google.common.collect.ImmutableList;
-import java.util.List;
 import java.util.Objects;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
 public final class CallP extends ExprP {
   private final ExprP callee;
-  private final ImmutableList<ExprP> args;
-  private ImmutableList<ExprP> positionedArgs;
+  private final List<ExprP> args;
+  private List<ExprP> positionedArgs;
 
   public CallP(ExprP callee, List<ExprP> args, Location location) {
     super(location);
     this.callee = callee;
-    this.args = ImmutableList.copyOf(args);
+    this.args = args;
   }
 
   public ExprP callee() {
     return callee;
   }
 
-  public ImmutableList<ExprP> args() {
+  public List<ExprP> args() {
     return args;
   }
 
-  public void setPositionedArgs(ImmutableList<ExprP> positionedArgs) {
+  public void setPositionedArgs(List<ExprP> positionedArgs) {
     this.positionedArgs = positionedArgs;
   }
 
@@ -44,7 +43,7 @@ public final class CallP extends ExprP {
    * 2. Missing args are replaced with RefP pointing
    * to that parameter default value.
    */
-  public ImmutableList<ExprP> positionedArgs() {
+  public List<ExprP> positionedArgs() {
     return positionedArgs;
   }
 

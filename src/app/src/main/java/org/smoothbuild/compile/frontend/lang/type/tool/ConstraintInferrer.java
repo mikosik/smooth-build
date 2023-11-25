@@ -2,13 +2,11 @@ package org.smoothbuild.compile.frontend.lang.type.tool;
 
 import static org.smoothbuild.common.collect.NList.nlist;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Queue;
-import org.smoothbuild.common.collect.Lists;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
@@ -139,8 +137,8 @@ public class ConstraintInferrer {
       throw new UnifierException();
     }
     var itemSigs = zip(
-        struct1.fields(),
-        struct2.fields(),
+        struct1.fields().list(),
+        struct2.fields().list(),
         (itemSig1, itemSig2) -> unifyItemSigAndItemSig(itemSig1, itemSig2, constraints));
     return new StructTS(struct1.name(), nlist(itemSigs));
   }
@@ -192,12 +190,12 @@ public class ConstraintInferrer {
     return new TupleTS(elements);
   }
 
-  private static <T> ImmutableList<T> zip(
+  private static <T> List<T> zip(
       List<T> items1, List<T> items2, ThrowingBiFunction<T, T, T, UnifierException> mapper)
       throws UnifierException {
     if (items1.size() != items2.size()) {
       throw new UnifierException();
     }
-    return Lists.zip(items1, items2, mapper);
+    return items1.zip(items2, mapper);
   }
 }

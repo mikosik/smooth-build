@@ -117,7 +117,7 @@ public abstract sealed class TypeS
   }
 
   private static TupleTS mapVarsInTuple(TupleTS tupleTS, Function<? super VarS, TypeS> map) {
-    var items = map(tupleTS.elements(), type -> type.mapVars(map));
+    var items = tupleTS.elements().map(type -> type.mapVars(map));
     return new TupleTS(items);
   }
 

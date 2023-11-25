@@ -22,7 +22,6 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 
-import com.google.common.collect.ImmutableList;
 import io.vavr.control.Either;
 import io.vavr.control.Option;
 import java.io.IOException;
@@ -745,7 +744,7 @@ public class EvaluatorBTest extends TestContext {
     }
 
     @Override
-    protected Job newJob(ExprB exprB, ImmutableList<Job> environment, TraceB trace) {
+    protected Job newJob(ExprB exprB, List<Job> environment, TraceB trace) {
       counters.computeIfAbsent(exprB.getClass(), k -> new AtomicInteger()).incrementAndGet();
       return super.newJob(exprB, environment, trace);
     }

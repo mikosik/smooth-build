@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
@@ -17,7 +17,6 @@ import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
-import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
@@ -251,7 +250,7 @@ public class SbTranslatorTest extends TestContext {
       public void lambda() {
         var lambda = lambdaS(varSetS(varA()), nlist(itemS(varA(), "p")), paramRefS(varA(), "p"));
         var monoLambdaS = instantiateS(list(intTS()), lambda);
-        assertTranslation(monoLambdaS, lambdaB(List.list(intTB()), varB(intTB(), 0)));
+        assertTranslation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
       }
 
       @Test
@@ -272,8 +271,8 @@ public class SbTranslatorTest extends TestContext {
             instantiateS(lambdaS(nlist(itemS(blobTS(), "b")), paramRefS(intTS(), "i")));
         var monoFuncS = funcS("myFunc", nlist(itemS(intTS(), "i")), monoLambdaS);
 
-        var bodyB = lambdaB(List.list(blobTB()), varB(intTB(), 1));
-        var lambdaB = lambdaB(List.list(intTB()), bodyB);
+        var bodyB = lambdaB(list(blobTB()), varB(intTB(), 1));
+        var lambdaB = lambdaB(list(intTB()), bodyB);
 
         assertTranslation(monoFuncS, lambdaB);
       }
@@ -317,7 +316,7 @@ public class SbTranslatorTest extends TestContext {
         var callS = callS(instantiateS(constructorS), stringS("abc"));
         var selectS = selectS(callS, "field");
 
-        var ctorB = lambdaB(List.list(stringTB()), combineB(varB(stringTB(), 0)));
+        var ctorB = lambdaB(list(stringTB()), combineB(varB(stringTB(), 0)));
         var callB = callB(ctorB, stringB("abc"));
         assertTranslation(bindings(constructorS), selectS, selectB(callB, intB(0)));
       }

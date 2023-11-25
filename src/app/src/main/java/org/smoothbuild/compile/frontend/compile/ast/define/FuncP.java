@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.type.FuncSchemaS;
 import org.smoothbuild.compile.frontend.lang.type.FuncTS;
@@ -11,7 +11,7 @@ public sealed interface FuncP extends EvaluableP permits LambdaP, NamedFuncP {
 
   public NList<ItemP> params();
 
-  public default ImmutableList<TypeS> paramTs() {
+  public default List<TypeS> paramTs() {
     return ItemP.toTypeS(params());
   }
 

@@ -3,14 +3,12 @@ package org.smoothbuild.testing;
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
-import static org.smoothbuild.common.collect.Lists.concat;
-import static org.smoothbuild.common.collect.Lists.list;
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
@@ -33,8 +31,6 @@ import static org.smoothbuild.run.eval.report.TaskMatchers.ALL;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Provider;
 import java.io.ByteArrayOutputStream;
@@ -440,7 +436,7 @@ public class TestContext {
   // Job related
 
   public static Job job(ExprB exprB, ExprB... environment) {
-    return new Job(exprB, map(asList(environment), TestContext::job), new TraceB());
+    return new Job(exprB, list(environment).map(TestContext::job), new TraceB());
   }
 
   public static Job job(ExprB exprB, Job... environment) {
@@ -498,15 +494,15 @@ public class TestContext {
   }
 
   public FuncTB funcTB(TypeB resultT) {
-    return funcTB(List.list(), resultT);
+    return funcTB(list(), resultT);
   }
 
   public FuncTB funcTB(TypeB param1, TypeB resultT) {
-    return funcTB(List.list(param1), resultT);
+    return funcTB(list(param1), resultT);
   }
 
   public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resultT) {
-    return funcTB(List.list(param1, param2), resultT);
+    return funcTB(list(param1, param2), resultT);
   }
 
   public FuncTB funcTB(List<TypeB> paramTs, TypeB resultT) {
@@ -630,15 +626,9 @@ public class TestContext {
   }
 
   public BlobB blobBJarWithPluginApi(Class<?>... classes) throws IOException {
-    return blobBWith(ImmutableList.<Class<?>>builder()
-        .addAll(list(classes))
-        .add(BlobB.class)
-        .add(NativeApi.class)
-        .add(ExprB.class)
-        .add(StringB.class)
-        .add(TupleB.class)
-        .add(ValueB.class)
-        .build());
+    return blobBWith(list(classes)
+        .append(
+            BlobB.class, NativeApi.class, ExprB.class, StringB.class, TupleB.class, ValueB.class));
   }
 
   public BlobB blobBJarWithJavaByteCode(Class<?>... classes) throws IOException {
@@ -707,7 +697,7 @@ public class TestContext {
   }
 
   public LambdaB lambdaB(ExprB body) {
-    return lambdaB(List.list(), body);
+    return lambdaB(list(), body);
   }
 
   public LambdaB lambdaB(List<TypeB> paramTs, ExprB body) {
@@ -720,7 +710,7 @@ public class TestContext {
   }
 
   public LambdaB idFuncB() {
-    return lambdaB(List.list(intTB()), varB(intTB(), 0));
+    return lambdaB(list(intTB()), varB(intTB(), 0));
   }
 
   public LambdaB returnAbcFuncB() {
@@ -800,7 +790,7 @@ public class TestContext {
   }
 
   public TupleB tupleB(ValueB... items) {
-    return bytecodeDb().tuple(List.list(items));
+    return bytecodeDb().tuple(list(items));
   }
 
   public ArrayB messageArrayWithOneError() {
@@ -858,7 +848,7 @@ public class TestContext {
   }
 
   public CombineB combineB(ExprB... items) {
-    return bytecodeDb().combine(List.list(items));
+    return bytecodeDb().combine(list(items));
   }
 
   public IfFuncB ifFuncB(TypeB t) {
@@ -878,7 +868,7 @@ public class TestContext {
   }
 
   public OrderB orderB(TypeB elemT, ExprB... elems) {
-    var elemList = List.list(elems);
+    var elemList = list(elems);
     return bytecodeDb().order(arrayTB(elemT), elemList);
   }
 
@@ -934,8 +924,8 @@ public class TestContext {
         .toList();
   }
 
-  public static ImmutableList<TypeS> nonCompositeTypes() {
-    return concat(TypeFS.baseTs(), new VarS("A"));
+  public static List<TypeS> nonCompositeTypes() {
+    return TypeFS.baseTs().append(new VarS("A"));
   }
 
   public static java.util.List<Function<TypeS, TypeS>> compositeTypeSFactories() {
@@ -981,7 +971,7 @@ public class TestContext {
     return funcTS(list(param1, param2), resultT);
   }
 
-  public static FuncTS funcTS(ImmutableList<TypeS> paramTs, TypeS resultT) {
+  public static FuncTS funcTS(List<TypeS> paramTs, TypeS resultT) {
     return new FuncTS(tupleTS(paramTs), resultT);
   }
 
@@ -989,7 +979,7 @@ public class TestContext {
     return tupleTS(list(itemTs));
   }
 
-  public static TupleTS tupleTS(ImmutableList<TypeS> paramTs) {
+  public static TupleTS tupleTS(List<TypeS> paramTs) {
     return new TupleTS(paramTs);
   }
 
@@ -998,7 +988,7 @@ public class TestContext {
   }
 
   public static FuncSchemaS funcSchemaS(NList<ItemS> params, TypeS resultT) {
-    return funcSchemaS(toTypes(params), resultT);
+    return funcSchemaS(toTypes(params.list()), resultT);
   }
 
   public static FuncSchemaS funcSchemaS(TypeS resultT) {
@@ -1009,7 +999,7 @@ public class TestContext {
     return funcSchemaS(funcTS(list(param1), resultT));
   }
 
-  public static FuncSchemaS funcSchemaS(ImmutableList<TypeS> paramTs, TypeS resultT) {
+  public static FuncSchemaS funcSchemaS(List<TypeS> paramTs, TypeS resultT) {
     return funcSchemaS(funcTS(paramTs, resultT));
   }
 
@@ -1069,12 +1059,12 @@ public class TestContext {
     return structTS(myStruct, nlist(fieldSigs));
   }
 
-  private static ImmutableList<ItemSigS> typesToItemSigs(TypeS... fieldTs) {
-    Builder<ItemSigS> builder = ImmutableList.builder();
+  private static List<ItemSigS> typesToItemSigs(TypeS... fieldTs) {
+    var builder = new ArrayList<ItemSigS>();
     for (int i = 0; i < fieldTs.length; i++) {
       builder.add(sigS(fieldTs[i], "param" + i));
     }
-    return builder.build();
+    return listOfAll(builder);
   }
 
   public static ImmutableMap<String, ItemSigS> typesToItemSigsMap(TypeS... types) {
@@ -1085,16 +1075,16 @@ public class TestContext {
     return itemSigsToMap(list(itemSigs));
   }
 
-  public static ImmutableMap<String, ItemSigS> itemSigsToMap(ImmutableList<ItemSigS> sigs) {
+  public static ImmutableMap<String, ItemSigS> itemSigsToMap(List<ItemSigS> sigs) {
     return toMap(sigs, ItemSigS::name, f -> f);
   }
 
-  private static ImmutableList<ItemSigS> typeTsToSigS(TypeS... types) {
-    Builder<ItemSigS> builder = ImmutableList.builder();
+  private static List<ItemSigS> typeTsToSigS(TypeS... types) {
+    var builder = new ArrayList<ItemSigS>();
     for (int i = 0; i < types.length; i++) {
       builder.add(sigS(types[i], "param" + i));
     }
-    return builder.build();
+    return listOfAll(builder);
   }
 
   public static StructTS structTS(String name, NList<ItemSigS> fields) {
@@ -1153,7 +1143,7 @@ public class TestContext {
 
   private static CombineS combineS(int line, ExprS... args) {
     var argsList = list(args);
-    var evaluationT = new TupleTS(map(argsList, ExprS::evaluationT));
+    var evaluationT = new TupleTS(argsList.map(ExprS::evaluationT));
     return new CombineS(evaluationT, argsList, location(line));
   }
 
@@ -1181,13 +1171,12 @@ public class TestContext {
     return instantiateS(line, referenceS(line, namedEvaluableS));
   }
 
-  public static InstantiateS instantiateS(
-      ImmutableList<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
+  public static InstantiateS instantiateS(List<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
     return instantiateS(1, typeArgs, namedEvaluableS);
   }
 
   public static InstantiateS instantiateS(
-      int line, ImmutableList<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
+      int line, List<TypeS> typeArgs, NamedEvaluableS namedEvaluableS) {
     var location = location(line);
     var referenceS = new ReferenceS(namedEvaluableS.schema(), namedEvaluableS.name(), location);
     return instantiateS(typeArgs, referenceS, location);
@@ -1205,24 +1194,23 @@ public class TestContext {
     return instantiateS(list(), polymorphicS, location);
   }
 
-  public static InstantiateS instantiateS(
-      ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS) {
+  public static InstantiateS instantiateS(List<TypeS> typeArgs, PolymorphicS polymorphicS) {
     return instantiateS(1, typeArgs, polymorphicS);
   }
 
   public static InstantiateS instantiateS(
-      int line, ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS) {
+      int line, List<TypeS> typeArgs, PolymorphicS polymorphicS) {
     return instantiateS(typeArgs, polymorphicS, location(line));
   }
 
   public static InstantiateS instantiateS(
-      ImmutableList<TypeS> typeArgs, PolymorphicS polymorphicS, Location location) {
+      List<TypeS> typeArgs, PolymorphicS polymorphicS, Location location) {
     return new InstantiateS(typeArgs, polymorphicS, location);
   }
 
   public static OrderS orderS(int line, ExprS headElem, ExprS... tailElems) {
     return new OrderS(
-        arrayTS(headElem.evaluationT()), concat(headElem, list(tailElems)), location(line));
+        arrayTS(headElem.evaluationT()), list(headElem).append(tailElems), location(line));
   }
 
   public static OrderS orderS(TypeS elemT, ExprS... exprs) {
@@ -1458,7 +1446,7 @@ public class TestContext {
   }
 
   public static LambdaS lambdaS(int line, VarSetS quantifiedVars, NList<ItemS> params, ExprS body) {
-    var funcTS = funcTS(toTypes(params), body.evaluationT());
+    var funcTS = funcTS(toTypes(params.list()), body.evaluationT());
     var funcSchemaS = funcSchemaS(quantifiedVars, funcTS);
     return new LambdaS(funcSchemaS, params, body, location(line));
   }
@@ -1472,7 +1460,7 @@ public class TestContext {
   }
 
   public static LambdaS lambdaS(int line, NList<ItemS> params, ExprS body) {
-    var funcSchemaS = funcSchemaS(toTypes(params), body.evaluationT());
+    var funcSchemaS = funcSchemaS(toTypes(params.list()), body.evaluationT());
     return new LambdaS(funcSchemaS, params, body, location(line));
   }
 
@@ -1517,8 +1505,7 @@ public class TestContext {
 
   // P - parsed objects
 
-  public static ModuleP moduleP(
-      java.util.List<StructP> structs, java.util.List<NamedEvaluableP> evaluables) {
+  public static ModuleP moduleP(List<StructP> structs, List<NamedEvaluableP> evaluables) {
     return new ModuleP("", structs, evaluables);
   }
 
