@@ -1,16 +1,16 @@
 package org.smoothbuild.vm.evaluate.execute;
 
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
-import com.google.common.collect.ImmutableList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.PromisedValue;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
 public record Job(
     ExprB exprB,
-    ImmutableList<Job> environment,
+    List<Job> environment,
     TraceB trace,
     AtomicBoolean started,
     PromisedValue<ValueB> promisedValue) {
@@ -19,7 +19,7 @@ public record Job(
     this(exprB, list(), new TraceB(), new AtomicBoolean(false), new PromisedValue<>());
   }
 
-  public Job(ExprB exprB, ImmutableList<Job> environment, TraceB trace) {
+  public Job(ExprB exprB, List<Job> environment, TraceB trace) {
     this(exprB, environment, trace, new AtomicBoolean(false), new PromisedValue<>());
   }
 }

@@ -12,7 +12,6 @@ import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.run.step.Step.optionStep;
 import static org.smoothbuild.run.step.Step.step;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import io.vavr.Tuple;
@@ -98,7 +97,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var orderS = orderS(a, paramRefS(a, "e"));
           var funcS = funcS(arrayTS(a), "n", nlist(itemS(a, "e")), orderS);
-          var callS = callS(instantiateS(ImmutableList.of(intTS()), funcS), intS(7));
+          var callS = callS(instantiateS(list(intTS()), funcS), intS(7));
           assertEvaluation(bindings(funcS), callS, arrayB(intTB(), intB(7)));
         }
 
@@ -190,7 +189,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_lambda() {
           var a = varA();
           var polyLambdaS = lambdaS(nlist(itemS(a, "a")), paramRefS(a, "a"));
-          var monoLambdaS = instantiateS(ImmutableList.of(intTS()), polyLambdaS);
+          var monoLambdaS = instantiateS(list(intTS()), polyLambdaS);
           assertEvaluation(monoLambdaS, lambdaB(list(intTB()), varB(intTB(), 0)));
         }
       }
@@ -206,7 +205,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_expression_function() {
           var a = varA();
           var funcS = funcS("n", nlist(itemS(a, "e")), paramRefS(a, "e"));
-          var instantiateS = instantiateS(ImmutableList.of(intTS()), funcS);
+          var instantiateS = instantiateS(list(intTS()), funcS);
           assertEvaluation(bindings(funcS), instantiateS, idFuncB());
         }
 
@@ -223,9 +222,7 @@ public class EvaluatorSTest extends TestContext {
           var a = varA();
           var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));
           assertEvaluation(
-              bindings(bytecodeFuncS),
-              instantiateS(ImmutableList.of(intTS()), bytecodeFuncS),
-              funcB);
+              bindings(bytecodeFuncS), instantiateS(list(intTS()), bytecodeFuncS), funcB);
         }
 
         @Test
@@ -247,7 +244,7 @@ public class EvaluatorSTest extends TestContext {
         public void poly_value() {
           var a = varA();
           var polyValue = valueS(1, arrayTS(a), "name", orderS(a));
-          var instantiatedValue = instantiateS(ImmutableList.of(intTS()), polyValue);
+          var instantiatedValue = instantiateS(list(intTS()), polyValue);
           assertEvaluation(bindings(polyValue), instantiatedValue, arrayB(intTB()));
         }
       }

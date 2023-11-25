@@ -3,7 +3,6 @@ package org.smoothbuild.compile.backend;
 import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.collect.Iterables.intIterable;
 import static org.smoothbuild.common.collect.List.list;
-import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.common.collect.Maps.mapKeys;
@@ -15,7 +14,6 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECOD
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Inject;
 import java.io.FileNotFoundException;
@@ -134,8 +132,8 @@ public class SbTranslator {
     return new BsMapping(nameMapping, locationMapping);
   }
 
-  private List<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
-    return listOfAll(exprs).map(this::translateExpr);
+  private List<ExprB> translateExprs(List<ExprS> exprs) {
+    return exprs.map(this::translateExpr);
   }
 
   public ExprB translateExpr(ExprS exprS) {

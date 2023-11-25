@@ -19,7 +19,6 @@ import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -142,7 +141,7 @@ public class AcceptanceTestCase extends TestContext {
     return artifacts.get();
   }
 
-  protected ImmutableList<Log> logs() {
+  protected List<Log> logs() {
     return memoryReporter.logs().toList();
   }
 

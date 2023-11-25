@@ -10,11 +10,10 @@ import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.STRING;
 import static org.smoothbuild.out.log.Maybe.success;
 
-import com.google.common.collect.ImmutableList;
 import io.vavr.Tuple2;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
@@ -170,8 +169,8 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Module
       return new AnnotationS(annotationP.name(), path, annotationP.location());
     }
 
-    private ImmutableList<ExprS> convertExprs(List<ExprP> positionedArgs) {
-      return map(positionedArgs, this::convertExpr);
+    private List<ExprS> convertExprs(List<ExprP> positionedArgs) {
+      return positionedArgs.map(this::convertExpr);
     }
 
     private ExprS convertExpr(ExprP expr) {
@@ -207,7 +206,7 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Maybe<Module
 
     private CombineS convertArgs(CallP call) {
       var args = convertExprs(call.positionedArgs());
-      var evaluationT = new TupleTS(map(args, ExprS::evaluationT));
+      var evaluationT = new TupleTS(args.map(ExprS::evaluationT));
       return new CombineS(evaluationT, args, call.location());
     }
 

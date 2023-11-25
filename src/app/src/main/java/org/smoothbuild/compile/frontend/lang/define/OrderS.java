@@ -3,12 +3,11 @@ package org.smoothbuild.compile.frontend.lang.define;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 
-public record OrderS(ArrayTS evaluationT, ImmutableList<ExprS> elems, Location location)
-    implements ExprS {
+public record OrderS(ArrayTS evaluationT, List<ExprS> elems, Location location) implements ExprS {
   @Override
   public String toString() {
     var fields = joinToString(

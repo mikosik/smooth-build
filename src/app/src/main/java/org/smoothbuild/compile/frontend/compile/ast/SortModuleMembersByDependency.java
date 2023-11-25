@@ -1,18 +1,17 @@
 package org.smoothbuild.compile.frontend.compile.ast;
 
 import static java.lang.String.join;
-import static java.util.Collections.rotate;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
-import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Sets;
 import org.smoothbuild.common.graph.GraphEdge;
 import org.smoothbuild.common.graph.GraphNode;
@@ -56,7 +55,7 @@ public class SortModuleMembersByDependency implements Function<ModuleP, Maybe<Mo
   }
 
   private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(
-      ImmutableList<NamedEvaluableP> evaluables) {
+      List<NamedEvaluableP> evaluables) {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(r -> names.add(r.name()));
 
@@ -77,7 +76,7 @@ public class SortModuleMembersByDependency implements Function<ModuleP, Maybe<Mo
         }
       }
     }.visitNamedEvaluable(evaluable);
-    return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(deps));
+    return new GraphNode<>(evaluable.name(), evaluable, listOfAll(deps));
   }
 
   private static TopologicalSortingRes<String, StructP, Location> sortStructsByDeps(
@@ -112,18 +111,18 @@ public class SortModuleMembersByDependency implements Function<ModuleP, Maybe<Mo
         }
       }
     }.visitStruct(struct);
-    return new GraphNode<>(struct.name(), struct, ImmutableList.copyOf(deps));
+    return new GraphNode<>(struct.name(), struct, listOfAll(deps));
   }
 
   private static Log createCycleError(String name, List<GraphEdge<Location, String>> cycle) {
     // Choosing edge lexicographically first and printing a cycle starting from that edge
     // is a way to make report deterministic and (as a result) to make testing those reports simple.
     int edgeIndex = chooseEdgeLexicographicallyFirst(cycle);
-    rotate(cycle, -edgeIndex);
+    var rotatedCycle = cycle.rotate(-edgeIndex);
 
-    String previous = cycle.get(cycle.size() - 1).targetKey();
+    String previous = rotatedCycle.get(rotatedCycle.size() - 1).targetKey();
     var lines = new ArrayList<String>();
-    for (var current : cycle) {
+    for (var current : rotatedCycle) {
       String dependency = current.targetKey();
       lines.add(current.value() + ": " + previous + " ~> " + dependency);
       previous = dependency;

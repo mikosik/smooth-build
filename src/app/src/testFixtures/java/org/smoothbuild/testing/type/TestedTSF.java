@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.type;
 
-import static org.smoothbuild.common.collect.Lists.list;
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.lang.define.ItemSigS.itemSigS;
 import static org.smoothbuild.testing.TestContext.arrayTS;
@@ -13,12 +13,11 @@ import static org.smoothbuild.testing.TestContext.stringTS;
 import static org.smoothbuild.testing.TestContext.structTS;
 import static org.smoothbuild.testing.TestContext.varS;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.define.ItemSigS;
 import org.smoothbuild.testing.type.TestedTS.TestedArrayTS;
 import org.smoothbuild.testing.type.TestedTS.TestedFuncTS;
@@ -75,7 +74,7 @@ public class TestedTSF {
     throw new UnsupportedOperationException();
   }
 
-  public TestedTS tuple(ImmutableList<TestedTS> items) {
+  public TestedTS tuple(List<TestedTS> items) {
     throw new UnsupportedOperationException();
   }
 
@@ -88,7 +87,7 @@ public class TestedTSF {
         type, arrayTS(type.type()), type.typeDeclarations(), type.allDeclarations());
   }
 
-  public TestedTS func(TestedTS resultT, ImmutableList<TestedTS> paramTs) {
+  public TestedTS func(TestedTS resultT, List<TestedTS> paramTs) {
     return f(resultT, paramTs);
   }
 
@@ -96,7 +95,7 @@ public class TestedTSF {
     return f(resultT, list(paramTestedTs));
   }
 
-  public static TestedFuncTS f(TestedTS resultT, ImmutableList<TestedTS> paramTestedTs) {
+  public static TestedFuncTS f(TestedTS resultT, List<TestedTS> paramTestedTs) {
     var paramSigs = toSigs(paramTestedTs);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
     String declaration = "@Native(\"impl\") %s %s(%s);"
@@ -115,12 +114,12 @@ public class TestedTSF {
     return new TestedFuncTS(
         resultT,
         paramTestedTs,
-        funcTS(map(paramSigs, ItemSigS::type), resultT.type()),
+        funcTS(paramSigs.map(ItemSigS::type), resultT.type()),
         typeDeclarations,
         declarations);
   }
 
-  private static String toParamDeclarationString(ImmutableList<TestedTS> paramTestedTs) {
+  private static String toParamDeclarationString(List<TestedTS> paramTestedTs) {
     StringBuilder builder = new StringBuilder();
     for (int i = 0; i < paramTestedTs.size(); i++) {
       builder.append(paramTestedTs.get(i).name() + " p" + i);
@@ -128,11 +127,11 @@ public class TestedTSF {
     return builder.toString();
   }
 
-  private static ImmutableList<ItemSigS> toSigs(List<TestedTS> paramTestedTs) {
-    Builder<ItemSigS> builder = ImmutableList.builder();
+  private static List<ItemSigS> toSigs(List<TestedTS> paramTestedTs) {
+    var builder = new ArrayList<ItemSigS>();
     for (int i = 0; i < paramTestedTs.size(); i++) {
       builder.add(new ItemSigS(paramTestedTs.get(i).type(), "p" + i));
     }
-    return builder.build();
+    return listOfAll(builder);
   }
 }

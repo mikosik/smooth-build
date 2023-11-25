@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Optionals.mapPair;
 import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
@@ -54,8 +54,8 @@ public class TypeTeller {
       case ArrayTP array -> translate(array.elemT()).map(ArrayTS::new);
       case FuncTP func -> {
         var resultOpt = translate(func.result());
-        var paramsOpt = pullUp(map(func.params(), this::translate));
-        yield mapPair(resultOpt, paramsOpt, (r, p) -> new FuncTS(p, r));
+        var paramsOpt = pullUp(func.params().map(this::translate));
+        yield mapPair(resultOpt, paramsOpt, (r, p) -> new FuncTS(listOfAll(p), r));
       }
       default -> typeWithName(type);
     };

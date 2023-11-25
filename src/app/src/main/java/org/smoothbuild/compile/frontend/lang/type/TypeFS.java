@@ -1,6 +1,8 @@
 package org.smoothbuild.compile.frontend.lang.type;
 
-import com.google.common.collect.ImmutableList;
+import static org.smoothbuild.common.collect.List.list;
+
+import org.smoothbuild.common.collect.List;
 
 public class TypeFS {
   public static final BlobTS BLOB = new BlobTS();
@@ -11,7 +13,7 @@ public class TypeFS {
   /**
    * Base types that are legal in smooth language.
    */
-  public static ImmutableList<TypeS> baseTs() {
-    return ImmutableList.of(BLOB, BOOL, INT, STRING);
+  public static List<TypeS> baseTs() {
+    return list(BLOB, BOOL, INT, STRING);
   }
 }

@@ -3,13 +3,11 @@ package org.smoothbuild.compile.frontend.lang.type.tool;
 import static com.google.common.collect.Collections2.permutations;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.common.collect.Lists.concat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.lang.type.tool.AssertStructuresAreEqual.assertStructuresAreEqual;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import com.google.common.collect.ImmutableList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -21,6 +19,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.type.FieldSetTS;
 import org.smoothbuild.compile.frontend.lang.type.TempVarS;
 import org.smoothbuild.compile.frontend.lang.type.TypeFS;
@@ -462,8 +461,8 @@ public class UnifierTest extends TestContext {
             type1, type2, interfaceTS(sigS(intTS(), "otherField"), sigS(intTS(), "myField")));
       }
 
-      public static ImmutableList<TypeS> typesToTest() {
-        return concat(TypeFS.baseTs(), new VarS("A"));
+      public static List<TypeS> typesToTest() {
+        return TypeFS.baseTs().append(new VarS("A"));
       }
     }
   }
@@ -980,8 +979,8 @@ public class UnifierTest extends TestContext {
   private static void assertForEachPermutation(
       List<? extends Constraint> constraints, Consumer<Unifier> assertion) throws UnifierException {
     var permutations = permutations(constraints);
-    for (List<? extends Constraint> permutation : permutations) {
-      assertPermutation(permutation, assertion);
+    for (java.util.List<? extends Constraint> permutation : permutations) {
+      assertPermutation(listOfAll(permutation), assertion);
     }
   }
 
@@ -1000,8 +999,8 @@ public class UnifierTest extends TestContext {
   private static void assertExceptionThrownForLastConstraintForEachPermutation(
       List<? extends Constraint> constraints) throws UnifierException {
     var permutations = permutations(constraints);
-    for (List<? extends Constraint> permutation : permutations) {
-      assertExceptionThrownForPermutation(permutation);
+    for (java.util.List<? extends Constraint> permutation : permutations) {
+      assertExceptionThrownForPermutation(listOfAll(permutation));
     }
   }
 

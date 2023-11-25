@@ -3,26 +3,27 @@ package org.smoothbuild.compile.frontend.lang.type;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.tupleTypeName;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import com.google.common.collect.ImmutableList;
-import java.util.List;
 import java.util.Objects;
+import org.smoothbuild.common.collect.List;
 
 /**
  * This class is immutable.
  */
 public final class TupleTS extends TypeS {
-  private final ImmutableList<TypeS> elements;
+  private final List<TypeS> elements;
 
   public TupleTS(List<? extends TypeS> elements) {
     super(tupleTypeName(elements), calculateVars(elements));
-    this.elements = ImmutableList.copyOf(elements);
+    @SuppressWarnings("unchecked")
+    var cast = (List<TypeS>) elements;
+    this.elements = cast;
   }
 
   private static VarSetS calculateVars(List<? extends TypeS> elements) {
     return varSetS(elements);
   }
 
-  public ImmutableList<TypeS> elements() {
+  public List<TypeS> elements() {
     return elements;
   }
 

@@ -1,12 +1,13 @@
 package org.smoothbuild.common.filesystem.mem;
 
-import com.google.common.collect.ImmutableList;
+import static org.smoothbuild.common.collect.List.listOfAll;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.PathS;
 
 public class MemoryDir implements MemoryElement {
@@ -55,7 +56,7 @@ public class MemoryDir implements MemoryElement {
 
   @Override
   public List<PathS> childNames() {
-    return ImmutableList.copyOf(map.keySet());
+    return listOfAll(map.keySet());
   }
 
   @Override

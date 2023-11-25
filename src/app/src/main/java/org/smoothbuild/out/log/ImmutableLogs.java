@@ -1,29 +1,30 @@
 package org.smoothbuild.out.log;
 
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
+import static org.smoothbuild.common.collect.List.*;
+import static org.smoothbuild.common.collect.List.list;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import org.smoothbuild.common.collect.List;
 
 public class ImmutableLogs implements Logs {
-  private final ImmutableList<Log> logs;
+  private final List<Log> logs;
 
   public static ImmutableLogs logs(Log... logs) {
-    return new ImmutableLogs(ImmutableList.copyOf(logs));
+    return new ImmutableLogs(list(logs));
   }
 
   public static ImmutableLogs logs(Collection<? extends Log> logs) {
-    return new ImmutableLogs(ImmutableList.copyOf(logs));
+    return new ImmutableLogs(listOfAll(logs));
   }
 
   private ImmutableLogs(List<Log> logs) {
-    this.logs = ImmutableList.copyOf(logs);
+    this.logs = logs;
   }
 
   @Override
@@ -32,7 +33,7 @@ public class ImmutableLogs implements Logs {
   }
 
   @Override
-  public ImmutableList<Log> toList() {
+  public List<Log> toList() {
     return logs;
   }
 

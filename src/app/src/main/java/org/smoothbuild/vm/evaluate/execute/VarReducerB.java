@@ -1,8 +1,5 @@
 package org.smoothbuild.vm.evaluate.execute;
 
-import static org.smoothbuild.common.collect.Lists.map;
-
-import com.google.common.collect.ImmutableList;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.BytecodeF;
@@ -23,8 +20,8 @@ public class VarReducerB {
     this.bytecodeF = bytecodeF;
   }
 
-  public ImmutableList<ExprB> inline(ImmutableList<Job> environment) {
-    return map(environment, this::inline);
+  public List<ExprB> inline(List<Job> environment) {
+    return environment.map(this::inline);
   }
 
   public ExprB inline(Job job) {
@@ -125,13 +122,13 @@ public class VarReducerB {
 
   private static class Resolver {
     private final int paramCount;
-    private final ImmutableList<ExprB> environment;
+    private final List<ExprB> environment;
 
-    public Resolver(ImmutableList<ExprB> environment) {
+    public Resolver(List<ExprB> environment) {
       this(0, environment);
     }
 
-    public Resolver(int paramCount, ImmutableList<ExprB> environment) {
+    public Resolver(int paramCount, List<ExprB> environment) {
       this.paramCount = paramCount;
       this.environment = environment;
     }

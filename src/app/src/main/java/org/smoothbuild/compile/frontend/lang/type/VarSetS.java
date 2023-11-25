@@ -5,9 +5,9 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Sets.union;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,6 +18,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Sets;
 
 public final class VarSetS implements Set<VarS> {
@@ -47,8 +48,8 @@ public final class VarSetS implements Set<VarS> {
     return stream().filter(predicate).collect(toVarSetS());
   }
 
-  public ImmutableList<VarS> asList() {
-    return elements.asList();
+  public List<VarS> asList() {
+    return listOfAll(elements.asList());
   }
 
   public VarSetS withAdded(Set<VarS> toAdd) {

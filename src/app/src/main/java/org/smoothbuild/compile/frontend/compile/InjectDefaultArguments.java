@@ -1,23 +1,22 @@
 package org.smoothbuild.compile.frontend.compile;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.lang.Math.max;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Maybe.maybe;
 
-import com.google.common.collect.ImmutableList;
 import io.vavr.Tuple2;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.Bindings;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.Lists;
 import org.smoothbuild.common.collect.Sets;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
@@ -73,7 +72,7 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
       callP.setPositionedArgs(inferPositionedArgs(callP));
     }
 
-    private ImmutableList<ExprP> inferPositionedArgs(CallP callP) {
+    private List<ExprP> inferPositionedArgs(CallP callP) {
       if (callP.callee() instanceof InstantiateP instantiateP
           && instantiateP.polymorphic() instanceof ReferenceP referenceP) {
         var name = referenceP.name();
@@ -88,25 +87,25 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
       }
     }
 
-    private ImmutableList<ExprP> inferPositionedArgs(CallP callP, ReferenceableP referenceableP) {
+    private List<ExprP> inferPositionedArgs(CallP callP, ReferenceableP referenceableP) {
       if (referenceableP instanceof NamedFuncP namedFuncP) {
-        var mappedParams = Lists.map(namedFuncP.params(), Param::new);
+        var mappedParams = namedFuncP.params().list().map(Param::new);
         return inferPositionedArgs(callP, mappedParams, logger);
       } else {
         return inferPositionedArgs(callP, logger);
       }
     }
 
-    private ImmutableList<ExprP> inferPositionedArgs(CallP callP, NamedEvaluableS namedEvaluableS) {
+    private List<ExprP> inferPositionedArgs(CallP callP, NamedEvaluableS namedEvaluableS) {
       if (namedEvaluableS instanceof NamedFuncS namedFuncS) {
-        var mappedParams = Lists.map(namedFuncS.params(), Param::new);
+        var mappedParams = namedFuncS.params().list().map(Param::new);
         return inferPositionedArgs(callP, mappedParams, logger);
       } else {
         return inferPositionedArgs(callP, logger);
       }
     }
 
-    private static ImmutableList<ExprP> inferPositionedArgs(CallP callP, Logger logger) {
+    private static List<ExprP> inferPositionedArgs(CallP callP, Logger logger) {
       var args = callP.args();
       for (var arg : args) {
         if (arg instanceof NamedArgP namedArgP) {
@@ -118,8 +117,7 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
       return args;
     }
 
-    private static ImmutableList<ExprP> inferPositionedArgs(
-        CallP callP, List<Param> params, Logger logger) {
+    private static List<ExprP> inferPositionedArgs(CallP callP, List<Param> params, Logger logger) {
       var logBuffer = new LogBuffer();
       var positionalArgs = leadingPositionalArgs(callP);
       logBuffer.logAll(findPositionalArgAfterNamedArgError(callP));
@@ -132,13 +130,11 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
       return positionedArgs(callP, params, positionalArgs.size(), logger);
     }
 
-    private static ImmutableList<ExprP> leadingPositionalArgs(CallP callP) {
-      return callP.args().stream()
-          .takeWhile(a -> !(a instanceof NamedArgP))
-          .collect(toImmutableList());
+    private static List<ExprP> leadingPositionalArgs(CallP callP) {
+      return callP.args().takeWhile(a -> !(a instanceof NamedArgP));
     }
 
-    private static ImmutableList<ExprP> positionedArgs(
+    private static List<ExprP> positionedArgs(
         CallP callP, List<Param> params, int positionalArgsCount, Logger logBuffer) {
       var names = Lists.map(params, Param::name);
       var args = callP.args();
@@ -170,7 +166,7 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
           }
         }
       }
-      return error ? null : ImmutableList.copyOf(result);
+      return error ? null : listOfAll(result);
     }
 
     private static String nameOfReferencedCallee(CallP callP) {
@@ -178,32 +174,32 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
     }
 
     private static List<Log> findPositionalArgAfterNamedArgError(CallP callP) {
-      return callP.args().stream()
+      return callP
+          .args()
           .dropWhile(a -> !(a instanceof NamedArgP))
           .dropWhile(a -> a instanceof NamedArgP)
-          .map(Visitor::positionalArgumentsMustBePlacedBeforeNamedArguments)
-          .toList();
+          .map(Visitor::positionalArgumentsMustBePlacedBeforeNamedArguments);
     }
 
     private static List<Log> findUnknownParamNameErrors(CallP callP, List<Param> params) {
       var names = Sets.map(params, Param::name);
-      return callP.args().stream()
+      return callP
+          .args()
           .filter(a -> a instanceof NamedArgP)
           .map(a -> (NamedArgP) a)
           .filter(a -> !names.contains(a.name()))
-          .map(Visitor::unknownParameterError)
-          .toList();
+          .map(Visitor::unknownParameterError);
     }
 
     private static List<Log> findDuplicateAssignmentErrors(
         CallP callP, List<ExprP> positionalArgs, List<Param> params) {
       var names = positionalArgNames(positionalArgs, params);
-      return callP.args().stream()
+      return callP
+          .args()
           .filter(a -> a instanceof NamedArgP)
           .map(a -> (NamedArgP) a)
           .filter(a -> !names.add(a.name()))
-          .map(Visitor::paramIsAlreadyAssignedError)
-          .toList();
+          .map(Visitor::paramIsAlreadyAssignedError);
     }
 
     private static Set<String> positionalArgNames(List<ExprP> positionalArgs, List<Param> params) {

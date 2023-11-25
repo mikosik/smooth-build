@@ -7,9 +7,9 @@ import static org.smoothbuild.common.io.Paths.removeExtension;
 import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR_FILE_PATH;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
 
-import com.google.common.collect.ImmutableList;
 import jakarta.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Properties;
 import org.smoothbuild.filesystem.space.FilePath;
@@ -56,11 +56,11 @@ public class InstallationHashes {
   }
 
   private HashNode standardLibsNode() throws IOException {
-    ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
+    var builder = new ArrayList<HashNode>();
     for (var filePath : STD_LIB_MODS) {
       builder.add(moduleNode(filePath));
     }
-    return new HashNode("standard libraries", listOfAll(builder.build()));
+    return new HashNode("standard libraries", listOfAll(builder));
   }
 
   private HashNode moduleNode(FilePath filePath) throws IOException {

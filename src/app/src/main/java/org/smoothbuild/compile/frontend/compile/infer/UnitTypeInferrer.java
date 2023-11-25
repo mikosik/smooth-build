@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;

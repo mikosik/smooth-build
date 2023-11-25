@@ -2,6 +2,7 @@ package org.smoothbuild.common.filesystem.disk;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.filesystem.base.AssertPath.assertPathExists;
 import static org.smoothbuild.common.filesystem.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.common.filesystem.base.AssertPath.assertPathIsFile;
@@ -10,11 +11,11 @@ import static org.smoothbuild.common.filesystem.base.PathState.DIR;
 import static org.smoothbuild.common.filesystem.base.PathState.FILE;
 import static org.smoothbuild.common.filesystem.base.PathState.NOTHING;
 
-import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Objects;
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -50,11 +51,11 @@ public class DiskFileSystem implements FileSystem {
   public Iterable<PathS> files(PathS dir) throws IOException {
     assertPathIsDir(this, dir);
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(jdkPath(dir))) {
-      ImmutableList.Builder<PathS> builder = ImmutableList.builder();
+      var builder = new ArrayList<PathS>();
       for (Path path : stream) {
         builder.add(PathS.path(path.getFileName().toString()));
       }
-      return builder.build();
+      return listOfAll(builder);
     }
   }
 

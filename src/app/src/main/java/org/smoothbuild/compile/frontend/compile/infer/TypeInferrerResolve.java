@@ -1,6 +1,5 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
-import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
@@ -118,7 +117,7 @@ public class TypeInferrerResolve {
   }
 
   private boolean resolveInstantiateTypeArgs(InstantiateP instantiateP) {
-    var resolvedTypeArgs = map(instantiateP.typeArgs(), unifier::resolve);
+    var resolvedTypeArgs = instantiateP.typeArgs().map(unifier::resolve);
     if (resolvedTypeArgs.stream().anyMatch(this::hasTempVar)) {
       logger.log(compileError(instantiateP.location(), "Cannot infer actual type parameters."));
       return false;

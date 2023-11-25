@@ -3,6 +3,7 @@ package org.smoothbuild.common.collect;
 import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
+import static org.smoothbuild.common.collect.List.listOfAll;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
@@ -47,9 +48,7 @@ public class NList<T extends Named> extends AbstractList<T> {
   public static <E extends Named> NList<E> nlist(Collection<E> elements) {
     checkContainsNoDuplicatedNames(elements);
     return new NList<>(
-        () -> List.listOfAll(elements),
-        () -> calculateMap(elements),
-        () -> calculateIndexMap(elements));
+        () -> listOfAll(elements), () -> calculateMap(elements), () -> calculateIndexMap(elements));
   }
 
   private static <E extends Named> void checkContainsNoDuplicatedNames(
@@ -68,7 +67,7 @@ public class NList<T extends Named> extends AbstractList<T> {
 
   public static <E extends Named> NList<E> nlist(ImmutableMap<String, E> map) {
     return new NList<>(
-        () -> List.listOfAll(map.values()), () -> map, () -> calculateIndexMap(map.values()));
+        () -> listOfAll(map.values()), () -> map, () -> calculateIndexMap(map.values()));
   }
 
   /**
@@ -77,7 +76,7 @@ public class NList<T extends Named> extends AbstractList<T> {
    */
   public static <E extends Named> NList<E> nlistWithShadowing(Collection<E> list) {
     return new NList<>(
-        () -> List.listOfAll(list), () -> calculateMap(list), () -> calculateIndexMap(list));
+        () -> listOfAll(list), () -> calculateMap(list), () -> calculateIndexMap(list));
   }
 
   // visible for testing

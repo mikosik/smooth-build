@@ -1,6 +1,7 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
-import static org.smoothbuild.common.collect.Lists.generate;
+import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Lists.zip;
 import static org.smoothbuild.common.collect.Optionals.flatMapPair;
@@ -9,9 +10,9 @@ import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.compile.CompileError;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
@@ -119,17 +120,17 @@ public class ExprTypeUnifier {
     return mapPair(paramTs, resultT, (p, r) -> unifyFunc(funcP, p, r)).orElse(false);
   }
 
-  private boolean unifyFunc(FuncP funcP, ImmutableList<TypeS> paramTs, TypeS resultT) {
+  private boolean unifyFunc(FuncP funcP, List<TypeS> paramTs, TypeS resultT) {
     var typeTellerForBody = typeTeller.withScope(funcP.scope());
     var funcTS = new FuncTS(paramTs, resultT);
     funcP.setTypeS(funcTS);
     return unifyEvaluableBody(funcP, resultT, funcTS, typeTellerForBody);
   }
 
-  private Optional<ImmutableList<TypeS>> inferParamTs(NList<ItemP> params) {
+  private Optional<List<TypeS>> inferParamTs(NList<ItemP> params) {
     var paramTs = pullUp(map(params, p -> typeTeller.translate(p.type())));
     paramTs.ifPresent(types -> zip(params, types, ItemP::setTypeS));
-    return paramTs;
+    return paramTs.map(List::listOfAll);
   }
 
   private Boolean unifyEvaluableBody(
@@ -194,10 +195,10 @@ public class ExprTypeUnifier {
     var calleeT = unifyExpr(callP.callee());
     var positionedArgs = callP.positionedArgs();
     var argTs = pullUp(map(positionedArgs, this::unifyExpr));
-    return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, a, callP.location()));
+    return flatMapPair(calleeT, argTs, (c, a) -> unifyCall(c, listOfAll(a), callP.location()));
   }
 
-  private Optional<TypeS> unifyCall(TypeS calleeT, ImmutableList<TypeS> argTs, Location location) {
+  private Optional<TypeS> unifyCall(TypeS calleeT, List<TypeS> argTs, Location location) {
     var resultT = unifier.newTempVar();
     var funcT = new FuncTS(argTs, resultT);
     try {
@@ -213,7 +214,7 @@ public class ExprTypeUnifier {
     var polymorphicP = instantiateP.polymorphic();
     if (unifyPolymorphic(polymorphicP)) {
       var schema = polymorphicP.schemaS();
-      instantiateP.setTypeArgs(generate(schema.quantifiedVars().size(), unifier::newTempVar));
+      instantiateP.setTypeArgs(list(schema.quantifiedVars().size(), unifier::newTempVar));
       return Optional.of(schema.instantiate(instantiateP.typeArgs()));
     } else {
       return Optional.empty();
@@ -238,10 +239,10 @@ public class ExprTypeUnifier {
   private Optional<TypeS> unifyOrder(OrderP orderP) {
     var elems = orderP.elems();
     var elemTs = pullUp(map(elems, this::unifyExpr));
-    return elemTs.flatMap(types -> unifyElemsWithArray(types, orderP.location()));
+    return elemTs.flatMap(types -> unifyElemsWithArray(listOfAll(types), orderP.location()));
   }
 
-  private Optional<TypeS> unifyElemsWithArray(ImmutableList<TypeS> elemTs, Location location) {
+  private Optional<TypeS> unifyElemsWithArray(List<TypeS> elemTs, Location location) {
     var elemVar = unifier.newTempVar();
     for (TypeS elemT : elemTs) {
       try {

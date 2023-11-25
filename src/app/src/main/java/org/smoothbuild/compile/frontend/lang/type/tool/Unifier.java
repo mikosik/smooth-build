@@ -3,18 +3,18 @@ package org.smoothbuild.compile.frontend.lang.type.tool;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.Strings.q;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.compile.frontend.lang.type.tool.ConstraintInferrer.unifyAndInferConstraints;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.type.TempVarS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.compile.frontend.lang.type.VarS;
@@ -88,7 +88,7 @@ public class Unifier {
   public void add(EqualityConstraint constraint) throws UnifierException {
     var queue = new LinkedList<EqualityConstraint>();
     queue.add(constraint);
-    var ordered = ImmutableList.copyOf(instantiationConstraints);
+    var ordered = listOfAll(instantiationConstraints);
     while (!queue.isEmpty()) {
       var resolvedBefore = resolvedInstantiationConstraints(ordered);
       drainQueue(queue);
@@ -98,24 +98,24 @@ public class Unifier {
     }
   }
 
-  private static ImmutableList<InstantiationConstraint> findUpdated(
+  private static List<InstantiationConstraint> findUpdated(
       List<ResolvedInstantiation> before,
       List<ResolvedInstantiation> after,
       List<InstantiationConstraint> ordered) {
-    Builder<InstantiationConstraint> builder = ImmutableList.builder();
+    var builder = new ArrayList<InstantiationConstraint>();
     for (int i = 0; i < before.size(); i++) {
       if (!before.get(i).equals(after.get(i))) {
         builder.add(ordered.get(i));
       }
     }
-    return builder.build();
+    return listOfAll(builder);
   }
 
   private static record ResolvedInstantiation(TypeS instantiation, TypeS schema) {}
 
   private List<ResolvedInstantiation> resolvedInstantiationConstraints(
       List<InstantiationConstraint> orderedInstantiationConstraints) {
-    return map(orderedInstantiationConstraints, this::resolve);
+    return orderedInstantiationConstraints.map(this::resolve);
   }
 
   private ResolvedInstantiation resolve(InstantiationConstraint constraint) {
