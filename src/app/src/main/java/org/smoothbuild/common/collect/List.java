@@ -43,6 +43,11 @@ public class List<E> extends AbstractList<E> {
     return array.length;
   }
 
+  @Override
+  public List<E> subList(int fromIndex, int toIndex) {
+    return list(Arrays.copyOfRange(array, fromIndex, toIndex));
+  }
+
   public List<E> append(Collection<? extends E> list) {
     @SuppressWarnings("unchecked")
     E[] toAppend = (E[]) list.toArray();

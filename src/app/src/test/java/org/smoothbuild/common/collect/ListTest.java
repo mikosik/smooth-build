@@ -177,6 +177,21 @@ public class ListTest {
   }
 
   @Nested
+  class _sublist {
+    @Test
+    void returns_sublist() {
+      var list = list("a", "b", "c");
+      assertThat(list.subList(1, 2)).isEqualTo(list("b"));
+    }
+
+    @Test
+    void is_covariant() {
+      var list = list("a", "b", "c");
+      assertThat(list.subList(1, 2)).isInstanceOf(List.class);
+    }
+  }
+
+  @Nested
   class _append {
     @Test
     void two_empty_lists() {
