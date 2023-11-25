@@ -83,6 +83,25 @@ public final class List<E> extends AbstractList<E> {
     return list(reversed);
   }
 
+  public List<E> rotate(int distance) {
+    var length = array.length;
+    if (length == 0) {
+      return this;
+    }
+    var distanceModulo = distance < 0 ? ((distance % length) + length) % length : distance % length;
+    if (distanceModulo == 0) {
+      return this;
+    }
+    @SuppressWarnings("unchecked")
+    E[] rotated = (E[]) new Object[length];
+    var i = distanceModulo;
+    for (E e : array) {
+      rotated[i] = e;
+      i = (i + 1) % length;
+    }
+    return list(rotated);
+  }
+
   public List<E> sortUsing(Comparator<? super E> comparator) {
     var copy = array.clone();
     Arrays.sort(copy, comparator);
