@@ -4,7 +4,6 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Objects;
 import org.smoothbuild.common.collect.NList;
@@ -19,7 +18,7 @@ public final class StructP extends NalImpl implements ScopedP {
   private StructTS structTS;
 
   public StructP(String name, List<ItemP> fields, Location location) {
-    this(name, nlistWithShadowing(ImmutableList.copyOf(fields)), location);
+    this(name, nlistWithShadowing(fields), location);
   }
 
   private StructP(String name, NList<ItemP> fields, Location location) {

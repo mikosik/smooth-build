@@ -5,20 +5,20 @@ import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
 
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import java.util.AbstractList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
+import org.smoothbuild.common.function.ThrowingFunction;
 
 /**
  * List of Named.
@@ -26,9 +26,9 @@ import java.util.stream.Stream;
  * This class is thread-safe.
  */
 public class NList<T extends Named> extends AbstractList<T> {
-  private static final NList<?> EMPTY = nlist(ImmutableList.of());
+  private static final NList<?> EMPTY = nlist(List.list());
 
-  private final Supplier<ImmutableList<T>> list;
+  private final Supplier<List<T>> list;
   private final Supplier<ImmutableMap<String, T>> map;
   private final Supplier<ImmutableMap<String, Integer>> indexMap;
 
@@ -41,15 +41,17 @@ public class NList<T extends Named> extends AbstractList<T> {
 
   @SafeVarargs
   public static <E extends Named> NList<E> nlist(E... elems) {
-    return nlist(Lists.list(elems));
+    return nlist(List.list(elems));
   }
 
-  public static <E extends Named> NList<E> nlist(ImmutableList<E> list) {
-    checkContainsNoDuplicatedNames(list);
-    return new NList<>(() -> list, () -> calculateMap(list), () -> calculateIndexMap(list));
+  public static <E extends Named> NList<E> nlist(Collection<E> elements) {
+    checkContainsNoDuplicatedNames(elements);
+    return new NList<>(
+        () -> List.list(elements), () -> calculateMap(elements), () -> calculateIndexMap(elements));
   }
 
-  private static <E extends Named> void checkContainsNoDuplicatedNames(ImmutableList<E> list) {
+  private static <E extends Named> void checkContainsNoDuplicatedNames(
+      Collection<? extends E> list) {
     HashSet<String> names = new HashSet<>();
     for (E elem : list) {
       String name = elem.name();
@@ -64,20 +66,21 @@ public class NList<T extends Named> extends AbstractList<T> {
 
   public static <E extends Named> NList<E> nlist(ImmutableMap<String, E> map) {
     return new NList<>(
-        () -> map.values().asList(), () -> map, () -> calculateIndexMap(map.values()));
+        () -> List.list(map.values()), () -> map, () -> calculateIndexMap(map.values()));
   }
 
   /**
    * Creates nlist which allows elements with duplicated names. When {@link #get(String)}
    * is called and more than one element has given name then the first one is returned.
    */
-  public static <E extends Named> NList<E> nlistWithShadowing(ImmutableList<E> list) {
-    return new NList<>(() -> list, () -> calculateMap(list), () -> calculateIndexMap(list));
+  public static <E extends Named> NList<E> nlistWithShadowing(Collection<E> list) {
+    return new NList<>(
+        () -> List.list(list), () -> calculateMap(list), () -> calculateIndexMap(list));
   }
 
   // visible for testing
   NList(
-      Supplier<ImmutableList<T>> list,
+      Supplier<List<T>> list,
       Supplier<ImmutableMap<String, T>> map,
       Supplier<ImmutableMap<String, Integer>> indexMap) {
     this.list = memoize(list);
@@ -115,8 +118,9 @@ public class NList<T extends Named> extends AbstractList<T> {
     return builder.build();
   }
 
-  public <R extends Named> NList<R> map(Function<T, R> mapping) {
-    return nlist(Lists.map(list(), mapping));
+  public <R extends Named, E extends Throwable> NList<R> map(ThrowingFunction<T, R, E> mapping)
+      throws E {
+    return nlist(list().map(mapping));
   }
 
   public Integer indexOf(String name) {
@@ -215,7 +219,7 @@ public class NList<T extends Named> extends AbstractList<T> {
 
   // helper methods
 
-  public ImmutableList<T> list() {
+  public List<T> list() {
     return list.get();
   }
 

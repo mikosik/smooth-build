@@ -186,7 +186,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
       return nlistWithShadowing(createItemsList(ownerName, itemList));
     }
 
-    private ImmutableList<ItemP> createItemsList(String ownerName, ItemListContext itemList) {
+    private List<ItemP> createItemsList(String ownerName, ItemListContext itemList) {
       if (itemList != null) {
         return sane(itemList.item()).stream()
             .map(item -> createItem(ownerName, item))
