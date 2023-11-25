@@ -9,7 +9,7 @@ import java.util.Comparator;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.common.function.ThrowingFunction;
 
-public class List<E> extends AbstractList<E> {
+public final class List<E> extends AbstractList<E> {
   private final E[] array;
 
   @SafeVarargs
@@ -48,9 +48,14 @@ public class List<E> extends AbstractList<E> {
     return list(Arrays.copyOfRange(array, fromIndex, toIndex));
   }
 
-  public List<E> append(Collection<? extends E> list) {
+  public List<E> appendAll(Collection<? extends E> list) {
     @SuppressWarnings("unchecked")
     E[] toAppend = (E[]) list.toArray();
+    return append(toAppend);
+  }
+
+  @SafeVarargs
+  public final List<E> append(E... toAppend) {
     var appended = Arrays.copyOf(array, array.length + toAppend.length);
     System.arraycopy(toAppend, 0, appended, array.length, toAppend.length);
     return new List<>(appended);
