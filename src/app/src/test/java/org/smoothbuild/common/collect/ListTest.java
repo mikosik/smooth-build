@@ -16,6 +16,8 @@ import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.common.function.ThrowingSupplier;
 
 public class ListTest {
@@ -242,6 +244,28 @@ public class ListTest {
     @Test
     void list_with_many_elements() {
       assertThat(list("a", "b", "c", "d").reverse()).isEqualTo(list("d", "c", "b", "a"));
+    }
+  }
+
+  @Nested
+  class _rotate {
+    @Test
+    void empty_lists_returns_empty_list() {
+      assertThat(list().rotate(3)).isEqualTo(list());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-9, -6, -3, 0, 3, 6, 9})
+    void rotated_by_zero_or_full_cycle_returns_same_instance(int distance) {
+      var list = list("a", "b", "c");
+      assertThat(list.rotate(distance)).isSameInstanceAs(list);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-7, -4, -1, 2, 5, 8, 11})
+    void rotated_not_full_cycle(int distance) {
+      var list = list("a", "b", "c");
+      assertThat(list.rotate(distance)).isEqualTo(list("b", "c", "a"));
     }
   }
 
