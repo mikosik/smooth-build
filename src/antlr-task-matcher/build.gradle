@@ -1,0 +1,11 @@
+plugins {
+    id 'antlr'
+}
+
+generateGrammarSource {
+    arguments += ["-visitor"]
+}
+
+dependencies {
+    antlr libs.antlr4
+}
