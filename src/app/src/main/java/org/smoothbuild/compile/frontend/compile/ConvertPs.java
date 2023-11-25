@@ -8,7 +8,7 @@ import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.BLOB;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.STRING;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.success;
 
 import io.vavr.Tuple2;
 import java.util.Optional;
@@ -65,11 +65,11 @@ import org.smoothbuild.compile.frontend.lang.define.TypeDefinitionS;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 import org.smoothbuild.compile.frontend.lang.type.TupleTS;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
-public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Maybe<ModuleS>> {
+public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>> {
   @Override
-  public Maybe<ModuleS> apply(Tuple2<ModuleP, ScopeS> context) {
+  public Try<ModuleS> apply(Tuple2<ModuleP, ScopeS> context) {
     var moduleP = context._1();
     var environment = context._2();
     var typeTeller = new TypeTeller(environment, moduleP.scope());

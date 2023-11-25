@@ -6,12 +6,11 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
-import static org.smoothbuild.out.log.Maybe.failure;
-import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.success;
 import static org.smoothbuild.out.log.TestingLog.ERROR_LOG;
 import static org.smoothbuild.out.log.TestingLog.INFO_LOG;
 import static org.smoothbuild.out.log.TestingLog.WARNING_LOG;
+import static org.smoothbuild.out.log.Try.failure;
+import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
@@ -19,21 +18,21 @@ import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class MaybeTest {
+public class TryTest {
   @Nested
-  class _maybe {
+  class _try_of {
     @Test
     void creation_with_value_and_non_problem() {
-      var maybe = maybe("abc", WARNING_LOG);
-      assertThat(maybe.value()).isEqualTo("abc");
-      assertThat(maybe.logs()).isEqualTo(logs(WARNING_LOG));
+      var tryOf = Try.of("abc", WARNING_LOG);
+      assertThat(tryOf.value()).isEqualTo("abc");
+      assertThat(tryOf.logs()).isEqualTo(logs(WARNING_LOG));
     }
 
     @Test
     void creation_with_value_and_problem() {
-      var maybe = maybe("abc", ERROR_LOG);
-      assertThat(maybe.valueOptional()).isEqualTo(Optional.empty());
-      assertThat(maybe.logs()).isEqualTo(logs(ERROR_LOG));
+      var tryOf = Try.of("abc", ERROR_LOG);
+      assertThat(tryOf.valueOptional()).isEqualTo(Optional.empty());
+      assertThat(tryOf.logs()).isEqualTo(logs(ERROR_LOG));
     }
   }
 
@@ -41,20 +40,20 @@ public class MaybeTest {
   class _success {
     @Test
     public void has_value() {
-      var maybe = success("abc");
-      assertThat(maybe.value()).isEqualTo("abc");
+      var success = success("abc");
+      assertThat(success.value()).isEqualTo("abc");
     }
 
     @Test
     public void has_value_optional() {
-      var maybe = success("abc");
-      assertThat(maybe.valueOptional()).isEqualTo(Optional.of("abc"));
+      var success = success("abc");
+      assertThat(success.valueOptional()).isEqualTo(Optional.of("abc"));
     }
 
     @Test
     public void creation_with_non_problem_log_is_allowed() {
-      var maybe = success("abc", WARNING_LOG);
-      assertThat(maybe.value()).isEqualTo("abc");
+      var success = success("abc", WARNING_LOG);
+      assertThat(success.value()).isEqualTo("abc");
     }
 
     @Test
@@ -78,14 +77,14 @@ public class MaybeTest {
 
     @Test
     public void has_no_value() {
-      var maybe = failure(ERROR_LOG);
-      assertCall(maybe::value).throwsException(IllegalStateException.class);
+      var failure = failure(ERROR_LOG);
+      assertCall(failure::value).throwsException(IllegalStateException.class);
     }
 
     @Test
     public void has_no_value_optional() {
-      var maybe = failure(ERROR_LOG);
-      assertThat(maybe.valueOptional()).isEqualTo(Optional.empty());
+      var failure = failure(ERROR_LOG);
+      assertThat(failure.valueOptional()).isEqualTo(Optional.empty());
     }
   }
 
@@ -109,7 +108,7 @@ public class MaybeTest {
 
   @Test
   public void to_string() {
-    var maybe = success("abc", info("message"));
-    assertThat(maybe.toString()).isEqualTo("Maybe{abc, [Log{INFO, 'message'}]}");
+    var success = success("abc", info("message"));
+    assertThat(success.toString()).isEqualTo("Try{abc, [Log{INFO, 'message'}]}");
   }
 }

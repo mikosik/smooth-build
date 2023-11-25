@@ -6,7 +6,6 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import io.vavr.Tuple2;
 import java.util.ArrayList;
@@ -67,11 +66,11 @@ import org.smoothbuild.compile.frontend.lang.base.location.Locations;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
-public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Maybe<ModuleP>> {
+public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Try<ModuleP>> {
   @Override
-  public Maybe<ModuleP> apply(Tuple2<ModuleContext, FilePath> context) {
+  public Try<ModuleP> apply(Tuple2<ModuleContext, FilePath> context) {
     var logBuffer = new LogBuffer();
     var module = context._1();
     var filePath = context._2();
@@ -81,7 +80,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Ma
     apTranslatingVisitor.visit(module);
     var name = filePath.withExtension("").path().lastPart().toString();
     var moduleP = new ModuleP(name, listOfAll(structs), listOfAll(evaluables));
-    return maybe(moduleP, logBuffer);
+    return Try.of(moduleP, logBuffer);
   }
 
   private static String unquote(String quotedString) {

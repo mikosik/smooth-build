@@ -11,7 +11,7 @@ import static org.smoothbuild.filesystem.space.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.filesystem.space.SpaceUtils.forSpace;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.testing.TestContext.writeFile;
 
 import com.google.inject.Injector;
@@ -27,14 +27,14 @@ import org.smoothbuild.filesystem.project.ProjectSpaceModule;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.MemoryFileSystemModule;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 import org.smoothbuild.run.step.StepExecutor;
 import org.smoothbuild.testing.accept.MemoryReporter;
 
 public class TestingModuleLoader {
   private final String sourceCode;
   private String importedSourceCode;
-  private Maybe<ScopeS> definitions;
+  private Try<ScopeS> definitions;
 
   TestingModuleLoader(String sourceCode) {
     this.sourceCode = sourceCode;
@@ -113,7 +113,7 @@ public class TestingModuleLoader {
         + "\n====================\n";
   }
 
-  private Maybe<ScopeS> load() {
+  private Try<ScopeS> load() {
     var injector = createInjector(
         PRODUCTION,
         new StandardLibrarySpaceModule(),

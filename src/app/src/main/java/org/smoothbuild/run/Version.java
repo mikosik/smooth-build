@@ -1,8 +1,8 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.failure;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.failure;
+import static org.smoothbuild.out.log.Try.success;
 
 import io.vavr.Tuple0;
 import jakarta.inject.Inject;
@@ -12,9 +12,9 @@ import org.smoothbuild.common.collect.List;
 import org.smoothbuild.filesystem.install.BuildVersion;
 import org.smoothbuild.filesystem.install.HashNode;
 import org.smoothbuild.filesystem.install.InstallationHashes;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
-public class Version implements Function<Tuple0, Maybe<String>> {
+public class Version implements Function<Tuple0, Try<String>> {
   private final InstallationHashes installationHashes;
 
   @Inject
@@ -23,7 +23,7 @@ public class Version implements Function<Tuple0, Maybe<String>> {
   }
 
   @Override
-  public Maybe<String> apply(Tuple0 tuple0) {
+  public Try<String> apply(Tuple0 tuple0) {
     try {
       return success(createVersionText(installationHashes.installationNode()));
     } catch (IOException e) {

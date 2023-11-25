@@ -5,7 +5,7 @@ import com.google.inject.Key;
 import io.vavr.control.Option;
 import jakarta.inject.Inject;
 import java.util.function.Function;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.step.Step.ComposedStep;
 import org.smoothbuild.run.step.Step.FactoryStep;
@@ -53,7 +53,7 @@ public class StepExecutor {
   }
 
   private <T, R> Option<R> functionKey(
-      Key<? extends Function<T, Maybe<R>>> key, T argument, Reporter reporter) {
+      Key<? extends Function<T, Try<R>>> key, T argument, Reporter reporter) {
     var function = injector.getInstance(key);
     return function(function, argument, reporter);
   }
@@ -62,7 +62,7 @@ public class StepExecutor {
     return injector.getInstance(key).apply(argument);
   }
 
-  private <T, R> Option<R> function(Function<T, Maybe<R>> function, T argument, Reporter reporter) {
+  private <T, R> Option<R> function(Function<T, Try<R>> function, T argument, Reporter reporter) {
     var result = function.apply(argument);
     var errors = result.logs().toList();
     if (!errors.isEmpty()) {

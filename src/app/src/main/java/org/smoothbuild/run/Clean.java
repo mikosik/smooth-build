@@ -4,7 +4,7 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PA
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.success;
 
 import io.vavr.Tuple0;
 import jakarta.inject.Inject;
@@ -15,9 +15,9 @@ import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
-public class Clean implements Function<Tuple0, Maybe<String>> {
+public class Clean implements Function<Tuple0, Try<String>> {
   private final FileSystem fileSystem;
 
   @Inject
@@ -26,7 +26,7 @@ public class Clean implements Function<Tuple0, Maybe<String>> {
   }
 
   @Override
-  public Maybe<String> apply(Tuple0 argument) {
+  public Try<String> apply(Tuple0 argument) {
     var logBuffer = new LogBuffer();
     deleteDir(logBuffer, HASHED_DB_PATH);
     deleteDir(logBuffer, COMPUTATION_CACHE_PATH);

@@ -3,7 +3,6 @@ package org.smoothbuild.compile.frontend.compile;
 import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptyScope;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.function.Function;
@@ -24,18 +23,18 @@ import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
 /**
  * For each syntactic construct that implements WithScope
  * ScopeInitializer calculates its Scope and sets via WithScopeP.setScope()
  */
-public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP, Maybe<ModuleP>> {
+public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP, Try<ModuleP>> {
   @Override
-  public Maybe<ModuleP> apply(ModuleP moduleP) {
+  public Try<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     initializeScopes(moduleP, logBuffer);
-    return maybe(moduleP, logBuffer);
+    return Try.of(moduleP, logBuffer);
   }
 
   @VisibleForTesting

@@ -2,7 +2,7 @@ package org.smoothbuild.run;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.compile.frontend.FrontendCompilerStep.frontendCompilerStep;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.step;
 
 import io.vavr.Tuple0;
@@ -10,7 +10,7 @@ import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 import org.smoothbuild.run.step.Step;
 import org.smoothbuild.run.step.StepFactory;
 
@@ -20,7 +20,7 @@ public class ListStepFactory implements StepFactory<Tuple0, String> {
     return frontendCompilerStep().then(step(ListStepFactory::printEvaluables));
   }
 
-  private static Maybe<String> printEvaluables(ScopeS scopeS) {
+  private static Try<String> printEvaluables(ScopeS scopeS) {
     var oneValuePerLineString = scopeS.evaluables().toMap().values().stream()
         .filter(ListStepFactory::isNoArgNotGenericValue)
         .map(Nal::name)

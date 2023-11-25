@@ -9,8 +9,7 @@ import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PA
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.failure;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Try.failure;
 import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
@@ -32,12 +31,12 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
 import org.smoothbuild.filesystem.space.ForSpace;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
 
-public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Maybe<String>> {
+public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<String>> {
   private final FileSystem fileSystem;
 
   @Inject
@@ -46,7 +45,7 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Mayb
   }
 
   @Override
-  public Maybe<String> apply(List<Tuple2<ExprS, ValueB>> argument) {
+  public Try<String> apply(List<Tuple2<ExprS, ValueB>> argument) {
     List<Tuple2<ReferenceS, ValueB>> artifacts = argument.map(t -> t.map1(this::toReferenceS));
     try {
       fileSystem.createDir(ARTIFACTS_PATH);
@@ -60,7 +59,7 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Mayb
     var messages = savedArtifacts
         .map(t -> t._1().name() + " -> " + t._2().map(PathS::q).getOrElse("?"))
         .toString("\n");
-    return maybe(messages, loggerBuffer);
+    return Try.of(messages, loggerBuffer);
   }
 
   private ReferenceS toReferenceS(ExprS e) {

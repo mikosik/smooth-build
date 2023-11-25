@@ -9,7 +9,6 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import io.vavr.Tuple2;
 import java.util.ArrayList;
@@ -38,16 +37,16 @@ import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
-public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>, Maybe<ModuleP>> {
+public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
   @Override
-  public Maybe<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
+  public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logBuffer = new LogBuffer();
     var environment = context._2();
     var moduleP = context._1();
     new Visitor(environment, immutableBindings(), logBuffer).visitModule(moduleP);
-    return maybe(moduleP, logBuffer);
+    return Try.of(moduleP, logBuffer);
   }
 
   private static class Visitor extends ScopingModuleVisitorP {
