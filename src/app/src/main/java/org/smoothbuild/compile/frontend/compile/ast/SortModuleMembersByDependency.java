@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.graph.SortTopologically.sortTopologically;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,31 +26,31 @@ import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.LogBuffer;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
 /**
  * Sort module Evaluables and Structs based on dependencies between them.
  */
-public class SortModuleMembersByDependency implements Function<ModuleP, Maybe<ModuleP>> {
+public class SortModuleMembersByDependency implements Function<ModuleP, Try<ModuleP>> {
   @Override
-  public Maybe<ModuleP> apply(ModuleP moduleP) {
+  public Try<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     var sortedTs = sortStructsByDeps(moduleP.structs());
     if (sortedTs.sorted() == null) {
       logBuffer.log(createCycleError("Type hierarchy", sortedTs.cycle()));
-      return maybe(null, logBuffer);
+      return Try.of(null, logBuffer);
     }
     var sortedEvaluables = sortEvaluablesByDeps(moduleP.evaluables());
     if (sortedEvaluables.sorted() == null) {
       logBuffer.log(createCycleError("Dependency graph", sortedEvaluables.cycle()));
-      return maybe(null, logBuffer);
+      return Try.of(null, logBuffer);
     }
     ModuleP result = new ModuleP(
         moduleP.name(),
         sortedTs.valuesReversed(),
         sortedEvaluables.valuesReversed(),
         moduleP.scope());
-    return maybe(result, logBuffer);
+    return Try.of(result, logBuffer);
   }
 
   private static TopologicalSortingRes<String, NamedEvaluableP, Location> sortEvaluablesByDeps(

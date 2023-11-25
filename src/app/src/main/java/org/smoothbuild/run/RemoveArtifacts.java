@@ -3,8 +3,8 @@ package org.smoothbuild.run;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
 import static org.smoothbuild.out.log.Log.error;
-import static org.smoothbuild.out.log.Maybe.failure;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.failure;
+import static org.smoothbuild.out.log.Try.success;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple0;
@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.util.function.Function;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.filesystem.space.ForSpace;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
-public class RemoveArtifacts implements Function<Tuple0, Maybe<Tuple0>> {
+public class RemoveArtifacts implements Function<Tuple0, Try<Tuple0>> {
   private final FileSystem fileSystem;
 
   @Inject
@@ -24,7 +24,7 @@ public class RemoveArtifacts implements Function<Tuple0, Maybe<Tuple0>> {
   }
 
   @Override
-  public Maybe<Tuple0> apply(Tuple0 unused) {
+  public Try<Tuple0> apply(Tuple0 unused) {
     try {
       fileSystem.delete(ARTIFACTS_PATH);
       return success(Tuple.empty());

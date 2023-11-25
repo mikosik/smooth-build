@@ -1,8 +1,8 @@
 package org.smoothbuild.compile.backend;
 
 import static org.smoothbuild.out.log.Log.fatal;
-import static org.smoothbuild.out.log.Maybe.failure;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.failure;
+import static org.smoothbuild.out.log.Try.success;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
@@ -12,7 +12,7 @@ import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.load.BytecodeLoader;
@@ -21,7 +21,7 @@ import org.smoothbuild.vm.bytecode.load.FileLoader;
 public class BackendCompile
     implements Function<
         Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>>,
-        Maybe<Tuple2<List<ExprB>, BsMapping>>> {
+        Try<Tuple2<List<ExprB>, BsMapping>>> {
   private final BytecodeF bytecodeF;
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
@@ -34,7 +34,7 @@ public class BackendCompile
   }
 
   @Override
-  public Maybe<Tuple2<List<ExprB>, BsMapping>> apply(
+  public Try<Tuple2<List<ExprB>, BsMapping>> apply(
       Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>> argument) {
     List<ExprS> exprs = argument._1();
     var evaluables = argument._2();

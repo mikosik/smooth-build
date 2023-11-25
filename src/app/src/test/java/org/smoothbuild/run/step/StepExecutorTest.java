@@ -13,9 +13,8 @@ import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
 import static org.smoothbuild.out.log.Log.warning;
-import static org.smoothbuild.out.log.Maybe.failure;
-import static org.smoothbuild.out.log.Maybe.maybe;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.failure;
+import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.constStep;
 import static org.smoothbuild.run.step.Step.optionStep;
 import static org.smoothbuild.run.step.Step.step;
@@ -39,7 +38,7 @@ import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.log.Logs;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 import org.smoothbuild.out.report.Reporter;
 
 class StepExecutorTest {
@@ -138,7 +137,7 @@ class StepExecutorTest {
           .throwsException(NullPointerException.class);
     }
 
-    private static class SuffixWithInjected implements Function<String, Maybe<String>> {
+    private static class SuffixWithInjected implements Function<String, Try<String>> {
       private final String string;
 
       @Inject
@@ -147,12 +146,12 @@ class StepExecutorTest {
       }
 
       @Override
-      public Maybe<String> apply(String arg) {
+      public Try<String> apply(String arg) {
         return success(arg + string);
       }
     }
 
-    private static class LogInjectedLog implements Function<Tuple0, Maybe<String>> {
+    private static class LogInjectedLog implements Function<Tuple0, Try<String>> {
       private final Log log;
 
       @Inject
@@ -161,14 +160,14 @@ class StepExecutorTest {
       }
 
       @Override
-      public Maybe<String> apply(Tuple0 tuple0) {
+      public Try<String> apply(Tuple0 tuple0) {
         return failure(log);
       }
     }
 
-    private static class ReturnNull implements Function<Tuple0, Maybe<String>> {
+    private static class ReturnNull implements Function<Tuple0, Try<String>> {
       @Override
-      public Maybe<String> apply(Tuple0 tuple0) {
+      public Try<String> apply(Tuple0 tuple0) {
         return null;
       }
     }
@@ -180,7 +179,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.out.log.Level#values")
     void unnamed_step_that_logged_something_uses_empty_string_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> maybe("value", log));
+      var step = step(t -> Try.of("value", log));
 
       assertStepExecutionReports(step, log);
     }
@@ -189,7 +188,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.out.log.Level#values")
     void named_step_that_logged_something_uses_name_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> maybe("value", log)).named("name");
+      var step = step(t -> Try.of("value", log)).named("name");
 
       var reporter = mock(Reporter.class);
 
@@ -205,7 +204,7 @@ class StepExecutorTest {
     @MethodSource("org.smoothbuild.out.log.Level#values")
     void named_inner_step_that_logged_something_uses_full_name_for_header(Level level) {
       var log = new Log(level, "message");
-      var step = step(t -> maybe("value", log)).named("name").named("outer");
+      var step = step(t -> Try.of("value", log)).named("name").named("outer");
 
       var reporter = mock(Reporter.class);
 
@@ -246,7 +245,7 @@ class StepExecutorTest {
     @Test
     void second_step_is_not_executed_when_first_fails() {
       var reporter = mock(Reporter.class);
-      Function<Object, Maybe<String>> function = mock();
+      Function<Object, Try<String>> function = mock();
       var step = step(v -> failure(error("error"))).then(step(function));
 
       var result = stepExecutor().execute(step, Tuple.empty(), reporter);

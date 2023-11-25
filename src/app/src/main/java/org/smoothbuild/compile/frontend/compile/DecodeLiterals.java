@@ -1,7 +1,6 @@
 package org.smoothbuild.compile.frontend.compile;
 
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
 import org.smoothbuild.common.DecodeHexException;
@@ -13,14 +12,14 @@ import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
 import org.smoothbuild.compile.frontend.compile.ast.define.StringP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
-public class DecodeLiterals implements Function<ModuleP, Maybe<ModuleP>> {
+public class DecodeLiterals implements Function<ModuleP, Try<ModuleP>> {
   @Override
-  public Maybe<ModuleP> apply(ModuleP moduleP) {
+  public Try<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     new DecodeLiteralModuleVisitor(logBuffer).visitModule(moduleP);
-    return maybe(moduleP, logBuffer);
+    return Try.of(moduleP, logBuffer);
   }
 
   private static class DecodeLiteralModuleVisitor extends ModuleVisitorP {

@@ -8,7 +8,6 @@ import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.ANNOTAT
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.BYTECODE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_IMPURE;
 import static org.smoothbuild.compile.frontend.lang.type.AnnotationNames.NATIVE_PURE;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import java.util.function.Function;
 import org.smoothbuild.compile.frontend.compile.ast.ModuleVisitorP;
@@ -22,7 +21,7 @@ import org.smoothbuild.compile.frontend.compile.ast.define.ReferenceableP;
 import org.smoothbuild.compile.frontend.compile.ast.define.StructP;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
 /**
  * Detect syntax errors that are not caught by Antlr.
@@ -31,15 +30,15 @@ import org.smoothbuild.out.log.Maybe;
  * Catching those errors here makes it easier
  * to provide more detailed error message.
  */
-public class FindSyntaxErrors implements Function<ModuleP, Maybe<ModuleP>> {
+public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
   @Override
-  public Maybe<ModuleP> apply(ModuleP moduleP) {
+  public Try<ModuleP> apply(ModuleP moduleP) {
     var logBuffer = new LogBuffer();
     detectIllegalNames(moduleP, logBuffer);
     detectIllegalAnnotations(moduleP, logBuffer);
     detectStructFieldWithDefaultValue(moduleP, logBuffer);
     detectLambdaParamWithDefaultValue(moduleP, logBuffer);
-    return maybe(moduleP, logBuffer);
+    return Try.of(moduleP, logBuffer);
   }
 
   private static void detectIllegalNames(ModuleP moduleP, Logger logger) {

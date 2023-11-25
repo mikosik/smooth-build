@@ -3,7 +3,6 @@ package org.smoothbuild.compile.frontend.compile;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.compile.ast.define.ScopeP.emptyScope;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.isVarName;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import io.vavr.Tuple2;
 import java.util.function.Function;
@@ -22,18 +21,18 @@ import org.smoothbuild.compile.frontend.compile.ast.define.TypeP;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
 /**
  * Detect undefined referencables and types.
  */
-public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Maybe<ModuleP>> {
+public class DetectUndefined implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
   @Override
-  public Maybe<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
+  public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logBuffer = new LogBuffer();
     var moduleP = context._1();
     new Detector(context._2(), emptyScope(), logBuffer).visitModule(moduleP);
-    return maybe(moduleP, logBuffer);
+    return Try.of(moduleP, logBuffer);
   }
 
   private static class Detector extends ScopingModuleVisitorP {

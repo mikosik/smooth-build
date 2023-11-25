@@ -1,14 +1,14 @@
 package org.smoothbuild.run.step;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.out.log.Maybe.success;
+import static org.smoothbuild.out.log.Try.success;
 
 import com.google.inject.Key;
 import io.vavr.Tuple;
 import io.vavr.Tuple0;
 import io.vavr.Tuple2;
 import java.util.function.Function;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 import org.smoothbuild.run.step.Step.ComposedStep;
 import org.smoothbuild.run.step.Step.FactoryStep;
 import org.smoothbuild.run.step.Step.FunctionKeyStep;
@@ -29,22 +29,22 @@ public sealed interface Step<T, R>
 
   record NamedStep<T, R>(String name, Step<T, R> step) implements Step<T, R> {}
 
-  public static <T, R> Step<T, R> step(Class<? extends Function<T, Maybe<R>>> clazz) {
+  public static <T, R> Step<T, R> step(Class<? extends Function<T, Try<R>>> clazz) {
     return new FunctionKeyStep<>(Key.get(clazz));
   }
 
-  record FunctionKeyStep<T, R>(Key<? extends Function<T, Maybe<R>>> key) implements Step<T, R> {}
+  record FunctionKeyStep<T, R>(Key<? extends Function<T, Try<R>>> key) implements Step<T, R> {}
 
   public static <T> Step<Tuple0, T> constStep(T value) {
     var sanitizedValue = requireNonNull(value);
     return step((Tuple0 t) -> success(sanitizedValue));
   }
 
-  public static <T, R> Step<T, R> step(Function<T, Maybe<R>> function) {
+  public static <T, R> Step<T, R> step(Function<T, Try<R>> function) {
     return new FunctionStep<>(function);
   }
 
-  record FunctionStep<T, R>(Function<T, Maybe<R>> function) implements Step<T, R> {}
+  record FunctionStep<T, R>(Function<T, Try<R>> function) implements Step<T, R> {}
 
   public static <T, R> Step<T, R> stepFactory(StepFactory<T, R> stepFactory) {
     return new FactoryStep<>(stepFactory);

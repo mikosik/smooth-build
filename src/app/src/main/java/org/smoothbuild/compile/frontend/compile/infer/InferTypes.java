@@ -5,7 +5,6 @@ import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.common.collect.Optionals.pullUp;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
-import static org.smoothbuild.out.log.Maybe.maybe;
 
 import io.vavr.Tuple2;
 import java.util.Optional;
@@ -31,7 +30,7 @@ import org.smoothbuild.compile.frontend.lang.type.tool.Unifier;
 import org.smoothbuild.compile.frontend.lang.type.tool.UnifierException;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
 /**
  * Type inferring consists of
@@ -40,15 +39,15 @@ import org.smoothbuild.out.log.Maybe;
  *   - inferring unit types {@link UnitTypeInferrer}
  *   - resolving types from normalized {@link TypeInferrerResolve}
  */
-public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Maybe<ModuleP>> {
+public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP>> {
   @Override
-  public Maybe<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
+  public Try<ModuleP> apply(Tuple2<ModuleP, ScopeS> context) {
     var logBuffer = new LogBuffer();
     var moduleP = context._1();
     var environment = context._2();
     var typeTeller = new TypeTeller(environment, moduleP.scope());
     new Worker(typeTeller, logBuffer).visitModule(moduleP);
-    return maybe(moduleP, logBuffer);
+    return Try.of(moduleP, logBuffer);
   }
 
   public static class Worker {

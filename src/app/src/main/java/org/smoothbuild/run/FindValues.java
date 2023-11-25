@@ -3,8 +3,7 @@ package org.smoothbuild.run;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.compile.frontend.lang.base.location.Locations.commandLineLocation;
 import static org.smoothbuild.out.log.Level.ERROR;
-import static org.smoothbuild.out.log.Maybe.failure;
-import static org.smoothbuild.out.log.Maybe.maybe;
+import static org.smoothbuild.out.log.Try.failure;
 
 import io.vavr.Tuple2;
 import java.util.ArrayList;
@@ -16,12 +15,12 @@ import org.smoothbuild.compile.frontend.lang.define.NamedValueS;
 import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
 import org.smoothbuild.compile.frontend.lang.define.ScopeS;
 import org.smoothbuild.out.log.LogBuffer;
-import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.log.Try;
 
-public class FindValues implements Function<Tuple2<ScopeS, List<String>>, Maybe<List<ExprS>>> {
+public class FindValues implements Function<Tuple2<ScopeS, List<String>>, Try<List<ExprS>>> {
 
   @Override
-  public Maybe<List<ExprS>> apply(Tuple2<ScopeS, List<String>> argument) {
+  public Try<List<ExprS>> apply(Tuple2<ScopeS, List<String>> argument) {
     var logBuffer = new LogBuffer();
     var valueNames = argument._2();
     var environment = argument._1();
@@ -45,7 +44,7 @@ public class FindValues implements Function<Tuple2<ScopeS, List<String>>, Maybe<
     }
     List<ExprS> exprs = listOfAll(namedEvaluables)
         .map(v -> new InstantiateS(referenceTo(v), commandLineLocation()));
-    return maybe(exprs, logBuffer);
+    return Try.of(exprs, logBuffer);
   }
 
   private static ReferenceS referenceTo(NamedValueS namedValueS) {
