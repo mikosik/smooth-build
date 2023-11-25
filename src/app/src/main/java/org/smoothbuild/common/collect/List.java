@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.common.function.ThrowingFunction;
+import org.smoothbuild.common.function.ThrowingSupplier;
 
 public final class List<E> extends AbstractList<E> {
   private final E[] array;
@@ -27,6 +28,16 @@ public final class List<E> extends AbstractList<E> {
       R[] array1 = (R[]) collection.toArray();
       return new List<>(array1);
     }
+  }
+
+  public static <E, T extends Throwable> List<E> list(int size, ThrowingSupplier<E, T> supplier)
+      throws T {
+    @SuppressWarnings("unchecked")
+    E[] array = (E[]) new Object[size];
+    for (int i = 0; i < array.length; i++) {
+      array[i] = supplier.get();
+    }
+    return new List<>(array);
   }
 
   private List(E[] array) {
