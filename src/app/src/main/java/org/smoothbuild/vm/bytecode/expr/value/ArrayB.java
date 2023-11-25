@@ -2,8 +2,8 @@ package org.smoothbuild.vm.bytecode.expr.value;
 
 import static com.google.common.base.Suppliers.memoize;
 
-import io.vavr.collection.Array;
 import java.util.function.Supplier;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeTypeException;
@@ -13,7 +13,7 @@ import org.smoothbuild.vm.bytecode.type.value.ArrayTB;
  * This class is thread-safe.
  */
 public final class ArrayB extends ValueB {
-  private final Supplier<Array<ValueB>> elemsSupplier;
+  private final Supplier<List<ValueB>> elemsSupplier;
 
   public ArrayB(MerkleRoot merkleRoot, BytecodeDb bytecodeDb) {
     super(merkleRoot, bytecodeDb);
@@ -34,10 +34,10 @@ public final class ArrayB extends ValueB {
     return readDataSeqSize();
   }
 
-  public <T extends ValueB> Array<T> elems(Class<T> elemTJ) {
+  public <T extends ValueB> List<T> elems(Class<T> elemTJ) {
     assertIsIterableAs(elemTJ);
     @SuppressWarnings("unchecked")
-    Array<T> result = (Array<T>) elemsSupplier.get();
+    List<T> result = (List<T>) elemsSupplier.get();
     return result;
   }
 
@@ -49,7 +49,7 @@ public final class ArrayB extends ValueB {
     }
   }
 
-  private Array<ValueB> instantiateElems() {
+  private List<ValueB> instantiateElems() {
     var elems = readElems();
     var expectedElemT = type().elem();
     for (int i = 0; i < elems.size(); i++) {
@@ -62,7 +62,7 @@ public final class ArrayB extends ValueB {
     return elems;
   }
 
-  private Array<ValueB> readElems() {
+  private List<ValueB> readElems() {
     return readDataSeqElems(ValueB.class);
   }
 

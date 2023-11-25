@@ -7,7 +7,6 @@ import static org.smoothbuild.vm.bytecode.expr.ExprB.DATA_PATH;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.cannotReadRootException;
 import static org.smoothbuild.vm.bytecode.expr.exc.DecodeExprRootException.wrongSizeOfRootSeqException;
 
-import io.vavr.collection.Array;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.function.Consumer;
@@ -23,6 +22,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeCombineWrongElementsSizeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprCatException;
@@ -119,7 +119,7 @@ public class ExprBCorruptedTest extends TestContext {
       var hash = hash(
           hash(arrayTB(stringTB())),
           hash(hash(hash(stringTB()), hash("aaa")), hash(hash(stringTB()), hash("bbb"))));
-      Array<String> strings =
+      List<String> strings =
           ((ArrayB) bytecodeDb().get(hash)).elems(StringB.class).map(StringB::toJ);
       assertThat(strings).containsExactly("aaa", "bbb").inOrder();
     }

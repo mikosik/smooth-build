@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.bytecode.type.value;
 
-import io.vavr.collection.Traversable;
+import org.smoothbuild.common.collect.List;
 
 public class TypeNamesB {
   public static final String BLOB = "Blob";
@@ -12,15 +12,15 @@ public class TypeNamesB {
     return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(Traversable<? extends TypeB> paramTs, TypeB resultT) {
+  public static String funcTypeName(List<? extends TypeB> paramTs, TypeB resultT) {
     return "(" + commaSeparatedTypeNames(paramTs) + ")->" + resultT.name();
   }
 
-  public static String tupleTypeName(Traversable<? extends TypeB> elementTypes) {
+  public static String tupleTypeName(List<? extends TypeB> elementTypes) {
     return "{" + commaSeparatedTypeNames(elementTypes) + "}";
   }
 
-  private static String commaSeparatedTypeNames(Traversable<? extends TypeB> types) {
-    return types.mkString(",");
+  private static String commaSeparatedTypeNames(List<? extends TypeB> types) {
+    return types.toString(",");
   }
 }

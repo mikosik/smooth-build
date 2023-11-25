@@ -1,14 +1,14 @@
 package org.smoothbuild.vm.evaluate.execute;
 
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Lists.concat;
-import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 
 import com.google.common.collect.ImmutableList;
-import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.Promise;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
@@ -140,7 +140,7 @@ public class SchedulerB {
       scheduleJobEvaluationWithConsumer(job, v -> onConditionEvaluated(v, args));
     }
 
-    private void onConditionEvaluated(ValueB conditionB, Array<ExprB> args) {
+    private void onConditionEvaluated(ValueB conditionB, List<ExprB> args) {
       var exprB = args.get(((BoolB) conditionB).toJ() ? 1 : 2);
       scheduleJobEvaluationWithConsumer(newJob(exprB, callJob), callJob.promisedValue());
     }
@@ -166,7 +166,7 @@ public class SchedulerB {
     }
 
     private CombineB singleArg(ValueB valueB) {
-      return bytecodeF.combine(Array.of(valueB));
+      return bytecodeF.combine(list(valueB));
     }
 
     // handling NativeFunc
@@ -181,7 +181,7 @@ public class SchedulerB {
 
     // helpers
 
-    private Array<Job> argJobs() {
+    private List<Job> argJobs() {
       return args().map(e -> newJob(e, callJob));
     }
 
@@ -189,14 +189,14 @@ public class SchedulerB {
       return new TraceB(call.hash(), funcB.hash(), callJob.trace());
     }
 
-    private Array<ExprB> args() {
+    private List<ExprB> args() {
       return call.subExprs().args().items();
     }
   }
 
   private void scheduleConstTask(Job job, ValueB value) {
     var constTask = new ConstTask(value, job.trace());
-    scheduleJobTask(job, constTask, Array.empty());
+    scheduleJobTask(job, constTask, list());
   }
 
   private <T extends OperB> void scheduleOperTask(
@@ -221,19 +221,19 @@ public class SchedulerB {
 
   // helpers
 
-  private void scheduleJobTask(Job job, Task task, Array<Job> subExprJobs) {
+  private void scheduleJobTask(Job job, Task task, List<Job> subExprJobs) {
     var subExprPromises = subExprJobs.map(Job::promisedValue);
     var consumer = job.promisedValue();
     runWhenAllAvailable(
         subExprPromises, () -> taskExecutor.enqueue(task, toInput(subExprPromises), consumer));
   }
 
-  private TupleB toInput(Array<? extends Promise<ValueB>> depResults) {
+  private TupleB toInput(List<? extends Promise<ValueB>> depResults) {
     return bytecodeF.tuple(depResults.map(Promise::get));
   }
 
   private Job newJob(ExprB exprB) {
-    return newJob(exprB, list(), new TraceB());
+    return newJob(exprB, ImmutableList.of(), new TraceB());
   }
 
   private Job newJob(ExprB exprB, Job parentJob) {

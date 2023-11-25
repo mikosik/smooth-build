@@ -2,7 +2,7 @@ package org.smoothbuild.vm.bytecode.expr.oper;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import io.vavr.collection.Array;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.expr.BytecodeDb;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.MerkleRoot;
@@ -34,7 +34,7 @@ public class OrderB extends OperB {
     return new OrderSubExprsB(elements());
   }
 
-  public Array<ExprB> elements() {
+  public List<ExprB> elements() {
     var elements = readDataSeqElems(ExprB.class);
     var expectedElementT = category().evaluationT().elem();
     for (int i = 0; i < elements.size(); i++) {

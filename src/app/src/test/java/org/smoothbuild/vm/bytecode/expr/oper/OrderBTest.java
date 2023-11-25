@@ -4,8 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import io.vavr.collection.Array;
-import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestContext;
@@ -32,18 +30,18 @@ public class OrderBTest extends TestContext {
 
   @Test
   public void elements_returns_elements() {
-    assertThat(orderB(intB(2)).elements()).isEqualTo(Array.of(intB(2)));
+    assertThat(orderB(intB(2)).elements()).isEqualTo(list(intB(2)));
   }
 
   @Nested
   class _equals_hash_hashcode extends AbstractExprBTestSuite<OrderB> {
     @Override
-    protected List<OrderB> equalExprs() {
+    protected java.util.List<OrderB> equalExprs() {
       return list(orderB(intB(1), intB(2)), orderB(intB(1), intB(2)));
     }
 
     @Override
-    protected List<OrderB> nonEqualExprs() {
+    protected java.util.List<OrderB> nonEqualExprs() {
       return list(
           orderB(intTB()),
           orderB(stringTB()),
@@ -63,8 +61,7 @@ public class OrderBTest extends TestContext {
   @Test
   public void array_read_back_by_hash_has_same_elementss() {
     var orderB = orderB(intB(1));
-    assertThat(((OrderB) bytecodeDbOther().get(orderB.hash())).elements())
-        .isEqualTo(Array.of(intB(1)));
+    assertThat(((OrderB) bytecodeDbOther().get(orderB.hash())).elements()).isEqualTo(list(intB(1)));
   }
 
   @Test

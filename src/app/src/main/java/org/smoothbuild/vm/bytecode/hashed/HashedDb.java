@@ -5,15 +5,16 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 
-import io.vavr.collection.Array;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import okio.BufferedSource;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.concurrent.AtomicBigInteger;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
@@ -166,7 +167,7 @@ public class HashedDb {
     }
   }
 
-  public Array<Hash> readSeq(Hash hash) throws HashedDbException {
+  public List<Hash> readSeq(Hash hash) throws HashedDbException {
     var builder = new ArrayList<Hash>();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {
@@ -179,7 +180,7 @@ public class HashedDb {
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }
-    return Array.ofAll(builder);
+    return list(builder);
   }
 
   public boolean contains(Hash hash) throws CorruptedHashedDbException {

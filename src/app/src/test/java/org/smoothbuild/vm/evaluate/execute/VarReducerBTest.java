@@ -1,9 +1,9 @@
 package org.smoothbuild.vm.evaluate.execute;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import io.vavr.collection.Array;
 import java.util.function.Function;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class VarReducerBTest extends TestContext {
     @Test
     public void call() {
       assertReferenceInliningDoesNotChangeExpression(
-          r -> callB(lambdaB(Array.of(intTB()), intB()), intB()));
+          r -> callB(lambdaB(list(intTB()), intB()), intB()));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class VarReducerBTest extends TestContext {
 
     private LambdaB myLambda(ExprB exprB) {
       var inner = lambdaB(funcTB(blobTB(), intTB()), exprB);
-      return lambdaB(Array.of(intTB()), inner);
+      return lambdaB(list(intTB()), inner);
     }
 
     @Test

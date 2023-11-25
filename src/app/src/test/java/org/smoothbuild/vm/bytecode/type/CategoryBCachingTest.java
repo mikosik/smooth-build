@@ -1,10 +1,8 @@
 package org.smoothbuild.vm.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.collect.Lists.list;
+import static org.smoothbuild.common.collect.List.list;
 
-import io.vavr.collection.Array;
-import java.util.List;
 import java.util.function.Function;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -27,7 +25,7 @@ public class CategoryBCachingTest extends TestContext {
     assertThat(catDb.get(hash)).isSameInstanceAs(catDb.get(hash));
   }
 
-  private static List<Function<CategoryDb, CategoryB>> factories() {
+  private static java.util.List<Function<CategoryDb, CategoryB>> factories() {
     return list(
         CategoryDb::blob,
         CategoryDb::bool,
@@ -38,7 +36,7 @@ public class CategoryBCachingTest extends TestContext {
         catDb -> catDb.call(catDb.int_()),
         catDb -> catDb.combine(catDb.tuple()),
         catDb -> catDb.combine(catDb.tuple(catDb.int_())),
-        catDb -> catDb.lambda(catDb.funcT(Array.of(), catDb.int_())),
+        catDb -> catDb.lambda(catDb.funcT(list(), catDb.int_())),
         catDb -> catDb.ifFunc(catDb.int_()),
         catDb -> catDb.mapFunc(catDb.int_(), catDb.string()),
         catDb -> catDb.order(catDb.array(catDb.int_())),
@@ -64,6 +62,6 @@ public class CategoryBCachingTest extends TestContext {
   }
 
   private static FuncTB funcT(CategoryDb categoryDb) {
-    return categoryDb.funcT(Array.of(categoryDb.bool(), categoryDb.blob()), categoryDb.string());
+    return categoryDb.funcT(list(categoryDb.bool(), categoryDb.blob()), categoryDb.string());
   }
 }

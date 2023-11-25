@@ -1,9 +1,11 @@
 package org.smoothbuild.vm.bytecode.expr;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
+import static org.smoothbuild.common.collect.Iterables.intIterable;
+import static org.smoothbuild.vm.bytecode.expr.Helpers.wrapHashedDbExcAsDecodeExprNodeException;
 
-import io.vavr.collection.Array;
 import java.util.Objects;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.expr.Helpers.HashedDbCallable;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprNodeException;
 import org.smoothbuild.vm.bytecode.expr.exc.DecodeExprWrongNodeClassException;
@@ -58,7 +60,7 @@ public abstract class ExprB {
   public abstract String exprToString();
 
   protected <T> T readData(HashedDbCallable<T> reader) {
-    return Helpers.wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
+    return wrapHashedDbExcAsDecodeExprNodeException(hash(), category(), DATA_PATH, reader);
   }
 
   protected <T extends ExprB> T readData(Class<T> clazz) {
@@ -71,32 +73,32 @@ public abstract class ExprB {
   }
 
   protected long readDataSeqSize() {
-    return Helpers.wrapHashedDbExcAsDecodeExprNodeException(
+    return wrapHashedDbExcAsDecodeExprNodeException(
         hash(), category(), DATA_PATH, () -> bytecodeDb.hashedDb().readSeqSize(dataHash()));
   }
 
-  protected Array<ValueB> readDataSeqElems(int expectedSize) {
+  protected List<ValueB> readDataSeqElems(int expectedSize) {
     var seqHashes = readDataSeqHashes(expectedSize);
     var exprs = readDataSeqElems(seqHashes);
     return castDataSeqElements(exprs, ValueB.class);
   }
 
-  protected <T extends ExprB> Array<T> readDataSeqElems(Class<T> clazz) {
+  protected <T extends ExprB> List<T> readDataSeqElems(Class<T> clazz) {
     var exprs = readDataSeqElems();
     return castDataSeqElements(exprs, clazz);
   }
 
-  protected Array<ExprB> readDataSeqElems() {
+  protected List<ExprB> readDataSeqElems() {
     var seqHashes = readDataSeqHashes();
     return readDataSeqElems(seqHashes);
   }
 
-  private Array<ExprB> readDataSeqElems(Array<Hash> seq) {
-    return seq.zipWithIndex((hash, i) -> readNode(indexOfDataNode(i), seq.get(i)));
+  private List<ExprB> readDataSeqElems(List<Hash> seq) {
+    return seq.zip(intIterable(0), (hash, i) -> readNode(indexOfDataNode(i), seq.get(i)));
   }
 
-  private Array<Hash> readDataSeqHashes(int expectedSize) {
-    Array<Hash> data = readDataSeqHashes();
+  private List<Hash> readDataSeqHashes(int expectedSize) {
+    List<Hash> data = readDataSeqHashes();
     if (data.size() != expectedSize) {
       throw new DecodeExprWrongSeqSizeException(
           hash(), category(), DATA_PATH, expectedSize, data.size());
@@ -104,8 +106,8 @@ public abstract class ExprB {
     return data;
   }
 
-  private Array<Hash> readDataSeqHashes() {
-    return Helpers.wrapHashedDbExcAsDecodeExprNodeException(
+  private List<Hash> readDataSeqHashes() {
+    return wrapHashedDbExcAsDecodeExprNodeException(
         hash(), category(), DATA_PATH, () -> bytecodeDb.hashedDb().readSeq(dataHash()));
   }
 
@@ -129,16 +131,16 @@ public abstract class ExprB {
     return readDataSeqHashes(expectedSize).get(i);
   }
 
-  protected static String exprsToString(Array<? extends ExprB> exprs) {
-    return exprs.map(ExprB::valToStringSafe).mkString(",");
+  protected static String exprsToString(List<? extends ExprB> exprs) {
+    return exprs.map(ExprB::valToStringSafe).toString(",");
   }
 
-  private <T> Array<T> castDataSeqElements(Array<ExprB> elems, Class<T> clazz) {
+  private <T> List<T> castDataSeqElements(List<ExprB> elems, Class<T> clazz) {
     for (int i = 0; i < elems.size(); i++) {
       castNode(indexOfDataNode(i), elems.get(i), clazz);
     }
     @SuppressWarnings("unchecked")
-    Array<T> result = (Array<T>) elems;
+    List<T> result = (List<T>) elems;
     return result;
   }
 

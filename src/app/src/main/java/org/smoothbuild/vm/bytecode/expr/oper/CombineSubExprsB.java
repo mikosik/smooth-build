@@ -1,11 +1,11 @@
 package org.smoothbuild.vm.bytecode.expr.oper;
 
-import io.vavr.collection.Array;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 
-public record CombineSubExprsB(Array<ExprB> items) implements SubExprsB {
+public record CombineSubExprsB(List<ExprB> items) implements SubExprsB {
   @Override
-  public Array<ExprB> toList() {
+  public List<ExprB> toList() {
     return items;
   }
 }

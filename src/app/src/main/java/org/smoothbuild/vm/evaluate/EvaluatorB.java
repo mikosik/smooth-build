@@ -1,12 +1,13 @@
 package org.smoothbuild.vm.evaluate;
 
+import static org.smoothbuild.common.collect.List.pullUpOption;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.out.log.Log.fatal;
 
-import io.vavr.collection.Array;
 import io.vavr.control.Option;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -22,7 +23,7 @@ public class EvaluatorB {
     this.reporter = reporter;
   }
 
-  public Option<Array<ValueB>> evaluate(Array<ExprB> exprs) {
+  public Option<List<ValueB>> evaluate(List<ExprB> exprs) {
     var schedulerB = schedulerProvider.get();
     var evaluationResults = exprs.map(schedulerB::scheduleExprEvaluation);
     runWhenAllAvailable(evaluationResults, schedulerB::terminate);
@@ -32,7 +33,7 @@ public class EvaluatorB {
       reporter.report(fatal("Evaluation process has been interrupted."));
       return Option.none();
     }
-    Array<Option<ValueB>> map = evaluationResults.map(r -> Option.of(r.get()));
-    return Option.sequence(map).map(Array::ofAll);
+    List<Option<ValueB>> map = evaluationResults.map(r -> Option.of(r.get()));
+    return pullUpOption(map);
   }
 }

@@ -1,9 +1,9 @@
 package org.smoothbuild.compile.backend;
 
 import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.common.collect.List.list;
 
 import com.google.common.collect.ImmutableMap;
-import io.vavr.collection.Array;
 import org.smoothbuild.compile.frontend.lang.type.ArrayTS;
 import org.smoothbuild.compile.frontend.lang.type.BlobTS;
 import org.smoothbuild.compile.frontend.lang.type.BoolTS;
@@ -59,7 +59,7 @@ public class TypeSbTranslator {
   }
 
   public TupleTB translate(StructTS struct) {
-    return bytecodeF.tupleT(Array.ofAll(struct.fields()).map(isig -> translate(isig.type())));
+    return bytecodeF.tupleT(list(struct.fields()).map(isig -> translate(isig.type())));
   }
 
   public FuncTB translate(FuncTS func) {
@@ -67,7 +67,7 @@ public class TypeSbTranslator {
   }
 
   public TupleTB translate(TupleTS tuple) {
-    return bytecodeF.tupleT(Array.ofAll(tuple.elements()).map(this::translate));
+    return bytecodeF.tupleT(list(tuple.elements()).map(this::translate));
   }
 
   public ArrayTB translate(ArrayTS array) {

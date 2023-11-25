@@ -36,19 +36,18 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
-import io.vavr.collection.Array;
 import jakarta.inject.Provider;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import okio.ByteString;
 import org.smoothbuild.common.bindings.ImmutableBindings;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.common.filesystem.base.FileSystem;
@@ -499,18 +498,18 @@ public class TestContext {
   }
 
   public FuncTB funcTB(TypeB resultT) {
-    return funcTB(Array.empty(), resultT);
+    return funcTB(List.list(), resultT);
   }
 
   public FuncTB funcTB(TypeB param1, TypeB resultT) {
-    return funcTB(Array.of(param1), resultT);
+    return funcTB(List.list(param1), resultT);
   }
 
   public FuncTB funcTB(TypeB param1, TypeB param2, TypeB resultT) {
-    return funcTB(Array.of(param1, param2), resultT);
+    return funcTB(List.list(param1, param2), resultT);
   }
 
-  public FuncTB funcTB(Array<TypeB> paramTs, TypeB resultT) {
+  public FuncTB funcTB(List<TypeB> paramTs, TypeB resultT) {
     return categoryDb().funcT(paramTs, resultT);
   }
 
@@ -646,7 +645,7 @@ public class TestContext {
     return blobBWith(list(classes));
   }
 
-  private BlobB blobBWith(List<Class<?>> list) throws IOException {
+  private BlobB blobBWith(java.util.List<Class<?>> list) throws IOException {
     var blobBBuilder = bytecodeDb().blobBuilder();
     try (var outputStream = blobBBuilder.sink()) {
       saveBytecodeInJar(outputStream, list);
@@ -708,10 +707,10 @@ public class TestContext {
   }
 
   public LambdaB lambdaB(ExprB body) {
-    return lambdaB(Array.empty(), body);
+    return lambdaB(List.list(), body);
   }
 
-  public LambdaB lambdaB(Array<TypeB> paramTs, ExprB body) {
+  public LambdaB lambdaB(List<TypeB> paramTs, ExprB body) {
     var funcTB = funcTB(paramTs, body.evaluationT());
     return lambdaB(funcTB, body);
   }
@@ -721,7 +720,7 @@ public class TestContext {
   }
 
   public LambdaB idFuncB() {
-    return lambdaB(Array.of(intTB()), varB(intTB(), 0));
+    return lambdaB(List.list(intTB()), varB(intTB(), 0));
   }
 
   public LambdaB returnAbcFuncB() {
@@ -801,7 +800,7 @@ public class TestContext {
   }
 
   public TupleB tupleB(ValueB... items) {
-    return bytecodeDb().tuple(Array.of(items));
+    return bytecodeDb().tuple(List.list(items));
   }
 
   public ArrayB messageArrayWithOneError() {
@@ -859,7 +858,7 @@ public class TestContext {
   }
 
   public CombineB combineB(ExprB... items) {
-    return bytecodeDb().combine(Array.of(items));
+    return bytecodeDb().combine(List.list(items));
   }
 
   public IfFuncB ifFuncB(TypeB t) {
@@ -879,7 +878,7 @@ public class TestContext {
   }
 
   public OrderB orderB(TypeB elemT, ExprB... elems) {
-    var elemList = Array.of(elems);
+    var elemList = List.list(elems);
     return bytecodeDb().order(arrayTB(elemT), elemList);
   }
 
@@ -929,7 +928,7 @@ public class TestContext {
 
   // ValS types
 
-  public static List<TypeS> typesToTest() {
+  public static java.util.List<TypeS> typesToTest() {
     return nonCompositeTypes().stream()
         .flatMap(t -> compositeTypeSFactories().stream().map(f -> f.apply(t)))
         .toList();
@@ -939,15 +938,15 @@ public class TestContext {
     return concat(TypeFS.baseTs(), new VarS("A"));
   }
 
-  public static List<Function<TypeS, TypeS>> compositeTypeSFactories() {
-    List<Function<TypeS, TypeS>> simpleFactories = List.of(
+  public static java.util.List<Function<TypeS, TypeS>> compositeTypeSFactories() {
+    java.util.List<Function<TypeS, TypeS>> simpleFactories = java.util.List.of(
         TestContext::arrayTS,
         TestContext::funcTS,
         t -> funcTS(t, intTS()),
         TestContext::tupleTS,
         TestContext::structTS,
         TestContext::interfaceTS);
-    List<Function<TypeS, TypeS>> factories = new ArrayList<>();
+    java.util.List<Function<TypeS, TypeS>> factories = new ArrayList<>();
     factories.addAll(simpleFactories);
     for (var simpleFactory : simpleFactories) {
       for (var simpleFactory2 : simpleFactories) {
@@ -1518,7 +1517,8 @@ public class TestContext {
 
   // P - parsed objects
 
-  public static ModuleP moduleP(List<StructP> structs, List<NamedEvaluableP> evaluables) {
+  public static ModuleP moduleP(
+      java.util.List<StructP> structs, java.util.List<NamedEvaluableP> evaluables) {
     return new ModuleP("", structs, evaluables);
   }
 

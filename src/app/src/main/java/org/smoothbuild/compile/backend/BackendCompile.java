@@ -6,10 +6,10 @@ import static org.smoothbuild.out.log.Maybe.success;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
-import io.vavr.collection.Array;
 import jakarta.inject.Inject;
 import java.util.function.Function;
 import org.smoothbuild.common.bindings.ImmutableBindings;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.out.log.Maybe;
@@ -20,8 +20,8 @@ import org.smoothbuild.vm.bytecode.load.FileLoader;
 
 public class BackendCompile
     implements Function<
-        Tuple2<Array<ExprS>, ImmutableBindings<NamedEvaluableS>>,
-        Maybe<Tuple2<Array<ExprB>, BsMapping>>> {
+        Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>>,
+        Maybe<Tuple2<List<ExprB>, BsMapping>>> {
   private final BytecodeF bytecodeF;
   private final FileLoader fileLoader;
   private final BytecodeLoader bytecodeLoader;
@@ -34,9 +34,9 @@ public class BackendCompile
   }
 
   @Override
-  public Maybe<Tuple2<Array<ExprB>, BsMapping>> apply(
-      Tuple2<Array<ExprS>, ImmutableBindings<NamedEvaluableS>> argument) {
-    Array<ExprS> exprs = argument._1();
+  public Maybe<Tuple2<List<ExprB>, BsMapping>> apply(
+      Tuple2<List<ExprS>, ImmutableBindings<NamedEvaluableS>> argument) {
+    List<ExprS> exprs = argument._1();
     var evaluables = argument._2();
     var sbTranslator = new SbTranslator(bytecodeF, fileLoader, bytecodeLoader, evaluables);
     try {

@@ -1,6 +1,7 @@
 package org.smoothbuild.vm.bytecode.type;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.vm.bytecode.type.CategoryDb.DATA_PATH;
 import static org.smoothbuild.vm.bytecode.type.CategoryDb.FUNC_PARAMS_PATH;
@@ -24,7 +25,6 @@ import static org.smoothbuild.vm.bytecode.type.CategoryKinds.VAR;
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalIfFuncTypeExc;
 import static org.smoothbuild.vm.bytecode.type.exc.DecodeFuncCatWrongFuncTypeException.illegalMapFuncTypeExc;
 
-import io.vavr.collection.Array;
 import okio.ByteString;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -176,14 +176,14 @@ public class CategoryBCorruptedTest extends TestContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save if func category in HashedDb.
          */
-        var specHash = hash(
-            hash(IF_FUNC.marker()), hash(funcTB(Array.of(boolTB(), intTB(), intTB()), intTB())));
+        var specHash =
+            hash(hash(IF_FUNC.marker()), hash(funcTB(list(boolTB(), intTB(), intTB()), intTB())));
         assertThat(specHash).isEqualTo(ifFuncCB(intTB()).hash());
       }
 
       @Test
       public void illegal_func_type_causes_error() throws Exception {
-        var illegalIfType = funcTB(Array.of(boolTB(), intTB(), intTB()), blobTB());
+        var illegalIfType = funcTB(list(boolTB(), intTB(), intTB()), blobTB());
         var categoryHash = hash(hash(IF_FUNC.marker()), hash(illegalIfType));
         assertCall(() -> categoryDb().get(categoryHash))
             .throwsException(illegalIfFuncTypeExc(categoryHash, illegalIfType));

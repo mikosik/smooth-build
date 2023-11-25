@@ -13,7 +13,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
-import org.smoothbuild.common.collect.Lists;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.PathS;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayBBuilder;
@@ -77,7 +77,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
             "recurse is not supported by SandboxedJavaFileManager.list()");
       }
       Set<JavaFileObject> result = packageToJavaFileObjects.get(packageName);
-      return result == null ? Lists.list() : result;
+      return result == null ? List.list() : result;
     } else {
       return super.list(location, packageName, kinds, recurse);
     }

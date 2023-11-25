@@ -5,14 +5,14 @@ import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
 import io.vavr.Tuple0;
-import io.vavr.collection.Array;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.run.eval.SaveArtifacts;
 import org.smoothbuild.run.step.Step;
 import org.smoothbuild.run.step.StepFactory;
 
-public class BuildStepFactory implements StepFactory<Array<String>, String> {
+public class BuildStepFactory implements StepFactory<List<String>, String> {
   @Override
-  public Step<Tuple0, String> create(Array<String> names) {
+  public Step<Tuple0, String> create(List<String> names) {
     return step(RemoveArtifacts.class)
         .then(frontendCompilerStep())
         .append(names)

@@ -2,7 +2,7 @@ package org.smoothbuild.vm.evaluate.task;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import io.vavr.collection.Array;
+import org.smoothbuild.common.collect.List;
 import org.smoothbuild.vm.bytecode.expr.oper.PickB;
 import org.smoothbuild.vm.bytecode.expr.value.ArrayB;
 import org.smoothbuild.vm.bytecode.expr.value.IntB;
@@ -32,11 +32,11 @@ public final class PickTask extends Task {
     }
   }
 
-  private ArrayB array(Array<ValueB> components) {
+  private ArrayB array(List<ValueB> components) {
     return (ArrayB) components.get(0);
   }
 
-  private IntB index(Array<ValueB> components) {
+  private IntB index(List<ValueB> components) {
     return (IntB) components.get(1);
   }
 }
