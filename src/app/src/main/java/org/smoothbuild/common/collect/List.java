@@ -56,6 +56,17 @@ public class List<E> extends AbstractList<E> {
     return new List<>(appended);
   }
 
+  public List<E> reverse() {
+    @SuppressWarnings("unchecked")
+    E[] reversed = (E[]) new Object[array.length];
+    var i = array.length - 1;
+    for (E e : array) {
+      reversed[i] = e;
+      i--;
+    }
+    return list(reversed);
+  }
+
   public List<E> sortUsing(Comparator<? super E> comparator) {
     var copy = array.clone();
     Arrays.sort(copy, comparator);
