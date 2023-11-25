@@ -66,6 +66,16 @@ public class List<E> extends AbstractList<E> {
     return new List<>(mapped);
   }
 
+  public <T extends Throwable> List<E> filter(ThrowingFunction<E, Boolean, T> function) throws T {
+    var builder = new ArrayList<E>();
+    for (E element : array) {
+      if (function.apply(element)) {
+        builder.add(element);
+      }
+    }
+    return list(builder);
+  }
+
   public <D, R, T extends Throwable> List<R> zip(
       Iterable<D> that, ThrowingBiFunction<? super E, ? super D, R, T> biFunction) throws T {
     var zipped = new ArrayList<R>();

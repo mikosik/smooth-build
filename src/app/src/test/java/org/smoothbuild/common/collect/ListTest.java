@@ -25,7 +25,7 @@ public class ListTest {
 
     @Test
     public void with_one_element() {
-      assertThat(list("abc")).containsExactly("abc");
+      assertThat(list("abc")).containsExactly("abc").inOrder();
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ListTest {
 
       array[0] = "x";
 
-      assertThat(list).containsExactly("a", "b", "c");
+      assertThat(list).containsExactly("a", "b", "c").inOrder();
     }
 
     @Test
@@ -70,7 +70,7 @@ public class ListTest {
       var copy = list(original);
       original.set(0, "x");
 
-      assertThat(copy).containsExactly("a", "b", "c");
+      assertThat(copy).containsExactly("a", "b", "c").inOrder();
     }
 
     @Test
@@ -238,12 +238,14 @@ public class ListTest {
 
     @Test
     public void returns_mapped_one_element() {
-      assertThat(list("abc").map(String::toUpperCase)).containsExactly("ABC");
+      assertThat(list("abc").map(String::toUpperCase)).containsExactly("ABC").inOrder();
     }
 
     @Test
     public void mapping_with_two_element() {
-      assertThat(list("abc", "def").map(String::toUpperCase)).containsExactly("ABC", "DEF");
+      assertThat(list("abc", "def").map(String::toUpperCase))
+          .containsExactly("ABC", "DEF")
+          .inOrder();
     }
 
     @Test
@@ -258,15 +260,54 @@ public class ListTest {
   }
 
   @Nested
+  class _filter {
+    @Test
+    public void returns_empty_for_empty_list() {
+      assertThat(list().filter(x -> true)).isEmpty();
+    }
+
+    @Test
+    public void returns_unmodified_list_when_predicate_is_always_true() {
+      assertThat(list("first", "second", "third").filter(x -> true))
+          .containsExactly("first", "second", "third")
+          .inOrder();
+    }
+
+    @Test
+    public void returns_empty_list_when_predicate_is_always_false() {
+      assertThat(list("first", "second", "third").filter(x -> false)).isEmpty();
+    }
+
+    @Test
+    public void leaves_only_elements_matching_predicate() {
+      assertThat(list("first", "second", "third").filter(s -> s.startsWith("s")))
+          .containsExactly("second")
+          .inOrder();
+    }
+
+    @Test
+    public void propagates_exception_thrown_from_function() {
+      var exception = new Exception("message");
+      var list = list("first", "second", "third");
+      assertCall(() -> list.filter(s -> {
+            throw exception;
+          }))
+          .throwsException(exception);
+    }
+  }
+
+  @Nested
   class _zip {
     @Test
     void with_empty_iterable_returns_empty_list() {
-      assertThat(list("abc").zip(list(), (x, y) -> "")).containsExactly();
+      assertThat(list("abc").zip(list(), (x, y) -> "")).containsExactly().inOrder();
     }
 
     @Test
     void with_iterable_of_equal_size() {
-      assertThat(list("a", "b").zip(list("1", "2"), (x, y) -> x + y)).containsExactly("a1", "b2");
+      assertThat(list("a", "b").zip(list("1", "2"), (x, y) -> x + y))
+          .containsExactly("a1", "b2")
+          .inOrder();
     }
 
     @Test
@@ -279,12 +320,16 @@ public class ListTest {
 
     @Test
     void with_shorter_iterable_returns_zipped_with_iterable_size() {
-      assertThat(list("a", "b").zip(list("1"), (x, y) -> x + y)).containsExactly("a1");
+      assertThat(list("a", "b").zip(list("1"), (x, y) -> x + y))
+          .containsExactly("a1")
+          .inOrder();
     }
 
     @Test
     void with_longer_iterable_returns_zipped_with_this_size() {
-      assertThat(list("a").zip(list("1", "2"), (x, y) -> x + y)).containsExactly("a1");
+      assertThat(list("a").zip(list("1", "2"), (x, y) -> x + y))
+          .containsExactly("a1")
+          .inOrder();
     }
   }
 
