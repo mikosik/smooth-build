@@ -4,9 +4,26 @@ import static com.google.common.collect.Streams.stream;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.collect.Lists.list;
 
+import java.util.Iterator;
 import java.util.function.Function;
 
 public class Iterables {
+  public static Iterable<Integer> intIterable(int firstElement) {
+    return () -> new Iterator<>() {
+      private int next = firstElement;
+
+      @Override
+      public boolean hasNext() {
+        return true;
+      }
+
+      @Override
+      public Integer next() {
+        return next++;
+      }
+    };
+  }
+
   public static <T> String joinWithCommaToString(Iterable<T> list) {
     return joinWithCommaToString(list, Object::toString);
   }
