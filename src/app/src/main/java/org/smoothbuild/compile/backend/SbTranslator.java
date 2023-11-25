@@ -3,6 +3,7 @@ package org.smoothbuild.compile.backend;
 import static org.smoothbuild.common.Strings.q;
 import static org.smoothbuild.common.collect.Iterables.intIterable;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.common.collect.Maps.mapKeys;
@@ -134,7 +135,7 @@ public class SbTranslator {
   }
 
   private List<ExprB> translateExprs(ImmutableList<ExprS> exprs) {
-    return list(exprs).map(this::translateExpr);
+    return listOfAll(exprs).map(this::translateExpr);
   }
 
   public ExprB translateExpr(ExprS exprS) {

@@ -2,6 +2,7 @@ package org.smoothbuild.filesystem.install;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.io.Paths.removeExtension;
 import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR_FILE_PATH;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
@@ -59,7 +60,7 @@ public class InstallationHashes {
     for (var filePath : STD_LIB_MODS) {
       builder.add(moduleNode(filePath));
     }
-    return new HashNode("standard libraries", list(builder.build()));
+    return new HashNode("standard libraries", listOfAll(builder.build()));
   }
 
   private HashNode moduleNode(FilePath filePath) throws IOException {

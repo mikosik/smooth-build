@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.RunStepExecutor.runStepExecutor;
-import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.run.CreateInjector.createInjector;
 import static org.smoothbuild.run.eval.report.MatcherCreator.createMatcher;
 import static org.smoothbuild.run.step.Step.stepFactory;
@@ -76,7 +76,7 @@ public class BuildCommand extends ProjectCommand {
   protected Integer executeCommand(Path projectDir) {
     var injector = createInjector(projectDir, out(), logLevel, showTasks);
     var step = stepFactory(new BuildStepFactory());
-    var argument = list(values);
+    var argument = listOfAll(values);
     return runStepExecutor(injector, step, argument);
   }
 }

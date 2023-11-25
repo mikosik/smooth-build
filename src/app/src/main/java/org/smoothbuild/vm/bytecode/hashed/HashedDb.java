@@ -5,7 +5,7 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 
 import java.io.IOException;
@@ -180,7 +180,7 @@ public class HashedDb {
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }
-    return list(builder);
+    return listOfAll(builder);
   }
 
   public boolean contains(Hash hash) throws CorruptedHashedDbException {

@@ -17,7 +17,7 @@ public final class List<E> extends AbstractList<E> {
     return new List<>(elements.clone());
   }
 
-  public static <R> List<R> list(Collection<? extends R> collection) {
+  public static <R> List<R> listOfAll(Collection<? extends R> collection) {
     if (collection instanceof List<? extends R> list) {
       @SuppressWarnings("unchecked")
       var cast = (List<R>) list;
@@ -94,7 +94,7 @@ public final class List<E> extends AbstractList<E> {
         builder.add(element);
       }
     }
-    return list(builder);
+    return listOfAll(builder);
   }
 
   public <T extends Throwable> List<E> dropWhile(ThrowingFunction<E, Boolean, T> predicate)
@@ -108,7 +108,7 @@ public final class List<E> extends AbstractList<E> {
       builder.add(array[i]);
       i++;
     }
-    return list(builder);
+    return listOfAll(builder);
   }
 
   public <T extends Throwable> List<E> takeWhile(ThrowingFunction<E, Boolean, T> predicate)
@@ -119,7 +119,7 @@ public final class List<E> extends AbstractList<E> {
       builder.add(array[i]);
       i++;
     }
-    return list(builder);
+    return listOfAll(builder);
   }
 
   public <D, R, T extends Throwable> List<R> zip(
