@@ -192,6 +192,24 @@ public class ListTest {
   }
 
   @Nested
+  class _reverse {
+    @Test
+    void empty_lists_returns_empty_list() {
+      assertThat(list().reverse()).isEqualTo(list());
+    }
+
+    @Test
+    void list_with_one_element() {
+      assertThat(list("a").reverse()).isEqualTo(list("a"));
+    }
+
+    @Test
+    void list_with_many_elements() {
+      assertThat(list("a", "b", "c", "d").reverse()).isEqualTo(list("d", "c", "b", "a"));
+    }
+  }
+
+  @Nested
   class _append {
     @Test
     void two_empty_lists() {
