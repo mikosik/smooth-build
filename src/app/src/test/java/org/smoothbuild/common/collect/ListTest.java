@@ -210,30 +210,59 @@ public class ListTest {
   }
 
   @Nested
-  class _append {
+  class _appendAll {
     @Test
     void two_empty_lists() {
-      assertThat(list().append(asList())).isEqualTo(list());
+      assertThat(list().appendAll(asList())).isEqualTo(list());
     }
 
     @Test
     void empty_list() {
-      assertThat(list("a").append(asList())).isEqualTo(list("a"));
+      assertThat(list("a").appendAll(asList())).isEqualTo(list("a"));
     }
 
     @Test
     void to_empty_list() {
-      assertThat(list().append(asList("b"))).isEqualTo(list("b"));
+      assertThat(list().appendAll(asList("b"))).isEqualTo(list("b"));
     }
 
     @Test
     void two_one_element_lists() {
-      assertThat(list("a").append(asList("b"))).isEqualTo(list("a", "b"));
+      assertThat(list("a").appendAll(asList("b"))).isEqualTo(list("a", "b"));
     }
 
     @Test
     void element_lists() {
-      assertThat(list("a", "b", "c").append(asList("d", "e", "f")))
+      assertThat(list("a", "b", "c").appendAll(asList("d", "e", "f")))
+          .isEqualTo(list("a", "b", "c", "d", "e", "f"));
+    }
+  }
+
+  @Nested
+  class _append {
+    @Test
+    void nothing_to_empty_lists() {
+      assertThat(list().append()).isEqualTo(list());
+    }
+
+    @Test
+    void nothing_to_list() {
+      assertThat(list("a").append()).isEqualTo(list("a"));
+    }
+
+    @Test
+    void one_element_to_empty_list() {
+      assertThat(list().append("b")).isEqualTo(list("b"));
+    }
+
+    @Test
+    void one_element_to_one_element_list() {
+      assertThat(list("a").append("b")).isEqualTo(list("a", "b"));
+    }
+
+    @Test
+    void many_elements_to_many_element_list() {
+      assertThat(list("a", "b", "c").append("d", "e", "f"))
           .isEqualTo(list("a", "b", "c", "d", "e", "f"));
     }
   }
