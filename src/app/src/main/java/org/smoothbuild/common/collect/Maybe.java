@@ -1,13 +1,13 @@
-package org.smoothbuild.common.option;
+package org.smoothbuild.common.collect;
 
 import static java.util.Objects.requireNonNull;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import org.smoothbuild.common.collect.Maybe.None;
+import org.smoothbuild.common.collect.Maybe.Some;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.common.function.ThrowingFunction;
-import org.smoothbuild.common.option.Maybe.None;
-import org.smoothbuild.common.option.Maybe.Some;
 
 public abstract sealed class Maybe<E> permits Some, None {
 

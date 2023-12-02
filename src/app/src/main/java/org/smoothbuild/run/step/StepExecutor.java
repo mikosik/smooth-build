@@ -4,7 +4,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import jakarta.inject.Inject;
 import java.util.function.Function;
-import org.smoothbuild.common.option.Maybe;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.out.log.Try;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.step.Step.ComposedStep;

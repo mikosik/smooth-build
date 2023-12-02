@@ -1,6 +1,6 @@
 package org.smoothbuild.run.step;
 
-import org.smoothbuild.common.option.Maybe;
+import org.smoothbuild.common.collect.Maybe;
 
 @FunctionalInterface
 public interface MaybeFunction<T, R> {

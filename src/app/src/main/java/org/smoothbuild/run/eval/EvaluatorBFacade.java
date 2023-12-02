@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import io.vavr.Tuple2;
 import jakarta.inject.Inject;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.option.Maybe;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compile.backend.BsMapping;
 import org.smoothbuild.run.eval.report.TaskReporterImpl;
 import org.smoothbuild.run.step.MaybeFunction;

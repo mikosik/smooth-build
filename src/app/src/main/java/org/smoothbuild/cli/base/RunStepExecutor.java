@@ -6,7 +6,7 @@ import static org.smoothbuild.run.step.Step.step;
 
 import com.google.inject.Injector;
 import io.vavr.Tuple0;
-import org.smoothbuild.common.option.Maybe;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.out.report.Console;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.run.step.Step;

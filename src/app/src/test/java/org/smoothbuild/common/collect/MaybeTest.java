@@ -1,17 +1,17 @@
-package org.smoothbuild.common.option;
+package org.smoothbuild.common.collect;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.option.Maybe.maybe;
-import static org.smoothbuild.common.option.Maybe.none;
-import static org.smoothbuild.common.option.Maybe.some;
+import static org.smoothbuild.common.collect.Maybe.maybe;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Maybe.None;
 import org.smoothbuild.common.function.ThrowingBiFunction;
-import org.smoothbuild.common.option.Maybe.None;
 
 public class MaybeTest {
   @Nested

@@ -6,8 +6,8 @@ import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
-import static org.smoothbuild.common.option.Maybe.none;
-import static org.smoothbuild.common.option.Maybe.some;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
