@@ -1,13 +1,14 @@
 package org.smoothbuild.common.collect;
 
 import static com.google.common.truth.Truth.assertThat;
-import static io.vavr.control.Option.none;
-import static io.vavr.control.Option.some;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.List.pullUpOption;
+import static org.smoothbuild.common.option.Maybe.none;
+import static org.smoothbuild.common.option.Maybe.some;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
@@ -569,12 +570,31 @@ public class ListTest {
 
     @Test
     public void with_none() {
-      assertThat(pullUpOption(list(Option.of("abc"), none()))).isEqualTo(none());
+      assertThat(pullUpOption(list(Option.of("abc"), Option.none()))).isEqualTo(Option.none());
     }
 
     @Test
     public void with_all_elements_present() {
-      assertThat(pullUpOption(list(some("abc"), some("def")))).isEqualTo(some(list("abc", "def")));
+      assertThat(pullUpOption(list(Option.some("abc"), Option.some("def"))))
+          .isEqualTo(Option.some(list("abc", "def")));
+    }
+  }
+
+  @Nested
+  class _pull_up_maybe {
+    @Test
+    public void with_zero_elements() {
+      assertThat(pullUpMaybe(list())).isEqualTo(some(list()));
+    }
+
+    @Test
+    public void with_none() {
+      assertThat(pullUpMaybe(list(some("abc"), none()))).isEqualTo(none());
+    }
+
+    @Test
+    public void with_all_elements_present() {
+      assertThat(pullUpMaybe(list(some("abc"), some("def")))).isEqualTo(some(list("abc", "def")));
     }
   }
 

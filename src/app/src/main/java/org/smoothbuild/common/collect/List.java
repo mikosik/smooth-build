@@ -1,5 +1,8 @@
 package org.smoothbuild.common.collect;
 
+import static org.smoothbuild.common.option.Maybe.none;
+import static org.smoothbuild.common.option.Maybe.some;
+
 import io.vavr.control.Option;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -9,6 +12,7 @@ import java.util.Comparator;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.common.function.ThrowingFunction;
 import org.smoothbuild.common.function.ThrowingSupplier;
+import org.smoothbuild.common.option.Maybe;
 
 public final class List<E> extends AbstractList<E> {
   private final E[] array;
@@ -180,6 +184,14 @@ public final class List<E> extends AbstractList<E> {
       return Option.none();
     } else {
       return Option.some(list.map(Option::get));
+    }
+  }
+
+  public static <E> Maybe<List<E>> pullUpMaybe(List<Maybe<E>> list) {
+    if (list.anyMatches(Maybe::isNone)) {
+      return none();
+    } else {
+      return some(list.map(Maybe::get));
     }
   }
 
