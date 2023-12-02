@@ -6,12 +6,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.common.collect.Either.left;
+import static org.smoothbuild.common.collect.Either.right;
 
-import io.vavr.control.Either;
 import java.lang.reflect.Method;
 import java.util.Map;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.bytecode.NonPublicMethod;
 import org.smoothbuild.testing.func.bytecode.NonStaticMethod;
@@ -29,13 +31,13 @@ public class BytecodeMethodLoaderTest extends TestContext {
     @Test
     public void method_is_cached() throws Exception {
       var method = fetchJMethod(ReturnAbc.class);
-      testCaching(method, Either.right(method), Either.right(method));
+      testCaching(method, right(method), right(method));
     }
 
     @Test
     public void error_when_loading_method_is_cached() throws Exception {
       var method = fetchJMethod(NonPublicMethod.class);
-      testCaching(method, Either.left("error message"), Either.left("error message"));
+      testCaching(method, left("error message"), left("error message"));
     }
 
     private void testCaching(
@@ -96,12 +98,12 @@ public class BytecodeMethodLoaderTest extends TestContext {
   private void assertLoadingCausesError(Method method, String message) {
     var methodSpec =
         new MethodSpec(blobB(), "class.binary.name", BytecodeMethodLoader.BYTECODE_METHOD_NAME);
-    assertThat(load(methodSpec, method)).isEqualTo(Either.left(message));
+    assertThat(load(methodSpec, method)).isEqualTo(left(message));
   }
 
   private Either<String, Method> load(MethodSpec methodSpec, Method method) {
     var methodLoader = mock(MethodLoader.class);
-    doReturn(Either.right(method)).when(methodLoader).provide(methodSpec);
+    doReturn(right(method)).when(methodLoader).provide(methodSpec);
     var bytecodeMethodLoader = new BytecodeMethodLoader(methodLoader);
     return bytecodeMethodLoader.load(methodSpec.jar(), methodSpec.classBinaryName());
   }

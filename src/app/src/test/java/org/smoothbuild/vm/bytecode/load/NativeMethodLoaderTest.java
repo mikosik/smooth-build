@@ -6,12 +6,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.common.collect.Either.left;
+import static org.smoothbuild.common.collect.Either.right;
 
-import io.vavr.control.Either;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
 import org.smoothbuild.testing.func.nativ.NonStaticMethod;
@@ -77,8 +79,8 @@ public class NativeMethodLoaderTest extends TestContext {
   }
 
   private Either<String, Object> loadingError(Class<?> clazz, String message) {
-    return Either.left("Error loading native implementation specified as `"
-        + clazz.getCanonicalName() + "`: " + message);
+    return left("Error loading native implementation specified as `" + clazz.getCanonicalName()
+        + "`: " + message);
   }
 
   @Nested
@@ -87,7 +89,7 @@ public class NativeMethodLoaderTest extends TestContext {
     public void method_is_cached() throws Exception {
       var method = ReturnAbc.class.getDeclaredMethod(
           NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
-      testCaching(method, Either.right(method), Either.right(method));
+      testCaching(method, right(method), right(method));
     }
 
     @Test
@@ -96,8 +98,8 @@ public class NativeMethodLoaderTest extends TestContext {
           NativeMethodLoader.NATIVE_METHOD_NAME, NativeApi.class, TupleB.class);
       testCaching(
           method,
-          Either.left("xx"),
-          Either.left("Error loading native implementation specified as `binary.name`: xx"));
+          left("xx"),
+          left("Error loading native implementation specified as `binary.name`: xx"));
     }
 
     private void testCaching(

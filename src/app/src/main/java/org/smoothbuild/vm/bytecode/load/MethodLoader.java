@@ -1,14 +1,16 @@
 package org.smoothbuild.vm.bytecode.load;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.common.collect.Either.left;
+import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.Lists.filter;
 
-import io.vavr.control.Either;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
+import org.smoothbuild.common.collect.Either;
 
 /**
  * This class is thread-safe.
@@ -29,14 +31,14 @@ public class MethodLoader {
   }
 
   private Either<String, Method> findMethod(MethodSpec methodSpec) {
-    return findClass(methodSpec).flatMap(c -> findMethod(methodSpec, c));
+    return findClass(methodSpec).flatMapRight(c -> findMethod(methodSpec, c));
   }
 
   private Either<String, Class<?>> findClass(MethodSpec methodSpec) {
     try {
       return jarClassLoaderProv
           .classLoaderFor(methodSpec.jar())
-          .flatMap(classLoader -> loadClass(classLoader, methodSpec));
+          .flatMapRight(classLoader -> loadClass(classLoader, methodSpec));
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
@@ -44,9 +46,9 @@ public class MethodLoader {
 
   private Either<String, Class<?>> loadClass(ClassLoader classLoader, MethodSpec methodSpec) {
     try {
-      return Either.right(classLoader.loadClass(methodSpec.classBinaryName()));
+      return right(classLoader.loadClass(methodSpec.classBinaryName()));
     } catch (ClassNotFoundException e) {
-      return Either.left("Class not found in jar.");
+      return left("Class not found in jar.");
     }
   }
 
@@ -54,9 +56,9 @@ public class MethodLoader {
     var declaredMethods = asList(clazz.getDeclaredMethods());
     var methods = filter(declaredMethods, m -> m.getName().equals(methodSpec.methodName()));
     return switch (methods.size()) {
-      case 0 -> Either.left(missingMethodError(methodSpec));
-      case 1 -> Either.right(methods.get(0));
-      default -> Either.left(overloadedMethodError(methodSpec));
+      case 0 -> left(missingMethodError(methodSpec));
+      case 1 -> right(methods.get(0));
+      default -> left(overloadedMethodError(methodSpec));
     };
   }
 

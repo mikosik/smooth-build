@@ -3,11 +3,11 @@ package org.smoothbuild.vm.bytecode.load;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
-import io.vavr.control.Either;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
+import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.vm.bytecode.BytecodeF;
 import org.smoothbuild.vm.bytecode.expr.value.BlobB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -33,7 +33,7 @@ public class BytecodeMethodLoader {
   }
 
   private Either<String, Method> loadImpl(MethodSpec methodSpec) {
-    return methodLoader.provide(methodSpec).flatMap(this::validateSignature);
+    return methodLoader.provide(methodSpec).flatMapRight(this::validateSignature);
   }
 
   private Either<String, Method> validateSignature(Method method) {

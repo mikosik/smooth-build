@@ -13,6 +13,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.option.Maybe.none;
@@ -23,7 +24,6 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.DISK;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 
-import io.vavr.control.Either;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -279,7 +279,7 @@ public class EvaluatorBTest extends TestContext {
           var call = callB(nativeFuncB, intB(33));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
-              .thenReturn(Either.right(
+              .thenReturn(right(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
           assertThat(evaluate(evaluatorB(nativeMethodLoader), call)).isEqualTo(intB(33));
         }
@@ -290,7 +290,7 @@ public class EvaluatorBTest extends TestContext {
               nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
-              .thenReturn(Either.right(
+              .thenReturn(right(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var nativeFuncT = nativeFuncB.evaluationT();
@@ -305,7 +305,7 @@ public class EvaluatorBTest extends TestContext {
               nativeFuncB(funcTB(intTB(), intTB()), blobB(77), stringB("classBinaryName"));
           var nativeMethodLoader = mock(NativeMethodLoader.class);
           when(nativeMethodLoader.load(eq(nativeFuncB)))
-              .thenReturn(Either.right(
+              .thenReturn(right(
                   EvaluatorBTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
 
           var outerFunc = lambdaB(nativeFuncB);
