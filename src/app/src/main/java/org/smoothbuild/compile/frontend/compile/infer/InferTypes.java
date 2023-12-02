@@ -1,14 +1,15 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
-import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.collect.Maps.toMap;
-import static org.smoothbuild.common.collect.Optionals.pullUp;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
 import io.vavr.Tuple2;
-import java.util.Optional;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ModuleP;
@@ -68,7 +69,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
 
     private void visitStruct(StructP structP) {
       var structTS = inferStructT(structP);
-      structTS.ifPresent(st -> visitConstructor(structP, st));
+      structTS.toList().forEach(st -> visitConstructor(structP, st));
     }
 
     private void visitConstructor(StructP structP, StructTS structT) {
@@ -77,8 +78,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
       var params = structP
           .fields()
           .list()
-          .map(f ->
-              new ItemS(fieldSigs.get(f.name()).type(), f.name(), Optional.empty(), f.location()));
+          .map(f -> new ItemS(fieldSigs.get(f.name()).type(), f.name(), none(), f.location()));
       var funcTS = new FuncTS(ItemS.toTypes(params), structT);
       var schema = new FuncSchemaS(varSetS(), funcTS);
       constructorP.setSchemaS(schema);
@@ -101,24 +101,24 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
       inferNamedFuncSchema(namedFuncP);
     }
 
-    private Optional<StructTS> inferStructT(StructP struct) {
-      Optional<StructTS> structTS = pullUp(map(struct.fields().list(), this::inferFieldSig))
+    private Maybe<StructTS> inferStructT(StructP struct) {
+      var structTS = pullUpMaybe(struct.fields().list().map(this::inferFieldSig))
           .map(NList::nlist)
           .map(is -> new StructTS(struct.name(), is));
-      structTS.ifPresent(struct::setTypeS);
+      structTS.toList().forEach(struct::setTypeS);
       return structTS;
     }
 
-    private Optional<ItemSigS> inferFieldSig(ItemP field) {
+    private Maybe<ItemSigS> inferFieldSig(ItemP field) {
       return typeTeller.translate(field.type()).flatMap(t -> {
         if (t.vars().isEmpty()) {
           field.setTypeS(t);
-          return Optional.of(new ItemSigS(t, field.name()));
+          return some(new ItemSigS(t, field.name()));
         } else {
           var message = "Field type cannot be polymorphic. Found field %s with type %s."
               .formatted(field.q(), t.q());
           logger.log(compileError(field.type(), message));
-          return Optional.empty();
+          return none();
         }
       });
     }
@@ -175,7 +175,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
       for (int i = 0; i < params.size(); i++) {
         var param = params.get(i);
         var index = i;
-        param.defaultValue().ifPresent(defaultvalue -> {
+        param.defaultValue().toList().forEach(defaultvalue -> {
           var schema = namedFunc.schemaS();
           var paramUnifier = new Unifier();
           var resolvedParamT = schema.type().params().elements().get(index);
@@ -208,7 +208,7 @@ public class InferTypes implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleP
 
     private boolean inferParamDefaultValues(NList<ItemP> params) {
       return params.stream()
-          .flatMap(p -> p.defaultValue().stream())
+          .flatMap(p -> p.defaultValue().toList().stream())
           .allMatch(this::inferParamDefaultValue);
     }
 

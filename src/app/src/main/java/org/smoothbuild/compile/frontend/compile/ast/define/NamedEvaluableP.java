@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compile.frontend.lang.base.NalImpl;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 
@@ -10,15 +10,15 @@ import org.smoothbuild.compile.frontend.lang.base.location.Location;
 public abstract sealed class NamedEvaluableP extends NalImpl implements ReferenceableP, EvaluableP
     permits NamedFuncP, NamedValueP {
   private final String shortName;
-  private final Optional<ExprP> body;
-  private final Optional<AnnotationP> annotation;
+  private final Maybe<ExprP> body;
+  private final Maybe<AnnotationP> annotation;
   private ScopeP scope;
 
   protected NamedEvaluableP(
       String fullName,
       String shortName,
-      Optional<ExprP> body,
-      Optional<AnnotationP> annotation,
+      Maybe<ExprP> body,
+      Maybe<AnnotationP> annotation,
       Location location) {
     super(fullName, location);
     this.shortName = shortName;
@@ -42,11 +42,11 @@ public abstract sealed class NamedEvaluableP extends NalImpl implements Referenc
   }
 
   @Override
-  public Optional<ExprP> body() {
+  public Maybe<ExprP> body() {
     return body;
   }
 
-  public Optional<AnnotationP> annotation() {
+  public Maybe<AnnotationP> annotation() {
     return annotation;
   }
 

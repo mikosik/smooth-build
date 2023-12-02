@@ -1,8 +1,10 @@
 package org.smoothbuild.common.bindings;
 
+import static org.smoothbuild.common.collect.Maybe.maybe;
+
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 
 /**
  * Immutable bindings with single scope.
@@ -14,7 +16,7 @@ public final class FlatImmutableBindings<E> extends FlatBindings<E>
   }
 
   @Override
-  public Optional<E> getOptional(String name) {
-    return Optional.ofNullable(map.get(name));
+  public Maybe<E> getMaybe(String name) {
+    return maybe(map.get(name));
   }
 }

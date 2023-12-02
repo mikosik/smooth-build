@@ -4,8 +4,8 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-import java.util.Optional;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.NalImpl;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
@@ -13,10 +13,10 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
 
 public final class ItemP extends NalImpl implements ReferenceableP {
   private final TypeP type;
-  private final Optional<NamedValueP> defaultValue;
+  private final Maybe<NamedValueP> defaultValue;
   private TypeS typeS;
 
-  public ItemP(TypeP type, String name, Optional<NamedValueP> defaultValue, Location location) {
+  public ItemP(TypeP type, String name, Maybe<NamedValueP> defaultValue, Location location) {
     super(name, location);
     this.type = type;
     this.defaultValue = defaultValue;
@@ -31,7 +31,7 @@ public final class ItemP extends NalImpl implements ReferenceableP {
     return type;
   }
 
-  public Optional<NamedValueP> defaultValue() {
+  public Maybe<NamedValueP> defaultValue() {
     return defaultValue;
   }
 

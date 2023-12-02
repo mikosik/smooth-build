@@ -20,9 +20,9 @@ import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.Nal;
 import org.smoothbuild.compile.frontend.lang.base.location.FileLocation;
@@ -204,8 +204,8 @@ public class SbTranslator {
   private ExprB translateReference(ReferenceS referenceS) {
     var itemS = environment.get(referenceS.name());
     if (itemS == null) {
-      Optional<NamedEvaluableS> namedEvaluableS = evaluables.getOptional(referenceS.name());
-      if (namedEvaluableS.isPresent()) {
+      Maybe<NamedEvaluableS> namedEvaluableS = evaluables.getMaybe(referenceS.name());
+      if (namedEvaluableS.isSome()) {
         return switch (namedEvaluableS.get()) {
           case NamedFuncS namedFuncS -> translateNamedFuncWithCache(namedFuncS);
           case NamedValueS namedValueS -> translateNamedValueWithCache(referenceS, namedValueS);

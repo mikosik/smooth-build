@@ -27,8 +27,8 @@ public class FindValues implements Function<Tuple2<ScopeS, List<String>>, Try<Li
     var namedEvaluables = new ArrayList<NamedValueS>();
     var evaluables = environment.evaluables();
     for (var name : valueNames) {
-      var topEvaluable = evaluables.getOptional(name);
-      if (topEvaluable.isEmpty()) {
+      var topEvaluable = evaluables.getMaybe(name);
+      if (topEvaluable.isNone()) {
         logBuffer.error("Unknown value `" + name + "`.\n"
             + "Try 'smooth list' to see all available values that can be calculated.");
       } else if (!(topEvaluable.get() instanceof NamedValueS namedValue)) {

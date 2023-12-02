@@ -3,7 +3,7 @@ package org.smoothbuild.compile.frontend.compile.infer;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compile.frontend.compile.ast.define.BlobP;
 import org.smoothbuild.compile.frontend.compile.ast.define.CallP;
 import org.smoothbuild.compile.frontend.compile.ast.define.EvaluableP;
@@ -77,8 +77,8 @@ public class TypeInferrerResolve {
     return unifier.resolve(schemaS.type());
   }
 
-  private boolean resolveBody(Optional<ExprP> body) {
-    return body.map(this::resolveBody).orElse(true);
+  private boolean resolveBody(Maybe<ExprP> body) {
+    return body.map(this::resolveBody).getOr(true);
   }
 
   private boolean resolveBody(ExprP body) {

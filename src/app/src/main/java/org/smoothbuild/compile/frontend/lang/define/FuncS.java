@@ -16,7 +16,7 @@ public sealed interface FuncS extends EvaluableS permits ExprFuncS, NamedFuncS {
   public FuncSchemaS schema();
 
   public default boolean canBeCalledArgless() {
-    return params().stream().allMatch(p -> p.defaultValue().isPresent());
+    return params().stream().allMatch(p -> p.defaultValue().isSome());
   }
 
   public default String fieldsToString() {

@@ -1,11 +1,12 @@
 package org.smoothbuild.compile.frontend.compile.infer;
 
 import static org.smoothbuild.common.collect.List.listOfAll;
-import static org.smoothbuild.common.collect.Optionals.mapPair;
-import static org.smoothbuild.common.collect.Optionals.pullUp;
+import static org.smoothbuild.common.collect.List.pullUpMaybe;
+import static org.smoothbuild.common.collect.Maybe.maybe;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compile.frontend.compile.ast.define.ArrayTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.FuncTP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ItemP;
@@ -34,39 +35,38 @@ public class TypeTeller {
     return new TypeTeller(imported, scopeP);
   }
 
-  public Optional<SchemaS> schemaFor(String name) {
+  public Maybe<SchemaS> schemaFor(String name) {
     return scopeP
         .referencables()
-        .getOptional(name)
+        .getMaybe(name)
         .map(r -> switch (r) {
-          case NamedEvaluableP namedEvaluableP -> Optional.ofNullable(namedEvaluableP.schemaS());
-          case ItemP itemP -> Optional.ofNullable(itemP.typeS())
-              .map(t -> new SchemaS(varSetS(), t));
+          case NamedEvaluableP namedEvaluableP -> maybe(namedEvaluableP.schemaS());
+          case ItemP itemP -> maybe(itemP.typeS()).map(t -> new SchemaS(varSetS(), t));
         })
-        .orElseGet(() -> Optional.of(imported.evaluables().get(name).schema()));
+        .getOrGet(() -> some(imported.evaluables().get(name).schema()));
   }
 
-  public Optional<TypeS> translate(TypeP type) {
+  public Maybe<TypeS> translate(TypeP type) {
     if (TypeNamesS.isVarName(type.name())) {
-      return Optional.of(new VarS(type.name()));
+      return some(new VarS(type.name()));
     }
     return switch (type) {
       case ArrayTP array -> translate(array.elemT()).map(ArrayTS::new);
       case FuncTP func -> {
         var resultOpt = translate(func.result());
-        var paramsOpt = pullUp(func.params().map(this::translate));
-        yield mapPair(resultOpt, paramsOpt, (r, p) -> new FuncTS(listOfAll(p), r));
+        var paramsOpt = pullUpMaybe(func.params().map(this::translate));
+        yield resultOpt.mapWith(paramsOpt, (r, p) -> new FuncTS(listOfAll(p), r));
       }
       default -> typeWithName(type);
     };
   }
 
-  private Optional<TypeS> typeWithName(TypeP type) {
-    Optional<StructP> structP = scopeP.types().getOptional(type.name());
-    if (structP.isPresent()) {
-      return Optional.ofNullable(structP.get().typeS());
+  private Maybe<TypeS> typeWithName(TypeP type) {
+    Maybe<StructP> structP = scopeP.types().getMaybe(type.name());
+    if (structP.isSome()) {
+      return maybe(structP.get().typeS());
     } else {
-      return Optional.of(imported.types().get(type.name()).type());
+      return some(imported.types().get(type.name()).type());
     }
   }
 }

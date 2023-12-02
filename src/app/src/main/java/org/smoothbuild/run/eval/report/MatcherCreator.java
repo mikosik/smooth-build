@@ -45,7 +45,7 @@ public class MatcherCreator {
       public TaskMatcher visitMatcherName(MatcherNameContext nameContext) {
         String name = nameContext.MATCHER_NAME().getText();
         return findMatcher(name)
-            .orElseThrow(() -> new TypeConversionException("Unknown matcher '" + name + "'."));
+            .getOrThrow(() -> new TypeConversionException("Unknown matcher '" + name + "'."));
       }
     }.visit(matcherContext);
   }

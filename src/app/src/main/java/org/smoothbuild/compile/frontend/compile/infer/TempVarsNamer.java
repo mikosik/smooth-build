@@ -96,7 +96,7 @@ public class TempVarsNamer {
     var body = evaluable.body();
     var thisScopeVars = resolvedT.vars().filter(v -> !v.isTemporary());
     var varsInScope = outerScopeVars.withAdded(thisScopeVars);
-    body.ifPresent(b -> handleExpr(varsInScope, b));
+    body.toList().forEach(b -> handleExpr(varsInScope, b));
     var resolvedAndRenamedT = nameVars(resolvedT, thisScopeVars);
     unifier.addOrFailWithRuntimeException(new EqualityConstraint(resolvedAndRenamedT, resolvedT));
   }

@@ -4,16 +4,17 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.Strings.escaped;
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.Strings.limitedWithEllipsis;
-import static org.smoothbuild.common.Strings.stringToOptionalString;
+import static org.smoothbuild.common.Strings.stringToMaybeString;
 import static org.smoothbuild.common.Strings.unescaped;
 import static org.smoothbuild.common.Strings.unlines;
 import static org.smoothbuild.common.UnescapeFailedException.illegalEscapeSeqException;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -204,13 +205,13 @@ public class StringsTest {
   @Nested
   class _string_to_optional_string {
     @Test
-    public void empty_string_converts_to_optional_empty() {
-      assertThat(stringToOptionalString("")).isEqualTo(Optional.empty());
+    public void empty_string_converts_to_maybe_empty() {
+      assertThat(stringToMaybeString("")).isEqualTo(none());
     }
 
     @Test
-    public void non_empty_string_converts_to_optional_of() {
-      assertThat(stringToOptionalString("abc")).isEqualTo(Optional.of("abc"));
+    public void non_empty_string_converts_to_maybe_of() {
+      assertThat(stringToMaybeString("abc")).isEqualTo(some("abc"));
     }
   }
 }

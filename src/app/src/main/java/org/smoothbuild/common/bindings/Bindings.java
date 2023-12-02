@@ -2,8 +2,8 @@ package org.smoothbuild.common.bindings;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.Maybe;
 
 public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings, MutableBindings {
   public static <E> FlatImmutableBindings<E> immutableBindings() {
@@ -37,7 +37,7 @@ public sealed interface Bindings<E> permits AbstractBindings, ImmutableBindings,
 
   public E get(String name);
 
-  public Optional<E> getOptional(String name);
+  public Maybe<E> getMaybe(String name);
 
   public <M> Bindings<M> map(Function<? super E, M> mapper);
 

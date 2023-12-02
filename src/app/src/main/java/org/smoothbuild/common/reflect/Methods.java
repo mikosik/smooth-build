@@ -1,9 +1,12 @@
 package org.smoothbuild.common.reflect;
 
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 
 public class Methods {
   public static boolean isPublic(Method method) {
@@ -18,11 +21,11 @@ public class Methods {
     return method.getDeclaringClass().getCanonicalName() + "." + method.getName();
   }
 
-  public static <T extends Annotation> Optional<T> getAnnotation(Method method, Class<T> clazz) {
+  public static <T extends Annotation> Maybe<T> getAnnotation(Method method, Class<T> clazz) {
     if (method.isAnnotationPresent(clazz)) {
-      return Optional.of(method.getAnnotation(clazz));
+      return some(method.getAnnotation(clazz));
     } else {
-      return Optional.empty();
+      return none();
     }
   }
 }

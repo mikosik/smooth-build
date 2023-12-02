@@ -1,6 +1,6 @@
 package org.smoothbuild.compile.frontend.compile.ast.define;
 
-import java.util.Optional;
+import static org.smoothbuild.common.collect.Maybe.none;
 
 public final class ConstructorP extends NamedFuncP {
   public ConstructorP(StructP structP) {
@@ -9,8 +9,8 @@ public final class ConstructorP extends NamedFuncP {
         structP.name(),
         structP.name(),
         structP.fields(),
-        Optional.empty(),
-        Optional.empty(),
+        none(),
+        none(),
         structP.location());
   }
 }

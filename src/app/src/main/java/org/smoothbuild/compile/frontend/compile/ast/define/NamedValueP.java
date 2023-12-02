@@ -4,7 +4,7 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.SchemaS;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
@@ -18,8 +18,8 @@ public final class NamedValueP extends NamedEvaluableP {
       TypeP type,
       String fullName,
       String shortName,
-      Optional<ExprP> body,
-      Optional<AnnotationP> annotation,
+      Maybe<ExprP> body,
+      Maybe<AnnotationP> annotation,
       Location location) {
     super(fullName, shortName, body, annotation, location);
     this.type = type;
