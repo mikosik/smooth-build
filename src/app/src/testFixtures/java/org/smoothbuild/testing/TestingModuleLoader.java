@@ -123,7 +123,7 @@ public class TestingModuleLoader {
     var steps = frontendCompilerStep();
     var memoryReporter = new MemoryReporter();
     var module = injector.getInstance(StepExecutor.class).execute(steps, null, memoryReporter);
-    return success(module.getOrNull(), memoryReporter.logs());
+    return success(module.getOr(null), memoryReporter.logs());
   }
 
   private void writeModuleFilesToFileSystems(Injector injector) {

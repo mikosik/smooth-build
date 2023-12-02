@@ -2,7 +2,7 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.constStep;
-import static org.smoothbuild.run.step.Step.optionStep;
+import static org.smoothbuild.run.step.Step.maybeStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 
@@ -26,7 +26,7 @@ public class EvaluateStepFactory
         .append(argument._1().evaluables())
         .then(stepFactory(arg -> constStep(arg)
             .then(step(BackendCompile.class))
-            .then(optionStep(EvaluatorBFacade.class))
+            .then(maybeStep(EvaluatorBFacade.class))
             .then(step(valueBs -> success(arg._1().zip(valueBs, Tuple2::new))))))
         .named("Evaluating");
   }

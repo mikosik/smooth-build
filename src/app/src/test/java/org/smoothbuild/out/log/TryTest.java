@@ -1,6 +1,8 @@
 package org.smoothbuild.out.log;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.common.option.Maybe.none;
+import static org.smoothbuild.common.option.Maybe.some;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
@@ -14,7 +16,6 @@ import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
-import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ public class TryTest {
     @Test
     void creation_with_value_and_problem() {
       var tryOf = Try.of("abc", ERROR_LOG);
-      assertThat(tryOf.valueOptional()).isEqualTo(Optional.empty());
+      assertThat(tryOf.toMaybe()).isEqualTo(none());
       assertThat(tryOf.logs()).isEqualTo(logs(ERROR_LOG));
     }
   }
@@ -45,9 +46,9 @@ public class TryTest {
     }
 
     @Test
-    public void has_value_optional() {
+    public void toMaybe_returns_some_with_value() {
       var success = success("abc");
-      assertThat(success.valueOptional()).isEqualTo(Optional.of("abc"));
+      assertThat(success.toMaybe()).isEqualTo(some("abc"));
     }
 
     @Test
@@ -82,9 +83,9 @@ public class TryTest {
     }
 
     @Test
-    public void has_no_value_optional() {
+    public void toMaybe_returns_none() {
       var failure = failure(ERROR_LOG);
-      assertThat(failure.valueOptional()).isEqualTo(Optional.empty());
+      assertThat(failure.toMaybe()).isEqualTo(none());
     }
   }
 

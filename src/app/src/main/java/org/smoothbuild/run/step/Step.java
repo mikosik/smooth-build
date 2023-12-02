@@ -13,8 +13,8 @@ import org.smoothbuild.run.step.Step.ComposedStep;
 import org.smoothbuild.run.step.Step.FactoryStep;
 import org.smoothbuild.run.step.Step.FunctionKeyStep;
 import org.smoothbuild.run.step.Step.FunctionStep;
+import org.smoothbuild.run.step.Step.MaybeFunctionKeyStep;
 import org.smoothbuild.run.step.Step.NamedStep;
-import org.smoothbuild.run.step.Step.OptionFunctionKeyStep;
 
 public sealed interface Step<T, R>
     permits ComposedStep,
@@ -22,7 +22,7 @@ public sealed interface Step<T, R>
         FunctionKeyStep,
         FunctionStep,
         NamedStep,
-        OptionFunctionKeyStep {
+        MaybeFunctionKeyStep {
   public default Step<T, R> named(String name) {
     return new NamedStep<>(name, this);
   }
@@ -52,12 +52,11 @@ public sealed interface Step<T, R>
 
   record FactoryStep<T, R>(StepFactory<T, R> stepFactory) implements Step<T, R> {}
 
-  public static <T, R> Step<T, R> optionStep(Class<? extends OptionFunction<T, R>> clazz) {
-    return new OptionFunctionKeyStep<>(Key.get(clazz));
+  public static <T, R> Step<T, R> maybeStep(Class<? extends MaybeFunction<T, R>> clazz) {
+    return new MaybeFunctionKeyStep<>(Key.get(clazz));
   }
 
-  record OptionFunctionKeyStep<T, R>(Key<? extends OptionFunction<T, R>> key)
-      implements Step<T, R> {}
+  record MaybeFunctionKeyStep<T, R>(Key<? extends MaybeFunction<T, R>> key) implements Step<T, R> {}
 
   public default <S> Step<T, Tuple2<R, S>> append(S value) {
     return new ComposedStep<>(this, step((R r) -> success(Tuple.of(r, value))));

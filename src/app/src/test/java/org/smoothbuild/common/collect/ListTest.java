@@ -6,13 +6,11 @@ import static java.util.Comparator.comparing;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
-import static org.smoothbuild.common.collect.List.pullUpOption;
 import static org.smoothbuild.common.option.Maybe.none;
 import static org.smoothbuild.common.option.Maybe.some;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.testing.EqualsTester;
-import io.vavr.control.Option;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Nested;
@@ -558,25 +556,6 @@ public class ListTest {
     @Test
     void returns_false_for_empty_list_even_when_predicate_returns_always_true() {
       assertThat(list().anyMatches(x -> true)).isFalse();
-    }
-  }
-
-  @Nested
-  class _pull_up_list {
-    @Test
-    public void with_zero_elements() {
-      assertThat(pullUpOption(list())).isEqualTo(Option.of(list()));
-    }
-
-    @Test
-    public void with_none() {
-      assertThat(pullUpOption(list(Option.of("abc"), Option.none()))).isEqualTo(Option.none());
-    }
-
-    @Test
-    public void with_all_elements_present() {
-      assertThat(pullUpOption(list(Option.some("abc"), Option.some("def"))))
-          .isEqualTo(Option.some(list("abc", "def")));
     }
   }
 

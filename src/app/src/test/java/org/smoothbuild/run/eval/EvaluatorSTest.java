@@ -9,19 +9,19 @@ import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
-import static org.smoothbuild.run.step.Step.optionStep;
+import static org.smoothbuild.run.step.Step.maybeStep;
 import static org.smoothbuild.run.step.Step.step;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import io.vavr.Tuple;
 import io.vavr.control.Either;
-import io.vavr.control.Option;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.option.Maybe;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.NamedEvaluableS;
 import org.smoothbuild.out.report.Reporter;
@@ -281,7 +281,7 @@ public class EvaluatorSTest extends TestContext {
     return resultMap.get(0);
   }
 
-  private Option<List<ValueB>> evaluate(
+  private Maybe<List<ValueB>> evaluate(
       ImmutableBindings<NamedEvaluableS> evaluables, List<ExprS> exprs) {
     var sbTranslatorFacade = sbTranslatorFacade(fileLoader, bytecodeLoader);
     var evaluatorB = evaluatorB(nativeMethodLoader);
@@ -295,7 +295,7 @@ public class EvaluatorSTest extends TestContext {
         bind(TaskReporterImpl.class).toInstance(taskReporter());
       }
     });
-    var step = step(sbTranslatorFacade).then(optionStep(EvaluatorBFacade.class));
+    var step = step(sbTranslatorFacade).then(maybeStep(EvaluatorBFacade.class));
     var argument = Tuple.of(exprs, evaluables);
 
     return new StepExecutor(injector).execute(step, argument, reporter);

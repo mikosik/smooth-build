@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Lists.map;
+import static org.smoothbuild.common.option.Maybe.none;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Log.error;
@@ -23,7 +24,6 @@ import static org.smoothbuild.vm.evaluate.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.vm.evaluate.compute.ResultSource.NOOP;
 
 import io.vavr.control.Either;
-import io.vavr.control.Option;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -695,18 +695,18 @@ public class EvaluatorBTest extends TestContext {
   }
 
   private ValueB evaluate(EvaluatorB evaluatorB, ExprB expr) {
-    var resultOptional = evaluatorB.evaluate(list(expr));
+    var maybeResult = evaluatorB.evaluate(list(expr));
     assertWithMessage(" ==== Console logs ==== \n" + systemOut().toString() + "\n ==========\n")
-        .that(resultOptional.isDefined())
+        .that(maybeResult.isSome())
         .isTrue();
-    var results = resultOptional.get();
+    var results = maybeResult.get();
     assertThat(results.size()).isEqualTo(1);
     return results.get(0);
   }
 
   private void evaluateWithFailure(EvaluatorB evaluatorB, ExprB expr) {
     var results = evaluatorB.evaluate(list(expr));
-    assertThat(results).isEqualTo(Option.none());
+    assertThat(results).isEqualTo(none());
   }
 
   public static IntB returnIntParam(NativeApi nativeApi, TupleB args) {

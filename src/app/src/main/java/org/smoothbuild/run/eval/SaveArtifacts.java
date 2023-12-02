@@ -5,6 +5,8 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
+import static org.smoothbuild.common.option.Maybe.none;
+import static org.smoothbuild.common.option.Maybe.some;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.ARTIFACTS_PATH;
 import static org.smoothbuild.filesystem.project.ProjectSpaceLayout.HASHED_DB_PATH;
 import static org.smoothbuild.filesystem.space.Space.PROJECT;
@@ -14,7 +16,6 @@ import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.vm.bytecode.hashed.HashedDb.dbPathTo;
 
 import io.vavr.Tuple2;
-import io.vavr.control.Option;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
@@ -23,6 +24,7 @@ import org.smoothbuild.common.collect.DuplicatesDetector;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.option.Maybe;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.compile.frontend.lang.define.InstantiateS;
 import org.smoothbuild.compile.frontend.lang.define.ReferenceS;
@@ -57,7 +59,7 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
     var savedArtifacts =
         sortedArtifacts.map(t -> t.map2(valueB -> save(t._1(), valueB, loggerBuffer)));
     var messages = savedArtifacts
-        .map(t -> t._1().name() + " -> " + t._2().map(PathS::q).getOrElse("?"))
+        .map(t -> t._1().name() + " -> " + t._2().map(PathS::q).getOr("?"))
         .toString("\n");
     return Try.of(messages, loggerBuffer);
   }
@@ -66,18 +68,18 @@ public class SaveArtifacts implements Function<List<Tuple2<ExprS, ValueB>>, Try<
     return (ReferenceS) ((InstantiateS) e).polymorphicS();
   }
 
-  private Option<PathS> save(ReferenceS valueS, ValueB valueB, Logger logger) {
+  private Maybe<PathS> save(ReferenceS valueS, ValueB valueB, Logger logger) {
     String name = valueS.name();
     try {
       var path = write(valueS, valueB);
-      return Option.of(path);
+      return some(path);
     } catch (IOException e) {
       logger.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
-      return Option.none();
+      return none();
     } catch (DuplicatedPathsException e) {
       logger.error(e.getMessage());
-      return Option.none();
+      return none();
     }
   }
 

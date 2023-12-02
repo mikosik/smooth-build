@@ -3,7 +3,6 @@ package org.smoothbuild.common.collect;
 import static org.smoothbuild.common.option.Maybe.none;
 import static org.smoothbuild.common.option.Maybe.some;
 
-import io.vavr.control.Option;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -177,14 +176,6 @@ public final class List<E> extends AbstractList<E> {
       }
     }
     return false;
-  }
-
-  public static <E> Option<List<E>> pullUpOption(List<Option<E>> list) {
-    if (list.anyMatches(Option::isEmpty)) {
-      return Option.none();
-    } else {
-      return Option.some(list.map(Option::get));
-    }
   }
 
   public static <E> Maybe<List<E>> pullUpMaybe(List<Maybe<E>> list) {
