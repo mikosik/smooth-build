@@ -6,14 +6,16 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.smoothbuild.common.collect.Either.left;
+import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.vm.bytecode.load.NativeMethodLoader.NATIVE_METHOD_NAME;
 
-import io.vavr.control.Either;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.testing.TestContext;
 import org.smoothbuild.testing.func.nativ.MissingMethod;
 import org.smoothbuild.testing.func.nativ.NonPublicMethod;
@@ -25,7 +27,7 @@ public class MethodLoaderTest extends TestContext {
   public void class_not_found_in_jar_error() throws Exception {
     var methodLoader = methodLoaderWithPlatformClassLoader();
     var methodSpec = new MethodSpec(blobBJarWithJavaByteCode(), "com.missing.Class", "methodName");
-    assertThat(methodLoader.provide(methodSpec)).isEqualTo(Either.left("Class not found in jar."));
+    assertThat(methodLoader.provide(methodSpec)).isEqualTo(left("Class not found in jar."));
   }
 
   @Test
@@ -52,7 +54,7 @@ public class MethodLoaderTest extends TestContext {
   }
 
   private Either<String, Object> loadingError(Class<?> clazz, String message) {
-    return Either.left("Class '" + clazz.getCanonicalName() + "' " + message);
+    return left("Class '" + clazz.getCanonicalName() + "' " + message);
   }
 
   private MethodLoader methodLoaderWithPlatformClassLoader() {
@@ -78,7 +80,7 @@ public class MethodLoaderTest extends TestContext {
       var classLoader = mock(ClassLoader.class);
       doReturn(clazz).when(classLoader).loadClass(className);
       var classLoaderProv = Mockito.mock(JarClassLoaderProv.class);
-      doReturn(Either.right(classLoader)).when(classLoaderProv).classLoaderFor(jar);
+      doReturn(right(classLoader)).when(classLoaderProv).classLoaderFor(jar);
 
       var methodLoader = new MethodLoader(classLoaderProv);
       var methodSpec = new MethodSpec(jar, className, "func");

@@ -3,10 +3,10 @@ package org.smoothbuild.vm.bytecode.load;
 import static org.smoothbuild.common.reflect.Methods.isPublic;
 import static org.smoothbuild.common.reflect.Methods.isStatic;
 
-import io.vavr.control.Either;
 import jakarta.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
+import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.vm.bytecode.expr.value.NativeFuncB;
 import org.smoothbuild.vm.bytecode.expr.value.TupleB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -36,7 +36,7 @@ public class NativeMethodLoader {
     var methodSpec = new MethodSpec(nativeFuncB.jar(), classBinaryName, NATIVE_METHOD_NAME);
     return methodLoader
         .provide(methodSpec)
-        .flatMap(this::validateMethodSignature)
+        .flatMapRight(this::validateMethodSignature)
         .mapLeft(e -> loadingError(classBinaryName, e));
   }
 

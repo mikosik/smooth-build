@@ -5,6 +5,7 @@ import static com.google.inject.Guice.createInjector;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
@@ -15,7 +16,6 @@ import static org.smoothbuild.run.step.Step.step;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import io.vavr.Tuple;
-import io.vavr.control.Either;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -116,7 +116,7 @@ public class EvaluatorSTest extends TestContext {
           var jarB = blobB(137);
           when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
-              .thenReturn(Either.right(
+              .thenReturn(right(
                   EvaluatorSTest.class.getMethod("returnInt", NativeApi.class, TupleB.class)));
           assertEvaluation(bindings(funcS), callS, intB(173));
         }
@@ -132,7 +132,7 @@ public class EvaluatorSTest extends TestContext {
           var jarB = blobB(137);
           when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jarB);
           when(nativeMethodLoader.load(any()))
-              .thenReturn(Either.right(
+              .thenReturn(right(
                   EvaluatorSTest.class.getMethod("returnIntParam", NativeApi.class, TupleB.class)));
           assertEvaluation(bindings(funcS), callS, intB(77));
         }
@@ -216,8 +216,7 @@ public class EvaluatorSTest extends TestContext {
           when(fileLoader.load(filePath(PROJECT, path("build.jar")))).thenReturn(jar);
           var varMap = ImmutableMap.<String, TypeB>of("A", intTB());
           var funcB = ReturnIdFunc.bytecode(bytecodeF(), varMap);
-          when(bytecodeLoader.load("myFunc", jar, className, varMap))
-              .thenReturn(Either.right(funcB));
+          when(bytecodeLoader.load("myFunc", jar, className, varMap)).thenReturn(right(funcB));
 
           var a = varA();
           var bytecodeFuncS = bytecodeFuncS(className, a, "myFunc", nlist(itemS(a, "p")));

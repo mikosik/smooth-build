@@ -2,6 +2,8 @@ package org.smoothbuild.vm.bytecode.load;
 
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.function.Function.identity;
+import static org.smoothbuild.common.collect.Either.left;
+import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.common.collect.Maps.toMap;
 import static org.smoothbuild.common.reflect.ClassLoaders.mapClassLoader;
@@ -9,13 +11,13 @@ import static org.smoothbuild.run.eval.FileStruct.fileContent;
 import static org.smoothbuild.run.eval.FileStruct.filePath;
 import static org.smoothbuild.vm.evaluate.plugin.UnzipBlob.unzipBlob;
 
-import io.vavr.control.Either;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.lingala.zip4j.exception.ZipException;
+import org.smoothbuild.common.collect.Either;
 import org.smoothbuild.common.io.DuplicateFileNameException;
 import org.smoothbuild.common.io.IllegalZipEntryFileNameException;
 import org.smoothbuild.vm.bytecode.BytecodeF;
@@ -51,9 +53,9 @@ public class JarClassLoaderProv {
     try {
       var files = unzipBlob(bytecodeF, jar, s -> true);
       var filesMap = toMap(files.elems(TupleB.class), f -> filePath(f).toJ(), identity());
-      return Either.right(classLoader(parentClassLoader, filesMap));
+      return right(classLoader(parentClassLoader, filesMap));
     } catch (DuplicateFileNameException | IllegalZipEntryFileNameException | ZipException e) {
-      return Either.left("Error unpacking jar with native code: " + e.getMessage());
+      return left("Error unpacking jar with native code: " + e.getMessage());
     }
   }
 

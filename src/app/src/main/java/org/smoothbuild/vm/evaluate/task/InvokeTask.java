@@ -23,11 +23,15 @@ public final class InvokeTask extends Task {
 
   @Override
   public Output run(TupleB input, Container container) {
-    return container
+    var result = container
         .nativeMethodLoader()
         .load(nativeFuncB)
-        .map(m -> invokeMethod(m, input, container))
-        .getOrElseGet(message -> logFatalAndReturnNullOutput(container, message));
+        .mapRight(m -> invokeMethod(m, input, container));
+    if (result.isRight()) {
+      return result.right();
+    } else {
+      return logFatalAndReturnNullOutput(container, result.left());
+    }
   }
 
   private Output invokeMethod(Method method, TupleB args, Container container) {

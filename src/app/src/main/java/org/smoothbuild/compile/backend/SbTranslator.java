@@ -357,9 +357,9 @@ public class SbTranslator {
     var jar = loadNativeJar(annotation.location());
     var bytecode = bytecodeLoader.load(name, jar, annotation.path().string(), varNameToTypeMap);
     if (!bytecode.isRight()) {
-      throw new SbTranslatorException(annotation.location() + ": " + bytecode.getLeft());
+      throw new SbTranslatorException(annotation.location() + ": " + bytecode.left());
     }
-    var bytecodeB = bytecode.get();
+    var bytecodeB = bytecode.right();
     if (!bytecodeB.evaluationT().equals(typeB)) {
       throw new SbTranslatorException(annotation.location()
           + ": Bytecode provider returned object of wrong type "
