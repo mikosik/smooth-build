@@ -9,12 +9,12 @@ public abstract sealed class AbstractBindings<E> implements Bindings<E>
 
   @Override
   public E get(String name) {
-    return getOptional(name).orElseThrow(() -> new NoSuchElementException(name));
+    return getMaybe(name).getOrThrow(() -> new NoSuchElementException(name));
   }
 
   @Override
   public boolean contains(String name) {
-    return getOptional(name).isPresent();
+    return getMaybe(name).isSome();
   }
 
   @Override

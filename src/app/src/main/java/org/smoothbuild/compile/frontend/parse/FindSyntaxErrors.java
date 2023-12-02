@@ -86,11 +86,11 @@ public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
       @Override
       public void visitNamedFunc(NamedFuncP namedFuncP) {
         super.visitNamedFunc(namedFuncP);
-        if (namedFuncP.annotation().isPresent()) {
+        if (namedFuncP.annotation().isSome()) {
           var ann = namedFuncP.annotation().get();
           var annName = ann.name();
           if (ANNOTATION_NAMES.contains(annName)) {
-            if (namedFuncP.body().isPresent()) {
+            if (namedFuncP.body().isSome()) {
               logger.log(compileError(
                   namedFuncP,
                   "Function " + namedFuncP.q() + " with @" + annName
@@ -105,7 +105,7 @@ public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
           } else {
             logger.log(compileError(ann.location(), "Unknown annotation " + ann.q() + "."));
           }
-        } else if (namedFuncP.body().isEmpty()) {
+        } else if (namedFuncP.body().isNone()) {
           logger.log(compileError(namedFuncP, "Function body is missing."));
         }
       }
@@ -113,12 +113,12 @@ public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
       @Override
       public void visitNamedValue(NamedValueP namedValueP) {
         super.visitNamedValue(namedValueP);
-        if (namedValueP.annotation().isPresent()) {
+        if (namedValueP.annotation().isSome()) {
           var ann = namedValueP.annotation().get();
           var annName = ann.name();
           switch (annName) {
             case BYTECODE -> {
-              if (namedValueP.body().isPresent()) {
+              if (namedValueP.body().isSome()) {
                 logger.log(compileError(
                     namedValueP, "Value with @" + annName + " annotation cannot have body."));
               }
@@ -133,7 +133,7 @@ public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
                 namedValueP.annotation().get(), "Value cannot have @" + annName + " annotation."));
             default -> logger.log(compileError(ann, "Unknown annotation " + ann.q() + "."));
           }
-        } else if (namedValueP.body().isEmpty()) {
+        } else if (namedValueP.body().isNone()) {
           logger.log(compileError(namedValueP, "Value cannot have empty body."));
         }
       }
@@ -149,7 +149,7 @@ public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
       }
 
       private void logErrorIfDefaultValuePresent(ItemP param) {
-        if (param.defaultValue().isPresent()) {
+        if (param.defaultValue().isSome()) {
           logger.log(compileError(
               param.location(),
               "Struct field `" + param.name()
@@ -168,7 +168,7 @@ public class FindSyntaxErrors implements Function<ModuleP, Try<ModuleP>> {
       }
 
       private void logErrorIfDefaultValuePresent(ItemP param) {
-        if (param.defaultValue().isPresent()) {
+        if (param.defaultValue().isSome()) {
           logger.log(compileError(
               param.location(),
               "Parameter " + param.q() + " of lambda cannot have default value."));

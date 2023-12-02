@@ -94,7 +94,7 @@ public class InitializeScopes extends ModuleVisitorP implements Function<ModuleP
       addReferenceable(namedEvaluableP);
       if (namedEvaluableP instanceof NamedFuncP namedFuncP) {
         for (var param : namedFuncP.params()) {
-          if (param.defaultValue().isPresent()) {
+          if (param.defaultValue().isSome()) {
             var defaultValue = param.defaultValue().get();
             addReferenceable(defaultValue);
           }

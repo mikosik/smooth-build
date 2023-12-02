@@ -21,7 +21,7 @@ public class ConstructorSTest extends TestContext {
                 ItemS(
                   type = Int
                   name = field
-                  defaultValue = Optional.empty
+                  defaultValue = None
                   location = build.smooth:2
                 )
               ]

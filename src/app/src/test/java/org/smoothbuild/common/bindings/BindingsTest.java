@@ -5,13 +5,14 @@ import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.bindings.Bindings.mutableBindings;
 import static org.smoothbuild.common.collect.Lists.list;
 import static org.smoothbuild.common.collect.Maps.toMap;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -149,15 +150,15 @@ public class BindingsTest {
     }
 
     @Test
-    public void getOptional_element() {
+    public void getMaybe_element() {
       var bindings = newBindings(elem("name", 7));
-      assertThat(bindings.getOptional("name")).isEqualTo(Optional.of(elem("name", 7)));
+      assertThat(bindings.getMaybe("name")).isEqualTo(some(elem("name", 7)));
     }
 
     @Test
-    public void getOptional_missing_element_returns_empty() {
+    public void getMaybe_missing_element_returns_empty() {
       var bindings = newBindings();
-      assertThat(bindings.getOptional("name")).isEqualTo(Optional.empty());
+      assertThat(bindings.getMaybe("name")).isEqualTo(none());
     }
 
     @Test

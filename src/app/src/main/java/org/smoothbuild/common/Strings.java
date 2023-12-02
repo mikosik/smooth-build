@@ -2,8 +2,10 @@ package org.smoothbuild.common;
 
 import static org.smoothbuild.common.UnescapeFailedException.illegalEscapeSeqException;
 import static org.smoothbuild.common.UnescapeFailedException.missingEscapeCodeException;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 
 public class Strings {
   private static final char TAB = '\t';
@@ -167,7 +169,7 @@ public class Strings {
     };
   }
 
-  public static Optional<String> stringToOptionalString(String string) {
-    return string.isEmpty() ? Optional.empty() : Optional.of(string);
+  public static Maybe<String> stringToMaybeString(String string) {
+    return string.isEmpty() ? none() : some(string);
   }
 }

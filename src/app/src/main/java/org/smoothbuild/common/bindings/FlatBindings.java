@@ -3,12 +3,13 @@ package org.smoothbuild.common.bindings;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 import static org.smoothbuild.common.collect.Maps.mapValues;
+import static org.smoothbuild.common.collect.Maybe.maybe;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.Maybe;
 
 public sealed class FlatBindings<E> extends AbstractBindings<E>
     permits FlatImmutableBindings, FlatMutableBindings {
@@ -19,8 +20,8 @@ public sealed class FlatBindings<E> extends AbstractBindings<E>
   }
 
   @Override
-  public Optional<E> getOptional(String name) {
-    return Optional.ofNullable(map.get(name));
+  public Maybe<E> getMaybe(String name) {
+    return maybe(map.get(name));
   }
 
   @Override

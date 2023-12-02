@@ -4,7 +4,7 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.FuncSchemaS;
@@ -21,8 +21,8 @@ public sealed class NamedFuncP extends NamedEvaluableP implements FuncP permits 
       String fullName,
       String shortName,
       NList<ItemP> params,
-      Optional<ExprP> body,
-      Optional<AnnotationP> annotation,
+      Maybe<ExprP> body,
+      Maybe<AnnotationP> annotation,
       Location location) {
     super(fullName, shortName, body, annotation, location);
     this.resultT = resultT;

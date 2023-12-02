@@ -75,8 +75,8 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
       if (callP.callee() instanceof InstantiateP instantiateP
           && instantiateP.polymorphic() instanceof ReferenceP referenceP) {
         var name = referenceP.name();
-        var optional = referenceables.getOptional(name);
-        if (optional.isPresent()) {
+        var optional = referenceables.getMaybe(name);
+        if (optional.isSome()) {
           return inferPositionedArgs(callP, optional.get());
         } else {
           return inferPositionedArgs(callP, imported.evaluables().get(name));
@@ -224,11 +224,11 @@ public class InjectDefaultArguments implements Function<Tuple2<ModuleP, ScopeS>,
 
   private static record Param(String name, boolean hasDefaultValue) {
     public Param(ItemS param) {
-      this(param.name(), param.defaultValue().isPresent());
+      this(param.name(), param.defaultValue().isSome());
     }
 
     public Param(ItemP param) {
-      this(param.name(), param.defaultValue().isPresent());
+      this(param.name(), param.defaultValue().isSome());
     }
   }
 }

@@ -4,8 +4,8 @@ import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
 
 import java.util.Objects;
-import java.util.Optional;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.compile.frontend.lang.base.Tanal;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
@@ -15,14 +15,14 @@ import org.smoothbuild.compile.frontend.lang.type.TypeS;
  * This class is immutable.
  */
 public final class ItemS extends Tanal implements ReferenceableS {
-  private final Optional<NamedValueS> defaultValue;
+  private final Maybe<NamedValueS> defaultValue;
 
-  public ItemS(TypeS type, String name, Optional<NamedValueS> defaultValue, Location location) {
+  public ItemS(TypeS type, String name, Maybe<NamedValueS> defaultValue, Location location) {
     super(type, name, location);
     this.defaultValue = defaultValue;
   }
 
-  public Optional<NamedValueS> defaultValue() {
+  public Maybe<NamedValueS> defaultValue() {
     return defaultValue;
   }
 

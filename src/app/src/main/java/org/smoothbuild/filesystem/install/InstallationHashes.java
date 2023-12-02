@@ -3,6 +3,8 @@ package org.smoothbuild.filesystem.install;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.io.Paths.removeExtension;
 import static org.smoothbuild.filesystem.install.InstallationLayout.SMOOTH_JAR_FILE_PATH;
 import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS;
@@ -10,8 +12,8 @@ import static org.smoothbuild.filesystem.install.InstallationLayout.STD_LIB_MODS
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.Properties;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.filesystem.space.FilePath;
 import org.smoothbuild.filesystem.space.FileResolver;
 import org.smoothbuild.vm.bytecode.hashed.Hash;
@@ -66,16 +68,16 @@ public class InstallationHashes {
   private HashNode moduleNode(FilePath filePath) throws IOException {
     var smoothNode = nodeFor(filePath);
     var nativeNode = nodeForNativeJarFor(filePath);
-    var nodes = nativeNode.isPresent() ? list(smoothNode, nativeNode.get()) : list(smoothNode);
+    var nodes = nativeNode.isSome() ? list(smoothNode, nativeNode.get()) : list(smoothNode);
     var moduleName = removeExtension(filePath.toString());
     return new HashNode(moduleName + " module", nodes);
   }
 
-  private Optional<HashNode> nodeForNativeJarFor(FilePath filePath) throws IOException {
+  private Maybe<HashNode> nodeForNativeJarFor(FilePath filePath) throws IOException {
     FilePath nativeFilePath = filePath.withExtension("jar");
     return switch (fileResolver.pathState(nativeFilePath)) {
-      case FILE -> Optional.of(nodeFor(nativeFilePath));
-      case DIR, NOTHING -> Optional.empty();
+      case FILE -> some(nodeFor(nativeFilePath));
+      case DIR, NOTHING -> none();
     };
   }
 

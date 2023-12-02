@@ -3,6 +3,7 @@ package org.smoothbuild.compile.frontend.compile;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.Lists.map;
 import static org.smoothbuild.common.collect.Maps.mapValues;
+import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.lang.define.ScopeS.scopeS;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.BLOB;
@@ -11,7 +12,6 @@ import static org.smoothbuild.compile.frontend.lang.type.TypeFS.STRING;
 import static org.smoothbuild.out.log.Try.success;
 
 import io.vavr.Tuple2;
-import java.util.Optional;
 import java.util.function.Function;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.collect.NList;
@@ -100,8 +100,8 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>
 
     private ConstructorS convertConstructor(ConstructorP constructorP) {
       var fields = constructorP.params();
-      var params = fields.map(
-          f -> new ItemS(fields.get(f.name()).typeS(), f.name(), Optional.empty(), f.location()));
+      var params =
+          fields.map(f -> new ItemS(fields.get(f.name()).typeS(), f.name(), none(), f.location()));
       return new ConstructorS(
           constructorP.schemaS(), constructorP.name(), params, constructorP.location());
     }
@@ -119,10 +119,10 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>
       var schema = namedValueP.schemaS();
       var name = namedValueP.name();
       var location = namedValueP.location();
-      if (namedValueP.annotation().isPresent()) {
+      if (namedValueP.annotation().isSome()) {
         var ann = convertAnnotation(namedValueP.annotation().get());
         return new AnnotatedValueS(ann, schema, name, location);
-      } else if (namedValueP.body().isPresent()) {
+      } else if (namedValueP.body().isSome()) {
         var body = convertExpr(namedValueP.body().get());
         return new NamedExprValueS(schema, name, body, location);
       } else {
@@ -153,10 +153,10 @@ public class ConvertPs implements Function<Tuple2<ModuleP, ScopeS>, Try<ModuleS>
       var schema = namedFuncP.schemaS();
       var name = namedFuncP.name();
       var loc = namedFuncP.location();
-      if (namedFuncP.annotation().isPresent()) {
+      if (namedFuncP.annotation().isSome()) {
         var annotationS = convertAnnotation(namedFuncP.annotation().get());
         return new AnnotatedFuncS(annotationS, schema, name, params, loc);
-      } else if (namedFuncP.body().isPresent()) {
+      } else if (namedFuncP.body().isSome()) {
         var body = convertFuncBody(namedFuncP, namedFuncP.body().get());
         return new NamedExprFuncS(schema, name, params, body, loc);
       } else {

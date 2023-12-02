@@ -2,9 +2,10 @@ package org.smoothbuild.compile.frontend.lang.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.compile.frontend.lang.type.TypeS;
@@ -30,11 +31,11 @@ public class FuncSTest extends TestContext {
   }
 
   private ItemS paramWithDefault(String name) {
-    return itemS(intTS(), name, Optional.of(stringS()));
+    return itemS(intTS(), name, some(stringS()));
   }
 
   private ItemS paramWithoutDefault(String name) {
-    return itemS(intTS(), name, Optional.empty());
+    return itemS(intTS(), name, none());
   }
 
   private FuncS myFunc(TypeS resultT, List<ItemS> params) {

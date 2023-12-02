@@ -3,13 +3,14 @@ package org.smoothbuild.testing;
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static java.util.Optional.empty;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.common.bindings.Bindings.immutableBindings;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
 import static org.smoothbuild.common.collect.Maps.toMap;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.common.filesystem.base.PathS.path;
 import static org.smoothbuild.common.io.Okios.intToByteString;
@@ -39,11 +40,11 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import okio.ByteString;
 import org.smoothbuild.common.bindings.ImmutableBindings;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.common.collect.Named;
 import org.smoothbuild.common.filesystem.base.FileSystem;
@@ -1310,30 +1311,30 @@ public class TestContext {
   }
 
   public static ItemS itemS(int line, TypeS type, String name) {
-    return itemS(line, type, name, empty());
+    return itemS(line, type, name, none());
   }
 
   public static ItemS itemS(int line, TypeS type, String name, ExprS body) {
-    return itemS(line, type, name, Optional.of(body));
+    return itemS(line, type, name, some(body));
   }
 
   public static ItemS itemS(String name, ExprS body) {
-    return itemS(body.evaluationT(), name, Optional.of(body));
+    return itemS(body.evaluationT(), name, some(body));
   }
 
-  public static ItemS itemS(TypeS type, String name, Optional<ExprS> body) {
+  public static ItemS itemS(TypeS type, String name, Maybe<ExprS> body) {
     return itemS(1, type, name, body);
   }
 
-  public static ItemS itemS(int line, TypeS type, String name, Optional<ExprS> body) {
+  public static ItemS itemS(int line, TypeS type, String name, Maybe<ExprS> body) {
     return itemSPoly(line, type, name, body.map(b -> valueS(line, name, b)));
   }
 
   public static ItemS itemS(int line, TypeS type, String name, NamedValueS body) {
-    return itemSPoly(line, type, name, Optional.of(body));
+    return itemSPoly(line, type, name, some(body));
   }
 
-  public static ItemS itemSPoly(int line, TypeS type, String name, Optional<NamedValueS> body) {
+  public static ItemS itemSPoly(int line, TypeS type, String name, Maybe<NamedValueS> body) {
     return new ItemS(type, name, body, location(line));
   }
 
@@ -1381,7 +1382,7 @@ public class TestContext {
 
   public static ConstructorS constructorS(int line, StructTS structT, String name) {
     var fields = structT.fields();
-    var params = fields.map(f -> new ItemS(f.type(), f.name(), empty(), location(2)));
+    var params = fields.map(f -> new ItemS(f.type(), f.name(), none(), location(2)));
     return new ConstructorS(funcSchemaS(params, structT), name, params, location(line));
   }
 
@@ -1534,7 +1535,7 @@ public class TestContext {
   }
 
   public static NamedFuncP namedFuncP(String name, int line) {
-    return namedFuncP(name, nlist(itemP()), Optional.empty(), location(line));
+    return namedFuncP(name, nlist(itemP()), none(), location(line));
   }
 
   public static NamedFuncP namedFuncP(NList<ItemP> params) {
@@ -1542,21 +1543,21 @@ public class TestContext {
   }
 
   public static NamedFuncP namedFuncP(String name, ExprP body) {
-    return namedFuncP(name, nlist(), Optional.of(body));
+    return namedFuncP(name, nlist(), some(body));
   }
 
   public static NamedFuncP namedFuncP(String name, NList<ItemP> params) {
-    return namedFuncP(name, params, Optional.empty());
+    return namedFuncP(name, params, none());
   }
 
-  public static NamedFuncP namedFuncP(String name, NList<ItemP> params, Optional<ExprP> body) {
+  public static NamedFuncP namedFuncP(String name, NList<ItemP> params, Maybe<ExprP> body) {
     return namedFuncP(name, params, body, location());
   }
 
   public static NamedFuncP namedFuncP(
-      String name, NList<ItemP> params, Optional<ExprP> body, Location location) {
+      String name, NList<ItemP> params, Maybe<ExprP> body, Location location) {
     var resultT = new ImplicitTP(location);
-    return new NamedFuncP(resultT, name, shortName(name), params, body, Optional.empty(), location);
+    return new NamedFuncP(resultT, name, shortName(name), params, body, none(), location);
   }
 
   public static NamedValueP namedValueP() {
@@ -1574,20 +1575,19 @@ public class TestContext {
   public static NamedValueP namedValueP(String name, ExprP body) {
     var location = location();
     var type = new ImplicitTP(location);
-    return new NamedValueP(
-        type, name, shortName(name), Optional.of(body), Optional.empty(), location);
+    return new NamedValueP(type, name, shortName(name), some(body), none(), location);
   }
 
   public static ItemP itemP() {
-    return itemP(Optional.of(namedValueP()));
+    return itemP(some(namedValueP()));
   }
 
-  public static ItemP itemP(Optional<NamedValueP> defaultValue) {
+  public static ItemP itemP(Maybe<NamedValueP> defaultValue) {
     return itemP("param1", defaultValue);
   }
 
   public static ItemP itemP(String name) {
-    return itemP(name, Optional.empty());
+    return itemP(name, none());
   }
 
   public static ItemP itemP(String name, ExprP defaultValue) {
@@ -1595,10 +1595,10 @@ public class TestContext {
   }
 
   public static ItemP itemP(String name, NamedValueP defaultValue) {
-    return itemP(name, Optional.of(defaultValue));
+    return itemP(name, some(defaultValue));
   }
 
-  public static ItemP itemP(String name, Optional<NamedValueP> defaultValue) {
+  public static ItemP itemP(String name, Maybe<NamedValueP> defaultValue) {
     return new ItemP(new ExplicitTP("Int", location()), name, defaultValue, location());
   }
 

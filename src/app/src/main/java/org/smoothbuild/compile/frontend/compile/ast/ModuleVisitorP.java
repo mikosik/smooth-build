@@ -63,13 +63,13 @@ public class ModuleVisitorP {
   }
 
   public void visitNamedValueSignature(NamedValueP namedValueP) {
-    namedValueP.annotation().ifPresent(this::visitAnnotation);
+    namedValueP.annotation().toList().forEach(this::visitAnnotation);
     visitType(namedValueP.type());
     visitNameOf(namedValueP);
   }
 
   public void visitNamedValueBody(NamedValueP namedValueP) {
-    namedValueP.body().ifPresent(this::visitExpr);
+    namedValueP.body().toList().forEach(this::visitExpr);
   }
 
   public void visitNamedFunc(NamedFuncP namedFuncP) {
@@ -78,14 +78,14 @@ public class ModuleVisitorP {
   }
 
   public void visitNamedFuncSignature(NamedFuncP namedFuncP) {
-    namedFuncP.annotation().ifPresent(this::visitAnnotation);
+    namedFuncP.annotation().toList().forEach(this::visitAnnotation);
     visitType(namedFuncP.resultT());
     visitItems(namedFuncP.params());
     visitNameOf(namedFuncP);
   }
 
   public void visitFuncBody(FuncP funcP) {
-    funcP.body().ifPresent(expr -> visitFuncBody(funcP, expr));
+    funcP.body().toList().forEach(expr -> visitFuncBody(funcP, expr));
   }
 
   public void visitFuncBody(FuncP funcP, ExprP exprP) {
@@ -103,7 +103,7 @@ public class ModuleVisitorP {
   public void visitItem(ItemP itemP) {
     visitType(itemP.type());
     visitNameOf(itemP);
-    itemP.defaultValue().ifPresent(this::visitNamedValue);
+    itemP.defaultValue().toList().forEach(this::visitNamedValue);
   }
 
   public void visitType(TypeP typeP) {}

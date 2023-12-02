@@ -26,7 +26,7 @@ public class AnnotatedFuncSTest extends TestContext {
                 ItemS(
                   type = Int
                   name = myParam
-                  defaultValue = Optional.empty
+                  defaultValue = None
                   location = build.smooth:1
                 )
               ]

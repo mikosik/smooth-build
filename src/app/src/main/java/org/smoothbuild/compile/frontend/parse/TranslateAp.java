@@ -3,13 +3,15 @@ package org.smoothbuild.compile.frontend.parse;
 import static org.smoothbuild.common.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.List.listOfAll;
+import static org.smoothbuild.common.collect.Maybe.maybe;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlistWithShadowing;
 import static org.smoothbuild.compile.frontend.compile.CompileError.compileError;
 import static org.smoothbuild.compile.frontend.lang.base.TypeNamesS.fullName;
 
 import io.vavr.Tuple2;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -37,6 +39,7 @@ import org.smoothbuild.antlr.lang.SmoothAntlrParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothAntlrParser.TypeNameContext;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.compile.ast.define.AnnotationP;
 import org.smoothbuild.compile.frontend.compile.ast.define.ArrayTP;
@@ -166,12 +169,12 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Tr
       return null;
     }
 
-    private Optional<AnnotationP> createNativeSane(AnnotationContext annotation) {
+    private Maybe<AnnotationP> createNativeSane(AnnotationContext annotation) {
       if (annotation == null) {
-        return Optional.empty();
+        return none();
       } else {
         var name = annotation.NAME().getText();
-        return Optional.of(new AnnotationP(
+        return some(new AnnotationP(
             name,
             createStringNode(annotation, annotation.STRING()),
             fileLocation(filePath, annotation)));
@@ -200,7 +203,7 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Tr
       return new ItemP(type, itemName, defaultValue, location);
     }
 
-    private Optional<NamedValueP> createDefaultValue(
+    private Maybe<NamedValueP> createDefaultValue(
         String ownerName, String itemName, ItemContext item, Location location) {
       return createExprSane(item.expr())
           .map(e -> namedValueForDefaultArgument(ownerName, itemName, e, location));
@@ -210,11 +213,11 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Tr
         String ownerName, String itemName, ExprP body, Location location) {
       var name = ownerName + ":" + itemName;
       var type = new ImplicitTP(location);
-      return new NamedValueP(type, name, itemName, Optional.of(body), Optional.empty(), location);
+      return new NamedValueP(type, name, itemName, some(body), none(), location);
     }
 
-    private Optional<ExprP> createPipeSane(PipeContext pipe) {
-      return Optional.ofNullable(pipe).map(this::createPipe);
+    private Maybe<ExprP> createPipeSane(PipeContext pipe) {
+      return maybe(pipe).map(this::createPipe);
     }
 
     private ExprP createPipe(PipeContext pipe) {
@@ -241,8 +244,8 @@ public class TranslateAp implements Function<Tuple2<ModuleContext, FilePath>, Tr
       logger.log(compileError(location, "Piped value is not consumed."));
     }
 
-    private Optional<ExprP> createExprSane(ExprContext expr) {
-      return Optional.ofNullable(expr).map(this::createExpr);
+    private Maybe<ExprP> createExprSane(ExprContext expr) {
+      return maybe(expr).map(this::createExpr);
     }
 
     private ExprP createExpr(ExprContext expr) {

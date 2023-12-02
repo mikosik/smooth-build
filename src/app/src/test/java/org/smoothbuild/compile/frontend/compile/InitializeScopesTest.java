@@ -2,10 +2,10 @@ package org.smoothbuild.compile.frontend.compile;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.compile.InitializeScopes.initializeScopes;
 
-import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.frontend.compile.ast.define.LambdaP;
@@ -62,8 +62,7 @@ public class InitializeScopesTest extends TestContext {
 
         initializeScopes(moduleP, new LogBuffer());
 
-        assertThat(defaultValue.scope().referencables().getOptional("param"))
-            .isEqualTo(Optional.empty());
+        assertThat(defaultValue.scope().referencables().getMaybe("param")).isEqualTo(none());
       }
 
       @Test
@@ -76,8 +75,8 @@ public class InitializeScopesTest extends TestContext {
 
         initializeScopes(moduleP, new LogBuffer());
 
-        assertThat(param1DefaultValue.scope().referencables().getOptional("param2"))
-            .isEqualTo(Optional.empty());
+        assertThat(param1DefaultValue.scope().referencables().getMaybe("param2"))
+            .isEqualTo(none());
       }
 
       @Test

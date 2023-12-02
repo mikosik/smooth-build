@@ -2,9 +2,10 @@ package org.smoothbuild.compile.frontend.compile.ast.define;
 
 import static org.smoothbuild.common.Strings.indent;
 import static org.smoothbuild.common.collect.Iterables.joinToString;
+import static org.smoothbuild.common.collect.Maybe.some;
 
 import java.util.Objects;
-import java.util.Optional;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.common.collect.NList;
 import org.smoothbuild.compile.frontend.lang.base.location.Location;
 import org.smoothbuild.compile.frontend.lang.type.FuncSchemaS;
@@ -43,8 +44,8 @@ public final class LambdaP extends PolymorphicP implements FuncP {
   }
 
   @Override
-  public Optional<ExprP> body() {
-    return Optional.of(body);
+  public Maybe<ExprP> body() {
+    return some(body);
   }
 
   public ExprP bodyGet() {

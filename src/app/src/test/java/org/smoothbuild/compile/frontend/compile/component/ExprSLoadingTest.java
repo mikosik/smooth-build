@@ -2,11 +2,11 @@ package org.smoothbuild.compile.frontend.compile.component;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.common.collect.List.list;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.common.collect.NList.nlist;
 import static org.smoothbuild.compile.frontend.lang.type.TypeFS.INT;
 import static org.smoothbuild.compile.frontend.lang.type.VarSetS.varSetS;
 
-import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.compile.frontend.lang.define.CallS;
@@ -777,7 +777,7 @@ public class ExprSLoadingTest extends TestContext {
             """;
         var empty = valueS(5, "empty", orderS(5, varA()));
         var defaultValue = valueS(2, "myFunc:param1", instantiateS(3, list(varA()), empty));
-        var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", Optional.of(defaultValue)));
+        var params = nlist(itemSPoly(2, arrayTS(varB()), "param1", some(defaultValue)));
         var func = funcS(1, intTS(), "myFunc", params, intS(4, 7));
         module(code).loadsWithSuccess().containsEvaluable(func);
       }

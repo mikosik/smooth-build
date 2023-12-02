@@ -6,8 +6,8 @@ import static org.smoothbuild.common.collect.Maps.override;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
+import org.smoothbuild.common.collect.Maybe;
 
 public sealed class ScopedBindings<E> extends AbstractBindings<E>
     permits ScopedImmutableBindings, ScopedMutableBindings {
@@ -21,12 +21,12 @@ public sealed class ScopedBindings<E> extends AbstractBindings<E>
   }
 
   @Override
-  public Optional<E> getOptional(String name) {
-    Optional<E> element = innerScopeBindings.getOptional(name).map(e -> e);
-    if (element.isPresent()) {
+  public Maybe<E> getMaybe(String name) {
+    Maybe<E> element = innerScopeBindings.getMaybe(name).map(e -> e);
+    if (element.isSome()) {
       return element;
     } else {
-      return outerScopeBindings.getOptional(name).map(e -> e);
+      return outerScopeBindings.getMaybe(name).map(e -> e);
     }
   }
 
