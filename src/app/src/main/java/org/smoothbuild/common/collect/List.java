@@ -1,7 +1,7 @@
 package org.smoothbuild.common.collect;
 
-import static org.smoothbuild.common.option.Maybe.none;
-import static org.smoothbuild.common.option.Maybe.some;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -11,7 +11,6 @@ import java.util.Comparator;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.common.function.ThrowingFunction;
 import org.smoothbuild.common.function.ThrowingSupplier;
-import org.smoothbuild.common.option.Maybe;
 
 public final class List<E> extends AbstractList<E> {
   private final E[] array;

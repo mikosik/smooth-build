@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.common.collect.Either.right;
 import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Lists.map;
-import static org.smoothbuild.common.option.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Log.error;

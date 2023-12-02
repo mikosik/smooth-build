@@ -1,8 +1,8 @@
 package org.smoothbuild.out.log;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.common.option.Maybe.none;
-import static org.smoothbuild.common.option.Maybe.some;
+import static org.smoothbuild.common.collect.Maybe.none;
+import static org.smoothbuild.common.collect.Maybe.some;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;

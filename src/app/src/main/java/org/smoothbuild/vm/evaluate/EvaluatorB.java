@@ -1,15 +1,15 @@
 package org.smoothbuild.vm.evaluate;
 
 import static org.smoothbuild.common.collect.List.pullUpMaybe;
+import static org.smoothbuild.common.collect.Maybe.maybe;
+import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
-import static org.smoothbuild.common.option.Maybe.maybe;
-import static org.smoothbuild.common.option.Maybe.none;
 import static org.smoothbuild.out.log.Log.fatal;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.smoothbuild.common.collect.List;
-import org.smoothbuild.common.option.Maybe;
+import org.smoothbuild.common.collect.Maybe;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
