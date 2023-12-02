@@ -1,6 +1,8 @@
 package org.smoothbuild.common.collect;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.smoothbuild.common.collect.List.list;
 import static org.smoothbuild.common.collect.Maybe.maybe;
 import static org.smoothbuild.common.collect.Maybe.none;
 import static org.smoothbuild.common.collect.Maybe.some;
@@ -45,6 +47,26 @@ public class MaybeTest {
     void getOr_returns_element() {
       var some = some("a");
       assertThat(some.getOr("b")).isEqualTo("a");
+    }
+
+    @Test
+    void getOrGet_returns_element() {
+      var some = some("a");
+      assertThat(some.getOrGet(() -> "b")).isEqualTo("a");
+    }
+
+    @Test
+    void getOrGet_not_calls_supplier() {
+      var some = some("a");
+      assertDoesNotThrow(() -> some.getOrGet(() -> {
+        throw new RuntimeException();
+      }));
+    }
+
+    @Test
+    void getOrThrow_returns_element() {
+      var some = some("a");
+      assertThat(some.getOrThrow(() -> new RuntimeException())).isEqualTo("a");
     }
 
     @Test
@@ -110,6 +132,11 @@ public class MaybeTest {
     }
 
     @Test
+    void toList_returns_single_element_list() {
+      assertThat(some("a").toList()).isEqualTo(list("a"));
+    }
+
+    @Test
     void to_string() {
       var some = some("abc");
       assertThat(some.toString()).isEqualTo("Some(abc)");
@@ -128,6 +155,29 @@ public class MaybeTest {
     void getOr_returns_argument() {
       var none = none();
       assertThat(none.getOr("b")).isEqualTo("b");
+    }
+
+    @Test
+    void getOrGet_returns_supplied_value() {
+      var none = none();
+      assertThat(none.getOrGet(() -> "b")).isEqualTo("b");
+    }
+
+    @Test
+    void getOrGet_propagates_exception_from_supplier() {
+      var none = none();
+      var exception = new Exception("message");
+      assertCall(() -> none.getOrGet(() -> {
+            throw exception;
+          }))
+          .throwsException(exception);
+    }
+
+    @Test
+    void getOrThrow_fails() {
+      var none = none();
+      var exception = new Exception("message");
+      assertCall(() -> none.getOrThrow(() -> exception)).throwsException(exception);
     }
 
     @Test
@@ -170,6 +220,11 @@ public class MaybeTest {
             throw new Exception();
           }))
           .isEqualTo(none());
+    }
+
+    @Test
+    void toList_returns_single_element_list() {
+      assertThat(none().toList()).isEqualTo(list());
     }
 
     @Test

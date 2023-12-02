@@ -1,6 +1,7 @@
 package org.smoothbuild.common.collect;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.common.collect.List.list;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -8,6 +9,7 @@ import org.smoothbuild.common.collect.Maybe.None;
 import org.smoothbuild.common.collect.Maybe.Some;
 import org.smoothbuild.common.function.ThrowingBiFunction;
 import org.smoothbuild.common.function.ThrowingFunction;
+import org.smoothbuild.common.function.ThrowingSupplier;
 
 public abstract sealed class Maybe<E> permits Some, None {
 
@@ -26,6 +28,11 @@ public abstract sealed class Maybe<E> permits Some, None {
   public abstract E get();
 
   public abstract E getOr(E b);
+
+  public abstract <T extends Throwable> E getOrGet(ThrowingSupplier<E, T> supplier) throws T;
+
+  public abstract <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
+      ThrowingSupplier<T1, T2> exceptionSupplier) throws T1, T2, T1;
 
   public abstract <R, T extends Throwable> Maybe<R> map(ThrowingFunction<E, R, T> mapper) throws T;
 
@@ -46,6 +53,8 @@ public abstract sealed class Maybe<E> permits Some, None {
 
   public abstract boolean isNone();
 
+  public abstract List<E> toList();
+
   public static final class Some<E> extends Maybe<E> {
     private final E element;
 
@@ -60,6 +69,17 @@ public abstract sealed class Maybe<E> permits Some, None {
 
     @Override
     public E getOr(E b) {
+      return element;
+    }
+
+    @Override
+    public <T extends Throwable> E getOrGet(ThrowingSupplier<E, T> supplier) {
+      return element;
+    }
+
+    @Override
+    public <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
+        ThrowingSupplier<T1, T2> exceptionSupplier) {
       return element;
     }
 
@@ -82,6 +102,11 @@ public abstract sealed class Maybe<E> permits Some, None {
     @Override
     public boolean isNone() {
       return false;
+    }
+
+    @Override
+    public List<E> toList() {
+      return list(element);
     }
 
     @Override
@@ -117,13 +142,23 @@ public abstract sealed class Maybe<E> permits Some, None {
     }
 
     @Override
+    public <T extends Throwable> E getOrGet(ThrowingSupplier<E, T> supplier) throws T {
+      return supplier.get();
+    }
+
+    @Override
+    public <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
+        ThrowingSupplier<T1, T2> exceptionSupplier) throws T2, T1 {
+      throw exceptionSupplier.get();
+    }
+
+    @Override
     public <R, T extends Throwable> None<R> map(ThrowingFunction<E, R, T> mapper) throws T {
       return cast();
     }
 
     @Override
-    public <R, T extends Throwable> None<R> flatMap(ThrowingFunction<E, Maybe<R>, T> mapper)
-        throws T {
+    public <R, T extends Throwable> None<R> flatMap(ThrowingFunction<E, Maybe<R>, T> mapper) {
       return cast();
     }
 
@@ -141,6 +176,11 @@ public abstract sealed class Maybe<E> permits Some, None {
     @Override
     public boolean isNone() {
       return true;
+    }
+
+    @Override
+    public List<E> toList() {
+      return list();
     }
 
     @Override
