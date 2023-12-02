@@ -1,14 +1,14 @@
 package org.smoothbuild.run.step;
 
 import static com.google.common.truth.Truth.assertThat;
-import static io.vavr.control.Option.none;
-import static io.vavr.control.Option.some;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.smoothbuild.common.option.Maybe.none;
+import static org.smoothbuild.common.option.Maybe.some;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.log.Log.info;
@@ -16,7 +16,7 @@ import static org.smoothbuild.out.log.Log.warning;
 import static org.smoothbuild.out.log.Try.failure;
 import static org.smoothbuild.out.log.Try.success;
 import static org.smoothbuild.run.step.Step.constStep;
-import static org.smoothbuild.run.step.Step.optionStep;
+import static org.smoothbuild.run.step.Step.maybeStep;
 import static org.smoothbuild.run.step.Step.step;
 import static org.smoothbuild.run.step.Step.stepFactory;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -25,7 +25,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import io.vavr.Tuple;
 import io.vavr.Tuple0;
-import io.vavr.control.Option;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.function.Function;
@@ -34,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.common.option.Maybe;
 import org.smoothbuild.out.log.ImmutableLogs;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
@@ -286,7 +286,7 @@ class StepExecutorTest {
     @Test
     void that_returns_some() {
       var reporter = mock(Reporter.class);
-      var step = optionStep(OptionFunctionReturningSome.class);
+      var step = maybeStep(OptionFunctionReturningSome.class);
 
       var result = stepExecutor().execute(step, 3, reporter);
 
@@ -297,7 +297,7 @@ class StepExecutorTest {
     @Test
     void that_returns_none() {
       var reporter = mock(Reporter.class);
-      var step = optionStep(OptionFunctionReturningNone.class);
+      var step = maybeStep(OptionFunctionReturningNone.class);
 
       var result = stepExecutor().execute(step, 3, reporter);
 
@@ -305,17 +305,17 @@ class StepExecutorTest {
       verifyReported(reporter, List.of());
     }
 
-    private static class OptionFunctionReturningSome implements OptionFunction<Integer, String> {
+    private static class OptionFunctionReturningSome implements MaybeFunction<Integer, String> {
       @Override
-      public Option<String> apply(Integer integer) {
-        return Option.some(integer.toString());
+      public Maybe<String> apply(Integer integer) {
+        return some(integer.toString());
       }
     }
 
-    private static class OptionFunctionReturningNone implements OptionFunction<Integer, String> {
+    private static class OptionFunctionReturningNone implements MaybeFunction<Integer, String> {
       @Override
-      public Option<String> apply(Integer integer) {
-        return Option.none();
+      public Maybe<String> apply(Integer integer) {
+        return none();
       }
     }
   }

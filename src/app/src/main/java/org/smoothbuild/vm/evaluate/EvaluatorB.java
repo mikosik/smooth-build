@@ -1,13 +1,15 @@
 package org.smoothbuild.vm.evaluate;
 
-import static org.smoothbuild.common.collect.List.pullUpOption;
+import static org.smoothbuild.common.collect.List.pullUpMaybe;
 import static org.smoothbuild.common.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.common.option.Maybe.maybe;
+import static org.smoothbuild.common.option.Maybe.none;
 import static org.smoothbuild.out.log.Log.fatal;
 
-import io.vavr.control.Option;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.smoothbuild.common.collect.List;
+import org.smoothbuild.common.option.Maybe;
 import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.bytecode.expr.ExprB;
 import org.smoothbuild.vm.bytecode.expr.value.ValueB;
@@ -23,7 +25,7 @@ public class EvaluatorB {
     this.reporter = reporter;
   }
 
-  public Option<List<ValueB>> evaluate(List<ExprB> exprs) {
+  public Maybe<List<ValueB>> evaluate(List<ExprB> exprs) {
     var schedulerB = schedulerProvider.get();
     var evaluationResults = exprs.map(schedulerB::scheduleExprEvaluation);
     runWhenAllAvailable(evaluationResults, schedulerB::terminate);
@@ -31,9 +33,9 @@ public class EvaluatorB {
       schedulerB.awaitTermination();
     } catch (InterruptedException e) {
       reporter.report(fatal("Evaluation process has been interrupted."));
-      return Option.none();
+      return none();
     }
-    List<Option<ValueB>> map = evaluationResults.map(r -> Option.of(r.get()));
-    return pullUpOption(map);
+    List<Maybe<ValueB>> map = evaluationResults.map(r -> maybe(r.get()));
+    return pullUpMaybe(map);
   }
 }

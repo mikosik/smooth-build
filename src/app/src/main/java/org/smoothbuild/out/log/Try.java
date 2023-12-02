@@ -3,10 +3,11 @@ package org.smoothbuild.out.log;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.common.collect.Iterables.joinWithCommaToString;
+import static org.smoothbuild.common.option.Maybe.maybe;
 import static org.smoothbuild.out.log.Level.ERROR;
 
 import java.util.Objects;
-import java.util.Optional;
+import org.smoothbuild.common.option.Maybe;
 
 public class Try<V> {
   private final V value;
@@ -49,8 +50,8 @@ public class Try<V> {
     return value;
   }
 
-  public Optional<V> valueOptional() {
-    return Optional.ofNullable(value);
+  public Maybe<V> toMaybe() {
+    return maybe(value);
   }
 
   public ImmutableLogs logs() {

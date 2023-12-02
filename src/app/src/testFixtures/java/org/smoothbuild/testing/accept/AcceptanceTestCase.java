@@ -24,13 +24,13 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import io.vavr.Tuple2;
-import io.vavr.control.Option;
 import java.io.IOException;
 import okio.BufferedSink;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.common.collect.List;
 import org.smoothbuild.common.filesystem.base.FileSystem;
 import org.smoothbuild.common.filesystem.base.PathS;
+import org.smoothbuild.common.option.Maybe;
 import org.smoothbuild.compile.frontend.lang.define.ExprS;
 import org.smoothbuild.filesystem.install.StandardLibrarySpaceModule;
 import org.smoothbuild.filesystem.project.ProjectSpaceModule;
@@ -48,7 +48,7 @@ public class AcceptanceTestCase extends TestContext {
   private FileSystem prjFileSystem;
   private MemoryReporter memoryReporter;
   private Injector injector;
-  private Option<List<Tuple2<ExprS, ValueB>>> artifacts;
+  private Maybe<List<Tuple2<ExprS, ValueB>>> artifacts;
 
   @BeforeEach
   public void beforeEach() throws IOException {
@@ -135,7 +135,7 @@ public class AcceptanceTestCase extends TestContext {
     if (memoryReporter.containsAtLeast(ERROR)) {
       fail("Expected artifact but problems have been reported:\n" + memoryReporter.logs());
     }
-    if (artifacts.isEmpty()) {
+    if (artifacts.isNone()) {
       fail("Expected artifact but evaluate() returned null.");
     }
     return artifacts.get();
