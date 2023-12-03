@@ -168,8 +168,4 @@ public class Strings {
       default -> throw illegalEscapeSeqException(charIndex);
     };
   }
-
-  public static Maybe<String> stringToMaybeString(String string) {
-    return string.isEmpty() ? none() : some(string);
-  }
 }
