@@ -32,7 +32,7 @@ public abstract sealed class Maybe<E> permits Some, None {
   public abstract <T extends Throwable> E getOrGet(Function0<E, T> supplier) throws T;
 
   public abstract <T1 extends Throwable, T2 extends Throwable> E getOrThrow(
-      Function0<T1, T2> exceptionSupplier) throws T1, T2, T1;
+      Function0<T1, T2> exceptionSupplier) throws T1, T2;
 
   public abstract <R, T extends Throwable> Maybe<R> map(Function1<E, R, T> mapper) throws T;
 
