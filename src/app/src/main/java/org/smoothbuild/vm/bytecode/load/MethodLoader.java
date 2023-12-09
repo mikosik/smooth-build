@@ -16,12 +16,12 @@ import org.smoothbuild.common.collect.Either;
  */
 @Singleton
 public class MethodLoader {
-  private final JarClassLoaderProv jarClassLoaderProv;
+  private final JarClassLoaderFactory jarClassLoaderFactory;
   private final ConcurrentHashMap<MethodSpec, Either<String, Method>> cache;
 
   @Inject
-  public MethodLoader(JarClassLoaderProv jarClassLoaderProv) {
-    this.jarClassLoaderProv = jarClassLoaderProv;
+  public MethodLoader(JarClassLoaderFactory jarClassLoaderFactory) {
+    this.jarClassLoaderFactory = jarClassLoaderFactory;
     this.cache = new ConcurrentHashMap<>();
   }
 
@@ -35,7 +35,7 @@ public class MethodLoader {
 
   private Either<String, Class<?>> findClass(MethodSpec methodSpec) {
     try {
-      return jarClassLoaderProv
+      return jarClassLoaderFactory
           .classLoaderFor(methodSpec.jar())
           .flatMapRight(classLoader -> loadClass(classLoader, methodSpec));
     } catch (IOException e) {

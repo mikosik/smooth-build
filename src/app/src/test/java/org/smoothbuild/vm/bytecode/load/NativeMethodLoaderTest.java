@@ -75,7 +75,7 @@ public class NativeMethodLoaderTest extends TestContext {
 
   private NativeMethodLoader nativeMethodLoaderWithPlatformClassLoader() {
     return new NativeMethodLoader(
-        new MethodLoader(new JarClassLoaderProv(bytecodeF(), getSystemClassLoader())));
+        new MethodLoader(new JarClassLoaderFactory(bytecodeF(), getSystemClassLoader())));
   }
 
   private Either<String, Object> loadingError(Class<?> clazz, String message) {
