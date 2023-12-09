@@ -25,7 +25,7 @@ public class MethodLoader {
     this.cache = new ConcurrentHashMap<>();
   }
 
-  public Either<String, Method> provide(MethodSpec methodSpec) {
+  public Either<String, Method> load(MethodSpec methodSpec) {
     return cache.computeIfAbsent(methodSpec, this::findMethod);
   }
 
