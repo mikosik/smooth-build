@@ -15,7 +15,6 @@ dependencies {
     implementation libs.guice
     implementation libs.okio
     implementation libs.picocli
-    implementation libs.vavr
     implementation libs.zip4j
 
     testFixturesApi libs.guava
@@ -24,7 +23,6 @@ dependencies {
     testFixturesApi libs.mockito
     testFixturesApi libs.okio
     testFixturesApi libs.truth
-    testFixturesApi libs.vavr
 
     testImplementation libs.guava.testlib
     testRuntimeOnly libs.junit.jupiter.engine
